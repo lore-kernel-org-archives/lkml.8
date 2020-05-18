@@ -2,119 +2,154 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9171CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8724B20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:51:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oTCaHa41"
+	by mail.kernel.org (Postfix) with ESMTP id 698CE207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:51:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589806285;
+	bh=59VoFxWg86wvMXwZUsJGWlhU4ZYA2YVdpnEWpzS7DZE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iv+vtmUWr7YhYQMwM3VWSPMOIv2vYfBej4BOAqe8fducV3zPn7xabdk7U0yTSTLCl
+	 cJWauSd+QWG13DOusaJbLMcg64z9ngYt0LkwW/W2bRz03jgkS53QuZtBPZAaf6xoCc
+	 euGyMfKauXbujWrJUE+4TBSn0x6OqBLS2D2GB/6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgERMvJ (ORCPT
+        id S1727832AbgERMvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:51:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgERMvH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:51:07 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C970C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:51:07 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id l15so3575038vsr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:51:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F3BUSKbo828h2E1EKD/0gfSxmOX3Dp5mHkq+oGuT5sI=;
-        b=oTCaHa41n3YsHvrUG3Lxk+lujs7RebbyKCNZ3sEbVUV/crDFTEKHeGz6fw9MAX2JfX
-         ORwZBLb3PzGSOed7tDwbzYuos6/X0oHYuUCkA6iyZqGIUr5Gsf7g/RP/DTfEIc6HQixT
-         HrTYr1bK2AJ8HeZkCpdw4vTP6xA8sFJdQZhhbI9SEy18qjBfCx+vOpG8Wk7iSpg/nH7d
-         0IkjOkpuRneLILNLn3TctQD34kabBXD/Badd5aZRjm2dcB0DzpjARh7NpDENhdCYn/tT
-         Z7qpWJbhsGthWk7p0ILhMPdetX7sw0fJ1FViHTBDwSDvrldIh0/Mn4JzgPYhkSPnqxHX
-         LFSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F3BUSKbo828h2E1EKD/0gfSxmOX3Dp5mHkq+oGuT5sI=;
-        b=EIm8WigGSvIZTBfKKGV32iGjWCMhL9BTcCFtTHK6Fh/jjtPBHw60gQVBlZZV7SHT6V
-         +c27wLlYrQxINJxHgn0cZxbn89d8YikpBQWhT/dd27saj8NeoRqTkdJ19YwJhgbJR9TQ
-         EDy7I4DMMUy7zvsfz65sLqy6sxe1b65tCNBUuscfkESgTh4lejVYnCrGNne4gZZCGnJ+
-         MnwW6WCLUTNEh9wvBQrN1EVgT6CPiz/LD89PIjh4b3/XgYHT+QDpo+dV5DOirNyd9TS6
-         zVyIp+3JpqE3TKq2t45LsjJyruCFXfjQr3CNMOCFgMzl97n0IdlPEq+6NfzkolWkZgPz
-         K0FQ==
-X-Gm-Message-State: AOAM531Ig7jRgFJTdY2/gdkv+pNZkocsEmWnMQ0NxZ0FRCa0fuUUpAaN
-        HjLFl0yLAyeJIEkWjKeJkeYwyM5yE42ay2xtUWIUpw==
-X-Google-Smtp-Source: ABdhPJy51OGGplkyUbHUeHsNQH1b7HeY7QZvnWmpssXL38U2Xe6u/GNafSzxw8l5wwGBugpr0QHWMT5mAJVAQf8bE48=
-X-Received: by 2002:a67:690e:: with SMTP id e14mr4184975vsc.34.1589806266292;
- Mon, 18 May 2020 05:51:06 -0700 (PDT)
+        Mon, 18 May 2020 08:51:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgERMvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:51:24 -0400
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19158207D8;
+        Mon, 18 May 2020 12:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589806283;
+        bh=59VoFxWg86wvMXwZUsJGWlhU4ZYA2YVdpnEWpzS7DZE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TRlQTwf11+v0bpjUNl2t5dPXV5ZIgFjYItuEHgPDLLWI8nX/b3fI1Gf9oXF2MEkY+
+         ag3gxxuz76Dqxvfrl2+KlKkbDYuLczLDqjJr4Jr/MylKyy2pqFx2xqJ5fah7iXpxfv
+         0CUSaHum5Oyo+Swa4XBHPXOioS47ylD1QP5MYOTg=
+Received: by mail-io1-f44.google.com with SMTP id h10so10376232iob.10;
+        Mon, 18 May 2020 05:51:23 -0700 (PDT)
+X-Gm-Message-State: AOAM533kr8lVGMOlORWinukcrczWUHssUmdNBL5hHoMKBtqyNzGFur/Q
+        fdPYRdcAKX0Yo9N4/h56FVXHLNjJgB8owra7InY=
+X-Google-Smtp-Source: ABdhPJz9/6CkchQipSV8AM+pHvWaEqOIHqsO5Jiu/QyHeKgC98RsdhCrUuUpwXRVK59Pi3qeDsED7Bv2BcEqy1sJsHA=
+X-Received: by 2002:a5e:8705:: with SMTP id y5mr14514218ioj.142.1589806282417;
+ Mon, 18 May 2020 05:51:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <1588772671-19675-1-git-send-email-sartgarg@codeaurora.org>
- <1588772671-19675-2-git-send-email-sartgarg@codeaurora.org>
- <CAPDyKFo0CabC_O-NusH4tUzjnG37_XQhY=QNhgnkQMoTokfaQg@mail.gmail.com> <4db354d7-fff4-048e-dde5-647e8ba89a7d@intel.com>
-In-Reply-To: <4db354d7-fff4-048e-dde5-647e8ba89a7d@intel.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 18 May 2020 14:50:30 +0200
-Message-ID: <CAPDyKFqN8CeniJq5S9zCdYYR38DFyk0vKnCw3fi548tXvwbseg@mail.gmail.com>
-Subject: Re: [PATCH V1 1/2] mmc: sdhci: Introduce new quirk to use reserved timeout
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Sarthak Garg <sartgarg@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
+ <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
+ <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com> <4202ea20-6e51-31d3-44b1-3861798a8158@nvidia.com>
+In-Reply-To: <4202ea20-6e51-31d3-44b1-3861798a8158@nvidia.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 18 May 2020 14:51:11 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEpryfqk5eKxB5NrDcriEBRQKEHnDVZNBMfB4DY=708fw@mail.gmail.com>
+Message-ID: <CAMj1kXEpryfqk5eKxB5NrDcriEBRQKEHnDVZNBMfB4DY=708fw@mail.gmail.com>
+Subject: Re: [PATCH v6 09/10] arm64: efi: Export screen_info
+To:     Nikhil Mahale <nmahale@nvidia.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 at 13:45, Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Mon, 18 May 2020 at 06:25, Nikhil Mahale <nmahale@nvidia.com> wrote:
 >
-> On 18/05/20 12:39 pm, Ulf Hansson wrote:
-> > On Wed, 6 May 2020 at 15:53, Sarthak Garg <sartgarg@codeaurora.org> wrote:
+> On 5/13/20 7:56 PM, Nikhil Mahale wrote:
+> > On 3/20/20 3:16 AM, Michael Kelley wrote:
+> >> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:27 AM
+> >>>
+> >>> On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
+> >>>> From: Arnd Bergmann <arnd@arndb.de>
+> >>>>> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
+> >>>>>>
+> >>>>>> The Hyper-V frame buffer driver may be built as a module, and
+> >>>>>> it needs access to screen_info. So export screen_info.
+> >>>>>>
+> >>>>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> >>>>>
+> >>>>> Is there any chance of using a more modern KMS based driver for the screen
+> >>>>> than the old fbdev subsystem? I had hoped to one day completely remove
+> >>>>> support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
+> >>>>> architectures.
+> >>>>>
+> >>>>
+> >>>> The current hyperv_fb.c driver is all we have today for the synthetic Hyper-V
+> >>>> frame buffer device.  That driver builds and runs on both ARM64 and x86.
+> >>>>
+> >>>> I'm not knowledgeable about video/graphics drivers, but when you
+> >>>> say "a more modern KMS based driver", are you meaning one based on
+> >>>> DRM & KMS?  Does DRM make sense for a "dumb" frame buffer device?
+> >>>> Are there any drivers that would be a good pattern to look at?
+> >>>
+> >>> It used to be a lot harder to write a DRM driver compared to an fbdev
+> >>> driver, but this has changed to the opposite over the years.
+> >>>
+> >>> A fairly minimal example would be drivers/gpu/drm/pl111/pl111_drv.c
+> >>> or anything in drivers/gpu/drm/tiny/, but you may want to look at the
+> >>> other hypervisor platforms first, i.e drivers/gpu/drm/virtio/virtgpu_drv.c,
+> >>> drivers/gpu/drm/vmwgfx/vmwgfx_drv.c, drivers/gpu/drm/xen/xen_drm_front.c,
+> >>> drivers/gpu/drm/qxl/qxl_drv.c, and drivers/gpu/drm/bochs/bochs_drv.c.
+> >>>
 > >>
-> >> Introduce a new quirk for letting vendor drivers to use reserved
-> >> timeout value (0xF) in timeout control register.
+> >> Thanks for the pointers, especially for the other hypervisors.
 > >>
-> >> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> >> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
-> >> ---
-> >>  drivers/mmc/host/sdhci.c | 3 ++-
-> >>  drivers/mmc/host/sdhci.h | 5 +++++
-> >>  2 files changed, 7 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> >> index 1bb6b67..07528a9 100644
-> >> --- a/drivers/mmc/host/sdhci.c
-> >> +++ b/drivers/mmc/host/sdhci.c
-> >> @@ -967,7 +967,8 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd,
-> >>         }
-> >>
-> >>         if (count >= 0xF) {
-> >> -               if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT))
-> >> +               if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) ||
-> >> +               !(host->quirks2 & SDHCI_QUIRK2_USE_RESERVED_MAX_TIMEOUT))
+> > Sorry if anybody in 'to' or 'cc' is receiving this reply multiple times.
+> > I had configured by email client incorrectly to reply.
 > >
-> > I don't quite get how this can make your variant use 0xF rather than 0xE?
+> > screen_info is still useful with a modern KMS-based driver.  It exposes
+> > the mode parameters that the GOP driver chose.  This information is
+> > needed to implement seamless or glitchless boot, by both ensuring that
+> > the scanout parameters don't change and being able to read back the
+> > scanout image to populate the initial contents of the new surface.
 > >
-> > To me it looks like an updated conditional check to print a debug message, no?
+> > This works today on arches which implement (U)EFI and export
+> > screen_info, including x86 and powerpc, but doesn't work on arm or
+> > arm64.  As arm64 systems that implement UEFI with real GOP drivers
+> > become more prevalent, it would be nice to be have these features there
+> > as well.
 >
-> Probably need to introduce host->max_timeout_count, set it to 0xE in
-> sdhci_alloc_host(), and change sdhci_calc_timeout() to use it in place of
-> all the 0xE and 0xF constants.
+> In addition to this, even if a driver doesn't implement a framebuffer
+> console, or if it does but has an option to disable it, the driver still
+> needs to know whether the EFI console is using resources on the GPU so
+> it can avoid clobbering them. For example screen_info provides information
+> like offset and size of EFI console, using this information driver can
+> reserve memory used by console and prevent corruption on it.
+>
+> I think arm64 should export screen_info.
+>
 
-Yep, that seems like a reasonable approach to me as well.
-
-[...]
-
-Kind regards
-Uffe
+If there are reasons why KMS or fbdev drivers may need to access the
+information in screen_info, it should be exported. I don't think that
+is under debate here.
