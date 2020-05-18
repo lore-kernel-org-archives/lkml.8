@@ -2,79 +2,68 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4453DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6B82067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589805718;
-	bh=7Gcl8CxLYUZqi40aBTR3CzPq6V4hTVndF7rtbs0NsKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PNvhoq8D/ZzQSNcq4lTXAZ5VnjXlMhlGOGGE05y/dggds1Nyqasq8GAH8XB5oRNP/
-	 BIA6YrAwmSCTaKM3fxKSIrTutck/irEdLZric8gL7DA7QXV3G9hcuTL4JhZcFlp9Di
-	 q4cVUieiknG6e01fiZ0VcmH2qNQ51p7FVMHYfq5Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1EB1920674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:42:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sendgrid.net header.i=@sendgrid.net header.b="xdNNeWV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgERMl6 (ORCPT
+        id S1727117AbgERMmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:41:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgERMl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:41:57 -0400
-Received: from localhost (unknown [171.76.87.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F13F20674;
-        Mon, 18 May 2020 12:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589805715;
-        bh=7Gcl8CxLYUZqi40aBTR3CzPq6V4hTVndF7rtbs0NsKs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c2vl74HVWltqdykYkY9wQ2gMCi6i7hMYErgYRr9fSziuAcw3XnEU6tWx+src0dtLw
-         pQRwEBF6YG9WvSSs6ZxhWa91GDM1J/eIoVWBBuXBVU/lftiJBbmt7FvAOJK90fthsA
-         b6HWai/3D3LRhaLr1OAE8z+NyYPnjVtOG0OPvR9k=
-Date:   Mon, 18 May 2020 18:11:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com
-Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
-Message-ID: <20200518124145.GF374218@vkoul-mobl.Dlink>
-References: <cover.1589530082.git.eswara.kota@linux.intel.com>
+        Mon, 18 May 2020 08:42:36 -0400
+Received: from wrqvzcbt.outbound-mail.sendgrid.net ([149.72.236.183]:34035
+        "EHLO wrqvzcbt.outbound-mail.sendgrid.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726739AbgERMmg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:42:36 -0400
+X-Greylist: delayed 337 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 May 2020 08:42:35 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sendgrid.net; 
+        h=reply-to:from:to:subject:mime-version:content-type:content-transfer-encoding; 
+        s=smtpapi; bh=m1XLIw5LGZxCpAYtBrTdWH++MGggL0usDaCLAoyAdvA=; b=xd
+        NNeWV0jCMZoWvS2qgj97tDqr1KfZpsabhqlYOmhMlCM5m7MBtfnfib6ou1fwblHW
+        wFEiJ+t4/QRDFYUcJURsVrvIa5y6LhWzNgXvMOvd0YaMd15CpdNhFlnqPa3Vw3I8
+        uhM/8w0zV86WGTi70wTS5upJoqtCuQFL1fOmPPBPM=
+Received: by filter0362p1iad2.sendgrid.net with SMTP id filter0362p1iad2-25691-5EC2816A-1
+        2020-05-18 12:36:58.083443533 +0000 UTC m=+220364.904245777
+Received: from mail.com (unknown)
+        by ismtpd0015p1iad1.sendgrid.net (SG) with ESMTP id jY64jmW6T6CtV5FMnF_n0g
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:36:57.996 +0000 (UTC)
+Reply-To: adelenebreton@gmail.com
+From:   Richard Wahl <wahl-Richy@mail.com>
+To:     linux-kernel@vger.kernel.org
+Subject: DONATION!!!
+Date:   Mon, 18 May 2020 12:36:58 +0000 (UTC)
+Message-ID: <20200518123642.693A7B5CD58CFD5D@mail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1589530082.git.eswara.kota@linux.intel.com>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-SG-EID: UsLXQ589HNP4HLBydmD9pgHURQozLYm9XliudupI8YusB5eprdwlMqmJg1eYouCQCQJGit362FAXr3
+ 9l2zAvNez65a8a5OZtfKJJVO/LII61nWpwVFocWOvzynPignZBu9WW35A5Q0zirzQNhQY47l18uSJV
+ XDJ1oGAysizbmTJAoU1dFpVLby3c0aijycZr6bEainW39i8/uwU+icCn9O3ZwVjBLxhBcJX2uXaFrl
+ E=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-05-20, 16:13, Dilip Kota wrote:
-> This patch series adds Intel ComboPhy driver, respective yaml schemas
-> 
-> Changes on v8:
->   As per PHY Maintainer's request add description in comments for doing
->   register access through register map framework.
-> 
-> Changes on v7:
->   As per System control driver maintainer's inputs remove
->     fwnode_to_regmap() definition and use device_node_get_regmap()
->     
-> Changes on v6:
->   Rebase patches on the latest maintainer's branch
->   https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
+Hello linux-kernel,
 
-Acked-By: Vinod Koul <vkoul@kernel.org>
+you have a donation of $3,000,000.00 ( 3 million dollars).
+My name is Richard Wahl from the united states. I won the America=20
+lottery worth $533 million and I am donating a portion of it to=20
+just 10 lucky people and a few Orphanage homes as a memorandum of=20
+goodwill to humanity. and also as a way of assistance over the=20
+COVID 19 Pandemic.
+If you are a recipient of this mail linux-kernel@vger.kernel.org=20=20
+contact me on  adelenebreton@gmail.com for more details and=20
+claim.
 
-
--- 
-~Vinod
+ I may be very busy but I will take out time to respond to you.
