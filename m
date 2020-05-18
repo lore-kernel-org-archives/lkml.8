@@ -2,241 +2,174 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C7620787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3340F206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uCUhiNFd"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="JpzifDtA";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="a8ZUTptE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgEROrJ (ORCPT
+        id S1727944AbgEROsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:47:09 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:37886 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726940AbgEROrI (ORCPT
+        Mon, 18 May 2020 10:48:22 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:26940 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726958AbgEROsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:47:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589813227; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=UGTXBvl9Wc61eV/J0mp1IY6DwD5usu85aOYigFBHuko=; b=uCUhiNFdVWs9CkG5ydmu4VBKi6yXMhWYHWL1RBKoJr4UcgHw+3mqZmF8t5m2SrMTYBJSmvZ7
- XfjUnxWEq1ftSTj71lY63xtddv4hW9i7QGK+i4DOSZE6NUAIORjg6z3OvZAkfKHGSixH30Q1
- kg7+jcYHI2U/kfMhxuWKvItRQ7M=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec29feb.7f88f86241f0-smtp-out-n01;
- Mon, 18 May 2020 14:47:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 87776C43637; Mon, 18 May 2020 14:47:07 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7700CC433F2;
-        Mon, 18 May 2020 14:47:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7700CC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 18 May 2020 08:47:03 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 9/9] drm/msm/a6xx: update a6xx_hw_init for A640 and
- A650
-Message-ID: <20200518144703.GF3915@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200423210946.28867-1-jonathan@marek.ca>
- <20200423210946.28867-10-jonathan@marek.ca>
+        Mon, 18 May 2020 10:48:21 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IEagIe015584;
+        Mon, 18 May 2020 07:48:02 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=agOclweCAmSeP4HPLHRLk9sAhs6V1J0PtgvVVGqcWrw=;
+ b=JpzifDtAretCR97h9nuLlseyIVdDLYOOIvJl0+50aJ9DfQtDK1Pgg59xwozJBlLO2Raf
+ BoApHuVH+0MjwzinDyq6zbcZo4UTh0DFEx/pdECfnk0NUNiwzZo3vBF/mb1HC9aTiyhC
+ Dk3H9tv2Z0ekhyJYBNZE55nyU3KkkWICVAU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 313013cj4u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 18 May 2020 07:48:02 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 18 May 2020 07:48:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SK2Fqw3W38Nb9A+Vv3fDs3KY1YCk7ij7b7boUAf1hQ5+gXBu8aQ6MaQGFADRTJ6aI5wSzv/tpcDx47nLPD1rZjo72mc/Hw8TncVwXDJi8vzsRBXdckyeiT2QsfzMco4clF+D0UiMvuWVCIlC/1Lmx3oxVvWLpe0SBKsdaBVaClnU4E+Nhcxj52Oyzj6lMs74p/MMxhmfnvLXxLhlFC6skAQ6Y4QiWoiet0lAILlvEmBznmi0ZoWtB07i757qP2BGLT+r4eWyRUTWqaSD9SERRb4P39cx9CJrmtpplZVX0gEcyfZ6vxBXYF3iMXukab/7UL6MsrvUnp4mGDgw3qLD0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=agOclweCAmSeP4HPLHRLk9sAhs6V1J0PtgvVVGqcWrw=;
+ b=JkDhvHv49igDdW8bPQv/s+2lHRiu9g86fkabuhXJIjbN0Keoyl2Fr/7vpLauurdjEjDiuIW9L/A6qfUzZjdNaJd6zYiTjEQNPghzQwPmoqQeX6ruYBLKb3KQf85B2hpLY+Zwhlh3bD9sDcFslB3BOeUCUjfteConrZSeuNjz0PzWxeIQimmQfLG/rfDP4SUkmyK1vhrVqEhRgpQEMdDLgbfuvPIAdh8NopNOD7Ea9ew8joIr3ctITg3TDI2aOyOVxZ07m9t7Jcc9hGHKGMipoddvk3MYOfOr85q1zqnJosJ3NE4q52tjFBenLs95H35bCK1YsESQQuYgeGsmakwqMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=agOclweCAmSeP4HPLHRLk9sAhs6V1J0PtgvVVGqcWrw=;
+ b=a8ZUTptEaI4/G5bFYuJ8B82z2IM9RMPZsTUoPxh0aWfGOcs76crwQEyWK/pgow7pWG7t9tSOcFHApCGsgiWUjvgGGuWtHcbXtqOtUFSGF8mepVMi6D6RtJ2XRSegnMJu/8r6YbtHbi3L/EcD6PQWoKbSp/eF+vtJmRI+9urAgsA=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB2328.namprd15.prod.outlook.com (2603:10b6:a02:8b::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Mon, 18 May
+ 2020 14:47:59 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301%7]) with mapi id 15.20.3000.034; Mon, 18 May 2020
+ 14:47:59 +0000
+Subject: Re: [PATCH v2 bpf-next 6/7] bpf: add support for %pT format specifier
+ for bpf_trace_printk() helper
+To:     Alan Maguire <alan.maguire@oracle.com>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <bpf@vger.kernel.org>,
+        <joe@perches.com>, <linux@rasmusvillemoes.dk>,
+        <arnaldo.melo@gmail.com>, <kafai@fb.com>, <songliubraving@fb.com>,
+        <andriin@fb.com>, <john.fastabend@gmail.com>,
+        <kpsingh@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
+ <1589263005-7887-7-git-send-email-alan.maguire@oracle.com>
+ <040b71a1-9bbf-9a55-6f1a-e7b8c36f8c6e@fb.com>
+ <alpine.LRH.2.21.2005181000520.893@localhost>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <91960eea-fb43-c26d-f8bb-256d37d5903f@fb.com>
+Date:   Mon, 18 May 2020 07:47:56 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
+In-Reply-To: <alpine.LRH.2.21.2005181000520.893@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR08CA0033.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::46) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423210946.28867-10-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from MacBook-Pro-52.local (2620:10d:c090:400::5:d485) by BYAPR08CA0033.namprd08.prod.outlook.com (2603:10b6:a03:100::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25 via Frontend Transport; Mon, 18 May 2020 14:47:58 +0000
+X-Originating-IP: [2620:10d:c090:400::5:d485]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7d424ae4-ecea-43da-c292-08d7fb3a7568
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2328:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2328EB84FC142B625C6016C1D3B80@BYAPR15MB2328.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 04073E895A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VdJQxgZ3xoSiRP19KJ7OW4ZyRuqSOwy9CSbIYUvBcS3U6WkWOD8+35uQijSv4f2fUtWffaUo9JdjQMqaFKdcRbv7Prxg56g9ctVbIsqfxNmoyNv03TUndACB9hNAk6Iy2btTD76eIf8MFje2vy0cIrF9DSyr0fT1nRgrYk3b2muA800Tv8MMuzqrS5/KDu7SKAW8GpimBQkj5yHV76+DcpeB4OIhg8IfRG65B0Wm1o/xyNgAIu2+sQhJdDhLgFD5mp456lCB0ErVBcoc+JhEA+GbianfDejobsh+V9gbKO6yzj3SUPwNG+tL+gQL4pFpjMdoV3olBCnfQfTEYY8WslaiJij4cGJJh9GGcKwF3jXgI6/bole4YqULAFU6vafDKBtS8Dwp7h1/FnM6V7YIaHBb39ZzlFfS3k0tEoRxKI0hXW5tTOioVzPWUtInZKOY5EkbxL2+kIoZRoeOEo7E9xe+vJOrMvAsmjylZYsT6TVwN4olo5OX8LVTCn8KvTLt
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(366004)(376002)(346002)(396003)(16526019)(86362001)(31696002)(31686004)(316002)(36756003)(2616005)(66476007)(66556008)(66946007)(52116002)(6506007)(53546011)(186003)(4326008)(8676002)(6512007)(5660300002)(8936002)(478600001)(2906002)(6916009)(6486002)(7416002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: ZAPQSK2VkvvDv3jCN96lsGUt2vjEeflIGq8NXDhcwAB5x5iitaTyRwYPR7D6Jr1kr7kfaZeuFVaoW+jNl+TaRzhyB1KlHK01hu512hXCtjvgjpyjr1Z/O2xp7+lyhHf5+XHQni+/6yK/XY7kMX9zOmOoJgmwGc326hAeCAxoZw0toLEgaxWUU3Nm/odzNxj2Rf3dHRZrKgUQRtiDFlDW7PtHA4JRevwi5vXdQC6hF70l/lWxat5wNyHe+AYKHznvFz9t+H9dOnz0j2cF/Z+X8YDezFzZp8I5OXWUpoRJJdYQqpuQScBXRHS3xEHrwcYJf7fSBsngFaGzD6m5vVOdvfDEYv6CnPRKcGz5+kYRmprGLD7B56RXxJM+C8uCVH5/GILQAgXjSqOq/t11uthwmF8pOHBxDAfFTKorJpYYbWr+qT5p93AIDa2oKQRRGhitR4nYDF2RmJ+lJnP1bVb4FyygFyJr7Arbqjq7NBeBGBpjxSKLELezw6FNHv0v19hDI2ZGAHfyIm4DbGebzRyKOA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d424ae4-ecea-43da-c292-08d7fb3a7568
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2020 14:47:59.5297
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mDVAmXe7zKLGppWWunRbqgoYrXOn66IKrZIwiCtFgLK8T0OJIoQgkD3/LkC2HZvL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2328
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 phishscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 spamscore=0
+ adultscore=0 clxscore=1015 impostorscore=0 mlxscore=0 malwarescore=0
+ mlxlogscore=999 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005180129
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 05:09:21PM -0400, Jonathan Marek wrote:
-> Adreno 640 and 650 GPUs need some registers set differently.
 
-As before, make sure you send the XML updates up so the database stays current.
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx.xml.h | 14 +++++++
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 56 ++++++++++++++++++++++-----
->  2 files changed, 61 insertions(+), 9 deletions(-)
+On 5/18/20 2:10 AM, Alan Maguire wrote:
+> On Wed, 13 May 2020, Yonghong Song wrote:
 > 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx.xml.h b/drivers/gpu/drm/msm/adreno/a6xx.xml.h
-> index ed78fee2a262..47840b73cdda 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx.xml.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx.xml.h
-> @@ -1047,6 +1047,8 @@ enum a6xx_tex_type {
->  
->  #define REG_A6XX_CP_MISC_CNTL					0x00000840
->  
-> +#define REG_A6XX_CP_APRIV_CNTL					0x00000844
-> +
->  #define REG_A6XX_CP_ROQ_THRESHOLDS_1				0x000008c1
->  
->  #define REG_A6XX_CP_ROQ_THRESHOLDS_2				0x000008c2
-> @@ -1764,6 +1766,8 @@ static inline uint32_t A6XX_CP_PROTECT_REG_MASK_LEN(uint32_t val)
->  
->  #define REG_A6XX_RBBM_VBIF_CLIENT_QOS_CNTL			0x00000010
->  
-> +#define REG_A6XX_RBBM_GBIF_CLIENT_QOS_CNTL			0x00000011
-> +
->  #define REG_A6XX_RBBM_INTERFACE_HANG_INT_CNTL			0x0000001f
->  
->  #define REG_A6XX_RBBM_INT_CLEAR_CMD				0x00000037
-> @@ -2418,6 +2422,16 @@ static inline uint32_t A6XX_UCHE_CLIENT_PF_PERFSEL(uint32_t val)
->  
->  #define REG_A6XX_TPL1_NC_MODE_CNTL				0x0000b604
->  
-> +#define REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_0			0x0000b608
-> +
-> +#define REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_1			0x0000b609
-> +
-> +#define REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_2			0x0000b60a
-> +
-> +#define REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_3			0x0000b60b
-> +
-> +#define REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_4			0x0000b60c
-> +
->  #define REG_A6XX_TPL1_PERFCTR_TP_SEL_0				0x0000b610
->  
->  #define REG_A6XX_TPL1_PERFCTR_TP_SEL_1				0x0000b611
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index a860d4970e10..e1eb34fa3a99 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -414,7 +414,17 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
->  		a6xx_set_hwcg(gpu, true);
->  
->  	/* VBIF/GBIF start*/
-> -	gpu_write(gpu, REG_A6XX_RBBM_VBIF_CLIENT_QOS_CNTL, 0x3);
-> +	if (adreno_is_a640(adreno_gpu) || adreno_is_a650(adreno_gpu)) {
-> +		gpu_write(gpu, REG_A6XX_GBIF_QSB_SIDE0, 0x00071620);
-> +		gpu_write(gpu, REG_A6XX_GBIF_QSB_SIDE1, 0x00071620);
-> +		gpu_write(gpu, REG_A6XX_GBIF_QSB_SIDE2, 0x00071620);
-> +		gpu_write(gpu, REG_A6XX_GBIF_QSB_SIDE3, 0x00071620);
-> +		gpu_write(gpu, REG_A6XX_GBIF_QSB_SIDE3, 0x00071620);
-> +		gpu_write(gpu, REG_A6XX_RBBM_GBIF_CLIENT_QOS_CNTL, 0x3);
-> +	} else {
-> +		gpu_write(gpu, REG_A6XX_RBBM_VBIF_CLIENT_QOS_CNTL, 0x3);
-> +	}
-> +
->  	if (adreno_is_a630(adreno_gpu))
->  		gpu_write(gpu, REG_A6XX_VBIF_GATE_OFF_WRREQ_EN, 0x00000009);
->  
-> @@ -429,25 +439,35 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
->  	gpu_write(gpu, REG_A6XX_UCHE_WRITE_THRU_BASE_LO, 0xfffff000);
->  	gpu_write(gpu, REG_A6XX_UCHE_WRITE_THRU_BASE_HI, 0x0001ffff);
->  
-> -	/* Set the GMEM VA range [0x100000:0x100000 + gpu->gmem - 1] */
-> -	gpu_write64(gpu, REG_A6XX_UCHE_GMEM_RANGE_MIN_LO,
-> -		REG_A6XX_UCHE_GMEM_RANGE_MIN_HI, 0x00100000);
-> +	if (!adreno_is_a650(adreno_gpu)) {
-> +		/* Set the GMEM VA range [0x100000:0x100000 + gpu->gmem - 1] */
-> +		gpu_write64(gpu, REG_A6XX_UCHE_GMEM_RANGE_MIN_LO,
-> +			REG_A6XX_UCHE_GMEM_RANGE_MIN_HI, 0x00100000);
->  
-> -	gpu_write64(gpu, REG_A6XX_UCHE_GMEM_RANGE_MAX_LO,
-> -		REG_A6XX_UCHE_GMEM_RANGE_MAX_HI,
-> -		0x00100000 + adreno_gpu->gmem - 1);
-> +		gpu_write64(gpu, REG_A6XX_UCHE_GMEM_RANGE_MAX_LO,
-> +			REG_A6XX_UCHE_GMEM_RANGE_MAX_HI,
-> +			0x00100000 + adreno_gpu->gmem - 1);
-> +	}
->  
->  	gpu_write(gpu, REG_A6XX_UCHE_FILTER_CNTL, 0x804);
->  	gpu_write(gpu, REG_A6XX_UCHE_CACHE_WAYS, 0x4);
->  
-> -	gpu_write(gpu, REG_A6XX_CP_ROQ_THRESHOLDS_2, 0x010000c0);
-> +	if (adreno_is_a640(adreno_gpu) || adreno_is_a650(adreno_gpu))
-> +		gpu_write(gpu, REG_A6XX_CP_ROQ_THRESHOLDS_2, 0x02000140);
-> +	else
-> +		gpu_write(gpu, REG_A6XX_CP_ROQ_THRESHOLDS_2, 0x010000c0);
->  	gpu_write(gpu, REG_A6XX_CP_ROQ_THRESHOLDS_1, 0x8040362c);
->  
->  	/* Setting the mem pool size */
->  	gpu_write(gpu, REG_A6XX_CP_MEM_POOL_SIZE, 128);
->  
->  	/* Setting the primFifo thresholds default values */
-> -	gpu_write(gpu, REG_A6XX_PC_DBG_ECO_CNTL, (0x300 << 11));
-> +	if (adreno_is_a650(adreno_gpu))
-> +		gpu_write(gpu, REG_A6XX_PC_DBG_ECO_CNTL, 0x00300000);
-> +	else if (adreno_is_a640(adreno_gpu))
-> +		gpu_write(gpu, REG_A6XX_PC_DBG_ECO_CNTL, 0x00200000);
-> +	else
-> +		gpu_write(gpu, REG_A6XX_PC_DBG_ECO_CNTL, (0x300 << 11));
->  
->  	/* Set the AHB default slave response to "ERROR" */
->  	gpu_write(gpu, REG_A6XX_CP_AHB_CNTL, 0x1);
-> @@ -471,6 +491,19 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
->  
->  	gpu_write(gpu, REG_A6XX_UCHE_CLIENT_PF, 1);
->  
-> +	/* Set weights for bicubic filtering */
-> +	if (adreno_is_a650(adreno_gpu)) {
-> +		gpu_write(gpu, REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_0, 0);
-> +		gpu_write(gpu, REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_1,
-> +			0x3fe05ff4);
-> +		gpu_write(gpu, REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_2,
-> +			0x3fa0ebee);
-> +		gpu_write(gpu, REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_3,
-> +			0x3f5193ed);
-> +		gpu_write(gpu, REG_A6XX_TPL1_BICUBIC_WEIGHTS_TABLE_4,
-> +			0x3f0243f0);
-> +	}
-> +
->  	/* Protect registers from the CP */
->  	gpu_write(gpu, REG_A6XX_CP_PROTECT_CNTL, 0x00000003);
->  
-> @@ -508,6 +541,11 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
->  			A6XX_PROTECT_RDONLY(0x980, 0x4));
->  	gpu_write(gpu, REG_A6XX_CP_PROTECT(25), A6XX_PROTECT_RW(0xa630, 0x0));
->  
-> +	if (adreno_is_a650(adreno_gpu)) {
-> +		gpu_write(gpu, REG_A6XX_CP_APRIV_CNTL,
-> +			(1 << 6) | (1 << 5) | (1 << 3) | (1 << 2) | (1 << 1));
-> +	}
-> +
->  	/* Enable interrupts */
->  	gpu_write(gpu, REG_A6XX_RBBM_INT_0_MASK, A6XX_INT_MASK);
->  
-> -- 
-> 2.26.1
+>>
+>>> +				while (isbtffmt(fmt[i]))
+>>> +					i++;
+>>
+>> The pointer passed to the helper may not be valid pointer. I think you
+>> need to do a probe_read_kernel() here. Do an atomic memory allocation
+>> here should be okay as this is mostly for debugging only.
+>>
 > 
+> Are there other examples of doing allocations in program execution
+> context? I'd hate to be the first to introduce one if not. I was hoping
+> I could get away with some per-CPU scratch space. Most data structures
+> will fit within a small per-CPU buffer, but if multiple copies
+> are required, performance isn't the key concern. It will make traversing
+> the buffer during display a bit more complex but I think avoiding
+> allocation might make that complexity worth it. The other thought I had
+> was we could carry out an allocation associated with the attach,
+> but that's messy as it's possible run-time might determine the type for
+> display (and thus the amount of the buffer we need to copy safely).
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+percpu buffer definitely better. In fact, I am using percpu buffer
+in bpf_seq_printf() helper. Yes, you will need to handling contention
+though. I guess we can do the same thing here, return -EBUSY so bpf
+program can react properly (retry, or just print error, etc.)
+if there is a contention.
+
+> 
+> Great news about LLVM support for __builtin_btf_type_id()!
+
+Thanks. Hopefully this will make implementation easier.
+
+> 
+> Thanks!
+> 
+> Alan
+> 
