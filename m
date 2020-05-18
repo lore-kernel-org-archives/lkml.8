@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F808C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA04C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E227420715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E61A20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823992;
-	bh=OpPKoHVeDi4/OcNJsXXm6symaGEhzbPOeDST53YmueU=;
+	s=default; t=1589823995;
+	bh=MIcijl7c7wJLvGMHBOy1pNw7+Kp/EwThWXFFjm0CaiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lx6/vT9ACzGtUuWSIghQMuTfqQE8bF0gLx0C8shuN82/rzqHhhue3OgarUUSc6e/i
-	 YZ7yDYQULYPcZhkVFgv6fTXmr8ddRJ6WhsHyQTGpBHK7s9Hpe27f/jtH132mxG0eNc
-	 yLfnHcm1qLBvI57gnMUpncyGO1SpMkedIAj9Ck3Q=
+	b=na9QtkGPbATPMKIV4qR8KBvgJwOuUmPK0Hfy15Q9yO16Nn4Zn/6u4tVqIsFMTdD49
+	 x6q0LdyzvQ5GUQ6H2XdoR9DpnRIks2rcwfmgPCoPKxPg+x4nbKPN/EJs898mIcR7L4
+	 puXnZ/i4vcx34hqycrktWOOeehRiflQbpF7VWt4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgERRqa (ORCPT
+        id S1730105AbgERRqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46036 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730081AbgERRq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:46:26 -0400
+        id S1730088AbgERRq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1168C20674;
-        Mon, 18 May 2020 17:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B0B820671;
+        Mon, 18 May 2020 17:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823984;
-        bh=OpPKoHVeDi4/OcNJsXXm6symaGEhzbPOeDST53YmueU=;
+        s=default; t=1589823987;
+        bh=MIcijl7c7wJLvGMHBOy1pNw7+Kp/EwThWXFFjm0CaiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dROKrW8m/7DpY2Pbe0U3ITJoln/czoTma2NQTdyHXvqhPoj132w724KFgOWf5iFt6
-         nxQXYuS5BXAXdykcYlzJ4ft8zxelsUxQI9N1YS6GARY4vAwysvXUasosZWFXNj+DyS
-         zs2dokMazIHzIRr9RoCpBxGZG+N2VMXTaQVmau04=
+        b=bBUqjR/tGmFDkbguOokF24bZ+/ERJ1tyqv+lNo5O7uznFMZmsV0h/D/i0bKHdpTsm
+         pZk2SMCHCS7tAF5EfJYqCFaXv63M8ZKiFrbR5CuO0jfghkGBJolYPykOn4Np5cniWm
+         4cXqEw1ptljG02beesuVEB9zi0jb6cozP/lSuS40=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Vroon <chainsaw@gentoo.org>,
-        Sergey Kvachonok <ravenexp@gmail.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 4.14 024/114] coredump: fix crash when umh is disabled
-Date:   Mon, 18 May 2020 19:35:56 +0200
-Message-Id: <20200518173508.098691204@linuxfoundation.org>
+        stable@vger.kernel.org, George Spelvin <lkml@sdf.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.14 025/114] batman-adv: fix batadv_nc_random_weight_tq
+Date:   Mon, 18 May 2020 19:35:57 +0200
+Message-Id: <20200518173508.260752094@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -61,123 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: George Spelvin <lkml@sdf.org>
 
-commit 3740d93e37902b31159a82da2d5c8812ed825404 upstream.
+commit fd0c42c4dea54335967c5a86f15fc064235a2797 upstream.
 
-Commit 64e90a8acb859 ("Introduce STATIC_USERMODEHELPER to mediate
-call_usermodehelper()") added the optiont to disable all
-call_usermodehelper() calls by setting STATIC_USERMODEHELPER_PATH to
-an empty string. When this is done, and crashdump is triggered, it
-will crash on null pointer dereference, since we make assumptions
-over what call_usermodehelper_exec() did.
+and change to pseudorandom numbers, as this is a traffic dithering
+operation that doesn't need crypto-grade.
 
-This has been reported by Sergey when one triggers a a coredump
-with the following configuration:
+The previous code operated in 4 steps:
 
-```
-CONFIG_STATIC_USERMODEHELPER=y
-CONFIG_STATIC_USERMODEHELPER_PATH=""
-kernel.core_pattern = |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %e
-```
+1. Generate a random byte 0 <= rand_tq <= 255
+2. Multiply it by BATADV_TQ_MAX_VALUE - tq
+3. Divide by 255 (= BATADV_TQ_MAX_VALUE)
+4. Return BATADV_TQ_MAX_VALUE - rand_tq
 
-The way disabling the umh was designed was that call_usermodehelper_exec()
-would just return early, without an error. But coredump assumes
-certain variables are set up for us when this happens, and calls
-ile_start_write(cprm.file) with a NULL file.
+This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
+value between 0/255 and 255/255.
 
-[    2.819676] BUG: kernel NULL pointer dereference, address: 0000000000000020
-[    2.819859] #PF: supervisor read access in kernel mode
-[    2.820035] #PF: error_code(0x0000) - not-present page
-[    2.820188] PGD 0 P4D 0
-[    2.820305] Oops: 0000 [#1] SMP PTI
-[    2.820436] CPU: 2 PID: 89 Comm: a Not tainted 5.7.0-rc1+ #7
-[    2.820680] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
-[    2.821150] RIP: 0010:do_coredump+0xd80/0x1060
-[    2.821385] Code: e8 95 11 ed ff 48 c7 c6 cc a7 b4 81 48 8d bd 28 ff
-ff ff 89 c2 e8 70 f1 ff ff 41 89 c2 85 c0 0f 84 72 f7 ff ff e9 b4 fe ff
-ff <48> 8b 57 20 0f b7 02 66 25 00 f0 66 3d 00 8
-0 0f 84 9c 01 00 00 44
-[    2.822014] RSP: 0000:ffffc9000029bcb8 EFLAGS: 00010246
-[    2.822339] RAX: 0000000000000000 RBX: ffff88803f860000 RCX: 000000000000000a
-[    2.822746] RDX: 0000000000000009 RSI: 0000000000000282 RDI: 0000000000000000
-[    2.823141] RBP: ffffc9000029bde8 R08: 0000000000000000 R09: ffffc9000029bc00
-[    2.823508] R10: 0000000000000001 R11: ffff88803dec90be R12: ffffffff81c39da0
-[    2.823902] R13: ffff88803de84400 R14: 0000000000000000 R15: 0000000000000000
-[    2.824285] FS:  00007fee08183540(0000) GS:ffff88803e480000(0000) knlGS:0000000000000000
-[    2.824767] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.825111] CR2: 0000000000000020 CR3: 000000003f856005 CR4: 0000000000060ea0
-[    2.825479] Call Trace:
-[    2.825790]  get_signal+0x11e/0x720
-[    2.826087]  do_signal+0x1d/0x670
-[    2.826361]  ? force_sig_info_to_task+0xc1/0xf0
-[    2.826691]  ? force_sig_fault+0x3c/0x40
-[    2.826996]  ? do_trap+0xc9/0x100
-[    2.827179]  exit_to_usermode_loop+0x49/0x90
-[    2.827359]  prepare_exit_to_usermode+0x77/0xb0
-[    2.827559]  ? invalid_op+0xa/0x30
-[    2.827747]  ret_from_intr+0x20/0x20
-[    2.827921] RIP: 0033:0x55e2c76d2129
-[    2.828107] Code: 2d ff ff ff e8 68 ff ff ff 5d c6 05 18 2f 00 00 01
-c3 0f 1f 80 00 00 00 00 c3 0f 1f 80 00 00 00 00 e9 7b ff ff ff 55 48 89
-e5 <0f> 0b b8 00 00 00 00 5d c3 66 2e 0f 1f 84 0
-0 00 00 00 00 0f 1f 40
-[    2.828603] RSP: 002b:00007fffeba5e080 EFLAGS: 00010246
-[    2.828801] RAX: 000055e2c76d2125 RBX: 0000000000000000 RCX: 00007fee0817c718
-[    2.829034] RDX: 00007fffeba5e188 RSI: 00007fffeba5e178 RDI: 0000000000000001
-[    2.829257] RBP: 00007fffeba5e080 R08: 0000000000000000 R09: 00007fee08193c00
-[    2.829482] R10: 0000000000000009 R11: 0000000000000000 R12: 000055e2c76d2040
-[    2.829727] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    2.829964] CR2: 0000000000000020
-[    2.830149] ---[ end trace ceed83d8c68a1bf1 ]---
-```
+But!  The intermediate value between steps 3 and 4 is stored in a u8
+variable.  So it's truncated, and most of the time, is less than 255, after
+which the division produces 0.  Specifically, if tq is odd, the product is
+always even, and can never be 255.  If tq is even, there's exactly one
+random byte value that will produce a product byte of 255.
 
-Cc: <stable@vger.kernel.org> # v4.11+
-Fixes: 64e90a8acb85 ("Introduce STATIC_USERMODEHELPER to mediate call_usermodehelper()")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=199795
-Reported-by: Tony Vroon <chainsaw@gentoo.org>
-Reported-by: Sergey Kvachonok <ravenexp@gmail.com>
-Tested-by: Sergei Trofimovich <slyfox@gentoo.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Link: https://lore.kernel.org/r/20200416162859.26518-1-mcgrof@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thus, the return value is 255 (511/512 of the time) or 254 (1/512
+of the time).
+
+If we assume that the truncation is a bug, and the code is meant to scale
+the input, a simpler way of looking at it is that it's returning a random
+value between tq and BATADV_TQ_MAX_VALUE, inclusive.
+
+Well, we have an optimized function for doing just that.
+
+Fixes: 3c12de9a5c75 ("batman-adv: network coding - code and transmit packets if possible")
+Signed-off-by: George Spelvin <lkml@sdf.org>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/coredump.c |    8 ++++++++
- kernel/umh.c  |    5 +++++
- 2 files changed, 13 insertions(+)
+ net/batman-adv/network-coding.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -758,6 +758,14 @@ void do_coredump(const siginfo_t *siginf
- 	if (displaced)
- 		put_files_struct(displaced);
- 	if (!dump_interrupted()) {
-+		/*
-+		 * umh disabled with CONFIG_STATIC_USERMODEHELPER_PATH="" would
-+		 * have this set to NULL.
-+		 */
-+		if (!cprm.file) {
-+			pr_info("Core dump to |%s disabled\n", cn.corename);
-+			goto close_fail;
-+		}
- 		file_start_write(cprm.file);
- 		core_dumped = binfmt->core_dump(&cprm);
- 		file_end_write(cprm.file);
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -404,6 +404,11 @@ EXPORT_SYMBOL(call_usermodehelper_setup)
-  * Runs a user-space application.  The application is started
-  * asynchronously if wait is not set, and runs as a child of system workqueues.
-  * (ie. it runs with full root capabilities and optimized affinity).
-+ *
-+ * Note: successful return value does not guarantee the helper was called at
-+ * all. You can't rely on sub_info->{init,cleanup} being called even for
-+ * UMH_WAIT_* wait modes as STATIC_USERMODEHELPER_PATH="" turns all helpers
-+ * into a successful no-op.
+--- a/net/batman-adv/network-coding.c
++++ b/net/batman-adv/network-coding.c
+@@ -1017,15 +1017,8 @@ static struct batadv_nc_path *batadv_nc_
   */
- int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
+ static u8 batadv_nc_random_weight_tq(u8 tq)
  {
+-	u8 rand_val, rand_tq;
+-
+-	get_random_bytes(&rand_val, sizeof(rand_val));
+-
+ 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
+-	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
+-
+-	/* normalize the randomized packet loss */
+-	rand_tq /= BATADV_TQ_MAX_VALUE;
++	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
+ 
+ 	/* convert to (randomized) estimated tq again */
+ 	return BATADV_TQ_MAX_VALUE - rand_tq;
 
 
