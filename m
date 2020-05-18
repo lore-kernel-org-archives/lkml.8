@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03B120674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3573520873
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824159;
-	bh=typIq0/seAP8Czi1rdqH4ZdtGRHRMXR+6Z2dgm9bv+g=;
+	s=default; t=1589824161;
+	bh=GT4WXSOw4+QI6BqNdM+u34S+tWwVn/JTGFbOfoE6UY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bDbABhanNTILnOV+J0huMt97OaYVMmgUrZos+zv1DAjfY003kOOEFGTt91qhva3+D
-	 QRLdhDAszMj67V7/6pzuj9NC39oNFOX7Y+VzbUiAllzrUrpI5Ra7TH9K5p7jjsZoSl
-	 5FyVmiCshXqLU8FrRz17qwVZHG5mW7+r9HYmngjI=
+	b=l1/xLjV3HEIuhUOY0LqJgAP04cc8luS5IhdUKOATYOB79kyaI/Hj++oh/8m9nJY2a
+	 uqaVRwUpOduygY9kxI2z9pJKdAe7qQKWQiKbYIpx+MKtvfThr4evTKa7+7lt7xIcfe
+	 Qc6KzO05sHXcFFobT+srM144h1AauCLJtmnmoGvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730506AbgERRtS (ORCPT
+        id S1730035AbgERRtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729506AbgERRtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:10 -0400
+        id S1729669AbgERRtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6432420671;
-        Mon, 18 May 2020 17:49:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9AE920657;
+        Mon, 18 May 2020 17:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824149;
-        bh=typIq0/seAP8Czi1rdqH4ZdtGRHRMXR+6Z2dgm9bv+g=;
+        s=default; t=1589824152;
+        bh=GT4WXSOw4+QI6BqNdM+u34S+tWwVn/JTGFbOfoE6UY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PGeB2E8G1kDb/WKcOmt8XSDvjdeugzB9wOybZAxsvbZfc+QYWc5nDo+KMjkd02Akq
-         lffTmNmz1IlIcBZEf2yLsBCGiIDejy1+m7zw7xqN1SvGGABeK450vmii3rmV1n21Zt
-         NunalyG19vVfZE0zJLEVUoCHdONw6jy415Ec4+Sg=
+        b=w/8nrZxe9LkijW4EF0A1m8G8x4WujOSnETjYphcdfeNOQhCjjeurATVrsgmDfCyWh
+         dHcf/q7hkK2nOZ+KLVA/tC4c1zUkAGz3rJ+pX8X1ZwR59v+lrxysAfxFO4j2iWVb+z
+         ACPp2GgHsnuEDxI0BroOSijDZMWMT0Iwc6rKSiEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, butt3rflyh4ck <butterflyhuangxx@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 092/114] ALSA: rawmidi: Fix racy buffer resize under concurrent accesses
-Date:   Mon, 18 May 2020 19:37:04 +0200
-Message-Id: <20200518173518.719876322@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 4.14 093/114] ARM: dts: dra7: Fix bus_dma_limit for PCIe
+Date:   Mon, 18 May 2020 19:37:05 +0200
+Message-Id: <20200518173518.816338276@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -59,131 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit c1f6e3c818dd734c30f6a7eeebf232ba2cf3181d upstream.
+commit 90d4d3f4ea45370d482fa609dbae4d2281b4074f upstream.
 
-The rawmidi core allows user to resize the runtime buffer via ioctl,
-and this may lead to UAF when performed during concurrent reads or
-writes: the read/write functions unlock the runtime lock temporarily
-during copying form/to user-space, and that's the race window.
+Even though commit cfb5d65f2595 ("ARM: dts: dra7: Add bus_dma_limit
+for L3 bus") added bus_dma_limit for L3 bus, the PCIe controller
+gets incorrect value of bus_dma_limit.
 
-This patch fixes the hole by introducing a reference counter for the
-runtime buffer read/write access and returns -EBUSY error when the
-resize is performed concurrently against read/write.
+Fix it by adding empty dma-ranges property to axi@0 and axi@1
+(parent device tree node of PCIe controller).
 
-Note that the ref count field is a simple integer instead of
-refcount_t here, since the all contexts accessing the buffer is
-basically protected with a spinlock, hence we need no expensive atomic
-ops.  Also, note that this busy check is needed only against read /
-write functions, and not in receive/transmit callbacks; the race can
-happen only at the spinlock hole mentioned in the above, while the
-whole function is protected for receive / transmit callbacks.
-
-Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
-Link: https://lore.kernel.org/r/s5heerw3r5z.wl-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@kernel.org
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/rawmidi.h |    1 +
- sound/core/rawmidi.c    |   31 +++++++++++++++++++++++++++----
- 2 files changed, 28 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/dra7.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/sound/rawmidi.h
-+++ b/include/sound/rawmidi.h
-@@ -76,6 +76,7 @@ struct snd_rawmidi_runtime {
- 	size_t avail_min;	/* min avail for wakeup */
- 	size_t avail;		/* max used buffer for wakeup */
- 	size_t xruns;		/* over/underruns counter */
-+	int buffer_ref;		/* buffer reference count */
- 	/* misc */
- 	spinlock_t lock;
- 	wait_queue_head_t sleep;
---- a/sound/core/rawmidi.c
-+++ b/sound/core/rawmidi.c
-@@ -108,6 +108,17 @@ static void snd_rawmidi_input_event_work
- 		runtime->event(runtime->substream);
- }
- 
-+/* buffer refcount management: call with runtime->lock held */
-+static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
-+{
-+	runtime->buffer_ref++;
-+}
-+
-+static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
-+{
-+	runtime->buffer_ref--;
-+}
-+
- static int snd_rawmidi_runtime_create(struct snd_rawmidi_substream *substream)
- {
- 	struct snd_rawmidi_runtime *runtime;
-@@ -654,6 +665,11 @@ int snd_rawmidi_output_params(struct snd
- 		if (!newbuf)
- 			return -ENOMEM;
- 		spin_lock_irq(&runtime->lock);
-+		if (runtime->buffer_ref) {
-+			spin_unlock_irq(&runtime->lock);
-+			kfree(newbuf);
-+			return -EBUSY;
-+		}
- 		oldbuf = runtime->buffer;
- 		runtime->buffer = newbuf;
- 		runtime->buffer_size = params->buffer_size;
-@@ -962,8 +978,10 @@ static long snd_rawmidi_kernel_read1(str
- 	long result = 0, count1;
- 	struct snd_rawmidi_runtime *runtime = substream->runtime;
- 	unsigned long appl_ptr;
-+	int err = 0;
- 
- 	spin_lock_irqsave(&runtime->lock, flags);
-+	snd_rawmidi_buffer_ref(runtime);
- 	while (count > 0 && runtime->avail) {
- 		count1 = runtime->buffer_size - runtime->appl_ptr;
- 		if (count1 > count)
-@@ -982,16 +1000,19 @@ static long snd_rawmidi_kernel_read1(str
- 		if (userbuf) {
- 			spin_unlock_irqrestore(&runtime->lock, flags);
- 			if (copy_to_user(userbuf + result,
--					 runtime->buffer + appl_ptr, count1)) {
--				return result > 0 ? result : -EFAULT;
--			}
-+					 runtime->buffer + appl_ptr, count1))
-+				err = -EFAULT;
- 			spin_lock_irqsave(&runtime->lock, flags);
-+			if (err)
-+				goto out;
- 		}
- 		result += count1;
- 		count -= count1;
- 	}
-+ out:
-+	snd_rawmidi_buffer_unref(runtime);
- 	spin_unlock_irqrestore(&runtime->lock, flags);
--	return result;
-+	return result > 0 ? result : err;
- }
- 
- long snd_rawmidi_kernel_read(struct snd_rawmidi_substream *substream,
-@@ -1262,6 +1283,7 @@ static long snd_rawmidi_kernel_write1(st
- 			return -EAGAIN;
- 		}
- 	}
-+	snd_rawmidi_buffer_ref(runtime);
- 	while (count > 0 && runtime->avail > 0) {
- 		count1 = runtime->buffer_size - runtime->appl_ptr;
- 		if (count1 > count)
-@@ -1293,6 +1315,7 @@ static long snd_rawmidi_kernel_write1(st
- 	}
-       __end:
- 	count1 = runtime->avail < runtime->buffer_size;
-+	snd_rawmidi_buffer_unref(runtime);
- 	spin_unlock_irqrestore(&runtime->lock, flags);
- 	if (count1)
- 		snd_rawmidi_output_trigger(substream, 1);
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -289,6 +289,7 @@
+ 			#address-cells = <1>;
+ 			ranges = <0x51000000 0x51000000 0x3000
+ 				  0x0	     0x20000000 0x10000000>;
++			dma-ranges;
+ 			/**
+ 			 * To enable PCI endpoint mode, disable the pcie1_rc
+ 			 * node and enable pcie1_ep mode.
+@@ -303,7 +304,6 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
+-				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -347,6 +347,7 @@
+ 			#address-cells = <1>;
+ 			ranges = <0x51800000 0x51800000 0x3000
+ 				  0x0	     0x30000000 0x10000000>;
++			dma-ranges;
+ 			status = "disabled";
+ 			pcie@51800000 {
+ 				compatible = "ti,dra7-pcie";
+@@ -358,7 +359,6 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
+-				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
 
 
