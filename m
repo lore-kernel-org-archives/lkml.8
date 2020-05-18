@@ -2,99 +2,88 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A595FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88655C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78E9C207F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF8120872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589843219;
-	bh=PK1V3Ku0yGM4DEfZQJfpSkYoFD5xqA30biO82kKQTyg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0LoIdNldlfkUe2/weBqkDiDSDhJZtm5tsLNAtYwZtPXwwCAdzbn3hhaiNrpm5JQax
-	 NqhF7m6ru7w9/LmvlU2ZHLbqspBqn4kquKMx98l1JHYbh2GHfCIwVQ7OZxMOvBMtMR
-	 aw7WR7wVbEn1w5M+V8ZjSOz0rp5v+v+5Uat6Ucts=
+	s=default; t=1589843248;
+	bh=OrLCaPTj9rIsDogaLBEUTknXFDgWFJhcptX+6acdAFA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ims72txd21mFX50IJK834RGdCt/BZrR5H67t6hS28yyayhMYuw7vCXj0gAwFaJDSJ
+	 HFbXFFvW1Zv6nerT/4rQ/azjqHNIpuo5bg8OI6KB+/ek5f9QQc5Rd0HV1uWdhGyaiM
+	 aJY4MSFtnvtolbPUlX2VmhssEZMiKJ+Ulwajlh6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgERXG7 (ORCPT
+        id S1728588AbgERXH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 19:06:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52002 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 19:07:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgERXG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 19:06:58 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726481AbgERXH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 19:07:27 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E43932067D;
-        Mon, 18 May 2020 23:06:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D99C2084C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589843217;
-        bh=PK1V3Ku0yGM4DEfZQJfpSkYoFD5xqA30biO82kKQTyg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=H3Y3A6nQEoHkOSbZz1IrzxA67bJtW3EK2PrUX2dvj+WcPFfXeeeFLSiDIsjqFM2+6
-         AoDFaDumm3o0hqXzWlR6moqQ94rO4UInBdKG+B6B2IL0f+9vqeGfN3n21meA/awxfW
-         5c6b+85KxidUgz4birZgOy7bjh/654owYJ42QtPE=
-Date:   Mon, 18 May 2020 16:06:56 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
+        s=default; t=1589843246;
+        bh=OrLCaPTj9rIsDogaLBEUTknXFDgWFJhcptX+6acdAFA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=H0yj6dWopxkj+HUpfIbdevDcLm54O1CymUX7h8qvcYhpCNdhwO0F5yHKm4oS8sunt
+         jfCEpihPHZShwnXLVWgO4VYl5gUVHqdLSuG9RBcBvq95sxavAggux5eB+2TJLA/237
+         ROQGMngmHowBg0vP8QCp8EYkOIjBCrYWjRg5RDbs=
+Received: by mail-wr1-f54.google.com with SMTP id e1so13723606wrt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:07:26 -0700 (PDT)
+X-Gm-Message-State: AOAM532sRuNIOnhHvnGGSAb/UVj4ZXllL3jXppWS0HnOSTIGR6XbDjl6
+        LkFcEJy0ECEq/IQs8itw657ruz7a7a5xeIAJ+igIqA==
+X-Google-Smtp-Source: ABdhPJyd+wgT8H6utEjJItlzB1q8h/e0LIVRSStKNHBDkAsHlYOWtY0HmTMXlhHyLzfpOzIt952NKHWEOhYSJ0ADk8s=
+X-Received: by 2002:adf:eccf:: with SMTP id s15mr21878009wro.70.1589843244857;
+ Mon, 18 May 2020 16:07:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200515234547.710474468@linutronix.de> <20200515235124.999721601@linutronix.de>
+In-Reply-To: <20200515235124.999721601@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 18 May 2020 16:07:13 -0700
+X-Gmail-Original-Message-ID: <CALCETrX4_r0Pa3NpMA7Oec_kjR9bpyEjG2QajoHptG3jgAMu1Q@mail.gmail.com>
+Message-ID: <CALCETrX4_r0Pa3NpMA7Oec_kjR9bpyEjG2QajoHptG3jgAMu1Q@mail.gmail.com>
+Subject: Re: [patch V6 06/37] genirq: Provde __irq_enter/exit_raw()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com,
-        SeongJae Park <sjpark@amazon.com>,
-        David Rientjes <rientjes@google.com>,
-        Arjun Roy <arjunroy@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [PATCH] mm: use only pidfd for process_madvise syscall
-Message-Id: <20200518160656.b9651ef7393db8e0614a1175@linux-foundation.org>
-In-Reply-To: <20200518211350.GA50295@google.com>
-References: <20200516012055.126205-1-minchan@kernel.org>
-        <CAJuCfpGbPUpWLDgwt5ZP4Uf8fp6ht_6eqUypMVYYh3btJdz_8Q@mail.gmail.com>
-        <20200518211350.GA50295@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 14:13:50 -0700 Minchan Kim <minchan@kernel.org> wrote:
+On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
 
-> Andrew, I sent this patch without folding into previous syscall introducing
-> patches because it could be arguable. If you want to fold it into each
-> patchset(i.e., introdcuing process_madvise syscall and introducing
-> compat_syscall), let me know it. I will send partial diff to each
-> patchset.
-
-It doesn't seem necessary - I believe we'll get a clean result if I
-squish all of these:
-
-mm-support-vector-address-ranges-for-process_madvise-fix.patch
-mm-support-vector-address-ranges-for-process_madvise-fix-fix.patch
-mm-support-vector-address-ranges-for-process_madvise-fix-fix-fix.patch
-mm-support-vector-address-ranges-for-process_madvise-fix-fix-fix-fix.patch
-mm-support-vector-address-ranges-for-process_madvise-fix-fix-fix-fix-fix.patch
-mm-use-only-pidfd-for-process_madvise-syscall.patch
-
-into mm-support-vector-address-ranges-for-process_madvise.patch and
-make the appropriate changelog adjustments?
-
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
