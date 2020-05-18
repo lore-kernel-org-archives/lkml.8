@@ -2,118 +2,140 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A35C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E99C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85CB920826
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yezs7gGm"
+	by mail.kernel.org (Postfix) with ESMTP id 15EBA20826
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589825105;
+	bh=8kVMZVJ1E7gi76obbwwyWZArSsiPule4tEWDW6aO31s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fib4WkmrDqyMLOFoa+ec8wzOPt0bb3XDFT0F033lVfV4+UblqapdLqRfaa4OYguFM
+	 DpXpuyNAkZe9Tmg6bt7ebZuXQ4awrX/xQ51Rh7poXWYPFJUOduZEvl8WoLBgqfojE2
+	 tEJBuCxemlh+VsIk/EElPM+xwwGGbgpP+yxGy6TQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732865AbgERSE7 (ORCPT
+        id S1732884AbgERSFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732846AbgERSEt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:04:49 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB8CC05BD0A
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:04:49 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so4547393plt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nGHpGwwWCzCJVc7bPHElzmAcZWD6x2usMfgTF/Hyv34=;
-        b=yezs7gGmWNEMQgES7TZ+xcCNcGDm2+5zFxorxpSP+ZD8d645MzsEgn/+ELaoNKXIFF
-         jwt25o2C1yM1vnTI6Hq0qT4rrZeh8aZYdo99QBYcXaJAED8NNz97cHQPfyanqByvOh8p
-         q2P6P9PgOakAS2y/R7ywxQeQLTluzvw4DRj7LTbweDTceoXUwix5YjtjzbpIgwZhWacL
-         u0kJHWnongsmlnxe9x81xW8PMi4x3cfmmaFf76hlMYAh3p7i/SevDZdLWIdwtV+XIvZo
-         HsJG3QBKDPJKTLwyqp0nSxh4qC5QRhrQ6MTB5zCV25Y/P42K/Yk+kupocFQObxdpjLwh
-         mzsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nGHpGwwWCzCJVc7bPHElzmAcZWD6x2usMfgTF/Hyv34=;
-        b=eSCaSRLe1xPvIlNOKTqzKjGWQxBILHT2xHCfms+xN2sKayEh0zbu+1EhfDl1eiyAew
-         uNl8EeKrS+ecmJcfSZbQpWrezVQK4q7lIKp+P/KEfU/7RFeBscWscYpZpzXIS0lQMawW
-         oRottQzWzxVYQ+wuKAOhIik+ndFKlPgBA8JCyhLdontwdx+PKSFMhQgvxcSHiPsPkkxB
-         8XY28OUObe3CvLfVbmkxhovr9lnPImoM+ylE1UtbUeTJXYg0/Sbc2MsC+1xt3vtBQ6rf
-         2y18LBC2usfyZ4D0O2c+NaWFvwL0h+nQtGBBwr09kRPtf5iIrgMfRHVliSZIAdrJFuAW
-         lVoA==
-X-Gm-Message-State: AOAM532cXfw2Reun4/vhOKZSfbVk9au2e5VwEigKAK3fpB8cNXzN8B8r
-        ZLESSHMy+uA9/iz5FzzguBW2jw==
-X-Google-Smtp-Source: ABdhPJy0os+7IoFCFKg7k+EZgJxjNXzkxcklwepEVVeiJOSzaLYyRQZOx0XwQFhan0Ma7PyXS/9uNQ==
-X-Received: by 2002:a17:90a:bb81:: with SMTP id v1mr605595pjr.168.1589825088878;
-        Mon, 18 May 2020 11:04:48 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c24sm172998pjs.51.2020.05.18.11.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:04:48 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:03:25 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 8/8] arm64: dts: ipq6018: Add a53 pll and apcs clock
-Message-ID: <20200518180325.GB2165@builder.lan>
-References: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
- <1588573224-3038-9-git-send-email-sivaprak@codeaurora.org>
- <20200512202439.GK2165@builder.lan>
- <80039c21-41cf-2ace-939a-ef48fd773aa4@codeaurora.org>
+        Mon, 18 May 2020 14:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732857AbgERSEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EACA20715;
+        Mon, 18 May 2020 18:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589825093;
+        bh=8kVMZVJ1E7gi76obbwwyWZArSsiPule4tEWDW6aO31s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dpcjh4JjN0zEsnktFu5yHuY+/Di2IYA9mNVJJtIwNS5bDU3n30NHDLSTV06B8Dg27
+         s43S4GV9rJuWWFmdJNuoH/Ygi7lCeuVy25r0PCrtH6NdLzqI702WSmg31Z8MbXPyIs
+         CgwYt9Dz56HVVf/dULHB/m/b9x+pjl5FyuOcxj8s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 087/194] bpf, sockmap: bpf_tcp_ingress needs to subtract bytes from sg.size
+Date:   Mon, 18 May 2020 19:36:17 +0200
+Message-Id: <20200518173538.924074160@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
+References: <20200518173531.455604187@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80039c21-41cf-2ace-939a-ef48fd773aa4@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12 May 20:55 PDT 2020, Sivaprakash Murugesan wrote:
+From: John Fastabend <john.fastabend@gmail.com>
 
-> Hi Bjorn,
-> 
-> On 5/13/2020 1:54 AM, Bjorn Andersson wrote:
-> > On Sun 03 May 23:20 PDT 2020, Sivaprakash Murugesan wrote:
-> > 
-> > > add support for apps pll and apcs clock.
-> > > 
-> > > Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> > > ---
-> > >   arch/arm64/boot/dts/qcom/ipq6018.dtsi | 16 +++++++++++++---
-> > >   1 file changed, 13 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> > > index 1aa8d85..af2ceeb 100644
-> > > --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> > > @@ -294,12 +294,22 @@
-> > >   		};
-> > >   		apcs_glb: mailbox@b111000 {
-> > > -			compatible = "qcom,ipq8074-apcs-apps-global";
-> > > -			reg = <0x0b111000 0xc>;
-> > > -
-> > > +			compatible = "qcom,ipq6018-apcs-apps-global";
-> > > +			reg = <0x0b111000 0x1000>;
-> > My documentation states that IPQ8074 indeed has this block at
-> > 0x0b111000, but IPQ6018 it's at 0x6b111000. Can you confirm this is
-> > correct? Same with the pll below.
-> The address 0x6b111000 is how the RPM sees this block. For A53 it is still
-> 0xb111000
+[ Upstream commit 81aabbb9fb7b4b1efd073b62f0505d3adad442f3 ]
 
-Okay, thanks for confirming.
+In bpf_tcp_ingress we used apply_bytes to subtract bytes from sg.size
+which is used to track total bytes in a message. But this is not
+correct because apply_bytes is itself modified in the main loop doing
+the mem_charge.
 
-Regards,
-Bjorn
+Then at the end of this we have sg.size incorrectly set and out of
+sync with actual sk values. Then we can get a splat if we try to
+cork the data later and again try to redirect the msg to ingress. To
+fix instead of trying to track msg.size do the easy thing and include
+it as part of the sk_msg_xfer logic so that when the msg is moved the
+sg.size is always correct.
+
+To reproduce the below users will need ingress + cork and hit an
+error path that will then try to 'free' the skmsg.
+
+[  173.699981] BUG: KASAN: null-ptr-deref in sk_msg_free_elem+0xdd/0x120
+[  173.699987] Read of size 8 at addr 0000000000000008 by task test_sockmap/5317
+
+[  173.700000] CPU: 2 PID: 5317 Comm: test_sockmap Tainted: G          I       5.7.0-rc1+ #43
+[  173.700005] Hardware name: Dell Inc. Precision 5820 Tower/002KVM, BIOS 1.9.2 01/24/2019
+[  173.700009] Call Trace:
+[  173.700021]  dump_stack+0x8e/0xcb
+[  173.700029]  ? sk_msg_free_elem+0xdd/0x120
+[  173.700034]  ? sk_msg_free_elem+0xdd/0x120
+[  173.700042]  __kasan_report+0x102/0x15f
+[  173.700052]  ? sk_msg_free_elem+0xdd/0x120
+[  173.700060]  kasan_report+0x32/0x50
+[  173.700070]  sk_msg_free_elem+0xdd/0x120
+[  173.700080]  __sk_msg_free+0x87/0x150
+[  173.700094]  tcp_bpf_send_verdict+0x179/0x4f0
+[  173.700109]  tcp_bpf_sendpage+0x3ce/0x5d0
+
+Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/158861290407.14306.5327773422227552482.stgit@john-Precision-5820-Tower
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/skmsg.h | 1 +
+ net/ipv4/tcp_bpf.c    | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+index 14d61bba0b79b..71db17927a9da 100644
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -187,6 +187,7 @@ static inline void sk_msg_xfer(struct sk_msg *dst, struct sk_msg *src,
+ 	dst->sg.data[which] = src->sg.data[which];
+ 	dst->sg.data[which].length  = size;
+ 	dst->sg.size		   += size;
++	src->sg.size		   -= size;
+ 	src->sg.data[which].length -= size;
+ 	src->sg.data[which].offset += size;
+ }
+diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+index 8a01428f80c1c..19bd10e6ab830 100644
+--- a/net/ipv4/tcp_bpf.c
++++ b/net/ipv4/tcp_bpf.c
+@@ -200,7 +200,6 @@ static int bpf_tcp_ingress(struct sock *sk, struct sk_psock *psock,
+ 
+ 	if (!ret) {
+ 		msg->sg.start = i;
+-		msg->sg.size -= apply_bytes;
+ 		sk_psock_queue_msg(psock, tmp);
+ 		sk_psock_data_ready(sk, psock);
+ 	} else {
+-- 
+2.20.1
+
+
+
