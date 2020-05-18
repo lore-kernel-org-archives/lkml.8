@@ -2,138 +2,114 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F69C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB99C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD9D207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589799095;
-	bh=i2AfCj4ub0nWHT5gvxlriwr/KZpF7Frnuv84NlUoeIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iROdQuG8YDeOJW4AiZdKIDO6wB3Nard9RNm/09Q2k7uFPzIALLPxDJZg1I+d8wIJF
-	 xXsdxJQX0JanWGyg8XKsoAtk/qcMiAxxKYgyF6/iEgVhjxahvqj8IyMtq8VTKiJUIa
-	 KpC84SoGW4v40e2ejowQqI6vumHh/MPbwoToxBqk=
+	by mail.kernel.org (Postfix) with ESMTP id DEE4C20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:51:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TIdzmN5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgERKve (ORCPT
+        id S1726739AbgERKvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgERKvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:51:33 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58FDD20709;
-        Mon, 18 May 2020 10:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589799092;
-        bh=i2AfCj4ub0nWHT5gvxlriwr/KZpF7Frnuv84NlUoeIA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mKMJa/Hx0SNrxKGqgTQ+Z9yf/QSzQjzYKzJN6tuA0sNMQnphFHnjikn4i5L9UfHZF
-         7vlBITv1hxqfiEfgiBzei9qanx1g+j0AjtIRUvbQE+qDI7r4bkBuYAfb6FGDfXUskm
-         R1PKD1ecMSRxeO25BvVq5/Q43gEvpe6VC/jxTDSA=
-Date:   Mon, 18 May 2020 11:51:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/19] spi: dw: Add Tx/Rx finish wait methods to the
- MID DMA
-Message-ID: <20200518105130.GC8699@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-3-Sergey.Semin@baikalelectronics.ru>
- <20200515120111.GV185537@smile.fi.intel.com>
- <20200515121815.GB5066@sirena.org.uk>
- <20200515123702.GA185537@smile.fi.intel.com>
- <20200515124131.GE5066@sirena.org.uk>
- <20200515200250.zjsv5uaftwqcnwud@mobilestation>
+        Mon, 18 May 2020 06:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgERKvw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 06:51:52 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C8FC061A0C;
+        Mon, 18 May 2020 03:51:52 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id v192so2279734vkd.3;
+        Mon, 18 May 2020 03:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MpjSkkn7ApK5Yq+n7OuT8kXvOD7uu7gT865+wNXuHVM=;
+        b=TIdzmN5Zyod2KpKoraBArfu7HJ/dEL5tffIucTv8YuRzLkeoU8FiBg7P7XovUQxL/D
+         PNj0R8Ys14RDTqKJWOpbotZAsy2DF9HvMohwoUIcrtsRtdZ1KhYQRu5S1a3jtL2keuQ9
+         n01+J9BhdUvlIGWd3QV7N8Ct+r8CCv5twPyzFL9jzrRF8UIlaU90fZAB11X4PCvWuvCs
+         HuJ3DiC7taPGk51xKRGbeKVrv1LRbWsxwT5zP8w20Oqj/OPmx8/wp4OrKUkO3aBtzmtG
+         dByNMjEIU75bxzxx5lR95RTEk8A9XIQ80QnpUDh4BaEbvqGlAoOTnd8U+zSTQZ6gIxx4
+         fkHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MpjSkkn7ApK5Yq+n7OuT8kXvOD7uu7gT865+wNXuHVM=;
+        b=GEcT5+nVu9wKVn1vTu5i8SRHuEeAjD8YMZ7iYWGasdXGEL0TTvIx0U3Q+eaIeIkNvt
+         7f7lZSTTqA0JPrUPUav1We0XjyPMQPNPmSo3+SiewOYelX9cBWaZ5oGBb5Ow8/2raxuK
+         lPXVHinb+1S+BdmyPhhvBMwe6psj7vzG8vu7tC+TeBbQ9BQSGWDvxpbLZCIZRcI4enOp
+         1lB5SKP/92Gsj/S8FoD1piAy2Sm5q2TvF40Q7/wxp1tC5rrUMBr36kDTqbXkxUuJfDf/
+         CKgB/OO3VfFf9w+YJOW98mT+JzrxtKW86qg2GX/1vZsZJ4u+KwLYC6yoNBlM2SjwleqC
+         miEw==
+X-Gm-Message-State: AOAM531Ze3WRKsvdVM9Ox94/k7S3vpewWf9MZn6EQu4R5eRMgtHnTSDN
+        a9K1CduxbGnKHECf+8o2DXtFmBqevqqFyn8UBn8=
+X-Google-Smtp-Source: ABdhPJyJoE3DeUp5mRCR4/NwPKcB+0c9bpy1Jfu2Pe+bafT+c8kQlQDsW0FnkxaYd3hr8PrATmPVX23jWINoG1EwtPc=
+X-Received: by 2002:a1f:2bd7:: with SMTP id r206mr790067vkr.28.1589799110526;
+ Mon, 18 May 2020 03:51:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dkEUBIird37B8yKS"
-Content-Disposition: inline
-In-Reply-To: <20200515200250.zjsv5uaftwqcnwud@mobilestation>
-X-Cookie: If in doubt, mumble.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200516215057.392609-1-paul@crapouillou.net> <20200516215057.392609-11-paul@crapouillou.net>
+In-Reply-To: <20200516215057.392609-11-paul@crapouillou.net>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Mon, 18 May 2020 11:48:59 +0100
+Message-ID: <CACvgo50q=qJXk3nFSCm+S6JHBMxpY0C_HwH8KGB2EAcKwgL0oQ@mail.gmail.com>
+Subject: Re: [PATCH 11/12] gpu/drm: Ingenic: Add support for the IPU
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, od@zcrc.me,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Paul,
 
---dkEUBIird37B8yKS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Disclaimer: I don't know much about the hardware :-P
 
-On Fri, May 15, 2020 at 11:02:50PM +0300, Serge Semin wrote:
-> On Fri, May 15, 2020 at 01:41:31PM +0100, Mark Brown wrote:
+On Sun, 17 May 2020 at 00:31, Paul Cercueil <paul@crapouillou.net> wrote:
+>
+> Add support for the Image Processing Unit (IPU) found in all Ingenic
+> SoCs.
+>
+Since the IPU is present on all devices supported, does it make sense
+to have it as separate module?
+Didn't check closely although I suspect doing that will remove the
+need for the component patch.
 
-> > I guess we could, though it's really there because for historical
-> > reasons we've got a bunch of different ways of specifying delays from
-> > client drivers rather than for the executing a delay where you've
-> > already got a good idea of the length of the delay.
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> @@ -50,7 +50,7 @@ struct jz_soc_info {
+>
+>  struct ingenic_drm {
+>         struct drm_device drm;
+> -       struct drm_plane f0, f1;
+> +       struct drm_plane f0, f1, *ipu_plane;
+>         struct drm_crtc crtc;
+>         struct drm_encoder encoder;
+>
+> @@ -186,13 +186,16 @@ static void ingenic_drm_crtc_update_timings(struct ingenic_drm *priv,
+>         regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
+>                            JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16,
+>                            JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16);
+> +
+> +       regmap_write(priv->map, JZ_REG_LCD_IPUR, JZ_LCD_IPUR_IPUREN |
+> +                    (ht * vpe / 3) << JZ_LCD_IPUR_IPUR_LSB);
 
-> A beauty of spi_delay_exec() is that it provides a selective delay. I mean it
-> checks the delay value and selects an appropriate delay method like ndelay,
-> udelay and so on. That's the only reason I'd use it here. But It has got a few
-> drawbacks:
+This hunk also indicates that it may be better to merge the IPU within
+the existing driver.
 
-Right, usually you'd have a good ideal how long the delay is and
-therefore just be able to go directly for an appropraite delay function.
-
-> - timeout value has type u16. It's too small to keep nanoseconds.
-
-That could be increased, though obviously if you have a bigger delay you
-can specify it in usecs instead.
-
-> - semantically the xfer argument isn't optional and we can't fetch it that easy
->   in the dmaengine completion callbacks.
-
-Not sure I follow this.
-
-> So if there were an alternative method like _spi_transfer_delay_ns() I'd use it.
-> Otherwise we'd need to locally implement the selective delay. Unless you know
-> another alternative, which does it. If you don't and there isn't one then in
-> order to not over-complicate a simple delay-loop code I'd simply leave the
-> ndelay() here.
-
-Not that I'm aware of.
-
---dkEUBIird37B8yKS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7CaLEACgkQJNaLcl1U
-h9B7Rwf/fqp1qjsvXr4x+k4pnHTXLydq+YVuk7I9jH54/CjiUyAFORKPQPBqaALA
-o6T8iks8/NsBl2RwCYddysTdSVb4H5vYD2GBjlvSWZgyLlnANzuES+mq6Ux8ZX/W
-FFlNgWpZY+bCBolXL53+0/j2wiVxYqRXsMPF05P3a8wphYDZE565WWTbTA9IQ5pX
-aLUW05PQcGuvQdgVF9SM89ftk/3YLnQJCmtUMwdpkuUzDLhlMVhw7FR9l2iClAXF
-GH9175wDMI2UIB4XnuAj2IvniurtxU0RevqsBsQmTvOiT1sPmGRLiuLCacJOjDzf
-vkOwB9Ol0wriQ8KeFaGhKbSu0rFZew==
-=E8fH
------END PGP SIGNATURE-----
-
---dkEUBIird37B8yKS--
+-Emil
