@@ -2,110 +2,81 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB73DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB362C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8717020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9F520758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:17:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/68PRJx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SaXIVd6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgERURd (ORCPT
+        id S1727123AbgERURn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:17:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56016 "EHLO
+        Mon, 18 May 2020 16:17:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgERURc (ORCPT
+        with ESMTP id S1726367AbgERURm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:17:32 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD41C061A0C;
-        Mon, 18 May 2020 13:17:30 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z6so285514ljm.13;
-        Mon, 18 May 2020 13:17:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZuljtQBpIL0qjGzLVg3jHlIfvzyQopbP8u18XmNvs2w=;
-        b=c/68PRJxvHcj3DE/yxZ0a6MERGu0//5Ick75ODI7dCtgrU5zBHrqVRNU4HqhHXpuZv
-         d2t6doF3mTYCazJIDoW5wNqAvo295xPtO6XMe5O9De+h+U2GvwsbB9oRjv5mppLTNPiG
-         IXXQ3kJPrN76Emfux8S/bccsLYFUG1rGlmLzl91IA3xyDGnNPQQwaB/xDvr7HfWHV7jG
-         O+JQOi7F1hmaLXSoPNAE8hpr+hRZIOYwTkoTOe3MGG1R6c+S2gGHrdKZsu01ochO6/Hx
-         s8HTJm6/tPmJeNBQuT+sIVCT81imNzDF4ndGjREky+I0LgIlKoYZosdlQ118PqrjndwO
-         DrEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZuljtQBpIL0qjGzLVg3jHlIfvzyQopbP8u18XmNvs2w=;
-        b=IlxpTFvaE8OdsWc5srF8l+3e7K3LrhtK5czmXw1WClpCPXMm7ob+zo72/DM7j1c7+x
-         TInqZE1k16CpsJZuxxfZkIiK2Rom44Q6vbUeKvF91W+WrKabvLMYfGGc7HVQEgVfy+QT
-         AjUhP/7Sa6aM747H9uzfUbD0/G6om7uJpCw+QQsgxhxajSLtWRMHTb5apGjRShnzCon9
-         y9br9D04AURHH10PnjAMx+CyiaRPyxYE4IzHYuY8oEVGkV+ABvDEUdyOkoFCtaXsDH8c
-         7QIXZoo7iWLsubX1ZxvUzIlCqBXuUQm3h8NkVy9frKQQ0EsS3g6U1QQmcRuDrWXz24bd
-         vyGQ==
-X-Gm-Message-State: AOAM533HMIbYBzvRG6iDiZTOGbP3rEoBgxbK+CvFFjXzEkdvEGdIbGi8
-        vA1qSN3uhQcbStwmMJTpyk8=
-X-Google-Smtp-Source: ABdhPJzuP8HWeS92/QB/RT+ANHc+zhMPanKEN1AyPO8zGrOkYxuf1y3OyGB+GMp7sTVVMOa9zz/V8w==
-X-Received: by 2002:a2e:8ec9:: with SMTP id e9mr3069561ljl.204.1589833049193;
-        Mon, 18 May 2020 13:17:29 -0700 (PDT)
-Received: from polark.local (62-243-86-95-cable.dk.customer.tdc.net. [62.243.86.95])
-        by smtp.gmail.com with ESMTPSA id r13sm6249279ljh.66.2020.05.18.13.17.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 13:17:28 -0700 (PDT)
-From:   Daniel Gomez <dagmcr@gmail.com>
-To:     daniel@ffwll.ch, airlied@linux.ie
-Cc:     kieran.bingham+renesas@ideasonboard.com,
-        laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Gomez <dagmcr@gmail.com>
-Subject: [PATCH] drm: rcar-du: Fix build error
-Date:   Mon, 18 May 2020 22:16:46 +0200
-Message-Id: <20200518201646.48312-1-dagmcr@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 18 May 2020 16:17:42 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B1B1C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:17:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Tmfw6jv5c7I6nXp+B8iQMsgCtcPbXu8jo3om/FY1qFw=; b=SaXIVd6VivCdptFJVGlmWC8fzO
+        Jx5YkkPhHKxbCKDyIvWNZndS6WIHBY41YhddYvOORXpZjVNSB9fZ4k0cO4itdlqeetvBqSwQTDqWA
+        VGr3iSBcmHogXbbEh94LhIxMxonmwgetSILAc8bqM0WdlaOAl3S6OtrZyzAgzOaQGoZuR94WCmiCt
+        PA+2xjYxgxbZyZd8d9HUY2eptNIceu74Y7YcM+KILfayp/FCkxSE0Rt9rb4wqMQUzah7umJqXwadI
+        YA0vRnQcws0drKfTegKLFC9sc6aAKLbxa7CVJ42s/dha303uuMCvnIJOc2WZvN9YlYSpQ26Ur6G2Z
+        fpW7w//w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jamCf-000670-KU; Mon, 18 May 2020 20:17:37 +0000
+Date:   Mon, 18 May 2020 13:17:37 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] mm/gup.c: Use gup_flags as parameter instead of passing
+ write flag
+Message-ID: <20200518201737.GV16070@bombadil.infradead.org>
+References: <1589831903-27800-1-git-send-email-jrdr.linux@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589831903-27800-1-git-send-email-jrdr.linux@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Select DRM_KMS_HELPER dependency.
+On Tue, May 19, 2020 at 01:28:23AM +0530, Souptick Joarder wrote:
+> The idea is to get rid of write parameter. Instead caller will pass
+> FOLL_WRITE to __get_user_pages_fast(). This will not change any
+> functionality of the API. Once it is upstream all the callers will
+> be changed to pass FOLL_WRITE.
 
-Build error when DRM_KMS_HELPER is not selected:
+Uhh ... until you change all the callers, haven't you just broken all
+the callers?
 
-drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
-drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
-drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
-drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
-drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
-drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
-drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
-
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
----
- drivers/gpu/drm/rcar-du/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-index 0919f1f159a4..f65d1489dc50 100644
---- a/drivers/gpu/drm/rcar-du/Kconfig
-+++ b/drivers/gpu/drm/rcar-du/Kconfig
-@@ -31,6 +31,7 @@ config DRM_RCAR_DW_HDMI
- config DRM_RCAR_LVDS
- 	tristate "R-Car DU LVDS Encoder Support"
- 	depends on DRM && DRM_BRIDGE && OF
-+	select DRM_KMS_HELPER
- 	select DRM_PANEL
- 	select OF_FLATTREE
- 	select OF_OVERLAY
--- 
-2.26.2
-
+> -int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+> -			  struct page **pages)
+> +int __get_user_pages_fast(unsigned long start, int nr_pages,
+> +			unsigned int gup_flags, struct page **pages)
+>  {
+>  	unsigned long len, end;
+>  	unsigned long flags;
+> @@ -2685,10 +2692,7 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+>  	 * Internally (within mm/gup.c), gup fast variants must set FOLL_GET,
+>  	 * because gup fast is always a "pin with a +1 page refcount" request.
+>  	 */
+> -	unsigned int gup_flags = FOLL_GET;
+> -
+> -	if (write)
+> -		gup_flags |= FOLL_WRITE;
+> +	gup_flags |= FOLL_GET;
