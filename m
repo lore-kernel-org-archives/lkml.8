@@ -2,223 +2,91 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CDAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5715BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB2D20756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B739206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="n/qeY/hH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NnbKbGQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgEROmu (ORCPT
+        id S1728039AbgEROnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:42:50 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46996 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727007AbgEROmt (ORCPT
+        Mon, 18 May 2020 10:43:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgEROns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:42:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589812968; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=BOJG45sKpRoyYeCu2iPA0P0NjKwkRXyqePBzMDunQaI=; b=n/qeY/hHckNBzdwypWI5LHzDGCDHWUVuxHAOCcQTx5ZM0m0+pbc/SwLoIusHGfN5bVY09XZz
- h4vtJXKrH3RYC5eH0r8unigReuZogYEt3KCh55kj+RCQRnrh/f3v0AU2XnGsu//86EJiknFf
- e3c46aqBmWgxSwreaHpq9ql2ovw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec29ee7.7fcd12958110-smtp-out-n03;
- Mon, 18 May 2020 14:42:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E5A9FC43636; Mon, 18 May 2020 14:42:46 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2509DC432C2;
-        Mon, 18 May 2020 14:42:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2509DC432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 18 May 2020 08:42:43 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] [PATCH v3 1/9] drm/msm: add
- msm_gem_get_and_pin_iova_range
-Message-ID: <20200518144243.GC3915@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Sean Paul <sean@poorly.run>
-References: <20200423210946.28867-1-jonathan@marek.ca>
- <20200423210946.28867-2-jonathan@marek.ca>
+        Mon, 18 May 2020 10:43:48 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE92C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:43:48 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w10so10156589ljo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vmKMl5YPAbtYvThGAufK7+pRDXytMF6DEwy6+OdOT6c=;
+        b=NnbKbGQluk5lNt1OMh91AzLf43ctbuCx11Qrf3/SH8c37zea2KCW1nBzzZxOP6eBMJ
+         mNikiWnBzqw1Qh5gemWUCvWkJrCIW8yDSnkDx8R6ZYBzKq+OLJjZPeFz2G9mgUvlkVTM
+         dm8UA+SmF8OQXRg6DdCXiTcqKrEVyEYP7SLPKT2yHm+RCB4cGu3cFPb2AjVfi0QY5rUq
+         qAGDKXTutca8F5XEP0TqE545HEJbER9IgNbvIFzIa9jPi0OuqeYk/x+vJdTSoeTUygoI
+         8E5aJEpfXrwXeNyCuMqf4Iw1FJkWkKCQGV1kAlYV1sACiLyt3C6WFh/ySD2nZG5gBeFu
+         wwUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vmKMl5YPAbtYvThGAufK7+pRDXytMF6DEwy6+OdOT6c=;
+        b=g163u/S98qYSXe3I9+YL6e3zcTIIgNSd22ia6Qw6AqrSqgHB3nfVtwPEKwWsfES6Sm
+         1/ZYtfxiuBtDc4txQ8mHhfVcb9JxuyghTmBfIWJ0iULSNcdjRDdT8tdnYrFwVOAm9ic5
+         sL4GKN4CnzrR+GDg0B2znPKFpmXVs0eu6epLKOIsWWRdeiGRNWFFJenUS9pVTO4QNACL
+         +JOeuCVZonwFjmfoxAzdWo+cd5Y5ShRzkBNWd/NnuLymXAudQ/lwN1P7hN5tT+9TgjY7
+         FR2qiHob4tRG33kGwZ60jp77STLUMUOHYDEeaeP8DZR1wj6UsruLm5r1scNWHfKPRraF
+         1ZKQ==
+X-Gm-Message-State: AOAM533qlH+HcWzWC9ufUeu6nkGD2cLcoiX6BuZ3qXj9ILywc3P3lSa7
+        4NHrc+kHcA75Ss/OL0hwiLwGqePRyM3XcxIa6DEQIA==
+X-Google-Smtp-Source: ABdhPJxtr0BKnKjn6pCHBXg0CBH0lcE95cP/SI2TsQx+b5KMUXKtBPY9ZvGp2Yty+kEdByTnUauiLd0kc/yHpxl0ygk=
+X-Received: by 2002:a2e:8e8c:: with SMTP id z12mr2985329ljk.221.1589813026603;
+ Mon, 18 May 2020 07:43:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423210946.28867-2-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200518055457.12302-1-keescook@chromium.org> <20200518055457.12302-2-keescook@chromium.org>
+ <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
+In-Reply-To: <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 18 May 2020 16:43:20 +0200
+Message-ID: <CAG48ez1FspvvypJSO6badG7Vb84KtudqjRk1D7VyHRm06AiEbQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 05:09:13PM -0400, Jonathan Marek wrote:
-> This function allows pinning iova to a specific page range (for a6xx GMU).
+On Mon, May 18, 2020 at 3:03 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+> Also - gulp (puts on flame proof suit) - may I suggest we check if there
+> are any distros out there that still set CONFIG_USELIB=y
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Debian seems to have it enabled on x86...
 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/gpu/drm/msm/msm_drv.h     |  6 +++++-
->  drivers/gpu/drm/msm/msm_gem.c     | 28 +++++++++++++++++++++-------
->  drivers/gpu/drm/msm/msm_gem_vma.c |  6 ++++--
->  3 files changed, 30 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-> index 194d900a460e..966fd9068c94 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.h
-> +++ b/drivers/gpu/drm/msm/msm_drv.h
-> @@ -236,7 +236,8 @@ int msm_crtc_enable_vblank(struct drm_crtc *crtc);
->  void msm_crtc_disable_vblank(struct drm_crtc *crtc);
->  
->  int msm_gem_init_vma(struct msm_gem_address_space *aspace,
-> -		struct msm_gem_vma *vma, int npages);
-> +		struct msm_gem_vma *vma, int npages,
-> +		u64 range_start, u64 range_end);
->  void msm_gem_purge_vma(struct msm_gem_address_space *aspace,
->  		struct msm_gem_vma *vma);
->  void msm_gem_unmap_vma(struct msm_gem_address_space *aspace,
-> @@ -276,6 +277,9 @@ vm_fault_t msm_gem_fault(struct vm_fault *vmf);
->  uint64_t msm_gem_mmap_offset(struct drm_gem_object *obj);
->  int msm_gem_get_iova(struct drm_gem_object *obj,
->  		struct msm_gem_address_space *aspace, uint64_t *iova);
-> +int msm_gem_get_and_pin_iova_range(struct drm_gem_object *obj,
-> +		struct msm_gem_address_space *aspace, uint64_t *iova,
-> +		u64 range_start, u64 range_end);
->  int msm_gem_get_and_pin_iova(struct drm_gem_object *obj,
->  		struct msm_gem_address_space *aspace, uint64_t *iova);
->  uint64_t msm_gem_iova(struct drm_gem_object *obj,
-> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-> index 5a6a79fbc9d6..d8f56a34c117 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.c
-> +++ b/drivers/gpu/drm/msm/msm_gem.c
-> @@ -389,7 +389,8 @@ put_iova(struct drm_gem_object *obj)
->  }
->  
->  static int msm_gem_get_iova_locked(struct drm_gem_object *obj,
-> -		struct msm_gem_address_space *aspace, uint64_t *iova)
-> +		struct msm_gem_address_space *aspace, uint64_t *iova,
-> +		u64 range_start, u64 range_end)
->  {
->  	struct msm_gem_object *msm_obj = to_msm_bo(obj);
->  	struct msm_gem_vma *vma;
-> @@ -404,7 +405,8 @@ static int msm_gem_get_iova_locked(struct drm_gem_object *obj,
->  		if (IS_ERR(vma))
->  			return PTR_ERR(vma);
->  
-> -		ret = msm_gem_init_vma(aspace, vma, obj->size >> PAGE_SHIFT);
-> +		ret = msm_gem_init_vma(aspace, vma, obj->size >> PAGE_SHIFT,
-> +			range_start, range_end);
->  		if (ret) {
->  			del_vma(vma);
->  			return ret;
-> @@ -443,9 +445,13 @@ static int msm_gem_pin_iova(struct drm_gem_object *obj,
->  			msm_obj->sgt, obj->size >> PAGE_SHIFT);
->  }
->  
-> -/* get iova and pin it. Should have a matching put */
-> -int msm_gem_get_and_pin_iova(struct drm_gem_object *obj,
-> -		struct msm_gem_address_space *aspace, uint64_t *iova)
-> +/*
-> + * get iova and pin it. Should have a matching put
-> + * limits iova to specified range (in pages)
-> + */
-> +int msm_gem_get_and_pin_iova_range(struct drm_gem_object *obj,
-> +		struct msm_gem_address_space *aspace, uint64_t *iova,
-> +		u64 range_start, u64 range_end)
->  {
->  	struct msm_gem_object *msm_obj = to_msm_bo(obj);
->  	u64 local;
-> @@ -453,7 +459,8 @@ int msm_gem_get_and_pin_iova(struct drm_gem_object *obj,
->  
->  	mutex_lock(&msm_obj->lock);
->  
-> -	ret = msm_gem_get_iova_locked(obj, aspace, &local);
-> +	ret = msm_gem_get_iova_locked(obj, aspace, &local,
-> +		range_start, range_end);
->  
->  	if (!ret)
->  		ret = msm_gem_pin_iova(obj, aspace);
-> @@ -465,6 +472,13 @@ int msm_gem_get_and_pin_iova(struct drm_gem_object *obj,
->  	return ret;
->  }
->  
-> +/* get iova and pin it. Should have a matching put */
-> +int msm_gem_get_and_pin_iova(struct drm_gem_object *obj,
-> +		struct msm_gem_address_space *aspace, uint64_t *iova)
-> +{
-> +	return msm_gem_get_and_pin_iova_range(obj, aspace, iova, 0, U64_MAX);
-> +}
-> +
->  /*
->   * Get an iova but don't pin it. Doesn't need a put because iovas are currently
->   * valid for the life of the object
-> @@ -476,7 +490,7 @@ int msm_gem_get_iova(struct drm_gem_object *obj,
->  	int ret;
->  
->  	mutex_lock(&msm_obj->lock);
-> -	ret = msm_gem_get_iova_locked(obj, aspace, iova);
-> +	ret = msm_gem_get_iova_locked(obj, aspace, iova, 0, U64_MAX);
->  	mutex_unlock(&msm_obj->lock);
->  
->  	return ret;
-> diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
-> index 1af5354bcd46..407b7ab82818 100644
-> --- a/drivers/gpu/drm/msm/msm_gem_vma.c
-> +++ b/drivers/gpu/drm/msm/msm_gem_vma.c
-> @@ -103,7 +103,8 @@ void msm_gem_close_vma(struct msm_gem_address_space *aspace,
->  
->  /* Initialize a new vma and allocate an iova for it */
->  int msm_gem_init_vma(struct msm_gem_address_space *aspace,
-> -		struct msm_gem_vma *vma, int npages)
-> +		struct msm_gem_vma *vma, int npages,
-> +		u64 range_start, u64 range_end)
->  {
->  	int ret;
->  
-> @@ -111,7 +112,8 @@ int msm_gem_init_vma(struct msm_gem_address_space *aspace,
->  		return -EBUSY;
->  
->  	spin_lock(&aspace->lock);
-> -	ret = drm_mm_insert_node(&aspace->mm, &vma->node, npages);
-> +	ret = drm_mm_insert_node_in_range(&aspace->mm, &vma->node, npages, 0,
-> +		0, range_start, range_end, 0);
->  	spin_unlock(&aspace->lock);
->  
->  	if (ret)
-> -- 
-> 2.26.1
-> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+https://salsa.debian.org/kernel-team/linux/-/blob/master/debian/config/kernelarch-x86/config#L1896
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+A random Ubuntu 19.10 VM I have here has it enabled, too.
