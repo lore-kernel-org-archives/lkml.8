@@ -2,104 +2,114 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B30C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B729C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B91020657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1980F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826665;
-	bh=SE1tukxQxUPoeD0v8ExDP7qUXqal/fKrpfg46v1AdTQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nBTr1xLOQJAskx/8cyvjogzxlSiUpdQib8aj4XODMp7r0SaK3Z3nvKSBKKq3F02Yi
-	 eecNykTmpQV8DNTsGE1kQCHAE8rvfPwOiJ42lAyRto9N6+f5woNBRWkFjNOF+zBpgB
-	 5nZTcDv2IbkEYiL+Zpddf0L0hy6r53W17KnXYjMs=
+	s=default; t=1589826670;
+	bh=Bbrs+y755BSyM/MVYEODb6BWtxLA7BzsDuuqPjzRNUM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VBmrZuA6MikkH8Zvl5rqFKMbpGRsKVZEPwjPho8WwOzpK1CalvqSi96HbsHrYXWLW
+	 JopuCdkor/bNLwyYGL7/RLmY5VYmKHmJKAVbBh5fyuWvWL8h+bybsXJmAAJteKagoQ
+	 WpUpwks4QEgWyE6Xu4mmp146nJ18FrlC0zuJo9Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbgERSbD (ORCPT
+        id S1732356AbgERSbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:31:03 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41153 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729437AbgERSa5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:30:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 23so5343701pfy.8;
-        Mon, 18 May 2020 11:30:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MNvGxXH70pUk2rUMUm7OX5VYVn/vSKKSqC8ibxkcQ+c=;
-        b=LkgTRMtFHTuflen9VfDx0gPUZ9vaone1bh8mAUpu1gCsvBMvO7vynQe5RiwSNx4uL4
-         Y/+KW7FeLOehpsAxoQ7jetQPVmJe9YkEJgIYpzthLIkEkmuraEsGm31hy+g/Tp7A+VtA
-         6T8GMFygIOGfB47pjBC9E3AU6eGuwd9bJFQAy68qFT+bjSfT8OSK5ko2y0MW8VlTCXQB
-         vyBrc0oZcMTXVQUFZrtNlEAi69UaIPvrRuyspeWQs4MBPerj05vKyomXYM2z5MwkOVVE
-         gTse/ka6xx3uoQk9O6R6ATUtwG7fad5SvTSvFV68xtLUZ+WK98eUtitPeg0Cib6cTmAC
-         JI0w==
-X-Gm-Message-State: AOAM531/5eBfGFBw4+M5mS9nbkTzVs0wB4QmCQc0KAZBs2NgR58ymepJ
-        It5tidZ9VAPV5uvINJ/Y5cI=
-X-Google-Smtp-Source: ABdhPJxbvrW+K08SVhBUxVXXcUph4FjFiKVCfMGxgL5mBKoSOvhTiXC3EzL18F1ArNzKTIDwUMUidQ==
-X-Received: by 2002:a63:3d7:: with SMTP id 206mr16076823pgd.45.1589826657018;
-        Mon, 18 May 2020 11:30:57 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id gt10sm204901pjb.30.2020.05.18.11.30.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:30:56 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 3B5A8404B0; Mon, 18 May 2020 18:30:55 +0000 (UTC)
-Date:   Mon, 18 May 2020 18:30:55 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Kitt <steve@sk2.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sysctl: const-ify ngroups_max
-Message-ID: <20200518183055.GN11244@42.do-not-panic.com>
-References: <20200518155727.10514-1-steve@sk2.org>
- <202005180908.C016C44D2@keescook>
- <20200518172509.GM11244@42.do-not-panic.com>
- <202005181117.BB74974@keescook>
+        Mon, 18 May 2020 14:31:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728964AbgERRkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3D3820884;
+        Mon, 18 May 2020 17:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589823605;
+        bh=Bbrs+y755BSyM/MVYEODb6BWtxLA7BzsDuuqPjzRNUM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zwxPysCdZZEig3igjJ1hGQpTTKC0P/es6UnunpjpVkX3YmakNJ8EauJ8C37tU2/MZ
+         skGD5bNQrSGKTug3MI/JuOqCOK936rc4d7sItamCRjK3SI8w5dE7zgkoRcFCKbOwet
+         M/GoPGfHztWVxa1qSVNA0fB+qGa4D6k8Y/ghrd3Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 48/86] gre: do not keep the GRE header around in collect medata mode
+Date:   Mon, 18 May 2020 19:36:19 +0200
+Message-Id: <20200518173500.350608854@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
+References: <20200518173450.254571947@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202005181117.BB74974@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 11:17:47AM -0700, Kees Cook wrote:
-> On Mon, May 18, 2020 at 05:25:09PM +0000, Luis Chamberlain wrote:
-> > On Mon, May 18, 2020 at 09:08:22AM -0700, Kees Cook wrote:
-> > > On Mon, May 18, 2020 at 05:57:27PM +0200, Stephen Kitt wrote:
-> > > > ngroups_max is a read-only sysctl entry, reflecting NGROUPS_MAX. Make
-> > > > it const, in the same way as cap_last_cap.
-> > > > 
-> > > > Signed-off-by: Stephen Kitt <steve@sk2.org>
-> > > 
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> > Kees, since there is quite a bit of sysctl cleanup stuff going on and I
-> > have a fs sysctl kitchen cleanup, are you alright if I carry this in a
-> > tree and send this to Andrew once done? This would hopefully avoid
-> > merge conflicts between these patches.
-> > 
-> > I have to still re-spin my fs sysctl stuff, but will wait to do that
-> > once Xiaoming bases his series on linux-next.
-> 
-> Yeah, totally. I don't technically have a sysctl tree (I've always just
-> had akpm take stuff), so go for it. I'm just doing reviews. :)
+From: Jiri Benc <jbenc@redhat.com>
 
-Oh, I don't want a tree either, it was just that I can imagine these
-series can easily create conflcits, so I wanted to avoid that before
-passing them on to Andrew.
+[ Upstream commit e271c7b4420ddbb9fae82a2b31a5ab3edafcf4fe ]
 
-  Luis
+For ipgre interface in collect metadata mode, it doesn't make sense for the
+interface to be of ARPHRD_IPGRE type. The outer header of received packets
+is not needed, as all the information from it is present in metadata_dst. We
+already don't set ipgre_header_ops for collect metadata interfaces, which is
+the only consumer of mac_header pointing to the outer IP header.
+
+Just set the interface type to ARPHRD_NONE in collect metadata mode for
+ipgre (not gretap, that still correctly stays ARPHRD_ETHER) and reset
+mac_header.
+
+Fixes: a64b04d86d14 ("gre: do not assign header_ops in collect metadata mode")
+Fixes: 2e15ea390e6f4 ("ip_gre: Add support to collect tunnel metadata.")
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/ipv4/ip_gre.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/net/ipv4/ip_gre.c b/net/ipv4/ip_gre.c
+index e5448570d6483..900ee28bda99a 100644
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -399,7 +399,10 @@ static int ipgre_rcv(struct sk_buff *skb, const struct tnl_ptk_info *tpi)
+ 				  iph->saddr, iph->daddr, tpi->key);
+ 
+ 	if (tunnel) {
+-		skb_pop_mac_header(skb);
++		if (tunnel->dev->type != ARPHRD_NONE)
++			skb_pop_mac_header(skb);
++		else
++			skb_reset_mac_header(skb);
+ 		if (tunnel->collect_md) {
+ 			__be16 flags;
+ 			__be64 tun_id;
+@@ -1015,6 +1018,8 @@ static void ipgre_netlink_parms(struct net_device *dev,
+ 		struct ip_tunnel *t = netdev_priv(dev);
+ 
+ 		t->collect_md = true;
++		if (dev->type == ARPHRD_IPGRE)
++			dev->type = ARPHRD_NONE;
+ 	}
+ }
+ 
+-- 
+2.20.1
+
+
+
