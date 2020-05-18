@@ -2,120 +2,148 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00404C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C048CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE40B2075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8370520643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:24:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1xrtfIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgERUWw (ORCPT
+        id S1726986AbgERUYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56848 "EHLO
+        Mon, 18 May 2020 16:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgERUWv (ORCPT
+        with ESMTP id S1726250AbgERUYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:22:51 -0400
-Received: from omr1.cc.vt.edu (omr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:c6:2117:b0e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D75FC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:22:51 -0700 (PDT)
-Received: from mr5.cc.vt.edu (mr5.cc.vt.edu [IPv6:2607:b400:92:8400:0:72:232:758b])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04IKMo04026701
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:22:50 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04IKMjnh017574
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:22:50 -0400
-Received: by mail-qt1-f200.google.com with SMTP id p31so13302476qte.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:22:50 -0700 (PDT)
+        Mon, 18 May 2020 16:24:03 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCEFC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:24:02 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i15so13305856wrx.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:24:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5B0bvyb+czYXibRbo3frDkeWMomKS71UWI1iUCkQxS8=;
+        b=H1xrtfIJsEgJbCyguOTKrsaF7WUbw/aM1YPdMJ53dhZz2PctJVBahR4Dlix3h9RpPO
+         TRfbTX5dArJn57NI+zOx8ju3PdHlAU5buJNt7sKD29mDpp4bk1b7q10o2qCe2CcG2SfF
+         VvwHzCZSj+D+0KW3p+0UDYynUca0TMEXbP5ZBUkIn4hsiF5ahUNoOZ+7aR46RHos2hh7
+         MiaGdLwfeMY4/4Kj9dwrknNyGleySWethq75DXFaopaLm4Jzc1De+HYw2Oh7hG7KKg9e
+         jirlcwI6Qev8P8jee/iNmR95QtJtKnr5CCz96Bl0FECiHXOs+EpKD4+l5SKFbH6nvTc5
+         oYwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=HCM0z9rljt16BROVf1iAlmj4G0K4AH3m18Cka4/RF1w=;
-        b=MsRiau7PALj/oYCM8XvVIDvxPzXjE2r372t8qKToQxq/+pqcejc2dh2jKsmGbeLX9M
-         YHp+65OYy49rcY5cc5R4qX59OUNzGOF9r9yhx78Xmlu9H20MmKW4LdcnoOSdFFjdEWMr
-         x0OXN3sS65gAwS4IY8EsIROQvtUtC5MfO86Js+0NBCSdeXZO6nH/tjiRwPrmb4ufamss
-         Iom/qfxMEzMCENqJJAJxjjCjw7uhTaPSPQQyA9+vboXaXcjWPZD8rjfgiW23ZXeSvnRL
-         +tbNtsHfeEH7H3d7Xy1djvV3GLEe2y7vrtFt31AnQuaK6PagMi40Aq07Sy5Z0+lFdzjb
-         F0OQ==
-X-Gm-Message-State: AOAM530YoV3PstQdHOxPJVVNMWNTJPJPIa7ozpDw7RpYvqCv8UQKotQS
-        FWjlPkRyjMp96ddCbLQ+M1MYZlDL4Y7KKSN6ydvhu9GEc8R2uApshkuMeoiDYuLNbEr2WGqU6Ui
-        rawroLG7CdzZFss24WP/auLiFUDowXXqIBO0=
-X-Received: by 2002:a37:6547:: with SMTP id z68mr17705296qkb.197.1589833364997;
-        Mon, 18 May 2020 13:22:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz5CNdFEQSK8WWfGbjtmZd6EWpYQj4GLJIi6JCfHh7zXZY77TsLFbZ8OUETO75hTZ3buwp8tw==
-X-Received: by 2002:a37:6547:: with SMTP id z68mr17705270qkb.197.1589833364681;
-        Mon, 18 May 2020 13:22:44 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id h12sm10341360qtb.19.2020.05.18.13.22.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 13:22:43 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     Hannes Reinecke <hare@suse.de>, Alasdair Kergon <agk@redhat.com>,
-        dm-devel@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: next-20200514 - build issue in drivers/md/dm-zoned-target.c
-In-Reply-To: <20200518164449.GA24518@redhat.com>
-References: <367320.1589627953@turing-police> <7bb0d1c8-b164-d5f3-0218-5c71047c3a8c@suse.de>
- <20200518164449.GA24518@redhat.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1589833361_31675P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 18 May 2020 16:22:42 -0400
-Message-ID: <74618.1589833362@turing-police>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5B0bvyb+czYXibRbo3frDkeWMomKS71UWI1iUCkQxS8=;
+        b=oTw4Pbazt2aC3Ao6qW+Zva2XBOxFcK7Xu3hfRwJ2RnjPr6bLScCAhZ2KLT/Ijk7UWn
+         pwQqoXHU5z26JGiaHosC7Uz9kowpw7uymnS/DfD4SUbXm5IyP187xjbUxScbc/Sd0tZA
+         qSBdrS1M2nja/xgtY3d43SG1mJapQtlExkBm+OxUDeyxckLB5f9Qh/zc0Vm1kSrO3kvn
+         rDBG12scbwMZnRlzq9KIpDCmdMtDbNvKlY5E9UmRG6abGsonc/3sdz3kT2GEwjOn8lvj
+         6QNU4SQFecgNLi490Sz75rTc5MqreRb5q6fiZDtVwArSzZ9Ye1U/OrpRGuqpbTapKkVI
+         eq9Q==
+X-Gm-Message-State: AOAM531ZRTzC9CEqQ9vzInC66vkRyPvlTA5DzzqGIDfvvkFWGq3Ngb5S
+        4LF/LRafHNIVvn0WYCAPvAGywg==
+X-Google-Smtp-Source: ABdhPJxnle0Ka9+nAQQbbufJUi1PeIgz/OINpBlvEqYX/F0IMX1TMNzubsaAi7WtxvNzOLQLCbVubg==
+X-Received: by 2002:a5d:6605:: with SMTP id n5mr23240499wru.198.1589833441326;
+        Mon, 18 May 2020 13:24:01 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
+        by smtp.googlemail.com with ESMTPSA id w9sm19689253wrc.27.2020.05.18.13.24.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 13:24:00 -0700 (PDT)
+Subject: Re: [PATCH 09/10] timer-riscv: Fix undefined riscv_time_val
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, tglx@linutronix.de
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hulkci@huawei.com
+References: <mhng-0c491e9e-41fd-4f76-a048-55c03d9359f0@palmerdabbelt-glaptop1>
+ <66121f9a-48f3-d3a5-7c96-d71397e12aed@linaro.org>
+ <0bc3eb36-7b9d-7c86-130c-68b566e85c10@huawei.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <e1916079-c209-bfad-6b0c-ccfb2e136ca4@linaro.org>
+Date:   Mon, 18 May 2020 22:23:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <0bc3eb36-7b9d-7c86-130c-68b566e85c10@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1589833361_31675P
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, 18 May 2020 12:44:49 -0400, Mike Snitzer said:
+Hi Kefeng,
 
-> Unless I'm missing something it was fixed up with this commit last
-> wednesday (13th):
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.=
-git/commit/?h=3Ddm-5.8&id=3D81a3a1453ec4e5da081e1395732801a600feb352
+On 18/05/2020 17:40, Kefeng Wang wrote:
+> 
+> On 2020/5/18 22:09, Daniel Lezcano wrote:
+>> On 13/05/2020 23:14, Palmer Dabbelt wrote:
+>>> On Sun, 10 May 2020 19:20:00 PDT (-0700), wangkefeng.wang@huawei.com
+>>> wrote:
+>>>> ERROR: modpost: "riscv_time_val" [crypto/tcrypt.ko] undefined!
+>>>>
+>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>>>> ---
+>>>>   drivers/clocksource/timer-riscv.c | 1 +
+>>>>   1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/drivers/clocksource/timer-riscv.c
+>>>> b/drivers/clocksource/timer-riscv.c
+>>>> index c4f15c4068c0..071b8c144027 100644
+>>>> --- a/drivers/clocksource/timer-riscv.c
+>>>> +++ b/drivers/clocksource/timer-riscv.c
+>>>> @@ -19,6 +19,7 @@
+>>>>
+>>>>   u64 __iomem *riscv_time_cmp;
+>>>>   u64 __iomem *riscv_time_val;
+>>>> +EXPORT_SYMBOL(riscv_time_val);
+>>>>
+>>>>   static inline void mmio_set_timer(u64 val)
+>>>>   {
+>>> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+>>> Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+>>>
+>>> Adding the clocksource maintainers.  Let me know if you want this
+>>> through my
+>>> tree, I'm assuming you want it through your tree.
+>> How can we end up by an export symbol here ?!
+> 
+> Hi Danile,
 
-That says:
+s/Danile/Daniel/
 
-author	Nathan Chancellor <natechancellor=40gmail.com>	2020-05-13 01:45:22=
- -0700
-committer	Mike Snitzer <snitzer=40redhat.com>	2020-05-15 10:29:39 -0400
+> Found this build error when CONFIG_RISCV_M_MODE=y and CONFIG_RISCV_SBI
+> is not,
+> 
+> see patch "4f9bbcefa142 riscv: add support for MMIO access to the timer
+> registers"
 
-So it didn't make it into next-0514, which is why I got bit by it.  It's =
-in today's linux-next
-and life is good. :)
+Thanks for the pointer.
 
---==_Exmh_1589833361_31675P
-Content-Type: application/pgp-signature
+The question still remains, how do we end up with this EXPORT_SYMBOL?
 
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
+There is something wrong if the fix is an EXPORT_SYMBOL for a global
+variable.
 
-iQIVAwUBXsLukQdmEQWDXROgAQJj2w//XgM9u5d10BsMq/vpw2IiM1yGckHbK/ar
-oGAc7biiwgohYKxuoVDjWaqvxLyWjRKKY51HLw1hW0iW+s6GRkXmJMOiCUIYRUgl
-cBJmUKzAUnHuWN2aXTRMk2iMR2cT76ymT/JCgdhl/ohiBIgHg3nhF9+eNLgxme+C
-PT9jC+TzcaMMpxwkAgpEVVpYsx+4S+4Y0iIKH/tsTbfMlGaUtBRKx/uiEcnugIP8
-VpOGjU6aUwpWNQpztpya2Be8E63mTkHv+QkjIMzt+B8Oo3NzqT4hFkr6X8bQ2Xsb
-b7Pd7f5ca2r6g2Y7JOvK2yawZTVoKt57Y3ri/fvaHLL1gk3Nj66D/XLEWtioiEq4
-hw4hmCIinwKg1EmWomkgHzaGEylZZIMWRuKcX00JhVqqtM6BEG5rSFC5b67LxARr
-BEkrlRCYM4PIaNYGnh7lbwdiwAORk/60JXmlzVq8DyRJXjmNjAGUL5aAIVRsACzN
-VY8FWX/KGblmvyp6mkq2CUEa3HAIh2BlUccA+wWJtwQbCtsB87obhcyd60iHso55
-apXGB/y3HCKAmyuET/GPGfRPb84RwZR98ylJbhvkU9KHNImaNpQcIJe/kGZUqqWd
-5tvPtuWstOixl3czNpAym0S1QGvgqebzKZQAeJPdRNmg8/WSt/LdOXt7Snt8AOss
-gikLBdM2Rzs=
-=24y2
------END PGP SIGNATURE-----
 
---==_Exmh_1589833361_31675P--
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
