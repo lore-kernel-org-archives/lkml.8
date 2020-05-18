@@ -2,56 +2,51 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE546C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8948FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEDF520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637D620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826657;
-	bh=wu0tYu0TTHvg7GYeJXWNFmDKe2/uOXqi3m4LRTZNwUE=;
+	s=default; t=1589826658;
+	bh=XP312QEKG9ACypwj04DGBWos0WkM813/41HdoPyONdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wsvg4rBdKsCH6tQ1BqjoR5rNgtyXGAeAuSoc4YuxnCeNSYYjJklaQCbpQhgCNS4wN
-	 qhh5h79n9CxR/7ad3iSwitJtucJMjXK5qq3otOCUem/6hbYKyffZPDrkrlGOgcepGQ
-	 w6oOH3Lyqqz9CBd29fBjlo/GHxsxmRqFan3tlEh8=
+	b=miLEL8xPBOb7HOfcp+K3vmdv6kDKVuVeRMBAPG+kHNDjakHxRy4ukdWafnlj2AxkA
+	 HL9aySyzZHr8ALjIdv/HG0o+MkotT/WdJ9aU3oUziz59ragSjcTxa8IUzb1ynK/wMc
+	 Whz1MPSA3Q21iWE0FpPHZ1bMsE71A+iWcWjeZ2u0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgERRkQ (ORCPT
+        id S1729008AbgERRkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35534 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:40:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728988AbgERRkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:10 -0400
+        id S1728978AbgERRkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D76B120874;
-        Mon, 18 May 2020 17:40:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7208120853;
+        Mon, 18 May 2020 17:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823610;
-        bh=wu0tYu0TTHvg7GYeJXWNFmDKe2/uOXqi3m4LRTZNwUE=;
+        s=default; t=1589823607;
+        bh=XP312QEKG9ACypwj04DGBWos0WkM813/41HdoPyONdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sQL7UfIJOwK+D46r8ShftT2xr21w7xmaOFuL6xvdiS9q5AvcZCA6sWXOvPCXJJXHI
-         RW4XpgY2E+LCQE5QE70V3LCh9rG4Nv9IRP2Tl0c51QOYBsppXVPuMrFbTZwExNeZbo
-         3jEX7iSGDO3VSylVQBfIo0AdRQ3EGh4dOOtDJIks=
+        b=TCXyPh+TPJ/fLOIXW0x/f564mHO+AFCmULgQXz/q2boRRAQ+IoT83S5iXz9Xdc5C2
+         NhfAoHHDEff72J8Q5zkbnPaXBxfMW25eBBWzi3pxlb+UI1ZzAPLJ6DRTk9dDXajED+
+         vKVHu10nW+ZJXmYTnBSB1zeq1tzhgseVRrmJ2TBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 49/86] mm/memory_hotplug.c: fix overflow in test_pages_in_a_zone()
-Date:   Mon, 18 May 2020 19:36:20 +0200
-Message-Id: <20200518173500.525311459@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        =?UTF-8?q?Julian=20Gro=C3=9F?= <julian.g@posteo.de>
+Subject: [PATCH 4.4 13/86] USB: uas: add quirk for LaCie 2Big Quadra
+Date:   Mon, 18 May 2020 19:35:44 +0200
+Message-Id: <20200518173453.216712227@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -64,57 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit d6d8c8a48291b929b2e039f220f0b62958cccfea ]
+commit 9f04db234af691007bb785342a06abab5fb34474 upstream.
 
-When mainline introduced commit a96dfddbcc04 ("base/memory, hotplug: fix
-a kernel oops in show_valid_zones()"), it obtained the valid start and
-end pfn from the given pfn range.  The valid start pfn can fix the
-actual issue, but it introduced another issue.  The valid end pfn will
-may exceed the given end_pfn.
+This device needs US_FL_NO_REPORT_OPCODES to avoid going
+through prolonged error handling on enumeration.
 
-Although the incorrect overflow will not result in actual problem at
-present, but I think it need to be fixed.
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: Julian Groß <julian.g@posteo.de>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200429155218.7308-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[toshi.kani@hpe.com: remove assumption that end_pfn is aligned by MAX_ORDER_NR_PAGES]
-Fixes: a96dfddbcc04 ("base/memory, hotplug: fix a kernel oops in show_valid_zones()")
-Link: http://lkml.kernel.org/r/1486467299-22648-1-git-send-email-zhongjiang@huawei.com
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Signed-off-by: Toshi Kani <toshi.kani@hpe.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory_hotplug.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/storage/unusual_uas.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 804cbfe9132dd..5fa8a3606f409 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1397,7 +1397,7 @@ int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
- 			while ((i < MAX_ORDER_NR_PAGES) &&
- 				!pfn_valid_within(pfn + i))
- 				i++;
--			if (i == MAX_ORDER_NR_PAGES)
-+			if (i == MAX_ORDER_NR_PAGES || pfn + i >= end_pfn)
- 				continue;
- 			/* Check if we got outside of the zone */
- 			if (zone && !zone_spans_pfn(zone, pfn + i))
-@@ -1414,7 +1414,7 @@ int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -40,6 +40,13 @@
+  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
+  */
  
- 	if (zone) {
- 		*valid_start = start;
--		*valid_end = end;
-+		*valid_end = min(end, end_pfn);
- 		return 1;
- 	} else {
- 		return 0;
--- 
-2.20.1
-
++/* Reported-by: Julian Groß <julian.g@posteo.de> */
++UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
++		"LaCie",
++		"2Big Quadra USB3",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_NO_REPORT_OPCODES),
++
+ /*
+  * Apricorn USB3 dongle sometimes returns "USBSUSBSUSBS" in response to SCSI
+  * commands in UAS mode.  Observed with the 1.28 firmware; are there others?
 
 
