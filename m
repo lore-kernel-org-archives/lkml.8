@@ -2,309 +2,107 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A030C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D71C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D77C20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03DA20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589826052;
+	bh=He+A6CTlKyr17xpE/1/977g8PsjHdNLClOrWgkyMqLo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ynf7DCnOKqw+uzmRiIwIJE747VHeXIMWUp0tXNZxZXBbQHuj5FLBuiSEwYTw5awQb
+	 FN9EjJzLEqN7R7Z0dIldTM2iZd58jls99OcDLQiMgX39KRKKOg38HOdFQrt/5goIQO
+	 UlpgAh+o4D667FWD9CiLDdkfQk5jPntYyekv3/2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387728AbgERSUp (ORCPT
+        id S2387769AbgERSUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730997AbgERRwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:34 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DADC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 10:52:33 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id CF53F2A10C9
-Subject: Re: [PATCH v14 03/11] soc: mediatek: Add basic_clk_name to
- scp_power_data
-To:     Weiyi Lu <weiyi.lu@mediatek.com>
-Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
-        Fan Chen <fan.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1588752963-19934-1-git-send-email-weiyi.lu@mediatek.com>
- <1588752963-19934-4-git-send-email-weiyi.lu@mediatek.com>
- <7ad67855-a3f8-f979-8849-3765bd8289d3@collabora.com>
- <1589176947.21832.9.camel@mtksdaap41> <1589513724.16252.3.camel@mtksdaap41>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <c510cc46-3285-fa53-b2e1-0420b0bfb61c@collabora.com>
-Date:   Mon, 18 May 2020 19:52:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 14:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730966AbgERRwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AC2B20674;
+        Mon, 18 May 2020 17:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824341;
+        bh=He+A6CTlKyr17xpE/1/977g8PsjHdNLClOrWgkyMqLo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H0Lb0J1lHGLotF3R0FhzEaMJ1RvwSAtdSNtldCxmqQeMKybLVY6ROnvsoNK0v2jgi
+         TAvt4m5O0ik6pudmYSmCOj2J4WrOqODl+F7J+uIPfEk/PGRDuijE/iCe9uua29ziLF
+         WCLpqmaAQS/w1EiZBcpar1vimVTx66PXFpGGGctg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 26/80] ALSA: hda/hdmi: fix race in monitor detection during probe
+Date:   Mon, 18 May 2020 19:36:44 +0200
+Message-Id: <20200518173455.620680477@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
+References: <20200518173450.097837707@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1589513724.16252.3.camel@mtksdaap41>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Weiyi,
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-On 15/5/20 5:35, Weiyi Lu wrote:
-> On Mon, 2020-05-11 at 14:02 +0800, Weiyi Lu wrote:
->> On Wed, 2020-05-06 at 23:01 +0200, Enric Balletbo i Serra wrote:
->>> Hi Weiyi,
->>>
->>> Thank you for your patch.
->>>
->>> On 6/5/20 10:15, Weiyi Lu wrote:
->>>> Try to stop extending the clk_id or clk_names if there are
->>>> more and more new BASIC clocks. To get its own clocks by the
->>>> basic_clk_name of each power domain.
->>>> And then use basic_clk_name strings for all compatibles, instead of
->>>> mixing clk_id and clk_name.
->>>>
->>>> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
->>>> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
->>>> ---
->>>>  drivers/soc/mediatek/mtk-scpsys.c | 134 ++++++++++++--------------------------
->>>>  1 file changed, 41 insertions(+), 93 deletions(-)
->>>>
->>>> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
->>>> index f669d37..c9c3cf7 100644
->>>> --- a/drivers/soc/mediatek/mtk-scpsys.c
->>>> +++ b/drivers/soc/mediatek/mtk-scpsys.c
->>>> @@ -78,34 +78,6 @@
->>>>  #define PWR_STATUS_HIF1			BIT(26)	/* MT7622 */
->>>>  #define PWR_STATUS_WB			BIT(27)	/* MT7622 */
->>>>  
->>>> -enum clk_id {
->>>> -	CLK_NONE,
->>>> -	CLK_MM,
->>>> -	CLK_MFG,
->>>> -	CLK_VENC,
->>>> -	CLK_VENC_LT,
->>>> -	CLK_ETHIF,
->>>> -	CLK_VDEC,
->>>> -	CLK_HIFSEL,
->>>> -	CLK_JPGDEC,
->>>> -	CLK_AUDIO,
->>>> -	CLK_MAX,
->>>> -};
->>>> -
->>>> -static const char * const clk_names[] = {
->>>> -	NULL,
->>>> -	"mm",
->>>> -	"mfg",
->>>> -	"venc",
->>>> -	"venc_lt",
->>>> -	"ethif",
->>>> -	"vdec",
->>>> -	"hif_sel",
->>>> -	"jpgdec",
->>>> -	"audio",
->>>> -	NULL,
->>>> -};
->>>> -
->>>>  #define MAX_CLKS	3
->>>>  
->>>>  /**
->>>> @@ -116,7 +88,7 @@ enum clk_id {
->>>>   * @sram_pdn_bits: The mask for sram power control bits.
->>>>   * @sram_pdn_ack_bits: The mask for sram power control acked bits.
->>>>   * @bus_prot_mask: The mask for single step bus protection.
->>>> - * @clk_id: The basic clocks required by this power domain.
->>>> + * @basic_clk_name: The basic clocks required by this power domain.
->>>>   * @caps: The flag for active wake-up action.
->>>>   */
->>>>  struct scp_domain_data {
->>>> @@ -126,7 +98,7 @@ struct scp_domain_data {
->>>>  	u32 sram_pdn_bits;
->>>>  	u32 sram_pdn_ack_bits;
->>>>  	u32 bus_prot_mask;
->>>> -	enum clk_id clk_id[MAX_CLKS];
->>>> +	const char *basic_clk_name[MAX_CLKS];
->>>
->>> I only reviewed v13, so sorry if this was already discussed. I am wondering if
->>> would be better take advantage of the devm_clk_bulk_get() function instead of
->>> kind of reimplementing the same, something like this
->>>
->>> 	const struct clk_bulk_data *basic_clocks;
->>>
->>
->> I thought it should be const struct clk_bulk_data
->> basic_clocks[MAX_CLKS]; instead of const struct clk_bulk_data
->> *basic_clocks; in struct scp_domain_data data type
->>
->>>>  	u8 caps;
->>>>  };
->>>>  
->>>> @@ -411,12 +383,19 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
->>>>  	return ret;
->>>>  }
->>>>  
->>>> -static void init_clks(struct platform_device *pdev, struct clk **clk)
->>>> +static int init_basic_clks(struct platform_device *pdev, struct clk **clk,
->>>> +			const char * const *name)
->>>>  {
->>>>  	int i;
->>>>  
->>>> -	for (i = CLK_NONE + 1; i < CLK_MAX; i++)
->>>> -		clk[i] = devm_clk_get(&pdev->dev, clk_names[i]);
->>>> +	for (i = 0; i < MAX_CLKS && name[i]; i++) {
->>>> +		clk[i] = devm_clk_get(&pdev->dev, name[i]);
->>>> +
->>>> +		if (IS_ERR(clk[i]))
->>>> +			return PTR_ERR(clk[i]);
->>>> +	}
->>>
->>> You will be able to remove this function, see below ...
->>>
->>>> +
->>>> +	return 0;
->>>>  }
->>>>  
->>>>  static struct scp *init_scp(struct platform_device *pdev,
->>>> @@ -426,9 +405,8 @@ static struct scp *init_scp(struct platform_device *pdev,
->>>>  {
->>>>  	struct genpd_onecell_data *pd_data;
->>>>  	struct resource *res;
->>>> -	int i, j;
->>>> +	int i, ret;
->>>>  	struct scp *scp;
->>>> -	struct clk *clk[CLK_MAX];
->>>>  
->>>>  	scp = devm_kzalloc(&pdev->dev, sizeof(*scp), GFP_KERNEL);
->>>>  	if (!scp)
->>>> @@ -481,8 +459,6 @@ static struct scp *init_scp(struct platform_device *pdev,
->>>>  
->>>>  	pd_data->num_domains = num;
->>>>  
->>>> -	init_clks(pdev, clk);
->>>> -
->>>>  	for (i = 0; i < num; i++) {
->>>>  		struct scp_domain *scpd = &scp->domains[i];
->>>>  		struct generic_pm_domain *genpd = &scpd->genpd;
->>>> @@ -493,17 +469,9 @@ static struct scp *init_scp(struct platform_device *pdev,
->>>>  
->>>>  		scpd->data = data;
->>>>  
->>>> -		for (j = 0; j < MAX_CLKS && data->clk_id[j]; j++) {
->>>> -			struct clk *c = clk[data->clk_id[j]];
->>>> -
->>>> -			if (IS_ERR(c)) {
->>>> -				dev_err(&pdev->dev, "%s: clk unavailable\n",
->>>> -					data->name);
->>>> -				return ERR_CAST(c);
->>>> -			}
->>>> -
->>>> -			scpd->clk[j] = c;
->>>> -		}
->>>> +		ret = init_basic_clks(pdev, scpd->clk, data->basic_clk_name);
->>>> +		if (ret)
->>>> +			return ERR_PTR(ret);
->>>
->>> Just call:
->>>
->>> 	ret = devm_clk_bulk_get(&pdev->dev, ARRAY_SIZE(basic_clocks),
->>> 				data->basic_clocks);
->>> 	if (ret)
->>> 		return ERR_PTR(ret);
->>>
->>>>  
->>>>  		genpd->name = data->name;
->>>>  		genpd->power_off = scpsys_power_off;
->>>> @@ -560,7 +528,6 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->>>>  		.ctl_offs = SPM_CONN_PWR_CON,
->>>>  		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_CONN_M |
->>>>  				 MT2701_TOP_AXI_PROT_EN_CONN_S,
->>>> -		.clk_id = {CLK_NONE},
->>>>  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->>>>  	},
->>>>  	[MT2701_POWER_DOMAIN_DISP] = {
->>>> @@ -568,7 +535,7 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->>>>  		.sta_mask = PWR_STATUS_DISP,
->>>>  		.ctl_offs = SPM_DIS_PWR_CON,
->>>>  		.sram_pdn_bits = GENMASK(11, 8),
->>>> -		.clk_id = {CLK_MM},
->>>> +		.basic_clk_name = {"mm"},
->>>
->>> 		.basic_clocks[] = {
->>> 			{ .id = "mm" },
->>> 		};
->>>
->>
->> Those basic clocks without given a name (name: null) would get incorrect
->> clock via clk_bulk_get(...) due to 
->>
->> /**
->>  * of_parse_clkspec() - Parse a DT clock specifier for a given device
->> node
->>  * @np: device node to parse clock specifier from
->>  * @index: index of phandle to parse clock out of. If index < 0, @name
->> is used
->>  * @name: clock name to find and parse. If name is NULL, the index is
->> used
->>
->> And the index is 0 here in this callstack
->>
->> I guess something need to be improved before we use the clk_bulk_ APIs.
->>
-> 
-> Hi Enric,
-> 
-> According to the result above, is it necessary to change the APIs or
-> maybe I should send the next version v15 first to fix other problems you
-> mentioned? Many thanks.
-> 
+[ Upstream commit ca76282b6faffc83601c25bd2a95f635c03503ef ]
 
-It is fine to send a next version without changing the APIs, it depends on the
-extra work if you are fine with the change. To be honest I didn't see the
-problem above but I think can be fixed.
+A race exists between build_pcms() and build_controls() phases of codec
+setup. Build_pcms() sets up notifier for jack events. If a monitor event
+is received before build_controls() is run, the initial jack state is
+lost and never reported via mixer controls.
 
-Cheers,
- Enric
+The problem can be hit at least with SOF as the controller driver. SOF
+calls snd_hda_codec_build_controls() in its workqueue-based probe and
+this can be delayed enough to hit the race condition.
+
+Fix the issue by invalidating the per-pin ELD information when
+build_controls() is called. The existing call to hdmi_present_sense()
+will update the ELD contents. This ensures initial monitor state is
+correctly reflected via mixer controls.
+
+BugLink: https://github.com/thesofproject/linux/issues/1687
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200428123836.24512-1-kai.vehmanen@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/pci/hda/patch_hdmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 12a064f994b1a..1d83c3c59e1ac 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2211,7 +2211,9 @@ static int generic_hdmi_build_controls(struct hda_codec *codec)
+ 
+ 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
+ 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
++		struct hdmi_eld *pin_eld = &per_pin->sink_eld;
+ 
++		pin_eld->eld_valid = false;
+ 		hdmi_present_sense(per_pin, 0);
+ 	}
+ 
+-- 
+2.20.1
 
 
->>
->>>>  		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_MM_M0,
->>>>  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->>>>  	},
->>>> @@ -578,7 +545,7 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->>>>  		.ctl_offs = SPM_MFG_PWR_CON,
->>>>  		.sram_pdn_bits = GENMASK(11, 8),
->>>>  		.sram_pdn_ack_bits = GENMASK(12, 12),
->>>> -		.clk_id = {CLK_MFG},
->>>> +		.basic_clk_name = {"mfg"},
->>>
->>> 		.basic_clocks[] = {
->>> 			{ .id = "mfg" },
->>> 		};
->>>
->>>>  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
->>>>  	},
->>>>  	[MT2701_POWER_DOMAIN_VDEC] = {
->>>> @@ -587,7 +554,7 @@ static void mtk_register_power_domains(struct platform_device *pdev,
->>>>  		.ctl_offs = SPM_VDE_PWR_CON,
->>>>  		.sram_pdn_bits = GENMASK(11, 8),
->>>>  		.sram_pdn_ack_bits = GENMASK(12, 12),
->>>> -		.clk_id = {CLK_MM},
->>>> +		.basic_clk_name = {"mm"},
->>>
->>> ...
->>>
->>> [snip]
->>
->>
-> 
+
