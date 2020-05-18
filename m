@@ -2,57 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD41C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79791C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75DE20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AAF820715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824462;
-	bh=9rzIDRtRGHjl2cYuAFprr0tLIdXvJ5jLfP+kGYkY8o0=;
+	s=default; t=1589824464;
+	bh=vJwxjENKjponhZzinjr7aum5pc/rXKXOdzUWMBC5U60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3Y/yQVWrO2FDbQch4h9EEPL+kphcPU8AvukweMMrHA6IRJzUH5iVVY0FsKVtf7aa
-	 8ha1axIS8vrt7YfGxYant/ew/HS52Cb8Q4lALJ63uh4jpCjySx0ZhXkHUto65hkOG2
-	 k6abVJsyq36kzChHp0Y2G92/JWLhlQYy+4+RZyA0=
+	b=V4wmogfOIbiZC7kUqE3mSsjrEZSx5y+kjC8lFKjQN4eNYAsVUsmoRQohn/ELKvPB2
+	 Iv331tr5B2bmLVKoPD4x9PO93ti1TaDbz0Kd3BV723GDfL1xDC68YFQvGEVssAl8dD
+	 /CCcRdrVDTSgyIHz6RlZv7VU7Cdv5aYR4Ic6qDNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731286AbgERRyW (ORCPT
+        id S1731294AbgERRyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:54:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58884 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731274AbgERRyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:18 -0400
+        id S1731280AbgERRyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D02520715;
-        Mon, 18 May 2020 17:54:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5FF2207C4;
+        Mon, 18 May 2020 17:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824457;
-        bh=9rzIDRtRGHjl2cYuAFprr0tLIdXvJ5jLfP+kGYkY8o0=;
+        s=default; t=1589824460;
+        bh=vJwxjENKjponhZzinjr7aum5pc/rXKXOdzUWMBC5U60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OdqY9X8Ih/QtlrRAzeH/2JvEtc2Av7DpRCaycZxux6VJWxayo7dAElTHRw9qEb6rc
-         ruoYUjOUVutkA1VbcXFs6oUnYZBskveIMiDAE8jIz47yIlXvsgOKPokY9aTRaeZaPe
-         eFJx9NcTRNOxgj5zmJ7OkRGVSZ9hJcVWWQNAJtlE=
+        b=L7KoGMbvdggu90Akxl8kM6oYfnYs/HAbP2DZPOFP3fRw8lBVy40PmcNT6pxeirSeK
+         GNAb7au3Wb52kmrTnImbDNQ6Phv1UWK3ek7yI9lv4n6hUXpotpOueU6R/ZV7d4nkZv
+         VHRjiYaDf0uAbhb7V8M/aQHwbWyrQAFx394152wE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com,
-        syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 002/147] shmem: fix possible deadlocks on shmlock_user_lock
-Date:   Mon, 18 May 2020 19:35:25 +0200
-Message-Id: <20200518173513.390093569@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Sheets <matthew.sheets@gd-ms.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 020/147] netlabel: cope with NULL catmap
+Date:   Mon, 18 May 2020 19:35:43 +0200
+Message-Id: <20200518173516.304392838@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -65,80 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit ea0dfeb4209b4eab954d6e00ed136bc6b48b380d ]
+[ Upstream commit eead1c2ea2509fd754c6da893a94f0e69e83ebe4 ]
 
-Recent commit 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page()
-when punching hole") has allowed syzkaller to probe deeper, uncovering a
-long-standing lockdep issue between the irq-unsafe shmlock_user_lock,
-the irq-safe xa_lock on mapping->i_pages, and shmem inode's info->lock
-which nests inside xa_lock (or tree_lock) since 4.8's shmem_uncharge().
+The cipso and calipso code can set the MLS_CAT attribute on
+successful parsing, even if the corresponding catmap has
+not been allocated, as per current configuration and external
+input.
 
-user_shm_lock(), servicing SysV shmctl(SHM_LOCK), wants
-shmlock_user_lock while its caller shmem_lock() holds info->lock with
-interrupts disabled; but hugetlbfs_file_setup() calls user_shm_lock()
-with interrupts enabled, and might be interrupted by a writeback endio
-wanting xa_lock on i_pages.
+Later, selinux code tries to access the catmap if the MLS_CAT flag
+is present via netlbl_catmap_getlong(). That may cause null ptr
+dereference while processing incoming network traffic.
 
-This may not risk an actual deadlock, since shmem inodes do not take
-part in writeback accounting, but there are several easy ways to avoid
-it.
+Address the issue setting the MLS_CAT flag only if the catmap is
+really allocated. Additionally let netlbl_catmap_getlong() cope
+with NULL catmap.
 
-Requiring interrupts disabled for shmlock_user_lock would be easy, but
-it's a high-level global lock for which that seems inappropriate.
-Instead, recall that the use of info->lock to guard info->flags in
-shmem_lock() dates from pre-3.1 days, when races with SHMEM_PAGEIN and
-SHMEM_TRUNCATE could occur: nowadays it serves no purpose, the only flag
-added or removed is VM_LOCKED itself, and calls to shmem_lock() an inode
-are already serialized by the caller.
-
-Take info->lock out of the chain and the possibility of deadlock or
-lockdep warning goes away.
-
-Fixes: 4595ef88d136 ("shmem: make shmem_inode_info::lock irq-safe")
-Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
-Reported-by: syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2004161707410.16322@eggly.anvils
-Link: https://lore.kernel.org/lkml/000000000000e5838c05a3152f53@google.com/
-Link: https://lore.kernel.org/lkml/0000000000003712b305a331d3b1@google.com/
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Matthew Sheets <matthew.sheets@gd-ms.com>
+Fixes: 4b8feff251da ("netlabel: fix the horribly broken catmap functions")
+Fixes: ceba1832b1b2 ("calipso: Set the calipso socket label to match the secattr.")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/shmem.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/ipv4/cipso_ipv4.c        |    6 ++++--
+ net/ipv6/calipso.c           |    3 ++-
+ net/netlabel/netlabel_kapi.c |    6 ++++++
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index e71b15da19854..98802ca76a5c3 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2183,7 +2183,11 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
- 	struct shmem_inode_info *info = SHMEM_I(inode);
- 	int retval = -ENOMEM;
+--- a/net/ipv4/cipso_ipv4.c
++++ b/net/ipv4/cipso_ipv4.c
+@@ -1258,7 +1258,8 @@ static int cipso_v4_parsetag_rbm(const s
+ 			return ret_val;
+ 		}
  
--	spin_lock_irq(&info->lock);
-+	/*
-+	 * What serializes the accesses to info->flags?
-+	 * ipc_lock_object() when called from shmctl_do_lock(),
-+	 * no serialization needed when called from shm_destroy().
-+	 */
- 	if (lock && !(info->flags & VM_LOCKED)) {
- 		if (!user_shm_lock(inode->i_size, user))
- 			goto out_nomem;
-@@ -2198,7 +2202,6 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
- 	retval = 0;
+-		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
++		if (secattr->attr.mls.cat)
++			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
+ 	}
  
- out_nomem:
--	spin_unlock_irq(&info->lock);
- 	return retval;
- }
+ 	return 0;
+@@ -1439,7 +1440,8 @@ static int cipso_v4_parsetag_rng(const s
+ 			return ret_val;
+ 		}
  
--- 
-2.20.1
-
+-		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
++		if (secattr->attr.mls.cat)
++			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
+ 	}
+ 
+ 	return 0;
+--- a/net/ipv6/calipso.c
++++ b/net/ipv6/calipso.c
+@@ -1047,7 +1047,8 @@ static int calipso_opt_getattr(const uns
+ 			goto getattr_return;
+ 		}
+ 
+-		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
++		if (secattr->attr.mls.cat)
++			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
+ 	}
+ 
+ 	secattr->type = NETLBL_NLTYPE_CALIPSO;
+--- a/net/netlabel/netlabel_kapi.c
++++ b/net/netlabel/netlabel_kapi.c
+@@ -734,6 +734,12 @@ int netlbl_catmap_getlong(struct netlbl_
+ 	if ((off & (BITS_PER_LONG - 1)) != 0)
+ 		return -EINVAL;
+ 
++	/* a null catmap is equivalent to an empty one */
++	if (!catmap) {
++		*offset = (u32)-1;
++		return 0;
++	}
++
+ 	if (off < catmap->startbit) {
+ 		off = catmap->startbit;
+ 		*offset = off;
 
 
