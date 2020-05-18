@@ -2,145 +2,129 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37010C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 199852070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042C9207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:21:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEUYT5d3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgERBIV (ORCPT
+        id S1726725AbgERBVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 21:08:21 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:42568 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726665AbgERBIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 21:08:21 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2v+38FeaOA1AA--.34S3;
-        Mon, 18 May 2020 09:08:15 +0800 (CST)
-Subject: Re: [PATCH] MIPS: Loongson: Add support for serial console
-To:     WANG Xuerui <kernel@xen0n.name>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1589612588-29196-1-git-send-email-yangtiezhu@loongson.cn>
- <5aadf1a7-51c7-453e-beaa-3df6ceca5354@xen0n.name>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <d5fde4bc-69a9-c9c0-70de-106968ecc7c4@loongson.cn>
-Date:   Mon, 18 May 2020 09:08:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <5aadf1a7-51c7-453e-beaa-3df6ceca5354@xen0n.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxr2v+38FeaOA1AA--.34S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGw1UZF1kCw1rXr43Aw47Jwb_yoW5Gr43pF
-        4rJa1UKrWktFnYq397CrWkZrWFyrZxJFyDGF47Jr15ua98K34Fvw1xK34jv3y7WF95ta10
-        vFykKF9IkF47C3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUU
-        UU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Sun, 17 May 2020 21:21:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726665AbgERBVk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 21:21:40 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7727C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 18:21:40 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s10so1814990pgm.0
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 18:21:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=EOiAYIbPHXBk/CjBM2wyL2J8T44WPRGVhqC7t2NlRp4=;
+        b=iEUYT5d3lsJutyCK8M2Yt9zzJfR8wnxAu6GipHa+ACUQE6DemN1ok4NyjeuIJ0x7vM
+         XwBCs9FjakumG1QxuimQcV5AVEQ3FwbuG7Q9A8mEZRdDtTa6VdhtRk7A1NnwdLz63+vY
+         khbjrWFUHD61Wcge3L7I8L79pb1f2LruKzzRtEC5eSLleqWmAE9u+WwIQKyB3dB5fFCk
+         f/GyxOzQoNhqAVrlCljpx1mKPYO579ijSuZQaUAofARisp0v1wdB8QKgMcVeYgyUdcV0
+         fo0NlYqLo8Dvju3IZCnVsOKP/UJ8PjLYgU5DWuoUNkhJZtT4T7iWnLqQ0HhGTfO9iaev
+         JIoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EOiAYIbPHXBk/CjBM2wyL2J8T44WPRGVhqC7t2NlRp4=;
+        b=fv8ll9HdcoLmZADi0jDrtAYDoEf5GYUya4DzBjuCoonF6GgBM/IS2TrUQAGnsPzoea
+         8vfM1z75lo4m6r+nPTv0UbTEiRDwWaX8VryPwnEtt0zjxqvAcRcZtHgNBr7J479gLffV
+         j/8mU46AorGq9d4QSCax3BHK0TUVayh6DyG6HfDibzdlxCiG3LM6OdDPKY6rgIv9ewMn
+         FKoDPV2IB/79BEPzsOn3B1WRPFwijd/dJLqSONwq/jPlt98s5/PnfLgRGFRRa+1DgOEN
+         7v4UZFNY0UkEmwjnb6VKiQAWkA8TkVYyCQvOdYg7bDpAnypE14W6NMkRAbYq9ZhiWNew
+         dsgA==
+X-Gm-Message-State: AOAM530dOyZ4yZr6/K9TIdSqQiFhllrTiCLrkfGnuEhf6rSbEyD6rgXR
+        V3Lj5LTSICHGQoENf35V4cQ=
+X-Google-Smtp-Source: ABdhPJw3PYsUVGZwikbg09dhIpRtwKWlR+3iYbPBHqIJtYgDNJ8rswWLbyMwxRoEw+JcuXFF6O7E8g==
+X-Received: by 2002:a63:f242:: with SMTP id d2mr13423800pgk.212.1589764900114;
+        Sun, 17 May 2020 18:21:40 -0700 (PDT)
+Received: from localhost.localdomain ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id fw4sm1544376pjb.31.2020.05.17.18.21.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 17 May 2020 18:21:39 -0700 (PDT)
+From:   js1304@gmail.com
+X-Google-Original-From: iamjoonsoo.kim@lge.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: [PATCH 00/11] clean-up the migration target allocation functions
+Date:   Mon, 18 May 2020 10:20:46 +0900
+Message-Id: <1589764857-6800-1-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/16/2020 07:09 PM, WANG Xuerui wrote:
-> On 5/16/20 3:03 PM, Tiezhu Yang wrote:
->
->> After commit 87fcfa7b7fe6 ("MIPS: Loongson64: Add generic dts"),
->> there already exists the node and property of Loongson CPU UART0
->> in loongson3-package.dtsi:
->>
->> cpu_uart0: serial@1fe001e0 {
->>          compatible = "ns16550a";
->>          reg = <0 0x1fe001e0 0x8>;
->>          clock-frequency = <33000000>;
->>          interrupt-parent = <&liointc>;
->>          interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
->>          no-loopback-test;
->> };
->>
->> In order to support for serial console on the Loongson platform,
->> add CONFIG_SERIAL_OF_PLATFORM=y to loongson3_defconfig.
->>
->> With this patch, we can see the following boot message:
->>
->> [    1.877745] printk: console [ttyS0] disabled
->> [    1.881979] 1fe001e0.serial: ttyS0 at MMIO 0x1fe001e0 (irq = 16, 
->> base_baud = 2062500) is a 16550A
->> [    1.890838] printk: console [ttyS0] enabled
->>
->> And also, we can login normally from the serial console.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>
->> Hi Jiaxun,
->>
->> Thank you very much for your suggestion.
->>
->>   arch/mips/configs/loongson3_defconfig | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/mips/configs/loongson3_defconfig 
->> b/arch/mips/configs/loongson3_defconfig
->> index 6768c16..cd95f08 100644
->> --- a/arch/mips/configs/loongson3_defconfig
->> +++ b/arch/mips/configs/loongson3_defconfig
->> @@ -217,6 +217,7 @@ CONFIG_SERIAL_8250_EXTENDED=y
->>   CONFIG_SERIAL_8250_MANY_PORTS=y
->>   CONFIG_SERIAL_8250_SHARE_IRQ=y
->>   CONFIG_SERIAL_8250_RSA=y
->> +CONFIG_SERIAL_OF_PLATFORM=y
->>   CONFIG_HW_RANDOM=y
->>   CONFIG_RAW_DRIVER=m
->>   CONFIG_I2C_CHARDEV=y
->
-> Hi,
->
-> The patch title is again exaggerating things. This is a defconfig 
-> change, so please refer to `git log` output of `arch/mips/configs` and 
-> use something like "MIPS: Loongson: loongson3_defconfig: enable serial 
-> console" or "MIPS: Loongson: enable serial console in defconfig". The 
-> current title reads as if Loongson kernels never were able to use a 
-> serial console in the past.
+From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-Hi Xuerui,
+This patchset clean-up the migration target allocation functions.
 
-Thanks for your suggestion.
+Contributions of this patchset are:
+1. unify two hugetlb alloc functions. As a result, one is remained.
+2. make one external hugetlb alloc function to internal one.
+3. unify three functions for migration target allocation.
 
-We can not use the serial console without this patch,
-so I use the current patch subject.
+The patchset is based on next-20200515.
+The patchset is available on:
 
-Anyway, let me modify the patch subject to make it more accurate,
-I think the following is better:
-"MIPS: Loongson: Enable devicetree based probing for 8250 ports"
+https://github.com/JoonsooKim/linux/tree/cleanup-migration-target-allocation-v1.00-next-20200515
 
-drivers/tty/serial/8250/Kconfig:
-config SERIAL_OF_PLATFORM
-         tristate "Devicetree based probing for 8250 ports"
+Thanks.
 
-I will send v2 later.
+Joonsoo Kim (11):
+  mm/page_isolation: prefer the node of the source page
+  mm/migrate: move migration helper from .h to .c
+  mm/hugetlb: introduce alloc_control structure to simplify migration
+    target allocation APIs
+  mm/hugetlb: unify hugetlb migration callback function
+  mm/hugetlb: make hugetlb migration target allocation APIs CMA aware
+  mm/hugetlb: do not modify user provided gfp_mask
+  mm/migrate: change the interface of the migration target alloc/free
+    functions
+  mm/migrate: make standard migration target allocation functions
+  mm/gup: use standard migration target allocation function
+  mm/mempolicy: use standard migration target allocation function
+  mm/page_alloc: use standard migration target allocation function
+    directly
 
-Thanks,
-Tiezhu Yang
+ include/linux/hugetlb.h        | 33 ++++++---------
+ include/linux/migrate.h        | 44 +++++---------------
+ include/linux/page-isolation.h |  4 +-
+ mm/compaction.c                | 15 ++++---
+ mm/gup.c                       | 60 +++++-----------------------
+ mm/hugetlb.c                   | 91 ++++++++++++++++++++----------------------
+ mm/internal.h                  | 13 +++++-
+ mm/memory-failure.c            | 14 ++++---
+ mm/memory_hotplug.c            | 10 +++--
+ mm/mempolicy.c                 | 39 ++++++------------
+ mm/migrate.c                   | 75 ++++++++++++++++++++++++++--------
+ mm/page_alloc.c                |  9 ++++-
+ mm/page_isolation.c            |  5 ---
+ 13 files changed, 196 insertions(+), 216 deletions(-)
+
+-- 
+2.7.4
 
