@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5179C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC7320643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855A220643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="AiY/uLPB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="rwK1tKZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387933AbgERSZ0 (ORCPT
+        id S1729471AbgERSZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38382 "EHLO
+        Mon, 18 May 2020 14:25:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730652AbgERSZU (ORCPT
+        with ESMTP id S2387923AbgERSZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:25:20 -0400
+        Mon, 18 May 2020 14:25:22 -0400
 Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC64C061A0C;
-        Mon, 18 May 2020 11:25:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A80BBC061A0C;
+        Mon, 18 May 2020 11:25:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version:
-        References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:Content-ID:
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=OE58ZX5Oa1e7YVFVtcnMs3q7vetLAsEVZFBhervmLAg=; b=AiY/uLPBryeGz2O3iSwnv2CjWr
-        ujQoBLXSfuBBAjlkjq0ulWqpgFLwNekgBcgIXC+S7lHtWIiPtPhm24fzgoXL3vwmYJ7QKjOJPeflM
-        wmcn2q/0JVYMFs3Z1NENUh+ICdIiiag18rd83YQKRX6Nkn9ziafYT+qvBum9gkw3IETWNPZiTgrtG
-        0ZOBICkuZB3uFgRC+RpZCSK7Hm5fIcEndKUwxFB7lCJURSxB5eJRSWXb76EfmdmnW2MsZR5ai90iS
-        MU13u+6ftBh+nVDqcSev6jJt87a66WlnXd5WiXbaCh2xZzjFxN+O2QJVDTFwXy07OMCNlxg8/nGIg
-        SOX5PV6Q==;
+        bh=NOEATbHih4e6QP8ruGj44dsqQNDb0OKT1gy3kLZ+YnY=; b=rwK1tKZl/xktGHTrTYBvCmMlip
+        Yiw+4/NJQRQqoDbemtl5D6JW6MdY8sHTNk4cabtIWYyaJMzEbYhssK4ig+sOgWgm6zgU2ceFaCHLX
+        GHBY/URRKVmwdGHF0bDkOP7j2Dt7D0QEc+b/0jzxP7MKbFHqZdEh1k7+8HWsm4mmj07vY6gHJHJ5x
+        9hGwhunTktVqr7ruLbC1hp6H8TunhoiEJXQ5rQEVMN/vXW9Ed4heVsvF+kcVRxhTYxeY4vmZARBfh
+        LrNhn845RPK9EAMiMglpsWrqslVETLmXnHDJHrH/dBwKx7e15tosgfWm1HAuH42EtEmO//6HtJ8bP
+        ZMqWdMWg==;
 Received: from [2001:4d48:ad59:1409:4::2] (helo=youmian.o362.us)
         by the.earth.li with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <noodles@earth.li>)
-        id 1jakCk-0008Ji-Ac; Mon, 18 May 2020 19:09:34 +0100
-Date:   Mon, 18 May 2020 19:09:31 +0100
+        id 1jakD2-0008LF-Pl; Mon, 18 May 2020 19:09:52 +0100
+Date:   Mon, 18 May 2020 19:09:49 +0100
 From:   Jonathan McDowell <noodles@earth.li>
 To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: vendor-prefixes: Add MikroTik
-Message-ID: <aae96cddb2d1426482cae7f6fc4d1dc0aecfde5d.1589824955.git.noodles@earth.li>
+Subject: [PATCH 2/3] ARM: dts: qcom: add ethernet definitions to ipq8064
+Message-ID: <723344332357b5eed957443ec4a705a080fcc2da.1589824955.git.noodles@earth.li>
 References: <cover.1589824955.git.noodles@earth.li>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 In-Reply-To: <cover.1589824955.git.noodles@earth.li>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,27 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MikroTik (SIA Mikrotīkls) is a Latvian company who develop routers and
-wireless ISP systems.
+Plumb in the 4 IPQ8064 stmmac based ethernet interfaces.
 
 Signed-off-by: Jonathan McDowell <noodles@earth.li>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/qcom-ipq8064.dtsi | 108 ++++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index d3891386d671..d3277fe6640b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -633,6 +633,8 @@ patternProperties:
-     description: Microsoft Corporation
-   "^mikroe,.*":
-     description: MikroElektronika d.o.o.
-+  "^mikrotik,.*":
-+    description: MikroTik
-   "^miniand,.*":
-     description: Miniand Tech
-   "^minix,.*":
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index b912da9a3ff3..9c0d5510c805 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -597,6 +597,114 @@
+ 			perst-gpio = <&qcom_pinmux 63 GPIO_ACTIVE_LOW>;
+ 		};
+ 
++		nss_common: syscon@03000000 {
++			compatible = "syscon";
++			reg = <0x03000000 0x0000FFFF>;
++		};
++
++		qsgmii_csr: syscon@1bb00000 {
++			compatible = "syscon";
++			reg = <0x1bb00000 0x000001FF>;
++		};
++
++		stmmac_axi_setup: stmmac-axi-config {
++			snps,wr_osr_lmt = <7>;
++			snps,rd_osr_lmt = <7>;
++			snps,blen = <16 0 0 0 0 0 0>;
++		};
++
++		gmac0: ethernet@37000000 {
++			device_type = "network";
++			compatible = "qcom,ipq806x-gmac";
++			reg = <0x37000000 0x200000>;
++			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++
++			snps,axi-config = <&stmmac_axi_setup>;
++			snps,pbl = <32>;
++			snps,aal = <1>;
++
++			qcom,nss-common = <&nss_common>;
++			qcom,qsgmii-csr = <&qsgmii_csr>;
++
++			clocks = <&gcc GMAC_CORE1_CLK>;
++			clock-names = "stmmaceth";
++
++			resets = <&gcc GMAC_CORE1_RESET>;
++			reset-names = "stmmaceth";
++
++			status = "disabled";
++		};
++
++		gmac1: ethernet@37200000 {
++			device_type = "network";
++			compatible = "qcom,ipq806x-gmac";
++			reg = <0x37200000 0x200000>;
++			interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++
++			snps,axi-config = <&stmmac_axi_setup>;
++			snps,pbl = <32>;
++			snps,aal = <1>;
++
++			qcom,nss-common = <&nss_common>;
++			qcom,qsgmii-csr = <&qsgmii_csr>;
++
++			clocks = <&gcc GMAC_CORE2_CLK>;
++			clock-names = "stmmaceth";
++
++			resets = <&gcc GMAC_CORE2_RESET>;
++			reset-names = "stmmaceth";
++
++			status = "disabled";
++		};
++
++		gmac2: ethernet@37400000 {
++			device_type = "network";
++			compatible = "qcom,ipq806x-gmac";
++			reg = <0x37400000 0x200000>;
++			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++
++			snps,axi-config = <&stmmac_axi_setup>;
++			snps,pbl = <32>;
++			snps,aal = <1>;
++
++			qcom,nss-common = <&nss_common>;
++			qcom,qsgmii-csr = <&qsgmii_csr>;
++
++			clocks = <&gcc GMAC_CORE3_CLK>;
++			clock-names = "stmmaceth";
++
++			resets = <&gcc GMAC_CORE3_RESET>;
++			reset-names = "stmmaceth";
++
++			status = "disabled";
++		};
++
++		gmac3: ethernet@37600000 {
++			device_type = "network";
++			compatible = "qcom,ipq806x-gmac";
++			reg = <0x37600000 0x200000>;
++			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++
++			snps,axi-config = <&stmmac_axi_setup>;
++			snps,pbl = <32>;
++			snps,aal = <1>;
++
++			qcom,nss-common = <&nss_common>;
++			qcom,qsgmii-csr = <&qsgmii_csr>;
++
++			clocks = <&gcc GMAC_CORE4_CLK>;
++			clock-names = "stmmaceth";
++
++			resets = <&gcc GMAC_CORE4_RESET>;
++			reset-names = "stmmaceth";
++
++			status = "disabled";
++		};
++
+ 		vsdcc_fixed: vsdcc-regulator {
+ 			compatible = "regulator-fixed";
+ 			regulator-name = "SDCC Power";
 -- 
 2.20.1
 
