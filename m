@@ -2,51 +2,55 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8948FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB45C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637D620657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E84C20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826658;
-	bh=XP312QEKG9ACypwj04DGBWos0WkM813/41HdoPyONdo=;
+	s=default; t=1589826660;
+	bh=VgB+B0Gdlag8jOFRayjeRepY0r8rjjvg0pgak1xnbZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=miLEL8xPBOb7HOfcp+K3vmdv6kDKVuVeRMBAPG+kHNDjakHxRy4ukdWafnlj2AxkA
-	 HL9aySyzZHr8ALjIdv/HG0o+MkotT/WdJ9aU3oUziz59ragSjcTxa8IUzb1ynK/wMc
-	 Whz1MPSA3Q21iWE0FpPHZ1bMsE71A+iWcWjeZ2u0=
+	b=egwPDdlGvDH8yVlnz+Z7zc7xAlGhZPK6ZX0uVI99pLkVATULv9u6ImwdcZeR66HH7
+	 ZwA+fEZsbEmM/fh++XSQWzigSIe/mSNUicqYQXThOVy18Zlul35Kxy9Di/TYHjxNTC
+	 RJn/hN7mgRxGWYFVh0WpS5jZh7ABlsVb3YNF5f8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgERRkN (ORCPT
+        id S1728994AbgERRkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35460 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:40:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728978AbgERRkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:08 -0400
+        id S1728954AbgERRkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7208120853;
-        Mon, 18 May 2020 17:40:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86EA32083E;
+        Mon, 18 May 2020 17:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823607;
-        bh=XP312QEKG9ACypwj04DGBWos0WkM813/41HdoPyONdo=;
+        s=default; t=1589823603;
+        bh=VgB+B0Gdlag8jOFRayjeRepY0r8rjjvg0pgak1xnbZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TCXyPh+TPJ/fLOIXW0x/f564mHO+AFCmULgQXz/q2boRRAQ+IoT83S5iXz9Xdc5C2
-         NhfAoHHDEff72J8Q5zkbnPaXBxfMW25eBBWzi3pxlb+UI1ZzAPLJ6DRTk9dDXajED+
-         vKVHu10nW+ZJXmYTnBSB1zeq1tzhgseVRrmJ2TBM=
+        b=LVNNFESfFE7JB5ojVm2aXYPERfhyuxzZFa3jPW+ueS0UDqbXz4fl8EYp82Bdpfvly
+         VwVXUg4G3ftNM2hdhn6aV0SLaHhGiUoLOBHsAojhWL9A+xfqUDFhIe8KgXFOU3pHJC
+         c08HLq0rgo/N1jB9m7U7WOiYYVyV825aHqojQWD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        =?UTF-8?q?Julian=20Gro=C3=9F?= <julian.g@posteo.de>
-Subject: [PATCH 4.4 13/86] USB: uas: add quirk for LaCie 2Big Quadra
-Date:   Mon, 18 May 2020 19:35:44 +0200
-Message-Id: <20200518173453.216712227@linuxfoundation.org>
+        stable@vger.kernel.org, John Hurley <john.hurley@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 47/86] net: openvswitch: fix csum updates for MPLS actions
+Date:   Mon, 18 May 2020 19:36:18 +0200
+Message-Id: <20200518173500.146019004@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -59,38 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: John Hurley <john.hurley@netronome.com>
 
-commit 9f04db234af691007bb785342a06abab5fb34474 upstream.
+[ Upstream commit 0e3183cd2a64843a95b62f8bd4a83605a4cf0615 ]
 
-This device needs US_FL_NO_REPORT_OPCODES to avoid going
-through prolonged error handling on enumeration.
+Skbs may have their checksum value populated by HW. If this is a checksum
+calculated over the entire packet then the CHECKSUM_COMPLETE field is
+marked. Changes to the data pointer on the skb throughout the network
+stack still try to maintain this complete csum value if it is required
+through functions such as skb_postpush_rcsum.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: Julian Groß <julian.g@posteo.de>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200429155218.7308-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The MPLS actions in Open vSwitch modify a CHECKSUM_COMPLETE value when
+changes are made to packet data without a push or a pull. This occurs when
+the ethertype of the MAC header is changed or when MPLS lse fields are
+modified.
 
+The modification is carried out using the csum_partial function to get the
+csum of a buffer and add it into the larger checksum. The buffer is an
+inversion of the data to be removed followed by the new data. Because the
+csum is calculated over 16 bits and these values align with 16 bits, the
+effect is the removal of the old value from the CHECKSUM_COMPLETE and
+addition of the new value.
+
+However, the csum fed into the function and the outcome of the
+calculation are also inverted. This would only make sense if it was the
+new value rather than the old that was inverted in the input buffer.
+
+Fix the issue by removing the bit inverts in the csum_partial calculation.
+
+The bug was verified and the fix tested by comparing the folded value of
+the updated CHECKSUM_COMPLETE value with the folded value of a full
+software checksum calculation (reset skb->csum to 0 and run
+skb_checksum_complete(skb)). Prior to the fix the outcomes differed but
+after they produce the same result.
+
+Fixes: 25cd9ba0abc0 ("openvswitch: Add basic MPLS support to kernel")
+Fixes: bc7cc5999fd3 ("openvswitch: update checksum in {push,pop}_mpls")
+Signed-off-by: John Hurley <john.hurley@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Acked-by: Pravin B Shelar <pshelar@ovn.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/unusual_uas.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ net/openvswitch/actions.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -40,6 +40,13 @@
-  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
-  */
+diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+index fd6c587b6a040..828fdced4ecd8 100644
+--- a/net/openvswitch/actions.c
++++ b/net/openvswitch/actions.c
+@@ -143,8 +143,7 @@ static void update_ethertype(struct sk_buff *skb, struct ethhdr *hdr,
+ 	if (skb->ip_summed == CHECKSUM_COMPLETE) {
+ 		__be16 diff[] = { ~(hdr->h_proto), ethertype };
  
-+/* Reported-by: Julian Groß <julian.g@posteo.de> */
-+UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
-+		"LaCie",
-+		"2Big Quadra USB3",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_NO_REPORT_OPCODES),
-+
- /*
-  * Apricorn USB3 dongle sometimes returns "USBSUSBSUSBS" in response to SCSI
-  * commands in UAS mode.  Observed with the 1.28 firmware; are there others?
+-		skb->csum = ~csum_partial((char *)diff, sizeof(diff),
+-					~skb->csum);
++		skb->csum = csum_partial((char *)diff, sizeof(diff), skb->csum);
+ 	}
+ 
+ 	hdr->h_proto = ethertype;
+@@ -227,8 +226,7 @@ static int set_mpls(struct sk_buff *skb, struct sw_flow_key *flow_key,
+ 	if (skb->ip_summed == CHECKSUM_COMPLETE) {
+ 		__be32 diff[] = { ~(*stack), lse };
+ 
+-		skb->csum = ~csum_partial((char *)diff, sizeof(diff),
+-					  ~skb->csum);
++		skb->csum = csum_partial((char *)diff, sizeof(diff), skb->csum);
+ 	}
+ 
+ 	*stack = lse;
+-- 
+2.20.1
+
 
 
