@@ -2,115 +2,144 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7924C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B87EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4985205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LmW2zV3v"
+	by mail.kernel.org (Postfix) with ESMTP id 1090F205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgERVjs (ORCPT
+        id S1728176AbgERVkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:39:48 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:56542 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726502AbgERVjr (ORCPT
+        Mon, 18 May 2020 17:40:04 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:50314 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgERVkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:39:47 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id ACEBE400B9;
-        Mon, 18 May 2020 21:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1589837987; bh=4fUtfqcSwPxDzsZvtjaryhdzMyuy3jPIOnsb1fo4TLE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LmW2zV3vqgfLtNGu6lM/+d6Fcr3odAXOx1mpOrnSof+11mW/l74QsXtnwaTKqce9I
-         uDfdtMdKwe41oYXsqdZgX2SD0Pt+TD0U10To7eG4t7BDtNNc78sghfN7RvlILSFyJA
-         ipdKw2/UhZezG/b79Qf8ZZgqxINOkOsFKCRm7ErvyHtxdlelaiBCOJr6pun9ta1oB8
-         oKuFMJbWK5n+KYL5DCdxFI7aI204vdNIL5AJ9AFpSgfGtbwZ8l0LXZIMkFwAtWPClX
-         QJ/5xREN94OsXPYjk1KNCgXFNUJxtcYe9bB4UPuZ5U2UHy/tkR6wUDz4FSS8rmy0Jb
-         qO/QgEz8NjF2Q==
-Received: from ru20arcgnu1.internal.synopsys.com (ru20arcgnu1.internal.synopsys.com [10.121.9.48])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 2B482A005C;
-        Mon, 18 May 2020 21:39:37 +0000 (UTC)
-From:   Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-To:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        Joey Pabalinas <joeypabalinas@gmail.com>,
-        Petr Vorel <petr.vorel@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-snps-arc@lists.infradead.org,
-        Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-Subject: [PATCH] Kernel selftests: Add check if tpm devices are supported
-Date:   Tue, 19 May 2020 00:39:34 +0300
-Message-Id: <20200518213934.23156-1-Nikita.Sobolev@synopsys.com>
-X-Mailer: git-send-email 2.16.2
+        Mon, 18 May 2020 17:40:04 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5B9488030875;
+        Mon, 18 May 2020 21:40:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KgkFFm6deoXq; Tue, 19 May 2020 00:39:56 +0300 (MSK)
+Date:   Tue, 19 May 2020 00:39:55 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/12] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C
+ controller
+Message-ID: <20200518213955.wzw26wnvcr3qpnok@mobilestation>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-4-Sergey.Semin@baikalelectronics.ru>
+ <20200518203319.GA14243@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200518203319.GA14243@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tpm2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
-are available. In case, when these devices are not available test
-fails, but expected behaviour is test to be skipped.
+On Mon, May 18, 2020 at 02:33:19PM -0600, Rob Herring wrote:
+> On Sun, May 10, 2020 at 12:50:09PM +0300, Serge Semin wrote:
+> > Add the "baikal,bt1-sys-i2c" compatible string to the DW I2C binding and
+> > make sure the reg property isn't required in this case because the
+> > controller is embedded into the Baikal-T1 System Controller. The rest of
+> > the DW APB I2C properties are compatible and can be freely used to describe
+> > the Baikal-T1 I2C controller dts-node.
+> 
+> Is there not a sub-range of the system controller with the I2C 
+> registers? I'd assume there is, so you can still have 'reg' even if 
+> Linux doesn't use it (currently).
 
-Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
----
- tools/testing/selftests/tpm2/test_smoke.sh | 11 +++++++++--
- tools/testing/selftests/tpm2/test_space.sh |  9 ++++++++-
- 2 files changed, 17 insertions(+), 3 deletions(-)
+Yes, there is a range. It's just three access registers. Is it wrong to make the
+reg property being optional in this case since it can be accessed over syscon
+regmap? Do you suggest to get back the reg property being required for our
+device?
 
-diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
-index 8155c2ea7ccb..e55d3e400666 100755
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -1,8 +1,15 @@
- #!/bin/bash
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
--python -m unittest -v tpm2_tests.SmokeTest
--python -m unittest -v tpm2_tests.AsyncTest
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+
-+if [ -f /dev/tpm0 ] ; then
-+	python -m unittest -v tpm2_tests.SmokeTest
-+	python -m unittest -v tpm2_tests.AsyncTest
-+else
-+	exit $ksft_skip
-+fi
- 
- CLEAR_CMD=$(which tpm2_clear)
- if [ -n $CLEAR_CMD ]; then
-diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
-index a6f5e346635e..180b469c53b4 100755
---- a/tools/testing/selftests/tpm2/test_space.sh
-+++ b/tools/testing/selftests/tpm2/test_space.sh
-@@ -1,4 +1,11 @@
- #!/bin/bash
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
--python -m unittest -v tpm2_tests.SpaceTest
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+
-+if [ -f /dev/tpmrm0 ] ; then
-+	python -m unittest -v tpm2_tests.SpaceTest
-+else
-+	exit $ksft_skip
-+fi
--- 
-2.16.2
+-Sergey
 
+> 
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Cc: linux-mips@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Rob, I had to remove your acked-by tag because of the changes introduced
+> > in v2 of the patch.
+> > 
+> > Changelog v2:
+> > - Make the reg property being optional if it's Baikal-T1 System I2C DT
+> >   node.
+> > ---
+> >  .../devicetree/bindings/i2c/snps,designware-i2c.yaml | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > index 8d4e5fccbd1c..579964098eb9 100644
+> > --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > @@ -21,6 +21,15 @@ allOf:
+> >        properties:
+> >          reg:
+> >            maxItems: 1
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          not:
+> > +            contains:
+> > +              const: baikal,bt1-sys-i2c
+> > +    then:
+> > +      required:
+> > +        - reg
+> >  
+> >  properties:
+> >    compatible:
+> > @@ -31,6 +40,8 @@ properties:
+> >          items:
+> >            - const: mscc,ocelot-i2c
+> >            - const: snps,designware-i2c
+> > +      - description: Baikal-T1 SoC System I2C controller
+> > +        const: baikal,bt1-sys-i2c
+> >  
+> >    reg:
+> >      minItems: 1
+> > @@ -98,7 +109,6 @@ unevaluatedProperties: false
+> >  
+> >  required:
+> >    - compatible
+> > -  - reg
+> >    - "#address-cells"
+> >    - "#size-cells"
+> >    - interrupts
+> > -- 
+> > 2.25.1
+> > 
