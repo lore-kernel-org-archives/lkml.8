@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76138C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61749C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E98620715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8C420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824116;
-	bh=dZwCggNU1iIC/ycO4FJK+Rssc7UHLIkc2O8HyfRQyI8=;
+	s=default; t=1589824119;
+	bh=DxDsfTkgOjqCFH1Q/5NfOZvR63TeurMxxpGVjJ6sUto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ghk+k7uk5OiHIe5FR3dXh6r5eAFaZP5OgpATfTFxK1K2R/Aw9MEZSRUEcoClks7nn
-	 ojH0d9FNAaCJumAL4G+jdq6dzdmN94mciRWMcdQQBT0KYG0pcKwmKaKCV1et3HIy8s
-	 vmvrwPvB7sGMomwZFwER/a53Y4ueOrJdhnWLGDes=
+	b=Rik+OPb2xm+U+KoF74EhHKmmDZTsH7GqWyuxUAvlwl4tjs/R6ducblPrYHStFY8nw
+	 /69z6JuEanq49fMFCQSQOi1QXcTJDwZ1g4d9hyiBBlxASHN1Ky05JE/BJmXjp8rfKk
+	 VReQbAq7JKKLPBKgNqg4DZdgX+CvoS7qt/Y6hY14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730393AbgERRsf (ORCPT
+        id S1730402AbgERRsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49340 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730378AbgERRs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:48:28 -0400
+        id S1729864AbgERRsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:48:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0665720674;
-        Mon, 18 May 2020 17:48:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B55B020671;
+        Mon, 18 May 2020 17:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824107;
-        bh=dZwCggNU1iIC/ycO4FJK+Rssc7UHLIkc2O8HyfRQyI8=;
+        s=default; t=1589824115;
+        bh=DxDsfTkgOjqCFH1Q/5NfOZvR63TeurMxxpGVjJ6sUto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NyC42pnhy2xKirTGTKK8ksisqmcRhOBnzQ0j4C6iqvQH7L2rbR+RmlZ293Zz5YoP1
-         nefuNQK0THIa+EiJiiTDtXHBpDVA9CmOCJtuWVPMtuzLF5+q/D8auhFUhPHE/LUU/I
-         6Xx/VOmt0+sNfinCXY5rtSzFEfrt85y8nY1OiTNA=
+        b=tVIbj0Ehoee1YH/3B5mJxPdLTCXvs983bv0N1ofjrsEJAavJlNEVmuekCnCZ6NWCp
+         3DhosmPLUmKR8QN9ASGFwN9nTjYb9vOmJeyTf8u3/2S8RHKizUlmz8+6jJzJen3RNM
+         +Ujyyd0MI8tFq3oYZBM8UTybWp9OD/6mEL4B7bjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 073/114] Stop the ad-hoc games with -Wno-maybe-initialized
-Date:   Mon, 18 May 2020 19:36:45 +0200
-Message-Id: <20200518173516.080366587@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.14 044/114] f2fs: introduce read_xattr_block
+Date:   Mon, 18 May 2020 19:36:16 +0200
+Message-Id: <20200518173511.349444101@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -59,109 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75 upstream.
+commit 63840695f68c20735df8861062343cf1faa3768d upstream.
 
-We have some rather random rules about when we accept the
-"maybe-initialized" warnings, and when we don't.
+Commit ba38c27eb93e ("f2fs: enhance lookup xattr") introduces
+lookup_all_xattrs duplicating from read_all_xattrs, which leaves
+lots of similar codes in between them, so introduce new help
+read_xattr_block to clean up redundant codes.
 
-For example, we consider it unreliable for gcc versions < 4.9, but also
-if -O3 is enabled, or if optimizing for size.  And then various kernel
-config options disabled it, because they know that they trigger that
-warning by confusing gcc sufficiently (ie PROFILE_ALL_BRANCHES).
-
-And now gcc-10 seems to be introducing a lot of those warnings too, so
-it falls under the same heading as 4.9 did.
-
-At the same time, we have a very straightforward way to _enable_ that
-warning when wanted: use "W=2" to enable more warnings.
-
-So stop playing these ad-hoc games, and just disable that warning by
-default, with the known and straight-forward "if you want to work on the
-extra compiler warnings, use W=123".
-
-Would it be great to have code that is always so obvious that it never
-confuses the compiler whether a variable is used initialized or not?
-Yes, it would.  In a perfect world, the compilers would be smarter, and
-our source code would be simpler.
-
-That's currently not the world we live in, though.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- Makefile             |    7 +++----
- init/Kconfig         |   17 -----------------
- kernel/trace/Kconfig |    1 -
- 3 files changed, 3 insertions(+), 22 deletions(-)
+ fs/f2fs/xattr.c |   50 ++++++++++++++++++++++++--------------------------
+ 1 file changed, 24 insertions(+), 26 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -661,10 +661,6 @@ else
- KBUILD_CFLAGS   += -O2
- endif
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -264,12 +264,31 @@ static int read_inline_xattr(struct inod
+ 	return 0;
+ }
  
--ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--KBUILD_CFLAGS   += -Wno-maybe-uninitialized
--endif
--
- # Tell gcc to never replace conditional load with a non-conditional one
- KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
- 
-@@ -804,6 +800,9 @@ KBUILD_CFLAGS += $(call cc-disable-warni
- # disable stringop warnings in gcc 8+
- KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
- 
-+# Enabled with W=2, disabled by default as noisy
-+KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
++static int read_xattr_block(struct inode *inode, void *txattr_addr)
++{
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
++	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
++	unsigned int inline_size = inline_xattr_size(inode);
++	struct page *xpage;
++	void *xattr_addr;
 +
- # disable invalid "can't wrap" optimizations for signed / pointers
- KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
++	/* The inode already has an extended attribute block. */
++	xpage = get_node_page(sbi, xnid);
++	if (IS_ERR(xpage))
++		return PTR_ERR(xpage);
++
++	xattr_addr = page_address(xpage);
++	memcpy(txattr_addr + inline_size, xattr_addr, VALID_XATTR_BLOCK_SIZE);
++	f2fs_put_page(xpage, 1);
++
++	return 0;
++}
++
+ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 				unsigned int index, unsigned int len,
+ 				const char *name, struct f2fs_xattr_entry **xe,
+ 				void **base_addr)
+ {
+-	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	void *cur_addr, *txattr_addr, *last_addr = NULL;
+ 	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
+ 	unsigned int size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
+@@ -298,19 +317,9 @@ static int lookup_all_xattrs(struct inod
  
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -16,22 +16,6 @@ config DEFCONFIG_LIST
- 	default "$ARCH_DEFCONFIG"
- 	default "arch/$ARCH/defconfig"
+ 	/* read from xattr node block */
+ 	if (xnid) {
+-		struct page *xpage;
+-		void *xattr_addr;
+-
+-		/* The inode already has an extended attribute block. */
+-		xpage = get_node_page(sbi, xnid);
+-		if (IS_ERR(xpage)) {
+-			err = PTR_ERR(xpage);
++		err = read_xattr_block(inode, txattr_addr);
++		if (err)
+ 			goto out;
+-		}
+-
+-		xattr_addr = page_address(xpage);
+-		memcpy(txattr_addr + inline_size, xattr_addr, size);
+-		f2fs_put_page(xpage, 1);
+ 	}
  
--config CC_HAS_WARN_MAYBE_UNINITIALIZED
--	def_bool $(cc-option,-Wmaybe-uninitialized)
--	help
--	  GCC >= 4.7 supports this option.
--
--config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--	bool
--	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
--	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
--	help
--	  GCC's -Wmaybe-uninitialized is not reliable by definition.
--	  Lots of false positive warnings are produced in some cases.
--
--	  If this option is enabled, -Wno-maybe-uninitialzed is passed
--	  to the compiler to suppress maybe-uninitialized warnings.
--
- config CONSTRUCTORS
- 	bool
- 	depends on !UML
-@@ -1060,7 +1044,6 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
+ 	if (last_addr)
+@@ -335,7 +344,6 @@ out:
+ static int read_all_xattrs(struct inode *inode, struct page *ipage,
+ 							void **base_addr)
+ {
+-	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct f2fs_xattr_header *header;
+ 	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
+ 	unsigned int size = VALID_XATTR_BLOCK_SIZE;
+@@ -357,19 +365,9 @@ static int read_all_xattrs(struct inode
  
- config CC_OPTIMIZE_FOR_SIZE
- 	bool "Optimize for size"
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Enabling this option will pass "-Os" instead of "-O2" to
- 	  your compiler resulting in a smaller kernel.
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -345,7 +345,6 @@ config PROFILE_ANNOTATED_BRANCHES
- config PROFILE_ALL_BRANCHES
- 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
- 	select TRACE_BRANCH_PROFILING
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  This tracer profiles all branch conditions. Every if ()
- 	  taken in the kernel is recorded whether it hit or miss.
+ 	/* read from xattr node block */
+ 	if (xnid) {
+-		struct page *xpage;
+-		void *xattr_addr;
+-
+-		/* The inode already has an extended attribute block. */
+-		xpage = get_node_page(sbi, xnid);
+-		if (IS_ERR(xpage)) {
+-			err = PTR_ERR(xpage);
++		err = read_xattr_block(inode, txattr_addr);
++		if (err)
+ 			goto fail;
+-		}
+-
+-		xattr_addr = page_address(xpage);
+-		memcpy(txattr_addr + inline_size, xattr_addr, size);
+-		f2fs_put_page(xpage, 1);
+ 	}
+ 
+ 	header = XATTR_HDR(txattr_addr);
 
 
