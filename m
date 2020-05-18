@@ -2,561 +2,203 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67970C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1095BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 355392067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA28320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uEn0oHmN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vtm64xWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgERJr2 (ORCPT
+        id S1726632AbgERJsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:47:28 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48966 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgERJr2 (ORCPT
+        Mon, 18 May 2020 05:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERJsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:47:28 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04I9ff4x181635;
-        Mon, 18 May 2020 09:47:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=IMhvil5b3eckC8IaWjSnELY80zhoQgBi9cwRaMEPeo0=;
- b=uEn0oHmN6hfPIQuwn50NoA8KKvU0/krfkQJfTZJCa9nF19PvcwVth9sJEWKUpdzIOYCX
- v+pZJvbA6HMD+u/zwJi64g2Zs9SGnEvt2emSBc1PSoUJ3qCDWqQ9YrBkr4QiFyUjY1Ax
- Ku5JI+kIKtaMK+3WD6s7S7LyAVStluy4SiPknoKiH5RfiYcXzVZj+E4X3uslSW3ONTVe
- bb5PGXD/NcEGM2MhUTJnnPDic1XNT7z7QTqw86ypdCbVnbiIk6avovPsLamEE0Fn3OhG
- 9nk+PCDerQUrQiJ/loYWduZq18ETDa5DKHEMl+6pVZthe6zIfDIkbd0AWzXO3HTvNS+P Ug== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 31284kns87-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 May 2020 09:47:08 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04I9iJ5D071104;
-        Mon, 18 May 2020 09:47:07 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 312t3v923s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 09:47:07 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04I9l5qx006629;
-        Mon, 18 May 2020 09:47:05 GMT
-Received: from dhcp-10-175-184-176.vpn.oracle.com (/10.175.184.176)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 May 2020 02:47:04 -0700
-Date:   Mon, 18 May 2020 10:46:58 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Yonghong Song <yhs@fb.com>
-cc:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org,
-        daniel@iogearbox.net, bpf@vger.kernel.org, joe@perches.com,
-        linux@rasmusvillemoes.dk, arnaldo.melo@gmail.com, kafai@fb.com,
-        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 bpf-next 2/7] bpf: move to generic BTF show support,
- apply it to seq files/strings
-In-Reply-To: <2a2c5072-8cd2-610b-db2a-16589df90faf@fb.com>
-Message-ID: <alpine.LRH.2.21.2005181012040.893@localhost>
-References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com> <1589263005-7887-3-git-send-email-alan.maguire@oracle.com> <2a2c5072-8cd2-610b-db2a-16589df90faf@fb.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Mon, 18 May 2020 05:48:21 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 327EBC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 02:48:21 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ci21so1528279pjb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 02:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Qhhn0VwMxiaOVltVT+JHeQEc8jO/6BKzGmuLUsypl40=;
+        b=Vtm64xWVmyDtHmUUR2p2lWsliT1zLS+ji2PmXEo5AOaXRctjr5RrzuG299MOHoi7/Y
+         Ncm/X1K8fJeljEh9G/Yy/juSpQ53ipBA5Ci7CD1lrGqQ4OGu8f6prCRYyfFqBAzUa3vj
+         gaXfaNxWAPiCxTePAtxez4Pa6OeA77UMa3xmTE62nFHvGbxAvo6ZXGVJRO5Nd+sTkqMn
+         uLy6McZZOcWvLEXkoV6L85FjQ9Af5BdIBg/VyZhQjNDkabQtauIcq2u1E+ZCZ18PEmjM
+         N61AMQkKoZpHIrKZeLCkwPs15FOJ7UPwK6EpbQSjbMMBx70AmWS9BIHdKHtRKuRHv5E8
+         nmbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Qhhn0VwMxiaOVltVT+JHeQEc8jO/6BKzGmuLUsypl40=;
+        b=cLyJqEMTZNs8jVMagNJ6ydN2vgzIDZIH10seUJR/fUx9J1BYQmf8MVKtybaXguriAk
+         0lKNXrjlwh5mz9S8bVl62LHMb5sADO0a6jD9q8OA93EUy3jQh8wqxGbEPVBKlt1n3obP
+         qNdV6uKRCOtIcoTM/4FKs/WxBnKfccCekKgHTIvFhSUjDUcCQyA8g4DnNQ4YaW0qdbon
+         Gn43FiGojd6fVHfUGAuPiTxQ8z/j2DASrWlL2hfPdz5FxEuERI7UeAOqTdW+dalZPQFM
+         ryohBVgFASMtvRD96MYJsIU+izmou6e1LcpTz8fEBFHT+4kW5EruxQ5/nyWdFkn9YE8J
+         ls2w==
+X-Gm-Message-State: AOAM531dm2RLeioz+L7ipg6xif7f025NyyRrKmL3jxGxKjJt/XpmgnQW
+        XKO9p5UaPi2EEPMyhnTg/VM=
+X-Google-Smtp-Source: ABdhPJz+aUlgYRjsAuVFMjH0Upj5P2vQAMj98/L+5cMVNkUbB2poJnmdDIEg+Z9zfpO5y/4iHxakkg==
+X-Received: by 2002:a17:902:d311:: with SMTP id b17mr6403665plc.147.1589795300476;
+        Mon, 18 May 2020 02:48:20 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u73sm8955021pfc.0.2020.05.18.02.48.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 02:48:19 -0700 (PDT)
+Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
+ PTE tables
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, elver@google.com, tglx@linutronix.de,
+        paulmck@kernel.org, mingo@kernel.org, peterz@infradead.org,
+        "David S. Miller" <davem@davemloft.net>, rppt@kernel.org
+References: <20200511204150.27858-1-will@kernel.org>
+ <20200511204150.27858-5-will@kernel.org>
+ <20200517000050.GA87467@roeck-us.net> <20200517000750.GA157503@roeck-us.net>
+ <20200518083715.GA31383@willie-the-truck>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <418aa44b-6fb3-c3d8-a920-1a26e5edec62@roeck-us.net>
+Date:   Mon, 18 May 2020 02:48:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
- phishscore=0 bulkscore=0 suspectscore=4 mlxscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005180087
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 mlxscore=0
- cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005180087
+In-Reply-To: <20200518083715.GA31383@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020, Yonghong Song wrote:
-
+On 5/18/20 1:37 AM, Will Deacon wrote:
+> On Sat, May 16, 2020 at 05:07:50PM -0700, Guenter Roeck wrote:
+>> On Sat, May 16, 2020 at 05:00:50PM -0700, Guenter Roeck wrote:
+>>> On Mon, May 11, 2020 at 09:41:36PM +0100, Will Deacon wrote:
+>>>> Now that the page table allocator can free page table allocations
+>>>> smaller than PAGE_SIZE, reduce the size of the PMD and PTE allocations
+>>>> to avoid needlessly wasting memory.
+>>>>
+>>>> Cc: "David S. Miller" <davem@davemloft.net>
+>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>>> Signed-off-by: Will Deacon <will@kernel.org>
+>>>
+>>> Something in the sparc32 patches in linux-next causes all my sparc32 emulations
+>>> to crash. bisect points to this patch, but reverting it doesn't help, and neither
+>>> does reverting the rest of the series.
+>>>
+>> Actually, turns out I see the same pattern (lots of scheduling while atomic
+>> followed by 'killing interrupt handler' in cryptomgr_test) with several
+>> powerpc boot tests.  I am currently bisecting those crashes. I'll report
+>> the results here as well as soon as I have it.
 > 
-> > +struct btf_show {
-> > +	u64 flags;
-> > +	void *target;	/* target of show operation (seq file, buffer) */
-> > +	void (*showfn)(struct btf_show *show, const char *fmt, ...);
-> > +	const struct btf *btf;
-> > +	/* below are used during iteration */
-> > +	struct {
-> > +		u8 depth;
-> > +		u8 depth_shown;
-> > +		u8 depth_check;
+> FWIW, I retested my sparc32 patches with PREEMPT=y and I don't see any
+> issues. However, linux-next is a different story, where I don't get very far
+> at all:
 > 
-> I have some difficulties to understand the relationship between
-> the above three variables. Could you add some comments here?
->
-
-Will do; sorry the code got a bit confusing. The goal is to track
-which sub-components in a data structure we need to display.  The
-"depth" variable tracks where we are currently; "depth_shown"
-is the depth at which we have something nonzer to display (perhaps
-"depth_to_show" would be a better name?). "depth_check" tells
-us whether we are currently checking depth or doing printing.
-If we're checking, we don't actually print anything, we merely note
-if we hit a non-zero value, and if so, we set "depth_shown"
-to the depth at which we hit that value.
-
-When we show a struct, union or array, we will only display an
-object has one or more non-zero members.  But because
-the struct can in turn nest a struct or array etc, we need
-to recurse into the object.  When we are doing that, depth_check
-is set, and this tells us not to do any actual display. When
-that recursion is complete, we check if "depth_shown" (depth
-to show) is > depth (i.e. we found something) and if it is
-we go on to display the object (setting depth_check to 0).
-
-There may be a better way to solve this problem of course,
-but I wanted to avoid storing values where possible as
-deeply-nested data structures might overrun such storage.
-
-> > +		u8 array_member:1,
-> > +		   array_terminated:1;
-> > +		u16 array_encoding;
-> > +		u32 type_id;
-> > +		const struct btf_type *type;
-> > +		const struct btf_member *member;
-> > +		char name[KSYM_NAME_LEN];	/* scratch space for name */
-> > +		char type_name[KSYM_NAME_LEN];	/* scratch space for type */
+> BUG: Bad page state in process swapper  pfn:005b4
 > 
-> KSYM_NAME_LEN is for symbol name, not for type name. But I guess in kernel we
-> probably do not have > 128 bytes type name so we should be
-> okay here.
+> If you're seeing this on powerpc too, I wonder if it's related to:
+> 
+> https://lore.kernel.org/r/20200514170327.31389-1-rppt@kernel.org
+> 
+> since I think it just hit -next and the diffstat is all over the place. I've
+> added Mike to CC just in case.
 > 
 
-Yeah, I couldn't find a good length to use here.  We
-eliminate qualifiers such as "const" in the display, so
-it's unlikely we'd overrun.
+Here are the bisect results for ppc:
 
-> > +	} state;
-> > +};
-> > +
-> >   struct btf_kind_operations {
-> >    s32 (*check_meta)(struct btf_verifier_env *env,
-> >   			  const struct btf_type *t,
-> > @@ -297,9 +323,9 @@ struct btf_kind_operations {
-> >    			  const struct btf_type *member_type);
-> >    void (*log_details)(struct btf_verifier_env *env,
-> >   			    const struct btf_type *t);
-> > -	void (*seq_show)(const struct btf *btf, const struct btf_type *t,
-> > +	void (*show)(const struct btf *btf, const struct btf_type *t,
-> >   			 u32 type_id, void *data, u8 bits_offsets,
-> > -			 struct seq_file *m);
-> > +			 struct btf_show *show);
-> >   };
-> >   
-> >   static const struct btf_kind_operations * const kind_ops[NR_BTF_KINDS];
-> > @@ -676,6 +702,340 @@ bool btf_member_is_reg_int(const struct btf *btf,
-> > const struct btf_type *s,
-> >   	return true;
-> >   }
-> >   
-> > +/* Similar to btf_type_skip_modifiers() but does not skip typedefs. */
-> > +static inline
-> > +const struct btf_type *btf_type_skip_qualifiers(const struct btf *btf, u32
-> > id)
-> > +{
-> > +	const struct btf_type *t = btf_type_by_id(btf, id);
-> > +
-> > +	while (btf_type_is_modifier(t) &&
-> > +	       BTF_INFO_KIND(t->info) != BTF_KIND_TYPEDEF) {
-> > +		id = t->type;
-> > +		t = btf_type_by_id(btf, t->type);
-> > +	}
-> > +
-> > +	return t;
-> > +}
-> > +
-> > +#define BTF_SHOW_MAX_ITER	10
-> > +
-> > +#define BTF_KIND_BIT(kind)	(1ULL << kind)
-> > +
-> > +static inline const char *btf_show_type_name(struct btf_show *show,
-> > +					     const struct btf_type *t)
-> > +{
-> > +	const char *array_suffixes = "[][][][][][][][][][]";
-> 
-> Add a comment here saying length BTF_SHOW_MAX_ITER * 2
-> so later on if somebody changes the BTF_SHOW_MAX_ITER from 10 to 12,
-> it won't miss here?
-> 
-> > +	const char *array_suffix = &array_suffixes[strlen(array_suffixes)];
-> > +	const char *ptr_suffixes = "**********";
-> 
-> The same here.
->
+# bad: [bdecf38f228bcca73b31ada98b5b7ba1215eb9c9] Add linux-next specific files for 20200515
+# good: [2ef96a5bb12be62ef75b5828c0aab838ebb29cb8] Linux 5.7-rc5
+git bisect start 'HEAD' 'v5.7-rc5'
+# good: [3674d7aa7a8e61d993886c2fb7c896c5ef85e988] Merge remote-tracking branch 'crypto/master'
+git bisect good 3674d7aa7a8e61d993886c2fb7c896c5ef85e988
+# good: [87f6f21783522e6d62127cf33ae5e95f50874beb] Merge remote-tracking branch 'spi/for-next'
+git bisect good 87f6f21783522e6d62127cf33ae5e95f50874beb
+# good: [5c428e8277d5d97c85126387d4e00aa5adde4400] Merge remote-tracking branch 'staging/staging-next'
+git bisect good 5c428e8277d5d97c85126387d4e00aa5adde4400
+# good: [f68de67ed934e7bdef4799fd7777c86f33f14982] Merge remote-tracking branch 'hyperv/hyperv-next'
+git bisect good f68de67ed934e7bdef4799fd7777c86f33f14982
+# bad: [54acd2dc52b069da59639eea0d0c92726f32fb01] mm/memblock: fix a typo in comment "implict"->"implicit"
+git bisect bad 54acd2dc52b069da59639eea0d0c92726f32fb01
+# good: [784a17aa58a529b84f7cc50f351ed4acf3bd11f3] mm: remove the pgprot argument to __vmalloc
+git bisect good 784a17aa58a529b84f7cc50f351ed4acf3bd11f3
+# good: [6cd8137ff37e9a37aee2d2a8889c8beb8eab192f] khugepaged: replace the usage of system(3) in the test
+git bisect good 6cd8137ff37e9a37aee2d2a8889c8beb8eab192f
+# bad: [6987da379826ed01b8a1cf046b67cc8cc10117cc] sparc: remove unnecessary includes
+git bisect bad 6987da379826ed01b8a1cf046b67cc8cc10117cc
+# good: [bc17b545388f64c09e83e367898e28f60277c584] mm/hugetlb: define a generic fallback for is_hugepage_only_range()
+git bisect good bc17b545388f64c09e83e367898e28f60277c584
+# good: [9b5aa5b43f957f03a1f4a9aff5f7924e2ebbc011] arch-kmap_atomic-consolidate-duplicate-code-checkpatch-fixes
+git bisect good 9b5aa5b43f957f03a1f4a9aff5f7924e2ebbc011
+# bad: [89194ba5ee31567eeee9c81101b334c8e3248198] arch/kmap: define kmap_atomic_prot() for all arch's
+git bisect bad 89194ba5ee31567eeee9c81101b334c8e3248198
+# good: [022785d2bea99f8bc2a37b7b6c525eea26f6ac59] arch-kunmap_atomic-consolidate-duplicate-code-checkpatch-fixes
+git bisect good 022785d2bea99f8bc2a37b7b6c525eea26f6ac59
+# good: [a13c2f39e3f0519ddee57d26cc66ec70e3546106] arch/kmap: don't hard code kmap_prot values
+git bisect good a13c2f39e3f0519ddee57d26cc66ec70e3546106
+# first bad commit: [89194ba5ee31567eeee9c81101b334c8e3248198] arch/kmap: define kmap_atomic_prot() for all arch's
 
-Good idea; will do.
- 
-> > +	const char *ptr_suffix = &ptr_suffixes[strlen(ptr_suffixes)];
-> > +	const char *type_name = NULL, *prefix = "", *parens = "";
-> > +	const struct btf_array *array;
-> > +	u32 id = show->state.type_id;
-> > +	bool allow_anon = true;
-> > +	u64 kinds = 0;
-> > +	int i;
-> > +
-> > +	show->state.type_name[0] = '\0';
-> > +
-> > +	/*
-> > +	 * Start with type_id, as we have have resolved the struct btf_type *
-> > +	 * via btf_modifier_show() past the parent typedef to the child
-> > +	 * struct, int etc it is defined as.  In such cases, the type_id
-> > +	 * still represents the starting type while the the struct btf_type *
-> > +	 * in our show->state points at the resolved type of the typedef.
-> > +	 */
-> > +	t = btf_type_by_id(show->btf, id);
-> > +	if (!t)
-> > +		return show->state.type_name;
-> > +
-> > +	/*
-> > +	 * The goal here is to build up the right number of pointer and
-> > +	 * array suffixes while ensuring the type name for a typedef
-> > +	 * is represented.  Along the way we accumulate a list of
-> > +	 * BTF kinds we have encountered, since these will inform later
-> > +	 * display; for example, pointer types will not require an
-> > +	 * opening "{" for struct, we will just display the pointer value.
-> > +	 *
-> > +	 * We also want to accumulate the right number of pointer or array
-> > +	 * indices in the format string while iterating until we get to
-> > +	 * the typedef/pointee/array member target type.
-> > +	 *
-> > +	 * We start by pointing at the end of pointer and array suffix
-> > +	 * strings; as we accumulate pointers and arrays we move the pointer
-> > +	 * or array string backwards so it will show the expected number of
-> > +	 * '*' or '[]' for the type.  BTF_SHOW_MAX_ITER of nesting of pointers
-> > +	 * and/or arrays and typedefs are supported as a precaution.
-> > +	 *
-> > +	 * We also want to get typedef name while proceeding to resolve
-> > +	 * type it points to so that we can add parentheses if it is a
-> > +	 * "typedef struct" etc.
-> > +	 */
-> > +	for (i = 0; i < BTF_SHOW_MAX_ITER; i++) {
-> > +
-> > +		switch (BTF_INFO_KIND(t->info)) {
-> > +		case BTF_KIND_TYPEDEF:
-> > +			if (!type_name)
-> > +				type_name = btf_name_by_offset(show->btf,
-> > +							       t->name_off);
-> > +			kinds |= BTF_KIND_BIT(BTF_KIND_TYPEDEF);
-> > +			id = t->type;
-> > +			break;
-> > +		case BTF_KIND_ARRAY:
-> > +			kinds |= BTF_KIND_BIT(BTF_KIND_ARRAY);
-> > +			parens = "[";
-> > +			array = btf_type_array(t);
-> > +			if (!array)
-> > +				return show->state.type_name;
-> > +			if (!t)
-> > +				return show->state.type_name;
-> > +			if (array_suffix > array_suffixes)
-> > +				array_suffix -= 2;
-> > +			id = array->type;
-> > +			break;
-> > +		case BTF_KIND_PTR:
-> > +			kinds |= BTF_KIND_BIT(BTF_KIND_PTR);
-> > +			if (ptr_suffix > ptr_suffixes)
-> > +				ptr_suffix -= 1;
-> > +			id = t->type;
-> > +			break;
-> > +		default:
-> > +			id = 0;
-> > +			break;
-> > +		}
-> > +		if (!id)
-> > +			break;
-> > +		t = btf_type_skip_qualifiers(show->btf, id);
-> > +		if (!t)
-> > +			return show->state.type_name;
-> > +	}
-> 
-> Do we do pointer tracing here? For example
-> struct t {
-> 	int *m[5];
-> }
-> 
-> When trying to access memory, the above code may go through
-> ptr->array and out of loop when hitting array element type "int"?
->
+I don't know if that is accurate either. Maybe things are so broken
+that bisect gets confused, or the problem is due to interaction
+between different patch series.
 
-I'm not totally sure I understand the question so I'll
-try and describe how the above is supposed to work. I
-think there's a bug here alright.
-
-In the above case, when we reach the "m" field of "struct t",
-the code  should start with the BTF_KIND_ARRAY, set up
-the array suffix, then get the array type which is a PTR
-and we will set up the ptr suffix to be "*" and we set
-the id to the id associated with "int", and
-btf_type_skip_qualifiers() will use that id to look up
-the new value for the type used in btf_name_by_offset().
-So on the next iteration we hit the int itself and bail from
-the loop, having noted that we've got a _PTR and _ARRAY set in
-the "kinds" bitfield.
-
-Then we look up the int type using "t" with btf_name_by_offset,
-so we end up displaying "(int *m[])" as the type.
-  
-However the code assumes we don't need the parentheses for
-the array if we have encountered a pointer; that's never
-the case.  We only should eliminate the opening parens
-for a struct or union "{" in such cases, as in those cases
-we have a pointer to the struct rather than a nested struct.
-So that needs to be fixed. Are the other problems here you're
-seeing that the above doesn't cover?
-
-> > +	/* We may not be able to represent this type; bail to be safe */
-> > +	if (i == BTF_SHOW_MAX_ITER)
-> > +		return show->state.type_name;
-> > +
-> > +	if (!type_name)
-> > +		type_name = btf_name_by_offset(show->btf, t->name_off);
-> > +
-> > +	switch (BTF_INFO_KIND(t->info)) {
-> > +	case BTF_KIND_STRUCT:
-> > +	case BTF_KIND_UNION:
-> > +		prefix = BTF_INFO_KIND(t->info) == BTF_KIND_STRUCT ?
-> > +			 "struct" : "union";
-> > +		/* if it's an array of struct/union, parens is already set */
-> > +		if (!(kinds & (BTF_KIND_BIT(BTF_KIND_ARRAY))))
-> > +			parens = "{";
-> > +		break;
-> > +	case BTF_KIND_ENUM:
-> > +		prefix = "enum";
-> > +		break;
-> > +	default:
-> > +		allow_anon = false;
-> > +		break;
-> > +	}
-> > +
-> > +	/* pointer does not require parens */
-> > +	if (kinds & BTF_KIND_BIT(BTF_KIND_PTR))
-> > +		parens = "";
-
-This is wrong for the example case you gave, as we don't want to 
-eliminate the opening array parentheses for an array of pointers.
-
-> > +	/* typedef does not require struct/union/enum prefix */
-> > +	if (kinds & BTF_KIND_BIT(BTF_KIND_TYPEDEF))
-> > +		prefix = "";
-> > +
-> > +	if (!type_name || strlen(type_name) == 0) {
-> > +		if (allow_anon)
-> > +			type_name = "";
-> > +		else
-> > +			return show->state.type_name;
-> > +	}
-> > +
-> > +	/* Even if we don't want type name info, we want parentheses etc */
-> > +	if (show->flags & BTF_SHOW_NONAME)
-> > +		snprintf(show->state.type_name, sizeof(show->state.type_name),
-> > +			 "%s", parens);
-> > +	else
-> > +		snprintf(show->state.type_name, sizeof(show->state.type_name),
-> > +			 "(%s%s%s%s%s%s)%s",
-> > +			 prefix,
-> > +			 strlen(prefix) > 0 && strlen(type_name) > 0 ? " " :
-> > "",
-> > +			 type_name,
-> > +			 strlen(ptr_suffix) > 0 ? " " : "", ptr_suffix,
-> > +			 array_suffix, parens);
-> > +
-> > +	return show->state.type_name;
-> > +}
-> > +
-> > +static inline const char *btf_show_name(struct btf_show *show)
-> > +{
-> > +	const struct btf_type *t = show->state.type;
-> > +	const struct btf_member *m = show->state.member;
-> > +	const char *member = NULL;
-> > +	const char *type = "";
-> > +
-> > +	show->state.name[0] = '\0';
-> > +
-> > +	if ((!m && !t) || show->state.array_member)
-> > +		return show->state.name;
-> > +
-> > +	if (m)
-> > +		t = btf_type_skip_qualifiers(show->btf, m->type);
-> > +
-> > +	if (t) {
-> > +		type = btf_show_type_name(show, t);
-> > +		if (!type)
-> > +			return show->state.name;
-> > +	}
-> > +
-> > +	if (m && !(show->flags & BTF_SHOW_NONAME)) {
-> > +		member = btf_name_by_offset(show->btf, m->name_off);
-> > +		if (member && strlen(member) > 0) {
-> > +			snprintf(show->state.name, sizeof(show->state.name),
-> > +				 ".%s = %s", member, type);
-> > +			return show->state.name;
-> > +		}
-> > +	}
-> > +
-> > +	snprintf(show->state.name, sizeof(show->state.name), "%s", type);
-> > +
-> > +	return show->state.name;
-> > +}
-> > +
-> > +#define btf_show(show, ...)
-> > \
-> > +	do {
-> > \
-> > +		if (!show->state.depth_check)
-> > \
-> 
-> As I mentioned above, some comments will be good to understand here.
->
-
-Absolutely.
- 
-> > +			show->showfn(show, __VA_ARGS__);
-> > \
-> > +	} while (0)
-> > +
-
-> > +static inline const char *__btf_show_indent(struct btf_show *show)
-> > +{
-> > +	const char *indents = "                                ";
-> > +	const char *indent = &indents[strlen(indents)];
-> > +
-> > +	if ((indent - show->state.depth) >= indents)
-> > +		return indent - show->state.depth;
-> > +	return indents;
-> > +}
-> > +
-> > +#define btf_show_indent(show)
-> > \
-> > +	((show->flags & BTF_SHOW_COMPACT) ? "" : __btf_show_indent(show))
-> > +
-> > +#define btf_show_newline(show)
-> > \
-> > +	((show->flags & BTF_SHOW_COMPACT) ? "" : "\n")
-> > +
-> > +#define btf_show_delim(show)
-> > \
-> > +	(show->state.depth == 0 ? "" :
-> > \
-> > +	 ((show->flags & BTF_SHOW_COMPACT) && show->state.type &&
-> > \
-> > +	  BTF_INFO_KIND(show->state.type->info) == BTF_KIND_UNION) ? "|" :
-> > ",")
-> > +
-> > +#define btf_show_type_value(show, fmt, value)
-> > \
-> > +	do {
-> > \
-> > +		if ((value) != 0 || (show->flags & BTF_SHOW_ZERO) ||
-> > \
-> > +		    show->state.depth == 0) {
-> > \
-> > +			btf_show(show, "%s%s" fmt "%s%s",
-> > \
-> > +				 btf_show_indent(show),
-> > \
-> > +				 btf_show_name(show),
-> > \
-> > +				 value, btf_show_delim(show),
-> > \
-> > +				 btf_show_newline(show));
-> > \
-> > +			if (show->state.depth > show->state.depth_shown)
-> > \
-> > +				show->state.depth_shown = show->state.depth;
-> > \
-> > +		}
-> > \
-> > +	} while (0)
-> > +
-> > +#define btf_show_type_values(show, fmt, ...)
-> > \
-> > +	do {
-> > \
-> > +		btf_show(show, "%s%s" fmt "%s%s", btf_show_indent(show),
-> > \
-> > +			 btf_show_name(show),
-> > \
-> > +			 __VA_ARGS__, btf_show_delim(show),
-> > \
-> > +			 btf_show_newline(show));
-> > \
-> > +		if (show->state.depth > show->state.depth_shown)
-> > \
-> > +			show->state.depth_shown = show->state.depth;
-> > \
-> > +	} while (0)
-> > +
-> [...]
-> >   
-> >   static int btf_array_check_member(struct btf_verifier_env *env,
-> > @@ -2104,28 +2489,87 @@ static void btf_array_log(struct btf_verifier_env
-> > *env,
-> >   			 array->type, array->index_type, array->nelems);
-> >   }
-> >   
-> > -static void btf_array_seq_show(const struct btf *btf, const struct btf_type
-> > *t,
-> > -			       u32 type_id, void *data, u8 bits_offset,
-> > -			       struct seq_file *m)
-> > +static void __btf_array_show(const struct btf *btf, const struct btf_type
-> > *t,
-> > +			     u32 type_id, void *data, u8 bits_offset,
-> > +			     struct btf_show *show)
-> >   {
-> >    const struct btf_array *array = btf_type_array(t);
-> >    const struct btf_kind_operations *elem_ops;
-> >    const struct btf_type *elem_type;
-> > -	u32 i, elem_size, elem_type_id;
-> > +	u32 i, elem_size = 0, elem_type_id;
-> > +	u16 encoding = 0;
-> >   
-> >   	elem_type_id = array->type;
-> > -	elem_type = btf_type_id_size(btf, &elem_type_id, &elem_size);
-> > +	elem_type = btf_type_skip_modifiers(btf, elem_type_id, NULL);
-> > +	if (elem_type && btf_type_has_size(elem_type))
-> > +		elem_size = elem_type->size;
-> > +
-> > +	if (elem_type && btf_type_is_int(elem_type)) {
-> > +		u32 int_type = btf_type_int(elem_type);
-> > +
-> > +		encoding = BTF_INT_ENCODING(int_type);
-> > +
-> > +		/*
-> > +		 * BTF_INT_CHAR encoding never seems to be set for
-> > +		 * char arrays, so if size is 1 and element is
-> > +		 * printable as a char, we'll do that.
-> > +		 */
-> > +		if (elem_size == 1) > +			encoding =
-> > BTF_INT_CHAR;
-> 
-> Some char array may be printable and some may not be printable,
-> how did you differentiate this?
->
-
-I should probably change the logic to ensure all chars
-(before a \0) are printable. I'll do that for v2. We will always
-have cases (e.g. the skb cb[] field) where the char[] is not
-intended as a string, but I think the utility of showing them as
-strings where possible is worthwhile.
-
-Thanks again for reviewing!
-
-Alan 
+Guenter
