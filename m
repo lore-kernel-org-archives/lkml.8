@@ -2,187 +2,104 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF09CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6151A20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B522070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e3MtD1jc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDvmkEp/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgERRes (ORCPT
+        id S1728456AbgERRhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:34:48 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37858 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgERRes (ORCPT
+        Mon, 18 May 2020 13:37:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51149 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727006AbgERRhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:34:48 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04IHYE2R024910;
-        Mon, 18 May 2020 12:34:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589823254;
-        bh=Qjkak8hZKljuAbNj3SzKadbkKVBCbSYsAFGNPjlT43I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=e3MtD1jcSwwIFlNTmMDvihFbeOYPhVuUl32uChY+1kMAXY5Kt8/SoPNEPjXEv99Be
-         XpShpA+JJzYb2aLWuso0LHWGhCXC0w7mguy+ctJRVef8YG3ROyClPV2CoTWQpTlVvk
-         NiN6aAqdZ+UeX+C19jqdcxQ9Xs920cynQOuiVvd4=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04IHYErC063206
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 May 2020 12:34:14 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
- May 2020 12:34:13 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 18 May 2020 12:34:14 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04IHY7u8020575;
-        Mon, 18 May 2020 12:34:07 -0500
-Subject: Re: [PATCH v1 2/2] i2c: busses: convert to
- devm_platform_request_irq()
-To:     Dejin Zheng <zhengdejin5@gmail.com>, <gregkh@linuxfoundation.org>,
-        <rafael@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
-        <sbranden@broadcom.com>, <michal.simek@xilinx.com>,
-        <baruch@tkos.co.il>, <wsa+renesas@sang-engineering.com>,
-        <paul@crapouillou.net>, <khilman@baylibre.com>,
-        <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
-        <festevam@gmail.com>, <linux-imx@nxp.com>, <vz@mleia.com>,
-        <slemieux.tyco@gmail.com>, <heiko@sntech.de>, <baohua@kernel.org>,
-        <linus.walleij@linaro.org>, <ardb@kernel.org>,
-        <radu_nicolae.pirea@upb.ro>, <zhouyanjie@wanyeetech.com>,
-        <linux-i2c@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <20200518155304.28639-1-zhengdejin5@gmail.com>
- <20200518155304.28639-3-zhengdejin5@gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <c4f33036-1a88-1d75-c4ce-3024d2bf9bb1@ti.com>
-Date:   Mon, 18 May 2020 20:34:01 +0300
+        Mon, 18 May 2020 13:37:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589823433;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pW1EBLelNH4xkOAfewry7ROyh0LG2QQK4g8hD3z33Eg=;
+        b=KDvmkEp/qCnxBfFjYFSKEORJ+zXqEyOcqU3TXyEZcd9DCCk95Zuw1iLHbAVqzaJubZM6vP
+        qep8yhdgJ5asqbRibveqLmiVPL+NAyVvpTpuloSUfeWHNILwp7D34thtTNYdil4J0yX59F
+        RaWDrcXbgAjxFqtX8wzqNwAs6liJTSE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-486-LflvGdE4O6u8m88md7xazA-1; Mon, 18 May 2020 13:37:11 -0400
+X-MC-Unique: LflvGdE4O6u8m88md7xazA-1
+Received: by mail-wr1-f69.google.com with SMTP id d16so5939764wrv.18
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 10:37:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pW1EBLelNH4xkOAfewry7ROyh0LG2QQK4g8hD3z33Eg=;
+        b=MiBddNnAScbE8D/qx7idao8p/e6oaOH5UINmWVG9VJ7Ggwmn2aL62qNwF8PEY6dJJ+
+         lUVyUVLzNBCxzktW44MsVncPMWF2T4NTB4KQhn0POGWz5A9AMay4FFKv9cTb1tUgIOAr
+         nJH1t6nu8OBHVVF/QTCKb9zKbuNxy1zrFEbLLXg4bI2b0+0s0rnlFXn3UgnrupsvwgwQ
+         rqJYkVQXf6NoGyHd/MrcY+264uPEKSIWhLOvB+wwUjrcInZwxO0JbDTNEE0XmMHvwYwB
+         Bhs2spqfXbYCRuVCHEsRrTNURDacJgjM/2+RNHq1KBWnhwUEHrmwqx4PlrZfX04zv2zG
+         wvJA==
+X-Gm-Message-State: AOAM531j2TZo6y3we/QBTvdKsI9cmSG014xr8QFqileYf9fmNwaDPHZC
+        XEpLRx6v1Z9gE4qCO7XvsPNFy3kBBb/6Ndfndh0petRwUAPy/rYy1INByEXp6qLBKwuV4eyP0r8
+        rpVxdr8Pb14QnEFxairmS6P21
+X-Received: by 2002:a1c:f207:: with SMTP id s7mr440847wmc.123.1589823430113;
+        Mon, 18 May 2020 10:37:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzHziqAUOZpnpSyz0zm5tqYhlwsJ/sYOxewftDlo7x0v61iHrJcJcl48zpv1zYNxvv9vqXjDw==
+X-Received: by 2002:a1c:f207:: with SMTP id s7mr440825wmc.123.1589823429893;
+        Mon, 18 May 2020 10:37:09 -0700 (PDT)
+Received: from [192.168.178.58] ([151.30.90.67])
+        by smtp.gmail.com with ESMTPSA id k13sm265994wmj.40.2020.05.18.10.37.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 10:37:09 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86: emulate reserved nops from 0f/18 to 0f/1f
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20200515161919.29249-1-pbonzini@redhat.com>
+ <20200518160720.GB3632@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <57d9da9b-00ec-3fe0-c69a-f7f00c68a90d@redhat.com>
+Date:   Mon, 18 May 2020 19:37:08 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200518155304.28639-3-zhengdejin5@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200518160720.GB3632@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 18/05/20 18:07, Sean Christopherson wrote:
+> On Fri, May 15, 2020 at 12:19:19PM -0400, Paolo Bonzini wrote:
+>> Instructions starting with 0f18 up to 0f1f are reserved nops, except those
+>> that were assigned to MPX.
+> Well, they're probably reserved NOPs again :-D.
 
+So are you suggesting adding them back to the list as well?
 
-On 18/05/2020 18:53, Dejin Zheng wrote:
-> Use devm_platform_request_irq() to simplify code, and it contains
-> platform_get_irq() and devm_request_irq().
-> 
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
->   drivers/i2c/busses/i2c-bcm-kona.c  | 16 +++-------------
->   drivers/i2c/busses/i2c-cadence.c   | 10 +++-------
->   drivers/i2c/busses/i2c-digicolor.c | 10 +++-------
->   drivers/i2c/busses/i2c-emev2.c     |  5 ++---
->   drivers/i2c/busses/i2c-jz4780.c    |  5 ++---
->   drivers/i2c/busses/i2c-meson.c     | 13 ++++---------
->   drivers/i2c/busses/i2c-mxs.c       |  9 +++------
->   drivers/i2c/busses/i2c-pnx.c       |  9 ++-------
->   drivers/i2c/busses/i2c-rcar.c      |  9 +++------
->   drivers/i2c/busses/i2c-rk3x.c      | 14 +++-----------
->   drivers/i2c/busses/i2c-sirf.c      | 10 ++--------
->   drivers/i2c/busses/i2c-stu300.c    |  4 ++--
->   drivers/i2c/busses/i2c-synquacer.c | 12 +++---------
->   13 files changed, 35 insertions(+), 91 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-bcm-kona.c b/drivers/i2c/busses/i2c-bcm-kona.c
-> index ed5e1275ae46..f45acb47552a 100644
-> --- a/drivers/i2c/busses/i2c-bcm-kona.c
-> +++ b/drivers/i2c/busses/i2c-bcm-kona.c
-> @@ -818,20 +818,10 @@ static int bcm_kona_i2c_probe(struct platform_device *pdev)
->   	       ISR_NOACK_MASK,
->   	       dev->base + ISR_OFFSET);
->   
-> -	/* Get the interrupt number */
-> -	dev->irq = platform_get_irq(pdev, 0);
-> -	if (dev->irq < 0) {
-> -		rc = dev->irq;
-> -		goto probe_disable_clk;
-> -	}
-> -
-> -	/* register the ISR handler */
-> -	rc = devm_request_irq(&pdev->dev, dev->irq, bcm_kona_i2c_isr,
-> -			      IRQF_SHARED, pdev->name, dev);
-> -	if (rc) {
-> -		dev_err(dev->device, "failed to request irq %i\n", dev->irq);
-> +	rc = devm_platform_request_irq(pdev, 0, &dev->irq, bcm_kona_i2c_isr,
-> +					IRQF_SHARED, pdev->name, dev);
-> +	if (rc)
->   		goto probe_disable_clk;
-> -	}
->   
->   	/* Enable the controller but leave it idle */
->   	bcm_kona_i2c_send_cmd_to_ctrl(dev, BCM_CMD_NOACTION);
-> diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-> index 4b72398af505..9ffae4d231dc 100644
-> --- a/drivers/i2c/busses/i2c-cadence.c
-> +++ b/drivers/i2c/busses/i2c-cadence.c
-> @@ -1204,8 +1204,6 @@ static int cdns_i2c_probe(struct platform_device *pdev)
->   	if (IS_ERR(id->membase))
->   		return PTR_ERR(id->membase);
->   
-> -	id->irq = platform_get_irq(pdev, 0);
-> -
+>> These include the endbr markers used by CET.
+> And RDSPP.  Wouldn't it make sense to treat RDSPP as a #UD even though it's
+> a NOP if CET is disabled?  The logic being that a sane guest will execute
+> RDSSP iff CET is enabled, and in that case it'd be better to inject a #UD
+> than to silently break the guest.
 
+We cannot assume that guests will bother checking CPUID before invoking
+RDSPP.  This is especially true userspace, which needs to check if CET
+is enable for itself and can only use RDSPP to do so.
 
-In many cases It is two strictly different steps
-1) Request resource, including IRQ mapping and differed probe handling.
-    It should be done as early as possible to avoid unnecessary initialization steps
-    when resource (irq) is not ready,  and so avoid boot time increasing.
-2) Actually request and enable IRQ, which, in many case, should be done late in probe
-    when driver and HW are actually ready to handle IRQs.
+Paolo
 
-here, for example, between this point
-
->   	id->adap.owner = THIS_MODULE;
->   	id->adap.dev.of_node = pdev->dev.of_node;
->   	id->adap.algo = &cdns_i2c_algo;
-> @@ -1256,12 +1254,10 @@ static int cdns_i2c_probe(struct platform_device *pdev)
->   		goto err_clk_dis;
->   	}
->   
-> -	ret = devm_request_irq(&pdev->dev, id->irq, cdns_i2c_isr, 0,
-> -				 DRIVER_NAME, id);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "cannot get irq %d\n", id->irq);
-
-and this point the following happens:
-  - devm_clk_get() can fail and cause probe defer
-  - clk_prepare_enable()
-  - pm_runtime_.. - pm init
-  - cdns_i2c_.. - hw int
-
-> +	ret = devm_platform_request_irq(pdev, 0, &id->irq, cdns_i2c_isr, 0,
-> +					DRIVER_NAME, id);
-
-and now platform_get_irq(), which can fail due to IRQ controller not ready,
-and all above has to be reverted.
-
-> +	if (ret)
->   		goto err_clk_dis;
-> -	}
-[...]
-
-A bit risky optimization, especially for bulk changes.
-
--- 
-Best regards,
-grygorii
