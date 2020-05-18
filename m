@@ -2,114 +2,106 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6736C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDCDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5DD320643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:11:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mqABSTJE"
+	by mail.kernel.org (Postfix) with ESMTP id 4756D207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgERJLV (ORCPT
+        id S1726412AbgERJM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:11:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60028 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgERJLU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:11:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04I93ATR173287;
-        Mon, 18 May 2020 09:10:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=Rvkso+0xj+PaZPCgO7NcqlP3hcldz8TuQZ/t643+Io8=;
- b=mqABSTJEenM30vsxFxjbAMut5oKHKCuD7bKCGWQ42NqBm0nm++F+hoWtMwoK4wBeWK94
- T6twSyP80Unnh+6nQQX27JJjxLeQ54BqYzNTtvM45pG71Rk7fdme6UwZrZ1PyXRXaXgM
- 5+tZGQwj/nSq51Ie8gR7Ki99ikUtPX9f/ZTeRpZ7XgIiBn2fE51RcDYPu3xNcy9ClBBW
- 31cnpS00srfEXmwSqVChOFdXI+S0DdBXOchqTNTY8wX3h0Xqx7cap9JtdtcIEUACFUVX
- HuKms+yjaw2OX/Mp8+j3RlAzN5Xpu/qF3893fuXBXl8I8GVwfSrFh19UrgKxgz4iWBDX qA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3127kqwn1x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 May 2020 09:10:59 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04I94KsA115300;
-        Mon, 18 May 2020 09:10:58 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 312t3v7w3e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 09:10:58 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04I9Ar6c001535;
-        Mon, 18 May 2020 09:10:53 GMT
-Received: from dhcp-10-175-184-176.vpn.oracle.com (/10.175.184.176)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 May 2020 02:10:52 -0700
-Date:   Mon, 18 May 2020 10:10:44 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Yonghong Song <yhs@fb.com>
-cc:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org,
-        daniel@iogearbox.net, bpf@vger.kernel.org, joe@perches.com,
-        linux@rasmusvillemoes.dk, arnaldo.melo@gmail.com, kafai@fb.com,
-        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 bpf-next 6/7] bpf: add support for %pT format specifier
- for bpf_trace_printk() helper
-In-Reply-To: <040b71a1-9bbf-9a55-6f1a-e7b8c36f8c6e@fb.com>
-Message-ID: <alpine.LRH.2.21.2005181000520.893@localhost>
-References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com> <1589263005-7887-7-git-send-email-alan.maguire@oracle.com> <040b71a1-9bbf-9a55-6f1a-e7b8c36f8c6e@fb.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
- phishscore=0 bulkscore=0 suspectscore=3 mlxscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005180081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=3 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005180081
+        Mon, 18 May 2020 05:12:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:36338 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbgERJM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:12:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA456106F;
+        Mon, 18 May 2020 02:12:27 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 699F43F68F;
+        Mon, 18 May 2020 02:12:26 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        harb@amperecomputing.com
+Subject: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 + ARCH_SOC_ID support
+Date:   Mon, 18 May 2020 10:12:15 +0100
+Message-Id: <20200518091222.27467-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020, Yonghong Song wrote:
+Hi,
 
-> 
-> > +				while (isbtffmt(fmt[i]))
-> > +					i++;
-> 
-> The pointer passed to the helper may not be valid pointer. I think you
-> need to do a probe_read_kernel() here. Do an atomic memory allocation
-> here should be okay as this is mostly for debugging only.
-> 
+This patch series adds support for SMCCCv1.2 ARCH_SOC_ID.
+This doesn't add other changes added in SMCCC v1.2 yet. They will
+follow these soon along with its first user SPCI/PSA-FF.
 
-Are there other examples of doing allocations in program execution
-context? I'd hate to be the first to introduce one if not. I was hoping
-I could get away with some per-CPU scratch space. Most data structures
-will fit within a small per-CPU buffer, but if multiple copies
-are required, performance isn't the key concern. It will make traversing
-the buffer during display a bit more complex but I think avoiding 
-allocation might make that complexity worth it. The other thought I had 
-was we could carry out an allocation associated with the attach, 
-but that's messy as it's possible run-time might determine the type for
-display (and thus the amount of the buffer we need to copy safely).
+This is tested using upstream TF-A + the patch[3] fixing the original
+implementation there.
 
-Great news about LLVM support for __builtin_btf_type_id()!
+v1[0]->v2[1]:
+	- Incorporated comments from Steven Price in patch 5/5
+	- Fixed build for CONFIG_PSCI_FW=n on some arm32 platforms
+	- Added Steven Price's review tags
 
-Thanks!
+v2[1]->v3[2]:
+	- Incorporated additional comments from Steven Price in patch 5/5
+	  and added his review tags
+	- Refactored SMCCC code from PSCI and moved it under
+	  drivers/firmware/smccc/smccc.c
+	- Also moved soc_id.c under drivers/firmware/smccc
 
-Alan
+v3[2]->v4:
+	- Incorporated all the review comments from Mark R
+
+Regards,
+Sudeep
+
+[0] https://lore.kernel.org/r/20200430114814.14116-1-sudeep.holla@arm.com/
+[1] https://lore.kernel.org/r/20200504092905.10580-1-sudeep.holla@arm.com/
+[2] https://lore.kernel.org/r/20200506164411.3284-1-sudeep.holla@arm.com/
+[3] https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/4002
+
+Sudeep Holla (7):
+  firmware: smccc: Add HAVE_ARM_SMCCC_DISCOVERY to identify SMCCC v1.1 and above
+  firmware: smccc: Update link to latest SMCCC specification
+  firmware: smccc: Add the definition for SMCCCv1.2 version/error codes
+  firmware: smccc: Drop smccc_version enum and use ARM_SMCCC_VERSION_1_x instead
+  firmware: smccc: Refactor SMCCC specific bits into separate file
+  firmware: smccc: Add function to fetch SMCCC version
+  firmware: smccc: Add ARCH_SOC_ID support
+
+ MAINTAINERS                     |   9 ++
+ arch/arm64/kernel/paravirt.c    |   2 +-
+ drivers/firmware/Kconfig        |   6 +-
+ drivers/firmware/Makefile       |   3 +-
+ drivers/firmware/psci/psci.c    |  22 ++---
+ drivers/firmware/smccc/Kconfig  |  25 ++++++
+ drivers/firmware/smccc/Makefile |   4 +
+ drivers/firmware/smccc/smccc.c  |  31 +++++++
+ drivers/firmware/smccc/soc_id.c | 151 ++++++++++++++++++++++++++++++++
+ include/linux/arm-smccc.h       |  27 +++++-
+ include/linux/psci.h            |   7 --
+ 11 files changed, 256 insertions(+), 31 deletions(-)
+ create mode 100644 drivers/firmware/smccc/Kconfig
+ create mode 100644 drivers/firmware/smccc/Makefile
+ create mode 100644 drivers/firmware/smccc/smccc.c
+ create mode 100644 drivers/firmware/smccc/soc_id.c
+
+--
+2.17.1
+
