@@ -2,837 +2,283 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D21FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 801B9207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A89B20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="338IIBjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgERTDA (ORCPT
+        id S1726500AbgERTHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:03:00 -0400
-Received: from mga17.intel.com ([192.55.52.151]:25620 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728402AbgERTCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:02:00 -0400
-IronPort-SDR: 2wEv3yJAFnCbRCzHjEB/ROQhwqo26beU34QtgJ2meQnKCf16zNplGAfz900b/I1s9JTwrJ5MJu
- UYEewT+DgTog==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:53:58 -0700
-IronPort-SDR: aKkeBnIjeYAOXC8QGWPrj2eY8JsTai4dhrYAykQdvY2718yjfl/EiFiCCAmMhAXcJlCGiuouvu
- SxSxZffLSj9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="465860947"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga006.fm.intel.com with ESMTP; 18 May 2020 11:53:57 -0700
-Subject: [PATCH v2 6/9] dmaengine: idxd: add shared workqueue support
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, arnd@arndb.de
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
-        fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com, dave.hansen@intel.com
-Date:   Mon, 18 May 2020 11:53:57 -0700
-Message-ID: <158982803718.37989.2521363223130749737.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
-References: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+        Mon, 18 May 2020 15:07:22 -0400
+Received: from mail-dm6nam12on2066.outbound.protection.outlook.com ([40.107.243.66]:23105
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726378AbgERTHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 15:07:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PXDXk4Ok17Ey0UYd5A0CAGt28n1uwLpEOPzEL3A3tun1WuBoTxecGuy0deUcYHqitdqSPQaIqJkra5+Otyw9NitLugE1m8o8EcnLTqKwbFo019LcM+UzYqAna5NawP6h7BbLOKOAgOQB/MCd8iec9HZyQhXcHyogwAZEEd3R2IPX7+UFNjYBLqxKLrNlB0KBE3HZAkfsxmwCoAZC9lkb8UgaCcQ6pvY+asEMB14xdZfCc3TKRLLxmn1+2De9JZBPe/IGHD/2HoVbdestjFe5KhpB92Zw0maOKZ0AYpc0JGZBYFTxk+P45M4g+4BSGJikr7k8nBWJJMRtfH/cAdiatA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6SV9R8lOK5y6ajqdrrEOQyg0SBeevl3oGK1mI0IkLXM=;
+ b=MAaCCxQmpusRXZLY7bPVNO/6sFZYE7X0fJ6uTmhuClVUdd5gplmjoHA6ZsU/DhHpfXl6eR1ZWDjHfBg2c+yfYfoAhLMBOAqeG40lGjqg0c2Q7WmyIWJgkCo926YV7JhDdwVyi6hRniygZGJ/EOgUr9ALPSYCZrAs7IDIQWqDjsFasqSbFEijJ1VzLhSgAE2CLJI7ijPJhqBysLHJYWeRm54kD4pA4g5MXqL8pjBpEYtQ3YTI+AHzEA3QUxeN6WkZ2pvG9ffmt/XGlqelnDYIWkO/ovr1AYZy8Y4pf8vWGb6OUenF0kiJjtk1gE/TBlt+JtI+wGdpvepQHgVwg3DDZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6SV9R8lOK5y6ajqdrrEOQyg0SBeevl3oGK1mI0IkLXM=;
+ b=338IIBjc7EWNRs2U4PyVodzdtvHn0UBe2ag3QSHZviAFq+vtFnKXeCnwodXA1P3lF0ita5Yg39Pz0bXv3dGis1B+HFcsbWv6Pv+dnW7IOsnxpN4ejFtuoTe0FSiZxzhDnekAjjF8+2DAqOfySgDBGBM6Y+VHS214rqqIlqAyNSk=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB1803.namprd12.prod.outlook.com (2603:10b6:3:10d::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3000.20; Mon, 18 May 2020 19:07:14 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb%3]) with mapi id 15.20.3000.033; Mon, 18 May 2020
+ 19:07:14 +0000
+Date:   Mon, 18 May 2020 19:07:08 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, Thomas.Lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srutherford@google.com, rientjes@google.com,
+        venu.busireddy@oracle.com, brijesh.singh@amd.com
+Subject: Re: [PATCH v8 00/18] Add AMD SEV guest live migration support
+Message-ID: <20200518190708.GA7929@ashkalra_ubuntu_server>
+References: <cover.1588711355.git.ashish.kalra@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588711355.git.ashish.kalra@amd.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SN4PR0201CA0048.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::34) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server (165.204.77.1) by SN4PR0201CA0048.namprd02.prod.outlook.com (2603:10b6:803:2e::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25 via Frontend Transport; Mon, 18 May 2020 19:07:13 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 1abb79c4-9c1b-49b9-4e25-08d7fb5ead1c
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1803:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB18038E6CF9CF5E8F2BBF8C648EB80@DM5PR12MB1803.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:369;
+X-Forefront-PRVS: 04073E895A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pKEFEOVVAIAWWRve7+GNsNhwU02Qhr3cVdMKO3GEJrvv5UH9JhgFNq2/JGDkRQp8/Sa9fSiWrU/3qVfQozgcg4mrhDZh8cXLpjOdWWaJK/MwJ4jWFmyfBfFZRQPkKO8Kat3F/aBGpmfTCBE4q3FVlfJtOlbjCB0lLDpVr1+we6yCf9F3hFfpjlqSo5wii0cnUypjrrXHCi2xXuQgp8NucCTB/GB5LMnmLFJnJfNds2TIvr6tRh0uR5URRda0EYqsq7vCYyyab1raJLVw+ln53Ah2laBmMv5Hy1dxWr6hRGpmekRQf6gIoi6K+BGLfPViUqop0sGioy52jIUNE6uLCKXzh6UfgRmoDVkusAVyB8IUKD1X9ZqQipgPSSd4/5shvEdZUZu/lwBUsk+JpbUPbBbBNrzWA9hETKFjZOWxb9ExIlOTbuCZIyura9CeNviRucSFCpeCT0yggDwdG0LiZnC1KtgBb2apOPzUhSZ2UhMr/jNlkV9fTxiWN8l808/3DvTxthKUYxlScqOv1SwUVw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(136003)(39860400002)(346002)(66556008)(33716001)(478600001)(6916009)(5660300002)(33656002)(966005)(86362001)(6666004)(26005)(8676002)(55016002)(7416002)(66476007)(66946007)(16526019)(4326008)(8936002)(2906002)(1076003)(186003)(44832011)(52116002)(316002)(956004)(9686003)(6496006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 3Q0EiSnqaQGymS5JFDlsp9WLv6FzJsbgu4xMVhm5T+qu4x0w+YHQlhvt9oLNpCx1lTnZ5wfZnBQxAMsorAXxVantprrkfDYlaQ01fF1Q6ACUkepydqxj7tEGkmj6YEN1fnbMLaMKBmeDbz412/Wj9DwiWkATvIAyExczPm8ObAcpNvL0SxKeo2IuPhUWIzwD1AJUD1mQ9yhUJC1XnQj6yuUvN4QKb3BNNgYg0P+DPxRE5vOvQTTo8PN6sLBC4Uxcwdfjvfh86HCbXZVsRilu9Hxj1gKSzyA1wRBaevKEVWWH9CesXDa3NCjX24bzD1o1csXe27fRabr6rQs+lpO18a34OgTjp55gMOfJxKP1DXiaDMBZGLEKVLwzlcLOdI9q4y39rAxHvPR3crz0a3rjZ9pXHr6E02LHBh2N9UWX/bmFgpwD3k0GpcR92QKAQfcQaDGz5zvqsuJvpX231CXvVgRn6X0NDe2CaUPS8NLvkyc=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1abb79c4-9c1b-49b9-4e25-08d7fb5ead1c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2020 19:07:14.7823
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AQL8qO4T4Gp8QFjqO59hejFI8tfQF9pCHMv8iCyDkaOR1OPAYhIn/KUzaJYtFY5H09sPUdoHRf3FsSJ10D475A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1803
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add shared workqueue support that includes the support of Shared Virtual
-memory (SVM) or in similar terms On Demand Paging (ODP). The shared
-workqueue uses the enqcmds command in kernel and will respond with retry if
-the workqueue is full. Shared workqueue only works when there is PASID
-support from the IOMMU.
+Hello All,
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/dma/Kconfig          |   13 ++++
- drivers/dma/idxd/cdev.c      |   37 ++++++++++++
- drivers/dma/idxd/device.c    |   90 +++++++++++++++++++++++++++---
- drivers/dma/idxd/dma.c       |    9 ---
- drivers/dma/idxd/idxd.h      |   10 +++
- drivers/dma/idxd/init.c      |   87 ++++++++++++++++++++++-------
- drivers/dma/idxd/registers.h |   14 +++++
- drivers/dma/idxd/submit.c    |   31 +++++++++-
- drivers/dma/idxd/sysfs.c     |  128 ++++++++++++++++++++++++++++++++++++++++++
- 9 files changed, 375 insertions(+), 44 deletions(-)
+Any other feedback, review or comments on this patch-set ?
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index e817781b656a..21f5ddd06d17 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -294,6 +294,19 @@ config INTEL_IDXD
- 
- 	  If unsure, say N.
- 
-+# Config symbol that collects all the dependencies that's necessary to
-+# support shared virtual memory for the devices supported by idxd.
-+config INTEL_IDXD_SVM
-+	bool "Accelerator Shared Virtual Memory Support"
-+	depends on INTEL_IDXD
-+	depends on INTEL_IOMMU_SVM
-+	depends on PCI_PRI
-+	depends on PCI_PASID
-+	depends on PCI_IOV
-+
-+comment "SVM support not enabled for Intel Accelerator (see INTEL_IDXD_SVM)"
-+	depends on INTEL_IDXD && !INTEL_IDXD_SVM
-+
- config INTEL_IOATDMA
- 	tristate "Intel I/OAT DMA support"
- 	depends on PCI && X86_64
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index f9fc58966207..57079ea2d1cb 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -32,6 +32,7 @@ static struct idxd_cdev_context ictx[IDXD_TYPE_MAX] = {
- struct idxd_user_context {
- 	struct idxd_wq *wq;
- 	struct task_struct *task;
-+	int pasid;
- 	unsigned int flags;
- };
- 
-@@ -74,6 +75,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 	struct idxd_device *idxd;
- 	struct idxd_wq *wq;
- 	struct device *dev;
-+	int rc;
- 
- 	wq = inode_wq(inode);
- 	idxd = wq->idxd;
-@@ -90,8 +92,30 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 
- 	ctx->wq = wq;
- 	filp->private_data = ctx;
-+
-+	if (idxd->pasid_enabled) {
-+		rc = intel_svm_bind_mm(dev, &ctx->pasid, 0, NULL);
-+		if (rc < 0) {
-+			dev_err(dev, "pasid allocation failed: %d\n", rc);
-+			goto failed;
-+		}
-+
-+		if (wq_dedicated(wq)) {
-+			rc = idxd_wq_set_pasid(wq, ctx->pasid);
-+			if (rc < 0) {
-+				intel_svm_unbind_mm(dev, ctx->pasid);
-+				dev_err(dev, "wq set pasid failed: %d\n", rc);
-+				goto failed;
-+			}
-+		}
-+	}
-+
- 	idxd_wq_get(wq);
- 	return 0;
-+
-+failed:
-+	kfree(ctx);
-+	return rc;
- }
- 
- static int idxd_cdev_release(struct inode *node, struct file *filep)
-@@ -100,12 +124,23 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
- 	struct idxd_wq *wq = ctx->wq;
- 	struct idxd_device *idxd = wq->idxd;
- 	struct device *dev = &idxd->pdev->dev;
-+	int rc;
- 
- 	dev_dbg(dev, "%s called\n", __func__);
- 	filep->private_data = NULL;
- 
- 	/* Wait for in-flight operations to complete. */
--	idxd_wq_drain(wq);
-+	if (!wq_dedicated(wq)) {
-+		idxd_device_drain_pasid(idxd, ctx->pasid);
-+		intel_svm_unbind_mm(&idxd->pdev->dev, ctx->pasid);
-+	} else {
-+		if (idxd->pasid_enabled) {
-+			rc = idxd_wq_disable_pasid(wq);
-+			if (rc < 0)
-+				dev_err(dev, "wq disable pasid failed.\n");
-+		}
-+		idxd_wq_drain(wq);
-+	}
- 
- 	kfree(ctx);
- 	idxd_wq_put(wq);
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 95b8820ef087..836dd8bac6e0 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -305,10 +305,9 @@ int idxd_wq_map_portal(struct idxd_wq *wq)
- 	start = pci_resource_start(pdev, IDXD_WQ_BAR);
- 	start = start + wq->id * IDXD_PORTAL_SIZE;
- 
--	wq->dportal = devm_ioremap(dev, start, IDXD_PORTAL_SIZE);
--	if (!wq->dportal)
-+	wq->portal = devm_ioremap(dev, start, IDXD_PORTAL_SIZE);
-+	if (!wq->portal)
- 		return -ENOMEM;
--	dev_dbg(dev, "wq %d portal mapped at %p\n", wq->id, wq->dportal);
- 
- 	return 0;
- }
-@@ -317,7 +316,61 @@ void idxd_wq_unmap_portal(struct idxd_wq *wq)
- {
- 	struct device *dev = &wq->idxd->pdev->dev;
- 
--	devm_iounmap(dev, wq->dportal);
-+	devm_iounmap(dev, wq->portal);
-+}
-+
-+int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
-+{
-+	struct idxd_device *idxd = wq->idxd;
-+	int rc;
-+	union wqcfg wqcfg;
-+	unsigned int offset;
-+	unsigned long flags;
-+
-+	rc = idxd_wq_disable(wq);
-+	if (rc < 0)
-+		return rc;
-+
-+	offset = WQCFG_OFFSET(idxd, wq->id, 2);
-+	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	wqcfg.bits[2] = ioread32(idxd->reg_base + offset);
-+	wqcfg.pasid_en = 1;
-+	wqcfg.pasid = pasid;
-+	iowrite32(wqcfg.bits[2], idxd->reg_base + offset);
-+	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+
-+	rc = idxd_wq_enable(wq);
-+	if (rc < 0)
-+		return rc;
-+
-+	return 0;
-+}
-+
-+int idxd_wq_disable_pasid(struct idxd_wq *wq)
-+{
-+	struct idxd_device *idxd = wq->idxd;
-+	int rc;
-+	union wqcfg wqcfg;
-+	unsigned int offset;
-+	unsigned long flags;
-+
-+	rc = idxd_wq_disable(wq);
-+	if (rc < 0)
-+		return rc;
-+
-+	offset = idxd->wqcfg_offset + wq->id * sizeof(wqcfg);
-+	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	wqcfg.bits[2] = ioread32(idxd->reg_base + offset);
-+	wqcfg.pasid_en = 0;
-+	wqcfg.pasid = 0;
-+	iowrite32(wqcfg.bits[2], idxd->reg_base + offset);
-+	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+
-+	rc = idxd_wq_enable(wq);
-+	if (rc < 0)
-+		return rc;
-+
-+	return 0;
- }
- 
- void idxd_wq_disable_cleanup(struct idxd_wq *wq)
-@@ -469,6 +522,17 @@ void idxd_device_reset(struct idxd_device *idxd)
- 	idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
- }
- 
-+void idxd_device_drain_pasid(struct idxd_device *idxd, int pasid)
-+{
-+	struct device *dev = &idxd->pdev->dev;
-+	u32 operand;
-+
-+	operand = pasid;
-+	dev_dbg(dev, "cmd: %u operand: %#x\n", IDXD_CMD_DRAIN_PASID, operand);
-+	idxd_cmd_exec(idxd, IDXD_CMD_DRAIN_PASID, operand, NULL);
-+	dev_dbg(dev, "pasid %d drained\n", pasid);
-+}
-+
- /* Device configuration bits */
- static void idxd_group_config_write(struct idxd_group *group)
- {
-@@ -554,11 +618,21 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	wq->wqcfg.wq_thresh = wq->threshold;
- 
- 	/* byte 8-11 */
--	wq->wqcfg.priv = !!(wq->type == IDXD_WQT_KERNEL);
--	wq->wqcfg.mode = 1;
-+	wq->wqcfg.priv = wq->type == IDXD_WQT_KERNEL ? 1 : 0;
-+	if (wq_dedicated(wq))
-+		wq->wqcfg.mode = 1;
-+
-+	if (idxd->pasid_enabled) {
-+		wq->wqcfg.pasid_en = 1;
-+		wq->wqcfg.pasid = idxd->pasid;
-+	}
- 
- 	wq->wqcfg.priority = wq->priority;
- 
-+	if (idxd->hw.gen_cap.block_on_fault &&
-+	    test_bit(WQ_FLAG_BLOCK_ON_FAULT, &wq->flags))
-+		wq->wqcfg.bof = 1;
-+
- 	/* bytes 12-15 */
- 	wq->wqcfg.max_xfer_shift = idxd->hw.gen_cap.max_xfer_shift;
- 	wq->wqcfg.max_batch_shift = idxd->hw.gen_cap.max_batch_shift;
-@@ -666,8 +740,8 @@ static int idxd_wqs_setup(struct idxd_device *idxd)
- 		if (!wq->size)
- 			continue;
- 
--		if (!wq_dedicated(wq)) {
--			dev_warn(dev, "No shared workqueue support.\n");
-+		if (!wq_dedicated(wq) && !idxd->pasid_enabled) {
-+			dev_warn(dev, "No shared wq support but configured.\n");
- 			return -EINVAL;
- 		}
- 
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index 0c892cbd72e0..8ed2773d8285 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -61,8 +61,6 @@ static inline void idxd_prep_desc_common(struct idxd_wq *wq,
- 					 u64 addr_f1, u64 addr_f2, u64 len,
- 					 u64 compl, u32 flags)
- {
--	struct idxd_device *idxd = wq->idxd;
--
- 	hw->flags = flags;
- 	hw->opcode = opcode;
- 	hw->src_addr = addr_f1;
-@@ -70,13 +68,6 @@ static inline void idxd_prep_desc_common(struct idxd_wq *wq,
- 	hw->xfer_size = len;
- 	hw->priv = !!(wq->type == IDXD_WQT_KERNEL);
- 	hw->completion_addr = compl;
--
--	/*
--	 * Descriptor completion vectors are 1-8 for MSIX. We will round
--	 * robin through the 8 vectors.
--	 */
--	wq->vec_ptr = (wq->vec_ptr % idxd->num_wq_irqs) + 1;
--	hw->int_handle =  wq->vec_ptr;
- }
- 
- static struct dma_async_tx_descriptor *
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 0769354df4cf..41b973e3b781 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -59,6 +59,7 @@ enum idxd_wq_state {
- 
- enum idxd_wq_flag {
- 	WQ_FLAG_DEDICATED = 0,
-+	WQ_FLAG_BLOCK_ON_FAULT,
- };
- 
- enum idxd_wq_type {
-@@ -86,10 +87,11 @@ enum idxd_op_type {
- enum idxd_complete_type {
- 	IDXD_COMPLETE_NORMAL = 0,
- 	IDXD_COMPLETE_ABORT,
-+	IDXD_COMPLETE_DEV_FAIL,
- };
- 
- struct idxd_wq {
--	void __iomem *dportal;
-+	void __iomem *portal;
- 	struct device conf_dev;
- 	struct idxd_cdev idxd_cdev;
- 	struct idxd_device *idxd;
-@@ -164,6 +166,9 @@ struct idxd_device {
- 	struct idxd_wq *wqs;
- 	struct idxd_engine *engines;
- 
-+	int pasid;
-+	bool pasid_enabled;
-+
- 	int num_groups;
- 
- 	u32 msix_perm_offset;
-@@ -284,6 +289,7 @@ void idxd_device_reset(struct idxd_device *idxd);
- void idxd_device_cleanup(struct idxd_device *idxd);
- int idxd_device_config(struct idxd_device *idxd);
- void idxd_device_wqs_clear_state(struct idxd_device *idxd);
-+void idxd_device_drain_pasid(struct idxd_device *idxd, int pasid);
- 
- /* work queue control */
- int idxd_wq_alloc_resources(struct idxd_wq *wq);
-@@ -294,6 +300,8 @@ void idxd_wq_drain(struct idxd_wq *wq);
- int idxd_wq_map_portal(struct idxd_wq *wq);
- void idxd_wq_unmap_portal(struct idxd_wq *wq);
- void idxd_wq_disable_cleanup(struct idxd_wq *wq);
-+int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid);
-+int idxd_wq_disable_pasid(struct idxd_wq *wq);
- 
- /* submission */
- int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc);
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index c7c61974f20f..60da12fdd8c1 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -14,6 +14,7 @@
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/device.h>
- #include <linux/idr.h>
-+#include <linux/intel-svm.h>
- #include <uapi/linux/idxd.h>
- #include <linux/dmaengine.h>
- #include "../dmaengine.h"
-@@ -53,6 +54,7 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 	struct idxd_irq_entry *irq_entry;
- 	int i, msixcnt;
- 	int rc = 0;
-+	union msix_perm mperm;
- 
- 	msixcnt = pci_msix_vec_count(pdev);
- 	if (msixcnt < 0) {
-@@ -131,6 +133,14 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 
- 	idxd_unmask_error_interrupts(idxd);
- 
-+	/* Setup MSIX permission table */
-+	mperm.bits = 0;
-+	mperm.pasid = idxd->pasid;
-+	mperm.pasid_en = idxd->pasid_enabled;
-+	for (i = 1; i < msixcnt; i++)
-+		iowrite32(mperm.bits, idxd->reg_base +
-+				idxd->msix_perm_offset + i * 8);
-+
- 	return 0;
- 
-  err_no_irq:
-@@ -258,8 +268,7 @@ static void idxd_read_caps(struct idxd_device *idxd)
- 	}
- }
- 
--static struct idxd_device *idxd_alloc(struct pci_dev *pdev,
--				      void __iomem * const *iomap)
-+static struct idxd_device *idxd_alloc(struct pci_dev *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct idxd_device *idxd;
-@@ -269,12 +278,43 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev,
- 		return NULL;
- 
- 	idxd->pdev = pdev;
--	idxd->reg_base = iomap[IDXD_MMIO_BAR];
- 	spin_lock_init(&idxd->dev_lock);
- 
- 	return idxd;
- }
- 
-+static int idxd_enable_system_pasid(struct idxd_device *idxd)
-+{
-+	int rc, flags, pasid;
-+
-+	flags = SVM_FLAG_SUPERVISOR_MODE;
-+
-+	rc = intel_svm_bind_mm(&idxd->pdev->dev, &pasid, flags, NULL);
-+	if (rc < 0) {
-+		dev_warn(&idxd->pdev->dev,
-+			 "system pasid allocation failed: %d\n", rc);
-+		return rc;
-+	}
-+
-+	idxd->pasid = pasid;
-+	dev_dbg(&idxd->pdev->dev, "system pasid: %d\n", pasid);
-+	return 0;
-+}
-+
-+static int idxd_disable_system_pasid(struct idxd_device *idxd)
-+{
-+	int rc;
-+
-+	rc = intel_svm_unbind_mm(&idxd->pdev->dev, idxd->pasid);
-+	if (rc < 0) {
-+		dev_warn(&idxd->pdev->dev,
-+			 "system pasid unbind failed: %d\n", rc);
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
- static int idxd_probe(struct idxd_device *idxd)
- {
- 	struct pci_dev *pdev = idxd->pdev;
-@@ -285,6 +325,14 @@ static int idxd_probe(struct idxd_device *idxd)
- 	idxd_device_init_reset(idxd);
- 	dev_dbg(dev, "IDXD reset complete\n");
- 
-+	if (IS_ENABLED(CONFIG_INTEL_IDXD_SVM)) {
-+		rc = idxd_enable_system_pasid(idxd);
-+		if (rc < 0)
-+			dev_warn(dev, "Failed to enable PASID. No SVA support.\n");
-+		else
-+			idxd->pasid_enabled = true;
-+	}
-+
- 	idxd_read_caps(idxd);
- 	idxd_read_table_offsets(idxd);
- 
-@@ -315,29 +363,29 @@ static int idxd_probe(struct idxd_device *idxd)
- 	idxd_mask_error_interrupts(idxd);
- 	idxd_mask_msix_vectors(idxd);
-  err_setup:
-+	if (idxd->pasid_enabled)
-+		idxd_disable_system_pasid(idxd);
- 	return rc;
- }
- 
- static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
--	void __iomem * const *iomap;
- 	struct device *dev = &pdev->dev;
- 	struct idxd_device *idxd;
- 	int rc;
--	unsigned int mask;
- 
- 	rc = pcim_enable_device(pdev);
- 	if (rc)
- 		return rc;
- 
--	dev_dbg(dev, "Mapping BARs\n");
--	mask = (1 << IDXD_MMIO_BAR);
--	rc = pcim_iomap_regions(pdev, mask, DRV_NAME);
--	if (rc)
--		return rc;
-+	dev_dbg(dev, "Alloc IDXD context\n");
-+	idxd = idxd_alloc(pdev);
-+	if (!idxd)
-+		return -ENOMEM;
- 
--	iomap = pcim_iomap_table(pdev);
--	if (!iomap)
-+	dev_dbg(dev, "Mapping BARs\n");
-+	idxd->reg_base = pcim_iomap(pdev, IDXD_MMIO_BAR, 0);
-+	if (!idxd->reg_base)
- 		return -ENOMEM;
- 
- 	dev_dbg(dev, "Set DMA masks\n");
-@@ -353,11 +401,6 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
--	dev_dbg(dev, "Alloc IDXD context\n");
--	idxd = idxd_alloc(pdev, iomap);
--	if (!idxd)
--		return -ENOMEM;
--
- 	idxd_set_type(idxd);
- 
- 	dev_dbg(dev, "Set PCI master\n");
-@@ -445,6 +488,8 @@ static void idxd_remove(struct pci_dev *pdev)
- 	dev_dbg(&pdev->dev, "%s called\n", __func__);
- 	idxd_cleanup_sysfs(idxd);
- 	idxd_shutdown(pdev);
-+	if (idxd->pasid_enabled)
-+		idxd_disable_system_pasid(idxd);
- 	mutex_lock(&idxd_idr_lock);
- 	idr_remove(&idxd_idrs[idxd->type], idxd->id);
- 	mutex_unlock(&idxd_idr_lock);
-@@ -463,7 +508,7 @@ static int __init idxd_init_module(void)
- 	int err, i;
- 
- 	/*
--	 * If the CPU does not support write512, there's no point in
-+	 * If the CPU does not support MOVDIR64B or ENQCMDS, there's no point in
- 	 * enumerating the device. We can not utilize it.
- 	 */
- 	if (!boot_cpu_has(X86_FEATURE_MOVDIR64B)) {
-@@ -471,8 +516,10 @@ static int __init idxd_init_module(void)
- 		return -ENODEV;
- 	}
- 
--	pr_info("%s: Intel(R) Accelerator Devices Driver %s\n",
--		DRV_NAME, IDXD_DRIVER_VERSION);
-+	if (!boot_cpu_has(X86_FEATURE_ENQCMD)) {
-+		pr_warn("Platform does not have ENQCMD(S) support.\n");
-+		return -ENODEV;
-+	}
- 
- 	mutex_init(&idxd_idr_lock);
- 	for (i = 0; i < IDXD_TYPE_MAX; i++)
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index a39e7ae6b3d9..a0df4f3fe1fb 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -333,4 +333,18 @@ union wqcfg {
- 	};
- 	u32 bits[8];
- } __packed;
-+
-+/*
-+ * This macro calculates the offset into the WQCFG register
-+ * idxd - struct idxd *
-+ * n - wq id
-+ * ofs - the index of the 32b dword for the config register
-+ *
-+ * The WQCFG register block is divided into groups per each wq. The n index
-+ * allows us to move to the register group that's for that particular wq.
-+ * Each register is 32bits. The ofs gives us the number of register to access.
-+ */
-+#define WQCFG_OFFSET(idxd_dev, n, ofs) ((idxd_dev)->wqcfg_offset +\
-+					(n) * sizeof(union wqcfg) +\
-+					sizeof(u32) * (ofs))
- #endif
-diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
-index 156a1ee233aa..0cf20b10e64c 100644
---- a/drivers/dma/idxd/submit.c
-+++ b/drivers/dma/idxd/submit.c
-@@ -11,11 +11,19 @@
- static struct idxd_desc *__get_desc(struct idxd_wq *wq, int idx, int cpu)
- {
- 	struct idxd_desc *desc;
-+	struct idxd_device *idxd = wq->idxd;
- 
- 	desc = wq->descs[idx];
- 	memset(desc->hw, 0, sizeof(struct dsa_hw_desc));
- 	memset(desc->completion, 0, sizeof(struct dsa_completion_record));
- 	desc->cpu = cpu;
-+
-+	/*
-+	 * Descriptor completion vectors are 1-8 for MSIX. We will round
-+	 * robin through the 8 vectors.
-+	 */
-+	wq->vec_ptr = (wq->vec_ptr % idxd->num_wq_irqs) + 1;
-+	desc->hw->int_handle = wq->vec_ptr;
- 	return desc;
- }
- 
-@@ -74,14 +82,27 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
- 	if (idxd->state != IDXD_DEV_ENABLED)
- 		return -EIO;
- 
--	portal = wq->dportal + idxd_get_wq_portal_offset(IDXD_PORTAL_UNLIMITED);
-+	portal = wq->portal +
-+		 idxd_get_wq_portal_offset(IDXD_PORTAL_UNLIMITED);
-+
- 	/*
--	 * The wmb() flushes writes to coherent DMA data before possibly
--	 * triggering a DMA read. The wmb() is necessary even on UP because
--	 * the recipient is a device.
-+	 * The wmb() flushes writes to coherent DMA data before
-+	 * possibly triggering a DMA read. The wmb() is necessary
-+	 * even on UP because the recipient is a device.
- 	 */
- 	wmb();
--	iosubmit_cmds512(portal, desc->hw, 1);
-+	if (wq_dedicated(wq)) {
-+		iosubmit_cmds512(portal, desc->hw, 1);
-+	} else {
-+		/*
-+		 * It's not likely that we would receive queue full rejection
-+		 * since the descriptor allocation gates at wq size. If we
-+		 * receive a 1, that means something went wrong such as the
-+		 * device is not accepting descriptor at all.
-+		 */
-+		if (!enqcmds(portal, desc->hw))
-+			return -ENXIO;
-+	}
- 
- 	/*
- 	 * Pending the descriptor to the lockless list for the irq_entry
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index dcba60953217..3d402570984c 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -175,6 +175,30 @@ static int idxd_config_bus_probe(struct device *dev)
- 			return -EINVAL;
- 		}
- 
-+		/* Shared WQ checks */
-+		if (!wq_dedicated(wq)) {
-+			if (!idxd->pasid_enabled) {
-+				dev_warn(dev,
-+					 "PASID not enabled and shared WQ.\n");
-+				mutex_unlock(&wq->wq_lock);
-+				return -ENXIO;
-+			}
-+			/*
-+			 * Shared wq with the threshold set to 0 means the user
-+			 * did not set the threshold or transitioned from a
-+			 * dedicated wq but did not set threshold. A value
-+			 * of 0 would effectively disable the shared wq. The
-+			 * driver does not allow a value of 0 to be set for
-+			 * threshold via sysfs.
-+			 */
-+			if (wq->threshold == 0) {
-+				dev_warn(dev,
-+					 "Shared WQ and threshold 0.\n");
-+				mutex_unlock(&wq->wq_lock);
-+				return -EINVAL;
-+			}
-+		}
-+
- 		rc = idxd_wq_alloc_resources(wq);
- 		if (rc < 0) {
- 			mutex_unlock(&wq->wq_lock);
-@@ -875,6 +899,8 @@ static ssize_t wq_mode_store(struct device *dev,
- 	if (sysfs_streq(buf, "dedicated")) {
- 		set_bit(WQ_FLAG_DEDICATED, &wq->flags);
- 		wq->threshold = 0;
-+	} else if (sysfs_streq(buf, "shared") && idxd->pasid_enabled) {
-+		clear_bit(WQ_FLAG_DEDICATED, &wq->flags);
- 	} else {
- 		return -EINVAL;
- 	}
-@@ -973,6 +999,87 @@ static ssize_t wq_priority_store(struct device *dev,
- static struct device_attribute dev_attr_wq_priority =
- 		__ATTR(priority, 0644, wq_priority_show, wq_priority_store);
- 
-+static ssize_t wq_block_on_fault_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-+
-+	return sprintf(buf, "%u\n",
-+		       test_bit(WQ_FLAG_BLOCK_ON_FAULT, &wq->flags));
-+}
-+
-+static ssize_t wq_block_on_fault_store(struct device *dev,
-+				       struct device_attribute *attr,
-+				       const char *buf, size_t count)
-+{
-+	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-+	struct idxd_device *idxd = wq->idxd;
-+	bool bof;
-+	int rc;
-+
-+	if (!test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
-+		return -EPERM;
-+
-+	if (wq->state != IDXD_WQ_DISABLED)
-+		return -ENXIO;
-+
-+	rc = kstrtobool(buf, &bof);
-+	if (rc < 0)
-+		return rc;
-+
-+	if (bof)
-+		set_bit(WQ_FLAG_BLOCK_ON_FAULT, &wq->flags);
-+	else
-+		clear_bit(WQ_FLAG_BLOCK_ON_FAULT, &wq->flags);
-+
-+	return count;
-+}
-+
-+static struct device_attribute dev_attr_wq_block_on_fault =
-+		__ATTR(block_on_fault, 0644, wq_block_on_fault_show,
-+		       wq_block_on_fault_store);
-+
-+static ssize_t wq_threshold_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-+
-+	return sprintf(buf, "%u\n", wq->threshold);
-+}
-+
-+static ssize_t wq_threshold_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-+	struct idxd_device *idxd = wq->idxd;
-+	unsigned int val;
-+	int rc;
-+
-+	rc = kstrtouint(buf, 0, &val);
-+	if (rc < 0)
-+		return -EINVAL;
-+
-+	if (val > wq->size || val <= 0)
-+		return -EINVAL;
-+
-+	if (!test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
-+		return -EPERM;
-+
-+	if (wq->state != IDXD_WQ_DISABLED)
-+		return -ENXIO;
-+
-+	if (test_bit(WQ_FLAG_DEDICATED, &wq->flags))
-+		return -EINVAL;
-+
-+	wq->threshold = val;
-+
-+	return count;
-+}
-+
-+static struct device_attribute dev_attr_wq_threshold =
-+		__ATTR(threshold, 0644, wq_threshold_show, wq_threshold_store);
-+
- static ssize_t wq_type_show(struct device *dev,
- 			    struct device_attribute *attr, char *buf)
- {
-@@ -1044,6 +1151,14 @@ static ssize_t wq_name_store(struct device *dev,
- 	if (strlen(buf) > WQ_NAME_SIZE || strlen(buf) == 0)
- 		return -EINVAL;
- 
-+	/*
-+	 * This is temporarily placed here until we have SVM support for
-+	 * dmaengine.
-+	 */
-+	if (wq->type == IDXD_WQT_KERNEL &&
-+	    wq->idxd->pasid_enabled)
-+		return -EOPNOTSUPP;
-+
- 	memset(wq->name, 0, WQ_NAME_SIZE + 1);
- 	strncpy(wq->name, buf, WQ_NAME_SIZE);
- 	strreplace(wq->name, '\n', '\0');
-@@ -1071,6 +1186,8 @@ static struct attribute *idxd_wq_attributes[] = {
- 	&dev_attr_wq_mode.attr,
- 	&dev_attr_wq_size.attr,
- 	&dev_attr_wq_priority.attr,
-+	&dev_attr_wq_block_on_fault.attr,
-+	&dev_attr_wq_threshold.attr,
- 	&dev_attr_wq_type.attr,
- 	&dev_attr_wq_name.attr,
- 	&dev_attr_wq_cdev_minor.attr,
-@@ -1220,6 +1337,16 @@ static ssize_t clients_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(clients);
- 
-+static ssize_t pasid_enabled_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct idxd_device *idxd =
-+		container_of(dev, struct idxd_device, conf_dev);
-+
-+	return sprintf(buf, "%u\n", idxd->pasid_enabled);
-+}
-+static DEVICE_ATTR_RO(pasid_enabled);
-+
- static ssize_t state_show(struct device *dev,
- 			  struct device_attribute *attr, char *buf)
- {
-@@ -1330,6 +1457,7 @@ static struct attribute *idxd_device_attributes[] = {
- 	&dev_attr_gen_cap.attr,
- 	&dev_attr_configurable.attr,
- 	&dev_attr_clients.attr,
-+	&dev_attr_pasid_enabled.attr,
- 	&dev_attr_state.attr,
- 	&dev_attr_errors.attr,
- 	&dev_attr_max_tokens.attr,
+Thanks,
+Ashish
 
+On Tue, May 05, 2020 at 09:13:49PM +0000, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> The series add support for AMD SEV guest live migration commands. To protect the
+> confidentiality of an SEV protected guest memory while in transit we need to
+> use the SEV commands defined in SEV API spec [1].
+> 
+> SEV guest VMs have the concept of private and shared memory. Private memory
+> is encrypted with the guest-specific key, while shared memory may be encrypted
+> with hypervisor key. The commands provided by the SEV FW are meant to be used
+> for the private memory only. The patch series introduces a new hypercall.
+> The guest OS can use this hypercall to notify the page encryption status.
+> If the page is encrypted with guest specific-key then we use SEV command during
+> the migration. If page is not encrypted then fallback to default.
+> 
+> The patch adds new ioctls KVM_{SET,GET}_PAGE_ENC_BITMAP. The ioctl can be used
+> by the qemu to get the page encrypted bitmap. Qemu can consult this bitmap
+> during the migration to know whether the page is encrypted.
+> 
+> This section descibes how the SEV live migration feature is negotiated
+> between the host and guest, the host indicates this feature support via 
+> KVM_FEATURE_CPUID. The guest firmware (OVMF) detects this feature and
+> sets a UEFI enviroment variable indicating OVMF support for live
+> migration, the guest kernel also detects the host support for this
+> feature via cpuid and in case of an EFI boot verifies if OVMF also
+> supports this feature by getting the UEFI enviroment variable and if it
+> set then enables live migration feature on host by writing to a custom
+> MSR, if not booted under EFI, then it simply enables the feature by
+> again writing to the custom MSR. The host returns error as part of
+> SET_PAGE_ENC_BITMAP ioctl if guest has not enabled live migration.
+> 
+> A branch containing these patches is available here:
+> https://github.com/AMDESE/linux/tree/sev-migration-v8
+> 
+> [1] https://developer.amd.com/wp-content/resources/55766.PDF
+> 
+> Changes since v7:
+> - Removed the hypervisor specific hypercall/paravirt callback for
+>   SEV live migration and moved back to calling kvm_sev_hypercall3 
+>   directly.
+> - Fix build errors as
+>   Reported-by: kbuild test robot <lkp@intel.com>, specifically fixed
+>   build error when CONFIG_HYPERVISOR_GUEST=y and
+>   CONFIG_AMD_MEM_ENCRYPT=n.
+> - Implicitly enabled live migration for incoming VM(s) to handle 
+>   A->B->C->... VM migrations.
+> - Fixed Documentation as per comments on v6 patches.
+> - Fixed error return path in sev_send_update_data() as per comments 
+>   on v6 patches. 
+> 
+> Changes since v6:
+> - Rebasing to mainline and refactoring to the new split SVM
+>   infrastructre.
+> - Move to static allocation of the unified Page Encryption bitmap
+>   instead of the dynamic resizing of the bitmap, the static allocation
+>   is done implicitly by extending kvm_arch_commit_memory_region() callack
+>   to add svm specific x86_ops which can read the userspace provided memory
+>   region/memslots and calculate the amount of guest RAM managed by the KVM
+>   and grow the bitmap.
+> - Fixed KVM_SET_PAGE_ENC_BITMAP ioctl to set the whole bitmap instead
+>   of simply clearing specific bits.
+> - Removed KVM_PAGE_ENC_BITMAP_RESET ioctl, which is now performed using
+>   KVM_SET_PAGE_ENC_BITMAP.
+> - Extended guest support for enabling Live Migration feature by adding a
+>   check for UEFI environment variable indicating OVMF support for Live
+>   Migration feature and additionally checking for KVM capability for the
+>   same feature. If not booted under EFI, then we simply check for KVM
+>   capability.
+> - Add hypervisor specific hypercall for SEV live migration by adding
+>   a new paravirt callback as part of x86_hyper_runtime.
+>   (x86 hypervisor specific runtime callbacks)
+> - Moving MSR handling for MSR_KVM_SEV_LIVE_MIG_EN into svm/sev code 
+>   and adding check for SEV live migration enabled by guest in the 
+>   KVM_GET_PAGE_ENC_BITMAP ioctl.
+> - Instead of the complete __bss_decrypted section, only specific variables
+>   such as hv_clock_boot and wall_clock are marked as decrypted in the
+>   page encryption bitmap
+> 
+> Changes since v5:
+> - Fix build errors as
+>   Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> Changes since v4:
+> - Host support has been added to extend KVM capabilities/feature bits to 
+>   include a new KVM_FEATURE_SEV_LIVE_MIGRATION, which the guest can
+>   query for host-side support for SEV live migration and a new custom MSR
+>   MSR_KVM_SEV_LIVE_MIG_EN is added for guest to enable the SEV live
+>   migration feature.
+> - Ensure that _bss_decrypted section is marked as decrypted in the
+>   page encryption bitmap.
+> - Fixing KVM_GET_PAGE_ENC_BITMAP ioctl to return the correct bitmap
+>   as per the number of pages being requested by the user. Ensure that
+>   we only copy bmap->num_pages bytes in the userspace buffer, if
+>   bmap->num_pages is not byte aligned we read the trailing bits
+>   from the userspace and copy those bits as is. This fixes guest
+>   page(s) corruption issues observed after migration completion.
+> - Add kexec support for SEV Live Migration to reset the host's
+>   page encryption bitmap related to kernel specific page encryption
+>   status settings before we load a new kernel by kexec. We cannot
+>   reset the complete page encryption bitmap here as we need to
+>   retain the UEFI/OVMF firmware specific settings.
+> 
+> Changes since v3:
+> - Rebasing to mainline and testing.
+> - Adding a new KVM_PAGE_ENC_BITMAP_RESET ioctl, which resets the 
+>   page encryption bitmap on a guest reboot event.
+> - Adding a more reliable sanity check for GPA range being passed to
+>   the hypercall to ensure that guest MMIO ranges are also marked
+>   in the page encryption bitmap.
+> 
+> Changes since v2:
+>  - reset the page encryption bitmap on vcpu reboot
+> 
+> Changes since v1:
+>  - Add support to share the page encryption between the source and target
+>    machine.
+>  - Fix review feedbacks from Tom Lendacky.
+>  - Add check to limit the session blob length.
+>  - Update KVM_GET_PAGE_ENC_BITMAP icotl to use the base_gfn instead of
+>    the memory slot when querying the bitmap.
+> 
+> Ashish Kalra (7):
+>   KVM: SVM: Add support for static allocation of unified Page Encryption
+>     Bitmap.
+>   KVM: x86: Introduce new KVM_FEATURE_SEV_LIVE_MIGRATION feature &
+>     Custom MSR.
+>   EFI: Introduce the new AMD Memory Encryption GUID.
+>   KVM: x86: Add guest support for detecting and enabling SEV Live
+>     Migration feature.
+>   KVM: x86: Mark _bss_decrypted section variables as decrypted in page
+>     encryption bitmap.
+>   KVM: x86: Add kexec support for SEV Live Migration.
+>   KVM: SVM: Enable SEV live migration feature implicitly on Incoming
+>     VM(s).
+> 
+> Brijesh Singh (11):
+>   KVM: SVM: Add KVM_SEV SEND_START command
+>   KVM: SVM: Add KVM_SEND_UPDATE_DATA command
+>   KVM: SVM: Add KVM_SEV_SEND_FINISH command
+>   KVM: SVM: Add support for KVM_SEV_RECEIVE_START command
+>   KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA command
+>   KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+>   KVM: x86: Add AMD SEV specific Hypercall3
+>   KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
+>   KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
+>   mm: x86: Invoke hypercall when page encryption status is changed
+>   KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP ioctl
+> 
+>  .../virt/kvm/amd-memory-encryption.rst        | 120 +++
+>  Documentation/virt/kvm/api.rst                |  71 ++
+>  Documentation/virt/kvm/cpuid.rst              |   5 +
+>  Documentation/virt/kvm/hypercalls.rst         |  15 +
+>  Documentation/virt/kvm/msr.rst                |  10 +
+>  arch/x86/include/asm/kvm_host.h               |   7 +
+>  arch/x86/include/asm/kvm_para.h               |  12 +
+>  arch/x86/include/asm/mem_encrypt.h            |  11 +
+>  arch/x86/include/asm/paravirt.h               |  10 +
+>  arch/x86/include/asm/paravirt_types.h         |   2 +
+>  arch/x86/include/uapi/asm/kvm_para.h          |   5 +
+>  arch/x86/kernel/kvm.c                         |  90 +++
+>  arch/x86/kernel/kvmclock.c                    |  12 +
+>  arch/x86/kernel/paravirt.c                    |   1 +
+>  arch/x86/kvm/svm/sev.c                        | 732 +++++++++++++++++-
+>  arch/x86/kvm/svm/svm.c                        |  21 +
+>  arch/x86/kvm/svm/svm.h                        |   9 +
+>  arch/x86/kvm/vmx/vmx.c                        |   1 +
+>  arch/x86/kvm/x86.c                            |  35 +
+>  arch/x86/mm/mem_encrypt.c                     |  68 +-
+>  arch/x86/mm/pat/set_memory.c                  |   7 +
+>  include/linux/efi.h                           |   1 +
+>  include/linux/psp-sev.h                       |   8 +-
+>  include/uapi/linux/kvm.h                      |  52 ++
+>  include/uapi/linux/kvm_para.h                 |   1 +
+>  25 files changed, 1297 insertions(+), 9 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
