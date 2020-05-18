@@ -2,124 +2,338 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC21AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD9720825
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:12:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589800320;
-	bh=y5KEPZycp2oqOnuCY3zLjhziAEaTVxgXBZUxJmqtlGY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kbVT85wO+smwd5jLoPWiyFfwAanY4RmnV938gfp2GkEGS9KID/LRld0QS/CCw3hUB
-	 ApcVh22LBe5Z7FQ/XrLaLU+0ZwSOeM+ax6jssacdKgl8kpbNWtci+bSTjlprXJoOG1
-	 +jFq/42io1g/z1zpJoD3t9kBCYjw8L89DbCNG+JE=
+	by mail.kernel.org (Postfix) with ESMTP id AAA722070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:12:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K7begZHA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgERLMA (ORCPT
+        id S1727067AbgERLM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:12:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbgERLL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:11:59 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F9752070A;
-        Mon, 18 May 2020 11:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589800318;
-        bh=y5KEPZycp2oqOnuCY3zLjhziAEaTVxgXBZUxJmqtlGY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ekps8lER8cGxo1U9Ib02aFnop4f+6JvNaLY30v7KoO6Qvs/xi4Cz1Wl4ZKEIDxfRf
-         h251C0uVoz8rrgQx3p1G25upPTqRClTJ0fZEpP33zbVSgiz9Q+QbOSQHttgaxm7z3O
-         leceqbuxoROcBvu97fh13ryAY53OfNuowzkvsoWY=
-Date:   Mon, 18 May 2020 12:11:56 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/19] spi: dw: Add Tx/Rx finish wait methods to the
- MID DMA
-Message-ID: <20200518111156.GD8699@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-3-Sergey.Semin@baikalelectronics.ru>
- <20200515120111.GV185537@smile.fi.intel.com>
- <20200515121815.GB5066@sirena.org.uk>
- <20200515123702.GA185537@smile.fi.intel.com>
- <20200515124131.GE5066@sirena.org.uk>
- <20200515200250.zjsv5uaftwqcnwud@mobilestation>
- <20200518105130.GC8699@sirena.org.uk>
- <20200518110453.w3ko5a5yzwyr73ir@mobilestation>
+        Mon, 18 May 2020 07:12:27 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38240 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbgERLM0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:12:26 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04IBCBgA055377;
+        Mon, 18 May 2020 06:12:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589800331;
+        bh=YiZbEVplVfWd50N8qAYl1Ci+8i6AUXxWn4KmE3zxDfM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=K7begZHAXu9+2iecza6h4m1bgxcxxAurb5orabVIWul0xYpdDN+9dP2i45A9Ivdlg
+         pwe8LkTO+1bmuUQZkcV5aUpSNw603p53jKuzNpi6QEPgPJNC6029jqXerRiEywT9z2
+         K7MkPcYYis0I/kY9ZHzLKZegDvbyYroNT6SPbi5M=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04IBCBut121235
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 May 2020 06:12:11 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
+ May 2020 06:12:11 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 18 May 2020 06:12:11 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04IBC8pr111486;
+        Mon, 18 May 2020 06:12:08 -0500
+Subject: Re: [PATCH v3 4/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200508130646.23939-1-kishon@ti.com>
+ <20200508130646.23939-5-kishon@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <b30c9882-b8f5-44e3-bfcd-7faefddbc4af@ti.com>
+Date:   Mon, 18 May 2020 16:42:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cHMo6Wbp1wrKhbfi"
-Content-Disposition: inline
-In-Reply-To: <20200518110453.w3ko5a5yzwyr73ir@mobilestation>
-X-Cookie: If in doubt, mumble.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200508130646.23939-5-kishon@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi RobH, Robin,
 
---cHMo6Wbp1wrKhbfi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 5/8/2020 6:36 PM, Kishon Vijay Abraham I wrote:
+> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+> property to configure the number of bits passed through from PCIe
+> address to internal address in Inbound Address Translation register.
+> This only used the NO MATCH BAR.
+> 
+> However standard PCI dt-binding already defines "dma-ranges" to
+> describe the address ranges accessible by PCIe controller. Add support
+> in Cadence PCIe host driver to parse dma-ranges and configure the
+> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
+> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB, so if
+> the dma-ranges specifies a size larger than the maximum allowed, the
+> driver will split and configure the BARs.
+> 
+> Legacy device tree binding compatibility is maintained by retaining
+> support for "cdns,no-bar-match-nbits".
 
-On Mon, May 18, 2020 at 02:04:53PM +0300, Serge Semin wrote:
-> On Mon, May 18, 2020 at 11:51:30AM +0100, Mark Brown wrote:
+Do you have any comments for this patch?
 
-> > > - semantically the xfer argument isn't optional and we can't fetch it that easy
-> > >   in the dmaengine completion callbacks.
+Tom,
 
-> > Not sure I follow this.
+where you able to test this in Cadence platform?
 
-> I mean is it Ok to call the spi_delay_exec like this: spi_delay_exec(delay, NULL),
-> with null passed instead of xfer pointer? Semantically the pointer is required only
-> if we'd need to calculate the SPI_DELAY_UNIT_SCK delay, but here we'll need
-> USECS and NSECS delays. So at the first glace there is no problem with passed
-> NULL instead of xfer. But doing so we'd rely on the semantic peculiarity, which
-> may seem a bit hackish.
+Thanks
+Kishon
 
-Yes, that should be fine if you don't specify a SCK delay.  There's no
-reason to be looking at that if the delay isn't specified in SCKs.
-
---cHMo6Wbp1wrKhbfi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7CbXsACgkQJNaLcl1U
-h9Bchwf/XyAPpC0qyH8YKkXr5ojOu4mZYFgsks4BSiWD3oihJ+PHPPyadgcyk5Cy
-1Da3q89y/hcJIj6G0IBO+VN1/5XqjtuF3KGrac8JysLfV9nphim4QqyrlF91DrZb
-6Zx/kpjUVDEfbTi9KOfda0sYHeeU6ccd9/3QdmQS5yRR04lHA+7204ZINBZ+AHPu
-F9yZaAfv4OclT57cMEGGHjXs3lY+KmOa8n4TV58MiBm2fMJNlcrAQAK5zSmrvZqN
-ZgR87Oi21WPCxRVCz15wj4tuGKg38jUawie1GxD3pu1vf+gfc8DvlcmrKWBxs263
-k/W97ew0gHSbfy3VyyhMH+zISqRX8A==
-=YKl/
------END PGP SIGNATURE-----
-
---cHMo6Wbp1wrKhbfi--
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../controller/cadence/pcie-cadence-host.c    | 141 ++++++++++++++++--
+>  drivers/pci/controller/cadence/pcie-cadence.h |  17 ++-
+>  2 files changed, 141 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 6ecebb79057a..2485ecd8434d 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -11,6 +11,12 @@
+>  
+>  #include "pcie-cadence.h"
+>  
+> +static u64 cdns_rp_bar_max_size[] = {
+> +	[RP_BAR0] = _ULL(128 * SZ_2G),
+> +	[RP_BAR1] = SZ_2G,
+> +	[RP_NO_BAR] = SZ_64T,
+> +};
+> +
+>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>  			       int where)
+>  {
+> @@ -106,6 +112,117 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  	return 0;
+>  }
+>  
+> +static void cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
+> +					 enum cdns_pcie_rp_bar bar,
+> +					 u64 cpu_addr, u32 aperture)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	u32 addr0, addr1;
+> +
+> +	addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
+> +		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
+> +	addr1 = upper_32_bits(cpu_addr);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
+> +}
+> +
+> +static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
+> +				     struct resource_entry *entry,
+> +				     enum cdns_pcie_rp_bar *index)
+> +{
+> +	u64 cpu_addr, pci_addr, size, winsize;
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	struct device *dev = pcie->dev;
+> +	enum cdns_pcie_rp_bar bar;
+> +	unsigned long flags;
+> +	u32 aperture;
+> +	u32 value;
+> +
+> +	cpu_addr = entry->res->start;
+> +	flags = entry->res->flags;
+> +	pci_addr = entry->res->start - entry->offset;
+> +	size = resource_size(entry->res);
+> +	bar = *index;
+> +
+> +	if (entry->offset) {
+> +		dev_err(dev, "Cannot map PCI addr: %llx to CPU addr: %llx\n",
+> +			pci_addr, cpu_addr);
+> +		return -EINVAL;
+> +	}
+> +
+> +	value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
+> +	while (size > 0) {
+> +		if (bar > RP_NO_BAR) {
+> +			dev_err(dev, "Failed to map inbound regions!\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		winsize = size;
+> +		if (size > cdns_rp_bar_max_size[bar])
+> +			winsize = cdns_rp_bar_max_size[bar];
+> +
+> +		aperture = ilog2(winsize);
+> +
+> +		cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, aperture);
+> +
+> +		if (bar == RP_NO_BAR)
+> +			break;
+> +
+> +		if (winsize + cpu_addr >= SZ_4G) {
+> +			if (!(flags & IORESOURCE_PREFETCH))
+> +				value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
+> +			value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
+> +		} else {
+> +			if (!(flags & IORESOURCE_PREFETCH))
+> +				value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
+> +			value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
+> +		}
+> +
+> +		value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
+> +
+> +		size -= winsize;
+> +		cpu_addr += winsize;
+> +		bar++;
+> +	}
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+> +	*index = bar;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+> +{
+> +	enum cdns_pcie_rp_bar bar = RP_BAR0;
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	struct device *dev = pcie->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct pci_host_bridge *bridge;
+> +	struct resource_entry *entry;
+> +	u32 no_bar_nbits = 32;
+> +	int err;
+> +
+> +	bridge = pci_host_bridge_from_priv(rc);
+> +	if (!bridge)
+> +		return -ENOMEM;
+> +
+> +	if (list_empty(&bridge->dma_ranges)) {
+> +		of_property_read_u32(np, "cdns,no-bar-match-nbits",
+> +				     &no_bar_nbits);
+> +		cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0, no_bar_nbits);
+> +		return 0;
+> +	}
+> +
+> +	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+> +		err = cdns_pcie_host_bar_config(rc, entry, &bar);
+> +		if (err) {
+> +			dev_err(dev, "Fail to configure IB using dma-ranges\n");
+> +			return err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -160,16 +277,9 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>  		r++;
+>  	}
+>  
+> -	/*
+> -	 * Set Root Port no BAR match Inbound Translation registers:
+> -	 * needed for MSI and DMA.
+> -	 * Root Port BAR0 and BAR1 are disabled, hence no need to set their
+> -	 * inbound translation registers.
+> -	 */
+> -	addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(rc->no_bar_nbits);
+> -	addr1 = 0;
+> -	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(RP_NO_BAR), addr0);
+> -	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(RP_NO_BAR), addr1);
+> +	err = cdns_pcie_host_map_dma_ranges(rc);
+> +	if (err)
+> +		return err;
+>  
+>  	return 0;
+>  }
+> @@ -179,10 +289,16 @@ static int cdns_pcie_host_init(struct device *dev,
+>  			       struct cdns_pcie_rc *rc)
+>  {
+>  	struct resource *bus_range = NULL;
+> +	struct pci_host_bridge *bridge;
+>  	int err;
+>  
+> +	bridge = pci_host_bridge_from_priv(rc);
+> +	if (!bridge)
+> +		return -ENOMEM;
+> +
+>  	/* Parse our PCI ranges and request their resources */
+> -	err = pci_parse_request_of_pci_ranges(dev, resources, NULL, &bus_range);
+> +	err = pci_parse_request_of_pci_ranges(dev, resources,
+> +					      &bridge->dma_ranges, &bus_range);
+>  	if (err)
+>  		return err;
+>  
+> @@ -239,9 +355,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	pcie = &rc->pcie;
+>  	pcie->is_rc = true;
+>  
+> -	rc->no_bar_nbits = 32;
+> -	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+> -
+>  	rc->vendor_id = 0xffff;
+>  	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+>  
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index f349f5828a58..336237a7025c 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -92,6 +92,20 @@
+>  #define  CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS		0x6
+>  #define  CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS	0x7
+>  
+> +#define LM_RC_BAR_CFG_CTRL_DISABLED(bar)		\
+> +		(CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED << (((bar) * 8) + 6))
+> +#define LM_RC_BAR_CFG_CTRL_IO_32BITS(bar)		\
+> +		(CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS << (((bar) * 8) + 6))
+> +#define LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar)		\
+> +		(CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_32BITS << (((bar) * 8) + 6))
+> +#define LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar)	\
+> +	(CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS << (((bar) * 8) + 6))
+> +#define LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar)		\
+> +		(CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS << (((bar) * 8) + 6))
+> +#define LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar)	\
+> +	(CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS << (((bar) * 8) + 6))
+> +#define LM_RC_BAR_CFG_APERTURE(bar, aperture)		\
+> +					(((aperture) - 2) << ((bar) * 8))
+>  
+>  /*
+>   * Endpoint Function Registers (PCI configuration space for endpoint functions)
+> @@ -266,8 +280,6 @@ struct cdns_pcie {
+>   * @bus_range: first/last buses behind the PCIe host controller
+>   * @cfg_base: IO mapped window to access the PCI configuration space of a
+>   *            single function at a time
+> - * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
+> - *                translation (nbits sets into the "no BAR match" register)
+>   * @vendor_id: PCI vendor ID
+>   * @device_id: PCI device ID
+>   */
+> @@ -276,7 +288,6 @@ struct cdns_pcie_rc {
+>  	struct resource		*cfg_res;
+>  	struct resource		*bus_range;
+>  	void __iomem		*cfg_base;
+> -	u32			no_bar_nbits;
+>  	u32			vendor_id;
+>  	u32			device_id;
+>  };
+> 
