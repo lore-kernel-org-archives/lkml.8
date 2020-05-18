@@ -2,193 +2,106 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4829FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B3FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 268E420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDE820709
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgERNTb (ORCPT
+        id S1727835AbgERNTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 May 2020 09:19:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:40320 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgERNTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 May 2020 09:19:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38270 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726855AbgERNTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:19:30 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04ID413x088391;
-        Mon, 18 May 2020 09:18:36 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312agck66k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 09:18:36 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04ID4H8R090068;
-        Mon, 18 May 2020 09:18:35 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312agck65j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 09:18:35 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IDFda7012514;
-        Mon, 18 May 2020 13:18:33 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03fra.de.ibm.com with ESMTP id 3127t5hpc7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 13:18:32 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IDIUh163635458
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 13:18:30 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC93642042;
-        Mon, 18 May 2020 13:18:30 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB9FB4203F;
-        Mon, 18 May 2020 13:18:29 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.67.24])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 18 May 2020 13:18:29 +0000 (GMT)
-Subject: Re: [PATCH v5 01/10] mmap locking API: initial implementation as
- rwsem wrappers
-To:     Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Davidlohr Bueso <dbueso@suse.de>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-2-walken@google.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <f39081c8-cbcc-4478-5f9b-4f73651bc6a7@linux.ibm.com>
-Date:   Mon, 18 May 2020 15:18:29 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A124A101E;
+        Mon, 18 May 2020 06:19:30 -0700 (PDT)
+Received: from melchizedek.cambridge.arm.com (melchizedek.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FADA3F305;
+        Mon, 18 May 2020 06:19:29 -0700 (PDT)
+From:   James Morse <james.morse@arm.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Babu Moger <Babu.Moger@amd.com>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH v3 00/10] x86/resctrl: Misc cleanup
+Date:   Mon, 18 May 2020 14:19:13 +0100
+Message-Id: <20200518131924.7741-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20200422001422.232330-2-walken@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_05:2020-05-15,2020-05-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- malwarescore=0 impostorscore=0 mlxlogscore=999 clxscore=1011 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 cotscore=-2147483648
- spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005180114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 22/04/2020 à 02:14, Michel Lespinasse a écrit :
-> This change wraps the existing mmap_sem related rwsem calls into a new
-> mmap locking API. There are two justifications for the new API:
-> 
-> - At first, it provides an easy hooking point to instrument mmap_sem
->    locking latencies independently of any other rwsems.
-> 
-> - In the future, it may be a starting point for replacing the rwsem
->    implementation with a different one, such as range locks.
-> 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
-> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+Hello!
 
-Reviewed-by: Laurent Dufour <ldufour@linux.ibm.com>
+These are the miscellaneous cleanup patches that floated to the top of
+the MPAM tree.
 
-> ---
->   include/linux/mm.h        |  1 +
->   include/linux/mmap_lock.h | 54 +++++++++++++++++++++++++++++++++++++++
->   2 files changed, 55 insertions(+)
->   create mode 100644 include/linux/mmap_lock.h
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 5a323422d783..051ec782bdbb 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -15,6 +15,7 @@
->   #include <linux/atomic.h>
->   #include <linux/debug_locks.h>
->   #include <linux/mm_types.h>
-> +#include <linux/mmap_lock.h>
->   #include <linux/range.h>
->   #include <linux/pfn.h>
->   #include <linux/percpu-refcount.h>
-> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> new file mode 100644
-> index 000000000000..97ac53b66052
-> --- /dev/null
-> +++ b/include/linux/mmap_lock.h
-> @@ -0,0 +1,54 @@
-> +#ifndef _LINUX_MMAP_LOCK_H
-> +#define _LINUX_MMAP_LOCK_H
-> +
-> +static inline void mmap_init_lock(struct mm_struct *mm)
-> +{
-> +	init_rwsem(&mm->mmap_sem);
-> +}
-> +
-> +static inline void mmap_write_lock(struct mm_struct *mm)
-> +{
-> +	down_write(&mm->mmap_sem);
-> +}
-> +
-> +static inline int mmap_write_lock_killable(struct mm_struct *mm)
-> +{
-> +	return down_write_killable(&mm->mmap_sem);
-> +}
-> +
-> +static inline bool mmap_write_trylock(struct mm_struct *mm)
-> +{
-> +	return down_write_trylock(&mm->mmap_sem) != 0;
-> +}
-> +
-> +static inline void mmap_write_unlock(struct mm_struct *mm)
-> +{
-> +	up_write(&mm->mmap_sem);
-> +}
-> +
-> +static inline void mmap_write_downgrade(struct mm_struct *mm)
-> +{
-> +	downgrade_write(&mm->mmap_sem);
-> +}
-> +
-> +static inline void mmap_read_lock(struct mm_struct *mm)
-> +{
-> +	down_read(&mm->mmap_sem);
-> +}
-> +
-> +static inline int mmap_read_lock_killable(struct mm_struct *mm)
-> +{
-> +	return down_read_killable(&mm->mmap_sem);
-> +}
-> +
-> +static inline bool mmap_read_trylock(struct mm_struct *mm)
-> +{
-> +	return down_read_trylock(&mm->mmap_sem) != 0;
-> +}
-> +
-> +static inline void mmap_read_unlock(struct mm_struct *mm)
-> +{
-> +	up_read(&mm->mmap_sem);
-> +}
-> +
-> +#endif /* _LINUX_MMAP_LOCK_H */
-> 
+The only interesting thing are the patches to make the AMD/Intel
+differences something resctrl understands, instead of just 'happening'
+because of the different function pointers.
+This will become more important once MPAM support is added. parse_bw()
+and friends are what enforces resctrl's ABI resctrl. Allowing an
+architecture/platform to provide a subtly different function here would
+be bad for user-space.
+
+MPAM would set arch_has_sparse_bitmaps and arch_has_empty_bitmap, but
+not arch_needs_linear.
+
+
+Since [v2], arch_has_empty_bitmap has been added, and some typos fixed.
+
+Since [v1], I've picked up all the review feedback and collected the
+tags.
+
+Nothing in this series should change any behaviour.
+This series is based on tip's x86/cache branch: v5.7-rc4-7-g0c4d5ba1b998
+and can be retrieved from:
+git://linux-arm.org/linux-jm.git mpam/cleanup/v3
+
+
+Thanks,
+
+James
+
+[v2] https://lore.kernel.org/lkml/20200430170400.21501-1-james.morse@arm.com/
+[v1] https://lore.kernel.org/lkml/20200214182401.39008-1-james.morse@arm.com/
+
+James Morse (10):
+  x86/resctrl: Nothing uses struct mbm_state chunks_bw
+  x86/resctrl: Remove max_delay
+  x86/resctrl: Fix stale comment
+  x86/resctrl: use container_of() in delayed_work handlers
+  x86/resctrl: Include pid.h
+  x86/resctrl: Use is_closid_match() in more places
+  x86/resctrl: Add arch_needs_linear to explain AMD/Intel MBA difference
+  x86/resctrl: Merge AMD/Intel parse_bw() calls
+  x86/resctrl: Add arch_has_{sparse,empty}_bitmaps to explain CAT
+    differences
+  cacheinfo: Move resctrl's get_cache_id() to the cacheinfo header file
+
+ arch/x86/kernel/cpu/resctrl/core.c        | 45 +++++------
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 92 ++++-------------------
+ arch/x86/kernel/cpu/resctrl/internal.h    | 21 ++----
+ arch/x86/kernel/cpu/resctrl/monitor.c     | 16 +---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 32 ++++----
+ include/linux/cacheinfo.h                 | 21 ++++++
+ include/linux/resctrl.h                   |  2 +
+ 7 files changed, 80 insertions(+), 149 deletions(-)
+
+-- 
+2.19.1
 
