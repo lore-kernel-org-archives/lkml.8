@@ -2,51 +2,54 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D27EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E98020853
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF522088E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826438;
-	bh=J3IsPnupG1bprp4tyhjpuDkdCJ3abZNdijJ9J9kjQPw=;
+	s=default; t=1589826444;
+	bh=e6+b2OsZ5WKqMKktF8KKi0LqxDz+d30duXatQxMSEsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fZ0d7a7YsLIicQz5qBvoN+jGI2KnQ+PlnzlJYkk7wWV/LUKJ5fDT+rhfi9+S1b7Vx
-	 2gefAHZBszgGlNgimUxWVGqZxsPyu82IKc6B1GT1rtJhs+qn57owFK3LTdrm+oW+KL
-	 EgrYognYFE7El9s5Uxzp05P2hrIWIabwlI9f8Gvg=
+	b=VS+f5B34gaO9TEHPvZzTlBhysuDQGdZr5UxNu27C176lH3lhdrPkMdJywm+5AXXXq
+	 LAmuhlQK6ntenL5w4HkLDVZJYQ3kmJ0HLwqepHUpDYpvY8Y7ycBU5o7LosKcVU7mzU
+	 maKzjV4DLT+7r1Pr4MSV2qUVh4w5er0J4oWmBiKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbgERRoL (ORCPT
+        id S1730634AbgERS1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42148 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbgERRoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:44:06 -0400
+        id S1729657AbgERRoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:44:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19FB52083E;
-        Mon, 18 May 2020 17:44:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACE57207C4;
+        Mon, 18 May 2020 17:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823845;
-        bh=J3IsPnupG1bprp4tyhjpuDkdCJ3abZNdijJ9J9kjQPw=;
+        s=default; t=1589823843;
+        bh=e6+b2OsZ5WKqMKktF8KKi0LqxDz+d30duXatQxMSEsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HodCwC4k44W3WJa013Q+LdSQekngSTdfidAfd+FKUk8Nm6OOVyNbwZFbryDv59mtD
-         MWkT2rFKVmseDfkRe1q0if63HQ7du83BzIGaF9AY+98y8lw5fV5Q6/hcgiHgS/RRgz
-         VeJL/ycNGaIojTvXQrii9Vx1C3IN6hJiOjYKxZsE=
+        b=y8ZsPzKtg4t3IrMmvL1a2Pt7AQlsUWseBNic8yLNicBgVwgHZYJ6gPYKWLLpppV3z
+         UA+OSspaN+/XeLeCs4watp4zxDBz9JtX6SZVmtNYlkRFQjNY8f/0eaujfgGf2wWOQD
+         J4vy13XMxBdbKOHMkHPxcziy7Cv1l3gaAkf30ebU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.9 58/90] pnp: Use list_for_each_entry() instead of open coding
-Date:   Mon, 18 May 2020 19:36:36 +0200
-Message-Id: <20200518173502.918228186@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 57/90] IB/mlx4: Test return value of calls to ib_get_cached_pkey
+Date:   Mon, 18 May 2020 19:36:35 +0200
+Message-Id: <20200518173502.736675760@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -59,90 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-commit 01b2bafe57b19d9119413f138765ef57990921ce upstream.
+[ Upstream commit 6693ca95bd4330a0ad7326967e1f9bcedd6b0800 ]
 
-Aside from good practice, this avoids a warning from gcc 10:
+In the mlx4_ib_post_send() flow, some functions call ib_get_cached_pkey()
+without checking its return value. If ib_get_cached_pkey() returns an
+error code, these functions should return failure.
 
-./include/linux/kernel.h:997:3: warning: array subscript -31 is outside array bounds of ‘struct list_head[1]’ [-Warray-bounds]
-  997 |  ((type *)(__mptr - offsetof(type, member))); })
-      |  ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/list.h:493:2: note: in expansion of macro ‘container_of’
-  493 |  container_of(ptr, type, member)
-      |  ^~~~~~~~~~~~
-./include/linux/pnp.h:275:30: note: in expansion of macro ‘list_entry’
-  275 | #define global_to_pnp_dev(n) list_entry(n, struct pnp_dev, global_list)
-      |                              ^~~~~~~~~~
-./include/linux/pnp.h:281:11: note: in expansion of macro ‘global_to_pnp_dev’
-  281 |  (dev) != global_to_pnp_dev(&pnp_global); \
-      |           ^~~~~~~~~~~~~~~~~
-arch/x86/kernel/rtc.c:189:2: note: in expansion of macro ‘pnp_for_each_dev’
-  189 |  pnp_for_each_dev(dev) {
-
-Because the common code doesn't cast the starting list_head to the
-containing struct.
-
+Fixes: 1ffeb2eb8be9 ("IB/mlx4: SR-IOV IB context objects and proxy/tunnel SQP support")
+Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand adapters")
+Fixes: e622f2f4ad21 ("IB: split struct ib_send_wr")
+Link: https://lore.kernel.org/r/20200426075921.130074-1-leon@kernel.org
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-[ rjw: Whitespace adjustments ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/pnp.h |   29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+ drivers/infiniband/hw/mlx4/qp.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/include/linux/pnp.h
-+++ b/include/linux/pnp.h
-@@ -219,10 +219,8 @@ struct pnp_card {
- #define global_to_pnp_card(n) list_entry(n, struct pnp_card, global_list)
- #define protocol_to_pnp_card(n) list_entry(n, struct pnp_card, protocol_list)
- #define to_pnp_card(n) container_of(n, struct pnp_card, dev)
--#define pnp_for_each_card(card) \
--	for((card) = global_to_pnp_card(pnp_cards.next); \
--	(card) != global_to_pnp_card(&pnp_cards); \
--	(card) = global_to_pnp_card((card)->global_list.next))
-+#define pnp_for_each_card(card)	\
-+	list_for_each_entry(card, &pnp_cards, global_list)
+diff --git a/drivers/infiniband/hw/mlx4/qp.c b/drivers/infiniband/hw/mlx4/qp.c
+index 709d6491d2435..7284a9176844e 100644
+--- a/drivers/infiniband/hw/mlx4/qp.c
++++ b/drivers/infiniband/hw/mlx4/qp.c
+@@ -2307,6 +2307,7 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
+ 	int send_size;
+ 	int header_size;
+ 	int spc;
++	int err;
+ 	int i;
  
- struct pnp_card_link {
- 	struct pnp_card *card;
-@@ -275,14 +273,9 @@ struct pnp_dev {
- #define card_to_pnp_dev(n) list_entry(n, struct pnp_dev, card_list)
- #define protocol_to_pnp_dev(n) list_entry(n, struct pnp_dev, protocol_list)
- #define	to_pnp_dev(n) container_of(n, struct pnp_dev, dev)
--#define pnp_for_each_dev(dev) \
--	for((dev) = global_to_pnp_dev(pnp_global.next); \
--	(dev) != global_to_pnp_dev(&pnp_global); \
--	(dev) = global_to_pnp_dev((dev)->global_list.next))
--#define card_for_each_dev(card,dev) \
--	for((dev) = card_to_pnp_dev((card)->devices.next); \
--	(dev) != card_to_pnp_dev(&(card)->devices); \
--	(dev) = card_to_pnp_dev((dev)->card_list.next))
-+#define pnp_for_each_dev(dev) list_for_each_entry(dev, &pnp_global, global_list)
-+#define card_for_each_dev(card, dev)	\
-+	list_for_each_entry(dev, &(card)->devices, card_list)
- #define pnp_dev_name(dev) (dev)->name
+ 	if (wr->wr.opcode != IB_WR_SEND)
+@@ -2341,7 +2342,9 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
  
- static inline void *pnp_get_drvdata(struct pnp_dev *pdev)
-@@ -436,14 +429,10 @@ struct pnp_protocol {
- };
- 
- #define to_pnp_protocol(n) list_entry(n, struct pnp_protocol, protocol_list)
--#define protocol_for_each_card(protocol,card) \
--	for((card) = protocol_to_pnp_card((protocol)->cards.next); \
--	(card) != protocol_to_pnp_card(&(protocol)->cards); \
--	(card) = protocol_to_pnp_card((card)->protocol_list.next))
--#define protocol_for_each_dev(protocol,dev) \
--	for((dev) = protocol_to_pnp_dev((protocol)->devices.next); \
--	(dev) != protocol_to_pnp_dev(&(protocol)->devices); \
--	(dev) = protocol_to_pnp_dev((dev)->protocol_list.next))
-+#define protocol_for_each_card(protocol, card)	\
-+	list_for_each_entry(card, &(protocol)->cards, protocol_list)
-+#define protocol_for_each_dev(protocol, dev)	\
-+	list_for_each_entry(dev, &(protocol)->devices, protocol_list)
- 
- extern struct bus_type pnp_bus_type;
- 
+ 	sqp->ud_header.lrh.virtual_lane    = 0;
+ 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
+-	ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
++	err = ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
++	if (err)
++		return err;
+ 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
+ 	if (sqp->qp.mlx4_ib_qp_type == MLX4_IB_QPT_TUN_SMI_OWNER)
+ 		sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
+@@ -2618,9 +2621,14 @@ static int build_mlx_header(struct mlx4_ib_sqp *sqp, struct ib_ud_wr *wr,
+ 	}
+ 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
+ 	if (!sqp->qp.ibqp.qp_num)
+-		ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index, &pkey);
++		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index,
++					 &pkey);
+ 	else
+-		ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index, &pkey);
++		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index,
++					 &pkey);
++	if (err)
++		return err;
++
+ 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
+ 	sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
+ 	sqp->ud_header.bth.psn = cpu_to_be32((sqp->send_psn++) & ((1 << 24) - 1));
+-- 
+2.20.1
+
 
 
