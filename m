@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3484C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8172CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8671D20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EA520671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825758;
-	bh=e1Jc7OCA4Kt+oHbqPtrCW5cQvwRi2pCAlYhq8EIwSHk=;
+	s=default; t=1589825763;
+	bh=XdSVoiFRtf3cyz7ypktPW4mY6jLVSFfO5OzF2dGq2VA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ufQTFelABcpKsbT0LAq852m44WE1PtsNM5dYN+1JqHGho6GQITsL7KV/mJP4Me/rj
-	 YmeoXxVy6KVLaYIp57AvfaIlpgeL62kGPfRTtWg4MpH8TvITnpLnwR1MN2maFNchVG
-	 JKBpGQFf4rdmDYCfGfp9SqyMgDWCwnpLt1IeJWMY=
+	b=fAbYIbiRckvapJ2qL9gpKKypIoOEp/f6T1h2Uc3amK6uZuYQyPBZzGSUU/lZtLCSZ
+	 w2fM2VMrYapqhkVe9BXqZX0OCp1VIdsTyxUVjdTLpR3p2FYYXRToj5E8hWXO4Tpbj7
+	 toejgKdHpbd5KzjhhCzGiDvZ2AW1duECQ+lACWC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731967AbgERR6u (ORCPT
+        id S2387589AbgERSQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38376 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:16:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731939AbgERR6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:58:43 -0400
+        id S1731966AbgERR6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:58:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FD8220715;
-        Mon, 18 May 2020 17:58:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56E3520874;
+        Mon, 18 May 2020 17:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824722;
-        bh=e1Jc7OCA4Kt+oHbqPtrCW5cQvwRi2pCAlYhq8EIwSHk=;
+        s=default; t=1589824729;
+        bh=XdSVoiFRtf3cyz7ypktPW4mY6jLVSFfO5OzF2dGq2VA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qs4L3d8Tt30e7o6Bzyzff+7bXTazm/sQCF55vOLfRIwUN12MSA+ChupSmYu86ArAe
-         l3Id0RlXSMqF6x7lLHqpbXl/zeuXU/TZ1SEaXM5eva9PF8yaGskQMZDmU9uZ7Dyls3
-         d/qLhLhIr5za7VQvyTJpnLNe1GAoigaf5NzdYM7w=
+        b=JeEX/OK49hAWrejXqURz0zJsBcHIx7fMaWbtNVa/pc2mdJQpaLMxcDN1WngjewIF7
+         RtxLVOHoE62TsvuKkWaZd8nRTNXdAgvlc5A+bHgUzbKapnQa+cJudy5jVL5qW1mlTa
+         JdFj9EDFlC929KiB0bHlG3OJaIBNR9xKyE7W0Oyk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Ser <contact@emersion.fr>,
-        Roman Gilg <subdiff@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Harry Wentland <hwentlan@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: [PATCH 5.4 118/147] drm/amd/display: add basic atomic check for cursor plane
-Date:   Mon, 18 May 2020 19:37:21 +0200
-Message-Id: <20200518173527.712591629@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 129/147] usb: gadget: legacy: fix error return code in gncm_bind()
+Date:   Mon, 18 May 2020 19:37:32 +0200
+Message-Id: <20200518173529.537635701@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -62,71 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Ser <contact@emersion.fr>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 626bf90fe03fa080d8df06bb0397c95c53ae8e27 upstream.
+commit e27d4b30b71c66986196d8a1eb93cba9f602904a upstream.
 
-This patch adds a basic cursor check when an atomic test-only commit is
-performed. The position and size of the cursor plane is checked.
+If 'usb_otg_descriptor_alloc()' fails, we must return a
+negative error code -ENOMEM, not 0.
 
-This should fix user-space relying on atomic checks to assign buffers to
-planes.
-
-Signed-off-by: Simon Ser <contact@emersion.fr>
-Reported-by: Roman Gilg <subdiff@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Harry Wentland <hwentlan@amd.com>
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: 1156e91dd7cc ("usb: gadget: ncm: allocate and init otg descriptor by otg capabilities")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   26 ++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/legacy/ncm.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -6921,6 +6921,7 @@ static int dm_update_plane_state(struct
- 	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
- 	struct dm_crtc_state *dm_new_crtc_state, *dm_old_crtc_state;
- 	struct dm_plane_state *dm_new_plane_state, *dm_old_plane_state;
-+	struct amdgpu_crtc *new_acrtc;
- 	bool needs_reset;
- 	int ret = 0;
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -156,8 +156,10 @@ static int gncm_bind(struct usb_composit
+ 		struct usb_descriptor_header *usb_desc;
  
-@@ -6930,9 +6931,30 @@ static int dm_update_plane_state(struct
- 	dm_new_plane_state = to_dm_plane_state(new_plane_state);
- 	dm_old_plane_state = to_dm_plane_state(old_plane_state);
- 
--	/*TODO Implement atomic check for cursor plane */
--	if (plane->type == DRM_PLANE_TYPE_CURSOR)
-+	/*TODO Implement better atomic check for cursor plane */
-+	if (plane->type == DRM_PLANE_TYPE_CURSOR) {
-+		if (!enable || !new_plane_crtc ||
-+			drm_atomic_plane_disabling(plane->state, new_plane_state))
-+			return 0;
-+
-+		new_acrtc = to_amdgpu_crtc(new_plane_crtc);
-+
-+		if ((new_plane_state->crtc_w > new_acrtc->max_cursor_width) ||
-+			(new_plane_state->crtc_h > new_acrtc->max_cursor_height)) {
-+			DRM_DEBUG_ATOMIC("Bad cursor size %d x %d\n",
-+							 new_plane_state->crtc_w, new_plane_state->crtc_h);
-+			return -EINVAL;
+ 		usb_desc = usb_otg_descriptor_alloc(gadget);
+-		if (!usb_desc)
++		if (!usb_desc) {
++			status = -ENOMEM;
+ 			goto fail;
 +		}
-+
-+		if (new_plane_state->crtc_x <= -new_acrtc->max_cursor_width ||
-+			new_plane_state->crtc_y <= -new_acrtc->max_cursor_height) {
-+			DRM_DEBUG_ATOMIC("Bad cursor position %d, %d\n",
-+							 new_plane_state->crtc_x, new_plane_state->crtc_y);
-+			return -EINVAL;
-+		}
-+
- 		return 0;
-+	}
- 
- 	needs_reset = should_reset_plane(state, plane, old_plane_state,
- 					 new_plane_state);
+ 		usb_otg_descriptor_init(gadget, usb_desc);
+ 		otg_desc[0] = usb_desc;
+ 		otg_desc[1] = NULL;
 
 
