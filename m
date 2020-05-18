@@ -2,95 +2,108 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C31F20801
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0036B2081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:01:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XFbb1vq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgERKBs (ORCPT
+        id S1726953AbgERKBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:01:48 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:50097 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgERKBr (ORCPT
+        Mon, 18 May 2020 06:01:47 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:23791 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERKBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 May 2020 06:01:47 -0400
-Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6F727200017;
-        Mon, 18 May 2020 10:01:45 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 0/3] TTY improve n_gsm support
-In-Reply-To: <20200518084517.2173242-4-gregory.clement@bootlin.com>
-References: <20200518084517.2173242-1-gregory.clement@bootlin.com> <20200518084517.2173242-4-gregory.clement@bootlin.com>
-Date:   Mon, 18 May 2020 12:01:45 +0200
-Message-ID: <87ftbxfto6.fsf@FE-laptop>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589796107; x=1621332107;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=G8CneijCkhkmAYrW5RLVj9rtVs0AB1S5RMsQ7jnOqO0=;
+  b=XFbb1vq8cUBx00WfWJ9Vl0F4byzpyWw4L7ZMKcnjQ1+4QlM7bY/Tntkf
+   8aoy8vdK4gR3BLi3Fcdp0eKrSedvQ3ec13ICOPeu3pvoEuWv1Lkr90vwc
+   aGeuPIbghKaaxwXRcfejwHvini7ABaVzd1Y5LafoToWTBHtF3sGytskRP
+   w=;
+IronPort-SDR: lYb/wQdtVJ0K221kRoIkCR7FND3r2SA9hTlXHIz4wrOczQxw6NhIvw+loDcOP96WqEmgFG8X3W
+ Yc8eIQe/vKhg==
+X-IronPort-AV: E=Sophos;i="5.73,406,1583193600"; 
+   d="scan'208";a="30702537"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 18 May 2020 10:01:46 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id C0840A235A;
+        Mon, 18 May 2020 10:01:34 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 18 May 2020 10:01:31 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.90) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 18 May 2020 10:01:16 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v12 02/16] mm/page_ext: Export lookup_page_ext() to GPL modules
+Date:   Mon, 18 May 2020 12:00:04 +0200
+Message-ID: <20200518100018.2293-3-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200518100018.2293-1-sjpark@amazon.com>
+References: <20200518100018.2293-1-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.43.160.90]
+X-ClientProxiedBy: EX13D04UWA003.ant.amazon.com (10.43.160.212) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: SeongJae Park <sjpark@amazon.de>
 
-> Hello,
->
-> This series is the second version of patch improving n_gms support
-> especially with TELIT LE910. However the fix should benefit to any
-> modem supporting cmux.
+This commit exports 'lookup_page_ext()' to GPL modules.  This will be
+used by DAMON.
 
-You can just ignore the emails from this point, I forgot to remove the
-remaining .patch!
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ mm/page_ext.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Sorry for the noise
-
-Gregory
-
->
-> The first patch is just about improving debugging output.
->
-> The second one removes a tty optimization which make the LE910 hang.
->
-> The last one fixes an issue observed on the LE910 but should benefit
-> to all the modem. We observed that pretty quickly the transfer done
-> using the virtual tty were blocked. We found that it was due of a
-> wakeup to the real tty. Without this fix, the real tty wait for
-> indefinitely.
->
-> Thanks to Jiri Slaby for the review.
->
-> Changelog:
->  v1 -> v2:
->  - don't replace the pr_info by pr_debug
->  - remove the superfluous printk("\n");
->  - use --follow option with git log to find the original commit to fix
->  - use tty_port_tty_wakeup
->  - use 'for' loop instead of 'while'
->
-> Gregory
->
-> Gregory CLEMENT (3):
->   tty: n_gsm: Improve debug output
->   tty: n_gsm: Fix SOF skipping
->   tty: n_gsm: Fix waking up upper tty layer when room available
->
->  drivers/tty/n_gsm.c | 48 +++++++++++++++++++++++----------------------
->  1 file changed, 25 insertions(+), 23 deletions(-)
->
-> -- 
-> 2.26.2
->
-
+diff --git a/mm/page_ext.c b/mm/page_ext.c
+index 4ade843ff588..71169b45bba9 100644
+--- a/mm/page_ext.c
++++ b/mm/page_ext.c
+@@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *page)
+ 					MAX_ORDER_NR_PAGES);
+ 	return get_entry(base, index);
+ }
++EXPORT_SYMBOL_GPL(lookup_page_ext);
+ 
+ static int __init alloc_node_page_ext(int nid)
+ {
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+2.17.1
+
