@@ -4,59 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4467C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E97C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8558B20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82FA20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825917;
-	bh=BEUWMUQxwatFeo/5l8VvlQUF3ITZ2kX7a3zK9Hqp7dw=;
+	s=default; t=1589825919;
+	bh=GNu2r6irny4xGrrsA7iFeCohSmwcngBd3yJPvL+gAFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IbGb0Zp/A0xtWS+xqyl4XcY1W+lx7/Y50NXbPDkD2dePHYaOOebNIZToneGmKGuAJ
-	 71/F5/dPwEKnwbW3Tr+o0xqz3pu85SLyUoAtgxa54b5y0eeOLpLYoY6/8H13DqAGOi
-	 2jqsbJvo633D6E7tS91s+r19w5XDZ1hPGj6JfYSo=
+	b=0wKJppHWvqbKpmU2EH9/ZghCsCvxwgn5SlCFqsXOIklO77U0j42HWcXGduqQ42eno
+	 Pyj0fQJHGmZKo8nu8WdQZXE9jragezmqCu5/+CLghaAH7Vs5J5kvA6rof49E0+1Nos
+	 QRfyKi5R/hjHl6rPLyh9pCbP8o5vURQ0Gjho54Ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731541AbgERRzl (ORCPT
+        id S2387723AbgERSSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32818 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:18:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731454AbgERRzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:32 -0400
+        id S1730700AbgERRzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14FA3207C4;
-        Mon, 18 May 2020 17:55:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C650A205CB;
+        Mon, 18 May 2020 17:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824532;
-        bh=BEUWMUQxwatFeo/5l8VvlQUF3ITZ2kX7a3zK9Hqp7dw=;
+        s=default; t=1589824540;
+        bh=GNu2r6irny4xGrrsA7iFeCohSmwcngBd3yJPvL+gAFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5tWIC67FPjwt1xw9fyhBcv4lGi5Etoza48WISMRGyZN8+KSVKig9k7eo5F9lssKh
-         3hdGv13IKYtnyMWEhKqqRBLDlMQuRrNBr6Q+dC/veOaw2Ow+GtAI/LLXWyF6nsZD5w
-         FZWuN5v3r8gty2pO0kHihu/bHTPGPFhzO8drWow8=
+        b=w96D89flZQewYL9YZu9O6+8SELvwUg/6MM1H+zb5Qo6yZbVdsbH4xNGp8dpL4Ugm+
+         3mjFV/Q2kdnyd5Cd6lKU1E7jr0gTzus1gTMZ6ERD4hbHRp5uALqwl0iEsfeCReh/Ce
+         6qPpHlGILTw1QoLq0bwqqmjVxncLePi+qsYlFFPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vasily Averin <vvs@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>, NeilBrown <neilb@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Renius Chen <renius.chen@genesyslogic.com.tw>,
+        Dave Flogeras <dflogeras2@gmail.com>,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        Vineeth Pillai <vineethrp@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Samuel Zou <zou_wei@huawei.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 050/147] ipc/util.c: sysvipc_find_ipc() incorrectly updates position index
-Date:   Mon, 18 May 2020 19:36:13 +0200
-Message-Id: <20200518173520.206794779@linuxfoundation.org>
+Subject: [PATCH 5.4 053/147] mmc: sdhci-pci-gli: Fix no irq handler from suspend
+Date:   Mon, 18 May 2020 19:36:16 +0200
+Message-Id: <20200518173520.582438135@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -69,123 +66,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-[ Upstream commit 5e698222c70257d13ae0816720dde57c56f81e15 ]
+[ Upstream commit 282ede76e47048eebc8ce5324b412890f0ec0a69 ]
 
-Commit 89163f93c6f9 ("ipc/util.c: sysvipc_find_ipc() should increase
-position index") is causing this bug (seen on 5.6.8):
+The kernel prints a message similar to
+"[   28.881959] do_IRQ: 5.36 No irq handler for vector"
+when GL975x resumes from suspend. Implement a resume callback to fix this.
 
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-
-   # ipcmk -Q
-   Message queue id: 0
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x82db8127 0          root       644        0            0
-
-   # ipcmk -Q
-   Message queue id: 1
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x82db8127 0          root       644        0            0
-   0x76d1fb2a 1          root       644        0            0
-
-   # ipcrm -q 0
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x76d1fb2a 1          root       644        0            0
-   0x76d1fb2a 1          root       644        0            0
-
-   # ipcmk -Q
-   Message queue id: 2
-   # ipcrm -q 2
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x76d1fb2a 1          root       644        0            0
-   0x76d1fb2a 1          root       644        0            0
-
-   # ipcmk -Q
-   Message queue id: 3
-   # ipcrm -q 1
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x7c982867 3          root       644        0            0
-   0x7c982867 3          root       644        0            0
-   0x7c982867 3          root       644        0            0
-   0x7c982867 3          root       644        0            0
-
-Whenever an IPC item with a low id is deleted, the items with higher ids
-are duplicated, as if filling a hole.
-
-new_pos should jump through hole of unused ids, pos can be updated
-inside "for" cycle.
-
-Fixes: 89163f93c6f9 ("ipc/util.c: sysvipc_find_ipc() should increase position index")
-Reported-by: Andreas Schwab <schwab@suse.de>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Waiman Long <longman@redhat.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/4921fe9b-9385-a2b4-1dc4-1099be6d2e39@virtuozzo.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 31e43f31890c ("mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x")
+Co-developed-by: Renius Chen <renius.chen@genesyslogic.com.tw>
+Signed-off-by: Renius Chen <renius.chen@genesyslogic.com.tw>
+Tested-by: Dave Flogeras <dflogeras2@gmail.com>
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Tested-by: Vineeth Pillai <vineethrp@gmail.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20200427103048.20785-1-benchuanggli@gmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+[Samuel Zou: Make sdhci_pci_gli_resume() static]
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/util.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/mmc/host/sdhci-pci-gli.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/ipc/util.c b/ipc/util.c
-index 594871610d454..1821b6386d3b4 100644
---- a/ipc/util.c
-+++ b/ipc/util.c
-@@ -764,21 +764,21 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
- 			total++;
- 	}
- 
--	*new_pos = pos + 1;
-+	ipc = NULL;
- 	if (total >= ids->in_use)
--		return NULL;
-+		goto out;
- 
- 	for (; pos < ipc_mni; pos++) {
- 		ipc = idr_find(&ids->ipcs_idr, pos);
- 		if (ipc != NULL) {
- 			rcu_read_lock();
- 			ipc_lock_object(ipc);
--			return ipc;
-+			break;
- 		}
- 	}
--
--	/* Out of range - return NULL to terminate iteration */
--	return NULL;
-+out:
-+	*new_pos = pos + 1;
-+	return ipc;
+diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
+index ce15a05f23d41..ff39d81a5742c 100644
+--- a/drivers/mmc/host/sdhci-pci-gli.c
++++ b/drivers/mmc/host/sdhci-pci-gli.c
+@@ -334,6 +334,18 @@ static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
+ 	return value;
  }
  
- static void *sysvipc_proc_next(struct seq_file *s, void *it, loff_t *pos)
++#ifdef CONFIG_PM_SLEEP
++static int sdhci_pci_gli_resume(struct sdhci_pci_chip *chip)
++{
++	struct sdhci_pci_slot *slot = chip->slots[0];
++
++	pci_free_irq_vectors(slot->chip->pdev);
++	gli_pcie_enable_msi(slot);
++
++	return sdhci_pci_resume_host(chip);
++}
++#endif
++
+ static const struct sdhci_ops sdhci_gl9755_ops = {
+ 	.set_clock		= sdhci_set_clock,
+ 	.enable_dma		= sdhci_pci_enable_dma,
+@@ -348,6 +360,9 @@ const struct sdhci_pci_fixes sdhci_gl9755 = {
+ 	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
+ 	.probe_slot	= gli_probe_slot_gl9755,
+ 	.ops            = &sdhci_gl9755_ops,
++#ifdef CONFIG_PM_SLEEP
++	.resume         = sdhci_pci_gli_resume,
++#endif
+ };
+ 
+ static const struct sdhci_ops sdhci_gl9750_ops = {
+@@ -366,4 +381,7 @@ const struct sdhci_pci_fixes sdhci_gl9750 = {
+ 	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
+ 	.probe_slot	= gli_probe_slot_gl9750,
+ 	.ops            = &sdhci_gl9750_ops,
++#ifdef CONFIG_PM_SLEEP
++	.resume         = sdhci_pci_gli_resume,
++#endif
+ };
 -- 
 2.20.1
 
