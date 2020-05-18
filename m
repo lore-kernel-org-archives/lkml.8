@@ -2,106 +2,91 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAC32067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2709F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgERJg5 (ORCPT
+        id S1726945AbgERJir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:36:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48196 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbgERJg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:36:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5F45EAC46;
-        Mon, 18 May 2020 09:36:58 +0000 (UTC)
-Subject: Re: [PATCH v5 04/10] mmap locking API: use coccinelle to convert
- mmap_sem rwsem call sites
-To:     Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-5-walken@google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <54ad4f32-ffa7-e418-24de-2e410361300e@suse.cz>
-Date:   Mon, 18 May 2020 11:36:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 05:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERJir (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:38:47 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F00E3C061A0C;
+        Mon, 18 May 2020 02:38:46 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jacE8-0006Sy-DK; Mon, 18 May 2020 11:38:28 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id D530B100606; Mon, 18 May 2020 11:38:27 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Anastassios Nanos <ananos@nubificus.co.uk>
+Cc:     kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 0/2] Expose KVM API to Linux Kernel
+In-Reply-To: <CALRTab-mEYtRG4zQbSGoAri+jg8xNL-imODv=MWE330Hkt_t+Q@mail.gmail.com>
+References: <cover.1589784221.git.ananos@nubificus.co.uk> <87y2ppy6q0.fsf@nanos.tec.linutronix.de> <CALRTab-mEYtRG4zQbSGoAri+jg8xNL-imODv=MWE330Hkt_t+Q@mail.gmail.com>
+Date:   Mon, 18 May 2020 11:38:27 +0200
+Message-ID: <87sgfxy44s.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200422001422.232330-5-walken@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/20 2:14 AM, Michel Lespinasse wrote:
-> This change converts the existing mmap_sem rwsem calls to use the new
-> mmap locking API instead.
-> 
-> The change is generated using coccinelle with the following rule:
-> 
-> // spatch --sp-file mmap_lock_api.cocci --in-place --include-headers --dir .
-> 
-> @@
-> expression mm;
-> @@
-> (
-> -init_rwsem
-> +mmap_init_lock
-> |
-> -down_write
-> +mmap_write_lock
-> |
-> -down_write_killable
-> +mmap_write_lock_killable
-> |
-> -down_write_trylock
-> +mmap_write_trylock
-> |
-> -up_write
-> +mmap_write_unlock
-> |
-> -downgrade_write
-> +mmap_write_downgrade
-> |
-> -down_read
-> +mmap_read_lock
-> |
-> -down_read_killable
-> +mmap_read_lock_killable
-> |
-> -down_read_trylock
-> +mmap_read_trylock
-> |
-> -up_read
-> +mmap_read_unlock
-> )
-> -(&mm->mmap_sem)
-> +(mm)
-> 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
-> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Anastassios Nanos <ananos@nubificus.co.uk> writes:
+> On Mon, May 18, 2020 at 11:43 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> And this shows clearly how simple the user space is which is required to
+>> do that. So why on earth would we want to have all of that in the
+>> kernel?
+>>
+> well, the main idea is that all this functionality is already in the
+> kernel. My view is that kvmmtest is as simple as kvmtest.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+That still does not explain the purpose, the advantage and any reason
+why this should be moreged.
+
+> Moreover, it doesn't involve *any* mode switch at all while printing
+> out the result of the addition of these two registers -- which I guess
+> for a simple use-case like this it isn't much.  But if we were to
+> scale this to a large number of exits (and their respective handling
+> in user-space) that would incur significant overhead. Don't you agree?
+
+No. I still do not see the real world use case you are trying to
+solve. We are not going to accept changes like this which have no proper
+justification, real world use cases and proper numbers backing it up.
+
+Thanks,
+
+        tglx
+
+
