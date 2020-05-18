@@ -2,230 +2,110 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9655CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32DCE207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:00:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589799636;
-	bh=wyGwJMp6JDvi1pxR/6oXX1BgJr9jWtaMspgSnt4Ppa4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g+xO97jK9TiMwg5xrqCPhji9VFEmbFYMig3/5bG+7Mr4lZd53RkFBVUmMwl/U5hfS
-	 eLgT/d+7Uq4c50yQv4LOYiyY+lqK44JIlZ0otMQ7wZtWqVlT8su+tGLH3zNMcZKmtq
-	 tjwWilFI1hzZljHStP9w5LSptjLjBVnaO/dTanfs=
+	by mail.kernel.org (Postfix) with ESMTP id 6DAC220825
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgERLAf (ORCPT
+        id S1726828AbgERLBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38194 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 07:01:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44308 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgERLAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:00:34 -0400
-Received: from earth.universe (dyndsl-037-138-186-253.ewe-ip-backbone.de [37.138.186.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8803B20709;
-        Mon, 18 May 2020 11:00:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589799633;
-        bh=wyGwJMp6JDvi1pxR/6oXX1BgJr9jWtaMspgSnt4Ppa4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PEWVpH2WCVwuzKm3cA49Pj6GlmuHjTAgIsG00SquIYG1ByF0c8wW4Wh0eONK45KfE
-         6VllZWVL5SM+EFySBFS/yet6ysdAEZcOO5zxlzSUlAWRl/Z9EZn3aHvXSqVA0qoTit
-         o8ji85g/r2LyktcsUdUP0D+blllZ6+goPlWj7FNY=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 30ED23C08C6; Mon, 18 May 2020 13:00:31 +0200 (CEST)
-Date:   Mon, 18 May 2020 13:00:31 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [not urgent] ROHM PMIC/Charger IC driver maintenance.
-Message-ID: <20200518110031.tthams2r7tkcytie@earth.universe>
-References: <18838efd9341c953fb6aabe9536786de3f1150ae.camel@fi.rohmeurope.com>
+        id S1726279AbgERLBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:01:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B9328ABBD;
+        Mon, 18 May 2020 11:01:36 +0000 (UTC)
+Subject: Re: [PATCH v5.5 09/10] mmap locking API: add mmap_assert_locked() and
+ mmap_assert_write_locked()
+To:     Michel Lespinasse <walken@google.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+References: <20200422001422.232330-1-walken@google.com>
+ <20200422001422.232330-11-walken@google.com>
+ <20200422015829.GR5820@bombadil.infradead.org>
+ <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
+ <20200423015917.GA13910@bombadil.infradead.org>
+ <20200424012612.GA158937@google.com> <20200424013858.GB158937@google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <fcf53ca7-d3a0-93e2-47af-7dd9b32b081a@suse.cz>
+Date:   Mon, 18 May 2020 13:01:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cddvtyzylvcawpye"
-Content-Disposition: inline
-In-Reply-To: <18838efd9341c953fb6aabe9536786de3f1150ae.camel@fi.rohmeurope.com>
+In-Reply-To: <20200424013858.GB158937@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/24/20 3:38 AM, Michel Lespinasse wrote:
+> Add new APIs to assert that mmap_sem is held.
+> 
+> Using this instead of rwsem_is_locked and lockdep_assert_held[_write]
+> makes the assertions more tolerant of future changes to the lock type.
+> 
+> Signed-off-by: Michel Lespinasse <walken@google.com>
+> ---
+>  arch/x86/events/core.c    |  2 +-
+>  fs/userfaultfd.c          |  6 +++---
+>  include/linux/mmap_lock.h | 14 ++++++++++++++
+>  mm/gup.c                  |  2 +-
+>  mm/hmm.c                  |  2 +-
+>  mm/memory.c               |  2 +-
+>  mm/mmu_notifier.c         |  6 +++---
+>  mm/pagewalk.c             |  6 +++---
+>  mm/util.c                 |  2 +-
+>  9 files changed, 28 insertions(+), 14 deletions(-)
+> 
 
---cddvtyzylvcawpye
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-Hi,
+> @@ -73,4 +75,16 @@ static inline void mmap_read_unlock_non_owner(struct mm_struct *mm)
+>  	up_read_non_owner(&mm->mmap_sem);
+>  }
+>  
+> +static inline void mmap_assert_locked(struct mm_struct *mm)
+> +{
+> +	VM_BUG_ON_MM(!lockdep_is_held_type(&mm->mmap_sem, -1), mm);
+> +	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
+> +}
+> +
+> +static inline void mmap_assert_write_locked(struct mm_struct *mm)
+> +{
+> +	VM_BUG_ON_MM(!lockdep_is_held_type(&mm->mmap_sem, 0), mm);
+> +	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
+> +}
 
-On Mon, May 18, 2020 at 07:38:25AM +0000, Vaittinen, Matti wrote:
-> Hello All,
->=20
-> In short - I consider adding myself in MAINTAINERs for the ROHM IC
-> drivers I've authored. I would like to get your opinion as subsystem
-> maintainers on the area where these driver belong. If you don't care -
-> then no need to read further :) If you do read, then I would appreciate
-> hearing about your expectations regarding reviews, ACKs etc.
->=20
-> Longer story, I have contributed drivers for ROHM PMICs
-> BD71837/BD71847/BD71850, BD70528, BD71828/BD71878 and ROHM charger IC
-> BD99954. I did also refactor the linear_ranges code out of the
-> regulator framework. Now I am working on with another PMIC driver
-> (regulators/watchdog) which I hope to end up in upstream at autumn
-> after the proper testing. There is also some pieces in regmap-irq which
-> I have added.
->=20
-> I would like to participate in reviewing work for patches to these
-> drivers (and perhaps the linear_ranges) and possibly set up some test
-> jobs where I can run some tests involving some of the PMICs. I hope
-> this helps the community too.
->=20
-> I would also benefit from being informed when a fix is sent to one of
-> these areas as I am anyways paid to be hosting some out-of-tree
-> additions to these drivers. So my git tree would benefit from getting
-> the odd fixes upstream is getting. Reviewing mails would serve as a
-> heads up for me.
->=20
-> Thus I consider adding few entries to MAINTAINERs in order to be
-> getting the patches for review/test. What I don't consider doing is
-> integrating the patches in "official Linux" - Eg. all patches should
-> still go upstream via your trees.
->=20
-> What kind of participation would you expect/appreciate from me if I
-> added myself in MAINTAINERS for these drivers I authored? Any
-> objections to that? (I don't really know how MAINTAINERs entries should
-> be added - and I didn't [easily] find up-to-date explanation to that).
-> For where I can be of help - I believe I am technically competent for
-> reviewing C-code. I am not competent for reviewing all styling details
-> - and I am not too useful what comes to YAML - this syntax is still
-> really alien to me. Yet I think I have some insight to things the DT
-> yaml is describing (meaning ROHM HW) :)
->=20
-> I add below the list of files / subsystem.
->=20
-> Regulator:
-> bd70528-regulator.c
-> bd71828-regulator.c
-> bd718x7-regulator.c
-> rohm-regulator.c
-> (lib/linear_ranges.c
-> lib/test_linear_ranges.c?
-> include/linux/linear_range.h - Who should maintain these?)
->=20
-> Power-supply:
-> bd70528-charger.c
-> bd71827-power.c
-> bd99954-charger.c
-> bd99954-charger.h
->=20
-> MFD:
-> rohm-bd70528.c
-> rohm-bd71828.c
-> rohm-bd718x7.c
-> include/linux/mfd/rohm-shared.h
-> include/linux/mfd/rohm-bd71828.h
-> include/linux/mfd/rohm-bd70528.h
-> include/linux/mfd/rohm-generic.h
-> include/linux/mfd/rohm-bd718x7.h
->=20
-> GPIO:
-> gpio-bd70528.c
-> gpio-bd71828.c
->=20
-> RTC:
-> rtc-bd70528.c
->=20
-> Watchdog:
-> bd70528_wdt.c
->=20
-> Clk:
-> clk-bd718x7.c
->=20
-> DT:
-> Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
-> Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
-> Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
-> Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
-> Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
-> Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-> Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
-> Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
-> Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> Documentation/devicetree/bindings/regulator/rohm,bd70528-regulator.txt
->=20
-> Best Regards
-> 	Matti Vaittinen
+I would remove VM_BUG_ON_MM() from the lockdep part. If kernel has lockdep
+enabled, it's already in heavy debugging mode enough so let's just use it and
+not depend on DEBUG_VM. Many sites you convert don't require DEBUG_VM for the
+lockdep checks.
 
-I suggest to just send something like this entry adapted to the ROHM
-drivers:
+With that you can also use the standard lockdep_assert_held() and
+lockdep_assert_held_write() wrappers.
 
-------------------------------------------------------------
-TI BQ27XXX POWER SUPPLY DRIVER
-R:      Andrew F. Davis <afd@ti.com>
-F:      drivers/power/supply/bq27xxx_battery.c
-F:      drivers/power/supply/bq27xxx_battery_i2c.c
-F:      include/linux/power/bq27xxx_battery.h
-------------------------------------------------------------
-
-It will result in get_maintainer.pl to output this:
-
-$ ./scripts/get_maintainer.pl -f drivers/power/supply/bq27xxx_battery.c
-"Andrew F. Davis" <afd@ti.com> (reviewer:TI BQ27XXX POWER SUPPLY DRIVER)
-"Pali Roh=E1r" <pali@kernel.org> (reviewer:NOKIA N900 POWER SUPPLY DRIVERS)
-Sebastian Reichel <sre@kernel.org> (maintainer:POWER SUPPLY CLASS/SUBSYSTEM=
- and DRIVERS)
-linux-pm@vger.kernel.org (open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVER=
-S)
-linux-kernel@vger.kernel.org (open list)
-
-For drivers with a dedicated reviewer I wait some time for their
-feedback.
-
-For the DT YAML bindings you don't need to do anything:
-
-https://lore.kernel.org/lkml/e85006456d9dbae55286c67ac5263668a72f5b58.15880=
-22228.git.joe@perches.com/
-
--- Sebastian
-
---cddvtyzylvcawpye
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7CascACgkQ2O7X88g7
-+pq1zA//cxJzaXoirmekFTa4rdDkDs9iinYvoN1j3hqvuCO9he6IcSs3w+0vzPSm
-Vi9lTdohxM0KsNP01lEmc6PnlU9jEHqiQAFDMJZ3+WsBAD48MmLHk/GuCKRdSuHo
-OBH0YEamwveu7YOqS934HjywHd1tYciiwDU/xOCZENNoR8TS53LuuXEya98uhtxJ
-juZ7qc5fLs1K/xKxHCR80gUjQhgKR/BOyY+/vpsL00GTRzIA6pkOmziSHo7Alhml
-WNIR40TjBmRE4dKPepxHJXd0jL7XN4gSzn5ZJuF7Gx06yhENE/sapleGB0V2plEy
-SF4sbkYNRZv+uSjl8Be5MjYmGojCDHCWijmxtguyN2/QR3/XKl1k1rHRq9agGKb9
-GYE3WZpJFUsLPV9X4uDxyuskYKFVk6ylJwZJvbkHvK7gkzclgYG+B1SvJQzltkLS
-436IejS7NDIAJAGnGrTyKWJMOz0Zt36GulQeviSenknPzMydhWI/p887CutWMCIb
-lMTM2A7gNspoWMvNGrO1MvmwHayji4nfgddEwQhIvhAoLz2SBCttnq/roaJyBh3Y
-zyDa7bmp9CD0UAWL3j6UWUArsxfyTD/Eg/3Va3UYfkrMXm+3q9DnqEEFRZrA7mrB
-gREFOTMvPNsMrlLeEIRp5gll7TX4Vtp6IQ8RndHmJnPXR/KMfuA=
-=X4FG
------END PGP SIGNATURE-----
-
---cddvtyzylvcawpye--
+If user has both lockdep and DEBUG_VM enabled, should we run both variants?
+Perhaps lockdep is enough as it's more comprehensive? Your initial v5 version
+was doing that.
