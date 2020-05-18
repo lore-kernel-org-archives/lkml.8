@@ -2,106 +2,113 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B607C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22586C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE7ED20756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F160220874
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="c2mKFEGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgERLhM (ORCPT
+        id S1727117AbgERLhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:37:12 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:46884 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgERLhL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:37:11 -0400
-X-AuditID: c0a8fbf4-489ff70000004419-01-5ec273653295
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id C2.09.17433.56372CE5; Mon, 18 May 2020 13:37:10 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0487.000; Mon, 18 May 2020 13:36:57 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [not urgent] ROHM PMIC/Charger IC driver maintenance.
-Thread-Topic: [not urgent] ROHM PMIC/Charger IC driver maintenance.
-Thread-Index: AQHWLOdQMdOSpxREeE+Cws0ySbgdVKitgt4AgAATFoA=
-Date:   Mon, 18 May 2020 11:36:56 +0000
-Message-ID: <b08e5796b3d94b1add13e706f7acdc34c3a79e49.camel@fi.rohmeurope.com>
-References: <18838efd9341c953fb6aabe9536786de3f1150ae.camel@fi.rohmeurope.com>
-         <20200518102842.GB8699@sirena.org.uk>
-In-Reply-To: <20200518102842.GB8699@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DB3A4F354C80124FBEE95FAFF2F15820@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 18 May 2020 07:37:18 -0400
+Received: from ozlabs.org ([203.11.71.1]:58779 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgERLhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:37:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QcS93j2Jz9sTC;
+        Mon, 18 May 2020 21:37:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1589801835;
+        bh=sVwnIBZtE1XIU+cSVfb2AfLRaR5qbpYzuQwbYj/q+m0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=c2mKFEGd8gslESqqwyOhLqXMUh1eHhIqYtyIVao0KterI88UjafJ4vhk7YLcftmkE
+         l/ebSBzr+IGn3Gg2bWU/4jX8nwYGdbRLjLZe0AyMQGT83o0J5GVTbHTSiN6ORWijcV
+         iRJj78qVj1nnHPNiqYkHqniyOg5cqG1aIrrwLXJJycCaF3AFQCd/ypHTYp8vXSh+7l
+         YdqArB4aSFZVZPLbUaHV+7iP/Td0Z5wJQxukfEwezPiUh5OIIUfdPfmKslafDJW7bR
+         AzLYDJFulCwRUubVjFb4mmd4V6D6gse8kgdnv3eL8yFJNzQ4Z4haIHeo6S85v7OnGr
+         UMA3Br6o/ybWw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     WANG Wenhu <wenhu.wang@vivo.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        wenhu.pku@gmail.com
+Subject: Re: [PATCH] powerpc/sysdev: fix compile errors
+In-Reply-To: <nycvar.YFH.7.76.2005181232140.25812@cbobk.fhfr.pm>
+References: <20200302053801.26027-1-wenhu.wang@vivo.com> <62251ec1-dd42-6522-dcb2-613838cd5504@c-s.fr> <nycvar.YFH.7.76.2005181228480.25812@cbobk.fhfr.pm> <nycvar.YFH.7.76.2005181232140.25812@cbobk.fhfr.pm>
+Date:   Mon, 18 May 2020 21:37:33 +1000
+Message-ID: <878shpa2yq.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDJsWRmVeSWpSXmKPExsVyYMXvjbppxYfiDKb0MlosuXiV3aL93TJ2
-        iy9zT7FYTH34hM3i/tejjBbfrnQwWUz5s5zJ4vKuOWwWTxaeYbKYs/QEi8XFU64WrXuPsFv8
-        u7aRxeL07hKLxy//MTvwe7y/0cruMW9NtcfOWXfZPTat6mTzuHNtD5vHyjVrWD12fm9g95g+
-        7yeTx+dNcgGcUdw2SYklZcGZ6Xn6dgncGUdn3WcvaOKvuNdziqmB8QJfFyMnh4SAicS2Z43M
-        XYxcHEIC1xglTt7eyg7hnGCUWPNzClMXIwcHm4CNRNdNdpAGEQFdiam/FrOB1DALXGCVOLul
-        HSwhLOAkceLOWWaIImeJ3+fegPWKCFhJzHtcARJmEVCVWPfwHVg5r4CfxJeTfxlBbCGBcokz
-        +/aBxTkFjCQeTrwANoZRQFais+EdE4jNLCAusenZd1aIowUkluw5zwxhi0q8fPwPKq4osf37
-        OhaQtcwCmhLrd+lDtDpI3Jn5gA3CVpSY0v0Q6gRBiZMzn7BMYBSbhWTDLITuWUi6ZyHpnoWk
-        ewEj6ypGidzEzJz0xJJUQ72i1FK9ovyMXCCVnJ+7iRGSGr7sYPx/yPMQIxMH4yFGSQ4mJVHe
-        Xv9DcUJ8SfkplRmJxRnxRaU5qcWHGCU4mJVEeCM/74sT4k1JrKxKLcqHSUlzsCiJ86o/nBgr
-        JACyKzs1tSC1CCYrw8GhJMHbWwA0VLAoNT21Ii0zpwQhzcTBCTKcS0qkODUvJbUosbQkIx6U
-        POKLgekDJMUDtDexEKidt7ggMRcoCtF6ilGbY8LLuYuYOY7MXbqIWYglLz8vVUqct6MIqFQA
-        pDSjNA9u0StGcQ5GJWHeDSCDeIBZAm7OK6AVTEArXC+CvFZckoiQkmpgjL6ZvvXyu8xjPyof
-        dgkHfN7ZsXd/oMyWtjczH8cbrdaxYuWsaT7HkRatLSTx9sotsbyjb/qUD5bO3PSAPUfYqiXu
-        QuRMDcu9cfsu3iyV4jZOPt7oozRDrWxz/I7UrqV3j34J9lsj8WJq5HwGvVl/PrwNldQL8pLZ
-        oWJ9LXursZJui83CXUZqSizFGYmGWsxFxYkASQaGbs8DAAA=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIGZvciByZXBseSBNYXJrLA0KDQpPbiBNb24sIDIwMjAtMDUtMTggYXQgMTE6MjggKzAx
-MDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+IE9uIE1vbiwgTWF5IDE4LCAyMDIwIGF0IDA3OjM4OjI1
-QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0dGkgd3JvdGU6DQo+IA0KPiA+IFdoYXQga2luZCBvZiBw
-YXJ0aWNpcGF0aW9uIHdvdWxkIHlvdSBleHBlY3QvYXBwcmVjaWF0ZSBmcm9tIG1lIGlmIEkNCj4g
-PiBhZGRlZCBteXNlbGYgaW4gTUFJTlRBSU5FUlMgZm9yIHRoZXNlIGRyaXZlcnMgSSBhdXRob3Jl
-ZD8gQW55DQo+IA0KPiBNYWlubHkganVzdCByZXZpZXdpbmcgcGF0Y2hlcy4NCg0KSSBjYW4gZG8g
-dGhhdCA6KQ0KDQo+IA0KPiA+IG9iamVjdGlvbnMgdG8gdGhhdD8gKEkgZG9uJ3QgcmVhbGx5IGtu
-b3cgaG93IE1BSU5UQUlORVJzIGVudHJpZXMNCj4gPiBzaG91bGQNCj4gPiBiZSBhZGRlZCAtIGFu
-ZCBJIGRpZG4ndCBbZWFzaWx5XSBmaW5kIHVwLXRvLWRhdGUgZXhwbGFuYXRpb24gdG8NCj4gPiB0
-aGF0KS4NCj4gDQo+IFNlbmQgYSBwYXRjaCwgb2Z0ZW4gYWxvbmcgd2l0aCBvdGhlciBzdHVmZiB0
-aGF0J3MgZ29pbmcgb24uICBJJ2QNCj4gZ3Vlc3MNCj4gTUZEIHdvdWxkIGJlIGFzIGdvb2QgYSB0
-cmVlIGFzIGFueSBmb3IgaXQgdG8gZ28gdmlhLg0KDQpBaCwgeWVzIDpdIEkgd2FzIGd1ZXNzaW5n
-IHRoaXMgaXMgdGhlIHRlY2huaWNhbCB3YXkgb2YgYWRkaW5nIHRoZQ0KZW50cnkuIEkgd2FzIG1v
-cmUgd29uZGVyaW5nIHdoYXQgaXMgZXhwZWN0ZWQgZnJvbSBtYWludGFpbmVyICh5b3UNCmFuc3dl
-cmVkIHRoYXQgYWJvdmUpIGFuZCB3aGV0aGVyIHRoZXJlIGlzIHNvbWUgY3JpdGVyaWEgYXMgdG8g
-d2hvIGNhbg0KYmUgYSBtYWludGFpbmVyLg0KDQpXaGlsZSB3ZSBhcmUgYXQgaXQgLSBNYXJrLCB3
-b3VsZCB5b3UgY29uc2lkZXIgZm9sbG93aW5nIHRvIGJlIGZ1bGx5DQppbmFwcHJvcHJpYXRlOg0K
-DQpMSU5FQVIgUkFOR0VTIEhFTFBFUlMNCk06ICAgICAgTWFyayBCcm93biA8YnJvb25pZUBrZXJu
-ZWwub3JnPg0KUjogICAgICBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2ht
-ZXVyb3BlLmNvbT4NCkY6ICAgICAgbGliL2xpbmVhcl9yYW5nZXMuYw0KRjogICAgICBsaWIvdGVz
-dF9saW5lYXJfcmFuZ2VzLmMNCkY6ICAgICAgaW5jbHVkZS9saW51eC9saW5lYXJfcmFuZ2UuaA0K
-DQpJIHRoaW5rIHRoYXQgcmVndWxhdG9ycyBiZWluZyB0aGUgbWFpbiB1c2VyIGZvciBsaW5lYXJf
-cmFuZ2VzIHRoZQ0KY2hhbmdlcyB0aGVyZSBzaG91bGQgZ28gaW4gdmlhIHlvdXIgdHJlZSAtIGFu
-ZCB5b3Ugc2hvdWxkIHByb2JhYmx5IGJlDQp3YXRjaGluZyBvdmVyIHRoZW0gYW55d2F5cyA6KQ0K
-DQpCZXN0IFJlZ2FyZHMNCglNYXR0aSBWYWl0dGluZW4NCg==
+Jiri Kosina <jikos@kernel.org> writes:
+> On Mon, 18 May 2020, Jiri Kosina wrote:
+>> > > Include linux/io.h into fsl_85xx_cache_sram.c to fix the
+>> > > implicit-declaration compile errors when building Cache-Sram.
+>> > >=20
+>> > > arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function
+>> > > =E2=80=98instantiate_cache_sram=E2=80=99:
+>> > > arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit dec=
+laration
+>> > > of function =E2=80=98ioremap_coherent=E2=80=99; did you mean =E2=80=
+=98bitmap_complement=E2=80=99?
+>> > > [-Werror=3Dimplicit-function-declaration]
+>> > >    cache_sram->base_virt =3D ioremap_coherent(cache_sram->base_phys,
+>> > >                            ^~~~~~~~~~~~~~~~
+>> > >                            bitmap_complement
+>> > > arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment m=
+akes
+>> > > pointer from integer without a cast [-Werror=3Dint-conversion]
+>> > >    cache_sram->base_virt =3D ioremap_coherent(cache_sram->base_phys,
+>> > >                          ^
+>> > > arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit dec=
+laration
+>> > > of function =E2=80=98iounmap=E2=80=99; did you mean =E2=80=98roundup=
+=E2=80=99?
+>> > > [-Werror=3Dimplicit-function-declaration]
+>> > >    iounmap(cache_sram->base_virt);
+>> > >    ^~~~~~~
+>> > >    roundup
+>> > > cc1: all warnings being treated as errors
+>> > >=20
+>> > > Fixed: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+>> > > Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
+>> >=20
+>> > Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>=20
+>> As this doesn't seem to have been picked up for linux-next yet, I am=20
+>> picking it up now.
+>
+> Only now I've noticed that this is actually a dead code o_O as this file=
+=20
+> can't be built by any combination of config options. So I am dropping the=
+=20
+> patch again, but why do we keep it in the tree in the first place?
+
+Yeah, sigh.
+
+As Christophe pointed out, it has been dead code for a long time but
+there is a series in flight that's trying to make it usable.
+
+cheers
