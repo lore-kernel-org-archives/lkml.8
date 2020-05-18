@@ -2,198 +2,79 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21775C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD802070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE912207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:23:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fYuqdYV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgERGV7 (ORCPT
+        id S1726676AbgERGXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:21:59 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:33094 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbgERGV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:21:59 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 32A752007B4;
-        Mon, 18 May 2020 08:21:57 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8D2E220081F;
-        Mon, 18 May 2020 08:21:53 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CCDEA402AD;
-        Mon, 18 May 2020 14:21:48 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, l.stach@pengutronix.de,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: interrupt-controller: Convert imx irqsteer to json-schema
-Date:   Mon, 18 May 2020 14:12:16 +0800
-Message-Id: <1589782336-17289-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 18 May 2020 02:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERGX3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 02:23:29 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73642C061A0C;
+        Sun, 17 May 2020 23:23:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zmDenp7FJVk0qEChp/8vOq7H+ikcbyONDjlE6Bfir70=; b=fYuqdYV2oiyyyrVbKTLbjx1UWv
+        6tceZf+hdlXvdYXsekdp03s0X2HYCv6BzfcWLaNBp9BvBCGT08fE7jAaEcfqQGqwcF7JHvrSDjYmi
+        CyWC7NJeVFWYHyjqhYMhpZwQJaivcFmmM4s246+D+E2m4CXL+uDaH9sFImidOsWY1N7/HcELSuRPF
+        zcVkz6Ny5AQibizOahgP9UEpvVJBXt3uP5WziTcrmnA5XAZCZmYSd3Ad6AqB30V9q3CKq2zX6odX9
+        vHJl44a74vCpHCmPJkp9zpCIXla7LRLd5vj1c8R00oWcllxcNzpke+V/N4oNOJmswnrh0w2sE0E3x
+        QJ4Cvsbw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaZAt-0007LB-Ns; Mon, 18 May 2020 06:22:55 +0000
+Date:   Sun, 17 May 2020 23:22:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        ebiederm@xmission.com, jeyu@kernel.org, jmorris@namei.org,
+        keescook@chromium.org, paul@paul-moore.com,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        nayna@linux.ibm.com, zohar@linux.ibm.com,
+        scott.branden@broadcom.com, dan.carpenter@oracle.com,
+        skhan@linuxfoundation.org, geert@linux-m68k.org,
+        tglx@linutronix.de, bauerman@linux.ibm.com, dhowells@redhat.com,
+        linux-integrity@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
+Message-ID: <20200518062255.GB15641@infradead.org>
+References: <20200513152108.25669-1-mcgrof@kernel.org>
+ <20200513181736.GA24342@infradead.org>
+ <20200515212933.GD11244@42.do-not-panic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515212933.GD11244@42.do-not-panic.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX IRQSTEER binding to DT schema format using json-schema.
+On Fri, May 15, 2020 at 09:29:33PM +0000, Luis Chamberlain wrote:
+> On Wed, May 13, 2020 at 11:17:36AM -0700, Christoph Hellwig wrote:
+> > Can you also move kernel_read_* out of fs.h?  That header gets pulled
+> > in just about everywhere and doesn't really need function not related
+> > to the general fs interface.
+> 
+> Sure, where should I dump these?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Add "fsl,imx8m-irqsteer" compatible back.
-	- Use "Multiplexer" instead of "multiplexer" for title.
----
- .../bindings/interrupt-controller/fsl,irqsteer.txt | 35 ---------
- .../interrupt-controller/fsl,irqsteer.yaml         | 89 ++++++++++++++++++++++
- 2 files changed, 89 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-deleted file mode 100644
-index 582991c..0000000
---- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-+++ /dev/null
-@@ -1,35 +0,0 @@
--Freescale IRQSTEER Interrupt multiplexer
--
--Required properties:
--
--- compatible: should be:
--	- "fsl,imx8m-irqsteer"
--	- "fsl,imx-irqsteer"
--- reg: Physical base address and size of registers.
--- interrupts: Should contain the up to 8 parent interrupt lines used to
--  multiplex the input interrupts. They should be specified sequentially
--  from output 0 to 7.
--- clocks: Should contain one clock for entry in clock-names
--  see Documentation/devicetree/bindings/clock/clock-bindings.txt
--- clock-names:
--   - "ipg": main logic clock
--- interrupt-controller: Identifies the node as an interrupt controller.
--- #interrupt-cells: Specifies the number of cells needed to encode an
--  interrupt source. The value must be 1.
--- fsl,channel: The output channel that all input IRQs should be steered into.
--- fsl,num-irqs: Number of input interrupts of this channel.
--  Should be multiple of 32 input interrupts and up to 512 interrupts.
--
--Example:
--
--	interrupt-controller@32e2d000 {
--		compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
--		reg = <0x32e2d000 0x1000>;
--		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
--		clock-names = "ipg";
--		fsl,channel = <0>;
--		fsl,num-irqs = <64>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--	};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-new file mode 100644
-index 0000000..5242c97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale IRQSTEER Interrupt Multiplexer
-+
-+maintainers:
-+  - Lucas Stach <l.stach@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx8m-irqsteer
-+      - fsl,imx-irqsteer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: |
-+      should contain the up to 8 parent interrupt lines used to multiplex
-+      the input interrupts. They should be specified sequentially from
-+      output 0 to 7.
-+    items:
-+      - description: irqsteer channel 0
-+      - description: irqsteer channel 1
-+      - description: irqsteer channel 2
-+      - description: irqsteer channel 3
-+      - description: irqsteer channel 4
-+      - description: irqsteer channel 5
-+      - description: irqsteer channel 6
-+      - description: irqsteer channel 7
-+    minItems: 1
-+    maxItems: 8
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: ipg
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  fsl,channel:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value representing the output channel that all input IRQs should be
-+      steered into.
-+
-+  fsl,num-irqs:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value representing the number of input interrupts of this channel,
-+      should be multiple of 32 input interrupts and up to 512 interrupts.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - fsl,channel
-+  - fsl,num-irqs
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx8mq-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    interrupt-controller@32e2d000 {
-+        compatible = "fsl,imx-irqsteer";
-+        reg = <0x32e2d000 0x1000>;
-+        interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
-+        clock-names = "ipg";
-+        fsl,channel = <0>;
-+        fsl,num-irqs = <64>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+    };
--- 
-2.7.4
-
+Maybe a new linux/kernel_read_file.h?  Bonus points for a small top
+of the file comment explaining the point of the interface, which I
+still don't get :)
