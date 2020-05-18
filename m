@@ -2,152 +2,124 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CA3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0F1207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589816729;
-	bh=lkx1dqDKnZ+7YQ40oS1fSOiu3vaTshH77dFDIsJ7zpY=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=BY+djB/4TDSmfbqe4dMXo3aEJM4czqm/vdAHpQEcIudtMEOxj7Eci3wDk0VCDnPdK
-	 +KWeLGzDDFz+D1o6SrZIR7lcrLI1/LU5eazkyNJ/CEkfjmt8IrFUsrSVGYV3Q4F88e
-	 8aY9yYxwVV88Nq6ESUb3/tyn9B+CS0fZl6BZQ67k=
+	by mail.kernel.org (Postfix) with ESMTP id D242C20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgERPp2 (ORCPT
+        id S1728403AbgERPpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727005AbgERPp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:45:28 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E63920657;
-        Mon, 18 May 2020 15:45:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589816727;
-        bh=lkx1dqDKnZ+7YQ40oS1fSOiu3vaTshH77dFDIsJ7zpY=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=1R3PT4Fh7iXsD1dBKDsTA2zU+v6Fh9XxL6QeojwFzCuedeAidtnj708jw4tqa4daW
-         WQzvXD/kyiA6nLQ/cGC3LCXT/X1PHq4EszC5UwDZfsIpkO7JTCeIkjtPCyXP0PWYuV
-         HoXh0/YZGhjrBX0kbc703WUMPr7fTluicvDCKH8s=
-Date:   Mon, 18 May 2020 16:45:23 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Rob Clark <robdclark@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
-Message-ID: <20200518154522.GN32394@willie-the-truck>
-References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
- <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
- <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
- <20200507125357.GA31783@willie-the-truck>
- <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
- <CAF6AEGvuHKObTR97XdSXjmjKB+qjQ8N1_wxM=ZU8bEkF=cXp-A@mail.gmail.com>
- <20200511173008.GA24282@jcrouse1-lnx.qualcomm.com>
+        Mon, 18 May 2020 11:45:55 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41615 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgERPpy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 11:45:54 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 19so9359277oiy.8;
+        Mon, 18 May 2020 08:45:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/f/rHROcvUhCw63I5sVVKyGk9toPKIj6soJfQz2EyMk=;
+        b=qLeGB4aOl/w5JiRu8iF/OJTmVYQEoafdZUarQZDWXzAC0yq26tJtbUclmzHMpF5CLN
+         s4ii1ZweH8SwgT5fzQWSzcO11IYhLuPFk8kj6EUxdGVVzsYVvwH8X7CxjtA6Op36SUgm
+         RK2Uxi6fImrCYS+e23jnhkAEWL+TTDD5w1uvO0FuxitaqszyvZUelHifa26i1gyTz6Fc
+         AF95uVFYYY7uoIi22QuMZxWRfQn1CWqVVvfrRWW6MYh9T+o5fz19yfaPy7hoFu1QoG9F
+         E3NKPBr7e6oq/5Mr6wymi33+Jp0vtfA263Rag5YGl24sYLt5iqsdNrz+2OGdhIw9uPce
+         cZ9g==
+X-Gm-Message-State: AOAM531QikCru4ApAVm0boY8/2y+33noCex7rbsYb4RqJf4uaC2prQET
+        /puod+lhyUKC+M8xb7r261HYweorV2wv65kQbtk=
+X-Google-Smtp-Source: ABdhPJwSk1XfmEg5VHimLrZlcq2vUCKSvy8da0C+Vb1NpLhDq1xPj9z+Pbn4JqCRj9XUaY6QJTN5Vm86GhCvioFXK6Y=
+X-Received: by 2002:a05:6808:1:: with SMTP id u1mr18216oic.54.1589816752210;
+ Mon, 18 May 2020 08:45:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511173008.GA24282@jcrouse1-lnx.qualcomm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVV+2HsgmBytCOFg4pri4XinT_SPWT_Ac6n7FMZN3dR3w@mail.gmail.com>
+ <CA+V-a8tmG1LKYqbc7feGZQO2Tj5RCpNUHi9e19vPr+bED0KOyQ@mail.gmail.com>
+ <9ab946d2-1076-ed92-0a48-9a95d798d291@cogentembedded.com> <CA+V-a8uuP9d6dNeRpn3O0_aOc15CqWoh0bbAfYze1_hn0dCh8g@mail.gmail.com>
+In-Reply-To: <CA+V-a8uuP9d6dNeRpn3O0_aOc15CqWoh0bbAfYze1_hn0dCh8g@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 18 May 2020 17:45:40 +0200
+Message-ID: <CAMuHMdVkf8vGL-769PvfTkMV=yuqW_V8gjo_ZfwEHVkdDWGTyw@mail.gmail.com>
+Subject: Re: [PATCH 17/17] ARM: dts: r8a7742: Add RWDT node
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 11:30:08AM -0600, Jordan Crouse wrote:
-> On Fri, May 08, 2020 at 08:40:40AM -0700, Rob Clark wrote:
-> > On Fri, May 8, 2020 at 8:32 AM Rob Clark <robdclark@gmail.com> wrote:
-> > >
-> > > On Thu, May 7, 2020 at 5:54 AM Will Deacon <will@kernel.org> wrote:
-> > > >
-> > > > On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
-> > > > > On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
-> > > > > > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
-> > > > > > > Add stall implementation hook to enable stalling
-> > > > > > > faults on QCOM platforms which supports it without
-> > > > > > > causing any kind of hardware mishaps. Without this
-> > > > > > > on QCOM platforms, GPU faults can cause unrelated
-> > > > > > > GPU memory accesses to return zeroes. This has the
-> > > > > > > unfortunate result of command-stream reads from CP
-> > > > > > > getting invalid data, causing a cascade of fail.
-> > > > >
-> > > > > I think this came up before, but something about this rationale doesn't add
-> > > > > up - we're not *using* stalls at all, we're still terminating faulting
-> > > > > transactions unconditionally; we're just using CFCFG to terminate them with
-> > > > > a slight delay, rather than immediately. It's really not clear how or why
-> > > > > that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
-> > > > > (or even a documented workaround for something), or might things start
-> > > > > blowing up again if any other behaviour subtly changes? I'm not dead set
-> > > > > against adding this, but I'd *really* like to have a lot more confidence in
-> > > > > it.
-> > > >
-> > > > Rob mentioned something about the "bus returning zeroes" before, but I agree
-> > > > that we need more information so that we can reason about this and maintain
-> > > > the code as the driver continues to change. That needs to be a comment in
-> > > > the driver, and I don't think "but android seems to work" is a good enough
-> > > > justification. There was some interaction with HUPCF as well.
-> > >
-> > > The issue is that there are multiple parallel memory accesses
-> > > happening at the same time, for example CP (the cmdstream processor)
-> > > will be reading ahead and setting things up for the next draw or
-> > > compute grid, in parallel with some memory accesses from the shader
-> > > which could trigger a fault.  (And with faults triggered by something
-> > > in the shader, there are *many* shader threads running in parallel so
-> > > those tend to generate a big number of faults at the same time.)
-> > >
-> > > We need either CFCFG or HUPCF, otherwise what I have observed is that
-> > > while the fault happens, CP's memory access will start returning
-> > > zero's instead of valid cmdstream data, which triggers a GPU hang.  I
-> > > can't say whether this is something unique to qcom's implementation of
-> > > the smmu spec or not.
-> > >
-> > > *Often* a fault is the result of the usermode gl/vk/cl driver bug,
-> > > although I don't think that is an argument against fixing this in the
-> > > smmu driver.. I've been carrying around a local patch to set HUPCF for
-> > > *years* because debugging usermode driver issues is so much harder
-> > > without.  But there are some APIs where faults can be caused by the
-> > > user's app on top of the usermode driver.
-> > >
-> > 
-> > Also, I'll add to that, a big wish of mine is to have stall with the
-> > ability to resume later from a wq context.  That would enable me to
-> > hook in the gpu crash dump handling for faults, which would make
-> > debugging these sorts of issues much easier.  I think I posted a
-> > prototype of this quite some time back, which would schedule a worker
-> > on the first fault (since there are cases where you see 1000's of
-> > faults at once), which grabbed some information about the currently
-> > executing submit and some gpu registers to indicate *where* in the
-> > submit (a single submit could have 100's or 1000's of draws), and then
-> > resumed the iommu cb.
-> > 
-> > (This would ofc eventually be useful for svm type things.. I expect
-> > we'll eventually care about that too.)
-> 
-> Rob is right about HUPCF. Due to the parallel nature of the command processor
-> there is always a very good chance that a CP access is somewhere in the bus so
-> any pagefault is usually a death sentence. The GPU context bank would always
-> want HUPCF set to 1.
+On Mon, May 18, 2020 at 3:23 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Mon, May 18, 2020 at 2:17 PM Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> > On 18.05.2020 15:27, Lad, Prabhakar wrote:
+> > >>> Add a device node for the Watchdog Timer (RWDT) controller on the Renesas
+> > >>> RZ/G1H (r8a7742) SoC.
+> > >>>
+> > >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >>> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > >>
+> > >> Thanks for your patch!
+> > >>
+> > >>> --- a/arch/arm/boot/dts/r8a7742.dtsi
+> > >>> +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> > >>> @@ -201,6 +201,16 @@
+> > >>>                  #size-cells = <2>;
+> > >>>                  ranges;
+> > >>>
+> > >>> +               rwdt: watchdog@e6020000 {
+> > >>> +                       compatible = "renesas,r8a7742-wdt",
+> > >>> +                                    "renesas,rcar-gen2-wdt";
+> > >>> +                       reg = <0 0xe6020000 0 0x0c>;
+> > >>> +                       clocks = <&cpg CPG_MOD 402>;
+> > >>> +                       power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
+> > >>> +                       resets = <&cpg 402>;
+> > >>> +                       status = "disabled";
+> > >>
+> > >> Missing "interrupts" property.
+> > >>
+> > > "interrupts" property isn't used by rwdt driver  and can be dropped
+> > > from bindings file.
+> >
+> >     DT describes the hardware, not its driver's abilities.
 
-So this sounds like an erratum to me, and I'm happy to set HUPCF if we
-detect the broken implementation. However, it will need an entry in
-Documentation/arm64/silicon-errata.rst and a decent comment in the driver
-to explain what we're doing and why.
+Thanks for chiming in, Sergei!
 
-Thanks,
+> Agreed will add, I had followed it on similar lines of r8a7743/44.
 
-Will
+Yeah. I know it's missing for a few other SoCs, too.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
