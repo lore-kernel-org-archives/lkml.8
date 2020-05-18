@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBACC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6553EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A65AF20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B40520643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826125;
-	bh=5DKwiWJyRxq7YiGnGwAaSbObySpsOz8YE1NrzOWGdHQ=;
+	s=default; t=1589826130;
+	bh=fE4l/YiFzGqBGD1qlBVhUzgpbiM6XFdUJWqpCgy6Krk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QuCfrS0UTrmmom4rlspJ/OKe5a5nFYzoM1ept6Qg/FZL84u5suPVbkTXsUvXrUqyW
-	 POcwzDa/jrnjlqI1hz97fXss0UEWc/PKmUYCBa+Ql36YpYcAnSUmXdyR26Zcapl9vP
-	 yXv/ui4XF+RTLEoNxmdt4/s7xz0p2VEJdnECxI3A=
+	b=OrGO6NNqjR/LNGix3RBs75BreX0QCmSKA6cI3hnrllYkO0sRLLyUImNoXXLt9Rnnk
+	 qhuPB0EJtyLx4i6Va+Jf//1WdGOgx0/5nRhmueRJP/TUlwQlVAbnVJMQgvx4hncT0a
+	 1f9LlPK0FBjBQiMg3sl1TWaEUrfEEfuJ0QBc5jMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732733AbgERSWE (ORCPT
+        id S1732951AbgERSWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:22:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53518 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730275AbgERRvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:03 -0400
+        id S1730721AbgERRux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6F8A20715;
-        Mon, 18 May 2020 17:51:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26FE120826;
+        Mon, 18 May 2020 17:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824262;
-        bh=5DKwiWJyRxq7YiGnGwAaSbObySpsOz8YE1NrzOWGdHQ=;
+        s=default; t=1589824252;
+        bh=fE4l/YiFzGqBGD1qlBVhUzgpbiM6XFdUJWqpCgy6Krk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BwQ8/uIwJqll5CRea7UXaQcxOaY7iIu0R2eb7jqiKtKzxSImFB1c9FQUFP9WNUr0q
-         oqdvR6yeCli3m9TebIW5vBndgCMJG0voyw7hS1X+dwwKxIVrju9XiYL7tq+YUwxXKD
-         Ci7GepW9d1MXrXLvOWHqETbeSBLdqTfHRJSjnReg=
+        b=dd7S/zyem6cQlEgG3GICtblWa3wrLNL3l7rMJ2VZRt0YP8GPS5sIzFHapJcTkd92X
+         8Uo4KL/k2j8u1FcbMYE4LfG39bQ3W8+JSZGQWaFYwzdDCSipsAu99nQQ35qRYAxriE
+         MaFVPL2/Una8lhul1G2LZmrY6IdgdPWfnMlyqG14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 21/80] tcp: fix SO_RCVLOWAT hangs with fat skbs
-Date:   Mon, 18 May 2020 19:36:39 +0200
-Message-Id: <20200518173454.663518050@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Colin Walters <walters@redhat.com>
+Subject: [PATCH 4.19 18/80] net: ipv4: really enforce backoff for redirects
+Date:   Mon, 18 May 2020 19:36:36 +0200
+Message-Id: <20200518173454.103849772@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,95 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 24adbc1676af4e134e709ddc7f34cf2adc2131e4 ]
+[ Upstream commit 57644431a6c2faac5d754ebd35780cf43a531b1a ]
 
-We autotune rcvbuf whenever SO_RCVLOWAT is set to account for 100%
-overhead in tcp_set_rcvlowat()
+In commit b406472b5ad7 ("net: ipv4: avoid mixed n_redirects and
+rate_tokens usage") I missed the fact that a 0 'rate_tokens' will
+bypass the backoff algorithm.
 
-This works well when skb->len/skb->truesize ratio is bigger than 0.5
+Since rate_tokens is cleared after a redirect silence, and never
+incremented on redirects, if the host keeps receiving packets
+requiring redirect it will reply ignoring the backoff.
 
-But if we receive packets with small MSS, we can end up in a situation
-where not enough bytes are available in the receive queue to satisfy
-RCVLOWAT setting.
-As our sk_rcvbuf limit is hit, we send zero windows in ACK packets,
-preventing remote peer from sending more data.
+Additionally, the 'rate_last' field will be updated with the
+cadence of the ingress packet requiring redirect. If that rate is
+high enough, that will prevent the host from generating any
+other kind of ICMP messages
 
-Even autotuning does not help, because it only triggers at the time
-user process drains the queue. If no EPOLLIN is generated, this
-can not happen.
+The check for a zero 'rate_tokens' value was likely a shortcut
+to avoid the more complex backoff algorithm after a redirect
+silence period. Address the issue checking for 'n_redirects'
+instead, which is incremented on successful redirect, and
+does not interfere with other ICMP replies.
 
-Note poll() has a similar issue, after commit
-c7004482e8dc ("tcp: Respect SO_RCVLOWAT in tcp_poll().")
-
-Fixes: 03f45c883c6f ("tcp: avoid extra wakeups for SO_RCVLOWAT users")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b406472b5ad7 ("net: ipv4: avoid mixed n_redirects and rate_tokens usage")
+Reported-and-tested-by: Colin Walters <walters@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tcp.h    |   13 +++++++++++++
- net/ipv4/tcp.c       |   14 +++++++++++---
- net/ipv4/tcp_input.c |    3 ++-
- 3 files changed, 26 insertions(+), 4 deletions(-)
+ net/ipv4/route.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1373,6 +1373,19 @@ static inline int tcp_full_space(const s
- 	return tcp_win_from_space(sk, sk->sk_rcvbuf);
- }
- 
-+/* We provision sk_rcvbuf around 200% of sk_rcvlowat.
-+ * If 87.5 % (7/8) of the space has been consumed, we want to override
-+ * SO_RCVLOWAT constraint, since we are receiving skbs with too small
-+ * len/truesize ratio.
-+ */
-+static inline bool tcp_rmem_pressure(const struct sock *sk)
-+{
-+	int rcvbuf = READ_ONCE(sk->sk_rcvbuf);
-+	int threshold = rcvbuf - (rcvbuf >> 3);
-+
-+	return atomic_read(&sk->sk_rmem_alloc) > threshold;
-+}
-+
- extern void tcp_openreq_init_rwin(struct request_sock *req,
- 				  const struct sock *sk_listener,
- 				  const struct dst_entry *dst);
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -488,9 +488,17 @@ static void tcp_tx_timestamp(struct sock
- static inline bool tcp_stream_is_readable(const struct tcp_sock *tp,
- 					  int target, struct sock *sk)
- {
--	return (READ_ONCE(tp->rcv_nxt) - tp->copied_seq >= target) ||
--		(sk->sk_prot->stream_memory_read ?
--		sk->sk_prot->stream_memory_read(sk) : false);
-+	int avail = READ_ONCE(tp->rcv_nxt) - READ_ONCE(tp->copied_seq);
-+
-+	if (avail > 0) {
-+		if (avail >= target)
-+			return true;
-+		if (tcp_rmem_pressure(sk))
-+			return true;
-+	}
-+	if (sk->sk_prot->stream_memory_read)
-+		return sk->sk_prot->stream_memory_read(sk);
-+	return false;
- }
- 
- /*
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -4683,7 +4683,8 @@ void tcp_data_ready(struct sock *sk)
- 	const struct tcp_sock *tp = tcp_sk(sk);
- 	int avail = tp->rcv_nxt - tp->copied_seq;
- 
--	if (avail < sk->sk_rcvlowat && !sock_flag(sk, SOCK_DONE))
-+	if (avail < sk->sk_rcvlowat && !tcp_rmem_pressure(sk) &&
-+	    !sock_flag(sk, SOCK_DONE))
- 		return;
- 
- 	sk->sk_data_ready(sk);
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -906,7 +906,7 @@ void ip_rt_send_redirect(struct sk_buff
+ 	/* Check for load limit; set rate_last to the latest sent
+ 	 * redirect.
+ 	 */
+-	if (peer->rate_tokens == 0 ||
++	if (peer->n_redirects == 0 ||
+ 	    time_after(jiffies,
+ 		       (peer->rate_last +
+ 			(ip_rt_redirect_load << peer->n_redirects)))) {
 
 
