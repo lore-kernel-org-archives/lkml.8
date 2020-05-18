@@ -2,105 +2,112 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB443C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBB420849
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FCB20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589823572;
+	bh=jiDnW3TRJvlV2PDuDvF3z66AZZfirSL0mdhSpl04r80=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ru86YO39Zk/4iJ0aeNAfZNMsVu1ATQP5FFowoXU/ZPIZ6UJezcWTZqUZ0JPu1qPSP
+	 NWhpKPlPnDlbyNGQT1Xz8JbujgofLfpJYWX0zPLCI4r3sanY2+NlttD8Bxik++Kg9t
+	 uLhPVTd2LxlzlFSxtlb+EDTqrTxQ9T8QE9TCRTXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgERRj3 (ORCPT
+        id S1728824AbgERRjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 May 2020 13:39:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728804AbgERRj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 May 2020 13:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbgERRjW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:22 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF96C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 10:39:22 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 91C232A0C9C
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>
-Cc:     narmstrong@baylibre.com, a.hajda@samsung.com,
-        boris.brezillon@collabora.com, laurent.pinchart@ideasonboard.com,
-        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [RESEND PATCH 1/3] drm/mediatek: mtk_dpi: Rename bridge to next_bridge
-Date:   Mon, 18 May 2020 19:39:07 +0200
-Message-Id: <20200518173909.2259259-2-enric.balletbo@collabora.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39FEB2086A;
+        Mon, 18 May 2020 17:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589823568;
+        bh=jiDnW3TRJvlV2PDuDvF3z66AZZfirSL0mdhSpl04r80=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gOwfWH0nDNX47jxvOiFjT/3Qa/w8mag8Xr9ceneUeruEEp0CyZIKVLDsuArloq8sX
+         eUFPSs0YwKWVMzlFm6rAiecaCTfZ1+XoaWQbmBPH9Q6RMrl3Vp0NMP6gqxbg2puFd4
+         vVBamJSzTPI+d4IXU/DVXW82xN0f8KgpyWG5EHPA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Antti Laakso <antti.laakso@intel.com>,
+        Vladis Dronov <vdronov@redhat.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.4 34/86] ptp: free ptp device pin descriptors properly
+Date:   Mon, 18 May 2020 19:36:05 +0200
+Message-Id: <20200518173457.437202085@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173909.2259259-1-enric.balletbo@collabora.com>
-References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
+References: <20200518173450.254571947@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is really a cosmetic change just to make a bit more readable the
-code after convert the driver to drm_bridge. The bridge variable name
-will be used by the encoder drm_bridge, and the chained bridge will be
-named next_bridge.
+From: Vladis Dronov <vdronov@redhat.com>
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+commit 75718584cb3c64e6269109d4d54f888ac5a5fd15 upstream.
+
+There is a bug in ptp_clock_unregister(), where ptp_cleanup_pin_groups()
+first frees ptp->pin_{,dev_}attr, but then posix_clock_unregister() needs
+them to destroy a related sysfs device.
+
+These functions can not be just swapped, as posix_clock_unregister() frees
+ptp which is needed in the ptp_cleanup_pin_groups(). Fix this by calling
+ptp_cleanup_pin_groups() in ptp_clock_release(), right before ptp is freed.
+
+This makes this patch fix an UAF bug in a patch which fixes an UAF bug.
+
+Reported-by: Antti Laakso <antti.laakso@intel.com>
+Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
+Link: https://lore.kernel.org/netdev/3d2bd09735dbdaf003585ca376b7c1e5b69a19bd.camel@intel.com/
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
+ drivers/ptp/ptp_clock.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/gpu/drm/mediatek/mtk_dpi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -175,6 +175,7 @@ static void ptp_clock_release(struct dev
+ {
+ 	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
+ 
++	ptp_cleanup_pin_groups(ptp);
+ 	mutex_destroy(&ptp->tsevq_mux);
+ 	mutex_destroy(&ptp->pincfg_mux);
+ 	ida_simple_remove(&ptp_clocks_map, ptp->index);
+@@ -275,9 +276,8 @@ int ptp_clock_unregister(struct ptp_cloc
+ 	if (ptp->pps_source)
+ 		pps_unregister_source(ptp->pps_source);
+ 
+-	ptp_cleanup_pin_groups(ptp);
+-
+ 	posix_clock_unregister(&ptp->clock);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(ptp_clock_unregister);
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 7fbfa95bab09..7112125dc3d1 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -61,7 +61,7 @@ enum mtk_dpi_out_color_format {
- struct mtk_dpi {
- 	struct mtk_ddp_comp ddp_comp;
- 	struct drm_encoder encoder;
--	struct drm_bridge *bridge;
-+	struct drm_bridge *next_bridge;
- 	void __iomem *regs;
- 	struct device *dev;
- 	struct clk *engine_clk;
-@@ -607,7 +607,7 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
- 	/* Currently DPI0 is fixed to be driven by OVL1 */
- 	dpi->encoder.possible_crtcs = BIT(1);
- 
--	ret = drm_bridge_attach(&dpi->encoder, dpi->bridge, NULL, 0);
-+	ret = drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, 0);
- 	if (ret) {
- 		dev_err(dev, "Failed to attach bridge: %d\n", ret);
- 		goto err_cleanup;
-@@ -747,11 +747,11 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
--					  NULL, &dpi->bridge);
-+					  NULL, &dpi->next_bridge);
- 	if (ret)
- 		return ret;
- 
--	dev_info(dev, "Found bridge node: %pOF\n", dpi->bridge->of_node);
-+	dev_info(dev, "Found bridge node: %pOF\n", dpi->next_bridge->of_node);
- 
- 	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DPI);
- 	if (comp_id < 0) {
--- 
-2.26.2
 
