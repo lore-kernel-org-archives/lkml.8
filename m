@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70729C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CF1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D93F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBF52065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826676;
-	bh=X4pfsZFG/GXb7yKk7eiqDfPfsrLUvS8kWjXq2j952qg=;
+	s=default; t=1589826682;
+	bh=Y4UlRLSIyLpUT5aBrokagxXIqt7biD1IIALrz4cS8h4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xDzUBy8eGT0aYATBBUTN6JdbKTsRk0osTzg3ejgwZFDhRds5DsiC3VQ9BoGJjGOC/
-	 +zpkHa6GIO8JvEBVzn8jG9KUgslZZUNLzd1dxkKSVdWydAsCrWkguZuL0uOVfDjDt4
-	 3ul9CeuWKjDobqf8ZMjfBp3uunNGasLOHz7V6eTg=
+	b=G0P63Gux6kYBzlHCwLJTYdDL9KX+Aat4DHf5o4+UtTejgqntRI5EOi2mbeCjDi7eh
+	 273uhx6AktjhmuydVjeNUrTxgDFXeDsOWzOQc7Bb4JiBw7UZfFCuZ7MSKz81PDwT8c
+	 5SVuT05eOmhCKOmhRQLfdxRMDMo80QHqgv+6vC68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgERRjr (ORCPT
+        id S1731150AbgERSbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34578 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728857AbgERRjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:41 -0400
+        id S1728870AbgERRjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6349420849;
-        Mon, 18 May 2020 17:39:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEC5B20835;
+        Mon, 18 May 2020 17:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823580;
-        bh=X4pfsZFG/GXb7yKk7eiqDfPfsrLUvS8kWjXq2j952qg=;
+        s=default; t=1589823583;
+        bh=Y4UlRLSIyLpUT5aBrokagxXIqt7biD1IIALrz4cS8h4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fdO71+hHGG3W20BSrxRXN9R3n4lXgR44T/mx5XhRPsvnvq6Pgu+cBeAdrTzZz+fwt
-         fTYsc+tHBkCaen8t4G19Xc90hIQZHtp3hl8magg1YHfmsetdFbgO0V9/DFmxrOEI7z
-         V3veKKiWBd9qFX12EIU7bOsgL3VQZblFb9MgMg1s=
+        b=FSkZvcPx6CJl83IsSXfAOPZWI52V03VYBMNgBu/o8gIlp9nkQBSbwYMhTT1n2/+mi
+         uD1fJROiZgLZx/4eq/mLIC3X92sLeutmnB/TF9+d2wEpZSrblUbh84zHz30bPfLUD/
+         jYx4kPE8+eaJD9e0wvBNYAQv61VZOJPoyQ912kFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Alex Estrin <alex.estrin@intel.com>,
-        Feras Daoud <ferasda@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
+        Wu Bo <wubo40@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 12/86] Revert "IB/ipoib: Update broadcast object if PKey value was changed in index 0"
-Date:   Mon, 18 May 2020 19:35:43 +0200
-Message-Id: <20200518173452.990204365@linuxfoundation.org>
+Subject: [PATCH 4.4 39/86] scsi: sg: add sg_remove_request in sg_write
+Date:   Mon, 18 May 2020 19:36:10 +0200
+Message-Id: <20200518173458.327092802@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -64,76 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Estrin <alex.estrin@intel.com>
+From: Wu Bo <wubo40@huawei.com>
 
-commit 612601d0013f03de9dc134809f242ba6da9ca252 upstream.
+commit 83c6f2390040f188cc25b270b4befeb5628c1aee upstream.
 
-commit 9a9b8112699d will cause core to fail UD QP from being destroyed
-on ipoib unload, therefore cause resources leakage.
-On pkey change event above patch modifies mgid before calling underlying
-driver to detach it from QP. Drivers' detach_mcast() will fail to find
-modified mgid it was never given to attach in a first place.
-Core qp->usecnt will never go down, so ib_destroy_qp() will fail.
+If the __copy_from_user function failed we need to call sg_remove_request
+in sg_write.
 
-IPoIB driver actually does take care of new broadcast mgid based on new
-pkey by destroying an old mcast object in ipoib_mcast_dev_flush())
-....
-	if (priv->broadcast) {
-		rb_erase(&priv->broadcast->rb_node, &priv->multicast_tree);
-		list_add_tail(&priv->broadcast->list, &remove_list);
-		priv->broadcast = NULL;
-	}
-...
-
-then in restarted ipoib_macst_join_task() creating a new broadcast mcast
-object, sending join request and on completion tells the driver to attach
-to reinitialized QP:
-...
-if (!priv->broadcast) {
-...
-	broadcast = ipoib_mcast_alloc(dev, 0);
-...
-	memcpy(broadcast->mcmember.mgid.raw, priv->dev->broadcast + 4,
-	       sizeof (union ib_gid));
-	priv->broadcast = broadcast;
-...
-
-Fixes: 9a9b8112699d ("IB/ipoib: Update broadcast object if PKey value was changed in index 0")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Alex Estrin <alex.estrin@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/610618d9-e983-fd56-ed0f-639428343af7@huawei.com
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+[groeck: Backport to v5.4.y and older kernels]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/ipoib/ipoib_ib.c |   13 -------------
- 1 file changed, 13 deletions(-)
+ drivers/scsi/sg.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-@@ -945,19 +945,6 @@ static inline int update_parent_pkey(str
- 		 */
- 		priv->dev->broadcast[8] = priv->pkey >> 8;
- 		priv->dev->broadcast[9] = priv->pkey & 0xff;
--
--		/*
--		 * Update the broadcast address in the priv->broadcast object,
--		 * in case it already exists, otherwise no one will do that.
--		 */
--		if (priv->broadcast) {
--			spin_lock_irq(&priv->lock);
--			memcpy(priv->broadcast->mcmember.mgid.raw,
--			       priv->dev->broadcast + 4,
--			sizeof(union ib_gid));
--			spin_unlock_irq(&priv->lock);
--		}
--
- 		return 0;
- 	}
- 
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -706,8 +706,10 @@ sg_write(struct file *filp, const char _
+ 	hp->flags = input_size;	/* structure abuse ... */
+ 	hp->pack_id = old_hdr.pack_id;
+ 	hp->usr_ptr = NULL;
+-	if (__copy_from_user(cmnd, buf, cmd_size))
++	if (__copy_from_user(cmnd, buf, cmd_size)) {
++		sg_remove_request(sfp, srp);
+ 		return -EFAULT;
++	}
+ 	/*
+ 	 * SG_DXFER_TO_FROM_DEV is functionally equivalent to SG_DXFER_FROM_DEV,
+ 	 * but is is possible that the app intended SG_DXFER_TO_DEV, because there
 
 
