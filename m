@@ -2,52 +2,54 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6989EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42588207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CAC2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823537;
-	bh=+DhRDDaqz+WFGKxK71hc3s0l/CkV/hBF2GDGz5ad0IE=;
+	s=default; t=1589823541;
+	bh=TEoHXFMTbejUrHlaEUHwHNavdgX9+aD2ECPMfE4eKks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YrUbGN24XZGM4zlknHLj6a3cGdZA15IR4GgQUykSYzLfGjexwOb1tru5v0iIUS0xZ
-	 QFlRk3kLBZlum3yjT4Y2m2Z1Jac8s5k5thlsclzTY+rNYoTFZdVIiMw98bFAKVc6sU
-	 Kk+j/8O2tfYn3xXnOXWa+FUB6nzplfAAt4W/gdD8=
+	b=gEoFvUU9w8jcoZYeI7qVCp8I0IdVC8kX4zsDtn8i+fHyHKvCFp43S7AZPluKGBtUT
+	 i+v81echN9ARq1w/mBaBDFZBfwk2IMkVSw/br+EF/6Z9eq7BkSL85DxrSvl4ZDpWrX
+	 +k8xzIxYd76n8C39LavWxUsBHtMGOCD2VHi6vYy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgERRi4 (ORCPT
+        id S1728677AbgERRjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:38:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33214 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:39:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbgERRiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:38:54 -0400
+        id S1728657AbgERRi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:38:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ADC020888;
-        Mon, 18 May 2020 17:38:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02265207C4;
+        Mon, 18 May 2020 17:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823533;
-        bh=+DhRDDaqz+WFGKxK71hc3s0l/CkV/hBF2GDGz5ad0IE=;
+        s=default; t=1589823538;
+        bh=TEoHXFMTbejUrHlaEUHwHNavdgX9+aD2ECPMfE4eKks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IlDusEBOWSG5l6hDtVLQ2rwA+Fl/iZeV540OEznTIpG9xJgDoYbQB2wA2TVKaVOH9
-         jnhyxIxAqCAvzuyqV2DBIc8PbtLLLksEXPo9Wbdut/ZJ9YDvNpU4o78BHY2DOodlyz
-         QcknyRtewI8s5R9Df2dX7uJi0CRMvS6P34V7Dfwg=
+        b=DDS0WHmuYvQIslNGO/h5SYpH7o7Xg4tkQhA3XnqRTB8CTckZnJEC3kVqDx5oEdpvz
+         55AbYmbS0Bilsc1wk22yj2Nljkemvls80tu+zekR7ydMpXdQO/eNVbm2reOiuBZlFN
+         cCmJJ04U+eGP3B39O4+fReDSLZ/lHfQc+RbR/4dw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Waiman Long <longman@redhat.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jens Axboe <axboe@kernel.dk>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 21/86] net: ipv6: add net argument to ip6_dst_lookup_flow
-Date:   Mon, 18 May 2020 19:35:52 +0200
-Message-Id: <20200518173454.753308245@linuxfoundation.org>
+Subject: [PATCH 4.4 23/86] blktrace: Fix potential deadlock between delete & sysfs ops
+Date:   Mon, 18 May 2020 19:35:54 +0200
+Message-Id: <20200518173455.161566394@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -60,224 +62,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Waiman Long <longman@redhat.com>
 
-commit c4e85f73afb6384123e5ef1bba3315b2e3ad031e upstream.
+commit 5acb3cc2c2e9d3020a4fee43763c6463767f1572 upstream.
 
-This will be used in the conversion of ipv6_stub to ip6_dst_lookup_flow,
-as some modules currently pass a net argument without a socket to
-ip6_dst_lookup. This is equivalent to commit 343d60aada5a ("ipv6: change
-ipv6_stub_impl.ipv6_dst_lookup to take net argument").
+The lockdep code had reported the following unsafe locking scenario:
 
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 4.4: adjust context]
+       CPU0                    CPU1
+       ----                    ----
+  lock(s_active#228);
+                               lock(&bdev->bd_mutex/1);
+                               lock(s_active#228);
+  lock(&bdev->bd_mutex);
+
+ *** DEADLOCK ***
+
+The deadlock may happen when one task (CPU1) is trying to delete a
+partition in a block device and another task (CPU0) is accessing
+tracing sysfs file (e.g. /sys/block/dm-1/trace/act_mask) in that
+partition.
+
+The s_active isn't an actual lock. It is a reference count (kn->count)
+on the sysfs (kernfs) file. Removal of a sysfs file, however, require
+a wait until all the references are gone. The reference count is
+treated like a rwsem using lockdep instrumentation code.
+
+The fact that a thread is in the sysfs callback method or in the
+ioctl call means there is a reference to the opended sysfs or device
+file. That should prevent the underlying block structure from being
+removed.
+
+Instead of using bd_mutex in the block_device structure, a new
+blk_trace_mutex is now added to the request_queue structure to protect
+access to the blk_trace structure.
+
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+Fix typo in patch subject line, and prune a comment detailing how
+the code used to work.
+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/ipv6.h               |    2 +-
- net/dccp/ipv6.c                  |    6 +++---
- net/ipv6/af_inet6.c              |    2 +-
- net/ipv6/datagram.c              |    2 +-
- net/ipv6/inet6_connection_sock.c |    4 ++--
- net/ipv6/ip6_output.c            |    8 ++++----
- net/ipv6/raw.c                   |    2 +-
- net/ipv6/syncookies.c            |    2 +-
- net/ipv6/tcp_ipv6.c              |    4 ++--
- net/l2tp/l2tp_ip6.c              |    2 +-
- net/sctp/ipv6.c                  |    4 ++--
- 11 files changed, 19 insertions(+), 19 deletions(-)
+ block/blk-core.c        |    3 +++
+ include/linux/blkdev.h  |    1 +
+ kernel/trace/blktrace.c |   18 ++++++++++++------
+ 3 files changed, 16 insertions(+), 6 deletions(-)
 
---- a/include/net/ipv6.h
-+++ b/include/net/ipv6.h
-@@ -853,7 +853,7 @@ static inline struct sk_buff *ip6_finish
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -719,6 +719,9 @@ struct request_queue *blk_alloc_queue_no
  
- int ip6_dst_lookup(struct net *net, struct sock *sk, struct dst_entry **dst,
- 		   struct flowi6 *fl6);
--struct dst_entry *ip6_dst_lookup_flow(const struct sock *sk, struct flowi6 *fl6,
-+struct dst_entry *ip6_dst_lookup_flow(struct net *net, const struct sock *sk, struct flowi6 *fl6,
- 				      const struct in6_addr *final_dst);
- struct dst_entry *ip6_sk_dst_lookup_flow(struct sock *sk, struct flowi6 *fl6,
- 					 const struct in6_addr *final_dst);
---- a/net/dccp/ipv6.c
-+++ b/net/dccp/ipv6.c
-@@ -209,7 +209,7 @@ static int dccp_v6_send_response(const s
- 	final_p = fl6_update_dst(&fl6, rcu_dereference(np->opt), &final);
- 	rcu_read_unlock();
+ 	kobject_init(&q->kobj, &blk_queue_ktype);
  
--	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-+	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
- 	if (IS_ERR(dst)) {
- 		err = PTR_ERR(dst);
- 		dst = NULL;
-@@ -276,7 +276,7 @@ static void dccp_v6_ctl_send_reset(const
- 	security_skb_classify_flow(rxskb, flowi6_to_flowi(&fl6));
++#ifdef CONFIG_BLK_DEV_IO_TRACE
++	mutex_init(&q->blk_trace_mutex);
++#endif
+ 	mutex_init(&q->sysfs_lock);
+ 	spin_lock_init(&q->__queue_lock);
  
- 	/* sk = NULL, but it is safe for now. RST socket required. */
--	dst = ip6_dst_lookup_flow(ctl_sk, &fl6, NULL);
-+	dst = ip6_dst_lookup_flow(sock_net(ctl_sk), ctl_sk, &fl6, NULL);
- 	if (!IS_ERR(dst)) {
- 		skb_dst_set(skb, dst);
- 		ip6_xmit(ctl_sk, skb, &fl6, NULL, 0);
-@@ -879,7 +879,7 @@ static int dccp_v6_connect(struct sock *
- 	opt = rcu_dereference_protected(np->opt, sock_owned_by_user(sk));
- 	final_p = fl6_update_dst(&fl6, opt, &final);
- 
--	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-+	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
- 	if (IS_ERR(dst)) {
- 		err = PTR_ERR(dst);
- 		goto failure;
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -683,7 +683,7 @@ int inet6_sk_rebuild_header(struct sock
- 					 &final);
- 		rcu_read_unlock();
- 
--		dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-+		dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
- 		if (IS_ERR(dst)) {
- 			sk->sk_route_caps = 0;
- 			sk->sk_err_soft = -PTR_ERR(dst);
---- a/net/ipv6/datagram.c
-+++ b/net/ipv6/datagram.c
-@@ -179,7 +179,7 @@ ipv4_connected:
- 	final_p = fl6_update_dst(&fl6, opt, &final);
- 	rcu_read_unlock();
- 
--	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-+	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
- 	err = 0;
- 	if (IS_ERR(dst)) {
- 		err = PTR_ERR(dst);
---- a/net/ipv6/inet6_connection_sock.c
-+++ b/net/ipv6/inet6_connection_sock.c
-@@ -88,7 +88,7 @@ struct dst_entry *inet6_csk_route_req(co
- 	fl6->fl6_sport = htons(ireq->ir_num);
- 	security_req_classify_flow(req, flowi6_to_flowi(fl6));
- 
--	dst = ip6_dst_lookup_flow(sk, fl6, final_p);
-+	dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
- 	if (IS_ERR(dst))
- 		return NULL;
- 
-@@ -142,7 +142,7 @@ static struct dst_entry *inet6_csk_route
- 
- 	dst = __inet6_csk_dst_check(sk, np->dst_cookie);
- 	if (!dst) {
--		dst = ip6_dst_lookup_flow(sk, fl6, final_p);
-+		dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
- 
- 		if (!IS_ERR(dst))
- 			ip6_dst_store(sk, dst, NULL, NULL);
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -1057,13 +1057,13 @@ EXPORT_SYMBOL_GPL(ip6_dst_lookup);
-  *	It returns a valid dst pointer on success, or a pointer encoded
-  *	error code.
-  */
--struct dst_entry *ip6_dst_lookup_flow(const struct sock *sk, struct flowi6 *fl6,
-+struct dst_entry *ip6_dst_lookup_flow(struct net *net, const struct sock *sk, struct flowi6 *fl6,
- 				      const struct in6_addr *final_dst)
- {
- 	struct dst_entry *dst = NULL;
- 	int err;
- 
--	err = ip6_dst_lookup_tail(sock_net(sk), sk, &dst, fl6);
-+	err = ip6_dst_lookup_tail(net, sk, &dst, fl6);
- 	if (err)
- 		return ERR_PTR(err);
- 	if (final_dst)
-@@ -1071,7 +1071,7 @@ struct dst_entry *ip6_dst_lookup_flow(co
- 	if (!fl6->flowi6_oif)
- 		fl6->flowi6_oif = l3mdev_fib_oif(dst->dev);
- 
--	return xfrm_lookup_route(sock_net(sk), dst, flowi6_to_flowi(fl6), sk, 0);
-+	return xfrm_lookup_route(net, dst, flowi6_to_flowi(fl6), sk, 0);
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -432,6 +432,7 @@ struct request_queue {
+ 	int			node;
+ #ifdef CONFIG_BLK_DEV_IO_TRACE
+ 	struct blk_trace	*blk_trace;
++	struct mutex		blk_trace_mutex;
+ #endif
+ 	/*
+ 	 * for flush operations
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -644,6 +644,12 @@ int blk_trace_startstop(struct request_q
  }
- EXPORT_SYMBOL_GPL(ip6_dst_lookup_flow);
+ EXPORT_SYMBOL_GPL(blk_trace_startstop);
  
-@@ -1096,7 +1096,7 @@ struct dst_entry *ip6_sk_dst_lookup_flow
++/*
++ * When reading or writing the blktrace sysfs files, the references to the
++ * opened sysfs or device files should prevent the underlying block device
++ * from being removed. So no further delete protection is really needed.
++ */
++
+ /**
+  * blk_trace_ioctl: - handle the ioctls associated with tracing
+  * @bdev:	the block device
+@@ -661,7 +667,7 @@ int blk_trace_ioctl(struct block_device
+ 	if (!q)
+ 		return -ENXIO;
  
- 	dst = ip6_sk_dst_check(sk, dst, fl6);
- 	if (!dst)
--		dst = ip6_dst_lookup_flow(sk, fl6, final_dst);
-+		dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_dst);
+-	mutex_lock(&bdev->bd_mutex);
++	mutex_lock(&q->blk_trace_mutex);
  
- 	return dst;
- }
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -889,7 +889,7 @@ static int rawv6_sendmsg(struct sock *sk
- 	if (hdrincl)
- 		fl6.flowi6_flags |= FLOWI_FLAG_KNOWN_NH;
- 
--	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-+	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
- 	if (IS_ERR(dst)) {
- 		err = PTR_ERR(dst);
- 		goto out;
---- a/net/ipv6/syncookies.c
-+++ b/net/ipv6/syncookies.c
-@@ -231,7 +231,7 @@ struct sock *cookie_v6_check(struct sock
- 		fl6.fl6_sport = inet_sk(sk)->inet_sport;
- 		security_req_classify_flow(req, flowi6_to_flowi(&fl6));
- 
--		dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-+		dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
- 		if (IS_ERR(dst))
- 			goto out_free;
+ 	switch (cmd) {
+ 	case BLKTRACESETUP:
+@@ -687,7 +693,7 @@ int blk_trace_ioctl(struct block_device
+ 		break;
  	}
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -245,7 +245,7 @@ static int tcp_v6_connect(struct sock *s
  
- 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
+-	mutex_unlock(&bdev->bd_mutex);
++	mutex_unlock(&q->blk_trace_mutex);
+ 	return ret;
+ }
  
--	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-+	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
- 	if (IS_ERR(dst)) {
- 		err = PTR_ERR(dst);
- 		goto failure;
-@@ -831,7 +831,7 @@ static void tcp_v6_send_response(const s
- 	 * Underlying function will use this to retrieve the network
- 	 * namespace
- 	 */
--	dst = ip6_dst_lookup_flow(ctl_sk, &fl6, NULL);
-+	dst = ip6_dst_lookup_flow(sock_net(ctl_sk), ctl_sk, &fl6, NULL);
- 	if (!IS_ERR(dst)) {
- 		skb_dst_set(buff, dst);
- 		ip6_xmit(ctl_sk, buff, &fl6, NULL, tclass);
---- a/net/l2tp/l2tp_ip6.c
-+++ b/net/l2tp/l2tp_ip6.c
-@@ -619,7 +619,7 @@ static int l2tp_ip6_sendmsg(struct sock
+@@ -1652,7 +1658,7 @@ static ssize_t sysfs_blk_trace_attr_show
+ 	if (q == NULL)
+ 		goto out_bdput;
  
- 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
+-	mutex_lock(&bdev->bd_mutex);
++	mutex_lock(&q->blk_trace_mutex);
  
--	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
-+	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
- 	if (IS_ERR(dst)) {
- 		err = PTR_ERR(dst);
- 		goto out;
---- a/net/sctp/ipv6.c
-+++ b/net/sctp/ipv6.c
-@@ -268,7 +268,7 @@ static void sctp_v6_get_dst(struct sctp_
- 	final_p = fl6_update_dst(fl6, rcu_dereference(np->opt), &final);
- 	rcu_read_unlock();
+ 	if (attr == &dev_attr_enable) {
+ 		ret = sprintf(buf, "%u\n", !!q->blk_trace);
+@@ -1671,7 +1677,7 @@ static ssize_t sysfs_blk_trace_attr_show
+ 		ret = sprintf(buf, "%llu\n", q->blk_trace->end_lba);
  
--	dst = ip6_dst_lookup_flow(sk, fl6, final_p);
-+	dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
- 	if (!asoc || saddr) {
- 		t->dst = dst;
- 		memcpy(fl, &_fl, sizeof(_fl));
-@@ -326,7 +326,7 @@ static void sctp_v6_get_dst(struct sctp_
- 		fl6->saddr = laddr->a.v6.sin6_addr;
- 		fl6->fl6_sport = laddr->a.v6.sin6_port;
- 		final_p = fl6_update_dst(fl6, rcu_dereference(np->opt), &final);
--		bdst = ip6_dst_lookup_flow(sk, fl6, final_p);
-+		bdst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
+ out_unlock_bdev:
+-	mutex_unlock(&bdev->bd_mutex);
++	mutex_unlock(&q->blk_trace_mutex);
+ out_bdput:
+ 	bdput(bdev);
+ out:
+@@ -1713,7 +1719,7 @@ static ssize_t sysfs_blk_trace_attr_stor
+ 	if (q == NULL)
+ 		goto out_bdput;
  
- 		if (IS_ERR(bdst))
- 			continue;
+-	mutex_lock(&bdev->bd_mutex);
++	mutex_lock(&q->blk_trace_mutex);
+ 
+ 	if (attr == &dev_attr_enable) {
+ 		if (!!value == !!q->blk_trace) {
+@@ -1743,7 +1749,7 @@ static ssize_t sysfs_blk_trace_attr_stor
+ 	}
+ 
+ out_unlock_bdev:
+-	mutex_unlock(&bdev->bd_mutex);
++	mutex_unlock(&q->blk_trace_mutex);
+ out_bdput:
+ 	bdput(bdev);
+ out:
 
 
