@@ -2,189 +2,152 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF09C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBD6020657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoYQijA0"
+	by mail.kernel.org (Postfix) with ESMTP id 4D0F1207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589816729;
+	bh=lkx1dqDKnZ+7YQ40oS1fSOiu3vaTshH77dFDIsJ7zpY=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=BY+djB/4TDSmfbqe4dMXo3aEJM4czqm/vdAHpQEcIudtMEOxj7Eci3wDk0VCDnPdK
+	 +KWeLGzDDFz+D1o6SrZIR7lcrLI1/LU5eazkyNJ/CEkfjmt8IrFUsrSVGYV3Q4F88e
+	 8aY9yYxwVV88Nq6ESUb3/tyn9B+CS0fZl6BZQ67k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgERPpM (ORCPT
+        id S1728387AbgERPp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgERPpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:45:10 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E2DC061A0C;
-        Mon, 18 May 2020 08:45:09 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id r187so7633363qkf.6;
-        Mon, 18 May 2020 08:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Rzkj0apKg+9dAE9ITAc0kw21NDc3bzZzChV1Zzph3jM=;
-        b=eoYQijA0kQhBgOKv9S9xmjIl7acasA3cMRgnCt4EU7hUq7O3p3Izo7a9m3A4DynEEj
-         kBFB7KLU/aVKPhrVcP59kJt/F+MLM9eu+w51RNa2tahs1XTJZyTfQY4uB79PxBLWROWs
-         Xj6Es1MpLFAQWbn01mVGBjwP76xOFknhDjrOeWtGh9cweLHhdSbDpmSrU/VIJRM8jim6
-         wJR3Gl95smJeRNGDAK+nnA5Rl3oLmU5/NhTkiDQTGD6uxACK2NMYFWU66CiDQy12zEqY
-         5kUjal89YOm6/ZYzveiF2TsnfIIrD3QHxurA+Qy/5Vt5Lg0TUlHfGA9uEl2mIVASSTYs
-         0K+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Rzkj0apKg+9dAE9ITAc0kw21NDc3bzZzChV1Zzph3jM=;
-        b=j1L7ys1IUy1dH8+p6K/eXLPi7iEZE3URE7ZHpyqjIQjeqrWhKwVQeN0rX6cQp0XhHK
-         empEbsXCoBdz5N7s25ChckhE9PixkwZu4huKpkR8S08xglQhUCcNWwM0jltju+6NbYDo
-         28mCClGJTGhz1zL+pL0LVpWm4hfyPo498qMFawnbSiIrc60BsXwpuOkferkFo0OflKoO
-         ED+YzeqmbLZyKxVwDSmteb/jHSYVxgGj+ty9K57ZKviiPflsXjrMDuoERT00b302QtUs
-         HbDiKALrZT//0DGttkOXekCc1jZmU21kzVy70VC9KxzbT1n3XfipB8LmrQnAKxkni9nX
-         t0iQ==
-X-Gm-Message-State: AOAM5336lkVQzocWVLRbHFth/1RxjIrkFfU/LPhx5Ax0aZC0dAP7hjBI
-        8rArW/puLgqqAVbVA+5ZI4C+Em7bBP7dSQ==
-X-Google-Smtp-Source: ABdhPJxfI+1IUAtHN7pYsLjRTqhDQqKeGbS4oBXnUG5jDKgJ4GMTuEP/ADEccrcG7Bh9LNtQfO2q2A==
-X-Received: by 2002:a37:8287:: with SMTP id e129mr12328386qkd.204.1589816708983;
-        Mon, 18 May 2020 08:45:08 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id d196sm8538583qkg.16.2020.05.18.08.45.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 08:45:08 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4860040AFD; Mon, 18 May 2020 12:45:05 -0300 (-03)
-Date:   Mon, 18 May 2020 12:45:05 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 7/7] perf expr: Migrate expr ids table to a hashmap
-Message-ID: <20200518154505.GE24211@kernel.org>
-References: <20200515221732.44078-1-irogers@google.com>
- <20200515221732.44078-8-irogers@google.com>
+        Mon, 18 May 2020 11:45:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727005AbgERPp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 11:45:28 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E63920657;
+        Mon, 18 May 2020 15:45:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589816727;
+        bh=lkx1dqDKnZ+7YQ40oS1fSOiu3vaTshH77dFDIsJ7zpY=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=1R3PT4Fh7iXsD1dBKDsTA2zU+v6Fh9XxL6QeojwFzCuedeAidtnj708jw4tqa4daW
+         WQzvXD/kyiA6nLQ/cGC3LCXT/X1PHq4EszC5UwDZfsIpkO7JTCeIkjtPCyXP0PWYuV
+         HoXh0/YZGhjrBX0kbc703WUMPr7fTluicvDCKH8s=
+Date:   Mon, 18 May 2020 16:45:23 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
+Message-ID: <20200518154522.GN32394@willie-the-truck>
+References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
+ <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
+ <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
+ <20200507125357.GA31783@willie-the-truck>
+ <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
+ <CAF6AEGvuHKObTR97XdSXjmjKB+qjQ8N1_wxM=ZU8bEkF=cXp-A@mail.gmail.com>
+ <20200511173008.GA24282@jcrouse1-lnx.qualcomm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515221732.44078-8-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200511173008.GA24282@jcrouse1-lnx.qualcomm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 15, 2020 at 03:17:32PM -0700, Ian Rogers escreveu:
-> Use a hashmap between a char* string and a double* value. While bpf's
-> hashmap entries are size_t in size, we can't guarantee sizeof(size_t) >=
-> sizeof(double). Avoid a memory allocation when gathering ids by making 0.0
-> a special value encoded as NULL.
+On Mon, May 11, 2020 at 11:30:08AM -0600, Jordan Crouse wrote:
+> On Fri, May 08, 2020 at 08:40:40AM -0700, Rob Clark wrote:
+> > On Fri, May 8, 2020 at 8:32 AM Rob Clark <robdclark@gmail.com> wrote:
+> > >
+> > > On Thu, May 7, 2020 at 5:54 AM Will Deacon <will@kernel.org> wrote:
+> > > >
+> > > > On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
+> > > > > On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
+> > > > > > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
+> > > > > > > Add stall implementation hook to enable stalling
+> > > > > > > faults on QCOM platforms which supports it without
+> > > > > > > causing any kind of hardware mishaps. Without this
+> > > > > > > on QCOM platforms, GPU faults can cause unrelated
+> > > > > > > GPU memory accesses to return zeroes. This has the
+> > > > > > > unfortunate result of command-stream reads from CP
+> > > > > > > getting invalid data, causing a cascade of fail.
+> > > > >
+> > > > > I think this came up before, but something about this rationale doesn't add
+> > > > > up - we're not *using* stalls at all, we're still terminating faulting
+> > > > > transactions unconditionally; we're just using CFCFG to terminate them with
+> > > > > a slight delay, rather than immediately. It's really not clear how or why
+> > > > > that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
+> > > > > (or even a documented workaround for something), or might things start
+> > > > > blowing up again if any other behaviour subtly changes? I'm not dead set
+> > > > > against adding this, but I'd *really* like to have a lot more confidence in
+> > > > > it.
+> > > >
+> > > > Rob mentioned something about the "bus returning zeroes" before, but I agree
+> > > > that we need more information so that we can reason about this and maintain
+> > > > the code as the driver continues to change. That needs to be a comment in
+> > > > the driver, and I don't think "but android seems to work" is a good enough
+> > > > justification. There was some interaction with HUPCF as well.
+> > >
+> > > The issue is that there are multiple parallel memory accesses
+> > > happening at the same time, for example CP (the cmdstream processor)
+> > > will be reading ahead and setting things up for the next draw or
+> > > compute grid, in parallel with some memory accesses from the shader
+> > > which could trigger a fault.  (And with faults triggered by something
+> > > in the shader, there are *many* shader threads running in parallel so
+> > > those tend to generate a big number of faults at the same time.)
+> > >
+> > > We need either CFCFG or HUPCF, otherwise what I have observed is that
+> > > while the fault happens, CP's memory access will start returning
+> > > zero's instead of valid cmdstream data, which triggers a GPU hang.  I
+> > > can't say whether this is something unique to qcom's implementation of
+> > > the smmu spec or not.
+> > >
+> > > *Often* a fault is the result of the usermode gl/vk/cl driver bug,
+> > > although I don't think that is an argument against fixing this in the
+> > > smmu driver.. I've been carrying around a local patch to set HUPCF for
+> > > *years* because debugging usermode driver issues is so much harder
+> > > without.  But there are some APIs where faults can be caused by the
+> > > user's app on top of the usermode driver.
+> > >
+> > 
+> > Also, I'll add to that, a big wish of mine is to have stall with the
+> > ability to resume later from a wq context.  That would enable me to
+> > hook in the gpu crash dump handling for faults, which would make
+> > debugging these sorts of issues much easier.  I think I posted a
+> > prototype of this quite some time back, which would schedule a worker
+> > on the first fault (since there are cases where you see 1000's of
+> > faults at once), which grabbed some information about the currently
+> > executing submit and some gpu registers to indicate *where* in the
+> > submit (a single submit could have 100's or 1000's of draws), and then
+> > resumed the iommu cb.
+> > 
+> > (This would ofc eventually be useful for svm type things.. I expect
+> > we'll eventually care about that too.)
 > 
-> Original map suggestion by Andi Kleen:
-> https://lore.kernel.org/lkml/20200224210308.GQ160988@tassilo.jf.intel.com/
-> and seconded by Jiri Olsa:
-> https://lore.kernel.org/lkml/20200423112915.GH1136647@krava/
+> Rob is right about HUPCF. Due to the parallel nature of the command processor
+> there is always a very good chance that a CP access is somewhere in the bus so
+> any pagefault is usually a death sentence. The GPU context bank would always
+> want HUPCF set to 1.
 
-I'm having trouble here when building it with:
+So this sounds like an erratum to me, and I'm happy to set HUPCF if we
+detect the broken implementation. However, it will need an entry in
+Documentation/arm64/silicon-errata.rst and a decent comment in the driver
+to explain what we're doing and why.
 
-make -C tools/perf O=/tmp/build/perf
+Thanks,
 
-    CC       /tmp/build/perf/tests/expr.o
-    INSTALL  trace_plugins
-    CC       /tmp/build/perf/util/metricgroup.o
-  In file included from /home/acme/git/perf/tools/lib/bpf/hashmap.h:18,
-                   from /home/acme/git/perf/tools/perf/util/expr.h:6,
-                   from tests/expr.c:3:
-  /home/acme/git/perf/tools/lib/bpf/libbpf_internal.h:63: error: "pr_info" redefined [-Werror]
-     63 | #define pr_info(fmt, ...) __pr(LIBBPF_INFO, fmt, ##__VA_ARGS__)
-        |
-  In file included from tests/expr.c:2:
-  /home/acme/git/perf/tools/perf/util/debug.h:24: note: this is the location of the previous definition
- 
-It looks like libbpf's hashmap.h is being used instead of the one in
-tools/perf/util/, yeah, as intended, but then since I don't have the
-fixes you added to the BPF tree, the build fails, if I instead
-unconditionally use
-
-#include "util/hashmap.h"
-
-It works. Please ack.
-
-I.e. with the patch below, further tests:
-
-[acme@five perf]$ perf -vv | grep -i bpf
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-[acme@five perf]$ nm ~/bin/perf | grep -i libbpf_ | wc -l
-39
-[acme@five perf]$ nm ~/bin/perf | grep -i hashmap_ | wc -l
-17
-[acme@five perf]$
-
-Explicitely building without LIBBPF:
-
-[acme@five perf]$ perf -vv | grep -i bpf
-                   bpf: [ OFF ]  # HAVE_LIBBPF_SUPPORT
-[acme@five perf]$
-[acme@five perf]$ nm ~/bin/perf | grep -i libbpf_ | wc -l
-0
-[acme@five perf]$ nm ~/bin/perf | grep -i hashmap_ | wc -l
-9
-[acme@five perf]$
-
-Works,
-
-- Arnaldo
-
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index d60a8feaf50b..8a2c1074f90f 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -2,11 +2,14 @@
- #ifndef PARSE_CTX_H
- #define PARSE_CTX_H 1
- 
--#ifdef HAVE_LIBBPF_SUPPORT
--#include <bpf/hashmap.h>
--#else
--#include "hashmap.h"
--#endif
-+// There are fixes that need to land upstream before we can use libbpf's headers,
-+// for now use our copy unconditionally, since the data structures at this point
-+// are exactly the same, no problem.
-+//#ifdef HAVE_LIBBPF_SUPPORT
-+//#include <bpf/hashmap.h>
-+//#else
-+#include "util/hashmap.h"
-+//#endif
- 
- struct expr_parse_ctx {
- 	struct hashmap ids;
+Will
