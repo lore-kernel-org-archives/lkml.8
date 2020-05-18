@@ -2,117 +2,131 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77948C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68677C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47D0F20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589809077;
-	bh=qWLypqUxpjq+PWGqvdA08FUoyMUiPmK0wN1hOQJH8Kw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZtMLUICLuOFemKVLNUMPTs71GHtnDvr4UqsAOvT9YdX8uMU5gyCtPt+K3QWjAiXdg
-	 Kxl+di9vrL0ewYelYA3yapKwNBPheT6PqijBxR8mHUWvtdYfGcgRl+dv6OBb6DXCYr
-	 fGotmBPCL3sRg+uMHpkAMh6YqQkEV7v9EfpMp8QE=
+	by mail.kernel.org (Postfix) with ESMTP id 4F7F4206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgERNh4 (ORCPT
+        id S1727957AbgERNiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:37:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726958AbgERNh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:37:56 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4079206D4;
-        Mon, 18 May 2020 13:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589809075;
-        bh=qWLypqUxpjq+PWGqvdA08FUoyMUiPmK0wN1hOQJH8Kw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B9UkcbY2jDAacUffVg4mgBVmOKNJgjBIi9QGO696HJhKqFVyxDCAnTe5VWZVmqFQA
-         6j/W5aBaup71jjp72bsEitt3GUeKjV7zBGm4M0D5NoERvarSIdTMvuih9Et4m+G9DE
-         pNf9ckZXrxfozI/DNEFAo41VOq8rV7P52/nvKMkg=
-Date:   Mon, 18 May 2020 14:37:50 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@am.com>,
-        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
-Subject: Re: [PATCH 1/6] arm64: scs: Store absolute SCS stack pointer value
- in thread_info
-Message-ID: <20200518133750.GF32394@willie-the-truck>
-References: <20200515172756.27185-1-will@kernel.org>
- <20200515172756.27185-2-will@kernel.org>
- <20200518113710.GA1957@C02TD0UTHF1T.local>
+        Mon, 18 May 2020 09:38:23 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:64474 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726855AbgERNiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:38:23 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IDYv5n017131;
+        Mon, 18 May 2020 09:38:20 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 312d35nn4n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 09:38:19 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04IDcIpe060429
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 18 May 2020 09:38:18 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 18 May 2020 06:38:17 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 18 May 2020 06:38:16 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 18 May 2020 06:38:16 -0700
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04IDcEMj025859;
+        Mon, 18 May 2020 09:38:14 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+CC:     <jic23@kernel.org>, <ak@it-klinger.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2] iio: proximity: ping: pass reference to IIO device as param to ping_read()
+Date:   Mon, 18 May 2020 16:38:13 +0300
+Message-ID: <20200518133813.403903-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518113710.GA1957@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 bulkscore=0 mlxscore=0 phishscore=0 cotscore=-2147483648
+ impostorscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ clxscore=1015 adultscore=0 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005180121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:37:10PM +0100, Mark Rutland wrote:
-> On Fri, May 15, 2020 at 06:27:51PM +0100, Will Deacon wrote:
-> > Storing the SCS information in thread_info as a {base,offset} pair
-> > introduces an additional load instruction on the ret-to-user path,
-> > since the SCS stack pointer in x18 has to be converted back to an offset
-> > by subtracting the base.
-> > 
-> > Replace the offset with the absolute SCS stack pointer value instead
-> > and avoid the redundant load.
-> > 
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> 
-> One trivial nit below, but regardless this looks sound to me, and I
-> certainly prefer having the absolute address rather than an offset, so:
-> 
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> > diff --git a/kernel/scs.c b/kernel/scs.c
-> > index 9389c28f0853..5ff8663e4a67 100644
-> > --- a/kernel/scs.c
-> > +++ b/kernel/scs.c
-> > @@ -60,8 +60,7 @@ int scs_prepare(struct task_struct *tsk, int node)
-> >  	if (!s)
-> >  		return -ENOMEM;
-> >  
-> > -	task_scs(tsk) = s;
-> > -	task_scs_offset(tsk) = 0;
-> > +	task_scs(tsk) = task_scs_sp(tsk) = s;
-> 
-> I think this would be more legible as two statements:
-> 
-> |	task_sys(tsk) = s;
-> |	task_scs_sp(tsk) = s;
+Since there will be some changes to how iio_priv_to_dev() is implemented,
+it could be that the helper becomes a bit slower, as it will be hidden away
+in the IIO core.
 
-I think it's nice to be able to say:
+But even without that rework, this looks like it can pass the 'indio_dev'
+object to ping_read() and obtain the state struct via iio_priv() which is a
+preferred practice than going back-n-forth (getting the state-struct, then
+using iio_priv_to_dev() to get the indio_dev object back).
 
-	task_scs(tsk) = task_scs_sp(tsk);
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-because it makes it very clear that they are initialised to the same thing.
-Having it as two statements means somebody will update one and forget to
-update the other one.
+Changelog v1 -> v2:
+* split away from series
+* pass 'indio_dev' to ping_read() and get the info via iio_priv()
 
-> ... as we usually save `foo = bar = baz` stuff for the start of a
-> function or within loop conditions.
+ drivers/iio/proximity/ping.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Hmm, I can't really find anything consistent in that regard, to be honest
-with you. Did I miss something in the coding style doc?
+diff --git a/drivers/iio/proximity/ping.c b/drivers/iio/proximity/ping.c
+index 12b893c5b0ee..2e99eeb27f2e 100644
+--- a/drivers/iio/proximity/ping.c
++++ b/drivers/iio/proximity/ping.c
+@@ -89,14 +89,14 @@ static irqreturn_t ping_handle_irq(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static int ping_read(struct ping_data *data)
++static int ping_read(struct iio_dev *indio_dev)
+ {
++	struct ping_data *data = iio_priv(indio_dev);
+ 	int ret;
+ 	ktime_t ktime_dt;
+ 	s64 dt_ns;
+ 	u32 time_ns, distance_mm;
+ 	struct platform_device *pdev = to_platform_device(data->dev);
+-	struct iio_dev *indio_dev = iio_priv_to_dev(data);
+ 
+ 	/*
+ 	 * just one read-echo-cycle can take place at a time
+@@ -228,7 +228,6 @@ static int ping_read_raw(struct iio_dev *indio_dev,
+ 			    struct iio_chan_spec const *channel, int *val,
+ 			    int *val2, long info)
+ {
+-	struct ping_data *data = iio_priv(indio_dev);
+ 	int ret;
+ 
+ 	if (channel->type != IIO_DISTANCE)
+@@ -236,7 +235,7 @@ static int ping_read_raw(struct iio_dev *indio_dev,
+ 
+ 	switch (info) {
+ 	case IIO_CHAN_INFO_RAW:
+-		ret = ping_read(data);
++		ret = ping_read(indio_dev);
+ 		if (ret < 0)
+ 			return ret;
+ 		*val = ret;
+-- 
+2.25.1
 
-I'll leave it as-is for now.
-
-Will
