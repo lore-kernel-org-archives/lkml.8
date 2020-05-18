@@ -2,51 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACF5C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A84C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50FC920715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570F520671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825659;
-	bh=4AIvEY9iTudlGVII25hYYeK4faPYN4d8s27VyEgFm8w=;
+	s=default; t=1589825662;
+	bh=U0nGBAXnXM7Tw+rZ0/kIFaLfed/pznDVsWUflpE+rpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SeCPIsMU8+tM9e543NyyA5I70Lnbm4wpj13IUeatHod4qgtmZuJOZIdeVKAxdsFX6
-	 jM0GVOCQn69KZVx96ZTtbp2VNiagGUxYyDoBmdxvxr6wOvEFT6loTLU91b6bt44kyk
-	 QV5gKUo2EFUYDCXFwofYGQ/rWBfhbY2lpfX3uEtU=
+	b=w4Kvr9Ys2m5lhfqR3HpI1hFtYPjyBkFv1y/6g0Hyze41hC90WqNUq8MWzq15EaIM2
+	 SxSHnjdFy6RHfEcS3m2b/pW5BVccI6e1sAlroui2GiSK5viOWzk3/mtRSB7drI1mHE
+	 KP5+bwgUHZgy5yUY7/Dtd1IXylY2D57yLQyBIVac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732935AbgERSOS (ORCPT
+        id S1733309AbgERSOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729586AbgERSA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:00:58 -0400
+        id S1732339AbgERSA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:00:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9776720829;
-        Mon, 18 May 2020 18:00:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24AE520715;
+        Mon, 18 May 2020 18:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824857;
-        bh=4AIvEY9iTudlGVII25hYYeK4faPYN4d8s27VyEgFm8w=;
+        s=default; t=1589824854;
+        bh=U0nGBAXnXM7Tw+rZ0/kIFaLfed/pznDVsWUflpE+rpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N0J2gpepEbBGDgQrZWkcVIJL1W0S7TIOnryOtz4pwgzZOgOQED8owGtqJM4ePgTtJ
-         K1KrEqabi2NS+b/pjArcQ+veSkwwhkN2rNPk3oLk7SKQkvFt8AwL9gmy96M3irDAuy
-         Yenh4imJ9WYbviwzudJxlWdS8HtBh4EZDpuinxPs=
+        b=Fl2c7RH5sfjo913putm+FAEwISwUvH1RRC2lKGqKg0ZrqfhwzMkhaDGxQO6dDxMCU
+         YEhyyO/BWZnTrXF2lBd9wxKKJ/GpAqnd5NbFFE1ZMG2MA0863RuDH6y/Z4ubtlMzTw
+         Ts6AEHTmNo/dHzC2gu6riEob3USVH+viNJ5lriY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 030/194] dpaa2-eth: properly handle buffer size restrictions
-Date:   Mon, 18 May 2020 19:35:20 +0200
-Message-Id: <20200518173534.050699985@linuxfoundation.org>
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 003/194] xprtrdma: Clean up the post_send path
+Date:   Mon, 18 May 2020 19:34:53 +0200
+Message-Id: <20200518173531.808301937@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,153 +60,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit efa6a7d07523ffbbf6503c1a7eeb52201c15c0e3 ]
+[ Upstream commit 97d0de8812a10a66510ff95f8fe6e8d3053fd2ca ]
 
-Depending on the WRIOP version, the buffer size on the RX path must by a
-multiple of 64 or 256. Handle this restriction properly by aligning down
-the buffer size to the necessary value. Also, use the new buffer size
-dynamically computed instead of the compile time one.
+Clean up: Simplify the synopses of functions in the post_send path
+by combining the struct rpcrdma_ia and struct rpcrdma_ep arguments.
 
-Fixes: 27c874867c4e ("dpaa2-eth: Use a single page per Rx buffer")
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c |   29 +++++++++++++----------
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h |    1 
- 2 files changed, 18 insertions(+), 12 deletions(-)
+ net/sunrpc/xprtrdma/backchannel.c |  2 +-
+ net/sunrpc/xprtrdma/frwr_ops.c    | 14 +++++++++-----
+ net/sunrpc/xprtrdma/transport.c   |  2 +-
+ net/sunrpc/xprtrdma/verbs.c       | 13 +++++--------
+ net/sunrpc/xprtrdma/xprt_rdma.h   |  5 ++---
+ 5 files changed, 18 insertions(+), 18 deletions(-)
 
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-@@ -86,7 +86,7 @@ static void free_rx_fd(struct dpaa2_eth_
- 	for (i = 1; i < DPAA2_ETH_MAX_SG_ENTRIES; i++) {
- 		addr = dpaa2_sg_get_addr(&sgt[i]);
- 		sg_vaddr = dpaa2_iova_to_virt(priv->iommu_domain, addr);
--		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, addr, priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
+diff --git a/net/sunrpc/xprtrdma/backchannel.c b/net/sunrpc/xprtrdma/backchannel.c
+index 1a0ae0c61353c..4b43910a6ed21 100644
+--- a/net/sunrpc/xprtrdma/backchannel.c
++++ b/net/sunrpc/xprtrdma/backchannel.c
+@@ -115,7 +115,7 @@ int xprt_rdma_bc_send_reply(struct rpc_rqst *rqst)
+ 	if (rc < 0)
+ 		goto failed_marshal;
  
- 		free_pages((unsigned long)sg_vaddr, 0);
-@@ -144,7 +144,7 @@ static struct sk_buff *build_frag_skb(st
- 		/* Get the address and length from the S/G entry */
- 		sg_addr = dpaa2_sg_get_addr(sge);
- 		sg_vaddr = dpaa2_iova_to_virt(priv->iommu_domain, sg_addr);
--		dma_unmap_page(dev, sg_addr, DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, sg_addr, priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
+-	if (rpcrdma_ep_post(&r_xprt->rx_ia, &r_xprt->rx_ep, req))
++	if (rpcrdma_post_sends(r_xprt, req))
+ 		goto drop_connection;
+ 	return 0;
  
- 		sg_length = dpaa2_sg_get_len(sge);
-@@ -185,7 +185,7 @@ static struct sk_buff *build_frag_skb(st
- 				(page_address(page) - page_address(head_page));
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index 125297c9aa3e7..79059d48f52b7 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -372,18 +372,22 @@ static void frwr_wc_fastreg(struct ib_cq *cq, struct ib_wc *wc)
+ }
  
- 			skb_add_rx_frag(skb, i - 1, head_page, page_offset,
--					sg_length, DPAA2_ETH_RX_BUF_SIZE);
-+					sg_length, priv->rx_buf_size);
- 		}
+ /**
+- * frwr_send - post Send WR containing the RPC Call message
+- * @ia: interface adapter
+- * @req: Prepared RPC Call
++ * frwr_send - post Send WRs containing the RPC Call message
++ * @r_xprt: controlling transport instance
++ * @req: prepared RPC Call
+  *
+  * For FRWR, chain any FastReg WRs to the Send WR. Only a
+  * single ib_post_send call is needed to register memory
+  * and then post the Send WR.
+  *
+- * Returns the result of ib_post_send.
++ * Returns the return code from ib_post_send.
++ *
++ * Caller must hold the transport send lock to ensure that the
++ * pointers to the transport's rdma_cm_id and QP are stable.
+  */
+-int frwr_send(struct rpcrdma_ia *ia, struct rpcrdma_req *req)
++int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ {
++	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
+ 	struct ib_send_wr *post_wr;
+ 	struct rpcrdma_mr *mr;
  
- 		if (dpaa2_sg_is_final(sge))
-@@ -211,7 +211,7 @@ static void free_bufs(struct dpaa2_eth_p
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 3cfeba68ee9a1..46e7949788e1a 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -694,7 +694,7 @@ xprt_rdma_send_request(struct rpc_rqst *rqst)
+ 		goto drop_connection;
+ 	rqst->rq_xtime = ktime_get();
  
- 	for (i = 0; i < count; i++) {
- 		vaddr = dpaa2_iova_to_virt(priv->iommu_domain, buf_array[i]);
--		dma_unmap_page(dev, buf_array[i], DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, buf_array[i], priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
- 		free_pages((unsigned long)vaddr, 0);
+-	if (rpcrdma_ep_post(&r_xprt->rx_ia, &r_xprt->rx_ep, req))
++	if (rpcrdma_post_sends(r_xprt, req))
+ 		goto drop_connection;
+ 
+ 	rqst->rq_xmit_bytes_sent += rqst->rq_snd_buf.len;
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 353f61ac8d519..4b9fbf69b4955 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1502,20 +1502,17 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb)
+ }
+ 
+ /**
+- * rpcrdma_ep_post - Post WRs to a transport's Send Queue
+- * @ia: transport's device information
+- * @ep: transport's RDMA endpoint information
++ * rpcrdma_post_sends - Post WRs to a transport's Send Queue
++ * @r_xprt: controlling transport instance
+  * @req: rpcrdma_req containing the Send WR to post
+  *
+  * Returns 0 if the post was successful, otherwise -ENOTCONN
+  * is returned.
+  */
+-int
+-rpcrdma_ep_post(struct rpcrdma_ia *ia,
+-		struct rpcrdma_ep *ep,
+-		struct rpcrdma_req *req)
++int rpcrdma_post_sends(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ {
+ 	struct ib_send_wr *send_wr = &req->rl_wr;
++	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+ 	int rc;
+ 
+ 	if (!ep->rep_send_count || kref_read(&req->rl_kref) > 1) {
+@@ -1526,7 +1523,7 @@ rpcrdma_ep_post(struct rpcrdma_ia *ia,
+ 		--ep->rep_send_count;
  	}
-@@ -335,7 +335,7 @@ static u32 run_xdp(struct dpaa2_eth_priv
- 		break;
- 	case XDP_REDIRECT:
- 		dma_unmap_page(priv->net_dev->dev.parent, addr,
--			       DPAA2_ETH_RX_BUF_SIZE, DMA_BIDIRECTIONAL);
-+			       priv->rx_buf_size, DMA_BIDIRECTIONAL);
- 		ch->buf_count--;
- 		xdp.data_hard_start = vaddr;
- 		err = xdp_do_redirect(priv->net_dev, &xdp, xdp_prog);
-@@ -374,7 +374,7 @@ static void dpaa2_eth_rx(struct dpaa2_et
- 	trace_dpaa2_rx_fd(priv->net_dev, fd);
  
- 	vaddr = dpaa2_iova_to_virt(priv->iommu_domain, addr);
--	dma_sync_single_for_cpu(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
-+	dma_sync_single_for_cpu(dev, addr, priv->rx_buf_size,
- 				DMA_BIDIRECTIONAL);
+-	rc = frwr_send(ia, req);
++	rc = frwr_send(r_xprt, req);
+ 	trace_xprtrdma_post_send(req, rc);
+ 	if (rc)
+ 		return -ENOTCONN;
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index 37d5080c250b8..600574a0d8387 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -469,8 +469,7 @@ void rpcrdma_ep_destroy(struct rpcrdma_xprt *r_xprt);
+ int rpcrdma_ep_connect(struct rpcrdma_ep *, struct rpcrdma_ia *);
+ void rpcrdma_ep_disconnect(struct rpcrdma_ep *, struct rpcrdma_ia *);
  
- 	fas = dpaa2_get_fas(vaddr, false);
-@@ -393,13 +393,13 @@ static void dpaa2_eth_rx(struct dpaa2_et
- 			return;
- 		}
+-int rpcrdma_ep_post(struct rpcrdma_ia *, struct rpcrdma_ep *,
+-				struct rpcrdma_req *);
++int rpcrdma_post_sends(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp);
  
--		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, addr, priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
- 		skb = build_linear_skb(ch, fd, vaddr);
- 	} else if (fd_format == dpaa2_fd_sg) {
- 		WARN_ON(priv->xdp_prog);
- 
--		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, addr, priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
- 		skb = build_frag_skb(priv, ch, buf_data);
- 		free_pages((unsigned long)vaddr, 0);
-@@ -974,7 +974,7 @@ static int add_bufs(struct dpaa2_eth_pri
- 		if (!page)
- 			goto err_alloc;
- 
--		addr = dma_map_page(dev, page, 0, DPAA2_ETH_RX_BUF_SIZE,
-+		addr = dma_map_page(dev, page, 0, priv->rx_buf_size,
- 				    DMA_BIDIRECTIONAL);
- 		if (unlikely(dma_mapping_error(dev, addr)))
- 			goto err_map;
-@@ -984,7 +984,7 @@ static int add_bufs(struct dpaa2_eth_pri
- 		/* tracing point */
- 		trace_dpaa2_eth_buf_seed(priv->net_dev,
- 					 page, DPAA2_ETH_RX_BUF_RAW_SIZE,
--					 addr, DPAA2_ETH_RX_BUF_SIZE,
-+					 addr, priv->rx_buf_size,
- 					 bpid);
- 	}
- 
-@@ -1715,7 +1715,7 @@ static bool xdp_mtu_valid(struct dpaa2_e
- 	int mfl, linear_mfl;
- 
- 	mfl = DPAA2_ETH_L2_MAX_FRM(mtu);
--	linear_mfl = DPAA2_ETH_RX_BUF_SIZE - DPAA2_ETH_RX_HWA_SIZE -
-+	linear_mfl = priv->rx_buf_size - DPAA2_ETH_RX_HWA_SIZE -
- 		     dpaa2_eth_rx_head_room(priv) - XDP_PACKET_HEADROOM;
- 
- 	if (mfl > linear_mfl) {
-@@ -2457,6 +2457,11 @@ static int set_buffer_layout(struct dpaa
- 	else
- 		rx_buf_align = DPAA2_ETH_RX_BUF_ALIGN;
- 
-+	/* We need to ensure that the buffer size seen by WRIOP is a multiple
-+	 * of 64 or 256 bytes depending on the WRIOP version.
-+	 */
-+	priv->rx_buf_size = ALIGN_DOWN(DPAA2_ETH_RX_BUF_SIZE, rx_buf_align);
-+
- 	/* tx buffer */
- 	buf_layout.private_data_size = DPAA2_ETH_SWA_SIZE;
- 	buf_layout.pass_timestamp = true;
-@@ -3121,7 +3126,7 @@ static int bind_dpni(struct dpaa2_eth_pr
- 	pools_params.num_dpbp = 1;
- 	pools_params.pools[0].dpbp_id = priv->dpbp_dev->obj_desc.id;
- 	pools_params.pools[0].backup_pool = 0;
--	pools_params.pools[0].buffer_size = DPAA2_ETH_RX_BUF_SIZE;
-+	pools_params.pools[0].buffer_size = priv->rx_buf_size;
- 	err = dpni_set_pools(priv->mc_io, 0, priv->mc_token, &pools_params);
- 	if (err) {
- 		dev_err(dev, "dpni_set_pools() failed\n");
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
-@@ -382,6 +382,7 @@ struct dpaa2_eth_priv {
- 	u16 tx_data_offset;
- 
- 	struct fsl_mc_device *dpbp_dev;
-+	u16 rx_buf_size;
- 	u16 bpid;
- 	struct iommu_domain *iommu_domain;
- 
+ /*
+@@ -544,7 +543,7 @@ struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
+ 				struct rpcrdma_mr_seg *seg,
+ 				int nsegs, bool writing, __be32 xid,
+ 				struct rpcrdma_mr *mr);
+-int frwr_send(struct rpcrdma_ia *ia, struct rpcrdma_req *req);
++int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+ void frwr_reminv(struct rpcrdma_rep *rep, struct list_head *mrs);
+ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+-- 
+2.20.1
+
 
 
