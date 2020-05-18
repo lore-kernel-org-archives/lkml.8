@@ -2,140 +2,95 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFFD207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E68207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rxcFsOE+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgERIBP (ORCPT
+        id S1727805AbgERIBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:01:15 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:40079 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgERIBP (ORCPT
+        Mon, 18 May 2020 04:01:30 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56012 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgERIBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:01:15 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 49EE7CECE2;
-        Mon, 18 May 2020 10:10:57 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] Bluetooth: Add SCO fallback for invalid LMP parameters
- error
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200515092704.902-1-hychao@google.com>
-Date:   Mon, 18 May 2020 10:01:13 +0200
-Cc:     linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org, alainm@chromium.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <B657F91B-0494-4B4C-8DE7-1E9F51085B1B@holtmann.org>
-References: <20200515092704.902-1-hychao@google.com>
-To:     Hsin-Yu Chao <hychao@chromium.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 18 May 2020 04:01:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=aDKxDJZ/qZ1vmOI+jxTFnYHJknWNLi0bRyCoqCFOLwM=; b=rxcFsOE+JyNoqI/GUYEUadKR+0
+        zhiJXye7AAB9w6UlXrNyVTptUwJDHPP5EvlB3aMqbUhc+K06Zlp+56BSBLjrWXmhFlRm4ffkgLYZc
+        OfszTqFFSU4WbGkiH32YiWSK67LcnuXD5+G+lAM0PKth56wEG7gmMdKJIqgFa4fzvTwFmY60zaYw1
+        eLx30A+GyyFobB4qlI9tlBzZybi76CXrDJ8KbMuBA8lBHHFt+oJKNNXhaxaEwljBCm08xwlm7tt78
+        0RTotjBEAGezhYi65jopDbFDcT3sOhikZC04vRy68PxKwbFmSM8/CiPmE0/PN2pr6EiTjbMMjtI6H
+        1LylQvgw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaadE-0003JR-86; Mon, 18 May 2020 07:56:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD5DC3011E8;
+        Mon, 18 May 2020 09:56:07 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C5E152B3CDC70; Mon, 18 May 2020 09:56:07 +0200 (CEST)
+Date:   Mon, 18 May 2020 09:56:07 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org
+Subject: Re: [for-linus][PATCH 1/3] x86/ftrace: Have ftrace trampolines turn
+ read-only at the end of system boot up
+Message-ID: <20200518075607.GH2940@hirez.programming.kicks-ass.net>
+References: <20200514125817.850882486@goodmis.org>
+ <20200514125842.392454557@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514125842.392454557@goodmis.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hsin-Yu,
+On Thu, May 14, 2020 at 08:58:18AM -0400, Steven Rostedt wrote:
+> +			start_offset = (unsigned long)ftrace_caller;
+> +			end_offset = (unsigned long)ftrace_epilogue;
 
-> Bluetooth PTS test case HFP/AG/ACC/BI-12-I accepts SCO connection
-> with invalid parameter at the first SCO request expecting AG to
-> attempt another SCO request with the use of "safe settings" for
-> given codec, base on section 5.7.1.2 of HFP 1.7 specification.
-> 
-> This patch addresses it by adding "Invalid LMP Parameters" (0x1e)
-> to the SCO fallback case. Verified with below log:
-> 
-> < HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
->        Handle: 256
->        Transmit bandwidth: 8000
->        Receive bandwidth: 8000
->        Max latency: 13
->        Setting: 0x0003
->          Input Coding: Linear
->          Input Data Format: 1's complement
->          Input Sample Size: 8-bit
->          # of bits padding at MSB: 0
->          Air Coding Format: Transparent Data
->        Retransmission effort: Optimize for link quality (0x02)
->        Packet type: 0x0380
->          3-EV3 may not be used
->          2-EV5 may not be used
->          3-EV5 may not be used
->> HCI Event: Command Status (0x0f) plen 4
->      Setup Synchronous Connection (0x01|0x0028) ncmd 1
->        Status: Success (0x00)
->> HCI Event: Number of Completed Packets (0x13) plen 5
->        Num handles: 1
->        Handle: 256
->        Count: 1
->> HCI Event: Max Slots Change (0x1b) plen 3
->        Handle: 256
->        Max slots: 1
->> HCI Event: Synchronous Connect Complete (0x2c) plen 17
->        Status: Invalid LMP Parameters / Invalid LL Parameters (0x1e)
->        Handle: 0
->        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
->        Link type: eSCO (0x02)
->        Transmission interval: 0x00
->        Retransmission window: 0x02
->        RX packet length: 0
->        TX packet length: 0
->        Air mode: Transparent (0x03)
-> < HCI Command: Setup Synchronous Connection (0x01|0x0028) plen 17
->        Handle: 256
->        Transmit bandwidth: 8000
->        Receive bandwidth: 8000
->        Max latency: 8
->        Setting: 0x0003
->          Input Coding: Linear
->          Input Data Format: 1's complement
->          Input Sample Size: 8-bit
->          # of bits padding at MSB: 0
->          Air Coding Format: Transparent Data
->        Retransmission effort: Optimize for link quality (0x02)
->        Packet type: 0x03c8
->          EV3 may be used
->          2-EV3 may not be used
->          3-EV3 may not be used
->          2-EV5 may not be used
->          3-EV5 may not be used
->> HCI Event: Command Status (0x0f) plen 4
->      Setup Synchronous Connection (0x01|0x0028) ncmd 1
->        Status: Success (0x00)
->> HCI Event: Max Slots Change (0x1b) plen 3
->        Handle: 256
->        Max slots: 5
->> HCI Event: Max Slots Change (0x1b) plen 3
->        Handle: 256
->        Max slots: 1
->> HCI Event: Synchronous Connect Complete (0x2c) plen 17
->        Status: Success (0x00)
->        Handle: 257
->        Address: 00:1B:DC:F2:21:59 (OUI 00-1B-DC)
->        Link type: eSCO (0x02)
->        Transmission interval: 0x06
->        Retransmission window: 0x04
->        RX packet length: 30
->        TX packet length: 30
->        Air mode: Transparent (0x03)
-> 
-> Signed-off-by: Hsin-Yu Chao <hychao@chromium.org>
-> ---
-> net/bluetooth/hci_event.c | 1 +
-> 1 file changed, 1 insertion(+)
 
-patch has been applied to bluetooth-next tree.
+---
+Subject: x86/ftrace: Fix compile error
 
-Regards
+When building x86-64 kernels, my compiler is sad about a missing symbol.
 
-Marcel
+Fixes: 59566b0b622e ("x86/ftrace: Have ftrace trampolines turn read-only at the end of system boot up")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/kernel/ftrace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index f8917a6f25b7..1cf7d69402e2 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -286,6 +286,7 @@ extern void ftrace_regs_caller_ret(void);
+ extern void ftrace_caller_end(void);
+ extern void ftrace_caller_op_ptr(void);
+ extern void ftrace_regs_caller_op_ptr(void);
++extern void ftrace_epilogue(void);
+ 
+ /* movq function_trace_op(%rip), %rdx */
+ /* 0x48 0x8b 0x15 <offset-to-ftrace_trace_op (4 bytes)> */
