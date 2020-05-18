@@ -2,137 +2,122 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC7D206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589789926;
-	bh=8VB30sxfPma62aYtecln63XBtlWSDmFihvThUfb92Cc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=rR4RuusZ7kRGiSu4OhyTNWVy2YSlW0dYh1jjvsTC7FBfFATQRf3kJVze9DB6zuRwU
-	 bzpSIrmJ84yeUA7B5HMTv9f0nOufPliHJPO7ZNZsYoaPnZPYIKE2UOG/HRWqmfDUi4
-	 52sMGsZ0KIDO0OPt2H7DyO8HSsVcMxsHr6aOHRjM=
+	by mail.kernel.org (Postfix) with ESMTP id EBDFE20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:20:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lzCxMPIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgERISq (ORCPT
+        id S1727779AbgERIUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56174 "EHLO
+        Mon, 18 May 2020 04:20:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgERISp (ORCPT
+        with ESMTP id S1726800AbgERIUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:18:45 -0400
+        Mon, 18 May 2020 04:20:23 -0400
 Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0D0C061A0C;
-        Mon, 18 May 2020 01:18:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g4so8836908ljl.2;
-        Mon, 18 May 2020 01:18:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BA8C05BD0B
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:20:23 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f18so8819953lja.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=h+Jor+/LX/T3dOkaHG06o8oKZPP+jxM2LIbLly8QyTw=;
-        b=dGTXtXSHH+MliSmXwudIH+af9C2qYhJaLKRkSgtQZKStsDBbLEn/2aXYsxzK8kRlSv
-         S/eVusPsylrneDLcOr7VBfhLbYnGzxKy2uAxXgC5Gkp6o8mvwctDrhR8K3FcYqEpB3ud
-         EArs0hav78XIBdlOqoD4SuKey4y2IrWbF9gfPAw3iac5u4+qQDikYVlwacjhmcreDOPm
-         wWgKvtysGr5f7vOYZtJ0rDpGiOpqMGeV7ouZ9zycBB2TawIoPmdFWQLuYxp06gguqn/U
-         1LnT++ktzV8YhYA6nTdy5Ih6kASkj5pawH35wNZ26p8kaHXkiP2SjMkeVmCPffYlvebB
-         kkCg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cWBQhzz5kxNoR9BFp0TP6Ch5JEPPhK+boe7luhQX8WE=;
+        b=lzCxMPImw8Rt7qwkKQvXvs4yHXPUCBcSFgZgVKQ1O//DYIZLFdU0vSKui/Goai4MKT
+         xzGOdXpFC6fBYraQ5/bglOKFm4zvdR+GQlFCVvUpk2HQXfwDAcFh1u70fVOJ6VXLasU+
+         yjC4ArpFTAt05MznUJpxxFnr4qaGbzevmpirg+pnHZQf3hyxYA50KaYPvFy8M4Ix9Vsw
+         7CmNiCNqtZExlHmmBkup0WtdyjuF+RwTNb9qxejk1O74cyIWT47Mx0yUrBpBhB0w0N/p
+         7DpB2eYveOkZ4EyHcs+xZJHU8763ij0ME6GnBRSzZ8iCJ3Xg9989Oe0v34IPE6J4mp6U
+         wGAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=h+Jor+/LX/T3dOkaHG06o8oKZPP+jxM2LIbLly8QyTw=;
-        b=PrVbNaYBS0GG1esbHqLo0RaiFOnTFeA2KrTPzf2JGmMsV800T2BxXbn3uUswtEQAQd
-         Xq/82jSmwEug65i+buRiYkGoYSFV2b0pGXWS+L63iPfgumzx+kLX6UPJU6lPHW+m1qGv
-         FwQnmKz1P2YpsB48maydgfgTQVQtbud8hgnaWsJMOcU/jXgVCka1ThuEWUaCaqJUVkox
-         0UM/tx77tVjo7URkLeRvKStVXfMcv+DYijMvp4GG/LjETse7r98m0kKDMlR0WN3w7ibu
-         TUewxXBWwM9bx8OzSXNGMr4DhPDNkJC/plr7IzXo/9R3DfSFPqSKDJwOnTPh+TVsyyat
-         7SSA==
-X-Gm-Message-State: AOAM533mtOsAvjrwKDeWfbV+9h0xSL6MfGrhzRpE3ZHprJ7WINMUZOEi
-        nl+ljm6jsSX+mLhNK+UvViM=
-X-Google-Smtp-Source: ABdhPJy0lSdsA1WdHayXUZZeXPQ7bF5+JBHivyWS/3sdkBCjRnjpm07VsxjGIxDlo72LLooXcdKdag==
-X-Received: by 2002:a2e:9093:: with SMTP id l19mr1148378ljg.27.1589789923538;
-        Mon, 18 May 2020 01:18:43 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id z5sm383072ljm.64.2020.05.18.01.18.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 May 2020 01:18:42 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Drew Fustini <drew@beagleboard.org>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
-In-Reply-To: <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
-References: <20200508165821.GA14555@x1> <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
-Date:   Mon, 18 May 2020 11:18:38 +0300
-Message-ID: <875zcty7tt.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cWBQhzz5kxNoR9BFp0TP6Ch5JEPPhK+boe7luhQX8WE=;
+        b=CQ8daCIQpy/Y3ArC27pccMCsuKfVrwOplaFZNm3Tu6CrtJ4h/F1aISPXXFIk+TPRfs
+         oJMN6KfGDB6tpDqHhGUyCAIsb22XBaFCUy4oNuidnV196qKVEX2irQr/k+Ojy6vSIaDz
+         CtgpFei3dgK3veS0KeB4gY87tOD4Kjmop+AWBPU6x+uV5rLOBWXRkrSaT98OzlL0if0S
+         Zjk66C2Eol6GEx314wW21Ms3Q5bN+h/bg66TxAiDnjeAh2WIeAoF8/Z8tIDbH/ymdOnj
+         grLaY1y2OQ4yK/k714ghabaRrGuZWCLsN63k7o0MLdEOcWvbIGjfPKTox5Ja0MDHEdC+
+         y5aQ==
+X-Gm-Message-State: AOAM531nxHFo9wjhvkr7cMtEYc5fBHYmf9naC5p9fi70jv4KJkPk9RS6
+        K3/eN4Y4OihE+B1HJCAXyxyJ2VewqVpSJhsu/ACuUw==
+X-Google-Smtp-Source: ABdhPJy23lR0seQjYixD1vitkrbudfUoFZ0cFs0uEBn+vezhL4JCCG9kC3sBTizi/2x2WCOoPPUTf8nffzPSq1nM6JE=
+X-Received: by 2002:a2e:a209:: with SMTP id h9mr10157090ljm.39.1589790021698;
+ Mon, 18 May 2020 01:20:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20200511145257.22970-1-geert+renesas@glider.be> <20200511145257.22970-4-geert+renesas@glider.be>
+In-Reply-To: <20200511145257.22970-4-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 May 2020 10:20:10 +0200
+Message-ID: <CACRpkdaqSQ4++mhR03pqi0i=uhSyf51WhtE5VOobGNEcMmf09g@mail.gmail.com>
+Subject: Re: [PATCH v7 3/6] gpiolib: Add support for GPIO lookup by line name
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, May 11, 2020 at 4:53 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Linus Walleij <linus.walleij@linaro.org> writes:
->> gpiochip0 - 32 lines:
->>         line   0:   "ethernet"       unused   input  active-high
->>         line   1:   "ethernet"       unused   input  active-high
+> Currently a GPIO lookup table can only refer to a specific GPIO by a
+> tuple, consisting of a GPIO controller label and a GPIO offset inside
+> the controller.
 >
-> Why are the ethernet lines not tagged with respective signal name
-> when right below the SPI lines are explicitly tagged with
-> sclk, cs0 etc?
+> However, a GPIO may also carry a line name, defined by DT or ACPI.
+> If present, the line name is the most use-centric way to refer to a
+> GPIO.  Hence add support for looking up GPIOs by line name.
+> Note that there is no guarantee that GPIO line names are globally
+> unique, so this will use the first match found.
 >
-> Ethernet is usually RGMII and has signal names like
-> tx_clk, tx_d0, tx_en etc.
+> Implement this by reusing the existing gpiod_lookup infrastructure.
+> Rename gpiod_lookup.chip_label to gpiod_lookup.key, to make it clear
+> that this field can have two meanings, and update the kerneldoc and
+> GPIO_LOOKUP*() macros.
 >
-> Also some lines seem to be tagged with the pin number
-> like P9_22, P2_21 below, it seems a bit inconsistent
-> to have much information on some pins and very sketchy
-> information on some.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> ---
+> v7:
+>   - Document non-uniqueness of line names,
+>   - Rebase on top of commit a0b66a73785ccc8f ("gpio: Rename variable in
 
-the pin names match the beagle bone documentation and would help users
-figure out which pins on the expansion headers match to a gpio signal.
+This is likely the most controversial patch of this series but since
+noone seems to be especially upset, I think I just accept this
+heuristic.
 
-=2D-=20
-balbi
+It is pretty clearly cut I think, and fits very well with the
+aggregator use case, which is an important one.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7CRN4ACgkQzL64meEa
-mQYTRQ//TUIxIdxJ0j0fQXEyJPGhdqPAmQQqf/oPQNarULsaoObXiAG65YXMZzCz
-G1yUBf7EP10S6fHda72GpvqJj1K+Yhr/CPmyCNmrrU8N1vr19rCQZtZ3qT4IIflz
-StTPQ9PPBdbhAi/g7x+nLMV5Jrer4pNVZ165EUVKE5WJJKdZ6VMOs+xgvnlLVVDk
-XmOqHiwOE21d+EiymWVrPrpZF8XuzCLBFw34y7o8AsAR2qYK2wrrGqftvq+d+eQ3
-YhC3k8JedCBTQkVPNpxSB7hcFezBukCqzyFs957LX/wqULT6xcfmbbfLj9o4jn/k
-pY2hh4ULDaRwxMW8AVtck4li8mdrvM66uyjjibK6sqKBOSIAlRE4y1FZWzPeZOZ2
-KwWZvOw31m0JPBzcNF4GZLKmORfYQQTGMo54anCVDCYe61Fv4/QtS8HK5162icjP
-90RY2N8As0Qo1tHQwBFVsQLLQWK+OT+6Botf34dqgPrM5LZMvgVNvKNE1lB3PQ37
-0n+S+gbKfNFgiBMWlo0Qm37h7x//t5rzGW2K82Icp9YPdmZrOCnRytQmKiJH7gcp
-XIdnCCw3cIfaWz3utE+Z6ytuNNzLlcMmglr7sOY2h3VCQ/ByMZZpAYmL7CRLy7Of
-+uF42QBNHoYcAKfkqhyAqvEK2dVlt3hxLVP4pdTywm+CHc/D2L4=
-=KGpi
------END PGP SIGNATURE-----
---=-=-=--
+Yours,
+Linus Walleij
