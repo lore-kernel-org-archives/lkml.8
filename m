@@ -2,114 +2,122 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ABDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A08A2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9899320787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bal608dP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjNQYzVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgERCoo (ORCPT
+        id S1726731AbgERCu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 22:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60668 "EHLO
+        Sun, 17 May 2020 22:50:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgERCon (ORCPT
+        with ESMTP id S1726639AbgERCu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 22:44:43 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D9BC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 19:44:43 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id s21so7592750ejd.2
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 19:44:43 -0700 (PDT)
+        Sun, 17 May 2020 22:50:29 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA52C061A0C;
+        Sun, 17 May 2020 19:50:29 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id a9so6668641lfb.8;
+        Sun, 17 May 2020 19:50:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=8K0sJqpLsIUnKAf2a0bGvl0VcjUMX3pFm+WYrpBq63U=;
-        b=bal608dPtmHgZjr230fo5HEIQmZpWNKbe748W5U7xWtCbMjZR+nm3oALJ/HWSvd00x
-         83Wr8YV8MLCO4AybYUDW7NOBlyfw1CrXTNq0We7cDoJwgzwt3P6Lz+g7EDAp9PxqyPXv
-         i3ImAkB3WHEXwi7X6SfYulCiLO1feN+hFQhesKRoawqlcX7mtVgElmQ56aZ0asEczKmB
-         hBUVItIYqiY+w0vbptHflC6eieNVeHjtNd3dShU8xW2hAnKqy7ZLWe5vl9vxhCAhQBoy
-         yNLIx++JyjzrrmoSnZ6lGx7w/q0GB2d/ld+CzDsrU/X2eU4wIBOh9WPL4rw/0kM/6RNx
-         YByA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:references:mime-version:message-id
+         :content-transfer-encoding;
+        bh=oam3dJJ4/crtTRL/eRuAxPUMONTVhcxSe0tWiKEQVAc=;
+        b=CjNQYzVgJb9GMSe0J72qapHzAuYsUoEeOr8gOvtTdA9ElJR3QwTCl0uj7sUIHgIy+t
+         l5X7v+4G2lDI8GNAaZqDQQrthE2XdBGbCIP7hXtXUF7eQnJbkGfYM6JeIqhqOOkQhreo
+         1oAV/uQHSXPWY0HOXVfQJPEM1huTKek2nzDE2YpYjZOe4/FoM82h+wQYOTbGhasjUmsZ
+         v9LmPuUkBq2Vh3r8AvjpbRB5GrMklqVlg+EYgfxbKSQhZpATzvDFoe1dp2TlF5/T6XgD
+         jLqFgi9kTUHXzLf9DXIwZrPKxVFcs4RQdZAwcPEnlfMJPHr0d1GC2sBFSXlmRffiSAH1
+         q9LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=8K0sJqpLsIUnKAf2a0bGvl0VcjUMX3pFm+WYrpBq63U=;
-        b=Ozwbk2eOylS4VH3/kbGHWiy+DODhYgBmlxALmdWoICYJ8e/kj8Brt6MJYlMbviLJe0
-         EBNJcBU618YxvDfawyR6NtfoKksLjIA8e7aACnzE5Hr3lS7TeS34fwCGwKD65ytfWw/a
-         RYIHV0KwavrWSzCHqzth9qyKdhqB2WGJOuFRreJSedhRCUDh199upvS6xwOgNN9qOJy9
-         OYxWs79QK/C6z5eJEmVj1vBg11E4u5gtmjSE3PoWSwslJcxdkTcUi1ToxeDqMsBhdQ9L
-         JDpEByV0Gd2IRD2QZ5Z/og8wvDP//5hGzSEdT8bT7q7kQQQZaxh2hHWNmnZM2hS4Ivn2
-         zQhw==
-X-Gm-Message-State: AOAM5333GTUF9yuJ6CWZHTXWH1AJNirP3tMS7fqbvkskSaV4X77HyW5C
-        sepTlq23nKCiEvJFNBHEv7uZqX+rXmT/toXx+D9rKA==
-X-Google-Smtp-Source: ABdhPJx2MV4ozWTjAy3YkqSEAkabXYFR7xDpxOWtddtOc7wQFoLofcxQF1JcxJiDynszv4GIEWR6UtA2NTgGyNxrpSw=
-X-Received: by 2002:a17:906:3952:: with SMTP id g18mr13610750eje.191.1589769882137;
- Sun, 17 May 2020 19:44:42 -0700 (PDT)
-MIME-Version: 1.0
-From:   Qian Cai <cai@lca.pw>
-Date:   Sun, 17 May 2020 22:44:31 -0400
-Message-ID: <CAG=TAF6mfrwxF1-xEJJ9dL675uMUa7RZrOa_eL2mJizZJ-U7iQ@mail.gmail.com>
-Subject: UBSAN: array-index-out-of-bounds in kernel/bpf/arraymap.c:177
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        bpf@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:references:mime-version
+         :message-id:content-transfer-encoding;
+        bh=oam3dJJ4/crtTRL/eRuAxPUMONTVhcxSe0tWiKEQVAc=;
+        b=VPACUeztPiNS3/A1sx4rF5Orb1ibfBw1vgb6mMf7Z82p9MZLGgIBFhArPyFmsAMmFz
+         I7vTIzlgMHwtlcOijeZtGhGsAVWn1WotsHwDyR3tlqdNwjOmdnQsdibjbsV6s7Gda/sa
+         S2iJylyNFfUq2Y1VrbnzyKeGT+a6AhJ/wPbgilVwV6cBuMcSJ9l5mOXrWzYBAeIB15la
+         j8qH+DRxXyWv5ukL0VqcJAGER6NhyhMn0+5tsbsLvOJBsM4/jOXwCqRoxhqM85I1vyq9
+         2ElzV5V+XE2WSb9ObFnqzdI8ZNZBOaS0m9SWNIE0pfarPoqvax/d3lk6J1vq/qEUoxCx
+         5q9A==
+X-Gm-Message-State: AOAM5321aiJ5hKM27W5fXsicBdhhAZaojGRXlwOHIUx4yzLCe45Wl31D
+        OdcgXI2lXbfg7A4Pa/0ZIeh+5nW4
+X-Google-Smtp-Source: ABdhPJxZNXhf/a/Su+ZtOR0O3Lg9Rt+Ua+DT0J3VJgTo9/b1WBLj8vU2zzf7mjRqGAf/d1T/SoLc5A==
+X-Received: by 2002:a19:c50c:: with SMTP id w12mr10042124lfe.23.1589770227415;
+        Sun, 17 May 2020 19:50:27 -0700 (PDT)
+Received: from N-20L6PF1KTYA2 ([131.228.2.21])
+        by smtp.gmail.com with ESMTPSA id d28sm5962870lfe.76.2020.05.17.19.50.25
+        (version=TLS1_2 cipher=AES128-GCM-SHA256 bits=128/128);
+        Sun, 17 May 2020 19:50:26 -0700 (PDT)
+Date:   Mon, 18 May 2020 10:50:25 +0800
+From:   "Li Xinhai" <lixinhai.lxh@gmail.com>
+To:     "Tom Zanussi" <zanussi@kernel.org>
+Cc:     linux-trace-devel <linux-trace-devel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Steven Rostedt" <rostedt@goodmis.org>
+Subject: Re: Documentation/trace/events.rst: wrong numbering of sections
+References: <2020051515434115672512@gmail.com>, 
+        <20200515091126.75db6ec9@gandalf.local.home>, 
+        <2449de9a39bd09510f75bd2358cc7ddfd397e93f.camel@kernel.org>
+X-Priority: 3
+X-GUID: 8C7C185D-E40D-40F5-9BAC-2528207C0581
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.13.365[cn]
+Mime-Version: 1.0
+Message-ID: <2020051810502421237517@gmail.com>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With Clang 9.0.1,
+PkhpLAo+Cj5PbiBGcmksIDIwMjAtMDUtMTUgYXQgMDk6MTEgLTA0MDAsIFN0ZXZlbiBSb3N0ZWR0
+IHdyb3RlOgo+PiBJdCdzIGJlc3QgdG8gQ2MgdGhlIG1haW50YWluZXJzIG9mIHRoZSBmaWxlLiBO
+b2JvZHkgcmVhZHMgbGludXgtCj4+IGtlcm5lbCAoaXQKPj4gcHJvZHVjZXMgODAwIGVtYWlscyBh
+IGRheSEpLiBMdWNraWx5LCBJIGhhcHBlbiB0byBtb25pdG9yIHRoZQo+PiBsaW51eC10cmFjZS1k
+ZXZlbCBsaXN0ICh3aGljaCBpcyBtb3N0bHkgZm9yIHVzZXJsYW5kIHRvb2xzKSwKPj4gb3RoZXJ3
+aXNlIHRoaXMKPj4gZW1haWwgd291bGQgaGF2ZSBiZWVuIGxvc3QgdG8gdGhlIExLTUwgYWJ5c3Mu
+Cj4+Cj4+IE9uIEZyaSwgMTUgTWF5IDIwMjAgMTU6NDM6NDMgKzA4MDAKPj4gIkxpIFhpbmhhaSIg
+PGxpeGluaGFpLmx4aEBnbWFpbC5jb20+IHdyb3RlOgo+Pgo+PiA+IFRoaXMgZG9jdW1lbnQgaGFz
+IGJlbG93IG51bWJlcmluZyBvZiBpdHMgc2VjdGlvbnM6Cj4+ID4KPj4gPiAxLiBJbnRyb2R1Y3Rp
+b24KPj4gPiAyLiBVc2luZyBFdmVudCBUcmFjaW5nCj4+ID4gMi4xIFZpYSB0aGUgJ3NldF9ldmVu
+dCcgaW50ZXJmYWNlCj4+ID4gMi4yIFZpYSB0aGUgJ2VuYWJsZScgdG9nZ2xlCj4+ID4gMi4zIEJv
+b3Qgb3B0aW9uCj4+ID4gMy4gRGVmaW5pbmcgYW4gZXZlbnQtZW5hYmxlZCB0cmFjZXBvaW50Cj4+
+ID4gNC4gRXZlbnQgZm9ybWF0cwo+PiA+IDUuIEV2ZW50IGZpbHRlcmluZwo+PiA+IDUuMSBFeHBy
+ZXNzaW9uIHN5bnRheAo+PiA+IDUuMiBTZXR0aW5nIGZpbHRlcnMKPj4gPiA1LjMgQ2xlYXJpbmcg
+ZmlsdGVycwo+PiA+IDUuMyBTdWJzeXN0ZW0gZmlsdGVycwo+PiA+IDUuNCBQSUQgZmlsdGVyaW5n
+Cj4+ID4gNi4gRXZlbnQgdHJpZ2dlcnMKPj4gPiA2LjEgRXhwcmVzc2lvbiBzeW50YXgKPj4gPiA2
+LjIgU3VwcG9ydGVkIHRyaWdnZXIgY29tbWFuZHMKPj4gPiA2LjMgSW4ta2VybmVsIHRyYWNlIGV2
+ZW50IEFQSQo+PiA+IDYuMy4xIER5YW1pY2FsbHkgY3JlYXRpbmcgc3ludGhldGljIGV2ZW50IGRl
+ZmluaXRpb25zCj4+ID4gNi4zLjMgVHJhY2luZyBzeW50aGV0aWMgZXZlbnRzIGZyb20gaW4ta2Vy
+bmVsIGNvZGUKPj4gPiA2LjMuMy4xIFRyYWNpbmcgYSBzeW50aGV0aWMgZXZlbnQgYWxsIGF0IG9u
+Y2UKPj4gPiA2LjMuMy4xIFRyYWNpbmcgYSBzeW50aGV0aWMgZXZlbnQgcGllY2V3aXNlCj4+ID4g
+Ni4zLjQgRHlhbWljYWxseSBjcmVhdGluZyBrcHJvYmUgYW5kIGtyZXRwcm9iZSBldmVudCBkZWZp
+bml0aW9ucwo+PiA+IDYuMy40IFRoZSAiZHluZXZlbnRfY21kIiBsb3ctbGV2ZWwgQVBJCj4+ID4K
+Pj4gPiBJdCBzZWVtcyB3cm9uZyBudW1iZXJpbmcgd2l0aGluIDYuMyBzZWN0aW9uLgo+PiA+IG9y
+LCB3b3VsZCBpdCBiZSBiZXR0ZXIgdG8gaGF2ZSBzZXBhcmF0ZWQgY2hhcHRlciAjNywgZm9yICdJ
+bi1rZXJuZWwKPj4gPiB0cmFjZQo+PiA+IGV2ZW50IEFQSSc/IGl0IHNlZW1zIG5vdCBiZWxvbmcg
+dG8gJ0V2ZW50IHRyaWdnZXJzJy4KPj4KPj4gWWVhaCwgNi4zLjQgKGJvdGggb2YgdGhlbSkgcHJv
+YmFibHkgc2hvdWxkIGhhdmUgYmVlbiB1bmRlciBhIG5ldyB0b3AKPj4gbGV2ZWwKPj4gc2VjdGlv
+bi4gKCM3KS4KPj4KPgo+WWVhaCwgYXNpZGUgZnJvbSBkdXBsaWNhdGUgbnVtYmVyaW5nIGluIGEg
+Y291cGxlIG9mIHBsYWNlcywgaXQgd291bGQKPm1ha2UgbW9yZSBzZW5zZSBmb3IgZXZlcnl0aGlu
+ZyBzdGFydGluZyBmcm9tICc2LjMgSW4ta2VybmVsIHRyYWNlIGV2ZW50Cj5BUEknIHRvIGJlIGlu
+IGEgc2VjdGlvbiA3Lgo+Cj5Xb3VsZCB5b3UgbGlrZSB0byBzdWJtaXQgYSBwYXRjaCBmb3IgdGhh
+dCwgTGksIG9yIHNob3VsZCBJPwo+IApJIGFtIG5vdCBzdXJlIHRoZSBjb3JyZWN0IG9yZ2FuaXph
+dGlvbiBvZiB0aGVzZSBwYXJ0LCB5b3UgbWF5YmUgYmV0dGVyIHRvIGZpeCBpdCwgdGhhbmtzLgoK
+PlRoYW5rcywKPgo+VG9tCj4KPj4gLS0gU3RldmUKPg==
 
-return array->value + array->elem_size * (index & array->index_mask);
-
-but array->value is,
-
-char value[0] __aligned(8);
-
-[  506.031548][ T4134] LTP: starting bpf_prog02
-[  506.125326][ T4352]
-================================================================================
-[  506.134603][ T4352] UBSAN: array-index-out-of-bounds in
-kernel/bpf/arraymap.c:177:22
-[  506.142521][ T4352] index 8 is out of range for type 'char [0]'
-[  506.148613][ T4352] CPU: 222 PID: 4352 Comm: bpf_prog02 Tainted: G
-           L    5.7.0-rc5-next-20200515 #2
-[  506.158632][ T4352] Hardware name: HPE Apollo 70
-/C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
-[  506.169084][ T4352] Call trace:
-[  506.172256][ T4352]  dump_backtrace+0x0/0x22c
-[  506.176634][ T4352]  show_stack+0x28/0x34
-[  506.180666][ T4352]  dump_stack+0x104/0x194
-[  506.184877][ T4352]  __ubsan_handle_out_of_bounds+0xf0/0x120
-[  506.190565][ T4352]  array_map_lookup_elem+0x90/0x94
-[  506.195560][ T4352]  bpf_map_lookup_elem+0x48/0x60
-[  506.200383][ T4352]  ___bpf_prog_run+0xe9c/0x2840
-[  506.205109][ T4352]  __bpf_prog_run32+0x80/0xac
-[  506.209673][ T4352]  __bpf_prog_run_save_cb+0x104/0x46c
-[  506.214919][ T4352]  sk_filter_trim_cap+0x21c/0x2c4
-[  506.219823][ T4352]  unix_dgram_sendmsg+0x45c/0x860
-[  506.224725][ T4352]  sock_sendmsg+0x4c/0x74
-[  506.228935][ T4352]  sock_write_iter+0x158/0x1a4
-[  506.233584][ T4352]  __vfs_write+0x190/0x1d8
-[  506.237874][ T4352]  vfs_write+0x13c/0x1b8
-[  506.241992][ T4352]  ksys_write+0xb0/0x120
-[  506.246108][ T4352]  __arm64_sys_write+0x54/0x88
-[  506.250747][ T4352]  do_el0_svc+0x128/0x1dc
-[  506.254957][ T4352]  el0_sync_handler+0xd0/0x268
-[  506.259594][ T4352]  el0_sync+0x164/0x180
-[  506.263747][ T4352]
