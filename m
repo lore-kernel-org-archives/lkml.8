@@ -2,51 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A265BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9452C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6DB20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0BD20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824072;
-	bh=1YqJ8DeqJXMlgEc1ELrfj/EAODkaBVufJMnrx/jj3vU=;
+	s=default; t=1589824077;
+	bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jt3tIjOiSCgNVa+c4UoxvYk9ZZF7Zj7kHW8uXBY5026RwGzyhw4EXCkX6O6stOvAX
-	 gJRhQPIIA7hv0rmIpALLnDnRcrmF9e1MPNvF+1Cn6iN/Bwf117+5e/bFEbW4qHID8p
-	 /PZvgS6qBhxDqXoPqX1p66EefWucofNtvIZX6Cdk=
+	b=myapUbvVWTqiebQ8A4XheW+p0/DIUmwWuPhRI5oFcvIbirgE9RA8iXjlPZBt76zsJ
+	 8W/9fq8rO1oAjK/2GDI5K/I7wPvZlwLPKsnLwZQFweiWoQlpirqWFVg0rBXFPIkZYD
+	 h1xAZzfp6ckVUEWJmRbTct+QnJgje9OzPKswLhCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbgERRrw (ORCPT
+        id S1730297AbgERRr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:47:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48232 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:47:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730261AbgERRrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:47:46 -0400
+        id S1730276AbgERRrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:47:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3345F20835;
-        Mon, 18 May 2020 17:47:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3145020715;
+        Mon, 18 May 2020 17:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824065;
-        bh=1YqJ8DeqJXMlgEc1ELrfj/EAODkaBVufJMnrx/jj3vU=;
+        s=default; t=1589824070;
+        bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TaXp/+JqAFrKYiB0DeALoYDZEgczNMxjyIfi/eYk8v9cJcQTU+GBadktGDVcqHmBF
-         PwxgfYpqsrtx36UgEKA807VPrv1M/dX4vqE7aFeF8E1nRCx6IkKgurR9tA88aIPutU
-         PGwlJcrzebcujYRxrKEYsdEIfYkVRcNm5OeJKQfw=
+        b=mMjvK82hbtSPRFvTQSDZ6xyMDP0cOiFioXuX+UmLVdvPCeH2M2YezFU6HOw1jMP8c
+         vQZzl1+6/XoeEYkOsoIa0Z6cWLUxSuqT6uAwmoSplyXy6BIKxMPTfNhDQgkjBAjJno
+         aQ6h8dqYEFC65byRYAHyzsCvMwvN3avg909d1eug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 040/114] blktrace: fix trace mutex deadlock
-Date:   Mon, 18 May 2020 19:36:12 +0200
-Message-Id: <20200518173510.751929221@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 059/114] drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
+Date:   Mon, 18 May 2020 19:36:31 +0200
+Message-Id: <20200518173513.810784310@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -59,42 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 2967acbb257a6a9bf912f4778b727e00972eac9b upstream.
+[ Upstream commit 5b5703dbafae74adfbe298a56a81694172caf5e6 ]
 
-A previous commit changed the locking around registration/cleanup,
-but direct callers of blk_trace_remove() were missed. This means
-that if we hit the error path in setup, we will deadlock on
-attempting to re-acquire the queue trace mutex.
+v2: removed TODO reminder
 
-Fixes: 1f2cac107c59 ("blktrace: fix unlocked access to init/start-stop/teardown")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/a4e0ae09-a73c-1c62-04ef-3f990d41bea9@virtuozzo.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/qxl/qxl_image.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -591,7 +591,7 @@ static int __blk_trace_setup(struct requ
- 		return ret;
- 
- 	if (copy_to_user(arg, &buts, sizeof(buts))) {
--		blk_trace_remove(q);
-+		__blk_trace_remove(q);
- 		return -EFAULT;
+diff --git a/drivers/gpu/drm/qxl/qxl_image.c b/drivers/gpu/drm/qxl/qxl_image.c
+index 7fbcc35e8ad35..c89c10055641e 100644
+--- a/drivers/gpu/drm/qxl/qxl_image.c
++++ b/drivers/gpu/drm/qxl/qxl_image.c
+@@ -210,7 +210,8 @@ qxl_image_init_helper(struct qxl_device *qdev,
+ 		break;
+ 	default:
+ 		DRM_ERROR("unsupported image bit depth\n");
+-		return -EINVAL; /* TODO: cleanup */
++		qxl_bo_kunmap_atomic_page(qdev, image_bo, ptr);
++		return -EINVAL;
  	}
- 	return 0;
-@@ -637,7 +637,7 @@ static int compat_blk_trace_setup(struct
- 		return ret;
- 
- 	if (copy_to_user(arg, &buts.name, ARRAY_SIZE(buts.name))) {
--		blk_trace_remove(q);
-+		__blk_trace_remove(q);
- 		return -EFAULT;
- 	}
- 
+ 	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
+ 	image->u.bitmap.x = width;
+-- 
+2.20.1
+
 
 
