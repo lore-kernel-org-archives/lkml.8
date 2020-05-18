@@ -2,142 +2,126 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61579C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E82C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3760F20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:23:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589808234;
-	bh=VRHqp4EH6ZCXx3q/nKzQbhc50sXdlhPesaPcLuWElWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mhyQT6nm18g6SFNFzmLPAIOJ0tbYTI08FTt7g66qTd6A5XdP0RaCFUB45Mi5bdhvn
-	 GphuFtxS3MYbb4xbqjw+rvWsScxKplUDv0WYLsVS65VVRp/gUuwF16nq5uvX3108fU
-	 0vkjxzyIb0b+qAPJkd7ILa+DhqeI+Y1a5Nioq2iw=
+	by mail.kernel.org (Postfix) with ESMTP id 5D6E72065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:24:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="FkOxga9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgERNXx (ORCPT
+        id S1728015AbgERNX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:23:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbgERNXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:23:52 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73656207F9;
-        Mon, 18 May 2020 13:23:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589808232;
-        bh=VRHqp4EH6ZCXx3q/nKzQbhc50sXdlhPesaPcLuWElWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JK8h+I3656sP2fg7WK8m+s26PlqWyYK5YmqtE6IW3Op9VK8D8B/UqDER4PdbsMSQ5
-         p5sP8nzfJLTy2vv+9qvzJqkifgwB0IuSdn+9i8AFFs0qbrVy6rF0Gc0WQSn7rvJYtN
-         sDiipVGvZG87aUDUNlQjHd0PvJY3D6ZvzjmJje/g=
-Date:   Mon, 18 May 2020 14:23:47 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@am.com>,
-        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
-Subject: Re: [PATCH 4/6] scs: Move scs_overflow_check() out of architecture
- code
-Message-ID: <20200518132346.GD32394@willie-the-truck>
-References: <20200515172756.27185-1-will@kernel.org>
- <20200515172756.27185-5-will@kernel.org>
- <20200518121210.GD1957@C02TD0UTHF1T.local>
+        Mon, 18 May 2020 09:23:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727812AbgERNX6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:23:58 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009F0C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:23:56 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id l20so9757274ilj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q4s3spBg1MuQWtvDoLbMK2ZyIIe+vIiqKz2qRus6bcE=;
+        b=FkOxga9Dic5nQJwkNzsVST9nRMKVvuIQXGyC+Qu8JLihUgSmqGzBG45VF1NIECnq22
+         gcbg77nIvuONrKk7DRL079v/BUjPCIL2esjGqBbvBWjmIuJE3EMBjUcD0EkaGMOUHRCh
+         /aw9qffWm37ZXBFYLj96l1AZZ7hADAEe6VOnpIVrDvXSQBZyY+efl9yaiNtSC1WDH7du
+         AVVVmwzNG1bwXaDGbyMl7kvIiuE1Qq2JrJcEQ3JpsY2xp+BXpmF9tV+VPbdurWjG4Fb0
+         XyhjlVRPpYnA53BHqfdvsBTS+S7uF8irc3dfK6BkNU/0qsyQSp/FJXHf2+qV+ssMSz4F
+         48qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q4s3spBg1MuQWtvDoLbMK2ZyIIe+vIiqKz2qRus6bcE=;
+        b=YppDIWtLd0gIbC2Tb6oP7+kqT374z9ECDiXPiEJD2diji8RabMzooHt4WCYZ3VI2lk
+         UD0qC6B3LO7PenjsRhreh/T5Q0kjwRkW9J5OJ4DjRKpPlbh2miCd2aYawaaV7Zcjrqbl
+         VhYKGap+33sZbpWncDR1EmIRFn+xAxkOpbNq94O6ecaPUiHt0QseY1r9N1fJYMSRIvf6
+         fP+l8WJsNBbxB53knCn62Iaf/Z0Ac5ECcXU91np2Iiq7Df3SDg2Le6ISSVBDsm9pCVLi
+         Y7IG7bABBNTKeoBs0utAMzFTScjg9rXK0pAKPYTl5EwNeuksJgqQcyodiKBRy4ZPiBtD
+         KTsQ==
+X-Gm-Message-State: AOAM531uF5zxEsiHhwnA3sDefRdtnodQuulQp9ryYdaQb0dGYh73sifM
+        2QTM0w4fkFKC+e4xj18ckpJNXg==
+X-Google-Smtp-Source: ABdhPJwRtGlPfxeHoGNDCJ45N+N0IqzWHJg3O0a3If8fksTe0+6NFI/ylWgN0YggwyyP5Jg8qwPYQg==
+X-Received: by 2002:a05:6e02:13e3:: with SMTP id w3mr14739119ilj.62.1589808236285;
+        Mon, 18 May 2020 06:23:56 -0700 (PDT)
+Received: from cisco ([2601:282:b02:8120:6155:7c8c:3dc0:c56e])
+        by smtp.gmail.com with ESMTPSA id j2sm3910456ioo.8.2020.05.18.06.23.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 06:23:55 -0700 (PDT)
+Date:   Mon, 18 May 2020 07:23:55 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        Kees Cook <keescook@chromium.org>, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
+Message-ID: <20200518132355.GB2405879@cisco>
+References: <202005162344.74A02C2D@keescook>
+ <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
+ <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
+ <20200517142316.GA1996744@cisco>
+ <20200517143311.fmxaf3pnopuaezl4@wittgenstein>
+ <20200517144603.GD1996744@cisco>
+ <20200517150215.GE1996744@cisco>
+ <202005171428.68F30AA0@keescook>
+ <20200518083224.GA16270@ircssh-2.c.rugged-nimbus-611.internal>
+ <20200518124500.5cb7rtjitbiiw3mq@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518121210.GD1957@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200518124500.5cb7rtjitbiiw3mq@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 01:12:10PM +0100, Mark Rutland wrote:
-> On Fri, May 15, 2020 at 06:27:54PM +0100, Will Deacon wrote:
-> > There is nothing architecture-specific about scs_overflow_check() as
-> > it's just a trivial wrapper around scs_corrupted().
+On Mon, May 18, 2020 at 02:45:00PM +0200, Christian Brauner wrote:
+> On Mon, May 18, 2020 at 08:32:25AM +0000, Sargun Dhillon wrote:
+> > On Sun, May 17, 2020 at 02:30:57PM -0700, Kees Cook wrote:
+> > > On Sun, May 17, 2020 at 09:02:15AM -0600, Tycho Andersen wrote:
+> > > 
+> > > I'm going read this thread more carefully tomorrow, but I just wanted to
+> > > mention that I'd *like* to extend seccomp_data for doing deep argument
+> > > inspection of the new syscalls. I think it's the least bad of many
+> > > designs, and I'll write that up in more detail. (I would *really* like
+> > > to avoid extending seccomp's BPF language, and instead allow probing
+> > > into the struct copied from userspace, etc.)
+> > > 
+> > > Anyway, it's very related to this, so, yeah, probably we need a v2 of the
+> > > notif API, but I'll try to get all the ideas here collected in one place.
+> > I scratched together a proposal of what I think would make a not-terrible
+> > V2 API. I'm sure there's bugs in this code, but I think it's workable --
+> > or at least a place to start. The biggest thing I think we should consider
+> > is unrolling seccomp_data if we don't intend to add new BPF-accessible
+> > fields.
 > > 
-> > For parity with task_stack_end_corrupted(), rename scs_corrupted() to
-> > task_scs_end_corrupted() and call it from schedule_debug() when
-> > CONFIG_SCHED_STACK_END_CHECK_is enabled. Finally, remove the unused
-> > scs_overflow_check() function entirely.
-> > 
-> > This has absolutely no impact on architectures that do not support SCS
-> > (currently arm64 only).
-> > 
-> > Signed-off-by: Will Deacon <will@kernel.org>
+> > If also uses read(2), so we get to take advantage of read(2)'s ability
+> > to pass a size along with the read, as opposed to doing ioctl tricks.
+> > It also makes programming from against it slightly simpler. I can imagine
+> > that the send API could be similar, in that it could support write, and
+> > thus making it 100% usable from Go (and the like) without requiring
+> > a separate OS-thread be spun up to interact with the listener.
 > 
-> Pulling this out of arch code seems sane to me, and the arch-specific
-> chanes look sound. However, I have a concern with the changes within the
-> scheduler context-switch.
+> I don't have strong feelings about using read() and write() here but I
+> think that Jann had reservations and that's why we didn't do it in the
+> first version. But his reservations were specifically tied to fd passing
+> which we never implemented:
+> http://lkml.iu.edu/hypermail/linux/kernel/1806.2/05995.html
 > 
-> > diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> > index a35d3318492c..56be4cbf771f 100644
-> > --- a/arch/arm64/kernel/process.c
-> > +++ b/arch/arm64/kernel/process.c
-> > @@ -52,7 +52,6 @@
-> >  #include <asm/mmu_context.h>
-> >  #include <asm/processor.h>
-> >  #include <asm/pointer_auth.h>
-> > -#include <asm/scs.h>
-> >  #include <asm/stacktrace.h>
-> >  
-> >  #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
-> > @@ -516,7 +515,6 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
-> >  	entry_task_switch(next);
-> >  	uao_thread_switch(next);
-> >  	ssbs_thread_switch(next);
-> > -	scs_overflow_check(next);
-> 
-> Prior to this patch, we'd never switch to a task whose SCS had already
-> been corrupted.
-> 
-> With this patch, we only check that when switching away from a task, and
-> only when CONFIG_SCHED_STACK_END_CHECK is selected, which at first
-> glance seems to weaken that.
+> But still, worth considering.
 
-Yes, ignoring vmap'd stacks, this patch brings the SCS checking in-line with
-the main stack checking when CONFIG_SCHED_STACK_END_CHECK=y.
+There was a thread about this same time for some other API (I can't
+find it now, but I can dig if you want) that suggests that "read() is
+for data" and we shouldn't use it for control in APIs.
 
-> Arguably:
-> 
-> * If the next task's SCS was corrupted by that task while it was
->   running, we had already lost at that point.
-
-With this change, we'll at least catch this one sooner, and that might be
-useful if a bug has caused us to overflow the SCS but not the main stack.
-
-> * If the next task's SCS was corrupted by another task, then that could
->   also happen immediately after the check (though timing to avoid the
->   check but affect the process could be harder).
-
-We're only checking the magic end value, so the cross-task case is basically
-if you overrun your own SCS as above, but then continue to overrun entire
-SCSs for other tasks as well. It's probably not very useful in that case.
-
-> ... and a VMAP'd SCS would be much nicer in this regard.
-> 
-> Do we think this is weakening the check, or do we think it wasn't all
-> that helpful to begin with?
-
-I see it as a debug check to catch SCS overflow, rather than a hardening
-feature, and I agree that using something like vmap stack for the SCS would
-be better because we could have a guard page instead. This is something I
-would like to revisit, but we need more information from Sami about why
-Android rejected the larger allocation size, since I don't think there's an
-awful lot of point merging this series if Android doesn't pick it up.
-
-Will
+Tycho
