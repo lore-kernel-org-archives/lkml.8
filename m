@@ -2,147 +2,91 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFFDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A21C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B7720756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8F92084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589834441;
-	bh=8de3UBP7OZuHm20Fet+BjlMemdZC5TSnfOPgXDe+Ghg=;
+	s=default; t=1589834509;
+	bh=eW9dA64CVaWgrcSFJ1x7C7dSa95K+pSpazmcCMpWNWY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mF8BAWWxmhZDWMC73a4rzRTVlyM8twEzQ0Cb8CwN1hUw87/B8KIR7b2EuTVmbJ1WG
-	 yvjw9w8/O/muFXEG20dSf6X7rxFG4rHJqdXqc9OKmV3jRIwgEFnAg4JRymL3e29P7V
-	 vPZ4criN1t/ahYYl1EkMi+j56orEuuRCngmIHdGQ=
+	b=z8Q5w885TjO2sEYPtWwa9w6QPUAJYsmAZNpWjljrhpDHBB9IyOO5X6eRCUshYgmGk
+	 /njOjOfIq9kkN4VIOiE1VKa+gUiev9sa8FMRc/vvNPtFV5zqE4MtakV1yrwxHLzfLS
+	 1p9GQU9i5GdhxactsHfDp1QohLjtCASx+ms6l1lQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgERUkl (ORCPT
+        id S1727857AbgERUls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:40:41 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35507 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgERUkk (ORCPT
+        Mon, 18 May 2020 16:41:48 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36016 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgERUls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:40:40 -0400
-Received: by mail-il1-f195.google.com with SMTP id a14so5912010ilk.2;
-        Mon, 18 May 2020 13:40:39 -0700 (PDT)
+        Mon, 18 May 2020 16:41:48 -0400
+Received: by mail-io1-f66.google.com with SMTP id k6so12224530iob.3;
+        Mon, 18 May 2020 13:41:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3XIblm8zUqQuuY/X/TRE5azM2syRVCTbnkaQ5PvYeqQ=;
-        b=CgOIpOr7aRmEtY+sNfPRku4mULjelQH08nxiiyd4/Iz2V1Ku2AyCQHLPeB5Bv9HYtD
-         AXDvsnpaq9RC9UijbJX3yQEktMazTO0URsa+n4IVulCEaD1Dz3X6LwNrPd99w+zetvfm
-         8uXzhhlKZ0pczIvsV/ISXIykptgyK70F6npju3iRdqhnq2lYC3e6oM29HJqf6HKrTmb5
-         zzmBUzpPUe9bo+mhTIi6fKTTjWDfVMadTy2va/Y66mxgKPy2+3AITm2J+FT7CRenYaAz
-         K0aEtgQ8Ib/pyDvteiZ3/BVpZX9U0agX51oL2bnYJHG48akHuqFTwjk1C1Jy5Ww99DxA
-         BREw==
-X-Gm-Message-State: AOAM531/dIFwBdFgqimkhwJjnlj3xeNrC/0hKIszL0egb+k6uuULKSKl
-        JtfX7wgr4PBSXLS3wx/pMQ==
-X-Google-Smtp-Source: ABdhPJzP6946xepHNazaOLD4ewVhDy31f9QxjZeD/1Q0ypDixwfmV7lyLnzYrKfUH8Jo45fkyUMnUg==
-X-Received: by 2002:a92:5acb:: with SMTP id b72mr18300906ilg.76.1589834439429;
-        Mon, 18 May 2020 13:40:39 -0700 (PDT)
+        bh=gPZ7HwLu+ZKuhC4Z7Pkuo4nBmBsOY1+VIA/NUsuh/DA=;
+        b=hPnl35yePgl8YdiOdSELn7D9E2qQpli8lL7m/SRHQjlBgmELowWFwfnian+6lmNsum
+         4Rcr3bqQ6k117t/0FpH2Ee70WRhVeD5BgDktqDtBudEGe3neJoFQtkefmlA7rb12HS4p
+         4tLlpAWAsoDMTPWVldk4AFIAgNO5EBEXq3ADCUCp0onhMn73lrAMhagzFWKLrF/b5Z1D
+         xrDLY7coe5l3pAqEUfHEJOwQBahMJDJxrdTL9VUbhsSKFixNo0Q41H/Xu6kpJHPbUsU5
+         QSRXe5ic51p1I/xD7Yp/FQ53+bD8doWc4rnhyp4Zo4zK+HR3o4ajLnhU/RvoBs4YAIrt
+         YAtg==
+X-Gm-Message-State: AOAM532AehzK4vLrMtnYBbmpvQ7G4kT8TgeZneAVG8uWbhIABkitYEJQ
+        h6BbwN1j/sVdEH3xH7MHfQ==
+X-Google-Smtp-Source: ABdhPJxEyNCVrlRsyqtmHbcvip7RB0j/NMJOkoIw9BOe8G2f9o9OXhHUrDCilvK3zRKkp7L7ICe24A==
+X-Received: by 2002:a02:1746:: with SMTP id 67mr16973423jah.103.1589834506239;
+        Mon, 18 May 2020 13:41:46 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r9sm5157600ilm.10.2020.05.18.13.40.38
+        by smtp.gmail.com with ESMTPSA id s22sm4249181iow.40.2020.05.18.13.41.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 13:40:38 -0700 (PDT)
-Received: (nullmailer pid 9739 invoked by uid 1000);
-        Mon, 18 May 2020 20:40:37 -0000
-Date:   Mon, 18 May 2020 14:40:37 -0600
+        Mon, 18 May 2020 13:41:45 -0700 (PDT)
+Received: (nullmailer pid 11333 invoked by uid 1000);
+        Mon, 18 May 2020 20:41:44 -0000
+Date:   Mon, 18 May 2020 14:41:44 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-mips@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] dt-bindings: watchdog: dw-wdt: Add watchdog TOPs
- array property
-Message-ID: <20200518204037.GA4909@bogus>
-References: <20200306132758.703FC8030704@mail.baikalelectronics.ru>
- <20200510105807.880-1-Sergey.Semin@baikalelectronics.ru>
- <20200510105807.880-4-Sergey.Semin@baikalelectronics.ru>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v14 1/2] dt-bindings: proximity: provide vcnl3020 device
+ tree binding document
+Message-ID: <20200518204144.GA11276@bogus>
+References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
+ <20200510184537.10335-2-i.mikhaylov@yadro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200510105807.880-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200510184537.10335-2-i.mikhaylov@yadro.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 01:58:03PM +0300, Serge Semin wrote:
-> In case if DW Watchdog IP core is built with WDT_USE_FIX_TOP == false,
-> a custom timeout periods are used to preset the timer counter. In
-> this case that periods should be specified in a new "snps,watchdog-tops"
-> property of the DW watchdog dts node.
+On Sun, 10 May 2020 21:45:36 +0300, Ivan Mikhaylov wrote:
+> Mostly standard i2c driver with some additional led-current option
+> for vcnl3020.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: linux-mips@vger.kernel.org
-> 
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 > ---
+>  .../iio/proximity/vishay,vcnl3020.yaml        | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
 > 
-> Rob, I had to remove your Reviewed-by tag, since the patch needed
-> to be updated a bit (see changelog).
-> 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Move $ref to the root level of the "snps,watchdog-tops" property
->   so does the constraints.
-> - Add default TOP values array.
-> - Discard the label definition from the new bindings example.
-> ---
->  .../bindings/watchdog/snps,dw-wdt.yaml        | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-> index 5bf6dc6377f3..cc741fb5a685 100644
-> --- a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-> @@ -39,6 +39,24 @@ properties:
->      description: Phandle to the DW Watchdog reset lane
->      maxItems: 1
->  
-> +  snps,watchdog-tops:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-> +      DW APB Watchdog custom timer intervals - Timeout Period ranges (TOPs).
-> +      Each TOP is a number loaded into the watchdog counter at the moment of
-> +      the timer restart. The counter decrementing happens each tick of the
-> +      reference clock. Therefore the TOPs array is equivalent to an array of
-> +      the timer expiration intervals supported by the DW APB Watchdog. Note
-> +      DW APB Watchdog IP-core might be synthesized with fixed TOP values,
-> +      in which case this property is unnecessary with default TOPs utilized.
-> +    default: [0x0001000 0x0002000 0x0004000 0x0008000
-> +      0x0010000 0x0020000 0x0040000 0x0080000
-> +      0x0100000 0x0200000 0x0400000 0x0800000
-> +      0x1000000 0x2000000 0x4000000 0x8000000]
-> +    items:
-> +      minItems: 16
-> +      maxItems: 16
-
-Drop 'items' and move these up a level. That may have given you some 
-issues, but I made some fixes recently.
-
-With that,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
-Rob
