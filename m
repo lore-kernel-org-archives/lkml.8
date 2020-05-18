@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D316C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E11220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAC3A20888
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824546;
-	bh=qm2ebLQpPuB5UzhypP58ZpTegmhnDmthwg66hFvVqtM=;
+	s=default; t=1589824547;
+	bh=K9sOYabv7aBb7ZHiBg2GiocuIAbCVTcXXK9GiqX+y08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qc3UtJF0hserUCbd7X+4nrovaJJfPzGzT+CEoVy6b98MLJyeClaJ7AZuVm1X87a1Z
-	 0A9RquEcfbxBlDBQrcrgYzEMxXjlTf7hZLb3ZHqVl1cavVMppkEzOBDikJ3WuJ4rrZ
-	 tXlsty9oblblfCmeJ1oU4PY1OSGdwsoskfqbiq/A=
+	b=0dOt39B5PWIptbx0OWxKW9a5GcuEqhDFAFjUFhnMNvKwRr1uWGpg4zaLvh6zFUBz8
+	 KSCpmn+KtmYCuNG69Zy6Xr3WNaCXiLRXAWi7hOYQEj9vnqNx9o5oIKyovbIwt+ATLg
+	 ujH2glgXxgAeCj5mc/PoPwgGvMsPasZ/H3G9XQbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbgERRzp (ORCPT
+        id S1731551AbgERRzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731550AbgERRzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 May 2020 13:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730501AbgERRzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64E9520674;
-        Mon, 18 May 2020 17:55:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E87520674;
+        Mon, 18 May 2020 17:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824542;
-        bh=qm2ebLQpPuB5UzhypP58ZpTegmhnDmthwg66hFvVqtM=;
+        s=default; t=1589824537;
+        bh=K9sOYabv7aBb7ZHiBg2GiocuIAbCVTcXXK9GiqX+y08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ZrylI9rmm0LfuLOAoT6Vt7yL5vnti1hlsBdIv8rTVIixUUdiQjarKTUiYobA/2xD
-         cA7Gt++zDzMKMYiNqL0Y9DiTxaGLl24amhpV9Bf7rJYBuZan5ILYRIYqMsXQgsAFje
-         g67WV4TrT5Lx1a4vNYGTdh9cPqj/W+7FTypRuKck=
+        b=z76dSyrW5hp5xsdmi40Qd+Vjpul9l5KJphVSbBGvqXkAbZ4fTnafoBINg1sxywoCb
+         3dJbwOxQN4W6n+oQnO163GWlo5Yl2O/lNUYBvq1KGaILBmxr6dVL5aMNO6r97BWsBj
+         jBhZdqB6INP2VuLRYJR/5EByjZfd3maFTwJsLEvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/147] IB/hfi1: Fix another case where pq is left on waitlist
-Date:   Mon, 18 May 2020 19:36:17 +0200
-Message-Id: <20200518173520.713628898@linuxfoundation.org>
+Subject: [PATCH 5.4 052/147] gfs2: Another gfs2_walk_metadata fix
+Date:   Mon, 18 May 2020 19:36:15 +0200
+Message-Id: <20200518173520.446979306@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,57 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit fa8dac3968635dec8518a13ac78d662f2aa88e4d ]
+[ Upstream commit 566a2ab3c9005f62e784bd39022d58d34ef4365c ]
 
-The commit noted below fixed a case where a pq is left on the sdma wait
-list.
+Make sure we don't walk past the end of the metadata in gfs2_walk_metadata: the
+inode holds fewer pointers than indirect blocks.
 
-It however missed another case.
+Slightly clean up gfs2_iomap_get.
 
-user_sdma_send_pkts() has two calls from hfi1_user_sdma_process_request().
-
-If the first one fails as indicated by -EBUSY, the pq will be placed on
-the waitlist as by design.
-
-If the second call then succeeds, the pq is still on the waitlist setting
-up a race with the interrupt handler if a subsequent request uses a
-different SDMA engine
-
-Fix by deleting the first call.
-
-The use of pcount and the intent to send a short burst of packets followed
-by the larger balance of packets was never correctly implemented, because
-the two calls always send pcount packets no matter what.  A subsequent
-patch will correct that issue.
-
-Fixes: 9a293d1e21a6 ("IB/hfi1: Ensure pq is not left on waitlist")
-Link: https://lore.kernel.org/r/20200504130917.175613.43231.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: a27a0c9b6a20 ("gfs2: gfs2_walk_metadata fix")
+Cc: stable@vger.kernel.org # v5.3+
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/user_sdma.c | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/gfs2/bmap.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/user_sdma.c b/drivers/infiniband/hw/hfi1/user_sdma.c
-index 13e4203497b33..a92346e88628b 100644
---- a/drivers/infiniband/hw/hfi1/user_sdma.c
-+++ b/drivers/infiniband/hw/hfi1/user_sdma.c
-@@ -589,10 +589,6 @@ int hfi1_user_sdma_process_request(struct hfi1_filedata *fd,
+diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
+index f63df54a08c6c..adbb8fef22162 100644
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -528,10 +528,12 @@ static int gfs2_walk_metadata(struct inode *inode, struct metapath *mp,
  
- 	set_comp_state(pq, cq, info.comp_idx, QUEUED, 0);
- 	pq->state = SDMA_PKT_Q_ACTIVE;
--	/* Send the first N packets in the request to buy us some time */
--	ret = user_sdma_send_pkts(req, pcount);
--	if (unlikely(ret < 0 && ret != -EBUSY))
--		goto free_req;
+ 		/* Advance in metadata tree. */
+ 		(mp->mp_list[hgt])++;
+-		if (mp->mp_list[hgt] >= sdp->sd_inptrs) {
+-			if (!hgt)
++		if (hgt) {
++			if (mp->mp_list[hgt] >= sdp->sd_inptrs)
++				goto lower_metapath;
++		} else {
++			if (mp->mp_list[hgt] >= sdp->sd_diptrs)
+ 				break;
+-			goto lower_metapath;
+ 		}
  
- 	/*
- 	 * This is a somewhat blocking send implementation.
+ fill_up_metapath:
+@@ -876,10 +878,9 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
+ 					ret = -ENOENT;
+ 					goto unlock;
+ 				} else {
+-					/* report a hole */
+ 					iomap->offset = pos;
+ 					iomap->length = length;
+-					goto do_alloc;
++					goto hole_found;
+ 				}
+ 			}
+ 			iomap->length = size;
+@@ -933,8 +934,6 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
+ 	return ret;
+ 
+ do_alloc:
+-	iomap->addr = IOMAP_NULL_ADDR;
+-	iomap->type = IOMAP_HOLE;
+ 	if (flags & IOMAP_REPORT) {
+ 		if (pos >= size)
+ 			ret = -ENOENT;
+@@ -956,6 +955,9 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
+ 		if (pos < size && height == ip->i_height)
+ 			ret = gfs2_hole_size(inode, lblock, len, mp, iomap);
+ 	}
++hole_found:
++	iomap->addr = IOMAP_NULL_ADDR;
++	iomap->type = IOMAP_HOLE;
+ 	goto out;
+ }
+ 
 -- 
 2.20.1
 
