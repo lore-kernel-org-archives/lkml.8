@@ -2,94 +2,110 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5375C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C41E1207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A756120758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:21:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATj+O5u3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgERCV0 (ORCPT
+        id S1726920AbgERCVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 22:21:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42412 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726675AbgERCV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 22:21:26 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7B2F8A7CA5DC1B82FDC8;
-        Mon, 18 May 2020 10:21:24 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 18 May
- 2020 10:21:21 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: flush dirty meta pages when flushing
- them
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-References: <20200515021554.226835-1-jaegeuk@kernel.org>
- <9ba6e5ef-068d-a925-1eb9-107b0523666c@huawei.com>
- <20200515144509.GA46028@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <cd964a56-b2a7-48de-97a6-5d89d9a590a3@huawei.com>
-Date:   Mon, 18 May 2020 10:21:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 17 May 2020 22:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbgERCVh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 22:21:37 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79136C061A0C;
+        Sun, 17 May 2020 19:21:37 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id dh1so147142qvb.13;
+        Sun, 17 May 2020 19:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MI/xOtYz1gKmyoKJ7JN1xfWZ15QiPgf/P/ZO62yZ6oI=;
+        b=ATj+O5u3xLLXibwinbzTTX1jNuGYZ7yx2aXg6N8/fU5CNNPweoDHEmTs4nGIE/u1OQ
+         zHBG64PAdb5oyvtlOyZ9Muu2RSjWkMJctTUKkUwKZzjgufadRvjkLFMkQus0bEXIwBV0
+         pS2QTnR3mmW+5pyleWnmKU5coIAygPIYOYtDHETq/UhDeqqOh+6Un5JJWt9Keyrm9gT3
+         8HcAxL7pWlyH7R0hoSj828jb+URux07n6Pgq8LQ+mmFuXi/IHVB6Sn7dbPE3cNGoyeUX
+         27vNOolqnkvwf2IQs6ddn0bwzOkpCT+Sm+z74BNHWVKwA+FeMe1TYpE/gRUcsx0LSpMS
+         zwTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MI/xOtYz1gKmyoKJ7JN1xfWZ15QiPgf/P/ZO62yZ6oI=;
+        b=mGAg+qz06Y+FTIVXMNVVa3yhcV/d3L9WHIikWwXoRDVjMnvDJk3y3ldeoeyo9PbvsI
+         /SZzMbGwbPguBPywtKcNkYV0YVOB+P0NpMkGqFPoZyXLyYQ6vuCv1nJe1LzCyAol/GUj
+         wFNPtXlA6100Qa/RvLPVTfT/92mOJqdm9V334iPdbHASWYmgAjB8ksMuhiryOG55amkC
+         HpMj1d4okFTl/u65kOyB9M2GwIbi7FEtPsX/172CLvGPMxxSJU6uucAyEwUc9uuv2BL7
+         O/7dVlPB/276pirJuNQxMaEsnQPpGn3KcpLmnpbSXUVyGAZczx+/zQYp77QFPV9os5EY
+         t5dA==
+X-Gm-Message-State: AOAM530f7uGiHVDep+iIZZ7O28gN9kcRumpgzD4J6hvK6C2RynbvLaEF
+        KFB6B4CyV1O+k6rPdKFtOzQ=
+X-Google-Smtp-Source: ABdhPJw0gRrAu197atVVJRuf4/d2wHUciiwN0loNhbPQ7UUg1uDhNwjlnggs6zRHotXXdp2W86VLNA==
+X-Received: by 2002:a0c:f203:: with SMTP id h3mr13677416qvk.131.1589768496671;
+        Sun, 17 May 2020 19:21:36 -0700 (PDT)
+Received: from renatolg ([2804:14c:118:3134:db0b:3b38:feb6:784c])
+        by smtp.gmail.com with ESMTPSA id i41sm8496262qte.15.2020.05.17.19.21.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 19:21:35 -0700 (PDT)
+From:   Renato Lui Geh <renatogeh@gmail.com>
+X-Google-Original-From: Renato Lui Geh <renatogeh@renatolg>
+Date:   Sun, 17 May 2020 23:21:29 -0300
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Michael.Hennerich@analog.com, renatogeh@gmail.com, lars@metafoo.de,
+        jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net,
+        giuliano.belinassi@usp.br, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad7780: Fix a resource handling path in
+ 'ad7780_probe()'
+Message-ID: <20200518022129.xkcuw4yxotnll7ym@renatolg>
+References: <20200517095953.278950-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-In-Reply-To: <20200515144509.GA46028@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200517095953.278950-1-christophe.jaillet@wanadoo.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/15 22:45, Jaegeuk Kim wrote:
-> On 05/15, Chao Yu wrote:
->> On 2020/5/15 10:15, Jaegeuk Kim wrote:
->>> Let's guarantee flusing dirty meta pages to avoid infinite loop.
->>
->> What's the root cause? Race case or meta page flush failure?
-> 
-> Investigating, but at least, this can avoid the inifinite loop there.
+Acked-by: Renato Lui Geh <renatogeh@gmail.com>
 
-Hmm... this fix may cover the root cause..
-
-Thanks,
-
-> 
-> V2:
-> 
->>From c60ce8e7178004fd6cba96e592247e43b5fd98d8 Mon Sep 17 00:00:00 2001
-> From: Jaegeuk Kim <jaegeuk@kernel.org>
-> Date: Wed, 13 May 2020 21:12:53 -0700
-> Subject: [PATCH] f2fs: flush dirty meta pages when flushing them
-> 
-> Let's guarantee flusing dirty meta pages to avoid infinite loop.
-> 
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  fs/f2fs/checkpoint.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 620a386d82c1a..3dc3ac6fe1432 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1266,6 +1266,9 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
->  		if (unlikely(f2fs_cp_error(sbi)))
->  			break;
->  
-> +		if (type == F2FS_DIRTY_META)
-> +			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
-> +							FS_CP_META_IO);
->  		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
->  	}
->  	finish_wait(&sbi->cp_wait, &wait);
-> 
+On 05/17, Christophe JAILLET wrote:
+>If 'ad7780_init_gpios()' fails, we must not release some resources that
+>have not been allocated yet. Return directly instead.
+>
+>Fixes: 5bb30e7daf00 ("staging: iio: ad7780: move regulator to after GPIO init")
+>Fixes: 9085daa4abcc ("staging: iio: ad7780: add gain & filter gpio support")
+>Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>---
+> drivers/iio/adc/ad7780.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/drivers/iio/adc/ad7780.c b/drivers/iio/adc/ad7780.c
+>index f47606ebbbbe..b33fe6c3907e 100644
+>--- a/drivers/iio/adc/ad7780.c
+>+++ b/drivers/iio/adc/ad7780.c
+>@@ -329,7 +329,7 @@ static int ad7780_probe(struct spi_device *spi)
+>
+> 	ret = ad7780_init_gpios(&spi->dev, st);
+> 	if (ret)
+>-		goto error_cleanup_buffer_and_trigger;
+>+		return ret;
+>
+> 	st->reg = devm_regulator_get(&spi->dev, "avdd");
+> 	if (IS_ERR(st->reg))
+>-- 
+>2.25.1
+>
