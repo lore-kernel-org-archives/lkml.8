@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E11CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3788C2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E00D207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825044;
-	bh=Id37jZ/rUFD+T0Ow/Ky5h9rjLEn8tPMh9o/bRa7KCOM=;
+	s=default; t=1589825046;
+	bh=GnBdQhONgJyiSt5zWJqn8JkDvXKh/3TzS2kKt72sA3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P9le/6sPBBCEWQmjji95XLFp9l1K8cgnm5/yrBUluRT5Ynp1X3pCdvH6fSuLunJZQ
-	 EXUkvukr4bazr/uarVJbSJDXl7AZZNmzPpCTspdLo6P4Vcz1s9X4Vjy5lXm1apHf6Z
-	 VwJ1plnBvSDerzDRry87tVB5ZuyvzxtxDRSz1ya8=
+	b=SRQYk2rHF2LbEnKRlsiZWDPFDNNl4ocwBahpVJX5mhgVG52Hp8O0JwuZ14m+wCDnA
+	 92NRmHLNUKCO8pwf7OeodfV5+5v5qAUC/GhD3xTm1mThnT/XMafZLWG1uuc+Zmpqbv
+	 IoUltyk23rjwTmZnNu18iIYwgCiO7SUahbuJTzf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732727AbgERSED (ORCPT
+        id S1732737AbgERSEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732701AbgERSDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:53 -0400
+        id S1732189AbgERSD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F4B3207D3;
-        Mon, 18 May 2020 18:03:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C88120715;
+        Mon, 18 May 2020 18:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825033;
-        bh=Id37jZ/rUFD+T0Ow/Ky5h9rjLEn8tPMh9o/bRa7KCOM=;
+        s=default; t=1589825038;
+        bh=GnBdQhONgJyiSt5zWJqn8JkDvXKh/3TzS2kKt72sA3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wEqphfhSS0FnOreU3Wob0PEJbTCAsbNgGlX+7pnpSMdnypPxEQygQjB4ZMw/iHVt5
-         mdalxNfvtP/5wMn4ocNzOrhFYRUUC9rMBnhCFdZ5izBEzu95158Pv2CVMWGnZhtSH/
-         KlHl7Fe7yRLGgcSnaMrECT+ptqQV/d8dZBi/BRzs=
+        b=OgYhcGADimqHCjHxob5J7IDha8UPh6FSqVhhQd9Ei6x/v3w7rXVN9KXllPPAcEqtr
+         84SFqdCiGHxBxrjXiVHVNicP8hl/6XbWWppb7LOQm7uLMfTIfLMGmShZ59hSmyAleo
+         Ss1Y1Nphx3cG8+deNtYhn/b9fjlFDewbhd+MXRfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiong Zhang <xiong.y.zhang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        stable@vger.kernel.org, Chen Yi <yiche@redhat.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 102/194] drm/i915/gvt: Fix kernel oops for 3-level ppgtt guest
-Date:   Mon, 18 May 2020 19:36:32 +0200
-Message-Id: <20200518173540.417177322@linuxfoundation.org>
+Subject: [PATCH 5.6 104/194] netfilter: conntrack: fix infinite loop on rmmod
+Date:   Mon, 18 May 2020 19:36:34 +0200
+Message-Id: <20200518173540.560612351@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,45 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenyu Wang <zhenyuw@linux.intel.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 72a7a9925e2beea09b109dffb3384c9bf920d9da ]
+[ Upstream commit 54ab49fde95605a1077f759ce454d94e84b5ca45 ]
 
-As i915 won't allocate extra PDP for current default PML4 table,
-so for 3-level ppgtt guest, we would hit kernel pointer access
-failure on extra PDP pointers. So this trys to bypass that now.
-It won't impact real shadow PPGTT setup, so guest context still
-works.
+'rmmod nf_conntrack' can hang forever, because the netns exit
+gets stuck in nf_conntrack_cleanup_net_list():
 
-This is verified on 4.15 guest kernel with i915.enable_ppgtt=1
-to force on old aliasing ppgtt behavior.
+i_see_dead_people:
+ busy = 0;
+ list_for_each_entry(net, net_exit_list, exit_list) {
+  nf_ct_iterate_cleanup(kill_all, net, 0, 0);
+  if (atomic_read(&net->ct.count) != 0)
+   busy = 1;
+ }
+ if (busy) {
+  schedule();
+  goto i_see_dead_people;
+ }
 
-Fixes: 4f15665ccbba ("drm/i915: Add ppgtt to GVT GEM context")
-Reviewed-by: Xiong Zhang <xiong.y.zhang@intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200506095918.124913-1-zhenyuw@linux.intel.com
+When nf_ct_iterate_cleanup iterates the conntrack table, all nf_conn
+structures can be found twice:
+once for the original tuple and once for the conntracks reply tuple.
+
+get_next_corpse() only calls the iterator when the entry is
+in original direction -- the idea was to avoid unneeded invocations
+of the iterator callback.
+
+When support for clashing entries was added, the assumption that
+all nf_conn objects are added twice, once in original, once for reply
+tuple no longer holds -- NF_CLASH_BIT entries are only added in
+the non-clashing reply direction.
+
+Thus, if at least one NF_CLASH entry is in the list then
+nf_conntrack_cleanup_net_list() always skips it completely.
+
+During normal netns destruction, this causes a hang of several
+seconds, until the gc worker removes the entry (NF_CLASH entries
+always have a 1 second timeout).
+
+But in the rmmod case, the gc worker has already been stopped, so
+ct.count never becomes 0.
+
+We can fix this in two ways:
+
+1. Add a second test for CLASH_BIT and call iterator for those
+   entries as well, or:
+2. Skip the original tuple direction and use the reply tuple.
+
+2) is simpler, so do that.
+
+Fixes: 6a757c07e51f80ac ("netfilter: conntrack: allow insertion of clashing entries")
+Reported-by: Chen Yi <yiche@redhat.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/gvt/scheduler.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/netfilter/nf_conntrack_core.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/gvt/scheduler.c b/drivers/gpu/drm/i915/gvt/scheduler.c
-index 685d1e04a5ff6..709ad181bc94a 100644
---- a/drivers/gpu/drm/i915/gvt/scheduler.c
-+++ b/drivers/gpu/drm/i915/gvt/scheduler.c
-@@ -375,7 +375,11 @@ static void set_context_ppgtt_from_shadow(struct intel_vgpu_workload *workload,
- 		for (i = 0; i < GVT_RING_CTX_NR_PDPS; i++) {
- 			struct i915_page_directory * const pd =
- 				i915_pd_entry(ppgtt->pd, i);
--
-+			/* skip now as current i915 ppgtt alloc won't allocate
-+			   top level pdp for non 4-level table, won't impact
-+			   shadow ppgtt. */
-+			if (!pd)
-+				break;
- 			px_dma(pd) = mm->ppgtt_mm.shadow_pdps[i];
- 		}
- 	}
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 6a978d7e0d639..d11a583481334 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -2137,8 +2137,19 @@ get_next_corpse(int (*iter)(struct nf_conn *i, void *data),
+ 		nf_conntrack_lock(lockp);
+ 		if (*bucket < nf_conntrack_htable_size) {
+ 			hlist_nulls_for_each_entry(h, n, &nf_conntrack_hash[*bucket], hnnode) {
+-				if (NF_CT_DIRECTION(h) != IP_CT_DIR_ORIGINAL)
++				if (NF_CT_DIRECTION(h) != IP_CT_DIR_REPLY)
+ 					continue;
++				/* All nf_conn objects are added to hash table twice, one
++				 * for original direction tuple, once for the reply tuple.
++				 *
++				 * Exception: In the IPS_NAT_CLASH case, only the reply
++				 * tuple is added (the original tuple already existed for
++				 * a different object).
++				 *
++				 * We only need to call the iterator once for each
++				 * conntrack, so we just use the 'reply' direction
++				 * tuple while iterating.
++				 */
+ 				ct = nf_ct_tuplehash_to_ctrack(h);
+ 				if (iter(ct, data))
+ 					goto found;
 -- 
 2.20.1
 
