@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB34AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90524C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA06C20826
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD9520715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824687;
-	bh=O9xcISJN/z1FNJAF1HxhOJkTIsQ+vTAHx4xaTb60ltw=;
+	s=default; t=1589824690;
+	bh=LnLghrpkiXkZxc4mghN+U/ZB0oWcDxHaMgo41YTF53o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zfuKsD57+2M8FjmOyQb54OMa0g+xoNWz+K5v2ModrfTq1kbDCRL/h+pbRlRmBb5Ak
-	 DV7mNa7n/uvOjcTXcfPByG0u4SFr26vCAbxgAfpV816EeIjO/ukjvO4ohaCwedoFkj
-	 /Rv0+K94Cm3T9XrtHaOCYKZailg/NWKVS25NGg8Q=
+	b=0ji/6zmBi7ijG/EFQhCj+go3OE1UcxqIyjnMuU3ix1ELsadpZo5c3DmLBliObYPNb
+	 9c0jpVhNW+3ea+8J47q6niK9bDaVH4iJuic2Foo4vMBJcy0Hv2jsDfYrpVmb9KH21g
+	 K42quUJzglQ27pTRWHR7a69FsCLFnNFThW50AwrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbgERR6G (ORCPT
+        id S1731869AbgERR6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37080 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729934AbgERR6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:58:02 -0400
+        id S1731861AbgERR6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:58:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDCE720715;
-        Mon, 18 May 2020 17:58:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4925420826;
+        Mon, 18 May 2020 17:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824682;
-        bh=O9xcISJN/z1FNJAF1HxhOJkTIsQ+vTAHx4xaTb60ltw=;
+        s=default; t=1589824684;
+        bh=LnLghrpkiXkZxc4mghN+U/ZB0oWcDxHaMgo41YTF53o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZaT/1baEsJdeijgHk07C1r4JJVyZnTnuuRyJGQO+CM+5ln7EOHWSHKSdKn62zAMHP
-         1PDv/YiZ34z6GPbevSVHKvONmMnQFQakRoLkmD4hhcvcks1Gpk+/8CHI/Y8SNuCymP
-         YsDWkN+xBWMuPP7R7Y3g6LuKLDRzt6s0ez5e3L0g=
+        b=mMDVrYfrWHTTXXnyesUCpeV1eSPPjmYgT9dARNOBIIX4Dts1HBx6uPC8NTqaLpx9W
+         LdbHcKRAwpFi+zFL3zgLZeQK9772hCNp9ROelV1Wf6oXmkBf5ceO8QvCpY5vWWSsag
+         pJm7tsdsFrvDkCoTtvhx5dkpjwoCDe3I/vjU4wJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesus Ramos <jesus-ramos@live.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 108/147] ALSA: usb-audio: Add control message quirk delay for Kingston HyperX headset
-Date:   Mon, 18 May 2020 19:37:11 +0200
-Message-Id: <20200518173526.673184044@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH 5.4 109/147] usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to USB5534B
+Date:   Mon, 18 May 2020 19:37:12 +0200
+Message-Id: <20200518173526.765169555@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,43 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesus Ramos <jesus-ramos@live.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-commit 073919e09ca445d4486968e3f851372ff44cf2b5 upstream.
+commit 76e1ef1d81a4129d7e2fb8c48c83b166d1c8e040 upstream.
 
-Kingston HyperX headset with 0951:16ad also needs the same quirk for
-delaying the frequency controls.
+On Tue, May 12, 2020 at 09:36:07PM +0800, Kai-Heng Feng wrote [1]:
+> This patch prevents my Raven Ridge xHCI from getting runtime suspend.
 
-Signed-off-by: Jesus Ramos <jesus-ramos@live.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/BY5PR19MB3634BA68C7CCA23D8DF428E796AF0@BY5PR19MB3634.namprd19.prod.outlook.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+The problem described in v5.6 commit 1208f9e1d758c9 ("USB: hub: Fix the
+broken detection of USB3 device in SMSC hub") applies solely to the
+USB5534B hub [2] present on the Kingfisher Infotainment Carrier Board,
+manufactured by Shimafuji Electric Inc [3].
+
+Despite that, the aforementioned commit applied the quirk to _all_ hubs
+carrying vendor ID 0x424 (i.e. SMSC), of which there are more [4] than
+initially expected. Consequently, the quirk is now enabled on platforms
+carrying SMSC/Microchip hub models which potentially don't exhibit the
+original issue.
+
+To avoid reports like [1], further limit the quirk's scope to
+USB5534B [2], by employing both Vendor and Product ID checks.
+
+Tested on H3ULCB + Kingfisher rev. M05.
+
+[1] https://lore.kernel.org/linux-renesas-soc/73933975-6F0E-40F5-9584-D2B8F615C0F3@canonical.com/
+[2] https://www.microchip.com/wwwproducts/en/USB5534B
+[3] http://www.shimafuji.co.jp/wp/wp-content/uploads/2018/08/SBEV-RCAR-KF-M06Board_HWSpecificationEN_Rev130.pdf
+[4] https://devicehunt.com/search/type/usb/vendor/0424/device/any
+
+Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+Cc: stable@vger.kernel.org # v4.14+
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-usb@vger.kernel.org
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200514220246.13290-1-erosca@de.adit-jv.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/quirks.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/usb/core/hub.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1592,13 +1592,14 @@ void snd_usb_ctl_msg_quirk(struct usb_de
- 	    && (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
- 		msleep(20);
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -38,6 +38,7 @@
  
--	/* Zoom R16/24, Logitech H650e, Jabra 550a needs a tiny delay here,
--	 * otherwise requests like get/set frequency return as failed despite
--	 * actually succeeding.
-+	/* Zoom R16/24, Logitech H650e, Jabra 550a, Kingston HyperX needs a tiny
-+	 * delay here, otherwise requests like get/set frequency return as
-+	 * failed despite actually succeeding.
- 	 */
- 	if ((chip->usb_id == USB_ID(0x1686, 0x00dd) ||
- 	     chip->usb_id == USB_ID(0x046d, 0x0a46) ||
--	     chip->usb_id == USB_ID(0x0b0e, 0x0349)) &&
-+	     chip->usb_id == USB_ID(0x0b0e, 0x0349) ||
-+	     chip->usb_id == USB_ID(0x0951, 0x16ad)) &&
- 	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
- 		usleep_range(1000, 2000);
+ #define USB_VENDOR_GENESYS_LOGIC		0x05e3
+ #define USB_VENDOR_SMSC				0x0424
++#define USB_PRODUCT_USB5534B			0x5534
+ #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
+ #define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
+ 
+@@ -5506,8 +5507,11 @@ out_hdev_lock:
  }
+ 
+ static const struct usb_device_id hub_id_table[] = {
+-    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
++    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
++                   | USB_DEVICE_ID_MATCH_PRODUCT
++                   | USB_DEVICE_ID_MATCH_INT_CLASS,
+       .idVendor = USB_VENDOR_SMSC,
++      .idProduct = USB_PRODUCT_USB5534B,
+       .bInterfaceClass = USB_CLASS_HUB,
+       .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
+     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
 
 
