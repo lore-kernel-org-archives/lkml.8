@@ -2,167 +2,151 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A4DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7987AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88DBC20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D98420715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SP6KFNP8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wpk1EG3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgERSgi (ORCPT
+        id S1728739AbgERSlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40158 "EHLO
+        Mon, 18 May 2020 14:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgERSgg (ORCPT
+        with ESMTP id S1728304AbgERSlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:36:36 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83EC1C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:36:36 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id q8so3541990pfu.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:36:36 -0700 (PDT)
+        Mon, 18 May 2020 14:41:36 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B25C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:41:35 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id u35so5242304pgk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=gvKKfXKVwXyHM5zyQzU2yfD82YJ/ssxteenCSL12PQo=;
-        b=SP6KFNP8GBJH4Y0iu8AifmlsrJrIDmqF86ly0zVJjsY9edGxCLOGJgRntsHb0RHjQG
-         gATe1S/lNrSEnPx6+nA/9Db0kPWSNByB+aLbETP0I7rvxRd5Pg5ppv5wkwn5hjz58cu/
-         /58rWXz8O5y2llnAhz2PnD1PepCOMtPQz0wlcWd4cCLGYB8YoMdMS4KqF902+qJ/GrWu
-         rYOlTmXrrdAjjv2aIxMNhSrdaKjlbrB4OS5ce1/H/hEo88g4KjJQ31AE7yroPGtfE9G0
-         GSPSNWOTyxVLaXh8veu7K3K0s5sMenbgG1ZDSnf8416Sc5oeIX+1pRsFFZpq8ADiflTg
-         Yiqg==
+        bh=BbV/LEIOeouRXOmK+GKN6o5kBO4anE2Qst31rAC/h8s=;
+        b=wpk1EG3wH9AfuuSAZTKJ+/n0Q9IjxGLodBjTu4ynOAG7Oao8ePt7F7SjaPQi9rYFBW
+         vTCGn5jpPiGn8sP5TKR4fBIzl8X9fsFTOYKFPTb5F3AHf4SMLBDa30kiGOOx9gMf0vy1
+         aCFLjZgohKiam+RjD+RPJxjAMEV3Movg6BLoGWxnmo9SwsN7aYuVgFyq3fhx2D23ln2S
+         YfMxuQDebgG45W/1YRp1agw9YqdJ9v0+swjux9ma+c/ER6RwDShQ18qxv2t9S/AHctoO
+         lxbR3qnHIIx8VG8ImM0hPjjD/EYgZ8jlOYCuvhtqOm3rlT2aF+H9ymdN8ob3LH3KMKPa
+         NDrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=gvKKfXKVwXyHM5zyQzU2yfD82YJ/ssxteenCSL12PQo=;
-        b=k0aoTP4rOfHBnpxkVahyisBdthMNgk3C+zSiQODE08onnhrK34Cc8CNXa2TdlfSAzf
-         9m/aI2+/SW1BAO6xzmk6QwuRDy0px6+AbpnsYhi0jSNqbXzAlIIHdUOu3aqK3kIGJGia
-         0lv3Vbbc972vxAF0XBtK6ZH+YyrWn7wPvkhOTCuq522ymPaKIamNOVJ5hYCp2x5sffxO
-         MGlEvbziPC5I3XW+gcRQzMqNZldovjsjqd76rLZb5MXSuvnZUp3ow0CB4DfYcBF7+T/l
-         CO+6as+qDyPGKgSO/EhoJX+iWhmaupWxpe/lD7OHvOYrpxJSiZO4Opzi5wvhFD4aWipp
-         wN3g==
-X-Gm-Message-State: AOAM532FGCEzploMQOVscylesIrUh5wLKkFgujR2JZReWMLxtlUXutEi
-        8A6xYS1L0qHcjHgHwDjeblHQhw==
-X-Google-Smtp-Source: ABdhPJwzQPbROOk4HuXutlusmWdCXG1o7ldok+fY8PJ23k2eDMM1tiiAiGoPeKkibIa2gifPhE5rpA==
-X-Received: by 2002:a65:5186:: with SMTP id h6mr17090119pgq.453.1589826995952;
-        Mon, 18 May 2020 11:36:35 -0700 (PDT)
+        bh=BbV/LEIOeouRXOmK+GKN6o5kBO4anE2Qst31rAC/h8s=;
+        b=lgsx4gLj/wdG/0b0OjT51cD/1u9Wvr5H7pwRTLrRALOVdEmDY0NXCe2jeSRZlssbTx
+         hguODWN7DvbnP7/nQ9qX0SFwohV+5PPm8garidhpbuAAh6mdg+6N6a6DWiezDDgUX9uR
+         mzJMzjNr4+4FFXon03kUHIs27EDSuHFKx4ftj4CWu9KSqzy0eq3EX1FDuoBmQXO9uBPx
+         JeJ4fH71LT014G0cQeUk460XnLLLVqVRGJgLi7w1fqtU8Rq+DNG15UnYVQbxJHNy+DaR
+         Mwz6ROAOTZ9LjBYjKrycsfdt2lvOMaUXccvjlmPb0pkqxyomU14J9CoMl0xzBe7PMJJ/
+         JXTw==
+X-Gm-Message-State: AOAM533A/aGeAftSxeqNjqh2FsvNE0EqJoD7KCca6zV9pRgEMdejYAVo
+        UJI+QhWCOr1sJWevlZiHMVutgw==
+X-Google-Smtp-Source: ABdhPJz0TbunwEJ3QS58Piw9hJtSVbZ5pMCjwwHgcI7aZsqjDXKf1WlgVOn75F7erOVKbayPWGlQIA==
+X-Received: by 2002:a63:f64d:: with SMTP id u13mr15918251pgj.151.1589827294403;
+        Mon, 18 May 2020 11:41:34 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z1sm209932pjn.43.2020.05.18.11.36.34
+        by smtp.gmail.com with ESMTPSA id x62sm9251663pfc.46.2020.05.18.11.41.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:36:35 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:35:12 -0700
+        Mon, 18 May 2020 11:41:33 -0700 (PDT)
+Date:   Mon, 18 May 2020 11:40:10 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Felipe Balbi <balbi@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-Message-ID: <20200518183512.GE2165@builder.lan>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
- <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
- <878shu4uwk.fsf@kernel.org>
- <875zcy4uuj.fsf@kernel.org>
- <20200514171352.GP4525@google.com>
- <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org>
- <87tv0h3fpv.fsf@kernel.org>
- <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org>
- <87r1vl3e42.fsf@kernel.org>
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH] interconnect: Disallow interconnect core to be built as
+ a module
+Message-ID: <20200518184010.GF2165@builder.lan>
+References: <b789cce388dd1f2906492f307dea6780c398bc6a.1567065991.git.viresh.kumar@linaro.org>
+ <CAOCOHw4ri6ikRpkJWtAdaPQiMhdKMrdNciqQ8YNaXR+ApSnAew@mail.gmail.com>
+ <66c3d470-48e2-619a-dd95-6064a85161e0@linaro.org>
+ <20200515071152.GA1274556@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87r1vl3e42.fsf@kernel.org>
+In-Reply-To: <20200515071152.GA1274556@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14 May 23:29 PDT 2020, Felipe Balbi wrote:
+On Fri 15 May 00:11 PDT 2020, Greg Kroah-Hartman wrote:
 
+> On Fri, May 15, 2020 at 07:48:47AM +0300, Georgi Djakov wrote:
+> > On 9/12/19 19:33, Bjorn Andersson wrote:
+> > > On Thu, Aug 29, 2019 at 1:07 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >>
+> > >> Building individual drivers as modules is fine but allowing a core
+> > >> framework to be built as a module makes it really complex and should be
+> > >> avoided.
+> > >>
+> > >> Whatever uses the interconnect core APIs must also be built as a module
+> > >> if interconnect core is built as module, else we will see compilation
+> > >> failures.
+> > >>
+> > >> If another core framework (like cpufreq, clk, etc), that can't be built
+> > >> as module, needs to use interconnect APIs then we will start seeing
+> > >> compilation failures with allmodconfig configurations as the symbols
+> > >> (like of_icc_get()) used in other frameworks will not be available in
+> > >> the built-in image.
+> > >>
+> > >> Disallow the interconnect core to be built as a module to avoid all
+> > >> these issues.
+> > 
+> > Hi Greg,
+> > 
+> > We had a discussion [1] a few months back about frameworks being built as
+> > modules. IIUC, you initially expressed some doubts about this patch, so i
+> > wanted to check with you again on this.
+> > 
+> > While i think that the possibility for a framework core to be a module is a
+> > nice feature, and we should try to be as modular as possible, it seems that
+> > handling dependencies between the different core frameworks becomes difficult
+> > when one of them is tristate.
+> > 
+> > This of course affects the drivers which use it (every client should express
+> > the dependency in Kconfig as a "depends on framework || !framework"), in order
+> > to avoid build failures in the case when framework=m and client=y. However, this
+> > is not a big issue.
+> > 
+> > But it gets more complex when another framework2 becomes a client of the modular
+> > framework and especially when framework2 is "select"-ed in Kconfig by it's
+> > users. When selects are used in Kconfig, it forces the option, without ever
+> > visiting the dependencies. I am not sure what we should do in this case, maybe
+> > we can continue and sprinkle more "depends on framework || !framework" also for
+> > every single user which selects framework2.. But i believe that this is very
+> > inconvenient.
+> > 
+> > Well, the above is not impossible, but other frameworks (regulator, clk, reset,
+> > pinctrl, etc.) are solving this problem by just being bool, instead of tristate.
+> > This makes life much easier for everyone. So i am wondering if it wouldn't be
+> > more appropriate to use the same approach here too?
 > 
-> Hi,
-> 
-> Georgi Djakov <georgi.djakov@linaro.org> writes:
-> >>>>>> Sandeep Maheswaram <sanm@codeaurora.org> writes:
-> >>>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
-> >>>>>>> +{
-> >>>>>>> +	struct device *dev = qcom->dev;
-> >>>>>>> +	int ret;
-> >>>>>>> +
-> >>>>>>> +	if (!device_is_bound(&qcom->dwc3->dev))
-> >>>>>>> +		return -EPROBE_DEFER;
-> >>>>>>
-> >>>>>> this breaks allmodconfig. I'm dropping this series from my queue for
-> >>>>>> this merge window.
-> >>>>>
-> >>>>> Sorry, I meant this patch ;-)
-> >>>>
-> >>>> I guess that's due to INTERCONNECT being a module. There is currently a
-> >>>
-> >>> I believe it's because of this:
-> >>> ERROR: modpost: "device_is_bound" [drivers/usb/dwc3/dwc3-qcom.ko] undefined!
-> >>>
-> >>>> discussion about this  with Viresh and Georgi in response to another
-> >>>> automated build failure. Viresh suggests changing CONFIG_INTERCONNECT
-> >>>> from tristate to bool, which seems sensible to me given that interconnect
-> >>>> is a core subsystem.
-> >>>
-> >>> The problem you are talking about would arise when INTERCONNECT=m and
-> >>> USB_DWC3_QCOM=y and it definitely exists here and could be triggered with
-> >>> randconfig build. So i suggest to squash also the diff below.
-> >>>
-> >>> Thanks,
-> >>> Georgi
-> >>>
-> >>> ---8<---
-> >>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-> >>> index 206caa0ea1c6..6661788b1a76 100644
-> >>> --- a/drivers/usb/dwc3/Kconfig
-> >>> +++ b/drivers/usb/dwc3/Kconfig
-> >>> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
-> >>>  	tristate "Qualcomm Platform"
-> >>>  	depends on ARCH_QCOM || COMPILE_TEST
-> >>>  	depends on EXTCON || !EXTCON
-> >>> +	depends on INTERCONNECT || !INTERCONNECT
-> >> 
-> >> I would prefer to see a patch adding EXPORT_SYMBOL_GPL() to device_is_bound()
-> >
-> > Agree, but just to clarify, that these are two separate issues that need to
-> > be fixed. The device_is_bound() is the first one and USB_DWC3_QCOM=y combined
-> > with INTERCONNECT=m is the second one.
-> 
-> If INTERCONNECT=m, QCOM3 shouldn't be y. I think the following is
-> enough:
-> 
-> 	depends on INTERCONNECT=y || INTERCONNECT=USB_DWC3_QCOM
+> Ok, if it makes things easier, perhaps this is the best way to handle
+> it.
 > 
 
-This misses the case where INTERCONNECT=n and USB_DWC3_QCOM=[ym] which
-I don't see a reason for breaking.
+It most certainly does.
 
-But if only INTERCONNECT where a bool, then we don't need to specify a
-depends on, because it will either be there, or the stubs will.
-We've come to this conclusion in a lot of different frameworks and I
-don't see why we should do this differently with INTERCONNECT.
+With INTERCONNECT as a bool we can handle its absence with stub
+functions - like every other framework does. But as a tristate then
+every driver with a call to the interconnect api needs an entry in
+Kconfig to ensure the client driver must be a module if the interconnect
+framework is.
 
 Regards,
 Bjorn
