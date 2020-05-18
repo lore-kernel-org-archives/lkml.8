@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0465DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D973F207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC81207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823797;
-	bh=DtZk9N0jACzETeARCKHK0Dvij7sIsuRxKR5jxQ1/l2g=;
+	s=default; t=1589823803;
+	bh=aWKxntaITNK5Crmzs5lhTI9tLJXLyzOlCRtDtXkeG0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFINvwLu4OVy8DYxWxJHEbQqjsNhQPtE2OZV03aZDnS8cljDRnt6I1JPPR6cgFN2+
-	 9h+atveO0kdksKA43CXv94sr3pET7TEEhZyCQm3ZlwCDihsp010QjzuwAFNLcwao+7
-	 mQosjE0BRjiBEA/ftR2LlwUJP1u7eXPjB8u1aLBg=
+	b=Fe+ykNKBMsrEwrz2Qe3vOl7amZStJ5NxaGNEd9P8gFVL0MHrl37BLGAmPb/gI7Jwl
+	 D/l5sg+68vgW4bpqqp/3o+9OKUZ/h7U7LNYbF1yd+GpNVGIoHwP5RqonhDAUgAdo8W
+	 DRP9PBIBubNyufHrOnVNwsfohX7DDAn0AecTa1Ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgERRnR (ORCPT
+        id S1729564AbgERRnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40198 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:43:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729499AbgERRm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:59 -0400
+        id S1729526AbgERRnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:43:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3584A207C4;
-        Mon, 18 May 2020 17:42:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F18020829;
+        Mon, 18 May 2020 17:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823778;
-        bh=DtZk9N0jACzETeARCKHK0Dvij7sIsuRxKR5jxQ1/l2g=;
+        s=default; t=1589823788;
+        bh=aWKxntaITNK5Crmzs5lhTI9tLJXLyzOlCRtDtXkeG0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kojuri1zkpxIBr5hf5cgOs//yndKtGjTpZdOzdWJW18OVE/PIEC251KHqtuZrdx/9
-         i5JuDYOkaQnyUuHPORjuG4PTCQjwGLDbRxVoJ5pNZo8t+bHdT0KoPMR/da9tDlLai3
-         +fzg/YIVu5Zx2dv3YgVpIJxwQDCWTfFCE1X+8ST8=
+        b=vSmJmymPy088njy4ZziB0PZfCsweKPmWyfkg+fdexgDESoAYL1UapoQNa0MQK91GC
+         uP52eeuBxzSQQVxQYaxHRtRIbRM9A66jCtagnRbbcJWmug8uNT1Ftm+dGEfYluoreu
+         VOcemsNUNJoBWltLuEstWjTsNYMh2gF2DJv5Q1iQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Bob Liu <bob.liu@oracle.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Cengiz Can <cengiz@kernel.wtf>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 33/90] blktrace: fix dereference after null check
-Date:   Mon, 18 May 2020 19:36:11 +0200
-Message-Id: <20200518173457.869823680@linuxfoundation.org>
+Subject: [PATCH 4.9 37/90] chardev: add helper function to register char devs with a struct device
+Date:   Mon, 18 May 2020 19:36:15 +0200
+Message-Id: <20200518173458.652973043@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -63,68 +63,215 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cengiz Can <cengiz@kernel.wtf>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-commit 153031a301bb07194e9c37466cfce8eacb977621 upstream.
+commit 233ed09d7fdacf592ee91e6c97ce5f4364fbe7c0 upstream.
 
-There was a recent change in blktrace.c that added a RCU protection to
-`q->blk_trace` in order to fix a use-after-free issue during access.
+Credit for this patch goes is shared with Dan Williams [1]. I've
+taken things one step further to make the helper function more
+useful and clean up calling code.
 
-However the change missed an edge case that can lead to dereferencing of
-`bt` pointer even when it's NULL:
+There's a common pattern in the kernel whereby a struct cdev is placed
+in a structure along side a struct device which manages the life-cycle
+of both. In the naive approach, the reference counting is broken and
+the struct device can free everything before the chardev code
+is entirely released.
 
-Coverity static analyzer marked this as a FORWARD_NULL issue with CID
-1460458.
+Many developers have solved this problem by linking the internal kobjs
+in this fashion:
 
-```
-/kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
-1898            ret = 0;
-1899            if (bt == NULL)
-1900                    ret = blk_trace_setup_queue(q, bdev);
-1901
-1902            if (ret == 0) {
-1903                    if (attr == &dev_attr_act_mask)
->>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
->>>     Dereferencing null pointer "bt".
-1904                            bt->act_mask = value;
-1905                    else if (attr == &dev_attr_pid)
-1906                            bt->pid = value;
-1907                    else if (attr == &dev_attr_start_lba)
-1908                            bt->start_lba = value;
-1909                    else if (attr == &dev_attr_end_lba)
-```
+cdev.kobj.parent = &parent_dev.kobj;
 
-Added a reassignment with RCU annotation to fix the issue.
+The cdev code explicitly gets and puts a reference to it's kobj parent.
+So this seems like it was intended to be used this way. Dmitrty Torokhov
+first put this in place in 2012 with this commit:
 
-Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+2f0157f char_dev: pin parent kobject
+
+and the first instance of the fix was then done in the input subsystem
+in the following commit:
+
+4a215aa Input: fix use-after-free introduced with dynamic minor changes
+
+Subsequently over the years, however, this issue seems to have tripped
+up multiple developers independently. For example, see these commits:
+
+0d5b7da iio: Prevent race between IIO chardev opening and IIO device
+(by Lars-Peter Clausen in 2013)
+
+ba0ef85 tpm: Fix initialization of the cdev
+(by Jason Gunthorpe in 2015)
+
+5b28dde [media] media: fix use-after-free in cdev_put() when app exits
+after driver unbind
+(by Shauh Khan in 2016)
+
+This technique is similarly done in at least 15 places within the kernel
+and probably should have been done so in another, at least, 5 places.
+The kobj line also looks very suspect in that one would not expect
+drivers to have to mess with kobject internals in this way.
+Even highly experienced kernel developers can be surprised by this
+code, as seen in [2].
+
+To help alleviate this situation, and hopefully prevent future
+wasted effort on this problem, this patch introduces a helper function
+to register a char device along with its parent struct device.
+This creates a more regular API for tying a char device to its parent
+without the developer having to set members in the underlying kobject.
+
+This patch introduce cdev_device_add and cdev_device_del which
+replaces a common pattern including setting the kobj parent, calling
+cdev_add and then calling device_add. It also introduces cdev_set_parent
+for the few cases that set the kobject parent without using device_add.
+
+[1] https://lkml.org/lkml/2017/2/13/700
+[2] https://lkml.org/lkml/2017/2/10/370
+
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Hans Verkuil <hans.verkuil@cisco.com>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/char_dev.c        | 86 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/cdev.h |  5 +++
+ 2 files changed, 91 insertions(+)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 78a896acd21ac..6d3b432a748a6 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1826,8 +1826,11 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
- 	}
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index 23e0477edf7d6..1bbb966c0783f 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -477,6 +477,85 @@ int cdev_add(struct cdev *p, dev_t dev, unsigned count)
+ 	return 0;
+ }
  
- 	ret = 0;
--	if (bt == NULL)
-+	if (bt == NULL) {
- 		ret = blk_trace_setup_queue(q, bdev);
-+		bt = rcu_dereference_protected(q->blk_trace,
-+				lockdep_is_held(&q->blk_trace_mutex));
++/**
++ * cdev_set_parent() - set the parent kobject for a char device
++ * @p: the cdev structure
++ * @kobj: the kobject to take a reference to
++ *
++ * cdev_set_parent() sets a parent kobject which will be referenced
++ * appropriately so the parent is not freed before the cdev. This
++ * should be called before cdev_add.
++ */
++void cdev_set_parent(struct cdev *p, struct kobject *kobj)
++{
++	WARN_ON(!kobj->state_initialized);
++	p->kobj.parent = kobj;
++}
++
++/**
++ * cdev_device_add() - add a char device and it's corresponding
++ *	struct device, linkink
++ * @dev: the device structure
++ * @cdev: the cdev structure
++ *
++ * cdev_device_add() adds the char device represented by @cdev to the system,
++ * just as cdev_add does. It then adds @dev to the system using device_add
++ * The dev_t for the char device will be taken from the struct device which
++ * needs to be initialized first. This helper function correctly takes a
++ * reference to the parent device so the parent will not get released until
++ * all references to the cdev are released.
++ *
++ * This helper uses dev->devt for the device number. If it is not set
++ * it will not add the cdev and it will be equivalent to device_add.
++ *
++ * This function should be used whenever the struct cdev and the
++ * struct device are members of the same structure whose lifetime is
++ * managed by the struct device.
++ *
++ * NOTE: Callers must assume that userspace was able to open the cdev and
++ * can call cdev fops callbacks at any time, even if this function fails.
++ */
++int cdev_device_add(struct cdev *cdev, struct device *dev)
++{
++	int rc = 0;
++
++	if (dev->devt) {
++		cdev_set_parent(cdev, &dev->kobj);
++
++		rc = cdev_add(cdev, dev->devt, 1);
++		if (rc)
++			return rc;
 +	}
++
++	rc = device_add(dev);
++	if (rc)
++		cdev_del(cdev);
++
++	return rc;
++}
++
++/**
++ * cdev_device_del() - inverse of cdev_device_add
++ * @dev: the device structure
++ * @cdev: the cdev structure
++ *
++ * cdev_device_del() is a helper function to call cdev_del and device_del.
++ * It should be used whenever cdev_device_add is used.
++ *
++ * If dev->devt is not set it will not remove the cdev and will be equivalent
++ * to device_del.
++ *
++ * NOTE: This guarantees that associated sysfs callbacks are not running
++ * or runnable, however any cdevs already open will remain and their fops
++ * will still be callable even after this function returns.
++ */
++void cdev_device_del(struct cdev *cdev, struct device *dev)
++{
++	device_del(dev);
++	if (dev->devt)
++		cdev_del(cdev);
++}
++
+ static void cdev_unmap(dev_t dev, unsigned count)
+ {
+ 	kobj_unmap(cdev_map, dev, count);
+@@ -488,6 +567,10 @@ static void cdev_unmap(dev_t dev, unsigned count)
+  *
+  * cdev_del() removes @p from the system, possibly freeing the structure
+  * itself.
++ *
++ * NOTE: This guarantees that cdev device will no longer be able to be
++ * opened, however any cdevs already open will remain and their fops will
++ * still be callable even after cdev_del returns.
+  */
+ void cdev_del(struct cdev *p)
+ {
+@@ -576,5 +659,8 @@ EXPORT_SYMBOL(cdev_init);
+ EXPORT_SYMBOL(cdev_alloc);
+ EXPORT_SYMBOL(cdev_del);
+ EXPORT_SYMBOL(cdev_add);
++EXPORT_SYMBOL(cdev_set_parent);
++EXPORT_SYMBOL(cdev_device_add);
++EXPORT_SYMBOL(cdev_device_del);
+ EXPORT_SYMBOL(__register_chrdev);
+ EXPORT_SYMBOL(__unregister_chrdev);
+diff --git a/include/linux/cdev.h b/include/linux/cdev.h
+index f8763615a5f2d..408bc09ce497b 100644
+--- a/include/linux/cdev.h
++++ b/include/linux/cdev.h
+@@ -4,6 +4,7 @@
+ #include <linux/kobject.h>
+ #include <linux/kdev_t.h>
+ #include <linux/list.h>
++#include <linux/device.h>
  
- 	if (ret == 0) {
- 		if (attr == &dev_attr_act_mask)
+ struct file_operations;
+ struct inode;
+@@ -26,6 +27,10 @@ void cdev_put(struct cdev *p);
+ 
+ int cdev_add(struct cdev *, dev_t, unsigned);
+ 
++void cdev_set_parent(struct cdev *p, struct kobject *kobj);
++int cdev_device_add(struct cdev *cdev, struct device *dev);
++void cdev_device_del(struct cdev *cdev, struct device *dev);
++
+ void cdev_del(struct cdev *);
+ 
+ void cd_forget(struct inode *);
 -- 
 2.20.1
 
