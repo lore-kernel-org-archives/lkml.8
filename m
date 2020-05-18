@@ -2,144 +2,172 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49997C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D79FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1FA207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9E7207BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHMhIaCk"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lm2sye2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgEREHO (ORCPT
+        id S1726357AbgERENJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 00:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgEREHO (ORCPT
+        Mon, 18 May 2020 00:13:09 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5079 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgERENJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 00:07:14 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 151C6C061A0C;
-        Sun, 17 May 2020 21:07:13 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id u22so3666670plq.12;
-        Sun, 17 May 2020 21:07:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vn0pCsD2eFefj2+fTs7XzO6u3jKtlDfOwmx3cRoRly4=;
-        b=cHMhIaCkX3pXQFq2PIJmAuFIdrTtnL9laAO0yFzZFD9I/GFu3a6nzCXko9DFFSlca/
-         nrVBlyHWY8rYNJ1lytwIYw09VMG/S8Lgd641oFvcafcs15272Zj/GDyECezRyoeJk6Sr
-         oQnEQhPPt6uolmfY10YNkdXprLaaADn1T2B0G4QsdFX60uo7KQDcw9ApqicxNmrgbvCc
-         iDu92Iwus6M2dnH5rVXgOpqyClmQyxAFuC55FFZlJ/aptu2jfrZNagBq7HRc+3YtMpHy
-         DIM7R2Hc07ymEU1nCgI6tkWa6EHR2wrdNlPtsyz9NKIaxOq+duaFwKbv8TefUM1af7Hs
-         2VZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vn0pCsD2eFefj2+fTs7XzO6u3jKtlDfOwmx3cRoRly4=;
-        b=l7hEN6rvme//K3SaHFQymn4RjpoK1qbBq2bA8XPQG0L0CMNZv7VaQsMSFAFW/jQ4Ux
-         4tboMUZ2vmkp2qQ9L6h6I1TNEkLSzc4T829mI5ORNLNb3YiwUkiPs18yL6v3a5Bx+kGj
-         kn88ku6yVODfOyLI9Gxk1gGIE4fiNpX0lAGSTB4S43pWCU4k07Ej45jeqSULwoVc4vvB
-         DvuTJe4MSbizvDk5fClQxUezXctHwJHpNji8oeKgG5gN+aQ09V398SYnn6xeVXIV+7us
-         WHdhnb4jFzkaUpqxQEIpPbJCGvg2M/Y2++tIpoOyrIZMoWpTIi1bwCqsHJwqD5KNk54D
-         2lrQ==
-X-Gm-Message-State: AOAM531kwKkwd4lCrJgXxqLqZgT/WeBJePMIHIDUVwTQGhdoE3f7A7AO
-        WzhAAyk6IUdaa+HvQfSclFM=
-X-Google-Smtp-Source: ABdhPJwP0PBNC2vfOxKjBQo6BDkblLwCXLnx/SPsb48qHcgzGpZ4WAnJ6e70pMImWPHGc+lqVQPgXQ==
-X-Received: by 2002:a17:90b:f8c:: with SMTP id ft12mr17610396pjb.127.1589774832490;
-        Sun, 17 May 2020 21:07:12 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id r21sm7114392pjo.2.2020.05.17.21.07.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 21:07:12 -0700 (PDT)
-Date:   Sun, 17 May 2020 21:07:10 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     David Heidelberg <david@ixit.cz>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 01/10] input: elants: document some registers and
- values
-Message-ID: <20200518040710.GQ89269@dtor-ws>
-References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
- <a8c17a4c804ad5c429269cc0468d8cb4c0783a47.1587923061.git.mirq-linux@rere.qmqm.pl>
+        Mon, 18 May 2020 00:13:09 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec20ac70001>; Sun, 17 May 2020 21:10:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 17 May 2020 21:13:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 17 May 2020 21:13:08 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
+ 2020 04:13:08 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 18 May 2020 04:13:08 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ec20b540001>; Sun, 17 May 2020 21:13:08 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH] drivers/mic/scif: convert get_user_pages() --> pin_user_pages()
+Date:   Sun, 17 May 2020 21:13:07 -0700
+Message-ID: <20200518041307.1987328-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a8c17a4c804ad5c429269cc0468d8cb4c0783a47.1587923061.git.mirq-linux@rere.qmqm.pl>
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589775048; bh=cuwLKOTJKSE6e49q/J5ZEuun7K4FWrcNFCi0NALDsCU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=lm2sye2uxDAzQsDuz72nrdclnyI+3mSXl54DWnuRzTk+mC20/nJG9pn0GZ45CY3Mn
+         dvPj8WeT0ELbY0UEwItFvN4jcTRLHFhLV4dHfZfqEsp6uWUgOGFYqu0DntiBv5TCQG
+         PUl0MbKAszDT/61TaTs2LM9sG3zpq+N+Dr73UK5uK8y6eOjsZc6pSt/TkFuI0f2Mhi
+         9Fi0DcmWd8Wwz9D54HyhQ3MIi6axa5MfHzSUiOFFcRF8nf5qweS+mtyjc0YyFP9Lpi
+         1982EhchbiVi7IjdMF9G7EfYjUc922cdxk162kvHRe4rb2GCna6azhPexEMrx5kE74
+         ovuORk6R7yPgg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 07:47:49PM +0200, Michał Mirosław wrote:
-> Add information found in downstream kernels, to make the code less
-> magic.
-> 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/input/touchscreen/elants_i2c.c | 29 +++++++++++++++++++++-----
->  1 file changed, 24 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-> index 2289f9638116..d2175fb6209a 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -81,7 +81,11 @@
->  
->  #define HEADER_REPORT_10_FINGER	0x62
->  
-> -/* Header (4 bytes) plus 3 fill 10-finger packets */
-> +/* Power state */
-> +#define PWR_STATE_DEEP_SLEEP	0
-> +#define PWR_STATE_NORMAL	1
-> +
-> +/* Header (4 bytes) plus 3 full 10-finger packets */
->  #define MAX_PACKET_SIZE		169
->  
->  #define BOOT_TIME_DELAY_MS	50
-> @@ -91,10 +95,21 @@
->  #define E_ELAN_INFO_BC_VER	0x10
->  #define E_ELAN_INFO_TEST_VER	0xE0
->  #define E_ELAN_INFO_FW_ID	0xF0
-> +#define E_POWER_MODE		0x40
-> +#define E_POWER_STATE		0x50
-> +#define E_INFO_X_RES		0x60
-> +#define E_INFO_Y_RES		0x63
+This code was using get_user_pages*(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages*() + put_page() calls to
+pin_user_pages*() + unpin_user_pages() calls.
 
-I would prefer if we introduced these in the patches that use them.
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
->  #define E_INFO_OSR		0xD6
->  #define E_INFO_PHY_SCAN		0xD7
->  #define E_INFO_PHY_DRIVER	0xD8
->  
-> +/* FW write command, 0x54 0x?? 0x0, 0x01 */
-> +#define E_POWER_MODE_BATTERY	0x40
-> +#define E_POWER_MODE_AC		0x41
-> +#define E_POWER_MODE_USB	0x42
+Note that this effectively changes the code's behavior as well: it now
+ultimately calls set_page_dirty_lock(), instead of SetPageDirty(). This
+is probably more accurate.
 
-What is this for?
+As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
+dealing with a file backed page where we have reference on the inode it
+hangs off." [3]
 
-> +#define E_POWER_STATE_SLEEP	0x50
-> +#define E_POWER_STATE_RESUME	0x58
+[1] Documentation/core-api/pin_user_pages.rst
 
-Thanks.
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
 
--- 
-Dmitry
+[3] https://lore.kernel.org/r/20190723153640.GB720@lst.de
+
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+
+Hi,
+
+Note that I have only compile-tested this patch, although that does
+also include cross-compiling for a few other arches.
+
+thanks,
+John Hubbard
+NVIDIA
+
+ drivers/misc/mic/scif/scif_rma.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/misc/mic/scif/scif_rma.c b/drivers/misc/mic/scif/scif_=
+rma.c
+index 01e27682ea30..406cd5abfa72 100644
+--- a/drivers/misc/mic/scif/scif_rma.c
++++ b/drivers/misc/mic/scif/scif_rma.c
+@@ -113,14 +113,17 @@ static int scif_destroy_pinned_pages(struct scif_pinn=
+ed_pages *pin)
+ 	int writeable =3D pin->prot & SCIF_PROT_WRITE;
+ 	int kernel =3D SCIF_MAP_KERNEL & pin->map_flags;
+=20
+-	for (j =3D 0; j < pin->nr_pages; j++) {
+-		if (pin->pages[j] && !kernel) {
+-			if (writeable)
+-				SetPageDirty(pin->pages[j]);
+-			put_page(pin->pages[j]);
++	if (kernel) {
++		for (j =3D 0; j < pin->nr_pages; j++) {
++			if (pin->pages[j] && !kernel) {
++				if (writeable)
++					set_page_dirty_lock(pin->pages[j]);
++				put_page(pin->pages[j]);
++			}
+ 		}
+-	}
+-
++	} else
++		unpin_user_pages_dirty_lock(pin->pages, pin->nr_pages,
++					    writeable);
+ 	scif_free(pin->pages,
+ 		  pin->nr_pages * sizeof(*pin->pages));
+ 	scif_free(pin, sizeof(*pin));
+@@ -1375,7 +1378,7 @@ int __scif_pin_pages(void *addr, size_t len, int *out=
+_prot,
+ 			}
+ 		}
+=20
+-		pinned_pages->nr_pages =3D get_user_pages_fast(
++		pinned_pages->nr_pages =3D pin_user_pages_fast(
+ 				(u64)addr,
+ 				nr_pages,
+ 				(prot & SCIF_PROT_WRITE) ? FOLL_WRITE : 0,
+@@ -1385,11 +1388,8 @@ int __scif_pin_pages(void *addr, size_t len, int *ou=
+t_prot,
+ 				if (ulimit)
+ 					__scif_dec_pinned_vm_lock(mm, nr_pages);
+ 				/* Roll back any pinned pages */
+-				for (i =3D 0; i < pinned_pages->nr_pages; i++) {
+-					if (pinned_pages->pages[i])
+-						put_page(
+-						pinned_pages->pages[i]);
+-				}
++				unpin_user_pages(pinned_pages->pages,
++						 pinned_pages->nr_pages);
+ 				prot &=3D ~SCIF_PROT_WRITE;
+ 				try_upgrade =3D false;
+ 				goto retry;
+--=20
+2.26.2
+
