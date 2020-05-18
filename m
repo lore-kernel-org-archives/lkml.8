@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F067C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF102C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61B0220657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45FB20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826197;
-	bh=seknKxSv+DaRyGlwZogVGF+DYMRm5Pq8n3UvU5yQipQ=;
+	s=default; t=1589826204;
+	bh=bn+0jV5CaXBmRGOJ7t0CtgxsTfEHiDXFyApcbux1kbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kk7J79wi6W4pxvmi3hXHkPhhwNs/JcCcIrHSgBu2x2SRvZro7j5AZhEb1LAHEmAaA
-	 wAiwv+IYfCceC7ayJMH0hqxNIHZCOWO82lUmCTwZQ0Yj8aRHgCrVk2XfMHPQxNHy5j
-	 EC7PUSAf05rwKoQRxCfBUg2taqYQqfKsmyx/3mxI=
+	b=QRETZzGRhxWuCY5touLUpq4ofub89qhIVyXeA4Ab0GSCInDf8Q/AreybuRruX410G
+	 keyJbEiYxObWmfDXxkVOSyzfOM535IM2ThW/A1urbbIQPtuWXlk8hj5NUGuKuhVz/J
+	 v0eBQ2m9gy7xa/KsYCwulqhLUQKopZnsqwoyz3Pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387830AbgERSXQ (ORCPT
+        id S1731494AbgERSXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51048 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbgERRtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:25 -0400
+        id S1729400AbgERRtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D00520715;
-        Mon, 18 May 2020 17:49:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FCDF20674;
+        Mon, 18 May 2020 17:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824164;
-        bh=seknKxSv+DaRyGlwZogVGF+DYMRm5Pq8n3UvU5yQipQ=;
+        s=default; t=1589824154;
+        bh=bn+0jV5CaXBmRGOJ7t0CtgxsTfEHiDXFyApcbux1kbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MvWG+ZRkPpmR7R8PPs+U7cyC8yYXrlb+BHxBvhaW6h8k+dvBWyq2lSOpQhuzVZbAG
-         zj6Rc/cSSXlyRzLNmD+r6SOlZZrMAv8Oe0ELaSrzmF4L6TticuFQPW5j57Nujj49+Q
-         TwDdVDCD8CWLQSyLyTj1DwgsRUqTXTSJSPqJ8wNc=
+        b=PP2oRVE51Cw4s4GutfuerG4Mf/7lqZSf0UqMijqc2Rgjzm4tsFECKta2t6VHfuC8s
+         iFII1VMw/z1D+KI+g92J+W0EW+hyuhYTMwqgJQkTzgMfhfAia4EGtY4acRpXK1A4UX
+         iihJD5bzjHVqq1i209aAjK9mg74xpNOcrIxTgmi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH 4.14 097/114] usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to USB5534B
-Date:   Mon, 18 May 2020 19:37:09 +0200
-Message-Id: <20200518173519.260708121@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 076/114] gcc-10: disable stringop-overflow warning for now
+Date:   Mon, 18 May 2020 19:36:48 +0200
+Message-Id: <20200518173516.490561046@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -62,72 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 76e1ef1d81a4129d7e2fb8c48c83b166d1c8e040 upstream.
+commit 5a76021c2eff7fcf2f0918a08fd8a37ce7922921 upstream.
 
-On Tue, May 12, 2020 at 09:36:07PM +0800, Kai-Heng Feng wrote [1]:
-> This patch prevents my Raven Ridge xHCI from getting runtime suspend.
+This is the final array bounds warning removal for gcc-10 for now.
 
-The problem described in v5.6 commit 1208f9e1d758c9 ("USB: hub: Fix the
-broken detection of USB3 device in SMSC hub") applies solely to the
-USB5534B hub [2] present on the Kingfisher Infotainment Carrier Board,
-manufactured by Shimafuji Electric Inc [3].
+Again, the warning is good, and we should re-enable all these warnings
+when we have converted all the legacy array declaration cases to
+flexible arrays. But in the meantime, it's just noise.
 
-Despite that, the aforementioned commit applied the quirk to _all_ hubs
-carrying vendor ID 0x424 (i.e. SMSC), of which there are more [4] than
-initially expected. Consequently, the quirk is now enabled on platforms
-carrying SMSC/Microchip hub models which potentially don't exhibit the
-original issue.
-
-To avoid reports like [1], further limit the quirk's scope to
-USB5534B [2], by employing both Vendor and Product ID checks.
-
-Tested on H3ULCB + Kingfisher rev. M05.
-
-[1] https://lore.kernel.org/linux-renesas-soc/73933975-6F0E-40F5-9584-D2B8F615C0F3@canonical.com/
-[2] https://www.microchip.com/wwwproducts/en/USB5534B
-[3] http://www.shimafuji.co.jp/wp/wp-content/uploads/2018/08/SBEV-RCAR-KF-M06Board_HWSpecificationEN_Rev130.pdf
-[4] https://devicehunt.com/search/type/usb/vendor/0424/device/any
-
-Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
-Cc: stable@vger.kernel.org # v4.14+
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
-Cc: linux-renesas-soc@vger.kernel.org
-Cc: linux-usb@vger.kernel.org
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20200514220246.13290-1-erosca@de.adit-jv.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ Makefile |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -37,6 +37,7 @@
+--- a/Makefile
++++ b/Makefile
+@@ -803,6 +803,7 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+ # We'll want to enable this eventually, but it's not going away for 5.7 at least
+ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
++KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
  
- #define USB_VENDOR_GENESYS_LOGIC		0x05e3
- #define USB_VENDOR_SMSC				0x0424
-+#define USB_PRODUCT_USB5534B			0x5534
- #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
- #define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
- 
-@@ -5317,8 +5318,11 @@ out_hdev_lock:
- }
- 
- static const struct usb_device_id hub_id_table[] = {
--    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
-+    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
-+                   | USB_DEVICE_ID_MATCH_PRODUCT
-+                   | USB_DEVICE_ID_MATCH_INT_CLASS,
-       .idVendor = USB_VENDOR_SMSC,
-+      .idProduct = USB_PRODUCT_USB5534B,
-       .bInterfaceClass = USB_CLASS_HUB,
-       .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
-     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
 
 
