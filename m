@@ -2,102 +2,151 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B76DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3299A20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA442070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vp8NHPcU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="r3dnNW0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgERCe2 (ORCPT
+        id S1726731AbgERCg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 22:34:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbgERCeW (ORCPT
+        Sun, 17 May 2020 22:36:59 -0400
+Received: from [115.28.160.31] ([115.28.160.31]:47348 "EHLO
+        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1726675AbgERCg6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 22:34:22 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81907C05BD09;
-        Sun, 17 May 2020 19:34:21 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h26so6658622lfg.6;
-        Sun, 17 May 2020 19:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Xl1nvwDloC5SGyJGluG2bly0970Vlb/BB3rsowSf9jg=;
-        b=Vp8NHPcUwpw8zYnWA8mTeUG+3McE8IfMPpfoMHJfWLwK8BY1J4U+IssULg3zjBUU0A
-         AXxrxx0pwnASo3ENkTOZIdDTrbuEzkGiVTFM7+GLqxAvk3jNSylzzwFaKRZYE2mCWWI5
-         71PdpGqhKQF7pJ702HGH3EOnn9un+gIwRc55ZjCvE5tbfvFATs9rcr2UsnlMrrTL09GK
-         Y//YlllpkcafLoRnsbM4shqCDTjmd3BXQeA9ymHgXHHi1qWPj+VilpwKrVAEOorEqvCZ
-         14097X6MtNZVF6jDqwU2+KzBqed3WQhtCOG4gAn8kO8WSCVP6EwJEZfrbeH4fYEVTpc8
-         eCng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Xl1nvwDloC5SGyJGluG2bly0970Vlb/BB3rsowSf9jg=;
-        b=m5QXR5BpFxz56IU4d/YLIiHdjApUMBaIkq3VuyZw45JSuoK4f787R91yYUnpDBwcgw
-         dwBBNg6ZfPlpoVNICyZjftTZks+xmEBsvl4eARzsfk1LMSBvufsMSDlYFmhRq6BZGA0j
-         mPYRm6GEoymKkhTL3A7phHXgLXWp4aS4AWlJdVUE+2vjStaAPqhgQ3NV+Dv0I6cit9Yt
-         OpiQuqEKV3dnXsShQAx2smijah2xi+zEbd2lb8eXn8/cRLoMwWaAN8Hkcr2X3mfqr421
-         e0PzhPnoDo5zLVgIbkJTWMdUpIJ8ryzCYCNrHmCMSgDrUglFR1RBzTEkzN1efAjPVRJj
-         WkNw==
-X-Gm-Message-State: AOAM533LrXLte3OQmFdFYWyB4vPaW/HfGeaFZfv5xdRA1hsxo4KgYgbh
-        R4F8ze8MEd0pVtXB0qhV88A=
-X-Google-Smtp-Source: ABdhPJyDKiLHGZ0GOOXmaKBS9PeMnLagvUEr271z/x0uzFEC4LwRMky2e2bGIHIRXSQQA9+KvZFZeA==
-X-Received: by 2002:a19:d57:: with SMTP id 84mr9997952lfn.112.1589769260032;
-        Sun, 17 May 2020 19:34:20 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id l25sm5937498lfh.71.2020.05.17.19.34.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 19:34:19 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v3 4/5] dt-bindings: arm: amlogic: add support for the Beelink GT-King Pro
-Date:   Mon, 18 May 2020 02:34:03 +0000
-Message-Id: <20200518023404.15166-5-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200518023404.15166-1-christianshewitt@gmail.com>
-References: <20200518023404.15166-1-christianshewitt@gmail.com>
+        Sun, 17 May 2020 22:36:58 -0400
+Received: from hanazono.local (unknown [116.236.177.50])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 84462600B4;
+        Mon, 18 May 2020 10:36:55 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
+        t=1589769415; bh=454XuQiZGJz74cqtV7Y1qbVoNSIrGmbj8yrfjhw0qtA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=r3dnNW0elBCA4uWOORwzxVfGu+MZYQZY5rf9WnjOjHMW4w1ENP0tmK2bxFzTxCRQF
+         buFI2C018iaYYJtrMtnOZhcE/N9aAjs/MHQGNu9umix9eCXGTfLUj7JjhV+ZYvPQ1L
+         AIIpkezGmUSwdws1Ks2PmJ0jy3WxMR2ieZIiU+Es=
+Subject: Re: [PATCH] MIPS: Loongson: Add support for serial console
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+References: <1589612588-29196-1-git-send-email-yangtiezhu@loongson.cn>
+ <5aadf1a7-51c7-453e-beaa-3df6ceca5354@xen0n.name>
+ <d5fde4bc-69a9-c9c0-70de-106968ecc7c4@loongson.cn>
+From:   WANG Xuerui <kernel@xen0n.name>
+Message-ID: <b9317e89-24e6-8ed1-96c2-12f82b8a7049@xen0n.name>
+Date:   Mon, 18 May 2020 10:36:55 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.0a1
+MIME-Version: 1.0
+In-Reply-To: <d5fde4bc-69a9-c9c0-70de-106968ecc7c4@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Shenzen AZW (Beelink) GT-King Pro is based on the Amlogic W400 reference
-board with an S922X chip.
+On 2020/5/18 09:08, Tiezhu Yang wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> On 05/16/2020 07:09 PM, WANG Xuerui wrote:
+>> On 5/16/20 3:03 PM, Tiezhu Yang wrote:
+>>
+>>> After commit 87fcfa7b7fe6 ("MIPS: Loongson64: Add generic dts"),
+>>> there already exists the node and property of Loongson CPU UART0
+>>> in loongson3-package.dtsi:
+>>>
+>>> cpu_uart0: serial@1fe001e0 {
+>>>          compatible = "ns16550a";
+>>>          reg = <0 0x1fe001e0 0x8>;
+>>>          clock-frequency = <33000000>;
+>>>          interrupt-parent = <&liointc>;
+>>>          interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+>>>          no-loopback-test;
+>>> };
+>>>
+>>> In order to support for serial console on the Loongson platform,
+>>> add CONFIG_SERIAL_OF_PLATFORM=y to loongson3_defconfig.
+>>>
+>>> With this patch, we can see the following boot message:
+>>>
+>>> [    1.877745] printk: console [ttyS0] disabled
+>>> [    1.881979] 1fe001e0.serial: ttyS0 at MMIO 0x1fe001e0 (irq = 16, 
+>>> base_baud = 2062500) is a 16550A
+>>> [    1.890838] printk: console [ttyS0] enabled
+>>>
+>>> And also, we can login normally from the serial console.
+>>>
+>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>> ---
+>>>
+>>> Hi Jiaxun,
+>>>
+>>> Thank you very much for your suggestion.
+>>>
+>>>   arch/mips/configs/loongson3_defconfig | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/mips/configs/loongson3_defconfig 
+>>> b/arch/mips/configs/loongson3_defconfig
+>>> index 6768c16..cd95f08 100644
+>>> --- a/arch/mips/configs/loongson3_defconfig
+>>> +++ b/arch/mips/configs/loongson3_defconfig
+>>> @@ -217,6 +217,7 @@ CONFIG_SERIAL_8250_EXTENDED=y
+>>>   CONFIG_SERIAL_8250_MANY_PORTS=y
+>>>   CONFIG_SERIAL_8250_SHARE_IRQ=y
+>>>   CONFIG_SERIAL_8250_RSA=y
+>>> +CONFIG_SERIAL_OF_PLATFORM=y
+>>>   CONFIG_HW_RANDOM=y
+>>>   CONFIG_RAW_DRIVER=m
+>>>   CONFIG_I2C_CHARDEV=y
+>>
+>> Hi,
+>>
+>> The patch title is again exaggerating things. This is a defconfig 
+>> change, so please refer to `git log` output of `arch/mips/configs` 
+>> and use something like "MIPS: Loongson: loongson3_defconfig: enable 
+>> serial console" or "MIPS: Loongson: enable serial console in 
+>> defconfig". The current title reads as if Loongson kernels never were 
+>> able to use a serial console in the past.
+>
+> Hi Xuerui,
+>
+> Thanks for your suggestion.
+>
+> We can not use the serial console without this patch,
+> so I use the current patch subject.
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index 25e118b8a97b..46cb6359f530 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -152,6 +152,7 @@ properties:
-         items:
-           - enum:
-               - azw,gtking
-+              - azw,gtking-pro
-               - hardkernel,odroid-n2
-               - khadas,vim3
-               - ugoos,am6
--- 
-2.17.1
+One can always use their own config to build in whatever support they 
+want. Only people blindly following defconfig are affected. That's why I 
+think the original patch title is exaggerating.
 
+>
+> Anyway, let me modify the patch subject to make it more accurate,
+> I think the following is better:
+> "MIPS: Loongson: Enable devicetree based probing for 8250 ports"
+>
+> drivers/tty/serial/8250/Kconfig:
+> config SERIAL_OF_PLATFORM
+>         tristate "Devicetree based probing for 8250 ports"
+>
+> I will send v2 later.
+>
+No problem. Just make it clear that these are defconfig changes so 
+people don't misunderstand, even if they're otherwise unfamiliar with 
+the current state of things.
+> Thanks,
+> Tiezhu Yang
+>
