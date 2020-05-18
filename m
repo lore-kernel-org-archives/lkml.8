@@ -2,138 +2,179 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D97220643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fb8jC7BE"
+	by mail.kernel.org (Postfix) with ESMTP id 6923020643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgERMMS (ORCPT
+        id S1727772AbgERMMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:12:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53160 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726682AbgERMMR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:12:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589803935;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6/EWbjFmwbmvg4uq23X0Lczc3hPOEd517yRWe/yPnXY=;
-        b=fb8jC7BEgi3vH7lNzEYY6p4nttT0HIPHJiq1fhfJ6BrqN9UUbSVIUcB1uA6aXHTaUh0N9M
-        A3V+LG60f43UTpWhC0uuhsmlCuBob0xPUqAqeGxCrUK31pF/lGkYt9LqLbfexKDzuAeFqy
-        IqPe3UEVGssdjBQ+WnjPNau7d7D5ttk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-JFMSKqioPeSueabZHReEjA-1; Mon, 18 May 2020 08:12:14 -0400
-X-MC-Unique: JFMSKqioPeSueabZHReEjA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68107BFC0;
-        Mon, 18 May 2020 12:12:11 +0000 (UTC)
-Received: from starship (unknown [10.35.206.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E5A6100239B;
-        Mon, 18 May 2020 12:12:05 +0000 (UTC)
-Message-ID: <2b5bbfd9b6e4a82262de75be8a1c93a02be127b3.camel@redhat.com>
-Subject: Re: [PATCH 0/2] Expose KVM API to Linux Kernel
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Anastassios Nanos <ananos@nubificus.co.uk>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mon, 18 May 2020 08:12:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:39268 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726682AbgERMMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:12:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 985E4106F;
+        Mon, 18 May 2020 05:12:20 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0201D3F305;
+        Mon, 18 May 2020 05:12:17 -0700 (PDT)
+Date:   Mon, 18 May 2020 13:12:10 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Date:   Mon, 18 May 2020 15:12:04 +0300
-In-Reply-To: <f077234c-ea74-faaf-422a-fd5d2c1c6923@redhat.com>
-References: <cover.1589784221.git.ananos@nubificus.co.uk>
-         <c1124c27293769f8e4836fb8fdbd5adf@kernel.org>
-         <CALRTab90UyMq2hMxCdCmC3GwPWFn2tK_uKMYQP2YBRcHwzkEUQ@mail.gmail.com>
-         <760e0927-d3a7-a8c6-b769-55f43a65e095@redhat.com>
-         <680e86ca19dd9270b95917da1d65e4b4d2bb18a9.camel@redhat.com>
-         <f077234c-ea74-faaf-422a-fd5d2c1c6923@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mark Rutland <mark.rutland@am.com>,
+        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
+Subject: Re: [PATCH 4/6] scs: Move scs_overflow_check() out of architecture
+ code
+Message-ID: <20200518121210.GD1957@C02TD0UTHF1T.local>
+References: <20200515172756.27185-1-will@kernel.org>
+ <20200515172756.27185-5-will@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515172756.27185-5-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 13:51 +0200, Paolo Bonzini wrote:
-> On 18/05/20 13:34, Maxim Levitsky wrote:
-> > > In high-performance configurations, most of the time virtio devices are
-> > > processed in another thread that polls on the virtio rings.  In this
-> > > setup, the rings are configured to not cause a vmexit at all; this has
-> > > much smaller latency than even a lightweight (kernel-only) vmexit,
-> > > basically corresponding to writing an L1 cache line back to L2.
-> > 
-> > This can be used to run kernel drivers inside a very thin VM IMHO to break up the stigma,
-> > that kernel driver is always a bad thing to and should be by all means replaced by a userspace driver,
-> > something I see a lot lately, and what was the ground for rejection of my nvme-mdev proposal.
+On Fri, May 15, 2020 at 06:27:54PM +0100, Will Deacon wrote:
+> There is nothing architecture-specific about scs_overflow_check() as
+> it's just a trivial wrapper around scs_corrupted().
 > 
-> It's a tought design decision between speeding up a kernel driver with
-> something like eBPF or wanting to move everything to userspace.
+> For parity with task_stack_end_corrupted(), rename scs_corrupted() to
+> task_scs_end_corrupted() and call it from schedule_debug() when
+> CONFIG_SCHED_STACK_END_CHECK_is enabled. Finally, remove the unused
+> scs_overflow_check() function entirely.
 > 
-> Networking has moved more towards the first because there are many more
-> opportunities for NIC-based acceleration, while storage has moved
-> towards the latter with things such as io_uring.  That said, I don't see
-> why in-kernel NVMeoF drivers would be acceptable for anything but Fibre
-> Channel (and that's only because FC HBAs try hard to hide most of the
-> SAN layers).
+> This has absolutely no impact on architectures that do not support SCS
+> (currently arm64 only).
 > 
-> Paolo
+> Signed-off-by: Will Deacon <will@kernel.org>
+
+Pulling this out of arch code seems sane to me, and the arch-specific
+chanes look sound. However, I have a concern with the changes within the
+scheduler context-switch.
+
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index a35d3318492c..56be4cbf771f 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -52,7 +52,6 @@
+>  #include <asm/mmu_context.h>
+>  #include <asm/processor.h>
+>  #include <asm/pointer_auth.h>
+> -#include <asm/scs.h>
+>  #include <asm/stacktrace.h>
+>  
+>  #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
+> @@ -516,7 +515,6 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
+>  	entry_task_switch(next);
+>  	uao_thread_switch(next);
+>  	ssbs_thread_switch(next);
+> -	scs_overflow_check(next);
+
+Prior to this patch, we'd never switch to a task whose SCS had already
+been corrupted.
+
+With this patch, we only check that when switching away from a task, and
+only when CONFIG_SCHED_STACK_END_CHECK is selected, which at first
+glance seems to weaken that.
+
+Arguably:
+
+* If the next task's SCS was corrupted by that task while it was
+  running, we had already lost at that point.
+
+* If the next task's SCS was corrupted by another task, then that could
+  also happen immediately after the check (though timing to avoid the
+  check but affect the process could be harder).
+
+... and a VMAP'd SCS would be much nicer in this regard.
+
+Do we think this is weakening the check, or do we think it wasn't all
+that helpful to begin with?
+
+Mark.
+
+>  
+>  	/*
+>  	 * Complete any pending TLB or cache maintenance on this CPU in case
+> diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
+> index adc97f826fab..955875dff9e1 100644
+> --- a/arch/arm64/kernel/scs.c
+> +++ b/arch/arm64/kernel/scs.c
+> @@ -6,7 +6,7 @@
+>   */
+>  
+>  #include <linux/percpu.h>
+> -#include <asm/scs.h>
+> +#include <linux/scs.h>
+>  
+>  /* Allocate a static per-CPU shadow stack */
+>  #define DEFINE_SCS(name)						\
+> diff --git a/include/linux/scs.h b/include/linux/scs.h
+> index 0eb2485ef832..2fd3df50e93e 100644
+> --- a/include/linux/scs.h
+> +++ b/include/linux/scs.h
+> @@ -47,7 +47,7 @@ static inline unsigned long *__scs_magic(void *s)
+>  	return (unsigned long *)(s + SCS_SIZE) - 1;
+>  }
+>  
+> -static inline bool scs_corrupted(struct task_struct *tsk)
+> +static inline bool task_scs_end_corrupted(struct task_struct *tsk)
+>  {
+>  	unsigned long *magic = __scs_magic(task_scs(tsk));
+>  	unsigned long sz = task_scs_sp(tsk) - task_scs(tsk);
+> @@ -60,8 +60,8 @@ static inline bool scs_corrupted(struct task_struct *tsk)
+>  static inline void scs_init(void) {}
+>  static inline void scs_task_reset(struct task_struct *tsk) {}
+>  static inline int scs_prepare(struct task_struct *tsk, int node) { return 0; }
+> -static inline bool scs_corrupted(struct task_struct *tsk) { return false; }
+>  static inline void scs_release(struct task_struct *tsk) {}
+> +static inline bool task_scs_end_corrupted(struct task_struct *tsk) { return false; }
+>  
+>  #endif /* CONFIG_SHADOW_CALL_STACK */
+>  
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 934e03cfaec7..a1d815a11b90 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3878,6 +3878,9 @@ static inline void schedule_debug(struct task_struct *prev, bool preempt)
+>  #ifdef CONFIG_SCHED_STACK_END_CHECK
+>  	if (task_stack_end_corrupted(prev))
+>  		panic("corrupted stack end detected inside scheduler\n");
+> +
+> +	if (task_scs_end_corrupted(prev))
+> +		panic("corrupted shadow stack detected inside scheduler\n");
+>  #endif
+>  
+>  #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+> diff --git a/kernel/scs.c b/kernel/scs.c
+> index aea841cd7586..faf0ecd7b893 100644
+> --- a/kernel/scs.c
+> +++ b/kernel/scs.c
+> @@ -98,7 +98,8 @@ void scs_release(struct task_struct *tsk)
+>  	if (!s)
+>  		return;
+>  
+> -	WARN(scs_corrupted(tsk), "corrupted shadow stack detected when freeing task\n");
+> +	WARN(task_scs_end_corrupted(tsk),
+> +	     "corrupted shadow stack detected when freeing task\n");
+>  	scs_check_usage(tsk);
+>  	scs_free(s);
+>  }
+> -- 
+> 2.26.2.761.g0e0b3e54be-goog
 > 
-
-Note that these days storage is as fast or even faster that many types of networking,
-and that there also are opportunities for acceleration (like p2p pci dma) that also are more
-natural to do in the kernel.
-
-io-uring is actually not about moving everything to userspace IMHO, but rather the opposite,
-it allows the userspace to access the kernel block subsystem in very efficent way which
-is the right thing to do.
-
-Sadly it doesn't help much with fast NVME virtualization because the bottleneck moves
-to the communication with the guest.
-
-I guess this is getting offtopic, so I won't continue this discussion here,
-I just wanted to voice my opinion on this manner.
-
-Another thing that comes to my mind (not that it has to be done in the kernel),
-is that AMD's AVIC allows peer to peer interrupts between guests, and that
-can in theory allow to run a 'driver' in a special guest and let it communicate
-with a normal guest using interrupts bi-directionally which can finally solve the
-need to waste a core in a busy wait loop.
-
-The only catch is that the 'special guest' has to run 100% of the time,
-thus it can't still share a core with other kernel/usespace tasks, but at least it can be in sleeping
-state most of the time, and it can itsel run various tasks that serve various needs.
-
-In other words, I don't have any objection to allowing part of the host kernel to run in VMX/SVM
-guest mode. This can be a very intersting thing.
-
-Best regards,
-	Maxim Levitsky
-
