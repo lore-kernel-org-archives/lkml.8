@@ -2,53 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41679C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2345C207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB0420829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824508;
-	bh=svHddsaV96M/0BQ97tYSdQCU0OUWVwtFZXRg1loGZLE=;
+	s=default; t=1589824510;
+	bh=ESOYWcCGu4d7CtEt3/MpT+J1apvIHKiIcZD5hwqrtRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x5eb2dc/yDBKN+7BvNGedpKGc63X6FlWzR3J5hkRXgQJRhXA1TiAExbZEOm2903la
-	 oAyu1SVU5jNZPvTY89r5929rNuHJhDljAQr7vuS2MLbo/NtrPOvvFvb5GAe5ynMg1f
-	 uHLqC8QhHArIcP55Yhk1vq9LFQBvnl+DP00DObWw=
+	b=epQcskKklSsvNfnsk9fweEiWuV6VwD/zxWjL7tD1BylNLqfQNsFCnsc6FjhRhsMqd
+	 +rt7mmbAVJ1iO1FwV5voN3jLFaEEz+MuadqOp8qPk/bwrq0+A04r6OOuMnJ2iHz34g
+	 ++97JZKGdkR3cgLVvjDMSmw4rptxEBaxPlQaF23g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbgERRzH (ORCPT
+        id S1731405AbgERRzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728822AbgERRzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:00 -0400
+        id S1731389AbgERRzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 889712083E;
-        Mon, 18 May 2020 17:54:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7303E20715;
+        Mon, 18 May 2020 17:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824500;
-        bh=svHddsaV96M/0BQ97tYSdQCU0OUWVwtFZXRg1loGZLE=;
+        s=default; t=1589824504;
+        bh=ESOYWcCGu4d7CtEt3/MpT+J1apvIHKiIcZD5hwqrtRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y37ff+rANrA/BHEeH6QGEm5ZkhaAFtwdaEqa6gr6NUcoD4iwftB1k+ikyXNOGYu16
-         e8QTfehZc9TYMVD/7tJQ/L/kD0g9pL6fjl3CngxXvXXPenio4s73gLSwMeKMmPhT+Q
-         wemXGn5Sy4w4DNX9UfX9al5w4Bo2nd1CxdXjdcBs=
+        b=icrwPkoUYtW1fr+fNZdjmG5ZMRClseiYPjvbYDaaTmADqGSBnE06Uzn1ZiZZAMR3c
+         A/qKkWo+NtqobObaAo/EZGUXW6fq9D+7p0/QDt91fNOj3N+sNSVg+TNgXbLz5rYRnk
+         w0J/L/chUgPdFDwceJQJiqOVeaRZQyb6yTRgD2Ao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Camale=C3=B3n?= <noelamac@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 035/147] r8169: re-establish support for RTL8401 chip version
-Date:   Mon, 18 May 2020 19:35:58 +0200
-Message-Id: <20200518173518.496434575@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 005/147] gpio: pca953x: Fix pca953x_gpio_set_config
+Date:   Mon, 18 May 2020 19:35:28 +0200
+Message-Id: <20200518173513.867666840@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,35 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit 1f8492df081bd66255764f3ce82ba1b2c37def49 ]
+[ Upstream commit dc87f6dd058a648cd2a35e4aa04592dccdc9f0c2 ]
 
-r8169 never had native support for the RTL8401, however it reportedly
-worked with the fallback to RTL8101e [0]. Therefore let's add this
-as an explicit assignment.
+pca953x_gpio_set_config is setup to support pull-up/down
+bias.  Currently the driver uses a variable called 'config' to
+determine which options to use.  Unfortunately, this is incorrect.
 
-[0] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=956868
+This patch uses function pinconf_to_config_param(config), which
+converts this 'config' parameter back to pinconfig to determine
+which option to use.
 
-Fixes: b4cc2dcc9c7c ("r8169: remove default chip versions")
-Reported-by: Camaleón <noelamac@gmail.com>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 15add06841a3 ("gpio: pca953x: add ->set_config implementation")
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/realtek/r8169_main.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpio/gpio-pca953x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -2202,6 +2202,8 @@ static void rtl8169_get_mac_version(stru
- 		{ 0x7cf, 0x348,	RTL_GIGA_MAC_VER_07 },
- 		{ 0x7cf, 0x248,	RTL_GIGA_MAC_VER_07 },
- 		{ 0x7cf, 0x340,	RTL_GIGA_MAC_VER_13 },
-+		/* RTL8401, reportedly works if treated as RTL8101e */
-+		{ 0x7cf, 0x240,	RTL_GIGA_MAC_VER_13 },
- 		{ 0x7cf, 0x343,	RTL_GIGA_MAC_VER_10 },
- 		{ 0x7cf, 0x342,	RTL_GIGA_MAC_VER_16 },
- 		{ 0x7c8, 0x348,	RTL_GIGA_MAC_VER_09 },
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index de5d1383f28da..3edc1762803ac 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -528,7 +528,7 @@ static int pca953x_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+ {
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+ 
+-	switch (config) {
++	switch (pinconf_to_config_param(config)) {
+ 	case PIN_CONFIG_BIAS_PULL_UP:
+ 	case PIN_CONFIG_BIAS_PULL_DOWN:
+ 		return pca953x_gpio_set_pull_up_down(chip, offset, config);
+-- 
+2.20.1
+
 
 
