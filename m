@@ -2,122 +2,131 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ABDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A708AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9899320787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3FF20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjNQYzVg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDZAJObB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgERCu3 (ORCPT
+        id S1726823AbgERCuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 22:50:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33336 "EHLO
+        Sun, 17 May 2020 22:50:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgERCu3 (ORCPT
+        with ESMTP id S1726639AbgERCuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 22:50:29 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA52C061A0C;
-        Sun, 17 May 2020 19:50:29 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id a9so6668641lfb.8;
-        Sun, 17 May 2020 19:50:28 -0700 (PDT)
+        Sun, 17 May 2020 22:50:50 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351D3C061A0C;
+        Sun, 17 May 2020 19:50:50 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id y85so3017030oie.11;
+        Sun, 17 May 2020 19:50:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:references:mime-version:message-id
-         :content-transfer-encoding;
-        bh=oam3dJJ4/crtTRL/eRuAxPUMONTVhcxSe0tWiKEQVAc=;
-        b=CjNQYzVgJb9GMSe0J72qapHzAuYsUoEeOr8gOvtTdA9ElJR3QwTCl0uj7sUIHgIy+t
-         l5X7v+4G2lDI8GNAaZqDQQrthE2XdBGbCIP7hXtXUF7eQnJbkGfYM6JeIqhqOOkQhreo
-         1oAV/uQHSXPWY0HOXVfQJPEM1huTKek2nzDE2YpYjZOe4/FoM82h+wQYOTbGhasjUmsZ
-         v9LmPuUkBq2Vh3r8AvjpbRB5GrMklqVlg+EYgfxbKSQhZpATzvDFoe1dp2TlF5/T6XgD
-         jLqFgi9kTUHXzLf9DXIwZrPKxVFcs4RQdZAwcPEnlfMJPHr0d1GC2sBFSXlmRffiSAH1
-         q9LQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+eK6VGuEuR0GRI5R9J65CKeVkPV8II1yka+J13as0Hc=;
+        b=nDZAJObBhop9kUEDGJbWMD/G7dZBMGOw6Ws+O6IBcDB8WVbVI7MNvMiKMO/2Vtohgf
+         /3S3gFg3lkP3NrNUWoOeZElhCdN7sXi/YlZ1cT0GDgGK/pUrxjckaR/58EIwEZmhx8vz
+         cmeeBQq1kcTcOch4fVxavwSX5sUV2Me23QWPCpaIGBXJCD5Ayrb++H+6bxiNPEPeZQ3y
+         X65P8HpSsYf6PvLEvJvzOMxautWfCTSDtKatcn4cwlFCpWbS0tkc2HFwr+73PUDFJxgr
+         AxbMFwqxtvvw2BCmhyceMWPyhAOsMLmb7o9iijlm4kYYT76pZdaTLRLT+UIybH18f7QV
+         vxRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:references:mime-version
-         :message-id:content-transfer-encoding;
-        bh=oam3dJJ4/crtTRL/eRuAxPUMONTVhcxSe0tWiKEQVAc=;
-        b=VPACUeztPiNS3/A1sx4rF5Orb1ibfBw1vgb6mMf7Z82p9MZLGgIBFhArPyFmsAMmFz
-         I7vTIzlgMHwtlcOijeZtGhGsAVWn1WotsHwDyR3tlqdNwjOmdnQsdibjbsV6s7Gda/sa
-         S2iJylyNFfUq2Y1VrbnzyKeGT+a6AhJ/wPbgilVwV6cBuMcSJ9l5mOXrWzYBAeIB15la
-         j8qH+DRxXyWv5ukL0VqcJAGER6NhyhMn0+5tsbsLvOJBsM4/jOXwCqRoxhqM85I1vyq9
-         2ElzV5V+XE2WSb9ObFnqzdI8ZNZBOaS0m9SWNIE0pfarPoqvax/d3lk6J1vq/qEUoxCx
-         5q9A==
-X-Gm-Message-State: AOAM5321aiJ5hKM27W5fXsicBdhhAZaojGRXlwOHIUx4yzLCe45Wl31D
-        OdcgXI2lXbfg7A4Pa/0ZIeh+5nW4
-X-Google-Smtp-Source: ABdhPJxZNXhf/a/Su+ZtOR0O3Lg9Rt+Ua+DT0J3VJgTo9/b1WBLj8vU2zzf7mjRqGAf/d1T/SoLc5A==
-X-Received: by 2002:a19:c50c:: with SMTP id w12mr10042124lfe.23.1589770227415;
-        Sun, 17 May 2020 19:50:27 -0700 (PDT)
-Received: from N-20L6PF1KTYA2 ([131.228.2.21])
-        by smtp.gmail.com with ESMTPSA id d28sm5962870lfe.76.2020.05.17.19.50.25
-        (version=TLS1_2 cipher=AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 May 2020 19:50:26 -0700 (PDT)
-Date:   Mon, 18 May 2020 10:50:25 +0800
-From:   "Li Xinhai" <lixinhai.lxh@gmail.com>
-To:     "Tom Zanussi" <zanussi@kernel.org>
-Cc:     linux-trace-devel <linux-trace-devel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        "Steven Rostedt" <rostedt@goodmis.org>
-Subject: Re: Documentation/trace/events.rst: wrong numbering of sections
-References: <2020051515434115672512@gmail.com>, 
-        <20200515091126.75db6ec9@gandalf.local.home>, 
-        <2449de9a39bd09510f75bd2358cc7ddfd397e93f.camel@kernel.org>
-X-Priority: 3
-X-GUID: 8C7C185D-E40D-40F5-9BAC-2528207C0581
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.13.365[cn]
-Mime-Version: 1.0
-Message-ID: <2020051810502421237517@gmail.com>
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: base64
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+eK6VGuEuR0GRI5R9J65CKeVkPV8II1yka+J13as0Hc=;
+        b=krKZrLFYKu/8B3xFwpooJphFHNmm9KFuWaOA23L/9mW0IC5SWhbg2J9Jb73WFWmbz6
+         csIkaz2UgC1OgIdGD78tAz0h5RnTZ3+P88975uv4eNapWKe9mB9Jj2OGmgyxDEQCZGO3
+         v6Vmb9IFi2gmMS21p4HQI5/s9cFZdmbLzrm4nbIo7rcu3GY0ho0kUDpf9YjrNAXq056x
+         viPXOrZnqKkQMt7OXZMVHCi7ClbE57ohVZizU8hXW5gYJvaTiiPbq0O1yBpAckH5mU8s
+         VEeKNIi7wIlqnaawOT6MkF7NoPuFn9fHnr7FB3qoStpmlVTSze8lTc+BdKoVPRt3YR4x
+         R+Fw==
+X-Gm-Message-State: AOAM532OFG/IWACkrX0ptf+oM6GMz6yh7b8gQjKCBb8FUeK2y9W463Fd
+        OkKqv0+skn5e4Yyur+8oB7SuNCt9ZmzZBhYc0iE=
+X-Google-Smtp-Source: ABdhPJzvu8D92gPrVWPjVyv/fmrqksDbDke11WkKE1DH2CwV2xK1nz09HbMjrMx/KpnC5QS6xEtvwD+ZaD7M8o8+X8I=
+X-Received: by 2002:aca:5296:: with SMTP id g144mr2472205oib.33.1589770249604;
+ Sun, 17 May 2020 19:50:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <2f78457e-f3a7-3bc9-e237-3132ee87f71e@gmail.com>
+In-Reply-To: <2f78457e-f3a7-3bc9-e237-3132ee87f71e@gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 18 May 2020 11:00:52 +0800
+Message-ID: <CANRm+CyEfmmVHLWnkJ1YHX5r5bNd+QjPQWyr+pmVWM5a6CXorQ@mail.gmail.com>
+Subject: Re: [PATCH] KVM: Fix the indentation to match coding style
+To:     Haiwei Li <lihaiwei.kernel@gmail.com>
+Cc:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>, kvm <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PkhpLAo+Cj5PbiBGcmksIDIwMjAtMDUtMTUgYXQgMDk6MTEgLTA0MDAsIFN0ZXZlbiBSb3N0ZWR0
-IHdyb3RlOgo+PiBJdCdzIGJlc3QgdG8gQ2MgdGhlIG1haW50YWluZXJzIG9mIHRoZSBmaWxlLiBO
-b2JvZHkgcmVhZHMgbGludXgtCj4+IGtlcm5lbCAoaXQKPj4gcHJvZHVjZXMgODAwIGVtYWlscyBh
-IGRheSEpLiBMdWNraWx5LCBJIGhhcHBlbiB0byBtb25pdG9yIHRoZQo+PiBsaW51eC10cmFjZS1k
-ZXZlbCBsaXN0ICh3aGljaCBpcyBtb3N0bHkgZm9yIHVzZXJsYW5kIHRvb2xzKSwKPj4gb3RoZXJ3
-aXNlIHRoaXMKPj4gZW1haWwgd291bGQgaGF2ZSBiZWVuIGxvc3QgdG8gdGhlIExLTUwgYWJ5c3Mu
-Cj4+Cj4+IE9uIEZyaSwgMTUgTWF5IDIwMjAgMTU6NDM6NDMgKzA4MDAKPj4gIkxpIFhpbmhhaSIg
-PGxpeGluaGFpLmx4aEBnbWFpbC5jb20+IHdyb3RlOgo+Pgo+PiA+IFRoaXMgZG9jdW1lbnQgaGFz
-IGJlbG93IG51bWJlcmluZyBvZiBpdHMgc2VjdGlvbnM6Cj4+ID4KPj4gPiAxLiBJbnRyb2R1Y3Rp
-b24KPj4gPiAyLiBVc2luZyBFdmVudCBUcmFjaW5nCj4+ID4gMi4xIFZpYSB0aGUgJ3NldF9ldmVu
-dCcgaW50ZXJmYWNlCj4+ID4gMi4yIFZpYSB0aGUgJ2VuYWJsZScgdG9nZ2xlCj4+ID4gMi4zIEJv
-b3Qgb3B0aW9uCj4+ID4gMy4gRGVmaW5pbmcgYW4gZXZlbnQtZW5hYmxlZCB0cmFjZXBvaW50Cj4+
-ID4gNC4gRXZlbnQgZm9ybWF0cwo+PiA+IDUuIEV2ZW50IGZpbHRlcmluZwo+PiA+IDUuMSBFeHBy
-ZXNzaW9uIHN5bnRheAo+PiA+IDUuMiBTZXR0aW5nIGZpbHRlcnMKPj4gPiA1LjMgQ2xlYXJpbmcg
-ZmlsdGVycwo+PiA+IDUuMyBTdWJzeXN0ZW0gZmlsdGVycwo+PiA+IDUuNCBQSUQgZmlsdGVyaW5n
-Cj4+ID4gNi4gRXZlbnQgdHJpZ2dlcnMKPj4gPiA2LjEgRXhwcmVzc2lvbiBzeW50YXgKPj4gPiA2
-LjIgU3VwcG9ydGVkIHRyaWdnZXIgY29tbWFuZHMKPj4gPiA2LjMgSW4ta2VybmVsIHRyYWNlIGV2
-ZW50IEFQSQo+PiA+IDYuMy4xIER5YW1pY2FsbHkgY3JlYXRpbmcgc3ludGhldGljIGV2ZW50IGRl
-ZmluaXRpb25zCj4+ID4gNi4zLjMgVHJhY2luZyBzeW50aGV0aWMgZXZlbnRzIGZyb20gaW4ta2Vy
-bmVsIGNvZGUKPj4gPiA2LjMuMy4xIFRyYWNpbmcgYSBzeW50aGV0aWMgZXZlbnQgYWxsIGF0IG9u
-Y2UKPj4gPiA2LjMuMy4xIFRyYWNpbmcgYSBzeW50aGV0aWMgZXZlbnQgcGllY2V3aXNlCj4+ID4g
-Ni4zLjQgRHlhbWljYWxseSBjcmVhdGluZyBrcHJvYmUgYW5kIGtyZXRwcm9iZSBldmVudCBkZWZp
-bml0aW9ucwo+PiA+IDYuMy40IFRoZSAiZHluZXZlbnRfY21kIiBsb3ctbGV2ZWwgQVBJCj4+ID4K
-Pj4gPiBJdCBzZWVtcyB3cm9uZyBudW1iZXJpbmcgd2l0aGluIDYuMyBzZWN0aW9uLgo+PiA+IG9y
-LCB3b3VsZCBpdCBiZSBiZXR0ZXIgdG8gaGF2ZSBzZXBhcmF0ZWQgY2hhcHRlciAjNywgZm9yICdJ
-bi1rZXJuZWwKPj4gPiB0cmFjZQo+PiA+IGV2ZW50IEFQSSc/IGl0IHNlZW1zIG5vdCBiZWxvbmcg
-dG8gJ0V2ZW50IHRyaWdnZXJzJy4KPj4KPj4gWWVhaCwgNi4zLjQgKGJvdGggb2YgdGhlbSkgcHJv
-YmFibHkgc2hvdWxkIGhhdmUgYmVlbiB1bmRlciBhIG5ldyB0b3AKPj4gbGV2ZWwKPj4gc2VjdGlv
-bi4gKCM3KS4KPj4KPgo+WWVhaCwgYXNpZGUgZnJvbSBkdXBsaWNhdGUgbnVtYmVyaW5nIGluIGEg
-Y291cGxlIG9mIHBsYWNlcywgaXQgd291bGQKPm1ha2UgbW9yZSBzZW5zZSBmb3IgZXZlcnl0aGlu
-ZyBzdGFydGluZyBmcm9tICc2LjMgSW4ta2VybmVsIHRyYWNlIGV2ZW50Cj5BUEknIHRvIGJlIGlu
-IGEgc2VjdGlvbiA3Lgo+Cj5Xb3VsZCB5b3UgbGlrZSB0byBzdWJtaXQgYSBwYXRjaCBmb3IgdGhh
-dCwgTGksIG9yIHNob3VsZCBJPwo+IApJIGFtIG5vdCBzdXJlIHRoZSBjb3JyZWN0IG9yZ2FuaXph
-dGlvbiBvZiB0aGVzZSBwYXJ0LCB5b3UgbWF5YmUgYmV0dGVyIHRvIGZpeCBpdCwgdGhhbmtzLgoK
-PlRoYW5rcywKPgo+VG9tCj4KPj4gLS0gU3RldmUKPg==
+On Mon, 18 May 2020 at 09:32, Haiwei Li <lihaiwei.kernel@gmail.com> wrote:
+>
+> From: Haiwei Li <lihaiwei@tencent.com>
+>
+> There is a bad indentation in next&queue branch. The patch looks like
+> fixes nothing though it fixes the indentation.
+>
+> Before fixing:
+>
+>                  if (!handle_fastpath_set_x2apic_icr_irqoff(vcpu, data)) {
+>                          kvm_skip_emulated_instruction(vcpu);
+>                          ret = EXIT_FASTPATH_EXIT_HANDLED;
+>                 }
+>                  break;
+>          case MSR_IA32_TSCDEADLINE:
+>
+> After fixing:
+>
+>                  if (!handle_fastpath_set_x2apic_icr_irqoff(vcpu, data)) {
+>                          kvm_skip_emulated_instruction(vcpu);
+>                          ret = EXIT_FASTPATH_EXIT_HANDLED;
+>                  }
+>                  break;
+>          case MSR_IA32_TSCDEADLINE:
+>
 
+Reviewed-by: Wanpeng Li <wanpengli@tencent.com>
+
+>
+> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+> ---
+>   arch/x86/kvm/x86.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 471fccf..446f747 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1631,7 +1631,7 @@ fastpath_t handle_fastpath_set_msr_irqoff(struct
+> kvm_vcpu *vcpu)
+>                  if (!handle_fastpath_set_x2apic_icr_irqoff(vcpu, data)) {
+>                          kvm_skip_emulated_instruction(vcpu);
+>                          ret = EXIT_FASTPATH_EXIT_HANDLED;
+> -               }
+> +               }
+>                  break;
+>          case MSR_IA32_TSCDEADLINE:
+>                  data = kvm_read_edx_eax(vcpu);
+> --
+> 1.8.3.1
