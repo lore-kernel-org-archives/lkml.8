@@ -2,87 +2,76 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEE120715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9E2207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589782648;
+	bh=mMVK8O15D2yC9R88JfE4ZWT1oH/SPci4NILiZTUIhyU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uXokBXChH87Baq+9iz32jEfctbIfX0WmmVHrgJOKmjXad0qY0T9ZKirTTH0rdjY8g
+	 ntXChsmaurB5nyNPDTiRpIrk9hRlrBIH2umCYoNrVRBDzOoYjFmcwTyLt2Yug/xQoy
+	 4wijc1Kbl/shMA9g2NyBUPBDd+LuPzGDSMZpssrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgERGNo (ORCPT
+        id S1726447AbgERGR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:13:44 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:40384 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726508AbgERGNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:13:43 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx39qRJ8Je+_s1AA--.5S2;
-        Mon, 18 May 2020 14:13:38 +0800 (CST)
-From:   Zhi Li <lizhi01@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: Remove useless parameter of the bootcmdline_init()
-Date:   Mon, 18 May 2020 14:13:36 +0800
-Message-Id: <1589782416-2130-1-git-send-email-lizhi01@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dx39qRJ8Je+_s1AA--.5S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jr1rGr48try7Gr4rWF4kWFg_yoWDJrgEqr
-        17Xw48C3y293WY9rW7Z34fWrWFyw4Fq3ZIvFnagw4Yy34fAw1UAr9xXFySqrn8ur4ayFya
-        kFZayF4vgrZrKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbx8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-        0_GcWlnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
-        648v4I1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j
-        6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUseO
-        AUUUUU=
-X-CM-SenderInfo: xol2xxqqr6z05rqj20fqof0/
+        Mon, 18 May 2020 02:17:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726180AbgERGR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 02:17:27 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744D520657;
+        Mon, 18 May 2020 06:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589782647;
+        bh=mMVK8O15D2yC9R88JfE4ZWT1oH/SPci4NILiZTUIhyU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xFsubk8KHe0iZS2oUrWQTQZR2LSm7JmHnXm8/94Y7cNtkbHlVADQhgaABZzF98D4M
+         GhwSFzYuzRyfS7Mt6gSkSMQNDvqmY2Sp/vyjVQ7VuSQI7VcNlXeg5jvzVfo0vB6I1T
+         C/YfLJZxfVFmz4cLfBLGdxNHpCIZfmxd3U4iSq6o=
+Date:   Mon, 18 May 2020 09:17:23 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Doug Ledford <dledford@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Sagi Grimberg <sagi@rimberg.me>,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: Re: [PATCH rdma-next v1 00/10] Enable asynchronous event FD per
+ object
+Message-ID: <20200518061723.GE60005@unreal>
+References: <20200506082444.14502-1-leon@kernel.org>
+ <20200517233713.GA20969@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200517233713.GA20969@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The parameter "cmdline_p" is useless in bootcmdline_init(), remove it.
+On Sun, May 17, 2020 at 08:37:13PM -0300, Jason Gunthorpe wrote:
+> On Wed, May 06, 2020 at 11:24:34AM +0300, Leon Romanovsky wrote:
+>
+> >   RDMA/core: Consolidate ib_create_srq flows
+> >   IB/uverbs: Cleanup wq/srq context usage from uverbs layer
+> >   IB/uverbs: Fix create WQ to use the given user handle
+>
+> I took these small fixed to for-next, the others need some minor
+> adjusting
 
-Signed-off-by: Zhi Li <lizhi01@loongson.cn>
----
- arch/mips/kernel/setup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks, I saw your comments and agree with all of them, we will fix.
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 8db533c..7b537fa 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -575,7 +575,7 @@ static int __init bootcmdline_scan_chosen(unsigned long node, const char *uname,
- 
- #endif /* CONFIG_OF_EARLY_FLATTREE */
- 
--static void __init bootcmdline_init(char **cmdline_p)
-+static void __init bootcmdline_init(void)
- {
- 	bool dt_bootargs = false;
- 
-@@ -658,7 +658,7 @@ static void __init arch_mem_init(char **cmdline_p)
- 	plat_mem_setup();
- 	memblock_set_bottom_up(true);
- 
--	bootcmdline_init(cmdline_p);
-+	bootcmdline_init();
- 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
- 	*cmdline_p = command_line;
- 
--- 
-2.1.0
+Thanks
 
+>
+> Thanks,
+> Jason
