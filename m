@@ -2,101 +2,113 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAF2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6148DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D54020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:23:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EmRutMjn"
+	by mail.kernel.org (Postfix) with ESMTP id 38B4D20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgERIXX (ORCPT
+        id S1726583AbgERIcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:23:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgERIXX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:23:23 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1096FC061A0C;
-        Mon, 18 May 2020 01:23:23 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F06E800ECDCE19D4A51D977.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:e800:ecdc:e19d:4a51:d977])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0AB141EC0295;
-        Mon, 18 May 2020 10:23:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589790200;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=NRH8oUNhkxpcUz5rd9LcRTM109aECD+/gUl0zIMTl5w=;
-        b=EmRutMjnTt3s/OCgVTsnLs5lE1J795LjE9ueGF2jckGBoi40V3GjCQ465iK19AYHmDM2Ns
-        WS9YUgSW70oUTt9Jx7wyuf4vUyYmw5ddYxHDzc4pdOHplM0R13+b4syehDAXt8GPNlMRLR
-        nqaFEm49nhK7F0ahvS00kE5h7VwuMV4=
-Date:   Mon, 18 May 2020 10:23:13 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mon, 18 May 2020 04:32:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:35834 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbgERIcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 04:32:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60807106F;
+        Mon, 18 May 2020 01:32:06 -0700 (PDT)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCC403F305;
+        Mon, 18 May 2020 01:32:02 -0700 (PDT)
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+To:     Qais Yousef <qais.yousef@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 31/75] x86/head/64: Install boot GDT
-Message-ID: <20200518082313.GA25034@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-32-joro@8bytes.org>
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <01c318b6-a109-2b8a-0ac3-a25b3c61e45a@arm.com>
+Date:   Mon, 18 May 2020 10:31:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200511154053.7822-1-qais.yousef@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-32-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:16:41PM +0200, Joerg Roedel wrote:
-> @@ -480,6 +500,22 @@ SYM_DATA_LOCAL(early_gdt_descr_base,	.quad INIT_PER_CPU_VAR(gdt_page))
->  SYM_DATA(phys_base, .quad 0x0)
->  EXPORT_SYMBOL(phys_base)
->
-> +/* Boot GDT used when kernel addresses are not mapped yet */
-> +SYM_DATA_LOCAL(boot_gdt_descr,		.word boot_gdt_end - boot_gdt)
-> +SYM_DATA_LOCAL(boot_gdt_base,		.quad 0)
-> +SYM_DATA_START(boot_gdt)
-> +	.quad	0
-> +	.quad   0x00cf9a000000ffff	/* __KERNEL32_CS */
-> +	.quad   0x00af9a000000ffff	/* __KERNEL_CS */
-> +	.quad   0x00cf92000000ffff	/* __KERNEL_DS */
-> +	.quad	0			/* __USER32_CS - unused */
-> +	.quad	0			/* __USER_DS   - unused */
-> +	.quad	0			/* __USER_CS   - unused */
-> +	.quad	0			/* unused */
-> +	.quad   0x0080890000000000	/* TSS descriptor */
-> +	.quad   0x0000000000000000	/* TSS continued */
+On 11/05/2020 17:40, Qais Yousef wrote:
 
-Any chance you could use macros ala GDT_ENTRY_INIT() for those instead
-of the naked values?
+[..]
 
--- 
-Regards/Gruss,
-    Boris.
+> @@ -790,6 +790,26 @@ unsigned int sysctl_sched_uclamp_util_min = SCHED_CAPACITY_SCALE;
+>  /* Max allowed maximum utilization */
+>  unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
+>  
+> +/*
+> + * By default RT tasks run at the maximum performance point/capacity of the
+> + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
+> + * SCHED_CAPACITY_SCALE.
+> + *
+> + * This knob allows admins to change the default behavior when uclamp is being
+> + * used. In battery powered devices, particularly, running at the maximum
+> + * capacity and frequency will increase energy consumption and shorten the
+> + * battery life.
+> + *
+> + * This knob only affects RT tasks that their uclamp_se->user_defined == false.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Nit pick: Isn't there a verb missing in this sentence?
+
+[...]
+
+> @@ -1114,12 +1161,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+>  				loff_t *ppos)
+>  {
+>  	bool update_root_tg = false;
+> -	int old_min, old_max;
+> +	int old_min, old_max, old_min_rt;
+
+Nit pick: Order local variable declarations according to length.
+
+[...]
+
+> @@ -1128,7 +1176,9 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+>  		goto done;
+>  
+>  	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
+> -	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
+> +	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE		||
+
+Nit pick: This extra space looks weird to me.
+
+[...]
+
+Apart from that, LGTM
+
+For both patches of this v5:
+
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
