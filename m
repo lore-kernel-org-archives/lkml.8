@@ -2,93 +2,110 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218ABC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB73DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDB6720758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8717020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lRN84o1P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/68PRJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgERUQz (ORCPT
+        id S1727063AbgERURd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
+        Mon, 18 May 2020 16:17:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgERUQx (ORCPT
+        with ESMTP id S1726367AbgERURc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:16:53 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B836C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:16:53 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id v26so6433077vsa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:16:53 -0700 (PDT)
+        Mon, 18 May 2020 16:17:32 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD41C061A0C;
+        Mon, 18 May 2020 13:17:30 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z6so285514ljm.13;
+        Mon, 18 May 2020 13:17:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2L5t1Sp95sqTVtR6AkRUlfVW8JMFNazZ3b7/dWgmdc8=;
-        b=lRN84o1P2f4cfUorpdVHKEFMmmGBZQXD3/THcziCpkhwowpSJz9mGQ2ehXmxCkh8oc
-         pOW86mIRYwu+9fWgatuAJwruTnN2l5B5fxBv5tktzAmD4GKJWx8s3aWb8Bec1zsYZRV9
-         s/glNUkXcauOZiJ6R4rPMaMSd386/y7VGOh3GZvhdJwEQLOM/lwFcRWGA1Nue1iuI/Jy
-         ILQDFIMUphst8PxHU2lyktW3i19RyvKdNN06v/8ej1Lnm4kRDBarQO5FoIz2dZ8SLphK
-         mZy3gOu8rxCusU8vVTwsigC3qdMnHKKSSQXh+O6X0g36Zl428GSRiM/Ya+zDJbbGToEx
-         boZQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZuljtQBpIL0qjGzLVg3jHlIfvzyQopbP8u18XmNvs2w=;
+        b=c/68PRJxvHcj3DE/yxZ0a6MERGu0//5Ick75ODI7dCtgrU5zBHrqVRNU4HqhHXpuZv
+         d2t6doF3mTYCazJIDoW5wNqAvo295xPtO6XMe5O9De+h+U2GvwsbB9oRjv5mppLTNPiG
+         IXXQ3kJPrN76Emfux8S/bccsLYFUG1rGlmLzl91IA3xyDGnNPQQwaB/xDvr7HfWHV7jG
+         O+JQOi7F1hmaLXSoPNAE8hpr+hRZIOYwTkoTOe3MGG1R6c+S2gGHrdKZsu01ochO6/Hx
+         s8HTJm6/tPmJeNBQuT+sIVCT81imNzDF4ndGjREky+I0LgIlKoYZosdlQ118PqrjndwO
+         DrEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2L5t1Sp95sqTVtR6AkRUlfVW8JMFNazZ3b7/dWgmdc8=;
-        b=H4Btoj/3de87Sdq6jw9a6rIUvXRfMEq4oXnL7j6VHq4HS5/CJo1HTsjq4FA3v+6PTU
-         XgBquAe+Dlpe88iIs4WLDHWkga2+uSNv6ajjxoA986oZaKhG5S8FGdcbqCU463j3qk/L
-         +1tHQkH2XRuZtlJWXRgYNLDXEvjtN6RhFXPoe2U5/Dh2af4zqoHC7583erIJfBOLz7pS
-         /0Ob7hK6JRnDmCRHp1SEWnQy5E4hmTkEZ10+/R947Mj8ye8utyk9Momt3NVAUoe4XlhP
-         ZUXOSQpfueXTtzHXDPNGqPrKxqHLNp7wEoVvW0XnelXDZF3Al5kNiEUlGdxufdRrrJRV
-         EwUw==
-X-Gm-Message-State: AOAM530WOwLRxx3zzcU4joFrwSLVyHO72QSATjrGqPbWI3hggCHLRfXf
-        p6V70gde8zJfjXLv3IyquFbZ6tnNfJPzjfc+dCpNTg==
-X-Google-Smtp-Source: ABdhPJw+AcUDhLRBTX9JpNUTxsZ7Ig4UDXf8LfIgGLCMsDdhtI6mrkvkFNe2juMyPsdcJA8XVnnXYnjEvDXx8ikG1nU=
-X-Received: by 2002:a67:d981:: with SMTP id u1mr648823vsj.240.1589833012258;
- Mon, 18 May 2020 13:16:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZuljtQBpIL0qjGzLVg3jHlIfvzyQopbP8u18XmNvs2w=;
+        b=IlxpTFvaE8OdsWc5srF8l+3e7K3LrhtK5czmXw1WClpCPXMm7ob+zo72/DM7j1c7+x
+         TInqZE1k16CpsJZuxxfZkIiK2Rom44Q6vbUeKvF91W+WrKabvLMYfGGc7HVQEgVfy+QT
+         AjUhP/7Sa6aM747H9uzfUbD0/G6om7uJpCw+QQsgxhxajSLtWRMHTb5apGjRShnzCon9
+         y9br9D04AURHH10PnjAMx+CyiaRPyxYE4IzHYuY8oEVGkV+ABvDEUdyOkoFCtaXsDH8c
+         7QIXZoo7iWLsubX1ZxvUzIlCqBXuUQm3h8NkVy9frKQQ0EsS3g6U1QQmcRuDrWXz24bd
+         vyGQ==
+X-Gm-Message-State: AOAM533HMIbYBzvRG6iDiZTOGbP3rEoBgxbK+CvFFjXzEkdvEGdIbGi8
+        vA1qSN3uhQcbStwmMJTpyk8=
+X-Google-Smtp-Source: ABdhPJzuP8HWeS92/QB/RT+ANHc+zhMPanKEN1AyPO8zGrOkYxuf1y3OyGB+GMp7sTVVMOa9zz/V8w==
+X-Received: by 2002:a2e:8ec9:: with SMTP id e9mr3069561ljl.204.1589833049193;
+        Mon, 18 May 2020 13:17:29 -0700 (PDT)
+Received: from polark.local (62-243-86-95-cable.dk.customer.tdc.net. [62.243.86.95])
+        by smtp.gmail.com with ESMTPSA id r13sm6249279ljh.66.2020.05.18.13.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 13:17:28 -0700 (PDT)
+From:   Daniel Gomez <dagmcr@gmail.com>
+To:     daniel@ffwll.ch, airlied@linux.ie
+Cc:     kieran.bingham+renesas@ideasonboard.com,
+        laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Gomez <dagmcr@gmail.com>
+Subject: [PATCH] drm: rcar-du: Fix build error
+Date:   Mon, 18 May 2020 22:16:46 +0200
+Message-Id: <20200518201646.48312-1-dagmcr@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200515215733.20647-1-eranian@google.com> <20200515215733.20647-4-eranian@google.com>
- <20200518093402.GB277222@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200518093402.GB277222@hirez.programming.kicks-ass.net>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Mon, 18 May 2020 13:16:41 -0700
-Message-ID: <CABPqkBQt0a7Pi7X2cLz601TJEqasDXrOZcwuBhDCjcZ+ishPMw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf/x86/rapl: add AMD Fam17h RAPL support
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, mingo@elte.hu,
-        Ian Rogers <irogers@google.com>,
-        "Phillips, Kim" <kim.phillips@amd.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 2:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, May 15, 2020 at 02:57:33PM -0700, Stephane Eranian wrote:
->
-> > +static struct perf_msr amd_rapl_msrs[] = {
-> > +     [PERF_RAPL_PP0]  = { 0, &rapl_events_cores_group, NULL},
-> > +     [PERF_RAPL_PKG]  = { MSR_AMD_PKG_ENERGY_STATUS,  &rapl_events_pkg_group,   test_msr },
-> > +     [PERF_RAPL_RAM]  = { 0, &rapl_events_ram_group,   NULL},
-> > +     [PERF_RAPL_PP1]  = { 0, &rapl_events_gpu_group,   NULL},
-> > +     [PERF_RAPL_PSYS] = { 0, &rapl_events_psys_group,  NULL},
-> > +};
->
-> Why have those !PKG things initialized? Wouldn't they default to 0
-> anyway? If not, surely { 0, } is sufficient.
+Select DRM_KMS_HELPER dependency.
 
-Yes, but that assumes that perf_msr_probe() is fixed to not expect a grp.
-I think it is best to fix perf_msr_probe(). I already fixed one
-problem, I'll fix this one as well.
+Build error when DRM_KMS_HELPER is not selected:
+
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
+drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
+
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+---
+ drivers/gpu/drm/rcar-du/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+index 0919f1f159a4..f65d1489dc50 100644
+--- a/drivers/gpu/drm/rcar-du/Kconfig
++++ b/drivers/gpu/drm/rcar-du/Kconfig
+@@ -31,6 +31,7 @@ config DRM_RCAR_DW_HDMI
+ config DRM_RCAR_LVDS
+ 	tristate "R-Car DU LVDS Encoder Support"
+ 	depends on DRM && DRM_BRIDGE && OF
++	select DRM_KMS_HELPER
+ 	select DRM_PANEL
+ 	select OF_FLATTREE
+ 	select OF_OVERLAY
+-- 
+2.26.2
+
