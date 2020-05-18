@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CCFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33580C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABFBC207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132E8207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825071;
-	bh=wjNCLJm8je2dfTo3Dnvetm+uHr8DjiIVmachTBfbvW4=;
+	s=default; t=1589825075;
+	bh=GhLdtHMBcvlMn7X3EK7g3WCOLHNCezwRMq8pXYaFogg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rxZqvCHNXaPUYvIYuYS8/c716YKDweT661TobgOK3O9Lbb7mQKp7IFzA3cEIft01s
-	 SszhpKvjRzBts7/GC69wYdamgAPZTvaAN+YQ75Oo4J/7SCG0dGRQDCuSIzb7dgaomp
-	 uGL40d40ib7mXLVRsxgs+rN4ak0Pr1ze1qHtvSw0=
+	b=vphzk41GsA0nN0dvXOkp3ceVlCOEnKEWN1hnB0FZk9A5lys+N3H39jirsqBU3r/zb
+	 kXLO1LLB4K9JxP+F5/6EFeCee30RYhNqBjjEsxp2I3VRYxv7FL3a5eFPAksEsA3wR2
+	 uIXIA/Y7xcbCuwzAhs8NGllL+wUQlD7ZWOX4761A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732789AbgERSEa (ORCPT
+        id S1732798AbgERSEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:04:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51230 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:04:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732765AbgERSES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:04:18 -0400
+        id S1732316AbgERSEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 709ED20715;
-        Mon, 18 May 2020 18:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1022207D3;
+        Mon, 18 May 2020 18:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825057;
-        bh=wjNCLJm8je2dfTo3Dnvetm+uHr8DjiIVmachTBfbvW4=;
+        s=default; t=1589825060;
+        bh=GhLdtHMBcvlMn7X3EK7g3WCOLHNCezwRMq8pXYaFogg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OS2lbltMMlra5FU+Bc4AQlNDZxqNz+PmsOT+xSydwlczd9vvbpIb0kpZHdRUax1mO
-         OZ5K0NhEiz7HYsHIYPWUS/+zaXcvkt3AKLpp4ojQ4Nnj6ApeqlA1R8dJXpKnmcZNGy
-         RgyPhFPcXwctjsL7VWf31NSRKtti+1m05agmzLG0=
+        b=YcloXx2IufP1YycrYEUNTgQ1yI+P0+q7ZK3kQu3Mzl67/Qw/mr0RJkSx5gyYT9Nrd
+         F6iO9Xz+EqOAEH447zbqLU6L83dKaaRqyuCVLZzTFEd6rCI5e7OLTdU3WPQcsEagtC
+         uymiiNUYt4H30JCrKz9DBDG5ThyHSAhYjnNY7N1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 111/194] RDMA/rxe: Always return ERR_PTR from rxe_create_mmap_info()
-Date:   Mon, 18 May 2020 19:36:41 +0200
-Message-Id: <20200518173541.021424362@linuxfoundation.org>
+Subject: [PATCH 5.6 112/194] IB/mlx4: Test return value of calls to ib_get_cached_pkey
+Date:   Mon, 18 May 2020 19:36:42 +0200
+Message-Id: <20200518173541.087790530@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,75 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit bb43c8e382e5da0ee253e3105d4099820ff4d922 ]
+[ Upstream commit 6693ca95bd4330a0ad7326967e1f9bcedd6b0800 ]
 
-The commit below modified rxe_create_mmap_info() to return ERR_PTR's but
-didn't update the callers to handle them. Modify rxe_create_mmap_info() to
-only return ERR_PTR and fix all error checking after
-rxe_create_mmap_info() is called.
+In the mlx4_ib_post_send() flow, some functions call ib_get_cached_pkey()
+without checking its return value. If ib_get_cached_pkey() returns an
+error code, these functions should return failure.
 
-Ensure that all other exit paths properly set the error return.
-
-Fixes: ff23dfa13457 ("IB: Pass only ib_udata in function prototypes")
-Link: https://lore.kernel.org/r/20200425233545.17210-1-sudipm.mukherjee@gmail.com
-Link: https://lore.kernel.org/r/20200511183742.GB225608@mwanda
-Cc: stable@vger.kernel.org [5.4+]
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 1ffeb2eb8be9 ("IB/mlx4: SR-IOV IB context objects and proxy/tunnel SQP support")
+Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand adapters")
+Fixes: e622f2f4ad21 ("IB: split struct ib_send_wr")
+Link: https://lore.kernel.org/r/20200426075921.130074-1-leon@kernel.org
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_mmap.c  |  2 +-
- drivers/infiniband/sw/rxe/rxe_queue.c | 11 +++++++----
- 2 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/mlx4/qp.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_mmap.c b/drivers/infiniband/sw/rxe/rxe_mmap.c
-index 48f48122ddcb8..6a413d73b95dd 100644
---- a/drivers/infiniband/sw/rxe/rxe_mmap.c
-+++ b/drivers/infiniband/sw/rxe/rxe_mmap.c
-@@ -151,7 +151,7 @@ struct rxe_mmap_info *rxe_create_mmap_info(struct rxe_dev *rxe, u32 size,
+diff --git a/drivers/infiniband/hw/mlx4/qp.c b/drivers/infiniband/hw/mlx4/qp.c
+index 26425dd2d960f..a2b1f6af5ba3f 100644
+--- a/drivers/infiniband/hw/mlx4/qp.c
++++ b/drivers/infiniband/hw/mlx4/qp.c
+@@ -2891,6 +2891,7 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
+ 	int send_size;
+ 	int header_size;
+ 	int spc;
++	int err;
+ 	int i;
  
- 	ip = kmalloc(sizeof(*ip), GFP_KERNEL);
- 	if (!ip)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
+ 	if (wr->wr.opcode != IB_WR_SEND)
+@@ -2925,7 +2926,9 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
  
- 	size = PAGE_ALIGN(size);
- 
-diff --git a/drivers/infiniband/sw/rxe/rxe_queue.c b/drivers/infiniband/sw/rxe/rxe_queue.c
-index ff92704de32ff..245040c3a35d0 100644
---- a/drivers/infiniband/sw/rxe/rxe_queue.c
-+++ b/drivers/infiniband/sw/rxe/rxe_queue.c
-@@ -45,12 +45,15 @@ int do_mmap_info(struct rxe_dev *rxe, struct mminfo __user *outbuf,
- 
- 	if (outbuf) {
- 		ip = rxe_create_mmap_info(rxe, buf_size, udata, buf);
--		if (!ip)
-+		if (IS_ERR(ip)) {
-+			err = PTR_ERR(ip);
- 			goto err1;
-+		}
- 
--		err = copy_to_user(outbuf, &ip->info, sizeof(ip->info));
--		if (err)
-+		if (copy_to_user(outbuf, &ip->info, sizeof(ip->info))) {
-+			err = -EFAULT;
- 			goto err2;
-+		}
- 
- 		spin_lock_bh(&rxe->pending_lock);
- 		list_add(&ip->pending_mmaps, &rxe->pending_mmaps);
-@@ -64,7 +67,7 @@ int do_mmap_info(struct rxe_dev *rxe, struct mminfo __user *outbuf,
- err2:
- 	kfree(ip);
- err1:
--	return -EINVAL;
-+	return err;
- }
- 
- inline void rxe_queue_reset(struct rxe_queue *q)
+ 	sqp->ud_header.lrh.virtual_lane    = 0;
+ 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
+-	ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
++	err = ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
++	if (err)
++		return err;
+ 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
+ 	if (sqp->qp.mlx4_ib_qp_type == MLX4_IB_QPT_TUN_SMI_OWNER)
+ 		sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
+@@ -3212,9 +3215,14 @@ static int build_mlx_header(struct mlx4_ib_sqp *sqp, const struct ib_ud_wr *wr,
+ 	}
+ 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
+ 	if (!sqp->qp.ibqp.qp_num)
+-		ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index, &pkey);
++		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index,
++					 &pkey);
+ 	else
+-		ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index, &pkey);
++		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index,
++					 &pkey);
++	if (err)
++		return err;
++
+ 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
+ 	sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
+ 	sqp->ud_header.bth.psn = cpu_to_be32((sqp->send_psn++) & ((1 << 24) - 1));
 -- 
 2.20.1
 
