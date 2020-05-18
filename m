@@ -2,211 +2,200 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9165C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21C8B20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7BC207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589825844;
+	bh=LMPH2QjOI+Enc5cMTVOmYGkwoFRvNBy3QoLbbmwcozk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i4iOmUyEPOJanKE5xeDGpn2hqIKb0mAAPY+Mv9t+wIZ6LGvlNVLxJHaLJx0i2M1DH
+	 Bzr7jtxK28DLpl2Ss0CjuLIXnamNApX5IufsHnEphNllNVk4dikNx6ctyoHZeA5Vxs
+	 pkyFjTgoAZWgbqy9KWJxnev+0D8thnFSmE+bXTgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387710AbgERSRR (ORCPT
+        id S2387726AbgERSRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:17:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:42542 "EHLO mga12.intel.com"
+        Mon, 18 May 2020 14:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387633AbgERSRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:17:11 -0400
-IronPort-SDR: NE/JDMre4xsM3FlCTM63wL490wOAJWjrn9/Beuqoh1eFtTpGzNGqw/HvqeiL33BI9vuw/tiHDO
- ZCwmaYzShfew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:17:06 -0700
-IronPort-SDR: iIaavOVZIuwCXVkyk0MZaKAti/TdPkYwe2b9MZrf6aG25XCVUgvBkao1mU5EV+8o9zdQQCW4/q
- TBMzQd6THLmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="299311850"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga002.fm.intel.com with ESMTP; 18 May 2020 11:17:05 -0700
-Date:   Mon, 18 May 2020 11:17:05 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH V3 10/15] arch/kmap: Define kmap_atomic_prot() for all
- arch's
-Message-ID: <20200518181705.GD3025231@iweiny-DESK2.sc.intel.com>
-References: <20200507150004.1423069-1-ira.weiny@intel.com>
- <20200507150004.1423069-11-ira.weiny@intel.com>
- <20200517173722.GA33341@roeck-us.net>
+        id S1731778AbgERR5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:57:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0382720715;
+        Mon, 18 May 2020 17:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824642;
+        bh=LMPH2QjOI+Enc5cMTVOmYGkwoFRvNBy3QoLbbmwcozk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FjP40WLsNlfzDC8Tfu17c3ciDhypdWIapZj8WqfmCfwhT3+j/mPZJRV1NGkEX4UTl
+         +y0n6gc7mYhgenprwf0upwXm4cJukBdUmM5KipwfKYa8e+xFn1JGa3g/25famAYMR5
+         9Y3Lk/XfsAPbCuWfYEm2xWQQ5oXGb9RAU07o8XKM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 094/147] net/rds: Use ERR_PTR for rds_message_alloc_sgs()
+Date:   Mon, 18 May 2020 19:36:57 +0200
+Message-Id: <20200518173525.256011622@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
+References: <20200518173513.009514388@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517173722.GA33341@roeck-us.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 10:37:22AM -0700, Guenter Roeck wrote:
-> Hi,
-> 
-> On Thu, May 07, 2020 at 07:59:58AM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > To support kmap_atomic_prot(), all architectures need to support
-> > protections passed to their kmap_atomic_high() function.  Pass
-> > protections into kmap_atomic_high() and change the name to
-> > kmap_atomic_high_prot() to match.
-> > 
-> > Then define kmap_atomic_prot() as a core function which calls
-> > kmap_atomic_high_prot() when needed.
-> > 
-> > Finally, redefine kmap_atomic() as a wrapper of kmap_atomic_prot() with
-> > the default kmap_prot exported by the architectures.
-> > 
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> This patch causes a variety of crashes whem booting powerpc images in qemu.
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-PowerPC has the same issue as microblaze and sparc.
+commit 7dba92037baf3fa00b4880a31fd532542264994c upstream.
 
-I'm preping a patch with all three fixed which fixes the kunmap_atomic clean up
-patch...
+Returning the error code via a 'int *ret' when the function returns a
+pointer is very un-kernely and causes gcc 10's static analysis to choke:
 
-Sorry for not seeing this last night...
+net/rds/message.c: In function ‘rds_message_map_pages’:
+net/rds/message.c:358:10: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  358 |   return ERR_PTR(ret);
 
-Hopefully this can explain all the problems.  It is clearly a bug.
+Use a typical ERR_PTR return instead.
 
-Ira
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> 
-> There are lots of warnings such as:
-> 
-> WARNING: CPU: 0 PID: 0 at lib/locking-selftest.c:743 irqsafe1_hard_spin_12+0x50/0xb0
-> Modules linked in:
-> CPU: 0 PID: 0 Comm: swapper Tainted: G        W         5.7.0-rc5-next-20200515 #1
-> NIP:  c0660c7c LR: c0660c44 CTR: c0660c2c
-> REGS: c1223e68 TRAP: 0700   Tainted: G        W          (5.7.0-rc5-next-20200515)
-> MSR:  00021000 <CE,ME>  CR: 28000224  XER: 20000000
-> 
-> GPR00: c0669c78 c1223f20 c113d560 c0660c44 00000000 00000001 c1223ea8 00000001
-> GPR08: 00000000 00000001 0000fffc ffffffff 88000222 00000000 00000000 00000000
-> GPR16: 00000000 00000000 00000000 00000000 c0000000 00000000 00000000 c1125084
-> GPR24: c1125084 c1230000 c1879538 fffffffc 00000001 00000000 c1011afc c1230000
-> NIP [c0660c7c] irqsafe1_hard_spin_12+0x50/0xb0
-> LR [c0660c44] irqsafe1_hard_spin_12+0x18/0xb0
-> Call Trace:
-> [c1223f20] [c1880000] megasas_mgmt_info+0xee4/0x1008 (unreliable)
-> [c1223f40] [c0669c78] dotest+0x38/0x550
-> [c1223f70] [c066aa4c] locking_selftest+0x8bc/0x1d54
-> [c1223fa0] [c10e0bc8] start_kernel+0x3ec/0x510
-> [c1223ff0] [c00003a0] set_ivor+0x118/0x154
-> Instruction dump:
-> 81420000 38e80001 3d4a0001 2c080000 91420000 90e20488 40820008 91020470
-> 81290000 5529031e 7d290034 5529d97e <0f090000> 3fe0c11c 3bff3964 3bff00ac
-> irq event stamp: 588
-> hardirqs last  enabled at (587): [<c00b9fe4>] vprintk_emit+0x1b4/0x33c
-> hardirqs last disabled at (588): [<c0660c44>] irqsafe1_hard_spin_12+0x18/0xb0
-> softirqs last  enabled at (0): [<00000000>] 0x0
-> softirqs last disabled at (0): [<00000000>] 0x0
-> ---[ end trace b18fe9e172f99d03 ]---
-> 
-> This is followed by:
-> 
-> BUG: sleeping function called from invalid context at lib/mpi/mpi-pow.c:245
-> in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 14, name: cryptomgr_test
-> INFO: lockdep is turned off.
-> CPU: 0 PID: 14 Comm: cryptomgr_test Tainted: G        W         5.7.0-rc5-next-20200515 #1
-> Call Trace:
-> [ce221b58] [c008755c] ___might_sleep+0x280/0x2a8 (unreliable)
-> [ce221b78] [c06bc524] mpi_powm+0x634/0xc50
-> [ce221c38] [c05eafdc] rsa_dec+0x88/0x134
-> [ce221c78] [c05f3b40] test_akcipher_one+0x678/0x804
-> [ce221dc8] [c05f3d7c] alg_test_akcipher+0xb0/0x130
-> [ce221df8] [c05ee674] alg_test.part.0+0xb4/0x458
-> [ce221ed8] [c05ed2b0] cryptomgr_test+0x30/0x50
-> [ce221ef8] [c007cd74] kthread+0x134/0x170
-> [ce221f38] [c001433c] ret_from_kernel_thread+0x14/0x1c
-> Kernel panic - not syncing: Aiee, killing interrupt handler!
-> CPU: 0 PID: 14 Comm: cryptomgr_test Tainted: G        W         5.7.0-rc5-next-20200515 #1
-> Call Trace:
-> [ce221e08] [c00530fc] panic+0x148/0x34c (unreliable)
-> [ce221e68] [c0056460] do_exit+0xac0/0xb40
-> [ce221eb8] [c00f5be8] find_kallsyms_symbol_value+0x0/0x128
-> [ce221ed8] [c05ed2d0] crypto_alg_put+0x0/0x70
-> [ce221ef8] [c007cd74] kthread+0x134/0x170
-> [ce221f38] [c001433c] ret_from_kernel_thread+0x14/0x1c
-> 
-> Bisect log is attached. The patch can not easily be reverted since
-> it results in compile errors.
-> 
-> Note that similar failures are seen with sparc32 images. Those bisect
-> to a different patch, but reverting that patch doesn't fix the problem.
-> The failure pattern (warnings followed by a crash in cryptomgr_test)
-> is the same.
-> 
-> Guenter
-> 
-> ---
-> # bad: [bdecf38f228bcca73b31ada98b5b7ba1215eb9c9] Add linux-next specific files for 20200515
-> # good: [2ef96a5bb12be62ef75b5828c0aab838ebb29cb8] Linux 5.7-rc5
-> git bisect start 'HEAD' 'v5.7-rc5'
-> # good: [3674d7aa7a8e61d993886c2fb7c896c5ef85e988] Merge remote-tracking branch 'crypto/master'
-> git bisect good 3674d7aa7a8e61d993886c2fb7c896c5ef85e988
-> # good: [87f6f21783522e6d62127cf33ae5e95f50874beb] Merge remote-tracking branch 'spi/for-next'
-> git bisect good 87f6f21783522e6d62127cf33ae5e95f50874beb
-> # good: [5c428e8277d5d97c85126387d4e00aa5adde4400] Merge remote-tracking branch 'staging/staging-next'
-> git bisect good 5c428e8277d5d97c85126387d4e00aa5adde4400
-> # good: [f68de67ed934e7bdef4799fd7777c86f33f14982] Merge remote-tracking branch 'hyperv/hyperv-next'
-> git bisect good f68de67ed934e7bdef4799fd7777c86f33f14982
-> # bad: [54acd2dc52b069da59639eea0d0c92726f32fb01] mm/memblock: fix a typo in comment "implict"->"implicit"
-> git bisect bad 54acd2dc52b069da59639eea0d0c92726f32fb01
-> # good: [784a17aa58a529b84f7cc50f351ed4acf3bd11f3] mm: remove the pgprot argument to __vmalloc
-> git bisect good 784a17aa58a529b84f7cc50f351ed4acf3bd11f3
-> # good: [6cd8137ff37e9a37aee2d2a8889c8beb8eab192f] khugepaged: replace the usage of system(3) in the test
-> git bisect good 6cd8137ff37e9a37aee2d2a8889c8beb8eab192f
-> # bad: [6987da379826ed01b8a1cf046b67cc8cc10117cc] sparc: remove unnecessary includes
-> git bisect bad 6987da379826ed01b8a1cf046b67cc8cc10117cc
-> # good: [bc17b545388f64c09e83e367898e28f60277c584] mm/hugetlb: define a generic fallback for is_hugepage_only_range()
-> git bisect good bc17b545388f64c09e83e367898e28f60277c584
-> # good: [9b5aa5b43f957f03a1f4a9aff5f7924e2ebbc011] arch-kmap_atomic-consolidate-duplicate-code-checkpatch-fixes
-> git bisect good 9b5aa5b43f957f03a1f4a9aff5f7924e2ebbc011
-> # bad: [89194ba5ee31567eeee9c81101b334c8e3248198] arch/kmap: define kmap_atomic_prot() for all arch's
-> git bisect bad 89194ba5ee31567eeee9c81101b334c8e3248198
-> # good: [022785d2bea99f8bc2a37b7b6c525eea26f6ac59] arch-kunmap_atomic-consolidate-duplicate-code-checkpatch-fixes
-> git bisect good 022785d2bea99f8bc2a37b7b6c525eea26f6ac59
-> # good: [a13c2f39e3f0519ddee57d26cc66ec70e3546106] arch/kmap: don't hard code kmap_prot values
-> git bisect good a13c2f39e3f0519ddee57d26cc66ec70e3546106
-> # first bad commit: [89194ba5ee31567eeee9c81101b334c8e3248198] arch/kmap: define kmap_atomic_prot() for all arch's
-> 
-> 
+---
+ net/rds/message.c |   19 ++++++-------------
+ net/rds/rdma.c    |   12 ++++++++----
+ net/rds/rds.h     |    3 +--
+ net/rds/send.c    |    6 ++++--
+ 4 files changed, 19 insertions(+), 21 deletions(-)
+
+--- a/net/rds/message.c
++++ b/net/rds/message.c
+@@ -308,26 +308,20 @@ out:
+ /*
+  * RDS ops use this to grab SG entries from the rm's sg pool.
+  */
+-struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
+-					  int *ret)
++struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents)
+ {
+ 	struct scatterlist *sg_first = (struct scatterlist *) &rm[1];
+ 	struct scatterlist *sg_ret;
+ 
+-	if (WARN_ON(!ret))
+-		return NULL;
+-
+ 	if (nents <= 0) {
+ 		pr_warn("rds: alloc sgs failed! nents <= 0\n");
+-		*ret = -EINVAL;
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	if (rm->m_used_sgs + nents > rm->m_total_sgs) {
+ 		pr_warn("rds: alloc sgs failed! total %d used %d nents %d\n",
+ 			rm->m_total_sgs, rm->m_used_sgs, nents);
+-		*ret = -ENOMEM;
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+ 	sg_ret = &sg_first[rm->m_used_sgs];
+@@ -343,7 +337,6 @@ struct rds_message *rds_message_map_page
+ 	unsigned int i;
+ 	int num_sgs = DIV_ROUND_UP(total_len, PAGE_SIZE);
+ 	int extra_bytes = num_sgs * sizeof(struct scatterlist);
+-	int ret;
+ 
+ 	rm = rds_message_alloc(extra_bytes, GFP_NOWAIT);
+ 	if (!rm)
+@@ -352,10 +345,10 @@ struct rds_message *rds_message_map_page
+ 	set_bit(RDS_MSG_PAGEVEC, &rm->m_flags);
+ 	rm->m_inc.i_hdr.h_len = cpu_to_be32(total_len);
+ 	rm->data.op_nents = DIV_ROUND_UP(total_len, PAGE_SIZE);
+-	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
+-	if (!rm->data.op_sg) {
++	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
++	if (IS_ERR(rm->data.op_sg)) {
+ 		rds_message_put(rm);
+-		return ERR_PTR(ret);
++		return ERR_CAST(rm->data.op_sg);
+ 	}
+ 
+ 	for (i = 0; i < rm->data.op_nents; ++i) {
+--- a/net/rds/rdma.c
++++ b/net/rds/rdma.c
+@@ -624,9 +624,11 @@ int rds_cmsg_rdma_args(struct rds_sock *
+ 	op->op_active = 1;
+ 	op->op_recverr = rs->rs_recverr;
+ 	WARN_ON(!nr_pages);
+-	op->op_sg = rds_message_alloc_sgs(rm, nr_pages, &ret);
+-	if (!op->op_sg)
++	op->op_sg = rds_message_alloc_sgs(rm, nr_pages);
++	if (IS_ERR(op->op_sg)) {
++		ret = PTR_ERR(op->op_sg);
+ 		goto out_pages;
++	}
+ 
+ 	if (op->op_notify || op->op_recverr) {
+ 		/* We allocate an uninitialized notifier here, because
+@@ -828,9 +830,11 @@ int rds_cmsg_atomic(struct rds_sock *rs,
+ 	rm->atomic.op_silent = !!(args->flags & RDS_RDMA_SILENT);
+ 	rm->atomic.op_active = 1;
+ 	rm->atomic.op_recverr = rs->rs_recverr;
+-	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1, &ret);
+-	if (!rm->atomic.op_sg)
++	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1);
++	if (IS_ERR(rm->atomic.op_sg)) {
++		ret = PTR_ERR(rm->atomic.op_sg);
+ 		goto err;
++	}
+ 
+ 	/* verify 8 byte-aligned */
+ 	if (args->local_addr & 0x7) {
+--- a/net/rds/rds.h
++++ b/net/rds/rds.h
+@@ -849,8 +849,7 @@ rds_conn_connecting(struct rds_connectio
+ 
+ /* message.c */
+ struct rds_message *rds_message_alloc(unsigned int nents, gfp_t gfp);
+-struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
+-					  int *ret);
++struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents);
+ int rds_message_copy_from_user(struct rds_message *rm, struct iov_iter *from,
+ 			       bool zcopy);
+ struct rds_message *rds_message_map_pages(unsigned long *page_addrs, unsigned int total_len);
+--- a/net/rds/send.c
++++ b/net/rds/send.c
+@@ -1274,9 +1274,11 @@ int rds_sendmsg(struct socket *sock, str
+ 
+ 	/* Attach data to the rm */
+ 	if (payload_len) {
+-		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
+-		if (!rm->data.op_sg)
++		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
++		if (IS_ERR(rm->data.op_sg)) {
++			ret = PTR_ERR(rm->data.op_sg);
+ 			goto out;
++		}
+ 		ret = rds_message_copy_from_user(rm, &msg->msg_iter, zcopy);
+ 		if (ret)
+ 			goto out;
+
+
