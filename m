@@ -2,125 +2,149 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6529C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA51C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 841F720709
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5FA20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sds5eDkS"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NCJGs8JU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgERKwz (ORCPT
+        id S1726945AbgERKxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:52:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43324 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726279AbgERKwz (ORCPT
+        Mon, 18 May 2020 06:53:50 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4604 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726279AbgERKxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:52:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589799173;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7i73MdO6mSnLJfSeLQzf3Paj06/1AUhoEWhZbMxx9q4=;
-        b=Sds5eDkSDDBKiEruJAxlEAMvXfj1nRHniI33DRO+keO2JLxkaplN2vDsEPW1/tstDfGo0d
-        lO+v1263d3xH2VieU8V+Qu7+ToatFCAf/PeTRgzPwLVzgBWNjkcICG60qGpfnXV4V/7dax
-        ukeJyYcvD9JotL1JuKk3/7ZVT7UV1fs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-q_fNrSQ7NEWOhYgI_w6_Tw-1; Mon, 18 May 2020 06:52:50 -0400
-X-MC-Unique: q_fNrSQ7NEWOhYgI_w6_Tw-1
-Received: by mail-wr1-f69.google.com with SMTP id e14so5473154wrv.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 03:52:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7i73MdO6mSnLJfSeLQzf3Paj06/1AUhoEWhZbMxx9q4=;
-        b=CFOzWjkPxi9x6D5Z8IcBhv9KEPKPzPJlBPAj/XAht33gnTE+icaZ3ZfeZ7WQ+gULDt
-         i+5QcNKbQ5rxoQ3zuo9z3tM6CnKkBE+tZlA+DPDNZWS/Bz+wVQASHuIFvkG/xFIccc/9
-         bOILPlEF8pnE3KhnAhqLNGw3JClsDQXOG0a+3PWrqHaZV+D8lY8+PdngARgy2g2VSurS
-         Aib213H65WPlkUI/OQ3U5Mb3RfH1ZAJb2plF6LG+Eb4dp/pcyvvuqTHyLH6lEwkZ7sC7
-         3I5/jGzbcKWO0iJkNBkxc+y7wMr3VnvY1awn9QevanPd65v0aJX1v5J0j59kxGU55Mbw
-         MLvA==
-X-Gm-Message-State: AOAM530BlYepH6oU91Kgja5YFaqSvbFMhYT6YUFCpyhzR7oWgnwaf8FW
-        XomKa/nfedEATAEwhqdgjjp1AYMdrnA8o/Dx88N98Kh0gJG7F+91+e3j12AbEaFgzrVhJhhTRcA
-        RBFft2YaYZXfslBFiCNKoR6AD
-X-Received: by 2002:a7b:cd04:: with SMTP id f4mr13204927wmj.118.1589799169119;
-        Mon, 18 May 2020 03:52:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyb5bJSjhIwujoAPyEeSV2lEHQs6rr/TIG41qjwncep2S48dLrjzAAz5OSj0DtYMHlyn0kYKA==
-X-Received: by 2002:a7b:cd04:: with SMTP id f4mr13204900wmj.118.1589799168906;
-        Mon, 18 May 2020 03:52:48 -0700 (PDT)
-Received: from [192.168.178.58] ([151.30.90.67])
-        by smtp.gmail.com with ESMTPSA id x17sm15630846wrp.71.2020.05.18.03.52.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 03:52:48 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: VMX: replace "fall through" with "return" to
- indicate different case
-To:     linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-References: <1582080348-20827-1-git-send-email-linmiaohe@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <50b2bf9b-d4c3-e469-1ef9-3d58b44f4de8@redhat.com>
-Date:   Mon, 18 May 2020 12:52:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 18 May 2020 06:53:49 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IAqpKn026437;
+        Mon, 18 May 2020 12:53:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=hYr/Z/iJo/s19A9RchK0rY3q7SlsXVvKYRI52EdpnXw=;
+ b=NCJGs8JUFONHamPapy20sfh1fVkO6XQyHiQSd4/xROmPage7ADLZqklwszMqpqsVgwxA
+ lMqc4bG5glGFxTXrs1Iir6on5eImHx+BjlfkdAo1fBRN9CiiiURGpiHRgNeAoGI23/2z
+ r48D7xnVP9cQPfjtXi+e132cpzaM3YlI4nxDjTOmqp54tvlcjhIutScTFDq+hGRco6kT
+ eK/8hqBMdmUSqVmg5+ZyRAvqO1jR2WB/wkcfL6y54LAkGAGLipPUMcsR2+UE99FAGL6N
+ PE8SJaqn+1OU3VoUlxzX/G1s72TlsPhNh7D3FT1XHGQt9tQq7YL+Zke3zDzz4WLA4zIs gg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3125a93cjj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 12:53:32 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2AF8410002A;
+        Mon, 18 May 2020 12:53:32 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 150562AEF19;
+        Mon, 18 May 2020 12:53:32 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 18 May
+ 2020 12:53:31 +0200
+Date:   Mon, 18 May 2020 12:53:26 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Rob Herring <robh@kernel.org>, "wsa@kernel.org" <wsa@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
+Message-ID: <20200518105326.GA3267@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Rob Herring <robh@kernel.org>,
+        "wsa@kernel.org" <wsa@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
+ <1588657871-14747-4-git-send-email-alain.volmat@st.com>
+ <20200513021932.GA9172@bogus>
+ <20200513054231.GA16558@gnbcxd0016.gnb.st.com>
 MIME-Version: 1.0
-In-Reply-To: <1582080348-20827-1-git-send-email-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200513054231.GA16558@gnbcxd0016.gnb.st.com>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-18_04:2020-05-15,2020-05-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/02/20 03:45, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> The second "/* fall through */" in rmode_exception() makes code harder to
-> read. Replace it with "return" to indicate they are different cases, only
-> the #DB and #BP check vcpu->guest_debug, while others don't care. And this
-> also improves the readability.
-> 
-> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index a13368b2719c..5b8f024f06c2 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4492,10 +4492,8 @@ static bool rmode_exception(struct kvm_vcpu *vcpu, int vec)
->  			return false;
->  		/* fall through */
->  	case DB_VECTOR:
-> -		if (vcpu->guest_debug &
-> -			(KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP))
-> -			return false;
-> -		/* fall through */
-> +		return !(vcpu->guest_debug &
-> +			(KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP));
->  	case DE_VECTOR:
->  	case OF_VECTOR:
->  	case BR_VECTOR:
-> 
+Gentle Reminder, as I wrote in my previous responce, smbus_alert interrupt
+refers to an host and not a client. And since we do not have a dedicated
+irq for smbus_alert, I propose to add this st, binding to enable the
+smbus_alert mechanism.
 
-Queued, thanks.
-
-Paolo
-
+On Wed, May 13, 2020 at 07:42:31AM +0200, Alain Volmat wrote:
+> Hello Rob,
+> 
+> On Wed, May 13, 2020 at 02:19:32AM +0000, Rob Herring wrote:
+> > On Tue, May 05, 2020 at 07:51:10AM +0200, Alain Volmat wrote:
+> > > Add a new binding of the i2c-stm32f7 driver to enable the handling
+> > > of the SMBUS-Alert
+> > > 
+> > > Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+> > > index b50a2f420b36..04c0882c3661 100644
+> > > --- a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+> > > +++ b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+> > > @@ -36,6 +36,10 @@ allOf:
+> > >                  minItems: 3
+> > >                  maxItems: 3
+> > >  
+> > > +        st,smbus-alert:
+> > > +          description: Enable the SMBus Alert feature
+> > > +          $ref: /schemas/types.yaml#/definitions/flag
+> > > +
+> > 
+> > We already have smbus_alert interrupt. Can't you just check for this in 
+> > the slave nodes and enable if found?
+> 
+> My understanding reading the code (smbalert_probe within i2c-smbus.c, of_i2c_setup_smbus_alert called when
+> registering an adapter within i2c-core-smbus.c) is that smbus_alert refers to an interrupt on the
+> adapter side. That is an interrupt that would be triggered when the adapter is receiving an smbus_alert
+> message.
+> In our case (stm32f7), we do not have specific interrupt for that purpose. The interrupt triggered when
+> an SMBUS Alert is received (by the adapter) is the same interrupt as for other reasons and we check
+> within the irq handler within stm32f7 the reason before calling i2c_handle_smbus_alert if the status
+> register indicated an SMBUS Alert.
+> So my understanding is that we cannot rely on the mechanism of naming an interrupt smbus_alert.
+> Did I misunderstood something ?
+> 
+> > 
+> > >    - if:
+> > >        properties:
+> > >          compatible:
+> > > -- 
+> > > 2.17.1
+> > > 
