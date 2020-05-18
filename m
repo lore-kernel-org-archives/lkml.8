@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B72C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5542AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC3820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314BD207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823764;
-	bh=l7gQ3LDxqyvmZKILg/1bQZEIGSXRweVRKSuXKY7UX0w=;
+	s=default; t=1589823768;
+	bh=CGePmMPwwQSqI/UZxuTkF09HS53/qmzLh96HTTGfteM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zKvzDBF1WeleMoW00xSe8qJumtnZJTz8ucAu7guSfaihy3qXWq8hHyeGua0CNIhC7
-	 rbYZfQwLTIPwmSoTTzni4afraOjyw2IxtAucAaUWyiABG+12NKJoXtIQcC6zklwzOJ
-	 OAZLVgTD3m0Qj6g3OBUPrF04bBQ4f2bWYrEd7quQ=
+	b=iwWiUCsCXesW34RZIJlFE4z7LamglFC/q2rPM1LZ7IbaUwO/VF/CBUJ9VyeCmaYEA
+	 k+euAjE2C2Qs4e8QA8w/fBJ0SbZefQ2936sjOeFOHSOY3zKYSRzyO8oSDg3f+3XcSm
+	 mOaieIeEgu5Nasmtzry9q1KfymCk/RduEKTrJIZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgERRmn (ORCPT
+        id S1729470AbgERRmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:42:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39492 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:42:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729428AbgERRma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:30 -0400
+        id S1729434AbgERRmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54F3120715;
-        Mon, 18 May 2020 17:42:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F317E20829;
+        Mon, 18 May 2020 17:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823748;
-        bh=l7gQ3LDxqyvmZKILg/1bQZEIGSXRweVRKSuXKY7UX0w=;
+        s=default; t=1589823751;
+        bh=CGePmMPwwQSqI/UZxuTkF09HS53/qmzLh96HTTGfteM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKAEIc9hsKAfODKuW/wHCoEFeaEV8V7avxwQEMuk1071CNqOi64daedoLuLLiohOP
-         okoGHyQWg5xf4TlJgBhCmMb+BmBMAb1J9uxm0UAIc0lJYgXAQGd0aaH62gluiZQ9/f
-         cFt8L3t+037bBem28Xr0jQEBvoY36bNc4eQEGtn4=
+        b=wtmTlDSG+6XslL/3dlLRHK+uSsVlG03jUaueAY8h/b5sUQ2AVvxjMy2WLvNfAeZhi
+         lDeM33wYQIrryt8vDH3SbhuM4/IiJKOOErsdyWgQXZwgQ/t4THFjItzblechVg4m1H
+         3kBZATRbTYxHgdSz0TUVeBEPHF4fJc8tdjsnGv5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Xin Tan <tanxin.ctf@gmail.com>,
         Sven Eckelmann <sven@narfation.org>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 20/90] batman-adv: Fix refcnt leak in batadv_show_throughput_override
-Date:   Mon, 18 May 2020 19:35:58 +0200
-Message-Id: <20200518173455.286190110@linuxfoundation.org>
+Subject: [PATCH 4.9 21/90] batman-adv: Fix refcnt leak in batadv_store_throughput_override
+Date:   Mon, 18 May 2020 19:35:59 +0200
+Message-Id: <20200518173455.473188193@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -63,22 +63,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit f872de8185acf1b48b954ba5bd8f9bc0a0d14016 upstream.
+commit 6107c5da0fca8b50b4d3215e94d619d38cc4a18c upstream.
 
 batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
 which gets a batadv_hard_iface object from net_dev with increased refcnt
 and its reference is assigned to a local pointer 'hard_iface'.
 
-When batadv_show_throughput_override() returns, "hard_iface" becomes
+When batadv_store_throughput_override() returns, "hard_iface" becomes
 invalid, so the refcount should be decreased to keep refcount balanced.
 
-The issue happens in the normal path of
-batadv_show_throughput_override(), which forgets to decrease the refcnt
-increased by batadv_hardif_get_by_netdev() before the function returns,
-causing a refcnt leak.
+The issue happens in one error path of
+batadv_store_throughput_override(). When batadv_parse_throughput()
+returns NULL, the refcnt increased by batadv_hardif_get_by_netdev() is
+not decreased, causing a refcnt leak.
 
-Fix this issue by calling batadv_hardif_put() before the
-batadv_show_throughput_override() returns in the normal path.
+Fix this issue by jumping to "out" label when batadv_parse_throughput()
+returns NULL.
 
 Fixes: 0b5ecc6811bd ("batman-adv: add throughput override attribute to hard_ifaces")
 Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
@@ -88,18 +88,19 @@ Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/sysfs.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/batman-adv/sysfs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/net/batman-adv/sysfs.c
 +++ b/net/batman-adv/sysfs.c
-@@ -1120,6 +1120,7 @@ static ssize_t batadv_show_throughput_ov
+@@ -1087,7 +1087,7 @@ static ssize_t batadv_store_throughput_o
+ 	ret = batadv_parse_throughput(net_dev, buff, "throughput_override",
+ 				      &tp_override);
+ 	if (!ret)
+-		return count;
++		goto out;
  
- 	tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
- 
-+	batadv_hardif_put(hard_iface);
- 	return sprintf(buff, "%u.%u MBit\n", tp_override / 10,
- 		       tp_override % 10);
- }
+ 	old_tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
+ 	if (old_tp_override == tp_override)
 
 
