@@ -2,295 +2,129 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB89CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB92620787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0055D2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgERMe7 (ORCPT
+        id S1726999AbgERMix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:34:59 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57519 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgERMe6 (ORCPT
+        Mon, 18 May 2020 08:38:53 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22500 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726739AbgERMiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:34:58 -0400
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7AED1240017;
-        Mon, 18 May 2020 12:34:51 +0000 (UTC)
-Date:   Mon, 18 May 2020 14:38:10 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
-Message-ID: <20200518123810.wsqg2a3lbbme36e7@uno.localdomain>
-References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
- <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
- <20200516215103.GA857@valkosipuli.retiisi.org.uk>
- <930009cd-d887-752a-4f1f-567c795101ee@ideasonboard.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <930009cd-d887-752a-4f1f-567c795101ee@ideasonboard.com>
+        Mon, 18 May 2020 08:38:52 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04ICX7lY088693;
+        Mon, 18 May 2020 08:37:52 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31292e4yye-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 08:37:51 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04ICYhbj094964;
+        Mon, 18 May 2020 08:37:51 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31292e4yx8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 08:37:50 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04ICa50C017752;
+        Mon, 18 May 2020 12:37:48 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03fra.de.ibm.com with ESMTP id 3127t5hnhx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 12:37:48 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04ICbjrD24838244
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 May 2020 12:37:45 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6BD284C059;
+        Mon, 18 May 2020 12:37:45 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F7144C04E;
+        Mon, 18 May 2020 12:37:42 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.145.145])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 18 May 2020 12:37:42 +0000 (GMT)
+Message-ID: <1589805462.5111.107.camel@linux.ibm.com>
+Subject: Re: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Cc:     viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rafael@kernel.org, ebiederm@xmission.com, jeyu@kernel.org,
+        jmorris@namei.org, keescook@chromium.org, paul@paul-moore.com,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        nayna@linux.ibm.com, scott.branden@broadcom.com,
+        dan.carpenter@oracle.com, skhan@linuxfoundation.org,
+        geert@linux-m68k.org, tglx@linutronix.de, bauerman@linux.ibm.com,
+        dhowells@redhat.com, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 18 May 2020 08:37:42 -0400
+In-Reply-To: <20200518062255.GB15641@infradead.org>
+References: <20200513152108.25669-1-mcgrof@kernel.org>
+         <20200513181736.GA24342@infradead.org>
+         <20200515212933.GD11244@42.do-not-panic.com>
+         <20200518062255.GB15641@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-18_05:2020-05-15,2020-05-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ lowpriorityscore=0 adultscore=0 impostorscore=0 bulkscore=0
+ priorityscore=1501 mlxlogscore=999 mlxscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005180114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran, Sakari
+Hi Christoph,
 
-On Mon, May 18, 2020 at 12:45:18PM +0100, Kieran Bingham wrote:
-> Hi Sakari,
->
-> There are only fairly minor comments here, fix ups will be included in a
-> v10.
->
-> Is there anything major blocking integration?
->
-> Regards
->
-> Kieran
->
->
->
-> On 16/05/2020 22:51, Sakari Ailus wrote:
-> > Hi Kieran,
-> >
-> > Thanks for the update.
-> >
-> > On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
-> >
-> > ...
-> >
-> >> +static int max9286_enum_mbus_code(struct v4l2_subdev *sd,
-> >> +				  struct v4l2_subdev_pad_config *cfg,
-> >> +				  struct v4l2_subdev_mbus_code_enum *code)
-> >> +{
-> >> +	if (code->pad || code->index > 0)
-> >> +		return -EINVAL;
-> >> +
-> >> +	code->code = MEDIA_BUS_FMT_UYVY8_2X8;
-> >
-> > Why UYVY8_2X8 and not UYVY8_1X16? In general, the single sample / pixel
-> > variant of the format is generally used on the serial busses. This choice
-> > was made when serial busses were introduced.
->
-> Ok - I presume this doesn't really have much effect anyway, they just
-> have to match for the transmitter/receiver?
->
-> But it makes sense to me, so I'll update to the 1x16 variant.
->
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static struct v4l2_mbus_framefmt *
-> >> +max9286_get_pad_format(struct max9286_priv *priv,
-> >> +		       struct v4l2_subdev_pad_config *cfg,
-> >> +		       unsigned int pad, u32 which)
-> >> +{
-> >> +	switch (which) {
-> >> +	case V4L2_SUBDEV_FORMAT_TRY:
-> >> +		return v4l2_subdev_get_try_format(&priv->sd, cfg, pad);
-> >> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
-> >> +		return &priv->fmt[pad];
-> >> +	default:
-> >> +		return NULL;
-> >> +	}
-> >> +}
-> >> +
-> >> +static int max9286_set_fmt(struct v4l2_subdev *sd,
-> >> +			   struct v4l2_subdev_pad_config *cfg,
-> >> +			   struct v4l2_subdev_format *format)
-> >> +{
-> >> +	struct max9286_priv *priv = sd_to_max9286(sd);
-> >> +	struct v4l2_mbus_framefmt *cfg_fmt;
-> >> +
-> >> +	if (format->pad >= MAX9286_SRC_PAD)
-> >> +		return -EINVAL;
-> >
-> > You can remove these checks; it's been already done by the caller.
-> >
->
-> Ok.
->
+On Sun, 2020-05-17 at 23:22 -0700, Christoph Hellwig wrote:
+> On Fri, May 15, 2020 at 09:29:33PM +0000, Luis Chamberlain wrote:
+> > On Wed, May 13, 2020 at 11:17:36AM -0700, Christoph Hellwig wrote:
+> > > Can you also move kernel_read_* out of fs.h?  That header gets pulled
+> > > in just about everywhere and doesn't really need function not related
+> > > to the general fs interface.
+> > 
+> > Sure, where should I dump these?
+> 
+> Maybe a new linux/kernel_read_file.h?  Bonus points for a small top
+> of the file comment explaining the point of the interface, which I
+> still don't get :)
 
-I think this shold be kept. The core validates that the pad number is
-valid, but we're here checking that set_fmt has been called on a sink
-pad [0-3], returning -EINVAL if set_fmt (and get_ftm as well) are
-called on the source one.
+Instead of rolling your own method of having the kernel read a file,
+which requires call specific security hooks, this interface provides a
+single generic set of pre and post security hooks.  The
+kernel_read_file_id enumeration permits the security hook to
+differentiate between callers.
 
-My question now is how does link validation work, if get_fmt() is not
-allowed on the source pad :/ ? Anyway, I would keep this check for
-set_fmt (maybe make it an == to address Sakari's comment).
+To comply with secure and trusted boot concepts, a file cannot be
+accessible to the caller until after it has been measured and/or the
+integrity (hash/signature) appraised.
 
-Thanks
-  j
+In some cases, the file was previously read twice, first to measure
+and/or appraise the file and then read again into a buffer for
+use.  This interface reads the file into a buffer once, calls the
+generic post security hook, before providing the buffer to the caller.
+ (Note using firmware pre-allocated memory might be an issue.)
 
->
-> > ...
-> >
-> >> +static int max9286_parse_dt(struct max9286_priv *priv)
-> >> +{
-> >> +	struct device *dev = &priv->client->dev;
-> >> +	struct device_node *i2c_mux;
-> >> +	struct device_node *node = NULL;
-> >> +	unsigned int i2c_mux_mask = 0;
-> >> +
-> >> +	of_node_get(dev->of_node);
-> >> +	i2c_mux = of_find_node_by_name(dev->of_node, "i2c-mux");
-> >> +	if (!i2c_mux) {
-> >> +		dev_err(dev, "Failed to find i2c-mux node\n");
-> >> +		of_node_put(dev->of_node);
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	/* Identify which i2c-mux channels are enabled */
-> >> +	for_each_child_of_node(i2c_mux, node) {
-> >> +		u32 id = 0;
-> >> +
-> >> +		of_property_read_u32(node, "reg", &id);
-> >> +		if (id >= MAX9286_NUM_GMSL)
-> >> +			continue;
-> >> +
-> >> +		if (!of_device_is_available(node)) {
-> >> +			dev_dbg(dev, "Skipping disabled I2C bus port %u\n", id);
-> >> +			continue;
-> >> +		}
-> >> +
-> >> +		i2c_mux_mask |= BIT(id);
-> >> +	}
-> >> +	of_node_put(node);
-> >> +	of_node_put(i2c_mux);
-> >> +
-> >> +	/* Parse the endpoints */
-> >> +	for_each_endpoint_of_node(dev->of_node, node) {
-> >> +		struct max9286_source *source;
-> >> +		struct of_endpoint ep;
-> >> +
-> >> +		of_graph_parse_endpoint(node, &ep);
-> >> +		dev_dbg(dev, "Endpoint %pOF on port %d",
-> >> +			ep.local_node, ep.port);
-> >> +
-> >> +		if (ep.port > MAX9286_NUM_GMSL) {
-> >> +			dev_err(dev, "Invalid endpoint %s on port %d",
-> >> +				of_node_full_name(ep.local_node), ep.port);
-> >> +			continue;
-> >> +		}
-> >> +
-> >> +		/* For the source endpoint just parse the bus configuration. */
-> >> +		if (ep.port == MAX9286_SRC_PAD) {
-> >> +			struct v4l2_fwnode_endpoint vep = {
-> >> +				.bus_type = V4L2_MBUS_CSI2_DPHY
-> >> +			};
-> >> +			int ret;
-> >> +
-> >> +			ret = v4l2_fwnode_endpoint_parse(
-> >> +					of_fwnode_handle(node), &vep);
-> >> +			if (ret) {
-> >> +				of_node_put(node);
-> >> +				of_node_put(dev->of_node);
-> >> +				return ret;
-> >> +			}
-> >> +
-> >> +			if (vep.bus_type != V4L2_MBUS_CSI2_DPHY) {
-> >
-> > This won't happen, the bus type will stay if you set it to a non-zero
-> > value.
->
->
-> Ok - I'll remove this check.
->
->
-> >
-> >> +				dev_err(dev,
-> >> +					"Media bus %u type not supported\n",
-> >> +					vep.bus_type);
-> >> +				v4l2_fwnode_endpoint_free(&vep);
-> >> +				of_node_put(node);
-> >> +				of_node_put(dev->of_node);
-> >> +				return -EINVAL;
-> >> +			}
-> >> +
-> >> +			priv->csi2_data_lanes =
-> >> +				vep.bus.mipi_csi2.num_data_lanes;
-> >> +			v4l2_fwnode_endpoint_free(&vep);
-> >
-> > No need to call this unless you use v4l2_fwnode_endpoint_alloc_parse().
-> >
-> > And as you don't, you also won't know which frequencies are known to be
-> > safe to use. That said, perhaps where this device is used having a random
-> > frequency on that bus could not be an issue. Perhaps.
->
-> Does this generate a range? or a list of static supported frequencies?
->
-> We configure the pixel clock based upon the number of cameras connected,
-> and their pixel rates etc ...
->
-> Are you saying that the frequency of this clock should be validated to
-> be a specific range? or are you talking about a different frequency?
->
->
-> For now I'll remove the v4l2_fwnode_endpoint_alloc_parse().
->
->
->
-> >> +
-> >> +			continue;
-> >> +		}
-> >> +
-> >> +		/* Skip if the corresponding GMSL link is unavailable. */
-> >> +		if (!(i2c_mux_mask & BIT(ep.port)))
-> >> +			continue;
-> >> +
-> >> +		if (priv->sources[ep.port].fwnode) {
-> >> +			dev_err(dev,
-> >> +				"Multiple port endpoints are not supported: %d",
-> >> +				ep.port);
-> >> +
-> >> +			continue;
-> >> +		}
-> >> +
-> >> +		source = &priv->sources[ep.port];
-> >> +		source->fwnode = fwnode_graph_get_remote_endpoint(
-> >> +						of_fwnode_handle(node));
-> >> +		if (!source->fwnode) {
-> >> +			dev_err(dev,
-> >> +				"Endpoint %pOF has no remote endpoint connection\n",
-> >> +				ep.local_node);
-> >> +
-> >> +			continue;
-> >> +		}
-> >> +
-> >> +		priv->source_mask |= BIT(ep.port);
-> >> +		priv->nsources++;
-> >> +	}
-> >> +	of_node_put(node);
-> >> +	of_node_put(dev->of_node);
-> >> +
-> >> +	priv->route_mask = priv->source_mask;
-> >> +
-> >> +	return 0;
-> >> +}
-> >
->
+Partial reading firmware will result in needing to pre-read the entire
+file, most likely on the security pre hook.
+
+Mimi
