@@ -6,145 +6,93 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6112CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC12A20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424B020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387851AbgERS0h (ORCPT
+        id S2387874AbgERS0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:26:37 -0400
-Received: from mga01.intel.com ([192.55.52.88]:27641 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728898AbgERS0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:26:32 -0400
-IronPort-SDR: JyuzkzXPtPV3syQh/yWxnhYEqHF7SJGBqxRYvbOghJiNPbW+8x92L0GfZfkoo0epadsVzxP2fP
- yEMbiUVm27SQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:26:31 -0700
-IronPort-SDR: EiDGEjtD5niwotAU58G4e/Ralcrx0+UnsF4cgXMSm0BivSD302e9Yg0i9/0jjpwnbzMdw/5d0Y
- pe1OKqDQvz/Q==
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="253135674"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:26:30 -0700
-Date:   Mon, 18 May 2020 11:26:29 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jue Wang <juew@google.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/mm: Don't try to change poison pages to uncacheable
- in a guest
-Message-ID: <20200518182629.GA2957@agluck-desk2.amr.corp.intel.com>
-References: <20200516150229.GB19372@zn.tnic>
- <8022D1E6-A8BC-4610-9F58-67A06B9A9575@intel.com>
- <CAPcxDJ50pbuTbittyvPwKq1uUT8q8jJ+dHH8rCug8a1DDZXVYw@mail.gmail.com>
- <CAPcxDJ6f3pBpwiR9nvXN_g_HBa1RAMG+aOmgfXLFT6aZ9HQn3w@mail.gmail.com>
- <20200518134813.GC25034@zn.tnic>
- <20200518153625.GA31444@agluck-desk2.amr.corp.intel.com>
- <20200518165500.GD25034@zn.tnic>
+        Mon, 18 May 2020 14:26:42 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:20732 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730445AbgERS0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:26:34 -0400
+Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 18 May 2020 11:26:32 -0700
+Received: from localhost (unknown [10.200.192.41])
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 8500FB2C85;
+        Mon, 18 May 2020 14:26:33 -0400 (EDT)
+Date:   Mon, 18 May 2020 11:26:33 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     Julien Thierry <jthierry@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH 4/5] objtool: Enable compilation of objtool for all
+ architectures
+Message-ID: <20200518182633.GL9040@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Julien Thierry <jthierry@redhat.com>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <cover.1588888003.git.mhelsley@vmware.com>
+ <9f709ea2ae66cc03b3ff3329baa8f670ccd0e368.1588888003.git.mhelsley@vmware.com>
+ <f9eedb02-54fe-fb96-fbcc-5f40f41e571a@redhat.com>
+ <20200513155948.GI9040@rlwimi.vmware.com>
+ <e369f0a9-30fc-5754-8cff-bf238ab0b716@redhat.com>
+ <20200515205135.5pknexlld53oicu5@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200518165500.GD25034@zn.tnic>
+In-Reply-To: <20200515205135.5pknexlld53oicu5@treble>
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 06:55:00PM +0200, Borislav Petkov wrote:
-> On Mon, May 18, 2020 at 08:36:25AM -0700, Luck, Tony wrote:
-> > The VMM gets the page fault (because the unmapping of the guest
-> > physical address is at the VMM EPT level).  The VMM can't map a new
-> > page into that guest physical address because it has no way to
-> > replace the contents of the old page.  The VMM could pass the #PF
-> > to the guest, but that would just confuse the guest (its page tables
-> > all say that the page is still valid). In this particular case the
-> > page is part of the 1:1 kernel map. So the kernel will OOPS (I think).
+On Fri, May 15, 2020 at 03:51:35PM -0500, Josh Poimboeuf wrote:
+> On Wed, May 13, 2020 at 05:55:31PM +0100, Julien Thierry wrote:
+> > > > Since the stuff under arch/missing is only weak symbols to make up for
+> > > > missing subcmd implementations, can we put everything in a file
+> > > > subcmd_defaults.c (name up for debate!) that would be always be compiled an
+> > > > linked. And some SUBCMD_XXX is set to "y", the corresponding object file
+> > > > gets compiled and overrides the weak symbols from subcmd_defaults.c .
+> > > 
+> > > Hmm, I like keeping them separated along similar lines to the other
+> > > code because it makes it easier to see the intended correspondence and
+> > > likely will keep the files more readable / smaller. I could
+> > > just move them out of arch/missing and into missing_check.c and so forth.
+> > > 
+> > > What do you think of that?
+> > > 
+> > 
+> > I do prefer that to the introduction of an arch/missing.
+> > 
+> > Still, I'm not sure I see much benefit in splitting those small
+> > implementations in separate files, but it's not a problem either. This seems
+> > more a matter of taste rather than one approach working better than the
+> > other. So it's more up to what the maintainer prefer! :)
 > 
-> ...
+> For now I'd prefer getting rid of the 'missing' arch and just having a
+> single top-level weak.c which has all the weak functions in it.  Keeps
+> the clutter down :-)
 > 
-> > PLease explain how a guest (that doesn't even know that it is a guest)
-> > is going to figure out that the EPT tables (that it has no way to access)
-> > have marked this page invalid in guest physical address space.
-> 
-> So somewhere BUS_MCEERR_AR was mentioned. So I'm assuming the error
-> severity was "action required". What does happen in the kernel, on
-> baremetal, with an AR error in kernel space, i.e., kernel memory?
+> Down the road, if the number of weak functions got out of hand then we
+> could look at splitting them up into multiple files.
 
-Outside of the now infamous memcpy_mcsafe() any kernel consumption
-of poison results in a panic as the mce_severity() code will trip
-this case:
+OK, I'll merge them all into weak.c
 
-        MCESEV(
-                PANIC, "Data load in unrecoverable area of kernel",
-                SER, MASK(MCI_STATUS_OVER|MCI_UC_SAR|MCI_ADDR|MCACOD, MCI_UC_SAR|MCI_ADDR|MCACOD_DATA),
-                KERNEL
-                ),
+Thanks!
 
-> If we can't fixup the exception, we die.
-> 
-> So why should the guest behave any differently?
-
-We don't see this particular problem on baremetal because a CLFLUSH
-instruction isn't *consuming* data. It's just evicting things from
-the cache to memory. So we reference the virtual address, which works
-fine on baremetal because the kernel 1:1 map is still active. But in
-the guest case the guest physical address has gone away. So we trap
-to the VMM.
-
-> Now, if you want for the guest to be more "robust" and handle that
-> thing, fine. But then you'd need an explicit way to tell the guest
-> kernel: "you've just had an MCE and I unmapped the page" so that the
-> guest kernel can figure out what do to. Even if it means, to panic.
-> 
-> I.e., signal in an explicit way that EPT violation Jue is talking about
-> in the other mail.
-> 
-> You can inject a #PF or better yet the *first* MCE which is being
-> injected should say with a bit somehwere "I unmapped the address in
-> m->addr". So that the guest kernel can handle that properly and know
-> what *exactly* it is getting an MCE for.
-
-That question only makes any sense if you know you are running as a
-guest and that someone else has unmapped the address. It's a meaningless
-question to ask if you are running bare metal. So we'd still have a check
-for FEATURE_HYPERVISOR
-
-> What I don't like is the "am I running as a guest" check. Because
-> someone else would come later and say, err, I'm not virtualizing this
-> portion of MCA either, lemme add another "am I guest" check.
-> 
-> Sure, it is a lot easier but when stuff like that starts spreading
-> around in the MCE code, then we can just as well disable MCE when
-> virtualized altogether. It would be a lot easier for everybody.
-
-Maybe it isn't pretty. But I don't see another practical solution.
-
-The VMM is doing exactly the right thing here. It should not trust
-that the guest will behave and not touch the poison location again.
-If/when the guest does touch the poison, the right action is
-for the VMM to fake a new machine check to the guest.
-
-Theoretlcally the VMM could decode the instruction that the guest
-was trying to use on the poison page and decide "oh, this is that
-weird case in Linux where it's just trying to CLFLUSH the page. I'll
-just step the return IP past the CLFLUSH and let the guest continue".
-
-But that doesn't sound at all reasonable to me (especially as the
-next step is to realize that Linux is going to repeat that for every
-cache line in the page, so you also want to VMM to fudge the register
-contents to skip to the end of the loop and avoid another 63 VMEXITs).
-
-N.B. Linux wants to switch the page to uncacheable so that in the
-persistant memory case the filesytem code can continue to access
-the other "blocks" in the page, rather than lose all of them. That's
-futile in the case where the VMM took the whole 4K away. Maybe Dan
-needs to think about the guest case too.
-
--Tony
+Cheers,
+    -Matt Helsley
