@@ -2,109 +2,132 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1780C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1139EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 862AB207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:41:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CsCWq4UE"
+	by mail.kernel.org (Postfix) with ESMTP id EF7BF207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgERKlM (ORCPT
+        id S1726675AbgERKlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgERKlM (ORCPT
+        Mon, 18 May 2020 06:41:25 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43030 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbgERKlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:41:12 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3593C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 03:41:10 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id 50so11191017wrc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 03:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ikyr+WGHg8huJGIaXBToPakGl31dMPTElNM/T3/AsyA=;
-        b=CsCWq4UEjwCH+yiYQDD4ynwlz421ZgsXOQhWh945mhdfeF2OpwrBYP71U999eButzs
-         6zUQe3lJKazONDHRJQ/90UT0XlCmm1DzsUJyCEwxcdma+ztv4UiMLRIVfHF8c1ZIwQH9
-         /zFBYdMTOUFjymmYvz7SCb/q1mfBlqzuRQvqdRabqvvQT37rBVPhFKRl0HS4s/8ba8Oc
-         RZKDR7q3KrMIAW4A4QSwEn5S5xiNBaLlwqUdZGah3bf2FSGzLWZLTLPr4sk6ChN1oNJc
-         1ThvkQJqacI34dcyVXrKD2jjXlwkuifXql9afLeRGglpo6cqbIcDoJhM5ikahtCCXJWr
-         FOow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ikyr+WGHg8huJGIaXBToPakGl31dMPTElNM/T3/AsyA=;
-        b=Kw+l4eU+D0sCmiXySi7oCrMbrDlIVDAJetpHjYXun1cJDl1y3NsMnXBo6R8op4f73v
-         m2rd8AZKJgBhgbnMrjqAXScryhAGJfyFgdX263/EPt67uZOiqBuaSKS/igomJ+hvhxk0
-         IedtWFhod7FA/Xo4I6dDkKuK3M1r8cb2JSmzL6AgoTGoHqnfW1ptoPRa5db9OzmlHbBJ
-         mqhxnzRCwIPNG1X4hwfz35teWoaYrNAJouWDLzLZKKNjEkcZ1fXQyX63sSKE1D/fhNNA
-         Hu3I3M9Ip8Bjcif324FIu75WjWRwDlIzgQDsSSVOsYJou3FWa+IsSStMlBw29LHf/PTv
-         koZA==
-X-Gm-Message-State: AOAM531Zxbn7dTdbJ6bepu5yAwmpPCu328xXN1mRxzEpKHwCucb4id/T
-        36cndunn7wr8EGbI1h2jvllHfg==
-X-Google-Smtp-Source: ABdhPJxJpfJuRoJfvHNiUbAVudTa2kS7XT56S3+kDTzC9GuaST7R/l/FinfyiKCOSKj3r4ODuckhIQ==
-X-Received: by 2002:adf:fb08:: with SMTP id c8mr19427696wrr.421.1589798469654;
-        Mon, 18 May 2020 03:41:09 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id z12sm14434852wmc.6.2020.05.18.03.41.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 03:41:09 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:41:07 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [not urgent] ROHM PMIC/Charger IC driver maintenance.
-Message-ID: <20200518104107.GS271301@dell>
-References: <18838efd9341c953fb6aabe9536786de3f1150ae.camel@fi.rohmeurope.com>
+        Mon, 18 May 2020 06:41:25 -0400
+Received: from 89-64-86-21.dynamic.chello.pl (89.64.86.21) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 850b1f41962055eb; Mon, 18 May 2020 12:41:21 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, stable@vger.kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw setting
+Date:   Mon, 18 May 2020 12:41:19 +0200
+Message-ID: <5284478.EF2IWm2iUs@kreacher>
+In-Reply-To: <20200518103102.t3a3g4uxeeuwsnix@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru> <20200518102415.k4c5qglodij5ac6h@vireshk-i7> <20200518103102.t3a3g4uxeeuwsnix@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <18838efd9341c953fb6aabe9536786de3f1150ae.camel@fi.rohmeurope.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020, Vaittinen, Matti wrote:
-
-> Hello All,
+On Monday, May 18, 2020 12:31:02 PM CEST Serge Semin wrote:
+> On Mon, May 18, 2020 at 03:54:15PM +0530, Viresh Kumar wrote:
+> > On 18-05-20, 12:22, Rafael J. Wysocki wrote:
+> > > On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
+> > > > On 18-05-20, 11:53, Rafael J. Wysocki wrote:
+> > > > > That said if you really only want it to return 0 on success, you may as well
+> > > > > add a ret = 0; statement (with a comment explaining why it is needed) after
+> > > > > the last break in the loop.
+> > > > 
+> > > > That can be done as well, but will be a bit less efficient as the loop
+> > > > will execute once for each policy, and so the statement will run
+> > > > multiple times. Though it isn't going to add any significant latency
+> > > > in the code.
+> > > 
+> > > Right.
+> > > 
+> > > However, the logic in this entire function looks somewhat less than
+> > > straightforward to me, because it looks like it should return an
+> > > error on the first policy without a frequency table (having a frequency
+> > > table depends on the driver and that is the same for all policies, so it
+> > > is pointless to iterate any further in that case).
+> > > 
+> > > Also, the error should not be -EINVAL, because that means "invalid
+> > > argument" which would be the state value.
+> > > 
+> > > So I would do something like this:
+> > > 
+> > > ---
+> > >  drivers/cpufreq/cpufreq.c |   11 ++++++-----
+> > >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > > 
+> > > Index: linux-pm/drivers/cpufreq/cpufreq.c
+> > > ===================================================================
+> > > --- linux-pm.orig/drivers/cpufreq/cpufreq.c
+> > > +++ linux-pm/drivers/cpufreq/cpufreq.c
+> > > @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
+> > >  static int cpufreq_boost_set_sw(int state)
+> > >  {
+> > >  	struct cpufreq_policy *policy;
+> > > -	int ret = -EINVAL;
+> > >  
+> > >  	for_each_active_policy(policy) {
+> > > +		int ret;
+> > > +
+> > >  		if (!policy->freq_table)
+> > > -			continue;
+> > > +			return -ENXIO;
+> > >  
+> > >  		ret = cpufreq_frequency_table_cpuinfo(policy,
+> > >  						      policy->freq_table);
+> > >  		if (ret) {
+> > >  			pr_err("%s: Policy frequency update failed\n",
+> > >  			       __func__);
+> > > -			break;
+> > > +			return ret;
+> > >  		}
+> > >  
+> > >  		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+> > >  		if (ret < 0)
+> > > -			break;
+> > > +			return ret;
+> > >  	}
+> > >  
+> > > -	return ret;
+> > > +	return 0;
+> > >  }
+> > >  
+> > >  int cpufreq_boost_trigger_state(int state)
+> > 
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > 
-> In short - I consider adding myself in MAINTAINERs for the ROHM IC
-> drivers I've authored. I would like to get your opinion as subsystem
-> maintainers on the area where these driver belong. If you don't care -
-> then no need to read further :) If you do read, then I would appreciate
-> hearing about your expectations regarding reviews, ACKs etc.
+> Ok. Thanks for the comments. Shall I resend the patch with update Rafael
+> suggests or you'll merge the Rafael's fix in yourself?
 
-It's fine to add yourself to MAINTAINERS for this purpose.
+I'll apply the fix directly, thanks!
 
-Either as M (mail-to) or R (designated reviewer) is fine.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
