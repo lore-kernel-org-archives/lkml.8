@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7778AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B75BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49AB220829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B742083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824497;
-	bh=eMgKjlrSqZbzw2cAvXs6l4AlTWhoYN7FjTDp/GmESNw=;
+	s=default; t=1589824503;
+	bh=KONOyviHySfFCx8g+X0yBPg7f/PqbVDlYmS8u/zo1G8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=huX43J+EJaH/NnwDAmJLI0QcMc/k1nQlZ112sc1djpp3BCo/5rDaovFPIQBFhTADW
-	 5uPIUb7Pdfcvtq420l2zDbtp4EjVjLdbnE7erksfdtUrHGiK3YkLLkjrdX7XnOlQJv
-	 k0yCVei82E7m/ZrbapZJkoomIiGaSBWH+FEoPmT0=
+	b=GgcuoH3FKb6AId6oCHKJ1AxxANDslf+FQImcioKjkqffXLifqF7KvVShF+sIEzrCm
+	 ozPsmEIIRwryygBswzZB/efmYr8N73nM6DyLHEMpXJRLqN9uiUD+ymmYNutdGTg8o/
+	 yjUXpqTVIbezTpuxD7ntZ9CyUf34DYqYeBWEWrj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731387AbgERRy4 (ORCPT
+        id S1730869AbgERRzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59928 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:55:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731372AbgERRyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:53 -0400
+        id S1728825AbgERRy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A584207C4;
-        Mon, 18 May 2020 17:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C919207C4;
+        Mon, 18 May 2020 17:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824492;
-        bh=eMgKjlrSqZbzw2cAvXs6l4AlTWhoYN7FjTDp/GmESNw=;
+        s=default; t=1589824497;
+        bh=KONOyviHySfFCx8g+X0yBPg7f/PqbVDlYmS8u/zo1G8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFWI3Kx8vzckXE+npCRIPv2PD30ws6bagcJY766/GxcQlcXojvJLBKotyC88wTgVl
-         bIVmgKD59AFFip1myjEZ38Sa/ZF+v9vE3tpaHCaJWoF8jFDgHQjQv8Xl5VawWP+reh
-         S4LitunQiCOX7I10YABktS6Hev0p+Mb0ordaYpQw=
+        b=e1MnLLuOQz9NJ1OTLW4b+y2vwn0bhxIPx9j0xYJ1cCoW2VUqE3R2jGbr0hkxvPg53
+         ukK2cCYx01pfOnLx1OyAggy2Ezhih9Uwwqo3WGzHlR5681FcZmvnNzChLilxyWParw
+         YQjLX0vfuwmvH7+stmiY3jt5JRlRLE2TSrZOm00k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Zefan Li <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 032/147] netprio_cgroup: Fix unlimited memory leak of v2 cgroups
-Date:   Mon, 18 May 2020 19:35:55 +0200
-Message-Id: <20200518173518.206897083@linuxfoundation.org>
+Subject: [PATCH 5.4 034/147] nfp: abm: fix error return code in nfp_abm_vnic_alloc()
+Date:   Mon, 18 May 2020 19:35:57 +0200
+Message-Id: <20200518173518.390245737@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,50 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zefan Li <lizefan@huawei.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 090e28b229af92dc5b40786ca673999d59e73056 ]
+[ Upstream commit 5099dea0a59f1c89525bb0ceac36689178a4c125 ]
 
-If systemd is configured to use hybrid mode which enables the use of
-both cgroup v1 and v2, systemd will create new cgroup on both the default
-root (v2) and netprio_cgroup hierarchy (v1) for a new session and attach
-task to the two cgroups. If the task does some network thing then the v2
-cgroup can never be freed after the session exited.
+Fix to return negative error code -ENOMEM from the kzalloc() error
+handling case instead of 0, as done elsewhere in this function.
 
-One of our machines ran into OOM due to this memory leak.
-
-In the scenario described above when sk_alloc() is called
-cgroup_sk_alloc() thought it's in v2 mode, so it stores
-the cgroup pointer in sk->sk_cgrp_data and increments
-the cgroup refcnt, but then sock_update_netprioidx()
-thought it's in v1 mode, so it stores netprioidx value
-in sk->sk_cgrp_data, so the cgroup refcnt will never be freed.
-
-Currently we do the mode switch when someone writes to the ifpriomap
-cgroup control file. The easiest fix is to also do the switch when
-a task is attached to a new cgroup.
-
-Fixes: bd1060a1d671 ("sock, cgroup: add sock->sk_cgroup")
-Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-Tested-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Zefan Li <lizefan@huawei.com>
-Acked-by: Tejun Heo <tj@kernel.org>
+Fixes: 174ab544e3bc ("nfp: abm: add cls_u32 offload for simple band classification")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/netprio_cgroup.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/netronome/nfp/abm/main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/core/netprio_cgroup.c
-+++ b/net/core/netprio_cgroup.c
-@@ -236,6 +236,8 @@ static void net_prio_attach(struct cgrou
- 	struct task_struct *p;
- 	struct cgroup_subsys_state *css;
+--- a/drivers/net/ethernet/netronome/nfp/abm/main.c
++++ b/drivers/net/ethernet/netronome/nfp/abm/main.c
+@@ -333,8 +333,10 @@ nfp_abm_vnic_alloc(struct nfp_app *app,
+ 		goto err_free_alink;
  
-+	cgroup_sk_alloc_disable();
-+
- 	cgroup_taskset_for_each(p, css, tset) {
- 		void *v = (void *)(unsigned long)css->cgroup->id;
+ 	alink->prio_map = kzalloc(abm->prio_map_len, GFP_KERNEL);
+-	if (!alink->prio_map)
++	if (!alink->prio_map) {
++		err = -ENOMEM;
+ 		goto err_free_alink;
++	}
  
+ 	/* This is a multi-host app, make sure MAC/PHY is up, but don't
+ 	 * make the MAC/PHY state follow the state of any of the ports.
 
 
