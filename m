@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF3CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C561820888
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D04920890
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823530;
-	bh=0wij+4SMfYt8fX0y0Plfm3QfI9RMGO92NpN60AKPhuU=;
+	s=default; t=1589823535;
+	bh=K0nTKFYR4erZ7CrFK5RO8VsqlyURu8lK5DXwvEtK5Ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwFMdfUCNdVme1dONkD7BWQn1UJI4xDaKdp9ixFcwWW0dlTI6LepSTaxIZzdPysJa
-	 BrbcfjjbWHF22mgndQOojkyg4X4Em7FFO7XgOl9/GDLpzukHccpe9hrs4uQszZheei
-	 oA0qp0h80EvA+XgsnCEtNUlpLVYZ8nBboJjXJHXY=
+	b=iEJ0wzwnLB+qVJc3g6x/BlUTa0UIPpLQ6ZiUvLSFkW8vluVFmDsXsSrtlDMK2BogP
+	 tSSD8uzN9UwPrbTIZdyyzjEbayxs+V8/MTI0NaIgwJV2TKyXR5lSNDUjzoVa86jsL6
+	 d6uWrxRu2PoVjLQ/NVwq2aMzJAoDjQFtzOV+DYTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgERRiu (ORCPT
+        id S1728641AbgERRiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33046 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbgERRir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:38:47 -0400
+        id S1728621AbgERRiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:38:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9F9C20853;
-        Mon, 18 May 2020 17:38:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC66820874;
+        Mon, 18 May 2020 17:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823526;
-        bh=0wij+4SMfYt8fX0y0Plfm3QfI9RMGO92NpN60AKPhuU=;
+        s=default; t=1589823531;
+        bh=K0nTKFYR4erZ7CrFK5RO8VsqlyURu8lK5DXwvEtK5Ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OmhimJohI/22Ucf2PRxluKeUjr0MnSYxsi5COgIRdGQzDKUe/LZ+LumXjr67Q/i9L
-         iPnP9OdzKmFSMCAtO152W7tkDi6Giiq1bvBZIY9r3Qe0WK1AcaVXJ3YrcyO9+eOwt9
-         lNyXNVi+lGQN68IxeFzbg9CSF6w3ANlnd+fw0QBs=
+        b=BsYlhIuXDQVb9gDe7UIT6IxhiXTcih3wr5I4Odzq4zcG4PqknwmJ6LYhY4JLQ6nMO
+         JGt5YRJBkwqSGKaOI/+8qORN5btfMsp8jfSlvXFbDMbSj+OCHX86a5cxAkT0wVGqIN
+         zqGpMPDlY9bTk44TCgOA8d0Fvue41QeeayRwzIWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Ali Saidi <alisaidi@amazon.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 10/86] binfmt_elf: move brk out of mmap when doing direct loader exec
-Date:   Mon, 18 May 2020 19:35:41 +0200
-Message-Id: <20200518173452.495203298@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Shijie Luo <luoshijie1@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.4 20/86] ext4: add cond_resched() to ext4_protect_reserved_inode
+Date:   Mon, 18 May 2020 19:35:51 +0200
+Message-Id: <20200518173454.557562877@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -66,105 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Shijie Luo <luoshijie1@huawei.com>
 
-commit bbdc6076d2e5d07db44e74c11b01a3e27ab90b32 upstream.
+commit af133ade9a40794a37104ecbcc2827c0ea373a3c upstream.
 
-Commmit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE"),
-made changes in the rare case when the ELF loader was directly invoked
-(e.g to set a non-inheritable LD_LIBRARY_PATH, testing new versions of
-the loader), by moving into the mmap region to avoid both ET_EXEC and
-PIE binaries.  This had the effect of also moving the brk region into
-mmap, which could lead to the stack and brk being arbitrarily close to
-each other.  An unlucky process wouldn't get its requested stack size
-and stack allocations could end up scribbling on the heap.
+When journal size is set too big by "mkfs.ext4 -J size=", or when
+we mount a crafted image to make journal inode->i_size too big,
+the loop, "while (i < num)", holds cpu too long. This could cause
+soft lockup.
 
-This is illustrated here.  In the case of using the loader directly, brk
-(so helpfully identified as "[heap]") is allocated with the _loader_ not
-the binary.  For example, with ASLR entirely disabled, you can see this
-more clearly:
+[  529.357541] Call trace:
+[  529.357551]  dump_backtrace+0x0/0x198
+[  529.357555]  show_stack+0x24/0x30
+[  529.357562]  dump_stack+0xa4/0xcc
+[  529.357568]  watchdog_timer_fn+0x300/0x3e8
+[  529.357574]  __hrtimer_run_queues+0x114/0x358
+[  529.357576]  hrtimer_interrupt+0x104/0x2d8
+[  529.357580]  arch_timer_handler_virt+0x38/0x58
+[  529.357584]  handle_percpu_devid_irq+0x90/0x248
+[  529.357588]  generic_handle_irq+0x34/0x50
+[  529.357590]  __handle_domain_irq+0x68/0xc0
+[  529.357593]  gic_handle_irq+0x6c/0x150
+[  529.357595]  el1_irq+0xb8/0x140
+[  529.357599]  __ll_sc_atomic_add_return_acquire+0x14/0x20
+[  529.357668]  ext4_map_blocks+0x64/0x5c0 [ext4]
+[  529.357693]  ext4_setup_system_zone+0x330/0x458 [ext4]
+[  529.357717]  ext4_fill_super+0x2170/0x2ba8 [ext4]
+[  529.357722]  mount_bdev+0x1a8/0x1e8
+[  529.357746]  ext4_mount+0x44/0x58 [ext4]
+[  529.357748]  mount_fs+0x50/0x170
+[  529.357752]  vfs_kern_mount.part.9+0x54/0x188
+[  529.357755]  do_mount+0x5ac/0xd78
+[  529.357758]  ksys_mount+0x9c/0x118
+[  529.357760]  __arm64_sys_mount+0x28/0x38
+[  529.357764]  el0_svc_common+0x78/0x130
+[  529.357766]  el0_svc_handler+0x38/0x78
+[  529.357769]  el0_svc+0x8/0xc
+[  541.356516] watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [mount:18674]
 
-$ /bin/cat /proc/self/maps
-555555554000-55555555c000 r-xp 00000000 ... /bin/cat
-55555575b000-55555575c000 r--p 00007000 ... /bin/cat
-55555575c000-55555575d000 rw-p 00008000 ... /bin/cat
-55555575d000-55555577e000 rw-p 00000000 ... [heap]
-...
-7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
-7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
-7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffe000-7ffff7fff000 rw-p 00000000 ...
-7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
-
-$ /lib/x86_64-linux-gnu/ld-2.27.so /bin/cat /proc/self/maps
-...
-7ffff7bcc000-7ffff7bd4000 r-xp 00000000 ... /bin/cat
-7ffff7bd4000-7ffff7dd3000 ---p 00008000 ... /bin/cat
-7ffff7dd3000-7ffff7dd4000 r--p 00007000 ... /bin/cat
-7ffff7dd4000-7ffff7dd5000 rw-p 00008000 ... /bin/cat
-7ffff7dd5000-7ffff7dfc000 r-xp 00000000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7fb2000-7ffff7fd6000 rw-p 00000000 ...
-7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
-7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
-7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffe000-7ffff8020000 rw-p 00000000 ... [heap]
-7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
-
-The solution is to move brk out of mmap and into ELF_ET_DYN_BASE since
-nothing is there in the direct loader case (and ET_EXEC is still far
-away at 0x400000).  Anything that ran before should still work (i.e.
-the ultimately-launched binary already had the brk very far from its
-text, so this should be no different from a COMPAT_BRK standpoint).  The
-only risk I see here is that if someone started to suddenly depend on
-the entire memory space lower than the mmap region being available when
-launching binaries via a direct loader execs which seems highly
-unlikely, I'd hope: this would mean a binary would _not_ work when
-exec()ed normally.
-
-(Note that this is only done under CONFIG_ARCH_HAS_ELF_RANDOMIZATION
-when randomization is turned on.)
-
-Link: http://lkml.kernel.org/r/20190422225727.GA21011@beast
-Link: https://lkml.kernel.org/r/CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com
-Fixes: eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reported-by: Ali Saidi <alisaidi@amazon.com>
-Cc: Ali Saidi <alisaidi@amazon.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jann Horn <jannh@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200211011752.29242-1-luoshijie1@huawei.com
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/binfmt_elf.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ fs/ext4/block_validity.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1097,6 +1097,17 @@ static int load_elf_binary(struct linux_
- 	current->mm->start_stack = bprm->p;
- 
- 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
-+		/*
-+		 * For architectures with ELF randomization, when executing
-+		 * a loader directly (i.e. no interpreter listed in ELF
-+		 * headers), move the brk area out of the mmap region
-+		 * (since it grows up, and may collide early with the stack
-+		 * growing down), and into the unused ELF_ET_DYN_BASE region.
-+		 */
-+		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
-+			current->mm->brk = current->mm->start_brk =
-+				ELF_ET_DYN_BASE;
-+
- 		current->mm->brk = current->mm->start_brk =
- 			arch_randomize_brk(current->mm);
- #ifdef compat_brk_randomized
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -152,6 +152,7 @@ static int ext4_protect_reserved_inode(s
+ 		return PTR_ERR(inode);
+ 	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
+ 	while (i < num) {
++		cond_resched();
+ 		map.m_lblk = i;
+ 		map.m_len = num - i;
+ 		n = ext4_map_blocks(NULL, inode, &map, 0);
 
 
