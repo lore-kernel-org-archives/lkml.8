@@ -2,158 +2,150 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E41C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B65DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 709FF20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89F920657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgERKpi (ORCPT
+        id S1726876AbgERKqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:45:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:37766 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726274AbgERKpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:45:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52543101E;
-        Mon, 18 May 2020 03:45:37 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBF4B3F52E;
-        Mon, 18 May 2020 03:45:33 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:45:24 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Lecopzer Chen <lecopzer@gmail.com>, alexandru.elisei@arm.com
-Cc:     Sumit Garg <sumit.garg@linaro.org>, julien.thierry.kdev@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jian-Lin Chen <lecopzer.chen@mediatek.com>,
-        alexander.shishkin@linux.intel.com,
-        Catalin Marinas <catalin.marinas@arm.com>, jolsa@redhat.com,
-        acme@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        mingo@redhat.com, linux-mediatek@lists.infradead.org,
-        matthias.bgg@gmail.com, namhyung@kernel.org,
-        Will Deacon <will@kernel.org>, yj.chiang@mediatek.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 0/3] arm64: perf: Add support for Perf NMI interrupts
-Message-ID: <20200518104524.GA1224@C02TD0UTHF1T.local>
-References: <20200516124857.75004-1-lecopzer@gmail.com>
- <CAFA6WYNwp+_ENiS8QDao5+RXyt5ofJZyq6c5CKG_d0CNEmBNYg@mail.gmail.com>
- <CANr2M19unLW8n0P2DiOYEZ=GZcaD-L2ygPht_5HNtNZ6e4h6xQ@mail.gmail.com>
+        Mon, 18 May 2020 06:46:09 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:46200 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbgERKqI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 06:46:08 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 72611803080B;
+        Mon, 18 May 2020 10:46:05 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GXTt2X8lPm2O; Mon, 18 May 2020 13:46:04 +0300 (MSK)
+Date:   Mon, 18 May 2020 13:46:02 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
+ setting
+Message-ID: <20200518104602.mjh2p5iltf2x4wmq@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200518102415.k4c5qglodij5ac6h@vireshk-i7>
+ <20200518103102.t3a3g4uxeeuwsnix@mobilestation>
+ <5284478.EF2IWm2iUs@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANr2M19unLW8n0P2DiOYEZ=GZcaD-L2ygPht_5HNtNZ6e4h6xQ@mail.gmail.com>
+In-Reply-To: <5284478.EF2IWm2iUs@kreacher>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Mon, May 18, 2020 at 12:41:19PM +0200, Rafael J. Wysocki wrote:
+> On Monday, May 18, 2020 12:31:02 PM CEST Serge Semin wrote:
+> > On Mon, May 18, 2020 at 03:54:15PM +0530, Viresh Kumar wrote:
+> > > On 18-05-20, 12:22, Rafael J. Wysocki wrote:
+> > > > On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
+> > > > > On 18-05-20, 11:53, Rafael J. Wysocki wrote:
+> > > > > > That said if you really only want it to return 0 on success, you may as well
+> > > > > > add a ret = 0; statement (with a comment explaining why it is needed) after
+> > > > > > the last break in the loop.
+> > > > > 
+> > > > > That can be done as well, but will be a bit less efficient as the loop
+> > > > > will execute once for each policy, and so the statement will run
+> > > > > multiple times. Though it isn't going to add any significant latency
+> > > > > in the code.
+> > > > 
+> > > > Right.
+> > > > 
+> > > > However, the logic in this entire function looks somewhat less than
+> > > > straightforward to me, because it looks like it should return an
+> > > > error on the first policy without a frequency table (having a frequency
+> > > > table depends on the driver and that is the same for all policies, so it
+> > > > is pointless to iterate any further in that case).
+> > > > 
+> > > > Also, the error should not be -EINVAL, because that means "invalid
+> > > > argument" which would be the state value.
+> > > > 
+> > > > So I would do something like this:
+> > > > 
+> > > > ---
+> > > >  drivers/cpufreq/cpufreq.c |   11 ++++++-----
+> > > >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > > > 
+> > > > Index: linux-pm/drivers/cpufreq/cpufreq.c
+> > > > ===================================================================
+> > > > --- linux-pm.orig/drivers/cpufreq/cpufreq.c
+> > > > +++ linux-pm/drivers/cpufreq/cpufreq.c
+> > > > @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
+> > > >  static int cpufreq_boost_set_sw(int state)
+> > > >  {
+> > > >  	struct cpufreq_policy *policy;
+> > > > -	int ret = -EINVAL;
+> > > >  
+> > > >  	for_each_active_policy(policy) {
+> > > > +		int ret;
+> > > > +
+> > > >  		if (!policy->freq_table)
+> > > > -			continue;
+> > > > +			return -ENXIO;
+> > > >  
+> > > >  		ret = cpufreq_frequency_table_cpuinfo(policy,
+> > > >  						      policy->freq_table);
+> > > >  		if (ret) {
+> > > >  			pr_err("%s: Policy frequency update failed\n",
+> > > >  			       __func__);
+> > > > -			break;
+> > > > +			return ret;
+> > > >  		}
+> > > >  
+> > > >  		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+> > > >  		if (ret < 0)
+> > > > -			break;
+> > > > +			return ret;
+> > > >  	}
+> > > >  
+> > > > -	return ret;
+> > > > +	return 0;
+> > > >  }
+> > > >  
+> > > >  int cpufreq_boost_trigger_state(int state)
+> > > 
+> > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > 
+> > Ok. Thanks for the comments. Shall I resend the patch with update Rafael
+> > suggests or you'll merge the Rafael's fix in yourself?
+> 
+> I'll apply the fix directly, thanks!
 
-On Mon, May 18, 2020 at 02:26:00PM +0800, Lecopzer Chen wrote:
-> HI Sumit,
-> 
-> Thanks for your information.
-> 
-> I've already implemented IPI (same as you did [1], little difference
-> in detail), hardlockup detector and perf in last year(2019) for
-> debuggability.
-> And now we tend to upstream to reduce kernel maintaining effort.
-> I'm glad if someone in ARM can do this work :)
-> 
-> Hi Julien,
-> 
-> Does any Arm maintainers can proceed this action?
+Great. Is it going to be available in the repo:
+https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/
+?
+I'll need it to back port into my local kernel tree. Thanks.
 
-Alexandru (Cc'd) has been rebasing and reworking Julien's patches, which
-is my preferred approach.
+-Sergey
 
-I understand that's not quite ready for posting since he's investigating
-some of the nastier subtleties (e.g. mutual exclusion with the NMI), but
-maybe we can put the work-in-progress patches somewhere in the mean
-time.
-
-Alexandru, do you have an idea of what needs to be done, and/or when you
-expect you could post that?
-
-Thanks,
-Mark.
-
-> This is really useful in debugging.
-> Thank you!!
 > 
 > 
 > 
-> [1] https://lkml.org/lkml/2020/4/24/328
-> 
-> 
-> Lecopzer
-> 
-> Sumit Garg <sumit.garg@linaro.org> 於 2020年5月18日 週一 下午1:46寫道：
-> >
-> > + Julien
-> >
-> > Hi Lecopzer,
-> >
-> > On Sat, 16 May 2020 at 18:20, Lecopzer Chen <lecopzer@gmail.com> wrote:
-> > >
-> > > These series implement Perf NMI funxtionality and depends on
-> > > Pseudo NMI [1] which has been upstreamed.
-> > >
-> > > In arm64 with GICv3, Pseudo NMI was implemented for NMI-like interruts.
-> > > That can be extended to Perf NMI which is the prerequisite for hard-lockup
-> > > detector which had already a standard interface inside Linux.
-> > >
-> > > Thus the first step we need to implement perf NMI interface and make sure
-> > > it works fine.
-> > >
-> >
-> > This is something that is already implemented via Julien's patch-set
-> > [1]. Its v4 has been floating since July, 2019 and I couldn't find any
-> > major blocking comments but not sure why things haven't progressed
-> > further.
-> >
-> > Maybe Julien or Arm maintainers can provide updates on existing
-> > patch-set [1] and how we should proceed further with this interesting
-> > feature.
-> >
-> > And regarding hard-lockup detection, I have been able to enable it
-> > based on perf NMI events using Julien's perf patch-set [1]. Have a
-> > look at the patch here [2].
-> >
-> > [1] https://patchwork.kernel.org/cover/11047407/
-> > [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2020-May/732227.html
-> >
-> > -Sumit
-> >
-> > > Perf NMI has been test by dd if=/dev/urandom of=/dev/null like the link [2]
-> > > did.
-> > >
-> > > [1] https://lkml.org/lkml/2019/1/31/535
-> > > [2] https://www.linaro.org/blog/debugging-arm-kernels-using-nmifiq
-> > >
-> > >
-> > > Lecopzer Chen (3):
-> > >   arm_pmu: Add support for perf NMI interrupts registration
-> > >   arm64: perf: Support NMI context for perf event ISR
-> > >   arm64: Kconfig: Add support for the Perf NMI
-> > >
-> > >  arch/arm64/Kconfig             | 10 +++++++
-> > >  arch/arm64/kernel/perf_event.c | 36 ++++++++++++++++++------
-> > >  drivers/perf/arm_pmu.c         | 51 ++++++++++++++++++++++++++++++----
-> > >  include/linux/perf/arm_pmu.h   |  6 ++++
-> > >  4 files changed, 88 insertions(+), 15 deletions(-)
-> > >
-> > > --
-> > > 2.25.1
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
