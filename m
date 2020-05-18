@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E35FE20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D260F207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823972;
-	bh=p/rp1dB4ad8U9VjmrjkExsxu3NWli1WNbE7dlplUZGQ=;
+	s=default; t=1589823974;
+	bh=vNZivytMBWAhlteQOYiqnhPyfZQnjhltAJXHLe92+kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q4Zj7rd/Ci/vCAyedBBLCwQWaK14RCffoDuOPM2AMEeUcv0TzUUe4/bouVVKDjfIu
-	 LZUfcNbJEd0mVk551J6VZ2ANQUZiI8lx77jah6qhczy1qjnVLE31yWCgC/+jGWai6p
-	 hZT9+yqEIFSqnJtegRQBBiVTBCk5BaMVI1eCi8Zs=
+	b=yQDV5GVeX7PdcznqIOy07nn1jLh6z/InE17WsXT+wpG0rw7ehCqy0REw40J+83NsH
+	 z+DBi2/hP/owD1LuP1HBrlzqJemVzh8O6L+rkrbvNNeyMxVym+e9e+NCzLEVpKCox8
+	 zxxo/1AzaJLpamOVsJonfF6cMIfyTQcqLiVWIjEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730049AbgERRqL (ORCPT
+        id S1730058AbgERRqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:46:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45536 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730036AbgERRqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:46:08 -0400
+        id S1729197AbgERRqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9684E20715;
-        Mon, 18 May 2020 17:46:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 084BC207C4;
+        Mon, 18 May 2020 17:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823967;
-        bh=p/rp1dB4ad8U9VjmrjkExsxu3NWli1WNbE7dlplUZGQ=;
+        s=default; t=1589823969;
+        bh=vNZivytMBWAhlteQOYiqnhPyfZQnjhltAJXHLe92+kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L9HmidIcdqEi5SHfzfeX3s+Qg7m0oodkrcc9Ibb8dEOpMsLTSFWYP4coBUhAMm836
-         Xou+M1wtT9PRYhJ5LwbcV3Rrl9xvx+zt2FknNdsNh8uVg5I3ntCvyXGO7h7IYuh6UK
-         AsThB2b/jB/qthN7KNN8Avy8+dkk00fcBJZicwpE=
+        b=s6wlbgO2kk6/C8vKuorkoTYvwLLpdb0k+7VYK1BCHtxciRpCSFSi5ydb20NFzo8/D
+         zNDYSw9eO6F1sG43znGVI61Nm/DZ1ZxsEaY9BavJJvuAPCjhsvz9RAz0wkS4oQm5ri
+         gPal0BM4D37j4Q4/x8RaPoep6wbCpXpuPw9pPVY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jkosina@suse.cz>,
-        syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 018/114] HID: usbhid: Fix race between usbhid_close() and usbhid_stop()
-Date:   Mon, 18 May 2020 19:35:50 +0200
-Message-Id: <20200518173506.983367509@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        =?UTF-8?q?Julian=20Gro=C3=9F?= <julian.g@posteo.de>
+Subject: [PATCH 4.14 019/114] USB: uas: add quirk for LaCie 2Big Quadra
+Date:   Mon, 18 May 2020 19:35:51 +0200
+Message-Id: <20200518173507.149711736@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,168 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 0ed08faded1da03eb3def61502b27f81aef2e615 upstream.
+commit 9f04db234af691007bb785342a06abab5fb34474 upstream.
 
-The syzbot fuzzer discovered a bad race between in the usbhid driver
-between usbhid_stop() and usbhid_close().  In particular,
-usbhid_stop() does:
+This device needs US_FL_NO_REPORT_OPCODES to avoid going
+through prolonged error handling on enumeration.
 
-	usb_free_urb(usbhid->urbin);
-	...
-	usbhid->urbin = NULL; /* don't mess up next start */
-
-and usbhid_close() does:
-
-	usb_kill_urb(usbhid->urbin);
-
-with no mutual exclusion.  If the two routines happen to run
-concurrently so that usb_kill_urb() is called in between the
-usb_free_urb() and the NULL assignment, it will access the
-deallocated urb structure -- a use-after-free bug.
-
-This patch adds a mutex to the usbhid private structure and uses it to
-enforce mutual exclusion of the usbhid_start(), usbhid_stop(),
-usbhid_open() and usbhid_close() callbacks.
-
-Reported-and-tested-by: syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: Julian Groß <julian.g@posteo.de>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200429155218.7308-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/usbhid/hid-core.c |   37 +++++++++++++++++++++++++++++--------
- drivers/hid/usbhid/usbhid.h   |    1 +
- 2 files changed, 30 insertions(+), 8 deletions(-)
+ drivers/usb/storage/unusual_uas.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/hid/usbhid/hid-core.c
-+++ b/drivers/hid/usbhid/hid-core.c
-@@ -680,16 +680,21 @@ static int usbhid_open(struct hid_device
- 	struct usbhid_device *usbhid = hid->driver_data;
- 	int res;
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -41,6 +41,13 @@
+  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
+  */
  
-+	mutex_lock(&usbhid->mutex);
++/* Reported-by: Julian Groß <julian.g@posteo.de> */
++UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
++		"LaCie",
++		"2Big Quadra USB3",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_NO_REPORT_OPCODES),
 +
- 	set_bit(HID_OPENED, &usbhid->iofl);
- 
--	if (hid->quirks & HID_QUIRK_ALWAYS_POLL)
--		return 0;
-+	if (hid->quirks & HID_QUIRK_ALWAYS_POLL) {
-+		res = 0;
-+		goto Done;
-+	}
- 
- 	res = usb_autopm_get_interface(usbhid->intf);
- 	/* the device must be awake to reliably request remote wakeup */
- 	if (res < 0) {
- 		clear_bit(HID_OPENED, &usbhid->iofl);
--		return -EIO;
-+		res = -EIO;
-+		goto Done;
- 	}
- 
- 	usbhid->intf->needs_remote_wakeup = 1;
-@@ -723,6 +728,9 @@ static int usbhid_open(struct hid_device
- 		msleep(50);
- 
- 	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
-+
-+ Done:
-+	mutex_unlock(&usbhid->mutex);
- 	return res;
- }
- 
-@@ -730,6 +738,8 @@ static void usbhid_close(struct hid_devi
- {
- 	struct usbhid_device *usbhid = hid->driver_data;
- 
-+	mutex_lock(&usbhid->mutex);
-+
- 	/*
- 	 * Make sure we don't restart data acquisition due to
- 	 * a resumption we no longer care about by avoiding racing
-@@ -741,12 +751,13 @@ static void usbhid_close(struct hid_devi
- 		clear_bit(HID_IN_POLLING, &usbhid->iofl);
- 	spin_unlock_irq(&usbhid->lock);
- 
--	if (hid->quirks & HID_QUIRK_ALWAYS_POLL)
--		return;
-+	if (!(hid->quirks & HID_QUIRK_ALWAYS_POLL)) {
-+		hid_cancel_delayed_stuff(usbhid);
-+		usb_kill_urb(usbhid->urbin);
-+		usbhid->intf->needs_remote_wakeup = 0;
-+	}
- 
--	hid_cancel_delayed_stuff(usbhid);
--	usb_kill_urb(usbhid->urbin);
--	usbhid->intf->needs_remote_wakeup = 0;
-+	mutex_unlock(&usbhid->mutex);
- }
- 
  /*
-@@ -1056,6 +1067,8 @@ static int usbhid_start(struct hid_devic
- 	unsigned int n, insize = 0;
- 	int ret;
- 
-+	mutex_lock(&usbhid->mutex);
-+
- 	clear_bit(HID_DISCONNECTED, &usbhid->iofl);
- 
- 	usbhid->bufsize = HID_MIN_BUFFER_SIZE;
-@@ -1170,6 +1183,8 @@ static int usbhid_start(struct hid_devic
- 		usbhid_set_leds(hid);
- 		device_set_wakeup_enable(&dev->dev, 1);
- 	}
-+
-+	mutex_unlock(&usbhid->mutex);
- 	return 0;
- 
- fail:
-@@ -1180,6 +1195,7 @@ fail:
- 	usbhid->urbout = NULL;
- 	usbhid->urbctrl = NULL;
- 	hid_free_buffers(dev, hid);
-+	mutex_unlock(&usbhid->mutex);
- 	return ret;
- }
- 
-@@ -1195,6 +1211,8 @@ static void usbhid_stop(struct hid_devic
- 		usbhid->intf->needs_remote_wakeup = 0;
- 	}
- 
-+	mutex_lock(&usbhid->mutex);
-+
- 	clear_bit(HID_STARTED, &usbhid->iofl);
- 	spin_lock_irq(&usbhid->lock);	/* Sync with error and led handlers */
- 	set_bit(HID_DISCONNECTED, &usbhid->iofl);
-@@ -1215,6 +1233,8 @@ static void usbhid_stop(struct hid_devic
- 	usbhid->urbout = NULL;
- 
- 	hid_free_buffers(hid_to_usb_dev(hid), hid);
-+
-+	mutex_unlock(&usbhid->mutex);
- }
- 
- static int usbhid_power(struct hid_device *hid, int lvl)
-@@ -1375,6 +1395,7 @@ static int usbhid_probe(struct usb_inter
- 	INIT_WORK(&usbhid->reset_work, hid_reset);
- 	setup_timer(&usbhid->io_retry, hid_retry_timeout, (unsigned long) hid);
- 	spin_lock_init(&usbhid->lock);
-+	mutex_init(&usbhid->mutex);
- 
- 	ret = hid_add_device(hid);
- 	if (ret) {
---- a/drivers/hid/usbhid/usbhid.h
-+++ b/drivers/hid/usbhid/usbhid.h
-@@ -93,6 +93,7 @@ struct usbhid_device {
- 	dma_addr_t outbuf_dma;                                          /* Output buffer dma */
- 	unsigned long last_out;							/* record of last output for timeouts */
- 
-+	struct mutex mutex;						/* start/stop/open/close */
- 	spinlock_t lock;						/* fifo spinlock */
- 	unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
- 	struct timer_list io_retry;                                     /* Retry timer */
+  * Apricorn USB3 dongle sometimes returns "USBSUSBSUSBS" in response to SCSI
+  * commands in UAS mode.  Observed with the 1.28 firmware; are there others?
 
 
