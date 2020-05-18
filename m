@@ -2,105 +2,120 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D049C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE90C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1634D20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5D620835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hj4YsfGY"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jZMmIFRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgERF2W (ORCPT
+        id S1726545AbgERFbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 01:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgERF2V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 01:28:21 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D72C061A0C;
-        Sun, 17 May 2020 22:28:21 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g11so3765551plp.1;
-        Sun, 17 May 2020 22:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WBVBIzp2b7Pg1EPe8d8y6PumURqXzl8cvQXQg0AQNAA=;
-        b=hj4YsfGYUb2YNgN2rYV/J1a6AVHr2yrndux2dSdQ3RTe+fM27+8IuY9ZsoSVS/+VDm
-         LYZm3dti8aaUt085/HPWSnE3Qe44JtqkpAjH819QZUU2vwW5ptsjI0ReocF+a5vkc/kN
-         GNq12gLNiOltbgqIDevqFJnXWZzOSNxGvDYlxtTgLB587i+eL9z4yDq7/If8tEx5eLrA
-         tiRpCaCmlctzEo31p/c+bb++kSNtePaqJIaGVhlQgCQURE/Qpwx9QWeDIyvm011P6pyY
-         uEePHDtdrlPCdbebkGvGIS0Y/wK9ZmHkUBzDBV+OWHN2jJC+YdMIeTLwiy/iXJWzPtwt
-         jooQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WBVBIzp2b7Pg1EPe8d8y6PumURqXzl8cvQXQg0AQNAA=;
-        b=rx+kXlP3RwMbXnPrIZoAvJbFoEaoR9QXKy8Gj+A1tkky1uRXZ2r3vbmONywVypcB3A
-         NAj5VNWnxLsGr49CTSpMzQti7w+3j5p4usET+6t1K2CgJEnsAW/bqUYvo2dV6dt9OfP0
-         ny40GN/ijW77cjUH+iZcjqrMQGHW1K4o/gNgmM4WtCZCb8DFHhbY2DiAb+PADr4avWqI
-         0V09ggLPf+eiObtpYGBbezezq3ClnmeAzTZu6P4JE5mHHmIx2on7Red7646Qn0l+Xt+U
-         P6XKoPlZsEYFDB+1Xq75ZXqheS49valstDxtJ2ML5LurKNcxStIhRIO9jwMiIHck8kuP
-         J8Rg==
-X-Gm-Message-State: AOAM5335SoMfYy851Ecdm9n0DrWAujw/9xYXbVPwLkMzYjasIm6FNyyA
-        zmQfERvBQP4EREg5tlkXP8o9rmF6LoU=
-X-Google-Smtp-Source: ABdhPJxmuetqrkkLnesTvgOybSfcegJ2cC2tdvVo0nHqY6DkBKjxLhQVEr05YSe+jrZzRgNA0btnew==
-X-Received: by 2002:a17:902:930c:: with SMTP id bc12mr14855642plb.255.1589779701248;
-        Sun, 17 May 2020 22:28:21 -0700 (PDT)
-Received: from DESKTOP-9405E5V.localdomain (h128-22-148-223.ablenetvps.ne.jp. [128.22.148.223])
-        by smtp.gmail.com with ESMTPSA id d124sm7572835pfa.98.2020.05.17.22.28.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 22:28:20 -0700 (PDT)
-From:   Huang Qijun <dknightjun@gmail.com>
-To:     davem@davemloft.net
-Cc:     kuba@kernel.org, ap420073@gmail.com, tglx@linutronix.de,
-        gregkh@linuxfoundation.org, allison@lohutok.net,
-        dknightjun@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] vlan: fix the bug that cannot create vlan4095
-Date:   Mon, 18 May 2020 13:27:55 +0800
-Message-Id: <20200518052755.27467-1-dknightjun@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 18 May 2020 01:31:48 -0400
+Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:17871
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726040AbgERFbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 01:31:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YJfAxd0P9Dk4DLE3hfzOyhYv2z0dDuMVO39WrtvDFegZsm4wqHgZnvvpIROFdXnN25dXJ94s9cGYoShsRT6RY0IzENR2FVU60mHzVhmVFmL6gur44hXeuJlfxs5GNdPVXzjJ3EhbYBD8IW1pu+wH+Q58QDdURAPoVd/cg4DCHz/Iue5f4krcitqnkWV0litn9T7sjesNCVQAz+cJm01a8NDq2KvZInpn/Qyj8MLtQsk3uKRFzaFt3p/8uPgVjMwIIZXez0SPz7RIPa1cj6/QP+29Mpd3HXzhjD3/xuIVe12j0MGe9yOShVKpgZmxQjq6FPPciHKezNJSOIraOR8pDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DRizpJhk7+qdJh3MbajO9cq3eB/cwAZ4p9CleWXEzdA=;
+ b=WISaLMaIjk/8v4qp50tKZEzNSUJ+eBFSc7+CTYkIifwNkoGPOfee+C+7mG4IF1AapEPfqUacEEhifwiB98CNOC0qNzYNwF9X3FwdlhLHIxsJoxda5qumdCel2MTFEye4RS0SQiAmrudIAP0WpGHpAvPfhOcRtNqNqDliXoDrURubGonkFRCaR/NFoe8wJoaWUl683rtGXrxmluODwSBsdVdvtovGA7mO65/G1MxEO/maAyLUXrAERbuW4BXXtdYWTvjZcjxVOqWXX/CSC3WPpygiOC2M5cZE1L41BfTuravRxliNX4kk93ax6WZQuOd+XATjR56n1TaX8QDseFkfIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DRizpJhk7+qdJh3MbajO9cq3eB/cwAZ4p9CleWXEzdA=;
+ b=jZMmIFRSKAtWd1t8HFjC8k5NkhV33MKh4gDEI1gTB12lQOfjW4scCMJZ7WIt47KXnvACNfDh2FUy1MLUOz4QRbPUjIgmCGnLEM2/RQrgQT1BbnAgFrkT8yKAf1gRpoz2SOgY1UmzTsFoY1/cARBzTuY9neqi4mk9SE+TTdMWyug=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3691.eurprd04.prod.outlook.com (2603:10a6:8:5::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.31; Mon, 18 May
+ 2020 05:31:43 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3000.033; Mon, 18 May 2020
+ 05:31:43 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
+Thread-Topic: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
+Thread-Index: AQHWKeXnwgIqcPijn06Ta1X0H9EaU6itVJ0AgAAB8bA=
+Date:   Mon, 18 May 2020 05:31:43 +0000
+Message-ID: <DB3PR0402MB3916B5980C0681BFF3C08FE5F5B80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB4966B92CFFA23DD77748C77680B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB4966B92CFFA23DD77748C77680B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d7b47085-4ca6-4301-322b-08d7faecc010
+x-ms-traffictypediagnostic: DB3PR0402MB3691:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3691DEF429E06F2C6898F056F5B80@DB3PR0402MB3691.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 04073E895A
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LDX3N41jtK/KebeZZ8f2no2NonKRWpI+w8ru/evEHqix5Xp8hG/S9Xkpgb3/vyCQHPFuIBLkzgx0RLPVvruZgFbW/MCfW6rvwCNW7GWIB8NfcrMA6Wls24SycJF+0BbkFPnKWmNQ7ND4cevA3qG54j7b5Z/Byj7EKetZ9gjbrdJQ57Nw8nLSoI5VrpwgRAeYqEdLDakE24T7paRg/eaqDafnAbqkGFpsyIcCnI/9YpOltb+SHFvvmcwIbrJERenQsCbd33IEEDHLSYFEIsM+d//wtcc5vWozenz4Y5YKNwqKpm/J2sqY4+vXDz0e9P9bqe1ArCPgrG/ymPxrlaWJ3qUGcRIGuOOTzXmgNAi3bKft+RZszZdhw5sChsUd0TYESu+Qwo4aeyqgIL25FV0BMoc4D4XnmvflnXjKeRh6cWMl0z6dA2o6cW9Ca/Hjk9bnDE2YxgSWZmmwNLyGdF2vPoWDiKkQy+/mAOPLCZTU/7w=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(66446008)(64756008)(66556008)(66476007)(76116006)(66946007)(86362001)(7696005)(478600001)(5660300002)(4326008)(2906002)(8676002)(6506007)(8936002)(55016002)(44832011)(71200400001)(9686003)(52536014)(26005)(186003)(110136005)(316002)(33656002)(7416002)(4744005)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: zQ5k9qRWnFoebgB+3CUOod6FgKs9wGvonejCjt7F4hR3AW3HR3XSryIPndQK46HgpnTkgXfhjbrA4qaDajy0Gry5UYClTkHWSUMkFpHMqP4bgBYLl529MNhZavZOrUN19MFF/y668LA5Jw3UoeHu0FZszxcyRs7zUq45Fp0VgNVbTD19hxnYqSlGn1afbTIsEK4203KCThLEwpjUF18szXlQCJUiZXGI/XgxgH/SjsyTsPR83H0pebZZrh04uKn0MAlNPkEq6IX9k4y3xocGEEPzVTiPwAvHEIkE7ujxPAfCfLtSZEc9pWS0TgBpTy+4Ta5zNxmjxYUHzbq5oT9AOu7dIjFbAhmIbjQtejL+p8XiDJ4xuMnRzDIlTvgbNM0ts74wFNcdjgt/xYG/SDa6IyZKiI99Z6rgA+wQP8Imu68BwLlIjIqPsE3q4jnKG9SeGHBSgoP6ocHVzznVe8qgegr41/sfL7cy++GH+5bMngxA/xNv4Dic7FcxRseld06a
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7b47085-4ca6-4301-322b-08d7faecc010
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 05:31:43.6887
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: X4pqvJLm0DZQqIl0787b5zod2+kZNjVMvoNBihtvYwyUZTNYYMt1uKcEZiogoLqP/L4esjUeC7mKl3IPsYV5xw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3691
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the 8021q standard, the VLAN id range is 1 to 4095.
-But in the register_vlan_device function, the range is 1 to 4094,
-because ">= VLAN_VID_MASK" is used to determine whether the id
-is illegal. This will prevent the creation of the vlan4095 interface:
-    $ vconfig add sit0 4095
-    vconfig: ioctl error for add: Numerical result out of range
-
-To fix this error, this patch uses ">= VLAN_N_VID" instead to
-determine if the id is illegal.
-
-Signed-off-by: Huang Qijun <dknightjun@gmail.com>
----
- net/8021q/vlan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/8021q/vlan.c b/net/8021q/vlan.c
-index d4bcfd8f95bf..5de7861ddf64 100644
---- a/net/8021q/vlan.c
-+++ b/net/8021q/vlan.c
-@@ -219,7 +219,7 @@ static int register_vlan_device(struct net_device *real_dev, u16 vlan_id)
- 	char name[IFNAMSIZ];
- 	int err;
- 
--	if (vlan_id >= VLAN_VID_MASK)
-+	if (vlan_id >= VLAN_N_VID)
- 		return -ERANGE;
- 
- 	err = vlan_check_real_dev(real_dev, htons(ETH_P_8021Q), vlan_id,
--- 
-2.17.1
-
+DQoNCj4gU3ViamVjdDogUkU6IFtQQVRDSF0gZHQtYmluZGluZ3M6IHB3bTogQ29udmVydCBteHMg
+cHdtIHRvIGpzb24tc2NoZW1hDQo+IA0KPiA+ICt0aXRsZTogRnJlZXNjYWxlIE1YUyBQV00gY29u
+dHJvbGxlcg0KPiA+ICsNCj4gPiArbWFpbnRhaW5lcnM6DQo+ID4gKyAgLSBTaGF3biBHdW8gPHNo
+YXduLmd1b0BsaW5hcm8ub3JnPg0KPiA+ICsgIC0gQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54
+cC5jb20+DQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGNvbXBhdGlibGU6DQo+ID4g
+KyAgICBlbnVtOg0KPiA+ICsgICAgICAtIGZzbCxpbXgyMy1wd20NCj4gPiArDQo+ID4gKyAgcmVn
+Og0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gKyAgIiNwd20tY2VsbHMiOg0KPiA+
+ICsgICAgY29uc3Q6IDMNCj4gDQo+IFNlZW1zIHlvdSBtaXNzZWQgdGhlIHJlZmVyZW5jZSB0byBw
+d20ueWFtbC4NCg0KSXQgaXMgYmVjYXVzZSBtYW55IHB3bSB5YW1sIGZpbGVzIGFsc28gaGFzIG5v
+ICIjcHdtLWNlbGxzIiByZWZlcmVuY2UsIHNvIEkNCmFtIE5PVCBzdXJlIGlmIGl0IGlzIGEgTVVT
+VDoNCg0KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9hbGx3aW5uZXIsc3Vu
+NGktYTEwLXB3bS55YW1sDQpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2dv
+b2dsZSxjcm9zLWVjLXB3bS55YW1sDQpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cHdtL2lxczYyMGEtcHdtLnlhbWwNCi4uLg0KDQpBbnNvbg0K
