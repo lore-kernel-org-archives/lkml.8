@@ -2,193 +2,130 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34729C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F23C20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0940B20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:53:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ptpOJFQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgERGu4 (ORCPT
+        id S1726732AbgERGxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:50:56 -0400
-Received: from mga09.intel.com ([134.134.136.24]:3552 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgERGu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:50:56 -0400
-IronPort-SDR: 1VzzeX53a97xqJ/0HvWkE1I/uDGJ1ZgcorukdYT+FfLpvCVriZ15Q4KOFcuCN7Mf+OfNQFjnhr
- USzs/4g90j2g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 23:50:55 -0700
-IronPort-SDR: oyhTQGkBJFfmfrsnh7FlhTR9PUcv3yxyDrgk17h7fYIH7QDtkXGb2i0scy4gVGNH5gQQK2aDoo
- /TOYIns6o80g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
-   d="scan'208";a="373291247"
-Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.140])
-  by fmsmga001.fm.intel.com with ESMTP; 17 May 2020 23:50:51 -0700
-Date:   Mon, 18 May 2020 15:00:46 +0800
-From:   Oliver Sang <oliver.sang@intel.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Mel Gorman <mgorman@suse.de>, Mike Galbraith <efault@gmx.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        OTC LSE PnP <otc.lse.pnp@intel.com>, lkp@lists.01.org
-Subject: Re: [sched/fair] 0b0695f2b3:
- phoronix-test-suite.compress-gzip.0.seconds 19.8% regression
-Message-ID: <20200518070046.GA23559@xsang-OptiPlex-9020>
-References: <20200514141526.GA30976@xsang-OptiPlex-9020>
- <CAKfTPtB3jQWd52FTyKNk5w8mmoDnu+jwYgkFBOiOKjb_BjxqTw@mail.gmail.com>
- <20200515141226.17700-1-hdanton@sina.com>
+        Mon, 18 May 2020 02:53:02 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:20606 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726040AbgERGxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 02:53:01 -0400
+X-UUID: 50de2994ee194d24be05a64da9dcc874-20200518
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=BE27p8cgAXdiOJaTc4rLjiLgh00VCcwZpGfoS4OOzsM=;
+        b=ptpOJFQJPFBPL0cXkOqi5XQq0/yJTcAYzd6Xd1kQWwUg4VdHh2mnbGPt0mbD9ULSgjuY9RuCQsxe6WDM+RcppeVDqP5klDWQdDGAiu8iiqef6Im9IPnivLimwGbVBzh1ZnPdTsfZL3fSYtLAJ1PlFQquB/C2sLu1OEw+FwOZ+Sc=;
+X-UUID: 50de2994ee194d24be05a64da9dcc874-20200518
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1666374242; Mon, 18 May 2020 14:52:50 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 18 May
+ 2020 14:52:46 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 18 May 2020 14:52:46 +0800
+Message-ID: <1589784680.15083.19.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 23/33] iommu/mediatek-v1 Convert to
+ probe/release_device() call-backs
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Joerg Roedel <joro@8bytes.org>
+CC:     Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Marek Szyprowski" <m.szyprowski@samsung.com>
+Date:   Mon, 18 May 2020 14:51:20 +0800
+In-Reply-To: <20200515100718.GS18353@8bytes.org>
+References: <20200414131542.25608-1-joro@8bytes.org>
+         <20200414131542.25608-24-joro@8bytes.org>
+         <1589528699.26119.9.camel@mhfsdcap03> <20200515100718.GS18353@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515141226.17700-1-hdanton@sina.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-SNTS-SMTP: 645326C83BAFED16ABAF80B4AAC8D7BA842597586DFE9CAF78B92A85A256ADAF2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:12:26PM +0800, Hillf Danton wrote:
-> 
-> On Fri, 15 May 2020 09:43:39 +0800 Oliver Sang wrote:
-> > On Thu, May 14, 2020 at 07:09:35PM +0200, Vincent Guittot wrote:
-> > > Hi Oliver,
-> > > 
-> > > On Thu, 14 May 2020 at 16:05, kernel test robot <oliver.sang@intel.com> wrote:
-> > > >
-> > > > Hi Vincent Guittot,
-> > > >
-> > > > Below report FYI.
-> > > > Last year, we actually reported an improvement "[sched/fair] 0b0695f2b3:
-> > > > vm-scalability.median 3.1% improvement" on link [1].
-> > > > but now we found the regression on pts.compress-gzip.
-> > > > This seems align with what showed in "[v4,00/10] sched/fair: rework the CFS
-> > > > load balance" (link [2]), where showed the reworked load balance could have
-> > > > both positive and negative effect for different test suites.
-> > > 
-> > > We have tried to run  all possible use cases but it's impossible to
-> > > covers all so there were a possibility that one that is not covered,
-> > > would regressed.
-> > > 
-> > > > And also from link [3], the patch set risks regressions.
-> > > >
-> > > > We also confirmed this regression on another platform
-> > > > (Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz with 8G memory),
-> > > > below is the data (lower is better).
-> > > > v5.4    4.1
-> > > > fcf0553db6f4c79387864f6e4ab4a891601f395e    4.01
-> > > > 0b0695f2b34a4afa3f6e9aa1ff0e5336d8dad912    4.89
-> > > > v5.5    5.18
-> > > > v5.6    4.62
-> > > > v5.7-rc2    4.53
-> > > > v5.7-rc3    4.59
-> > > >
-> > > > It seems there are some recovery on latest kernels, but not fully back.
-> 
-> Hi
-> 
-> Here is a tiny diff for growing balance in the over loaded case. Wish it's
-> likely going to help you spot the factors behind the regression.
+T24gRnJpLCAyMDIwLTA1LTE1IGF0IDEyOjA3ICswMjAwLCBKb2VyZyBSb2VkZWwgd3JvdGU6DQo+
+IEhpLA0KPiANCj4gT24gRnJpLCBNYXkgMTUsIDIwMjAgYXQgMDM6NDQ6NTlQTSArMDgwMCwgWW9u
+ZyBXdSB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMjAtMDQtMTQgYXQgMTU6MTUgKzAyMDAsIEpvZXJn
+IFJvZWRlbCB3cm90ZToNCj4gPiA+IC0JcmV0dXJuIGlvbW11X2RldmljZV9saW5rKCZkYXRhLT5p
+b21tdSwgZGV2KTsNCj4gPiA+ICsJZXJyID0gYXJtX2lvbW11X2F0dGFjaF9kZXZpY2UoZGV2LCBt
+dGtfbWFwcGluZyk7DQo+ID4gPiArCWlmIChlcnIpDQo+ID4gPiArCQlkZXZfZXJyKGRldiwgIkNh
+bid0IGNyZWF0ZSBJT01NVSBtYXBwaW5nIC0gRE1BLU9QUyB3aWxsIG5vdCB3b3JrXG4iKTsNCj4g
+PiANCj4gPiANCj4gPiBIaSBKb2VyZywNCj4gPiANCj4gPiAgICAgIFRoYW5rcyB2ZXJ5IG11Y2gg
+Zm9yIHRoaXMgcGF0Y2guDQo+ID4gDQo+ID4gICAgICBUaGlzIGFybV9pb21tdV9hdHRhY2hfZGV2
+aWNlIGlzIGNhbGxlZCBqdXN0IGFzIHdlIGV4cGVjdGVkLg0KPiA+IA0KPiA+ICAgICAgQnV0IGl0
+IHdpbGwgZmFpbCBpbiB0aGlzIGNhbGxzdGFjayBhcyB0aGUgZ3JvdXAtPm11dGV4IHdhcyB0cmll
+ZCB0bw0KPiA+IGJlIHJlLWxvY2tlZC4uLg0KPiA+IA0KPiA+IFs8YzA5MzhlOGM+XSAoaW9tbXVf
+YXR0YWNoX2RldmljZSkgZnJvbSBbPGMwMzE3NTkwPl0NCj4gPiAoX19hcm1faW9tbXVfYXR0YWNo
+X2RldmljZSsweDM0LzB4OTApDQo+ID4gWzxjMDMxNzU5MD5dIChfX2FybV9pb21tdV9hdHRhY2hf
+ZGV2aWNlKSBmcm9tIFs8YzAzMTc1Zjg+XQ0KPiA+IChhcm1faW9tbXVfYXR0YWNoX2RldmljZSsw
+eGMvMHgyMCkNCj4gPiBbPGMwMzE3NWY4Pl0gKGFybV9pb21tdV9hdHRhY2hfZGV2aWNlKSBmcm9t
+IFs8YzA5NDMyY2M+XQ0KPiA+IChtdGtfaW9tbXVfcHJvYmVfZmluYWxpemUrMHgzNC8weDUwKQ0K
+PiA+IFs8YzA5NDMyY2M+XSAobXRrX2lvbW11X3Byb2JlX2ZpbmFsaXplKSBmcm9tIFs8YzA5M2E4
+YWM+XQ0KPiA+IChidXNfaW9tbXVfcHJvYmUrMHgyYTgvMHgyYzQpDQo+ID4gWzxjMDkzYThhYz5d
+IChidXNfaW9tbXVfcHJvYmUpIGZyb20gWzxjMDkzYTk1MD5dIChidXNfc2V0X2lvbW11DQo+ID4g
+KzB4ODgvMHhkNCkNCj4gPiBbPGMwOTNhOTUwPl0gKGJ1c19zZXRfaW9tbXUpIGZyb20gWzxjMDk0
+M2M3ND5dIChtdGtfaW9tbXVfcHJvYmUNCj4gPiArMHgyZjgvMHgzNjQpDQo+IA0KPiBUaGFua3Mg
+Zm9yIHRoZSByZXBvcnQsIGlzDQo+IA0KPiAJaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8x
+NTg5NTMwMTIzLTMwMjQwLTEtZ2l0LXNlbmQtZW1haWwteW9uZy53dUBtZWRpYXRlay5jb20vDQo+
+IA0KPiBUaGUgZml4IGZvciB0aGlzIGlzc3VlIG9yIGlzIHNvbWV0aGluZyBlbHNlIHJlcXVpcmVk
+Pw0KDQpOby4gVGhhdCBwYXRjaCBvbmx5IGFkanVzdCB0aGUgaW50ZXJuYWwgZmxvdyB0byBzYXRp
+c2Z5IHRoZSBsYXRlc3QNCmZyYW1ld29yaywgaXQncyBub3QgZm9yIGZpeGluZyB0aGlzIG11dGV4
+IGlzc3VlLiANCg0KSGVyZSBJIG9ubHkgcmVwb3J0ZWQgdGhpcyBpc3N1ZS4NCg0KYmVsb3cgaXMg
+bXkgbG9jYWwgcGF0Y2guIHNwbGl0ICJkbWFfYXR0YWNoIiB0byBhdHRhY2hfZGV2aWNlIGFuZA0K
+cHJvYmVfZmluYWxpemUuIEFib3V0IGF0dGFjaF9kZXZpY2UsIFVzZSB0aGUgZXhpc3RlZA0KX19p
+b21tdV9hdHRhY2hfZ3JvdXAgaW5zdGVhZC4gVGhlbiByZW5hbWUgZnJvbSB0aGUgImRtYV9hdHRh
+Y2giIHRvDQoicHJvYmVfZmluYWxpemUiIHRvIGRvIHRoZSBwcm9iZV9maW5hbGl6ZSBqb2IuIEFu
+ZCBtb3ZlIGl0IG91dHNpZGUgb2YNCnRoZSBtdXRleF91bmxvY2suDQoNCkknbSBub3Qgc3VyZSBp
+ZiBpdCBpcyByaWdodC4gYW5kIG9mIGNvdXJzZSBJIHdpbGwgdGVzdCBpZiB5b3UgaGF2ZSBhbnkN
+Cm90aGVyIHNvbHV0aW9uLiBUaGFua3MuDQoNCg0KLS0tIGEvZHJpdmVycy9pb21tdS9pb21tdS5j
+DQorKysgYi9kcml2ZXJzL2lvbW11L2lvbW11LmMNCkBAIC0xNjY1LDI2ICsxNjY1LDIwIEBAIHN0
+YXRpYyB2b2lkIHByb2JlX2FsbG9jX2RlZmF1bHRfZG9tYWluKHN0cnVjdA0KYnVzX3R5cGUgKmJ1
+cywNCiANCiB9DQogDQotc3RhdGljIGludCBpb21tdV9ncm91cF9kb19kbWFfYXR0YWNoKHN0cnVj
+dCBkZXZpY2UgKmRldiwgdm9pZCAqZGF0YSkNCitzdGF0aWMgaW50IGlvbW11X2dyb3VwX2RvX3By
+b2JlX2ZpbmFsaXplKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZA0KKmRhdGEpDQogew0KIAlzdHJ1
+Y3QgaW9tbXVfZG9tYWluICpkb21haW4gPSBkYXRhOw0KLQljb25zdCBzdHJ1Y3QgaW9tbXVfb3Bz
+ICpvcHM7DQotCWludCByZXQ7DQotDQotCXJldCA9IF9faW9tbXVfYXR0YWNoX2RldmljZShkb21h
+aW4sIGRldik7DQotDQotCW9wcyA9IGRvbWFpbi0+b3BzOw0KKwljb25zdCBzdHJ1Y3QgaW9tbXVf
+b3BzICpvcHMgPSBkb21haW4tPm9wczsNCiANCi0JaWYgKHJldCA9PSAwICYmIG9wcy0+cHJvYmVf
+ZmluYWxpemUpDQorCWlmIChvcHMtPnByb2JlX2ZpbmFsaXplKQ0KIAkJb3BzLT5wcm9iZV9maW5h
+bGl6ZShkZXYpOw0KLQ0KLQlyZXR1cm4gcmV0Ow0KKwlyZXR1cm4gMDsNCiB9DQogDQotc3RhdGlj
+IGludCBfX2lvbW11X2dyb3VwX2RtYV9hdHRhY2goc3RydWN0IGlvbW11X2dyb3VwICpncm91cCkN
+CitzdGF0aWMgaW50IGlvbW11X2dyb3VwX3Byb2JlX2ZpbmFsaXplKHN0cnVjdCBpb21tdV9ncm91
+cCAqZ3JvdXApDQogew0KIAlyZXR1cm4gX19pb21tdV9ncm91cF9mb3JfZWFjaF9kZXYoZ3JvdXAs
+IGdyb3VwLT5kZWZhdWx0X2RvbWFpbiwNCi0JCQkJCSAgaW9tbXVfZ3JvdXBfZG9fZG1hX2F0dGFj
+aCk7DQorCQkJCQkgIGlvbW11X2dyb3VwX2RvX3Byb2JlX2ZpbmFsaXplKTsNCiB9DQogDQogc3Rh
+dGljIGludCBpb21tdV9kb19jcmVhdGVfZGlyZWN0X21hcHBpbmdzKHN0cnVjdCBkZXZpY2UgKmRl
+diwgdm9pZA0KKmRhdGEpDQpAQCAtMTczMSwxMiArMTcyNSwxNCBAQCBpbnQgYnVzX2lvbW11X3By
+b2JlKHN0cnVjdCBidXNfdHlwZSAqYnVzKQ0KIA0KIAkJaW9tbXVfZ3JvdXBfY3JlYXRlX2RpcmVj
+dF9tYXBwaW5ncyhncm91cCk7DQogDQotCQlyZXQgPSBfX2lvbW11X2dyb3VwX2RtYV9hdHRhY2go
+Z3JvdXApOw0KKwkJcmV0ID0gX19pb21tdV9hdHRhY2hfZ3JvdXAoZ3JvdXAtPmRlZmF1bHRfZG9t
+YWluLCBncm91cCk7DQogDQogCQltdXRleF91bmxvY2soJmdyb3VwLT5tdXRleCk7DQogDQogCQlp
+ZiAocmV0KQ0KIAkJCWJyZWFrOw0KKw0KKwkJaW9tbXVfZ3JvdXBfcHJvYmVfZmluYWxpemUoZ3Jv
+dXApOw0KIAl9DQogDQogCXJldHVybiByZXQ7DQotLSANCg0KPiANCj4gDQo+IFRoYW5rcywNCj4g
+DQo+IAlKb2VyZw0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18NCj4gTGludXgtbWVkaWF0ZWsgbWFpbGluZyBsaXN0DQo+IExpbnV4LW1lZGlhdGVr
+QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1tZWRpYXRlaw0KDQo=
 
-Thanks Hillf!
-just wondering what's the target release of below patch?
-
-> 
-> Hillf
-> 
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8683,15 +8683,12 @@ find_idlest_group(struct sched_domain *s
->  	struct sched_group *idlest = NULL, *local = NULL, *group = sd->groups;
->  	struct sg_lb_stats local_sgs, tmp_sgs;
->  	struct sg_lb_stats *sgs;
-> -	unsigned long imbalance;
-> +	unsigned long hal, lal;
->  	struct sg_lb_stats idlest_sgs = {
->  			.avg_load = UINT_MAX,
->  			.group_type = group_overloaded,
->  	};
->  
-> -	imbalance = scale_load_down(NICE_0_LOAD) *
-> -				(sd->imbalance_pct-100) / 100;
-> -
->  	do {
->  		int local_group;
->  
-> @@ -8744,31 +8741,26 @@ find_idlest_group(struct sched_domain *s
->  
->  	switch (local_sgs.group_type) {
->  	case group_overloaded:
-> -	case group_fully_busy:
-> -		/*
-> -		 * When comparing groups across NUMA domains, it's possible for
-> -		 * the local domain to be very lightly loaded relative to the
-> -		 * remote domains but "imbalance" skews the comparison making
-> -		 * remote CPUs look much more favourable. When considering
-> -		 * cross-domain, add imbalance to the load on the remote node
-> -		 * and consider staying local.
-> -		 */
-> -
-> -		if ((sd->flags & SD_NUMA) &&
-> -		    ((idlest_sgs.avg_load + imbalance) >= local_sgs.avg_load))
-> -			return NULL;
-> +		if (idlest_sgs.avg_load < local_sgs.avg_load) {
-> +			hal = local_sgs.avg_load;
-> +			lal = idlest_sgs.avg_load;
-> +		} else {
-> +			lal = local_sgs.avg_load;  /*  low avg load */
-> +			hal = idlest_sgs.avg_load; /* high avg load */
-> +		}
->  
-> -		/*
-> -		 * If the local group is less loaded than the selected
-> -		 * idlest group don't try and push any tasks.
-> -		 */
-> -		if (idlest_sgs.avg_load >= (local_sgs.avg_load + imbalance))
-> +		/* No push if groups are balanced in terms of load */
-> +		if (100 * hal <= sd->imbalance_pct * lal)
->  			return NULL;
->  
-> -		if (100 * local_sgs.avg_load <= sd->imbalance_pct * idlest_sgs.avg_load)
-> +		/* No push if it only grows imbalance */
-> +		if (hal == idlest_sgs.avg_load)
->  			return NULL;
->  		break;
->  
-> +	case group_fully_busy:
-> +		/* No push because groups are unusually balanced */
-> +		return NULL;
->  	case group_imbalanced:
->  	case group_asym_packing:
->  		/* Those type are not used in the slow wakeup path */
-> --
-> 
-> > > > We were just wondering whether you could share some lights the further works
-> > > > on the load balance after patch set [2] which could cause the performance
-> > > > change?
-> > > > And whether you have plan to refine the load balance algorithm further?
-> > > 
-> > > I'm going to have a look at your regression to understand what is
-> > > going wrong and how it can be fixed
-> > 
-> > Thanks a lot!
-> > 
-> > > 
-> > > Thanks
-> > > Vincent
-> > > 
-> > 
-> 
