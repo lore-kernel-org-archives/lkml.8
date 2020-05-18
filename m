@@ -6,42 +6,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD938C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF22DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF55820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEADC207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgERXrX (ORCPT
+        id S1727951AbgERXrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 19:47:23 -0400
+        Mon, 18 May 2020 19:47:21 -0400
 Received: from mga02.intel.com ([134.134.136.20]:65333 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728258AbgERXrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 19:47:18 -0400
-IronPort-SDR: a+0TBaaoglEYnYmqeMxm9Jb6YycpMTDeBn+QW8qMM67GfcwiYDawOb2rKSD41w4y1klPYOxzDw
- YJbRTwAk+QXw==
+        id S1726407AbgERXrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 19:47:13 -0400
+IronPort-SDR: zyb9Uj7Cdjq464O0XH9tmBDekpx45SjPTNF4jUnzdXdc55y/BGS/JE3MGx8TBVMKIkdQZhn1f7
+ 7Jm1AMx+WFDg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 16:47:12 -0700
-IronPort-SDR: 1c5lss4U7G9EI9oBxLXuQZxRq6qrLODLeOzUOYw74fwFvC5AFjjrAnTvIHITJmliDAa4UYRMy8
- 7Pypk+RPMjFg==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 16:47:11 -0700
+IronPort-SDR: rWo2a2RyNypcHEr7XUNsaoBJyo9rApl6vv++rqOITyrczy6zMI6Nmt68XPodRH8t/+s+IULREU
+ cTW/v5o80Lzw==
 X-IronPort-AV: E=Sophos;i="5.73,408,1583222400"; 
-   d="scan'208";a="288757573"
+   d="scan'208";a="288757548"
 Received: from rchatre-s.jf.intel.com ([10.54.70.76])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 16:47:11 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 16:47:10 -0700
 From:   Reinette Chatre <reinette.chatre@intel.com>
 To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
         tony.luck@intel.com
 Cc:     kuo-lang.tseng@intel.com, ravi.v.shankar@intel.com,
         mingo@redhat.com, babu.moger@amd.com, hpa@zytor.com,
         x86@kernel.org, linux-kernel@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH V5 4/4] x86/resctrl: Use appropriate API for strings terminated by newline
-Date:   Mon, 18 May 2020 16:46:49 -0700
-Message-Id: <a953992d99a1930703cba1362a3005d517c4cb33.1589844108.git.reinette.chatre@intel.com>
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: [PATCH V5 2/4] x86/resctrl: Enumerate per-thread MBA
+Date:   Mon, 18 May 2020 16:46:47 -0700
+Message-Id: <a8957b02aa28c1fc8053a7f865dfebcc0def1edf.1589844108.git.reinette.chatre@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1589844108.git.reinette.chatre@intel.com>
 References: <cover.1589844108.git.reinette.chatre@intel.com>
@@ -52,129 +51,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The user input to files in the resctrl filesystem are expected to be
-terminated with a newline. Testing the user input includes a test for
-the presence of a newline and then replacing the newline with NUL
-byte followed by comparison using strcmp().
+From: Fenghua Yu <fenghua.yu@intel.com>
 
-sysfs_streq() exists to test if strings are equal, treating both NUL and
-newline-then-NUL as equivalent string terminations. Even more,
-sysfs_match_string() exists to match a given string in an array using
-sysfs_streq().
+Some systems support per-thread Memory Bandwidth Allocation (MBA) which
+applies a throttling delay value to each hardware thread instead of to
+a core. Per-thread MBA is enumerated by CPUID.
 
-Replace existing strcmp() comparisons of strings that are terminated
-with a newline with more appropriate sysfs_streq() via the
-sysfs_match_string() API that can perform the match across the different
-mode strings that are already maintained in an array.
+No feature flag is shown in /proc/cpuinfo. User applications need to
+check a resctrl throttling mode info file to know if the feature is
+supported.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Babu Moger <babu.moger@amd.com>
 ---
 Changes since V4:
-- Remove "mode" local variable from rdtgroup_mode_write(). This variable
-  was previously used to create shorter lines with the original strcmp()
-  code that was removed in patch 4/4.
-- Andy pointed out that the repeated assignment to rdtgrp->mode could be
-  replaced by a single assignment after all the checks. This was initially
-  rejected because it would let the "RDT_MODE_PSEUDO_LOCKED" assignment
-  slip through. Even so, Andy's feedback revealed that the new changes
-  unintentionally let a user's attempt at setting the mode to pseudo-locked
-  be silently ignored where it previously reported an error. Restore original
-  user space behavior by returning success when user attempts to change any
-  mode when it is already the current mode (including pseudo-locked) and
-  returning failure when user attempts to set the mode to pseudo-locked.
-  After this change it is possible to follow Andy's original suggestion
-  of using a single assignment. (Andy)
+- Pick up Babu's "Reviewed-by" tag.
 
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 40 ++++++++++++++------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kernel/cpu/cpuid-deps.c   | 1 +
+ arch/x86/kernel/cpu/scattered.c    | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 088a1536bccc..31f1bacaa288 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1414,13 +1414,11 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 				   char *buf, size_t nbytes, loff_t off)
- {
- 	struct rdtgroup *rdtgrp;
--	enum rdtgrp_mode mode;
--	int ret = 0;
-+	int user_m;
-+	int ret;
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index db189945e9b0..d0ec26ce7f66 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -286,6 +286,7 @@
+ #define X86_FEATURE_FENCE_SWAPGS_USER	(11*32+ 4) /* "" LFENCE in user entry SWAPGS path */
+ #define X86_FEATURE_FENCE_SWAPGS_KERNEL	(11*32+ 5) /* "" LFENCE in kernel entry SWAPGS path */
+ #define X86_FEATURE_SPLIT_LOCK_DETECT	(11*32+ 6) /* #AC for split lock */
++#define X86_FEATURE_PER_THREAD_MBA	(11*32+ 7) /* "" Per-thread Memory Bandwidth Allocation */
  
--	/* Valid input requires a trailing newline */
--	if (nbytes == 0 || buf[nbytes - 1] != '\n')
-+	if (nbytes == 0)
- 		return -EINVAL;
--	buf[nbytes - 1] = '\0';
+ /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
+ #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index 3cbe24ca80ab..3e30b26c50ef 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -69,6 +69,7 @@ static const struct cpuid_dep cpuid_deps[] = {
+ 	{ X86_FEATURE_CQM_MBM_TOTAL,		X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_CQM_MBM_LOCAL,		X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_AVX512_BF16,		X86_FEATURE_AVX512VL  },
++	{ X86_FEATURE_PER_THREAD_MBA,		X86_FEATURE_MBA       },
+ 	{}
+ };
  
- 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
- 	if (!rdtgrp) {
-@@ -1430,29 +1428,33 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 
- 	rdt_last_cmd_clear();
- 
--	mode = rdtgrp->mode;
-+	ret = sysfs_match_string(rdt_mode_str, buf);
-+	if (ret < 0) {
-+		rdt_last_cmd_puts("Unknown or unsupported mode\n");
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	user_m = ret;
-+	ret = 0;
- 
--	if ((!strcmp(buf, "shareable") && mode == RDT_MODE_SHAREABLE) ||
--	    (!strcmp(buf, "exclusive") && mode == RDT_MODE_EXCLUSIVE) ||
--	    (!strcmp(buf, "pseudo-locksetup") &&
--	     mode == RDT_MODE_PSEUDO_LOCKSETUP) ||
--	    (!strcmp(buf, "pseudo-locked") && mode == RDT_MODE_PSEUDO_LOCKED))
-+	/* Do nothing and return success if user asks for current mode */
-+	if (user_m == rdtgrp->mode)
- 		goto out;
- 
--	if (mode == RDT_MODE_PSEUDO_LOCKED) {
-+	if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
- 		rdt_last_cmd_puts("Cannot change pseudo-locked group\n");
- 		ret = -EINVAL;
- 		goto out;
- 	}
- 
--	if (!strcmp(buf, "shareable")) {
-+	if (user_m == RDT_MODE_SHAREABLE) {
- 		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
- 			ret = rdtgroup_locksetup_exit(rdtgrp);
- 			if (ret)
- 				goto out;
- 		}
--		rdtgrp->mode = RDT_MODE_SHAREABLE;
--	} else if (!strcmp(buf, "exclusive")) {
-+	} else if (user_m == RDT_MODE_EXCLUSIVE) {
- 		if (!rdtgroup_mode_test_exclusive(rdtgrp)) {
- 			ret = -EINVAL;
- 			goto out;
-@@ -1462,16 +1464,16 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 			if (ret)
- 				goto out;
- 		}
--		rdtgrp->mode = RDT_MODE_EXCLUSIVE;
--	} else if (!strcmp(buf, "pseudo-locksetup")) {
-+	} else if (user_m == RDT_MODE_PSEUDO_LOCKSETUP) {
- 		ret = rdtgroup_locksetup_enter(rdtgrp);
- 		if (ret)
- 			goto out;
--		rdtgrp->mode = RDT_MODE_PSEUDO_LOCKSETUP;
--	} else {
-+	} else if (user_m == RDT_MODE_PSEUDO_LOCKED) {
- 		rdt_last_cmd_puts("Unknown or unsupported mode\n");
- 		ret = -EINVAL;
-+		goto out;
- 	}
-+	rdtgrp->mode = user_m;
- 
- out:
- 	rdtgroup_kn_unlock(of->kn);
+diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+index 62b137c3c97a..bccfc9ff3cc1 100644
+--- a/arch/x86/kernel/cpu/scattered.c
++++ b/arch/x86/kernel/cpu/scattered.c
+@@ -35,6 +35,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+ 	{ X86_FEATURE_CDP_L3,		CPUID_ECX,  2, 0x00000010, 1 },
+ 	{ X86_FEATURE_CDP_L2,		CPUID_ECX,  2, 0x00000010, 2 },
+ 	{ X86_FEATURE_MBA,		CPUID_EBX,  3, 0x00000010, 0 },
++	{ X86_FEATURE_PER_THREAD_MBA,	CPUID_ECX,  0, 0x00000010, 3 },
+ 	{ X86_FEATURE_HW_PSTATE,	CPUID_EDX,  7, 0x80000007, 0 },
+ 	{ X86_FEATURE_CPB,		CPUID_EDX,  9, 0x80000007, 0 },
+ 	{ X86_FEATURE_PROC_FEEDBACK,    CPUID_EDX, 11, 0x80000007, 0 },
 -- 
 2.21.0
 
