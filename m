@@ -2,53 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53256C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1176AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7A6207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76F620853
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824300;
-	bh=S2PjfQJo09RQhAQV6KCBLCWeUPBTH9UMZI6xUNXjn7A=;
+	s=default; t=1589824301;
+	bh=t3npKBEsuRcAzaeEdhUZ+UJDeNrUl67D2yV/RLVnfT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aX5g9e3ZpMCE4Xsy1TRusDfR0lYLB8wztNmmu+oy+w5Qi+B4v1dWF0q7GNA1WOnZi
-	 LTADPFBSKU1Nkl9l5SnWyhYn93BA0uFTw+7XibLGFzvll0TVfnYPxKJ0CtQzfcGPDK
-	 twZvFJzj8pDx74iY8IJGbhN7wq2iK0vZG5iOQjfM=
+	b=Ytg+qq8+l7rMhy//8VWieCxssFb7fyw2E7/QDgTnMkP35IXvoKG36qhWxQqIOgxlN
+	 s7ydmhUBz+WmasUbgxqZljHuQMwoF6QQL3imTC6vQU1WbHzKIlDRCkTWwy7QhqBZJO
+	 nV2HeAsURzEyVieCL+5gKGUqAJWRT8godfZS2MNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730889AbgERRvi (ORCPT
+        id S1730881AbgERRvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52832 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:51:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730752AbgERRuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:50:37 -0400
+        id S1730330AbgERRv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7981820674;
-        Mon, 18 May 2020 17:50:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 188C320674;
+        Mon, 18 May 2020 17:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824236;
-        bh=S2PjfQJo09RQhAQV6KCBLCWeUPBTH9UMZI6xUNXjn7A=;
+        s=default; t=1589824289;
+        bh=t3npKBEsuRcAzaeEdhUZ+UJDeNrUl67D2yV/RLVnfT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3Yj1jUpdLUlgi5mjJhPge+c9IAV5sbQJSxnzLROZfE/0WgJL3hbT0CJ7yPotL43s
-         4uMb7CYWJO595/u/ArpG3zclP2Mywy7SIhPO35DNX9EGMnVChXsYwsBFDtNrh76Awv
-         qjR8d+NGh7Jcu9FBTHlKEXP2dEpFuHJPttdho7V0=
+        b=W1jpyDVCSdPt1rWgch2fCXfS2otQ1mvhUvMOTxyJU7pSxq8BilIo8gUpOQm0kK1lk
+         7uBYzDsbtr3Jzg/MajHQgi1iwrlLsz+pmOlqpekewxBBZx7LvBs9NqrG4lBKgZ5CbT
+         jsjWfS1VGFcLdkZarypt4s6Vfj/t4azvBMzwPtk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?David=20Bala=C5=BEic?= <xerces9@gmail.com>,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 12/80] pppoe: only process PADT targeted at local interfaces
-Date:   Mon, 18 May 2020 19:36:30 +0200
-Message-Id: <20200518173452.813559136@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 33/80] i40iw: Fix error handling in i40iw_manage_arp_cache()
+Date:   Mon, 18 May 2020 19:36:51 +0200
+Message-Id: <20200518173457.154389444@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -61,35 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit b8c158395119be62294da73646a3953c29ac974b ]
+[ Upstream commit 37e31d2d26a4124506c24e95434e9baf3405a23a ]
 
-We don't want to disconnect a session because of a stray PADT arriving
-while the interface is in promiscuous mode.
-Furthermore, multicast and broadcast packets make no sense here, so
-only PACKET_HOST is accepted.
+The i40iw_arp_table() function can return -EOVERFLOW if
+i40iw_alloc_resource() fails so we can't just test for "== -1".
 
-Reported-by: David Balažic <xerces9@gmail.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 4e9042e647ff ("i40iw: add hw and utils files")
+Link: https://lore.kernel.org/r/20200422092211.GA195357@mwanda
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ppp/pppoe.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/infiniband/hw/i40iw/i40iw_hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ppp/pppoe.c
-+++ b/drivers/net/ppp/pppoe.c
-@@ -497,6 +497,9 @@ static int pppoe_disc_rcv(struct sk_buff
- 	if (!skb)
- 		goto out;
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_hw.c b/drivers/infiniband/hw/i40iw/i40iw_hw.c
+index 55a1fbf0e670c..ae8b97c306657 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_hw.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_hw.c
+@@ -534,7 +534,7 @@ void i40iw_manage_arp_cache(struct i40iw_device *iwdev,
+ 	int arp_index;
  
-+	if (skb->pkt_type != PACKET_HOST)
-+		goto abort;
-+
- 	if (!pskb_may_pull(skb, sizeof(struct pppoe_hdr)))
- 		goto abort;
- 
+ 	arp_index = i40iw_arp_table(iwdev, ip_addr, ipv4, mac_addr, action);
+-	if (arp_index == -1)
++	if (arp_index < 0)
+ 		return;
+ 	cqp_request = i40iw_get_cqp_request(&iwdev->cqp, false);
+ 	if (!cqp_request)
+-- 
+2.20.1
+
 
 
