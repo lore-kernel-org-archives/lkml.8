@@ -2,95 +2,217 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39506C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EB8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD8120674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B3720674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:51:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tr+7QO/E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgERQu0 (ORCPT
+        id S1728152AbgERQvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:50:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:60500 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbgERQu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:50:26 -0400
-IronPort-SDR: RZpLFjnY4CF4vMfRF6x7TFa7Q03Vg439eJhOAmWT03yDGZPXQ6MKN+0li1Jz3mQHGrQpW5Kj4d
- rIwfpMkMAaTQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:50:25 -0700
-IronPort-SDR: yDZWrORbas6Bbf4P2PnX4MI8kWYYm/LATS1XSpSx+GN75BymvQatXfWkkJ0b6XUvND943g8Zad
- odhH+TmIUu6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="253111534"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 18 May 2020 09:50:24 -0700
-Received: from [10.249.230.167] (abudanko-mobl.ccr.corp.intel.com [10.249.230.167])
-        by linux.intel.com (Postfix) with ESMTP id 3F9BF580100;
-        Mon, 18 May 2020 09:50:22 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] perf docs: introduce security.txt file to document
- related issues
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-References: <0fffd9e2-1f22-a0c2-c2e3-cb7f4bb89d66@linux.intel.com>
- <290ded0a-c422-3749-5180-918fed1ee30f@linux.intel.com>
- <20200518155936.GG24211@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <1f6eb4c7-dec1-355c-024e-8405f4ef7f3e@linux.intel.com>
-Date:   Mon, 18 May 2020 19:50:21 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 12:51:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgERQvD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:51:03 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F021AC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:51:02 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id d207so423896wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rRdH9wSpot0NrcZPFvHZWOLU6dqlCA3ptvEFBk4r7OE=;
+        b=Tr+7QO/ElHxeYDWXbWC5zGXwAzNcr0ia39LJGWhGpidg5GNj5Ksu/F+pGOsek0BR8M
+         qSjr2EYsjTGv/ejUFu+C3SK9ZqAyECr4Io1IDcpD1s43rQ7ugSjqbiYKetYN6rEFqLgw
+         5+9zNs80eSmD/52xKvmP0Y9Wk8lWraoR8G5zeXEUts0a/eP892jJsR7FRaoZNX0MKPHP
+         NOd0vSskWcS5EPHjAXtCAseBuEKr15ROlm1pYIlVHKbh9KHyhoWGVKIfn3bJm10kOWW7
+         EcInw/h5y7X7nukjH5EWsy/o1PADALkfnFglLkxrBwc9Yn7mjnHW+HsPPrpma8rGWhy7
+         uHrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rRdH9wSpot0NrcZPFvHZWOLU6dqlCA3ptvEFBk4r7OE=;
+        b=UQP4tR2SgYHOH/wrkyUl5KhIuL+iszIJyBD3xslFdC/8a074+7BXiVuDaIbO25cRmz
+         RE/49BOfhMSHg6ciCeE6fQZz2IoL8bDXf6wQBvCvcjoMLTsBrAvOCrgymWgRSICRKT9+
+         jKdkj3vJ+nkjSrcZagBARllOcC0TbEale04nd/dSm4vaPAbWDKNxHDjeJuuq4d026tmD
+         DpFTZwhdN4DJU97C2vsGCIhcXk4rl1B1b0jn9h2/LC1N8J6fo2+K0ptYPAwDN8cRp3mN
+         0HPuC9k0L7RecSvLAV2UMIDh8I7Leewwfrten2oTKe2ktXSaq9g6vKak/6KcYMhRq85H
+         CHeQ==
+X-Gm-Message-State: AOAM533E3ozAAk5XZVDAJJEtCMhvyEzV4/xXYFVhulzVUhOwYneUod+3
+        WljHdcJZHa6pB1MT/nzwF9VphQ==
+X-Google-Smtp-Source: ABdhPJx0zzjrFy7VftFdwzWAwm0lEENm7xU7BLBqWdjcpiSAl70WARM/F9HxlUwjeQIDwTEPtH+uEg==
+X-Received: by 2002:a1c:7410:: with SMTP id p16mr306095wmc.134.1589820661545;
+        Mon, 18 May 2020 09:51:01 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
+        by smtp.googlemail.com with ESMTPSA id b145sm161741wme.41.2020.05.18.09.51.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 09:51:01 -0700 (PDT)
+Subject: Re: [RFC][PATCH 4/5] thermal: Add support for setting polling
+ interval
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
+ <20200504181616.175477-5-srinivas.pandruvada@linux.intel.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <c2aad548-32c2-f008-5ce4-97b76a19271d@linaro.org>
+Date:   Mon, 18 May 2020 18:51:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200518155936.GG24211@kernel.org>
+In-Reply-To: <20200504181616.175477-5-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 18.05.2020 18:59, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Apr 30, 2020 at 10:16:34AM +0300, Alexey Budankov escreveu:
->>
->> Publish instructions on how to apply LSM hooks for access control
->> to perf_event_open() syscall on Fedora distro with Targeted SELinux
->> policy and then manage access to the syscall.
+On 04/05/2020 20:16, Srinivas Pandruvada wrote:
+> Add new attribute in the thermal syfs for setting temperature sampling
+> interval when CONFIG_THERMAL_USER_EVENT_INTERFACE is defined. The default
+> value is 0, which means no polling.
 > 
-> I'm fixing these up:
-> 
-> [acme@five perf]$ am /wb/1.patch
-> Applying: perf docs: introduce security.txt file to document related issues
-> .git/rebase-apply/patch:46: space before tab in indent.
->  	wake_alarm
-> .git/rebase-apply/patch:47: space before tab in indent.
->  	block_suspend
-> .git/rebase-apply/patch:48: space before tab in indent.
->  	audit_read
-> .git/rebase-apply/patch:51: trailing whitespace.
-> 
-> .git/rebase-apply/patch:54: trailing whitespace.
+> At this interval user space will get an event THERMAL_TEMP_SAMPLE with
+> temperature sample. This reuses existing polling mecahnism when polling
+> or passive delay is specified during zone registry. To avoid interference
+> with passive and polling delay, this new polling attribute can't be used
+> for those zones.
 
-This is output of diff utility.
-Hopefully it is still applicable after fixes.
-I will test this either jointly with the changes at 2/3.
+The userspace can get the temperature whenever it wants via the
+temperature file. The polling is designed for a specific hardware and
+the slope of the temperature graphic.
 
-Thanks,
-Alexey
+The userspace has the alternative of reading the temperature based on
+its own timer or wait for (and stick to) the thermal framework sampling
+rate. Adding a notification in the update is enough IMO.
+
+
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  drivers/thermal/thermal_core.c  |  7 +++++++
+>  drivers/thermal/thermal_sysfs.c | 36 +++++++++++++++++++++++++++++++--
+>  include/linux/thermal.h         |  1 +
+>  3 files changed, 42 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 14770d882d42..17cd799b0073 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -313,6 +313,8 @@ static void monitor_thermal_zone(struct thermal_zone_device *tz)
+>  		thermal_zone_device_set_polling(tz, tz->passive_delay);
+>  	else if (tz->polling_delay)
+>  		thermal_zone_device_set_polling(tz, tz->polling_delay);
+> +	else if (tz->temp_polling_delay)
+> +		thermal_zone_device_set_polling(tz, tz->temp_polling_delay);
+>  	else
+>  		thermal_zone_device_set_polling(tz, 0);
+>  
+> @@ -446,6 +448,11 @@ static void update_temperature(struct thermal_zone_device *tz)
+>  	tz->temperature = temp;
+>  	mutex_unlock(&tz->lock);
+>  
+> +	if (tz->temp_polling_delay) {
+> +		thermal_dev_send_event(tz->id, THERMAL_TEMP_SAMPLE, temp);
+> +		monitor_thermal_zone(tz);
+> +	}
+> +
+>  	trace_thermal_temperature(tz);
+>  	if (tz->last_temperature == THERMAL_TEMP_INVALID)
+>  		dev_dbg(&tz->device, "last_temperature N/A, current_temperature=%d\n",
+> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+> index aa85424c3ac4..0df7997993fe 100644
+> --- a/drivers/thermal/thermal_sysfs.c
+> +++ b/drivers/thermal/thermal_sysfs.c
+> @@ -248,6 +248,36 @@ create_thres_attr(temp_thres_low);
+>  create_thres_attr(temp_thres_high);
+>  create_thres_attr(temp_thres_hyst);
+>  
+> +static ssize_t
+> +temp_polling_delay_store(struct device *dev, struct device_attribute *attr,
+> +		   const char *buf, size_t count)
+> +{
+> +	struct thermal_zone_device *tz = to_thermal_zone(dev);
+> +	int val;
+> +
+> +	if (kstrtoint(buf, 10, &val))
+> +		return -EINVAL;
+> +
+> +	if (val && val < 1000)
+> +		return -EINVAL;
+> +
+> +	tz->temp_polling_delay = val;
+> +	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t
+> +temp_polling_delay_show(struct device *dev, struct device_attribute *attr,
+> +		     char *buf)
+> +{
+> +	struct thermal_zone_device *tz = to_thermal_zone(dev);
+> +
+> +	return sprintf(buf, "%d\n", tz->temp_polling_delay);
+> +}
+> +
+> +static DEVICE_ATTR_RW(temp_polling_delay);
+> +
+>  static int create_user_events_attrs(struct thermal_zone_device *tz)
+>  {
+>  	struct attribute **attrs;
+> @@ -260,8 +290,8 @@ static int create_user_events_attrs(struct thermal_zone_device *tz)
+>  	if (tz->ops->get_temp_thres_high)
+>  		++index;
+>  
+> -	/* One additional space for NULL */
+> -	attrs = kcalloc(index + 1, sizeof(*attrs), GFP_KERNEL);
+> +	/* One additional space for NULL and temp_pollling_delay */
+> +	attrs = kcalloc(index + 2, sizeof(*attrs), GFP_KERNEL);
+>  	if (!attrs)
+>  		return -ENOMEM;
+>  
+> @@ -312,6 +342,8 @@ static int create_user_events_attrs(struct thermal_zone_device *tz)
+>  		attrs[index] = &tz->threshold_attrs[index].attr.attr;
+>  		++index;
+>  	}
+> +	if (!tz->polling_delay && !tz->passive_delay)
+> +		attrs[index++] = &dev_attr_temp_polling_delay.attr;
+>  	attrs[index] = NULL;
+>  	tz->threshold_attribute_group.attrs = attrs;
+>  
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index ee9d79ace7ce..0ec4bd8c9c5c 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -216,6 +216,7 @@ struct thermal_zone_device {
+>  	enum thermal_notify_event notify_event;
+>  	struct attribute_group threshold_attribute_group;
+>  	struct thermal_attr *threshold_attrs;
+> +	int temp_polling_delay;
+>  };
+>  
+>  /**
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
