@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04330C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 786772086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D782420873
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823554;
-	bh=R3OFtDSNSKo9Y6kM7usTYKgPt88aIPs/IFl0nxhwCEU=;
+	s=default; t=1589823556;
+	bh=LP08RHZ2h+3MNUPCldPZPOjGAFKVSbQofTJGvA4TZpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zYhBbOPwjjstnSJKxZKGlZQUkN/iC6ime8GxNgvZuRT1Z40Oc0MGBi5Po0PPcfIII
-	 iGt2vuyu9Mf6b1krq771VXOBoThWaVYFw3SU+MwQFvmT2/R/xmurXGrWxDtLYIr5+Q
-	 aP34BhxNpndomkKBv864n+KDdv1IA5yeV5zKA3BA=
+	b=cg7prdUjRTQDIJreYAbVuIlT7RcafezWaaNa/qFomCbbTqdzhpf5y0ag/4AZ13QnL
+	 LZB6ePH4OSp9YboIgXuGcgknI9bx8rWP073WHAhWKIKz1DPcEOynnlmIa2NYidrRUL
+	 k1NUL4SxKWuzyOk1xEvlU0YBf6VZDlEgDd44sw8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgERRjO (ORCPT
+        id S1728737AbgERRjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33662 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728710AbgERRjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:11 -0400
+        id S1728721AbgERRjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 922C220873;
-        Mon, 18 May 2020 17:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AF9620835;
+        Mon, 18 May 2020 17:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823551;
-        bh=R3OFtDSNSKo9Y6kM7usTYKgPt88aIPs/IFl0nxhwCEU=;
+        s=default; t=1589823553;
+        bh=LP08RHZ2h+3MNUPCldPZPOjGAFKVSbQofTJGvA4TZpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GoIBiYuYW1rDUMO8xrgZbUvS9UK34R4m0+eZlPrU+ZsDzRbMos3DIwb5UYYGNagSB
-         dg5D1syWOOukArRnggoGUk1SP632thuh0evyUuoDizWmFvyAiA2nplonuCgV6mYiw1
-         elYWgSkQu/JG2aXcfB0aYO/A+n3g1JV9ijdSqt2A=
+        b=Aj2+Bj6C67ORnUWR6aQu7t2OOVlUbEcbc2KXAHoNPe35ZGh9VPlJx7Y073J8q5QDw
+         nTmZ0vRzbsufGiz6yRN0R9YBBVeIpzatovIvQqyR8gZ/397RTDu/MsK5Lcg425y1ti
+         IOxxf5JfZf9wvtPiyZo2pNUGmIArWveRWVJKqsHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 28/86] ptp: do not explicitly set drvdata in ptp_clock_register()
-Date:   Mon, 18 May 2020 19:35:59 +0200
-Message-Id: <20200518173456.193877073@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 11/86] x86/apm: Dont access __preempt_count with zeroed fs
+Date:   Mon, 18 May 2020 19:35:42 +0200
+Message-Id: <20200518173452.746337483@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -61,32 +64,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit 882f312dc0751c973db26478f07f082c584d16aa upstream.
+commit 6f6060a5c9cc76fdbc22748264e6aa3779ec2427 upstream.
 
-We do not need explicitly call dev_set_drvdata(), as it is done for us by
-device_create().
+APM_DO_POP_SEGS does not restore fs/gs which were zeroed by
+APM_DO_ZERO_SEGS. Trying to access __preempt_count with
+zeroed fs doesn't really work.
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Move the ibrs call outside the APM_DO_SAVE_SEGS/APM_DO_RESTORE_SEGS
+invocations so that fs is actually restored before calling
+preempt_enable().
+
+Fixes the following sort of oopses:
+[    0.313581] general protection fault: 0000 [#1] PREEMPT SMP
+[    0.313803] Modules linked in:
+[    0.314040] CPU: 0 PID: 268 Comm: kapmd Not tainted 4.16.0-rc1-triton-bisect-00090-gdd84441a7971 #19
+[    0.316161] EIP: __apm_bios_call_simple+0xc8/0x170
+[    0.316161] EFLAGS: 00210016 CPU: 0
+[    0.316161] EAX: 00000102 EBX: 00000000 ECX: 00000102 EDX: 00000000
+[    0.316161] ESI: 0000530e EDI: dea95f64 EBP: dea95f18 ESP: dea95ef0
+[    0.316161]  DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068
+[    0.316161] CR0: 80050033 CR2: 00000000 CR3: 015d3000 CR4: 000006d0
+[    0.316161] Call Trace:
+[    0.316161]  ? cpumask_weight.constprop.15+0x20/0x20
+[    0.316161]  on_cpu0+0x44/0x70
+[    0.316161]  apm+0x54e/0x720
+[    0.316161]  ? __switch_to_asm+0x26/0x40
+[    0.316161]  ? __schedule+0x17d/0x590
+[    0.316161]  kthread+0xc0/0xf0
+[    0.316161]  ? proc_apm_show+0x150/0x150
+[    0.316161]  ? kthread_create_worker_on_cpu+0x20/0x20
+[    0.316161]  ret_from_fork+0x2e/0x38
+[    0.316161] Code: da 8e c2 8e e2 8e ea 57 55 2e ff 1d e0 bb 5d b1 0f 92 c3 5d 5f 07 1f 89 47 0c 90 8d b4 26 00 00 00 00 90 8d b4 26 00 00 00 00 90 <64> ff 0d 84 16 5c b1 74 7f 8b 45 dc 8e e0 8b 45 d8 8e e8 8b 45
+[    0.316161] EIP: __apm_bios_call_simple+0xc8/0x170 SS:ESP: 0068:dea95ef0
+[    0.316161] ---[ end trace 656253db2deaa12c ]---
+
+Fixes: dd84441a7971 ("x86/speculation: Use IBRS if available before calling into firmware")
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Cc:  David Woodhouse <dwmw@amazon.co.uk>
+Cc:  "H. Peter Anvin" <hpa@zytor.com>
+Cc:  x86@kernel.org
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Link: https://lkml.kernel.org/r/20180709133534.5963-1-ville.syrjala@linux.intel.com
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/ptp/ptp_clock.c |    2 --
- 1 file changed, 2 deletions(-)
 
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -220,8 +220,6 @@ struct ptp_clock *ptp_clock_register(str
- 	if (IS_ERR(ptp->dev))
- 		goto no_device;
+---
+ arch/x86/include/asm/apm.h |    6 ------
+ arch/x86/kernel/apm_32.c   |    5 +++++
+ 2 files changed, 5 insertions(+), 6 deletions(-)
+
+--- a/arch/x86/include/asm/apm.h
++++ b/arch/x86/include/asm/apm.h
+@@ -6,8 +6,6 @@
+ #ifndef _ASM_X86_MACH_DEFAULT_APM_H
+ #define _ASM_X86_MACH_DEFAULT_APM_H
  
--	dev_set_drvdata(ptp->dev, ptp);
+-#include <asm/nospec-branch.h>
 -
- 	err = ptp_populate_sysfs(ptp);
- 	if (err)
- 		goto no_sysfs;
+ #ifdef APM_ZERO_SEGS
+ #	define APM_DO_ZERO_SEGS \
+ 		"pushl %%ds\n\t" \
+@@ -33,7 +31,6 @@ static inline void apm_bios_call_asm(u32
+ 	 * N.B. We do NOT need a cld after the BIOS call
+ 	 * because we always save and restore the flags.
+ 	 */
+-	firmware_restrict_branch_speculation_start();
+ 	__asm__ __volatile__(APM_DO_ZERO_SEGS
+ 		"pushl %%edi\n\t"
+ 		"pushl %%ebp\n\t"
+@@ -46,7 +43,6 @@ static inline void apm_bios_call_asm(u32
+ 		  "=S" (*esi)
+ 		: "a" (func), "b" (ebx_in), "c" (ecx_in)
+ 		: "memory", "cc");
+-	firmware_restrict_branch_speculation_end();
+ }
+ 
+ static inline u8 apm_bios_call_simple_asm(u32 func, u32 ebx_in,
+@@ -59,7 +55,6 @@ static inline u8 apm_bios_call_simple_as
+ 	 * N.B. We do NOT need a cld after the BIOS call
+ 	 * because we always save and restore the flags.
+ 	 */
+-	firmware_restrict_branch_speculation_start();
+ 	__asm__ __volatile__(APM_DO_ZERO_SEGS
+ 		"pushl %%edi\n\t"
+ 		"pushl %%ebp\n\t"
+@@ -72,7 +67,6 @@ static inline u8 apm_bios_call_simple_as
+ 		  "=S" (si)
+ 		: "a" (func), "b" (ebx_in), "c" (ecx_in)
+ 		: "memory", "cc");
+-	firmware_restrict_branch_speculation_end();
+ 	return error;
+ }
+ 
+--- a/arch/x86/kernel/apm_32.c
++++ b/arch/x86/kernel/apm_32.c
+@@ -239,6 +239,7 @@
+ #include <asm/olpc.h>
+ #include <asm/paravirt.h>
+ #include <asm/reboot.h>
++#include <asm/nospec-branch.h>
+ 
+ #if defined(CONFIG_APM_DISPLAY_BLANK) && defined(CONFIG_VT)
+ extern int (*console_blank_hook)(int);
+@@ -613,11 +614,13 @@ static long __apm_bios_call(void *_call)
+ 	gdt[0x40 / 8] = bad_bios_desc;
+ 
+ 	apm_irq_save(flags);
++	firmware_restrict_branch_speculation_start();
+ 	APM_DO_SAVE_SEGS;
+ 	apm_bios_call_asm(call->func, call->ebx, call->ecx,
+ 			  &call->eax, &call->ebx, &call->ecx, &call->edx,
+ 			  &call->esi);
+ 	APM_DO_RESTORE_SEGS;
++	firmware_restrict_branch_speculation_end();
+ 	apm_irq_restore(flags);
+ 	gdt[0x40 / 8] = save_desc_40;
+ 	put_cpu();
+@@ -689,10 +692,12 @@ static long __apm_bios_call_simple(void
+ 	gdt[0x40 / 8] = bad_bios_desc;
+ 
+ 	apm_irq_save(flags);
++	firmware_restrict_branch_speculation_start();
+ 	APM_DO_SAVE_SEGS;
+ 	error = apm_bios_call_simple_asm(call->func, call->ebx, call->ecx,
+ 					 &call->eax);
+ 	APM_DO_RESTORE_SEGS;
++	firmware_restrict_branch_speculation_end();
+ 	apm_irq_restore(flags);
+ 	gdt[0x40 / 8] = save_desc_40;
+ 	put_cpu();
 
 
