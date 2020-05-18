@@ -2,55 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC843C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF63A20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2391420872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824268;
-	bh=WmONSK4ctFdQWjz26WZgwfs5SpenNY5/I3xlW0g0H4U=;
+	s=default; t=1589824272;
+	bh=zLUCqSvC236bu0DFeMlfYuTWti5TF2S5odgN6soGDug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rO3H2irMyOp0NasxDth6WUkfr6B7pvWV3z/+uYXyWIABxgPOgR6nd2n6t1v9jqit7
-	 Zn8xIVdApT7D5Sr8VIa4zVyVo1niPRzNnSf7fVb/5X9Khe6xxP2pWAHp7zuZOMN8++
-	 2KaKIJsnaw0FbmQSQHGaCIvhxP75ahkLC+7mANck=
+	b=A8qE7MvJiuE6g3cnNmkG8BDNVD6kaV0KeURosmr/TWkJRRYFfUo1baJYtSpB4BXRs
+	 m3yOHpPamVBNuXx6ntB0JqKcGvg+E0CY9RuhKIQ20Rnx4apSDWr/HX/BoUVeG/ivou
+	 62SQZMUcsuppA7oqz5IIQP6bah9ngRxLekesqPiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730822AbgERRvI (ORCPT
+        id S1730831AbgERRvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53570 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730807AbgERRvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:05 -0400
+        id S1730821AbgERRvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6533820674;
-        Mon, 18 May 2020 17:51:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D37E3207F5;
+        Mon, 18 May 2020 17:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824264;
-        bh=WmONSK4ctFdQWjz26WZgwfs5SpenNY5/I3xlW0g0H4U=;
+        s=default; t=1589824267;
+        bh=zLUCqSvC236bu0DFeMlfYuTWti5TF2S5odgN6soGDug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nSoHist7/jqWI0XlRi95ZYfvIjBdhez75e7bz0DYFU6sN8jO9EwmAyPIEQPEQpd66
-         CC5j9Fynee6AsPH1hKWnhHA7MUnSOGq7scnzCRvFbGZ+Fv0Q+zfjiwnao+EEblMAgF
-         42g7mDOkFbz3oqMHvMEjVrummft9JvN9Rdp1VKuw=
+        b=uLE8z4l9rSKNIZH9GoBDTq/S7C91Vk1kL637d1ckucBMTLHZCpS1ezB5550Fh3NMh
+         p9+K7hVGoMFDToixtuSkLjP5hGPWQLAwPiPjyo7H9PtIf8eRIYuJlq2buvb68kZQgc
+         ltYBVA+pucmMVqmop4hd7L8CfWwNNoUeSWHqof3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 22/80] riscv: fix vdso build with lld
-Date:   Mon, 18 May 2020 19:36:40 +0200
-Message-Id: <20200518173454.857080221@linuxfoundation.org>
+Subject: [PATCH 4.19 03/80] net/sonic: Fix a resource leak in an error handling path in jazz_sonic_probe()
+Date:   Mon, 18 May 2020 19:36:21 +0200
+Message-Id: <20200518173450.825849382@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -63,53 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilie Halip <ilie.halip@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 3c1918c8f54166598195d938564072664a8275b1 ]
+[ Upstream commit 10e3cc180e64385edc9890c6855acf5ed9ca1339 ]
 
-When building with the LLVM linker this error occurrs:
-    LD      arch/riscv/kernel/vdso/vdso-syms.o
-  ld.lld: error: no input files
+A call to 'dma_alloc_coherent()' is hidden in 'sonic_alloc_descriptors()',
+called from 'sonic_probe1()'.
 
-This happens because the lld treats -R as an alias to -rpath, as opposed
-to ld where -R means --just-symbols.
+This is correctly freed in the remove function, but not in the error
+handling path of the probe function.
+Fix it and add the missing 'dma_free_coherent()' call.
 
-Use the long option name for compatibility between the two.
+While at it, rename a label in order to be slightly more informative.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/805
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/vdso/Makefile | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/natsemi/jazzsonic.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
-index 87f71a6cd3ef8..1dd134fc0d84a 100644
---- a/arch/riscv/kernel/vdso/Makefile
-+++ b/arch/riscv/kernel/vdso/Makefile
-@@ -30,15 +30,15 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
- 	$(call if_changed,vdsold)
+diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
+index 51fa82b429a3c..40970352d2082 100644
+--- a/drivers/net/ethernet/natsemi/jazzsonic.c
++++ b/drivers/net/ethernet/natsemi/jazzsonic.c
+@@ -235,11 +235,13 @@ static int jazz_sonic_probe(struct platform_device *pdev)
  
- # We also create a special relocatable object that should mirror the symbol
--# table and layout of the linked DSO.  With ld -R we can then refer to
--# these symbols in the kernel code rather than hand-coded addresses.
-+# table and layout of the linked DSO. With ld --just-symbols we can then
-+# refer to these symbols in the kernel code rather than hand-coded addresses.
+ 	err = register_netdev(dev);
+ 	if (err)
+-		goto out1;
++		goto undo_probe1;
  
- SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
-                             $(call cc-ldoption, -Wl$(comma)--hash-style=both)
- $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
- 	$(call if_changed,vdsold)
+ 	return 0;
  
--LDFLAGS_vdso-syms.o := -r -R
-+LDFLAGS_vdso-syms.o := -r --just-symbols
- $(obj)/vdso-syms.o: $(obj)/vdso-dummy.o FORCE
- 	$(call if_changed,ld)
- 
+-out1:
++undo_probe1:
++	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
++			  lp->descriptors, lp->descriptors_laddr);
+ 	release_mem_region(dev->base_addr, SONIC_MEM_SIZE);
+ out:
+ 	free_netdev(dev);
 -- 
 2.20.1
 
