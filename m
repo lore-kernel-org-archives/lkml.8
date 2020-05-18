@@ -2,75 +2,92 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD30C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50163C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2F622070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23CAB20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:08:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G25aQFAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgERLH3 (ORCPT
+        id S1726920AbgERLI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:07:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46998 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgERLH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:07:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 12E60AE00;
-        Mon, 18 May 2020 11:07:30 +0000 (UTC)
-Subject: Re: [PATCH v5.5 10/10] mmap locking API: rename mmap_sem to mmap_lock
-To:     Michel Lespinasse <walken@google.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-11-walken@google.com>
- <20200422015829.GR5820@bombadil.infradead.org>
- <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
- <20200423015917.GA13910@bombadil.infradead.org>
- <20200424012612.GA158937@google.com> <20200424013958.GC158937@google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <25ca9d8a-7c2a-b82e-f727-fcc940f19f2b@suse.cz>
-Date:   Mon, 18 May 2020 13:07:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 07:08:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgERLI1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:08:27 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2459DC061A0C;
+        Mon, 18 May 2020 04:08:27 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Qbpx421hz9sTC;
+        Mon, 18 May 2020 21:08:25 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589800105;
+        bh=04zCL21QITiWjsuS3kcIIRHW85DOav2/vUYRENFepKI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=G25aQFAbc0p5cY/yiSrY5FcRgigs5vkikPVp+LIQZrT9bmf3S9KmQhdrsaY6adY/8
+         4jHqe/j169rFAvSM/vv8XbW1oUfCIqpgwWIueIM+CjKqM3xegF3HD+pCDpXVAT5IKY
+         Kx3WFxZvaF1lmGYX4B/Dpb3VrJQWOWDCTpKUlFKvZMMz84Zq9NFdadNJiEP3zUH+Fz
+         ZWs2dub1jyN+j1a4SCddF04FrC8Eq9C/gcTx439DOvWn/KoQ+fUuQ8zIx0raGLiEVa
+         JbkOlVQuvJSS3xrqmGmd8G7yZAK02Op5H10xJAXcsEIfX+bfsbNtObX1ta2xPyd9GE
+         QZOpIq3RgzA4g==
+Date:   Mon, 18 May 2020 21:08:23 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: linux-next: Signed-off-by missing for commit in the scmi tree
+Message-ID: <20200518210823.760fee29@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200424013958.GC158937@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/qAV70EUxb2mK7QY3YKjk1Xq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/20 3:39 AM, Michel Lespinasse wrote:
-> Rename the mmap_sem field to mmap_lock. Any new uses of this lock
-> should now go through the new mmap locking api. The mmap_lock is
-> still implemented as a rwsem, though this could change in the future.
-> 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
+--Sig_/qAV70EUxb2mK7QY3YKjk1Xq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Except gpu/drm/etnaviv/etnaviv_gem.c all direct users remain in mm or arch/fault
-code so that seems fine.
+Commit
 
+  17a37ff76e95 ("arm64: dts: juno: Use proper DT node name for USB")
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+is missing a Signed-off-by from its author.
 
+Also, the commit message tags should be separated from the rest of the
+commit message by a blank line.
 
-Any plan about all the code comments mentioning mmap_sem? :) Not urgent.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qAV70EUxb2mK7QY3YKjk1Xq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7CbKcACgkQAVBC80lX
+0GzxpAf/Wsflke5wuOPg9Ie75sK2RYp/uwldGiXcMTsDP8HUoJVJhNr59EosVDyf
+fIQpEW07mROf8E46QS2d+jhvkHHe+ToH4Dd0jfCjN2M7YO1KzaqAWb9veuTWRKSk
+NR4vxMfRiGjLsSfV/OcCRjIt48HWy/8/iPv/GZP2xVBme6rie07mSUUboFO5n7/T
+P5Xh0jsCf5JTEn4C2Z1OB0Ef4j3UbjrpnzpqEj/9cJ19oo9LVSIO1Kpl9OS18jRF
+x+CSK6My5wnttxoHDoPcSFdE0vPnfxxzwzS0b4mRWsCBA1vhyqBQ5Hoa2yiAUvny
+Hh7ZquvYHK0Y/yVbQg7LbscV3ysZ5A==
+=1JDp
+-----END PGP SIGNATURE-----
+
+--Sig_/qAV70EUxb2mK7QY3YKjk1Xq--
