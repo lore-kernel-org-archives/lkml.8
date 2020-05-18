@@ -2,131 +2,129 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B752BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF2CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AAAA20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825382;
-	bh=fB+roZHtIxggYejk2OF7luJkFNMNH6aS08BxOIv9KII=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2SscDOJYpfAas/74yVcL4nU94iDSZguk25Wptr94XgOsvZm+qcO/y5Wv4Zyqsd2j9
-	 RkWt6MBK5IbiIcHlR23GaJ1f8slVpT/OZBVyQU3UPg6d7Nbf4d4c4gbLKgqY7yGZKD
-	 3tm3sebO/ymF1Pnd+Ibm5Wii/IHR8kmImlsCjTrs=
+	by mail.kernel.org (Postfix) with ESMTP id 3BAC820671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="li91YZRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733121AbgERSGM (ORCPT
+        id S2387531AbgERSJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733087AbgERSF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F3662087D;
-        Mon, 18 May 2020 18:05:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825157;
-        bh=fB+roZHtIxggYejk2OF7luJkFNMNH6aS08BxOIv9KII=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=StB1YKkzsDU9acBW1T4GWmOP5Zh3sM7/JXaEcGVIGEYgz9H2x5EgTw6JtSoBV1NsC
-         tPNxnjiHJzaoDzvWDZMU0B9Zlvp5yRStGEoris/3u6A4Z/bFnuJ74aJSlB+OA/AIo0
-         uUjqlAv5PGvJj6e9hZOuIwPSdf74M4GlKC5qbews=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Ser <contact@emersion.fr>,
-        Roman Gilg <subdiff@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Harry Wentland <hwentlan@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: [PATCH 5.6 151/194] drm/amd/display: add basic atomic check for cursor plane
-Date:   Mon, 18 May 2020 19:37:21 +0200
-Message-Id: <20200518173543.827591423@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
-References: <20200518173531.455604187@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 18 May 2020 14:09:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733129AbgERSGN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:06:13 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9130AC05BD0A
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:06:13 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id u79so2810260vsu.4
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c3UXUPcrt3P6Bgw39Gw3bWHJNGcf+91G7bjcoOjFILM=;
+        b=li91YZRk4xYKI9MXE0tWUzbZMwcWG60O5oELkyNKU4sTYVNPY20T5Tu/2C4PXO0pSb
+         metKaUg3abydKAsYDkjq5QAPkQqK7PqGeCwzCrjMqbAJG1JvjKQ0vB5xZdrqIZcj7Gph
+         UoleVSIHc/fp4FoD48l5IFZcAOxm20aQrn4GE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c3UXUPcrt3P6Bgw39Gw3bWHJNGcf+91G7bjcoOjFILM=;
+        b=OuHfydW4tb8zEeE/uPIxfnRggWUzQsEF2Tv1XB38J1Em7oMkdHJc94xwNuEdBvb6hS
+         c19bxFwhOE5o8J3suc86NWoTjqYnsg5bHSBlmcLHhEq3ve+CZwsISzsBxreovAcL0yhd
+         U4QwH+BOOmkk6sOifs/bAiklZLKisLyPdgkPEnIlS4PyS+SDS+pF3gzWcQzK5hK+Vi6b
+         jpjV5qgDD6l+1w4DW7IteyZGbBLBn0t/Kpaj1pTTv+ozvLaEYjn8fIY2oxe+BWx9jQdp
+         9W9vyyqBuv2uoqIEwNw7GD3OL5rmPE6J4a4WgcEtn9aYk0+CK496WzL/H6OPSrwMvkKL
+         Jr7g==
+X-Gm-Message-State: AOAM530ORXkLgP36Tk70RJxzCeigSWIzUr3ek9lPteuD13yi/SLQx9nr
+        Ptx3l+My6uAFvTktJu2bOeFmIBtXd5E=
+X-Google-Smtp-Source: ABdhPJw7QxNHkkwCo84ZJN9+UIYjkfJHIO+8sl7f80GMpWxqD/Zq+TIsQawdZvmkDb81fLqobsIpnQ==
+X-Received: by 2002:a67:69ca:: with SMTP id e193mr11642947vsc.19.1589825172561;
+        Mon, 18 May 2020 11:06:12 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id m25sm1910231vsr.7.2020.05.18.11.06.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 11:06:11 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id l15so4280928vsr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:06:10 -0700 (PDT)
+X-Received: by 2002:a1f:4e46:: with SMTP id c67mr11262026vkb.92.1589825169814;
+ Mon, 18 May 2020 11:06:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200507213500.241695-1-dianders@chromium.org>
+ <20200509201511.GD30802@ravnborg.org> <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
+ <CAD=FV=UNuwb+YYJKw9+HNMKUNfuNFxj+Gr+yB9tXANbXAvDgCg@mail.gmail.com> <20200518175939.GA770425@ravnborg.org>
+In-Reply-To: <20200518175939.GA770425@ravnborg.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 18 May 2020 11:05:58 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
+Message-ID: <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot
+ Plug Detect
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Ser <contact@emersion.fr>
+Sam,
 
-commit 626bf90fe03fa080d8df06bb0397c95c53ae8e27 upstream.
+On Mon, May 18, 2020 at 10:59 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Douglas.
+>
+> > > Given the previous feedback from Linus W, Stephen, and Laurent I
+> > > expect things are good enough to land now, but it'd be good to get
+> > > confirmation (I removed some of the previous tags just to get
+> > > confirmation).  If we can get review tags early next week maybe it'll
+> > > still be in time to land for 5.8?
+> >
+> > I think all the others have reviews now.  Is there anything blocking
+> > them from getting applied?
+> Applied, including the small fix pointed out by Linus.
 
-This patch adds a basic cursor check when an atomic test-only commit is
-performed. The position and size of the cursor plane is checked.
+Thanks!  Ugh, I just realized what the problem was.  I posted a v6
+with this fix but insanely somehow didn't CC you (!!!).  It was here:
 
-This should fix user-space relying on atomic checks to assign buffers to
-planes.
+https://lore.kernel.org/r/20200513215902.261547-1-dianders@chromium.org
 
-Signed-off-by: Simon Ser <contact@emersion.fr>
-Reported-by: Roman Gilg <subdiff@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Harry Wentland <hwentlan@amd.com>
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I'm super sorry about that and thanks for fixing the nit.  That was
+the only difference between v5 and v6.  I just checked what you pushed
+and it looks great, thank you.
 
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   26 ++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
-
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -7716,6 +7716,7 @@ static int dm_update_plane_state(struct
- 	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
- 	struct dm_crtc_state *dm_new_crtc_state, *dm_old_crtc_state;
- 	struct dm_plane_state *dm_new_plane_state, *dm_old_plane_state;
-+	struct amdgpu_crtc *new_acrtc;
- 	bool needs_reset;
- 	int ret = 0;
- 
-@@ -7725,9 +7726,30 @@ static int dm_update_plane_state(struct
- 	dm_new_plane_state = to_dm_plane_state(new_plane_state);
- 	dm_old_plane_state = to_dm_plane_state(old_plane_state);
- 
--	/*TODO Implement atomic check for cursor plane */
--	if (plane->type == DRM_PLANE_TYPE_CURSOR)
-+	/*TODO Implement better atomic check for cursor plane */
-+	if (plane->type == DRM_PLANE_TYPE_CURSOR) {
-+		if (!enable || !new_plane_crtc ||
-+			drm_atomic_plane_disabling(plane->state, new_plane_state))
-+			return 0;
-+
-+		new_acrtc = to_amdgpu_crtc(new_plane_crtc);
-+
-+		if ((new_plane_state->crtc_w > new_acrtc->max_cursor_width) ||
-+			(new_plane_state->crtc_h > new_acrtc->max_cursor_height)) {
-+			DRM_DEBUG_ATOMIC("Bad cursor size %d x %d\n",
-+							 new_plane_state->crtc_w, new_plane_state->crtc_h);
-+			return -EINVAL;
-+		}
-+
-+		if (new_plane_state->crtc_x <= -new_acrtc->max_cursor_width ||
-+			new_plane_state->crtc_y <= -new_acrtc->max_cursor_height) {
-+			DRM_DEBUG_ATOMIC("Bad cursor position %d, %d\n",
-+							 new_plane_state->crtc_x, new_plane_state->crtc_y);
-+			return -EINVAL;
-+		}
-+
- 		return 0;
-+	}
- 
- 	needs_reset = should_reset_plane(state, plane, old_plane_state,
- 					 new_plane_state);
-
-
+-Doug
