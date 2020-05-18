@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCC9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E04520674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA06520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823934;
-	bh=TkyQUb/hHwF5Zmma86qgaGPQM3IxEGf+vjAG8OOTAOU=;
+	s=default; t=1589823938;
+	bh=fSRau1pAiWHNJbmlUH/uhaszxFG174FpSD9tnHCsz6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gw34lhP71zR3DHLkETR92HmEThnXm5BHZ82+F+0R8PzJZUr5hkN6WyukALECtLpi+
-	 TbtBsw6PUPf+XKamHkuLwJs6TLsKNSzgpuTNyXxAitlCJp+A5C/GJf4QBkO+epFS55
-	 edkcLDzG5p6dYmsowMGH7eK7aYH0XceRm97T+wEA=
+	b=v6YL2BtOQFah634cOeSdWpmeTG4zGaG6QaCwbdMbrp4nhVcX+4xZUBlI9NSdVYlLy
+	 HG7fhoGp791i3TkpRG4txe4sqf/+dQf6VhEYiHxsFrMb1nNHJJLGuwoyLVJlqZIWBY
+	 s6IsGL9DlEzla6L2KIOJRpgS5xWFUycuArt4Kwto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgERRpb (ORCPT
+        id S1729972AbgERRph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:45:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44204 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbgERRpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:25 -0400
+        id S1729926AbgERRp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:45:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B02B420671;
-        Mon, 18 May 2020 17:45:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D8EC20674;
+        Mon, 18 May 2020 17:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823925;
-        bh=TkyQUb/hHwF5Zmma86qgaGPQM3IxEGf+vjAG8OOTAOU=;
+        s=default; t=1589823927;
+        bh=fSRau1pAiWHNJbmlUH/uhaszxFG174FpSD9tnHCsz6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P12pIEqPU9Y2R3hvSjzEzu7yWym/iJm/sSpyiyn6HI9zzqAAsPunhcsOp0fhLWkXK
-         0YZGE481DpdGNlBgGdrWXwAFAqGNW6ogkZwS2YGhWnSCu3/u2K1zOuo7DKngdiWeyl
-         7OhzwMbiFpcAN6QTQ36sZwzKHD9hNPlpZEz0uAaU=
+        b=uWFwuKQTfTGhSuTDM4cJLNl4DkviQDsovAnMBu7gA/WMYVTmT67FaXyFmz9GeFh1W
+         Po0/mgCs7H509nJ/ruVL+TfS2h+iJvuKYhhxGI1SDDnao0Sly04CxeMzmuo63FYCYy
+         8B6lYQ9pS1vKVed19N0D56NEtMs83VU1kokpMYo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 66/90] gcc-10: disable stringop-overflow warning for now
-Date:   Mon, 18 May 2020 19:36:44 +0200
-Message-Id: <20200518173504.566882619@linuxfoundation.org>
+Subject: [PATCH 4.9 67/90] gcc-10: disable restrict warning for now
+Date:   Mon, 18 May 2020 19:36:45 +0200
+Message-Id: <20200518173504.854092505@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -61,30 +61,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 5a76021c2eff7fcf2f0918a08fd8a37ce7922921 upstream.
+commit adc71920969870dfa54e8f40dac8616284832d02 upstream.
 
-This is the final array bounds warning removal for gcc-10 for now.
+gcc-10 now warns about passing aliasing pointers to functions that take
+restricted pointers.
 
-Again, the warning is good, and we should re-enable all these warnings
-when we have converted all the legacy array declaration cases to
-flexible arrays. But in the meantime, it's just noise.
+That's actually a great warning, and if we ever start using 'restrict'
+in the kernel, it might be quite useful.  But right now we don't, and it
+turns out that the only thing this warns about is an idiom where we have
+declared a few functions to be "printf-like" (which seems to make gcc
+pick up the restricted pointer thing), and then we print to the same
+buffer that we also use as an input.
+
+And people do that as an odd concatenation pattern, with code like this:
+
+    #define sysfs_show_gen_prop(buffer, fmt, ...) \
+        snprintf(buffer, PAGE_SIZE, "%s"fmt, buffer, __VA_ARGS__)
+
+where we have 'buffer' as both the destination of the final result, and
+as the initial argument.
+
+Yes, it's a bit questionable.  And outside of the kernel, people do have
+standard declarations like
+
+    int snprintf( char *restrict buffer, size_t bufsz,
+                  const char *restrict format, ... );
+
+where that output buffer is marked as a restrict pointer that cannot
+alias with any other arguments.
+
+But in the context of the kernel, that 'use snprintf() to concatenate to
+the end result' does work, and the pattern shows up in multiple places.
+And we have not marked our own version of snprintf() as taking restrict
+pointers, so the warning is incorrect for now, and gcc picks it up on
+its own.
+
+If we do start using 'restrict' in the kernel (and it might be a good
+idea if people find places where it matters), we'll need to figure out
+how to avoid this issue for snprintf and friends.  But in the meantime,
+this warning is not useful.
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ Makefile |    3 +++
+ 1 file changed, 3 insertions(+)
 
 --- a/Makefile
 +++ b/Makefile
-@@ -800,6 +800,7 @@ KBUILD_CFLAGS += $(call cc-disable-warni
- # We'll want to enable this eventually, but it's not going away for 5.7 at least
- KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+@@ -802,6 +802,9 @@ KBUILD_CFLAGS += $(call cc-disable-warni
  KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
-+KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
  
++# Another good warning that we'll want to enable eventually
++KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
++
  # Enabled with W=2, disabled by default as noisy
  KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ 
 
 
