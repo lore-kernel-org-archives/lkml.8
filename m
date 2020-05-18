@@ -2,134 +2,99 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBD3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CED54207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P1Ae4Jcm"
+	by mail.kernel.org (Postfix) with ESMTP id AE4A620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589826068;
+	bh=hvqqDYaM6AyhaXkWz7Zgch97q9DfaBBza48GIAW7nbU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cCOqzBSasz8PHR8p+KjRlgLs9H8TeY/yIjkEFnsmVXdw32mdgbDl+VZCr7Mh8rnLM
+	 qu+iGKuVV13On9CBXg0RN/MsGbtcEUmK+PsVjDsuWHyTPRe6b24WtA5Cwgnh038649
+	 RJhFAtf+EHJaq5xWIk/Q5lfsVhdpDujfK3GX+F4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387804AbgERSVA (ORCPT
+        id S2387808AbgERSVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:21:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41671 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731703AbgERSU4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:20:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589826054;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bgUgYOhXHVrOhAbBYxlnYyhMzdekwGrXn9fI5GzJacU=;
-        b=P1Ae4JcmTm0WHLLAVaElH5dd9rU87sM7FkJZLRKSfEpQ1W+vh24p5OoRUEyXSMHavi2+O6
-        hyofZQ6yzv9FW4cIZOWwA/V4f5w47EuRXrN/yW5dL62ma3WCPjDUeiuN2Na9ibgT7BUb10
-        dYriE19REwII93v6UFtVKKn+YoNgRvs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-266-kVRrudnWNEOZ64966nyy_Q-1; Mon, 18 May 2020 14:20:52 -0400
-X-MC-Unique: kVRrudnWNEOZ64966nyy_Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 18 May 2020 14:21:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730293AbgERRwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 428731005510;
-        Mon, 18 May 2020 18:20:48 +0000 (UTC)
-Received: from ovpn-115-234.rdu2.redhat.com (ovpn-115-234.rdu2.redhat.com [10.10.115.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6AF23398;
-        Mon, 18 May 2020 18:20:43 +0000 (UTC)
-Message-ID: <5260142047d0339e00d4a74865c2f0b7511c89f6.camel@redhat.com>
-Subject: Re: [PATCH 10/29] c6x: use asm-generic/cacheflush.h
-From:   Mark Salter <msalter@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Roman Zippel <zippel@linux-m68k.org>
-Cc:     linux-arch@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Michal Simek <monstr@monstr.eu>, Jessica Yu <jeyu@kernel.org>,
-        linux-ia64@vger.kernel.org, linux-c6x-dev@linux-c6x.org,
-        linux-sh@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        x86@kernel.org, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-m68k@lists.linux-m68k.org,
-        openrisc@lists.librecores.org, linux-alpha@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Mon, 18 May 2020 14:20:42 -0400
-In-Reply-To: <20200515143646.3857579-11-hch@lst.de>
-References: <20200515143646.3857579-1-hch@lst.de>
-         <20200515143646.3857579-11-hch@lst.de>
-Organization: Red Hat, Inc
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        by mail.kernel.org (Postfix) with ESMTPSA id D49A320715;
+        Mon, 18 May 2020 17:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824329;
+        bh=hvqqDYaM6AyhaXkWz7Zgch97q9DfaBBza48GIAW7nbU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bNreGVXLzIAlPjc6ThxNLAVIwYvjoeu8HJAeeiNVCFnwjIDhxcnNMopUcIsCeoWYP
+         MAXqxH7ZtlUUmcbaCDRMnpAIexmsnST/IMVBhKK+zh8vP4iPXT+iCFa/D/N/eDx/Ia
+         F2EwTVFxPLkyX269g2K3TX/ohCgv+vH2rgYMEfKo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 48/80] gcc-10: disable zero-length-bounds warning for now
+Date:   Mon, 18 May 2020 19:37:06 +0200
+Message-Id: <20200518173500.146875633@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
+References: <20200518173450.097837707@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-15 at 16:36 +0200, Christoph Hellwig wrote:
-> C6x needs almost no cache flushing routines of its own.  Rely on
-> asm-generic/cacheflush.h for the defaults.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/c6x/include/asm/cacheflush.h | 19 +------------------
->  1 file changed, 1 insertion(+), 18 deletions(-)
-> 
-> diff --git a/arch/c6x/include/asm/cacheflush.h b/arch/c6x/include/asm/cacheflush.h
-> index 4540b40475e6c..10922d528de6d 100644
-> --- a/arch/c6x/include/asm/cacheflush.h
-> +++ b/arch/c6x/include/asm/cacheflush.h
-> @@ -16,21 +16,6 @@
->  #include <asm/page.h>
->  #include <asm/string.h>
->  
-> -/*
-> - * virtually-indexed cache management (our cache is physically indexed)
-> - */
-> -#define flush_cache_all()			do {} while (0)
-> -#define flush_cache_mm(mm)			do {} while (0)
-> -#define flush_cache_dup_mm(mm)			do {} while (0)
-> -#define flush_cache_range(mm, start, end)	do {} while (0)
-> -#define flush_cache_page(vma, vmaddr, pfn)	do {} while (0)
-> -#define flush_cache_vmap(start, end)		do {} while (0)
-> -#define flush_cache_vunmap(start, end)		do {} while (0)
-> -#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
-> -#define flush_dcache_page(page)			do {} while (0)
-> -#define flush_dcache_mmap_lock(mapping)		do {} while (0)
-> -#define flush_dcache_mmap_unlock(mapping)	do {} while (0)
-> -
->  /*
->   * physically-indexed cache management
->   */
-> @@ -49,14 +34,12 @@ do {								  \
->  			(unsigned long) page_address(page) + PAGE_SIZE)); \
->  } while (0)
->  
-> -
->  #define copy_to_user_page(vma, page, vaddr, dst, src, len) \
->  do {						     \
->  	memcpy(dst, src, len);			     \
->  	flush_icache_range((unsigned) (dst), (unsigned) (dst) + (len)); \
->  } while (0)
->  
-> -#define copy_from_user_page(vma, page, vaddr, dst, src, len) \
-> -	memcpy(dst, src, len)
-> +#include <asm-generic/cacheflush.h>
->  
->  #endif /* _ASM_C6X_CACHEFLUSH_H */
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-Acked-by: Mark Salter <msalter@redhat.com>
+commit 5c45de21a2223fe46cf9488c99a7fbcf01527670 upstream.
+
+This is a fine warning, but we still have a number of zero-length arrays
+in the kernel that come from the traditional gcc extension.  Yes, they
+are getting converted to flexible arrays, but in the meantime the gcc-10
+warning about zero-length bounds is very verbose, and is hiding other
+issues.
+
+I missed one actual build failure because it was hidden among hundreds
+of lines of warning.  Thankfully I caught it on the second go before
+pushing things out, but it convinced me that I really need to disable
+the new warnings for now.
+
+We'll hopefully be all done with our conversion to flexible arrays in
+the not too distant future, and we can then re-enable this warning.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ Makefile |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/Makefile
++++ b/Makefile
+@@ -792,6 +792,9 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+ # disable stringop warnings in gcc 8+
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ 
++# We'll want to enable this eventually, but it's not going away for 5.7 at least
++KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
++
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ 
 
 
