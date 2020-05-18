@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D334DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AACCF20853
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E20E207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824991;
-	bh=zvL4WUKqUr4egYTxLwiT19jrJbcEYPSa8vWOmxhsTdY=;
+	s=default; t=1589824994;
+	bh=tehWF7fpkndSMrdZ/mvh2Ukdq+BeAudbWlSRcul9Fdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OdTXn90C4jVp0v9Z0KRlZg47NDM1XusyiupL3JZ2ayAIQ9xmr2OWfBezjWUkVQBVq
-	 alhN1gV/i8X+gnW9b2vAsH/ZieZTxV1+msQwtkzbfqfBT56o5Kn69514wrtfkoFRTB
-	 q8Ddu5TPTPKyiV39ydSE0O7dF0QdtljX6VLramBM=
+	b=gdt/W3ySbgakrPBBV1aoELgb+4lHxXt4wQuLOFtDMZ5BTz5F4QV+Kpv3ExEhpedn4
+	 NEDvOSNsGxqAniu8m/LmJbqHyEi1k/2UVufSTZwq7R3UCvXViAUk5cMmZ03W9qvdqS
+	 7cDCG7jwvUZa4qbXn8X53bvo9O/wqiuolwIiYeKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732615AbgERSDL (ORCPT
+        id S1732080AbgERSDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48030 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:03:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732595AbgERSDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:01 -0400
+        id S1732600AbgERSDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 701C420853;
-        Mon, 18 May 2020 18:03:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAFC6207D3;
+        Mon, 18 May 2020 18:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824980;
-        bh=zvL4WUKqUr4egYTxLwiT19jrJbcEYPSa8vWOmxhsTdY=;
+        s=default; t=1589824983;
+        bh=tehWF7fpkndSMrdZ/mvh2Ukdq+BeAudbWlSRcul9Fdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DNzlw+xMPB/wC/jNr1+zDwczEhJDXOZ0QNwr69PAXIwzW4ZmNjq8kiGWsFEnL80my
-         8rHS6hPt9ityc7MXkcSQM8VQSPQNsj4+r5GO60wLZEIpeS4hEq9UPEgYatw1cQCD0s
-         HIuQoBjvXR0dFa5DPJEwcWlhXCbl79RHMjR2WjRk=
+        b=SEjHOZj80DggZ1usXq9144RvPp11wEHDbwRH8OvkM1ZtRDWJAGB2s0cYqoawQLfnr
+         mBoATwBujsiEOvUKoauqQbqkmudcDQNgfqT2np27gbstR5z+QefMtqISy29gYxnjmr
+         jumjAKAMBT0W6OgtNordkxcELlYsvW5i7uW8zui0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.6 043/194] net: dsa: loop: Add module soft dependency
-Date:   Mon, 18 May 2020 19:35:33 +0200
-Message-Id: <20200518173535.348876432@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Colin Walters <walters@redhat.com>
+Subject: [PATCH 5.6 044/194] net: ipv4: really enforce backoff for redirects
+Date:   Mon, 18 May 2020 19:35:34 +0200
+Message-Id: <20200518173535.436284069@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,32 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 3047211ca11bf77b3ecbce045c0aa544d934b945 ]
+[ Upstream commit 57644431a6c2faac5d754ebd35780cf43a531b1a ]
 
-There is a soft dependency against dsa_loop_bdinfo.ko which sets up the
-MDIO device registration, since there are no symbols referenced by
-dsa_loop.ko, there is no automatic loading of dsa_loop_bdinfo.ko which
-is needed.
+In commit b406472b5ad7 ("net: ipv4: avoid mixed n_redirects and
+rate_tokens usage") I missed the fact that a 0 'rate_tokens' will
+bypass the backoff algorithm.
 
-Fixes: 98cd1552ea27 ("net: dsa: Mock-up driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Since rate_tokens is cleared after a redirect silence, and never
+incremented on redirects, if the host keeps receiving packets
+requiring redirect it will reply ignoring the backoff.
+
+Additionally, the 'rate_last' field will be updated with the
+cadence of the ingress packet requiring redirect. If that rate is
+high enough, that will prevent the host from generating any
+other kind of ICMP messages
+
+The check for a zero 'rate_tokens' value was likely a shortcut
+to avoid the more complex backoff algorithm after a redirect
+silence period. Address the issue checking for 'n_redirects'
+instead, which is incremented on successful redirect, and
+does not interfere with other ICMP replies.
+
+Fixes: b406472b5ad7 ("net: ipv4: avoid mixed n_redirects and rate_tokens usage")
+Reported-and-tested-by: Colin Walters <walters@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/dsa_loop.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/ipv4/route.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/dsa_loop.c
-+++ b/drivers/net/dsa/dsa_loop.c
-@@ -360,6 +360,7 @@ static void __exit dsa_loop_exit(void)
- }
- module_exit(dsa_loop_exit);
- 
-+MODULE_SOFTDEP("pre: dsa_loop_bdinfo");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Florian Fainelli");
- MODULE_DESCRIPTION("DSA loopback driver");
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -915,7 +915,7 @@ void ip_rt_send_redirect(struct sk_buff
+ 	/* Check for load limit; set rate_last to the latest sent
+ 	 * redirect.
+ 	 */
+-	if (peer->rate_tokens == 0 ||
++	if (peer->n_redirects == 0 ||
+ 	    time_after(jiffies,
+ 		       (peer->rate_last +
+ 			(ip_rt_redirect_load << peer->n_redirects)))) {
 
 
