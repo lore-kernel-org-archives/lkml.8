@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE57C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BC2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97D1D207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42A82083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824669;
-	bh=MT8t/Y/qjbY9lEmvs0LhPBNuEWj5pnEFucUdNsbCr0E=;
+	s=default; t=1589824670;
+	bh=FtjT8lwXETCyCVSxox66iHY31x24xhLqPM6VXV++cHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jja8kcVr03A1MSYh/yiIbAvcdcvjJyotu5/B+Lz5cf1LAZnVmoOuGKjFphPxfAig9
-	 jbpvkFxJXmV10EDbaFT1cPr97LFb07CW14HugY5GYdqMKMXTbbMk39A/FR/lLF69fT
-	 lYyXF2Hgbc+aFEnXNR8hK9aKjUNNUwQ7D51tnj4c=
+	b=fEUHiECCxWIwP9QWRCkpGghbevvgQtZ4Mk6NyBPKEnR6xP0Bc7VQuvumJmMJ/PHZe
+	 C5obpZsgdDnhBrBoF9rWRnEG5ywzNj5p+j41eLbOSTBTOXA89YYibC8od0rWB4t8RL
+	 jtCOWXZzccVSmX6KTlyZ4KBpR4B0IrrQvXozMzdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbgERR5s (ORCPT
+        id S1731517AbgERR5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36486 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:57:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731837AbgERR5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:57:43 -0400
+        id S1730836AbgERR5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:57:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE49220674;
-        Mon, 18 May 2020 17:57:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CF3E20715;
+        Mon, 18 May 2020 17:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824662;
-        bh=MT8t/Y/qjbY9lEmvs0LhPBNuEWj5pnEFucUdNsbCr0E=;
+        s=default; t=1589824664;
+        bh=FtjT8lwXETCyCVSxox66iHY31x24xhLqPM6VXV++cHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qZMQfDiq2IXiqd8kaDRqUUPyYyDhfvts1jRPPN4iAxDv4DKjCixkV4s1VmuUOrWPe
-         esYt2/wYQiNrVTwnRryD0v1ah8hOtFp/YwdF/o8Iv6v251PMdn2jSa4BdpmZpF2roZ
-         Vjldm/KG2ZA1obnH0fB4tTixSPQQCNXk7DAdA/ec=
+        b=oWPATE75ZKrwDm5sB++ZtVHhVeFeEtJSc4IRFRrOt/0ZVrv8eynrJzn+BTiejLyuU
+         UpbHSl0/E/BeUNIF73hQZlcXA5fR9GGGj/DtoctAJt0MBtGowMRoR3vyjGGoJgpV0s
+         Ga0PgOl5EVVLn+xZbt1PZBfDRDI119qqC/vYj7Ek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 101/147] gcc-10: mark more functions __init to avoid section mismatch warnings
-Date:   Mon, 18 May 2020 19:37:04 +0200
-Message-Id: <20200518173525.986717228@linuxfoundation.org>
+Subject: [PATCH 5.4 102/147] gcc-10: avoid shadowing standard library free() in crypto
+Date:   Mon, 18 May 2020 19:37:05 +0200
+Message-Id: <20200518173526.083206184@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,54 +61,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit e99332e7b4cda6e60f5b5916cf9943a79dbef902 upstream.
+commit 1a263ae60b04de959d9ce9caea4889385eefcc7b upstream.
 
-It seems that for whatever reason, gcc-10 ends up not inlining a couple
-of functions that used to be inlined before.  Even if they only have one
-single callsite - it looks like gcc may have decided that the code was
-unlikely, and not worth inlining.
+gcc-10 has started warning about conflicting types for a few new
+built-in functions, particularly 'free()'.
 
-The code generation difference is harmless, but caused a few new section
-mismatch errors, since the (now no longer inlined) function wasn't in
-the __init section, but called other init functions:
+This results in warnings like:
 
-   Section mismatch in reference from the function kexec_free_initrd() to the function .init.text:free_initrd_mem()
-   Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memremap()
-   Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
+   crypto/xts.c:325:13: warning: conflicting types for built-in function ‘free’; expected ‘void(void *)’ [-Wbuiltin-declaration-mismatch]
 
-So add the appropriate __init annotation to make modpost not complain.
-In both cases there were trivially just a single callsite from another
-__init function.
+because the crypto layer had its local freeing functions called
+'free()'.
+
+Gcc-10 is in the wrong here, since that function is marked 'static', and
+thus there is no chance of confusion with any standard library function
+namespace.
+
+But the simplest thing to do is to just use a different name here, and
+avoid this gcc mis-feature.
+
+[ Side note: gcc knowing about 'free()' is in itself not the
+  mis-feature: the semantics of 'free()' are special enough that a
+  compiler can validly do special things when seeing it.
+
+  So the mis-feature here is that gcc thinks that 'free()' is some
+  restricted name, and you can't shadow it as a local static function.
+
+  Making the special 'free()' semantics be a function attribute rather
+  than tied to the name would be the much better model ]
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/tpm.c |    2 +-
- init/initramfs.c           |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ crypto/lrw.c |    4 ++--
+ crypto/xts.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -16,7 +16,7 @@
- int efi_tpm_final_log_size;
- EXPORT_SYMBOL(efi_tpm_final_log_size);
- 
--static int tpm2_calc_event_log_size(void *data, int count, void *size_info)
-+static int __init tpm2_calc_event_log_size(void *data, int count, void *size_info)
- {
- 	struct tcg_pcr_event2_head *header;
- 	int event_size, size = 0;
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -534,7 +534,7 @@ void __weak free_initrd_mem(unsigned lon
+--- a/crypto/lrw.c
++++ b/crypto/lrw.c
+@@ -289,7 +289,7 @@ static void exit_tfm(struct crypto_skcip
+ 	crypto_free_skcipher(ctx->child);
  }
  
- #ifdef CONFIG_KEXEC_CORE
--static bool kexec_free_initrd(void)
-+static bool __init kexec_free_initrd(void)
+-static void free(struct skcipher_instance *inst)
++static void free_inst(struct skcipher_instance *inst)
  {
- 	unsigned long crashk_start = (unsigned long)__va(crashk_res.start);
- 	unsigned long crashk_end   = (unsigned long)__va(crashk_res.end);
+ 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
+ 	kfree(inst);
+@@ -401,7 +401,7 @@ static int create(struct crypto_template
+ 	inst->alg.encrypt = encrypt;
+ 	inst->alg.decrypt = decrypt;
+ 
+-	inst->free = free;
++	inst->free = free_inst;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+ 	if (err)
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -328,7 +328,7 @@ static void exit_tfm(struct crypto_skcip
+ 	crypto_free_cipher(ctx->tweak);
+ }
+ 
+-static void free(struct skcipher_instance *inst)
++static void free_inst(struct skcipher_instance *inst)
+ {
+ 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
+ 	kfree(inst);
+@@ -439,7 +439,7 @@ static int create(struct crypto_template
+ 	inst->alg.encrypt = encrypt;
+ 	inst->alg.decrypt = decrypt;
+ 
+-	inst->free = free;
++	inst->free = free_inst;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+ 	if (err)
 
 
