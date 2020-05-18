@@ -2,53 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F124207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1DF20853
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824910;
-	bh=2VvWhOFQzzvG/pN3a73j/LJUDOwNB2TYPqpV7CVyMBw=;
+	s=default; t=1589824914;
+	bh=1nnHsVdBrNbkfWBXxTVXXxkC6uk3Re/8JIIgBHmsfGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qsJdc9mlPjgOA0DaZ+VL9oSqsLydwZLq3waO7GuC1VgI1HpxrzUxZ/iLkwqlRV4pU
-	 GXSOGfit10eOX5p458zIUNXNefYYu3untCtspSN76Sw0oYV87Bcs/Z+rJEh3ttjdAy
-	 vl3TTx6pkqLa8LtmC1E4Zy2WTdoVjrYlh9p1QF5Y=
+	b=CSmx3HP+CYrLmaEgm1sUC98wroEOFr9Nnj9VuxEaL5FAuZ3dXTfhgZDSSnTHJNOhd
+	 HqiMITs+n2M3vTbpJf8VkhsvwKG7cI++s1uDvPELMLXCprhZfGDft1ARUlf7sD5BsQ
+	 qYP3fcceb5bgZ1g7M48GCC3jXH6ul6rvEVHWDOwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731903AbgERSBt (ORCPT
+        id S1731923AbgERSBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:01:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44136 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:01:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731901AbgERSBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:01:42 -0400
+        id S1731641AbgERSBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:01:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64FF520826;
-        Mon, 18 May 2020 18:01:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B73C2207C4;
+        Mon, 18 May 2020 18:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824901;
-        bh=2VvWhOFQzzvG/pN3a73j/LJUDOwNB2TYPqpV7CVyMBw=;
+        s=default; t=1589824909;
+        bh=1nnHsVdBrNbkfWBXxTVXXxkC6uk3Re/8JIIgBHmsfGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MbflPwHXdUAxKn7wXBqNwMcYSU02KCK6Scs5SE4G82eHiaAEPlhVxNHX0jp5ypA71
-         7GHWdYbadUbQYAdn10YrECP7KmBRH8LSvCcq9AIvXomsoukwEuPGvcG5UzRN1dPCmR
-         d8jV1dYqVaTdkPjl3PYj9QGcnuvFVjMT4nrA5m58=
+        b=k1HhKfBe6kQ0TKKwk+klTFShhH78yTou8gs0jMK+pK9B/3kFo4PpTFF9Z8wwKzjTg
+         Rd12rJ3aqhIlYbp03ttCUSxJ0DVuV8n5G2H4PvorxLhwCfdSwz3/JDK8IcWdmKfnpE
+         NSbxZ0AEMgR0e8sENuMn8ShZ4/jZ5nPRROero/sw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 050/194] net: broadcom: Select BROADCOM_PHY for BCMGENET
-Date:   Mon, 18 May 2020 19:35:40 +0200
-Message-Id: <20200518173535.965662570@linuxfoundation.org>
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 053/194] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
+Date:   Mon, 18 May 2020 19:35:43 +0200
+Message-Id: <20200518173536.186626885@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,34 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 99addbe31f5524494f4d7077bcb3f6fa64c5d160 ]
+[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
 
-The GENET controller on the Raspberry Pi 4 (2711) is typically
-interfaced with an external Broadcom PHY via a RGMII electrical
-interface. To make sure that delays are properly configured at the PHY
-side, ensure that we the dedicated Broadcom PHY driver
-(CONFIG_BROADCOM_PHY) is enabled for this to happen.
+pd->dma.dev is read in irq handler pd_irq().
+However, it is set to pdev->dev after request_irq().
+Therefore, set pd->dma.dev to pdev->dev before request_irq() to
+avoid data race between pch_dma_probe() and pd_irq().
 
-Fixes: 402482a6a78e ("net: bcmgenet: Clear ID_MODE_DIS in EXT_RGMII_OOB_CTRL when not needed")
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/pch_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/Kconfig
-+++ b/drivers/net/ethernet/broadcom/Kconfig
-@@ -69,6 +69,7 @@ config BCMGENET
- 	select BCM7XXX_PHY
- 	select MDIO_BCM_UNIMAC
- 	select DIMLIB
-+	select BROADCOM_PHY if ARCH_BCM2835
- 	help
- 	  This driver supports the built-in Ethernet MACs found in the
- 	  Broadcom BCM7xxx Set Top Box family chipset.
+diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+index 581e7a290d98e..a3b0b4c56a190 100644
+--- a/drivers/dma/pch_dma.c
++++ b/drivers/dma/pch_dma.c
+@@ -865,6 +865,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
+ 	}
+ 
+ 	pci_set_master(pdev);
++	pd->dma.dev = &pdev->dev;
+ 
+ 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
+ 	if (err) {
+@@ -880,7 +881,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
+ 		goto err_free_irq;
+ 	}
+ 
+-	pd->dma.dev = &pdev->dev;
+ 
+ 	INIT_LIST_HEAD(&pd->dma.channels);
+ 
+-- 
+2.20.1
+
 
 
