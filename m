@@ -2,111 +2,90 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27115C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F058020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825557;
-	bh=qPiPvnOGJzhRxWccUafyKknE9pRDCl2DUrjtZb6VY4k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aM+xNL1GvbuXh41a9vxtmwKSQpgl5Hi3aKNm8vTk8IPG9c12DBMYBZxMhMEQNScfa
-	 hlryGrg030JYF+9EVKHjnc2RfIA1KD52mQm6FBpHzq5folA3U6rbyICi6C944ZVmWt
-	 hjHYpZj1z622G6LCoGkYtnWqTPfpzISRP22q3N3o=
+	by mail.kernel.org (Postfix) with ESMTP id A29BB20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732631AbgERSMg (ORCPT
+        id S1733041AbgERSMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731073AbgERSDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E4B120853;
-        Mon, 18 May 2020 18:03:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825000;
-        bh=qPiPvnOGJzhRxWccUafyKknE9pRDCl2DUrjtZb6VY4k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E1snMUohdoan0/P+MKbqUQ4U/ur3mu2vp4bV6Vy6JGFGhxWcH4XFqWaO0gg8BBrdH
-         RQfTpz8rqLvncqWpVSQxpfk9dsHmWZX5EtS/Bg3ZdpX2WUIOwqYOB033r97SILQn1P
-         PUUtM981Krj7HSNOgYWiMPxR2KgBjyOmndaKh8Qo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Grzegorz Kowal <custos.mentis@gmail.com>,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 090/194] mmc: sdhci-pci-gli: Fix can not access GL9750 after reboot from Windows 10
-Date:   Mon, 18 May 2020 19:36:20 +0200
-Message-Id: <20200518173539.125024739@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
-References: <20200518173531.455604187@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 18 May 2020 14:12:39 -0400
+Received: from smtprelay0108.hostedemail.com ([216.40.44.108]:50162 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732632AbgERSDR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:17 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id BA469837F24C;
+        Mon, 18 May 2020 18:03:15 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: help47_9096ad8ae3547
+X-Filterd-Recvd-Size: 2150
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 18 May 2020 18:03:13 +0000 (UTC)
+Message-ID: <8007a07f354b9f5ff714914f3696e185078c27c3.camel@perches.com>
+Subject: Re: [PATCH] drm/exynos: Remove dev_err() on platform_get_irq()
+ failure
+From:   Joe Perches <joe@perches.com>
+To:     Tamseel Shams <m.shams@samsung.com>, inki.dae@samsung.com,
+        jy0922.shim@samsung.com, sw0312.kim@samsung.com,
+        kyungmin.park@samsung.com, airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shaik.ameer@samsung.com, krzk@kernel.org, alim.akhtar@samsung.com
+Date:   Mon, 18 May 2020 11:03:12 -0700
+In-Reply-To: <20200518172708.48600-1-m.shams@samsung.com>
+References: <CGME20200518174120epcas5p1fb5f832c7874a9d367eb9c9ea4e69d53@epcas5p1.samsung.com>
+         <20200518172708.48600-1-m.shams@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+On Mon, 2020-05-18 at 22:57 +0530, Tamseel Shams wrote:
+> platform_get_irq() will call dev_err() itself on failure,
+> so there is no need for the driver to also do this.
+> This is detected by coccinelle.
 
-[ Upstream commit b56ff195c317ad28c05d354aeecbb9995b8e08c1 ]
+trivia:
 
-Need to clear some bits in a vendor-defined register after reboot from
-Windows 10.
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+[]
+> @@ -1810,7 +1810,6 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+>  
+>  	dsi->irq = platform_get_irq(pdev, 0);
+>  	if (dsi->irq < 0) {
+> -		dev_err(dev, "failed to request dsi irq resource\n");
+>  		return dsi->irq;
+>  	}
 
-Fixes: e51df6ce668a ("mmc: host: sdhci-pci: Add Genesys Logic GL975x support")
-Reported-by: Grzegorz Kowal <custos.mentis@gmail.com>
-Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Grzegorz Kowal <custos.mentis@gmail.com>
-Link: https://lore.kernel.org/r/20200504063957.6638-1-benchuanggli@gmail.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/mmc/host/sdhci-pci-gli.c | 5 +++++
- 1 file changed, 5 insertions(+)
+You could also remove the now atypical braces
 
-diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-index ff39d81a5742c..fd76aa672e020 100644
---- a/drivers/mmc/host/sdhci-pci-gli.c
-+++ b/drivers/mmc/host/sdhci-pci-gli.c
-@@ -26,6 +26,9 @@
- #define   SDHCI_GLI_9750_DRIVING_2    GENMASK(27, 26)
- #define   GLI_9750_DRIVING_1_VALUE    0xFFF
- #define   GLI_9750_DRIVING_2_VALUE    0x3
-+#define   SDHCI_GLI_9750_SEL_1        BIT(29)
-+#define   SDHCI_GLI_9750_SEL_2        BIT(31)
-+#define   SDHCI_GLI_9750_ALL_RST      (BIT(24)|BIT(25)|BIT(28)|BIT(30))
- 
- #define SDHCI_GLI_9750_PLL	      0x864
- #define   SDHCI_GLI_9750_PLL_TX2_INV    BIT(23)
-@@ -122,6 +125,8 @@ static void gli_set_9750(struct sdhci_host *host)
- 				    GLI_9750_DRIVING_1_VALUE);
- 	driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_2,
- 				    GLI_9750_DRIVING_2_VALUE);
-+	driving_value &= ~(SDHCI_GLI_9750_SEL_1|SDHCI_GLI_9750_SEL_2|SDHCI_GLI_9750_ALL_RST);
-+	driving_value |= SDHCI_GLI_9750_SEL_2;
- 	sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
- 
- 	sw_ctrl_value &= ~SDHCI_GLI_9750_SW_CTRL_4;
--- 
-2.20.1
+	if (dsi->irq < 0)
+		return dsi->irq;
 
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_rotator.c b/drivers/gpu/drm/exynos/exynos_drm_rotator.c
+[]
+> @@ -294,7 +294,6 @@ static int rotator_probe(struct platform_device *pdev)
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0) {
+> -		dev_err(dev, "failed to get irq\n");
+>  		return irq;
+>  	}
+
+etc...
 
 
