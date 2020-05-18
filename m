@@ -2,132 +2,92 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E377C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A83CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3BD2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 592442070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:46:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y8OzVbBU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WP9PXV+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgERFnS (ORCPT
+        id S1726700AbgERFqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 01:43:18 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5395 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgERFnR (ORCPT
+        Mon, 18 May 2020 01:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERFqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 01:43:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec220270000>; Sun, 17 May 2020 22:42:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 17 May 2020 22:43:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 17 May 2020 22:43:17 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
- 2020 05:43:17 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 18 May 2020 05:43:16 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec220740002>; Sun, 17 May 2020 22:43:16 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <etnaviv@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH] drm/etnaviv: convert get_user_pages() --> pin_user_pages()
-Date:   Sun, 17 May 2020 22:43:15 -0700
-Message-ID: <20200518054315.2407093-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 18 May 2020 01:46:04 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E3BC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 22:46:03 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id h7so98068otr.3
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 22:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BHIPtwizuJJ8Ut3MjdysZF5NHI8/optEcfuuIjKQd5I=;
+        b=WP9PXV+kr+zcDzjTAYCg1yuLh8csUwd0flQXiXhfhopKRwgBWdvOkZlj7+wMvMgmHX
+         X9395CSLd6Ob1X4+uoIwE+ASm1p8Pzice9ArcCWw21oVk1aIQPGmpHTSGC/azH+TWC8s
+         eAyDXG0zx7Fx/ahE9DDb8zU46xONiX03i0pYL9yopmTPr2GRLreTlJHoib0bT5KL39eI
+         vxeA6Jc506j/inSFcdPonAZlNG/3j2fyFWNavvQ8M9FEwRq6Z2F2WUNN0gNSGbhkJutH
+         EICmG6+A+hvgd6liCOUV66z1VldLaGEBjkIcwzF0otrZ054JXJY6IEblUUTtWStIjcrg
+         ftYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BHIPtwizuJJ8Ut3MjdysZF5NHI8/optEcfuuIjKQd5I=;
+        b=R2sSIRjN2gwOzOgWhxEmzrR9HVgGQmei/8dveskVYJO0KmYR24o0LMUqnREmFq4Z6l
+         rih8/b82XO1l3Ui2u4UJedQ4Cu0SRyrCn+k9VVVVVMlaD/C0lHk4Bz4HidrJLYZ5/6x0
+         BM/PKM+HQAkZ4/Pb5i4m7wBql6FjZdq3wTuUnDR41Hub7xzMyB1Emt+HYsO/RV9+Tu/j
+         txptjaDaLh3bevgdDNr3jQZMRIyjx/pkOnBHeOyyLrU8r80kxbahKwREtiPjqVPARtPx
+         5Rwi3CApVgFXBMkoUXOoCc45eV6q53uz8RjrYc82PGviK4pZr4PVsrPsaN77veByz12J
+         9dVQ==
+X-Gm-Message-State: AOAM533gJn99uPOtJrbh7Bb/8FcySrEloxzmpgZ4FFDM6HLl0IlCVSWq
+        3xqPFe4CMbq8ffg9U8zH3W7AkcqFe8pw9FAg0f9n5g==
+X-Google-Smtp-Source: ABdhPJxVaVfYRfC++bcomKfhV/jH4a1jS72/ADwWqa9UGXzYn8ZEQC68iQYkhLvcYWg18qQwytBT5GF2vee0/dz24/o=
+X-Received: by 2002:a05:6830:101a:: with SMTP id a26mr10661305otp.53.1589780762697;
+ Sun, 17 May 2020 22:46:02 -0700 (PDT)
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589780520; bh=Nw/n11knSNrp8BRVAAf0yZA96pwzBUISJeQpKg/G4dc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=Y8OzVbBUzW9w/9M2Wg03/k4DFOeTeW4XJIAYKYx24E2BSAh2InaXI3chth31KBebn
-         lUcWz5ZaKYceDrBL1IHvIVaOHxmoBsTn3TEs95oCFOUX9A52yqKzaDww8i029K+b6P
-         Y3FidGcZZpH+C/U79Fownhl7VNNTogejGlc6MgA+i5ajT9RVCnRZ6EfS8op0fmH9sP
-         QIJofhVM9SmAicaoEj7NSfzcb+qYfRLgnm4pCjBy0AbbxSn/MiiwO4VT/jlWmDD99o
-         u4Qf/CI+JzYMdIlhzasehts4HJ3mE1n1X0LU6rlaKtP06hRnCXhHFfDCh88xa5XJff
-         GVW/CDgkRIg3Q==
+References: <CAPY=qRQ6gzN1BWh=ianVDBQ1C9kibWHwxs5Z0+QSwGxKymLDTQ@mail.gmail.com>
+ <374485.1589637193@turing-police> <af03bee5-27b2-4e92-359a-b1cc8f500d6d@infradead.org>
+ <CAPY=qRRJ6aZbbRnWfvjqojs08Z7H-+-6nzLAcpzjDcQOJ40fOQ@mail.gmail.com> <CAM_iQpXzeMjAUW0LNMpGf+bqykU8fjOJmy=CDdNEPQNpSB4raA@mail.gmail.com>
+In-Reply-To: <CAM_iQpXzeMjAUW0LNMpGf+bqykU8fjOJmy=CDdNEPQNpSB4raA@mail.gmail.com>
+From:   Subhashini Rao Beerisetty <subhashbeerisetty@gmail.com>
+Date:   Mon, 18 May 2020 11:15:34 +0530
+Message-ID: <CAPY=qRQez4JRLGcwBq_3_AGmtH36FRrKjhCWvkhrnQxvBJEnOw@mail.gmail.com>
+Subject: Re: general protection fault vs Oops
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages*(), in a "Case 2" scenario
-(DMA/RDMA), using the categorization from [1]. That means that it's
-time to convert the get_user_pages*() + put_page() calls to
-pin_user_pages*() + unpin_user_pages() calls.
-
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
-
-[1] Documentation/core-api/pin_user_pages.rst
-
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
-
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
-
-Hi,
-
-Note that I have only compile-tested this patch, although that does
-also include cross-compiling for a few other arches.
-
-thanks,
-John Hubbard
-NVIDIA
-
- drivers/gpu/drm/etnaviv/etnaviv_gem.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnavi=
-v/etnaviv_gem.c
-index dc9ef302f517..0f4578dc169d 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-@@ -675,10 +675,10 @@ static int etnaviv_gem_userptr_get_pages(struct etnav=
-iv_gem_object *etnaviv_obj)
- 		uint64_t ptr =3D userptr->ptr + pinned * PAGE_SIZE;
- 		struct page **pages =3D pvec + pinned;
-=20
--		ret =3D get_user_pages_fast(ptr, num_pages,
-+		ret =3D pin_user_pages_fast(ptr, num_pages,
- 					  !userptr->ro ? FOLL_WRITE : 0, pages);
- 		if (ret < 0) {
--			release_pages(pvec, pinned);
-+			unpin_user_pages(pvec, pinned);
- 			kvfree(pvec);
- 			return ret;
- 		}
-@@ -702,7 +702,7 @@ static void etnaviv_gem_userptr_release(struct etnaviv_=
-gem_object *etnaviv_obj)
- 	if (etnaviv_obj->pages) {
- 		int npages =3D etnaviv_obj->base.size >> PAGE_SHIFT;
-=20
--		release_pages(etnaviv_obj->pages, npages);
-+		unpin_user_pages(etnaviv_obj->pages, npages);
- 		kvfree(etnaviv_obj->pages);
- 	}
- }
---=20
-2.26.2
-
+On Mon, May 18, 2020 at 2:16 AM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>
+> On Sat, May 16, 2020 at 9:16 AM Subhashini Rao Beerisetty
+> <subhashbeerisetty@gmail.com> wrote:
+> > Yes, those are out-of-tree modules. Basically, my question is, in
+> > general what is the difference between 'general protection fault' and
+> > 'Oops' failure in kernel mode.
+>
+> For your case, they are likely just different consequences of a same
+> memory error. Let's assume it is a use-after-free, the behavior is UAF
+> is undefined: If that memory freed by kernel is also unmapped from
+> kernel address space, you would get a page fault when using it
+> afterward, that is an Oops. Or if that memory freed by kernel gets
+> reallocated and remapped as read-only, you would get a general
+> protection error when you writing to it afterward.
+Cool, thanks for the clarification.
