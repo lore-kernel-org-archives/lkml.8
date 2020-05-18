@@ -2,141 +2,157 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC49C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72A4207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE3E207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589836695;
+	bh=NNPG5y8SVwnubBaklZBItGjFY23Rs06YSjF3fnr1kV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VHsA/kLneZvqmLrKw0uLw4VgUgdMYl3BN1jVj06L+XbjCpQndKRK1l0fv592JqKwx
+	 c/U7l/C5jz7TY3j06LQ6GUTe/8P40zl6jkLa6BLUKaTmZkIl5+XZTrbT/EOYAiZ3xc
+	 BylH7AZu1EVhvRq7ArT9rN0jH7QIb+pdHdXxmuYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgERVRf (ORCPT
+        id S1728196AbgERVSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:17:35 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50230 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbgERVRe (ORCPT
+        Mon, 18 May 2020 17:18:14 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:33762 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726367AbgERVSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:17:34 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2EBCD8030807;
-        Mon, 18 May 2020 21:17:30 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id i3GN_NL9uKnD; Tue, 19 May 2020 00:17:29 +0300 (MSK)
-Date:   Tue, 19 May 2020 00:17:27 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Message-ID: <20200518211727.jrzo6tn7slqzxoyl@mobilestation>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <20200508113751.GD4820@sirena.org.uk>
- <20200510002039.hwahqasnnceowskz@mobilestation>
- <20200511212506.GA23852@sirena.org.uk>
- <20200518000542.ohtpem3lo2pbixbu@mobilestation>
- <20200518151946.GH8699@sirena.org.uk>
+        Mon, 18 May 2020 17:18:14 -0400
+Received: by mail-pj1-f66.google.com with SMTP id z15so384161pjb.0;
+        Mon, 18 May 2020 14:18:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l7e4wKCO02j4byrVDyWhWctfhv6l8FZHk8XSWR2z0vo=;
+        b=plDKgRHdhpJsjGO96kdVpRhRsZbAKwq6HGHt+vC3gnFYc8cMu1SPqJUq+W9Nk0KZax
+         XkDnQ4974LyMrf5moA+JAtHJZKR8oRc5kxx2KmAmZcnJ4N36wszwUVyqZ9mVij1yaKMj
+         slYroe6+f/4DhtZvpIXfFCsIZjflus06/uXGEY2fSVzhM1xYQOlyB7qcvorQhe8FekB4
+         /3S8+Z7peksiFQMV+CGXfypWt/CabMxT9N6llsePLkI4GJ4JF8e16juUNJAAnw4+Tct7
+         qBdCx36X7j8cJ2Ys7MeJfZWc/spsZnBqkMfZIEXN6Nyr7sAEG8WqFkG2OpG4nLr7fKdY
+         z4FQ==
+X-Gm-Message-State: AOAM53342i2Haulktxw4//Yf8b3yFapQYhWE4a6SuWmpDLM3qrpPZeBm
+        62LYcs9cLiA7IMx1lvQV3N8=
+X-Google-Smtp-Source: ABdhPJzkdRsgH22dj2g8Hm1MTTSw8RzHY7IB5l/iNmXwB4OiLU+K1Uzi5CZ4z9dHoULajnN+bWOrAg==
+X-Received: by 2002:a17:902:5a8c:: with SMTP id r12mr15373937pli.51.1589836691939;
+        Mon, 18 May 2020 14:18:11 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id o15sm371753pjq.28.2020.05.18.14.18.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 14:18:10 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 4F1A4404B0; Mon, 18 May 2020 21:18:09 +0000 (UTC)
+Date:   Mon, 18 May 2020 21:18:09 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Steve deRosier <derosier@gmail.com>,
+        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com,
+        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
+        daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+Message-ID: <20200518211809.GQ11244@42.do-not-panic.com>
+References: <20200518165154.GH11244@42.do-not-panic.com>
+ <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
+ <20200518170934.GJ11244@42.do-not-panic.com>
+ <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
+ <20200518171801.GL11244@42.do-not-panic.com>
+ <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
+ <20200518190930.GO11244@42.do-not-panic.com>
+ <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
+ <20200518195950.GP11244@42.do-not-panic.com>
+ <bb0b9a2da99c16a28c1dbee93d08abfa2aecdc8b.camel@sipsolutions.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518151946.GH8699@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <bb0b9a2da99c16a28c1dbee93d08abfa2aecdc8b.camel@sipsolutions.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 04:19:47PM +0100, Mark Brown wrote:
-> On Mon, May 18, 2020 at 03:05:42AM +0300, Serge Semin wrote:
-> > On Mon, May 11, 2020 at 10:25:06PM +0100, Mark Brown wrote:
+On Mon, May 18, 2020 at 10:07:49PM +0200, Johannes Berg wrote:
+> On Mon, 2020-05-18 at 19:59 +0000, Luis Chamberlain wrote:
 > 
-> > > Yes, some flags should work here - the issue was that at least some
-> > > controllers may end up trying to do multiple SPI operations for one
-> > > spi-mem thing which will break if the chip select doesn't get changed to
-> > > correspond with what's going on.
-> 
-> > Ok. New SPI flag it is then. It will be something like this:
-> > + #define SPI_CONTROLLER_FLASH_SS		BIT(6)
-> 
-> I'd rather use CS than SS (it's more common in the code).
-
-Ok.
-
-> 
-> > So, what do you think?
-> 
-> Should be fine, controllers that have an issue implementing just
-> shouldn't set the flag.
-
-Yes, exactly what I intended.
-
-> 
-> > > > > It's not clear to me that this hardware actually supports spi_mem in
-> > > > > hardware?
-> 
-> > > > SPI-mem operations are implemented by means of the EEPROM-read and Tx-only
-> > > > modes of the controller.
-> 
-> > > Sure, but those seem like normal SPI-level things rather than cases
-> > > where the hardware understands that it has a flash attached and is doing
-> > > flash specific things.
-> 
-> > No, hardware can't detect whether the flash is attached. This must be defined by
-> > the platform, like based on the DT sub-nodes.
-> 
-> This isn't about autodetection, it's about the abstraction level the
-> hardware is operating on - some hardware is able to generate flash
-> operations by itself (possibly with some help programming the opcodes
-> that are needed by a given flash), some hardware just works at the
-> bytestream level.
-> 
-> > > A very common case for this stuff is that
-> > > controllers have acceleration blocks for read and fall back on normal
-> > > SPI for writes and erases, that sounds like what's going on here.
+> > > Err, no. Those two are most definitely related. Have you looked at (most
+> > > or some or whatever) staging drivers recently? Those contain all kinds
+> > > of garbage that might do whatever with your kernel.
 > > 
-> > Well, yeah, they do provide some acceleration. EEPROM-read provides automatic
-> > write-cmd-dummy-data-then-read operations. But in this case the only thing we
-> > have to push into the SPI Tx FIFO is command and dummy bytes. The read operation
+> > No, I stay away :)
 > 
-> So it's a write then read but you have to program the write each time?
+> :)
+> 
+> > > That's all fine, I just don't think it's appropriate to pretend that
+> > > your kernel is now 'tainted' (think about the meaning of that word) when
+> > > the firmware of some random device crashed.
+> > 
+> > If the firmware crash *does* require driver remove / addition again,
+> > or a reboot, would you think that this is a situation that merits a taint?
+> 
+> Not really. In my experience, that's more likely a hardware issue (card
+> not properly seated, for example) that a bus reset happens to "fix".
+> 
+> > > It's pretty clear, but even then, first of all I doubt this is the case
+> > > for many of the places that you've sprinkled the annotation on,
+> > 
+> > We can remove it, for this driver I can vouch for its location as it did
+> > reach a state where I required a reboot. And its not the first time this
+> > has happened. This got me thinking about the bigger picture of the lack
+> > of proper way to address these cases in the kernel, and how the user is
+> > left dumbfounded.
+> 
+> Fair, so the driver is still broken wrt. recovery here. I still don't
+> think that's a situation where e.g. the system should say "hey you have
+> a taint here, if your graphics go bad now you should not report that
+> bug" (which is effectively what the single taint bit does).
 
-Here is what we need to do to perform the EEPROM-read operation:
-1) Enable EEPROM-read mode.
-2) Initialize a corresponding registers with a number of SPI transfer words
-   (with bits-per-word taken into account) to read.
-3) Push opcode + address + dummy bytes into the Tx FIFO. When it's done and
-   the Tx FIFO is empty, the controller will proceed with read operations by
-   pushing zeros (or ones, don't remember what level it's by default) to MOSI
-   and pulling data from MISO into the RX FIFO.
-4) Keep up with getting data from the Rx FIFO so one wouldn't get overflown.
+But again, let's think about the generic type of issue, and the
+unexpected type of state that can be reached. The circumstance here
+*does* lead to a case which is not recoverable. Now, consider how
+many cases in the kernel where similar situations can happen and leave
+the device or driver in a non-functional state.
 
-Regarding programming write each time. Well, it's up to the driver implementation.
-If opcode, address, dummy bytes and number of words to read are the same as before,
-then re-programming isn't required.
+> > > and secondly it actually hides useful information.
+> > 
+> > What is it hiding?
+> 
+> Most importantly, which device crashed. Secondarily I'd say how many
+> times (*).
 
--Sergey
+The device is implied by the module, the taint is applied to both.
+If you had multiple devices, however, yes, it would not be possible
+to distinguish from the taint which exact device it happened on.
+
+So the only thing *generic* which would be left out is count.
+
+> The information "firmware crashed" is really only useful in relation to
+> the device.
+
+If you have to reboot to get a functional network again then the device
+is quite useless for many people, regardless of which device that
+happened on.
+
+But from a support perspective a sysfs interface which provides a tiny
+bit more generic information indeed provides more value than a taint.
+
+  Luis
