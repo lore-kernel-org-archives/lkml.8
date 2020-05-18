@@ -2,234 +2,94 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0092C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC73C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04702067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98F32067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:17:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cEeYQ8sM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgERIPN (ORCPT
+        id S1727123AbgERIRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:15:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55590 "EHLO
+        Mon, 18 May 2020 04:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgERIPN (ORCPT
+        with ESMTP id S1726828AbgERIR3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:15:13 -0400
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0ADDC05BD0A
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:15:12 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:6c27:925d:6b9c:58b2])
-        by michel.telenet-ops.be with bizsmtp
-        id g8F72200l11gx4G068F7yw; Mon, 18 May 2020 10:15:08 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jaavT-0003cs-Q5; Mon, 18 May 2020 10:15:07 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jaavT-00066W-MU; Mon, 18 May 2020 10:15:07 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3] dt-bindings: timer: renesas: tmu: Convert to json-schema
-Date:   Mon, 18 May 2020 10:15:06 +0200
-Message-Id: <20200518081506.23423-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 18 May 2020 04:17:29 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F65C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:17:29 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w10so8849291ljo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KgB5iCRiDY1xUpzvcmt2qA5qOxhIvxFlroLwQSWXKVk=;
+        b=cEeYQ8sMtfIcnqhDnaBX58ozf3oJI5XHFUC7g3rtIUDyqFXqr/s6o9QnE2+uFP1k/J
+         LILQgdSPbgh22hGw180ItVeDUD7AU7RWmUS7tnKBpMk9U4t2JKNxq2pw8DY0Dr0glxoc
+         9h935pnTmgCgvB8iSgullSwo71ZCKnR3oJERR89JnjUG0THbBdRQXx1WxsyFErA0JpzB
+         b4NIVLEPTvVtsFQqcbTuJ4CrynyFpmf8ZXHARe3MZX3xlqHCX9g+ZlZpXgYibNMcuvu5
+         SuKbidv7OF9jh3VrmN4uc7XV48TL9pRc4TJevPeF2eMsNSiYx4LoZTRVZTp2C4Vyh1/N
+         SVcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KgB5iCRiDY1xUpzvcmt2qA5qOxhIvxFlroLwQSWXKVk=;
+        b=j9WcxaQztwTby+TAqYa5goTmx67d8/lrBJy6bhaiAeKVI0YHk46wTcrqEQHEQ/PFM2
+         FHvem90IPzbtgQrHL69JcYY91FYdN7BoSVBheS+NEDhQjv6Jc7nlzzrhqxUr+ivbrY/l
+         +/eEEad5rsBSolI4G4Uk4aOmL6K5q8qajyQB1M2JkdffgZSUwdodtmfB2zdJxTx8qFaZ
+         V1X6KqiUMuLin1CqMMKiBa9ajCJHLXVjuR+mHcBIzvfIoTFeGq7uEv8GM+GmgHVY7seV
+         0DHqZUELuT/YD3VSZRrcKsKm9aalZckM9UBccRiDYQMAFaR87sfzN7hYB+/FOec0Kwvc
+         0U5A==
+X-Gm-Message-State: AOAM530sgw74zTTnRBNiDvaM9AEbZsv6QTf3kgpivCMXrs3qMkrqLWPu
+        KupVt6nq7ElbYRYkBPLPjl10BuAUHqZ3B+h6FjPuzQ==
+X-Google-Smtp-Source: ABdhPJwh1h7WOq2+DVADM4reEeAZtZ0+Bi37spSD7MX9/2PvrGxVJ5a7SXExxc9Et8QUQoYjFbtIPHqiLPfc0Ni3lug=
+X-Received: by 2002:a2e:b609:: with SMTP id r9mr9513452ljn.125.1589789846527;
+ Mon, 18 May 2020 01:17:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200511145257.22970-1-geert+renesas@glider.be>
+In-Reply-To: <20200511145257.22970-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 May 2020 10:17:15 +0200
+Message-ID: <CACRpkdaz34Bc_EzcXKMEVCCCUt82_c2+t4X6YSLW2b59oi+9gA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/6] gpio: Add GPIO Aggregator
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Renesas R-Mobile/R-Car Timer Unit (TMU) Device Tree binding
-documentation to json-schema.
+Hi Geert,
 
-Document missing properties.
-Update the example to match reality.
+I have queued this v7 patch set in an immutable branch for testing and also
+merged to my "devel" branch for testing.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v3:
-  - Remove unneeded 'allOf' container around '$ref',
+If all goes well it also hits linux-next soon.
 
-v2:
-  - Add missing "additionalProperties: false",
-  - Add Reviewed-by.
----
- .../devicetree/bindings/timer/renesas,tmu.txt | 49 ----------
- .../bindings/timer/renesas,tmu.yaml           | 98 +++++++++++++++++++
- 2 files changed, 98 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.txt
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-deleted file mode 100644
-index 29159f4e65abece9..0000000000000000
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--* Renesas R-Mobile/R-Car Timer Unit (TMU)
--
--The TMU is a 32-bit timer/counter with configurable clock inputs and
--programmable compare match.
--
--Channels share hardware resources but their counter and compare match value
--are independent. The TMU hardware supports up to three channels.
--
--Required Properties:
--
--  - compatible: must contain one or more of the following:
--    - "renesas,tmu-r8a7740" for the r8a7740 TMU
--    - "renesas,tmu-r8a774a1" for the r8a774A1 TMU
--    - "renesas,tmu-r8a774b1" for the r8a774B1 TMU
--    - "renesas,tmu-r8a774c0" for the r8a774C0 TMU
--    - "renesas,tmu-r8a7778" for the r8a7778 TMU
--    - "renesas,tmu-r8a7779" for the r8a7779 TMU
--    - "renesas,tmu-r8a77970" for the r8a77970 TMU
--    - "renesas,tmu-r8a77980" for the r8a77980 TMU
--    - "renesas,tmu" for any TMU.
--      This is a fallback for the above renesas,tmu-* entries
--
--  - reg: base address and length of the registers block for the timer module.
--
--  - interrupts: interrupt-specifier for the timer, one per channel.
--
--  - clocks: a list of phandle + clock-specifier pairs, one for each entry
--    in clock-names.
--  - clock-names: must contain "fck" for the functional clock.
--
--Optional Properties:
--
--  - #renesas,channels: number of channels implemented by the timer, must be 2
--    or 3 (if not specified the value defaults to 3).
--
--
--Example: R8A7779 (R-Car H1) TMU0 node
--
--	tmu0: timer@ffd80000 {
--		compatible = "renesas,tmu-r8a7779", "renesas,tmu";
--		reg = <0xffd80000 0x30>;
--		interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 33 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 34 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
--		clock-names = "fck";
--
--		#renesas,channels = <3>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-new file mode 100644
-index 0000000000000000..2f7bd31f0dfe0607
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-@@ -0,0 +1,98 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/renesas,tmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas R-Mobile/R-Car Timer Unit (TMU)
-+
-+maintainers:
-+  - Geert Uytterhoeven <geert+renesas@glider.be>
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+
-+description:
-+  The TMU is a 32-bit timer/counter with configurable clock inputs and
-+  programmable compare match.
-+
-+  Channels share hardware resources but their counter and compare match value
-+  are independent. The TMU hardware supports up to three channels.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - renesas,tmu-r8a7740  # R-Mobile A1
-+          - renesas,tmu-r8a774a1 # RZ/G2M
-+          - renesas,tmu-r8a774b1 # RZ/G2N
-+          - renesas,tmu-r8a774c0 # RZ/G2E
-+          - renesas,tmu-r8a7778  # R-Car M1A
-+          - renesas,tmu-r8a7779  # R-Car H1
-+          - renesas,tmu-r8a77970 # R-Car V3M
-+          - renesas,tmu-r8a77980 # R-Car V3H
-+      - const: renesas,tmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 2
-+    maxItems: 3
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: fck
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  '#renesas,channels':
-+    description:
-+      Number of channels implemented by the timer.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [ 2, 3 ]
-+    default: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - power-domains
-+
-+if:
-+  not:
-+    properties:
-+      compatible:
-+        contains:
-+          enum:
-+            - renesas,tmu-r8a7740
-+            - renesas,tmu-r8a7778
-+            - renesas,tmu-r8a7779
-+then:
-+  required:
-+    - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7779-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7779-sysc.h>
-+    tmu0: timer@ffd80000 {
-+            compatible = "renesas,tmu-r8a7779", "renesas,tmu";
-+            reg = <0xffd80000 0x30>;
-+            interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
-+            clock-names = "fck";
-+            power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
-+            #renesas,channels = <3>;
-+    };
--- 
-2.17.1
-
+Yours,
+Linus Walleij
