@@ -2,173 +2,193 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA1EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 261E52070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6686207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3xPJZtp"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qmcdhdbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgERG0P (ORCPT
+        id S1726940AbgERG0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:26:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgERG0O (ORCPT
+        Mon, 18 May 2020 02:26:19 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:14654 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726369AbgERG0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:26:14 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5681C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 23:26:13 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id nu7so2110601pjb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 23:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sqEbuUUC6vd4Sa66d08NNo4B0txnWr9aDhBTPjvmYJ8=;
-        b=X3xPJZtpZ+1rw0mFFaFkJlO44v9hlmZCh+zJeg9JgWkvvtlZOPOXfPTsK01TqHRmgr
-         oLDaaMSe5J/NidcHTI+itTPoh7TsAZJ8xd1iMI/5nltzxBJzppACR5SdjJtxw56JwHOw
-         o03MowbtjoB6XR0HlELcpQFaI4lE3F51CCdp7GsHRTzIkA9AbO83juZNwf7dyJUCZ6XE
-         8tLUzs9bkvSuBs1PbvkDXilxaEDWIU8TN4tCfSKuYG/RzOUCBWw64ffJSU+Ev3OuqusW
-         OBGzjpi33ZJCL4CBKM1hQ6CQApI7CgYKkJqn35zU2xE0cW0x574QIJ+lmAVo4IiUKn8A
-         QSvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sqEbuUUC6vd4Sa66d08NNo4B0txnWr9aDhBTPjvmYJ8=;
-        b=Kasm97qA8JUh/mLIUyNio1iDfTzTlM6DS5TMGcuXtfYZPpT1flQwu2S2Y3Vn+QJD/4
-         bDO6cwxuuYqgiby1+x5aQsS+uEKlT4PBo9G7uvQmGp2718sKGVrHJKDPVyhT1DneSrlu
-         1LaS19zNquPsdOxk3mMuLWUhlKhR63q8/w4/J29i7A/ImeAEXTHb49BhXxb8CG32qxfG
-         o2A6b1vGuetMwk4l2RJNGEf6HirkALRYBLczChQSi/RBT497oj5dYX+MU4bzGdE5tdYb
-         Bvh8cKgxZV04sKQXPHFXwXM+nJNRMLFIAX6gRs/A0/QOjwLBsjr5sGjGfa6/4iprXC/5
-         Q2vQ==
-X-Gm-Message-State: AOAM532ZFHn0/sOX7dWxn6wihe1zJSf/sjTm9V8I+RBwmkxIZePVWuZI
-        KfEofspOfx6lzZYCb5RAHDlBXfdVGNujyHEIrB8=
-X-Google-Smtp-Source: ABdhPJzYBVm9s1yrTK8/5YWe8NEHNxv4hskZUXZjYG1F24Mm5WP6B5+11QjZuwKa0CwSkFe2FsaUj0X2L8ft4fkWmjo=
-X-Received: by 2002:a17:902:b088:: with SMTP id p8mr15507720plr.123.1589783173163;
- Sun, 17 May 2020 23:26:13 -0700 (PDT)
+        Mon, 18 May 2020 02:26:16 -0400
+X-UUID: 4a6181a3d20249a39e47885731e104ba-20200518
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=jMwIoafcIPklID0jC/qE2cM2vi67boNK7eoXAW/LkS4=;
+        b=qmcdhdbF0EA5wpsm7a7NR98+PAwgx05qQ45thbddDvPiacFr56ej7Nrj38ynkp+VmCHzoX/lWh3ByDmThwx10eLj7WBTCd5nbg8DJhz1ZH2AOi3LAb+EAaycK9Hez62SJ0RkzY42yUdhS3yHMK4ybOMXpAOnRlTTMH/OOWeC1nc=;
+X-UUID: 4a6181a3d20249a39e47885731e104ba-20200518
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1729141021; Mon, 18 May 2020 14:26:08 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 18 May 2020 14:26:07 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 18 May 2020 14:26:05 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v3 1/4] rcu/kasan: record and print call_rcu() call stack
+Date:   Mon, 18 May 2020 14:26:03 +0800
+Message-ID: <20200518062603.4570-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20200516124857.75004-1-lecopzer@gmail.com> <CAFA6WYNwp+_ENiS8QDao5+RXyt5ofJZyq6c5CKG_d0CNEmBNYg@mail.gmail.com>
-In-Reply-To: <CAFA6WYNwp+_ENiS8QDao5+RXyt5ofJZyq6c5CKG_d0CNEmBNYg@mail.gmail.com>
-From:   Lecopzer Chen <lecopzer@gmail.com>
-Date:   Mon, 18 May 2020 14:26:00 +0800
-Message-ID: <CANr2M19unLW8n0P2DiOYEZ=GZcaD-L2ygPht_5HNtNZ6e4h6xQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] arm64: perf: Add support for Perf NMI interrupts
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     julien.thierry.kdev@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jian-Lin Chen <lecopzer.chen@mediatek.com>,
-        alexander.shishkin@linux.intel.com,
-        Catalin Marinas <catalin.marinas@arm.com>, jolsa@redhat.com,
-        acme@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        mingo@redhat.com, linux-mediatek@lists.infradead.org,
-        matthias.bgg@gmail.com, namhyung@kernel.org,
-        Will Deacon <will@kernel.org>, yj.chiang@mediatek.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Sumit,
+VGhpcyBmZWF0dXJlIHdpbGwgcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3JjdSgpIGNhbGwgc3Rh
+Y2sgYW5kDQpwcmludHMgdXAgdG8gMiBjYWxsX3JjdSgpIGNhbGwgc3RhY2tzIGluIEtBU0FOIHJl
+cG9ydC4NCg0KV2hlbiBjYWxsX3JjdSgpIGlzIGNhbGxlZCwgd2Ugc3RvcmUgdGhlIGNhbGxfcmN1
+KCkgY2FsbCBzdGFjayBpbnRvDQpzbHViIGFsbG9jIG1ldGEtZGF0YSwgc28gdGhhdCB0aGUgS0FT
+QU4gcmVwb3J0IGNhbiBwcmludCByY3Ugc3RhY2suDQoNClsxXWh0dHBzOi8vYnVnemlsbGEua2Vy
+bmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTk4NDM3DQpbMl1odHRwczovL2dyb3Vwcy5nb29nbGUu
+Y29tL2ZvcnVtLyMhc2VhcmNoaW4va2FzYW4tZGV2L2JldHRlciQyMHN0YWNrJDIwdHJhY2VzJDIw
+Zm9yJDIwcmN1JTdDc29ydDpkYXRlL2thc2FuLWRldi9LUXNqVF84OGhERS83ck5VWnByUkJnQUoN
+Cg0KU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPg0K
+U3VnZ2VzdGVkLWJ5OiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdvb2dsZS5jb20+DQpDYzogQW5k
+cmV5IFJ5YWJpbmluIDxhcnlhYmluaW5AdmlydHVvenpvLmNvbT4NCkNjOiBEbWl0cnkgVnl1a292
+IDxkdnl1a292QGdvb2dsZS5jb20+DQpDYzogQWxleGFuZGVyIFBvdGFwZW5rbyA8Z2xpZGVyQGdv
+b2dsZS5jb20+DQpDYzogQW5kcmV3IE1vcnRvbiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz4N
+CkNjOiBQYXVsIEUuIE1jS2VubmV5IDxwYXVsbWNrQGtlcm5lbC5vcmc+DQpDYzogSm9zaCBUcmlw
+bGV0dCA8am9zaEBqb3NodHJpcGxldHQub3JnPg0KQ2M6IE1hdGhpZXUgRGVzbm95ZXJzIDxtYXRo
+aWV1LmRlc25veWVyc0BlZmZpY2lvcy5jb20+DQpDYzogTGFpIEppYW5nc2hhbiA8amlhbmdzaGFu
+bGFpQGdtYWlsLmNvbT4NCkNjOiBKb2VsIEZlcm5hbmRlcyA8am9lbEBqb2VsZmVybmFuZGVzLm9y
+Zz4NCi0tLQ0KIGluY2x1ZGUvbGludXgva2FzYW4uaCB8ICAyICsrDQoga2VybmVsL3JjdS90cmVl
+LmMgICAgIHwgIDIgKysNCiBsaWIvS2NvbmZpZy5rYXNhbiAgICAgfCAgMiArKw0KIG1tL2thc2Fu
+L2NvbW1vbi5jICAgICB8ICA0ICsrLS0NCiBtbS9rYXNhbi9nZW5lcmljLmMgICAgfCAyMCArKysr
+KysrKysrKysrKysrKysrKw0KIG1tL2thc2FuL2thc2FuLmggICAgICB8IDEwICsrKysrKysrKysN
+CiBtbS9rYXNhbi9yZXBvcnQuYyAgICAgfCAyNCArKysrKysrKysrKysrKysrKysrKysrKysNCiA3
+IGZpbGVzIGNoYW5nZWQsIDYyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYg
+LS1naXQgYS9pbmNsdWRlL2xpbnV4L2thc2FuLmggYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCmlu
+ZGV4IDMxMzE0Y2E3YzYzNS4uMjNiN2VlMDA1NzJkIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51
+eC9rYXNhbi5oDQorKysgYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCkBAIC0xNzQsMTEgKzE3NCwx
+MyBAQCBzdGF0aWMgaW5saW5lIHNpemVfdCBrYXNhbl9tZXRhZGF0YV9zaXplKHN0cnVjdCBrbWVt
+X2NhY2hlICpjYWNoZSkgeyByZXR1cm4gMDsgfQ0KIA0KIHZvaWQga2FzYW5fY2FjaGVfc2hyaW5r
+KHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSk7DQogdm9pZCBrYXNhbl9jYWNoZV9zaHV0ZG93bihz
+dHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpOw0KK3ZvaWQga2FzYW5fcmVjb3JkX2F1eF9zdGFjayh2
+b2lkICpwdHIpOw0KIA0KICNlbHNlIC8qIENPTkZJR19LQVNBTl9HRU5FUklDICovDQogDQogc3Rh
+dGljIGlubGluZSB2b2lkIGthc2FuX2NhY2hlX3NocmluayhzdHJ1Y3Qga21lbV9jYWNoZSAqY2Fj
+aGUpIHt9DQogc3RhdGljIGlubGluZSB2b2lkIGthc2FuX2NhY2hlX3NodXRkb3duKHN0cnVjdCBr
+bWVtX2NhY2hlICpjYWNoZSkge30NCitzdGF0aWMgaW5saW5lIHZvaWQga2FzYW5fcmVjb3JkX2F1
+eF9zdGFjayh2b2lkICpwdHIpIHt9DQogDQogI2VuZGlmIC8qIENPTkZJR19LQVNBTl9HRU5FUklD
+ICovDQogDQpkaWZmIC0tZ2l0IGEva2VybmVsL3JjdS90cmVlLmMgYi9rZXJuZWwvcmN1L3RyZWUu
+Yw0KaW5kZXggMDY1NDhlMmViYjcyLi4zNmE0ZmY3ZjMyMGIgMTAwNjQ0DQotLS0gYS9rZXJuZWwv
+cmN1L3RyZWUuYw0KKysrIGIva2VybmVsL3JjdS90cmVlLmMNCkBAIC01Nyw2ICs1Nyw3IEBADQog
+I2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCiAjaW5jbHVkZSA8bGludXgvc2NoZWQvaXNvbGF0aW9u
+Lmg+DQogI2luY2x1ZGUgPGxpbnV4L3NjaGVkL2Nsb2NrLmg+DQorI2luY2x1ZGUgPGxpbnV4L2th
+c2FuLmg+DQogI2luY2x1ZGUgIi4uL3RpbWUvdGljay1pbnRlcm5hbC5oIg0KIA0KICNpbmNsdWRl
+ICJ0cmVlLmgiDQpAQCAtMjY2OCw2ICsyNjY5LDcgQEAgX19jYWxsX3JjdShzdHJ1Y3QgcmN1X2hl
+YWQgKmhlYWQsIHJjdV9jYWxsYmFja190IGZ1bmMpDQogCWhlYWQtPmZ1bmMgPSBmdW5jOw0KIAlo
+ZWFkLT5uZXh0ID0gTlVMTDsNCiAJbG9jYWxfaXJxX3NhdmUoZmxhZ3MpOw0KKwlrYXNhbl9yZWNv
+cmRfYXV4X3N0YWNrKGhlYWQpOw0KIAlyZHAgPSB0aGlzX2NwdV9wdHIoJnJjdV9kYXRhKTsNCiAN
+CiAJLyogQWRkIHRoZSBjYWxsYmFjayB0byBvdXIgbGlzdC4gKi8NCmRpZmYgLS1naXQgYS9saWIv
+S2NvbmZpZy5rYXNhbiBiL2xpYi9LY29uZmlnLmthc2FuDQppbmRleCA4MWY1NDY0ZWE5ZTEuLjRl
+ODNjZjZlM2NhYSAxMDA2NDQNCi0tLSBhL2xpYi9LY29uZmlnLmthc2FuDQorKysgYi9saWIvS2Nv
+bmZpZy5rYXNhbg0KQEAgLTU4LDYgKzU4LDggQEAgY29uZmlnIEtBU0FOX0dFTkVSSUMNCiAJICBG
+b3IgYmV0dGVyIGVycm9yIGRldGVjdGlvbiBlbmFibGUgQ09ORklHX1NUQUNLVFJBQ0UuDQogCSAg
+Q3VycmVudGx5IENPTkZJR19LQVNBTl9HRU5FUklDIGRvZXNuJ3Qgd29yayB3aXRoIENPTkZJR19E
+RUJVR19TTEFCDQogCSAgKHRoZSByZXN1bHRpbmcga2VybmVsIGRvZXMgbm90IGJvb3QpLg0KKwkg
+IEluIGdlbmVyaWMgbW9kZSBLQVNBTiBwcmludHMgdGhlIGxhc3QgdHdvIGNhbGxfcmN1KCkgY2Fs
+bCBzdGFja3MgaW4NCisJICByZXBvcnRzLg0KIA0KIGNvbmZpZyBLQVNBTl9TV19UQUdTDQogCWJv
+b2wgIlNvZnR3YXJlIHRhZy1iYXNlZCBtb2RlIg0KZGlmZiAtLWdpdCBhL21tL2thc2FuL2NvbW1v
+bi5jIGIvbW0va2FzYW4vY29tbW9uLmMNCmluZGV4IDI5MDYzNThlNDJmMC4uOGJjNjE4Mjg5YmIx
+IDEwMDY0NA0KLS0tIGEvbW0va2FzYW4vY29tbW9uLmMNCisrKyBiL21tL2thc2FuL2NvbW1vbi5j
+DQpAQCAtNDEsNyArNDEsNyBAQA0KICNpbmNsdWRlICJrYXNhbi5oIg0KICNpbmNsdWRlICIuLi9z
+bGFiLmgiDQogDQotc3RhdGljIGlubGluZSBkZXBvdF9zdGFja19oYW5kbGVfdCBzYXZlX3N0YWNr
+KGdmcF90IGZsYWdzKQ0KK2RlcG90X3N0YWNrX2hhbmRsZV90IGthc2FuX3NhdmVfc3RhY2soZ2Zw
+X3QgZmxhZ3MpDQogew0KIAl1bnNpZ25lZCBsb25nIGVudHJpZXNbS0FTQU5fU1RBQ0tfREVQVEhd
+Ow0KIAl1bnNpZ25lZCBpbnQgbnJfZW50cmllczsNCkBAIC01NCw3ICs1NCw3IEBAIHN0YXRpYyBp
+bmxpbmUgZGVwb3Rfc3RhY2tfaGFuZGxlX3Qgc2F2ZV9zdGFjayhnZnBfdCBmbGFncykNCiBzdGF0
+aWMgaW5saW5lIHZvaWQgc2V0X3RyYWNrKHN0cnVjdCBrYXNhbl90cmFjayAqdHJhY2ssIGdmcF90
+IGZsYWdzKQ0KIHsNCiAJdHJhY2stPnBpZCA9IGN1cnJlbnQtPnBpZDsNCi0JdHJhY2stPnN0YWNr
+ID0gc2F2ZV9zdGFjayhmbGFncyk7DQorCXRyYWNrLT5zdGFjayA9IGthc2FuX3NhdmVfc3RhY2so
+ZmxhZ3MpOw0KIH0NCiANCiB2b2lkIGthc2FuX2VuYWJsZV9jdXJyZW50KHZvaWQpDQpkaWZmIC0t
+Z2l0IGEvbW0va2FzYW4vZ2VuZXJpYy5jIGIvbW0va2FzYW4vZ2VuZXJpYy5jDQppbmRleCA1NmZm
+ODg4NWZlMmUuLjc4ZDhlMGE3NWE4YSAxMDA2NDQNCi0tLSBhL21tL2thc2FuL2dlbmVyaWMuYw0K
+KysrIGIvbW0va2FzYW4vZ2VuZXJpYy5jDQpAQCAtMzI1LDMgKzMyNSwyMyBAQCBERUZJTkVfQVNB
+Tl9TRVRfU0hBRE9XKGYyKTsNCiBERUZJTkVfQVNBTl9TRVRfU0hBRE9XKGYzKTsNCiBERUZJTkVf
+QVNBTl9TRVRfU0hBRE9XKGY1KTsNCiBERUZJTkVfQVNBTl9TRVRfU0hBRE9XKGY4KTsNCisNCit2
+b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2sodm9pZCAqYWRkcikNCit7DQorCXN0cnVjdCBwYWdl
+ICpwYWdlID0ga2FzYW5fYWRkcl90b19wYWdlKGFkZHIpOw0KKwlzdHJ1Y3Qga21lbV9jYWNoZSAq
+Y2FjaGU7DQorCXN0cnVjdCBrYXNhbl9hbGxvY19tZXRhICphbGxvY19pbmZvOw0KKwl2b2lkICpv
+YmplY3Q7DQorDQorCWlmICghKHBhZ2UgJiYgUGFnZVNsYWIocGFnZSkpKQ0KKwkJcmV0dXJuOw0K
+Kw0KKwljYWNoZSA9IHBhZ2UtPnNsYWJfY2FjaGU7DQorCW9iamVjdCA9IG5lYXJlc3Rfb2JqKGNh
+Y2hlLCBwYWdlLCBhZGRyKTsNCisJYWxsb2NfaW5mbyA9IGdldF9hbGxvY19pbmZvKGNhY2hlLCBv
+YmplY3QpOw0KKw0KKwkvKiByZWNvcmQgbGFzdCB0d28gY2FsbF9yY3UoKSBjYWxsIHN0YWNrcyAq
+Lw0KKwlpZiAoYWxsb2NfaW5mby0+cmN1X3N0YWNrWzBdKQ0KKwkJYWxsb2NfaW5mby0+cmN1X3N0
+YWNrWzFdID0gYWxsb2NfaW5mby0+cmN1X3N0YWNrWzBdOw0KKwlhbGxvY19pbmZvLT5yY3Vfc3Rh
+Y2tbMF0gPSBrYXNhbl9zYXZlX3N0YWNrKEdGUF9OT1dBSVQpOw0KK30NCmRpZmYgLS1naXQgYS9t
+bS9rYXNhbi9rYXNhbi5oIGIvbW0va2FzYW4va2FzYW4uaA0KaW5kZXggZThmMzcxOTlkODg1Li44
+NzBjNWRkMDc3NTYgMTAwNjQ0DQotLS0gYS9tbS9rYXNhbi9rYXNhbi5oDQorKysgYi9tbS9rYXNh
+bi9rYXNhbi5oDQpAQCAtMTA0LDcgKzEwNCwxNSBAQCBzdHJ1Y3Qga2FzYW5fdHJhY2sgew0KIA0K
+IHN0cnVjdCBrYXNhbl9hbGxvY19tZXRhIHsNCiAJc3RydWN0IGthc2FuX3RyYWNrIGFsbG9jX3Ry
+YWNrOw0KKyNpZmRlZiBDT05GSUdfS0FTQU5fR0VORVJJQw0KKwkvKg0KKwkgKiBjYWxsX3JjdSgp
+IGNhbGwgc3RhY2sgaXMgc3RvcmVkIGludG8gc3RydWN0IGthc2FuX2FsbG9jX21ldGEuDQorCSAq
+IFRoZSBmcmVlIHN0YWNrIGlzIHN0b3JlZCBpbnRvIHN0cnVjdCBrYXNhbl9mcmVlX21ldGEuDQor
+CSAqLw0KKwlkZXBvdF9zdGFja19oYW5kbGVfdCByY3Vfc3RhY2tbMl07DQorI2Vsc2UNCiAJc3Ry
+dWN0IGthc2FuX3RyYWNrIGZyZWVfdHJhY2tbS0FTQU5fTlJfRlJFRV9TVEFDS1NdOw0KKyNlbmRp
+Zg0KICNpZmRlZiBDT05GSUdfS0FTQU5fU1dfVEFHU19JREVOVElGWQ0KIAl1OCBmcmVlX3BvaW50
+ZXJfdGFnW0tBU0FOX05SX0ZSRUVfU1RBQ0tTXTsNCiAJdTggZnJlZV90cmFja19pZHg7DQpAQCAt
+MTU5LDYgKzE2Nyw4IEBAIHZvaWQga2FzYW5fcmVwb3J0X2ludmFsaWRfZnJlZSh2b2lkICpvYmpl
+Y3QsIHVuc2lnbmVkIGxvbmcgaXApOw0KIA0KIHN0cnVjdCBwYWdlICprYXNhbl9hZGRyX3RvX3Bh
+Z2UoY29uc3Qgdm9pZCAqYWRkcik7DQogDQorZGVwb3Rfc3RhY2tfaGFuZGxlX3Qga2FzYW5fc2F2
+ZV9zdGFjayhnZnBfdCBmbGFncyk7DQorDQogI2lmIGRlZmluZWQoQ09ORklHX0tBU0FOX0dFTkVS
+SUMpICYmIFwNCiAJKGRlZmluZWQoQ09ORklHX1NMQUIpIHx8IGRlZmluZWQoQ09ORklHX1NMVUIp
+KQ0KIHZvaWQgcXVhcmFudGluZV9wdXQoc3RydWN0IGthc2FuX2ZyZWVfbWV0YSAqaW5mbywgc3Ry
+dWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9yZXBvcnQuYyBi
+L21tL2thc2FuL3JlcG9ydC5jDQppbmRleCA4MGYyM2M5ZGE2YjAuLjVlZTY2Y2Y3ZTI3YyAxMDA2
+NDQNCi0tLSBhL21tL2thc2FuL3JlcG9ydC5jDQorKysgYi9tbS9rYXNhbi9yZXBvcnQuYw0KQEAg
+LTE3OSw2ICsxNzksMTcgQEAgc3RhdGljIHN0cnVjdCBrYXNhbl90cmFjayAqa2FzYW5fZ2V0X2Zy
+ZWVfdHJhY2soc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KIAlyZXR1cm4gJmFsbG9jX21ldGEt
+PmZyZWVfdHJhY2tbaV07DQogfQ0KIA0KKyNpZmRlZiBDT05GSUdfS0FTQU5fR0VORVJJQw0KK3N0
+YXRpYyB2b2lkIHByaW50X3N0YWNrKGRlcG90X3N0YWNrX2hhbmRsZV90IHN0YWNrKQ0KK3sNCisJ
+dW5zaWduZWQgbG9uZyAqZW50cmllczsNCisJdW5zaWduZWQgaW50IG5yX2VudHJpZXM7DQorDQor
+CW5yX2VudHJpZXMgPSBzdGFja19kZXBvdF9mZXRjaChzdGFjaywgJmVudHJpZXMpOw0KKwlzdGFj
+a190cmFjZV9wcmludChlbnRyaWVzLCBucl9lbnRyaWVzLCAwKTsNCit9DQorI2VuZGlmDQorDQog
+c3RhdGljIHZvaWQgZGVzY3JpYmVfb2JqZWN0KHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwgdm9p
+ZCAqb2JqZWN0LA0KIAkJCQljb25zdCB2b2lkICphZGRyLCB1OCB0YWcpDQogew0KQEAgLTE5Miw2
+ICsyMDMsMTkgQEAgc3RhdGljIHZvaWQgZGVzY3JpYmVfb2JqZWN0KHN0cnVjdCBrbWVtX2NhY2hl
+ICpjYWNoZSwgdm9pZCAqb2JqZWN0LA0KIAkJZnJlZV90cmFjayA9IGthc2FuX2dldF9mcmVlX3Ry
+YWNrKGNhY2hlLCBvYmplY3QsIHRhZyk7DQogCQlwcmludF90cmFjayhmcmVlX3RyYWNrLCAiRnJl
+ZWQiKTsNCiAJCXByX2VycigiXG4iKTsNCisNCisjaWZkZWYgQ09ORklHX0tBU0FOX0dFTkVSSUMN
+CisJCWlmIChhbGxvY19pbmZvLT5yY3Vfc3RhY2tbMF0pIHsNCisJCQlwcl9lcnIoIkxhc3Qgb25l
+IGNhbGxfcmN1KCkgY2FsbCBzdGFjazpcbiIpOw0KKwkJCXByaW50X3N0YWNrKGFsbG9jX2luZm8t
+PnJjdV9zdGFja1swXSk7DQorCQkJcHJfZXJyKCJcbiIpOw0KKwkJfQ0KKwkJaWYgKGFsbG9jX2lu
+Zm8tPnJjdV9zdGFja1sxXSkgew0KKwkJCXByX2VycigiU2Vjb25kIHRvIGxhc3QgY2FsbF9yY3Uo
+KSBjYWxsIHN0YWNrOlxuIik7DQorCQkJcHJpbnRfc3RhY2soYWxsb2NfaW5mby0+cmN1X3N0YWNr
+WzFdKTsNCisJCQlwcl9lcnIoIlxuIik7DQorCQl9DQorI2VuZGlmDQogCX0NCiANCiAJZGVzY3Jp
+YmVfb2JqZWN0X2FkZHIoY2FjaGUsIG9iamVjdCwgYWRkcik7DQotLSANCjIuMTguMA0K
 
-Thanks for your information.
-
-I've already implemented IPI (same as you did [1], little difference
-in detail), hardlockup detector and perf in last year(2019) for
-debuggability.
-And now we tend to upstream to reduce kernel maintaining effort.
-I'm glad if someone in ARM can do this work :)
-
-Hi Julien,
-
-Does any Arm maintainers can proceed this action?
-This is really useful in debugging.
-Thank you!!
-
-
-
-[1] https://lkml.org/lkml/2020/4/24/328
-
-
-Lecopzer
-
-Sumit Garg <sumit.garg@linaro.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=8818=E6=
-=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=881:46=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> + Julien
->
-> Hi Lecopzer,
->
-> On Sat, 16 May 2020 at 18:20, Lecopzer Chen <lecopzer@gmail.com> wrote:
-> >
-> > These series implement Perf NMI funxtionality and depends on
-> > Pseudo NMI [1] which has been upstreamed.
-> >
-> > In arm64 with GICv3, Pseudo NMI was implemented for NMI-like interruts.
-> > That can be extended to Perf NMI which is the prerequisite for hard-loc=
-kup
-> > detector which had already a standard interface inside Linux.
-> >
-> > Thus the first step we need to implement perf NMI interface and make su=
-re
-> > it works fine.
-> >
->
-> This is something that is already implemented via Julien's patch-set
-> [1]. Its v4 has been floating since July, 2019 and I couldn't find any
-> major blocking comments but not sure why things haven't progressed
-> further.
->
-> Maybe Julien or Arm maintainers can provide updates on existing
-> patch-set [1] and how we should proceed further with this interesting
-> feature.
->
-> And regarding hard-lockup detection, I have been able to enable it
-> based on perf NMI events using Julien's perf patch-set [1]. Have a
-> look at the patch here [2].
->
-> [1] https://patchwork.kernel.org/cover/11047407/
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2020-May/732227=
-.html
->
-> -Sumit
->
-> > Perf NMI has been test by dd if=3D/dev/urandom of=3D/dev/null like the =
-link [2]
-> > did.
-> >
-> > [1] https://lkml.org/lkml/2019/1/31/535
-> > [2] https://www.linaro.org/blog/debugging-arm-kernels-using-nmifiq
-> >
-> >
-> > Lecopzer Chen (3):
-> >   arm_pmu: Add support for perf NMI interrupts registration
-> >   arm64: perf: Support NMI context for perf event ISR
-> >   arm64: Kconfig: Add support for the Perf NMI
-> >
-> >  arch/arm64/Kconfig             | 10 +++++++
-> >  arch/arm64/kernel/perf_event.c | 36 ++++++++++++++++++------
-> >  drivers/perf/arm_pmu.c         | 51 ++++++++++++++++++++++++++++++----
-> >  include/linux/perf/arm_pmu.h   |  6 ++++
-> >  4 files changed, 88 insertions(+), 15 deletions(-)
-> >
-> > --
-> > 2.25.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
