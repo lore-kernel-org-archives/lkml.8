@@ -2,194 +2,320 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF349C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A00BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8732070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2CD2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nHwFdGhZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NltKmP5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgERG1k (ORCPT
+        id S1726731AbgERG2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:27:40 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:27856 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726357AbgERG1k (ORCPT
+        Mon, 18 May 2020 02:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgERG2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:27:40 -0400
-X-UUID: 21cbb749ac784cbb9868ef3736957364-20200518
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=ISBcatq6mVn60qvM3IFa85BGa9k8Ralk+4f4AH+hBXM=;
-        b=nHwFdGhZOeP2uI3vKofQxDaPLR4DXBugFdRB/dWY0nvq/SZk6YlGgl04HRIxz4ZIhsqzP+V5EbKzPiTozrCPTRc+Ff0qvuFydhYYK/7uT+qcgzNBVneiHFI9tgpJS0T93MRHEMSLnhSIdCPOCd6h1oUylz430Gi1xln1srG6VbU=;
-X-UUID: 21cbb749ac784cbb9868ef3736957364-20200518
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1093623343; Mon, 18 May 2020 14:27:32 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 18 May 2020 14:27:30 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 18 May 2020 14:27:30 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v3 2/4] kasan: record and print the free track
-Date:   Mon, 18 May 2020 14:27:30 +0800
-Message-ID: <20200518062730.4665-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 18 May 2020 02:28:20 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF1CCC061A0C;
+        Sun, 17 May 2020 23:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=WBVjldVPlROyW79yyrIGXz/tzCpcEaJ8FqY6RWz6ets=; b=NltKmP5mJneBTQQV9GblVct4/S
+        laX/3GhvB/AVHn6bCMPCXtkOJpSh3ODMWyvvHyV7TtrJ0D+H+rOZN+Rs09cnGQLyG72iU46O04s+9
+        fAMth1M49zszpcxLrVngdbut/kP3R0aB1FnkpLMkfrqMY3lv4188qJJKiHDCMBJVEk8/MWqB1/0Jx
+        zVO/ZFNxQCjZbGn8z3hkg0q9xnjo3GYU6Izp6NZKvb8SiSARpn8WD2muBK6x8pTsRjQ7sQzZfM0ML
+        aG26Jz9bjh/BavbqNG9TZt5p8BK2hxg3J2ETZ6tdEXUO9JaB+EAlnIY7ANG3uUniL5Fqsd7xXdUqi
+        DG0Ldong==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaZG5-0002Zg-JJ; Mon, 18 May 2020 06:28:18 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/4] ipv6: move SIOCADDRT and SIOCDELRT handling into ->compat_ioctl
+Date:   Mon, 18 May 2020 08:28:06 +0200
+Message-Id: <20200518062808.756610-3-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518062808.756610-1-hch@lst.de>
+References: <20200518062808.756610-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TW92ZSBmcmVlIHRyYWNrIGZyb20gc2x1YiBhbGxvYyBtZXRhLWRhdGEgdG8gc2x1YiBmcmVlIG1l
-dGEtZGF0YSBpbg0Kb3JkZXIgdG8gbWFrZSBzdHJ1Y3Qga2FzYW5fZnJlZV9tZXRhIHNpemUgaXMg
-MTYgYnl0ZXMuIEl0IGlzIGEgZ29vZA0Kc2l6ZSBiZWNhdXNlIGl0IGlzIHRoZSBtaW5pbWFsIHJl
-ZHpvbmUgc2l6ZSBhbmQgYSBnb29kIG51bWJlciBvZg0KYWxpZ25tZW50Lg0KDQpGb3IgZnJlZSB0
-cmFjayBpbiBnZW5lcmljIEtBU0FOLCB3ZSBkbyB0aGUgbW9kaWZpY2F0aW9uIGluIHN0cnVjdA0K
-a2FzYW5fYWxsb2NfbWV0YSBhbmQga2FzYW5fZnJlZV9tZXRhOg0KLSByZW1vdmUgZnJlZSB0cmFj
-ayBmcm9tIGthc2FuX2FsbG9jX21ldGEuDQotIGFkZCBmcmVlIHRyYWNrIGludG8ga2FzYW5fZnJl
-ZV9tZXRhLg0KDQpbMV1odHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lk
-PTE5ODQzNw0KDQpTaWduZWQtb2ZmLWJ5OiBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBtZWRpYXRl
-ay5jb20+DQpTdWdnZXN0ZWQtYnk6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4N
-CkNjOiBBbmRyZXkgUnlhYmluaW4gPGFyeWFiaW5pbkB2aXJ0dW96em8uY29tPg0KQ2M6IERtaXRy
-eSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NCkNjOiBBbGV4YW5kZXIgUG90YXBlbmtvIDxn
-bGlkZXJAZ29vZ2xlLmNvbT4NCi0tLQ0KIG1tL2thc2FuL2NvbW1vbi5jICB8IDMzICsrKysrKysr
-KystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIG1tL2thc2FuL2dlbmVyaWMuYyB8IDE4ICsrKysr
-KysrKysrKysrKysrKw0KIG1tL2thc2FuL2thc2FuLmggICB8ICA3ICsrKysrKysNCiBtbS9rYXNh
-bi9yZXBvcnQuYyAgfCAyMCAtLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIG1tL2thc2FuL3RhZ3MuYyAg
-ICB8IDM3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCiA1IGZpbGVzIGNo
-YW5nZWQsIDcyIGluc2VydGlvbnMoKyksIDQzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEv
-bW0va2FzYW4vY29tbW9uLmMgYi9tbS9rYXNhbi9jb21tb24uYw0KaW5kZXggOGJjNjE4Mjg5YmIx
-Li42NTAwYmMyYmI3MGMgMTAwNjQ0DQotLS0gYS9tbS9rYXNhbi9jb21tb24uYw0KKysrIGIvbW0v
-a2FzYW4vY29tbW9uLmMNCkBAIC01MSw3ICs1MSw3IEBAIGRlcG90X3N0YWNrX2hhbmRsZV90IGth
-c2FuX3NhdmVfc3RhY2soZ2ZwX3QgZmxhZ3MpDQogCXJldHVybiBzdGFja19kZXBvdF9zYXZlKGVu
-dHJpZXMsIG5yX2VudHJpZXMsIGZsYWdzKTsNCiB9DQogDQotc3RhdGljIGlubGluZSB2b2lkIHNl
-dF90cmFjayhzdHJ1Y3Qga2FzYW5fdHJhY2sgKnRyYWNrLCBnZnBfdCBmbGFncykNCit2b2lkIGth
-c2FuX3NldF90cmFjayhzdHJ1Y3Qga2FzYW5fdHJhY2sgKnRyYWNrLCBnZnBfdCBmbGFncykNCiB7
-DQogCXRyYWNrLT5waWQgPSBjdXJyZW50LT5waWQ7DQogCXRyYWNrLT5zdGFjayA9IGthc2FuX3Nh
-dmVfc3RhY2soZmxhZ3MpOw0KQEAgLTI0OSw5ICsyNDksNyBAQCB2b2lkIGthc2FuX2NhY2hlX2Ny
-ZWF0ZShzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsIHVuc2lnbmVkIGludCAqc2l6ZSwNCiAJKnNp
-emUgKz0gc2l6ZW9mKHN0cnVjdCBrYXNhbl9hbGxvY19tZXRhKTsNCiANCiAJLyogQWRkIGZyZWUg
-bWV0YS4gKi8NCi0JaWYgKElTX0VOQUJMRUQoQ09ORklHX0tBU0FOX0dFTkVSSUMpICYmDQotCSAg
-ICAoY2FjaGUtPmZsYWdzICYgU0xBQl9UWVBFU0FGRV9CWV9SQ1UgfHwgY2FjaGUtPmN0b3IgfHwN
-Ci0JICAgICBjYWNoZS0+b2JqZWN0X3NpemUgPCBzaXplb2Yoc3RydWN0IGthc2FuX2ZyZWVfbWV0
-YSkpKSB7DQorCWlmIChJU19FTkFCTEVEKENPTkZJR19LQVNBTl9HRU5FUklDKSkgew0KIAkJY2Fj
-aGUtPmthc2FuX2luZm8uZnJlZV9tZXRhX29mZnNldCA9ICpzaXplOw0KIAkJKnNpemUgKz0gc2l6
-ZW9mKHN0cnVjdCBrYXNhbl9mcmVlX21ldGEpOw0KIAl9DQpAQCAtMjk5LDI0ICsyOTcsNiBAQCBz
-dHJ1Y3Qga2FzYW5fZnJlZV9tZXRhICpnZXRfZnJlZV9pbmZvKHN0cnVjdCBrbWVtX2NhY2hlICpj
-YWNoZSwNCiAJcmV0dXJuICh2b2lkICopb2JqZWN0ICsgY2FjaGUtPmthc2FuX2luZm8uZnJlZV9t
-ZXRhX29mZnNldDsNCiB9DQogDQotDQotc3RhdGljIHZvaWQga2FzYW5fc2V0X2ZyZWVfaW5mbyhz
-dHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsDQotCQl2b2lkICpvYmplY3QsIHU4IHRhZykNCi17DQot
-CXN0cnVjdCBrYXNhbl9hbGxvY19tZXRhICphbGxvY19tZXRhOw0KLQl1OCBpZHggPSAwOw0KLQ0K
-LQlhbGxvY19tZXRhID0gZ2V0X2FsbG9jX2luZm8oY2FjaGUsIG9iamVjdCk7DQotDQotI2lmZGVm
-IENPTkZJR19LQVNBTl9TV19UQUdTX0lERU5USUZZDQotCWlkeCA9IGFsbG9jX21ldGEtPmZyZWVf
-dHJhY2tfaWR4Ow0KLQlhbGxvY19tZXRhLT5mcmVlX3BvaW50ZXJfdGFnW2lkeF0gPSB0YWc7DQot
-CWFsbG9jX21ldGEtPmZyZWVfdHJhY2tfaWR4ID0gKGlkeCArIDEpICUgS0FTQU5fTlJfRlJFRV9T
-VEFDS1M7DQotI2VuZGlmDQotDQotCXNldF90cmFjaygmYWxsb2NfbWV0YS0+ZnJlZV90cmFja1tp
-ZHhdLCBHRlBfTk9XQUlUKTsNCi19DQotDQogdm9pZCBrYXNhbl9wb2lzb25fc2xhYihzdHJ1Y3Qg
-cGFnZSAqcGFnZSkNCiB7DQogCXVuc2lnbmVkIGxvbmcgaTsNCkBAIC0zOTYsNiArMzc2LDEzIEBA
-IHZvaWQgKiBfX211c3RfY2hlY2sga2FzYW5faW5pdF9zbGFiX29iaihzdHJ1Y3Qga21lbV9jYWNo
-ZSAqY2FjaGUsDQogCWFsbG9jX2luZm8gPSBnZXRfYWxsb2NfaW5mbyhjYWNoZSwgb2JqZWN0KTsN
-CiAJX19tZW1zZXQoYWxsb2NfaW5mbywgMCwgc2l6ZW9mKCphbGxvY19pbmZvKSk7DQogDQorCWlm
-IChJU19FTkFCTEVEKENPTkZJR19LQVNBTl9HRU5FUklDKSkgew0KKwkJc3RydWN0IGthc2FuX2Zy
-ZWVfbWV0YSAqZnJlZV9pbmZvOw0KKw0KKwkJZnJlZV9pbmZvID0gZ2V0X2ZyZWVfaW5mbyhjYWNo
-ZSwgb2JqZWN0KTsNCisJCV9fbWVtc2V0KGZyZWVfaW5mbywgMCwgc2l6ZW9mKCpmcmVlX2luZm8p
-KTsNCisJfQ0KKw0KIAlpZiAoSVNfRU5BQkxFRChDT05GSUdfS0FTQU5fU1dfVEFHUykpDQogCQlv
-YmplY3QgPSBzZXRfdGFnKG9iamVjdCwNCiAJCQkJYXNzaWduX3RhZyhjYWNoZSwgb2JqZWN0LCB0
-cnVlLCBmYWxzZSkpOw0KQEAgLTQ5Miw3ICs0NzksNyBAQCBzdGF0aWMgdm9pZCAqX19rYXNhbl9r
-bWFsbG9jKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwgY29uc3Qgdm9pZCAqb2JqZWN0LA0KIAkJ
-S0FTQU5fS01BTExPQ19SRURaT05FKTsNCiANCiAJaWYgKGNhY2hlLT5mbGFncyAmIFNMQUJfS0FT
-QU4pDQotCQlzZXRfdHJhY2soJmdldF9hbGxvY19pbmZvKGNhY2hlLCBvYmplY3QpLT5hbGxvY190
-cmFjaywgZmxhZ3MpOw0KKwkJa2FzYW5fc2V0X3RyYWNrKCZnZXRfYWxsb2NfaW5mbyhjYWNoZSwg
-b2JqZWN0KS0+YWxsb2NfdHJhY2ssIGZsYWdzKTsNCiANCiAJcmV0dXJuIHNldF90YWcob2JqZWN0
-LCB0YWcpOw0KIH0NCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9nZW5lcmljLmMgYi9tbS9rYXNhbi9n
-ZW5lcmljLmMNCmluZGV4IDc4ZDhlMGE3NWE4YS4uOTg4YmMwOTViNzM4IDEwMDY0NA0KLS0tIGEv
-bW0va2FzYW4vZ2VuZXJpYy5jDQorKysgYi9tbS9rYXNhbi9nZW5lcmljLmMNCkBAIC0zNDUsMyAr
-MzQ1LDIxIEBAIHZvaWQga2FzYW5fcmVjb3JkX2F1eF9zdGFjayh2b2lkICphZGRyKQ0KIAkJYWxs
-b2NfaW5mby0+cmN1X3N0YWNrWzFdID0gYWxsb2NfaW5mby0+cmN1X3N0YWNrWzBdOw0KIAlhbGxv
-Y19pbmZvLT5yY3Vfc3RhY2tbMF0gPSBrYXNhbl9zYXZlX3N0YWNrKEdGUF9OT1dBSVQpOw0KIH0N
-CisNCit2b2lkIGthc2FuX3NldF9mcmVlX2luZm8oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0K
-KwkJCQl2b2lkICpvYmplY3QsIHU4IHRhZykNCit7DQorCXN0cnVjdCBrYXNhbl9mcmVlX21ldGEg
-KmZyZWVfbWV0YTsNCisNCisJZnJlZV9tZXRhID0gZ2V0X2ZyZWVfaW5mbyhjYWNoZSwgb2JqZWN0
-KTsNCisJa2FzYW5fc2V0X3RyYWNrKCZmcmVlX21ldGEtPmZyZWVfdHJhY2ssIEdGUF9OT1dBSVQp
-Ow0KK30NCisNCitzdHJ1Y3Qga2FzYW5fdHJhY2sgKmthc2FuX2dldF9mcmVlX3RyYWNrKHN0cnVj
-dCBrbWVtX2NhY2hlICpjYWNoZSwNCisJCQkJdm9pZCAqb2JqZWN0LCB1OCB0YWcpDQorew0KKwlz
-dHJ1Y3Qga2FzYW5fZnJlZV9tZXRhICpmcmVlX21ldGE7DQorDQorCWZyZWVfbWV0YSA9IGdldF9m
-cmVlX2luZm8oY2FjaGUsIG9iamVjdCk7DQorCXJldHVybiAmZnJlZV9tZXRhLT5mcmVlX3RyYWNr
-Ow0KK30NCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9rYXNhbi5oIGIvbW0va2FzYW4va2FzYW4uaA0K
-aW5kZXggODcwYzVkZDA3NzU2Li44N2VlMzYyNmI4YjAgMTAwNjQ0DQotLS0gYS9tbS9rYXNhbi9r
-YXNhbi5oDQorKysgYi9tbS9rYXNhbi9rYXNhbi5oDQpAQCAtMTI3LDYgKzEyNyw5IEBAIHN0cnVj
-dCBrYXNhbl9mcmVlX21ldGEgew0KIAkgKiBPdGhlcndpc2UgaXQgbWlnaHQgYmUgdXNlZCBmb3Ig
-dGhlIGFsbG9jYXRvciBmcmVlbGlzdC4NCiAJICovDQogCXN0cnVjdCBxbGlzdF9ub2RlIHF1YXJh
-bnRpbmVfbGluazsNCisjaWZkZWYgQ09ORklHX0tBU0FOX0dFTkVSSUMNCisJc3RydWN0IGthc2Fu
-X3RyYWNrIGZyZWVfdHJhY2s7DQorI2VuZGlmDQogfTsNCiANCiBzdHJ1Y3Qga2FzYW5fYWxsb2Nf
-bWV0YSAqZ2V0X2FsbG9jX2luZm8oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KQEAgLTE2OCw2
-ICsxNzEsMTAgQEAgdm9pZCBrYXNhbl9yZXBvcnRfaW52YWxpZF9mcmVlKHZvaWQgKm9iamVjdCwg
-dW5zaWduZWQgbG9uZyBpcCk7DQogc3RydWN0IHBhZ2UgKmthc2FuX2FkZHJfdG9fcGFnZShjb25z
-dCB2b2lkICphZGRyKTsNCiANCiBkZXBvdF9zdGFja19oYW5kbGVfdCBrYXNhbl9zYXZlX3N0YWNr
-KGdmcF90IGZsYWdzKTsNCit2b2lkIGthc2FuX3NldF90cmFjayhzdHJ1Y3Qga2FzYW5fdHJhY2sg
-KnRyYWNrLCBnZnBfdCBmbGFncyk7DQordm9pZCBrYXNhbl9zZXRfZnJlZV9pbmZvKHN0cnVjdCBr
-bWVtX2NhY2hlICpjYWNoZSwgdm9pZCAqb2JqZWN0LCB1OCB0YWcpOw0KK3N0cnVjdCBrYXNhbl90
-cmFjayAqa2FzYW5fZ2V0X2ZyZWVfdHJhY2soc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KKwkJ
-CQl2b2lkICpvYmplY3QsIHU4IHRhZyk7DQogDQogI2lmIGRlZmluZWQoQ09ORklHX0tBU0FOX0dF
-TkVSSUMpICYmIFwNCiAJKGRlZmluZWQoQ09ORklHX1NMQUIpIHx8IGRlZmluZWQoQ09ORklHX1NM
-VUIpKQ0KZGlmZiAtLWdpdCBhL21tL2thc2FuL3JlcG9ydC5jIGIvbW0va2FzYW4vcmVwb3J0LmMN
-CmluZGV4IDVlZTY2Y2Y3ZTI3Yy4uN2U5ZjlmNmQ1ZTg1IDEwMDY0NA0KLS0tIGEvbW0va2FzYW4v
-cmVwb3J0LmMNCisrKyBiL21tL2thc2FuL3JlcG9ydC5jDQpAQCAtMTU5LDI2ICsxNTksNiBAQCBz
-dGF0aWMgdm9pZCBkZXNjcmliZV9vYmplY3RfYWRkcihzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUs
-IHZvaWQgKm9iamVjdCwNCiAJCSh2b2lkICopKG9iamVjdF9hZGRyICsgY2FjaGUtPm9iamVjdF9z
-aXplKSk7DQogfQ0KIA0KLXN0YXRpYyBzdHJ1Y3Qga2FzYW5fdHJhY2sgKmthc2FuX2dldF9mcmVl
-X3RyYWNrKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwNCi0JCXZvaWQgKm9iamVjdCwgdTggdGFn
-KQ0KLXsNCi0Jc3RydWN0IGthc2FuX2FsbG9jX21ldGEgKmFsbG9jX21ldGE7DQotCWludCBpID0g
-MDsNCi0NCi0JYWxsb2NfbWV0YSA9IGdldF9hbGxvY19pbmZvKGNhY2hlLCBvYmplY3QpOw0KLQ0K
-LSNpZmRlZiBDT05GSUdfS0FTQU5fU1dfVEFHU19JREVOVElGWQ0KLQlmb3IgKGkgPSAwOyBpIDwg
-S0FTQU5fTlJfRlJFRV9TVEFDS1M7IGkrKykgew0KLQkJaWYgKGFsbG9jX21ldGEtPmZyZWVfcG9p
-bnRlcl90YWdbaV0gPT0gdGFnKQ0KLQkJCWJyZWFrOw0KLQl9DQotCWlmIChpID09IEtBU0FOX05S
-X0ZSRUVfU1RBQ0tTKQ0KLQkJaSA9IGFsbG9jX21ldGEtPmZyZWVfdHJhY2tfaWR4Ow0KLSNlbmRp
-Zg0KLQ0KLQlyZXR1cm4gJmFsbG9jX21ldGEtPmZyZWVfdHJhY2tbaV07DQotfQ0KLQ0KICNpZmRl
-ZiBDT05GSUdfS0FTQU5fR0VORVJJQw0KIHN0YXRpYyB2b2lkIHByaW50X3N0YWNrKGRlcG90X3N0
-YWNrX2hhbmRsZV90IHN0YWNrKQ0KIHsNCmRpZmYgLS1naXQgYS9tbS9rYXNhbi90YWdzLmMgYi9t
-bS9rYXNhbi90YWdzLmMNCmluZGV4IDI1Yjc3MzRlNzAxMy4uMjAxZGVlNWQ2YWUwIDEwMDY0NA0K
-LS0tIGEvbW0va2FzYW4vdGFncy5jDQorKysgYi9tbS9rYXNhbi90YWdzLmMNCkBAIC0xNjIsMyAr
-MTYyLDQwIEBAIHZvaWQgX19od2FzYW5fdGFnX21lbW9yeSh1bnNpZ25lZCBsb25nIGFkZHIsIHU4
-IHRhZywgdW5zaWduZWQgbG9uZyBzaXplKQ0KIAlrYXNhbl9wb2lzb25fc2hhZG93KCh2b2lkICop
-YWRkciwgc2l6ZSwgdGFnKTsNCiB9DQogRVhQT1JUX1NZTUJPTChfX2h3YXNhbl90YWdfbWVtb3J5
-KTsNCisNCit2b2lkIGthc2FuX3NldF9mcmVlX2luZm8oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hl
-LA0KKwkJCQl2b2lkICpvYmplY3QsIHU4IHRhZykNCit7DQorCXN0cnVjdCBrYXNhbl9hbGxvY19t
-ZXRhICphbGxvY19tZXRhOw0KKwl1OCBpZHggPSAwOw0KKw0KKwlhbGxvY19tZXRhID0gZ2V0X2Fs
-bG9jX2luZm8oY2FjaGUsIG9iamVjdCk7DQorDQorI2lmZGVmIENPTkZJR19LQVNBTl9TV19UQUdT
-X0lERU5USUZZDQorCWlkeCA9IGFsbG9jX21ldGEtPmZyZWVfdHJhY2tfaWR4Ow0KKwlhbGxvY19t
-ZXRhLT5mcmVlX3BvaW50ZXJfdGFnW2lkeF0gPSB0YWc7DQorCWFsbG9jX21ldGEtPmZyZWVfdHJh
-Y2tfaWR4ID0gKGlkeCArIDEpICUgS0FTQU5fTlJfRlJFRV9TVEFDS1M7DQorI2VuZGlmDQorDQor
-CWthc2FuX3NldF90cmFjaygmYWxsb2NfbWV0YS0+ZnJlZV90cmFja1tpZHhdLCBHRlBfTk9XQUlU
-KTsNCit9DQorDQorc3RydWN0IGthc2FuX3RyYWNrICprYXNhbl9nZXRfZnJlZV90cmFjayhzdHJ1
-Y3Qga21lbV9jYWNoZSAqY2FjaGUsDQorCQkJCXZvaWQgKm9iamVjdCwgdTggdGFnKQ0KK3sNCisJ
-c3RydWN0IGthc2FuX2FsbG9jX21ldGEgKmFsbG9jX21ldGE7DQorCWludCBpID0gMDsNCisNCisJ
-YWxsb2NfbWV0YSA9IGdldF9hbGxvY19pbmZvKGNhY2hlLCBvYmplY3QpOw0KKw0KKyNpZmRlZiBD
-T05GSUdfS0FTQU5fU1dfVEFHU19JREVOVElGWQ0KKwlmb3IgKGkgPSAwOyBpIDwgS0FTQU5fTlJf
-RlJFRV9TVEFDS1M7IGkrKykgew0KKwkJaWYgKGFsbG9jX21ldGEtPmZyZWVfcG9pbnRlcl90YWdb
-aV0gPT0gdGFnKQ0KKwkJCWJyZWFrOw0KKwl9DQorCWlmIChpID09IEtBU0FOX05SX0ZSRUVfU1RB
-Q0tTKQ0KKwkJaSA9IGFsbG9jX21ldGEtPmZyZWVfdHJhY2tfaWR4Ow0KKyNlbmRpZg0KKw0KKwly
-ZXR1cm4gJmFsbG9jX21ldGEtPmZyZWVfdHJhY2tbaV07DQorfQ0KLS0gDQoyLjE4LjANCg==
+To prepare removing the global routing_ioctl hack start lifting the code
+into a newly added ipv6 ->compat_ioctl handler.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/net/ipv6.h   |  2 ++
+ net/dccp/ipv6.c      |  1 +
+ net/ipv6/af_inet6.c  | 53 +++++++++++++++++++++++++++++++++++++
+ net/ipv6/raw.c       |  1 +
+ net/l2tp/l2tp_ip6.c  |  1 +
+ net/mptcp/protocol.c |  1 +
+ net/sctp/ipv6.c      |  1 +
+ net/socket.c         | 63 ++++++++++++--------------------------------
+ 8 files changed, 77 insertions(+), 46 deletions(-)
+
+diff --git a/include/net/ipv6.h b/include/net/ipv6.h
+index 955badd1e8ffc..5fc3a9d7b053e 100644
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -1115,6 +1115,8 @@ int inet6_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len);
+ int inet6_getname(struct socket *sock, struct sockaddr *uaddr,
+ 		  int peer);
+ int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
++int inet6_compat_ioctl(struct socket *sock, unsigned int cmd,
++		unsigned long arg);
+ 
+ int inet6_hash_connect(struct inet_timewait_death_row *death_row,
+ 			      struct sock *sk);
+diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
+index 1e5e08cc0bfc3..650187d688519 100644
+--- a/net/dccp/ipv6.c
++++ b/net/dccp/ipv6.c
+@@ -1082,6 +1082,7 @@ static const struct proto_ops inet6_dccp_ops = {
+ 	.mmap		   = sock_no_mmap,
+ 	.sendpage	   = sock_no_sendpage,
+ #ifdef CONFIG_COMPAT
++	.compat_ioctl	   = inet6_compat_ioctl,
+ 	.compat_setsockopt = compat_sock_common_setsockopt,
+ 	.compat_getsockopt = compat_sock_common_getsockopt,
+ #endif
+diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+index a618beb9b6d54..b69496eaf9226 100644
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -60,6 +60,7 @@
+ #include <net/calipso.h>
+ #include <net/seg6.h>
+ #include <net/rpl.h>
++#include <net/compat.h>
+ 
+ #include <linux/uaccess.h>
+ #include <linux/mroute6.h>
+@@ -571,6 +572,56 @@ int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ }
+ EXPORT_SYMBOL(inet6_ioctl);
+ 
++#ifdef CONFIG_COMPAT
++struct compat_in6_rtmsg {
++	struct in6_addr		rtmsg_dst;
++	struct in6_addr		rtmsg_src;
++	struct in6_addr		rtmsg_gateway;
++	u32			rtmsg_type;
++	u16			rtmsg_dst_len;
++	u16			rtmsg_src_len;
++	u32			rtmsg_metric;
++	u32			rtmsg_info;
++	u32			rtmsg_flags;
++	s32			rtmsg_ifindex;
++};
++
++static int inet6_compat_routing_ioctl(struct sock *sk, unsigned int cmd,
++		struct compat_in6_rtmsg __user *ur)
++{
++	struct in6_rtmsg rt;
++
++	if (copy_from_user(&rt.rtmsg_dst, &ur->rtmsg_dst,
++			3 * sizeof(struct in6_addr)) ||
++	    get_user(rt.rtmsg_type, &ur->rtmsg_type) ||
++	    get_user(rt.rtmsg_dst_len, &ur->rtmsg_dst_len) ||
++	    get_user(rt.rtmsg_src_len, &ur->rtmsg_src_len) ||
++	    get_user(rt.rtmsg_metric, &ur->rtmsg_metric) ||
++	    get_user(rt.rtmsg_info, &ur->rtmsg_info) ||
++	    get_user(rt.rtmsg_flags, &ur->rtmsg_flags) ||
++	    get_user(rt.rtmsg_ifindex, &ur->rtmsg_ifindex))
++		return -EFAULT;
++
++
++	return ipv6_route_ioctl(sock_net(sk), cmd, &rt);
++}
++
++int inet6_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
++{
++	void __user *argp = compat_ptr(arg);
++	struct sock *sk = sock->sk;
++
++	switch (cmd) {
++	case SIOCADDRT:
++	case SIOCDELRT:
++		return inet6_compat_routing_ioctl(sk, cmd, argp);
++	default:
++		return -ENOIOCTLCMD;
++	}
++}
++EXPORT_SYMBOL_GPL(inet6_compat_ioctl);
++#endif /* CONFIG_COMPAT */
++
+ INDIRECT_CALLABLE_DECLARE(int udpv6_sendmsg(struct sock *, struct msghdr *,
+ 					    size_t));
+ int inet6_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
+@@ -632,6 +683,7 @@ const struct proto_ops inet6_stream_ops = {
+ 	.read_sock	   = tcp_read_sock,
+ 	.peek_len	   = tcp_peek_len,
+ #ifdef CONFIG_COMPAT
++	.compat_ioctl	   = inet6_compat_ioctl,
+ 	.compat_setsockopt = compat_sock_common_setsockopt,
+ 	.compat_getsockopt = compat_sock_common_getsockopt,
+ #endif
+@@ -660,6 +712,7 @@ const struct proto_ops inet6_dgram_ops = {
+ 	.sendpage	   = sock_no_sendpage,
+ 	.set_peek_off	   = sk_set_peek_off,
+ #ifdef CONFIG_COMPAT
++	.compat_ioctl	   = inet6_compat_ioctl,
+ 	.compat_setsockopt = compat_sock_common_setsockopt,
+ 	.compat_getsockopt = compat_sock_common_getsockopt,
+ #endif
+diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
+index 0028aa1d78691..8ef5a7b30524f 100644
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -1377,6 +1377,7 @@ const struct proto_ops inet6_sockraw_ops = {
+ 	.mmap		   = sock_no_mmap,
+ 	.sendpage	   = sock_no_sendpage,
+ #ifdef CONFIG_COMPAT
++	.compat_ioctl	   = inet6_compat_ioctl,
+ 	.compat_setsockopt = compat_sock_common_setsockopt,
+ 	.compat_getsockopt = compat_sock_common_getsockopt,
+ #endif
+diff --git a/net/l2tp/l2tp_ip6.c b/net/l2tp/l2tp_ip6.c
+index d148766f40d11..fdfef926c5916 100644
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -758,6 +758,7 @@ static const struct proto_ops l2tp_ip6_ops = {
+ 	.mmap		   = sock_no_mmap,
+ 	.sendpage	   = sock_no_sendpage,
+ #ifdef CONFIG_COMPAT
++	.compat_ioctl	   = inet6_compat_ioctl,
+ 	.compat_setsockopt = compat_sock_common_setsockopt,
+ 	.compat_getsockopt = compat_sock_common_getsockopt,
+ #endif
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e3a628bea2b81..ba9d3d5c625f7 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2068,6 +2068,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+ 	.mmap		   = sock_no_mmap,
+ 	.sendpage	   = inet_sendpage,
+ #ifdef CONFIG_COMPAT
++	.compat_ioctl	   = inet6_compat_ioctl,
+ 	.compat_setsockopt = compat_sock_common_setsockopt,
+ 	.compat_getsockopt = compat_sock_common_getsockopt,
+ #endif
+diff --git a/net/sctp/ipv6.c b/net/sctp/ipv6.c
+index c87af430107ae..ccfa0ab3e7f48 100644
+--- a/net/sctp/ipv6.c
++++ b/net/sctp/ipv6.c
+@@ -1032,6 +1032,7 @@ static const struct proto_ops inet6_seqpacket_ops = {
+ 	.recvmsg	   = inet_recvmsg,
+ 	.mmap		   = sock_no_mmap,
+ #ifdef CONFIG_COMPAT
++	.compat_ioctl	   = inet6_compat_ioctl,
+ 	.compat_setsockopt = compat_sock_common_setsockopt,
+ 	.compat_getsockopt = compat_sock_common_getsockopt,
+ #endif
+diff --git a/net/socket.c b/net/socket.c
+index 1c9a7260a41de..6824470757753 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3384,62 +3384,33 @@ struct rtentry32 {
+ 	unsigned short  rt_irtt;        /* Initial RTT                  */
+ };
+ 
+-struct in6_rtmsg32 {
+-	struct in6_addr		rtmsg_dst;
+-	struct in6_addr		rtmsg_src;
+-	struct in6_addr		rtmsg_gateway;
+-	u32			rtmsg_type;
+-	u16			rtmsg_dst_len;
+-	u16			rtmsg_src_len;
+-	u32			rtmsg_metric;
+-	u32			rtmsg_info;
+-	u32			rtmsg_flags;
+-	s32			rtmsg_ifindex;
+-};
+-
+ static int routing_ioctl(struct net *net, struct socket *sock,
+ 			 unsigned int cmd, void __user *argp)
+ {
++	struct rtentry32 __user *ur4 = argp;
+ 	int ret;
+ 	void *r = NULL;
+-	struct in6_rtmsg r6;
+ 	struct rtentry r4;
+ 	char devname[16];
+ 	u32 rtdev;
+ 	mm_segment_t old_fs = get_fs();
+ 
+-	if (sock && sock->sk && sock->sk->sk_family == AF_INET6) { /* ipv6 */
+-		struct in6_rtmsg32 __user *ur6 = argp;
+-		ret = copy_from_user(&r6.rtmsg_dst, &(ur6->rtmsg_dst),
+-			3 * sizeof(struct in6_addr));
+-		ret |= get_user(r6.rtmsg_type, &(ur6->rtmsg_type));
+-		ret |= get_user(r6.rtmsg_dst_len, &(ur6->rtmsg_dst_len));
+-		ret |= get_user(r6.rtmsg_src_len, &(ur6->rtmsg_src_len));
+-		ret |= get_user(r6.rtmsg_metric, &(ur6->rtmsg_metric));
+-		ret |= get_user(r6.rtmsg_info, &(ur6->rtmsg_info));
+-		ret |= get_user(r6.rtmsg_flags, &(ur6->rtmsg_flags));
+-		ret |= get_user(r6.rtmsg_ifindex, &(ur6->rtmsg_ifindex));
+-
+-		r = (void *) &r6;
+-	} else { /* ipv4 */
+-		struct rtentry32 __user *ur4 = argp;
+-		ret = copy_from_user(&r4.rt_dst, &(ur4->rt_dst),
+-					3 * sizeof(struct sockaddr));
+-		ret |= get_user(r4.rt_flags, &(ur4->rt_flags));
+-		ret |= get_user(r4.rt_metric, &(ur4->rt_metric));
+-		ret |= get_user(r4.rt_mtu, &(ur4->rt_mtu));
+-		ret |= get_user(r4.rt_window, &(ur4->rt_window));
+-		ret |= get_user(r4.rt_irtt, &(ur4->rt_irtt));
+-		ret |= get_user(rtdev, &(ur4->rt_dev));
+-		if (rtdev) {
+-			ret |= copy_from_user(devname, compat_ptr(rtdev), 15);
+-			r4.rt_dev = (char __user __force *)devname;
+-			devname[15] = 0;
+-		} else
+-			r4.rt_dev = NULL;
+-
+-		r = (void *) &r4;
+-	}
++	ret = copy_from_user(&r4.rt_dst, &(ur4->rt_dst),
++				3 * sizeof(struct sockaddr));
++	ret |= get_user(r4.rt_flags, &(ur4->rt_flags));
++	ret |= get_user(r4.rt_metric, &(ur4->rt_metric));
++	ret |= get_user(r4.rt_mtu, &(ur4->rt_mtu));
++	ret |= get_user(r4.rt_window, &(ur4->rt_window));
++	ret |= get_user(r4.rt_irtt, &(ur4->rt_irtt));
++	ret |= get_user(rtdev, &(ur4->rt_dev));
++	if (rtdev) {
++		ret |= copy_from_user(devname, compat_ptr(rtdev), 15);
++		r4.rt_dev = (char __user __force *)devname;
++		devname[15] = 0;
++	} else
++		r4.rt_dev = NULL;
++
++	r = (void *) &r4;
+ 
+ 	if (ret) {
+ 		ret = -EFAULT;
+-- 
+2.26.2
 
