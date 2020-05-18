@@ -2,123 +2,102 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA281C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C244C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB5522075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589836926;
-	bh=pYXU3fjDy4/iKFEeRqPtVkcBcBShYL9gPdU7+XjCCxk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kvVtKZ44ocxmQ3csq9s3PuK78yWMUUQnH11tJKdC3QL8lKvqkB1ocWyuDZ4cNGBWi
-	 yKonjbCFb5IHZOgoH7Z9+dpJdjIHRZ/QRymMElTrotdeVlV0Dh8Chv7haN/S1KAeq7
-	 MRKccdUZKqWxgwtlO4zf0kbQoD9MlDfoo0cyvCQM=
+	by mail.kernel.org (Postfix) with ESMTP id 1009A2075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="O8T8RwxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgERVWG (ORCPT
+        id S1728033AbgERVWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:22:06 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46645 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgERVWF (ORCPT
+        Mon, 18 May 2020 17:22:39 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14641 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726367AbgERVWi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:22:05 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 145so5529587pfw.13;
-        Mon, 18 May 2020 14:22:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y/wo2Runc9bAB/6pd6AKP8cw8s6s3rSoWBtx05F6YCY=;
-        b=FymUGAi+qHWAnxN2+dkVooEaU1xb5GgkL3l9TdVi8pj91FwAf/vneT/RnRU83rXd5V
-         aWyIVXA+9fydUAc6CLWRPBL0+rtCesAVIPP3dydOT0lIymqFBd/kENFUT/ubRhBnVx20
-         l7O3suq4A/cB3T3PHC3+QtA5AaBr3EF42bHX0V44AHsvKjh/A4kyRKE9qOkb9iezvRAS
-         NmD233UMq8VYGV/aMF5qGNFwO0HZUFYypsjsaeiOw92dtsnVBiZzMqF8NYDQSTbz+zAI
-         +SCjMuhh3g85BVNm0Gr6iqPQkJ1Dv5j+W7VjYSxiQBaMcMtomAfxl+qDmZYDswRJ3lMj
-         KvJg==
-X-Gm-Message-State: AOAM531C1Enou/GtjWf2HyPqpcBVZLhTHNwckICyVYq1pkPi8nRoNQi1
-        LO0fqaTXk14Z9FH9eoq+MA0=
-X-Google-Smtp-Source: ABdhPJxRLL0rTq2IGsFVxmB6BhC8z1lsUdqt1OZAfIGKtPauSAho1gbrv5Utwt5N1LUfBc32tNhgtg==
-X-Received: by 2002:a62:15c7:: with SMTP id 190mr8308823pfv.190.1589836924550;
-        Mon, 18 May 2020 14:22:04 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id l6sm9387019pfl.128.2020.05.18.14.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 14:22:03 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 90999404B0; Mon, 18 May 2020 21:22:02 +0000 (UTC)
-Date:   Mon, 18 May 2020 21:22:02 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Steve deRosier <derosier@gmail.com>,
-        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com,
-        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        ath10k@lists.infradead.org
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-Message-ID: <20200518212202.GR11244@42.do-not-panic.com>
-References: <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
- <20200518171801.GL11244@42.do-not-panic.com>
- <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
- <20200518190930.GO11244@42.do-not-panic.com>
- <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
- <20200518132828.553159d9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <8d7a3bed242ac9d3ec55a4c97e008081230f1f6d.camel@sipsolutions.net>
- <20200518133521.6052042e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <d81601b17065d7dc3b78bf8d68faf0fbfdb8c936.camel@sipsolutions.net>
- <20200518134643.685fcb0e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Mon, 18 May 2020 17:22:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec2fc500000>; Mon, 18 May 2020 14:21:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 18 May 2020 14:22:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 18 May 2020 14:22:38 -0700
+Received: from [10.2.55.90] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
+ 2020 21:22:38 +0000
+Subject: Re: [RFC] mm/gup.c: Use gup_flags as parameter instead of passing
+ write flag
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+CC:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <1589831903-27800-1-git-send-email-jrdr.linux@gmail.com>
+ <20200518201737.GV16070@bombadil.infradead.org>
+ <CAFqt6zbcn5kEbtY1fod4yy_PETKX8zVM2NjsY0HHyOixiu2q4w@mail.gmail.com>
+ <975cc333-e9f4-29e4-db0e-00ea8b8a7c25@nvidia.com>
+ <CAFqt6zZoFBkvkZKOc9mbGVO6_Gst+0k=wpjmXYSKvFru=HgczA@mail.gmail.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <4effb531-844e-0755-249f-ba5dea7bf490@nvidia.com>
+Date:   Mon, 18 May 2020 14:22:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518134643.685fcb0e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFqt6zZoFBkvkZKOc9mbGVO6_Gst+0k=wpjmXYSKvFru=HgczA@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589836880; bh=E85nFVa8mu0vGn7khXC49N7FJQ3xbA85drUoVklhxno=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=O8T8RwxSkH+IdRc0E8xXcXXZ3GbbJAx3B/6OP3dwhbwhfvn/jTthg5lb1R35np2cG
+         LGGqn2NlgENnn/OyzffzE8mGx729KDQdrdrppRNWh1Of4M/E0yADc24fZ+DWdQcxFj
+         ls6LEGLSfOHJQEn+16OxxVZHvDM/AReVcobs80e3ORmIQprOzi74LuU1AX1EFJ5Ob3
+         V43mi9iUqr+7FaM/ywAiL+5Gpg/Pu/YqQlHyA7uftO/plG0cXTI8bYXds7LDeflxXV
+         WU4vUC223YEbtuPm6DaXJEb1i/dyQiE3yEQtjkSRDrFqdnqGvOw5dTYHLGyaHqQVWU
+         yH99yp/2kRGTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 01:46:43PM -0700, Jakub Kicinski wrote:
-> On Mon, 18 May 2020 22:41:48 +0200 Johannes Berg wrote:
-> > On Mon, 2020-05-18 at 13:35 -0700, Jakub Kicinski wrote:
-> > > It's intended to be a generic netlink channel for configuring devices.
-> > > 
-> > > All the firmware-related interfaces have no dependencies on netdevs,
-> > > in fact that's one of the reasons we moved to devlink - we don't want
-> > > to hold rtnl lock just for talking to device firmware.  
-> > 
-> > Sounds good :)
-> > 
-> > So I guess Luis just has to add some way in devlink to hook up devlink
-> > health in a simple way to drivers, perhaps? I mean, many drivers won't
-> > really want to use devlink for anything else, so I guess it should be as
-> > simple as the API that Luis proposed ("firmware crashed for this struct
-> > device"), if nothing more interesting is done with devlink?
-> > 
-> > Dunno. But anyway sounds like it should somehow integrate there rather
-> > than the way this patchset proposed?
+On 2020-05-18 14:06, Souptick Joarder wrote:
+...
+>> So in other words, if you do go out and change all the call sites (there only
+>> seem to be about 7, outside of gup.c, actually), that's going to conflict
+>> a little bit with what I'm doing here.
+>>
+>> So, how would you like proceed? If you want to do the full conversion
+>> (which really should include the call sites), it would be easier for me
+>> if you based it on my upcoming small patchset, which I expect to post
+>> shortly (later today).
 > 
-> Right, that'd be great. Simple API to register a devlink instance with
-> whatever number of reporters the device would need. I'm happy to help.
+> Sure, I will wait for your patchset :)
+> 
+> As there are only 7 callers of the __get_user_pages_fast(), I prefer to do
+> full conversion in a single commit. But if it is not preferred way, I would go
+> as per feedback.
+> 
 
-Indeed my issue with devlink is that it did not seem generic enough for
-all devices which use firmware and for which firmware can crash. Support
-should not have to be "add devlink support" + "now use this new hook",
-but rather a very lighweight devlink_crash(device) call we can sprinkly
-with only the device as a functional requirement.
+Thanks, I appreciate it! And yes, you'll want to do the "write" to "gup_flags"
+conversion in a single patch, definitely.
 
-  Luis
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
