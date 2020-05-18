@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 672F920671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B142320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823918;
-	bh=RGT0VjGe9TRQuJHjMcP/kiurgPyuxbygJwlZVLInTgw=;
+	s=default; t=1589823921;
+	bh=NM+61okHoeZrlRYKybin1UV6GNvIOPisbB5yJ8j6QjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ILhyHo4OD26DKynWulZQ6u3RM9nZ++9IVsDlgcjr1H2J8QMf/3CkAei3j/YHtM2/1
-	 B81e14hgAg/bUbOANDK1YjA3MqDHGGNSf/fttpEl0Nv/nz19BtUDOWjUIUyv0tGej2
-	 zXmEzkTNhjSo0y8544vbwtXy9yE9nw0RVsz8wx94=
+	b=Evy+BmQS0aepI0V5pIb6z/6fvOdrSZbRnFm9f2B/cjpSzn8OuqQtDi8VNRaDxBbPF
+	 lN/7bToMQcc8HVmkbyWUkiyjUEZLpj4bbLO3Hlohs7rFLrj+TpKcJzpQphZsFsiDeF
+	 D3gdgGmWb7URMFfxv402G1NCm+KgBZqURCAmymns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgERRpR (ORCPT
+        id S1729913AbgERRpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43926 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:45:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729829AbgERRpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:13 -0400
+        id S1729896AbgERRpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:45:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75B4B207C4;
-        Mon, 18 May 2020 17:45:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E729F20657;
+        Mon, 18 May 2020 17:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823912;
-        bh=RGT0VjGe9TRQuJHjMcP/kiurgPyuxbygJwlZVLInTgw=;
+        s=default; t=1589823915;
+        bh=NM+61okHoeZrlRYKybin1UV6GNvIOPisbB5yJ8j6QjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RitQpEmRdA6Hjs6OAf2UcpktsdHqCdyW5nrRDRUJ7EV67d6pzG4STChfVZOQq7ZBZ
-         u4QQMiMflB5q7mEN61B6Rq57CKVM7y2EWjXiOEvvRZIOcWwq22tnnhCU8im2O64yWk
-         irkVM30/pVakzX9cWNwRAsL9dKHEe0hNZmGew/HI=
+        b=Q/2Gjp0OwBAaGw70w8NAMAJiMesBTBtsOedfA1iBUptmY8c5z1+5bTWYu9n7DArJX
+         I0kmoaOBpPBxfgFwngtrAQwBzhfMauW+1/DenQbqDUvMx1LhJodwr0syx2ChI3h/DR
+         PdcnzXPcWXBd3lik/3pcTDAqBM1x9wqqTamSAsjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 86/90] Revert "ALSA: hda/realtek: Fix pop noise on ALC225"
-Date:   Mon, 18 May 2020 19:37:04 +0200
-Message-Id: <20200518173508.600506560@linuxfoundation.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 4.9 87/90] ARM: dts: r8a73a4: Add missing CMT1 interrupts
+Date:   Mon, 18 May 2020 19:37:05 +0200
+Message-Id: <20200518173508.807412847@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -60,36 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit f41224efcf8aafe80ea47ac870c5e32f3209ffc8 upstream.
+commit 0f739fdfe9e5ce668bd6d3210f310df282321837 upstream.
 
-This reverts commit 3b36b13d5e69d6f51ff1c55d1b404a74646c9757.
+The R-Mobile APE6 Compare Match Timer 1 generates 8 interrupts, one for
+each channel, but currently only 1 is described.
+Fix this by adding the missing interrupts.
 
-Enable power save node breaks some systems with ACL225. Revert the patch
-and use a platform specific quirk for the original issue isntead.
-
-Fixes: 3b36b13d5e69 ("ALSA: hda/realtek: Fix pop noise on ALC225")
-BugLink: https://bugs.launchpad.net/bugs/1875916
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20200503152449.22761-1-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: f7b65230019b9dac ("ARM: shmobile: r8a73a4: Add CMT1 node")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20200408090926.25201-1-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/boot/dts/r8a73a4.dtsi |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -4212,8 +4212,6 @@ static void alc_determine_headset_type(s
- 		is_ctia = (val & 0x1c02) == 0x1c02;
- 		break;
- 	case 0x10ec0225:
--		codec->power_save_node = 1;
--		/* fall through */
- 	case 0x10ec0295:
- 	case 0x10ec0299:
- 		alc_process_coef_fw(codec, coef0225);
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -135,7 +135,14 @@
+ 	cmt1: timer@e6130000 {
+ 		compatible = "renesas,cmt-48-r8a73a4", "renesas,cmt-48-gen2";
+ 		reg = <0 0xe6130000 0 0x1004>;
+-		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
 
 
