@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB91AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C74C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C579E207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67BC207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824474;
-	bh=daS6GalhjnGYoPZ3TDKNy1AUcN8WR2LaRd4LmL2ZeTQ=;
+	s=default; t=1589824477;
+	bh=xURob6Yxsaifegk/rKDVTt3iGfWy/FpxpLBBuq79G/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2YYdnOjA4OD0ve+kJU5iIWRXvyMk3En2JEAFFGXvb+xGEIE4Xp9ED/b6mbi/GF7u
-	 kBteUAfrq2H4KJaobDVygknXW5CG0bYFOMbdls2puj91UgoeBZ/FunFCc4DuQwL426
-	 epubOThHgZG0gCVQZiHWVE2RU+nGwUlPARJiPLeE=
+	b=yp9OsEafDHvUNOKtDMHcAwDdW7w+2Iytv2AwFcQpHb2Kjh51GbXXXydjhj2nTg9og
+	 /1NlpuLLH8GCqXHrdCvqWTgC6CKTlwt9jlDt+b8gErbddaax3mI4wan6RUtNPgVxtx
+	 m+l8HeaKIV1WcczW5sp4m3Tzrrm7nhNAMD/twzOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731318AbgERRyd (ORCPT
+        id S1729362AbgERRyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:54:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59166 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:54:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731303AbgERRy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:28 -0400
+        id S1731317AbgERRyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8739220715;
-        Mon, 18 May 2020 17:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61B7A207C4;
+        Mon, 18 May 2020 17:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824468;
-        bh=daS6GalhjnGYoPZ3TDKNy1AUcN8WR2LaRd4LmL2ZeTQ=;
+        s=default; t=1589824472;
+        bh=xURob6Yxsaifegk/rKDVTt3iGfWy/FpxpLBBuq79G/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rMzwpjn/DgMehKt5ACzyEz2Nm0y2kuucjknlGs3nO+VRUSiCMnnZxkfKqP2ZZ0/IY
-         AB6myI22hCyX49y/DY0kH/BdYwT4XIQEvZND/XZKbuSmYdqlVEfMOeK6YRcvc1q2fY
-         n2lUN/8oMMh6WN+5Hn4PT4QThqNqUL2eBDkx8VZA=
+        b=EdX/mPRxpDylEb7KWoPODm70aDdHLYz2zrFgpVvV4QnrVOabIUAIdo9sNlUEqcpGi
+         X7XSCCV4B4kkwipz/LEJzMxErPaHpeuwrzlwgtanov8l59cjI88CjdHvxMnRPoL9zL
+         j0bJfxzDGA2UCh8qilQhcQq2Ad1vAHOGTmD3v9U8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?David=20Bala=C5=BEic?= <xerces9@gmail.com>,
-        Guillaume Nault <gnault@redhat.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 023/147] pppoe: only process PADT targeted at local interfaces
-Date:   Mon, 18 May 2020 19:35:46 +0200
-Message-Id: <20200518173516.719890797@linuxfoundation.org>
+Subject: [PATCH 5.4 025/147] tcp: fix error recovery in tcp_zerocopy_receive()
+Date:   Mon, 18 May 2020 19:35:48 +0200
+Message-Id: <20200518173516.952261293@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,35 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit b8c158395119be62294da73646a3953c29ac974b ]
+[ Upstream commit e776af608f692a7a647455106295fa34469e7475 ]
 
-We don't want to disconnect a session because of a stray PADT arriving
-while the interface is in promiscuous mode.
-Furthermore, multicast and broadcast packets make no sense here, so
-only PACKET_HOST is accepted.
+If user provides wrong virtual address in TCP_ZEROCOPY_RECEIVE
+operation we want to return -EINVAL error.
 
-Reported-by: David Balažic <xerces9@gmail.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
+But depending on zc->recv_skip_hint content, we might return
+-EIO error if the socket has SOCK_DONE set.
+
+Make sure to return -EINVAL in this case.
+
+BUG: KMSAN: uninit-value in tcp_zerocopy_receive net/ipv4/tcp.c:1833 [inline]
+BUG: KMSAN: uninit-value in do_tcp_getsockopt+0x4494/0x6320 net/ipv4/tcp.c:3685
+CPU: 1 PID: 625 Comm: syz-executor.0 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ tcp_zerocopy_receive net/ipv4/tcp.c:1833 [inline]
+ do_tcp_getsockopt+0x4494/0x6320 net/ipv4/tcp.c:3685
+ tcp_getsockopt+0xf8/0x1f0 net/ipv4/tcp.c:3728
+ sock_common_getsockopt+0x13f/0x180 net/core/sock.c:3131
+ __sys_getsockopt+0x533/0x7b0 net/socket.c:2177
+ __do_sys_getsockopt net/socket.c:2192 [inline]
+ __se_sys_getsockopt+0xe1/0x100 net/socket.c:2189
+ __x64_sys_getsockopt+0x62/0x80 net/socket.c:2189
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f1deeb72c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+RAX: ffffffffffffffda RBX: 00000000004e01e0 RCX: 000000000045c829
+RDX: 0000000000000023 RSI: 0000000000000006 RDI: 0000000000000009
+RBP: 000000000078bf00 R08: 0000000020000200 R09: 0000000000000000
+R10: 00000000200001c0 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000001d8 R14: 00000000004d3038 R15: 00007f1deeb736d4
+
+Local variable ----zc@do_tcp_getsockopt created at:
+ do_tcp_getsockopt+0x1a74/0x6320 net/ipv4/tcp.c:3670
+ do_tcp_getsockopt+0x1a74/0x6320 net/ipv4/tcp.c:3670
+
+Fixes: 05255b823a61 ("tcp: add TCP_ZEROCOPY_RECEIVE support for zerocopy receive")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ppp/pppoe.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/ipv4/tcp.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ppp/pppoe.c
-+++ b/drivers/net/ppp/pppoe.c
-@@ -492,6 +492,9 @@ static int pppoe_disc_rcv(struct sk_buff
- 	if (!skb)
- 		goto out;
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1757,10 +1757,11 @@ static int tcp_zerocopy_receive(struct s
  
-+	if (skb->pkt_type != PACKET_HOST)
-+		goto abort;
-+
- 	if (!pskb_may_pull(skb, sizeof(struct pppoe_hdr)))
- 		goto abort;
+ 	down_read(&current->mm->mmap_sem);
  
+-	ret = -EINVAL;
+ 	vma = find_vma(current->mm, address);
+-	if (!vma || vma->vm_start > address || vma->vm_ops != &tcp_vm_ops)
+-		goto out;
++	if (!vma || vma->vm_start > address || vma->vm_ops != &tcp_vm_ops) {
++		up_read(&current->mm->mmap_sem);
++		return -EINVAL;
++	}
+ 	zc->length = min_t(unsigned long, zc->length, vma->vm_end - address);
+ 
+ 	tp = tcp_sk(sk);
 
 
