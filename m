@@ -2,470 +2,712 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3028C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D84C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08B720671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B196C20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589825931;
+	bh=vWuC4T8CO33xmzUYjBB+nD1pmC55VfM3JtMWnzUgF4c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pLycjAe+zRSTQxG9/kVZEkgykGHaKYhq677SlescUiodeSlpttMOl7596eRZFr0wK
+	 x7/br7cPAWJDuIlzIDysUzolsB2rR9pfvf+8tlJOgrxMlCmmMDj0xyXg0edbsAtRhz
+	 xvW/VKG3UfrG5mADe0c6Tx1D58yWLbJyLp+BYY94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387735AbgERSSq (ORCPT
+        id S2387742AbgERSSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730700AbgERSSl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:18:41 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE271C061A0C;
-        Mon, 18 May 2020 11:18:40 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jakLJ-00BJTF-Cc; Mon, 18 May 2020 18:18:25 +0000
-Date:   Mon, 18 May 2020 19:18:25 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        David Miller <davem@davemloft.net>, arnd@arndb.de,
-        guoren@kernel.org, linux-csky@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH 0/3] sparc: port to copy_thread_tls() and struct
- kernel_clone_args
-Message-ID: <20200518181825.GM23230@ZenIV.linux.org.uk>
-References: <20200512171527.570109-1-christian.brauner@ubuntu.com>
- <20200512.130633.293867428547074800.davem@davemloft.net>
- <20200517150123.sl36ug27gwnyz6gf@wittgenstein>
- <cfc07b63-29e6-cda9-c611-235e37970763@ilande.co.uk>
- <20200517221346.GL23230@ZenIV.linux.org.uk>
+        Mon, 18 May 2020 14:18:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731431AbgERRzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FF6B205CB;
+        Mon, 18 May 2020 17:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824518;
+        bh=vWuC4T8CO33xmzUYjBB+nD1pmC55VfM3JtMWnzUgF4c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mHhv5OLlnwZKGHIUGKV+gLOtNRifLVAZUz1UvQDrbJa1hMyGcPwE8ZM/0EtXlBsDA
+         5hwHz2KO4MtPfw0gPSy3k9hdG+Tnj+jZPKtq4g2KpNg26aG0+nQE5AujmmOiekrVki
+         0UvDfKN67Z+zNSuGsh+lgT+mAolOuPgBEc20B28c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 000/147] 5.4.42-rc1 review
+Date:   Mon, 18 May 2020 19:35:23 +0200
+Message-Id: <20200518173513.009514388@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517221346.GL23230@ZenIV.linux.org.uk>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.42-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.42-rc1
+X-KernelTest-Deadline: 2020-05-20T17:35+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 11:13:47PM +0100, Al Viro wrote:
+This is the start of the stable review cycle for the 5.4.42 release.
+There are 147 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-> 	Is virtio-blk-pci more resilent to lost interrupt bug introduced in 
-> "sun4u: update PCI topology to include simba PCI bridges"?  I hadn't tried
-> it yet (reverted to the last working mainline qemu commit for now); IDE
-> definitely is screwed by that - both the Linux and NetBSD drivers, actually.
-> 
-> 	A 50Mb worth of wget(1) is more than enough to trigger that crap;
-> 
-> commit 063833a6ec
-> Merge: d634fc0499 bcf9e2c2f2
-> Author: Peter Maydell <peter.maydell@linaro.org>
-> Date:   Thu Oct 19 18:42:51 2017 +0100
-> 
->     Merge remote-tracking branch 'remotes/mcayland/tags/qemu-sparc-signed' into staging
-> 
-> hangs, d634fc0499 works, bcf9e2c2f2 hangs.
-> 
-> I hadn't looked into details (the branch itself is only two commits long, but it
-> incorporates an openbios update - 35 commits there, some obviously pci- and
-> sun4u-related), but it's really easy to reproduce - -m 1024 and -hda <image>
-> are probably the only relevant arguments.  Even dd if=/dev/sda of=/dev/null bs=64m
-> is often enough to hang it, so I rather doubt that networking (e1000 on pciB,
-> FWIW, with tap for backend) has anything to do with that.
+Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
+Anything received after that time might be too late.
 
-	FWIW, virtio-blk-pci does appear to be much more resilent; I hadn't been
-able to reproduce hangs on that, while mounting identical fs from pata_cmd64x
-and doing the same aptitude dist-upgrade --download-only ended up with
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.42-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
 
-...
-Note: Using 'Download Only' mode, no other actions will be performed.
-Do you want to continue? [Y/n/?] y
-Get: 1 http://ftp.ports.debian.org/debian-ports sid/main sparc64 perl-modules-5.30 all 5.30.2-1 [2,806 kB]
-Get: 2 http://ftp.ports.debian.org/debian-ports sid/main sparc64 libperl5.30 sparc64 5.30.2-1 [3,388 kB]
-Get: 3 http://ftp.ports.debian.org/debian-ports sid/main sparc64 perl sparc64 5.30.2-1 [290 kB]
-Get: 4 http://ftp.ports.debian.org/debian-ports sid/main sparc64 perl-base sparc64 5.30.2-1 [1,427 kB]
-Get: 5 http://ftp.ports.debian.org/debian-ports sid/main sparc64 libsystemd0 sparc64 245.5-3 [309 kB]
-Get: 6 http://ftp.ports.debian.org/debian-ports sid/main sparc64 udev sparc64 245.5-3 [1,356 kB]
-Get: 7 http://ftp.ports.debian.org/debian-ports sid/main sparc64 libudev1 sparc64 245.5-3 [153 kB]
-[ 1472.613660] ata2: lost interrupt (Status 0x58)
-[ 1472.615124] ata1: lost interrupt (Status 0x50)
-[ 1472.615812] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1472.616515] ata1.00: failed command: WRITE DMA
-[ 1472.617145] ata1.00: cmd ca/00:60:0c:9b:23/00:00:00:00:00/e0 tag 0 dma 49152 out
-[ 1472.617145]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1472.618229] ata1.00: status: { DRDY }
-[ 1472.618743] ata1: soft resetting link
-[ 1472.779489] ata1.00: configured for UDMA/33
-[ 1472.781211] ata1: EH complete
-[ 1477.977424] ata2.00: qc timeout (cmd 0xa0)
-[ 1477.977897] ata2.00: TEST_UNIT_READY failed (err_mask=0x5)
-[ 1483.353324] ata2.00: qc timeout (cmd 0xa0)
-[ 1483.353697] ata2.00: TEST_UNIT_READY failed (err_mask=0x5)
-[ 1483.354453] ata2.00: limiting speed to UDMA/33:PIO3
-[ 1488.729323] ata2.00: qc timeout (cmd 0xa0)
-[ 1488.730255] ata2.00: TEST_UNIT_READY failed (err_mask=0x5)
-[ 1488.731320] ata2.00: disabled
-[ 1503.333388] ata1: lost interrupt (Status 0x50)
-[ 1503.333838] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1503.334309] ata1.00: failed command: WRITE DMA EXT
-[ 1503.334647] ata1.00: cmd 35/00:30:0c:7b:23/00:01:00:00:00/e0 tag 0 dma 155648 out
-[ 1503.334647]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1503.335494] ata1.00: status: { DRDY }
-[ 1503.335858] ata1: soft resetting link
-[ 1503.494764] ata1.00: configured for UDMA/33
-[ 1503.495313] ata1: EH complete
-[ 1534.041532] ata1: lost interrupt (Status 0x50)
-[ 1534.042043] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1534.042627] ata1.00: failed command: WRITE DMA
-[ 1534.042969] ata1.00: cmd ca/00:60:0c:9b:23/00:00:00:00:00/e0 tag 0 dma 49152 out
-[ 1534.042969]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1534.043902] ata1.00: status: { DRDY }
-[ 1534.044306] ata1: soft resetting link
-[ 1534.202625] ata1.00: configured for UDMA/33
-[ 1534.203119] ata1: EH complete
-[ 1564.761561] ata1: lost interrupt (Status 0x50)
-[ 1564.762351] ata1.00: limiting speed to UDMA/25:PIO4
-[ 1564.762831] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1564.763388] ata1.00: failed command: WRITE DMA EXT
-[ 1564.763790] ata1.00: cmd 35/00:30:0c:7b:23/00:01:00:00:00/e0 tag 0 dma 155648 out
-[ 1564.763790]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1564.764784] ata1.00: status: { DRDY }
-[ 1564.765470] ata1: soft resetting link
-[ 1564.926509] ata1.00: configured for UDMA/25
-[ 1564.927516] ata1: EH complete
-[ 1575.001438] INFO: task jbd2/sda2-8:143 blocked for more than 120 seconds.
-[ 1575.002273]       Tainted: G            E     5.6.0-1-sparc64 #1 Debian 5.6.7-1
-[ 1575.002755] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1575.003323] jbd2/sda2-8     D    0   143      2 0x07000000
-[ 1575.003867] Call Trace:
-[ 1575.004228]  [0000000000b10834] schedule+0x54/0x100
-[ 1575.004598]  [0000000000b10bf4] io_schedule+0x14/0x40
-[ 1575.004922]  [00000000007a6ac4] rq_qos_wait+0xc4/0x160
-[ 1575.009472]  [00000000007b5274] wbt_wait+0x74/0xe0
-[ 1575.009832]  [00000000007a6760] __rq_qos_throttle+0x20/0x40
-[ 1575.010191]  [00000000007975f0] blk_mq_make_request+0xf0/0x5a0
-[ 1575.010558]  [000000000078b418] generic_make_request+0x98/0x2e0
-[ 1575.010923]  [000000000078b6b8] submit_bio+0x58/0x200
-[ 1575.011245]  [000000000067f100] submit_bh_wbc+0x1c0/0x200
-[ 1575.011583]  [000000000067f91c] submit_bh+0x1c/0x40
-[ 1575.012627]  [0000000010167d7c] jbd2_journal_commit_transaction+0x69c/0x1740 [jbd2]
-[ 1575.013300]  [000000001016d530] kjournald2+0x90/0x220 [jbd2]
-[ 1575.013706]  [000000000048913c] kthread+0xdc/0x120
-[ 1575.014012]  [0000000000405fa4] ret_from_fork+0x1c/0x2c
-[ 1575.014565]  [0000000000000000] 0x0
-[ 1575.014888] INFO: task http:1294 blocked for more than 120 seconds.
-[ 1575.015287]       Tainted: G            E     5.6.0-1-sparc64 #1 Debian 5.6.7-1
-[ 1575.015728] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1575.016208] http            D    0  1294   1283 0x208000105000000
-[ 1575.016616] Call Trace:
-[ 1575.016803]  [0000000000b10834] schedule+0x54/0x100
-[ 1575.017289]  [0000000000b10bf4] io_schedule+0x14/0x40
-[ 1575.017654]  [00000000007a6ac4] rq_qos_wait+0xc4/0x160
-[ 1575.018011]  [00000000007b5274] wbt_wait+0x74/0xe0
-[ 1575.018328]  [00000000007a6760] __rq_qos_throttle+0x20/0x40
-[ 1575.018677]  [00000000007975f0] blk_mq_make_request+0xf0/0x5a0
-[ 1575.019047]  [000000000078b418] generic_make_request+0x98/0x2e0
-[ 1575.019421]  [000000000078b6b8] submit_bio+0x58/0x200
-[ 1575.019825]  [00000000101dcf64] ext4_io_submit+0x44/0x60 [ext4]
-[ 1575.020249]  [00000000101c0108] ext4_writepages+0x508/0xc20 [ext4]
-[ 1575.020634]  [00000000005b0790] do_writepages+0x30/0xe0
-[ 1575.021000]  [00000000005a7618] __filemap_fdatawrite_range+0xb8/0x100
-[ 1575.021542]  [00000000005a76bc] filemap_flush+0x1c/0x40
-[ 1575.021944]  [00000000101bce24] ext4_alloc_da_blocks+0x24/0x80 [ext4]
-[ 1575.022387]  [00000000101abf30] ext4_release_file+0x90/0xe0 [ext4]
-[ 1575.022777]  [000000000063d1cc] __fput+0xac/0x280
-[ 1595.481559] ata1: lost interrupt (Status 0x50)
-[ 1595.482352] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1595.483223] ata1.00: failed command: WRITE DMA
-[ 1595.483799] ata1.00: cmd ca/00:60:0c:9b:23/00:00:00:00:00/e0 tag 0 dma 49152 out
-[ 1595.483799]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1595.485513] ata1.00: status: { DRDY }
-[ 1595.489629] ata1: soft resetting link
-[ 1595.650743] ata1.00: configured for UDMA/25
-[ 1595.651259] ata1: EH complete
-[ 1626.201466] ata1: lost interrupt (Status 0x50)
-[ 1626.202778] ata1.00: limiting speed to PIO4
-[ 1626.203678] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1626.205103] ata1.00: failed command: WRITE DMA EXT
-[ 1626.206127] ata1.00: cmd 35/00:30:0c:7b:23/00:01:00:00:00/e0 tag 0 dma 155648 out
-[ 1626.206127]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1626.208832] ata1.00: status: { DRDY }
-[ 1626.209856] ata1: soft resetting link
-[ 1626.370839] ata1.00: configured for PIO4
-[ 1626.371357] ata1: EH complete
-[ 1656.921546] ata1: lost interrupt (Status 0x58)
-[ 1656.922076] ata1.00: limiting speed to PIO3
-[ 1656.922390] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1656.922837] ata1.00: failed command: WRITE MULTIPLE
-[ 1656.923190] ata1.00: cmd c5/00:60:0c:9b:23/00:00:00:00:00/e0 tag 0 pio 49152 out
-[ 1656.923190]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1656.924057] ata1.00: status: { DRDY }
-[ 1656.924441] ata1: soft resetting link
-[ 1657.082383] ata1.00: configured for PIO3
-[ 1657.082940] ata1: EH complete
-[ 1687.641729] ata1: lost interrupt (Status 0x58)
-[ 1687.642217] ata1.00: limiting speed to PIO0
-[ 1687.642526] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1687.642963] ata1.00: failed command: WRITE MULTIPLE EXT
-[ 1687.643336] ata1.00: cmd 39/00:30:0c:7b:23/00:01:00:00:00/e0 tag 0 pio 155648 out
-[ 1687.643336]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1687.644276] ata1.00: status: { DRDY }
-[ 1687.644649] ata1: soft resetting link
-[ 1687.802485] ata1.00: configured for PIO0
-[ 1687.802946] ata1: EH complete
-[ 1695.833443] INFO: task jbd2/sda2-8:143 blocked for more than 241 seconds.
-[ 1695.834181]       Tainted: G            E     5.6.0-1-sparc64 #1 Debian 5.6.7-1
-[ 1695.834915] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1695.835667] jbd2/sda2-8     D    0   143      2 0x07000000
-[ 1695.836230] Call Trace:
-[ 1695.836537]  [0000000000b10834] schedule+0x54/0x100
-[ 1695.837186]  [0000000000b10bf4] io_schedule+0x14/0x40
-[ 1695.837753]  [00000000007a6ac4] rq_qos_wait+0xc4/0x160
-[ 1695.838244]  [00000000007b5274] wbt_wait+0x74/0xe0
-[ 1695.838717]  [00000000007a6760] __rq_qos_throttle+0x20/0x40
-[ 1695.839247]  [00000000007975f0] blk_mq_make_request+0xf0/0x5a0
-[ 1695.839811]  [000000000078b418] generic_make_request+0x98/0x2e0
-[ 1695.840366]  [000000000078b6b8] submit_bio+0x58/0x200
-[ 1695.840841]  [000000000067f100] submit_bh_wbc+0x1c0/0x200
-[ 1695.841561]  [000000000067f91c] submit_bh+0x1c/0x40
-[ 1695.842111]  [0000000010167d7c] jbd2_journal_commit_transaction+0x69c/0x1740 [jbd2]
-[ 1695.842851]  [000000001016d530] kjournald2+0x90/0x220 [jbd2]
-[ 1695.843392]  [000000000048913c] kthread+0xdc/0x120
-[ 1695.843860]  [0000000000405fa4] ret_from_fork+0x1c/0x2c
-[ 1695.844355]  [0000000000000000] 0x0
-[ 1695.844707] INFO: task http:1294 blocked for more than 241 seconds.
-[ 1695.845478]       Tainted: G            E     5.6.0-1-sparc64 #1 Debian 5.6.7-1
-[ 1695.846180] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1695.846905] http            D    0  1294   1283 0x208000105000000
-[ 1695.847500] Call Trace:
-[ 1695.847786]  [0000000000b10834] schedule+0x54/0x100
-[ 1695.848272]  [0000000000b10bf4] io_schedule+0x14/0x40
-[ 1695.848757]  [00000000007a6ac4] rq_qos_wait+0xc4/0x160
-[ 1695.849477]  [00000000007b5274] wbt_wait+0x74/0xe0
-[ 1695.850000]  [00000000007a6760] __rq_qos_throttle+0x20/0x40
-[ 1695.850557]  [00000000007975f0] blk_mq_make_request+0xf0/0x5a0
-[ 1695.851107]  [000000000078b418] generic_make_request+0x98/0x2e0
-[ 1695.851650]  [000000000078b6b8] submit_bio+0x58/0x200
-[ 1695.852214]  [00000000101dcf64] ext4_io_submit+0x44/0x60 [ext4]
-[ 1695.852837]  [00000000101c0108] ext4_writepages+0x508/0xc20 [ext4]
-[ 1695.853638]  [00000000005b0790] do_writepages+0x30/0xe0
-[ 1695.854162]  [00000000005a7618] __filemap_fdatawrite_range+0xb8/0x100
-[ 1695.854765]  [00000000005a76bc] filemap_flush+0x1c/0x40
-[ 1695.855316]  [00000000101bce24] ext4_alloc_da_blocks+0x24/0x80 [ext4]
-[ 1695.855973]  [00000000101abf30] ext4_release_file+0x90/0xe0 [ext4]
-[ 1695.856568]  [000000000063d1cc] __fput+0xac/0x280
-[ 1695.857152] INFO: task kworker/0:3:1295 blocked for more than 120 seconds.
-[ 1695.857878]       Tainted: G            E     5.6.0-1-sparc64 #1 Debian 5.6.7-1
-[ 1695.858550] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1695.859262] kworker/0:3     D    0  1295      2 0x01000000
-[ 1695.860238] Workqueue: events ata_scsi_dev_rescan [libata]
-[ 1695.860828] Call Trace:
-[ 1695.861273]  [0000000000b10834] schedule+0x54/0x100
-[ 1695.861814]  [0000000000b10bf4] io_schedule+0x14/0x40
-[ 1695.862295]  [000000000079a33c] blk_mq_get_tag+0x11c/0x2c0
-[ 1695.862826]  [0000000000794e28] blk_mq_get_request+0xc8/0x3a0
-[ 1695.863294]  [000000000079514c] blk_mq_alloc_request+0x4c/0xa0
-[ 1695.863686]  [00000000007896f0] blk_get_request+0x30/0xe0
-[ 1695.864093]  [000000001003bd14] __scsi_execute+0x34/0x1a0 [scsi_mod]
-[ 1695.864544]  [0000000010034c6c] scsi_vpd_inquiry+0x6c/0xc0 [scsi_mod]
-[ 1695.865018]  [0000000010034dec] scsi_get_vpd_buf+0x4c/0x80 [scsi_mod]
-[ 1695.865640]  [0000000010035afc] scsi_attach_vpd+0x3c/0x180 [scsi_mod]
-[ 1695.866099]  [00000000100402f8] scsi_rescan_device+0x18/0xa0 [scsi_mod]
-[ 1695.866568]  [00000000100a6620] ata_scsi_dev_rescan+0x80/0xe0 [libata]
-[ 1695.867009]  [0000000000482eb4] process_one_work+0x194/0x480
-[ 1695.867392]  [00000000004832e4] worker_thread+0x144/0x540
-[ 1695.867759]  [000000000048913c] kthread+0xdc/0x120
-[ 1695.868095]  [0000000000405fa4] ret_from_fork+0x1c/0x2c
-[ 1718.361472] ata1: lost interrupt (Status 0x58)
-[ 1718.362753] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1718.364199] ata1.00: failed command: WRITE MULTIPLE
-[ 1718.365436] ata1.00: cmd c5/00:60:0c:9b:23/00:00:00:00:00/e0 tag 0 pio 49152 out
-[ 1718.365436]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1718.368421] ata1.00: status: { DRDY }
-[ 1718.369510] ata1: soft resetting link
-[ 1718.530645] ata1.00: configured for PIO0
-[ 1718.531608] ata1: EH complete
-[ 1749.081528] ata1: lost interrupt (Status 0x58)
-[ 1749.082016] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1749.082490] ata1.00: failed command: WRITE MULTIPLE EXT
-[ 1749.082861] ata1.00: cmd 39/00:30:0c:7b:23/00:01:00:00:00/e0 tag 0 pio 155648 out
-[ 1749.082861]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1749.083785] ata1.00: status: { DRDY }
-[ 1749.084186] ata1: soft resetting link
-[ 1749.242344] ata1.00: configured for PIO0
-[ 1749.242776] ata1: EH complete
-[ 1779.801525] ata1: lost interrupt (Status 0x58)
-[ 1779.802194] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1779.802933] ata1.00: failed command: WRITE MULTIPLE
-[ 1779.803424] ata1.00: cmd c5/00:60:0c:9b:23/00:00:00:00:00/e0 tag 0 pio 49152 out
-[ 1779.803424]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1779.804678] ata1.00: status: { DRDY }
-[ 1779.805327] ata1: soft resetting link
-[ 1779.966461] ata1.00: configured for PIO0
-[ 1779.968232] sd 0:0:0:0: [sda] tag#0 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE cmd_age=338s
-[ 1779.969221] sd 0:0:0:0: [sda] tag#0 Sense Key : Illegal Request [current] 
-[ 1779.969921] sd 0:0:0:0: [sda] tag#0 Add. Sense: Unaligned write command
-[ 1779.971038] sd 0:0:0:0: [sda] tag#0 CDB: Write(10) 2a 00 00 23 9b 0c 00 00 60 00
-[ 1779.971722] blk_update_request: I/O error, dev sda, sector 2333452 op 0x1:(WRITE) flags 0x0 phys_seg 1 prio class 0
-[ 1779.972504] EXT4-fs warning (device sda2): ext4_end_bio:347: I/O error 10 writing to inode 130691 starting block 291693)
-[ 1779.973770] ata1: EH complete
-[ 1810.521509] ata1: lost interrupt (Status 0x58)
-[ 1810.522165] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1810.522895] ata1.00: failed command: WRITE MULTIPLE EXT
-[ 1810.523415] ata1.00: cmd 39/00:30:0c:7b:23/00:01:00:00:00/e0 tag 0 pio 155648 out
-[ 1810.523415]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1810.524696] ata1.00: status: { DRDY }
-[ 1810.525363] ata1: soft resetting link
-[ 1810.686255] ata1.00: configured for PIO0
-[ 1810.686951] sd 0:0:0:0: [sda] tag#0 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE cmd_age=337s
-[ 1810.687809] sd 0:0:0:0: [sda] tag#0 Sense Key : Illegal Request [current] 
-[ 1810.688449] sd 0:0:0:0: [sda] tag#0 Add. Sense: Unaligned write command
-[ 1810.689213] sd 0:0:0:0: [sda] tag#0 CDB: Write(10) 2a 00 00 23 7b 0c 00 01 30 00
-[ 1810.689966] blk_update_request: I/O error, dev sda, sector 2325260 op 0x1:(WRITE) flags 0x0 phys_seg 3 prio class 0
-[ 1810.690901] EXT4-fs warning (device sda2): ext4_end_bio:347: I/O error 10 writing to inode 130696 starting block 290695)
-[ 1810.692093] ata1: EH complete
-[ 1841.253842] ata1: lost interrupt (Status 0x58)
-[ 1841.254522] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1841.255276] ata1.00: failed command: WRITE MULTIPLE
-[ 1841.255781] ata1.00: cmd c5/00:78:d4:61:49/00:00:00:00:00/e0 tag 0 pio 61440 out
-[ 1841.255781]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1841.257269] ata1.00: status: { DRDY }
-[ 1841.257820] ata1: soft resetting link
-[ 1841.418388] ata1.00: configured for PIO0
-[ 1841.418961] ata1: EH complete
-[ 1871.973375] ata1: lost interrupt (Status 0x58)
-[ 1871.973863] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1871.974338] ata1.00: failed command: WRITE MULTIPLE
-[ 1871.974727] ata1.00: cmd c5/00:a0:8c:0e:3b/00:00:00:00:00/e0 tag 0 pio 81920 out
-[ 1871.974727]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1871.975707] ata1.00: status: { DRDY }
-[ 1871.976096] ata1: soft resetting link
-[ 1872.134384] ata1.00: configured for PIO0
-[ 1872.134988] ata1: EH complete
-[ 1902.681573] ata1: lost interrupt (Status 0x58)
-[ 1902.682340] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1902.683115] ata1.00: failed command: WRITE MULTIPLE
-[ 1902.683674] ata1.00: cmd c5/00:78:d4:61:49/00:00:00:00:00/e0 tag 0 pio 61440 out
-[ 1902.683674]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1902.685158] ata1.00: status: { DRDY }
-[ 1902.689610] ata1: soft resetting link
-[ 1902.850306] ata1.00: configured for PIO0
-[ 1902.850767] ata1: EH complete
-[ 1933.401429] ata1: lost interrupt (Status 0x58)
-[ 1933.401961] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
-[ 1933.402474] ata1.00: failed command: WRITE MULTIPLE
-[ 1933.402878] ata1.00: cmd c5/00:a0:8c:0e:3b/00:00:00:00:00/e0 tag 0 pio 81920 out
-[ 1933.402878]          res 40/00:01:00:00:00/00:00:00:00:00/a0 Emask 0x4 (timeout)
-[ 1933.403875] ata1.00: status: { DRDY }
-[ 1933.404289] ata1: soft resetting link
-[ 1933.562384] ata1.00: configured for PIO0
-[ 1933.562869] ata1: EH complete
-[ 1937.497217] INFO: task jbd2/sda2-8:143 blocked for more than 120 seconds.
-[ 1937.497777]       Tainted: G            E     5.6.0-1-sparc64 #1 Debian 5.6.7-1
-[ 1937.498257] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1937.498777] jbd2/sda2-8     D    0   143      2 0x03000000
-[ 1937.499174] Call Trace:
-[ 1937.499400]  [0000000000b10834] schedule+0x54/0x100
-[ 1937.499746]  [0000000000b10bf4] io_schedule+0x14/0x40
-[ 1937.500100]  [0000000000b1108c] bit_wait_io+0xc/0x80
-[ 1937.500450]  [0000000000b10c80] __wait_on_bit+0x60/0x100
-[ 1937.500815]  [0000000000b10d9c] out_of_line_wait_on_bit+0x7c/0xa0
-[ 1937.501357]  [000000000067d6d0] __wait_on_buffer+0x30/0x40
-[ 1937.501796]  [00000000101685d4] jbd2_journal_commit_transaction+0xef4/0x1740 [jbd2]
-[ 1937.502330]  [000000001016d530] kjournald2+0x90/0x220 [jbd2]
-[ 1937.502728]  [000000000048913c] kthread+0xdc/0x120
-[ 1937.503061]  [0000000000405fa4] ret_from_fork+0x1c/0x2c
-[ 1937.503407]  [0000000000000000] 0x0
-[ 1937.503658] INFO: task kworker/u2:2:1138 blocked for more than 120 seconds.
-[ 1937.504096]       Tainted: G            E     5.6.0-1-sparc64 #1 Debian 5.6.7-1
-[ 1937.504544] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1937.505128] kworker/u2:2    D    0  1138      2 0x05000000
-[ 1937.505677] Workqueue: ext4-rsv-conversion ext4_end_io_rsv_work [ext4]
-[ 1937.506109] Call Trace:
-[ 1937.506306]  [0000000000b10834] schedule+0x54/0x100
-[ 1937.506643]  [0000000000b10bf4] io_schedule+0x14/0x40
-[ 1937.507007]  [0000000000b1108c] bit_wait_io+0xc/0x80
-[ 1937.507361]  [0000000000b10c80] __wait_on_bit+0x60/0x100
-[ 1937.507717]  [0000000000b10d9c] out_of_line_wait_on_bit+0x7c/0xa0
-[ 1937.508150]  [0000000010166138] do_get_write_access+0x2f8/0x440 [jbd2]
-[ 1937.508587]  [0000000010166300] jbd2_journal_get_write_access+0x80/0xa0 [jbd2]
-[ 1937.509203]  [000000001019c400] __ext4_journal_get_write_access+0x20/0x60 [ext4]
-[ 1937.509812]  [00000000101bf824] ext4_reserve_inode_write+0x84/0xc0 [ext4]
-[ 1937.510301]  [00000000101bfa48] ext4_mark_inode_dirty+0x28/0x1e0 [ext4]
-[ 1937.510766]  [000000001019ce74] __ext4_ext_dirty.isra.0+0x54/0xa0 [ext4]
-[ 1937.511234]  [00000000101a66c8] ext4_ext_map_blocks+0x828/0x17c0 [ext4]
-[ 1937.511699]  [00000000101bb638] ext4_map_blocks+0xd8/0x6a0 [ext4]
-[ 1937.512134]  [00000000101a882c] ext4_convert_unwritten_extents+0x14c/0x200 [ext4]
-[ 1937.512706]  [00000000101a894c] ext4_convert_unwritten_io_end_vec+0x6c/0x100 [ext4]
-[ 1937.513388]  [00000000101dca00] ext4_end_io_rsv_work+0xe0/0x1c0 [ext4]
-[ 1937.513853] INFO: task http:1294 blocked for more than 120 seconds.
-[ 1937.514287]       Tainted: G            E     5.6.0-1-sparc64 #1 Debian 5.6.7-1
-[ 1937.514735] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1937.515277] http            D    0  1294   1283 0x208000103000000
-[ 1937.515732] Call Trace:
-[ 1937.515925]  [0000000000b10834] schedule+0x54/0x100
-[ 1937.516254]  [0000000000b10bf4] io_schedule+0x14/0x40
-[ 1937.516586]  [0000000000b1108c] bit_wait_io+0xc/0x80
-[ 1937.516924]  [0000000000b10c80] __wait_on_bit+0x60/0x100
-[ 1937.517426]  [0000000000b10d9c] out_of_line_wait_on_bit+0x7c/0xa0
-[ 1937.517897]  [0000000010166138] do_get_write_access+0x2f8/0x440 [jbd2]
-[ 1937.518346]  [0000000010166300] jbd2_journal_get_write_access+0x80/0xa0 [jbd2]
-[ 1937.518855]  [000000001019c400] __ext4_journal_get_write_access+0x20/0x60 [ext4]
-[ 1937.519369]  [00000000101bf824] ext4_reserve_inode_write+0x84/0xc0 [ext4]
-[ 1937.519883]  [00000000101bfa48] ext4_mark_inode_dirty+0x28/0x1e0 [ext4]
-[ 1937.520365]  [00000000101c3c6c] ext4_dirty_inode+0x4c/0x80 [ext4]
-[ 1937.520755]  [000000000066fe30] __mark_inode_dirty+0x130/0x340
-[ 1937.521307]  [00000000101c38ec] ext4_setattr+0x50c/0x840 [ext4]
-[ 1937.521744]  [000000000065c8c4] notify_change+0x384/0x560
-[ 1937.522093]  [0000000000677104] utimes_common.isra.0+0xc4/0x1a0
-[ 1937.522469]  [00000000006772e0] do_utimes+0x100/0x180
-[ 1937.522799] INFO: task kworker/0:3:1295 blocked for more than 120 seconds.
-[ 1937.523233]       Tainted: G            E     5.6.0-1-sparc64 #1 Debian 5.6.7-1
-[ 1937.523685] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1937.524186] kworker/0:3     D    0  1295      2 0x02000000
-[ 1937.524633] Workqueue: events ata_scsi_dev_rescan [libata]
-[ 1937.525100] Call Trace:
-[ 1937.525348]  [0000000000b10834] schedule+0x54/0x100
-[ 1937.525703]  [0000000000b10bf4] io_schedule+0x14/0x40
-[ 1937.526040]  [000000000079a33c] blk_mq_get_tag+0x11c/0x2c0
-[ 1937.526394]  [0000000000794e28] blk_mq_get_request+0xc8/0x3a0
-[ 1937.526766]  [000000000079514c] blk_mq_alloc_request+0x4c/0xa0
-[ 1937.527186]  [00000000007896f0] blk_get_request+0x30/0xe0
-[ 1937.527581]  [000000001003bd14] __scsi_execute+0x34/0x1a0 [scsi_mod]
-[ 1937.528022]  [0000000010034c6c] scsi_vpd_inquiry+0x6c/0xc0 [scsi_mod]
-[ 1937.528485]  [0000000010034dec] scsi_get_vpd_buf+0x4c/0x80 [scsi_mod]
-[ 1937.528938]  [0000000010034e30] scsi_update_vpd_page+0x10/0x60 [scsi_mod]
-[ 1937.529530]  [0000000010035b90] scsi_attach_vpd+0xd0/0x180 [scsi_mod]
-[ 1937.529988]  [00000000100402f8] scsi_rescan_device+0x18/0xa0 [scsi_mod]
-[ 1937.530489]  [00000000100a6620] ata_scsi_dev_rescan+0x80/0xe0 [libata]
-[ 1937.530906]  [0000000000482eb4] process_one_work+0x194/0x480
-[ 1937.531270]  [00000000004832e4] worker_thread+0x144/0x540
-[ 1937.531618]  [000000000048913c] kthread+0xdc/0x120
+thanks,
 
-... at which point I killed the damn thing.  Unpingable, doesn't react to serial
-console (the output is obviously there, the input doesn't reach shell, at the
-very least).  That was on current debian kernel (5.6.0-based), but the mainline
-5.7-rc1 behaves the same way.  qemu is (yesterday) mainline:
+greg k-h
 
-commit debe78ce14bf8f8940c2bdf3ef387505e9e035a9 (HEAD -> master, origin/master, origin/HEAD)
-Merge: 66706192de 9ecaf5ccec
-Author: Peter Maydell <peter.maydell@linaro.org>
-Date:   Fri May 15 19:51:16 2020 +0100
+-------------
+Pseudo-Shortlog of commits:
 
-    Merge remote-tracking branch 'remotes/rth/tags/pull-fpu-20200515' into staging
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.42-rc1
 
-and anything since bcf9e2c2f2 exhibits that behaviour.  qemu arguments:
-../qemu1/build/sparc64-softmmu/qemu-system-sparc64 \
-        -hda sid.img \
-        -drive id=hd,if=none,file=foo.raw,format=raw \
-        -device virtio-blk-pci,bus=pciB,drive=hd \
-        -netdev tap,ifname=tap4,script=no,downscript=no,id=net \
-        -device e1000,bus=pciB,netdev=net \
-        -nographic -m 1024
-foo.raw and sid.img have the same contents (sid.img is qcow2 - might or might not
-cause enough timing differences to trigger whatever's happening).
+Kamal Mostafa <kamal@canonical.com>
+    bpf: Test_progs, fix test_get_stack_rawtp_err.c build
 
-Looks like something got screwed in PCI interrupt routing in that sun4u branch back in
-2017.  If you have any suggestions on debugging that, I'd be glad to help; I'm not
-familiar with openbios guts, though ;-/
+Andrii Nakryiko <andriin@fb.com>
+    selftest/bpf: fix backported test_select_reuseport selftest changes
+
+Andrii Nakryiko <andriin@fb.com>
+    libbpf: Extract and generalize CPU mask parsing logic
+
+Sergei Trofimovich <slyfox@gentoo.org>
+    Makefile: disallow data races on gcc-10 as well
+
+Jim Mattson <jmattson@google.com>
+    KVM: x86: Fix off-by-one error in kvm_vcpu_ioctl_x86_setup_mce
+
+Xiyu Yang <xiyuyang19@fudan.edu.cn>
+    bpf: Fix sk_psock refcnt leak when receiving message
+
+Chuck Lever <chuck.lever@oracle.com>
+    SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()")
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    ARM: dts: r8a7740: Add missing extal2 to CPG node
+
+Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+    arm64: dts: renesas: r8a77980: Fix IPMMU VIP[01] nodes
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    ARM: dts: r8a73a4: Add missing CMT1 interrupts
+
+Adam Ford <aford173@gmail.com>
+    arm64: dts: imx8mn: Change SDMA1 ahb clock for imx8mn
+
+Chen-Yu Tsai <wens@csie.org>
+    arm64: dts: rockchip: Rename dwc3 device nodes on rk3399 to make dtc happy
+
+Chen-Yu Tsai <wens@csie.org>
+    arm64: dts: rockchip: Replace RK805 PMIC node name with "pmic" on rk3328 boards
+
+Neil Armstrong <narmstrong@baylibre.com>
+    arm64: dts: meson-g12-common: fix dwc2 clock names
+
+Neil Armstrong <narmstrong@baylibre.com>
+    arm64: dts: meson-g12b-khadas-vim3: add missing frddr_a status property
+
+Marc Zyngier <maz@kernel.org>
+    clk: Unlink clock if failed to prepare or enable
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    Revert "ALSA: hda/realtek: Fix pop noise on ALC225"
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    usb: gadget: legacy: fix error return code in cdc_bind()
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    usb: gadget: legacy: fix error return code in gncm_bind()
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    usb: gadget: audio: Fix a missing error return value in audio_bind()
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    usb: gadget: net2272: Fix a memory leak in an error handling path in 'net2272_plat_probe()'
+
+Amir Goldstein <amir73il@gmail.com>
+    fanotify: fix merging marks masks with FAN_ONDIR
+
+John Stultz <john.stultz@linaro.org>
+    dwc3: Remove check for HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
+
+Justin Swartz <justin.swartz@risingedge.co.za>
+    clk: rockchip: fix incorrect configuration of rk3228 aclk_gpu* clocks
+
+Eric W. Biederman <ebiederm@xmission.com>
+    exec: Move would_dump into flush_old_exec
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/unwind/orc: Fix error handling in __unwind_start()
+
+Borislav Petkov <bp@suse.de>
+    x86: Fix early boot crash on gcc-10, third try
+
+Adam McCoy <adam@forsedomani.com>
+    cifs: fix leaked reference on requeued write
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    powerpc/32s: Fix build failure with CONFIG_PPC_KUAP_DEBUG
+
+Simon Ser <contact@emersion.fr>
+    drm/amd/display: add basic atomic check for cursor plane
+
+Michal Vokáč <michal.vokac@ysoft.com>
+    ARM: dts: imx6dl-yapp4: Fix Ursa board Ethernet connection
+
+Fabio Estevam <festevam@gmail.com>
+    ARM: dts: imx27-phytec-phycard-s-rdk: Fix the I2C1 pinctrl entries
+
+Kishon Vijay Abraham I <kishon@ti.com>
+    ARM: dts: dra7: Fix bus_dma_limit for PCIe
+
+Peter Jones <pjones@redhat.com>
+    Make the "Reducing compressed framebufer size" message be DRM_INFO_ONCE()
+
+Sriharsha Allenki <sallenki@codeaurora.org>
+    usb: xhci: Fix NULL pointer dereference when enqueuing trbs from urb sg list
+
+Kyungtae Kim <kt0755@gmail.com>
+    USB: gadget: fix illegal array access in binding with UDC
+
+Peter Chen <peter.chen@nxp.com>
+    usb: cdns3: gadget: prev_req->trb is NULL for ep0
+
+Li Jun <jun.li@nxp.com>
+    usb: host: xhci-plat: keep runtime active when removing host
+
+Eugeniu Rosca <erosca@de.adit-jv.com>
+    usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to USB5534B
+
+Jesus Ramos <jesus-ramos@live.com>
+    ALSA: usb-audio: Add control message quirk delay for Kingston HyperX headset
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: rawmidi: Fix racy buffer resize under concurrent accesses
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek - Add COEF workaround for ASUS ZenBook UX431DA
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek - Limit int mic boost for Thinkpad T530
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    USB: usbfs: fix mmap dma mismatch
+
+Jeremy Linton <jeremy.linton@arm.com>
+    usb: usbfs: correct kernel->user page attribute mismatch
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    gcc-10: avoid shadowing standard library 'free()' in crypto
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    gcc-10: mark more functions __init to avoid section mismatch warnings
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    gcc-10 warnings: fix low-hanging fruit
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    gcc-10: disable 'restrict' warning for now
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    gcc-10: disable 'stringop-overflow' warning for now
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    gcc-10: disable 'array-bounds' warning for now
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    gcc-10: disable 'zero-length-bounds' warning for now
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    Stop the ad-hoc games with -Wno-maybe-initialized
+
+Jason Gunthorpe <jgg@ziepe.ca>
+    net/rds: Use ERR_PTR for rds_message_alloc_sgs()
+
+Jason Gunthorpe <jgg@ziepe.ca>
+    pnp: Use list_for_each_entry() instead of open coding
+
+Olga Kornievskaia <olga.kornievskaia@gmail.com>
+    NFSv3: fix rpc receive buffer size for MOUNT call
+
+Yafang Shao <laoar.shao@gmail.com>
+    mm, memcg: fix inconsistent oom event behavior
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    s390/ism: fix error return code in ism_probe()
+
+Samu Nuutamo <samu.nuutamo@vincit.fi>
+    hwmon: (da9052) Synchronize access with mfd
+
+Potnuri Bharat Teja <bharat@chelsio.com>
+    RDMA/iw_cxgb4: Fix incorrect function parameters
+
+Sasha Levin <sashal@kernel.org>
+    RDMA/core: Fix double put of resource
+
+Jack Morgenstein <jackm@dev.mellanox.co.il>
+    IB/core: Fix potential NULL pointer dereference in pkey cache
+
+Jack Morgenstein <jackm@dev.mellanox.co.il>
+    IB/mlx4: Test return value of calls to ib_get_cached_pkey
+
+Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+    RDMA/rxe: Always return ERR_PTR from rxe_create_mmap_info()
+
+Phil Sutter <phil@nwl.cc>
+    netfilter: nft_set_rbtree: Add missing expired checks
+
+Stefano Brivio <sbrivio@redhat.com>
+    netfilter: nft_set_rbtree: Introduce and use nft_rbtree_interval_start()
+
+Chuck Lever <chuck.lever@oracle.com>
+    SUNRPC: Signalled ASYNC tasks need to exit
+
+J. Bruce Fields <bfields@redhat.com>
+    nfs: fix NULL deference in nfs4_get_valid_delegation
+
+Christoph Hellwig <hch@lst.de>
+    arm64: fix the flush_icache_range arguments in machine_kexec
+
+Zhenyu Wang <zhenyuw@linux.intel.com>
+    drm/i915/gvt: Fix kernel oops for 3-level ppgtt guest
+
+Arnd Bergmann <arnd@arndb.de>
+    netfilter: conntrack: avoid gcc-10 zero-length-bounds warning
+
+Dave Wysochanski <dwysocha@redhat.com>
+    NFSv4: Fix fscache cookie aux_data to ensure change_attr is included
+
+Arnd Bergmann <arnd@arndb.de>
+    nfs: fscache: use timespec64 in inode auxdata
+
+Dave Wysochanski <dwysocha@redhat.com>
+    NFS: Fix fscache super_cookie index_key from changing after umount
+
+Alex Deucher <alexander.deucher@amd.com>
+    drm/amdgpu: force fbdev into vram
+
+Christian Brauner <christian.brauner@ubuntu.com>
+    fork: prevent accidental access to clone3 features
+
+Andreas Gruenbacher <agruenba@redhat.com>
+    gfs2: More gfs2_find_jhead fixes
+
+Adrian Hunter <adrian.hunter@intel.com>
+    mmc: block: Fix request completion in the CQE timeout path
+
+Sarthak Garg <sartgarg@codeaurora.org>
+    mmc: core: Fix recursive locking issue in CQE recovery path
+
+Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+    mmc: core: Check request type before completing the request
+
+Ben Chuang <ben.chuang@genesyslogic.com.tw>
+    mmc: sdhci-pci-gli: Fix can not access GL9750 after reboot from Windows 10
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    mmc: alcor: Fix a resource leak in the error path for ->probe()
+
+John Fastabend <john.fastabend@gmail.com>
+    bpf, sockmap: bpf_tcp_ingress needs to subtract bytes from sg.size
+
+John Fastabend <john.fastabend@gmail.com>
+    bpf, sockmap: msg_pop_data can incorrecty set an sge length
+
+Sultan Alsawaf <sultan@kerneltoast.com>
+    drm/i915: Don't enable WaIncreaseLatencyIPCEnabled when IPC is disabled
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    i40iw: Fix error handling in i40iw_manage_arp_cache()
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: firewire-lib: fix 'function sizeof not defined' error of tracepoints format
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    bpf: Fix error return code in map_lookup_and_delete_elem()
+
+Grace Kao <grace.kao@intel.com>
+    pinctrl: cherryview: Add missing spinlock usage in chv_gpio_irq_handler
+
+Ansuel Smith <ansuelsmth@gmail.com>
+    pinctrl: qcom: fix wrong write in update_dual_edge
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    pinctrl: baytrail: Enable pin configuration setting for GPIO chip
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    pinctrl: sunrisepoint: Fix PAD lock register offset for SPT-H
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    ACPI: EC: PM: Avoid premature returns from acpi_s2idle_wake()
+
+Mike Marciniszyn <mike.marciniszyn@intel.com>
+    IB/hfi1: Fix another case where pq is left on waitlist
+
+Ben Chuang <ben.chuang@genesyslogic.com.tw>
+    mmc: sdhci-pci-gli: Fix no irq handler from suspend
+
+Andreas Gruenbacher <agruenba@redhat.com>
+    gfs2: Another gfs2_walk_metadata fix
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    ALSA: hda/realtek - Fix S3 pop noise on Dell Wyse
+
+Vasily Averin <vvs@virtuozzo.com>
+    ipc/util.c: sysvipc_find_ipc() incorrectly updates position index
+
+Marek Olšák <marek.olsak@amd.com>
+    drm/amdgpu: invalidate L2 before SDMA IBs (v2)
+
+Luben Tuikov <luben.tuikov@amd.com>
+    drm/amdgpu: simplify padding calculations (v2)
+
+Vasily Averin <vvs@virtuozzo.com>
+    drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
+
+Sung Lee <sung.lee@amd.com>
+    drm/amd/display: Update downspread percent to match spreadsheet for DCN2.1
+
+Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+    drm/amd/display: check if REFCLK_CNTL register is present
+
+Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+    drm/amd/powerplay: avoid using pm_en before it is initialized revised
+
+Kai Vehmanen <kai.vehmanen@linux.intel.com>
+    ALSA: hda/hdmi: fix race in monitor detection during probe
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    cpufreq: intel_pstate: Only mention the BIOS disabling turbo mode once
+
+Xiao Yang <yangx.jy@cn.fujitsu.com>
+    selftests/ftrace: Check the first record for kprobe_args_type.tc
+
+Lubomir Rintel <lkundrak@v3.sk>
+    dmaengine: mmp_tdma: Reset channel error on release
+
+Lubomir Rintel <lkundrak@v3.sk>
+    dmaengine: mmp_tdma: Do not ignore slave config validation errors
+
+Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+    dmaengine: pch_dma.c: Avoid data race between probe and irq handler
+
+Ilie Halip <ilie.halip@gmail.com>
+    riscv: fix vdso build with lld
+
+Vincent Minet <v.minet@criteo.com>
+    umh: fix memory leak on execve failure
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    r8169: re-establish support for RTL8401 chip version
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    nfp: abm: fix error return code in nfp_abm_vnic_alloc()
+
+Kelly Littlepage <kelly@onechronos.com>
+    net: tcp: fix rx timestamp behavior for tcp_recvmsg
+
+Zefan Li <lizefan@huawei.com>
+    netprio_cgroup: Fix unlimited memory leak of v2 cgroups
+
+Paolo Abeni <pabeni@redhat.com>
+    net: ipv4: really enforce backoff for redirects
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: dsa: loop: Add module soft dependency
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a bug of ndo_stop
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    dpaa2-eth: prevent array underflow in update_cls_rule()
+
+Michael S. Tsirkin <mst@redhat.com>
+    virtio_net: fix lockdep warning on 32 bit
+
+Eric Dumazet <edumazet@google.com>
+    tcp: fix SO_RCVLOWAT hangs with fat skbs
+
+Eric Dumazet <edumazet@google.com>
+    tcp: fix error recovery in tcp_zerocopy_receive()
+
+Maciej Żenczykowski <maze@google.com>
+    Revert "ipv6: add mtu lock check in __ip6_rt_update_pmtu"
+
+Guillaume Nault <gnault@redhat.com>
+    pppoe: only process PADT targeted at local interfaces
+
+Vinod Koul <vkoul@kernel.org>
+    net: stmmac: fix num_por initialization
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: phy: fix aneg restart in phy_ethtool_set_eee
+
+Paolo Abeni <pabeni@redhat.com>
+    netlabel: cope with NULL catmap
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net: fix a potential recursive NETDEV_FEAT_CHANGE
+
+Ioana Ciornei <ioana.ciornei@nxp.com>
+    dpaa2-eth: properly handle buffer size restrictions
+
+Raul E Rangel <rrangel@chromium.org>
+    mmc: sdhci-acpi: Add SDHCI_QUIRK2_BROKEN_64_BIT_DMA for AMDI0040
+
+Hangbin Liu <liuhangbin@gmail.com>
+    selftests/bpf: fix goto cleanup label not defined
+
+Wu Bo <wubo40@huawei.com>
+    scsi: sg: add sg_remove_request in sg_write
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: fix tcm_parent in tc filter dump
+
+Arnd Bergmann <arnd@arndb.de>
+    sun6i: dsi: fix gcc-4.8
+
+Stefan Hajnoczi <stefanha@redhat.com>
+    virtio-blk: handle block_device_operations callbacks after hot unplug
+
+Arnd Bergmann <arnd@arndb.de>
+    drop_monitor: work around gcc-10 stringop-overflow warning
+
+Alan Maguire <alan.maguire@oracle.com>
+    ftrace/selftests: workaround cgroup RT scheduling issues
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    net: moxa: Fix a potential double 'free_irq()'
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    net/sonic: Fix a resource leak in an error handling path in 'jazz_sonic_probe()'
+
+Chuck Lever <chuck.lever@oracle.com>
+    SUNRPC: Fix GSS privacy computation of auth->au_ralign
+
+Chuck Lever <chuck.lever@oracle.com>
+    SUNRPC: Add "@len" parameter to gss_unwrap()
+
+Adam Ford <aford173@gmail.com>
+    gpio: pca953x: Fix pca953x_gpio_set_config
+
+Marc Zyngier <maz@kernel.org>
+    KVM: arm: vgic: Synchronize the whole guest on GIC{D,R}_I{S,C}ACTIVER read
+
+Yuiko Oshino <yuiko.oshino@microchip.com>
+    net: phy: microchip_t1: add lan87xx_phy_init to initialize the lan87xx phy.
+
+Hugh Dickins <hughd@google.com>
+    shmem: fix possible deadlocks on shmlock_user_lock
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: dsa: Do not make user port errors fatal
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  20 ++-
+ arch/arm/boot/dts/dra7.dtsi                        |   4 +-
+ arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts   |   4 +-
+ arch/arm/boot/dts/imx6dl-yapp4-ursa.dts            |   2 +-
+ arch/arm/boot/dts/r8a73a4.dtsi                     |   9 +-
+ arch/arm/boot/dts/r8a7740.dtsi                     |   2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi  |   2 +-
+ .../boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi   |   4 +
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi          |   2 +-
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi          |   2 +
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts        |   2 +-
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts     |   2 +-
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   4 +-
+ arch/arm64/kernel/machine_kexec.c                  |   1 +
+ arch/powerpc/include/asm/book3s/32/kup.h           |   2 +-
+ arch/riscv/kernel/vdso/Makefile                    |   6 +-
+ arch/x86/include/asm/stackprotector.h              |   7 +-
+ arch/x86/kernel/smpboot.c                          |   8 +
+ arch/x86/kernel/unwind_orc.c                       |  16 +-
+ arch/x86/kvm/x86.c                                 |   2 +-
+ arch/x86/xen/smp_pv.c                              |   1 +
+ crypto/lrw.c                                       |   4 +-
+ crypto/xts.c                                       |   4 +-
+ drivers/acpi/ec.c                                  |  24 ++-
+ drivers/acpi/internal.h                            |   1 -
+ drivers/acpi/sleep.c                               |  14 +-
+ drivers/block/virtio_blk.c                         |  86 ++++++++++-
+ drivers/clk/clk.c                                  |   3 +
+ drivers/clk/rockchip/clk-rk3228.c                  |  17 +-
+ drivers/cpufreq/intel_pstate.c                     |   2 +-
+ drivers/dma/mmp_tdma.c                             |   5 +-
+ drivers/dma/pch_dma.c                              |   2 +-
+ drivers/firmware/efi/tpm.c                         |   2 +-
+ drivers/gpio/gpio-pca953x.c                        |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c             |   3 +-
+ drivers/gpu/drm/amd/amdgpu/cik_sdma.c              |   4 +-
+ drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h  |  16 ++
+ drivers/gpu/drm/amd/amdgpu/sdma_v2_4.c             |   4 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v3_0.c             |   4 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c             |   4 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c             |  31 +++-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  26 +++-
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c |   3 +-
+ .../gpu/drm/amd/display/dc/dcn21/dcn21_resource.c  |   2 +-
+ drivers/gpu/drm/amd/powerplay/amd_powerplay.c      |   6 +-
+ drivers/gpu/drm/i915/display/intel_fbc.c           |   3 +-
+ drivers/gpu/drm/i915/gvt/scheduler.c               |   6 +-
+ drivers/gpu/drm/i915/intel_pm.c                    |   2 +-
+ drivers/gpu/drm/qxl/qxl_image.c                    |   3 +-
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c             |   2 +-
+ drivers/hwmon/da9052-hwmon.c                       |   4 +-
+ drivers/infiniband/core/cache.c                    |   7 +-
+ drivers/infiniband/core/nldev.c                    |   2 +-
+ drivers/infiniband/hw/cxgb4/cm.c                   |   7 +-
+ drivers/infiniband/hw/hfi1/user_sdma.c             |   4 -
+ drivers/infiniband/hw/i40iw/i40iw_hw.c             |   2 +-
+ drivers/infiniband/hw/mlx4/qp.c                    |  14 +-
+ drivers/infiniband/sw/rxe/rxe_mmap.c               |   2 +-
+ drivers/infiniband/sw/rxe/rxe_queue.c              |  11 +-
+ drivers/mmc/core/block.c                           |   3 +-
+ drivers/mmc/core/queue.c                           |  16 +-
+ drivers/mmc/host/alcor.c                           |   6 +-
+ drivers/mmc/host/sdhci-acpi.c                      |  10 +-
+ drivers/mmc/host/sdhci-pci-gli.c                   |  23 +++
+ drivers/net/dsa/dsa_loop.c                         |   1 +
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c   |  29 ++--
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h   |   1 +
+ .../net/ethernet/freescale/dpaa2/dpaa2-ethtool.c   |   2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c  |  16 +-
+ drivers/net/ethernet/huawei/hinic/hinic_main.c     |  16 +-
+ drivers/net/ethernet/moxa/moxart_ether.c           |   2 +-
+ drivers/net/ethernet/natsemi/jazzsonic.c           |   6 +-
+ drivers/net/ethernet/netronome/nfp/abm/main.c      |   4 +-
+ drivers/net/ethernet/realtek/r8169_main.c          |   2 +
+ .../ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c    |  17 +-
+ drivers/net/phy/microchip_t1.c                     | 171 +++++++++++++++++++++
+ drivers/net/phy/phy.c                              |   8 +-
+ drivers/net/ppp/pppoe.c                            |   3 +
+ drivers/net/virtio_net.c                           |   6 +-
+ drivers/pinctrl/intel/pinctrl-baytrail.c           |   1 +
+ drivers/pinctrl/intel/pinctrl-cherryview.c         |   4 +
+ drivers/pinctrl/intel/pinctrl-sunrisepoint.c       |  15 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |   2 +-
+ drivers/s390/net/ism_drv.c                         |   4 +-
+ drivers/scsi/sg.c                                  |   4 +-
+ drivers/usb/cdns3/gadget.c                         |   2 +-
+ drivers/usb/core/devio.c                           |  19 ++-
+ drivers/usb/core/hub.c                             |   6 +-
+ drivers/usb/dwc3/gadget.c                          |   3 -
+ drivers/usb/gadget/configfs.c                      |   3 +
+ drivers/usb/gadget/legacy/audio.c                  |   4 +-
+ drivers/usb/gadget/legacy/cdc2.c                   |   4 +-
+ drivers/usb/gadget/legacy/ncm.c                    |   4 +-
+ drivers/usb/gadget/udc/net2272.c                   |   2 +
+ drivers/usb/host/xhci-plat.c                       |   4 +-
+ drivers/usb/host/xhci-ring.c                       |   4 +-
+ fs/cifs/cifssmb.c                                  |   2 +-
+ fs/exec.c                                          |   4 +-
+ fs/gfs2/bmap.c                                     |  16 +-
+ fs/gfs2/lops.c                                     |  19 ++-
+ fs/nfs/fscache-index.c                             |   6 +-
+ fs/nfs/fscache.c                                   |  31 ++--
+ fs/nfs/fscache.h                                   |   8 +-
+ fs/nfs/mount_clnt.c                                |   3 +-
+ fs/nfs/nfs4state.c                                 |   2 +-
+ fs/notify/fanotify/fanotify.c                      |  11 +-
+ include/linux/compiler.h                           |   6 +
+ include/linux/fs.h                                 |   2 +-
+ include/linux/memcontrol.h                         |   2 +
+ include/linux/pnp.h                                |  29 ++--
+ include/linux/skmsg.h                              |   1 +
+ include/linux/sunrpc/gss_api.h                     |   3 +
+ include/linux/sunrpc/gss_krb5.h                    |   6 +-
+ include/linux/sunrpc/xdr.h                         |   1 +
+ include/linux/tty.h                                |   2 +-
+ include/net/netfilter/nf_conntrack.h               |   2 +-
+ include/net/sch_generic.h                          |   1 +
+ include/net/tcp.h                                  |  13 ++
+ include/sound/rawmidi.h                            |   1 +
+ init/Kconfig                                       |  18 ---
+ init/initramfs.c                                   |   2 +-
+ init/main.c                                        |   2 +
+ ipc/util.c                                         |  12 +-
+ kernel/bpf/syscall.c                               |   4 +-
+ kernel/fork.c                                      |  13 +-
+ kernel/trace/Kconfig                               |   1 -
+ kernel/umh.c                                       |   6 +
+ mm/shmem.c                                         |   7 +-
+ net/core/dev.c                                     |   4 +-
+ net/core/drop_monitor.c                            |  11 +-
+ net/core/filter.c                                  |   2 +-
+ net/core/netprio_cgroup.c                          |   2 +
+ net/dsa/dsa2.c                                     |   8 +-
+ net/ipv4/cipso_ipv4.c                              |   6 +-
+ net/ipv4/route.c                                   |   2 +-
+ net/ipv4/tcp.c                                     |  27 +++-
+ net/ipv4/tcp_bpf.c                                 |  10 +-
+ net/ipv4/tcp_input.c                               |   3 +-
+ net/ipv6/calipso.c                                 |   3 +-
+ net/ipv6/route.c                                   |   6 +-
+ net/netfilter/nf_conntrack_core.c                  |   4 +-
+ net/netfilter/nft_set_rbtree.c                     |  28 +++-
+ net/netlabel/netlabel_kapi.c                       |   6 +
+ net/rds/message.c                                  |  19 +--
+ net/rds/rdma.c                                     |  12 +-
+ net/rds/rds.h                                      |   3 +-
+ net/rds/send.c                                     |   6 +-
+ net/sched/cls_api.c                                |   8 +-
+ net/sunrpc/auth_gss/auth_gss.c                     |  12 +-
+ net/sunrpc/auth_gss/gss_krb5_crypto.c              |   8 +-
+ net/sunrpc/auth_gss/gss_krb5_wrap.c                |  44 ++++--
+ net/sunrpc/auth_gss/gss_mech_switch.c              |   3 +-
+ net/sunrpc/auth_gss/svcauth_gss.c                  |  10 +-
+ net/sunrpc/clnt.c                                  |   5 +
+ net/sunrpc/xdr.c                                   |  41 +++++
+ sound/core/rawmidi.c                               |  31 +++-
+ sound/firewire/amdtp-stream-trace.h                |   3 +-
+ sound/pci/hda/patch_hdmi.c                         |   2 +
+ sound/pci/hda/patch_realtek.c                      |  41 ++++-
+ sound/usb/quirks.c                                 |   9 +-
+ tools/lib/bpf/libbpf.c                             | 126 ++++++++++-----
+ tools/lib/bpf/libbpf_internal.h                    |   2 +
+ .../bpf/prog_tests/stacktrace_build_id_nmi.c       |   2 +-
+ .../selftests/bpf/progs/test_get_stack_rawtp_err.c |   2 +-
+ .../testing/selftests/bpf/test_select_reuseport.c  |   4 +-
+ tools/testing/selftests/ftrace/ftracetest          |  22 +++
+ .../ftrace/test.d/kprobe/kprobe_args_type.tc       |   2 +-
+ virt/kvm/arm/vgic/vgic-mmio-v2.c                   |   4 +-
+ virt/kvm/arm/vgic/vgic-mmio-v3.c                   |  12 +-
+ virt/kvm/arm/vgic/vgic-mmio.c                      | 100 +++++++-----
+ virt/kvm/arm/vgic/vgic-mmio.h                      |   3 +
+ 171 files changed, 1238 insertions(+), 523 deletions(-)
+
+
