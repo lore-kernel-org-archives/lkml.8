@@ -2,141 +2,82 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB02DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A061120756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:38:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXMQfkf2"
+	by mail.kernel.org (Postfix) with ESMTP id AFEF320709
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgERLi0 (ORCPT
+        id S1727067AbgERLjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgERLiZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:38:25 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA0E6C061A0C;
-        Mon, 18 May 2020 04:38:25 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id s69so5011955pjb.4;
-        Mon, 18 May 2020 04:38:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tFYbOS9O2Ltwi9wFSOezvo7kaD7sfz92gMvItxnnShM=;
-        b=NXMQfkf2JjFCUAex4KRSqSyb1zZG9+lbZ8xVO4CeS037zxqs7aomMFCIYlpeW3sImx
-         XkzoyJhhdsNP/UPSybb/FvWsgsd9o4QwKLhcgzE5jThKXARHk17wvO2Nrpkvtatamd6T
-         eIi8GPXjgouP9M+SBTBrpfn0iHp/EjDr8eVt61m1T1Wm7eYEEQ1ew5rem5iyN2JgpAmY
-         HtaiGQslZ2n0rVoh+Siu3tOJUKJMviRsbz9HEMvCLryUqNUq/V5B8kBQ9IOcaSii+8TI
-         +HKvnKBUumta0nugBBjmBO0DL/J9AxtiGyAzyvGO/telkWEIXOyJb1hzylG0q2AJMiAB
-         jlpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tFYbOS9O2Ltwi9wFSOezvo7kaD7sfz92gMvItxnnShM=;
-        b=q+f5qGJsS71FHi7WhpM2vtWfp2dMGtPXR+rhBQbq/AR1yysGHIt/Uk39F9MirIZYDc
-         7ks/lJaUze/FHrmCLQETABo8KTDr1O8mHsCV29848ohbTUfEZaYHi2SKQJ2yPqIjNXZU
-         JX9cbbmU6DkPJ80WwkZN83IMEU+nbb3wCo1shxPsnY3I5WWaogh0EZKO1oZ05TN2j5YM
-         F508zSfHi+dYY+yTY84Uy2L+gl/qLsUO17PkmgvzE6BOm+WoIXFwV1BzN/7Wf80ZmAuc
-         UaMslS1BIIozaMTlt5VH3DFmXcg7qyn3vSNNRtfEFEHAsMywOW1XDhMYDTAnS32DoUPN
-         16yw==
-X-Gm-Message-State: AOAM533Tm9SRnsrzcpQx1xnp+hRMJyeyXUDKufWSqpibfpglQfm7s9ea
-        MQAViMZnDOh1D9NDIFAp8QQMAMW8tcuSA+ieJXo=
-X-Google-Smtp-Source: ABdhPJynIdw8n9smtcUVVt1+xFJ7nfgBacpNT7rwXVcqHEAHNqbO846my5bVMtqSHbfVdZ6g8cgfW4hm1KY+nSJ1EA4=
-X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr19706098pjb.129.1589801905266;
- Mon, 18 May 2020 04:38:25 -0700 (PDT)
+        Mon, 18 May 2020 07:39:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:38774 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgERLjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:39:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D38C9106F;
+        Mon, 18 May 2020 04:39:03 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73FB53F52E;
+        Mon, 18 May 2020 04:39:01 -0700 (PDT)
+Date:   Mon, 18 May 2020 12:38:58 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@am.com>,
+        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
+Subject: Re: [PATCH 2/6] scs: Move accounting into alloc/free functions
+Message-ID: <20200518113858.GB1957@C02TD0UTHF1T.local>
+References: <20200515172756.27185-1-will@kernel.org>
+ <20200515172756.27185-3-will@kernel.org>
 MIME-Version: 1.0
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru> <20200515104758.6934-7-Sergey.Semin@baikalelectronics.ru>
- <20200515123422.GZ185537@smile.fi.intel.com> <20200516142030.kburieaxjg4n7c42@mobilestation>
- <20200518110004.GW1634618@smile.fi.intel.com>
-In-Reply-To: <20200518110004.GW1634618@smile.fi.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 May 2020 14:38:13 +0300
-Message-ID: <CAHp75Vf268nfwJ4Bm+A+-CsqjBSHgKVmiiON=ffUd79DCOcE8Q@mail.gmail.com>
-Subject: Re: [PATCH v2 06/19] spi: dw: Discard static DW DMA slave structures
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515172756.27185-3-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 2:01 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Sat, May 16, 2020 at 05:20:30PM +0300, Serge Semin wrote:
-> > On Fri, May 15, 2020 at 03:34:22PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 15, 2020 at 01:47:45PM +0300, Serge Semin wrote:
-> > > > Having them declared is redundant since each struct dw_dma_chan has
-> > > > the same structure embedded and the structure from the passed dma_chan
-> > > > private pointer will be copied there as a result of the next calls
-> > > > chain:
-> > > > dma_request_channel() -> find_candidate() -> dma_chan_get() ->
-> > > > device_alloc_chan_resources() = dwc_alloc_chan_resources() ->
-> > > > dw_dma_filter().
-> > > > So just remove the static dw_dma_chan structures and use a locally
-> > > > declared data instance with dst_id/src_id set to the same values as
-> > > > the static copies used to have.
-> > >
-> > > ...
-> > >
-> > > > -static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
-> > > > -static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
-> > >
-> > > > + struct dw_dma_slave slave = {0};
-> > >
-> > > I really would like to leave them separated and as in the original form, i.e.
-> > >
-> > >     struct dw_dma_slave tx = { .dst_id = 1 };
-> > >     struct dw_dma_slave rx = { .src_id = 0 };
-> > >
-> > > those src and dst IDs are put in that form on purpose...
-> >
-> > As long as you don't tell us what purpose it is, my position won't change.
->
-> It's not the way when your changes makes this the older (upstreamed) stuff's
-> issue, it's an opposite. But I will help you here...
->
-> > These structures declared here just hold the static memory and nothing
-> > else. Allocating them on stack is better.
->
-> I'm not talking about stack, it's fine for me, what I'm talking about is *how*
-> they are being initialized. Read my message again carefully, please.
+On Fri, May 15, 2020 at 06:27:52PM +0100, Will Deacon wrote:
+> There's no need to perform the shadow stack page accounting independently
+> of the lifetime of the underlying allocation, so call the accounting code
+> from the {alloc,free}() functions and simplify the code in the process.
+> 
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  kernel/scs.c | 45 +++++++++++++++++++++------------------------
+>  1 file changed, 21 insertions(+), 24 deletions(-)
 
-And to avoid additional churn around this, the purpose is to show what
-Dreq number is in use actually for these transfers (that's why 0
-assignment is explicitly there and no counterpart Dreq filled).
+One (super trivial) nit below, but regardless this looks like a sound
+and sensible cleanup, so:
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+
+> diff --git a/kernel/scs.c b/kernel/scs.c
+> index 5ff8663e4a67..aea841cd7586 100644
+> --- a/kernel/scs.c
+> +++ b/kernel/scs.c
+> @@ -14,25 +14,35 @@
+
+>  static void *scs_alloc(int node)
+>  {
+
+> +	void *s = kmem_cache_alloc_node(scs_cache, GFP_SCS, node);
+> +
+> +	if (!s)
+> +		return NULL;
+
+Super trivial nit, but could we omit the line space between these two,
+to fit with usual style?
+
+Mark.
