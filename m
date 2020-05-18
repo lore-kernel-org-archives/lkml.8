@@ -2,108 +2,84 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BF7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECE920671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2FB20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825865;
-	bh=iI6/4pieNmhea6dG1LXDMXm/LdTJkwUeGnsdS5TIGu4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R5gwV5doK3aAARKK0RCG81uJt6vw73W1DRpJBnnQh/4xckCiBgelqVng8/7Jrnm29
-	 dhisYm7Sxhb8y7BL4xb/fMZumpG8XLwaczn6Q78ihQ1HBqzFCjGm/slZl8RY8xrddg
-	 C7HsUe4+fTCXox0UaCW47AkuIBpppV7xb/tcY5IU=
+	s=default; t=1589825869;
+	bh=KHEgyZZzoo7mWHblJF4i6DA0WwL5tO5haj/2mSX8coE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eKd3oVXXj6xhCS3iR+6eWjMmbWVx0Nw2m3bDCGD4oy/dWi8Gm6O5HcMW50cyeMGTA
+	 5/+9gDsfcFHmPDC+LbKJDFR0wiP/jJhloXCVtNVzTbXGZX9SIqgSzSFGBTfeL+oVDp
+	 nFmRzg73eOgIE+L/VSjuH837BBGMCC/PuLY41rsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731692AbgERR4t (ORCPT
+        id S1732318AbgERSRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:56:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731676AbgERR4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CD8F20674;
-        Mon, 18 May 2020 17:56:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824604;
-        bh=iI6/4pieNmhea6dG1LXDMXm/LdTJkwUeGnsdS5TIGu4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TlCLRf37lLqyYWzsJ4t5SJokgztIOOzWFnjh3txmZ4/UpwFjWWnftqZovTr7fBbQI
-         NRC2NFDnNCJVdmooFB1hMJayehdSYcFnWABfQpQFtEr5Op3QU8kmIlp2G7Hj2U/6gg
-         7K69CXTI1Xn7rjE0YtP1UTGTLbIoBEVAa/TqWbMo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 041/147] selftests/ftrace: Check the first record for kprobe_args_type.tc
-Date:   Mon, 18 May 2020 19:36:04 +0200
-Message-Id: <20200518173519.175651703@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
-References: <20200518173513.009514388@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 18 May 2020 14:17:48 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46588 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729804AbgERSRp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:17:45 -0400
+Received: by mail-io1-f65.google.com with SMTP id j8so11628431iog.13;
+        Mon, 18 May 2020 11:17:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wH2wpsF4FeBFwhkjZBgF9GlZnTfwvwb/yr+LagJqrpw=;
+        b=kSBJbeBFe+iqYOKsUy2ANOUT8RnmtwuSOZsuYT1YMDQyfI5zjyNFEoaxhwa/ZCMSdo
+         20aDF0mWfFxw3QyEN2nU9Z45pbew96wpeIAGHFaGqj2SfNmU9c2yDuql0+BZmc/jfUdr
+         p1JOPon4PPHYj1Ws1RL4XE+Gc9Q3BvxVlN6hBkYr1A5dGsLYnh7d/iR+giYrr8VTjfBT
+         u8tDDpEfJ2btPz866vJivQfRyhjTvpnJTelmVzKWA5bJ5LPqyA1QsIwGblEIQ8S+hxsa
+         f3PlraMeJQwsKBAMxPHwZgI+ppbvaeMw0LuMscsPGK14EzXr0G3k0MlqUscsQtQqWqfW
+         h54g==
+X-Gm-Message-State: AOAM531riIaBuWjHUc21bfL8MldypR9tQ7jcOaJnYrElWGyha1nHlsH3
+        1uFc5wwwOp6KNMRI7bGkSA==
+X-Google-Smtp-Source: ABdhPJxBTebcxj6RzsmcfGZ/6flTsiq6MHsYPPbOoqoI1bDj5QSrtkeJ/VN4Vm/MyZaUM3vZkbSFww==
+X-Received: by 2002:a5d:954c:: with SMTP id a12mr15748646ios.208.1589825864973;
+        Mon, 18 May 2020 11:17:44 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id g65sm4587417ila.21.2020.05.18.11.17.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 11:17:44 -0700 (PDT)
+Received: (nullmailer pid 22861 invoked by uid 1000);
+        Mon, 18 May 2020 18:17:43 -0000
+Date:   Mon, 18 May 2020 12:17:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 1/3] dt-bindings: phy: Drop reset-gpios from
+ marvell,mmp3-hsic-phy
+Message-ID: <20200518181743.GA22794@bogus>
+References: <20200509081754.474787-1-lkundrak@v3.sk>
+ <20200509081754.474787-2-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200509081754.474787-2-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Yang <yangx.jy@cn.fujitsu.com>
+On Sat,  9 May 2020 10:17:52 +0200, Lubomir Rintel wrote:
+> This has been added in error -- the PHY block doesn't have a reset pin.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml     | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
 
-[ Upstream commit f0c0d0cf590f71b2213b29a7ded2cde3d0a1a0ba ]
-
-It is possible to get multiple records from trace during test and then more
-than 4 arguments are assigned to ARGS.  This situation results in the failure
-of kprobe_args_type.tc.  For example:
------------------------------------------------------------
-grep testprobe trace
-   ftracetest-5902  [001] d... 111195.682227: testprobe: (_do_fork+0x0/0x460) arg1=334823024 arg2=334823024 arg3=0x13f4fe70 arg4=7
-     pmlogger-5949  [000] d... 111195.709898: testprobe: (_do_fork+0x0/0x460) arg1=345308784 arg2=345308784 arg3=0x1494fe70 arg4=7
- grep testprobe trace
- sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'
-ARGS='334823024 334823024 0x13f4fe70 7
-345308784 345308784 0x1494fe70 7'
------------------------------------------------------------
-
-We don't care which process calls do_fork so just check the first record to
-fix the issue.
-
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc  | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
-index 1bcb67dcae267..81490ecaaa927 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
-@@ -38,7 +38,7 @@ for width in 64 32 16 8; do
-   echo 0 > events/kprobes/testprobe/enable
- 
-   : "Confirm the arguments is recorded in given types correctly"
--  ARGS=`grep "testprobe" trace | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
-+  ARGS=`grep "testprobe" trace | head -n 1 | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
-   check_types $ARGS $width
- 
-   : "Clear event for next loop"
--- 
-2.20.1
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
