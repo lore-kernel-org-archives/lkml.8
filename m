@@ -2,187 +2,89 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE811C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD1A20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589800484;
-	bh=Xft0OX1sCG8ou9a4KxwIg+OYYH2TEd6FEcukn63aO88=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W9ZP54IXF91xHuYcdZ1kL+oBLInnoGCP17Oegb8+nnYSjPUw4gp3bCqhhlN8oTaLH
-	 avMYpxJ0GxKb3Vl/6NRZxTzsz8oNU3bewXf5EYa0RBH+WN667U1SxTaMfXoolRu8nk
-	 JB/G5ei/5A8wfOljcdG6rCFmZR90f05bOHWkWXD0=
+	by mail.kernel.org (Postfix) with ESMTP id BC16F207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:15:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgERLOn (ORCPT
+        id S1727911AbgERLPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:14:43 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:33199 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727840AbgERLOg (ORCPT
+        Mon, 18 May 2020 07:15:43 -0400
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:42624 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgERLPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:14:36 -0400
-Received: by mail-oo1-f66.google.com with SMTP id q6so1948442oot.0;
-        Mon, 18 May 2020 04:14:35 -0700 (PDT)
+        Mon, 18 May 2020 07:15:42 -0400
+Received: by mail-oo1-f68.google.com with SMTP id a83so1942721oob.9;
+        Mon, 18 May 2020 04:15:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xIPLeWfzuIiw+O1I+1psfswOSkbFeXLFcX0dH9PjiPk=;
-        b=VKXy+kZFmQZOVGV4ja7GB9lC/o6XQ25NP4HKhhIIRpMukzO0GmDm2lBq6DOH/3RTgy
-         JluM3WKFVRm1HpxTIgrCPDXhWFxBmXJDEIvSwIdOV2it/71ZnxyWPJuxYlBSTzSP1Mil
-         q9p/Pjzp8oXnxSrryoJGkPEDuRLBQnRAv0ygAue/veGcKVCNdt0UfWRTyQeFEJK7AWxh
-         CPlDYza+zNa14g5K7yLkfZaXM3dAm+sNfWhIpkCBQlh0tBQV0JjGw+dvNPvVFNXNlC0w
-         tPwad7bwXdjJjPDsg46N/2Uq9fCJn495l0BPx3ZILD8oS0dsX32NlXzkCZg6vjDnbKgF
-         HepA==
-X-Gm-Message-State: AOAM531d4L/CAUOOh6/9VWFn2iVGFSoheT8rp3tlvbZw/01RTn9wrld5
-        NP7JA9XJ/YQINI3haYxEuYfHahjsrju06PlbW0w=
-X-Google-Smtp-Source: ABdhPJyjjRohNtzYOZux1PadVtPRgk3RCnO2GQyqFlC1CuoS1BzGXLkakHwRRIC6/Jm5lH2+Px+N/LPVW0cgUdFmPrs=
-X-Received: by 2002:a4a:a286:: with SMTP id h6mr12497264ool.38.1589800474994;
- Mon, 18 May 2020 04:14:34 -0700 (PDT)
+        bh=2knah10lYJPRFPQUQWZ2BsD37uk3fKBevsfxNnl6fDY=;
+        b=FY56BNXXqEg85TH+Bcmw+ccPmBQtAI2pGGVB2mTK+R4hsMcpNsfwRahDYc9873WO8h
+         KBVmIa7+OQuoUhzUHMG2Ejge3FoQc4IQLyPuck3w5855L1jEkDrq6EOo0qgfBLSSJr28
+         HUrKUP/Ig9diQOGcy+NT53NlFhGPbhKqwZe/sRuySEwaIirCgMDyqhuRng5PplW/eAMY
+         Jax9QdnYlBtP0fYyioRmvSto9YKH3WFAf1dxEEA+wLRrOLCX072YS9qhWZ6UPiFT3eEa
+         kXoyR2dYOle04I392jLVUEQX0EoA3fGXBuVEK7/nMjJHBbslKYxxh+JVGis/KlyWe/+y
+         QsFw==
+X-Gm-Message-State: AOAM530csjlRE0h5jjlsYrY3ikbWdSf8KCKDsgXSsx6358UkSgbwewpb
+        OewSJ8uj/0+R0Ot+JdiecoXa2KKVRtr+T2GaMtg=
+X-Google-Smtp-Source: ABdhPJxiykjLGbyCdTUmaaWGqaDi8Kkzqq0ytAjLi4UAlN3VnuLtu6yd4zpQUCHKMzaG9VRjKLwUZ65RnGtwkNZfbbs=
+X-Received: by 2002:a4a:e0d1:: with SMTP id e17mr12409403oot.1.1589800541367;
+ Mon, 18 May 2020 04:15:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <4502272.pByIgeXik9@kreacher> <CAJZ5v0j6S+we7tHeV9TM30LS+TO3zWigACe0ZUFfWphg2FBBZQ@mail.gmail.com>
- <CAB4CAwc4y7xitv9L9w61GKfBsbhHXuk+iM+QWKc2=0mks_fNFg@mail.gmail.com>
-In-Reply-To: <CAB4CAwc4y7xitv9L9w61GKfBsbhHXuk+iM+QWKc2=0mks_fNFg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 18 May 2020 13:14:23 +0200
-Message-ID: <CAJZ5v0hMtxmu9S3xsyEhT-b-qYiects80cLt18orxEXyeH6ESw@mail.gmail.com>
-Subject: Re: [PATCH[RFT]] ACPI: EC: s2idle: Avoid flushing EC work when EC GPE
- is inactive
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1589555337-5498-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 18 May 2020 13:15:29 +0200
+Message-ID: <CAMuHMdW+Wi7atvwanekJp0mno4F9sbhC0+hM8B80mhxXdbVFNA@mail.gmail.com>
+Subject: Re: [PATCH 11/17] dt-bindings: net: renesas,ether: Document R8A7742 SoC
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 1:11 PM Chris Chiu <chiu@endlessm.com> wrote:
+On Fri, May 15, 2020 at 5:10 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document RZ/G1H (R8A7742) SoC bindings.
 >
-> On Mon, May 18, 2020 at 4:59 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Thu, May 14, 2020 at 12:10 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > >
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Flushing the EC work while suspended to idle when the EC GPE status
-> > > is not set causes some EC wakeup events (notably power button and
-> > > lid ones) to be missed after a series of spurious wakeups on the Dell
-> > > XPS13 9360 in my office.
-> > >
-> > > If that happens, the machine cannot be woken up from suspend-to-idle
-> > > by a power button press or lid status change and it needs to be woken
-> > > up in some other way (eg. by a key press).
-> > >
-> > > Flushing the EC work only after successful dispatching the EC GPE,
-> > > which means that its status has been set, avoids the issue, so change
-> > > the code in question accordingly.
-> > >
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >
-> > > Hi Chris,
-> > >
-> > > Please check if the key press wakeup still works on your system with this patch
-> > > applied (on top of https://patchwork.kernel.org/patch/11538065/).
-> >
-> > Hi Chris,
-> >
-> > Since I haven't heard back from you and the problem at hand is a
-> > regression on the machine where it happens, I'm going to push this
-> > patch for merging.
-> >
-> > If it causes the key press wakeup issue to reappear on your machine,
-> > I'm afraid that we'll need to quirk it in the EC driver.
-> >
-> > Thanks!
->
-> Hi Rafael,
-> My laptop works w/o problem waking up from a keystroke with this patch
-> on top of https://patchwork.kernel.org/patch/11538065/).
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Great, thanks for the confirmation!
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> > > ---
-> > >  drivers/acpi/ec.c    |    6 +++++-
-> > >  drivers/acpi/sleep.c |   15 ++++-----------
-> > >  2 files changed, 9 insertions(+), 12 deletions(-)
-> > >
-> > > Index: linux-pm/drivers/acpi/ec.c
-> > > ===================================================================
-> > > --- linux-pm.orig/drivers/acpi/ec.c
-> > > +++ linux-pm/drivers/acpi/ec.c
-> > > @@ -2020,9 +2020,13 @@ bool acpi_ec_dispatch_gpe(void)
-> > >          * to allow the caller to process events properly after that.
-> > >          */
-> > >         ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
-> > > -       if (ret == ACPI_INTERRUPT_HANDLED)
-> > > +       if (ret == ACPI_INTERRUPT_HANDLED) {
-> > >                 pm_pr_dbg("EC GPE dispatched\n");
-> > >
-> > > +               /* Flush the event and query workqueues. */
-> > > +               acpi_ec_flush_work();
-> > > +       }
-> > > +
-> > >         return false;
-> > >  }
-> > >  #endif /* CONFIG_PM_SLEEP */
-> > > Index: linux-pm/drivers/acpi/sleep.c
-> > > ===================================================================
-> > > --- linux-pm.orig/drivers/acpi/sleep.c
-> > > +++ linux-pm/drivers/acpi/sleep.c
-> > > @@ -980,13 +980,6 @@ static int acpi_s2idle_prepare_late(void
-> > >         return 0;
-> > >  }
-> > >
-> > > -static void acpi_s2idle_sync(void)
-> > > -{
-> > > -       /* The EC driver uses special workqueues that need to be flushed. */
-> > > -       acpi_ec_flush_work();
-> > > -       acpi_os_wait_events_complete(); /* synchronize Notify handling */
-> > > -}
-> > > -
-> > >  static bool acpi_s2idle_wake(void)
-> > >  {
-> > >         if (!acpi_sci_irq_valid())
-> > > @@ -1018,7 +1011,7 @@ static bool acpi_s2idle_wake(void)
-> > >                         return true;
-> > >
-> > >                 /*
-> > > -                * Cancel the wakeup and process all pending events in case
-> > > +                * Cancel the SCI wakeup and process all pending events in case
-> > >                  * there are any wakeup ones in there.
-> > >                  *
-> > >                  * Note that if any non-EC GPEs are active at this point, the
-> > > @@ -1026,8 +1019,7 @@ static bool acpi_s2idle_wake(void)
-> > >                  * should be missed by canceling the wakeup here.
-> > >                  */
-> > >                 pm_system_cancel_wakeup();
-> > > -
-> > > -               acpi_s2idle_sync();
-> > > +               acpi_os_wait_events_complete();
-> > >
-> > >                 /*
-> > >                  * The SCI is in the "suspended" state now and it cannot produce
-> > > @@ -1060,7 +1052,8 @@ static void acpi_s2idle_restore(void)
-> > >          * of GPEs.
-> > >          */
-> > >         acpi_os_wait_events_complete(); /* synchronize GPE processing */
-> > > -       acpi_s2idle_sync();
-> > > +       acpi_ec_flush_work(); /* flush the EC driver's workqueues */
-> > > +       acpi_os_wait_events_complete(); /* synchronize Notify handling */
-> > >
-> > >         s2idle_wakeup = false;
-> > >
-> > >
-> > >
-> > >
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
