@@ -2,80 +2,107 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF86C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA35C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9331207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C65C20872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:01:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cVS7jAFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgERNB1 convert rfc822-to-8bit (ORCPT
+        id S1727847AbgERNBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:01:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43808 "EHLO
+        Mon, 18 May 2020 09:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgERNB1 (ORCPT
+        with ESMTP id S1726726AbgERNBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:01:27 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73116C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:01:27 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jafOY-0001kn-0i; Mon, 18 May 2020 15:01:26 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 5897E100606; Mon, 18 May 2020 15:01:25 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Missing CLOCK_BOOTTIME_RAW?
-In-Reply-To: <20200518124902.yuw2rtmjndi7nbd2@pali>
-References: <20200508213122.f7srcd2gnduamtvs@pali> <87zhah4evs.fsf@nanos.tec.linutronix.de> <20200518111103.sj73h5j3r75zv2wp@pali> <87ftbxxz55.fsf@nanos.tec.linutronix.de> <20200518113522.y6sj7ypunsu6pi3s@pali> <87d071xwxv.fsf@nanos.tec.linutronix.de> <20200518124902.yuw2rtmjndi7nbd2@pali>
-Date:   Mon, 18 May 2020 15:01:25 +0200
-Message-ID: <87a725xuqi.fsf@nanos.tec.linutronix.de>
+        Mon, 18 May 2020 09:01:34 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D20C061A0C;
+        Mon, 18 May 2020 06:01:34 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QfKH5PKQz9sTY;
+        Mon, 18 May 2020 23:01:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589806885;
+        bh=X87x2O/NgHgg3pQpZtNm9qm3ZbblNwSzNsBmhoy99ww=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cVS7jAFaI3QUD3oMiUjV1oa9TRmDqjdksbhYdPw68gGZHUCID3kP5plttFCMHyPnz
+         GVJ6C430GOrSl0NeVfAXOPVrUUdSDVfN6BgLBQBGpak/QQIZZB4OZ01guSKg3Pz0oi
+         8/WM++ctW1HmwBKuNJ0IXtUoPISZlYV6PXTwtoa1fXOyozeuHapLfi+ha4IoUBh7PO
+         bKfHwIZmEiX2mnMN46SWyI9XauCqoI3DLNFIsR0Y01JHNNu2DLVYTlSILP23+kSyAE
+         6fXyuLGq1zM7kq1lJ4TCNnl3Dt/dNvbMgsxqXEs792FtkQbxVr2jxz4mdp3QdQPdmk
+         RmNHjPOHAVyJA==
+Date:   Mon, 18 May 2020 23:01:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Felix Fietkau <nbd@nbd.name>,
+        Soul Huang <Soul.Huang@mediatek.com>,
+        Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: linux-next: Fixes tag needs some work in the wireless-drivers-next
+ tree
+Message-ID: <20200518230120.7b4c6074@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/dSih45EDoyKnaSCqCDR/H=S";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pali Rohár <pali@kernel.org> writes:
-> On Monday 18 May 2020 14:13:48 Thomas Gleixner wrote:
->> Of course not, but the kernel relies on that application behaving
->> sanely. If it does not then the time stamps you are complaining about
->> are the least of your worries.
->
-> I do not thing it is too bad... When I needed to deal in userspace with
-> time/date/clock I just needed either "current time in UTC" to show it to
-> user (possible in different timezone and pretty formatted) or I needed
-> "timestamp since some epoch" suitable for measuring time differences.
->
-> For first case I used CLOCK_REALTIME and for second case I used
-> CLOCK_MONOTONIC_RAW (as it was not affected by adjtime()).
->
-> And I would like to know, it is correct to use these two clocks in those
-> situations?
+--Sig_/dSih45EDoyKnaSCqCDR/H=S
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It's your choice to do so. I prefer CLOCK_MONOTONIC simply because it's
-in human understandable units and not some assumed frequency.
+Hi all,
 
-> Anyway, what would happen with CLOCK_BOOTTIME when during suspend is
-> that external RTC source shifted back? Is kernel guarantee that
-> CLOCK_BOOTTIME is always monotonic even in this case?
+In commit
 
-If the RTC delta is negative, then it's ignored, i.e. 0 sleep time
-injected.
+  f8d6379932dd ("mt76: mt7663: fix the usage WoW with net detect support")
 
-Thanks,
+Fixes tag
 
-        tglx
+  Fixes: bd39bd2f00c3 ("mt76: mt7663: introduce WoW with net detect support=
+")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Maybe you meant
+
+Fixes: a72ad451e704 ("mt76: mt7663: introduce WoW with net detect support")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/dSih45EDoyKnaSCqCDR/H=S
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7ChyAACgkQAVBC80lX
+0GyYuAf/Q7gNlAhBoIJFTdZtFGN/5W95393jFP7jFdQh6WpjGZGxicr/sVpe+qSQ
+K2Wtj3elCW4rQsuEdTVSfOHCpwbw00niNP8krcc6Ktmv+XSmRiqVie/9Qqf+ATUG
+AfvWK2JYyQxZLUQZ1OsBW5Te2szDyCgewlNE5gl25gpBfTQhOAaY3qCdtSFkPaSI
+LPiXibm9hY8GwshznMH2FF/paZ03p9PGrN1buIuiMHzp/hA2DV/c2QIDwzdLLt5O
+VY/E//yuvfPuwJCe26MVJggv7JqaL7hQwsXGfM0GIVFLq6CaeKAIRDyamIqMv3Ef
+jtcXWkITe8UqFShODEdgKOXp4mGf7Q==
+=5c9u
+-----END PGP SIGNATURE-----
+
+--Sig_/dSih45EDoyKnaSCqCDR/H=S--
