@@ -2,125 +2,119 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65258C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8A92065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8724B20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:51:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oTCaHa41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgERMth (ORCPT
+        id S1727076AbgERMvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:49:37 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:54258 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgERMth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:49:37 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DB0552009B8;
-        Mon, 18 May 2020 14:49:34 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 14E5A200844;
-        Mon, 18 May 2020 14:49:31 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 11BBE402AD;
-        Mon, 18 May 2020 20:49:26 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] ARM: dts: imx: make src node name generic
-Date:   Mon, 18 May 2020 20:39:53 +0800
-Message-Id: <1589805593-14164-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 18 May 2020 08:51:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgERMvH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:51:07 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C970C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:51:07 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id l15so3575038vsr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F3BUSKbo828h2E1EKD/0gfSxmOX3Dp5mHkq+oGuT5sI=;
+        b=oTCaHa41n3YsHvrUG3Lxk+lujs7RebbyKCNZ3sEbVUV/crDFTEKHeGz6fw9MAX2JfX
+         ORwZBLb3PzGSOed7tDwbzYuos6/X0oHYuUCkA6iyZqGIUr5Gsf7g/RP/DTfEIc6HQixT
+         HrTYr1bK2AJ8HeZkCpdw4vTP6xA8sFJdQZhhbI9SEy18qjBfCx+vOpG8Wk7iSpg/nH7d
+         0IkjOkpuRneLILNLn3TctQD34kabBXD/Badd5aZRjm2dcB0DzpjARh7NpDENhdCYn/tT
+         Z7qpWJbhsGthWk7p0ILhMPdetX7sw0fJ1FViHTBDwSDvrldIh0/Mn4JzgPYhkSPnqxHX
+         LFSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F3BUSKbo828h2E1EKD/0gfSxmOX3Dp5mHkq+oGuT5sI=;
+        b=EIm8WigGSvIZTBfKKGV32iGjWCMhL9BTcCFtTHK6Fh/jjtPBHw60gQVBlZZV7SHT6V
+         +c27wLlYrQxINJxHgn0cZxbn89d8YikpBQWhT/dd27saj8NeoRqTkdJ19YwJhgbJR9TQ
+         EDy7I4DMMUy7zvsfz65sLqy6sxe1b65tCNBUuscfkESgTh4lejVYnCrGNne4gZZCGnJ+
+         MnwW6WCLUTNEh9wvBQrN1EVgT6CPiz/LD89PIjh4b3/XgYHT+QDpo+dV5DOirNyd9TS6
+         zVyIp+3JpqE3TKq2t45LsjJyruCFXfjQr3CNMOCFgMzl97n0IdlPEq+6NfzkolWkZgPz
+         K0FQ==
+X-Gm-Message-State: AOAM531Ig7jRgFJTdY2/gdkv+pNZkocsEmWnMQ0NxZ0FRCa0fuUUpAaN
+        HjLFl0yLAyeJIEkWjKeJkeYwyM5yE42ay2xtUWIUpw==
+X-Google-Smtp-Source: ABdhPJy51OGGplkyUbHUeHsNQH1b7HeY7QZvnWmpssXL38U2Xe6u/GNafSzxw8l5wwGBugpr0QHWMT5mAJVAQf8bE48=
+X-Received: by 2002:a67:690e:: with SMTP id e14mr4184975vsc.34.1589806266292;
+ Mon, 18 May 2020 05:51:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <1588772671-19675-1-git-send-email-sartgarg@codeaurora.org>
+ <1588772671-19675-2-git-send-email-sartgarg@codeaurora.org>
+ <CAPDyKFo0CabC_O-NusH4tUzjnG37_XQhY=QNhgnkQMoTokfaQg@mail.gmail.com> <4db354d7-fff4-048e-dde5-647e8ba89a7d@intel.com>
+In-Reply-To: <4db354d7-fff4-048e-dde5-647e8ba89a7d@intel.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 18 May 2020 14:50:30 +0200
+Message-ID: <CAPDyKFqN8CeniJq5S9zCdYYR38DFyk0vKnCw3fi548tXvwbseg@mail.gmail.com>
+Subject: Re: [PATCH V1 1/2] mmc: sdhci: Introduce new quirk to use reserved timeout
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Sarthak Garg <sartgarg@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Node name should be generic, use "reset-controller" instead of "src" for
-i.MX6/i.MX7 SoCs src nodes.
+On Mon, 18 May 2020 at 13:45, Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 18/05/20 12:39 pm, Ulf Hansson wrote:
+> > On Wed, 6 May 2020 at 15:53, Sarthak Garg <sartgarg@codeaurora.org> wrote:
+> >>
+> >> Introduce a new quirk for letting vendor drivers to use reserved
+> >> timeout value (0xF) in timeout control register.
+> >>
+> >> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> >> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+> >> ---
+> >>  drivers/mmc/host/sdhci.c | 3 ++-
+> >>  drivers/mmc/host/sdhci.h | 5 +++++
+> >>  2 files changed, 7 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> >> index 1bb6b67..07528a9 100644
+> >> --- a/drivers/mmc/host/sdhci.c
+> >> +++ b/drivers/mmc/host/sdhci.c
+> >> @@ -967,7 +967,8 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd,
+> >>         }
+> >>
+> >>         if (count >= 0xF) {
+> >> -               if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT))
+> >> +               if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) ||
+> >> +               !(host->quirks2 & SDHCI_QUIRK2_USE_RESERVED_MAX_TIMEOUT))
+> >
+> > I don't quite get how this can make your variant use 0xF rather than 0xE?
+> >
+> > To me it looks like an updated conditional check to print a debug message, no?
+>
+> Probably need to introduce host->max_timeout_count, set it to 0xE in
+> sdhci_alloc_host(), and change sdhci_calc_timeout() to use it in place of
+> all the 0xE and 0xF constants.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
- arch/arm/boot/dts/imx6sl.dtsi  | 2 +-
- arch/arm/boot/dts/imx6sx.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul.dtsi  | 2 +-
- arch/arm/boot/dts/imx7s.dtsi   | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+Yep, that seems like a reasonable approach to me as well.
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 1763c2b..39d4afd 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -858,7 +858,7 @@
- 				interrupts = <0 57 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
--			src: src@20d8000 {
-+			src: reset-controller@20d8000 {
- 				compatible = "fsl,imx6q-src", "fsl,imx51-src";
- 				reg = <0x020d8000 0x4000>;
- 				interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index fcb84fe..911d8cf 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -678,7 +678,7 @@
- 				interrupts = <0 57 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
--			src: src@20d8000 {
-+			src: reset-controller@20d8000 {
- 				compatible = "fsl,imx6sl-src", "fsl,imx51-src";
- 				reg = <0x020d8000 0x4000>;
- 				interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index d6f8317..e031337 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -754,7 +754,7 @@
- 				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
--			src: src@20d8000 {
-+			src: reset-controller@20d8000 {
- 				compatible = "fsl,imx6sx-src", "fsl,imx51-src";
- 				reg = <0x020d8000 0x4000>;
- 				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 2ccf67c..35e7301 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -676,7 +676,7 @@
- 				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
--			src: src@20d8000 {
-+			src: reset-controller@20d8000 {
- 				compatible = "fsl,imx6ul-src", "fsl,imx51-src";
- 				reg = <0x020d8000 0x4000>;
- 				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 76e3ffb..8bac491 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -624,7 +624,7 @@
- 				clock-names = "ckil", "osc";
- 			};
- 
--			src: src@30390000 {
-+			src: reset-controller@30390000 {
- 				compatible = "fsl,imx7d-src", "syscon";
- 				reg = <0x30390000 0x10000>;
- 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.7.4
+[...]
 
+Kind regards
+Uffe
