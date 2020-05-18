@@ -7,56 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32672C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08B08207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A363F207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824378;
-	bh=7ibfb7MZ5Rbo43/qIurP+pCgmu+s1/H3wWWJxSi86sw=;
+	s=default; t=1589824379;
+	bh=ZqwXHEyM8qmNlA+ZRLn8Pt8SwMb5n38j5x6Rsej8ekw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bReP+yPb9DT5QS5SP+HRESdGQ5YfnBfRlPf0w9YtGABul8QPx4cFADeVBLpG0cbVD
-	 IHnMk/8e2Robn2RJoyUqrM6+d5ZSAZm6s5ahZlCH5lIiixJaXfmRdRC4UWer0ARrYf
-	 qMMmSkqtWqBvz+MOeEcJ300n1/XyDCXKGlxfjo9U=
+	b=HF86mEXaZneJMgVmSij7TspOGNvgaA1mDg2GXb5QQv7laIpzWFCMasVeQFx4mC3+B
+	 OaiGfxiPoDjM00cLF8Bb85oUMapb2vho0wpJn+sPfuzU7NYWsdEWjSqmaazFmGHe0s
+	 Q2TFWORm5z5n/5tNvotWwrgXlV3oc0S4YiT3u1hI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731062AbgERRw5 (ORCPT
+        id S1731068AbgERRw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56416 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:52:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731052AbgERRww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:52 -0400
+        id S1731055AbgERRwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC90920715;
-        Mon, 18 May 2020 17:52:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EE24207F5;
+        Mon, 18 May 2020 17:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824371;
-        bh=7ibfb7MZ5Rbo43/qIurP+pCgmu+s1/H3wWWJxSi86sw=;
+        s=default; t=1589824373;
+        bh=ZqwXHEyM8qmNlA+ZRLn8Pt8SwMb5n38j5x6Rsej8ekw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1TeetxkrfJx65r5AGr/2eYRfnlbJ4OBOhKyzrkyLf04AKG0zgLhBmYOfnAkaJ0LSK
-         0CbsDMdKWLh+KGa21mk7+trtcpwQPlvKrSiBZiFz8djiRK8YzVlKCeFcpfeUYcjSvr
-         kNm8x8MGl14bycsucM0uvMKoeRmT17t4GuYtZkOE=
+        b=EdVZDTnXLSi6UVG06Bl7wGiXpJbNXZxazPWNRM/XTaCsdATrioSi/oJQ98R/6RzEV
+         cD25ptoR0u/Y1EBd4q03evAFFBjXNS0YpPorCYXRdvLENGsJY45Th+GTo1+tDYdieB
+         4Fos1+HRPi3xqCehqVPCpV3ZmVj0HLHf5EsUIzxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vasily Averin <vvs@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>, NeilBrown <neilb@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/80] ipc/util.c: sysvipc_find_ipc() incorrectly updates position index
-Date:   Mon, 18 May 2020 19:36:46 +0200
-Message-Id: <20200518173456.062491514@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 29/80] ALSA: hda/realtek - Fix S3 pop noise on Dell Wyse
+Date:   Mon, 18 May 2020 19:36:47 +0200
+Message-Id: <20200518173456.284179648@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -69,123 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 5e698222c70257d13ae0816720dde57c56f81e15 ]
+[ Upstream commit 52e4e36807aeac1cdd07b14e509c8a64101e1a09 ]
 
-Commit 89163f93c6f9 ("ipc/util.c: sysvipc_find_ipc() should increase
-position index") is causing this bug (seen on 5.6.8):
+Commit 317d9313925c ("ALSA: hda/realtek - Set default power save node to
+0") makes the ALC225 have pop noise on S3 resume and cold boot.
 
-   # ipcs -q
+The previous fix enable power save node universally for ALC225, however
+it makes some ALC225 systems unable to produce any sound.
 
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
+So let's only enable power save node for the affected Dell Wyse
+platform.
 
-   # ipcmk -Q
-   Message queue id: 0
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x82db8127 0          root       644        0            0
-
-   # ipcmk -Q
-   Message queue id: 1
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x82db8127 0          root       644        0            0
-   0x76d1fb2a 1          root       644        0            0
-
-   # ipcrm -q 0
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x76d1fb2a 1          root       644        0            0
-   0x76d1fb2a 1          root       644        0            0
-
-   # ipcmk -Q
-   Message queue id: 2
-   # ipcrm -q 2
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x76d1fb2a 1          root       644        0            0
-   0x76d1fb2a 1          root       644        0            0
-
-   # ipcmk -Q
-   Message queue id: 3
-   # ipcrm -q 1
-   # ipcs -q
-
-   ------ Message Queues --------
-   key        msqid      owner      perms      used-bytes   messages
-   0x7c982867 3          root       644        0            0
-   0x7c982867 3          root       644        0            0
-   0x7c982867 3          root       644        0            0
-   0x7c982867 3          root       644        0            0
-
-Whenever an IPC item with a low id is deleted, the items with higher ids
-are duplicated, as if filling a hole.
-
-new_pos should jump through hole of unused ids, pos can be updated
-inside "for" cycle.
-
-Fixes: 89163f93c6f9 ("ipc/util.c: sysvipc_find_ipc() should increase position index")
-Reported-by: Andreas Schwab <schwab@suse.de>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Waiman Long <longman@redhat.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/4921fe9b-9385-a2b4-1dc4-1099be6d2e39@virtuozzo.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 317d9313925c ("ALSA: hda/realtek - Set default power save node to 0")
+BugLink: https://bugs.launchpad.net/bugs/1866357
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200503152449.22761-2-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/util.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/pci/hda/patch_realtek.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/ipc/util.c b/ipc/util.c
-index b111e792b3125..af1b572effb14 100644
---- a/ipc/util.c
-+++ b/ipc/util.c
-@@ -735,21 +735,21 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
- 			total++;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index fc39550f6c5d5..cf2889f3da41f 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5524,6 +5524,15 @@ static void alc233_alc662_fixup_lenovo_dual_codecs(struct hda_codec *codec,
  	}
- 
--	*new_pos = pos + 1;
-+	ipc = NULL;
- 	if (total >= ids->in_use)
--		return NULL;
-+		goto out;
- 
- 	for (; pos < IPCMNI; pos++) {
- 		ipc = idr_find(&ids->ipcs_idr, pos);
- 		if (ipc != NULL) {
- 			rcu_read_lock();
- 			ipc_lock_object(ipc);
--			return ipc;
-+			break;
- 		}
- 	}
--
--	/* Out of range - return NULL to terminate iteration */
--	return NULL;
-+out:
-+	*new_pos = pos + 1;
-+	return ipc;
  }
  
- static void *sysvipc_proc_next(struct seq_file *s, void *it, loff_t *pos)
++static void alc225_fixup_s3_pop_noise(struct hda_codec *codec,
++				      const struct hda_fixup *fix, int action)
++{
++	if (action != HDA_FIXUP_ACT_PRE_PROBE)
++		return;
++
++	codec->power_save_node = 1;
++}
++
+ /* Forcibly assign NID 0x03 to HP/LO while NID 0x02 to SPK for EQ */
+ static void alc274_fixup_bind_dacs(struct hda_codec *codec,
+ 				    const struct hda_fixup *fix, int action)
+@@ -5690,6 +5699,7 @@ enum {
+ 	ALC233_FIXUP_ACER_HEADSET_MIC,
+ 	ALC294_FIXUP_LENOVO_MIC_LOCATION,
+ 	ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE,
++	ALC225_FIXUP_S3_POP_NOISE,
+ 	ALC700_FIXUP_INTEL_REFERENCE,
+ 	ALC274_FIXUP_DELL_BIND_DACS,
+ 	ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
+@@ -6546,6 +6556,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			{ }
+ 		},
+ 		.chained = true,
++		.chain_id = ALC225_FIXUP_S3_POP_NOISE
++	},
++	[ALC225_FIXUP_S3_POP_NOISE] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc225_fixup_s3_pop_noise,
++		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
+ 	},
+ 	[ALC700_FIXUP_INTEL_REFERENCE] = {
 -- 
 2.20.1
 
