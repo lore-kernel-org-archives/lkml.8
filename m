@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73513C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58E8120715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B947820826
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825254;
-	bh=aEbCs/ehsd1uykQYJPlIZO/uC6PeDCBHQ8EMD2l9lFY=;
+	s=default; t=1589825257;
+	bh=dauGskwhFdS0FQcA5fjSQecXpT+n6+sjzPuDZ4Qa8pM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZBMxvfnFSORNiSfFS/kj22oKWDKBrleNDGKSef4Jxzk1dXuocCjXVfGAe4tvx9RHz
-	 g6EUAz27wJlNq0KF3YExH7MiZOkpxJG5dBYsfgggBKax8IiRBnNdEBJvbbQ2YahEZ1
-	 thpuPRrfY0XxWqm/HidEiBGkJOslHSd9UUExn9Sg=
+	b=wk5QNENqgX3ve66+az+9JHWxydjvhdZSkGXltJuO6FVHpvdtDTIY9703fjSQTO79d
+	 280AJFxXiuc5GKUwriTJkKDcdwDinYJE20rSS7mqeAXJlZgkWQYbXuVUpeJ9/aawTM
+	 vNVYl2Q8PIF/r69JLFUkuE4q6l4VW+HXjuexj6bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733048AbgERSFh (ORCPT
+        id S2387422AbgERSHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:05:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53182 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:07:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729470AbgERSFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:33 -0400
+        id S1728596AbgERSHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:07:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D41120671;
-        Mon, 18 May 2020 18:05:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 395A7207D3;
+        Mon, 18 May 2020 18:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825132;
-        bh=aEbCs/ehsd1uykQYJPlIZO/uC6PeDCBHQ8EMD2l9lFY=;
+        s=default; t=1589825239;
+        bh=dauGskwhFdS0FQcA5fjSQecXpT+n6+sjzPuDZ4Qa8pM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gc4qRFWqVvLTB/CpRNx2jyqWugkZj5aiwcsMzOwkhm2HPswUykrzVu/5+zYRVTCBP
-         1NYhApjCdQGf49MJ/tIkIlC3U3NyN5hyggZ84zFAVOFg09fyhqL7b4r6PF1CgZwtjk
-         ILlSlcjkmTPlz8lKw5mjMTGjlRUh71Nxgvcpsqtg=
+        b=ltSYRFDstALzko+ZVCXpQeq+wogfmc3Zem6/9tGsgcXxa2p0BKSuO3U/I36yZ6es/
+         4lQ5kQkvwdUpkqYL+rLdLT6uY5Dx8Xmyu75oHih5NPLk7dpvAE/QugxuUr1DIreGcQ
+         C0t31WkvmVVcCwhR5I6tXY/yPFl2ow8YB93rlaRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH 5.6 142/194] usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to USB5534B
-Date:   Mon, 18 May 2020 19:37:12 +0200
-Message-Id: <20200518173543.121249652@linuxfoundation.org>
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.6 185/194] powerpc/uaccess: Evaluate macro arguments once, before user access is allowed
+Date:   Mon, 18 May 2020 19:37:55 +0200
+Message-Id: <20200518173546.870174069@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,72 +59,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-commit 76e1ef1d81a4129d7e2fb8c48c83b166d1c8e040 upstream.
+commit d02f6b7dab8228487268298ea1f21081c0b4b3eb upstream.
 
-On Tue, May 12, 2020 at 09:36:07PM +0800, Kai-Heng Feng wrote [1]:
-> This patch prevents my Raven Ridge xHCI from getting runtime suspend.
+get/put_user() can be called with nontrivial arguments. fs/proc/page.c
+has a good example:
 
-The problem described in v5.6 commit 1208f9e1d758c9 ("USB: hub: Fix the
-broken detection of USB3 device in SMSC hub") applies solely to the
-USB5534B hub [2] present on the Kingfisher Infotainment Carrier Board,
-manufactured by Shimafuji Electric Inc [3].
+    if (put_user(stable_page_flags(ppage), out)) {
 
-Despite that, the aforementioned commit applied the quirk to _all_ hubs
-carrying vendor ID 0x424 (i.e. SMSC), of which there are more [4] than
-initially expected. Consequently, the quirk is now enabled on platforms
-carrying SMSC/Microchip hub models which potentially don't exhibit the
-original issue.
+stable_page_flags() is quite a lot of code, including spin locks in
+the page allocator.
 
-To avoid reports like [1], further limit the quirk's scope to
-USB5534B [2], by employing both Vendor and Product ID checks.
+Ensure these arguments are evaluated before user access is allowed.
 
-Tested on H3ULCB + Kingfisher rev. M05.
+This improves security by reducing code with access to userspace, but
+it also fixes a PREEMPT bug with KUAP on powerpc/64s:
+stable_page_flags() is currently called with AMR set to allow writes,
+it ends up calling spin_unlock(), which can call preempt_schedule. But
+the task switch code can not be called with AMR set (it relies on
+interrupts saving the register), so this blows up.
 
-[1] https://lore.kernel.org/linux-renesas-soc/73933975-6F0E-40F5-9584-D2B8F615C0F3@canonical.com/
-[2] https://www.microchip.com/wwwproducts/en/USB5534B
-[3] http://www.shimafuji.co.jp/wp/wp-content/uploads/2018/08/SBEV-RCAR-KF-M06Board_HWSpecificationEN_Rev130.pdf
-[4] https://devicehunt.com/search/type/usb/vendor/0424/device/any
+It's fine if the code inside allow_user_access() is preemptible,
+because a timer or IPI will save the AMR, but it's not okay to
+explicitly cause a reschedule.
 
-Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
-Cc: stable@vger.kernel.org # v4.14+
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
-Cc: linux-renesas-soc@vger.kernel.org
-Cc: linux-usb@vger.kernel.org
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20200514220246.13290-1-erosca@de.adit-jv.com
+Fixes: de78a9c42a79 ("powerpc: Add a framework for Kernel Userspace Access Protection")
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200407041245.600651-1-npiggin@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/uaccess.h |   49 ++++++++++++++++++++++++++-----------
+ 1 file changed, 35 insertions(+), 14 deletions(-)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -39,6 +39,7 @@
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -166,13 +166,17 @@ do {								\
+ ({								\
+ 	long __pu_err;						\
+ 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
++	__typeof__(*(ptr)) __pu_val = (x);			\
++	__typeof__(size) __pu_size = (size);			\
++								\
+ 	if (!is_kernel_addr((unsigned long)__pu_addr))		\
+ 		might_fault();					\
+-	__chk_user_ptr(ptr);					\
++	__chk_user_ptr(__pu_addr);				\
+ 	if (do_allow)								\
+-		__put_user_size((x), __pu_addr, (size), __pu_err);		\
++		__put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err);	\
+ 	else									\
+-		__put_user_size_allowed((x), __pu_addr, (size), __pu_err);	\
++		__put_user_size_allowed(__pu_val, __pu_addr, __pu_size, __pu_err); \
++								\
+ 	__pu_err;						\
+ })
  
- #define USB_VENDOR_GENESYS_LOGIC		0x05e3
- #define USB_VENDOR_SMSC				0x0424
-+#define USB_PRODUCT_USB5534B			0x5534
- #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
- #define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
+@@ -180,9 +184,13 @@ do {								\
+ ({									\
+ 	long __pu_err = -EFAULT;					\
+ 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);			\
++	__typeof__(*(ptr)) __pu_val = (x);				\
++	__typeof__(size) __pu_size = (size);				\
++									\
+ 	might_fault();							\
+-	if (access_ok(__pu_addr, size))			\
+-		__put_user_size((x), __pu_addr, (size), __pu_err);	\
++	if (access_ok(__pu_addr, __pu_size))				\
++		__put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
++									\
+ 	__pu_err;							\
+ })
  
-@@ -5621,8 +5622,11 @@ out_hdev_lock:
- }
+@@ -190,8 +198,12 @@ do {								\
+ ({								\
+ 	long __pu_err;						\
+ 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
+-	__chk_user_ptr(ptr);					\
+-	__put_user_size((x), __pu_addr, (size), __pu_err);	\
++	__typeof__(*(ptr)) __pu_val = (x);			\
++	__typeof__(size) __pu_size = (size);			\
++								\
++	__chk_user_ptr(__pu_addr);				\
++	__put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
++								\
+ 	__pu_err;						\
+ })
  
- static const struct usb_device_id hub_id_table[] = {
--    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
-+    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
-+                   | USB_DEVICE_ID_MATCH_PRODUCT
-+                   | USB_DEVICE_ID_MATCH_INT_CLASS,
-       .idVendor = USB_VENDOR_SMSC,
-+      .idProduct = USB_PRODUCT_USB5534B,
-       .bInterfaceClass = USB_CLASS_HUB,
-       .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
-     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
+@@ -283,15 +295,18 @@ do {								\
+ 	long __gu_err;						\
+ 	__long_type(*(ptr)) __gu_val;				\
+ 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
+-	__chk_user_ptr(ptr);					\
++	__typeof__(size) __gu_size = (size);			\
++								\
++	__chk_user_ptr(__gu_addr);				\
+ 	if (!is_kernel_addr((unsigned long)__gu_addr))		\
+ 		might_fault();					\
+ 	barrier_nospec();					\
+ 	if (do_allow)								\
+-		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);		\
++		__get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err);	\
+ 	else									\
+-		__get_user_size_allowed(__gu_val, __gu_addr, (size), __gu_err);	\
++		__get_user_size_allowed(__gu_val, __gu_addr, __gu_size, __gu_err); \
+ 	(x) = (__typeof__(*(ptr)))__gu_val;			\
++								\
+ 	__gu_err;						\
+ })
+ 
+@@ -300,12 +315,15 @@ do {								\
+ 	long __gu_err = -EFAULT;					\
+ 	__long_type(*(ptr)) __gu_val = 0;				\
+ 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);		\
++	__typeof__(size) __gu_size = (size);				\
++									\
+ 	might_fault();							\
+-	if (access_ok(__gu_addr, (size))) {		\
++	if (access_ok(__gu_addr, __gu_size)) {				\
+ 		barrier_nospec();					\
+-		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
++		__get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
+ 	}								\
+ 	(x) = (__force __typeof__(*(ptr)))__gu_val;				\
++									\
+ 	__gu_err;							\
+ })
+ 
+@@ -314,10 +332,13 @@ do {								\
+ 	long __gu_err;						\
+ 	__long_type(*(ptr)) __gu_val;				\
+ 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
+-	__chk_user_ptr(ptr);					\
++	__typeof__(size) __gu_size = (size);			\
++								\
++	__chk_user_ptr(__gu_addr);				\
+ 	barrier_nospec();					\
+-	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
++	__get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
+ 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
++								\
+ 	__gu_err;						\
+ })
+ 
 
 
