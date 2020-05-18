@@ -2,90 +2,119 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FD8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C81C20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2472065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgERPtY (ORCPT
+        id S1728412AbgERPti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:49:24 -0400
-Received: from mga18.intel.com ([134.134.136.126]:11281 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbgERPtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:49:24 -0400
-IronPort-SDR: kp+h8Sb8My/UII/YXc4z9vv7QAXWISEr1LsOZcxVkrrrLaukiE/0XQQVhHQlkO8dEV96gEy0Us
- 973A2z5NmDOQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 08:49:23 -0700
-IronPort-SDR: L6G04AIge5D55UrRgxPLrv4p4b0eq6pVar1+izTtqtjQ3SmrW/XACqXzn35bZ6qFbHNNydws0g
- dKKn4R/QpTlA==
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="465801574"
-Received: from xiaoxuwa-mobl.ccr.corp.intel.com (HELO [10.255.28.12]) ([10.255.28.12])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 08:49:22 -0700
-Subject: Re: [PATCH] kvm: x86: Use KVM CPU capabilities to determine CR4
- reserved bits
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jmattson@google.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200506094436.3202-1-pbonzini@redhat.com>
- <6a4daca4-6034-901a-261f-215df7d606a6@intel.com>
- <09cb27f8-fa02-4b37-94de-1a4d86b9bdbd@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <3bf2e68f-9843-cfed-6520-54dbf4955fc8@intel.com>
-Date:   Mon, 18 May 2020 23:49:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <09cb27f8-fa02-4b37-94de-1a4d86b9bdbd@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Mon, 18 May 2020 11:49:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26990 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727007AbgERPti (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 11:49:38 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IFXR0E108670;
+        Mon, 18 May 2020 11:49:36 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312c63f5ue-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 11:49:36 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IFeoxh021224;
+        Mon, 18 May 2020 15:49:34 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma01fra.de.ibm.com with ESMTP id 3127t5hthp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 15:49:34 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IFnWRS62324914
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 May 2020 15:49:32 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3829052050;
+        Mon, 18 May 2020 15:49:32 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.145.145])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B351C52052;
+        Mon, 18 May 2020 15:49:31 +0000 (GMT)
+Message-ID: <1589816971.5111.113.camel@linux.ibm.com>
+Subject: [GIT PULL] integrity subsystem fixes for v5.7
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 18 May 2020 11:49:31 -0400
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 cotscore=-2147483648
+ spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 phishscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1011 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005180131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/2020 8:31 PM, Paolo Bonzini wrote:
-> On 18/05/20 06:52, Xiaoyao Li wrote:
->> On 5/6/2020 5:44 PM, Paolo Bonzini wrote:
->>> Using CPUID data can be useful for the processor compatibility
->>> check, but that's it.  Using it to compute guest-reserved bits
->>> can have both false positives (such as LA57 and UMIP which we
->>> are already handling) and false negatives:
->>
->>> in particular, with
->>> this patch we don't allow anymore a KVM guest to set CR4.PKE
->>> when CR4.PKE is clear on the host.
->>
->> A common question about whether a feature can be exposed to guest:
->>
->> Given a feature, there is a CPUID bit to enumerate it, and a CR4 bit to
->> turn it on/off. Whether the feature can be exposed to guest only depends
->> on host CR4 setting? I.e., if CPUID bit is not cleared in cpu_data in
->> host but host kernel doesn't set the corresponding CR4 bit to turn it
->> on, we cannot expose the feature to guest. right?
-> 
-> It depends.  The most obvious case is that the host kernel doesn't use
-> CR4.PSE but we even use 4MB pages to emulate paging disabled mode when
-> the processor doesn't support unrestricted guests.
-> 
-> Basically, the question is whether we are able to save/restore any
-> processor state attached to the CR4 bit on vmexit/vmentry.  In this case
-> there is no PKRU field in the VMCS and the RDPKRU/WRPKRU instructions
-> require CR4.PKE=1; therefore, we cannot let the guest enable CR4.PKE
-> unless it's also enabled on the host.
-> 
+Hi Linus,
 
-aha! That's reason!
-Thanks for the clarification.
+Here are a couple of miscellaneous bug fixes for the integrity
+subsystem:
 
+IMA:
+- Properly modify the open flags in order to calculate the file hash.
+- On systems requiring the IMA policy to be signed, the policy is
+loaded differently.  Don't differentiate between "enforce" and either
+"log" or "fix" modes how the policy is loaded.
+
+EVM:
+- (2 patches) Fix an EVM race condition, normally the result of
+attempting to load an unsupported hash algorithm.
+- Use the lockless RCU version for walking an append only list.
+
+Mimi
+
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity.fixes
+
+for you to fetch changes up to 8433856947217ebb5697a8ff9c4c9cad4639a2cf:
+
+  evm: Fix a small race in init_desc() (2020-05-14 19:55:54 -0400)
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      evm: Fix a small race in init_desc()
+
+Madhuparna Bhowmik (1):
+      evm: Fix RCU list related warnings
+
+Roberto Sassu (3):
+      ima: Set file->f_mode instead of file->f_flags in ima_calc_file_hash()
+      evm: Check also if *tfm is an error pointer in init_desc()
+      ima: Fix return value of ima_write_policy()
+
+ security/integrity/evm/evm_crypto.c | 46 ++++++++++++++++++-------------------
+ security/integrity/evm/evm_main.c   |  4 ++--
+ security/integrity/evm/evm_secfs.c  |  9 +++++++-
+ security/integrity/ima/ima_crypto.c | 12 +++++-----
+ security/integrity/ima/ima_fs.c     |  3 +--
+ 5 files changed, 40 insertions(+), 34 deletions(-)
