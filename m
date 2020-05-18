@@ -2,403 +2,188 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E83C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA1520671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="O9dZDvVb"
+	by mail.kernel.org (Postfix) with ESMTP id 824E820715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589825430;
+	bh=8W5kfFh37VEb/OX1ZIecgC5GijoPKDRsNoEBJ4aaWZo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1pgyopzBUNOmSWWYZtEgG5m/OPbE2ftCzb3WfVknPd4hrw6qZEPU1mWon8NVfJeOJ
+	 px2RUqBauxovvtfpcp0j3Ad8YONK5rE0+SmyLcj/CwBdiuQF3BFrqXQafnHAiSYcBW
+	 v2IXfcl3G/ZGI/ryicKj08FMXNuIYF1j3B5/JiEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387557AbgERSK0 (ORCPT
+        id S1733008AbgERSFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732991AbgERSKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:10:24 -0400
-X-Greylist: delayed 65 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 18 May 2020 11:10:23 PDT
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC736C061A0C;
-        Mon, 18 May 2020 11:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
-        :To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=AbyQlLTgT9N6dnHMOx2feZtNUM31THpZV6Gi5OUra7o=; b=O9dZDvVbze5d5QwrWR1VB6dsos
-        Jvr+FLendqrn2L8zU0c+3f6G/zEqbmrUsAyAVL6+3sANjzvL2zae6NA4TSVDnqPuHc55+lmzPbzTA
-        MtR/4F3WzgjFkJfgdsKrxF6WL0bC22GzbrrcN/1IEEea58rlzCi3oirGz1JSk4Nu6azPVxhkFnDr6
-        rU3tuoLDcf7qBzBH8PX6/cGLZ2eCyuBq7OtAv+YwKvvt1ec8/JjWMmPvSCs3qDNbJQbF8y9M5TQnW
-        ggyGwKVDwnwQrV2SueCO9f6U6Z8juHmKtwdysx3zkwoF4ezFQrk4RVKcyVnXa+3dXj9H6FzxDApjE
-        J7LqM/bA==;
-Received: from [2001:4d48:ad59:1409:4::2] (helo=youmian.o362.us)
-        by the.earth.li with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1jakDW-0008Ou-Le; Mon, 18 May 2020 19:10:22 +0100
-Date:   Mon, 18 May 2020 19:10:14 +0100
-From:   Jonathan McDowell <noodles@earth.li>
-To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] ARM: dts: qcom: Add MikroTik RB3011
-Message-ID: <75390e66c9e6e36ddd42dc7f54cac28dfd7a24b9.1589824955.git.noodles@earth.li>
-References: <cover.1589824955.git.noodles@earth.li>
+        Mon, 18 May 2020 14:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732160AbgERSF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DF52207D3;
+        Mon, 18 May 2020 18:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589825127;
+        bh=8W5kfFh37VEb/OX1ZIecgC5GijoPKDRsNoEBJ4aaWZo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qWsmzPFR0BV9gebp4vdGRNu01UVTKuXvvFyoRqjlEzzYj3lVyr9q8sPOaNwfVNQE7
+         pVVfdAEn34yTLha5+ohYwmZaNgo2dUuWF2VPnYjI1ZlJH+xzB/taTyFgxf4dd4v6O/
+         mCW4ciE4hw6L9fmDygtfarZEVTn7MS6ES4/Q/5yk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, butt3rflyh4ck <butterflyhuangxx@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 140/194] ALSA: rawmidi: Fix racy buffer resize under concurrent accesses
+Date:   Mon, 18 May 2020 19:37:10 +0200
+Message-Id: <20200518173542.979747345@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
+References: <20200518173531.455604187@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1589824955.git.noodles@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a DTS file for the MikroTik RouterBoard 3011, which is a
-1U rackmount router based on the IPQ8064, supporting the serial UART,
-dual QCA8337 Gigabit ethernet switches, boot loader NOR and user LED
-device.
+From: Takashi Iwai <tiwai@suse.de>
 
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
+commit c1f6e3c818dd734c30f6a7eeebf232ba2cf3181d upstream.
+
+The rawmidi core allows user to resize the runtime buffer via ioctl,
+and this may lead to UAF when performed during concurrent reads or
+writes: the read/write functions unlock the runtime lock temporarily
+during copying form/to user-space, and that's the race window.
+
+This patch fixes the hole by introducing a reference counter for the
+runtime buffer read/write access and returns -EBUSY error when the
+resize is performed concurrently against read/write.
+
+Note that the ref count field is a simple integer instead of
+refcount_t here, since the all contexts accessing the buffer is
+basically protected with a spinlock, hence we need no expensive atomic
+ops.  Also, note that this busy check is needed only against read /
+write functions, and not in receive/transmit callbacks; the race can
+happen only at the spinlock hole mentioned in the above, while the
+whole function is protected for receive / transmit callbacks.
+
+Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
+Link: https://lore.kernel.org/r/s5heerw3r5z.wl-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/qcom-ipq8064-rb3011.dts | 308 ++++++++++++++++++++++
- 2 files changed, 309 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
+ include/sound/rawmidi.h |    1 +
+ sound/core/rawmidi.c    |   31 +++++++++++++++++++++++++++----
+ 2 files changed, 28 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..e697a4bd7426 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -884,6 +884,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-ipq4019-ap.dk07.1-c1.dtb \
- 	qcom-ipq4019-ap.dk07.1-c2.dtb \
- 	qcom-ipq8064-ap148.dtb \
-+	qcom-ipq8064-rb3011.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb \
- 	qcom-msm8974-fairphone-fp2.dtb \
-diff --git a/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts b/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
-new file mode 100644
-index 000000000000..282b89ce3d45
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
-@@ -0,0 +1,308 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "qcom-ipq8064.dtsi"
-+#include <dt-bindings/input/input.h>
+--- a/include/sound/rawmidi.h
++++ b/include/sound/rawmidi.h
+@@ -61,6 +61,7 @@ struct snd_rawmidi_runtime {
+ 	size_t avail_min;	/* min avail for wakeup */
+ 	size_t avail;		/* max used buffer for wakeup */
+ 	size_t xruns;		/* over/underruns counter */
++	int buffer_ref;		/* buffer reference count */
+ 	/* misc */
+ 	spinlock_t lock;
+ 	wait_queue_head_t sleep;
+--- a/sound/core/rawmidi.c
++++ b/sound/core/rawmidi.c
+@@ -120,6 +120,17 @@ static void snd_rawmidi_input_event_work
+ 		runtime->event(runtime->substream);
+ }
+ 
++/* buffer refcount management: call with runtime->lock held */
++static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
++{
++	runtime->buffer_ref++;
++}
 +
-+/ {
-+	model = "MikroTik RB3011UiAS-RM";
-+	compatible = "mikrotik,rb3011";
++static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
++{
++	runtime->buffer_ref--;
++}
 +
-+	aliases {
-+		serial0 = &gsbi7_serial;
-+		ethernet0 = &gmac0;
-+		ethernet1 = &gmac3;
-+		mdio-gpio0 = &mdio0;
-+		mdio-gpio1 = &mdio1;
-+	};
-+
-+	chosen {
-+		bootargs = "loglevel=8 console=ttyMSM0,115200";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		reg = <0x42000000 0x3e000000>;
-+		device_type = "memory";
-+	};
-+
-+	mdio0: mdio@0 {
-+		status = "okay";
-+		compatible = "virtual,mdio-gpio";
-+		gpios = <&qcom_pinmux 1 GPIO_ACTIVE_HIGH>,
-+			<&qcom_pinmux 0 GPIO_ACTIVE_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pinctrl-0 = <&mdio0_pins>;
-+		pinctrl-names = "default";
-+
-+		switch0: switch@10 {
-+			compatible = "qca,qca8337";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dsa,member = <0 0>;
-+
-+			pinctrl-0 = <&sw0_reset_pin>;
-+			pinctrl-names = "default";
-+
-+			reset-gpios = <&qcom_pinmux 16 GPIO_ACTIVE_LOW>;
-+			reg = <0x10>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				switch0cpu: port@0 {
-+					reg = <0>;
-+					label = "cpu";
-+					ethernet = <&gmac0>;
-+					phy-mode = "rgmii-id";
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "sw1";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "sw2";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "sw3";
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					label = "sw4";
-+				};
-+
-+				port@5 {
-+					reg = <5>;
-+					label = "sw5";
-+				};
-+			};
-+		};
-+	};
-+
-+	mdio1: mdio@1 {
-+		status = "okay";
-+		compatible = "virtual,mdio-gpio";
-+		gpios = <&qcom_pinmux 11 GPIO_ACTIVE_HIGH>,
-+			<&qcom_pinmux 10 GPIO_ACTIVE_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pinctrl-0 = <&mdio1_pins>;
-+		pinctrl-names = "default";
-+
-+		switch1: switch@14 {
-+			compatible = "qca,qca8337";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dsa,member = <1 0>;
-+
-+			pinctrl-0 = <&sw1_reset_pin>;
-+			pinctrl-names = "default";
-+
-+			reset-gpios = <&qcom_pinmux 17 GPIO_ACTIVE_LOW>;
-+			reg = <0x10>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				switch1cpu: port@0 {
-+					reg = <0>;
-+					label = "cpu";
-+					ethernet = <&gmac3>;
-+					phy-mode = "sgmii";
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "sw6";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "sw7";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "sw8";
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					label = "sw9";
-+				};
-+
-+				port@5 {
-+					reg = <5>;
-+					label = "sw10";
-+				};
-+			};
-+		};
-+	};
-+
-+	soc {
-+		gsbi5: gsbi@1a200000 {
-+			qcom,mode = <GSBI_PROT_SPI>;
-+			status = "okay";
-+
-+			spi4: spi@1a280000 {
-+				status = "okay";
-+				spi-max-frequency = <50000000>;
-+
-+				pinctrl-0 = <&spi_pins>;
-+				pinctrl-names = "default";
-+
-+				cs-gpios = <&qcom_pinmux 20 GPIO_ACTIVE_HIGH>;
-+
-+				norflash: s25fl016k@0 {
-+					compatible = "jedec,spi-nor";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					spi-max-frequency = <50000000>;
-+					reg = <0>;
-+
-+					partition@0 {
-+						label = "RouterBoot";
-+						reg = <0x0 0x40000>;
-+					};
-+				};
-+			};
-+		};
-+
-+		gpio_keys {
-+			compatible = "gpio-keys";
-+			pinctrl-0 = <&buttons_pins>;
-+			pinctrl-names = "default";
-+
-+			button@1 {
-+				label = "reset";
-+				linux,code = <KEY_RESTART>;
-+				gpios = <&qcom_pinmux 66 GPIO_ACTIVE_LOW>;
-+				linux,input-type = <1>;
-+				debounce-interval = <60>;
-+			};
-+		};
-+
-+		leds {
-+			compatible = "gpio-leds";
-+			pinctrl-0 = <&leds_pins>;
-+			pinctrl-names = "default";
-+
-+			led@7 {
-+				label = "rb3011:green:user";
-+				gpios = <&qcom_pinmux 33 GPIO_ACTIVE_HIGH>;
-+				default-state = "off";
-+			};
-+		};
-+
-+	};
-+};
-+
-+&gmac0 {
-+	status = "okay";
-+
-+	phy-mode = "rgmii";
-+	qcom,id = <0>;
-+	phy-handle = <&switch0cpu>;
-+
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
-+
-+&gmac3 {
-+	status = "okay";
-+
-+	phy-mode = "sgmii";
-+	qcom,id = <3>;
-+	phy-handle = <&switch1cpu>;
-+
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
-+
-+&gsbi7 {
-+	status = "okay";
-+	qcom,mode = <GSBI_PROT_I2C_UART>;
-+};
-+
-+&gsbi7_serial {
-+	status = "okay";
-+};
-+
-+&qcom_pinmux {
-+	buttons_pins: buttons_pins {
-+		mux {
-+			pins = "gpio66";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	leds_pins: leds_pins {
-+		mux {
-+			pins = "gpio33";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	mdio0_pins: mdio0_pins {
-+		mux {
-+			pins = "gpio0", "gpio1";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-disable;
-+		};
-+	};
-+
-+	mdio1_pins: mdio1_pins {
-+		mux {
-+			pins = "gpio10", "gpio11";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-disable;
-+		};
-+	};
-+
-+	sw0_reset_pin: sw0_reset_pin {
-+		mux {
-+			pins = "gpio16";
-+			drive-strength = <16>;
-+			function = "gpio";
-+			bias-disable;
-+			input-disable;
-+		};
-+	};
-+
-+	sw1_reset_pin: sw1_reset_pin {
-+		mux {
-+			pins = "gpio17";
-+			drive-strength = <16>;
-+			function = "gpio";
-+			bias-disable;
-+			input-disable;
-+		};
-+	};
-+};
--- 
-2.20.1
+ static int snd_rawmidi_runtime_create(struct snd_rawmidi_substream *substream)
+ {
+ 	struct snd_rawmidi_runtime *runtime;
+@@ -669,6 +680,11 @@ static int resize_runtime_buffer(struct
+ 		if (!newbuf)
+ 			return -ENOMEM;
+ 		spin_lock_irq(&runtime->lock);
++		if (runtime->buffer_ref) {
++			spin_unlock_irq(&runtime->lock);
++			kvfree(newbuf);
++			return -EBUSY;
++		}
+ 		oldbuf = runtime->buffer;
+ 		runtime->buffer = newbuf;
+ 		runtime->buffer_size = params->buffer_size;
+@@ -1019,8 +1035,10 @@ static long snd_rawmidi_kernel_read1(str
+ 	long result = 0, count1;
+ 	struct snd_rawmidi_runtime *runtime = substream->runtime;
+ 	unsigned long appl_ptr;
++	int err = 0;
+ 
+ 	spin_lock_irqsave(&runtime->lock, flags);
++	snd_rawmidi_buffer_ref(runtime);
+ 	while (count > 0 && runtime->avail) {
+ 		count1 = runtime->buffer_size - runtime->appl_ptr;
+ 		if (count1 > count)
+@@ -1039,16 +1057,19 @@ static long snd_rawmidi_kernel_read1(str
+ 		if (userbuf) {
+ 			spin_unlock_irqrestore(&runtime->lock, flags);
+ 			if (copy_to_user(userbuf + result,
+-					 runtime->buffer + appl_ptr, count1)) {
+-				return result > 0 ? result : -EFAULT;
+-			}
++					 runtime->buffer + appl_ptr, count1))
++				err = -EFAULT;
+ 			spin_lock_irqsave(&runtime->lock, flags);
++			if (err)
++				goto out;
+ 		}
+ 		result += count1;
+ 		count -= count1;
+ 	}
++ out:
++	snd_rawmidi_buffer_unref(runtime);
+ 	spin_unlock_irqrestore(&runtime->lock, flags);
+-	return result;
++	return result > 0 ? result : err;
+ }
+ 
+ long snd_rawmidi_kernel_read(struct snd_rawmidi_substream *substream,
+@@ -1342,6 +1363,7 @@ static long snd_rawmidi_kernel_write1(st
+ 			return -EAGAIN;
+ 		}
+ 	}
++	snd_rawmidi_buffer_ref(runtime);
+ 	while (count > 0 && runtime->avail > 0) {
+ 		count1 = runtime->buffer_size - runtime->appl_ptr;
+ 		if (count1 > count)
+@@ -1373,6 +1395,7 @@ static long snd_rawmidi_kernel_write1(st
+ 	}
+       __end:
+ 	count1 = runtime->avail < runtime->buffer_size;
++	snd_rawmidi_buffer_unref(runtime);
+ 	spin_unlock_irqrestore(&runtime->lock, flags);
+ 	if (count1)
+ 		snd_rawmidi_output_trigger(substream, 1);
+
 
