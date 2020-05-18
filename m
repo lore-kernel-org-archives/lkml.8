@@ -2,103 +2,229 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC51DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 715C220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589837845;
-	bh=EUyWXexSsbz75cYmX07WWKXWXKLhqB/4DeEQtFnWqlw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uTMfwruDDzaoo1hmSzCQTqpkdrFOTMWnWzn67mQmuNENrWFZcTroe5YTwwRXNRFoe
-	 jzA4RWl5gyx+RL8pYRNicgWvkRDRHEXAJReCbt6WkOxnXA9275C0mjiPQIzhAGOY34
-	 w+aWLXAf459pPbFtsoqcemERf6DG3kCZUFqgWltE=
+	by mail.kernel.org (Postfix) with ESMTP id 81D07205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="cKR3pqRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgERVhY (ORCPT
+        id S1728127AbgERVhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgERVhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:37:24 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A40E0205CB;
-        Mon, 18 May 2020 21:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589837844;
-        bh=EUyWXexSsbz75cYmX07WWKXWXKLhqB/4DeEQtFnWqlw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qclqy01Zzf4awU5/li0KjuAMvhHjWCiNdgctP3bwqEBf4vQJFfodBIGCpmPtFzRls
-         Rvpj8Pp410HK9Dr1ImCBroRyEMQB6QHNwINSZ+RfX6901h45KISoZbKZC2f78tJ4Ww
-         l3VS3req8WcMjQPEhnHcvBAcxvSoxI6iGRfJDQeQ=
-Date:   Mon, 18 May 2020 14:37:23 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        <linux-media@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] rapidio: fix an error in get_user_pages_fast()
- error handling
-Message-Id: <20200518143723.2c3159ddd53345b9cde5d869@linux-foundation.org>
-In-Reply-To: <20200517235620.205225-2-jhubbard@nvidia.com>
-References: <20200517235620.205225-1-jhubbard@nvidia.com>
-        <20200517235620.205225-2-jhubbard@nvidia.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 18 May 2020 17:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgERVhj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 17:37:39 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F9C5C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:37:38 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id k18so12415413ion.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:37:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PS//4W49LeX9Vs+lxZu9gg7QYyqRhCBlBHWbz6v23bo=;
+        b=cKR3pqRH2lLjEXlXFaO+eDoDtdxmLA25ueQY7ECKTbG7903OEMmVNkwirdBQ7LuA3k
+         wz3sZoA1MUXbfGSSc+bE9n1lP1+2AyTFD/8VaZLl0VlHcUy0sBfH7flEfcHbqgsUQ9fN
+         xOjGNn0KvmYzQ3yvdruPt2KQlPsQfk8cR0kjs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PS//4W49LeX9Vs+lxZu9gg7QYyqRhCBlBHWbz6v23bo=;
+        b=tDNg89dGssIZ/xx1LOaHYKl96F/0KeVJRFHfPQWBFI7KxZ6iTx8GXWU+EuGXLyewvs
+         ribSMM/jjJpNOG8Lcu8Ssg8WqR+B9DquHH+dbKrwDqEljUUYtXyG8tbuooSivaJFiyeI
+         qYikyxeGpPXQC/7+zZ8VvNid6h9FYPThZUzkZoQMT8Hvy0mTnkra2PHDttV1DquHJgUt
+         Y1QxoeUZ+Ms1QT7yKdzY/TsgucsgMD0x/VuMJIXTRyqFiIyoarCKL8+PyZKCpm+czMrS
+         1X5foIMC3FllaUuM0c6UuwoWhBm59YOieXAMbpwFVEoA4RYAtzGFV3IulyPnNEH/ehS7
+         3PlQ==
+X-Gm-Message-State: AOAM532qPTqCjKSTsSSNnZnGLY/f8wkNsNcjnUYY5HUMrF0jcjXnVxaW
+        RDPdqOfzdPkAq9XxW0FQWcyZRw==
+X-Google-Smtp-Source: ABdhPJwNC6ZrM01bUDFpeSIEpLw5mCNXAO6WtOX6hiP1ExKQ7BInjPiC+zdoq09ow1N0BwBUpdtlvA==
+X-Received: by 2002:a5d:94c5:: with SMTP id y5mr4097703ior.43.1589837857147;
+        Mon, 18 May 2020 14:37:37 -0700 (PDT)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id f10sm5235937ilj.85.2020.05.18.14.37.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 May 2020 14:37:36 -0700 (PDT)
+Date:   Mon, 18 May 2020 21:37:35 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Tycho Andersen <tycho@tycho.ws>, Aleksa Sarai <asarai@suse.de>,
+        Kees Cook <keescook@chromium.org>, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
+Message-ID: <20200518213734.GA25216@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20200515234005.32370-1-sargun@sargun.me>
+ <202005162344.74A02C2D@keescook>
+ <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
+ <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
+ <20200517142316.GA1996744@cisco>
+ <20200517143311.fmxaf3pnopuaezl4@wittgenstein>
+ <20200517144603.GD1996744@cisco>
+ <20200517150215.GE1996744@cisco>
+ <20200518125325.l2lpixp3ch7zuiwx@wittgenstein>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518125325.l2lpixp3ch7zuiwx@wittgenstein>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 May 2020 16:56:19 -0700 John Hubbard <jhubbard@nvidia.com> wrote:
-
-> In the case of get_user_pages_fast() returning fewer pages than
-> requested, rio_dma_transfer() does not quite do the right thing.
-> It attempts to release all the pages that were requested, rather
-> than just the pages that were pinned.
+On Mon, May 18, 2020 at 02:53:25PM +0200, Christian Brauner wrote:
+> On Sun, May 17, 2020 at 09:02:15AM -0600, Tycho Andersen wrote:
+> > On Sun, May 17, 2020 at 08:46:03AM -0600, Tycho Andersen wrote:
+> > > On Sun, May 17, 2020 at 04:33:11PM +0200, Christian Brauner wrote:
+> > > > struct seccomp_notif2 {
+> > > > 	__u32 notif_size;
+> > > > 	__u64 id;
+> > > > 	__u32 pid;
+> > > > 	__u32 flags;
+> > > > 	struct seccomp_data data;
+> > > > 	__u32 data_size;
+> > > > };
+> > > 
+> > > I guess you need to put data_size before data, otherwise old userspace
+> > > with a smaller struct seccomp_data will look in the wrong place.
+> > > 
+> > > But yes, that'll work if you put two sizes in, which is probably
+> > > reasonable since we're talking about two structs.
+> > 
+> > Well, no, it doesn't either. Suppose we add a new field first to
+> > struct seccomp_notif2:
+> > 
+> > struct seccomp_notif2 {
+> >     __u32 notif_size;
+> >     __u64 id;
+> >     __u32 pid;
+> >     __u32 flags;
+> >     struct seccomp_data data;
+> >     __u32 data_size;
+> >     __u32 new_field;
+> > };
+> > 
+> > And next we add a new field to struct secccomp_data. When a userspace
+> > compiled with just the new seccomp_notif2 field does:
+> > 
+> > seccomp_notif2.new_field = ...;
+> > 
+> > the compiler will put it in the wrong place for the kernel with the
+> > new seccomp_data field too.
+> > 
+> > Sort of feels like we should do:
+> > 
+> > struct seccomp_notif2 {
+> >     struct seccomp_notif *notif;
+> >     struct seccomp_data *data;
+> > };
+> > 
+> > ?
 > 
-> Fix the error handling so that only the pages that were successfully
-> pinned are released.
+> Oh yes of course, sorry that was my stupid typo. I meant:
 > 
-> ...
->
-> --- a/drivers/rapidio/devices/rio_mport_cdev.c
-> +++ b/drivers/rapidio/devices/rio_mport_cdev.c
-> @@ -877,6 +877,11 @@ rio_dma_transfer(struct file *filp, u32 transfer_mode,
->  				rmcd_error("pinned %ld out of %ld pages",
->  					   pinned, nr_pages);
->  			ret = -EFAULT;
-> +			/*
-> +			 * Set nr_pages up to mean "how many pages to unpin, in
-> +			 * the error handler:
-> +			 */
-> +			nr_pages = pinned;
->  			goto err_pg;
->  		}
+> struct seccomp_notif2 {
+>     __u32 notif_size;
+>     __u64 id;
+>     __u32 pid;
+>     __u32 flags;
+>     struct seccomp_data *data;
+>     __u32 data_size;
+>     __u32 new_field;
+> }
+One big difference in the approach I described is that the user gets to ask
+for specific fields, and can configure the listener upfront, versus having to
+do the dance of fetching the sizes, and dynamically allocating memory.
 
-The code is a bit odd.  If (xfer->loc_addr == 0) then we do the `else'
-stuff then fall through to
+This way userspace can just do on-stack static allocations. We can get
+rid of the kbuf bits in my PR, if we incrementally fill up the userspace buffer
+(copy_to_user shouldn't be *that* costly).
 
-err_pg:
-	if (!req->page_list) {
-		for (i = 0; i < nr_pages; i++)
-			put_page(page_list[i]);
-		kfree(page_list);
+In addition, we're not copying a bunch of unnecessary data, or calculating
+values that the user may not be interested in. This is particularly valuable
+if we ever want to do things like passing optional fields (think PIDs) back.
+
+Code-wise, it looks something like:
+struct read_output_format {
+	__u64 id;
+	__u32 tgid;
+	struct seccomp_data data;
+} __packed;
+
+TEST(user_notification_read)
+{
+	long ret;
+	int status, pid, listener, read_size;
+	struct seccomp_notif_config config = {};
+	struct seccomp_notif_resp resp = {};
+	struct read_output_format buf;
+
+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+	ASSERT_EQ(0, ret) {
+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
 	}
 
-all of which is a big no-op because nr_pages==0 and page_list==NULL,
-but it could all be easily avoided.
+	listener = user_trap_syscall(__NR_dup, SECCOMP_FILTER_FLAG_NEW_LISTENER);
+	ASSERT_GE(listener, 0);
 
-Oh well.  Reviewed-by:me.
+	EXPECT_EQ(read(listener, &buf, sizeof(buf)), -1) {
+		EXPECT_EQ(errno, -EINVAL);
+	}
+
+	config.size = sizeof(config);
+	config.seccomp_data_size = sizeof(struct seccomp_data);
+	config.optional_fields = ~(0);
+	/* Make sure invalid fields are not accepted */
+	ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_CONFIG, &config), -1);
+
+	config.optional_fields = SECCOMP_NOTIF_FIELD_TGID;
+	ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_CONFIG, &config), sizeof(buf));
+
+	pid = fork();
+	ASSERT_GE(pid, 0);
+	if (pid == 0)
+		exit(syscall(__NR_dup, 42, 1, 1, 1) != USER_NOTIF_MAGIC);
+
+
+	/* Passing a smaller value in should fail */
+	EXPECT_EQ(read(listener, &buf, read_size - 1), -1) {
+		EXPECT_EQ(errno, -E2BIG);
+	}
+	/* Passing a larger value in should succeed */
+	ASSERT_EQ(read(listener, &buf, 200), sizeof(buf));
+	EXPECT_EQ(buf.tgid, pid);
+	EXPECT_EQ(buf.data.args[0], 42);
+	EXPECT_EQ(buf.data.nr, __NR_dup);
+
+	resp.id = buf.id;
+	resp.error = 0;
+	resp.val = USER_NOTIF_MAGIC;
+
+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
+
+	EXPECT_EQ(waitpid(pid, &status, 0), pid);
+	EXPECT_EQ(true, WIFEXITED(status));
+	EXPECT_EQ(0, WEXITSTATUS(status));
+}
+
+> 
+> at which point things should just work imho. This is similar to how the
+> set_tid array works. The kernel doesn't need to allocate any more too.
+> The kernel can just always use the currently know seccomp_data size.
+> If the kernel supports _less_ than what the caller expects, it can
+> report the supported size in data_size to userspace returning EINVAL. If
+> it supports more then it can just copy the known fields, I guess.
+> 
+> This way we don't need to add yet another ioctl...
+> 
+> Christian
