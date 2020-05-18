@@ -2,135 +2,87 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F486C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A579B20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67C020715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589841407;
+	bh=UDtiReFY25s+f23VlmoZ6pnQHEcJoADgtqNLzJ6WKr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IuJq8Qt5nX5TMROdwwSGrnLABW+uFJiOMe3Ylvk002cdK3tEKBE2ticTX3fnSoIlo
+	 riUu5H5jt9PwaUBkZvuEHIeAIBUo3DNXWyzvJphrElOGgBND26i/L11ROK5cgaC9qc
+	 isjMIwFN0eE2oVYPGDMdpS6owp1COCLdNMJKywKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgERWfQ (ORCPT
+        id S1728371AbgERWgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:35:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbgERWfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:35:16 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84B6220674;
-        Mon, 18 May 2020 22:35:14 +0000 (UTC)
-Date:   Mon, 18 May 2020 18:35:13 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        nouveau@lists.freedesktop.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH] x86: mmiotrace: Use cpumask_available for cpumask_var_t
- variables
-Message-ID: <20200518183513.53b94f11@gandalf.local.home>
-In-Reply-To: <CAKwvOdmXgYThHRDpt5dFZy5T1zS6MYQhcBNcq6-rsuc5fjiE6Q@mail.gmail.com>
-References: <20200408205323.44490-1-natechancellor@gmail.com>
-        <20200518093117.GA719849@ubuntu-s3-xlarge-x86>
-        <CAKwvOdmXgYThHRDpt5dFZy5T1zS6MYQhcBNcq6-rsuc5fjiE6Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 18 May 2020 18:36:47 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45702 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728223AbgERWgq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:36:46 -0400
+Received: by mail-il1-f196.google.com with SMTP id b15so11512543ilq.12;
+        Mon, 18 May 2020 15:36:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lDHijTmy+IOAetUHiwAUcflxm9U9CcYAXapEIE7xXd0=;
+        b=FiAChHXI8kgtqgLRlbKTwvm76orL+nMD3DVsrRxRrDuzJE1ab37cNL03CBzd60wdWT
+         zK/YC8Uao8Os/rLk/VvYa+82T+OkTIc6l94yOxWpAsg10UQ6AS9jZ0wOI1/Id01Tl3jb
+         7LGYXSO7kkf/+UTP6EaYc1uLZXiHc+esG3D7Q0CCF+pWPnaCB0u7+3aiJ518i1uouLAJ
+         2uNs9TnLDqIBMGXCe6+dGASS7NiHnmQeVF3TP+X/KtNFjzVOdRYSK8phs/L7r5sElWl0
+         /e6jmii3Xnk4xL0I7NhuSG1t/pUeeOLv+ILLvZNVDteWKkVOnQb9/4X9LqkgQ5diQuMx
+         hpeA==
+X-Gm-Message-State: AOAM532UONrv4unyCjvh59l1fn5qWmidUFwHVFPCyR1kxj1CJMYGbrQR
+        goMz33fjSzI2qKnhw0rc/w==
+X-Google-Smtp-Source: ABdhPJyfB//q3n3N5C4f18+VIRekJCumkD01M8aTVQWfd0ekd3pS2p2Qu/LenJQcXvB2ZvLMqPEexw==
+X-Received: by 2002:a92:afcd:: with SMTP id v74mr18237211ill.305.1589841404926;
+        Mon, 18 May 2020 15:36:44 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c26sm4336676iod.16.2020.05.18.15.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 15:36:44 -0700 (PDT)
+Received: (nullmailer pid 4555 invoked by uid 1000);
+        Mon, 18 May 2020 22:36:41 -0000
+Date:   Mon, 18 May 2020 16:36:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     nikitos.tr@gmail.com
+Cc:     dmurphy@ti.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, pavel@ucw.cz,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v2 2/3] dt-bindings: leds: Add binding for aw2013
+Message-ID: <20200518223641.GA4338@bogus>
+References: <20200511111128.16210-1-nikitos.tr@gmail.com>
+ <20200511111128.16210-2-nikitos.tr@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511111128.16210-2-nikitos.tr@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 11:52:47 -0700
-Nick Desaulniers <ndesaulniers@google.com> wrote:
-
-> On Mon, May 18, 2020 at 2:31 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Wed, Apr 08, 2020 at 01:53:23PM -0700, Nathan Chancellor wrote:  
-> > > When building with Clang + -Wtautological-compare and
-> > > CONFIG_CPUMASK_OFFSTACK unset:
-> > >
-> > > arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
-> > > equal to a null pointer is always false [-Wtautological-pointer-compare]
-> > >         if (downed_cpus == NULL &&
-> > >             ^~~~~~~~~~~    ~~~~
-> > > arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
-> > > equal to a null pointer is always false [-Wtautological-pointer-compare]
-> > >         if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-> > >             ^~~~~~~~~~~    ~~~~
-> > > 2 warnings generated.
-> > >
-> > > Commit f7e30f01a9e2 ("cpumask: Add helper cpumask_available()") added
-> > > cpumask_available to fix warnings of this nature. Use that here so that
-> > > clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's value.
-> > >
-> > > Link: https://github.com/ClangBuiltLinux/linux/issues/982
-> > > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>  
+On Mon, 11 May 2020 16:11:27 +0500,  wrote:
+> From: Nikita Travkin <nikitos.tr@gmail.com>
 > 
-> Thanks for the patch, sorry I'm falling behind on code review!
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Linus sent me a issue about this failure privately as well, and had two
-solutions for it (one being identical to this one, and I shared that with
-him, and another one he thought would be better, but had some issues).
-
-Linus,
-
-Are you OK with this patch?
-
--- Steve
-
-
+> Add YAML devicetree binding for AWINIC AW2013 3-channel led driver
 > 
-> > > ---
-> > >  arch/x86/mm/mmio-mod.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-> > > index 109325d77b3e..43fd19b3f118 100644
-> > > --- a/arch/x86/mm/mmio-mod.c
-> > > +++ b/arch/x86/mm/mmio-mod.c
-> > > @@ -372,7 +372,7 @@ static void enter_uniprocessor(void)
-> > >       int cpu;
-> > >       int err;
-> > >
-> > > -     if (downed_cpus == NULL &&
-> > > +     if (!cpumask_available(downed_cpus) &&
-> > >           !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
-> > >               pr_notice("Failed to allocate mask\n");
-> > >               goto out;
-> > > @@ -402,7 +402,7 @@ static void leave_uniprocessor(void)
-> > >       int cpu;
-> > >       int err;
-> > >
-> > > -     if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-> > > +     if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
-> > >               return;
-> > >       pr_notice("Re-enabling CPUs...\n");
-> > >       for_each_cpu(cpu, downed_cpus) {
-> > >
-> > > base-commit: ae46d2aa6a7fbe8ca0946f24b061b6ccdc6c3f25
-> > > --
-> > > 2.26.0
-> > >  
-> >
-> > Gentle ping for acceptance, I am not sure who should take this.  
-> 
-> Looks like Steven or Ingo are the listed maintainers for MMIOTRACE?
+> Signed-off-by: Nikita Travkin <nikitos.tr@gmail.com>
+> ---
+>  .../devicetree/bindings/leds/leds-aw2013.yaml | 91 +++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-aw2013.yaml
 > 
 
+Reviewed-by: Rob Herring <robh@kernel.org>
