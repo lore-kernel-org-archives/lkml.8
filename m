@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4813BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91510C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 190AC20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FED20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823683;
-	bh=FbYVbW5S+MWJqqzX/D8J0938n0JU/xFXLAl/FccIewI=;
+	s=default; t=1589823684;
+	bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j7x7UCf1JSUnlDExX29VX9JG86XVEq9lS8gtUW25zVRbf2WTi/tjMhI5fBTklodfL
-	 rBwAwJwl7ZK9z3Wmc5RKmPCtiGXDd+cWxiLIN8l+hpXbFhrBBqMCeaYjwiKifRLp2e
-	 Tgi6P8iDoqShdhYvWevfd1N01amja4gQ7YiJjezY=
+	b=Uc+PIpc90jPgi5Z79B/mLOYRARRRs3TEHifZD8kWQ/voRvNwQd1Tm8F9PZ6FB/9rb
+	 8e4c/lMSTqrYvA3tOsjcZlC//lQohQsBxTq6gt8cHbcxQLim+dXrVX1kTKHasLpBcp
+	 kzWtGe7MS1SbZ7JIlajRjsII9pyVwvLmQ6ZKIMo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgERRlW (ORCPT
+        id S1728557AbgERRlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:41:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37292 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729210AbgERRlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:41:08 -0400
+        id S1729219AbgERRlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:41:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3882D20715;
-        Mon, 18 May 2020 17:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A87ED20657;
+        Mon, 18 May 2020 17:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823667;
-        bh=FbYVbW5S+MWJqqzX/D8J0938n0JU/xFXLAl/FccIewI=;
+        s=default; t=1589823670;
+        bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E3f3KBso/yCpUWnm6JuHpu5qV0VYOsChBlxbyHJrtbyhLViiBttv+EwLE92R9yxbk
-         fwL5ziF1ABvABgHcdu3QsJECMDIPTeGutngq2N/tMHXL4qw50w8B59HBDG2dgI3kd9
-         zYuJ7Of/RaM0hGEdG0ThXkIuuJZdPiu+2MzvAano=
+        b=1E+zIVY4rKvFOtwQ1HFs9/BdBwtXfJvYD8wAlPNrEha9gYgiO9xsxQoo4eacjWfSW
+         ZVG9AJhHmNl3M7u2uQZX+aHrTJZmgEUIcqeA2D2/2nNUb16pYttI0B4gtdmndaaR6k
+         7FssJr3RIMRXv7fmfLivWSguo32u1Ouxz7zRmGbo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+194dffdb8b22fc5d207a@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 74/86] ALSA: rawmidi: Initialize allocated buffers
-Date:   Mon, 18 May 2020 19:36:45 +0200
-Message-Id: <20200518173505.468778017@linuxfoundation.org>
+        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.4 75/86] USB: gadget: fix illegal array access in binding with UDC
+Date:   Mon, 18 May 2020 19:36:46 +0200
+Message-Id: <20200518173505.756313534@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -60,43 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Kyungtae Kim <kt0755@gmail.com>
 
-commit 5a7b44a8df822e0667fc76ed7130252523993bda upstream.
+commit 15753588bcd4bbffae1cca33c8ced5722477fe1f upstream.
 
-syzbot reported the uninitialized value exposure in certain situations
-using virmidi loop.  It's likely a very small race at writing and
-reading, and the influence is almost negligible.  But it's safer to
-paper over this just by replacing the existing kvmalloc() with
-kvzalloc().
+FuzzUSB (a variant of syzkaller) found an illegal array access
+using an incorrect index while binding a gadget with UDC.
 
-Reported-by: syzbot+194dffdb8b22fc5d207a@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reference: https://www.spinics.net/lists/linux-usb/msg194331.html
+
+This bug occurs when a size variable used for a buffer
+is misused to access its strcpy-ed buffer.
+Given a buffer along with its size variable (taken from user input),
+from which, a new buffer is created using kstrdup().
+Due to the original buffer containing 0 value in the middle,
+the size of the kstrdup-ed buffer becomes smaller than that of the original.
+So accessing the kstrdup-ed buffer with the same size variable
+triggers memory access violation.
+
+The fix makes sure no zero value in the buffer,
+by comparing the strlen() of the orignal buffer with the size variable,
+so that the access to the kstrdup-ed buffer is safe.
+
+BUG: KASAN: slab-out-of-bounds in gadget_dev_desc_UDC_store+0x1ba/0x200
+drivers/usb/gadget/configfs.c:266
+Read of size 1 at addr ffff88806a55dd7e by task syz-executor.0/17208
+
+CPU: 2 PID: 17208 Comm: syz-executor.0 Not tainted 5.6.8 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ gadget_dev_desc_UDC_store+0x1ba/0x200 drivers/usb/gadget/configfs.c:266
+ flush_write_buffer fs/configfs/file.c:251 [inline]
+ configfs_write_file+0x2f1/0x4c0 fs/configfs/file.c:283
+ __vfs_write+0x85/0x110 fs/read_write.c:494
+ vfs_write+0x1cd/0x510 fs/read_write.c:558
+ ksys_write+0x18a/0x220 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+ do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
+Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200510054326.GA19198@pizza01
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/rawmidi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/configfs.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/core/rawmidi.c
-+++ b/sound/core/rawmidi.c
-@@ -136,7 +136,7 @@ static int snd_rawmidi_runtime_create(st
- 		runtime->avail = 0;
- 	else
- 		runtime->avail = runtime->buffer_size;
--	if ((runtime->buffer = kmalloc(runtime->buffer_size, GFP_KERNEL)) == NULL) {
-+	if ((runtime->buffer = kzalloc(runtime->buffer_size, GFP_KERNEL)) == NULL) {
- 		kfree(runtime);
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -260,6 +260,9 @@ static ssize_t gadget_dev_desc_UDC_store
+ 	char *name;
+ 	int ret;
+ 
++	if (strlen(page) < len)
++		return -EOVERFLOW;
++
+ 	name = kstrdup(page, GFP_KERNEL);
+ 	if (!name)
  		return -ENOMEM;
- 	}
-@@ -661,7 +661,7 @@ int snd_rawmidi_output_params(struct snd
- 		return -EINVAL;
- 	}
- 	if (params->buffer_size != runtime->buffer_size) {
--		newbuf = kmalloc(params->buffer_size, GFP_KERNEL);
-+		newbuf = kzalloc(params->buffer_size, GFP_KERNEL);
- 		if (!newbuf)
- 			return -ENOMEM;
- 		spin_lock_irq(&runtime->lock);
 
 
