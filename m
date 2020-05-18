@@ -2,146 +2,167 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A52C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B111C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCE42081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a84EmTd7"
+	by mail.kernel.org (Postfix) with ESMTP id 1727A207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgERSxA (ORCPT
+        id S1729554AbgERSxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728402AbgERSw7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:52:59 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B3CC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:52:59 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id q16so4608305plr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dFak8/mdn0uAmUBsx2tXCAV4WCKdaMa+D5ub/JVb32o=;
-        b=a84EmTd7Tp4Pbn+CkrTqRzCc9g1R2avRZs0ToXDlNwKWovnLKeUoMqxYCcT8OdRnuh
-         kOexfXAYAL+KHDoNg7U20KPSIBzA7Szr/zYqZk1ERuAOfOViF2O7TKSEJZZqdJwAqpMN
-         pI1+wDVlgTDzs3nwvN48hyGtwiD0oVtj8Cg4xsl5LUKsSYlK0UH7lmURJ9Ao5E+OATu9
-         oQ1HjwsSWFFBUt+Zj9fNShLRAvZ5wlViWzQB7myPFPyLnjeEwlkv4uf7wdZsiL36p4ml
-         9qY4OUM1FPwT2O/LdnL4yLpeaTnE0+TzO8IB3pjzuc9XPDH3J+9XYVdd/oCQ87bBMjz9
-         Tn4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dFak8/mdn0uAmUBsx2tXCAV4WCKdaMa+D5ub/JVb32o=;
-        b=DL8G1TupOgJdkQVj3BaLOAZIAwhYW7u3QxBQghdahHX184/X7dcUynxe0Y/tyuy2Rr
-         VGtDwm+ew4gvb22/FNQpae1n8BqwyUXgoyANiQ4ANniG3fR4y67WwYYWQ8gEA+7XGSnj
-         GtL6n9SIqJiadrSPvGWJfdNKjMEBPtRkdwmpcLqFUdMUSddGUVa7UFdRbEkgvlcBBGwY
-         BPkOgzFJJklXnhpvZuwzIS22mtqHKgQ+77AJdyQvWtjt8iru089f0I4YYqD2OaLrr3za
-         J16rQpfC9+KiDYXSJ+GHP/y7lawdqslA9OoBSVsUqHqMGqkCDfctafUZNQYjiMiBGocs
-         0Qdg==
-X-Gm-Message-State: AOAM533hhNPXeRe4+VvHYGaq0tt1i4LvYSl5ZRtpu2ku0UsQTgau7hYJ
-        Wn1mdvbn3n7k99TSM0Jc4Pbxkn4EFg14blDfplrobg==
-X-Google-Smtp-Source: ABdhPJwD4+q9rE52VUN1KmW84Ac+bxZIw4F46mR/IkVNPqXIvZlTgE2/S2ihGw8kx4s+4gkQ/0I9rnCcyC4gaCDzGIc=
-X-Received: by 2002:a17:902:82c9:: with SMTP id u9mr6715535plz.179.1589827978379;
- Mon, 18 May 2020 11:52:58 -0700 (PDT)
+        Mon, 18 May 2020 14:53:23 -0400
+Received: from mga01.intel.com ([192.55.52.88]:30017 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728402AbgERSxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:53:22 -0400
+IronPort-SDR: OLiGs8Slq7dsYjg0WwlWYhQ/HrY2GPNWoC0FNawN2ePVc+ifQxqTFiX3MGcSxS3SX0vzrKcgaJ
+ bovsmdEkpHhw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:53:21 -0700
+IronPort-SDR: wT5udie50AdNTuMUJYxPteuLMe12TZ41D4wivcgS4W3Bxq31tLdSQvNWL7BfVJ299q3OTUSN62
+ i04uJ/dpGnmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="299866992"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga008.jf.intel.com with ESMTP; 18 May 2020 11:53:20 -0700
+Subject: [PATCH v2 0/9] Add shared workqueue support for idxd driver
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
+        fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com, dave.hansen@intel.com
+Date:   Mon, 18 May 2020 11:53:20 -0700
+Message-ID: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-References: <20200408205323.44490-1-natechancellor@gmail.com> <20200518093117.GA719849@ubuntu-s3-xlarge-x86>
-In-Reply-To: <20200518093117.GA719849@ubuntu-s3-xlarge-x86>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 18 May 2020 11:52:47 -0700
-Message-ID: <CAKwvOdmXgYThHRDpt5dFZy5T1zS6MYQhcBNcq6-rsuc5fjiE6Q@mail.gmail.com>
-Subject: Re: [PATCH] x86: mmiotrace: Use cpumask_available for cpumask_var_t variables
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        nouveau@lists.freedesktop.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 2:31 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Wed, Apr 08, 2020 at 01:53:23PM -0700, Nathan Chancellor wrote:
-> > When building with Clang + -Wtautological-compare and
-> > CONFIG_CPUMASK_OFFSTACK unset:
-> >
-> > arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
-> > equal to a null pointer is always false [-Wtautological-pointer-compare]
-> >         if (downed_cpus == NULL &&
-> >             ^~~~~~~~~~~    ~~~~
-> > arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
-> > equal to a null pointer is always false [-Wtautological-pointer-compare]
-> >         if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-> >             ^~~~~~~~~~~    ~~~~
-> > 2 warnings generated.
-> >
-> > Commit f7e30f01a9e2 ("cpumask: Add helper cpumask_available()") added
-> > cpumask_available to fix warnings of this nature. Use that here so that
-> > clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's value.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/982
-> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+v2:
+- Dropped device feature enabling (GregKH)
+- Dropped PCI device feature enabling (Bjorn)
+	- https://members.pcisig.com/wg/PCI-SIG/document/14237
+	- After some internal discussion, we have decided to hold off on the
+	  enabling of DMWR due to the following reasons. 1. Most first gen hw
+	  will not have the feature bits. 2. First gen hw that support the
+	  feature are all Root Complex integrated endpoints. 3. PCI devices
+	  that are not RCiEP’s with this capability won’t surface for a few
+	  years so we can wait until we can test the full code.
+- Dropped special ioremap (hch)
+- Added proper support for WQ flush (tony, dan)
+- Changed descriptor submission to use sbitmap_queue for blocking. (dan)
+- Split out MOBDIR64B to right location for ENQCMDS placement. (daveh)
+- Split out SVM kernel dependencies for driver. (daveh)
+- Call enqcmds() directly (daveh)
+- Fix enqcmds() commit log (daveh)
+- Split out fault processing code (tony)
 
-Thanks for the patch, sorry I'm falling behind on code review!
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Driver stage 1 postings for context: [1]
 
-> > ---
-> >  arch/x86/mm/mmio-mod.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-> > index 109325d77b3e..43fd19b3f118 100644
-> > --- a/arch/x86/mm/mmio-mod.c
-> > +++ b/arch/x86/mm/mmio-mod.c
-> > @@ -372,7 +372,7 @@ static void enter_uniprocessor(void)
-> >       int cpu;
-> >       int err;
-> >
-> > -     if (downed_cpus == NULL &&
-> > +     if (!cpumask_available(downed_cpus) &&
-> >           !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
-> >               pr_notice("Failed to allocate mask\n");
-> >               goto out;
-> > @@ -402,7 +402,7 @@ static void leave_uniprocessor(void)
-> >       int cpu;
-> >       int err;
-> >
-> > -     if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-> > +     if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
-> >               return;
-> >       pr_notice("Re-enabling CPUs...\n");
-> >       for_each_cpu(cpu, downed_cpus) {
-> >
-> > base-commit: ae46d2aa6a7fbe8ca0946f24b061b6ccdc6c3f25
-> > --
-> > 2.26.0
-> >
->
-> Gentle ping for acceptance, I am not sure who should take this.
+The patch series has functionality dependency on Fenghua's "Tag application
+address space for devices" patch series for the ENQCMD CPU command enumeration
+and the PASID MSR support. [2]
 
-Looks like Steven or Ingo are the listed maintainers for MMIOTRACE?
+The first patch enumerating ENQCMD is lifted from Fenghua's patch series. It
+removes the compilation dependency for the driver. It can be dropped by the
+maintainer merging the driver patch series once Fenghua's patch series is
+merged.
 
--- 
-Thanks,
-~Nick Desaulniers
+== Background ==
+A typical DMA device requires the driver to translate application buffers to
+hardware addresses, and a kernel-user transition to notify the hardware of new
+work. Shared Virtual Addressing (SVA) allows the processor and device to use the
+same virtual addresses without requiring software to translate between the
+address spaces. ENQCMD is a new instruction on Intel Platforms that allows user
+applications to directly notify hardware of new work, much like how doorbells
+are used in some hardware, but it carries a payload along with it. ENQCMDS is
+the supervisor version (ring0) of ENQCMD.
+
+== ENQCMDS ==
+Introduce iosubmit_cmd512_sync(), a common wrapper that copies an input payload
+to a 64B aligned destination and confirms whether the payload was accepted by
+the device or not. iosubmit_cmd512_sync() wraps the new ENQCMDS CPU instruction.
+The ENQCMDS is a ring 0 CPU instruction that performs similar to the ENQCMD
+instruction. Descriptor submission must use ENQCMD(S) for shared workqueues
+(swq) on an Intel DSA device. 
+
+== Shared WQ support ==
+Introduce shared workqueue (swq) support for the idxd driver. The current idxd
+driver contains dedicated workqueue (dwq) support only. A dwq accepts
+descriptors from a MOVDIR64B instruction. MOVDIR64B is a posted instruction on
+the PCIe bus, it does not wait for any response from the device. If the wq is
+full, submitted descriptors are dropped. A swq utilizes the ENQCMDS in ring 0,
+which is a non-posted instruction. The zero flag would be set to 1 if the device
+rejects the descriptor or if the wq is full. A swq can be shared between
+multiple users (kernel or userspace) due to not having to keep track of the wq
+full condition for submission. A swq requires PASID and can only run with SVA
+support. 
+
+== IDXD SVA support ==
+Add utilization of PASID to support Shared Virtual Addressing (SVA). With PASID
+support, the descriptors can be programmed with host virtual address (HVA)
+rather than IOVA. The hardware will work with the IOMMU in fulfilling page
+requests. With SVA support, a user app using the char device interface can now
+submit descriptors without having to pin the virtual memory range it wants to
+DMA in its own address space. 
+
+The series does not add SVA support for the dmaengine subsystem. That support
+is coming at a later time.
+
+[1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
+[2]: https://lore.kernel.org/lkml/1585596788-193989-1-git-send-email-fenghua.yu@intel.com/
+[3]: https://software.intel.com/en-us/articles/intel-sdm
+[4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
+[5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+[6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
+[7]: https://intel.github.io/idxd/
+[8]: https://github.com/intel/idxd-driver idxd-stage2
+
+---
+
+Dave Jiang (8):
+      x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
+      x86/asm: add enqcmds() to support ENQCMDS instruction
+      dmaengine: idxd: add work queue drain support
+      dmaengine: idxd: move submission to sbitmap_queue
+      dmaengine: idxd: add shared workqueue support
+      dmaengine: idxd: clean up descriptors with fault error
+      dmaengine: idxd: add leading / for sysfspath in ABI documentation
+      dmaengine: idxd: add ABI documentation for shared wq
+
+Fenghua Yu (1):
+      x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
+
+
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |   68 ++++--
+ arch/x86/include/asm/cpufeatures.h             |    1 
+ arch/x86/include/asm/io.h                      |   43 +++-
+ arch/x86/include/asm/special_insns.h           |   17 ++
+ arch/x86/kernel/cpu/cpuid-deps.c               |    1 
+ drivers/dma/Kconfig                            |   15 +
+ drivers/dma/idxd/cdev.c                        |   38 ++++
+ drivers/dma/idxd/device.c                      |  252 +++++++++++++++---------
+ drivers/dma/idxd/dma.c                         |    9 -
+ drivers/dma/idxd/idxd.h                        |   32 ++-
+ drivers/dma/idxd/init.c                        |  122 +++++++-----
+ drivers/dma/idxd/irq.c                         |  184 ++++++++++++++----
+ drivers/dma/idxd/registers.h                   |   14 +
+ drivers/dma/idxd/submit.c                      |  105 ++++++----
+ drivers/dma/idxd/sysfs.c                       |  150 +++++++++++++-
+ 15 files changed, 758 insertions(+), 293 deletions(-)
+
+--
