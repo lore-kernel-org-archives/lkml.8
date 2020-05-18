@@ -2,225 +2,159 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90001C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A2CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6690C20756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1DC020756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:24:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="JiXE+5as"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgERTX7 (ORCPT
+        id S1728078AbgERTYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:23:59 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37755 "EHLO mga05.intel.com"
+        Mon, 18 May 2020 15:24:07 -0400
+Received: from mout.web.de ([212.227.15.14]:44749 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727856AbgERTX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:23:59 -0400
-IronPort-SDR: o6WqnFtRWw648yJnTBVCibxHDp978ah9IfTl/PdjB1Bp0Zway4EalNXQxG4ksLTrV+zWRI43p5
- JA1lDBJyFAMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 12:23:58 -0700
-IronPort-SDR: NDhrWaw/AbgHFmGh0MuM+YO/qV5icHEW4Lug05Ae9xABBLnPruju/EyFUoO+cNd90Qjh+Kfqz4
- BGb2wi+tyEVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="282074584"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga002.jf.intel.com with ESMTP; 18 May 2020 12:23:57 -0700
-Date:   Mon, 18 May 2020 12:23:57 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/9] fs/ext4: Disallow encryption if inode is DAX
-Message-ID: <20200518192357.GE3025231@iweiny-DESK2.sc.intel.com>
-References: <20200513054324.2138483-1-ira.weiny@intel.com>
- <20200513054324.2138483-4-ira.weiny@intel.com>
- <20200516020253.GG1009@sol.localdomain>
- <20200518050315.GA3025231@iweiny-DESK2.sc.intel.com>
- <20200518162447.GA954@sol.localdomain>
+        id S1727856AbgERTYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 15:24:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1589829816;
+        bh=4p69O51PNXbOaGofqEGICiYCEctSXqV9dh5c7B6HOXM=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=JiXE+5asY0MTzWVDisXNQLLcskDxST5m92wm2H4ORk+HTbRy0+2dmBuKATt9dNo2c
+         vSnGv0tu+z6dl5d61aDgQzgQlh4IFl/gMv4Ca6SF87+9eR9Esgh+jn8WfiiPyyIHmx
+         rpyfv/awSoQ4L+NrPH+KKskjKjQrcTqiVzxXLWa4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.105.123]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lylol-1ixm2y46fH-0167qg; Mon, 18
+ May 2020 21:23:36 +0200
+To:     Dejin Zheng <zhengdejin5@gmail.com>, linux-i2c@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Barry Song <baohua@kernel.org>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Zhou Yanjie <zhouyanjie@wanyeetech.com>,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] drivers: provide devm_platform_request_irq()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e679788a-d616-a45d-f12d-20485aad2f43@web.de>
+Date:   Mon, 18 May 2020 21:23:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518162447.GA954@sol.localdomain>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dtjqk0vd7wSzBubXB3rn+UWKtMvfrfnVBwPt0yEKLNN59noL1nk
+ fucEjf6s9fc0jz8bf0GHwg2gGsev68SaTaqobO4SjID/YWvX9p2efb0bsZ5YUBSdfR/juhv
+ pNxs7KkFcnoVktsOpzHm5TH3pe9Zfc+dt7m9Zsh0EvDq5hSvE+iGvbB4IzJINTUUf5jJxFk
+ bHhjY1KYlEiY8nygVTxuQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1dxI5VD8FLc=:GsTzuLVZBGzNVnNHXhsyE9
+ vG5sT/SiA6JZ8cykx0anlo3KT7l3GeYm5qomVy7VaEhqYpa9AMgDNJkv6+6zIaAS33rOyDMxW
+ b+PikVLNRWgCqAv/1fEE4PzQ1U9LK4pMzjLC4kYI4oQeHwj7yHSYFXpXHLWhkGDt47sFw4/Yk
+ b+khY1ex4ufytIebrnqdXWEyO6X7uDK3w4y9P3FLtrpGXiufB3zGRHz6NojORnoiBhQOYuH5V
+ tzhtB2UcmaPDXebvikI17p8CawMzp5wZacYPaDB8UoAGobV49v7B+rBz0UdOPLBIfVSU8a7rA
+ KvBgcm0WYUa94OLCyxUCE+NAWKmcmrvo+ZryfB4w5ayfwCN0bOGdbN2/xrTMWqtQJ/Q7kbFQF
+ GJdhHfomDJ6doMQnPhw04zbQBl0/rTgnFjzTAo5DNPI9CjdFceipZEeN0v4jr6I+cyr0YCaSR
+ bZFC2Ua2xqw+BjjPCUqOoI716y3MrbVwZlcToNdbrJSiG9TRfvpDrgm4jbMl1n1R62lnAvn3U
+ OsFxlOUaqxsOGszqaRQXKG6Z39QlbgjL2s2ouLKVSEi3qlykm3BIOJKF1WKpmvKhMRA/4hC38
+ LobehJigE+kHJmRvfO0tZ7Ip1mFDMYtCOiuwf4tgVdDJuEZjsDrasPQFDIKRm4ijBIbjXCS9G
+ dknf24ug98J9qIAxMvtjXH+BkRAPJGo2/6NS4aCy/36sAS0Fpvlj20+FtckaHHCOy4ily8rhy
+ ROoIZ9TQ0+zUEf3VKcj+/EYMC4m9/WIee/Mx9KHf3trS3rwW4A9JxJEc11IvcNayQdWLs11e5
+ DnIJxq3kJ7hFk0rDGEHr97vS+ld+fpdCvCNtJjn9S/V6/K+wokBoCqRNdWDltYfGXANaxLCPO
+ 68s97e1pn28QdI+cAVcDpDdgccth6793+6kdY8l0w6T45MJbgL0eOHFekOoEPcXrNfgxAS8oA
+ 6SlqlNdMWoGf5OAL3ZrzDwemEFNCOh9VcT3bpezg4m8+ky6A2pVkyFVvdYI6tBji5NW4oAY+W
+ /YoeTkr4+8dtwRUvEI6U8T0ueQE3t7b8Z+TCOOHzzUcao/fVsVGshR3gPwDDPtjHx/iyULSeB
+ 7hm+X5FawrCag4RNwUp789qtDmwbrqoLOOsgDstWlPhlVCgyYZGVeRG0RpjhYtW7Oaf7B64JQ
+ VYkFercxnEtx5pcV95LrKhN9c88xd/ld3kLmrtWEHOhZt+3AaApu0DixlDk2Cd+zXzs+O/aWm
+ nTUSIzqD0UVH1JVpI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 09:24:47AM -0700, Eric Biggers wrote:
-> On Sun, May 17, 2020 at 10:03:15PM -0700, Ira Weiny wrote:
-> > On Fri, May 15, 2020 at 07:02:53PM -0700, Eric Biggers wrote:
-> > > On Tue, May 12, 2020 at 10:43:18PM -0700, ira.weiny@intel.com wrote:
-> > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > 
-> > > > Encryption and DAX are incompatible.  Changing the DAX mode due to a
-> > > > change in Encryption mode is wrong without a corresponding
-> > > > address_space_operations update.
-> > > > 
-> > > > Make the 2 options mutually exclusive by returning an error if DAX was
-> > > > set first.
-> > > > 
-> > > > Furthermore, clarify the documentation of the exclusivity and how that
-> > > > will work.
-> > > > 
-> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > > 
-> > > > ---
-> > > > Changes:
-> > > > 	remove WARN_ON_ONCE
-> > > > 	Add documentation to the encrypt doc WRT DAX
-> > > > ---
-> > > >  Documentation/filesystems/fscrypt.rst |  4 +++-
-> > > >  fs/ext4/super.c                       | 10 +---------
-> > > >  2 files changed, 4 insertions(+), 10 deletions(-)
-> > > > 
-> > > > diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
-> > > > index aa072112cfff..1475b8d52fef 100644
-> > > > --- a/Documentation/filesystems/fscrypt.rst
-> > > > +++ b/Documentation/filesystems/fscrypt.rst
-> > > > @@ -1038,7 +1038,9 @@ astute users may notice some differences in behavior:
-> > > >  - The ext4 filesystem does not support data journaling with encrypted
-> > > >    regular files.  It will fall back to ordered data mode instead.
-> > > >  
-> > > > -- DAX (Direct Access) is not supported on encrypted files.
-> > > > +- DAX (Direct Access) is not supported on encrypted files.  Attempts to enable
-> > > > +  DAX on an encrypted file will fail.  Mount options will _not_ enable DAX on
-> > > > +  encrypted files.
-> > > >  
-> > > >  - The st_size of an encrypted symlink will not necessarily give the
-> > > >    length of the symlink target as required by POSIX.  It will actually
-> > > > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> > > > index bf5fcb477f66..9873ab27e3fa 100644
-> > > > --- a/fs/ext4/super.c
-> > > > +++ b/fs/ext4/super.c
-> > > > @@ -1320,7 +1320,7 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
-> > > >  	if (inode->i_ino == EXT4_ROOT_INO)
-> > > >  		return -EPERM;
-> > > >  
-> > > > -	if (WARN_ON_ONCE(IS_DAX(inode) && i_size_read(inode)))
-> > > > +	if (IS_DAX(inode))
-> > > >  		return -EINVAL;
-> > > >  
-> > > >  	res = ext4_convert_inline_data(inode);
-> > > > @@ -1344,10 +1344,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
-> > > >  			ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
-> > > >  			ext4_clear_inode_state(inode,
-> > > >  					EXT4_STATE_MAY_INLINE_DATA);
-> > > > -			/*
-> > > > -			 * Update inode->i_flags - S_ENCRYPTED will be enabled,
-> > > > -			 * S_DAX may be disabled
-> > > > -			 */
-> > > >  			ext4_set_inode_flags(inode);
-> > > >  		}
-> > > >  		return res;
-> > > > @@ -1371,10 +1367,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
-> > > >  				    ctx, len, 0);
-> > > >  	if (!res) {
-> > > >  		ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
-> > > > -		/*
-> > > > -		 * Update inode->i_flags - S_ENCRYPTED will be enabled,
-> > > > -		 * S_DAX may be disabled
-> > > > -		 */
-> > > >  		ext4_set_inode_flags(inode);
-> > > >  		res = ext4_mark_inode_dirty(handle, inode);
-> > > >  		if (res)
-> > > 
-> > > I'm confused by the ext4_set_context() change.
-> > > 
-> > > ext4_set_context() is only called when FS_IOC_SET_ENCRYPTION_POLICY sets an
-> > > encryption policy on an empty directory, *or* when a new inode (regular, dir, or
-> > > symlink) is created in an encrypted directory (thus inheriting encryption from
-> > > its parent).
-> > 
-> > I don't see the check which prevents FS_IOC_SET_ENCRYPTION_POLICY on a file?
-> 
-> It's in fscrypt_ioctl_set_policy().
+> It will call devm_request_irq() after platform_get_irq() function
+> in many drivers, sometimes, it is not right of the error handling
+> for these two functions in some drivers. so provide this function
+> to simplify the driver.
 
-I see...
+I suggest to improve also this change description.
+How do you think about a wording variant like the following?
 
-> 
-> > 
-> > On inode creation, encryption will always usurp S_DAX...
-> > 
-> > > 
-> > > So when is it reachable when IS_DAX()?  Is the issue that the DAX flag can now
-> > > be set on directories?  The commit message doesn't seem to be talking about
-> > > directories.  Is the behavior we want is that on an (empty) directory with the
-> > > DAX flag set, FS_IOC_SET_ENCRYPTION_POLICY should fail with EINVAL?
-> > 
-> > We would want that but AFIAK S_DAX is never set on directories.  Perhaps this
-> > is another place where S_DAX needs to be changed to the new inode flag?
-> > However, this would not be appropriate at this point in the series.  At this
-> > point in the series S_DAX is still set based on the mount option and I'm 99%
-> > sure that only happens on regular files, not directories.  So I'm confused now.
-> 
-> S_DAX is only set by ext4_set_inode_flags() which only sets it on regular files.
+   The function =E2=80=9Cdevm_request_irq=E2=80=9D is called after the
+   function =E2=80=9Cplatform_get_irq=E2=80=9D in many drivers.
+   The exception handling is incomplete there sometimes.
+   Thus add a corresponding wrapper function for the simplification
+   of the drivers.
 
-Exactly...
 
-> 
-> > 
-> > This is, AFAICS, not going to affect correctness.  It will only be confusing
-> > because the user will be able to set both DAX and encryption on the directory
-> > but files there will only see encryption being used...  :-(
-> > 
-> > Assuming you are correct about this call path only being valid on directories.
-> > It seems this IS_DAX() needs to be changed to check for EXT4_DAX_FL in
-> > "fs/ext4: Introduce DAX inode flag"?  Then at that point we can prevent DAX and
-> > encryption on a directory.  ...  and at this point IS_DAX() could be removed at
-> > this point in the series???
-> 
-> I haven't read the whole series, but if you are indeed trying to prevent a
-> directory with EXT4_DAX_FL from being encrypted, then it does look like you'd
-> need to check EXT4_DAX_FL, not S_DAX.
+Will a companion script for the semantic patch language (Coccinelle softwa=
+re)
+become helpful for further support of collateral evolution?
 
-Yep.
-
-> 
-> The other question is what should happen when a file is created in an encrypted
-> directory when the filesystem is mounted with -o dax.  Actually, I think I
-> missed something there.  Currently (based on reading the code) the DAX flag will
-> get set first, and then ext4_set_context()
-
-See this is where I am confused.  Above you said that ext4_set_context() is only
-called on a directory.  And I agree with you now having seen the check in
-fscrypt_ioctl_set_policy().  So what is the call path you are speaking of here?
-
-> will see IS_DAX() && i_size == 0 and
-> clear the DAX flag when setting the encrypt flag.  So, the i_size == 0 check is
-> actually needed.  Your patch (AFAICS) just makes creating an encrypted file fail
-> when '-o dax'.  Is that intended?
-
-Yes that is what I intended for this patch.  At this point in the series the
-file system is either all DAX (-o dax) or not.  I did not comprehend the
-directory vs regular file complexity with fscrypt.
-
-It seems this patch should be removing the IS_DAX() check completely but I'm
-still not sure if a regular file inode could be passed to ext4_set_context()
-and I think we need to protect if it has IS_DAX() set if it does...
-
-An alternate solution would be to drop this patch entirely and change the code
-later in the series once EXT4_DAX_FL is defined...
-
-But I'm not even clear where EXT4_ENCRYPT_FL is set...
-
-Ira
-
-> If not, maybe you should change it to check
-> S_NEW instead of i_size == 0 to make it clearer?
-> 
-> - Eric
+Regards,
+Markus
