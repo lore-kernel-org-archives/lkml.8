@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A84B20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4C920657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823671;
-	bh=ybPCDmouDFF/PZ/wxtR3Cd0tZ9peoJhFptvo+Rz9Omw=;
+	s=default; t=1589823674;
+	bh=8JEMHKTX3965n4n18+Ai3xzuSK/PYEZl1GVXvu9fqag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5lPwvSeKWaWYzHZDIavlgiUMdHOZX+68PvS1CK6R9qJyf95THV+HG1/RoaSeJXWL
-	 nAGRKrC5Cq2ODo47wGyzncWoae1nvQPX1+tcLS12ZVHTl617RumHezhZ+y/GwMgICn
-	 53hMy1mDFM1a9IVii0cCUVaOgALtCF3kZ5/mwPVc=
+	b=jZtfpUhf+uix0FrFdTPpixfpPc1vmKdHCSpO4EMqCCU5JXZZm49FXKN3Vv5b/AxDz
+	 xUEVZFRfW4lTvFt2za3/9zApQ0vDlwitsiBhWRfEKy0kx71m6GWoi/Ni46H1QZ8IiJ
+	 UJqPuFbPBnXO1IIofyc4RWcTlAyPGBMu3PYeFBGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729218AbgERRlJ (ORCPT
+        id S1729229AbgERRlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36796 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:41:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729164AbgERRku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:50 -0400
+        id S1729174AbgERRkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 962B720657;
-        Mon, 18 May 2020 17:40:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0BDD20657;
+        Mon, 18 May 2020 17:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823650;
-        bh=ybPCDmouDFF/PZ/wxtR3Cd0tZ9peoJhFptvo+Rz9Omw=;
+        s=default; t=1589823652;
+        bh=8JEMHKTX3965n4n18+Ai3xzuSK/PYEZl1GVXvu9fqag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jdXCPq2U6UTkj7vHohCZqNgLDP/I43KAj+XOK0m901tSen4uN+E1a7TRId4u68IWH
-         8SRUDlT5dgpunbnr53a1xNVF2HB2KkYPkzbol2Ojx/m4x6k1gdgL+43ynwQmmS8Xn5
-         h1W5Kr93kDqxXmjYOcOolywn2F2WtzNMIewUiUmE=
+        b=ilCQ/IF27GG8VWgkdSuX6PFcssoGHGQI29XTZyXHKNdYD2OqKwhsl5xj6Cyv79Ka4
+         SburagasyoOS9/eXl3ga4dBdMNPdFBF+Oz5O6rygz5ULt9du3aiJKGxIEdyXvJYpbY
+         wuzfI96XH97VK3a7NsrZbm4NDCqrMlXDPUP5eQrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 68/86] gcc-10: avoid shadowing standard library free() in crypto
-Date:   Mon, 18 May 2020 19:36:39 +0200
-Message-Id: <20200518173504.126873286@linuxfoundation.org>
+        syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com,
+        syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com,
+        Jarod Wilson <jarod@redhat.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 69/86] net: fix a potential recursive NETDEV_FEAT_CHANGE
+Date:   Mon, 18 May 2020 19:36:40 +0200
+Message-Id: <20200518173504.310523547@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -59,84 +67,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 1a263ae60b04de959d9ce9caea4889385eefcc7b upstream.
+[ Upstream commit dd912306ff008891c82cd9f63e8181e47a9cb2fb ]
 
-gcc-10 has started warning about conflicting types for a few new
-built-in functions, particularly 'free()'.
+syzbot managed to trigger a recursive NETDEV_FEAT_CHANGE event
+between bonding master and slave. I managed to find a reproducer
+for this:
 
-This results in warnings like:
+  ip li set bond0 up
+  ifenslave bond0 eth0
+  brctl addbr br0
+  ethtool -K eth0 lro off
+  brctl addif br0 bond0
+  ip li set br0 up
 
-   crypto/xts.c:325:13: warning: conflicting types for built-in function ‘free’; expected ‘void(void *)’ [-Wbuiltin-declaration-mismatch]
+When a NETDEV_FEAT_CHANGE event is triggered on a bonding slave,
+it captures this and calls bond_compute_features() to fixup its
+master's and other slaves' features. However, when syncing with
+its lower devices by netdev_sync_lower_features() this event is
+triggered again on slaves when the LRO feature fails to change,
+so it goes back and forth recursively until the kernel stack is
+exhausted.
 
-because the crypto layer had its local freeing functions called
-'free()'.
+Commit 17b85d29e82c intentionally lets __netdev_update_features()
+return -1 for such a failure case, so we have to just rely on
+the existing check inside netdev_sync_lower_features() and skip
+NETDEV_FEAT_CHANGE event only for this specific failure case.
 
-Gcc-10 is in the wrong here, since that function is marked 'static', and
-thus there is no chance of confusion with any standard library function
-namespace.
-
-But the simplest thing to do is to just use a different name here, and
-avoid this gcc mis-feature.
-
-[ Side note: gcc knowing about 'free()' is in itself not the
-  mis-feature: the semantics of 'free()' are special enough that a
-  compiler can validly do special things when seeing it.
-
-  So the mis-feature here is that gcc thinks that 'free()' is some
-  restricted name, and you can't shadow it as a local static function.
-
-  Making the special 'free()' semantics be a function attribute rather
-  than tied to the name would be the much better model ]
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: fd867d51f889 ("net/core: generic support for disabling netdev features down stack")
+Reported-by: syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com
+Reported-by: syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com
+Cc: Jarod Wilson <jarod@redhat.com>
+Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Reviewed-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- crypto/lrw.c |    4 ++--
- crypto/xts.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ net/core/dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -377,7 +377,7 @@ out_put_alg:
- 	return inst;
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -6449,11 +6449,13 @@ static void netdev_sync_lower_features(s
+ 			netdev_dbg(upper, "Disabling feature %pNF on lower dev %s.\n",
+ 				   &feature, lower->name);
+ 			lower->wanted_features &= ~feature;
+-			netdev_update_features(lower);
++			__netdev_update_features(lower);
+ 
+ 			if (unlikely(lower->features & feature))
+ 				netdev_WARN(upper, "failed to disable %pNF on %s!\n",
+ 					    &feature, lower->name);
++			else
++				netdev_features_change(lower);
+ 		}
+ 	}
  }
- 
--static void free(struct crypto_instance *inst)
-+static void free_inst(struct crypto_instance *inst)
- {
- 	crypto_drop_spawn(crypto_instance_ctx(inst));
- 	kfree(inst);
-@@ -386,7 +386,7 @@ static void free(struct crypto_instance
- static struct crypto_template crypto_tmpl = {
- 	.name = "lrw",
- 	.alloc = alloc,
--	.free = free,
-+	.free = free_inst,
- 	.module = THIS_MODULE,
- };
- 
---- a/crypto/xts.c
-+++ b/crypto/xts.c
-@@ -334,7 +334,7 @@ out_put_alg:
- 	return inst;
- }
- 
--static void free(struct crypto_instance *inst)
-+static void free_inst(struct crypto_instance *inst)
- {
- 	crypto_drop_spawn(crypto_instance_ctx(inst));
- 	kfree(inst);
-@@ -343,7 +343,7 @@ static void free(struct crypto_instance
- static struct crypto_template crypto_tmpl = {
- 	.name = "xts",
- 	.alloc = alloc,
--	.free = free,
-+	.free = free_inst,
- 	.module = THIS_MODULE,
- };
- 
 
 
