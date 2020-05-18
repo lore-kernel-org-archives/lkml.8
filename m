@@ -2,152 +2,170 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A32CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C180C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99D9207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:17:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IboKzie5"
+	by mail.kernel.org (Postfix) with ESMTP id D49E2207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgERLRP (ORCPT
+        id S1727884AbgERLR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbgERLRO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:17:14 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A119CC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 04:17:14 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id h7so711126otr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 04:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g503Ck8Hmnwm3Mle9RPu3pG4Ds3hYRoRksfGfnX5Wtc=;
-        b=IboKzie54ObNPp3JiHhtIQ8kPbLLNHmAcRRYDKnk1oArIjZ+GMd10k4aYMJSRPb9zG
-         17F0resl74uiihv4gxGIutzAXhic+K18i7W3hyGwgMfTt8nCdTFLiRiH/3M90+eJtdp8
-         NOtY1+r+bXRxOoYA/CFBWd3Y29PGDF37HlePI4bTyWF2JDP4nX+bpXNsXdtCMybiKvJk
-         3xL5+CrFHGwbOdHy5qb3FBbTBNIDGk7CJwhLUp4tig7HJTZMNmUt4I/ZmlrsqxCOu96c
-         odlDwjvWGdMjf7bSEZvSr2V+hOQ8gJPE9TtlDbNnG+73EW9FbfvLzrsTUZwGJeNQoI66
-         xWWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g503Ck8Hmnwm3Mle9RPu3pG4Ds3hYRoRksfGfnX5Wtc=;
-        b=GaZf+W81Yek3qlGgnKCInhLIYlMKQTqQmPR0QJU9BpFfUjgkigPFIIhtq2sEypZgcZ
-         5yHMb1X7tN1lyLSEf2MFKc5BRHzbTAzMgvDeBIy/PV2zGf2HZgmlmudPgiZvkOPjMx58
-         rukZcy07NQLUeOlRq+77vUe2avv+uXJhKQf2BGeCwnduN3E06tHam2AvRcnd6i+uyee/
-         NdLRkSrH9xWlbJrY0WEv3FsE4XdJUZYtfQUOkFN3sk5Y0eAPh3ssYOX7PAAlR3N9WNCY
-         T2ArLThZOO2iVwxaNYh4LHSAuIsl2b54ktVVpPl0K6TCyvZiLfeey32HOqhEuvDD28tE
-         cClQ==
-X-Gm-Message-State: AOAM531ta1miex1GP2+Qb8gQRdNTG7hd1aWES3q8/0UCG6qM8eEanBc/
-        7wP/HMH2tYS19FXiRhJEHhqcGjluLVShe9kH24yqJg==
-X-Google-Smtp-Source: ABdhPJwl5rqs5VWO5Jkao2XeEWkRX+lCx01ip7F50tguMxrw+WswGeYLG9OGd+5XHn6jnx/Q1aQbMIwBn56Y/9LJcLA=
-X-Received: by 2002:a9d:ec7:: with SMTP id 65mr11530376otj.164.1589800633898;
- Mon, 18 May 2020 04:17:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200311112004.47138-1-stevensd@chromium.org> <20200311112004.47138-2-stevensd@chromium.org>
- <CAKMK7uHFgiHLe9oiFBr-VR-6rU9-hLTpBTEVNh0ezyj54u70jw@mail.gmail.com>
- <CAD=HUj6k-y1=64zY8ZFOQBZ7WSUWiQfvkiTpXXt10JB_CGqk1A@mail.gmail.com>
- <20200514123007.GP206103@phenom.ffwll.local> <CAD=HUj7452eFfn9i=JWm54Mke3Lew-7AWYeoKZLAjCSg7eLO6A@mail.gmail.com>
- <20200515140306.GF206103@phenom.ffwll.local>
-In-Reply-To: <20200515140306.GF206103@phenom.ffwll.local>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Mon, 18 May 2020 16:47:02 +0530
-Message-ID: <CAO_48GG85PhyoZ1yzXuwv8tT12V4dkDsXc8_RaMd--oinkpN2g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dma-buf: add support for virtio exported objects
-To:     David Stevens <stevensd@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
+        Mon, 18 May 2020 07:17:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:38288 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726590AbgERLR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:17:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07E9A106F;
+        Mon, 18 May 2020 04:17:26 -0700 (PDT)
+Received: from [192.168.0.110] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFEA13F52E;
+        Mon, 18 May 2020 04:17:23 -0700 (PDT)
+Subject: Re: [PATCH 0/3] arm64: perf: Add support for Perf NMI interrupts
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Lecopzer Chen <lecopzer@gmail.com>
+Cc:     Sumit Garg <sumit.garg@linaro.org>, julien.thierry.kdev@gmail.com,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO CORE, NET..." 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
-Cc:     Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+        Jian-Lin Chen <lecopzer.chen@mediatek.com>,
+        alexander.shishkin@linux.intel.com,
+        Catalin Marinas <catalin.marinas@arm.com>, jolsa@redhat.com,
+        acme@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        mingo@redhat.com, linux-mediatek@lists.infradead.org,
+        matthias.bgg@gmail.com, namhyung@kernel.org,
+        Will Deacon <will@kernel.org>, yj.chiang@mediatek.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20200516124857.75004-1-lecopzer@gmail.com>
+ <CAFA6WYNwp+_ENiS8QDao5+RXyt5ofJZyq6c5CKG_d0CNEmBNYg@mail.gmail.com>
+ <CANr2M19unLW8n0P2DiOYEZ=GZcaD-L2ygPht_5HNtNZ6e4h6xQ@mail.gmail.com>
+ <20200518104524.GA1224@C02TD0UTHF1T.local>
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+Message-ID: <a9002b5e-aec5-b6e0-7174-87b93351d60c@arm.com>
+Date:   Mon, 18 May 2020 12:17:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200518104524.GA1224@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David,
+Hi,
 
-On Fri, 15 May 2020 at 19:33, Daniel Vetter <daniel@ffwll.ch> wrote:
+On 5/18/20 11:45 AM, Mark Rutland wrote:
+> Hi all,
 >
-> On Fri, May 15, 2020 at 02:07:06PM +0900, David Stevens wrote:
-> > On Thu, May 14, 2020 at 9:30 PM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > On Thu, May 14, 2020 at 05:19:40PM +0900, David Stevens wrote:
-> > > > Sorry for the duplicate reply, didn't notice this until now.
-> > > >
-> > > > > Just storing
-> > > > > the uuid should be doable (assuming this doesn't change during the
-> > > > > lifetime of the buffer), so no need for a callback.
-> > > >
-> > > > Directly storing the uuid doesn't work that well because of
-> > > > synchronization issues. The uuid needs to be shared between multiple
-> > > > virtio devices with independent command streams, so to prevent races
-> > > > between importing and exporting, the exporting driver can't share the
-> > > > uuid with other drivers until it knows that the device has finished
-> > > > registering the uuid. That requires a round trip to and then back from
-> > > > the device. Using a callback allows the latency from that round trip
-> > > > registration to be hidden.
-> > >
-> > > Uh, that means you actually do something and there's locking involved.
-> > > Makes stuff more complicated, invariant attributes are a lot easier
-> > > generally. Registering that uuid just always doesn't work, and blocking
-> > > when you're exporting?
-> >
-> > Registering the id at creation and blocking in gem export is feasible,
-> > but it doesn't work well for systems with a centralized buffer
-> > allocator that doesn't support batch allocations (e.g. gralloc). In
-> > such a system, the round trip latency would almost certainly be
-> > included in the buffer allocation time. At least on the system I'm
-> > working on, I suspect that would add 10s of milliseconds of startup
-> > latency to video pipelines (although I haven't benchmarked the
-> > difference). Doing the blocking as late as possible means most or all
-> > of the latency can be hidden behind other pipeline setup work.
-> >
-> > In terms of complexity, I think the synchronization would be basically
-> > the same in either approach, just in different locations. All it would
-> > do is alleviate the need for a callback to fetch the UUID.
+> On Mon, May 18, 2020 at 02:26:00PM +0800, Lecopzer Chen wrote:
+>> HI Sumit,
+>>
+>> Thanks for your information.
+>>
+>> I've already implemented IPI (same as you did [1], little difference
+>> in detail), hardlockup detector and perf in last year(2019) for
+>> debuggability.
+>> And now we tend to upstream to reduce kernel maintaining effort.
+>> I'm glad if someone in ARM can do this work :)
+>>
+>> Hi Julien,
+>>
+>> Does any Arm maintainers can proceed this action?
+> Alexandru (Cc'd) has been rebasing and reworking Julien's patches, which
+> is my preferred approach.
 >
-I think I agree with Daniel there - this seems best suited for code
-within virtio.
+> I understand that's not quite ready for posting since he's investigating
+> some of the nastier subtleties (e.g. mutual exclusion with the NMI), but
+> maybe we can put the work-in-progress patches somewhere in the mean
+> time.
+>
+> Alexandru, do you have an idea of what needs to be done, and/or when you
+> expect you could post that?
 
-> Hm ok. I guess if we go with the older patch, where this all is a lot more
-> just code in virtio, doing an extra function to allocate the uuid sounds
-> fine. Then synchronization is entirely up to the virtio subsystem and not
-> a dma-buf problem (and hence not mine). You can use dma_resv_lock or so,
-> but no need to. But with callbacks potentially going both ways things
-> always get a bit interesting wrt locking - this is what makes peer2peer
-> dma-buf so painful right now. Hence I'd like to avoid that if needed, at
-> least at the dma-buf level. virtio code I don't mind what you do there :-)
->
-> Cheers, Daniel
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+I'm currently working on rebasing the patches on top of 5.7-rc5, when I have
+something usable I'll post a link (should be a couple of days). After that I will
+address the review comments, and I plan to do a thorough testing because I'm not
+100% confident that some of the assumptions around the locks that were removed are
+correct. My guess is this will take a few weeks.
 
-Best,
-Sumit.
+Thanks,
+Alex
+>
+> Thanks,
+> Mark.
+>
+>> This is really useful in debugging.
+>> Thank you!!
+>>
+>>
+>>
+>> [1] https://lkml.org/lkml/2020/4/24/328
+>>
+>>
+>> Lecopzer
+>>
+>> Sumit Garg <sumit.garg@linaro.org> 於 2020年5月18日 週一 下午1:46寫道：
+>>> + Julien
+>>>
+>>> Hi Lecopzer,
+>>>
+>>> On Sat, 16 May 2020 at 18:20, Lecopzer Chen <lecopzer@gmail.com> wrote:
+>>>> These series implement Perf NMI funxtionality and depends on
+>>>> Pseudo NMI [1] which has been upstreamed.
+>>>>
+>>>> In arm64 with GICv3, Pseudo NMI was implemented for NMI-like interruts.
+>>>> That can be extended to Perf NMI which is the prerequisite for hard-lockup
+>>>> detector which had already a standard interface inside Linux.
+>>>>
+>>>> Thus the first step we need to implement perf NMI interface and make sure
+>>>> it works fine.
+>>>>
+>>> This is something that is already implemented via Julien's patch-set
+>>> [1]. Its v4 has been floating since July, 2019 and I couldn't find any
+>>> major blocking comments but not sure why things haven't progressed
+>>> further.
+>>>
+>>> Maybe Julien or Arm maintainers can provide updates on existing
+>>> patch-set [1] and how we should proceed further with this interesting
+>>> feature.
+>>>
+>>> And regarding hard-lockup detection, I have been able to enable it
+>>> based on perf NMI events using Julien's perf patch-set [1]. Have a
+>>> look at the patch here [2].
+>>>
+>>> [1] https://patchwork.kernel.org/cover/11047407/
+>>> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2020-May/732227.html
+>>>
+>>> -Sumit
+>>>
+>>>> Perf NMI has been test by dd if=/dev/urandom of=/dev/null like the link [2]
+>>>> did.
+>>>>
+>>>> [1] https://lkml.org/lkml/2019/1/31/535
+>>>> [2] https://www.linaro.org/blog/debugging-arm-kernels-using-nmifiq
+>>>>
+>>>>
+>>>> Lecopzer Chen (3):
+>>>>   arm_pmu: Add support for perf NMI interrupts registration
+>>>>   arm64: perf: Support NMI context for perf event ISR
+>>>>   arm64: Kconfig: Add support for the Perf NMI
+>>>>
+>>>>  arch/arm64/Kconfig             | 10 +++++++
+>>>>  arch/arm64/kernel/perf_event.c | 36 ++++++++++++++++++------
+>>>>  drivers/perf/arm_pmu.c         | 51 ++++++++++++++++++++++++++++++----
+>>>>  include/linux/perf/arm_pmu.h   |  6 ++++
+>>>>  4 files changed, 88 insertions(+), 15 deletions(-)
+>>>>
+>>>> --
+>>>> 2.25.1
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> linux-arm-kernel mailing list
+>>>> linux-arm-kernel@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
