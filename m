@@ -2,131 +2,86 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28091C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF177C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0395920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:50:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="fIXqnEYF"
+	by mail.kernel.org (Postfix) with ESMTP id 8EC2020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgERNup (ORCPT
+        id S1727936AbgERNvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:50:45 -0400
-Received: from lists.nic.cz ([217.31.204.67]:49056 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbgERNup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:50:45 -0400
-Received: from localhost (unknown [172.20.6.135])
-        by mail.nic.cz (Postfix) with ESMTPSA id 3A5A913FB34;
-        Mon, 18 May 2020 15:50:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1589809842; bh=mKx8Rnn8Z17iw+8AFlxVTaPbT4P6vQPBfVaylXnXQEI=;
-        h=Date:From:To;
-        b=fIXqnEYFg6lCSyAhSNCZwFLbz1jywVQpQlh6h9L1S2ju9VaJol4woUgK4UmYZ7Mv7
-         cOga8n5NBLXHC7Wdb1LB0FVjxF2o3S5DivQXGj3iHOE8IGjs/VnIqPKaWfED5LCVTU
-         9LooSz6AHYRItjZGXC/Ry51vkD58ZaId2JnKvTtc=
-Date:   Mon, 18 May 2020 15:50:41 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
- Compex wifi cards
-Message-ID: <20200518155041.655050b1@nic.cz>
-In-Reply-To: <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
-References: <20200430080625.26070-1-pali@kernel.org>
-        <20200513135643.478ffbda@windsurf.home>
-        <87pnb2h7w1.fsf@FE-laptop>
-        <20200518103004.6tydnad3apkfn77y@pali>
-        <20200518134614.GA31554@e121166-lin.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 18 May 2020 09:51:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33907 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbgERNvP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:51:15 -0400
+Received: from mail-ej1-f72.google.com ([209.85.218.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <guilherme.piccoli@canonical.com>)
+        id 1jagAj-0002Ma-3a
+        for linux-kernel@vger.kernel.org; Mon, 18 May 2020 13:51:13 +0000
+Received: by mail-ej1-f72.google.com with SMTP id u24so5279045ejg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:51:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c7hu+iWhNpwsjT8JCVNUPdNUhRLVOPLZBCQR9T/nGBw=;
+        b=VnjWZq1Nc05jSNaYq72Fl1isA6NR1YAHk8vjyQW2eQtoGXbKm4gZCCVE24ZJTnz9gf
+         tjaUBy81yeSRGiVipZUMcJ0jmX9uAWWl6jzqgPoGxtlNgIgUTKH/C+SeQyeuo1UTgWmp
+         RkuFdSFrqaVY4nrlE1zSHYCg8v7aTMQOClUmoycaZEesnWRPDendKqWiQiPJrjtOdRbj
+         W5dbtJKzVQf9wIkpyq+iKf8PrsKGwlXh4vX1oBThPMaI9GRqvBt0m86tbx+nIyE34GaH
+         /f6YOWcC5lWFGZxCu2FfIYW2+3OZXTav9AVmMzLeITAd6JUmM/npQWlORvkc8Htd+ZfY
+         xfvA==
+X-Gm-Message-State: AOAM532OIUXcf6V11Dwx2TWhJ7ZbSq6mQ3pdS+EHd2BkCrSML90dnb8O
+        3Dk8r31Dnyxv0NS7IKKFURIi9n5FOvomVNTpoFR8kG1rDQE0HXmQNVx4sOLJBvkc6awqEHECAzX
+        iI02BTjO3tCkWzpRg40I9Ub5B88HANUpTWPrxBmitq72n3QydYyuPE74pjg==
+X-Received: by 2002:a50:dac4:: with SMTP id s4mr1154931edj.84.1589809872826;
+        Mon, 18 May 2020 06:51:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwgbq5M3t9GyFs8CX1A2dVN1oxIyEH0opyQqFB6u1APwAyHroua3cFI3LrqWIumMgzIw6tcjVsFSADLRenfwsY=
+X-Received: by 2002:a50:dac4:: with SMTP id s4mr1154911edj.84.1589809872621;
+ Mon, 18 May 2020 06:51:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+References: <20200507215946.22589-1-gpiccoli@canonical.com>
+ <20200507160438.ed336a1e00c23c6863d75ae5@linux-foundation.org>
+ <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com>
+ <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
+ <CAHD1Q_wF6Mzf5JipXGZKvn2YDR+FQ6ePuKOe-1W-t_VapxMCxg@mail.gmail.com>
+ <alpine.DEB.2.22.394.2005101821160.172131@chino.kir.corp.google.com>
+ <CAHD1Q_zrQmUTRpdW3bZ0CRKuu2dKgueXUjqCNtC5oyZ67CGp2A@mail.gmail.com>
+ <6bf5e178-f2c8-f453-9035-93e31995bb53@sony.com> <CAHD1Q_yk4GhUgTMc5KcvpaW-oMNEfvSj7vxOCOQGALs4qe8VUQ@mail.gmail.com>
+ <cd43b4d6-7a2e-3e92-0a15-19597e9df4fd@sony.com>
+In-Reply-To: <cd43b4d6-7a2e-3e92-0a15-19597e9df4fd@sony.com>
+From:   Guilherme Piccoli <gpiccoli@canonical.com>
+Date:   Mon, 18 May 2020 10:50:36 -0300
+Message-ID: <CAHD1Q_wF_ZoS2xuiTJo5P4f1_1ZEyx3jY0bN+Qsm7rZo2x9C6Q@mail.gmail.com>
+Subject: Re: [PATCH] mm, compaction: Indicate when compaction is manually
+ triggered by sysctl
+To:     "Enderborg, Peter" <Peter.Enderborg@sony.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gavin Guo <gavin.guo@canonical.com>,
+        Mel Gorman <mgorman@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 14:46:14 +0100
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+On Mon, May 18, 2020 at 9:54 AM Enderborg, Peter
+<Peter.Enderborg@sony.com> wrote:
+> Usually change existing causes confusion. It should not be a problem but it happen.
+>
 
-> On Mon, May 18, 2020 at 12:30:04PM +0200, Pali Roh=C3=A1r wrote:
-> > On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote: =20
-> > > Hello,
-> > >  =20
-> > > > Hello,
-> > > >
-> > > > On Thu, 30 Apr 2020 10:06:13 +0200
-> > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > > > =20
-> > > >> Marek Beh=C3=BAn (5):
-> > > >>   PCI: aardvark: Improve link training
-> > > >>   PCI: aardvark: Add PHY support
-> > > >>   dt-bindings: PCI: aardvark: Describe new properties
-> > > >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio fun=
-ction
-> > > >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle proper=
-ty
-> > > >>=20
-> > > >> Pali Roh=C3=A1r (7):
-> > > >>   PCI: aardvark: Train link immediately after enabling training
-> > > >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
-> > > >>     read-only register
-> > > >>   PCI: of: Zero max-link-speed value is invalid
-> > > >>   PCI: aardvark: Issue PERST via GPIO
-> > > >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG ac=
-cess
-> > > >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
-> > > >>     macros
-> > > >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed prope=
-rty =20
-> > > >
-> > > > Thanks a lot for this work. For a number of reasons, I'm less invol=
-ved
-> > > > in Marvell platform support in Linux, but I reviewed your series and
-> > > > followed the discussions around it, and I'm happy to give my:
-> > > >
-> > > > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com> =20
-> > >=20
-> > > With this acked-by for the series, the reviewed-by from Rob on the
-> > > binding and the tested-by, I am pretty confident so I applied the
-> > > patches 10, 11 and 12 on mvebu/dt64.
-> > >=20
-> > > Thanks,
-> > >=20
-> > > Gregory =20
-> >=20
-> > Thank you!
-> >=20
-> > Lorenzo, would you now take remaining patches? =20
->=20
-> Yes - even though I have reservations about patch (5) and the
-> problem is related to a complete lack of programming model for
-> these host controllers and a clear separation between what's
-> done in the OS vs bootloader, PERST handling in this host
-> bridge is *really* a mess.
->=20
-> I applied 1-9 to pci/aardvark.
->=20
-> Lorenzo
-
-Hooray, thanks, Lorenzo (and everyone else).
+I am sorry, but I really didn't understand your statement, can you be
+more specific?
+Thanks again!
