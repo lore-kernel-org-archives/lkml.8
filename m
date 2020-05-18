@@ -2,103 +2,111 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6986C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13A2F2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A3A02070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:42:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IeJwIO+2"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PLpI1CnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgERFke (ORCPT
+        id S1726700AbgERFmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 01:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
+        Mon, 18 May 2020 01:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgERFke (ORCPT
+        with ESMTP id S1726040AbgERFmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 01:40:34 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C9CC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 22:40:32 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id e16so10208135wra.7
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 22:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TUHyhh6MJuOq2jR9036y/hLL4Ej0HV3joFyYzx/cxo4=;
-        b=IeJwIO+2G5Ycxw3ocwT3vCOhV+gDLcAUFQtq7g0kbVRUDAkLaBSH6FETH99/QqMHRW
-         y+DYPgwkuViiHW5Ez8P+a8mwehTgKACMSmUedAJfG9D4UXCJXVt+o0/fiWGLSZ07mG6l
-         ZBRs3RXbtwY8Cy7XAcLj1pgs27TEn22NmG+QAlcWjzUkR3MjAqoftAKknh0YNzPQUQPH
-         VRLjPqKqVhVP27ubw+mVTstBwobfSqXUrxGKdjOaRMA2uI2FcRhs9XMbWYfCtiB7bVEB
-         CrGAlCjFQ/ZNY0YpddSwwIT9exk6QeXb63mG3LqNhQDu1Ewf45sCx42L02vAshikeP0x
-         qyFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TUHyhh6MJuOq2jR9036y/hLL4Ej0HV3joFyYzx/cxo4=;
-        b=UtYDbcFAQ/2GnaVXp3a0URY9RPiOBYsauYMENUy8w12LgF2lPvHahf1ZVYsYonOqIH
-         NkahD479naep6WoMZcO9QSkZu6lUxpd/EC8mLby0HN6HOBu5hAz9ilm3DsZY43cIizzg
-         u6WTwuEyEWdysUBIZIypt/e3V/kJoZrifOqlaFWYx5usQlIrJSFQ/5DH8gtV/up+3JY4
-         jzeKjcNfeImVoGXangrYXzK78WfdHTW7zrwdPppVrx5j/im7wQ/JA3m6QXq4rcgtbdRc
-         gg5oQQsMYz3g6gbrCZ+fvW/RPQPvdDW0gdfuWlK27EWlfPs22qn9nyhIv/HBYiOzN9Qt
-         p0Jg==
-X-Gm-Message-State: AOAM530DtE8r+N9mgMGeryFY6IpxnQ21ssw0vHHPPIYTsfZ1ngAYvH8O
-        ZB1dkxsE0Ij4Ljzu1mIXXjo=
-X-Google-Smtp-Source: ABdhPJzBrQMwY1/Ws5eGRxhrvXX9+vORDuCq6nY8qwiugbRjyTWPFS5eh8J0ERXIw2REI5mbJBnL2g==
-X-Received: by 2002:a5d:5710:: with SMTP id a16mr17121635wrv.209.1589780431096;
-        Sun, 17 May 2020 22:40:31 -0700 (PDT)
-Received: from cosmos.lan (84-114-134-91.cable.dynamic.surfer.at. [84.114.134.91])
-        by smtp.gmail.com with ESMTPSA id q14sm15410069wrc.66.2020.05.17.22.40.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 22:40:30 -0700 (PDT)
-From:   Christian Lachner <gladiac@gmail.com>
-To:     patch@alsa-project.org
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.com,
-        linux-kernel@vger.kernel.org, Christian Lachner <gladiac@gmail.com>
-Subject: [PATCH 1/1] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Xtreme
-Date:   Mon, 18 May 2020 07:38:44 +0200
-Message-Id: <20200518053844.42743-2-gladiac@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518053844.42743-1-gladiac@gmail.com>
-References: <20200518053844.42743-1-gladiac@gmail.com>
+        Mon, 18 May 2020 01:42:45 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5F8C061A0C;
+        Sun, 17 May 2020 22:42:45 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QSb56qHjz9sPK;
+        Mon, 18 May 2020 15:42:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589780563;
+        bh=OZXkqJ/Ua5mmXPX03SU7RZ5lmFd03+MILYNEQaoroR0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PLpI1CnWIlGwPqpKU/O+3JguxMENXVN/HQKqPD49/uLcNjLS2dHTa+VtS6aUdIOSL
+         VjFw40Ko+AS2E/qH/wDmLGQYLn2ZqH0hlWOBuJKc9ChM+mwX7YTkbbz8t+H6Kg3xl5
+         y3sx1rsrvOHzsYe2eZ2327FwRWQN2TG2leIPFS3LXN7bqDvExfkrzQGK0fKUXspEs4
+         N9hvwRVVaULYVp8EuTFbjqlvQDhckcWX/iMQGihqdHCvI6cg5ZBX7p9Nby4jDLJFo9
+         VwYBhjC+54mPh7xvUcnp8swn8K9vgRXgAij9lV/X8CkfXL4mLenysOjHvc2f9B30W4
+         Ze8IlHDwJszcA==
+Date:   Mon, 18 May 2020 15:42:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>, Wanpeng Li <wanpengli@tencent.com>
+Subject: linux-next: manual merge of the kvm tree with the rcu tree
+Message-ID: <20200518154240.777ca18e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/Lw2gywd8ZNI=5ZwAIi9Bxji";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Gigabyte X570 Aorus Xtreme motherboard with ALC1220 codec
-requires a similar workaround for Clevo laptops to enforce the
-DAC/mixer connection path. Set up a quirk entry for that.
+--Sig_/Lw2gywd8ZNI=5ZwAIi9Bxji
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
-Signed-off-by: Christian Lachner <gladiac@gmail.com>
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi all,
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index dc2302171a71..23315b69ac38 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2457,6 +2457,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
--- 
-2.26.2
+Today's linux-next merge of the kvm tree got a conflict in:
 
+  arch/x86/kvm/svm/svm.c
+
+between commit:
+
+  9f24847d8fdb ("kvm/svm: Disable KCSAN for svm_vcpu_run()")
+
+from the rcu tree and commits:
+
+  a9ab13ff6e84 ("KVM: X86: Improve latency for single target IPI fastpath")
+  404d5d7bff0d ("KVM: X86: Introduce more exit_fastpath_completion enum val=
+ues")
+
+from the kvm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Lw2gywd8ZNI=5ZwAIi9Bxji
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7CIFAACgkQAVBC80lX
+0Gx4hwf5ASoL+5CtYpxMRe2Vbi1nhpHDiWzG5EGUnI7uAIdqUgf7W4K36Kp5H2Q4
+H+JYJ7ZfvfNceY0vwZWWd9MwjSmHrLNp2ba/xAb1FKqmVZjEjnyuouzBoJEz+7Lz
+7GAysptpayD7hYDG8oHxtFMOSNOx48VzKBjEgI3B1qRTTiWS5fyLtLOG6zw+vqF3
+sc+j4+Z1OoozhV7zJHbhDnGhTi2ABOUW+xewKrJM49tZgXag/4XFYGivddyyeU2Y
+LooiEU1bHRt3eT/3TzMXRPmYnWdIEgH56tG517KUL2bZ8+SonLwhtO2F5gu0IqbZ
+++Rkq0jBuAGoyPZNp/HQ0FaOEAqiLQ==
+=DYlb
+-----END PGP SIGNATURE-----
+
+--Sig_/Lw2gywd8ZNI=5ZwAIi9Bxji--
