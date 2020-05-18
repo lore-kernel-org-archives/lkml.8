@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97220C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42ADB20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67EF020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826075;
-	bh=B1k6/ieFLe0du67HPDRc6ybeufLWj68xmLG/knItTo8=;
+	s=default; t=1589826083;
+	bh=twspVT1zrYkRZRsrbISXp+khKPtPDdbQVathL8OXLA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ql3UAelP6fvv/PRN6LMxfMQ0IKBHRacaV7huJj4GjcPx7rqfvw05yTYQTOFHKg91j
-	 usSMwOiOJGba2HRn0bRTpzpNYBiT4NWVP76NPqMRCVeBhou81hX786o5x1C0Hnhi4e
-	 DnL2PLsJbY8voEm9d7/fE5pC1dqxye4llphBEO3c=
+	b=L9J1k9WpfqAFtp1l+cICJyLZKFl6lqVnOARNLYkBLaRPitVvH0m6+KwIZ4oltZgnZ
+	 NK9o6nfvv89m6NAqoj412xV27B1o3M+UNSyR5g8JH97jabv/bSmadMqJG2jCK13ZVs
+	 TJOPfETHUwh9MTyVIAcx83t263Vt3btNNM2c8ZRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387839AbgERSVO (ORCPT
+        id S2387704AbgERSVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54982 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:21:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730903AbgERRv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:57 -0400
+        id S1730743AbgERRvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 606D020674;
-        Mon, 18 May 2020 17:51:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B37D820674;
+        Mon, 18 May 2020 17:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824316;
-        bh=B1k6/ieFLe0du67HPDRc6ybeufLWj68xmLG/knItTo8=;
+        s=default; t=1589824307;
+        bh=twspVT1zrYkRZRsrbISXp+khKPtPDdbQVathL8OXLA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFU66lg/e2gTW/mdydsBgB45yLOMKoOUHaU9FKqYGbCoAB4wp5ObUGsdi529kNtqt
-         hc+C5o2yAEw+/bpHDe9rRxyz3Y3Uo2u2mLEuhokm5JpoqMRTrVQWGZPJdVAPCY3WzT
-         C9HA8CV6Xv9eZ8A/7dojAlqpumBtw4dGN7lICJ44=
+        b=Ed8ypBV3tXxuu/lhyrFec7HnWUnzkrnfocaJE1ewUANJKrdCMZFQj5H0Nn4YB64kJ
+         XFzDgHVPmbe/kZZsQKfDg/v7zR3pBs75KrKRJGKnURNQyVq62G9qx6hwCM5NwfOjeL
+         izFuWDG7XhcuUbtMLzyck9omVoYKm8bEi4aGvxNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samu Nuutamo <samu.nuutamo@vincit.fi>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 43/80] hwmon: (da9052) Synchronize access with mfd
-Date:   Mon, 18 May 2020 19:37:01 +0200
-Message-Id: <20200518173459.011448976@linuxfoundation.org>
+Subject: [PATCH 4.19 40/80] arm64: fix the flush_icache_range arguments in machine_kexec
+Date:   Mon, 18 May 2020 19:36:58 +0200
+Message-Id: <20200518173458.397323938@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -61,44 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samu Nuutamo <samu.nuutamo@vincit.fi>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 333e22db228f0bd0c839553015a6a8d3db4ba569 ]
+[ Upstream commit d51c214541c5154dda3037289ee895ea3ded5ebd ]
 
-When tsi-as-adc is configured it is possible for in7[0123]_input read to
-return an incorrect value if a concurrent read to in[456]_input is
-performed. This is caused by a concurrent manipulation of the mux
-channel without proper locking as hwmon and mfd use different locks for
-synchronization.
+The second argument is the end "pointer", not the length.
 
-Switch hwmon to use the same lock as mfd when accessing the TSI channel.
-
-Fixes: 4f16cab19a3d5 ("hwmon: da9052: Add support for TSI channel")
-Signed-off-by: Samu Nuutamo <samu.nuutamo@vincit.fi>
-[rebase to current master, reword commit message slightly]
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: d28f6df1305a ("arm64/kexec: Add core kexec support")
+Cc: <stable@vger.kernel.org> # 4.8.x-
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/da9052-hwmon.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/machine_kexec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hwmon/da9052-hwmon.c b/drivers/hwmon/da9052-hwmon.c
-index a973eb6a28908..9e44d2385e6f9 100644
---- a/drivers/hwmon/da9052-hwmon.c
-+++ b/drivers/hwmon/da9052-hwmon.c
-@@ -250,9 +250,9 @@ static ssize_t da9052_read_tsi(struct device *dev,
- 	int channel = to_sensor_dev_attr(devattr)->index;
- 	int ret;
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 922add8adb749..5e26ef0078638 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -192,6 +192,7 @@ void machine_kexec(struct kimage *kimage)
+ 	 * the offline CPUs. Therefore, we must use the __* variant here.
+ 	 */
+ 	__flush_icache_range((uintptr_t)reboot_code_buffer,
++			     (uintptr_t)reboot_code_buffer +
+ 			     arm64_relocate_new_kernel_size);
  
--	mutex_lock(&hwmon->hwmon_lock);
-+	mutex_lock(&hwmon->da9052->auxadc_lock);
- 	ret = __da9052_read_tsi(dev, channel);
--	mutex_unlock(&hwmon->hwmon_lock);
-+	mutex_unlock(&hwmon->da9052->auxadc_lock);
- 
- 	if (ret < 0)
- 		return ret;
+ 	/* Flush the kimage list and its buffers. */
 -- 
 2.20.1
 
