@@ -2,53 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1114EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2441DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4443207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1DFA20849
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823574;
-	bh=jptbGf47UtxIe6X7zV5uYiSn+4FsyqIgKhShjmDJwR8=;
+	s=default; t=1589823579;
+	bh=2K8/xX5qPz/2GkBEO4hSwzpuw4kzPYUm1BPA9HRbYuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvYG++dgxDRzNvZQuuB+i5COsqN4TnezAGLaV69CejPIFRAubma8CFcjwngQB+mbG
-	 AtZ6PVkEQjeSO3g9JtEu/IgkE3xaHcmOgkQYmcRwUpWT8MT+mWH/j4FU3YBz9hoZPZ
-	 4pSgAMtNf5YHAMN/lHrkhSwNiD8KdTg1br1bBqAU=
+	b=wHN8jhaT9aj9jme1ZWvtgCC5u6m6G2g75WuFCB6IC9ph7b9j4JzyEZo6aEGFrlTqv
+	 T8th0U66Y89u+pIksLLvzizZl7+RcyhuB3fp6zdXoKmvcv5t5C+jnWeNZui5K13SqE
+	 bbQtkBTKN6hs0iW9JwxEk/zLFtmElvSsltJfrrQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgERRje (ORCPT
+        id S1728850AbgERRji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34212 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:39:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728822AbgERRjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:31 -0400
+        id S1728833AbgERRjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD22C207C4;
-        Mon, 18 May 2020 17:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 207D720835;
+        Mon, 18 May 2020 17:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823571;
-        bh=jptbGf47UtxIe6X7zV5uYiSn+4FsyqIgKhShjmDJwR8=;
+        s=default; t=1589823573;
+        bh=2K8/xX5qPz/2GkBEO4hSwzpuw4kzPYUm1BPA9HRbYuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F73lNmLkmqr9AxJelr+GIkFWpOJ5turZS4pvF/5rORvAlR468Js+OnuCt0zAFHI87
-         HW1USDxms9oi4AVp3JlHLkcbRbrgp3XZ32AjeTwrfjGoZatCsQC2/b18OHMFuJKq0z
-         jFmV4YQVa1aHw8MGUz1biMnIKiWX+d5ss8zHWzT8=
+        b=bfdVMAI2KFI+MOlJcIbX6JaCXgyULVo64JMuvKG9uSL7ywTPOTfaiYy1dTMLRprW+
+         +lzHdlyXrkYkCZOgKi1VIZ21WEvks1FVd2+/n/6b81G1LJgRum5WfWgjuJHlVHkIEx
+         /1UnHK+b8RgC3VLnX3CybuB1a443x7fgjG+MtjUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        David Ahern <dsa@cumulusnetworks.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         "David S. Miller" <davem@davemloft.net>,
-        "Nobuhiro Iwamatsu (CIP)" <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.4 35/86] net: handle no dst on skb in icmp6_send
-Date:   Mon, 18 May 2020 19:36:06 +0200
-Message-Id: <20200518173457.623138564@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 36/86] net/sonic: Fix a resource leak in an error handling path in jazz_sonic_probe()
+Date:   Mon, 18 May 2020 19:36:07 +0200
+Message-Id: <20200518173457.806751751@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -61,73 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsa@cumulusnetworks.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 79dc7e3f1cd323be4c81aa1a94faa1b3ed987fb2 upstream.
+[ Upstream commit 10e3cc180e64385edc9890c6855acf5ed9ca1339 ]
 
-Andrey reported the following while fuzzing the kernel with syzkaller:
+A call to 'dma_alloc_coherent()' is hidden in 'sonic_alloc_descriptors()',
+called from 'sonic_probe1()'.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-Modules linked in:
-CPU: 0 PID: 3859 Comm: a.out Not tainted 4.9.0-rc6+ #429
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-task: ffff8800666d4200 task.stack: ffff880067348000
-RIP: 0010:[<ffffffff833617ec>]  [<ffffffff833617ec>]
-icmp6_send+0x5fc/0x1e30 net/ipv6/icmp.c:451
-RSP: 0018:ffff88006734f2c0  EFLAGS: 00010206
-RAX: ffff8800666d4200 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 0000000000000018
-RBP: ffff88006734f630 R08: ffff880064138418 R09: 0000000000000003
-R10: dffffc0000000000 R11: 0000000000000005 R12: 0000000000000000
-R13: ffffffff84e7e200 R14: ffff880064138484 R15: ffff8800641383c0
-FS:  00007fb3887a07c0(0000) GS:ffff88006cc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000000 CR3: 000000006b040000 CR4: 00000000000006f0
-Stack:
- ffff8800666d4200 ffff8800666d49f8 ffff8800666d4200 ffffffff84c02460
- ffff8800666d4a1a 1ffff1000ccdaa2f ffff88006734f498 0000000000000046
- ffff88006734f440 ffffffff832f4269 ffff880064ba7456 0000000000000000
-Call Trace:
- [<ffffffff83364ddc>] icmpv6_param_prob+0x2c/0x40 net/ipv6/icmp.c:557
- [<     inline     >] ip6_tlvopt_unknown net/ipv6/exthdrs.c:88
- [<ffffffff83394405>] ip6_parse_tlv+0x555/0x670 net/ipv6/exthdrs.c:157
- [<ffffffff8339a759>] ipv6_parse_hopopts+0x199/0x460 net/ipv6/exthdrs.c:663
- [<ffffffff832ee773>] ipv6_rcv+0xfa3/0x1dc0 net/ipv6/ip6_input.c:191
- ...
+This is correctly freed in the remove function, but not in the error
+handling path of the probe function.
+Fix it and add the missing 'dma_free_coherent()' call.
 
-icmp6_send / icmpv6_send is invoked for both rx and tx paths. In both
-cases the dst->dev should be preferred for determining the L3 domain
-if the dst has been set on the skb. Fallback to the skb->dev if it has
-not. This covers the case reported here where icmp6_send is invoked on
-Rx before the route lookup.
+While at it, rename a label in order to be slightly more informative.
 
-Fixes: 5d41ce29e ("net: icmp6_send should use dst dev to determine L3 domain")
-Reported-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: David Ahern <dsa@cumulusnetworks.com>
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Nobuhiro Iwamatsu (CIP) <nobuhiro1.iwamatsu@toshiba.co.jp>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/icmp.c |    6 ++++--
+ drivers/net/ethernet/natsemi/jazzsonic.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/ipv6/icmp.c
-+++ b/net/ipv6/icmp.c
-@@ -445,8 +445,10 @@ static void icmp6_send(struct sk_buff *s
+diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
+index acf3f11e38cc1..68d2f31921ff8 100644
+--- a/drivers/net/ethernet/natsemi/jazzsonic.c
++++ b/drivers/net/ethernet/natsemi/jazzsonic.c
+@@ -247,13 +247,15 @@ static int jazz_sonic_probe(struct platform_device *pdev)
+ 		goto out;
+ 	err = register_netdev(dev);
+ 	if (err)
+-		goto out1;
++		goto undo_probe1;
  
- 	if (__ipv6_addr_needs_scope_id(addr_type))
- 		iif = skb->dev->ifindex;
--	else
--		iif = l3mdev_master_ifindex(skb_dst(skb)->dev);
-+	else {
-+		dst = skb_dst(skb);
-+		iif = l3mdev_master_ifindex(dst ? dst->dev : skb->dev);
-+	}
+ 	printk("%s: MAC %pM IRQ %d\n", dev->name, dev->dev_addr, dev->irq);
  
- 	/*
- 	 *	Must not send error if the source does not uniquely
+ 	return 0;
+ 
+-out1:
++undo_probe1:
++	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
++			  lp->descriptors, lp->descriptors_laddr);
+ 	release_mem_region(dev->base_addr, SONIC_MEM_SIZE);
+ out:
+ 	free_netdev(dev);
+-- 
+2.20.1
+
 
 
