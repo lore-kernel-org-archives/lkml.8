@@ -2,173 +2,279 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E761CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B57C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDE2A2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B162B20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:06:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iBrIcwCU"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gLoLOcIS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgERKFb (ORCPT
+        id S1726432AbgERKGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:05:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30137 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726274AbgERKF3 (ORCPT
+        Mon, 18 May 2020 06:06:54 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:64394 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERKGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:05:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589796327;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=Za7fjQxZACKJjDltMjyMqwc1e+IzrhgqtXCvMmBS57g=;
-        b=iBrIcwCUrJHpneaXcrUK6MbbPw6WWZt42HoqbDJI0r/vzyeLYLcfjQxRG2JB8J9X0AXfpr
-        W4PrmlyTtTg1SSBNhw1Jd5C59liqshbm/ukNLfslZ/Y6vl4L+ftyvzLLwSJAjzk4Praw2/
-        6tzHsXs68zltANtMKGUFvr5Uos6v/ok=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-x-pLVFO2MzSBvxH8D4ZNCg-1; Mon, 18 May 2020 06:05:24 -0400
-X-MC-Unique: x-pLVFO2MzSBvxH8D4ZNCg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00F6F1800D42;
-        Mon, 18 May 2020 10:05:23 +0000 (UTC)
-Received: from [10.36.113.224] (ovpn-113-224.ams2.redhat.com [10.36.113.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CAC1582A16;
-        Mon, 18 May 2020 10:05:21 +0000 (UTC)
-Subject: Re: [PATCH] mm/page_alloc: Restrict and formalize
- compound_page_dtors[]
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-References: <1589795958-19317-1-git-send-email-anshuman.khandual@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <3261e416-2454-d6c5-a962-724df39cdbab@redhat.com>
-Date:   Mon, 18 May 2020 12:05:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 06:06:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589796412; x=1621332412;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=O1VDocZN6EV1TxUTdcWHgJOvFNy2UKzn3xx6il9Z/rk=;
+  b=gLoLOcISDUSSOuQ1nLJ1AWzVBKAENEdffrGeq4BE9zDvfevsC8tVj5mp
+   3NJLZHqXUyVZAWD0LEbHaFUqidONgJw8gaxy16peK9/BnKpnblm0nPjNk
+   nGqt3JT9VhVneG4+19dgXzcgMAnz7ed18zoffDwqrGkKwGnZU02yZ3dxd
+   M=;
+IronPort-SDR: aVIlm021g4zyUFa16vDSsi1CBKPIi/G7JHUhnzJkrdkLpycJxiMtTQxK8Fcvrwz1eJpfDiFEcu
+ 6dPpSE1jAefw==
+X-IronPort-AV: E=Sophos;i="5.73,406,1583193600"; 
+   d="scan'208";a="35725621"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 18 May 2020 10:06:49 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 6AE87C0C2C;
+        Mon, 18 May 2020 10:06:38 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 18 May 2020 10:06:37 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.90) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 18 May 2020 10:06:22 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v12 07/16] mm/damon: Apply dynamic memory mapping changes
+Date:   Mon, 18 May 2020 12:00:09 +0200
+Message-ID: <20200518100018.2293-8-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200518100018.2293-1-sjpark@amazon.com>
+References: <20200518100018.2293-1-sjpark@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <1589795958-19317-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.90]
+X-ClientProxiedBy: EX13D04UWA003.ant.amazon.com (10.43.160.212) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.05.20 11:59, Anshuman Khandual wrote:
-> Restrict elements in compound_page_dtors[] array per NR_COMPOUND_DTORS and
-> explicitly position them according to enum compound_dtor_id. This improves
-> protection against possible misalignment between compound_page_dtors[] and
-> enum compound_dtor_id later on.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  include/linux/mm.h |  2 +-
->  mm/page_alloc.c    | 10 +++++-----
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 688558c57751..d1bd7736a5e5 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -856,7 +856,7 @@ enum compound_dtor_id {
->  #endif
->  	NR_COMPOUND_DTORS,
->  };
-> -extern compound_page_dtor * const compound_page_dtors[];
-> +extern compound_page_dtor * const compound_page_dtors[NR_COMPOUND_DTORS];
->  
->  static inline void set_compound_page_dtor(struct page *page,
->  		enum compound_dtor_id compound_dtor)
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index cef05d3a23f5..2e4c23b34940 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -302,14 +302,14 @@ const char * const migratetype_names[MIGRATE_TYPES] = {
->  #endif
->  };
->  
-> -compound_page_dtor * const compound_page_dtors[] = {
-> -	NULL,
-> -	free_compound_page,
-> +compound_page_dtor * const compound_page_dtors[NR_COMPOUND_DTORS] = {
-> +	[NULL_COMPOUND_DTOR] = NULL,
-> +	[COMPOUND_PAGE_DTOR] = free_compound_page,
->  #ifdef CONFIG_HUGETLB_PAGE
-> -	free_huge_page,
-> +	[HUGETLB_PAGE_DTOR] = free_huge_page,
->  #endif
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -	free_transhuge_page,
-> +	[TRANSHUGE_PAGE_DTOR] = free_transhuge_page,
->  #endif
->  };
->  
-> 
+From: SeongJae Park <sjpark@amazon.de>
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Only a number of parts in the virtual address space of the processes is
+mapped to physical memory and accessed.  Thus, tracking the unmapped
+address regions is just wasteful.  However, tracking every memory
+mapping change might incur an overhead.  For the reason, DAMON applies
+the dynamic memory mapping changes to the tracking regions only for each
+of a user-specified time interval (``regions update interval``).
 
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ include/linux/damon.h |  10 +++--
+ mm/damon.c            | 101 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 106 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index f1c3f491fc50..62b9f90ed87b 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -34,17 +34,21 @@ struct damon_task {
+ /*
+  * For each 'sample_interval', DAMON checks whether each region is accessed or
+  * not.  It aggregates and keeps the access information (number of accesses to
+- * each region) for each 'aggr_interval' time.
++ * each region) for 'aggr_interval' time.  DAMON also checks whether the memory
++ * mapping of the target tasks has changed (e.g., by mmap() calls from the
++ * application) and applies the changes for each 'regions_update_interval'.
+  *
+  * All time intervals are in micro-seconds.
+  */
+ struct damon_ctx {
+ 	unsigned long sample_interval;
+ 	unsigned long aggr_interval;
++	unsigned long regions_update_interval;
+ 	unsigned long min_nr_regions;
+ 	unsigned long max_nr_regions;
+ 
+ 	struct timespec64 last_aggregation;
++	struct timespec64 last_regions_update;
+ 
+ 	struct task_struct *kdamond;
+ 	bool kdamond_stop;
+@@ -54,8 +58,8 @@ struct damon_ctx {
+ };
+ 
+ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
+-int damon_set_attrs(struct damon_ctx *ctx,
+-		unsigned long sample_int, unsigned long aggr_int,
++int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
++		unsigned long aggr_int, unsigned long regions_update_int,
+ 		unsigned long min_nr_reg, unsigned long max_nr_reg);
+ int damon_start(struct damon_ctx *ctx);
+ int damon_stop(struct damon_ctx *ctx);
+diff --git a/mm/damon.c b/mm/damon.c
+index bbd5b1d921da..38a8a68b7beb 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -714,6 +714,98 @@ static void kdamond_split_regions(struct damon_ctx *ctx)
+ 		last_nr_regions = nr_regions;
+ }
+ 
++/*
++ * Check whether it is time to check and apply the dynamic mmap changes
++ *
++ * Returns true if it is.
++ */
++static bool kdamond_need_update_regions(struct damon_ctx *ctx)
++{
++	return damon_check_reset_time_interval(&ctx->last_regions_update,
++			ctx->regions_update_interval);
++}
++
++/*
++ * Check whether regions are intersecting
++ *
++ * Note that this function checks 'struct damon_region' and 'struct region'.
++ *
++ * Returns true if it is.
++ */
++static bool damon_intersect(struct damon_region *r, struct region *re)
++{
++	return !(r->vm_end <= re->start || re->end <= r->vm_start);
++}
++
++/*
++ * Update damon regions for the three big regions of the given task
++ *
++ * t		the given task
++ * bregions	the three big regions of the task
++ */
++static void damon_apply_three_regions(struct damon_ctx *ctx,
++		struct damon_task *t, struct region bregions[3])
++{
++	struct damon_region *r, *next;
++	unsigned int i = 0;
++
++	/* Remove regions which are not in the three big regions now */
++	damon_for_each_region_safe(r, next, t) {
++		for (i = 0; i < 3; i++) {
++			if (damon_intersect(r, &bregions[i]))
++				break;
++		}
++		if (i == 3)
++			damon_destroy_region(r);
++	}
++
++	/* Adjust intersecting regions to fit with the three big regions */
++	for (i = 0; i < 3; i++) {
++		struct damon_region *first = NULL, *last;
++		struct damon_region *newr;
++		struct region *br;
++
++		br = &bregions[i];
++		/* Get the first and last regions which intersects with br */
++		damon_for_each_region(r, t) {
++			if (damon_intersect(r, br)) {
++				if (!first)
++					first = r;
++				last = r;
++			}
++			if (r->vm_start >= br->end)
++				break;
++		}
++		if (!first) {
++			/* no damon_region intersects with this big region */
++			newr = damon_new_region(ctx,
++					ALIGN_DOWN(br->start, MIN_REGION),
++					ALIGN(br->end, MIN_REGION));
++			if (!newr)
++				continue;
++			damon_insert_region(newr, damon_prev_region(r), r);
++		} else {
++			first->vm_start = ALIGN_DOWN(br->start, MIN_REGION);
++			last->vm_end = ALIGN(br->end, MIN_REGION);
++		}
++	}
++}
++
++/*
++ * Update regions for current memory mappings
++ */
++static void kdamond_update_regions(struct damon_ctx *ctx)
++{
++	struct region three_regions[3];
++	struct damon_task *t;
++
++	damon_for_each_task(t, ctx) {
++		if (damon_three_regions_of(t, three_regions))
++			continue;
++		damon_apply_three_regions(ctx, t, three_regions);
++	}
++}
++
+ /*
+  * Check whether current monitoring should be stopped
+  *
+@@ -769,6 +861,9 @@ static int kdamond_fn(void *data)
+ 			kdamond_reset_aggregated(ctx);
+ 			kdamond_split_regions(ctx);
+ 		}
++
++		if (kdamond_need_update_regions(ctx))
++			kdamond_update_regions(ctx);
+ 	}
+ 	damon_for_each_task(t, ctx) {
+ 		damon_for_each_region_safe(r, next, t)
+@@ -876,6 +971,7 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids)
+  * damon_set_attrs() - Set attributes for the monitoring.
+  * @ctx:		monitoring context
+  * @sample_int:		time interval between samplings
++ * @regions_update_int:	time interval between vma update checks
+  * @aggr_int:		time interval between aggregations
+  * @min_nr_reg:		minimal number of regions
+  * @max_nr_reg:		maximum number of regions
+@@ -885,8 +981,8 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids)
+  *
+  * Return: 0 on success, negative error code otherwise.
+  */
+-int damon_set_attrs(struct damon_ctx *ctx,
+-		    unsigned long sample_int, unsigned long aggr_int,
++int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
++		    unsigned long aggr_int, unsigned long regions_update_int,
+ 		    unsigned long min_nr_reg, unsigned long max_nr_reg)
+ {
+ 	if (min_nr_reg < 3) {
+@@ -902,6 +998,7 @@ int damon_set_attrs(struct damon_ctx *ctx,
+ 
+ 	ctx->sample_interval = sample_int;
+ 	ctx->aggr_interval = aggr_int;
++	ctx->regions_update_interval = regions_update_int;
+ 	ctx->min_nr_regions = min_nr_reg;
+ 	ctx->max_nr_regions = max_nr_reg;
+ 
 -- 
-Thanks,
-
-David / dhildenb
+2.17.1
 
