@@ -2,99 +2,69 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D776C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF524207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:03:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589789010;
-	bh=mmzwWq+x+YwuOlGAZGoYiIL6vmZz6USIebAEuTVHsoI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2hQfUVRuh3H16g1CZKizi124U0xTPVVTxecTezBrHLRWr0/KXTHeFVS17Ve1BGFWP
-	 omccm5P1i8HZvtuQV48BELnzWmYy0pmIQO6I8Seit/3t7gbz3wG+VrkcijpQWRalGP
-	 Ewu8An5aOTjOjy/supCNF4/KOYH3AsSIFVV2lWog=
+	by mail.kernel.org (Postfix) with ESMTP id F206F20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgERIDa (ORCPT
+        id S1727847AbgERIDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgERID3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:03:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3654A20787;
-        Mon, 18 May 2020 08:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589789009;
-        bh=mmzwWq+x+YwuOlGAZGoYiIL6vmZz6USIebAEuTVHsoI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LUbxTyMJoLhlFyJf6S+Z4mA1VGurHEXkQR8E3CWtDnlF4QNEWJ13lsZRMgaSbcNT3
-         TYdgn3nLl4KA894AygpL2ERKc75sdjqujxr8PuA9DYtuPtr4tTqrUGsRR+B3r826Q1
-         XnoFtKY/VztwzbA1h2Ewjxcl3BKSvC6zacF1ry4M=
-Date:   Mon, 18 May 2020 10:03:27 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] driver core: Fix memory leak when adding
- SYNC_STATE_ONLY device links
-Message-ID: <20200518080327.GA3126260@kroah.com>
-References: <20200516080718.166676-1-saravanak@google.com>
- <CAGETcx8Ro_tsmYEQwzZKsm2xzimw=MBcChbSW5Nx9arUni53wQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx8Ro_tsmYEQwzZKsm2xzimw=MBcChbSW5Nx9arUni53wQ@mail.gmail.com>
+        Mon, 18 May 2020 04:03:39 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:57289 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbgERIDi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 04:03:38 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 182A8CECE3;
+        Mon, 18 May 2020 10:13:21 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2] Bluetooth: hci_qca: Enable WBS support for wcn3991
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200514131338.v2.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
+Date:   Mon, 18 May 2020 10:03:36 +0200
+Cc:     BlueZ <linux-bluetooth@vger.kernel.org>, bgodavar@codeaurora.org,
+        alainm@chromium.org, mka@chromium.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <8BFF0708-07AF-4034-8FEF-C1D95975404B@holtmann.org>
+References: <20200514131338.v2.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:48:42AM -0700, Saravana Kannan wrote:
-> On Sat, May 16, 2020 at 1:07 AM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
-> > core: Add device link support for SYNC_STATE_ONLY flag"),
-> > device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
-> > device link to the supplier's and consumer's "device link" list. So the
-> > "device link" is lost forever from driver core if the caller didn't keep
-> > track of it (typically isn't expected to).
-> >
-> > If the same SYNC_STATE_ONLY device link is created again using
-> > device_link_add(), instead of returning the pointer to the previously
-> > created device link, a new device link is created and returned. This can
-> > cause memory leaks in conjunction with fw_devlinks.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+Hi Abhishek,
+
+> WCN3991 supports transparent WBS (host encoded mSBC). Add a flag to the
+> device match data to show WBS is supported.
 > 
-> Greg/Rafael,
+> This requires the matching firmware for WCN3991 in linux-firmware:
+>        1a8b0dc00f77 (qca: Enable transparent WBS for WCN3991)
 > 
-> This patch causes a warning for SYNC_STATE_ONLY links because they
-> allow consumers to probe before suppliers but the device link
-> status/state change code wasn't written with that possibility in mind.
-> So I need to fix up that warning or state change code.
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> 
+> Changes in v2:
+> - Rename struct to qca_capabilities and fix enum naming
+> 
+> drivers/bluetooth/hci_qca.c | 23 +++++++++++++++++------
+> 1 file changed, 17 insertions(+), 6 deletions(-)
 
-What type of warning happens?
+patch has been applied to bluetooth-next tree.
 
-> Depending on how urgent you think memory leak fixes are, you can take
-> it as is for now and I can send a separate patch to fix the
-> warning/state change code later. Or if we can sit on this memory leak
-> for a week, I might be able to fix the warning before then.
+Regards
 
-memory leaks are not ok, but neither is adding runtime warnings.  Any
-chance we can't just get a fix for both?  :)
+Marcel
 
-thanks,
-
-greg k-h
