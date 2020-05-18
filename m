@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59E0E207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ABEA20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825198;
-	bh=994zIiEycYh7/lg/4+jHuKAIDN+NHXup24O6Vq+jURo=;
+	s=default; t=1589825200;
+	bh=6N6w2wP3kX6H5vYrBp3ZyXjwxWLpVF52LgoHSd3cLMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PYfDi6mtPicJo4sgmrxxt5v4YMztChUBTebJTBi12mFDurrHimU6GJfKtTTlFELaf
-	 ZkARuZvpa5R0c2WA368UqId9TjhaNJL5luCQTbsnlPFMzP2DliB2ir/FymnqHGXGJP
-	 efRo8jUsah6dv1yxp9RIUWi6bYjf7s7D5E1hD7Zc=
+	b=Fh5uUzrdsQ8SFCY5ukF9b4hR9CZl1HAEVJXSkf20b8ywxacNdcVRbIrswFIaH6b2G
+	 8BDgbZsMqm22ZOBuG9SMKaGQNGuz66RwgPb6PfjoZlheccJeRw2lLwMHoveHCvYxT4
+	 fsSx5Rv+dEFFBXureJUjl5oBGjp0/sC2CRRRwDHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733186AbgERSGh (ORCPT
+        id S1733194AbgERSGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:06:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54480 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:06:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733153AbgERSGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:06:25 -0400
+        id S1733169AbgERSGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:06:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A1A520715;
-        Mon, 18 May 2020 18:06:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 500ED20715;
+        Mon, 18 May 2020 18:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825184;
-        bh=994zIiEycYh7/lg/4+jHuKAIDN+NHXup24O6Vq+jURo=;
+        s=default; t=1589825189;
+        bh=6N6w2wP3kX6H5vYrBp3ZyXjwxWLpVF52LgoHSd3cLMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nhWXk1mmS1Qu5HBLqqoTeHZ9vPn+utip6stYXiKhdRTPX5/Cs5RDluNl5QnIp1VEo
-         7Mf2BBRbiz5Sh+Cwb6XCAVT7PFbWIjKmAYMQdAcc1hrskdYm23glJlCmEoqKsVPNhT
-         2lV7oNvrsmOf0ieEpoRuZ2eThABJTTI9FpsjZ/9M=
+        b=KK46HM2QSaR0xayvcs8+hZ9zoIDse1lJVBz05qa/pXOfbaPhzDDDdXFAGVNUH9NTw
+         9mzv7DG3zR7MasTYLykjd8KUvYoSmnrbtq4JuPsOqGHRtvEVgkrtdx+jIRhdm02PS/
+         1F/yY5sksfUa4DftK1/lLHKVgh4jOeiJzqmXcfug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 125/194] net/rds: Use ERR_PTR for rds_message_alloc_sgs()
-Date:   Mon, 18 May 2020 19:36:55 +0200
-Message-Id: <20200518173541.956896644@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 127/194] gcc-10: disable zero-length-bounds warning for now
+Date:   Mon, 18 May 2020 19:36:57 +0200
+Message-Id: <20200518173542.091835895@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,142 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 7dba92037baf3fa00b4880a31fd532542264994c upstream.
+commit 5c45de21a2223fe46cf9488c99a7fbcf01527670 upstream.
 
-Returning the error code via a 'int *ret' when the function returns a
-pointer is very un-kernely and causes gcc 10's static analysis to choke:
+This is a fine warning, but we still have a number of zero-length arrays
+in the kernel that come from the traditional gcc extension.  Yes, they
+are getting converted to flexible arrays, but in the meantime the gcc-10
+warning about zero-length bounds is very verbose, and is hiding other
+issues.
 
-net/rds/message.c: In function ‘rds_message_map_pages’:
-net/rds/message.c:358:10: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  358 |   return ERR_PTR(ret);
+I missed one actual build failure because it was hidden among hundreds
+of lines of warning.  Thankfully I caught it on the second go before
+pushing things out, but it convinced me that I really need to disable
+the new warnings for now.
 
-Use a typical ERR_PTR return instead.
+We'll hopefully be all done with our conversion to flexible arrays in
+the not too distant future, and we can then re-enable this warning.
 
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/rds/message.c |   19 ++++++-------------
- net/rds/rdma.c    |   12 ++++++++----
- net/rds/rds.h     |    3 +--
- net/rds/send.c    |    6 ++++--
- 4 files changed, 19 insertions(+), 21 deletions(-)
+ Makefile |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/rds/message.c
-+++ b/net/rds/message.c
-@@ -308,26 +308,20 @@ out:
- /*
-  * RDS ops use this to grab SG entries from the rm's sg pool.
-  */
--struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
--					  int *ret)
-+struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents)
- {
- 	struct scatterlist *sg_first = (struct scatterlist *) &rm[1];
- 	struct scatterlist *sg_ret;
+--- a/Makefile
++++ b/Makefile
+@@ -857,6 +857,9 @@ KBUILD_CFLAGS += -Wno-pointer-sign
+ # disable stringop warnings in gcc 8+
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
  
--	if (WARN_ON(!ret))
--		return NULL;
--
- 	if (nents <= 0) {
- 		pr_warn("rds: alloc sgs failed! nents <= 0\n");
--		*ret = -EINVAL;
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 	}
++# We'll want to enable this eventually, but it's not going away for 5.7 at least
++KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
++
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
  
- 	if (rm->m_used_sgs + nents > rm->m_total_sgs) {
- 		pr_warn("rds: alloc sgs failed! total %d used %d nents %d\n",
- 			rm->m_total_sgs, rm->m_used_sgs, nents);
--		*ret = -ENOMEM;
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 	}
- 
- 	sg_ret = &sg_first[rm->m_used_sgs];
-@@ -343,7 +337,6 @@ struct rds_message *rds_message_map_page
- 	unsigned int i;
- 	int num_sgs = DIV_ROUND_UP(total_len, PAGE_SIZE);
- 	int extra_bytes = num_sgs * sizeof(struct scatterlist);
--	int ret;
- 
- 	rm = rds_message_alloc(extra_bytes, GFP_NOWAIT);
- 	if (!rm)
-@@ -352,10 +345,10 @@ struct rds_message *rds_message_map_page
- 	set_bit(RDS_MSG_PAGEVEC, &rm->m_flags);
- 	rm->m_inc.i_hdr.h_len = cpu_to_be32(total_len);
- 	rm->data.op_nents = DIV_ROUND_UP(total_len, PAGE_SIZE);
--	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
--	if (!rm->data.op_sg) {
-+	rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
-+	if (IS_ERR(rm->data.op_sg)) {
- 		rds_message_put(rm);
--		return ERR_PTR(ret);
-+		return ERR_CAST(rm->data.op_sg);
- 	}
- 
- 	for (i = 0; i < rm->data.op_nents; ++i) {
---- a/net/rds/rdma.c
-+++ b/net/rds/rdma.c
-@@ -664,9 +664,11 @@ int rds_cmsg_rdma_args(struct rds_sock *
- 	op->op_odp_mr = NULL;
- 
- 	WARN_ON(!nr_pages);
--	op->op_sg = rds_message_alloc_sgs(rm, nr_pages, &ret);
--	if (!op->op_sg)
-+	op->op_sg = rds_message_alloc_sgs(rm, nr_pages);
-+	if (IS_ERR(op->op_sg)) {
-+		ret = PTR_ERR(op->op_sg);
- 		goto out_pages;
-+	}
- 
- 	if (op->op_notify || op->op_recverr) {
- 		/* We allocate an uninitialized notifier here, because
-@@ -905,9 +907,11 @@ int rds_cmsg_atomic(struct rds_sock *rs,
- 	rm->atomic.op_silent = !!(args->flags & RDS_RDMA_SILENT);
- 	rm->atomic.op_active = 1;
- 	rm->atomic.op_recverr = rs->rs_recverr;
--	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1, &ret);
--	if (!rm->atomic.op_sg)
-+	rm->atomic.op_sg = rds_message_alloc_sgs(rm, 1);
-+	if (IS_ERR(rm->atomic.op_sg)) {
-+		ret = PTR_ERR(rm->atomic.op_sg);
- 		goto err;
-+	}
- 
- 	/* verify 8 byte-aligned */
- 	if (args->local_addr & 0x7) {
---- a/net/rds/rds.h
-+++ b/net/rds/rds.h
-@@ -852,8 +852,7 @@ rds_conn_connecting(struct rds_connectio
- 
- /* message.c */
- struct rds_message *rds_message_alloc(unsigned int nents, gfp_t gfp);
--struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents,
--					  int *ret);
-+struct scatterlist *rds_message_alloc_sgs(struct rds_message *rm, int nents);
- int rds_message_copy_from_user(struct rds_message *rm, struct iov_iter *from,
- 			       bool zcopy);
- struct rds_message *rds_message_map_pages(unsigned long *page_addrs, unsigned int total_len);
---- a/net/rds/send.c
-+++ b/net/rds/send.c
-@@ -1274,9 +1274,11 @@ int rds_sendmsg(struct socket *sock, str
- 
- 	/* Attach data to the rm */
- 	if (payload_len) {
--		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs, &ret);
--		if (!rm->data.op_sg)
-+		rm->data.op_sg = rds_message_alloc_sgs(rm, num_sgs);
-+		if (IS_ERR(rm->data.op_sg)) {
-+			ret = PTR_ERR(rm->data.op_sg);
- 			goto out;
-+		}
- 		ret = rds_message_copy_from_user(rm, &msg->msg_iter, zcopy);
- 		if (ret)
- 			goto out;
 
 
