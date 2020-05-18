@@ -2,84 +2,88 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 689BC20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E59B2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ExRyFryi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rUAx0b4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgERMTw (ORCPT
+        id S1727847AbgERMUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:19:52 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:56477 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726855AbgERMTu (ORCPT
+        Mon, 18 May 2020 08:20:43 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:40892 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726855AbgERMUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:19:50 -0400
+        Mon, 18 May 2020 08:20:42 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589804390; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=RkLZWqjK5J2QQRE7bqK/5Ne832290KHKl7J2BIb/wP8=;
- b=ExRyFryiXEQ31538zowKmOAaaEQFfy4QYcr+/XXMzFJkJU75epa5PbZ6oA4OWONYhrQaUjxe
- GLCz7yppoVZt1zfTYB2EmFNDTs9jjRZVWPe5KpioEvlAAU+mY34XlJI2rV9q8IBPBPlUlATK
- 4I2U4xo0EwnY0T6rjSq1h1lhSjQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ s=smtp; t=1589804442; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=MAxhP+teqZIXPoeMS5hBv8vDuvdydsbV2LjXEfVR9mM=; b=rUAx0b4ZBcXCJf8UHlMjrpPc+AXL+ITX9qiPDGmrWgNdLLN7w62eHUdRY7okt+oupRp5kbP+
+ TIxyIQGCNh18UxmmCdXbpAnEGwxdzBQ2l1u2Mqp7yHUCuQpiE+aQjv3osmQZDiQvTqE6xunu
+ YN8KB0jHnZiJRO60d389uWyogAI=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec27d54.7fdbc1d299d0-smtp-out-n03;
- Mon, 18 May 2020 12:19:32 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ec27d8c.7f2e1d21fb20-smtp-out-n05;
+ Mon, 18 May 2020 12:20:28 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CBE53C433D2; Mon, 18 May 2020 12:19:32 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id 9679EC43637; Mon, 18 May 2020 12:20:28 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A4DAC433F2;
-        Mon, 18 May 2020 12:19:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A4DAC433F2
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5AB9CC432C2;
+        Mon, 18 May 2020 12:20:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5AB9CC432C2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtlwifi: rtl8192ee: remove redundant for-loop
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200515102226.29819-1-colin.king@canonical.com>
-References: <20200515102226.29819-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200518121932.CBE53C433D2@smtp.codeaurora.org>
-Date:   Mon, 18 May 2020 12:19:32 +0000 (UTC)
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
+        dianders@chromium.org, Maulik Shah <mkshah@codeaurora.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sc7180: Correct the pdc interrupt ranges
+Date:   Mon, 18 May 2020 17:50:02 +0530
+Message-Id: <1589804402-27130-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
+Few PDC interrupts do not map to respective parent GIC interrupt.
+Fix this by correcting the pdc interrupt map.
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The for-loop seems to be redundant, the assignments for indexes
-> 0..2 are being over-written by the last index 3 in the loop. Remove
-> the loop and use index 3 instead.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Fixes: 22f185ee81d2 ("arm64: dts: qcom: sc7180: Add pdc interrupt controller")
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-b0a4bb7693be rtlwifi: rtl8192ee: remove redundant for-loop
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index f1280e0..f6b4ee8 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2308,8 +2308,7 @@
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
+-			qcom,pdc-ranges = <0 480 15>, <17 497 98>,
+-					  <119 634 4>, <124 639 1>;
++			qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
+ 			#interrupt-cells = <2>;
+ 			interrupt-parent = <&intc>;
+ 			interrupt-controller;
 -- 
-https://patchwork.kernel.org/patch/11551059/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
