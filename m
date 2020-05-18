@@ -2,128 +2,115 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB21C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE57C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D033520674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589820719;
-	bh=P4k/oumOl2Kh3KRdE41h/K202GgjjPZFiWYCSGEqhDc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AZr43kS3o/OUyaBxAWcO0GzxpaTUQfmUM6kc2yFnuYcE039dKaB2GBTUliQWNXkDG
-	 MJwAeyQwMUOUmr7qIxSOZsBl21pUOKcolEaOj/2Jn2cC6bsPjRwi0tCs08iVn2yA4h
-	 Jyur3dMS9y0RXAJ7KEdU7huZZYtl6SFiDC/rWzqU=
+	by mail.kernel.org (Postfix) with ESMTP id 9C56A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:55:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ovxJaWVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgERQv7 (ORCPT
+        id S1728150AbgERQzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:51:59 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37577 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgERQv6 (ORCPT
+        Mon, 18 May 2020 12:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgERQzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:51:58 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x10so4458592plr.4;
-        Mon, 18 May 2020 09:51:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Yd4VQPjSfVqPw2JwHOBUH7DvL28anQpLQnF2oRmOvUg=;
-        b=feXYZoGFDxp9/wWW8Vi0TYmI7PE+WdjwOmfK0ZI1tgeUmyEi4RDx4jLuhhTiDszGlJ
-         2jf1N+T27ejV94FPrKkU9yR/YBYsuZMsG4Aa3U3SRiGBP9x7ABbr5DDLOYsfBVCWz+xZ
-         7P6O2u2WkXLxuVpnbD3+pxC8TxGVMQbHE2C2FMG35UiXLhqNtmXdX8vxdHqsycvyz1M6
-         UBb7NFAVqsJORDo7LqK2Tmsdeui+Mie8U4ilhVscT+TPujSW7VBWQkt/2W8kHX6I9RcL
-         p6sDL1cqhTKLBhdHiWQGb3vH0bYotLHQGccVHdfCds8UFmorjNISDQQwWzfhVoI9hhH8
-         vXig==
-X-Gm-Message-State: AOAM5306/If0lzHkt2A40miQ5/TzjXtiG54DGXKX83i90xGcgB70UvjE
-        PF454uHx9VlY+Zq+FIpzHwY=
-X-Google-Smtp-Source: ABdhPJxLH5VDUbuE1FDuR86WOwRMaXJWESAIbwJvrLBEYETZmBwxGlYnKUYGXtOmogknCzCtXf7ShQ==
-X-Received: by 2002:a17:90a:ad49:: with SMTP id w9mr365592pjv.20.1589820717327;
-        Mon, 18 May 2020 09:51:57 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id v27sm3350582pfi.61.2020.05.18.09.51.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 09:51:56 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 17421404B0; Mon, 18 May 2020 16:51:55 +0000 (UTC)
-Date:   Mon, 18 May 2020 16:51:54 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
-        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
-        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-Message-ID: <20200518165154.GH11244@42.do-not-panic.com>
-References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-13-mcgrof@kernel.org>
- <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+        Mon, 18 May 2020 12:55:02 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A6CC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:55:02 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f06e800e15d4bec2df949c0.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:e800:e15d:4bec:2df9:49c0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 348E51EC011B;
+        Mon, 18 May 2020 18:55:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589820900;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=k6LpZAryra3EY4vS9Y/qTS00GPq5TvZ4jvfHqH6pFlI=;
+        b=ovxJaWVGjvXi6IWjpLFbNp73b8mFBz6lcbwj6YUbkNFmL46ov9WTvbWTti+KuNIpk1mBXG
+        nwz/NU7Stp1vYs84bXvV/hUeksh/4QpiDZLDH4taZs6CDgnUSOno22XuRXoZtYGdWqiPA/
+        Jdwy9Sgmngk+C63mxG0mFVeqOx+4afc=
+Date:   Mon, 18 May 2020 18:55:00 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Jue Wang <juew@google.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/mm: Don't try to change poison pages to uncacheable
+ in a guest
+Message-ID: <20200518165500.GD25034@zn.tnic>
+References: <20200516150229.GB19372@zn.tnic>
+ <8022D1E6-A8BC-4610-9F58-67A06B9A9575@intel.com>
+ <CAPcxDJ50pbuTbittyvPwKq1uUT8q8jJ+dHH8rCug8a1DDZXVYw@mail.gmail.com>
+ <CAPcxDJ6f3pBpwiR9nvXN_g_HBa1RAMG+aOmgfXLFT6aZ9HQn3w@mail.gmail.com>
+ <20200518134813.GC25034@zn.tnic>
+ <20200518153625.GA31444@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+In-Reply-To: <20200518153625.GA31444@agluck-desk2.amr.corp.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 03:24:01PM +0200, Johannes Berg wrote:
-> On Fri, 2020-05-15 at 21:28 +0000, Luis Chamberlain wrote:> module_firmware_crashed
-> 
-> You didn't CC me or the wireless list on the rest of the patches, so I'm
-> replying to a random one, but ...
-> 
-> What is the point here?
-> 
-> This should in no way affect the integrity of the system/kernel, for
-> most devices anyway.
+On Mon, May 18, 2020 at 08:36:25AM -0700, Luck, Tony wrote:
+> The VMM gets the page fault (because the unmapping of the guest
+> physical address is at the VMM EPT level).  The VMM can't map a new
+> page into that guest physical address because it has no way to
+> replace the contents of the old page.  The VMM could pass the #PF
+> to the guest, but that would just confuse the guest (its page tables
+> all say that the page is still valid). In this particular case the
+> page is part of the 1:1 kernel map. So the kernel will OOPS (I think).
 
-Keyword you used here is "most device". And in the worst case, *who*
-knows what other odd things may happen afterwards.
+...
 
-> So what if ath10k's firmware crashes? If there's a driver bug it will
-> not handle it right (and probably crash, WARN_ON, or something else),
-> but if the driver is working right then that will not affect the kernel
-> at all.
+> PLease explain how a guest (that doesn't even know that it is a guest)
+> is going to figure out that the EPT tables (that it has no way to access)
+> have marked this page invalid in guest physical address space.
 
-Sometimes the device can go into a state which requires driver removal
-and addition to get things back up.
+So somewhere BUS_MCEERR_AR was mentioned. So I'm assuming the error
+severity was "action required". What does happen in the kernel, on
+baremetal, with an AR error in kernel space, i.e., kernel memory?
 
-> So maybe I can understand that maybe you want an easy way to discover -
-> per device - that the firmware crashed, but that still doesn't warrant a
-> complete kernel taint.
+If we can't fixup the exception, we die.
 
-That is one reason, another is that a taint helps support cases *fast*
-easily detect if the issue was a firmware crash, instead of scraping
-logs for driver specific ways to say the firmware has crashed.
+So why should the guest behave any differently?
 
-> Instead of the kernel taint, IMHO you should provide an annotation in
-> sysfs (or somewhere else) for the *struct device* that had its firmware
-> crash.
+Now, if you want for the guest to be more "robust" and handle that
+thing, fine. But then you'd need an explicit way to tell the guest
+kernel: "you've just had an MCE and I unmapped the page" so that the
+guest kernel can figure out what do to. Even if it means, to panic.
 
-It would seem the way some folks are thinking about getting more details
-would be through devlink.
+I.e., signal in an explicit way that EPT violation Jue is talking about
+in the other mail.
 
-> Or maybe, if it's too complex to walk the entire hierarchy
-> checking for that, have a uevent,  or add the ability for the kernel to
-> print out elsewhere in debugfs the list of devices that crashed at some
-> point... All of that is fine, but a kernel taint?
+You can inject a #PF or better yet the *first* MCE which is being
+injected should say with a bit somehwere "I unmapped the address in
+m->addr". So that the guest kernel can handle that properly and know
+what *exactly* it is getting an MCE for.
 
-debugfs is optional, a taint is simple, and device agnostic. From a
-support perspective it is very easy to see if a possible issue may
-be device firmware specific.
+What I don't like is the "am I running as a guest" check. Because
+someone else would come later and say, err, I'm not virtualizing this
+portion of MCA either, lemme add another "am I guest" check.
 
-  Luis
+Sure, it is a lot easier but when stuff like that starts spreading
+around in the MCE code, then we can just as well disable MCE when
+virtualized altogether. It would be a lot easier for everybody.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
