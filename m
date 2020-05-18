@@ -2,119 +2,111 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9CC620825
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:47:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vK03JGNW"
+	by mail.kernel.org (Postfix) with ESMTP id 1336820829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589788087;
+	bh=B8BZX1tEa8YFlmLQI8RzC6u6+knqEquuZ1Wxf4akJ5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FftGmmqdtP60GRztsVmPjLQcbBo0Gvy2Rw8MXqg7uR2rReRaGGxpVUr3THONrLGkw
+	 tG1bmNkfNViG5Yv2Zt0gmUJyfQFlWNcn2rS8ZqAjAjvciNuq/u587daUOylX91vHwB
+	 xsJ+Dp55jezBlFlHKe/a6OiPVvvs9iqeD2isnX08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgERHri (ORCPT
+        id S1727853AbgERHsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 03:47:38 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:57087 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgERHrh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 03:47:37 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 04I7lLUU009322
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:47:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 04I7lLUU009322
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589788042;
-        bh=wlkpEnjVQhrTfI3Q/lY2Xz/QnYWGwFaUeURa+uAY6S8=;
-        h=From:Date:Subject:To:Cc:From;
-        b=vK03JGNW26ZyF7VyTqccspUPZCl+JqHrYb2iiq3KwDXW/bHPgY+yMouTgEgFOTzoj
-         6rE6xMWObtEtHizUN8IdUWwOIcl+CQJGSWjlMzOKqQpbIX7MB06EBdSpqgjbb6s/G9
-         XidclT+FpRCBEYOIpdYeyHewXwKs8T6N/DkK5nDEUdFvYhgc4PXAUhIK3R2Z5qS3xN
-         g00o+1voPDCp2hpDWpgEoUXrchdN1wW6bdB6XX6YdYvUvGSWS9cU0EYgz8lGF+X6qE
-         ZQmLHlxwoyBQKRSnPX4GH30uAZC2tEuepIAYfKKYHyVsLSpIl4D64LYD3WemBNl9kL
-         WduaZaHjBpa/w==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id k4so3112312uaq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 00:47:22 -0700 (PDT)
-X-Gm-Message-State: AOAM532mvbde0dF1W76JcP5DTaKPpYfD3glCp/KkLK+gRiLKbx7BADMr
-        3UfR3FrZeHeQ6Dr1CkhB4cYBARnN+BruyYMROiE=
-X-Google-Smtp-Source: ABdhPJx36t2lq6XUgRP8aZsWzniDSVT/3mB//NzrYGT15Oui9iLyTfcNDeSJpxItpJS9c+QQGTVe7lk7FYYZTxe6p7Y=
-X-Received: by 2002:a9f:3e0d:: with SMTP id o13mr10445027uai.25.1589788041123;
- Mon, 18 May 2020 00:47:21 -0700 (PDT)
+        Mon, 18 May 2020 03:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbgERHsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 03:48:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0076A20825;
+        Mon, 18 May 2020 07:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589788085;
+        bh=B8BZX1tEa8YFlmLQI8RzC6u6+knqEquuZ1Wxf4akJ5Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aXNt7F9MPKx+9varfW/wXddmdWJT70EBEbOPdVzPiqIF619UoaR6Hp3G/bIqv6IJV
+         gawia3MBS58OU1kldkeoPy5E9vyw9yE82VP1BUq+g6IlgkYiDoer6sC1KJRiNirycA
+         /hSZ/wxnHX1jG5DpgSPDaJXKZhXTB/yk7+OmHKs0=
+Date:   Mon, 18 May 2020 09:48:03 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 1/3] tty: n_gsm: Improve debug output
+Message-ID: <20200518074803.GA3095136@kroah.com>
+References: <20200512115323.1447922-1-gregory.clement@bootlin.com>
+ <20200512115323.1447922-2-gregory.clement@bootlin.com>
+ <f957eb74-cdbe-848f-b345-7c9fb3d7b1e6@suse.com>
+ <87tv0dg0ii.fsf@FE-laptop>
+ <20200518073829.GA3055513@kroah.com>
+ <87o8qlg00b.fsf@FE-laptop>
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 18 May 2020 16:46:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQXSpg4s0e0d-tp9j85Sj01t13zAa5+rqsOWu4ZvkpYhg@mail.gmail.com>
-Message-ID: <CAK7LNAQXSpg4s0e0d-tp9j85Sj01t13zAa5+rqsOWu4ZvkpYhg@mail.gmail.com>
-Subject: [GIT PULL] ARM: dts: uniphier: UniPhier DT updates for v5.8
-List-Id: <soc.lore.kernel.org>
-To:     soc@kernel.org, Olof Johansson <olof@lixom.net>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8qlg00b.fsf@FE-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Olof, Arnd,
+On Mon, May 18, 2020 at 09:44:52AM +0200, Gregory CLEMENT wrote:
+> Hello Greg,
+> 
+> > On Mon, May 18, 2020 at 09:33:57AM +0200, Gregory CLEMENT wrote:
+> >> Hello Jiri,
+> >> 
+> >> > On 12. 05. 20, 13:53, Gregory CLEMENT wrote:
+> >> >> Use appropriate print helpers for debug messages.
+> >> >> 
+> >> >> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> >> >> ---
+> >> >>  drivers/tty/n_gsm.c | 14 ++------------
+> >> >>  1 file changed, 2 insertions(+), 12 deletions(-)
+> >> >> 
+> >> >> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+> >> >> index d77ed82a4840..67c8f8173023 100644
+> >> >> --- a/drivers/tty/n_gsm.c
+> >> >> +++ b/drivers/tty/n_gsm.c
+> >> >> @@ -504,18 +504,8 @@ static void gsm_print_packet(const char *hdr, int addr, int cr,
+> >> >>  	else
+> >> >>  		pr_cont("(F)");
+> >> >>  
+> >> >> -	if (dlen) {
+> >> >> -		int ct = 0;
+> >> >> -		while (dlen--) {
+> >> >> -			if (ct % 8 == 0) {
+> >> >> -				pr_cont("\n");
+> >> >> -				pr_debug("    ");
+> >> >> -			}
+> >> >> -			pr_cont("%02X ", *data++);
+> >> >> -			ct++;
+> >> >> -		}
+> >> >> -	}
+> >> >> -	pr_cont("\n");
+> >> >> +	if (dlen)
+> >> >
+> >> > This test is superfluous. print_hex_dump_* won't write anything when
+> >> > zero length is passed to it.
+> >> 
+> >> As I will send a v3 due to the issue found on the last patch, I am also
+> >> going to fix this.
+> >
+> > Ugh, as I already applied this series, should I just revert them all, or
+> > are you going to send fix-ups on top of what I have applied instead?
+> 
+> I was about to send a new series, but I can just send fix-ups. It's up
+> to you.
 
-
-Here are UniPhier DT (32bit) updates for the v5.8 merge window.
-
-(I intentionally based this on -rc4
-because I needed a dt-binding fix from DMA engine tree
-to avoid 'make ARCH=arm dtbs_check' regression.
-I hope this is OK.)
-
-
-Please pull!
-
-
-
-
-
-The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
-
-  Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
-tags/uniphier-dt-v5.8
-
-for you to fetch changes up to 137a1cecb89a024f8c92d71e07e73b14fc4d4161:
-
-  ARM: dts: uniphier: add #address-cells and #size-cells to SPI nodes
-(2020-05-04 10:07:22 +0900)
-
-----------------------------------------------------------------
-UniPhier ARM SoC DT updates for v5.8
-
-- add DMA controller nodes
-
-----------------------------------------------------------------
-Kunihiko Hayashi (2):
-      ARM: dts: uniphier: Add XDMAC node
-      ARM: dts: uniphier: Add ethernet aliases
-
-Masahiro Yamada (1):
-      ARM: dts: uniphier: add #address-cells and #size-cells to SPI nodes
-
- arch/arm/boot/dts/uniphier-ld4.dtsi        |  2 ++
- arch/arm/boot/dts/uniphier-ld6b-ref.dts    |  1 +
- arch/arm/boot/dts/uniphier-pro4-ace.dts    |  1 +
- arch/arm/boot/dts/uniphier-pro4-ref.dts    |  1 +
- arch/arm/boot/dts/uniphier-pro4-sanji.dts  |  1 +
- arch/arm/boot/dts/uniphier-pro4.dtsi       | 10 ++++++++++
- arch/arm/boot/dts/uniphier-pro5.dtsi       | 12 ++++++++++++
- arch/arm/boot/dts/uniphier-pxs2-gentil.dts |  1 +
- arch/arm/boot/dts/uniphier-pxs2-vodka.dts  |  1 +
- arch/arm/boot/dts/uniphier-pxs2.dtsi       | 12 ++++++++++++
- arch/arm/boot/dts/uniphier-sld8.dtsi       |  2 ++
- 11 files changed, 44 insertions(+)
+fix-ups are less work for me :)
