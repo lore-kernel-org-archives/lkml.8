@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D83CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77AA82083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C14720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825187;
-	bh=7jw05OWTpoGSzrigMFDCv1fn3HTWY8WK7WIiiMyCcDw=;
+	s=default; t=1589825191;
+	bh=ASD+fFzp4NJHBwKGUBzfOTPXS0YJQ2vb0CTvZsbplXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pqrtuFg7zEXZXAIjk1J0pfl9Pr4b17QfIGSMYjC+Bod0hsIHq7VbhjTojoGyu6iJi
-	 c130YQSbsLL6AkuhGgxM21PMv5QILuwlGR/Q2ZrdWXMgcoaDWQFN55+lNVDmtK7Bgm
-	 sLumgss5m7NxLWypnrbURsrMG/gczO2L6HxNTyI8=
+	b=Z/BADdB5YXTAdlw52qcKC6vWNrNq3VHwZkYWMmieMGkVrK19NODWLVZWL4o+JDAck
+	 xMb00YygXjRVkvCmv0PumiMW2zXXDVzOI6uNlptuy0sTePxBmlOFaiVZkaNR8TI9qD
+	 PTMp51LSKXWDVdjIlCnnUfu9TPKaDQKbZhdO62qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733159AbgERSG0 (ORCPT
+        id S1732605AbgERSGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54434 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729488AbgERSGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:06:23 -0400
+        id S1733143AbgERSGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:06:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 099AD20671;
-        Mon, 18 May 2020 18:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97A85207D3;
+        Mon, 18 May 2020 18:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825182;
-        bh=7jw05OWTpoGSzrigMFDCv1fn3HTWY8WK7WIiiMyCcDw=;
+        s=default; t=1589825180;
+        bh=ASD+fFzp4NJHBwKGUBzfOTPXS0YJQ2vb0CTvZsbplXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZApVvlMftK88H952Y5Z69+ZI7PrHiJ2UvNDS6u89mWzUOMEfzKewPwUBfMjktGDX+
-         RKT0+ZE3/yFkK9gkWloGRiT9Yk0k+22t7Rfg0S0nwvybhOb6RxtAmxICHnVvqb1dws
-         2dFl9cqAJnYQAtFlp8HgaKqNmF5CkI+/vTIFfliE=
+        b=lhrgLVCsLxMWorqlYlk9YjiQu4Qx4KuMhAEoBn4W2SW1EnYfLO6YUyP9bh3M0l4Td
+         YqlQcY6tG+KeqBsMGdh8d14pHocgIrtvdBwS5QSqrJsGH/3IMHk6jaKazVh4sdv1JZ
+         zGaFgh5+H7RWRDMSxZXLeg9pq4Ipuwqg9Fzlzl34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 5.6 160/194] exec: Move would_dump into flush_old_exec
-Date:   Mon, 18 May 2020 19:37:30 +0200
-Message-Id: <20200518173544.535588494@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.6 124/194] pnp: Use list_for_each_entry() instead of open coding
+Date:   Mon, 18 May 2020 19:36:54 +0200
+Message-Id: <20200518173541.890762514@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -58,58 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit f87d1c9559164294040e58f5e3b74a162bf7c6e8 upstream.
+commit 01b2bafe57b19d9119413f138765ef57990921ce upstream.
 
-I goofed when I added mm->user_ns support to would_dump.  I missed the
-fact that in the case of binfmt_loader, binfmt_em86, binfmt_misc, and
-binfmt_script bprm->file is reassigned.  Which made the move of
-would_dump from setup_new_exec to __do_execve_file before exec_binprm
-incorrect as it can result in would_dump running on the script instead
-of the interpreter of the script.
+Aside from good practice, this avoids a warning from gcc 10:
 
-The net result is that the code stopped making unreadable interpreters
-undumpable.  Which allows them to be ptraced and written to disk
-without special permissions.  Oops.
+./include/linux/kernel.h:997:3: warning: array subscript -31 is outside array bounds of ‘struct list_head[1]’ [-Warray-bounds]
+  997 |  ((type *)(__mptr - offsetof(type, member))); })
+      |  ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/list.h:493:2: note: in expansion of macro ‘container_of’
+  493 |  container_of(ptr, type, member)
+      |  ^~~~~~~~~~~~
+./include/linux/pnp.h:275:30: note: in expansion of macro ‘list_entry’
+  275 | #define global_to_pnp_dev(n) list_entry(n, struct pnp_dev, global_list)
+      |                              ^~~~~~~~~~
+./include/linux/pnp.h:281:11: note: in expansion of macro ‘global_to_pnp_dev’
+  281 |  (dev) != global_to_pnp_dev(&pnp_global); \
+      |           ^~~~~~~~~~~~~~~~~
+arch/x86/kernel/rtc.c:189:2: note: in expansion of macro ‘pnp_for_each_dev’
+  189 |  pnp_for_each_dev(dev) {
 
-The move was necessary because the call in set_new_exec was after
-bprm->mm was no longer valid.
+Because the common code doesn't cast the starting list_head to the
+containing struct.
 
-To correct this mistake move the misplaced would_dump from
-__do_execve_file into flos_old_exec, before exec_mmap is called.
-
-I tested and confirmed that without this fix I can attach with gdb to
-a script with an unreadable interpreter, and with this fix I can not.
-
-Cc: stable@vger.kernel.org
-Fixes: f84df2a6f268 ("exec: Ensure mm->user_ns contains the execed files")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[ rjw: Whitespace adjustments ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exec.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/pnp.h |   29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
 
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1277,6 +1277,8 @@ int flush_old_exec(struct linux_binprm *
- 	 */
- 	set_mm_exe_file(bprm->mm, bprm->file);
+--- a/include/linux/pnp.h
++++ b/include/linux/pnp.h
+@@ -220,10 +220,8 @@ struct pnp_card {
+ #define global_to_pnp_card(n) list_entry(n, struct pnp_card, global_list)
+ #define protocol_to_pnp_card(n) list_entry(n, struct pnp_card, protocol_list)
+ #define to_pnp_card(n) container_of(n, struct pnp_card, dev)
+-#define pnp_for_each_card(card) \
+-	for((card) = global_to_pnp_card(pnp_cards.next); \
+-	(card) != global_to_pnp_card(&pnp_cards); \
+-	(card) = global_to_pnp_card((card)->global_list.next))
++#define pnp_for_each_card(card)	\
++	list_for_each_entry(card, &pnp_cards, global_list)
  
-+	would_dump(bprm, bprm->file);
-+
- 	/*
- 	 * Release all of the old mmap stuff
- 	 */
-@@ -1820,8 +1822,6 @@ static int __do_execve_file(int fd, stru
- 	if (retval < 0)
- 		goto out;
+ struct pnp_card_link {
+ 	struct pnp_card *card;
+@@ -276,14 +274,9 @@ struct pnp_dev {
+ #define card_to_pnp_dev(n) list_entry(n, struct pnp_dev, card_list)
+ #define protocol_to_pnp_dev(n) list_entry(n, struct pnp_dev, protocol_list)
+ #define	to_pnp_dev(n) container_of(n, struct pnp_dev, dev)
+-#define pnp_for_each_dev(dev) \
+-	for((dev) = global_to_pnp_dev(pnp_global.next); \
+-	(dev) != global_to_pnp_dev(&pnp_global); \
+-	(dev) = global_to_pnp_dev((dev)->global_list.next))
+-#define card_for_each_dev(card,dev) \
+-	for((dev) = card_to_pnp_dev((card)->devices.next); \
+-	(dev) != card_to_pnp_dev(&(card)->devices); \
+-	(dev) = card_to_pnp_dev((dev)->card_list.next))
++#define pnp_for_each_dev(dev) list_for_each_entry(dev, &pnp_global, global_list)
++#define card_for_each_dev(card, dev)	\
++	list_for_each_entry(dev, &(card)->devices, card_list)
+ #define pnp_dev_name(dev) (dev)->name
  
--	would_dump(bprm, bprm->file);
--
- 	retval = exec_binprm(bprm);
- 	if (retval < 0)
- 		goto out;
+ static inline void *pnp_get_drvdata(struct pnp_dev *pdev)
+@@ -437,14 +430,10 @@ struct pnp_protocol {
+ };
+ 
+ #define to_pnp_protocol(n) list_entry(n, struct pnp_protocol, protocol_list)
+-#define protocol_for_each_card(protocol,card) \
+-	for((card) = protocol_to_pnp_card((protocol)->cards.next); \
+-	(card) != protocol_to_pnp_card(&(protocol)->cards); \
+-	(card) = protocol_to_pnp_card((card)->protocol_list.next))
+-#define protocol_for_each_dev(protocol,dev) \
+-	for((dev) = protocol_to_pnp_dev((protocol)->devices.next); \
+-	(dev) != protocol_to_pnp_dev(&(protocol)->devices); \
+-	(dev) = protocol_to_pnp_dev((dev)->protocol_list.next))
++#define protocol_for_each_card(protocol, card)	\
++	list_for_each_entry(card, &(protocol)->cards, protocol_list)
++#define protocol_for_each_dev(protocol, dev)	\
++	list_for_each_entry(dev, &(protocol)->devices, protocol_list)
+ 
+ extern struct bus_type pnp_bus_type;
+ 
 
 
