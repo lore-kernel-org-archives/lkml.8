@@ -2,112 +2,152 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD296C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5B2207F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gq8oTz42"
+	by mail.kernel.org (Postfix) with ESMTP id 82D76207BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbgEREFh (ORCPT
+        id S1726424AbgEREHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 00:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgEREFh (ORCPT
+        Mon, 18 May 2020 00:07:08 -0400
+Received: from m177129.mail.qiye.163.com ([123.58.177.129]:7053 "EHLO
+        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgEREHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 00:05:37 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63CDC061A0C;
-        Sun, 17 May 2020 21:05:35 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s10so1959714pgm.0;
-        Sun, 17 May 2020 21:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=HHiEm16/4xq3MMtfPri9/a/cmBcNfYbkXXVh01N5Jmc=;
-        b=Gq8oTz42VuMggbYwL0Pc6kbWlihL0/DOkyOcBTPOl82BQwQ5eYQ/kXCS9R62KmpH2u
-         dlfgqMroZLPD417zHzIXAdn8qavm0nB7i15Bo72v1oM2I1n2M33Gb53GY4++nVTJSJR0
-         vwph2dgoA1fiKzFHd+qGYfEIankY6peFOVjgJ8dSs0bQmXPi2ilq+D4m4qMxWojCKCtV
-         SSzod9H/x1217c9n4e0QWHluchjSstEs8tim8Dw9L50Tg20xHZZKsCoiAGrksS8XklU1
-         pDkMiU5nK+hEiCWMaD4WS6YzVWjFv8vcMxs442YPot8F3UjltV/+iC51ga6A//Yiz/ux
-         Bfyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=HHiEm16/4xq3MMtfPri9/a/cmBcNfYbkXXVh01N5Jmc=;
-        b=tFjUvdZr6B8CbdnHhLsM1OzI9UK+rUrLvc9GH+FlJ71XwvDswPfxqz2FvI+/GiJgNp
-         q9I4MPGTVRnnypie4GKFqongAUPyMQ6x69KJpGDRqvDFN49XKk2FVTyxQ7zbQNT8qMlB
-         pwl0yG7JjqsUFkSvWnT1OcD8nR1iSUXM13NAtsVwQarG+XgrVSCL8ZJ7Q5Jsfej7+nLw
-         z6I52aEFV672T9O6YdhPgl/DEGeyYxqCbJovlRabG+LStn91qJNcsqvEJPRxfX5gD4sY
-         4cCGP5NfcmUelQvsbjMdUtN27usUHyGYeBl6jsbrV7SjyO2UCjLD18dGfuFKU38+DxXX
-         gAag==
-X-Gm-Message-State: AOAM531bul8lWpEBguZh5RSw3NnHGYx+kI6TpCFXrSVMVy2Bwk0rOzMi
-        M+pHRotl6ae/O3nzo+wBx8k=
-X-Google-Smtp-Source: ABdhPJxeM2GvoO4bJ+QyqyBR4glZb9YGdl+Qx/9T0hFrxaeYAaC84R6rILJ02H0T9hVdYz4aBN9iNQ==
-X-Received: by 2002:a63:4911:: with SMTP id w17mr13105303pga.13.1589774735117;
-        Sun, 17 May 2020 21:05:35 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id a16sm7298692pff.41.2020.05.17.21.05.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 21:05:34 -0700 (PDT)
-Date:   Sun, 17 May 2020 21:05:32 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     David Heidelberg <david@ixit.cz>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 07/10] input: elants: support 0x66 reply opcode for
- reporting touches
-Message-ID: <20200518040532.GP89269@dtor-ws>
-References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
- <02dc25c5851e50d77bc707a2e1b44caf9d6354eb.1587923061.git.mirq-linux@rere.qmqm.pl>
+        Mon, 18 May 2020 00:07:08 -0400
+Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
+        by m177129.mail.qiye.163.com (Hmail) with ESMTP id BE7D05C3350;
+        Mon, 18 May 2020 12:06:30 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AEwAGwAICJTOkB61jcDtw4oE.3.1589774790763.Hmail.bernard@vivo.com>
+To:     Liviu Dudau <liviu.dudau@arm.com>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFJlOlJlOiBbUEFUQ0ggdjJdIGRybS9hcm06IGZpeGVzIHBpeGVsIGNsb2NrIGVuYWJsZWQgd2l0aCB3cm9uZyBmb3JtYXQ=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 218.104.188.164
+In-Reply-To: <20200515144149.GN159988@e110455-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <02dc25c5851e50d77bc707a2e1b44caf9d6354eb.1587923061.git.mirq-linux@rere.qmqm.pl>
+Received: from bernard@vivo.com( [218.104.188.164) ] by ajax-webmail ( [127.0.0.1] ) ; Mon, 18 May 2020 12:06:30 +0800 (GMT+08:00)
+From:   Bernard <bernard@vivo.com>
+Date:   Mon, 18 May 2020 12:06:30 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVNTUNLS0tJSUpJTklPT1lXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMTENCSkJOQ0JMN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Pgw6PAw6MjgxLzQQOU1KERg*DwxPFD5VSFVKTkNCTExPTEJIQ0xCVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlJSkNVSktPVUpDQ1VKTU9ZV1kIAVlBQk1MTDcG
+X-HM-Tid: 0a7225f630846447kursbe7d05c3350
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 07:47:52PM +0200, Michał Mirosław wrote:
-> From: Dmitry Osipenko <digetx@gmail.com>
-> 
-> eKTF3624 touchscreen firmware uses two variants of the reply opcodes for
-> reporting touch events: one is 0x63 (used by older firmware) and other is
-> 0x66 (used by newer firmware). The 0x66 variant is equal to 0x63 of
-> eKTH3500, while 0x63 needs small adjustment of the touch pressure value.
-> 
-> Nexus 7 tablet device has eKTF3624 touchscreen and it uses 0x66 opcode for
-> reporting touch events, let's support it now. Other devices, eg. ASUS TF300T,
-> use 0x63.
-> 
-> Note: CMD_HEADER_REK is used for replying to calibration requests, it has
-> the same 0x66 opcode number which eKTF3624 uses for reporting touches.
-> The calibration replies are handled separately from the the rest of the
-> commands in the driver by entering into ELAN_WAIT_RECALIBRATION state
-> and thus this change shouldn't change the old behavior.
-
-Is it possible to know what format a device will use by querying it at
-probe time?
-
-Thanks.
-
--- 
-Dmitry
+CuWPkeS7tuS6uu+8mkxpdml1IER1ZGF1IDxsaXZpdS5kdWRhdUBhcm0uY29tPgrlj5HpgIHml6Xm
+nJ/vvJoyMDIwLTA1LTE1IDIyOjQxOjQ5CuaUtuS7tuS6uu+8mkJlcm5hcmQgPGJlcm5hcmRAdml2
+by5jb20+CuaKhOmAgeS6uu+8mkJyaWFuIFN0YXJrZXkgPGJyaWFuLnN0YXJrZXlAYXJtLmNvbT4s
+RGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPixEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3
+bGwuY2g+LGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsbGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZyxvcGVuc291cmNlLmtlcm5lbEB2aXZvLmNvbQrkuLvpopjvvJpSZTogUmU6UmU6
+IFtQQVRDSCB2Ml0gZHJtL2FybTogZml4ZXMgcGl4ZWwgY2xvY2sgZW5hYmxlZCB3aXRoIHdyb25n
+IGZvcm1hdD5IaSBCZXJuYXJkLAo+Cj5PbiBGcmksIE1heSAwOCwgMjAyMCBhdCAwNDo0NzoxN1BN
+ICswODAwLCBCZXJuYXJkIHdyb3RlOgo+PiBGcm9tOiAi6LW15Yab5aWOIiA8YmVybmFyZEB2aXZv
+LmNvbT4KPj4gRGF0ZTogMjAyMC0wNC0yNCAxOTozNzozNgo+PiBUbzogIExpdml1IER1ZGF1IDxs
+aXZpdS5kdWRhdUBhcm0uY29tPgo+PiBDYzogIEJyaWFuIFN0YXJrZXkgPGJyaWFuLnN0YXJrZXlA
+YXJtLmNvbT4sRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPixEYW5pZWwgVmV0dGVyIDxk
+YW5pZWxAZmZ3bGwuY2g+LGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZyxvcGVuc291cmNlLmtlcm5lbEB2aXZvLmNvbQo+PiBTdWJqZWN0
+OiBSZTpSZTogW1BBVENIIHYyXSBkcm0vYXJtOiBmaXhlcyBwaXhlbCBjbG9jayBlbmFibGVkIHdp
+dGggd3JvbmcgZm9ybWF0Cj4+IAo+PiAKPj4gCj4+IAo+PiBGcm9tOiBMaXZpdSBEdWRhdSA8bGl2
+aXUuZHVkYXVAYXJtLmNvbT4KPj4gRGF0ZTogMjAyMC0wNC0yNCAxOTowOTo1MAo+PiBUbzogIEJl
+cm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KPj4gQ2M6ICBCcmlhbiBTdGFya2V5IDxicmlh
+bi5zdGFya2V5QGFybS5jb20+LERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4sRGFuaWVs
+IFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPixkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+LGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsb3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20K
+Pj4gU3ViamVjdDogUmU6IFtQQVRDSCB2Ml0gZHJtL2FybTogZml4ZXMgcGl4ZWwgY2xvY2sgZW5h
+YmxlZCB3aXRoIHdyb25nIGZvcm1hdD5IaSBCZXJuYW5kLAo+PiA+Cj4+ID5PbiBUaHUsIEFwciAy
+MywgMjAyMCBhdCAxMTozNTo1MVBNIC0wNzAwLCBCZXJuYXJkIFpoYW8gd3JvdGU6Cj4+ID4+IFRo
+ZSBwaXhlbCBjbG9jayBpcyBzdGlsbCBlbmFibGVkIHdoZW4gdGhlIGZvcm1hdCBpcyB3cm9uZy4K
+Pj4gPj4gbm8gZXJyb3IgYnJhbmNoIGhhbmRsZSwgYW5kIGFsc28gc29tZSByZWdpc3RlciBpcyBu
+b3Qgc2V0Cj4+ID4+IGluIHRoaXMgY2FzZSwgZS5nOiBIRExDRF9SRUdfPGNvbG9yPl9TRUxFQ1Qu
+IE1heWJlIHdlCj4+ID4+IHNob3VsZCBkaXNhYmxlIHRoaXMgY2xvY2sgYW5kIHRocm93IGFuIHdh
+cm4gbWVzc2FnZSB3aGVuCj4+ID4+IHRoaXMgaGFwcGVuZWQuCj4+ID4+IFdpdGggdGhpcyBjaGFu
+Z2UsIHRoZSBjb2RlIG1heWJlIGEgYml0IG1vcmUgcmVhZGFibGUuCj4+ID4+IAo+PiA+PiBTaWdu
+ZWQtb2ZmLWJ5OiBCZXJuYXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+Cj4+ID4+IAo+PiA+PiBD
+aGFuZ2VzIHNpbmNlIFYxOgo+PiA+PiAqYWRkIGZvcm1hdCBlcnJvciBoYW5kbGUsIGlmIGZvcm1h
+dCBpcyBub3QgY29ycmVjdCwgdGhyb3cKPj4gPj4gYW4gd2FybmluZyBtZXNzYWdlIGFuZCBkaXNh
+YmxlIHRoaXMgY2xvY2suCj4+ID4+IAo+PiA+PiBMaW5rIGZvciBWMToKPj4gPj4gKmh0dHBzOi8v
+bG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMjI4NTAxLwo+PiA+PiAtLS0KPj4gPj4g
+IGRyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfY3J0Yy5jIHwgMTMgKysrKysrKysrLS0tLQo+PiA+
+PiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKPj4gPj4g
+Cj4+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2NydGMuYyBiL2Ry
+aXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfY3J0Yy5jCj4+ID4+IGluZGV4IGFmNjdmZWZlZDM4ZC4u
+ZjM5NDVkZWUyYjdkIDEwMDY0NAo+PiA+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNk
+X2NydGMuYwo+PiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2NydGMuYwo+PiA+
+PiBAQCAtOTYsNyArOTYsNyBAQCBzdGF0aWMgaW50IGhkbGNkX3NldF9weGxfZm10KHN0cnVjdCBk
+cm1fY3J0YyAqY3J0YykKPj4gPj4gIAl9Cj4+ID4+ICAKPj4gPj4gIAlpZiAoV0FSTl9PTighZm9y
+bWF0KSkKPj4gPj4gLQkJcmV0dXJuIDA7Cj4+ID4+ICsJCXJldHVybiAtRUlOVkFMOwo+PiA+Cj4+
+ID5UaGF0IGlzIHRoZSByaWdodCBmaXghCj4+ID4KPj4gPj4gIAo+PiA+PiAgCS8qIEhETENEIHVz
+ZXMgJ2J5dGVzIHBlciBwaXhlbCcsIHplcm8gbWVhbnMgMSBieXRlICovCj4+ID4+ICAJYnRwcCA9
+IChmb3JtYXQtPmJpdHNfcGVyX3BpeGVsICsgNykgLyA4Owo+PiA+PiBAQCAtMTI1LDcgKzEyNSw3
+IEBAIHN0YXRpYyBpbnQgaGRsY2Rfc2V0X3B4bF9mbXQoc3RydWN0IGRybV9jcnRjICpjcnRjKQo+
+PiA+PiAgCXJldHVybiAwOwo+PiA+PiAgfQo+PiA+PiAgCj4+ID4+IC1zdGF0aWMgdm9pZCBoZGxj
+ZF9jcnRjX21vZGVfc2V0X25vZmIoc3RydWN0IGRybV9jcnRjICpjcnRjKQo+PiA+PiArc3RhdGlj
+IGludCBoZGxjZF9jcnRjX21vZGVfc2V0X25vZmIoc3RydWN0IGRybV9jcnRjICpjcnRjKQo+PiA+
+Cj4+ID5CdXQgdGhpcyBpcyBub3QuIFdlIGRvbid0IG5lZWQgdG8gcHJvcGFnYXRlIHRoZSBlcnJv
+ciBmdXJ0aGVyLCBqdXN0IC4uLi4KPj4gPgo+PiA+PiAgewo+PiA+PiAgCXN0cnVjdCBoZGxjZF9k
+cm1fcHJpdmF0ZSAqaGRsY2QgPSBjcnRjX3RvX2hkbGNkX3ByaXYoY3J0Yyk7Cj4+ID4+ICAJc3Ry
+dWN0IGRybV9kaXNwbGF5X21vZGUgKm0gPSAmY3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGU7Cj4+
+ID4+IEBAIC0xNjIsOSArMTYyLDEwIEBAIHN0YXRpYyB2b2lkIGhkbGNkX2NydGNfbW9kZV9zZXRf
+bm9mYihzdHJ1Y3QgZHJtX2NydGMgKmNydGMpCj4+ID4+ICAKPj4gPj4gIAllcnIgPSBoZGxjZF9z
+ZXRfcHhsX2ZtdChjcnRjKTsKPj4gPj4gIAlpZiAoZXJyKQo+PiA+PiAtCQlyZXR1cm47Cj4+ID4K
+Pj4gCj4+IE15IHByZXZpb3VzIHVuZGVyc3RhbmRpbmcgd2FzIHRoYXQgd2hlbiBzdWNoIGFuIGV4
+Y2VwdGlvbiBvY2N1cnJlZCwgaXQgd2FzIGNhdWdodAo+PiBpbiB0aGUgYXRvbWljX2VuYWJsZSBp
+bnRlcmZhY2UsIGFuZCB0aGVuIGRpc2FibGUgcGl4ZWwgY2xvY2suIEkgYW0gbm90IHN1cmUgaXMg
+dGhpcyBvayBvcgo+PiBpIGhhdmUgdG8gZG8gbW9yZSByZWdpc3RlciBjbGVhbiBvcGVyYWN0aW9u
+Lgo+PiAKPj4gPi4uLiByZXR1cm4gaGVyZSBzbyB0aGF0IHdlIGRvbid0IGNhbGwgY2xrX3NldF9y
+YXRlKCk7Cj4+IEFuZCBmb3IgdGhpcyBwYXJ0LCBpIGFtIGEgbGl0dGxlIGNvbmZ1c2VkIDoKPj4g
+MSBjbGtfc2V0X3JhdGUgbXVzdCBiZSBzZXQgZXZlbiBpZiBmb3JtYXQgaXMgd3Jvbmc/Cj4+IDIg
+VGhlIG9yaWdpbmFsIGNvZGUgbG9naWMgc2hvd3MgdGhhdCBJZiBmb3JtYXQgaXMgbm90IGNvcnJl
+Y3QsIHdlIHdpbGwgbm90IHNldCByZWdpc3RlcnMgCj4+IEhETENEX1JFR19QSVhFTF9GT1JNQVQg
+JiBIRExDRF9SRUdfPGNvbG9yPl9TRUxFQ1QsIHdpbGwgdGhpcyBicmluZyBpbgo+PiBhbnkgcHJv
+YmxlbXM/Cj4+IDMgaWYgMSB0aGUgcmF0ZSBtdXN0IHNldCAmIDIgcmVnaXN0ZXJzIGFib3ZlIGRv
+ZXNuYHQgbWF0dGVyLCB0aGVuIG1heWJlIHRoZXJlIGlzIG5vCj4+IG5lZWQgdG8gZGlzYWJsZSBw
+aXhlbCBjbG9jay4KPj4gQW0gaSBtaXN1bmRlcnN0YW5kaW5nCj4KPllvdSBhcmUgcmlnaHQsIHRo
+ZSBwaXhlbCBmb3JtYXQgY2hlY2sgc2hvdWxkIG5vdCBoYXBwZW4gaW5zaWRlIGhkbGNkX2NydGNf
+YXRvbWljX2VuYWJsZSgpCj5ob29rLCBpdCBzaG91bGQgYmUgbW92ZWQgaW50byBhIHNlcGFyYXRl
+IGZ1bmN0aW9uIGhkbGNkX2NydGNfYXRvbWljX2NoZWNrKCkgYW5kIHRoYXQgbmVlZHMKPnRvIGJl
+IGhvb2tlZCBpbnRvIC5hdG9taWNfY2hlY2soKSBmb3IgaGRsY2RfY3J0Y19oZWxwZXJfZnVuY3Mo
+KS4KPgo+SWYgeW91IHdhbnQgdG8gaGF2ZSBhbm90aGVyIGdvIEknbGwgYmUgaGFwcHkgdG8gcmV2
+aWV3IGFuZCBBY2sgeW91ciBwYXRjaC4KPgo+QmVzdCByZWdhcmRzLAo+TGl2aXUgCj4KCkhpCgpT
+dXJlLCBpIHdpbGwgY2hlY2sgdGhpcyBhbmQgcmUtc3ViYm1pdCBvbmUgcGF0Y2guCgpSZWdhcmRz
+LApCZXJuYXJkCgo+PiAKPj4gUmVnYXJkcywKPj4gQmVybmFyZAo+PiAKPj4gPj4gKwkJcmV0dXJu
+IGVycjsKPj4gPj4gIAo+PiA+PiAgCWNsa19zZXRfcmF0ZShoZGxjZC0+Y2xrLCBtLT5jcnRjX2Ns
+b2NrICogMTAwMCk7Cj4+ID4+ICsJcmV0dXJuIDA7Cj4+ID4+ICB9Cj4+ID4+ICAKPj4gPj4gIHN0
+YXRpYyB2b2lkIGhkbGNkX2NydGNfYXRvbWljX2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMs
+Cj4+ID4+IEBAIC0xNzMsNyArMTc0LDExIEBAIHN0YXRpYyB2b2lkIGhkbGNkX2NydGNfYXRvbWlj
+X2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCj4+ID4+ICAJc3RydWN0IGhkbGNkX2RybV9w
+cml2YXRlICpoZGxjZCA9IGNydGNfdG9faGRsY2RfcHJpdihjcnRjKTsKPj4gPj4gIAo+PiA+PiAg
+CWNsa19wcmVwYXJlX2VuYWJsZShoZGxjZC0+Y2xrKTsKPj4gPj4gLQloZGxjZF9jcnRjX21vZGVf
+c2V0X25vZmIoY3J0Yyk7Cj4+ID4+ICsJaWYgKGhkbGNkX2NydGNfbW9kZV9zZXRfbm9mYihjcnRj
+KSkgewo+PiA+PiArCQlEUk1fREVCVUdfS01TKCJJbnZhbGlkIGZvcm1hdCwgcGl4ZWwgY2xvY2sg
+ZW5hYmxlIGZhaWxlZCFcbiIpOwo+PiA+PiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUoaGRsY2Qt
+PmNsayk7Cj4+ID4+ICsJCXJldHVybjsKPj4gPj4gKwl9Cj4+ID4+ICAJaGRsY2Rfd3JpdGUoaGRs
+Y2QsIEhETENEX1JFR19DT01NQU5ELCAxKTsKPj4gPj4gIAlkcm1fY3J0Y192Ymxhbmtfb24oY3J0
+Yyk7Cj4+ID4+ICB9Cj4+ID4+IC0tIAo+PiA+PiAyLjI2LjIKPj4gPj4gCj4+ID4KPj4gPi0tIAo+
+PiA+PT09PT09PT09PT09PT09PT09PT0KPj4gPnwgSSB3b3VsZCBsaWtlIHRvIHwKPj4gPnwgZml4
+IHRoZSB3b3JsZCwgIHwKPj4gPnwgYnV0IHRoZXkncmUgbm90IHwKPj4gPnwgZ2l2aW5nIG1lIHRo
+ZSAgIHwKPj4gPiBcIHNvdXJjZSBjb2RlISAgLwo+PiA+ICAtLS0tLS0tLS0tLS0tLS0KPj4gPiAg
+ICDCr1xfKOODhClfL8KvCj4+IAo+PiAKPj4gCj4KPi0tIAo+PT09PT09PT09PT09PT09PT09PT0K
+PnwgSSB3b3VsZCBsaWtlIHRvIHwKPnwgZml4IHRoZSB3b3JsZCwgIHwKPnwgYnV0IHRoZXkncmUg
+bm90IHwKPnwgZ2l2aW5nIG1lIHRoZSAgIHwKPiBcIHNvdXJjZSBjb2RlISAgLwo+ICAtLS0tLS0t
+LS0tLS0tLS0KPiAgICDCr1xfKOODhClfL8KvCg0KDQo=
