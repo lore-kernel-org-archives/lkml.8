@@ -2,111 +2,187 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59792C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3901820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6151A20829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tzpeiWW1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e3MtD1jc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbgERRbc (ORCPT
+        id S1728304AbgERRes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:31:32 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:47874 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728337AbgERRbc (ORCPT
+        Mon, 18 May 2020 13:34:48 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37858 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgERRes (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:31:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589823091; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=QSSrzFNbEG3tmCT2karWtCRJnIeHXfmV1PvTWjMC/xc=;
- b=tzpeiWW1BGUUtEUq4tRpRYONfIJNOTx/CjNbuxDwJSuUb5VIYNc3ZF29C4Y76BD/qflBAphE
- 8Fclm6y0oWZjkTz1XJZi+ZkgFXoeYxbKCft0Auwks7X2yIeSMzvvky5WyVfZNfWdy17j7kOQ
- F5iMDB6xlz+xSbNUkORemOU/HBQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec2c664.7f51d3af67d8-smtp-out-n04;
- Mon, 18 May 2020 17:31:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E90B3C432C2; Mon, 18 May 2020 17:31:14 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2309FC433D2;
-        Mon, 18 May 2020 17:31:13 +0000 (UTC)
+        Mon, 18 May 2020 13:34:48 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04IHYE2R024910;
+        Mon, 18 May 2020 12:34:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589823254;
+        bh=Qjkak8hZKljuAbNj3SzKadbkKVBCbSYsAFGNPjlT43I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=e3MtD1jcSwwIFlNTmMDvihFbeOYPhVuUl32uChY+1kMAXY5Kt8/SoPNEPjXEv99Be
+         XpShpA+JJzYb2aLWuso0LHWGhCXC0w7mguy+ctJRVef8YG3ROyClPV2CoTWQpTlVvk
+         NiN6aAqdZ+UeX+C19jqdcxQ9Xs920cynQOuiVvd4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04IHYErC063206
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 May 2020 12:34:14 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
+ May 2020 12:34:13 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 18 May 2020 12:34:14 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04IHY7u8020575;
+        Mon, 18 May 2020 12:34:07 -0500
+Subject: Re: [PATCH v1 2/2] i2c: busses: convert to
+ devm_platform_request_irq()
+To:     Dejin Zheng <zhengdejin5@gmail.com>, <gregkh@linuxfoundation.org>,
+        <rafael@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
+        <sbranden@broadcom.com>, <michal.simek@xilinx.com>,
+        <baruch@tkos.co.il>, <wsa+renesas@sang-engineering.com>,
+        <paul@crapouillou.net>, <khilman@baylibre.com>,
+        <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
+        <festevam@gmail.com>, <linux-imx@nxp.com>, <vz@mleia.com>,
+        <slemieux.tyco@gmail.com>, <heiko@sntech.de>, <baohua@kernel.org>,
+        <linus.walleij@linaro.org>, <ardb@kernel.org>,
+        <radu_nicolae.pirea@upb.ro>, <zhouyanjie@wanyeetech.com>,
+        <linux-i2c@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20200518155304.28639-1-zhengdejin5@gmail.com>
+ <20200518155304.28639-3-zhengdejin5@gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <c4f33036-1a88-1d75-c4ce-3024d2bf9bb1@ti.com>
+Date:   Mon, 18 May 2020 20:34:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 18 May 2020 10:31:13 -0700
-From:   bbhatt@codeaurora.org
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     manivannan.sadhasivam@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH] bus: mhi: core: Use current ee in intvec handler
-In-Reply-To: <713dc189-561d-3c4a-f856-26d006524485@codeaurora.org>
-References: <1589509049-14532-1-git-send-email-jhugo@codeaurora.org>
- <aab020af0372b11ff63ba4526aab0fdc@codeaurora.org>
- <713dc189-561d-3c4a-f856-26d006524485@codeaurora.org>
-Message-ID: <9f19fb80d6cb410809efd27d27390709@codeaurora.org>
-X-Sender: bbhatt@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20200518155304.28639-3-zhengdejin5@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-17 12:38, Jeffrey Hugo wrote:
-> On 5/15/2020 8:58 PM, bbhatt@codeaurora.org wrote:
->> On 2020-05-14 19:17, Jeffrey Hugo wrote:
->>> The intvec handler stores the caches ee in a local variable for use 
->>> in
->>> processing the intvec.  It should instead use the current ee which is
->>> read at the beginning of the intvec incase that the intvec is related 
->>> to
->>> an ee change.  Otherwise, the handler might make the wrong decision
->>> based on an incorrect ee.
->>> 
->>> Fixes: 3000f85b8f47 (bus: mhi: core: Add support for basic PM 
->>> operations)
->>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->>> ---
->>>  drivers/bus/mhi/core/main.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>> 
->>> diff --git a/drivers/bus/mhi/core/main.c 
->>> b/drivers/bus/mhi/core/main.c
->>> index 7272a5a..0a41fe5 100644
->>> --- a/drivers/bus/mhi/core/main.c
->>> +++ b/drivers/bus/mhi/core/main.c
->>> @@ -386,8 +386,8 @@ irqreturn_t mhi_intvec_threaded_handler(int
->>> irq_number, void *dev)
->>>      write_lock_irq(&mhi_cntrl->pm_lock);
->>>      if (MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
->>>          state = mhi_get_mhi_state(mhi_cntrl);
->>> -        ee = mhi_cntrl->ee;
->>>          mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
->>> +        ee = mhi_cntrl->ee;
->>>      }
->>> 
->>>      if (state == MHI_STATE_SYS_ERR) {
->> Hi Jeff,
->> 
->> Let's hold off on this change for now please as we have some good set 
->> of
->> bug fixes and improvements coming in very soon. They're only pending 
->> post
->> to LKML.
+
+
+On 18/05/2020 18:53, Dejin Zheng wrote:
+> Use devm_platform_request_irq() to simplify code, and it contains
+> platform_get_irq() and devm_request_irq().
 > 
-> Does that series of changes address the same issue this patch does,
-> and are they going to be posted soon (ie this week)?
-Yes.
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>   drivers/i2c/busses/i2c-bcm-kona.c  | 16 +++-------------
+>   drivers/i2c/busses/i2c-cadence.c   | 10 +++-------
+>   drivers/i2c/busses/i2c-digicolor.c | 10 +++-------
+>   drivers/i2c/busses/i2c-emev2.c     |  5 ++---
+>   drivers/i2c/busses/i2c-jz4780.c    |  5 ++---
+>   drivers/i2c/busses/i2c-meson.c     | 13 ++++---------
+>   drivers/i2c/busses/i2c-mxs.c       |  9 +++------
+>   drivers/i2c/busses/i2c-pnx.c       |  9 ++-------
+>   drivers/i2c/busses/i2c-rcar.c      |  9 +++------
+>   drivers/i2c/busses/i2c-rk3x.c      | 14 +++-----------
+>   drivers/i2c/busses/i2c-sirf.c      | 10 ++--------
+>   drivers/i2c/busses/i2c-stu300.c    |  4 ++--
+>   drivers/i2c/busses/i2c-synquacer.c | 12 +++---------
+>   13 files changed, 35 insertions(+), 91 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-bcm-kona.c b/drivers/i2c/busses/i2c-bcm-kona.c
+> index ed5e1275ae46..f45acb47552a 100644
+> --- a/drivers/i2c/busses/i2c-bcm-kona.c
+> +++ b/drivers/i2c/busses/i2c-bcm-kona.c
+> @@ -818,20 +818,10 @@ static int bcm_kona_i2c_probe(struct platform_device *pdev)
+>   	       ISR_NOACK_MASK,
+>   	       dev->base + ISR_OFFSET);
+>   
+> -	/* Get the interrupt number */
+> -	dev->irq = platform_get_irq(pdev, 0);
+> -	if (dev->irq < 0) {
+> -		rc = dev->irq;
+> -		goto probe_disable_clk;
+> -	}
+> -
+> -	/* register the ISR handler */
+> -	rc = devm_request_irq(&pdev->dev, dev->irq, bcm_kona_i2c_isr,
+> -			      IRQF_SHARED, pdev->name, dev);
+> -	if (rc) {
+> -		dev_err(dev->device, "failed to request irq %i\n", dev->irq);
+> +	rc = devm_platform_request_irq(pdev, 0, &dev->irq, bcm_kona_i2c_isr,
+> +					IRQF_SHARED, pdev->name, dev);
+> +	if (rc)
+>   		goto probe_disable_clk;
+> -	}
+>   
+>   	/* Enable the controller but leave it idle */
+>   	bcm_kona_i2c_send_cmd_to_ctrl(dev, BCM_CMD_NOACTION);
+> diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
+> index 4b72398af505..9ffae4d231dc 100644
+> --- a/drivers/i2c/busses/i2c-cadence.c
+> +++ b/drivers/i2c/busses/i2c-cadence.c
+> @@ -1204,8 +1204,6 @@ static int cdns_i2c_probe(struct platform_device *pdev)
+>   	if (IS_ERR(id->membase))
+>   		return PTR_ERR(id->membase);
+>   
+> -	id->irq = platform_get_irq(pdev, 0);
+> -
+
+
+In many cases It is two strictly different steps
+1) Request resource, including IRQ mapping and differed probe handling.
+    It should be done as early as possible to avoid unnecessary initialization steps
+    when resource (irq) is not ready,  and so avoid boot time increasing.
+2) Actually request and enable IRQ, which, in many case, should be done late in probe
+    when driver and HW are actually ready to handle IRQs.
+
+here, for example, between this point
+
+>   	id->adap.owner = THIS_MODULE;
+>   	id->adap.dev.of_node = pdev->dev.of_node;
+>   	id->adap.algo = &cdns_i2c_algo;
+> @@ -1256,12 +1254,10 @@ static int cdns_i2c_probe(struct platform_device *pdev)
+>   		goto err_clk_dis;
+>   	}
+>   
+> -	ret = devm_request_irq(&pdev->dev, id->irq, cdns_i2c_isr, 0,
+> -				 DRIVER_NAME, id);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "cannot get irq %d\n", id->irq);
+
+and this point the following happens:
+  - devm_clk_get() can fail and cause probe defer
+  - clk_prepare_enable()
+  - pm_runtime_.. - pm init
+  - cdns_i2c_.. - hw int
+
+> +	ret = devm_platform_request_irq(pdev, 0, &id->irq, cdns_i2c_isr, 0,
+> +					DRIVER_NAME, id);
+
+and now platform_get_irq(), which can fail due to IRQ controller not ready,
+and all above has to be reverted.
+
+> +	if (ret)
+>   		goto err_clk_dis;
+> -	}
+[...]
+
+A bit risky optimization, especially for bulk changes.
+
+-- 
+Best regards,
+grygorii
