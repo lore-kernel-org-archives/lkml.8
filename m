@@ -2,53 +2,51 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9900EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57EF520826
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF8320715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824329;
-	bh=H3lARfiaXtBGdgWpOv2deCtz4iA5GbK5Cy1r8oPgU3o=;
+	s=default; t=1589824332;
+	bh=I8yVPvyo6Odn3MxN2GXm8an0PqLnTd5gLYsP5FuJ5KU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Kmcr2VOf+l438Of6z/Kidg3iQogVkKiywuwCfjMq+6z3cpU/B7n5zAXP8JJ/tu6v
-	 KK4hSDJ0DQ1rxBW1X8Q4SjAQhfVt+4dkU/JTx8EeLPQ3QQOODu0Dl2tNrrCSOce/sn
-	 Gmr1Up6GChZeEyaJ5z/EZbm/AgquLiGC8ydouk+o=
+	b=o/1OkuikCsmeGDa0yNJdOjM4U2NPqYft6k+Vk5g2w1HXkJgpbtEqNxABIqzyhDWE6
+	 CD8VsNQyWxlwovI/60a16Mq4z8kzvWc7iTu36Ci7BfNsHLFIOLepXCE5BhjP5hX0yS
+	 xHkImK20D3643kPu62Aj9GvWwCkvgx5UDIHGfIB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730938AbgERRwI (ORCPT
+        id S1730944AbgERRwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55178 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730925AbgERRwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:05 -0400
+        id S1730914AbgERRwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F7D20826;
-        Mon, 18 May 2020 17:52:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 959622083E;
+        Mon, 18 May 2020 17:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824324;
-        bh=H3lARfiaXtBGdgWpOv2deCtz4iA5GbK5Cy1r8oPgU3o=;
+        s=default; t=1589824322;
+        bh=I8yVPvyo6Odn3MxN2GXm8an0PqLnTd5gLYsP5FuJ5KU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BU7QVo2BevLFvqCm4OpzlOL5asmiAYM1WyRL8ikgSwCdC0kb/p3GJKhtAUf6w/5ZS
-         Oct7NP3t2B6K+AYQfQphR86AhEcgOOf2kRZtNmzYGTyDoNdYqSH2qedjR0lJbCoQYV
-         RhOowsggt7nULcQp3nW1jrBhOZXtSll/nBCdiXZc=
+        b=nSvxh/yriZUnjq8zvPgHtLMUXCPj6xcVEPHASZ6ovDhWXiF/JgJa+cGaV7grN27KV
+         Lz9GQMrXfeWqiR12kPUBA9IP3O4J8PGMnanlRBHy94Y1TtiqRDuEEjn8PkZ5pEzTWq
+         uAlXLFyEf2c7pNYvdvJfHjoIz9P6CpYx6Dv1t+IY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH 4.19 46/80] kbuild: compute false-positive -Wmaybe-uninitialized cases in Kconfig
-Date:   Mon, 18 May 2020 19:37:04 +0200
-Message-Id: <20200518173459.723033759@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 45/80] gcc-10 warnings: fix low-hanging fruit
+Date:   Mon, 18 May 2020 19:37:03 +0200
+Message-Id: <20200518173459.442921938@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -61,104 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit b303c6df80c9f8f13785aa83a0471fca7e38b24d upstream.
+commit 9d82973e032e246ff5663c9805fbb5407ae932e3 upstream.
 
-Since -Wmaybe-uninitialized was introduced by GCC 4.7, we have patched
-various false positives:
+Due to a bug-report that was compiler-dependent, I updated one of my
+machines to gcc-10.  That shows a lot of new warnings.  Happily they
+seem to be mostly the valid kind, but it's going to cause a round of
+churn for getting rid of them..
 
- - commit e74fc973b6e5 ("Turn off -Wmaybe-uninitialized when building
-   with -Os") turned off this option for -Os.
+This is the really low-hanging fruit of removing a couple of zero-sized
+arrays in some core code.  We have had a round of these patches before,
+and we'll have many more coming, and there is nothing special about
+these except that they were particularly trivial, and triggered more
+warnings than most.
 
- - commit 815eb71e7149 ("Kbuild: disable 'maybe-uninitialized' warning
-   for CONFIG_PROFILE_ALL_BRANCHES") turned off this option for
-   CONFIG_PROFILE_ALL_BRANCHES
-
- - commit a76bcf557ef4 ("Kbuild: enable -Wmaybe-uninitialized warning
-   for "make W=1"") turned off this option for GCC < 4.9
-   Arnd provided more explanation in https://lkml.org/lkml/2017/3/14/903
-
-I think this looks better by shifting the logic from Makefile to Kconfig.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/350
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile             |   11 ++++-------
- init/Kconfig         |   17 +++++++++++++++++
- kernel/trace/Kconfig |    1 +
- 3 files changed, 22 insertions(+), 7 deletions(-)
+ include/linux/fs.h  |    2 +-
+ include/linux/tty.h |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -657,17 +657,14 @@ KBUILD_CFLAGS	+= $(call cc-disable-warni
- KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -934,7 +934,7 @@ struct file_handle {
+ 	__u32 handle_bytes;
+ 	int handle_type;
+ 	/* file identifier */
+-	unsigned char f_handle[0];
++	unsigned char f_handle[];
+ };
  
- ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
--KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
--else
--ifdef CONFIG_PROFILE_ALL_BRANCHES
--KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,)
-+KBUILD_CFLAGS   += -Os
- else
- KBUILD_CFLAGS   += -O2
- endif
--endif
+ static inline struct file *get_file(struct file *f)
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -66,7 +66,7 @@ struct tty_buffer {
+ 	int read;
+ 	int flags;
+ 	/* Data points here */
+-	unsigned long data[0];
++	unsigned long data[];
+ };
  
--KBUILD_CFLAGS += $(call cc-ifversion, -lt, 0409, \
--			$(call cc-disable-warning,maybe-uninitialized,))
-+ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
-+KBUILD_CFLAGS   += -Wno-maybe-uninitialized
-+endif
- 
- # Tell gcc to never replace conditional load with a non-conditional one
- KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -26,6 +26,22 @@ config CLANG_VERSION
- config CC_HAS_ASM_GOTO
- 	def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
- 
-+config CC_HAS_WARN_MAYBE_UNINITIALIZED
-+	def_bool $(cc-option,-Wmaybe-uninitialized)
-+	help
-+	  GCC >= 4.7 supports this option.
-+
-+config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
-+	bool
-+	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
-+	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
-+	help
-+	  GCC's -Wmaybe-uninitialized is not reliable by definition.
-+	  Lots of false positive warnings are produced in some cases.
-+
-+	  If this option is enabled, -Wno-maybe-uninitialzed is passed
-+	  to the compiler to suppress maybe-uninitialized warnings.
-+
- config CONSTRUCTORS
- 	bool
- 	depends on !UML
-@@ -1083,6 +1099,7 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
- 
- config CC_OPTIMIZE_FOR_SIZE
- 	bool "Optimize for size"
-+	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Enabling this option will pass "-Os" instead of "-O2" to
- 	  your compiler resulting in a smaller kernel.
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -370,6 +370,7 @@ config PROFILE_ANNOTATED_BRANCHES
- config PROFILE_ALL_BRANCHES
- 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
- 	select TRACE_BRANCH_PROFILING
-+	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  This tracer profiles all branch conditions. Every if ()
- 	  taken in the kernel is recorded whether it hit or miss.
+ /* Values for .flags field of tty_buffer */
 
 
