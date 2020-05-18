@@ -2,177 +2,150 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF3C20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863D520715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:47:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="gPW7gR4V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="avL6pZkU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgEREjx (ORCPT
+        id S1726378AbgERErr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 00:39:53 -0400
-Received: from mail-dm6nam11on2066.outbound.protection.outlook.com ([40.107.223.66]:63841
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbgEREjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 00:39:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YX9RVYim0/Elw+Ti+aZnUJ1VTmFIxQEAnG1dlCUk1pBxHsJCBDHkKhS3KjL1Zg0m1cpirG7uEXZvvLuuYRnH50yPXUgl15FVrlTLEMOPvi3Gb39EJ6pID/kXaXsDAov5UZ2Yl89vNHYHPOT46hAXTnJxvh6WCBJBq/LpPSXtrN14HiYvc4k46iJ2D3KOarTWGj/grFsXiUMTwvD5ZIjvA9VR7FTZuAtr3H0iRwK9fXqZvhVGwQBcKtaSoMMUzcYVWdnyIyY/qn1CnDLxtFOUYaKZ4Z64VDqHPJDVrvnVdnGZpbsI+lvqlbdt3sUcaDcr9Yeq6IMiorouabQwrhgo0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eg8GDeFfEbYSERAFDvY1JpG5UI5umKP9JtwNemG0RwQ=;
- b=Km37Lz6aEPzN6g5FQO1EQ9zr83LwFwuaHqxOTbkMNkEU3IKZQcGPDo8IMe1JeHJ5sIuqkcMNxJslYoX+Bh2I0dqpx/gWS5Z58XoL3yeuTPL80LVSSb29b51POxJepSd2l+S2/U8VNIA9MbQVPiq2v2gdM50iDGTkTEAvK64YocFh0Ho34w+wCI+6zTw/IDbDstkaqRnOsE/ZtdVf1UtoegRJXRZcuAPInhgyBOTlc6C867zKRvZEXgxP3ij2vBXldMI8utO2t7XQn4QdaEEmzaEzVnCAOcWScOt/9O1mvXBhQvPYrAySL32AAcEBtsbso8SnRGCa0Cy9gqianhEkzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 18 May 2020 00:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERErr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 00:47:47 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C898C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 21:47:46 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x2so4382745pfx.7
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 21:47:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eg8GDeFfEbYSERAFDvY1JpG5UI5umKP9JtwNemG0RwQ=;
- b=gPW7gR4VamNwIWoplZxnqbEn/5fom3qBdZwHNz5jN+oGDdQAenlbbGX6M1/GZu27TSryKQ8DpqBloQtBpNAdW6suKtjym3pVyBz8FkYfDcnS32APRD1cletJ9tnsZ0XSrKUBEzH9N2Hm2/YTd3I+hQI2+kw3Do0NTDERwVMMhpg=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from MWHPR12MB1855.namprd12.prod.outlook.com (2603:10b6:300:10e::23)
- by MWHPR12MB1341.namprd12.prod.outlook.com (2603:10b6:300:11::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24; Mon, 18 May
- 2020 04:39:43 +0000
-Received: from MWHPR12MB1855.namprd12.prod.outlook.com
- ([fe80::c455:6257:3c8a:7010]) by MWHPR12MB1855.namprd12.prod.outlook.com
- ([fe80::c455:6257:3c8a:7010%3]) with mapi id 15.20.3000.034; Mon, 18 May 2020
- 04:39:43 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ASoC: amd: raven: Make the driver name consistent across files
-Date:   Mon, 18 May 2020 10:09:05 +0530
-Message-Id: <20200518043913.40646-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: MAXPR01CA0096.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::14) To MWHPR12MB1855.namprd12.prod.outlook.com
- (2603:10b6:300:10e::23)
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=X/lhy2lqdLYOlnTnlwuNEX14NtdAXY44agjxDbsMHek=;
+        b=avL6pZkUlCn+t3YkdiJMlLLxbozudebElBmHL2Tw6SfB9qnfnHabcBO154nR7cq50E
+         nyJh5pPe9UlSBBXP2RjzipcR34z0Chi/1QkLlSg+oujwfALZuxmQbaWSHWomveBF/nPJ
+         xM1LKug4z3C9em40JlstY1lONBmER/sBp3iFk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=X/lhy2lqdLYOlnTnlwuNEX14NtdAXY44agjxDbsMHek=;
+        b=GUCqJH/cKPB5ovYEkM2aWlII/XEyUbonyQW3QceU0rVdiLzFU2j86UR+nN4eRHFZjq
+         C25jN2ai8qnPDcQmkUIF2zpMZieNPLPDjJP9fBaZZeSNTRIBzWIqteORc6Dzln702YGJ
+         Q25T4RRSClzYi6+DL3HheSWh96JP1MG9vbeCh9e2WQGA66ft8ZrZGxZiAB+BgkIw93Hl
+         ipDNQWh6sNie/N7bDPk2QUUJKOJJdS+PBHbvSkbczj030P9qnXdAdJA7aMeuQECzsU9l
+         +q6i648h1+FOjIP+dYRD8UAPadF3kJd63hUxABN7WaA5zIpBuJb9rldYaj4LHftTMb/s
+         lUFg==
+X-Gm-Message-State: AOAM5326X2GtvCIX2Ei1JKGBAtPwXFUgnVyNuQN8tL7jr3Yde9wbT+T+
+        XGHnhUccWF+DhBJs8Ud1aDOqZA==
+X-Google-Smtp-Source: ABdhPJyC+IQcZZeglGPmJ9VEQKllWJvgBjA2CQs/cdQJaDsi3Z/YHvSXoNagRTwXLs2GUZqe6cjPeA==
+X-Received: by 2002:a63:df4f:: with SMTP id h15mr13604951pgj.30.1589777265568;
+        Sun, 17 May 2020 21:47:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g6sm7259713pjx.48.2020.05.17.21.47.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 21:47:44 -0700 (PDT)
+Date:   Sun, 17 May 2020 21:47:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kselftest@vger.kernel.org
+Cc:     Shuah Khan <shuah@kernel.org>,
+        David Drysdale <drysdale@google.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests/exec: Verify execve of non-regular files fail
+Message-ID: <202005172143.D25AC29@keescook>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ETHANOL2.amd.com (165.204.156.251) by MAXPR01CA0096.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:5d::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24 via Frontend Transport; Mon, 18 May 2020 04:39:40 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f2a9dc2a-1235-457f-eb0b-08d7fae57c12
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1341:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR12MB1341783DA3677436C5A02416F8B80@MWHPR12MB1341.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-Forefront-PRVS: 04073E895A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: D3p3WkL2KP8+uQxhkb3vcM0Fpdzf1dNJbKeJ1bpkQBlnimUgesXMH+DAwhqlMojtCH8mcqsdoVoLhbyC0UDTsb49dDyLxVRql9TPEv/ipeHUxI+5hmDdCaRsya0apLJTUTWkaVdcsCCHNkMsMXuVmMjnBj5feVMY8UAy7L7DI52M9ojHpqCkxEJHnaYm5v4jRPAo5exJpzlztjuDzE6NVtosik0O7d3lrLl6EVb86l0KpOMsxnksP4XSlVGaxbM7vPfGgnp/2s7C//6wDaQp3Zea70941d9nDm+scYeNXsVLNnV26Fgz8PzMEkhB42LbM0GLWpj51H4FPuJjL2m8EQNOjxogsWGChGqMVicvxeSuV0Kn0LT+UHpFty3CkujaZbOtvMisj2p8pYXLNtG6kf2p5WrHEeC4Qvov6exSeCAChQFXAyBY0KIrGZmeY6fKOMGSvWle503zbkBCO5EP9HZxOMf8P59rJBhTqHgP48E1i06/Vj5LGoZcsccvwgfg1GLCO/ZBF6MeefEPQIZYgy3nvnwSbVg8CQvlPqfelWHH/HoWkt8u4dOQBpWxAi5x
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1855.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(39860400002)(366004)(346002)(52116002)(44832011)(7696005)(6486002)(54906003)(316002)(5660300002)(8676002)(4326008)(109986005)(6666004)(86362001)(478600001)(36756003)(966005)(8936002)(2906002)(1076003)(66946007)(66476007)(66556008)(956004)(2616005)(26005)(16526019)(186003)(266003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: avMxVCR7O0IAoENTeo7uvyKNWZhXYLZUk4t33/UyyyEB5DOKfY+1Qy52W8VtbOAfZy/VNiuTm87K4geNks+CB1fRrAzVIPSmxR5acq0L77IVV7TQvp/EQZs2u4osJX39hcVRYfiYZlUMYm+K8EY9s0hgvm9h15lyjpIuZRb9TmdeRO8Mt71tMUvMOS8vFTJ2AGGMhvygInwsTJHmQbjFKyABPJLma8HUN1qb23N4AmG9LUbaVT5snragqgmfixVzlhExXFlxJzv75qfrgdo8WInQEyCKRmHCOY9RPNkJWkKJEMO9S2+xfzCAHhWjxyu5zaO9oKqrnU6ap5fXe8UyFhY7WGmcg0ZEETaVZhSx6JgP++cx8hv4rmmwmLhcuSrLfvfuOw/9aPJIaIPA/uHj5oazb/+JyDvRTwH+TRpaqwBqh+Rbapr21Ax5UITOADtu0NLFxn9pzxUHii5HhCGYjcr1Yd22x78lUpky8HzApKArOwhiFvy9A9NxVLH2Hwd9
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2a9dc2a-1235-457f-eb0b-08d7fae57c12
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2020 04:39:43.4972
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 85Oz5VvsCFhiUOspm44npKSnk1KmOoRuS3QodXJuRW43nJlYk/fuGzRmk9rZYI9jfrwDh9aPsF4/nF7QIX2uvw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1341
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes the issue of driver not getting auto loaded with
-MODULE_ALIAS.
+Add a named pipe as an exec target to make sure that non-regular
+files are rejected by execve() with EACCES. This can help verify
+commit 73601ea5b7b1 ("fs/open.c: allow opening only regular files
+during execve()").
 
-With this patch:
-$find /sys/devices -name modalias -print0 | xargs -0 grep -i acp3x
-/sys/devices/pci0000:00/0000:00:08.1/0000:03:00.5/acp3x_i2s_playcap.2/
-modalias:platform:acp3x_i2s_playcap
-/sys/devices/pci0000:00/0000:00:08.1/0000:03:00.5/acp3x_i2s_playcap.0/
-modalias:platform:acp3x_i2s_playcap
-/sys/devices/pci0000:00/0000:00:08.1/0000:03:00.5/acp3x_rv_i2s_dma.0/
-modalias:platform:acp3x_rv_i2s_dma
-/sys/devices/pci0000:00/0000:00:08.1/0000:03:00.5/acp3x_i2s_playcap.1/
-modalias:platform:acp3x_i2s_playcap
-
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Resending the patch https://patchwork.kernel.org/patch/11355713/
+ tools/testing/selftests/exec/.gitignore | 1 +
+ tools/testing/selftests/exec/Makefile   | 2 +-
+ tools/testing/selftests/exec/execveat.c | 8 ++++++++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
- sound/soc/amd/raven/acp3x-i2s.c     | 6 +++---
- sound/soc/amd/raven/acp3x-pcm-dma.c | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
-index f160d35a6832..a532e01a2622 100644
---- a/sound/soc/amd/raven/acp3x-i2s.c
-+++ b/sound/soc/amd/raven/acp3x-i2s.c
-@@ -15,7 +15,7 @@
+diff --git a/tools/testing/selftests/exec/.gitignore b/tools/testing/selftests/exec/.gitignore
+index c078ece12ff0..94b02a18f230 100644
+--- a/tools/testing/selftests/exec/.gitignore
++++ b/tools/testing/selftests/exec/.gitignore
+@@ -9,3 +9,4 @@ execveat.ephemeral
+ execveat.denatured
+ /recursion-depth
+ xxxxxxxx*
++pipe
+diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
+index 33339e31e365..cfafa1f8a2fa 100644
+--- a/tools/testing/selftests/exec/Makefile
++++ b/tools/testing/selftests/exec/Makefile
+@@ -4,7 +4,7 @@ CFLAGS += -Wno-nonnull
+ CFLAGS += -D_GNU_SOURCE
  
- #include "acp3x.h"
+ TEST_GEN_PROGS := execveat
+-TEST_GEN_FILES := execveat.symlink execveat.denatured script subdir
++TEST_GEN_FILES := execveat.symlink execveat.denatured script subdir pipe
+ # Makefile is a run-time dependency, since it's accessed by the execveat test
+ TEST_FILES := Makefile
  
--#define DRV_NAME "acp3x-i2s"
-+#define DRV_NAME "acp3x_i2s_playcap"
+diff --git a/tools/testing/selftests/exec/execveat.c b/tools/testing/selftests/exec/execveat.c
+index cbb6efbdb786..67bf7254a48f 100644
+--- a/tools/testing/selftests/exec/execveat.c
++++ b/tools/testing/selftests/exec/execveat.c
+@@ -5,7 +5,9 @@
+  * Selftests for execveat(2).
+  */
  
- static int acp3x_i2s_set_fmt(struct snd_soc_dai *cpu_dai,
- 					unsigned int fmt)
-@@ -269,7 +269,7 @@ static struct snd_soc_dai_ops acp3x_i2s_dai_ops = {
- };
++#ifndef _GNU_SOURCE
+ #define _GNU_SOURCE  /* to get O_PATH, AT_EMPTY_PATH */
++#endif
+ #include <sys/sendfile.h>
+ #include <sys/stat.h>
+ #include <sys/syscall.h>
+@@ -311,6 +313,10 @@ static int run_tests(void)
+ 	fail += check_execveat_fail(AT_FDCWD, fullname_symlink,
+ 				    AT_SYMLINK_NOFOLLOW, ELOOP);
  
- static const struct snd_soc_component_driver acp3x_dai_component = {
--	.name           = "acp3x-i2s",
-+	.name           = DRV_NAME,
- };
++	/*  Non-regular file failure */
++	fail += check_execveat_fail(dot_dfd, "pipe", 0, EACCES);
++	unlink("pipe");
++
+ 	/* Shell script wrapping executable file: */
+ 	/*   dfd + path */
+ 	fail += check_execveat(subdir_dfd, "../script", 0);
+@@ -384,6 +390,8 @@ static void prerequisites(void)
+ 	fd = open("subdir.ephemeral/script", O_RDWR|O_CREAT|O_TRUNC, 0755);
+ 	write(fd, script, strlen(script));
+ 	close(fd);
++
++	mkfifo("pipe", 0755);
+ }
  
- static struct snd_soc_dai_driver acp3x_i2s_dai = {
-@@ -348,4 +348,4 @@ module_platform_driver(acp3x_dai_driver);
- MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
- MODULE_DESCRIPTION("AMD ACP 3.x PCM Driver");
- MODULE_LICENSE("GPL v2");
--MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_ALIAS("platform:"DRV_NAME);
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index a36c5cb848cd..620b568bc414 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -15,7 +15,7 @@
- 
- #include "acp3x.h"
- 
--#define DRV_NAME "acp3x-i2s-audio"
-+#define DRV_NAME "acp3x_rv_i2s_dma"
- 
- static const struct snd_pcm_hardware acp3x_pcm_hardware_playback = {
- 	.info = SNDRV_PCM_INFO_INTERLEAVED |
-@@ -542,4 +542,4 @@ MODULE_AUTHOR("Maruthi.Bayyavarapu@amd.com");
- MODULE_AUTHOR("Vijendar.Mukunda@amd.com");
- MODULE_DESCRIPTION("AMD ACP 3.x PCM Driver");
- MODULE_LICENSE("GPL v2");
--MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_ALIAS("platform:"DRV_NAME);
+ int main(int argc, char **argv)
 -- 
-2.17.1
+2.20.1
 
+
+-- 
+Kees Cook
