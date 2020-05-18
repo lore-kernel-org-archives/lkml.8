@@ -2,68 +2,115 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4453DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B707C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB1920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:42:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sendgrid.net header.i=@sendgrid.net header.b="xdNNeWV0"
+	by mail.kernel.org (Postfix) with ESMTP id 48B5720787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589805796;
+	bh=1JZLry2PUegFM/l1H92CD7cKZOjtP39iyTkAp0FBJaw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k6NTCEiO8+59CDf6KgqtZHnah3kiE4ec1en2nM8o0kDoK78nHUrixsPXf/uS8WsoH
+	 QGy+Gqxss5ftofn3kVAJjCz09wOSLp3lDgowcA5RFmn2oHrVGUoojP87C6dlDkMmTB
+	 Z96jEphV7Z5AsA9LlUfYQ6ZDYUSwp/x8E6pYcK1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgERMmg (ORCPT
+        id S1727825AbgERMnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:42:36 -0400
-Received: from wrqvzcbt.outbound-mail.sendgrid.net ([149.72.236.183]:34035
-        "EHLO wrqvzcbt.outbound-mail.sendgrid.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726739AbgERMmg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:42:36 -0400
-X-Greylist: delayed 337 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 May 2020 08:42:35 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sendgrid.net; 
-        h=reply-to:from:to:subject:mime-version:content-type:content-transfer-encoding; 
-        s=smtpapi; bh=m1XLIw5LGZxCpAYtBrTdWH++MGggL0usDaCLAoyAdvA=; b=xd
-        NNeWV0jCMZoWvS2qgj97tDqr1KfZpsabhqlYOmhMlCM5m7MBtfnfib6ou1fwblHW
-        wFEiJ+t4/QRDFYUcJURsVrvIa5y6LhWzNgXvMOvd0YaMd15CpdNhFlnqPa3Vw3I8
-        uhM/8w0zV86WGTi70wTS5upJoqtCuQFL1fOmPPBPM=
-Received: by filter0362p1iad2.sendgrid.net with SMTP id filter0362p1iad2-25691-5EC2816A-1
-        2020-05-18 12:36:58.083443533 +0000 UTC m=+220364.904245777
-Received: from mail.com (unknown)
-        by ismtpd0015p1iad1.sendgrid.net (SG) with ESMTP id jY64jmW6T6CtV5FMnF_n0g
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:36:57.996 +0000 (UTC)
-Reply-To: adelenebreton@gmail.com
-From:   Richard Wahl <wahl-Richy@mail.com>
-To:     linux-kernel@vger.kernel.org
-Subject: DONATION!!!
-Date:   Mon, 18 May 2020 12:36:58 +0000 (UTC)
-Message-ID: <20200518123642.693A7B5CD58CFD5D@mail.com>
+        Mon, 18 May 2020 08:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbgERMnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:43:15 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93C1E20674;
+        Mon, 18 May 2020 12:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589805795;
+        bh=1JZLry2PUegFM/l1H92CD7cKZOjtP39iyTkAp0FBJaw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cV+jHkG2z8E9jTCW1ntbDqk46eqMjVxLyyvcNGW0rEPV+B9MMM1h9UHyRBdGXqF25
+         /KOzSTNKjYKDeXEQlGoRi4EPqnQV/ADFCuzVTJZ31I7wrM7AnVvHp09nS2WhMjtg3o
+         ORJZGnRyU8DV3qQxNo2a9N/+RvEKTWsOyRcj8egY=
+Date:   Mon, 18 May 2020 13:43:12 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request
+ thresholds
+Message-ID: <20200518124312.GF8699@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
+ <20200515143842.GG1634618@smile.fi.intel.com>
+ <20200516200133.wmaqnfjbr7234fzo@mobilestation>
+ <20200518110343.GY1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-SG-EID: UsLXQ589HNP4HLBydmD9pgHURQozLYm9XliudupI8YusB5eprdwlMqmJg1eYouCQCQJGit362FAXr3
- 9l2zAvNez65a8a5OZtfKJJVO/LII61nWpwVFocWOvzynPignZBu9WW35A5Q0zirzQNhQY47l18uSJV
- XDJ1oGAysizbmTJAoU1dFpVLby3c0aijycZr6bEainW39i8/uwU+icCn9O3ZwVjBLxhBcJX2uXaFrl
- E=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Pql/uPZNXIm1JCle"
+Content-Disposition: inline
+In-Reply-To: <20200518110343.GY1634618@smile.fi.intel.com>
+X-Cookie: If in doubt, mumble.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello linux-kernel,
 
-you have a donation of $3,000,000.00 ( 3 million dollars).
-My name is Richard Wahl from the united states. I won the America=20
-lottery worth $533 million and I am donating a portion of it to=20
-just 10 lucky people and a few Orphanage homes as a memorandum of=20
-goodwill to humanity. and also as a way of assistance over the=20
-COVID 19 Pandemic.
-If you are a recipient of this mail linux-kernel@vger.kernel.org=20=20
-contact me on  adelenebreton@gmail.com for more details and=20
-claim.
+--Pql/uPZNXIm1JCle
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- I may be very busy but I will take out time to respond to you.
+On Mon, May 18, 2020 at 02:03:43PM +0300, Andy Shevchenko wrote:
+> On Sat, May 16, 2020 at 11:01:33PM +0300, Serge Semin wrote:
+
+> > Though if v3 is required I'll group these members together.
+
+> From what I see v3 is what Mark and me are waiting for. Mark, are we on the
+> same page here?
+
+I loose track of what's going on with this specific patch, sorry - it's
+patch 10 in the series so there's a good chance it has dependencies on
+some of the earlier changes anyway.
+
+--Pql/uPZNXIm1JCle
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Cgt8ACgkQJNaLcl1U
+h9BaIwf/c47rPAJvBpcr8a/g6QrXgZlVY7AC2NAP+vI8mWBTUyQTI6Vr0gbsyWIY
+bi3KxMa/82i/bl9Vk7C4QEdXISENK0ARCtQ2K26ki/zMSp9ILaL8dYdSOQ4SLCse
+g/5XUQcQQRljj9dujtlDtgPWZV09QWYiNPzAPzNVEa2uXdNc0eFS1yJzw+35puXD
+p9n2nd6N5VJagIvPj9E/kPzLYcXkh1S3ooQOj2UUWE0iOIZOhlnY34Kt5nUbI/mR
+V6EnZEPlTbrVWNDJ5eGDzmtljrFhNojtbN/wQQqK2IJPECw0POmgVOR3FGh6Boox
+61dlLkz/OYgVuaebXcEvos8+gHh5CQ==
+=MUZo
+-----END PGP SIGNATURE-----
+
+--Pql/uPZNXIm1JCle--
