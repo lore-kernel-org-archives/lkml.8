@@ -2,152 +2,144 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD296C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49997C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82D76207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1FA207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:07:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHMhIaCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgEREHI (ORCPT
+        id S1726526AbgEREHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 00:07:08 -0400
-Received: from m177129.mail.qiye.163.com ([123.58.177.129]:7053 "EHLO
-        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgEREHI (ORCPT
+        Mon, 18 May 2020 00:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgEREHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 00:07:08 -0400
-Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
-        by m177129.mail.qiye.163.com (Hmail) with ESMTP id BE7D05C3350;
-        Mon, 18 May 2020 12:06:30 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AEwAGwAICJTOkB61jcDtw4oE.3.1589774790763.Hmail.bernard@vivo.com>
-To:     Liviu Dudau <liviu.dudau@arm.com>
-Cc:     Brian Starkey <brian.starkey@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
-Subject: =?UTF-8?B?UmU6UmU6IFJlOlJlOiBbUEFUQ0ggdjJdIGRybS9hcm06IGZpeGVzIHBpeGVsIGNsb2NrIGVuYWJsZWQgd2l0aCB3cm9uZyBmb3JtYXQ=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 218.104.188.164
-In-Reply-To: <20200515144149.GN159988@e110455-lin.cambridge.arm.com>
+        Mon, 18 May 2020 00:07:14 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 151C6C061A0C;
+        Sun, 17 May 2020 21:07:13 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id u22so3666670plq.12;
+        Sun, 17 May 2020 21:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=vn0pCsD2eFefj2+fTs7XzO6u3jKtlDfOwmx3cRoRly4=;
+        b=cHMhIaCkX3pXQFq2PIJmAuFIdrTtnL9laAO0yFzZFD9I/GFu3a6nzCXko9DFFSlca/
+         nrVBlyHWY8rYNJ1lytwIYw09VMG/S8Lgd641oFvcafcs15272Zj/GDyECezRyoeJk6Sr
+         oQnEQhPPt6uolmfY10YNkdXprLaaADn1T2B0G4QsdFX60uo7KQDcw9ApqicxNmrgbvCc
+         iDu92Iwus6M2dnH5rVXgOpqyClmQyxAFuC55FFZlJ/aptu2jfrZNagBq7HRc+3YtMpHy
+         DIM7R2Hc07ymEU1nCgI6tkWa6EHR2wrdNlPtsyz9NKIaxOq+duaFwKbv8TefUM1af7Hs
+         2VZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vn0pCsD2eFefj2+fTs7XzO6u3jKtlDfOwmx3cRoRly4=;
+        b=l7hEN6rvme//K3SaHFQymn4RjpoK1qbBq2bA8XPQG0L0CMNZv7VaQsMSFAFW/jQ4Ux
+         4tboMUZ2vmkp2qQ9L6h6I1TNEkLSzc4T829mI5ORNLNb3YiwUkiPs18yL6v3a5Bx+kGj
+         kn88ku6yVODfOyLI9Gxk1gGIE4fiNpX0lAGSTB4S43pWCU4k07Ej45jeqSULwoVc4vvB
+         DvuTJe4MSbizvDk5fClQxUezXctHwJHpNji8oeKgG5gN+aQ09V398SYnn6xeVXIV+7us
+         WHdhnb4jFzkaUpqxQEIpPbJCGvg2M/Y2++tIpoOyrIZMoWpTIi1bwCqsHJwqD5KNk54D
+         2lrQ==
+X-Gm-Message-State: AOAM531kwKkwd4lCrJgXxqLqZgT/WeBJePMIHIDUVwTQGhdoE3f7A7AO
+        WzhAAyk6IUdaa+HvQfSclFM=
+X-Google-Smtp-Source: ABdhPJwP0PBNC2vfOxKjBQo6BDkblLwCXLnx/SPsb48qHcgzGpZ4WAnJ6e70pMImWPHGc+lqVQPgXQ==
+X-Received: by 2002:a17:90b:f8c:: with SMTP id ft12mr17610396pjb.127.1589774832490;
+        Sun, 17 May 2020 21:07:12 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id r21sm7114392pjo.2.2020.05.17.21.07.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 21:07:12 -0700 (PDT)
+Date:   Sun, 17 May 2020 21:07:10 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     David Heidelberg <david@ixit.cz>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 01/10] input: elants: document some registers and
+ values
+Message-ID: <20200518040710.GQ89269@dtor-ws>
+References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
+ <a8c17a4c804ad5c429269cc0468d8cb4c0783a47.1587923061.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [218.104.188.164) ] by ajax-webmail ( [127.0.0.1] ) ; Mon, 18 May 2020 12:06:30 +0800 (GMT+08:00)
-From:   Bernard <bernard@vivo.com>
-Date:   Mon, 18 May 2020 12:06:30 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVNTUNLS0tJSUpJTklPT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMTENCSkJOQ0JMN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6Pgw6PAw6MjgxLzQQOU1KERg*DwxPFD5VSFVKTkNCTExPTEJIQ0xCVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlJSkNVSktPVUpDQ1VKTU9ZV1kIAVlBQk1MTDcG
-X-HM-Tid: 0a7225f630846447kursbe7d05c3350
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a8c17a4c804ad5c429269cc0468d8cb4c0783a47.1587923061.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CuWPkeS7tuS6uu+8mkxpdml1IER1ZGF1IDxsaXZpdS5kdWRhdUBhcm0uY29tPgrlj5HpgIHml6Xm
-nJ/vvJoyMDIwLTA1LTE1IDIyOjQxOjQ5CuaUtuS7tuS6uu+8mkJlcm5hcmQgPGJlcm5hcmRAdml2
-by5jb20+CuaKhOmAgeS6uu+8mkJyaWFuIFN0YXJrZXkgPGJyaWFuLnN0YXJrZXlAYXJtLmNvbT4s
-RGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPixEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3
-bGwuY2g+LGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZyxvcGVuc291cmNlLmtlcm5lbEB2aXZvLmNvbQrkuLvpopjvvJpSZTogUmU6UmU6
-IFtQQVRDSCB2Ml0gZHJtL2FybTogZml4ZXMgcGl4ZWwgY2xvY2sgZW5hYmxlZCB3aXRoIHdyb25n
-IGZvcm1hdD5IaSBCZXJuYXJkLAo+Cj5PbiBGcmksIE1heSAwOCwgMjAyMCBhdCAwNDo0NzoxN1BN
-ICswODAwLCBCZXJuYXJkIHdyb3RlOgo+PiBGcm9tOiAi6LW15Yab5aWOIiA8YmVybmFyZEB2aXZv
-LmNvbT4KPj4gRGF0ZTogMjAyMC0wNC0yNCAxOTozNzozNgo+PiBUbzogIExpdml1IER1ZGF1IDxs
-aXZpdS5kdWRhdUBhcm0uY29tPgo+PiBDYzogIEJyaWFuIFN0YXJrZXkgPGJyaWFuLnN0YXJrZXlA
-YXJtLmNvbT4sRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPixEYW5pZWwgVmV0dGVyIDxk
-YW5pZWxAZmZ3bGwuY2g+LGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZyxvcGVuc291cmNlLmtlcm5lbEB2aXZvLmNvbQo+PiBTdWJqZWN0
-OiBSZTpSZTogW1BBVENIIHYyXSBkcm0vYXJtOiBmaXhlcyBwaXhlbCBjbG9jayBlbmFibGVkIHdp
-dGggd3JvbmcgZm9ybWF0Cj4+IAo+PiAKPj4gCj4+IAo+PiBGcm9tOiBMaXZpdSBEdWRhdSA8bGl2
-aXUuZHVkYXVAYXJtLmNvbT4KPj4gRGF0ZTogMjAyMC0wNC0yNCAxOTowOTo1MAo+PiBUbzogIEJl
-cm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KPj4gQ2M6ICBCcmlhbiBTdGFya2V5IDxicmlh
-bi5zdGFya2V5QGFybS5jb20+LERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4sRGFuaWVs
-IFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPixkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-LGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsb3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20K
-Pj4gU3ViamVjdDogUmU6IFtQQVRDSCB2Ml0gZHJtL2FybTogZml4ZXMgcGl4ZWwgY2xvY2sgZW5h
-YmxlZCB3aXRoIHdyb25nIGZvcm1hdD5IaSBCZXJuYW5kLAo+PiA+Cj4+ID5PbiBUaHUsIEFwciAy
-MywgMjAyMCBhdCAxMTozNTo1MVBNIC0wNzAwLCBCZXJuYXJkIFpoYW8gd3JvdGU6Cj4+ID4+IFRo
-ZSBwaXhlbCBjbG9jayBpcyBzdGlsbCBlbmFibGVkIHdoZW4gdGhlIGZvcm1hdCBpcyB3cm9uZy4K
-Pj4gPj4gbm8gZXJyb3IgYnJhbmNoIGhhbmRsZSwgYW5kIGFsc28gc29tZSByZWdpc3RlciBpcyBu
-b3Qgc2V0Cj4+ID4+IGluIHRoaXMgY2FzZSwgZS5nOiBIRExDRF9SRUdfPGNvbG9yPl9TRUxFQ1Qu
-IE1heWJlIHdlCj4+ID4+IHNob3VsZCBkaXNhYmxlIHRoaXMgY2xvY2sgYW5kIHRocm93IGFuIHdh
-cm4gbWVzc2FnZSB3aGVuCj4+ID4+IHRoaXMgaGFwcGVuZWQuCj4+ID4+IFdpdGggdGhpcyBjaGFu
-Z2UsIHRoZSBjb2RlIG1heWJlIGEgYml0IG1vcmUgcmVhZGFibGUuCj4+ID4+IAo+PiA+PiBTaWdu
-ZWQtb2ZmLWJ5OiBCZXJuYXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+Cj4+ID4+IAo+PiA+PiBD
-aGFuZ2VzIHNpbmNlIFYxOgo+PiA+PiAqYWRkIGZvcm1hdCBlcnJvciBoYW5kbGUsIGlmIGZvcm1h
-dCBpcyBub3QgY29ycmVjdCwgdGhyb3cKPj4gPj4gYW4gd2FybmluZyBtZXNzYWdlIGFuZCBkaXNh
-YmxlIHRoaXMgY2xvY2suCj4+ID4+IAo+PiA+PiBMaW5rIGZvciBWMToKPj4gPj4gKmh0dHBzOi8v
-bG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMjI4NTAxLwo+PiA+PiAtLS0KPj4gPj4g
-IGRyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfY3J0Yy5jIHwgMTMgKysrKysrKysrLS0tLQo+PiA+
-PiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKPj4gPj4g
-Cj4+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2NydGMuYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfY3J0Yy5jCj4+ID4+IGluZGV4IGFmNjdmZWZlZDM4ZC4u
-ZjM5NDVkZWUyYjdkIDEwMDY0NAo+PiA+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNk
-X2NydGMuYwo+PiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2NydGMuYwo+PiA+
-PiBAQCAtOTYsNyArOTYsNyBAQCBzdGF0aWMgaW50IGhkbGNkX3NldF9weGxfZm10KHN0cnVjdCBk
-cm1fY3J0YyAqY3J0YykKPj4gPj4gIAl9Cj4+ID4+ICAKPj4gPj4gIAlpZiAoV0FSTl9PTighZm9y
-bWF0KSkKPj4gPj4gLQkJcmV0dXJuIDA7Cj4+ID4+ICsJCXJldHVybiAtRUlOVkFMOwo+PiA+Cj4+
-ID5UaGF0IGlzIHRoZSByaWdodCBmaXghCj4+ID4KPj4gPj4gIAo+PiA+PiAgCS8qIEhETENEIHVz
-ZXMgJ2J5dGVzIHBlciBwaXhlbCcsIHplcm8gbWVhbnMgMSBieXRlICovCj4+ID4+ICAJYnRwcCA9
-IChmb3JtYXQtPmJpdHNfcGVyX3BpeGVsICsgNykgLyA4Owo+PiA+PiBAQCAtMTI1LDcgKzEyNSw3
-IEBAIHN0YXRpYyBpbnQgaGRsY2Rfc2V0X3B4bF9mbXQoc3RydWN0IGRybV9jcnRjICpjcnRjKQo+
-PiA+PiAgCXJldHVybiAwOwo+PiA+PiAgfQo+PiA+PiAgCj4+ID4+IC1zdGF0aWMgdm9pZCBoZGxj
-ZF9jcnRjX21vZGVfc2V0X25vZmIoc3RydWN0IGRybV9jcnRjICpjcnRjKQo+PiA+PiArc3RhdGlj
-IGludCBoZGxjZF9jcnRjX21vZGVfc2V0X25vZmIoc3RydWN0IGRybV9jcnRjICpjcnRjKQo+PiA+
-Cj4+ID5CdXQgdGhpcyBpcyBub3QuIFdlIGRvbid0IG5lZWQgdG8gcHJvcGFnYXRlIHRoZSBlcnJv
-ciBmdXJ0aGVyLCBqdXN0IC4uLi4KPj4gPgo+PiA+PiAgewo+PiA+PiAgCXN0cnVjdCBoZGxjZF9k
-cm1fcHJpdmF0ZSAqaGRsY2QgPSBjcnRjX3RvX2hkbGNkX3ByaXYoY3J0Yyk7Cj4+ID4+ICAJc3Ry
-dWN0IGRybV9kaXNwbGF5X21vZGUgKm0gPSAmY3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGU7Cj4+
-ID4+IEBAIC0xNjIsOSArMTYyLDEwIEBAIHN0YXRpYyB2b2lkIGhkbGNkX2NydGNfbW9kZV9zZXRf
-bm9mYihzdHJ1Y3QgZHJtX2NydGMgKmNydGMpCj4+ID4+ICAKPj4gPj4gIAllcnIgPSBoZGxjZF9z
-ZXRfcHhsX2ZtdChjcnRjKTsKPj4gPj4gIAlpZiAoZXJyKQo+PiA+PiAtCQlyZXR1cm47Cj4+ID4K
-Pj4gCj4+IE15IHByZXZpb3VzIHVuZGVyc3RhbmRpbmcgd2FzIHRoYXQgd2hlbiBzdWNoIGFuIGV4
-Y2VwdGlvbiBvY2N1cnJlZCwgaXQgd2FzIGNhdWdodAo+PiBpbiB0aGUgYXRvbWljX2VuYWJsZSBp
-bnRlcmZhY2UsIGFuZCB0aGVuIGRpc2FibGUgcGl4ZWwgY2xvY2suIEkgYW0gbm90IHN1cmUgaXMg
-dGhpcyBvayBvcgo+PiBpIGhhdmUgdG8gZG8gbW9yZSByZWdpc3RlciBjbGVhbiBvcGVyYWN0aW9u
-Lgo+PiAKPj4gPi4uLiByZXR1cm4gaGVyZSBzbyB0aGF0IHdlIGRvbid0IGNhbGwgY2xrX3NldF9y
-YXRlKCk7Cj4+IEFuZCBmb3IgdGhpcyBwYXJ0LCBpIGFtIGEgbGl0dGxlIGNvbmZ1c2VkIDoKPj4g
-MSBjbGtfc2V0X3JhdGUgbXVzdCBiZSBzZXQgZXZlbiBpZiBmb3JtYXQgaXMgd3Jvbmc/Cj4+IDIg
-VGhlIG9yaWdpbmFsIGNvZGUgbG9naWMgc2hvd3MgdGhhdCBJZiBmb3JtYXQgaXMgbm90IGNvcnJl
-Y3QsIHdlIHdpbGwgbm90IHNldCByZWdpc3RlcnMgCj4+IEhETENEX1JFR19QSVhFTF9GT1JNQVQg
-JiBIRExDRF9SRUdfPGNvbG9yPl9TRUxFQ1QsIHdpbGwgdGhpcyBicmluZyBpbgo+PiBhbnkgcHJv
-YmxlbXM/Cj4+IDMgaWYgMSB0aGUgcmF0ZSBtdXN0IHNldCAmIDIgcmVnaXN0ZXJzIGFib3ZlIGRv
-ZXNuYHQgbWF0dGVyLCB0aGVuIG1heWJlIHRoZXJlIGlzIG5vCj4+IG5lZWQgdG8gZGlzYWJsZSBw
-aXhlbCBjbG9jay4KPj4gQW0gaSBtaXN1bmRlcnN0YW5kaW5nCj4KPllvdSBhcmUgcmlnaHQsIHRo
-ZSBwaXhlbCBmb3JtYXQgY2hlY2sgc2hvdWxkIG5vdCBoYXBwZW4gaW5zaWRlIGhkbGNkX2NydGNf
-YXRvbWljX2VuYWJsZSgpCj5ob29rLCBpdCBzaG91bGQgYmUgbW92ZWQgaW50byBhIHNlcGFyYXRl
-IGZ1bmN0aW9uIGhkbGNkX2NydGNfYXRvbWljX2NoZWNrKCkgYW5kIHRoYXQgbmVlZHMKPnRvIGJl
-IGhvb2tlZCBpbnRvIC5hdG9taWNfY2hlY2soKSBmb3IgaGRsY2RfY3J0Y19oZWxwZXJfZnVuY3Mo
-KS4KPgo+SWYgeW91IHdhbnQgdG8gaGF2ZSBhbm90aGVyIGdvIEknbGwgYmUgaGFwcHkgdG8gcmV2
-aWV3IGFuZCBBY2sgeW91ciBwYXRjaC4KPgo+QmVzdCByZWdhcmRzLAo+TGl2aXUgCj4KCkhpCgpT
-dXJlLCBpIHdpbGwgY2hlY2sgdGhpcyBhbmQgcmUtc3ViYm1pdCBvbmUgcGF0Y2guCgpSZWdhcmRz
-LApCZXJuYXJkCgo+PiAKPj4gUmVnYXJkcywKPj4gQmVybmFyZAo+PiAKPj4gPj4gKwkJcmV0dXJu
-IGVycjsKPj4gPj4gIAo+PiA+PiAgCWNsa19zZXRfcmF0ZShoZGxjZC0+Y2xrLCBtLT5jcnRjX2Ns
-b2NrICogMTAwMCk7Cj4+ID4+ICsJcmV0dXJuIDA7Cj4+ID4+ICB9Cj4+ID4+ICAKPj4gPj4gIHN0
-YXRpYyB2b2lkIGhkbGNkX2NydGNfYXRvbWljX2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMs
-Cj4+ID4+IEBAIC0xNzMsNyArMTc0LDExIEBAIHN0YXRpYyB2b2lkIGhkbGNkX2NydGNfYXRvbWlj
-X2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCj4+ID4+ICAJc3RydWN0IGhkbGNkX2RybV9w
-cml2YXRlICpoZGxjZCA9IGNydGNfdG9faGRsY2RfcHJpdihjcnRjKTsKPj4gPj4gIAo+PiA+PiAg
-CWNsa19wcmVwYXJlX2VuYWJsZShoZGxjZC0+Y2xrKTsKPj4gPj4gLQloZGxjZF9jcnRjX21vZGVf
-c2V0X25vZmIoY3J0Yyk7Cj4+ID4+ICsJaWYgKGhkbGNkX2NydGNfbW9kZV9zZXRfbm9mYihjcnRj
-KSkgewo+PiA+PiArCQlEUk1fREVCVUdfS01TKCJJbnZhbGlkIGZvcm1hdCwgcGl4ZWwgY2xvY2sg
-ZW5hYmxlIGZhaWxlZCFcbiIpOwo+PiA+PiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUoaGRsY2Qt
-PmNsayk7Cj4+ID4+ICsJCXJldHVybjsKPj4gPj4gKwl9Cj4+ID4+ICAJaGRsY2Rfd3JpdGUoaGRs
-Y2QsIEhETENEX1JFR19DT01NQU5ELCAxKTsKPj4gPj4gIAlkcm1fY3J0Y192Ymxhbmtfb24oY3J0
-Yyk7Cj4+ID4+ICB9Cj4+ID4+IC0tIAo+PiA+PiAyLjI2LjIKPj4gPj4gCj4+ID4KPj4gPi0tIAo+
-PiA+PT09PT09PT09PT09PT09PT09PT0KPj4gPnwgSSB3b3VsZCBsaWtlIHRvIHwKPj4gPnwgZml4
-IHRoZSB3b3JsZCwgIHwKPj4gPnwgYnV0IHRoZXkncmUgbm90IHwKPj4gPnwgZ2l2aW5nIG1lIHRo
-ZSAgIHwKPj4gPiBcIHNvdXJjZSBjb2RlISAgLwo+PiA+ICAtLS0tLS0tLS0tLS0tLS0KPj4gPiAg
-ICDCr1xfKOODhClfL8KvCj4+IAo+PiAKPj4gCj4KPi0tIAo+PT09PT09PT09PT09PT09PT09PT0K
-PnwgSSB3b3VsZCBsaWtlIHRvIHwKPnwgZml4IHRoZSB3b3JsZCwgIHwKPnwgYnV0IHRoZXkncmUg
-bm90IHwKPnwgZ2l2aW5nIG1lIHRoZSAgIHwKPiBcIHNvdXJjZSBjb2RlISAgLwo+ICAtLS0tLS0t
-LS0tLS0tLS0KPiAgICDCr1xfKOODhClfL8KvCg0KDQo=
+On Sun, Apr 26, 2020 at 07:47:49PM +0200, Michał Mirosław wrote:
+> Add information found in downstream kernels, to make the code less
+> magic.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 29 +++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+> index 2289f9638116..d2175fb6209a 100644
+> --- a/drivers/input/touchscreen/elants_i2c.c
+> +++ b/drivers/input/touchscreen/elants_i2c.c
+> @@ -81,7 +81,11 @@
+>  
+>  #define HEADER_REPORT_10_FINGER	0x62
+>  
+> -/* Header (4 bytes) plus 3 fill 10-finger packets */
+> +/* Power state */
+> +#define PWR_STATE_DEEP_SLEEP	0
+> +#define PWR_STATE_NORMAL	1
+> +
+> +/* Header (4 bytes) plus 3 full 10-finger packets */
+>  #define MAX_PACKET_SIZE		169
+>  
+>  #define BOOT_TIME_DELAY_MS	50
+> @@ -91,10 +95,21 @@
+>  #define E_ELAN_INFO_BC_VER	0x10
+>  #define E_ELAN_INFO_TEST_VER	0xE0
+>  #define E_ELAN_INFO_FW_ID	0xF0
+> +#define E_POWER_MODE		0x40
+> +#define E_POWER_STATE		0x50
+> +#define E_INFO_X_RES		0x60
+> +#define E_INFO_Y_RES		0x63
+
+I would prefer if we introduced these in the patches that use them.
+
+>  #define E_INFO_OSR		0xD6
+>  #define E_INFO_PHY_SCAN		0xD7
+>  #define E_INFO_PHY_DRIVER	0xD8
+>  
+> +/* FW write command, 0x54 0x?? 0x0, 0x01 */
+> +#define E_POWER_MODE_BATTERY	0x40
+> +#define E_POWER_MODE_AC		0x41
+> +#define E_POWER_MODE_USB	0x42
+
+What is this for?
+
+> +#define E_POWER_STATE_SLEEP	0x50
+> +#define E_POWER_STATE_RESUME	0x58
+
+Thanks.
+
+-- 
+Dmitry
