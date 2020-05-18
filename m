@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D316C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A445220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E11220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824540;
-	bh=FoizjeQWVQ+PPrHic9gyMac+0ySrT3orkEdMtBwM2/s=;
+	s=default; t=1589824546;
+	bh=qm2ebLQpPuB5UzhypP58ZpTegmhnDmthwg66hFvVqtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hlxizsaP/novRmvDZpDBAVnGMrZqAliMOsLs2Ky4YCVtYP9tVdpfBsYGDfR3QQz/D
-	 YAfLtdgAbkOM5cQZv7Kf3KBsF2TByyHDF/7eP6sgDHdU/q0XcLfflyZ/r4dKFdC8zZ
-	 A5EgJzWUveCy3VMDm5QAyRRPbJ76MR8SJu1wMEvw=
+	b=qc3UtJF0hserUCbd7X+4nrovaJJfPzGzT+CEoVy6b98MLJyeClaJ7AZuVm1X87a1Z
+	 0A9RquEcfbxBlDBQrcrgYzEMxXjlTf7hZLb3ZHqVl1cavVMppkEzOBDikJ3WuJ4rrZ
+	 tXlsty9oblblfCmeJ1oU4PY1OSGdwsoskfqbiq/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbgERRzj (ORCPT
+        id S1731475AbgERRzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60982 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730833AbgERRzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:55:31 -0400
+        id S1731550AbgERRzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE02120674;
-        Mon, 18 May 2020 17:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64E9520674;
+        Mon, 18 May 2020 17:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824530;
-        bh=FoizjeQWVQ+PPrHic9gyMac+0ySrT3orkEdMtBwM2/s=;
+        s=default; t=1589824542;
+        bh=qm2ebLQpPuB5UzhypP58ZpTegmhnDmthwg66hFvVqtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kYHYM8EdrrUUpyNe12dO4LW4uQABsB4GGXGsi7QPpadTdXj9Ghdt/5am0CbG2IXnE
-         Iw1p4uvFzCjv0+ANtqM0ALdpUugHYpXXw3LlvaJ7xvpEli1zSOLb1N9kWt3YRnOY5c
-         Nw8GvX3J+A8fOnFLHoAyVRRbZs+c55c2sL4C4JDU=
+        b=2ZrylI9rmm0LfuLOAoT6Vt7yL5vnti1hlsBdIv8rTVIixUUdiQjarKTUiYobA/2xD
+         cA7Gt++zDzMKMYiNqL0Y9DiTxaGLl24amhpV9Bf7rJYBuZan5ILYRIYqMsXQgsAFje
+         g67WV4TrT5Lx1a4vNYGTdh9cPqj/W+7FTypRuKck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 049/147] drm/amdgpu: invalidate L2 before SDMA IBs (v2)
-Date:   Mon, 18 May 2020 19:36:12 +0200
-Message-Id: <20200518173520.085222643@linuxfoundation.org>
+Subject: [PATCH 5.4 054/147] IB/hfi1: Fix another case where pq is left on waitlist
+Date:   Mon, 18 May 2020 19:36:17 +0200
+Message-Id: <20200518173520.713628898@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -63,84 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Olšák <marek.olsak@amd.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit fdf83646c0542ecfb9adc4db8f741a1f43dca058 ]
+[ Upstream commit fa8dac3968635dec8518a13ac78d662f2aa88e4d ]
 
-This fixes GPU hangs due to cache coherency issues.
+The commit noted below fixed a case where a pq is left on the sdma wait
+list.
 
-v2: Split the version bump to a separate patch
+It however missed another case.
 
-Signed-off-by: Marek Olšák <marek.olsak@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Tested-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+user_sdma_send_pkts() has two calls from hfi1_user_sdma_process_request().
+
+If the first one fails as indicated by -EBUSY, the pq will be placed on
+the waitlist as by design.
+
+If the second call then succeeds, the pq is still on the waitlist setting
+up a race with the interrupt handler if a subsequent request uses a
+different SDMA engine
+
+Fix by deleting the first call.
+
+The use of pcount and the intent to send a short burst of packets followed
+by the larger balance of packets was never correctly implemented, because
+the two calls always send pcount packets no matter what.  A subsequent
+patch will correct that issue.
+
+Fixes: 9a293d1e21a6 ("IB/hfi1: Ensure pq is not left on waitlist")
+Link: https://lore.kernel.org/r/20200504130917.175613.43231.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h    | 16 ++++++++++++++++
- drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c           | 14 +++++++++++++-
- 2 files changed, 29 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/user_sdma.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h b/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h
-index 074a9a09c0a79..a5b60c9a24189 100644
---- a/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h
-+++ b/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h
-@@ -73,6 +73,22 @@
- #define SDMA_OP_AQL_COPY  0
- #define SDMA_OP_AQL_BARRIER_OR  0
+diff --git a/drivers/infiniband/hw/hfi1/user_sdma.c b/drivers/infiniband/hw/hfi1/user_sdma.c
+index 13e4203497b33..a92346e88628b 100644
+--- a/drivers/infiniband/hw/hfi1/user_sdma.c
++++ b/drivers/infiniband/hw/hfi1/user_sdma.c
+@@ -589,10 +589,6 @@ int hfi1_user_sdma_process_request(struct hfi1_filedata *fd,
  
-+#define SDMA_GCR_RANGE_IS_PA		(1 << 18)
-+#define SDMA_GCR_SEQ(x)			(((x) & 0x3) << 16)
-+#define SDMA_GCR_GL2_WB			(1 << 15)
-+#define SDMA_GCR_GL2_INV		(1 << 14)
-+#define SDMA_GCR_GL2_DISCARD		(1 << 13)
-+#define SDMA_GCR_GL2_RANGE(x)		(((x) & 0x3) << 11)
-+#define SDMA_GCR_GL2_US			(1 << 10)
-+#define SDMA_GCR_GL1_INV		(1 << 9)
-+#define SDMA_GCR_GLV_INV		(1 << 8)
-+#define SDMA_GCR_GLK_INV		(1 << 7)
-+#define SDMA_GCR_GLK_WB			(1 << 6)
-+#define SDMA_GCR_GLM_INV		(1 << 5)
-+#define SDMA_GCR_GLM_WB			(1 << 4)
-+#define SDMA_GCR_GL1_RANGE(x)		(((x) & 0x3) << 2)
-+#define SDMA_GCR_GLI_INV(x)		(((x) & 0x3) << 0)
-+
- /*define for op field*/
- #define SDMA_PKT_HEADER_op_offset 0
- #define SDMA_PKT_HEADER_op_mask   0x000000FF
-diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-index 2a792d7abe007..bd715012185c6 100644
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-@@ -382,6 +382,18 @@ static void sdma_v5_0_ring_emit_ib(struct amdgpu_ring *ring,
- 	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
- 	uint64_t csa_mc_addr = amdgpu_sdma_get_csa_mc_addr(ring, vmid);
+ 	set_comp_state(pq, cq, info.comp_idx, QUEUED, 0);
+ 	pq->state = SDMA_PKT_Q_ACTIVE;
+-	/* Send the first N packets in the request to buy us some time */
+-	ret = user_sdma_send_pkts(req, pcount);
+-	if (unlikely(ret < 0 && ret != -EBUSY))
+-		goto free_req;
  
-+	/* Invalidate L2, because if we don't do it, we might get stale cache
-+	 * lines from previous IBs.
-+	 */
-+	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_GCR_REQ));
-+	amdgpu_ring_write(ring, 0);
-+	amdgpu_ring_write(ring, (SDMA_GCR_GL2_INV |
-+				 SDMA_GCR_GL2_WB |
-+				 SDMA_GCR_GLM_INV |
-+				 SDMA_GCR_GLM_WB) << 16);
-+	amdgpu_ring_write(ring, 0xffffff80);
-+	amdgpu_ring_write(ring, 0xffff);
-+
- 	/* An IB packet must end on a 8 DW boundary--the next dword
- 	 * must be on a 8-dword boundary. Our IB packet below is 6
- 	 * dwords long, thus add x number of NOPs, such that, in
-@@ -1607,7 +1619,7 @@ static const struct amdgpu_ring_funcs sdma_v5_0_ring_funcs = {
- 		SOC15_FLUSH_GPU_TLB_NUM_WREG * 3 +
- 		SOC15_FLUSH_GPU_TLB_NUM_REG_WAIT * 6 * 2 +
- 		10 + 10 + 10, /* sdma_v5_0_ring_emit_fence x3 for user fence, vm fence */
--	.emit_ib_size = 7 + 6, /* sdma_v5_0_ring_emit_ib */
-+	.emit_ib_size = 5 + 7 + 6, /* sdma_v5_0_ring_emit_ib */
- 	.emit_ib = sdma_v5_0_ring_emit_ib,
- 	.emit_fence = sdma_v5_0_ring_emit_fence,
- 	.emit_pipeline_sync = sdma_v5_0_ring_emit_pipeline_sync,
+ 	/*
+ 	 * This is a somewhat blocking send implementation.
 -- 
 2.20.1
 
