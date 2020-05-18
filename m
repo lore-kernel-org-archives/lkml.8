@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2816C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA15CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB51420643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D7020643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826101;
-	bh=Yci84up+VDf4LFh3i5lZgGmVwgZzDWVjnLjyFZsAH0g=;
+	s=default; t=1589826104;
+	bh=D7KNT8DXPfp5mfOYskYOKBb4eNvLU6ux7YhVEuX6CoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PS3cC8CU7RAw7qSB7v4ZkW9GC1gDjFdfrQZaDQsDU0HxPhj/6XsMc2/eQzfENJ3wU
-	 YwKTpEmFoflSeSivWB8TfNZA2VrFtTzWrAEQC+nBIaNlxQzrYWkNFgUcq4mnKgHT52
-	 qaJRrGp1MuFSPL4sHl3JXfznus20Mgpas01T7xpk=
+	b=jVZhWrPVh3EHhcHFXBI2s61L80EhtKyzuLIrXt9nv1UgUUVZu2xF+XMvBozyFpzKu
+	 FTjOWDr3nCQhey5RLOFosZcAnNg2qI98qhBykMYi0dQ3TCdhRjkURBXqk0G5bVAGqy
+	 N8Ml/9Bi1ZbKuMB229xcxHhhyZ0MMOLzcWZNO3YM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387806AbgERSVl (ORCPT
+        id S2387815AbgERSVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54370 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:21:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730879AbgERRvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:35 -0400
+        id S1730877AbgERRvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 285D720826;
-        Mon, 18 May 2020 17:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF8A420715;
+        Mon, 18 May 2020 17:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824294;
-        bh=Yci84up+VDf4LFh3i5lZgGmVwgZzDWVjnLjyFZsAH0g=;
+        s=default; t=1589824292;
+        bh=D7KNT8DXPfp5mfOYskYOKBb4eNvLU6ux7YhVEuX6CoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CusfaS9ShRPaZyD9vTpGkRC8IUROSW/baMDfZmZdk1VfQHaKJF2HNSkWqZqELvCHF
-         krUcUzEnEbyPgI2YLyU1wbndTgj7PDyE0FPl1W4tnFbrpf/0+9oj1+b44MNNB4EdnX
-         SIARkLqk5poqiwe9HQKZi9s0renhjKNc78ZPL74s=
+        b=NK/zeLjMWeShmrd4zx0ay19lXZSU87i4PAcOHvwisS0qp/v7Wh9KSsVmDrVCwcsW/
+         ZqFImTay8PdLWknc3p2pvrAP9RyUlrSaBVGYW9/fsZX/ZH9g0NDJd5B7ndlkIB9QYG
+         HMdlnpAN4SDdakxFqF9YkXRYE6NcouWX5d0s4Nxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        stable@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/80] mmc: block: Fix request completion in the CQE timeout path
-Date:   Mon, 18 May 2020 19:36:53 +0200
-Message-Id: <20200518173457.510515989@linuxfoundation.org>
+Subject: [PATCH 4.19 34/80] mmc: core: Check request type before completing the request
+Date:   Mon, 18 May 2020 19:36:52 +0200
+Message-Id: <20200518173457.347082325@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,53 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-[ Upstream commit c077dc5e0620508a29497dac63a2822324ece52a ]
+[ Upstream commit e6bfb1bf00852b55f4c771f47ae67004c04d3c87 ]
 
-First, it should be noted that the CQE timeout (60 seconds) is substantial
-so a CQE request that times out is really stuck, and the race between
-timeout and completion is extremely unlikely. Nevertheless this patch
-fixes an issue with it.
+In the request completion path with CQE, request type is being checked
+after the request is getting completed. This is resulting in returning
+the wrong request type and leading to the IO hang issue.
 
-Commit ad73d6feadbd7b ("mmc: complete requests from ->timeout")
-preserved the existing functionality, to complete the request.
-However that had only been necessary because the block layer
-timeout handler had been marking the request to prevent it from being
-completed normally. That restriction was removed at the same time, the
-result being that a request that has gone will have been completed anyway.
-That is, the completion was unnecessary.
+ASYNC request type is getting returned for DCMD type requests.
+Because of this mismatch, mq->cqe_busy flag is never getting cleared
+and the driver is not invoking blk_mq_hw_run_queue. So requests are not
+getting dispatched to the LLD from the block layer.
 
-At the time, the unnecessary completion was harmless because the block
-layer would ignore it, although that changed in kernel v5.0.
+All these eventually leading to IO hang issues.
+So, get the request type before completing the request.
 
-Note for stable, this patch will not apply cleanly without patch "mmc:
-core: Fix recursive locking issue in CQE recovery path"
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Fixes: ad73d6feadbd7b ("mmc: complete requests from ->timeout")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200508062227.23144-1-adrian.hunter@intel.com
+Cc: <stable@vger.kernel.org>
+Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/1588775643-18037-2-git-send-email-vbadigan@codeaurora.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/queue.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/mmc/core/block.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-index becc6594a8a47..03f3d9c80fbac 100644
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -111,8 +111,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
- 				__mmc_cqe_recovery_notifier(mq);
- 			return BLK_EH_RESET_TIMER;
- 		}
--		/* No timeout (XXX: huh? comment doesn't make much sense) */
--		blk_mq_complete_request(req);
-+		/* The request has gone already */
- 		return BLK_EH_DONE;
- 	default:
- 		/* Timeout is handled by mmc core */
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 60eac66dc9f0b..23bcdbba0cab9 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -1424,6 +1424,7 @@ static void mmc_blk_cqe_complete_rq(struct mmc_queue *mq, struct request *req)
+ 	struct mmc_request *mrq = &mqrq->brq.mrq;
+ 	struct request_queue *q = req->q;
+ 	struct mmc_host *host = mq->card->host;
++	enum mmc_issue_type issue_type = mmc_issue_type(mq, req);
+ 	unsigned long flags;
+ 	bool put_card;
+ 	int err;
+@@ -1453,7 +1454,7 @@ static void mmc_blk_cqe_complete_rq(struct mmc_queue *mq, struct request *req)
+ 
+ 	spin_lock_irqsave(q->queue_lock, flags);
+ 
+-	mq->in_flight[mmc_issue_type(mq, req)] -= 1;
++	mq->in_flight[issue_type] -= 1;
+ 
+ 	put_card = (mmc_tot_in_flight(mq) == 0);
+ 
 -- 
 2.20.1
 
