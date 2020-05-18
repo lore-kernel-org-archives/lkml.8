@@ -2,124 +2,199 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8049C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD76C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B50F620758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7779F20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:10:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ujn3EHPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgERUIy (ORCPT
+        id S1726478AbgERUKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:08:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERUIx (ORCPT
+        Mon, 18 May 2020 16:10:22 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14786 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgERUKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:08:53 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E1ACC061A0C;
-        Mon, 18 May 2020 13:08:53 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jam3D-00FjeM-Ku; Mon, 18 May 2020 22:07:51 +0200
-Message-ID: <bb0b9a2da99c16a28c1dbee93d08abfa2aecdc8b.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Steve deRosier <derosier@gmail.com>,
-        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com,
-        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        ath10k@lists.infradead.org
-Date:   Mon, 18 May 2020 22:07:49 +0200
-In-Reply-To: <20200518195950.GP11244@42.do-not-panic.com> (sfid-20200518_215954_551733_20DE2085)
-References: <20200515212846.1347-13-mcgrof@kernel.org>
-         <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
-         <20200518165154.GH11244@42.do-not-panic.com>
-         <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
-         <20200518170934.GJ11244@42.do-not-panic.com>
-         <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
-         <20200518171801.GL11244@42.do-not-panic.com>
-         <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
-         <20200518190930.GO11244@42.do-not-panic.com>
-         <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
-         <20200518195950.GP11244@42.do-not-panic.com>
-         (sfid-20200518_215954_551733_20DE2085)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Mon, 18 May 2020 16:10:22 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec2eb1f0002>; Mon, 18 May 2020 13:07:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 18 May 2020 13:10:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 18 May 2020 13:10:21 -0700
+Received: from [10.2.48.175] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
+ 2020 20:10:21 +0000
+Subject: Re: [RFC V2] mm/vmstat: Add events for PMD based THP migration
+ without split
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, <linux-mm@kvack.org>
+CC:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Zi Yan <ziy@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1589784156-28831-1-git-send-email-anshuman.khandual@arm.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <67be2597-c019-63c1-b551-d4571a44f1a5@nvidia.com>
+Date:   Mon, 18 May 2020 13:10:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <1589784156-28831-1-git-send-email-anshuman.khandual@arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589832479; bh=1z6kses1IYzBnV/KtBizIk4pEwFasA/+isDtngaC6jU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Ujn3EHPgluHWuBnN1PL0JpJoP/orRUamQbJZFpQrwUwVWnSP4esAhc+l4kGF32gWP
+         Ymca9YAT3fi9tnyUQrliR8I32n+fr6ZiSAl0PbmyrnTAC9C3WR4atGZGufWK4aGUX3
+         TWa0PqVJ4wMBDhH72CTMJyiVsxOerk2jFxZjE+iVnKaqorbEY/NxGcGTd+OX+7SOnf
+         Wj/n5K0EF4L+3fPPTpH+6xq61lfAnx59EFAZZyeFYVwtOqwSL/BXzsSls5CwKB1saP
+         WoOTWDHC2qG+WWNGYRYbsKtVnM0ubTBL6c+nNy381NyZllVW/fxvxShgddDEtqDs6K
+         Xuxdf8/4IcNAw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 19:59 +0000, Luis Chamberlain wrote:
+On 2020-05-17 23:42, Anshuman Khandual wrote:
+...
+> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
+> index ffef0f279747..23d8f9884c2b 100644
+> --- a/include/linux/vm_event_item.h
+> +++ b/include/linux/vm_event_item.h
+> @@ -91,6 +91,10 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+>   		THP_ZERO_PAGE_ALLOC_FAILED,
+>   		THP_SWPOUT,
+>   		THP_SWPOUT_FALLBACK,
+> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
 
-> > Err, no. Those two are most definitely related. Have you looked at (most
-> > or some or whatever) staging drivers recently? Those contain all kinds
-> > of garbage that might do whatever with your kernel.
+
+Hi Anshuman,
+
+These new events look great to me. I have some nits below, plus one
+lightly controversial suggestion which I'd really like to have someone
+more experienced weigh in on, which is:
+
+How about not being quite so granular on the THP config options, and
+just guarding these events with the overall CONFIG_TRANSPARENT_HUGEPAGE
+option, instead of the sub-option CONFIG_ARCH_ENABLE_THP_MIGRATION?
+
+I tentatively think it's harmless and not really misleading to have
+/proc/vmstat showing this in all THP-enabled configurations:
+
+thp_pmd_migration_success 0
+thp_pmd_migration_failure 0
+
+...if THP is enabled, and *whether or not* _THP_MIGRATION is enabled.
+And this simplifies things a bit. Given how the .config options can get,
+I think simplifying would be nice.
+
+However, I'm ready to be corrected on that, if it's a bad idea for
+other API reasons perhaps.  Can anyone please comment?
+
+
+> +		THP_PMD_MIGRATION_SUCCESS,
+> +		THP_PMD_MIGRATION_FAILURE,
+> +#endif
+>   #endif
+>   #ifdef CONFIG_MEMORY_BALLOON
+>   		BALLOON_INFLATE,
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 7160c1556f79..5325700a3e90 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1170,6 +1170,18 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
+>   #define ICE_noinline
+>   #endif
+>   
+> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+> +static inline void thp_migration_success(bool success)
+
+
+I think this should be named
+
+     thp_pmd_migration_success()
+
+, since that's what you're really counting. Or, you could
+name the events THP_MIGRATION_SUCCESS|FAILURE. Either way,
+just so the function name matches the events it's counting.
+
+
+> +{
+> +	if (success)
+> +		count_vm_event(THP_PMD_MIGRATION_SUCCESS);
+> +	else
+> +		count_vm_event(THP_PMD_MIGRATION_FAILURE);
+> +}
+> +#else
+> +static inline void thp_migration_success(bool success) { }
+
+
+This whole ifdef clause would disappear if my suggestion above is
+accepted. However, if not, then I believe the convention for this
+kind of situation is:
+
+static inline void thp_migration_success(bool success)
+{
+}
+
+
+> +#endif
+> +
+>   /*
+>    * Obtain the lock on page, remove all ptes and migrate the page
+>    * to the newly allocated page in newpage.
+> @@ -1232,6 +1244,8 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
+>   	 * we want to retry.
+>   	 */
+>   	if (rc == MIGRATEPAGE_SUCCESS) {
+> +		if (PageTransHuge(newpage))
+> +			thp_migration_success(true);
+>   		put_page(page);
+>   		if (reason == MR_MEMORY_FAILURE) {
+>   			/*
+> @@ -1474,6 +1488,7 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
+>   					unlock_page(page);
+>   					if (!rc) {
+>   						list_safe_reset_next(page, page2, lru);
+> +						thp_migration_success(false);
+>   						goto retry;
+>   					}
+>   				}
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 96d21a792b57..e258c782fd3a 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1274,6 +1274,10 @@ const char * const vmstat_text[] = {
+>   	"thp_zero_page_alloc_failed",
+>   	"thp_swpout",
+>   	"thp_swpout_fallback",
+> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+> +	"thp_pmd_migration_success",
+> +	"thp_pmd_migration_failure",
+> +#endif
+>   #endif
+>   #ifdef CONFIG_MEMORY_BALLOON
+>   	"balloon_inflate",
 > 
-> No, I stay away :)
 
-:)
-
-> > That's all fine, I just don't think it's appropriate to pretend that
-> > your kernel is now 'tainted' (think about the meaning of that word) when
-> > the firmware of some random device crashed.
-> 
-> If the firmware crash *does* require driver remove / addition again,
-> or a reboot, would you think that this is a situation that merits a taint?
-
-Not really. In my experience, that's more likely a hardware issue (card
-not properly seated, for example) that a bus reset happens to "fix".
-
-> > It's pretty clear, but even then, first of all I doubt this is the case
-> > for many of the places that you've sprinkled the annotation on,
-> 
-> We can remove it, for this driver I can vouch for its location as it did
-> reach a state where I required a reboot. And its not the first time this
-> has happened. This got me thinking about the bigger picture of the lack
-> of proper way to address these cases in the kernel, and how the user is
-> left dumbfounded.
-
-Fair, so the driver is still broken wrt. recovery here. I still don't
-think that's a situation where e.g. the system should say "hey you have
-a taint here, if your graphics go bad now you should not report that
-bug" (which is effectively what the single taint bit does).
-
-> > and secondly it actually hides useful information.
-> 
-> What is it hiding?
-
-Most importantly, which device crashed. Secondarily I'd say how many
-times (*).
-
-The information "firmware crashed" is really only useful in relation to
-the device. If your graphics firmware crashed, yeah, well, you probably
-won't even see this. If your USB wifi firmware crashed? Not really
-interesting, you'll anyway just unplug. In fact it's very hard for a USB
-driver (short of arbitrary memory corruption) to significantly mess up
-the system.
-
-johannes
-
-(*) though if it crashed only once, was that because it was wedged
-enough to be unusable afterwards, or because everything was fine?
-
-
+thanks,
+-- 
+John Hubbard
+NVIDIA
