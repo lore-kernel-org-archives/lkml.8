@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B938BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC70220835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A98420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824053;
-	bh=HyYP/wOosNvn+zL16+yWrZlgCfA669VtlRgAiGh5Qjk=;
+	s=default; t=1589824057;
+	bh=uXIgwYldt3Qt6/DL3+ObImCY0Z8vbGt4xt21X1y3Uz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=be9TgXpWWrcnduJPUH4wptoo9deMsaUbZcnAYqmdWbuoV2AyUxHK/qgP1mSlzFHtI
-	 joMSwEvQiV+QiBGSECxSaU6ieknFFAny99nlGdRcAHVTZBWZMHWR87VsqNTfU1Wi4k
-	 +15jn7skMsUvzn6aA+XLct3GsiXsgCcOVf7psCpc=
+	b=zqjmjAd0dliSAXk/aVHGUtTuHCF3+BQi7fVhCXqVpx/Y0GiFBvro+CiqJdQp8/jNz
+	 gmKPcK79hlTKjHRxgpVUgFteeREILgzLjO1gIsMGSyiFCq2Dq9DH8BZNL+lYDfp/mB
+	 m10mQA8bP4uPO2o/GLngMnFzRMV4AbDsKkiZepBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbgERRra (ORCPT
+        id S1730240AbgERRrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:47:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47754 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730222AbgERRr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:47:26 -0400
+        id S1730230AbgERRrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:47:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EAB620671;
-        Mon, 18 May 2020 17:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57CCD20674;
+        Mon, 18 May 2020 17:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824046;
-        bh=HyYP/wOosNvn+zL16+yWrZlgCfA669VtlRgAiGh5Qjk=;
+        s=default; t=1589824050;
+        bh=uXIgwYldt3Qt6/DL3+ObImCY0Z8vbGt4xt21X1y3Uz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ilqnk5xgbRdvA9Kn3kDjW6hlUjTUQjv6CORxoRiy/Z71xqiFbl+g8zxl/vGoLtb30
-         jGw4e2OcSmL34D5v2/edqN+N2+XCyrg8KhslkjgwIMN6fmkY1SXoWNHc/1+Bhlj9xI
-         pUeKfXvPUuFZ2lAnVUAL1g/lvmucUM6iwlqzWabk=
+        b=0f0mGh9Phtluv05T5fpOvlud7UAYKqNddzT/iQlwkhPIFtFUkEU4FUtR+3egalN2J
+         fZhlfOBritF5sDT+2k9DB931qbSsYSsUXL3U8D+UmQMCOyA1cPzUrCad3iOwX90E8W
+         rPYImwNc5a2H59OvwbfvJ6Mc6iM9q+i+hsWyPJ1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Neil Horman <nhorman@tuxdriver.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 050/114] net/sonic: Fix a resource leak in an error handling path in jazz_sonic_probe()
-Date:   Mon, 18 May 2020 19:36:22 +0200
-Message-Id: <20200518173512.341620450@linuxfoundation.org>
+Subject: [PATCH 4.14 052/114] drop_monitor: work around gcc-10 stringop-overflow warning
+Date:   Mon, 18 May 2020 19:36:24 +0200
+Message-Id: <20200518173512.666804892@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -61,49 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 10e3cc180e64385edc9890c6855acf5ed9ca1339 ]
+[ Upstream commit dc30b4059f6e2abf3712ab537c8718562b21c45d ]
 
-A call to 'dma_alloc_coherent()' is hidden in 'sonic_alloc_descriptors()',
-called from 'sonic_probe1()'.
+The current gcc-10 snapshot produces a false-positive warning:
 
-This is correctly freed in the remove function, but not in the error
-handling path of the probe function.
-Fix it and add the missing 'dma_free_coherent()' call.
+net/core/drop_monitor.c: In function 'trace_drop_common.constprop':
+cc1: error: writing 8 bytes into a region of size 0 [-Werror=stringop-overflow=]
+In file included from net/core/drop_monitor.c:23:
+include/uapi/linux/net_dropmon.h:36:8: note: at offset 0 to object 'entries' with size 4 declared here
+   36 |  __u32 entries;
+      |        ^~~~~~~
 
-While at it, rename a label in order to be slightly more informative.
+I reported this in the gcc bugzilla, but in case it does not get
+fixed in the release, work around it by using a temporary variable.
 
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Fixes: 9a8afc8d3962 ("Network Drop Monitor: Adding drop monitor implementation & Netlink protocol")
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94881
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/jazzsonic.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/core/drop_monitor.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
-index d5b28884e21eb..9a6c91c9d111c 100644
---- a/drivers/net/ethernet/natsemi/jazzsonic.c
-+++ b/drivers/net/ethernet/natsemi/jazzsonic.c
-@@ -247,13 +247,15 @@ static int jazz_sonic_probe(struct platform_device *pdev)
+diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+index 70ccda233bd1f..ef9fe5f95093b 100644
+--- a/net/core/drop_monitor.c
++++ b/net/core/drop_monitor.c
+@@ -154,6 +154,7 @@ static void sched_send_work(unsigned long _data)
+ static void trace_drop_common(struct sk_buff *skb, void *location)
+ {
+ 	struct net_dm_alert_msg *msg;
++	struct net_dm_drop_point *point;
+ 	struct nlmsghdr *nlh;
+ 	struct nlattr *nla;
+ 	int i;
+@@ -172,11 +173,13 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 	nlh = (struct nlmsghdr *)dskb->data;
+ 	nla = genlmsg_data(nlmsg_data(nlh));
+ 	msg = nla_data(nla);
++	point = msg->points;
+ 	for (i = 0; i < msg->entries; i++) {
+-		if (!memcmp(&location, msg->points[i].pc, sizeof(void *))) {
+-			msg->points[i].count++;
++		if (!memcmp(&location, &point->pc, sizeof(void *))) {
++			point->count++;
+ 			goto out;
+ 		}
++		point++;
+ 	}
+ 	if (msg->entries == dm_hit_limit)
  		goto out;
- 	err = register_netdev(dev);
- 	if (err)
--		goto out1;
-+		goto undo_probe1;
+@@ -185,8 +188,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 	 */
+ 	__nla_reserve_nohdr(dskb, sizeof(struct net_dm_drop_point));
+ 	nla->nla_len += NLA_ALIGN(sizeof(struct net_dm_drop_point));
+-	memcpy(msg->points[msg->entries].pc, &location, sizeof(void *));
+-	msg->points[msg->entries].count = 1;
++	memcpy(point->pc, &location, sizeof(void *));
++	point->count = 1;
+ 	msg->entries++;
  
- 	printk("%s: MAC %pM IRQ %d\n", dev->name, dev->dev_addr, dev->irq);
- 
- 	return 0;
- 
--out1:
-+undo_probe1:
-+	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
-+			  lp->descriptors, lp->descriptors_laddr);
- 	release_mem_region(dev->base_addr, SONIC_MEM_SIZE);
- out:
- 	free_netdev(dev);
+ 	if (!timer_pending(&data->send_timer)) {
 -- 
 2.20.1
 
