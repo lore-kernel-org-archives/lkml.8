@@ -2,67 +2,115 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D69C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A37C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6831E207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7CE20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgERPeN (ORCPT
+        id S1728396AbgERPfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:34:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:42695 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgERPeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:34:09 -0400
-IronPort-SDR: OXeartJWH0bxtj2gH0kMkmvq0tVe6Qz+RjzMQIAdHymNJmSpreNWwbSw5jA8rsWnC2DsbxWmH7
- V5vAYg1xbRJg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 08:34:08 -0700
-IronPort-SDR: eV5C3H+cnoC0A8uX4kOxBmXf/PSL+93BTzOl8w2BmzU4Y5t+/ija7Mo2k1ocUFqS2o5A3HnkRd
- YpxgeX4S3jxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="465617760"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga005.fm.intel.com with ESMTP; 18 May 2020 08:34:08 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id D3CA8301B7F; Mon, 18 May 2020 08:34:07 -0700 (PDT)
-Date:   Mon, 18 May 2020 08:34:07 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, luto@kernel.org, hpa@zytor.com,
-        dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-Message-ID: <20200518153407.GA499505@tassilo.jf.intel.com>
-References: <20200511045311.4785-1-sashal@kernel.org>
- <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
- <20200515164013.GF29995@sasha-vm>
- <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
+        Mon, 18 May 2020 11:35:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15124 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728110AbgERPft (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 11:35:49 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IFWxsf095910;
+        Mon, 18 May 2020 11:35:48 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312agcqr93-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 11:35:48 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IFKUEW018437;
+        Mon, 18 May 2020 15:35:46 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 3127t5mcxn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 May 2020 15:35:45 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IFZhqA58785966
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 May 2020 15:35:43 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BBBD34C04E;
+        Mon, 18 May 2020 15:35:43 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 833834C04A;
+        Mon, 18 May 2020 15:35:43 +0000 (GMT)
+Received: from bahia.lan (unknown [9.145.63.64])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 18 May 2020 15:35:43 +0000 (GMT)
+Subject: [PATCH] scripts/sorttable: Correctly handle mmap() returning
+ MAP_FAILED
+From:   Greg Kurz <groug@kaod.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        mingo@kernel.org
+Date:   Mon, 18 May 2020 17:35:42 +0200
+Message-ID: <158981614256.106494.12226121528668381542.stgit@bahia.lan>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 mlxlogscore=999 clxscore=1034 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=1 cotscore=-2147483648
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005180131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Yes, for SGX this is functional feature because enclave entry points,
-> thread control structures (aka TCS's), reset FSBASE and GSBASE registers
-> to fixed (albeit user defined) values. And syscall's can be done only
-> outside of enclave.
-> 
-> This is a required feature for fancier runtimes (such as Graphene).
+The caller of mmap_file() assumes it returns a valid address or NULL
+on error. If mmap() fails for some reason, MAP_FAILED is returned
+instead and sorttable crashes later when trying to dereference the
+pointer:
 
-Can you please explain a bit more? What do they need GS for?
+Program received signal SIGSEGV, Segmentation fault.
+0x0000000000402b25 in do_file (fname=0x7fffffffe5e2 "vmlinux",
+    addr=0xffffffffffffffff) at scripts/sorttable.c:264
+264             switch (ehdr->e_ident[EI_DATA]) {
+(gdb) p ehdr
+$1 = (Elf32_Ehdr *) 0xffffffffffffffff
 
--Andi
+mmap() can only return NULL if the user explicitely asks for it with
+MAP_FIXED, which isn't the case here. So, rather than changing the
+semantics of mmap_file() and having the caller to cope with an
+extra sentinel, return NULL when mmap() fails.
+
+This bug exists since the addition of the sortextable binary (previous
+name of sorttable). That code was borrowed from scripts/recordmount.c
+which had the same issue. It got fixed in a similar manner by commit
+3f1df12019f3 ("recordmcount: Rewrite error/success handling").
+
+Cc: stable@vger.kernel.org # v3.5
+Fixes: a79f248b9b30 ("scripts: Add sortextable to sort the kernel's exception table.")
+Signed-off-by: Greg Kurz <groug@kaod.org>
+---
+ scripts/sorttable.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index ec6b5e81eba1..5ad7a9bbff42 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -91,6 +91,7 @@ static void *mmap_file(char const *fname, size_t *size)
+ 	addr = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+ 	if (addr == MAP_FAILED) {
+ 		fprintf(stderr, "Could not mmap file: %s\n", fname);
++		addr = NULL;
+ 		goto out;
+ 	}
+ 
+
