@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA88C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C645F20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D055207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823952;
-	bh=x9sPUck7yGR2tWg2w6qovXsDndLDcIPgf6857mP3fQc=;
+	s=default; t=1589823955;
+	bh=Zl0uOgz7VZUw9aDWIujEZjYk+KwhoWX6LHcHCVTFqcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQLhFYu7YpL9UhfMSRdndyBMa/YXSrXNeqbOu/iNwipb6odJ3JESmZGwb4paUlT2+
-	 1WkPTDbgGP37LBjEmRjYCHSSHXS/5cXvS3qyhbM8ByNSirIHMIVdLEOmQmRfwrpj1D
-	 BzhG75Ilvw37m4XS5c6Oc6RaFFKy06x59hvfUk4I=
+	b=qfvGrCVIjsAbff9+JLdUrgDFQzks4WuOdpTY9BNJCDYkjN+wugwa7g3+rC/62B8qp
+	 WVVnlrF9MlVybE8e5CxZEZVXkq6H1aXEMr2S717SDXoYKWL8eno3sTxvMILGm5zb0z
+	 noSSZ7xb/lpgYuwSdYDo7Y5phzBEqwqUA+MZgn00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbgERRpv (ORCPT
+        id S1728738AbgERRpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:45:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44962 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:45:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729452AbgERRpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:47 -0400
+        id S1729998AbgERRpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:45:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBD6720674;
-        Mon, 18 May 2020 17:45:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4820720671;
+        Mon, 18 May 2020 17:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823947;
-        bh=x9sPUck7yGR2tWg2w6qovXsDndLDcIPgf6857mP3fQc=;
+        s=default; t=1589823949;
+        bh=Zl0uOgz7VZUw9aDWIujEZjYk+KwhoWX6LHcHCVTFqcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVEfO8tsySjp9U0jkg85dLsVwN3B6cziJ7YJM8zPWVlaWUp3Ddm0GIk5j2vmoXoOh
-         QK+DMRbSkazBp3BvmemtasxoYfBpKSMp458N/n6zojB33ja8llBoFrbw5soiJ2Z3xp
-         syez3+kvkKcGXh6ymzxvCUTJsiqKpRxMixBBgBCQ=
+        b=FlwcsDUeHHFDIgBG10Y7rZLFe3CeXxtMT0isCF15pex1nw8ggi8Dn7/PYbHiju2Dd
+         DXoqkCKH4c9soe8YvyNA2cy8Gr3BsB08lUJYp8r4UuLte1KDoVNCvCMM6JuCAwFrRs
+         oIggZyOup3Qqf+uhr4dKyVuOTjZQCWniLG/X8KNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 002/114] dp83640: reverse arguments to list_add_tail
-Date:   Mon, 18 May 2020 19:35:34 +0200
-Message-Id: <20200518173503.493601438@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.14 011/114] net/mlx5: Fix command entry leak in Internal Error State
+Date:   Mon, 18 May 2020 19:35:43 +0200
+Message-Id: <20200518173505.410713690@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -59,34 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@inria.fr>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit 865308373ed49c9fb05720d14cbf1315349b32a9 ]
+[ Upstream commit cece6f432cca9f18900463ed01b97a152a03600a ]
 
-In this code, it appears that phyter_clocks is a list head, based on
-the previous list_for_each, and that clock->list is intended to be a
-list element, given that it has just been initialized in
-dp83640_clock_init.  Accordingly, switch the arguments to
-list_add_tail, which takes the list head as the second argument.
+Processing commands by cmd_work_handler() while already in Internal
+Error State will result in entry leak, since the handler process force
+completion without doorbell. Forced completion doesn't release the entry
+and event completion will never arrive, so entry should be released.
 
-Fixes: cb646e2b02b27 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/dp83640.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1110,7 +1110,7 @@ static struct dp83640_clock *dp83640_clo
- 		goto out;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -865,6 +865,10 @@ static void cmd_work_handler(struct work
+ 		MLX5_SET(mbox_out, ent->out, syndrome, drv_synd);
+ 
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
++		/* no doorbell, no need to keep the entry */
++		free_ent(cmd, ent->idx);
++		if (ent->callback)
++			free_cmd(ent);
+ 		return;
  	}
- 	dp83640_clock_init(clock, bus);
--	list_add_tail(&phyter_clocks, &clock->list);
-+	list_add_tail(&clock->list, &phyter_clocks);
- out:
- 	mutex_unlock(&phyter_clocks_lock);
  
 
 
