@@ -2,119 +2,169 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC98C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D83C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66527207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Evwhtrr7"
+	by mail.kernel.org (Postfix) with ESMTP id D7451207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589826554;
+	bh=qDmmf1H14DQGq38TlSbF7UeqBoaq2BFhXg9rvJ9XgF8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pPDduCBaeNi2+Py0TjapLA0t+c7TbUTHEHybls33mSgQcQJAU4pRt766EMHFq/JDO
+	 G2oECJQr4FsKACwjDFJTf+vHR0rdS8ZFkgAJ3JEu2VWUBoTbo4D+N9UddM1JSLYGPA
+	 F4ZnMNRUyojPkE4KHQfnxr1YkKteX4dB8l3+JGpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388017AbgERS3C (ORCPT
+        id S1729879AbgERS3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729420AbgERS25 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:28:57 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E6DBC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:28:57 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id u35so5226245pgk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B7TcTnxdgBKTVFL5gUH9Cy+Jbda1czl9E/pUOuzMN/k=;
-        b=Evwhtrr7DfFquZt/cm+QLYTGVqidVIKhvJS22rNpNJk94fG/F9IzQhDU4y/bCEU4cH
-         xd+K0m6JnG5eb4d5M7YXq22v9ymYRgljTktq1YE98d9c1ZmfHOsOmS8lske6MfpztrSe
-         NRMzZXp+d2uuIbdUtV6Dcuz5dAbQ4ji99HeIk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B7TcTnxdgBKTVFL5gUH9Cy+Jbda1czl9E/pUOuzMN/k=;
-        b=jZYfhxFsLW+iIWAPcXon89/zswiY6dlpqDT+UtLPrUA46uyfFDnW0pBnq0I3crnhhP
-         hPx1LzMVHMjzzCYadcxfnTnWUSR52GVc1MelnupYuz5mxpyTqcJXT55qp1pMV2udTeM8
-         x/mhDh9ZAZ/vTydnITdVNqhP68lc/p/pBrluqFbzy7V9sXRL375VXAWUhTxJ6LqPKQi6
-         IDjjioefVvALzRarFtvEPO4mCwpyQX6dBONUFQLJ3EfZRjKGX9gkpeatAuCfJIrb93aB
-         /Ztgkp3+tKNxqR9AtdyWqKrNZh/L40aM9w4qvRX7RH6Wyd85N3LQesn4jDkus8G7SZgF
-         1w9Q==
-X-Gm-Message-State: AOAM532XqeNwKMnuRaybvjqZu2srdiE9gH65Niu3xLG5RyS3vbSoe98Y
-        8RzHVg0BvzD9NX4PkAGLD9XgXBxI8Rc=
-X-Google-Smtp-Source: ABdhPJw3/2Xp/R1HnQ+kB5Y6oOzLGx0iJJNyb0SKhYm0sW1E3i03qvSm1fcancEYIjJhXEsOEXv+DQ==
-X-Received: by 2002:a62:3c5:: with SMTP id 188mr17329329pfd.41.1589826536395;
-        Mon, 18 May 2020 11:28:56 -0700 (PDT)
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com. [209.85.215.170])
-        by smtp.gmail.com with ESMTPSA id n9sm210504pjt.29.2020.05.18.11.28.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 11:28:56 -0700 (PDT)
-Received: by mail-pg1-f170.google.com with SMTP id u5so5233827pgn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:28:56 -0700 (PDT)
-X-Received: by 2002:a67:d199:: with SMTP id w25mr5312377vsi.169.1589826154516;
- Mon, 18 May 2020 11:22:34 -0700 (PDT)
+        Mon, 18 May 2020 14:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729389AbgERRmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4880C207C4;
+        Mon, 18 May 2020 17:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589823731;
+        bh=qDmmf1H14DQGq38TlSbF7UeqBoaq2BFhXg9rvJ9XgF8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0fK8xP5eW+LHUZJCNnvBiJZmw/oeaBuzZetbWwEPMsoEWvnrnvV7OBb4GGb6U5Hko
+         tp2f5Yhde72eChXDyEPTn5CXEfObaLFrF38gZVQQJR9iC2NQgAEwEleLlTI+3F9vpy
+         PMqy7cEI6Eu+K6ajdrjfhhraNkxfTrjySjEF5/xs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 14/90] binfmt_elf: move brk out of mmap when doing direct loader exec
+Date:   Mon, 18 May 2020 19:35:52 +0200
+Message-Id: <20200518173454.108423305@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
+References: <20200518173450.930655662@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200506140208.v2.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
- <CAF6AEGvXkeOrHGMHo=C1zXhDc9rquQJc8oGDB4VDfhTfdtqyTg@mail.gmail.com>
-In-Reply-To: <CAF6AEGvXkeOrHGMHo=C1zXhDc9rquQJc8oGDB4VDfhTfdtqyTg@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 18 May 2020 11:22:22 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V9Aphv=sV36CcK=ka2zNh7Hwiog4qiUEC7wpgjqYSi5Q@mail.gmail.com>
-Message-ID: <CAD=FV=V9Aphv=sV36CcK=ka2zNh7Hwiog4qiUEC7wpgjqYSi5Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] drm/bridge: ti-sn65dsi86: Implement lane
- reordering + polarity
-To:     Rob Clark <robdclark@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sam,
+From: Kees Cook <keescook@chromium.org>
 
-On Fri, May 15, 2020 at 2:43 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Wed, May 6, 2020 at 2:03 PM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > The ti-sn65dsi86 MIPI DSI to eDP bridge chip supports arbitrary
-> > remapping of eDP lanes and also polarity inversion.  Both of these
-> > features have been described in the device tree bindings for the
-> > device since the beginning but were never implemented in the driver.
-> > Implement both of them.
-> >
-> > Part of this change also allows you to (via the same device tree
-> > bindings) specify to use fewer than the max number of DP lanes that
-> > the panel reports.  This could be useful if your display supports more
-> > lanes but only a few are hooked up on your board.
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->
-> Reviewed-by: Rob Clark <robdclark@gmail.com>
+commit bbdc6076d2e5d07db44e74c11b01a3e27ab90b32 upstream.
 
-I guess get_maintainer is somehow not tagging you and I haven't got it
-through my thick skull to CC you each time.  If you're willing, I
-think this patch is ready too.  Happy to re-post it with you in the To
-list if it helps.
+Commmit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE"),
+made changes in the rare case when the ELF loader was directly invoked
+(e.g to set a non-inheritable LD_LIBRARY_PATH, testing new versions of
+the loader), by moving into the mmap region to avoid both ET_EXEC and
+PIE binaries.  This had the effect of also moving the brk region into
+mmap, which could lead to the stack and brk being arbitrarily close to
+each other.  An unlucky process wouldn't get its requested stack size
+and stack allocations could end up scribbling on the heap.
 
--Doug
+This is illustrated here.  In the case of using the loader directly, brk
+(so helpfully identified as "[heap]") is allocated with the _loader_ not
+the binary.  For example, with ASLR entirely disabled, you can see this
+more clearly:
+
+$ /bin/cat /proc/self/maps
+555555554000-55555555c000 r-xp 00000000 ... /bin/cat
+55555575b000-55555575c000 r--p 00007000 ... /bin/cat
+55555575c000-55555575d000 rw-p 00008000 ... /bin/cat
+55555575d000-55555577e000 rw-p 00000000 ... [heap]
+...
+7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
+7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
+7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffe000-7ffff7fff000 rw-p 00000000 ...
+7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
+
+$ /lib/x86_64-linux-gnu/ld-2.27.so /bin/cat /proc/self/maps
+...
+7ffff7bcc000-7ffff7bd4000 r-xp 00000000 ... /bin/cat
+7ffff7bd4000-7ffff7dd3000 ---p 00008000 ... /bin/cat
+7ffff7dd3000-7ffff7dd4000 r--p 00007000 ... /bin/cat
+7ffff7dd4000-7ffff7dd5000 rw-p 00008000 ... /bin/cat
+7ffff7dd5000-7ffff7dfc000 r-xp 00000000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7fb2000-7ffff7fd6000 rw-p 00000000 ...
+7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
+7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
+7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffe000-7ffff8020000 rw-p 00000000 ... [heap]
+7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
+
+The solution is to move brk out of mmap and into ELF_ET_DYN_BASE since
+nothing is there in the direct loader case (and ET_EXEC is still far
+away at 0x400000).  Anything that ran before should still work (i.e.
+the ultimately-launched binary already had the brk very far from its
+text, so this should be no different from a COMPAT_BRK standpoint).  The
+only risk I see here is that if someone started to suddenly depend on
+the entire memory space lower than the mmap region being available when
+launching binaries via a direct loader execs which seems highly
+unlikely, I'd hope: this would mean a binary would _not_ work when
+exec()ed normally.
+
+(Note that this is only done under CONFIG_ARCH_HAS_ELF_RANDOMIZATION
+when randomization is turned on.)
+
+Link: http://lkml.kernel.org/r/20190422225727.GA21011@beast
+Link: https://lkml.kernel.org/r/CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com
+Fixes: eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reported-by: Ali Saidi <alisaidi@amazon.com>
+Cc: Ali Saidi <alisaidi@amazon.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/binfmt_elf.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1100,6 +1100,17 @@ static int load_elf_binary(struct linux_
+ 	current->mm->start_stack = bprm->p;
+ 
+ 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
++		/*
++		 * For architectures with ELF randomization, when executing
++		 * a loader directly (i.e. no interpreter listed in ELF
++		 * headers), move the brk area out of the mmap region
++		 * (since it grows up, and may collide early with the stack
++		 * growing down), and into the unused ELF_ET_DYN_BASE region.
++		 */
++		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
++			current->mm->brk = current->mm->start_brk =
++				ELF_ET_DYN_BASE;
++
+ 		current->mm->brk = current->mm->start_brk =
+ 			arch_randomize_brk(current->mm);
+ #ifdef compat_brk_randomized
+
+
