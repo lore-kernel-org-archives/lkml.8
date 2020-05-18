@@ -2,173 +2,122 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F18C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68988207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:18:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="MzvkyNhR"
+	by mail.kernel.org (Postfix) with ESMTP id BC77F20809
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589815126;
+	bh=7pn0POB44tC2n5gNnVjv3NxibG0KtevFb7C2erURwxI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ts0tWuWKUdUekzwFiQrK5VRhH9k/ypp1l1QmEO5v6wZ04FuRXXd5N/qqPzwV3XTIO
+	 4LEAXLXhGrZd0svWvFNMC8pVBarOlUEjyLK102NI4A8GAPQtKBgo1QftmyROLiSCG7
+	 52l8Re3SM71cXjNkwGQYwlwR2cKJeAVjQmQ2z1DM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgERPSl (ORCPT
+        id S1727035AbgERPSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:18:41 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:34243 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726918AbgERPSl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:18:41 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id ahXGjvLYt8hmdahXKjhJ8z; Mon, 18 May 2020 17:18:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1589815118; bh=n0fFGCGdi818S+XdCRml9VArGU71ZuuWGQf3y8cVenM=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=MzvkyNhR3+1xg9AJ1h0OcyOrrxCoEWkSUTzgh5VuX3AoGLhjn1B0dqZAeS/cFc6pI
-         kWBr3VTRLnsRgQe6HvGJMYqkkEOkIRE3DhyzxZzpC/m+pufUpCfFPfFGz9Vh1kpVja
-         1GQg/86BG71p7CkX601+bKjh3esf/3MYj1mWsZjBC8BaMe1Rqlk+2U6lmGdl6zgTIo
-         8XCv/fYlzAkZdF5jiylQSOtUiTOUq4LYMZb8Mk/R0RSCCbTwE/NKZFtx4sTBQEHCAy
-         /C8zSqiUYTwbwv0e82I3eZTh3s/wVaVN6r86EMtRX+MaVjt2MAVuS5YEO7UyWs41ZM
-         5Z4cgBEOAmvZg==
-Subject: Re: [PATCH v6 00/14] Implement V4L2_BUF_FLAG_NO_CACHE_* flags
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <3fee9a3d-30fe-826a-7a36-b4c9720a94db@xs4all.nl>
-Date:   Mon, 18 May 2020 17:18:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 18 May 2020 11:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgERPSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 11:18:44 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF82C207D3;
+        Mon, 18 May 2020 15:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589815124;
+        bh=7pn0POB44tC2n5gNnVjv3NxibG0KtevFb7C2erURwxI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aQlgb2ic/mmOg59kHAC86otewooCNikOj5trO7coH/eQB25WXcK7PtMEKDq5pBxcu
+         amwAXY1BjRUtiKaElfjc3FaaluZEN7s5g9mKh0QqG7l+Vkz2HAHOAi3YVT7/tW4P9I
+         fA1MHiWy8zQdn70CubreIQvELhUeLbBN/VvOkpcM=
+Date:   Mon, 18 May 2020 16:18:39 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v1 2/6] arm/smmu: Add auxiliary domain support for
+ arm-smmuv2
+Message-ID: <20200518151838.GL32394@willie-the-truck>
+References: <1580249770-1088-1-git-send-email-jcrouse@codeaurora.org>
+ <1580249770-1088-3-git-send-email-jcrouse@codeaurora.org>
+ <20200318224840.GA10796@willie-the-truck>
+ <CAF6AEGu-hj6=3rsCe5XeBq_ffoq9VFmL+ycrQ8N=iv89DZf=8Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfI6Lht0ujiOXn8w5y/udiDLlkwMRqX60HUf+iJ7HJGUpwLICDz656fqMWX//dHjq1DNJuQh7kF3onp42CadT3ClOKvouGOMf5oKLKuIeja2xByT9mRdh
- WKXrOGq72IFFDv1SEeMOQs0ZEwqEY7RjYh3senwLjJEjLaYB6WJHezFte8Lb/ns/erZ5w2Dnvt2mc9w8n33seQAbw+D66kWiBDl+cchpqeUsALXPN1GE8ljF
- PygvybUsvwXN0RFiuA6hX2xoOLhQO6yRN3UgB90to+OYrqOSXciaHs3uEISQ84dR1mNe0egY0JnLygyvaOIQ/Ih8SgjEtr3e5itS7dL8lV1Yi+tQzjYGAuB7
- Bk5ZDrl8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGu-hj6=3rsCe5XeBq_ffoq9VFmL+ycrQ8N=iv89DZf=8Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergey,
+On Wed, Mar 18, 2020 at 04:43:07PM -0700, Rob Clark wrote:
+> On Wed, Mar 18, 2020 at 3:48 PM Will Deacon <will@kernel.org> wrote:
+> > On Tue, Jan 28, 2020 at 03:16:06PM -0700, Jordan Crouse wrote:
+> > > Support auxiliary domains for arm-smmu-v2 to initialize and support
+> > > multiple pagetables for a single SMMU context bank. Since the smmu-v2
+> > > hardware doesn't have any built in support for switching the pagetable
+> > > base it is left as an exercise to the caller to actually use the pagetable.
+> > >
+> > > Aux domains are supported if split pagetable (TTBR1) support has been
+> > > enabled on the master domain.  Each auxiliary domain will reuse the
+> > > configuration of the master domain. By default the a domain with TTBR1
+> > > support will have the TTBR0 region disabled so the first attached aux
+> > > domain will enable the TTBR0 region in the hardware and conversely the
+> > > last domain to be detached will disable TTBR0 translations.  All subsequent
+> > > auxiliary domains create a pagetable but not touch the hardware.
+> > >
+> > > The leaf driver will be able to query the physical address of the
+> > > pagetable with the DOMAIN_ATTR_PTBASE attribute so that it can use the
+> > > address with whatever means it has to switch the pagetable base.
+> > >
+> > > Following is a pseudo code example of how a domain can be created
+> > >
+> > >  /* Check to see if aux domains are supported */
+> > >  if (iommu_dev_has_feature(dev, IOMMU_DEV_FEAT_AUX)) {
+> > >        iommu = iommu_domain_alloc(...);
+> > >
+> > >        if (iommu_aux_attach_device(domain, dev))
+> > >                return FAIL;
+> > >
+> > >       /* Save the base address of the pagetable for use by the driver
+> > >       iommu_domain_get_attr(domain, DOMAIN_ATTR_PTBASE, &ptbase);
+> > >  }
+> >
+> > I'm not really understanding what the pagetable base gets used for here and,
+> > to be honest with you, the whole thing feels like a huge layering violation
+> > with the way things are structured today. Why doesn't the caller just
+> > interface with io-pgtable directly?
+> >
+> > Finally, if we need to support context-switching TTBR0 for a live domain
+> > then that code really needs to live inside the SMMU driver because the
+> > ASID and TLB management necessary to do that safely doesn't belong anywhere
+> > else.
+> 
+> We do in fact need live domain switching, that is really the whole
+> point.  The GPU CP (command processor/parser) is directly updating
+> TTBR0 and triggering TLB flush, asynchronously from the CPU.
+> 
+> And I think the answer about ASID is easy (on current hw).. it must be zero[*].
 
-On 14/05/2020 18:01, Sergey Senozhatsky wrote:
-> Hello
-> 
-> v6 changes:
-> The design has been slightly reworked. The cache-hints capability has
-> been renamed to SUPPORTS_MMAP_CACHE_HINTS and is reported for all queues
-> that support MMAP and allow cache hints. However, the actual hints and
-> memory consistency are ignored unless the queue is used for the MMAP
-> streaming I/O. Plus some cleanups, documentation updates, and so on.
+Using ASID zero is really bad, because it means that you will end up sharing
+TLB entries with whichever device is using context bank 0.
 
-This looks good. If there are no new comments then I plan to make a PR for 5.9 in
-two weeks.
+Is the SMMU only used by the GPU in your SoC?
 
-Thank you for all your work on this!
-
-Regards,
-
-	Hans
-
-> 
-> Previous versions:
-> v5 link: https://lore.kernel.org/lkml/20200424092920.4801-1-sergey.senozhatsky@gmail.com
-> v4 link: https://lore.kernel.org/lkml/20200302041213.27662-1-senozhatsky@chromium.org/
-> v3 link: https://lore.kernel.org/lkml/20200226111529.180197-1-senozhatsky@chromium.org
-> v2 link: https://lore.kernel.org/lkml/20200204025641.218376-1-senozhatsky@chromium.org/
-> v1 link: https://lore.kernel.org/lkml/20191217032034.54897-1-senozhatsky@chromium.org/
-> 
-> Series Intro
-> ========================================================================
-> 
->         This is a reworked version of the vb2 cache hints
-> (V4L2_BUF_FLAG_NO_CACHE_INVALIDATE / V4L2_BUF_FLAG_NO_CACHE_CLEAN)
-> support patch series which previsouly was developed by Sakari and
-> Laurent [0].
-> 
-> The patch set attempts to preserve the existing behvaiour - cache
-> sync is performed in ->prepare() and ->finish() (unless the buffer
-> is DMA exported). User space can request “default behavior” override
-> with cache management hints, which are handled on a per-buffer basis
-> and should be supplied with v4l2_buffer ->flags during buffer
-> preparation. There are two possible hints:
-> 
-> - V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
->         No cache sync on ->finish()
-> 
-> - V4L2_BUF_FLAG_NO_CACHE_CLEAN
->         No cache sync on ->prepare()
-> 
-> In order to keep things on the safe side, we also require driver
-> to explicitly state which of its queues (if any) support user space
-> cache management hints (such queues should have ->allow_cache_hints
-> bit set).
-> 
-> The patch set also (to some extent) simplifies allocators' ->prepare()
-> and ->finish() callbacks. Namely, we move cache management decision
-> making to the upper - core - layer. For example, if, previously, we
-> would have something like this
-> 
->         vb2_buffer_done()
->           vb2_dc_finish()
->             if (buf->db_attach)
->               return;
-> 
-> where each allocators' ->finish() callback would either bail
-> out (DMA exported buffer, for instance) or sync, now that "bail
-> out or sync" decision is made before we call into the allocator.
-> 
-> Along with cache management hints, user space is also able to
-> adjust queue's memory consistency attributes. Memory consistency
-> attribute (dma_attrs) is per-queue, yet it plays its role on the
-> allocator level, when we allocate buffers’ private memory (planes).
-> For the time being, only one consistency attribute is supported:
-> DMA_ATTR_NON_CONSISTENT.
-> 
-> [0] https://www.mail-archive.com/linux-media@vger.kernel.org/msg112459.html
-> 
-> Sergey Senozhatsky (14):
->   videobuf2: use explicit unsigned int in vb2_queue
->   videobuf2: add cache management members
->   videobuf2: handle V4L2 buffer cache flags
->   videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->   videobuf2: add queue memory consistency parameter
->   videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->   videobuf2: factor out planes prepare/finish functions
->   videobuf2: do not sync caches when we are allowed not to
->   videobuf2: check ->synced flag in prepare() and finish()
->   videobuf2: add begin/end cpu_access callbacks to dma-contig
->   videobuf2: add begin/end cpu_access callbacks to dma-sg
->   videobuf2: don't test db_attach in dma-contig prepare and finish
->   videobuf2: remove redundant if-statement
->   media: vivid: add cache_hints module param
-> 
->  Documentation/admin-guide/media/vivid.rst     |   9 ++
->  .../userspace-api/media/v4l/buffer.rst        |  40 +++++-
->  .../media/v4l/vidioc-create-bufs.rst          |   7 +-
->  .../media/v4l/vidioc-reqbufs.rst              |  21 ++-
->  .../media/common/videobuf2/videobuf2-core.c   | 121 +++++++++++++-----
->  .../common/videobuf2/videobuf2-dma-contig.c   |  44 ++++++-
->  .../media/common/videobuf2/videobuf2-dma-sg.c |  38 ++++--
->  .../media/common/videobuf2/videobuf2-v4l2.c   |  72 ++++++++++-
->  drivers/media/dvb-core/dvb_vb2.c              |   2 +-
->  drivers/media/test-drivers/vivid/vivid-core.c |   9 ++
->  drivers/media/v4l2-core/v4l2-compat-ioctl32.c |  10 +-
->  drivers/media/v4l2-core/v4l2-ioctl.c          |   5 +-
->  include/media/videobuf2-core.h                |  47 +++++--
->  include/uapi/linux/videodev2.h                |  14 +-
->  14 files changed, 366 insertions(+), 73 deletions(-)
-> 
-
+Will
