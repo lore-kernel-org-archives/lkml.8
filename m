@@ -2,94 +2,113 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5157C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71440206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90477206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589834587;
+	bh=DVpqsXwckSCUbAJoI8aDzAaM3G/Kl8m8ZNDDVrz/OeU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OngD0PBN50eQpv/bvKJYFajbI/BK8votj+HBGlz3k+PgfEyuvk38wcMut99wWIKev
+	 R+cprfJ/l5mjjcFPYtjQCm/y429/oeqL7POejS551TOWMptRWhK+ZAO2Dw06He98t5
+	 2j+FEIGZ+po9okSDg+zNc2nkRSiqbpnp/l/GAvI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgERUmX (ORCPT
+        id S1727957AbgERUnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:42:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgERUmX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:42:23 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AE8C061A0C;
-        Mon, 18 May 2020 13:42:23 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jama5-00Fkrl-PA; Mon, 18 May 2020 22:41:49 +0200
-Message-ID: <d81601b17065d7dc3b78bf8d68faf0fbfdb8c936.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Steve deRosier <derosier@gmail.com>,
-        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com,
-        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        ath10k@lists.infradead.org
-Date:   Mon, 18 May 2020 22:41:48 +0200
-In-Reply-To: <20200518133521.6052042e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20200515212846.1347-1-mcgrof@kernel.org>
-         <20200515212846.1347-13-mcgrof@kernel.org>
-         <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
-         <20200518165154.GH11244@42.do-not-panic.com>
-         <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
-         <20200518170934.GJ11244@42.do-not-panic.com>
-         <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
-         <20200518171801.GL11244@42.do-not-panic.com>
-         <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
-         <20200518190930.GO11244@42.do-not-panic.com>
-         <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
-         <20200518132828.553159d9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-         <8d7a3bed242ac9d3ec55a4c97e008081230f1f6d.camel@sipsolutions.net>
-         <20200518133521.6052042e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Mon, 18 May 2020 16:43:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727037AbgERUnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 16:43:06 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E1DF20756
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589834585;
+        bh=DVpqsXwckSCUbAJoI8aDzAaM3G/Kl8m8ZNDDVrz/OeU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=clKX/hUxYgFS2FFs8J3IDHgLC/wBOtPCM7cN4hkBHup2WFFRJBBlFYMS7no6yHv+u
+         kDuqqHtH61NuCg1fqB0rdA9fSWpMcuDa8N/GoCWwVujIqUgLtYysUFvrbsAZPYiI5g
+         mUs76enQ6tuPUrEpsw16/Z4o6M6HAMId3ffPB4Xw=
+Received: by mail-wm1-f53.google.com with SMTP id m12so862310wmc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:43:05 -0700 (PDT)
+X-Gm-Message-State: AOAM532X3XwwUVdWxbXl5nW+WB38Z4xtDcWuyaWwMKnW07J8q0qgZCYf
+        yx4nrQ8fwX4OwjyIf/ZxF0C6tfLo2WOSnQZEQskIrg==
+X-Google-Smtp-Source: ABdhPJw+pnVx9jgNe6Ljpq4BSZjMEWHBDxTURrm0IbPOmjOd+hx1REtWyjfWXvQ7ibqaNxC225g6lK4eEbesnQ4jEYk=
+X-Received: by 2002:a1c:9989:: with SMTP id b131mr1246250wme.176.1589834583789;
+ Mon, 18 May 2020 13:43:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200515234547.710474468@linutronix.de> <20200515235124.783722942@linutronix.de>
+ <CALCETrW2negGYRSQ8dqFVdiWGtYpYf6nKe5_hkotNv0e5mNBxA@mail.gmail.com>
+ <87zha7c5h5.fsf@nanos.tec.linutronix.de> <CALCETrVuA25n_d-3KMvvDxuqZeBEEYb6n=QAXOhBFkgS1Dk+UA@mail.gmail.com>
+ <877dx9zn47.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <877dx9zn47.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 18 May 2020 13:42:52 -0700
+X-Gmail-Original-Message-ID: <CALCETrW9sCjeRgNZ4h4f-zNzheerxWxEvUyCaPkO1nHqV99EpQ@mail.gmail.com>
+Message-ID: <CALCETrW9sCjeRgNZ4h4f-zNzheerxWxEvUyCaPkO1nHqV99EpQ@mail.gmail.com>
+Subject: Re: [patch V6 04/37] x86: Make hardware latency tracing explicit
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 13:35 -0700, Jakub Kicinski wrote:
-> 
-> It's intended to be a generic netlink channel for configuring devices.
-> 
-> All the firmware-related interfaces have no dependencies on netdevs,
-> in fact that's one of the reasons we moved to devlink - we don't want
-> to hold rtnl lock just for talking to device firmware.
+On Mon, May 18, 2020 at 1:03 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Lutomirski <luto@kernel.org> writes:
+> > On Sun, May 17, 2020 at 1:48 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> Remember this is about ensuring that all the state is properly
+> >> established before any of this instrumentation muck can happen.
+> >>
+> >> DR7 handling is specific to #DB and done even before nmi_enter to
+> >> prevent recursion.
+> >
+> > So why is this change needed?
+>
+> We really want nmi_enter() to be the carefully crafted mechanism which
+> establishes correct state in whatever strange context the exception
+> hits. Not more, not less.
+>
+> Random instrumentation has absolutely no business there and I went a
+> long way to make sure that this is enforcible by objtool.
+>
+> Aside of that the tracing which is contained in nmi_enter() is about
+> taking timestamps for hardware latency detection. If someone runs
+> hardware latency detection with active break/watchpoints then I really
+> can't help it.
+>
 
-Sounds good :)
-
-So I guess Luis just has to add some way in devlink to hook up devlink
-health in a simple way to drivers, perhaps? I mean, many drivers won't
-really want to use devlink for anything else, so I guess it should be as
-simple as the API that Luis proposed ("firmware crashed for this struct
-device"), if nothing more interesting is done with devlink?
-
-Dunno. But anyway sounds like it should somehow integrate there rather
-than the way this patchset proposed?
-
-johannes
-
+Okay.  I'll stop looking for the bug you're fixing, then.
