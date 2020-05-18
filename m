@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ED6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E44C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFC820671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE56520671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825444;
-	bh=qPHsgWoFLk4NPnZi5Ufy/BdEGqUt4vkX6hmOfYFIzsg=;
+	s=default; t=1589825447;
+	bh=j6Q93TPyp66Zjj7q2ocE5UWkMJC5FKfVTyZa9hUgzEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=euYxQmW3PM0E4++b3UBA4ceMeTXKeMbIczrwfuzLRUWPEcDu5NRuJi0YjvucQBkWK
-	 7IeOswkzEm5C3kxB2Aj6Y0LBcgQoblyGGzX3/Exx3HD1fYsPS88cIERKtSCLYEoAny
-	 M09kh3ih6wkc6AvK/zbWP+3uaI41FG64RjSsF4pg=
+	b=PHlPMaMshVkRg40LoArRGK5qgm1MajziK4O66OhUQQUyhvfHUMTsjWAAMds4/8YeO
+	 q2jgVNLqi5xi8FhWvkPu3Rc0h7hmtQetmeuLye/bedzGCOe/AkiwO+tbmksRmlkLYa
+	 /Oqc3ta4HT2oLVr26c7iekJ4u7SDt8ZWj9EDL1vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387602AbgERSKn (ORCPT
+        id S1732931AbgERSFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:10:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52818 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:05:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732933AbgERSFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:21 -0400
+        id S1732893AbgERSFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F79F20671;
-        Mon, 18 May 2020 18:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F8D620671;
+        Mon, 18 May 2020 18:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825120;
-        bh=qPHsgWoFLk4NPnZi5Ufy/BdEGqUt4vkX6hmOfYFIzsg=;
+        s=default; t=1589825107;
+        bh=j6Q93TPyp66Zjj7q2ocE5UWkMJC5FKfVTyZa9hUgzEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cVdHxchjKWJfOqzft5v/XmnGgqPzoLQxErlqwgyFSqSsKABmUffrJWdoK8aGsHe+E
-         hGkzTpptP+LAVpmwAADIesgwgRdalvpUMZaFYQWJRUCGDtdJT5p9hd4FCEod1z1Jg6
-         CDa6FelO/6/PzIPxQfXZD4Mnpjq+97Je5TEM7SQ8=
+        b=GeTV6cu+BE73rdRl7w6Bc4qnVvhsZslVqXriuXdYQ70Zd1viyRTfnuCG8xv+JXdsH
+         2iR5CQwPnlX2pldfF6FbHnbmSlQKV1nCuPuEEa3h3WU2BFx8v0FYoOKnaPnkmqno1C
+         ctzCpvV5zzWrwO0Sz4iCN17pJatVFXLv8JEBKquo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 138/194] ALSA: hda/realtek - Limit int mic boost for Thinkpad T530
-Date:   Mon, 18 May 2020 19:37:08 +0200
-Message-Id: <20200518173542.846812514@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 133/194] gcc-10: avoid shadowing standard library free() in crypto
+Date:   Mon, 18 May 2020 19:37:03 +0200
+Message-Id: <20200518173542.515765508@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -58,66 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit b590b38ca305d6d7902ec7c4f7e273e0069f3bcc upstream.
+commit 1a263ae60b04de959d9ce9caea4889385eefcc7b upstream.
 
-Lenovo Thinkpad T530 seems to have a sensitive internal mic capture
-that needs to limit the mic boost like a few other Thinkpad models.
-Although we may change the quirk for ALC269_FIXUP_LENOVO_DOCK, this
-hits way too many other laptop models, so let's add a new fixup model
-that limits the internal mic boost on top of the existing quirk and
-apply to only T530.
+gcc-10 has started warning about conflicting types for a few new
+built-in functions, particularly 'free()'.
 
-BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1171293
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200514160533.10337-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This results in warnings like:
+
+   crypto/xts.c:325:13: warning: conflicting types for built-in function ‘free’; expected ‘void(void *)’ [-Wbuiltin-declaration-mismatch]
+
+because the crypto layer had its local freeing functions called
+'free()'.
+
+Gcc-10 is in the wrong here, since that function is marked 'static', and
+thus there is no chance of confusion with any standard library function
+namespace.
+
+But the simplest thing to do is to just use a different name here, and
+avoid this gcc mis-feature.
+
+[ Side note: gcc knowing about 'free()' is in itself not the
+  mis-feature: the semantics of 'free()' are special enough that a
+  compiler can validly do special things when seeing it.
+
+  So the mis-feature here is that gcc thinks that 'free()' is some
+  restricted name, and you can't shadow it as a local static function.
+
+  Making the special 'free()' semantics be a function attribute rather
+  than tied to the name would be the much better model ]
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ crypto/lrw.c |    4 ++--
+ crypto/xts.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5856,6 +5856,7 @@ enum {
- 	ALC269_FIXUP_HP_LINE1_MIC1_LED,
- 	ALC269_FIXUP_INV_DMIC,
- 	ALC269_FIXUP_LENOVO_DOCK,
-+	ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST,
- 	ALC269_FIXUP_NO_SHUTUP,
- 	ALC286_FIXUP_SONY_MIC_NO_PRESENCE,
- 	ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT,
-@@ -6175,6 +6176,12 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT
- 	},
-+	[ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc269_fixup_limit_int_mic_boost,
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_LENOVO_DOCK,
-+	},
- 	[ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc269_fixup_pincfg_no_hp_to_lineout,
-@@ -7317,7 +7324,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x21ca, "Thinkpad L412", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x21e9, "Thinkpad Edge 15", ALC269_FIXUP_SKU_IGNORE),
--	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK),
-+	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST),
- 	SND_PCI_QUIRK(0x17aa, 0x21fa, "Thinkpad X230", ALC269_FIXUP_LENOVO_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x21f3, "Thinkpad T430", ALC269_FIXUP_LENOVO_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x21fb, "Thinkpad T430s", ALC269_FIXUP_LENOVO_DOCK),
-@@ -7456,6 +7463,7 @@ static const struct hda_model_fixup alc2
- 	{.id = ALC269_FIXUP_HEADSET_MODE, .name = "headset-mode"},
- 	{.id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC, .name = "headset-mode-no-hp-mic"},
- 	{.id = ALC269_FIXUP_LENOVO_DOCK, .name = "lenovo-dock"},
-+	{.id = ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST, .name = "lenovo-dock-limit-boost"},
- 	{.id = ALC269_FIXUP_HP_GPIO_LED, .name = "hp-gpio-led"},
- 	{.id = ALC269_FIXUP_HP_DOCK_GPIO_MIC1_LED, .name = "hp-dock-gpio-mic1-led"},
- 	{.id = ALC269_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "dell-headset-multi"},
+--- a/crypto/lrw.c
++++ b/crypto/lrw.c
+@@ -287,7 +287,7 @@ static void exit_tfm(struct crypto_skcip
+ 	crypto_free_skcipher(ctx->child);
+ }
+ 
+-static void free(struct skcipher_instance *inst)
++static void free_inst(struct skcipher_instance *inst)
+ {
+ 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
+ 	kfree(inst);
+@@ -400,7 +400,7 @@ static int create(struct crypto_template
+ 	inst->alg.encrypt = encrypt;
+ 	inst->alg.decrypt = decrypt;
+ 
+-	inst->free = free;
++	inst->free = free_inst;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+ 	if (err)
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -322,7 +322,7 @@ static void exit_tfm(struct crypto_skcip
+ 	crypto_free_cipher(ctx->tweak);
+ }
+ 
+-static void free(struct skcipher_instance *inst)
++static void free_inst(struct skcipher_instance *inst)
+ {
+ 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
+ 	kfree(inst);
+@@ -434,7 +434,7 @@ static int create(struct crypto_template
+ 	inst->alg.encrypt = encrypt;
+ 	inst->alg.decrypt = decrypt;
+ 
+-	inst->free = free;
++	inst->free = free_inst;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+ 	if (err)
 
 
