@@ -2,53 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D811C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D73D20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909DB20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826260;
-	bh=phbduZygKDjvLEczF+LMzOvnJFb1dJQEvGrvC6l95N4=;
+	s=default; t=1589826266;
+	bh=9M0s6ogtpfEzHXEjhSDKcHFJqu2mZ6vE1gJFHGx8pzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TtWXg+BA+GfGGRbqRh+nfmCZQzib6R0y/1l80Tym20JXDTQ/2oxfRRuQs4V7QYGyz
-	 QnBpQCV3eAVRhJuVVMEniFSUCZQDzEUQtVyDwcCGYtxpx4zS1vMMU1iX/CBsCRpChT
-	 qbo0AnCksp0sbOxlMB2DZbdGr76TNS8Ai1lhvHoA=
+	b=1CCQDZU8aAMBKCICTpViGm+R5nHQ2QgwNAzumL0k3zXHyNsGDyzl8CyqN2bvsubFS
+	 XnTcUTMO9FpB7WGfw2q4EwJmUNBPQQ2vajqAlECDngHnk2y4krKdBTYeg/FsJag1+p
+	 8Z/DRzIXafJhyyc4M4qvhULdmHKb92hU8wH3jf3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387809AbgERSYT (ORCPT
+        id S1730290AbgERRry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48856 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:47:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbgERRsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:48:08 -0400
+        id S1730254AbgERRrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:47:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43D0220671;
-        Mon, 18 May 2020 17:48:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A066A2083E;
+        Mon, 18 May 2020 17:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824087;
-        bh=phbduZygKDjvLEczF+LMzOvnJFb1dJQEvGrvC6l95N4=;
+        s=default; t=1589824068;
+        bh=9M0s6ogtpfEzHXEjhSDKcHFJqu2mZ6vE1gJFHGx8pzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kqCFAw2zj5oSzlho0mFOV4uwkJ6beJjdA+23EqV2lbRpbJDSdtnrlmM9YDlkIfz2/
-         TUfX7f4sCdY+lksJD3kVYWdE5dXF4fcZpNIetnmMHAV6TEx3mFZrFTlSjMDvQeoLEQ
-         rrWL9OpExZMDmRpHtESw3xxUr3udwMnaYk09+YWo=
+        b=s/hOGvMCF0B2Rm+TGXs8iZ20+vXOeAP4mTBL91AQJ/ISFTTF4ChFuW4X8QhIO+tI0
+         lT56FdJVZL0wUr8rFrcMiChrZkCqBHD2W53RVWpaFu0ZA2en56XDNZGFiNf34EWiMi
+         GQ51waUweP7MjhVG59vp+jOnOvqL4zn4mzaLal5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 066/114] i40iw: Fix error handling in i40iw_manage_arp_cache()
-Date:   Mon, 18 May 2020 19:36:38 +0200
-Message-Id: <20200518173515.055877898@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 058/114] ALSA: hda/hdmi: fix race in monitor detection during probe
+Date:   Mon, 18 May 2020 19:36:30 +0200
+Message-Id: <20200518173513.647373643@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -61,36 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 37e31d2d26a4124506c24e95434e9baf3405a23a ]
+[ Upstream commit ca76282b6faffc83601c25bd2a95f635c03503ef ]
 
-The i40iw_arp_table() function can return -EOVERFLOW if
-i40iw_alloc_resource() fails so we can't just test for "== -1".
+A race exists between build_pcms() and build_controls() phases of codec
+setup. Build_pcms() sets up notifier for jack events. If a monitor event
+is received before build_controls() is run, the initial jack state is
+lost and never reported via mixer controls.
 
-Fixes: 4e9042e647ff ("i40iw: add hw and utils files")
-Link: https://lore.kernel.org/r/20200422092211.GA195357@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+The problem can be hit at least with SOF as the controller driver. SOF
+calls snd_hda_codec_build_controls() in its workqueue-based probe and
+this can be delayed enough to hit the race condition.
+
+Fix the issue by invalidating the per-pin ELD information when
+build_controls() is called. The existing call to hdmi_present_sense()
+will update the ELD contents. This ensures initial monitor state is
+correctly reflected via mixer controls.
+
+BugLink: https://github.com/thesofproject/linux/issues/1687
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200428123836.24512-1-kai.vehmanen@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/i40iw/i40iw_hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_hdmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_hw.c b/drivers/infiniband/hw/i40iw/i40iw_hw.c
-index 476867a3f584f..4ded9411fb325 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_hw.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_hw.c
-@@ -483,7 +483,7 @@ void i40iw_manage_arp_cache(struct i40iw_device *iwdev,
- 	int arp_index;
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 435c0efb9bf29..6b4ebaefd8f85 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2212,7 +2212,9 @@ static int generic_hdmi_build_controls(struct hda_codec *codec)
  
- 	arp_index = i40iw_arp_table(iwdev, ip_addr, ipv4, mac_addr, action);
--	if (arp_index == -1)
-+	if (arp_index < 0)
- 		return;
- 	cqp_request = i40iw_get_cqp_request(&iwdev->cqp, false);
- 	if (!cqp_request)
+ 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
+ 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
++		struct hdmi_eld *pin_eld = &per_pin->sink_eld;
+ 
++		pin_eld->eld_valid = false;
+ 		hdmi_present_sense(per_pin, 0);
+ 	}
+ 
 -- 
 2.20.1
 
