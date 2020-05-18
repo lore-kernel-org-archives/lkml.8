@@ -2,304 +2,132 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF4B820758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC1020758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgERDG1 (ORCPT
+        id S1727030AbgERDMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 23:06:27 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39772 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726639AbgERDG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 23:06:26 -0400
-IronPort-SDR: bXB6AeMxhvwiK9dC5jY/JRLc3Z7xfq/fIcezBTm/K6dEsDpF9gr7VFae/p7Zp/loP/vNg3tBjc
- qpIEnAHcmFaw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 20:06:26 -0700
-IronPort-SDR: ZodtljUh9+7MSzGOSifcMary7mu0dRa+dQOFzSBH2T0ZlWSnK8HGJjF9JydYxVA7Q3evPo+gpa
- +Opeg/vPxmkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,405,1583222400"; 
-   d="scan'208";a="411106816"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
-  by orsmga004.jf.intel.com with ESMTP; 17 May 2020 20:06:22 -0700
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        xin.zeng@intel.com, hang.yuan@intel.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [QEMU RFC PATCH v4] hw/vfio/pci: remap bar region irq
-Date:   Sun, 17 May 2020 22:56:18 -0400
-Message-Id: <20200518025618.14659-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200518025245.14425-1-yan.y.zhao@intel.com>
-References: <20200518025245.14425-1-yan.y.zhao@intel.com>
+        Sun, 17 May 2020 23:12:21 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:54610 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726639AbgERDMV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 23:12:21 -0400
+Received: by mail-io1-f70.google.com with SMTP id t23so7487334iog.21
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 20:12:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=CAsDS7ZIgusWr675bltnlikqaEpJeccBYtHQhstg4Ic=;
+        b=aI3GL71LsFYfdQ0DkHDYZqiC0ZtyrFVYfgH4B3Zq21riIUEv/7aTwor2EuE+oAtN03
+         n2Igi74HFvJ2TmrIHlnWUA3BQRp6AEsny5gPgsRUoU+BUKbumufnpzDCzpgfMS+UOwkH
+         fdlx/ExChp9XZgYMIiTTPmxGirjHHkjtbf3NpmAZcBNQ/kWa7ZKV2yyoxfmG/excaEXO
+         Vdo7A0E+dtGx3vBYxJnoHW1dS5oPXOHOmHGUhS1WCc/fk9GVxlxLJ2c0AZ6L4kyGHnHX
+         LTBS785xThoRjO0HetW6jdfBRtER5mHVpRw9tWGZUa6/CTzXvCgCQNPqBhTR9S4yIsh9
+         riSA==
+X-Gm-Message-State: AOAM530EOwvYYFvyDKJu8O85UGTWVrA00L/fdmsN45rVm1KGrUOUtAwh
+        2UX08aDzEKOOj7psXanWPnLc4ERikUdKZ10YiFizZdkl9L6G
+X-Google-Smtp-Source: ABdhPJyK2qLknPz//aJAU2TRbiB9Ss/X223242JI7yptearMkyTLWIEipJILHaxT6vZdqEsNMzTeqMYHboGXUPeSrjtOWyAxJc9P
+MIME-Version: 1.0
+X-Received: by 2002:a02:a11c:: with SMTP id f28mr14094576jag.22.1589771539493;
+ Sun, 17 May 2020 20:12:19 -0700 (PDT)
+Date:   Sun, 17 May 2020 20:12:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e2b80305a5e387d7@google.com>
+Subject: WARNING in get_probe_ref
+From:   syzbot <syzbot+8672dcb9d10011c0a160@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added an irq type VFIO_IRQ_TYPE_REMAP_BAR_REGION to
-dynamically query and remap BAR regions.
+Hello,
 
-QEMU decodes the index of the BARs by reading cnt of eventfd.
-If bit n is set, the corresponding BAR will be requeried and
-its subregions will be remapped according to the its new flags.
+syzbot found the following crash on:
 
-rely on [1] "vfio: Add a funtion to return a specific irq capabilities"
-[1] https://www.mail-archive.com/qemu-devel@nongnu.org/msg621645.html
+HEAD commit:    24085f70 Merge tag 'trace-v5.7-rc4' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=117087fa100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=efdde85c3af536b5
+dashboard link: https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101c09dc100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=178fa32c100000
 
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8672dcb9d10011c0a160@syzkaller.appspotmail.com
+
+RBP: 0000000000000006 R08: 0000000000000002 R09: 0000000002003033
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402f60
+R13: 0000000000402ff0 R14: 0000000000000000 R15: 0000000000000000
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 7052 at kernel/trace/blktrace.c:1115 blk_register_tracepoints kernel/trace/blktrace.c:1115 [inline]
+WARNING: CPU: 0 PID: 7052 at kernel/trace/blktrace.c:1115 get_probe_ref+0x327/0x3e0 kernel/trace/blktrace.c:324
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7052 Comm: syz-executor149 Not tainted 5.7.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:blk_register_tracepoints kernel/trace/blktrace.c:1115 [inline]
+RIP: 0010:get_probe_ref+0x327/0x3e0 kernel/trace/blktrace.c:324
+Code: 8a e8 3d d3 fb ff 31 ff 89 c3 89 c6 e8 62 56 fa ff 85 db 0f 84 1e fd ff ff e8 e5 54 fa ff 0f 0b e9 12 fd ff ff e8 d9 54 fa ff <0f> 0b e9 45 fd ff ff e8 cd 54 fa ff 0f 0b e9 66 fd ff ff e8 c1 54
+RSP: 0018:ffffc900016a7b88 EFLAGS: 00010293
+RAX: ffff8880953ba600 RBX: 00000000fffffff4 RCX: ffffffff8178dbdb
+RDX: 0000000000000000 RSI: ffffffff8178de97 RDI: 0000000000000005
+RBP: ffff8880a4640700 R08: ffff8880953ba600 R09: fffffbfff133f1c1
+R10: ffffffff899f8e07 R11: fffffbfff133f1c0 R12: ffff8880a019d100
+R13: ffff888089d24a10 R14: 0000000000000000 R15: ffff8880a4640730
+ do_blk_trace_setup+0x7d3/0xb30 kernel/trace/blktrace.c:550
+ __blk_trace_setup+0xca/0x180 kernel/trace/blktrace.c:571
+ blk_trace_setup+0x43/0x60 kernel/trace/blktrace.c:589
+ sg_ioctl_common+0x2f8/0x2720 drivers/scsi/sg.c:1120
+ sg_ioctl+0x8f/0x120 drivers/scsi/sg.c:1163
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:771
+ __do_sys_ioctl fs/ioctl.c:780 [inline]
+ __se_sys_ioctl fs/ioctl.c:778 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:778
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x445ca9
+Code: e8 ac e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b ce fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff1c9ef988 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fff1c9ef990 RCX: 0000000000445ca9
+RDX: 0000000020000140 RSI: 00000000c0481273 RDI: 0000000000000004
+RBP: 0000000000000006 R08: 0000000000000002 R09: 0000000002003033
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402f60
+R13: 0000000000402ff0 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
- hw/vfio/common.c              | 50 ++++++++++++++++++++++++
- hw/vfio/pci.c                 | 90 +++++++++++++++++++++++++++++++++++++++++++
- hw/vfio/pci.h                 |  2 +
- include/hw/vfio/vfio-common.h |  2 +
- linux-headers/linux/vfio.h    | 11 ++++++
- 5 files changed, 155 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/hw/vfio/common.c b/hw/vfio/common.c
-index a041c3b..cf24293 100644
---- a/hw/vfio/common.c
-+++ b/hw/vfio/common.c
-@@ -1284,6 +1284,56 @@ void vfio_region_unmap(VFIORegion *region)
-     }
- }
- 
-+/*
-+ * re-query a region's flags,
-+ * and update its mmap'd subregions.
-+ * It does not support change a region's size.
-+ */
-+void vfio_region_reset_mmap(VFIODevice *vbasedev, VFIORegion *region, int index)
-+{
-+    struct vfio_region_info *new;
-+
-+    if (!region->mem) {
-+        return;
-+    }
-+
-+    if (vfio_get_region_info(vbasedev, index, &new)) {
-+        goto out;
-+    }
-+
-+    if (region->size != new->size) {
-+        error_report("vfio: resetting of region size is not supported");
-+        goto out;
-+    }
-+
-+    if (region->flags == new->flags) {
-+        goto out;
-+    }
-+
-+    /* ummap old mmap'd subregions, if any */
-+    vfio_region_unmap(region);
-+    region->nr_mmaps = 0;
-+    g_free(region->mmaps);
-+    region->mmaps = NULL;
-+
-+    /* setup new mmap'd subregions*/
-+    region->flags = new->flags;
-+    if (vbasedev->no_mmap ||
-+            !(region->flags & VFIO_REGION_INFO_FLAG_MMAP)) {
-+        goto out;
-+    }
-+
-+    if (vfio_setup_region_sparse_mmaps(region, new)) {
-+        region->nr_mmaps = 1;
-+        region->mmaps = g_new0(VFIOMmap, region->nr_mmaps);
-+        region->mmaps[0].offset = 0;
-+        region->mmaps[0].size = region->size;
-+    }
-+    vfio_region_mmap(region);
-+out:
-+    g_free(new);
-+}
-+
- void vfio_region_exit(VFIORegion *region)
- {
-     int i;
-diff --git a/hw/vfio/pci.c b/hw/vfio/pci.c
-index c70f153..12998c5 100644
---- a/hw/vfio/pci.c
-+++ b/hw/vfio/pci.c
-@@ -2883,6 +2883,94 @@ static void vfio_unregister_req_notifier(VFIOPCIDevice *vdev)
-     vdev->req_enabled = false;
- }
- 
-+static void vfio_remap_bar_notifier_handler(void *opaque)
-+{
-+    VFIOPCIDevice *vdev = opaque;
-+    uint64_t bars;
-+    ssize_t ret;
-+    int i;
-+
-+    ret = read(vdev->remap_bar_notifier.rfd, &bars, sizeof(bars));
-+    if (ret != sizeof(bars)) {
-+            return;
-+    }
-+    for (i = 0; i < PCI_ROM_SLOT; i++) {
-+        VFIORegion *region = &vdev->bars[i].region;
-+
-+        if (!test_bit(i, &bars)) {
-+            continue;
-+        }
-+
-+        vfio_region_reset_mmap(&vdev->vbasedev, region, i);
-+    }
-+
-+    /* write 0 to notify kernel that we're done */
-+    bars = 0;
-+    write(vdev->remap_bar_notifier.wfd, &bars, sizeof(bars));
-+}
-+
-+static void vfio_register_remap_bar_notifier(VFIOPCIDevice *vdev)
-+{
-+    int ret;
-+    struct vfio_irq_info *irq;
-+    Error *err = NULL;
-+    int32_t fd;
-+
-+    ret = vfio_get_dev_irq_info(&vdev->vbasedev,
-+                                VFIO_IRQ_TYPE_REMAP_BAR_REGION,
-+                                VFIO_IRQ_SUBTYPE_REMAP_BAR_REGION,
-+                                &irq);
-+    if (ret) {
-+        return;
-+    }
-+    ret = event_notifier_init(&vdev->remap_bar_notifier, 0);
-+    if (ret) {
-+        error_report("vfio: Failed to init event notifier for remap bar irq");
-+        return;
-+    }
-+
-+    fd = event_notifier_get_fd(&vdev->remap_bar_notifier);
-+    qemu_set_fd_handler(fd, vfio_remap_bar_notifier_handler, NULL, vdev);
-+
-+    if (vfio_set_irq_signaling(&vdev->vbasedev, irq->index, 0,
-+                               VFIO_IRQ_SET_ACTION_TRIGGER, fd, &err)) {
-+        error_reportf_err(err, VFIO_MSG_PREFIX, vdev->vbasedev.name);
-+        qemu_set_fd_handler(fd, NULL, NULL, vdev);
-+        event_notifier_cleanup(&vdev->remap_bar_notifier);
-+    } else {
-+        vdev->remap_bar_enabled = true;
-+    }
-+};
-+
-+static void vfio_unregister_remap_bar_notifier(VFIOPCIDevice *vdev)
-+{
-+    struct vfio_irq_info *irq;
-+    Error *err = NULL;
-+    int ret;
-+
-+    if (!vdev->remap_bar_enabled) {
-+        return;
-+    }
-+
-+    ret = vfio_get_dev_irq_info(&vdev->vbasedev,
-+                                VFIO_IRQ_TYPE_REMAP_BAR_REGION,
-+                                VFIO_IRQ_SUBTYPE_REMAP_BAR_REGION,
-+                                &irq);
-+    if (ret) {
-+        return;
-+    }
-+
-+    if (vfio_set_irq_signaling(&vdev->vbasedev, irq->index, 0,
-+                               VFIO_IRQ_SET_ACTION_TRIGGER, -1, &err)) {
-+        error_reportf_err(err, VFIO_MSG_PREFIX, vdev->vbasedev.name);
-+    }
-+    qemu_set_fd_handler(event_notifier_get_fd(&vdev->remap_bar_notifier),
-+                        NULL, NULL, vdev);
-+    event_notifier_cleanup(&vdev->req_notifier);
-+
-+    vdev->remap_bar_enabled = false;
-+}
-+
- static void vfio_realize(PCIDevice *pdev, Error **errp)
- {
-     VFIOPCIDevice *vdev = PCI_VFIO(pdev);
-@@ -3194,6 +3282,7 @@ static void vfio_realize(PCIDevice *pdev, Error **errp)
- 
-     vfio_register_err_notifier(vdev);
-     vfio_register_req_notifier(vdev);
-+    vfio_register_remap_bar_notifier(vdev);
-     vfio_setup_resetfn_quirk(vdev);
- 
-     return;
-@@ -3235,6 +3324,7 @@ static void vfio_exitfn(PCIDevice *pdev)
- 
-     vfio_unregister_req_notifier(vdev);
-     vfio_unregister_err_notifier(vdev);
-+    vfio_unregister_remap_bar_notifier(vdev);
-     pci_device_set_intx_routing_notifier(&vdev->pdev, NULL);
-     if (vdev->irqchip_change_notifier.notify) {
-         kvm_irqchip_remove_change_notifier(&vdev->irqchip_change_notifier);
-diff --git a/hw/vfio/pci.h b/hw/vfio/pci.h
-index b148c93..5a1e564 100644
---- a/hw/vfio/pci.h
-+++ b/hw/vfio/pci.h
-@@ -134,6 +134,7 @@ typedef struct VFIOPCIDevice {
-     PCIHostDeviceAddress host;
-     EventNotifier err_notifier;
-     EventNotifier req_notifier;
-+    EventNotifier remap_bar_notifier;
-     int (*resetfn)(struct VFIOPCIDevice *);
-     uint32_t vendor_id;
-     uint32_t device_id;
-@@ -157,6 +158,7 @@ typedef struct VFIOPCIDevice {
-     uint8_t nv_gpudirect_clique;
-     bool pci_aer;
-     bool req_enabled;
-+    bool remap_bar_enabled;
-     bool has_flr;
-     bool has_pm_reset;
-     bool rom_read_failed;
-diff --git a/include/hw/vfio/vfio-common.h b/include/hw/vfio/vfio-common.h
-index a6283b7..1c16790 100644
---- a/include/hw/vfio/vfio-common.h
-+++ b/include/hw/vfio/vfio-common.h
-@@ -188,6 +188,8 @@ int vfio_region_setup(Object *obj, VFIODevice *vbasedev, VFIORegion *region,
- int vfio_region_mmap(VFIORegion *region);
- void vfio_region_mmaps_set_enabled(VFIORegion *region, bool enabled);
- void vfio_region_unmap(VFIORegion *region);
-+void vfio_region_reset_mmap(VFIODevice *vbasedev,
-+                            VFIORegion *region, int index);
- void vfio_region_exit(VFIORegion *region);
- void vfio_region_finalize(VFIORegion *region);
- void vfio_reset_handler(void *opaque);
-diff --git a/linux-headers/linux/vfio.h b/linux-headers/linux/vfio.h
-index 2598a84..2344ca6 100644
---- a/linux-headers/linux/vfio.h
-+++ b/linux-headers/linux/vfio.h
-@@ -703,6 +703,17 @@ struct vfio_irq_info_cap_type {
- 	__u32 subtype;  /* type specific */
- };
- 
-+/* Bar Region Query IRQ TYPE */
-+#define VFIO_IRQ_TYPE_REMAP_BAR_REGION                 (1)
-+
-+/* sub-types for VFIO_IRQ_TYPE_REMAP_BAR_REGION */
-+/*
-+ * This irq notifies userspace to re-query BAR region and remaps the
-+ * subregions.
-+ */
-+#define VFIO_IRQ_SUBTYPE_REMAP_BAR_REGION      (0)
-+
-+
- /**
-  * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_irq_set)
-  *
--- 
-2.7.4
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
