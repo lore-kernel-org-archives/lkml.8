@@ -2,162 +2,154 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA52C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2358B2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C2720756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589808314;
+	bh=LUiGLJFtm9eoZ+pZaHm/Fmfo9ae62W+XvOQCZJC6g+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KHBtcreDlvpW2UIbH1VSK0DWc3qLojpXPOdH4jloPT8jeMpOo10yb5ZhqK021KYoL
+	 u4nuOHqF0qVdc/QSsIOGc/05FT3ZX6pJm1iQy7ghopdA7B4jbqBQdN4jGgwIAz2VnU
+	 w+c7rVqe5sooHWQABz9ixdvYx1wpn7NwZecHNTWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgERNYx (ORCPT
+        id S1727835AbgERNZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:24:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3088 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726726AbgERNYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:24:53 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04ID44Ux134324;
-        Mon, 18 May 2020 09:24:44 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312wsgw03g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 09:24:43 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04IDKR9p083024;
-        Mon, 18 May 2020 09:24:40 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312wsgvyyq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 09:24:39 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IDL6q8010481;
-        Mon, 18 May 2020 13:24:33 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma05fra.de.ibm.com with ESMTP id 3127t5hpm2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 13:24:32 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IDOUw9983518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 13:24:30 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 95D7B42045;
-        Mon, 18 May 2020 13:24:30 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EDA142041;
-        Mon, 18 May 2020 13:24:29 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.67.24])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 18 May 2020 13:24:29 +0000 (GMT)
-Subject: Re: [PATCH v5 06/10] mmap locking API: convert nested write lock
- sites
-To:     Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-7-walken@google.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <e567f21c-3539-09f1-7435-0e46205fa168@linux.ibm.com>
-Date:   Mon, 18 May 2020 15:24:29 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Mon, 18 May 2020 09:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgERNZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:25:12 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3411620709;
+        Mon, 18 May 2020 13:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589808311;
+        bh=LUiGLJFtm9eoZ+pZaHm/Fmfo9ae62W+XvOQCZJC6g+Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fQwCPtJf0yA++YRbg9Kzoyhy/MUwgnB/BBJSOipLZhaMpUBuYWE8bVLHftNhTX+6U
+         peufVqbqF2frSo2064XbfCoCQ1hL8oOzS7f7tl8ye5qiixE0pDGwYDnF5/7X7pIURQ
+         0fT8T09KV8gtlTWj2drIGbgtgKuKC5ZhrDi61Tig=
+Date:   Mon, 18 May 2020 15:25:09 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        "Paul E . McKenney" <paulmck@kernel.org>, stable@kernel.org
+Subject: Re: [PATCH] tick/nohz: Narrow down noise while setting current
+ task's tick dependency
+Message-ID: <20200518132506.GB30646@lenoir>
+References: <20200515003429.4317-1-frederic@kernel.org>
+ <20200518085758.GK2940@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200422001422.232330-7-walken@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 cotscore=-2147483648 suspectscore=0 clxscore=1015
- priorityscore=1501 spamscore=0 malwarescore=0 phishscore=0 bulkscore=0
- adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005180117
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518085758.GK2940@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 22/04/2020 à 02:14, Michel Lespinasse a écrit :
-> Add API for nested write locks and convert the few call sites doing that.
+On Mon, May 18, 2020 at 10:57:58AM +0200, Peter Zijlstra wrote:
+> On Fri, May 15, 2020 at 02:34:29AM +0200, Frederic Weisbecker wrote:
+> > So far setting a tick dependency on any task, including current, used to
+> > trigger an IPI to all CPUs. That's of course suboptimal but it wasn't
+> > an issue as long as it was only used by posix-cpu-timers on nohz_full,
+> > a combo that nobody seemed to use in real life.
+> > 
+> > But RCU started to use task tick dependency on current task to fix
+> > stall issues on callbacks processing. These trigger regular and
+> > undesired system wide IPIs on nohz_full.
+> > 
+> > The fix is very easy while setting a tick dependency on the current
+> > task, only its CPU needs an IPI.
+> > 
+> > Fixes: 6a949b7af82d (rcu: Force on tick when invoking lots of callbacks)
+> > Reported-by: Matt Fleming <matt@codeblueprint.co.uk>
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > Cc: stable@kernel.org
+> > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > ---
+> >  kernel/time/tick-sched.c | 22 +++++++++++++++-------
+> >  1 file changed, 15 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+> > index 3e2dc9b8858c..f0199a4ba1ad 100644
+> > --- a/kernel/time/tick-sched.c
+> > +++ b/kernel/time/tick-sched.c
+> > @@ -351,16 +351,24 @@ void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
+> >  EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
+> >  
+> >  /*
+> > - * Set a per-task tick dependency. Posix CPU timers need this in order to elapse
+> > - * per task timers.
+> > + * Set a per-task tick dependency. RCU need this. Also posix CPU timers
+> > + * in order to elapse per task timers.
+> >   */
+> >  void tick_nohz_dep_set_task(struct task_struct *tsk, enum tick_dep_bits bit)
+> >  {
+> > -	/*
+> > -	 * We could optimize this with just kicking the target running the task
+> > -	 * if that noise matters for nohz full users.
+> > -	 */
+> > -	tick_nohz_dep_set_all(&tsk->tick_dep_mask, bit);
+> > +	if (!atomic_fetch_or(BIT(bit), &tsk->tick_dep_mask)) {
 > 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
-> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-
-Reviewed-by: Laurent Dufour <ldufour@linux.ibm.com>
-
-> ---
->   arch/um/include/asm/mmu_context.h | 3 ++-
->   include/linux/mmap_lock.h         | 5 +++++
->   kernel/fork.c                     | 2 +-
->   3 files changed, 8 insertions(+), 2 deletions(-)
+> So why not simply:
 > 
-> diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
-> index 62262c5c7785..17ddd4edf875 100644
-> --- a/arch/um/include/asm/mmu_context.h
-> +++ b/arch/um/include/asm/mmu_context.h
-> @@ -8,6 +8,7 @@
->   
->   #include <linux/sched.h>
->   #include <linux/mm_types.h>
-> +#include <linux/mmap_lock.h>
->   
->   #include <asm/mmu.h>
->   
-> @@ -47,7 +48,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
->   	 * when the new ->mm is used for the first time.
->   	 */
->   	__switch_mm(&new->context.id);
-> -	down_write_nested(&new->mmap_sem, 1);
-> +	mmap_write_lock_nested(new, SINGLE_DEPTH_NESTING);
->   	uml_setup_stubs(new);
->   	mmap_write_unlock(new);
->   }
-> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> index 97ac53b66052..a757cb30ae77 100644
-> --- a/include/linux/mmap_lock.h
-> +++ b/include/linux/mmap_lock.h
-> @@ -11,6 +11,11 @@ static inline void mmap_write_lock(struct mm_struct *mm)
->   	down_write(&mm->mmap_sem);
->   }
->   
-> +static inline void mmap_write_lock_nested(struct mm_struct *mm, int subclass)
-> +{
-> +	down_write_nested(&mm->mmap_sem, subclass);
-> +}
-> +
->   static inline int mmap_write_lock_killable(struct mm_struct *mm)
->   {
->   	return down_write_killable(&mm->mmap_sem);
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 41d3f45c058e..a5d1d20ccba7 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -499,7 +499,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->   	/*
->   	 * Not linked in yet - no deadlock potential:
->   	 */
-> -	down_write_nested(&mm->mmap_sem, SINGLE_DEPTH_NESTING);
-> +	mmap_write_lock_nested(mm, SINGLE_DEPTH_NESTING);
->   
->   	/* No ordering required: file already has been exposed. */
->   	RCU_INIT_POINTER(mm->exe_file, get_mm_exe_file(oldmm));
+> 		tick_nohz_full_kick_cpu(task_cpu(tsk)); ?
 > 
+> If it got preempted, the scheduling involved would already have observed
+> the bit we just set and kept the tick on anyway, same for migration.
+> 
+> Or am I missing something?
 
+Hmm, I guess we would then need some sort of ordering like
+this:
+
+         CPU 0                            CPU 1
+         -----                            -----
+         p->cpu = smp_processor_id()      atomic_fetch_or(bit, p->tick_dep_mask)
+         smp_mb();                        smp_mb(); //actually implied by atomic_fetch_or()
+         READ p->tick_dep_mask            irq_work_on(...., p->cpu)
+
+And since p->cpu is already set and visible on context switch, it should work
+indeed. Now in the case CPU 1 reads a stale task_cpu(), that's fine as CPU 0 sees
+the new tick_dep_mask, but CPU 1 might be dealing with an offlined CPU, right?
+
+So I guess I should still protect against hotplug with cpus_read_lock() but
+tick_nohz_dep_set_task() isn't supposed to sleep...
+
+Or preempt_disable() could help us with that somehow? I'm always confused with
+the guarantees that disabled preemption can offer toward hotplug.
+
+
+> 
+> > +		if (tsk == current) {
+> > +			preempt_disable();
+> > +			tick_nohz_full_kick();
+> > +			preempt_enable();
+> > +		} else {
+> > +			/*
+> > +			 * Some future tick_nohz_full_kick_task()
+> > +			 * should optimize this.
+> > +			 */
+> > +			tick_nohz_full_kick_all();
+> > +		}
+> > +	}
+> 
