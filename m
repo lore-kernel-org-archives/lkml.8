@@ -2,51 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F02BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1810E20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D5620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824649;
-	bh=n7/Jy8yngkl5+iE5tSrau/6Npt5wz5PgvgKrbzn52bo=;
+	s=default; t=1589824652;
+	bh=u9Dmuq/K6ryDJMtzgJQEABHCn0tfGryZO0R5fm4zHtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wxC0OjsyBBkv4AcIsTnROEcSbEV+kyB2isYJBILTNgmGgQsEqmoOKdY86tscIyWqO
-	 +Dv6J30Xjqf1S3fslBnfOaAhlRntygy5/goseAjhZSyNwXCZv7aAhJbfZEboRr3USw
-	 3aYW6HDBdkww8I89FK9rw3vs+EVvJmLV+yzzsTAs=
+	b=MiUYY6na2kdNUNoTZuSO7MR8EAcF9FHODwQJA7blEsTBKt5a9/qqcnlzfFuRk9g+2
+	 XWtQ4DrTXj6CHc4NBBRZ2+ofLG6DzuxYIukk3PWfiNEzy47Woz74MVM6i8ZZtW3Ow4
+	 rgWYkYDIj075Ca2X8lVMM0vBTgzJQ2CT7DroLlqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbgERR52 (ORCPT
+        id S1731102AbgERR5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:57:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731257AbgERR5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:57:25 -0400
+        id S1731791AbgERR52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:57:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1033207C4;
-        Mon, 18 May 2020 17:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E76B20674;
+        Mon, 18 May 2020 17:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824645;
-        bh=n7/Jy8yngkl5+iE5tSrau/6Npt5wz5PgvgKrbzn52bo=;
+        s=default; t=1589824647;
+        bh=u9Dmuq/K6ryDJMtzgJQEABHCn0tfGryZO0R5fm4zHtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2EgJnq1z/WDBwN3giTr/Z/wXwp31Qab+HjCbTiy/6eAbdwqm6J9DiOmH6G3oxof1F
-         x6yDKefDTDuTqrHKQ8+SPaODLf8Lk/MwYBPRmSzDwikNaVNewbL44UWR8EW8YEWLBE
-         P3kex+cM/e2Psjyg00hpfLZX5sDYTFy0WCPxOy6w=
+        b=bl+bgb47g1si813xS79UDlBTQmwDHNmKeqUNMmzdp79NfWXE54TK4K74lRFAfBEV6
+         Mj11z2oC4e/3YnrCFKk5xjqJQadQTsZDfbscsRdw4G6idXnC048/lyYQ0+Whk/nZRd
+         v0iMOMQx+EsO3Q96jNzUtJLO8gdtZ7czTlXNzJC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 095/147] Stop the ad-hoc games with -Wno-maybe-initialized
-Date:   Mon, 18 May 2020 19:36:58 +0200
-Message-Id: <20200518173525.364053200@linuxfoundation.org>
+        stable@vger.kernel.org, Xiong Zhang <xiong.y.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 078/147] drm/i915/gvt: Fix kernel oops for 3-level ppgtt guest
+Date:   Mon, 18 May 2020 19:36:41 +0200
+Message-Id: <20200518173523.488172832@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,116 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Zhenyu Wang <zhenyuw@linux.intel.com>
 
-commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75 upstream.
+[ Upstream commit 72a7a9925e2beea09b109dffb3384c9bf920d9da ]
 
-We have some rather random rules about when we accept the
-"maybe-initialized" warnings, and when we don't.
+As i915 won't allocate extra PDP for current default PML4 table,
+so for 3-level ppgtt guest, we would hit kernel pointer access
+failure on extra PDP pointers. So this trys to bypass that now.
+It won't impact real shadow PPGTT setup, so guest context still
+works.
 
-For example, we consider it unreliable for gcc versions < 4.9, but also
-if -O3 is enabled, or if optimizing for size.  And then various kernel
-config options disabled it, because they know that they trigger that
-warning by confusing gcc sufficiently (ie PROFILE_ALL_BRANCHES).
+This is verified on 4.15 guest kernel with i915.enable_ppgtt=1
+to force on old aliasing ppgtt behavior.
 
-And now gcc-10 seems to be introducing a lot of those warnings too, so
-it falls under the same heading as 4.9 did.
-
-At the same time, we have a very straightforward way to _enable_ that
-warning when wanted: use "W=2" to enable more warnings.
-
-So stop playing these ad-hoc games, and just disable that warning by
-default, with the known and straight-forward "if you want to work on the
-extra compiler warnings, use W=123".
-
-Would it be great to have code that is always so obvious that it never
-confuses the compiler whether a variable is used initialized or not?
-Yes, it would.  In a perfect world, the compilers would be smarter, and
-our source code would be simpler.
-
-That's currently not the world we live in, though.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 4f15665ccbba ("drm/i915: Add ppgtt to GVT GEM context")
+Reviewed-by: Xiong Zhang <xiong.y.zhang@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200506095918.124913-1-zhenyuw@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile             |    7 +++----
- init/Kconfig         |   18 ------------------
- kernel/trace/Kconfig |    1 -
- 3 files changed, 3 insertions(+), 23 deletions(-)
+ drivers/gpu/drm/i915/gvt/scheduler.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -707,10 +707,6 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
- KBUILD_CFLAGS += -Os
- endif
- 
--ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--KBUILD_CFLAGS   += -Wno-maybe-uninitialized
--endif
+diff --git a/drivers/gpu/drm/i915/gvt/scheduler.c b/drivers/gpu/drm/i915/gvt/scheduler.c
+index 6c79d16b381ea..058dcd5416440 100644
+--- a/drivers/gpu/drm/i915/gvt/scheduler.c
++++ b/drivers/gpu/drm/i915/gvt/scheduler.c
+@@ -374,7 +374,11 @@ static void set_context_ppgtt_from_shadow(struct intel_vgpu_workload *workload,
+ 		for (i = 0; i < GVT_RING_CTX_NR_PDPS; i++) {
+ 			struct i915_page_directory * const pd =
+ 				i915_pd_entry(ppgtt->pd, i);
 -
- # Tell gcc to never replace conditional load with a non-conditional one
- KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
- 
-@@ -860,6 +856,9 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- # disable stringop warnings in gcc 8+
- KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
- 
-+# Enabled with W=2, disabled by default as noisy
-+KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
-+
- # disable invalid "can't wrap" optimizations for signed / pointers
- KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
- 
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -36,22 +36,6 @@ config TOOLS_SUPPORT_RELR
- config CC_HAS_ASM_INLINE
- 	def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(CC) -x c - -c -o /dev/null)
- 
--config CC_HAS_WARN_MAYBE_UNINITIALIZED
--	def_bool $(cc-option,-Wmaybe-uninitialized)
--	help
--	  GCC >= 4.7 supports this option.
--
--config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--	bool
--	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
--	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
--	help
--	  GCC's -Wmaybe-uninitialized is not reliable by definition.
--	  Lots of false positive warnings are produced in some cases.
--
--	  If this option is enabled, -Wno-maybe-uninitialzed is passed
--	  to the compiler to suppress maybe-uninitialized warnings.
--
- config CONSTRUCTORS
- 	bool
- 	depends on !UML
-@@ -1226,14 +1210,12 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
- config CC_OPTIMIZE_FOR_PERFORMANCE_O3
- 	bool "Optimize more for performance (-O3)"
- 	depends on ARC
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Choosing this option will pass "-O3" to your compiler to optimize
- 	  the kernel yet more for performance.
- 
- config CC_OPTIMIZE_FOR_SIZE
- 	bool "Optimize for size (-Os)"
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Choosing this option will pass "-Os" to your compiler resulting
- 	  in a smaller kernel.
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -371,7 +371,6 @@ config PROFILE_ANNOTATED_BRANCHES
- config PROFILE_ALL_BRANCHES
- 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
- 	select TRACE_BRANCH_PROFILING
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  This tracer profiles all branch conditions. Every if ()
- 	  taken in the kernel is recorded whether it hit or miss.
++			/* skip now as current i915 ppgtt alloc won't allocate
++			   top level pdp for non 4-level table, won't impact
++			   shadow ppgtt. */
++			if (!pd)
++				break;
+ 			px_dma(pd) = mm->ppgtt_mm.shadow_pdps[i];
+ 		}
+ 	}
+-- 
+2.20.1
+
 
 
