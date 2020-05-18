@@ -2,57 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAAAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB365C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20ED7207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E18B20849
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823806;
-	bh=R5QK326AH5inWhvKfzZwcHD32UTKHTovUyeZHJAtRzg=;
+	s=default; t=1589823811;
+	bh=zyeyKeHzoQB4z3mEqUUGw7iDBKNzKrBvabHIzqeR+HI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rCglYj5A0Xg5WvyoFcS/4+UiKKyeqL0/xv6GB9kj3+4PMbW8A/wdXHPhCL1Iy0hj6
-	 39YMTPsxhrHTcMrqgPyyF+DYRryADa8run6Ca8cZxVnJyES6aLdpPHM/4ltbWSS8Nn
-	 9fa4YeZwqfOBeeL7D+PI24OPwj2VrcNilGjl6VRg=
+	b=mCqxJuTc8O4AKS4++c00lTTyo27Wh0CTGIJCdfAyqVFFrvO0G+M+TnhAqLUxQClNU
+	 15xNqcfqheC63SRrGjlXnY0QApraNbfnS1JKgu/SdcTJSKI+e6H5gHcRSL2aHFuwTq
+	 gTQK+V+KVo40J0HPf+dUSkLXQNdL3BLF1gyd2puI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgERRnZ (ORCPT
+        id S1729588AbgERRna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:43:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40734 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729552AbgERRnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:43:18 -0400
+        id S1729567AbgERRnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:43:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF27220835;
-        Mon, 18 May 2020 17:43:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F246D20715;
+        Mon, 18 May 2020 17:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823798;
-        bh=R5QK326AH5inWhvKfzZwcHD32UTKHTovUyeZHJAtRzg=;
+        s=default; t=1589823803;
+        bh=zyeyKeHzoQB4z3mEqUUGw7iDBKNzKrBvabHIzqeR+HI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DQRhVrgGl9+Hga66EN/rCwzPRE9GYz8tAstC/1DWQqDMxDKtngmlPSwUo9eUsPsBa
-         eH2FjnEE/S9Y5TTPXN66YC3+h/9WWucNwf1XxihIjQtlIhgeovok4vmWOaqP1nJlC0
-         xenHFYlGjvLJ20A0SM00HHI3/l1GBhKWylTLeS8k=
+        b=rQV7iuwdUadOMyaJcGYp0TgUzKtSestv/llfF6vr9gIsGvyShKW9zHiO0ifkNCZBb
+         /TCnnWMcQWWBFMlnWCw0+ZXSiPScmkKmj8+AJypJoDczLCi/6jiM9zISA07wIoJ6Om
+         ak5FHKCkroJWuOr+ixWD3obQLGTTF0DIS1FwVq/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com,
-        syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 41/90] shmem: fix possible deadlocks on shmlock_user_lock
-Date:   Mon, 18 May 2020 19:36:19 +0200
-Message-Id: <20200518173459.560223961@linuxfoundation.org>
+        Guenter Roeck <linux@roeck-us.net>,
+        Richard Kojedzinszky <richard@kojedz.in>
+Subject: [PATCH 4.9 25/90] binfmt_elf: Do not move brk for INTERP-less ET_EXEC
+Date:   Mon, 18 May 2020 19:36:03 +0200
+Message-Id: <20200518173456.322832435@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -65,80 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit ea0dfeb4209b4eab954d6e00ed136bc6b48b380d ]
+commit 7be3cb019db1cbd5fd5ffe6d64a23fefa4b6f229 upstream.
 
-Recent commit 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page()
-when punching hole") has allowed syzkaller to probe deeper, uncovering a
-long-standing lockdep issue between the irq-unsafe shmlock_user_lock,
-the irq-safe xa_lock on mapping->i_pages, and shmem inode's info->lock
-which nests inside xa_lock (or tree_lock) since 4.8's shmem_uncharge().
+When brk was moved for binaries without an interpreter, it should have
+been limited to ET_DYN only. In other words, the special case was an
+ET_DYN that lacks an INTERP, not just an executable that lacks INTERP.
+The bug manifested for giant static executables, where the brk would end
+up in the middle of the text area on 32-bit architectures.
 
-user_shm_lock(), servicing SysV shmctl(SHM_LOCK), wants
-shmlock_user_lock while its caller shmem_lock() holds info->lock with
-interrupts disabled; but hugetlbfs_file_setup() calls user_shm_lock()
-with interrupts enabled, and might be interrupted by a writeback endio
-wanting xa_lock on i_pages.
-
-This may not risk an actual deadlock, since shmem inodes do not take
-part in writeback accounting, but there are several easy ways to avoid
-it.
-
-Requiring interrupts disabled for shmlock_user_lock would be easy, but
-it's a high-level global lock for which that seems inappropriate.
-Instead, recall that the use of info->lock to guard info->flags in
-shmem_lock() dates from pre-3.1 days, when races with SHMEM_PAGEIN and
-SHMEM_TRUNCATE could occur: nowadays it serves no purpose, the only flag
-added or removed is VM_LOCKED itself, and calls to shmem_lock() an inode
-are already serialized by the caller.
-
-Take info->lock out of the chain and the possibility of deadlock or
-lockdep warning goes away.
-
-Fixes: 4595ef88d136 ("shmem: make shmem_inode_info::lock irq-safe")
-Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
-Reported-by: syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2004161707410.16322@eggly.anvils
-Link: https://lore.kernel.org/lkml/000000000000e5838c05a3152f53@google.com/
-Link: https://lore.kernel.org/lkml/0000000000003712b305a331d3b1@google.com/
+Reported-and-tested-by: Richard Kojedzinszky <richard@kojedz.in>
+Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- mm/shmem.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/binfmt_elf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 90ccbb35458bd..31b0c09fe6c60 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2082,7 +2082,11 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
- 	struct shmem_inode_info *info = SHMEM_I(inode);
- 	int retval = -ENOMEM;
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1107,7 +1107,8 @@ static int load_elf_binary(struct linux_
+ 		 * (since it grows up, and may collide early with the stack
+ 		 * growing down), and into the unused ELF_ET_DYN_BASE region.
+ 		 */
+-		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
++		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
++		    loc->elf_ex.e_type == ET_DYN && !interpreter)
+ 			current->mm->brk = current->mm->start_brk =
+ 				ELF_ET_DYN_BASE;
  
--	spin_lock_irq(&info->lock);
-+	/*
-+	 * What serializes the accesses to info->flags?
-+	 * ipc_lock_object() when called from shmctl_do_lock(),
-+	 * no serialization needed when called from shm_destroy().
-+	 */
- 	if (lock && !(info->flags & VM_LOCKED)) {
- 		if (!user_shm_lock(inode->i_size, user))
- 			goto out_nomem;
-@@ -2097,7 +2101,6 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
- 	retval = 0;
- 
- out_nomem:
--	spin_unlock_irq(&info->lock);
- 	return retval;
- }
- 
--- 
-2.20.1
-
 
 
