@@ -2,217 +2,142 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE314C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5296DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F57520853
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA7720849
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589845599;
+	bh=CNbucCilmQWgmoPahZxwFxBbyz+IJqaVp50vq3Zrguk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lj/c4T3LEw6UeCViS0ySfFx+dTlfjWFLgfPL753gEmz2jLmLm1Fu2VShFxAUHKFFc
+	 BLq37UJZungTjAyrEnK+/uypQSqnifFKhtt9dXHTJKAEz5lZ0FqIIlNB2pgyvK0XWI
+	 rv4rk6bhxoPFCzMj/wJZ3tNamq94VyXTpglkY84I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgERXqQ (ORCPT
+        id S1726658AbgERXqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 19:46:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:57890 "EHLO mga05.intel.com"
+        Mon, 18 May 2020 19:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgERXqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 19:46:15 -0400
-IronPort-SDR: WG4JpC2fLle2/pFmcP2nnQ2kK8EqePGqhPPeyAbGZctYRl5x2UouoLfbquD1BSe6BTD7VWl/qo
- 9ilggpVbiL9Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 16:46:15 -0700
-IronPort-SDR: ipZ7LcBdI0Kp+BKLIJ31Z+FXg551fHuZqwIGB6snDp0VXJuoQC+Yx2nK169zbJISBsYpvy/cCd
- PlLofdBIoYrw==
-X-IronPort-AV: E=Sophos;i="5.73,408,1583222400"; 
-   d="scan'208";a="373550847"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.251.227.7])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 16:46:14 -0700
-Message-ID: <b74767964b028c297840aefc166e2384333afd3b.camel@linux.intel.com>
-Subject: Re: [RFC][PATCH 4/5] thermal: Add support for setting polling
- interval
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Date:   Mon, 18 May 2020 16:46:13 -0700
-In-Reply-To: <c2aad548-32c2-f008-5ce4-97b76a19271d@linaro.org>
-References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
-         <20200504181616.175477-5-srinivas.pandruvada@linux.intel.com>
-         <c2aad548-32c2-f008-5ce4-97b76a19271d@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1726407AbgERXqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 19:46:37 -0400
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E73722086A
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:46:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589845597;
+        bh=CNbucCilmQWgmoPahZxwFxBbyz+IJqaVp50vq3Zrguk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PxKbLXntOMChu8LZfjCpD46s5PrMyFJ2O10vGw5bzjQed8MPaSHhEZnU6EuzAKrBK
+         Vq5yWQImXMxE8Dp2BwghQmldQ49Y1WNcwdNBme9IjeC/KnTF7wL5b3n/jIczkeBgz6
+         rGZSUxSFeor/dGk1XUeWQpFcxMLElEBkOFrQgSco=
+Received: by mail-wm1-f44.google.com with SMTP id f134so1193008wmf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:46:36 -0700 (PDT)
+X-Gm-Message-State: AOAM533yYpnHQcdrUHZuIL8gO94F6ZBvkJXJ8s/UHEwVEFYpNTve3Xkt
+        OJF7YhiP165KmERTSYYOMpRR8haI7EFU9O8ZhDw3iw==
+X-Google-Smtp-Source: ABdhPJxeeGCauCdDatVZLOyvbp6x62lGL1VS69l0gVVLXNKu5wn9lLXmXDnGyTle0192sKDaBqPMIsHwXY+Iwj2lpvI=
+X-Received: by 2002:a1c:9989:: with SMTP id b131mr1925003wme.176.1589845595172;
+ Mon, 18 May 2020 16:46:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200515234547.710474468@linutronix.de> <20200515235125.110889386@linutronix.de>
+ <CALCETrXPDAPtWMS6_KX8_GUsnPs1osmFsLokeGYczJwXZisLvg@mail.gmail.com>
+In-Reply-To: <CALCETrXPDAPtWMS6_KX8_GUsnPs1osmFsLokeGYczJwXZisLvg@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 18 May 2020 16:46:22 -0700
+X-Gmail-Original-Message-ID: <CALCETrWD8qH-P4J3MB6Q9mr1MRLzsR7Fpab+Fk9Ac60qQBZPaA@mail.gmail.com>
+Message-ID: <CALCETrWD8qH-P4J3MB6Q9mr1MRLzsR7Fpab+Fk9Ac60qQBZPaA@mail.gmail.com>
+Subject: Re: [patch V6 07/37] x86/entry: Provide helpers for execute on irqstack
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 18:51 +0200, Daniel Lezcano wrote:
-> On 04/05/2020 20:16, Srinivas Pandruvada wrote:
-> > Add new attribute in the thermal syfs for setting temperature
-> > sampling
-> > interval when CONFIG_THERMAL_USER_EVENT_INTERFACE is defined. The
-> > default
-> > value is 0, which means no polling.
-> > 
-> > At this interval user space will get an event THERMAL_TEMP_SAMPLE
-> > with
-> > temperature sample. This reuses existing polling mecahnism when
-> > polling
-> > or passive delay is specified during zone registry. To avoid
-> > interference
-> > with passive and polling delay, this new polling attribute can't be
-> > used
-> > for those zones.
-> 
-> The userspace can get the temperature whenever it wants via the
-> temperature file. The polling is designed for a specific hardware and
-> the slope of the temperature graphic.
-> 
-> The userspace has the alternative of reading the temperature based on
-> its own timer or wait for (and stick to) the thermal framework
-> sampling
-> rate. Adding a notification in the update is enough IMO.
-> 
-The problem with this approach is that the user can't change sampling
-interval. Those polling intervals are fixed during thermal-zone
-register. Is there any way to change those defaults from user space?
+On Mon, May 18, 2020 at 4:11 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> >
+> > Device interrupt handlers and system vector handlers are executed on the
+> > interrupt stack. The stack switch happens in the low level assembly entry
+> > code. This conflicts with the efforts to consolidate the exit code in C to
+> > ensure correctness vs. RCU and tracing.
+> >
+> > As there is no way to move #DB away from IST due to the MOV SS issue, the
+> > requirements vs. #DB and NMI for switching to the interrupt stack do not
+> > exist anymore. The only requirement is that interrupts are disabled.
+> >
+> > That allows to move the stack switching to C code which simplifies the
+> > entry/exit handling further because it allows to switch stacks after
+> > handling the entry and on exit before handling RCU, return to usermode and
+> > kernel preemption in the same way as for regular exceptions.
+> >
+> > The initial attempt of having the stack switching in inline ASM caused too
+> > much headache vs. objtool and the unwinder. After analysing the use cases
+> > it was agreed on that having the stack switch in ASM for the price of an
+> > indirect call is acceptable as the main users are indirect call heavy
+> > anyway and the few system vectors which are empty shells (scheduler IPI and
+> > KVM posted interrupt vectors) can run from the regular stack.
+> >
+> > Provide helper functions to check whether the interrupt stack is already
+> > active and whether stack switching is required.
+> >
+> > 64 bit only for now. 32 bit has a variant of that already. Once this is
+> > cleaned up the two implementations might be consolidated as a cleanup on
+> > top.
+> >
+>
+> Acked-by: Andy Lutomirski <luto@kernel.org>
+>
+> Have you tested by forcing a stack trace from the IRQ stack and making
+> sure it unwinds all the way out?
 
-Kernel can start with some long polling interval and user space can
-change close to some trip.
+Actually, I revoke my ack.  Can you make one of two changes:
 
-Thanks,
-Srinivas
+Option A: Add an assertion to run_on_irqstack to verify that irq_count
+was -1 at the beginning?  I suppose this also means you could just
+explicitly write 0 instead of adding and subtracting.
 
+Option B: Make run_on_irqstack() just call the function on the current
+stack if we're already on the irq stack.
 
+Right now, it's too easy to mess up and not verify the right
+precondition before calling run_on_irqstack().
 
+If you choose A, perhaps add a helper to do the if(irq_needs_irqstack)
+dance so that users can just do:
 
-> 
-> > Signed-off-by: Srinivas Pandruvada <
-> > srinivas.pandruvada@linux.intel.com>
-> > ---
-> >  drivers/thermal/thermal_core.c  |  7 +++++++
-> >  drivers/thermal/thermal_sysfs.c | 36
-> > +++++++++++++++++++++++++++++++--
-> >  include/linux/thermal.h         |  1 +
-> >  3 files changed, 42 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/thermal/thermal_core.c
-> > b/drivers/thermal/thermal_core.c
-> > index 14770d882d42..17cd799b0073 100644
-> > --- a/drivers/thermal/thermal_core.c
-> > +++ b/drivers/thermal/thermal_core.c
-> > @@ -313,6 +313,8 @@ static void monitor_thermal_zone(struct
-> > thermal_zone_device *tz)
-> >  		thermal_zone_device_set_polling(tz, tz->passive_delay);
-> >  	else if (tz->polling_delay)
-> >  		thermal_zone_device_set_polling(tz, tz->polling_delay);
-> > +	else if (tz->temp_polling_delay)
-> > +		thermal_zone_device_set_polling(tz, tz-
-> > >temp_polling_delay);
-> >  	else
-> >  		thermal_zone_device_set_polling(tz, 0);
-> >  
-> > @@ -446,6 +448,11 @@ static void update_temperature(struct
-> > thermal_zone_device *tz)
-> >  	tz->temperature = temp;
-> >  	mutex_unlock(&tz->lock);
-> >  
-> > +	if (tz->temp_polling_delay) {
-> > +		thermal_dev_send_event(tz->id, THERMAL_TEMP_SAMPLE,
-> > temp);
-> > +		monitor_thermal_zone(tz);
-> > +	}
-> > +
-> >  	trace_thermal_temperature(tz);
-> >  	if (tz->last_temperature == THERMAL_TEMP_INVALID)
-> >  		dev_dbg(&tz->device, "last_temperature N/A,
-> > current_temperature=%d\n",
-> > diff --git a/drivers/thermal/thermal_sysfs.c
-> > b/drivers/thermal/thermal_sysfs.c
-> > index aa85424c3ac4..0df7997993fe 100644
-> > --- a/drivers/thermal/thermal_sysfs.c
-> > +++ b/drivers/thermal/thermal_sysfs.c
-> > @@ -248,6 +248,36 @@ create_thres_attr(temp_thres_low);
-> >  create_thres_attr(temp_thres_high);
-> >  create_thres_attr(temp_thres_hyst);
-> >  
-> > +static ssize_t
-> > +temp_polling_delay_store(struct device *dev, struct
-> > device_attribute *attr,
-> > +		   const char *buf, size_t count)
-> > +{
-> > +	struct thermal_zone_device *tz = to_thermal_zone(dev);
-> > +	int val;
-> > +
-> > +	if (kstrtoint(buf, 10, &val))
-> > +		return -EINVAL;
-> > +
-> > +	if (val && val < 1000)
-> > +		return -EINVAL;
-> > +
-> > +	tz->temp_polling_delay = val;
-> > +	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
-> > +
-> > +	return count;
-> > +}
-> > +
-> > +static ssize_t
-> > +temp_polling_delay_show(struct device *dev, struct
-> > device_attribute *attr,
-> > +		     char *buf)
-> > +{
-> > +	struct thermal_zone_device *tz = to_thermal_zone(dev);
-> > +
-> > +	return sprintf(buf, "%d\n", tz->temp_polling_delay);
-> > +}
-> > +
-> > +static DEVICE_ATTR_RW(temp_polling_delay);
-> > +
-> >  static int create_user_events_attrs(struct thermal_zone_device
-> > *tz)
-> >  {
-> >  	struct attribute **attrs;
-> > @@ -260,8 +290,8 @@ static int create_user_events_attrs(struct
-> > thermal_zone_device *tz)
-> >  	if (tz->ops->get_temp_thres_high)
-> >  		++index;
-> >  
-> > -	/* One additional space for NULL */
-> > -	attrs = kcalloc(index + 1, sizeof(*attrs), GFP_KERNEL);
-> > +	/* One additional space for NULL and temp_pollling_delay */
-> > +	attrs = kcalloc(index + 2, sizeof(*attrs), GFP_KERNEL);
-> >  	if (!attrs)
-> >  		return -ENOMEM;
-> >  
-> > @@ -312,6 +342,8 @@ static int create_user_events_attrs(struct
-> > thermal_zone_device *tz)
-> >  		attrs[index] = &tz->threshold_attrs[index].attr.attr;
-> >  		++index;
-> >  	}
-> > +	if (!tz->polling_delay && !tz->passive_delay)
-> > +		attrs[index++] = &dev_attr_temp_polling_delay.attr;
-> >  	attrs[index] = NULL;
-> >  	tz->threshold_attribute_group.attrs = attrs;
-> >  
-> > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> > index ee9d79ace7ce..0ec4bd8c9c5c 100644
-> > --- a/include/linux/thermal.h
-> > +++ b/include/linux/thermal.h
-> > @@ -216,6 +216,7 @@ struct thermal_zone_device {
-> >  	enum thermal_notify_event notify_event;
-> >  	struct attribute_group threshold_attribute_group;
-> >  	struct thermal_attr *threshold_attrs;
-> > +	int temp_polling_delay;
-> >  };
-> >  
-> >  /**
-> > 
-> 
-> 
+run_on_irqstack_if_needed(...);
 
+instead of checking everything themselves.
