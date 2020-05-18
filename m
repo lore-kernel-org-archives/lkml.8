@@ -2,211 +2,145 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E44C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E15D520671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825680;
-	bh=rZe7RgQTbU2+URaYJ7uJtJiULLuneyg1T7kqNoH9dDs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5bvNzWVh5dguCrfDnAuwSPa8LdE7R3VzLQsQhuOXXdldu7cMGS+/4fcEUb/eEYmt
-	 2ZtdZnnmCpIGA1RHC+KSzC5KPmOrp/FZexQBwu89cXOzWx/Re7qAmJE+nxKyR7Rwte
-	 qEwTPp9lOVLd4Q0KO+GM+ZCYs/mAIZt/3fvzw6e0=
+	by mail.kernel.org (Postfix) with ESMTP id 7323B20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732230AbgERSAa (ORCPT
+        id S1732294AbgERSOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41802 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:14:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24475 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732210AbgERSAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:00:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DF2D207D3;
-        Mon, 18 May 2020 18:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824824;
-        bh=rZe7RgQTbU2+URaYJ7uJtJiULLuneyg1T7kqNoH9dDs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XrA/AXd7hlmQHnr3DKtB5pKrQgogdfKrdkOWSPPyZjSIVgs0I++X2bK1+GklD1yT5
-         VRhlo0hBS+usKb32n+DHmQ9Rs1hyWmUmlVqLJqzWpxcb7L3pf23zsqpXhCkTN2T5QB
-         MWPYXJx0DlaMykmqezFtemk9OZkQnj+gqDvYPAGY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Clay McClure <clay@daemons.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 019/194] net: Make PTP-specific drivers depend on PTP_1588_CLOCK
-Date:   Mon, 18 May 2020 19:35:09 +0200
-Message-Id: <20200518173533.160651742@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
-References: <20200518173531.455604187@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729719AbgERSOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:14:40 -0400
+IronPort-SDR: vBQ0B9julmD6isB6NfxKj+yO+jKgoDUjV4PXdHwBVR6c2kYJYUC4sR6rde6+ThEEaF37MRfjfd
+ vaTwz5TUuQqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:14:39 -0700
+IronPort-SDR: j/46IT6eWsYwOW6sl5zbmbDriMKsrikLjOU+dd+Mo3hYvrfmQry4QGbMj8Pq+j5gpPUs8S5RPK
+ s6GoooRqllGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="253133530"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga007.fm.intel.com with ESMTP; 18 May 2020 11:14:39 -0700
+Date:   Mon, 18 May 2020 11:14:39 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Mike Rapoport <rppt@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, elver@google.com, tglx@linutronix.de,
+        paulmck@kernel.org, mingo@kernel.org, peterz@infradead.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
+ PTE tables
+Message-ID: <20200518181438.GB3028105@iweiny-DESK2.sc.intel.com>
+References: <20200511204150.27858-1-will@kernel.org>
+ <20200511204150.27858-5-will@kernel.org>
+ <20200517000050.GA87467@roeck-us.net>
+ <20200517000750.GA157503@roeck-us.net>
+ <20200518083715.GA31383@willie-the-truck>
+ <418aa44b-6fb3-c3d8-a920-1a26e5edec62@roeck-us.net>
+ <20200518142310.GC1118872@kernel.org>
+ <20200518160811.GA66689@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518160811.GA66689@roeck-us.net>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Clay McClure <clay@daemons.net>
+On Mon, May 18, 2020 at 09:08:11AM -0700, Guenter Roeck wrote:
+> On Mon, May 18, 2020 at 05:23:10PM +0300, Mike Rapoport wrote:
+> > On Mon, May 18, 2020 at 02:48:18AM -0700, Guenter Roeck wrote:
+> > > On 5/18/20 1:37 AM, Will Deacon wrote:
+> > > > On Sat, May 16, 2020 at 05:07:50PM -0700, Guenter Roeck wrote:
+> > > >> On Sat, May 16, 2020 at 05:00:50PM -0700, Guenter Roeck wrote:
+> > > >>> On Mon, May 11, 2020 at 09:41:36PM +0100, Will Deacon wrote:
+> > > >>>> Now that the page table allocator can free page table allocations
+> > > >>>> smaller than PAGE_SIZE, reduce the size of the PMD and PTE allocations
+> > > >>>> to avoid needlessly wasting memory.
+> > > >>>>
+> > > >>>> Cc: "David S. Miller" <davem@davemloft.net>
+> > > >>>> Cc: Peter Zijlstra <peterz@infradead.org>
+> > > >>>> Signed-off-by: Will Deacon <will@kernel.org>
+> > > >>>
+> > > >>> Something in the sparc32 patches in linux-next causes all my sparc32 emulations
+> > > >>> to crash. bisect points to this patch, but reverting it doesn't help, and neither
+> > > >>> does reverting the rest of the series.
+> > > >>>
+> > > >> Actually, turns out I see the same pattern (lots of scheduling while atomic
+> > > >> followed by 'killing interrupt handler' in cryptomgr_test) with several
+> > > >> powerpc boot tests.  I am currently bisecting those crashes. I'll report
+> > > >> the results here as well as soon as I have it.
+> > > > 
+> > > > FWIW, I retested my sparc32 patches with PREEMPT=y and I don't see any
+> > > > issues. However, linux-next is a different story, where I don't get very far
+> > > > at all:
+> > > > 
+> > > > BUG: Bad page state in process swapper  pfn:005b4
+> > 
+> > This one seems to be due to commit 24aab577764f ("mm: memmap_init:
+> > iterate over memblock regions rather that check each PFN") and reverting
+> > it and partially reverting the next cleanup commits makes those
+> > dissapear. sparc32 boot still fails on today's linux-next and mmotm for me with
+> > 
+> > Run /sbin/init as init process
+> >   with arguments:
+> >     /sbin/init
+> >   with environment:
+> >     HOME=/
+> >     TERM=linux
+> > Starting init: /sbin/init exists but couldn't execute it (error -14)
+> > 
+> 
+> Interesting; that is also seen on microblazeel:petalogix-ml605. Bisect there
+> suggests 'arch/kmap_atomic: consolidate duplicate code' as the culprit,
+> which is part of Ira's series.
+> 
+> Today's -next is even worse, unfortunately; now all microblaze boot tests
+> (both little and big endian) fail, plus everything that failed last
+> time, plus new compile failures. Another round of bisects ...
 
-[ Upstream commit b6d49cab44b567b3e0a5544b3d61e516a7355fad ]
+Sparc had the same problem...
 
-Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
-all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
-PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
-clock subsystem and ethernet drivers capable of being clock providers."
-As a result it is possible to build PTP-capable Ethernet drivers without
-the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
-handle the missing dependency gracefully.
 
-Some PTP-capable Ethernet drivers (e.g., TI_CPSW) factor their PTP code
-out into separate drivers (e.g., TI_CPTS_MOD). The above commit also
-changed these PTP-specific drivers to `imply PTP_1588_CLOCK`, making it
-possible to build them without the PTP subsystem. But as Grygorii
-Strashko noted in [1]:
+commit 6e5c523370c510f5fae3436b193ab5dabe0fef06 (HEAD -> lm-kmap17)
+Author: Ira Weiny <ira.weiny@intel.com>
+Date:   Mon May 18 11:13:16 2020 -0700
 
-On Wed, Apr 22, 2020 at 02:16:11PM +0300, Grygorii Strashko wrote:
+    arch/sparc: Don't enable pagefault/preempt twice
+    
+    The kunmap_atomic clean up failed to remove the pagefault/preempt
+    enables on this path.
+    
+    Fixes: bee2128a09e6 ("arch/kunmap_atomic: consolidate duplicate code")
+    Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-> Another question is that CPTS completely nonfunctional in this case and
-> it was never expected that somebody will even try to use/run such
-> configuration (except for random build purposes).
-
-In my view, enabling a PTP-specific driver without the PTP subsystem is
-a configuration error made possible by the above commit. Kconfig should
-not allow users to create a configuration with missing dependencies that
-results in "completely nonfunctional" drivers.
-
-I audited all network drivers that call ptp_clock_register() but merely
-`imply PTP_1588_CLOCK` and found five PTP-specific drivers that are
-likely nonfunctional without PTP_1588_CLOCK:
-
-    NET_DSA_MV88E6XXX_PTP
-    NET_DSA_SJA1105_PTP
-    MACB_USE_HWSTAMP
-    CAVIUM_PTP
-    TI_CPTS_MOD
-
-Note how these symbols all reference PTP or timestamping in their name;
-this is a clue that they depend on PTP_1588_CLOCK.
-
-Change them from `imply PTP_1588_CLOCK` [2] to `depends on PTP_1588_CLOCK`.
-I'm not using `select PTP_1588_CLOCK` here because PTP_1588_CLOCK has
-its own dependencies, which `select` would not transitively apply.
-
-Additionally, remove the `select NET_PTP_CLASSIFY` from CPTS_TI_MOD;
-PTP_1588_CLOCK already selects that.
-
-[1]: https://lore.kernel.org/lkml/c04458ed-29ee-1797-3a11-7f3f560553e6@ti.com/
-
-[2]: NET_DSA_SJA1105_PTP had never declared any type of dependency on
-PTP_1588_CLOCK (`imply` or otherwise); adding a `depends on PTP_1588_CLOCK`
-here seems appropriate.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Nicolas Pitre <nico@fluxnic.net>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: d1cbfd771ce8 ("ptp_clock: Allow for it to be optional")
-Signed-off-by: Clay McClure <clay@daemons.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/dsa/mv88e6xxx/Kconfig    | 2 +-
- drivers/net/dsa/sja1105/Kconfig      | 1 +
- drivers/net/ethernet/cadence/Kconfig | 2 +-
- drivers/net/ethernet/cavium/Kconfig  | 2 +-
- drivers/net/ethernet/ti/Kconfig      | 3 +--
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/dsa/mv88e6xxx/Kconfig b/drivers/net/dsa/mv88e6xxx/Kconfig
-index 6435020d690dd..51185e4d7d15e 100644
---- a/drivers/net/dsa/mv88e6xxx/Kconfig
-+++ b/drivers/net/dsa/mv88e6xxx/Kconfig
-@@ -24,8 +24,8 @@ config NET_DSA_MV88E6XXX_PTP
- 	bool "PTP support for Marvell 88E6xxx"
- 	default n
- 	depends on NET_DSA_MV88E6XXX_GLOBAL2
-+	depends on PTP_1588_CLOCK
- 	imply NETWORK_PHY_TIMESTAMPING
--	imply PTP_1588_CLOCK
- 	help
- 	  Say Y to enable PTP hardware timestamping on Marvell 88E6xxx switch
- 	  chips that support it.
-diff --git a/drivers/net/dsa/sja1105/Kconfig b/drivers/net/dsa/sja1105/Kconfig
-index 0fe1ae173aa1a..68c3086af9af8 100644
---- a/drivers/net/dsa/sja1105/Kconfig
-+++ b/drivers/net/dsa/sja1105/Kconfig
-@@ -20,6 +20,7 @@ tristate "NXP SJA1105 Ethernet switch family support"
- config NET_DSA_SJA1105_PTP
- 	bool "Support for the PTP clock on the NXP SJA1105 Ethernet switch"
- 	depends on NET_DSA_SJA1105
-+	depends on PTP_1588_CLOCK
- 	help
- 	  This enables support for timestamping and PTP clock manipulations in
- 	  the SJA1105 DSA driver.
-diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
-index 53b50c24d9c95..2c4c12b03502d 100644
---- a/drivers/net/ethernet/cadence/Kconfig
-+++ b/drivers/net/ethernet/cadence/Kconfig
-@@ -35,8 +35,8 @@ config MACB
- config MACB_USE_HWSTAMP
- 	bool "Use IEEE 1588 hwstamp"
- 	depends on MACB
-+	depends on PTP_1588_CLOCK
- 	default y
--	imply PTP_1588_CLOCK
- 	---help---
- 	  Enable IEEE 1588 Precision Time Protocol (PTP) support for MACB.
+diff --git a/arch/sparc/mm/highmem.c b/arch/sparc/mm/highmem.c
+index d237d902f9c3..13fb197bb26c 100644
+--- a/arch/sparc/mm/highmem.c
++++ b/arch/sparc/mm/highmem.c
+@@ -86,11 +86,8 @@ void kunmap_atomic_high(void *kvaddr)
+        unsigned long vaddr = (unsigned long) kvaddr & PAGE_MASK;
+        int type;
  
-diff --git a/drivers/net/ethernet/cavium/Kconfig b/drivers/net/ethernet/cavium/Kconfig
-index 6a700d34019e3..4520e7ee00fe1 100644
---- a/drivers/net/ethernet/cavium/Kconfig
-+++ b/drivers/net/ethernet/cavium/Kconfig
-@@ -54,7 +54,7 @@ config	THUNDER_NIC_RGX
- config CAVIUM_PTP
- 	tristate "Cavium PTP coprocessor as PTP clock"
- 	depends on 64BIT && PCI
--	imply PTP_1588_CLOCK
-+	depends on PTP_1588_CLOCK
- 	---help---
- 	  This driver adds support for the Precision Time Protocol Clocks and
- 	  Timestamping coprocessor (PTP) found on Cavium processors.
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index bf98e0fa7d8be..cd6eda83e1f8c 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -89,9 +89,8 @@ config TI_CPTS
- config TI_CPTS_MOD
- 	tristate
- 	depends on TI_CPTS
-+	depends on PTP_1588_CLOCK
- 	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
--	select NET_PTP_CLASSIFY
--	imply PTP_1588_CLOCK
- 	default m
+-       if (vaddr < FIXADDR_START) { // FIXME
+-               pagefault_enable();
+-               preempt_enable();
++       if (vaddr < FIXADDR_START) // FIXME
+                return;
+-       }
  
- config TI_KEYSTONE_NETCP
--- 
-2.20.1
-
-
-
+        type = kmap_atomic_idx();
+ 
