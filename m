@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04330C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D782420873
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524BA20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823556;
-	bh=LP08RHZ2h+3MNUPCldPZPOjGAFKVSbQofTJGvA4TZpU=;
+	s=default; t=1589823560;
+	bh=ZP9cLF3ZRQGEGhgyHHKlUniELKld2k1fXuP5/UyAh80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cg7prdUjRTQDIJreYAbVuIlT7RcafezWaaNa/qFomCbbTqdzhpf5y0ag/4AZ13QnL
-	 LZB6ePH4OSp9YboIgXuGcgknI9bx8rWP073WHAhWKIKz1DPcEOynnlmIa2NYidrRUL
-	 k1NUL4SxKWuzyOk1xEvlU0YBf6VZDlEgDd44sw8E=
+	b=Q2CLZHlOTngwUVsNnx6sK5LzBB/vou9RDxIk7utC17WwMcAlHG7iAiTfq3CyimFyO
+	 K6kYvSWBG6yXJRzG0i02LIOkNdWsDK3KHK+C5TVlOoVAoOLibo8Nf/8desta2u6vec
+	 WR6OLGtwfzjKzJkTRcE6LOkvKNR/7kAuG5m1XM+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgERRjQ (ORCPT
+        id S1728751AbgERRjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:39:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:39:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbgERRjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:14 -0400
+        id S1728738AbgERRjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AF9620835;
-        Mon, 18 May 2020 17:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E602086A;
+        Mon, 18 May 2020 17:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823553;
-        bh=LP08RHZ2h+3MNUPCldPZPOjGAFKVSbQofTJGvA4TZpU=;
+        s=default; t=1589823555;
+        bh=ZP9cLF3ZRQGEGhgyHHKlUniELKld2k1fXuP5/UyAh80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aj2+Bj6C67ORnUWR6aQu7t2OOVlUbEcbc2KXAHoNPe35ZGh9VPlJx7Y073J8q5QDw
-         nTmZ0vRzbsufGiz6yRN0R9YBBVeIpzatovIvQqyR8gZ/397RTDu/MsK5Lcg425y1ti
-         IOxxf5JfZf9wvtPiyZo2pNUGmIArWveRWVJKqsHE=
+        b=FX7TJB7W8sl9616YLUYVmAGgaAhLog8i4xWe+03BvFdMunSxX8r8QA5yCbyubSZT7
+         B4X16aiRRV0ojERTMQVMJ0mYyc8bC3hfq5uiI+12mXtXqTmfrT5yKrJsk0EomFMci/
+         BRtyW61wBuKFdpq/hklxXll4KLgtNFsZ1VvjHppw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 11/86] x86/apm: Dont access __preempt_count with zeroed fs
-Date:   Mon, 18 May 2020 19:35:42 +0200
-Message-Id: <20200518173452.746337483@linuxfoundation.org>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.4 29/86] ptp: use is_visible method to hide unused attributes
+Date:   Mon, 18 May 2020 19:36:00 +0200
+Message-Id: <20200518173456.413568155@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -64,139 +61,210 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 6f6060a5c9cc76fdbc22748264e6aa3779ec2427 upstream.
+commit af59e717d5ff9c8dbf9bcc581c0dfb3b2a9c9030 upstream.
 
-APM_DO_POP_SEGS does not restore fs/gs which were zeroed by
-APM_DO_ZERO_SEGS. Trying to access __preempt_count with
-zeroed fs doesn't really work.
+Instead of creating selected attributes after the device is created (and
+after userspace potentially seen uevent), lets use attribute group
+is_visible() method to control which attributes are shown. This will allow
+us to create all attributes (except "pins" group, which will be taken care
+of later) before userspace gets notified about new ptp class device.
 
-Move the ibrs call outside the APM_DO_SAVE_SEGS/APM_DO_RESTORE_SEGS
-invocations so that fs is actually restored before calling
-preempt_enable().
-
-Fixes the following sort of oopses:
-[    0.313581] general protection fault: 0000 [#1] PREEMPT SMP
-[    0.313803] Modules linked in:
-[    0.314040] CPU: 0 PID: 268 Comm: kapmd Not tainted 4.16.0-rc1-triton-bisect-00090-gdd84441a7971 #19
-[    0.316161] EIP: __apm_bios_call_simple+0xc8/0x170
-[    0.316161] EFLAGS: 00210016 CPU: 0
-[    0.316161] EAX: 00000102 EBX: 00000000 ECX: 00000102 EDX: 00000000
-[    0.316161] ESI: 0000530e EDI: dea95f64 EBP: dea95f18 ESP: dea95ef0
-[    0.316161]  DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068
-[    0.316161] CR0: 80050033 CR2: 00000000 CR3: 015d3000 CR4: 000006d0
-[    0.316161] Call Trace:
-[    0.316161]  ? cpumask_weight.constprop.15+0x20/0x20
-[    0.316161]  on_cpu0+0x44/0x70
-[    0.316161]  apm+0x54e/0x720
-[    0.316161]  ? __switch_to_asm+0x26/0x40
-[    0.316161]  ? __schedule+0x17d/0x590
-[    0.316161]  kthread+0xc0/0xf0
-[    0.316161]  ? proc_apm_show+0x150/0x150
-[    0.316161]  ? kthread_create_worker_on_cpu+0x20/0x20
-[    0.316161]  ret_from_fork+0x2e/0x38
-[    0.316161] Code: da 8e c2 8e e2 8e ea 57 55 2e ff 1d e0 bb 5d b1 0f 92 c3 5d 5f 07 1f 89 47 0c 90 8d b4 26 00 00 00 00 90 8d b4 26 00 00 00 00 90 <64> ff 0d 84 16 5c b1 74 7f 8b 45 dc 8e e0 8b 45 d8 8e e8 8b 45
-[    0.316161] EIP: __apm_bios_call_simple+0xc8/0x170 SS:ESP: 0068:dea95ef0
-[    0.316161] ---[ end trace 656253db2deaa12c ]---
-
-Fixes: dd84441a7971 ("x86/speculation: Use IBRS if available before calling into firmware")
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Cc:  David Woodhouse <dwmw@amazon.co.uk>
-Cc:  "H. Peter Anvin" <hpa@zytor.com>
-Cc:  x86@kernel.org
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lkml.kernel.org/r/20180709133534.5963-1-ville.syrjala@linux.intel.com
-Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/include/asm/apm.h |    6 ------
- arch/x86/kernel/apm_32.c   |    5 +++++
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ drivers/ptp/ptp_sysfs.c |  125 +++++++++++++++++++++---------------------------
+ 1 file changed, 55 insertions(+), 70 deletions(-)
 
---- a/arch/x86/include/asm/apm.h
-+++ b/arch/x86/include/asm/apm.h
-@@ -6,8 +6,6 @@
- #ifndef _ASM_X86_MACH_DEFAULT_APM_H
- #define _ASM_X86_MACH_DEFAULT_APM_H
+--- a/drivers/ptp/ptp_sysfs.c
++++ b/drivers/ptp/ptp_sysfs.c
+@@ -46,27 +46,6 @@ PTP_SHOW_INT(n_periodic_outputs, n_per_o
+ PTP_SHOW_INT(n_programmable_pins, n_pins);
+ PTP_SHOW_INT(pps_available, pps);
  
--#include <asm/nospec-branch.h>
+-static struct attribute *ptp_attrs[] = {
+-	&dev_attr_clock_name.attr,
+-	&dev_attr_max_adjustment.attr,
+-	&dev_attr_n_alarms.attr,
+-	&dev_attr_n_external_timestamps.attr,
+-	&dev_attr_n_periodic_outputs.attr,
+-	&dev_attr_n_programmable_pins.attr,
+-	&dev_attr_pps_available.attr,
+-	NULL,
+-};
 -
- #ifdef APM_ZERO_SEGS
- #	define APM_DO_ZERO_SEGS \
- 		"pushl %%ds\n\t" \
-@@ -33,7 +31,6 @@ static inline void apm_bios_call_asm(u32
- 	 * N.B. We do NOT need a cld after the BIOS call
- 	 * because we always save and restore the flags.
- 	 */
--	firmware_restrict_branch_speculation_start();
- 	__asm__ __volatile__(APM_DO_ZERO_SEGS
- 		"pushl %%edi\n\t"
- 		"pushl %%ebp\n\t"
-@@ -46,7 +43,6 @@ static inline void apm_bios_call_asm(u32
- 		  "=S" (*esi)
- 		: "a" (func), "b" (ebx_in), "c" (ecx_in)
- 		: "memory", "cc");
--	firmware_restrict_branch_speculation_end();
+-static const struct attribute_group ptp_group = {
+-	.attrs = ptp_attrs,
+-};
+-
+-const struct attribute_group *ptp_groups[] = {
+-	&ptp_group,
+-	NULL,
+-};
+-
+-
+ static ssize_t extts_enable_store(struct device *dev,
+ 				  struct device_attribute *attr,
+ 				  const char *buf, size_t count)
+@@ -91,6 +70,7 @@ static ssize_t extts_enable_store(struct
+ out:
+ 	return err;
+ }
++static DEVICE_ATTR(extts_enable, 0220, NULL, extts_enable_store);
+ 
+ static ssize_t extts_fifo_show(struct device *dev,
+ 			       struct device_attribute *attr, char *page)
+@@ -124,6 +104,7 @@ out:
+ 	mutex_unlock(&ptp->tsevq_mux);
+ 	return cnt;
+ }
++static DEVICE_ATTR(fifo, 0444, extts_fifo_show, NULL);
+ 
+ static ssize_t period_store(struct device *dev,
+ 			    struct device_attribute *attr,
+@@ -151,6 +132,7 @@ static ssize_t period_store(struct devic
+ out:
+ 	return err;
+ }
++static DEVICE_ATTR(period, 0220, NULL, period_store);
+ 
+ static ssize_t pps_enable_store(struct device *dev,
+ 				struct device_attribute *attr,
+@@ -177,6 +159,57 @@ static ssize_t pps_enable_store(struct d
+ out:
+ 	return err;
+ }
++static DEVICE_ATTR(pps_enable, 0220, NULL, pps_enable_store);
++
++static struct attribute *ptp_attrs[] = {
++	&dev_attr_clock_name.attr,
++
++	&dev_attr_max_adjustment.attr,
++	&dev_attr_n_alarms.attr,
++	&dev_attr_n_external_timestamps.attr,
++	&dev_attr_n_periodic_outputs.attr,
++	&dev_attr_n_programmable_pins.attr,
++	&dev_attr_pps_available.attr,
++
++	&dev_attr_extts_enable.attr,
++	&dev_attr_fifo.attr,
++	&dev_attr_period.attr,
++	&dev_attr_pps_enable.attr,
++	NULL
++};
++
++static umode_t ptp_is_attribute_visible(struct kobject *kobj,
++					struct attribute *attr, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct ptp_clock *ptp = dev_get_drvdata(dev);
++	struct ptp_clock_info *info = ptp->info;
++	umode_t mode = attr->mode;
++
++	if (attr == &dev_attr_extts_enable.attr ||
++	    attr == &dev_attr_fifo.attr) {
++		if (!info->n_ext_ts)
++			mode = 0;
++	} else if (attr == &dev_attr_period.attr) {
++		if (!info->n_per_out)
++			mode = 0;
++	} else if (attr == &dev_attr_pps_enable.attr) {
++		if (!info->pps)
++			mode = 0;
++	}
++
++	return mode;
++}
++
++static const struct attribute_group ptp_group = {
++	.is_visible	= ptp_is_attribute_visible,
++	.attrs		= ptp_attrs,
++};
++
++const struct attribute_group *ptp_groups[] = {
++	&ptp_group,
++	NULL
++};
+ 
+ static int ptp_pin_name2index(struct ptp_clock *ptp, const char *name)
+ {
+@@ -235,26 +268,11 @@ static ssize_t ptp_pin_store(struct devi
+ 	return count;
  }
  
- static inline u8 apm_bios_call_simple_asm(u32 func, u32 ebx_in,
-@@ -59,7 +55,6 @@ static inline u8 apm_bios_call_simple_as
- 	 * N.B. We do NOT need a cld after the BIOS call
- 	 * because we always save and restore the flags.
- 	 */
--	firmware_restrict_branch_speculation_start();
- 	__asm__ __volatile__(APM_DO_ZERO_SEGS
- 		"pushl %%edi\n\t"
- 		"pushl %%ebp\n\t"
-@@ -72,7 +67,6 @@ static inline u8 apm_bios_call_simple_as
- 		  "=S" (si)
- 		: "a" (func), "b" (ebx_in), "c" (ecx_in)
- 		: "memory", "cc");
--	firmware_restrict_branch_speculation_end();
- 	return error;
+-static DEVICE_ATTR(extts_enable, 0220, NULL, extts_enable_store);
+-static DEVICE_ATTR(fifo,         0444, extts_fifo_show, NULL);
+-static DEVICE_ATTR(period,       0220, NULL, period_store);
+-static DEVICE_ATTR(pps_enable,   0220, NULL, pps_enable_store);
+-
+ int ptp_cleanup_sysfs(struct ptp_clock *ptp)
+ {
+ 	struct device *dev = ptp->dev;
+ 	struct ptp_clock_info *info = ptp->info;
+ 
+-	if (info->n_ext_ts) {
+-		device_remove_file(dev, &dev_attr_extts_enable);
+-		device_remove_file(dev, &dev_attr_fifo);
+-	}
+-	if (info->n_per_out)
+-		device_remove_file(dev, &dev_attr_period);
+-
+-	if (info->pps)
+-		device_remove_file(dev, &dev_attr_pps_enable);
+-
+ 	if (info->n_pins) {
+ 		sysfs_remove_group(&dev->kobj, &ptp->pin_attr_group);
+ 		kfree(ptp->pin_attr);
+@@ -307,46 +325,13 @@ no_dev_attr:
+ 
+ int ptp_populate_sysfs(struct ptp_clock *ptp)
+ {
+-	struct device *dev = ptp->dev;
+ 	struct ptp_clock_info *info = ptp->info;
+ 	int err;
+ 
+-	if (info->n_ext_ts) {
+-		err = device_create_file(dev, &dev_attr_extts_enable);
+-		if (err)
+-			goto out1;
+-		err = device_create_file(dev, &dev_attr_fifo);
+-		if (err)
+-			goto out2;
+-	}
+-	if (info->n_per_out) {
+-		err = device_create_file(dev, &dev_attr_period);
+-		if (err)
+-			goto out3;
+-	}
+-	if (info->pps) {
+-		err = device_create_file(dev, &dev_attr_pps_enable);
+-		if (err)
+-			goto out4;
+-	}
+ 	if (info->n_pins) {
+ 		err = ptp_populate_pins(ptp);
+ 		if (err)
+-			goto out5;
++			return err;
+ 	}
+ 	return 0;
+-out5:
+-	if (info->pps)
+-		device_remove_file(dev, &dev_attr_pps_enable);
+-out4:
+-	if (info->n_per_out)
+-		device_remove_file(dev, &dev_attr_period);
+-out3:
+-	if (info->n_ext_ts)
+-		device_remove_file(dev, &dev_attr_fifo);
+-out2:
+-	if (info->n_ext_ts)
+-		device_remove_file(dev, &dev_attr_extts_enable);
+-out1:
+-	return err;
  }
- 
---- a/arch/x86/kernel/apm_32.c
-+++ b/arch/x86/kernel/apm_32.c
-@@ -239,6 +239,7 @@
- #include <asm/olpc.h>
- #include <asm/paravirt.h>
- #include <asm/reboot.h>
-+#include <asm/nospec-branch.h>
- 
- #if defined(CONFIG_APM_DISPLAY_BLANK) && defined(CONFIG_VT)
- extern int (*console_blank_hook)(int);
-@@ -613,11 +614,13 @@ static long __apm_bios_call(void *_call)
- 	gdt[0x40 / 8] = bad_bios_desc;
- 
- 	apm_irq_save(flags);
-+	firmware_restrict_branch_speculation_start();
- 	APM_DO_SAVE_SEGS;
- 	apm_bios_call_asm(call->func, call->ebx, call->ecx,
- 			  &call->eax, &call->ebx, &call->ecx, &call->edx,
- 			  &call->esi);
- 	APM_DO_RESTORE_SEGS;
-+	firmware_restrict_branch_speculation_end();
- 	apm_irq_restore(flags);
- 	gdt[0x40 / 8] = save_desc_40;
- 	put_cpu();
-@@ -689,10 +692,12 @@ static long __apm_bios_call_simple(void
- 	gdt[0x40 / 8] = bad_bios_desc;
- 
- 	apm_irq_save(flags);
-+	firmware_restrict_branch_speculation_start();
- 	APM_DO_SAVE_SEGS;
- 	error = apm_bios_call_simple_asm(call->func, call->ebx, call->ecx,
- 					 &call->eax);
- 	APM_DO_RESTORE_SEGS;
-+	firmware_restrict_branch_speculation_end();
- 	apm_irq_restore(flags);
- 	gdt[0x40 / 8] = save_desc_40;
- 	put_cpu();
 
 
