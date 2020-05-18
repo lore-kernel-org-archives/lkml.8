@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8012CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA19C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62BB520835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3FB20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823607;
-	bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
+	s=default; t=1589823609;
+	bh=hyWaDA4pn3Qhi+YpMfwyxF5VOu5UfUSJ24UOZtnnM4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tRAwwo66aLhFxTFqN4K/x4OvoonhKnpI7TpujT72QRUKFK/WL24SC8x5ByF85VBBp
-	 NnkF6x38n5tPUWuSjPwfEjbRPrJx/tL9L8PenttRc0E7haJmJcnDtLDRgfnPOLGmDv
-	 3dI4LxqZzaQOzRMDS/p7Jp6V5wR0Yeolh7sOALew=
+	b=ctP8oRYOi2odzikLNlcXo5CSpb14mzN84ubu44piRqy+9f9s1XlrjqCz+40QBGFXw
+	 aMER9PXzHfoB59Bc8Zw28rEA0++J20p4jaIfSUF1i+NGeNbkgld/YjStvS7BM4VQpv
+	 S0ZxVjSddpB1usMlgXVn5vvm35I/eOmrxyOvG7I8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgERRkG (ORCPT
+        id S1728982AbgERRkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35054 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbgERRj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:58 -0400
+        id S1728947AbgERRkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C82B72086A;
-        Mon, 18 May 2020 17:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134BC207C4;
+        Mon, 18 May 2020 17:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823598;
-        bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
+        s=default; t=1589823600;
+        bh=hyWaDA4pn3Qhi+YpMfwyxF5VOu5UfUSJ24UOZtnnM4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sO4chUVCWxUPo2SuA1tlol2k9+SUYwImgZzdCXp/wt4hToriQRPvpD+UCQH1pUHDu
-         zCFY2D7zviBwm5a3wFcty6PPPuFYfzNgtV0CJ7R6wZUgt5WI3YMbfsIPPCBX+uDZ1D
-         j8Pueh54EtkvBWdNg+xz4brnMsMLVCJvL9hDHztQ=
+        b=lYeARB6Z7Ulorli1yYK81Sz9b1e6AvGsUEPhIpkohyQmFPIBGRvvwnFFSUDTqUZtj
+         FUiqZ0MHIrvTnGbjHAAObGhGBFvMDye57oE+ifDDpVE+gwllUOhHyMhD3svrESm4F3
+         x/FfXT2OpGhNXg/W236S4+D0aFa7m4E5OFk3dXXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>, NeilBrown <neilb@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 45/86] drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
-Date:   Mon, 18 May 2020 19:36:16 +0200
-Message-Id: <20200518173459.716638047@linuxfoundation.org>
+Subject: [PATCH 4.4 46/86] ipc/util.c: sysvipc_find_ipc() incorrectly updates position index
+Date:   Mon, 18 May 2020 19:36:17 +0200
+Message-Id: <20200518173459.940228469@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -62,32 +71,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 5b5703dbafae74adfbe298a56a81694172caf5e6 ]
+[ Upstream commit 5e698222c70257d13ae0816720dde57c56f81e15 ]
 
-v2: removed TODO reminder
+Commit 89163f93c6f9 ("ipc/util.c: sysvipc_find_ipc() should increase
+position index") is causing this bug (seen on 5.6.8):
 
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+
+   # ipcmk -Q
+   Message queue id: 0
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x82db8127 0          root       644        0            0
+
+   # ipcmk -Q
+   Message queue id: 1
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x82db8127 0          root       644        0            0
+   0x76d1fb2a 1          root       644        0            0
+
+   # ipcrm -q 0
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x76d1fb2a 1          root       644        0            0
+   0x76d1fb2a 1          root       644        0            0
+
+   # ipcmk -Q
+   Message queue id: 2
+   # ipcrm -q 2
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x76d1fb2a 1          root       644        0            0
+   0x76d1fb2a 1          root       644        0            0
+
+   # ipcmk -Q
+   Message queue id: 3
+   # ipcrm -q 1
+   # ipcs -q
+
+   ------ Message Queues --------
+   key        msqid      owner      perms      used-bytes   messages
+   0x7c982867 3          root       644        0            0
+   0x7c982867 3          root       644        0            0
+   0x7c982867 3          root       644        0            0
+   0x7c982867 3          root       644        0            0
+
+Whenever an IPC item with a low id is deleted, the items with higher ids
+are duplicated, as if filling a hole.
+
+new_pos should jump through hole of unused ids, pos can be updated
+inside "for" cycle.
+
+Fixes: 89163f93c6f9 ("ipc/util.c: sysvipc_find_ipc() should increase position index")
+Reported-by: Andreas Schwab <schwab@suse.de>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/a4e0ae09-a73c-1c62-04ef-3f990d41bea9@virtuozzo.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Waiman Long <longman@redhat.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/4921fe9b-9385-a2b4-1dc4-1099be6d2e39@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/qxl/qxl_image.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ ipc/util.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_image.c b/drivers/gpu/drm/qxl/qxl_image.c
-index 7fbcc35e8ad35..c89c10055641e 100644
---- a/drivers/gpu/drm/qxl/qxl_image.c
-+++ b/drivers/gpu/drm/qxl/qxl_image.c
-@@ -210,7 +210,8 @@ qxl_image_init_helper(struct qxl_device *qdev,
- 		break;
- 	default:
- 		DRM_ERROR("unsupported image bit depth\n");
--		return -EINVAL; /* TODO: cleanup */
-+		qxl_bo_kunmap_atomic_page(qdev, image_bo, ptr);
-+		return -EINVAL;
+diff --git a/ipc/util.c b/ipc/util.c
+index 2724f9071ab39..7af476b6dcdde 100644
+--- a/ipc/util.c
++++ b/ipc/util.c
+@@ -756,21 +756,21 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+ 			total++;
  	}
- 	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
- 	image->u.bitmap.x = width;
+ 
+-	*new_pos = pos + 1;
++	ipc = NULL;
+ 	if (total >= ids->in_use)
+-		return NULL;
++		goto out;
+ 
+ 	for (; pos < IPCMNI; pos++) {
+ 		ipc = idr_find(&ids->ipcs_idr, pos);
+ 		if (ipc != NULL) {
+ 			rcu_read_lock();
+ 			ipc_lock_object(ipc);
+-			return ipc;
++			break;
+ 		}
+ 	}
+-
+-	/* Out of range - return NULL to terminate iteration */
+-	return NULL;
++out:
++	*new_pos = pos + 1;
++	return ipc;
+ }
+ 
+ static void *sysvipc_proc_next(struct seq_file *s, void *it, loff_t *pos)
 -- 
 2.20.1
 
