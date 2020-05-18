@@ -2,93 +2,89 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43692C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D8E2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE6220657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826588;
-	bh=Dy9+yzzQGv8TwSLbXo42Lz/TB6+TmkvJluwUjIXx7IM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUqYQpwt+iGlZ4LFcQbadzyam+1KPJU3eIOy8C7uNJZrDgleLkyPYs/cMY0ZHXdg1
-	 c2+sw2ivAsbWGpa50iOYa5yhpBGVpuxBUIM+qvZUIME/9s4DpV08PjsdFbXhqRSRxV
-	 1IMMmgmy0F+8KL8bbOVIxfnNtQw89uzMRgkztC6o=
+	s=default; t=1589826593;
+	bh=BsDr7nxkF4zF7gMBv5mX7My/9Qowd6V2zS7U7dRAsHw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mIDfkGKD++uAAuHhhyh/2uG7trC9eV7/gr14w02BNtiRCPrKoM2OQ3Yx1VTnQANo4
+	 w3kowSLVIQdd9yqrDwwDk7LLteIjffk/EvF0Ml9sMYw5yiOVgv1LR2PE1q6/SYgWjP
+	 vZQYCfy+Hf+61si6sSuszj+JfnkQVBTHWBiSDuVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388034AbgERS3r (ORCPT
+        id S2388040AbgERS3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729266AbgERRlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:41:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C09020715;
-        Mon, 18 May 2020 17:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823685;
-        bh=Dy9+yzzQGv8TwSLbXo42Lz/TB6+TmkvJluwUjIXx7IM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvfM6MOw6XP4dTcwwIg1MtOnFQH1pvume0Ep1LFIOn5Frka/p3BWb+2TljIEeTKwu
-         khfEtq6WYbqtF9KegHp2EMEfbS4PGGfn8Yjebkd2xQA0EcfqkuSZoDRxo000L6wNGg
-         eB8UgHxIVW2dV6ab+nx1VtT8qEsEaM4/0CEQan/0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.4 80/86] usb: gadget: audio: Fix a missing error return value in audio_bind()
-Date:   Mon, 18 May 2020 19:36:51 +0200
-Message-Id: <20200518173506.792692315@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
-References: <20200518173450.254571947@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 18 May 2020 14:29:52 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38676 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbgERS3l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:29:41 -0400
+Received: by mail-il1-f194.google.com with SMTP id j2so10878121ilr.5;
+        Mon, 18 May 2020 11:29:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H9QUmqRboTMq2btI6W1PlOxGwrrB/TVm3hT9RDAxdio=;
+        b=dv/RyRgTjIqZKFw4/wVffVjI4wcgG6Tee3JUpGSOClDB8QnVwGVR8NqYWLlhLtwjEb
+         Gu9nqMn2IXRrLq0M3Ol9/b0DQq1JuqwA7BWDu8nEW617EA2/kuIF4VW1631VzpFLN/15
+         x86g7/YZFNyvLil9lx5mpbP7rGqKqmm4uDczvdtiW08XqOebfPOTD8tyCX3NHBCAA5lS
+         ENe3BLYLrPCQfMWDAleQ3vThc09IokJaXhUa0bmFUUTDgAhr4sQ28T8mAFI4gXqpDa7p
+         sK8w05oqVMwOFkBw1lq6ccLD68+4Q773TN/cIl1G/9Ep4EsCNxA3gsn8IcM5noRUNKW3
+         WFxQ==
+X-Gm-Message-State: AOAM530c4M2mGZb/S6AGqYDJoADu1tehptIOHdVLHW9w6z/0kZhQTXyc
+        LS7cK5qoZHgvkn1jx+mKqQ==
+X-Google-Smtp-Source: ABdhPJzxd7rr3zApzsbN80hNAQP6arGxepHH572CYOWpC/bwGTqxizgZRmX7IJW1q0n5+KM61tXsVA==
+X-Received: by 2002:a92:b743:: with SMTP id c3mr14630153ilm.92.1589826579249;
+        Mon, 18 May 2020 11:29:39 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id l9sm4203595iop.22.2020.05.18.11.29.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 11:29:38 -0700 (PDT)
+Received: (nullmailer pid 7054 invoked by uid 1000);
+        Mon, 18 May 2020 18:29:37 -0000
+Date:   Mon, 18 May 2020 12:29:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v1] dt-bindings: serial: qca,ar9330-uart: Convert to
+ json-schema
+Message-ID: <20200518182937.GA6974@bogus>
+References: <20200510051522.6191-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510051522.6191-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Sun, 10 May 2020 07:15:22 +0200, Oleksij Rempel wrote:
+> Convert the Qualcomm Atheros AR9330 High-Speed UART
+> Device Tree binding documentation to json-schema.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  .../bindings/serial/qca,ar9330-uart.txt       | 31 ------------
+>  .../bindings/serial/qca,ar9330-uart.yaml      | 50 +++++++++++++++++++
+>  2 files changed, 50 insertions(+), 31 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/qca,ar9330-uart.yaml
+> 
 
-commit 19b94c1f9c9a16d41a8de3ccbdb8536cf1aecdbf upstream.
-
-If 'usb_otg_descriptor_alloc()' fails, we must return an error code, not 0.
-
-Fixes: 56023ce0fd70 ("usb: gadget: audio: allocate and init otg descriptor by otg capabilities")
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/gadget/legacy/audio.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/drivers/usb/gadget/legacy/audio.c
-+++ b/drivers/usb/gadget/legacy/audio.c
-@@ -249,8 +249,10 @@ static int audio_bind(struct usb_composi
- 		struct usb_descriptor_header *usb_desc;
- 
- 		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
--		if (!usb_desc)
-+		if (!usb_desc) {
-+			status = -ENOMEM;
- 			goto fail;
-+		}
- 		usb_otg_descriptor_init(cdev->gadget, usb_desc);
- 		otg_desc[0] = usb_desc;
- 		otg_desc[1] = NULL;
-
-
+Applied, thanks!
