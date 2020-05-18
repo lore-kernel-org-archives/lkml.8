@@ -2,79 +2,103 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAA7D2081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715C220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589837845;
+	bh=EUyWXexSsbz75cYmX07WWKXWXKLhqB/4DeEQtFnWqlw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uTMfwruDDzaoo1hmSzCQTqpkdrFOTMWnWzn67mQmuNENrWFZcTroe5YTwwRXNRFoe
+	 jzA4RWl5gyx+RL8pYRNicgWvkRDRHEXAJReCbt6WkOxnXA9275C0mjiPQIzhAGOY34
+	 w+aWLXAf459pPbFtsoqcemERf6DG3kCZUFqgWltE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgERVc5 (ORCPT
+        id S1727951AbgERVhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:32:57 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:53601 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERVc5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:32:57 -0400
-X-Originating-IP: 90.65.91.255
-Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 36E80FF805;
-        Mon, 18 May 2020 21:32:55 +0000 (UTC)
-Date:   Mon, 18 May 2020 23:32:54 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-List-Id: <soc.lore.kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: at91: defconfig for 5.8
-Message-ID: <20200518213254.GA26598@piout.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Mon, 18 May 2020 17:37:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbgERVhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 17:37:24 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A40E0205CB;
+        Mon, 18 May 2020 21:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589837844;
+        bh=EUyWXexSsbz75cYmX07WWKXWXKLhqB/4DeEQtFnWqlw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qclqy01Zzf4awU5/li0KjuAMvhHjWCiNdgctP3bwqEBf4vQJFfodBIGCpmPtFzRls
+         Rvpj8Pp410HK9Dr1ImCBroRyEMQB6QHNwINSZ+RfX6901h45KISoZbKZC2f78tJ4Ww
+         l3VS3req8WcMjQPEhnHcvBAcxvSoxI6iGRfJDQeQ=
+Date:   Mon, 18 May 2020 14:37:23 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        <linux-media@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/2] rapidio: fix an error in get_user_pages_fast()
+ error handling
+Message-Id: <20200518143723.2c3159ddd53345b9cde5d869@linux-foundation.org>
+In-Reply-To: <20200517235620.205225-2-jhubbard@nvidia.com>
+References: <20200517235620.205225-1-jhubbard@nvidia.com>
+        <20200517235620.205225-2-jhubbard@nvidia.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd, Olof,
+On Sun, 17 May 2020 16:56:19 -0700 John Hubbard <jhubbard@nvidia.com> wrote:
 
-Very little is added to the sama5_defconfig: support for the gpios from
-the security module and a pmic for the SAMA5D27 WLSOM1.
+> In the case of get_user_pages_fast() returning fewer pages than
+> requested, rio_dma_transfer() does not quite do the right thing.
+> It attempts to release all the pages that were requested, rather
+> than just the pages that were pinned.
+> 
+> Fix the error handling so that only the pages that were successfully
+> pinned are released.
+> 
+> ...
+>
+> --- a/drivers/rapidio/devices/rio_mport_cdev.c
+> +++ b/drivers/rapidio/devices/rio_mport_cdev.c
+> @@ -877,6 +877,11 @@ rio_dma_transfer(struct file *filp, u32 transfer_mode,
+>  				rmcd_error("pinned %ld out of %ld pages",
+>  					   pinned, nr_pages);
+>  			ret = -EFAULT;
+> +			/*
+> +			 * Set nr_pages up to mean "how many pages to unpin, in
+> +			 * the error handler:
+> +			 */
+> +			nr_pages = pinned;
+>  			goto err_pg;
+>  		}
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+The code is a bit odd.  If (xfer->loc_addr == 0) then we do the `else'
+stuff then fall through to
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+err_pg:
+	if (!req->page_list) {
+		for (i = 0; i < nr_pages; i++)
+			put_page(page_list[i]);
+		kfree(page_list);
+	}
 
-are available in the Git repository at:
+all of which is a big no-op because nr_pages==0 and page_list==NULL,
+but it could all be easily avoided.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.8-defconfig
-
-for you to fetch changes up to 6a2ab88ca789804cad89d558625147edd26a1d37:
-
-  ARM: configs: at91: sama5: enable MCP16502 regulator (2020-04-13 13:00:16 +0200)
-
-----------------------------------------------------------------
-AT91 defconfig for 5.8
-
- - Add PIOBU and MCP16502 regulator to sama5 defconfig
-
-----------------------------------------------------------------
-Razvan Stefanescu (2):
-      ARM: configs: at91: sama5: enable SAMA5D2_PIOBU
-      ARM: configs: at91: sama5: enable MCP16502 regulator
-
- arch/arm/configs/sama5_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Oh well.  Reviewed-by:me.
