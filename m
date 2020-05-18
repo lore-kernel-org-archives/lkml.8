@@ -2,52 +2,55 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEECC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75BB3208B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DFA208FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824936;
-	bh=c7Z1TziP9EnCo4NzNnJO1mlONXL94kwHUnfD09/x5Gw=;
+	s=default; t=1589824941;
+	bh=dp7iFnJlTuXJo6yAkAJuyAMkJxYlx6hfOyDpFHMYqbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVS/77jiyNH1gbiz3csmYbuZXb3Zl37ynLT/4L8nozlw1J457fPQs3rvcWc0JTw5p
-	 NRxrpLZc5jtEEsToiqTH1V9W1Qjc1HjFGTa93hMAwfCEjaIPGTOc2R1JbnjgPZe5zB
-	 Y9sA8Kq5mfB8tvXzb3/fR9Ank6hKUhfrUGKs1ToE=
+	b=bDvJDgFp+tTgIeHjXsuSiTFIBBYgETC0eYRxNMBVqq4X0y1EIdXkVmbFHhT+Lenpg
+	 A6GLldAuNWI3zHAyf4vLcs/+eY8MQusxqaSP6EB7kCOPCMzYjx39uz8q80pmGwpAq3
+	 jAMZHu9Vd3FMuAnifBoJXwZhkGdsIC4OI68tWfgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732485AbgERSCO (ORCPT
+        id S1732496AbgERSCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:02:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45244 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:02:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731959AbgERSCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:07 -0400
+        id S1731959AbgERSCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AFCC208B3;
-        Mon, 18 May 2020 18:02:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5283208B8;
+        Mon, 18 May 2020 18:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824927;
-        bh=c7Z1TziP9EnCo4NzNnJO1mlONXL94kwHUnfD09/x5Gw=;
+        s=default; t=1589824934;
+        bh=dp7iFnJlTuXJo6yAkAJuyAMkJxYlx6hfOyDpFHMYqbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aK4HezU8jTV+z5bsAX4AMBE7aQpIHYfRjDWh2MHTTj8GHxL5XFwVQgjOVDggJAAdi
-         oJq/+4+zVahCLabZJyAdVDt6T2wTIMR5rpS2Q6msIr7Fcdm9Yeqr34qosCvIh7Ry+N
-         htGJWN+erdItqO48wz+LoByL+aVCbL5r7Q4VEI6Q=
+        b=DFal+/jPjM6amy/YIdKFMWqvHB7L6odaChW4J1LB1piFUPQY0CApda25NLnSXhwK5
+         Z0NDRpYUIyWRKQ1qM/j5huHhi00/dP+iZfb7zrIfXzw/B4fYnhOODBhvgyV96LA49d
+         8p2yDAKbY8lpW135x8XAlykkeMMWs19rdhfRelVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 059/194] ALSA: hda/hdmi: fix race in monitor detection during probe
-Date:   Mon, 18 May 2020 19:35:49 +0200
-Message-Id: <20200518173536.649783489@linuxfoundation.org>
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Eric Bernstein <Eric.Bernstein@amd.com>,
+        Aurabindo Pillai <aurabindo.pillai@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 062/194] drm/amd/display: check if REFCLK_CNTL register is present
+Date:   Mon, 18 May 2020 19:35:52 +0200
+Message-Id: <20200518173536.875799772@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,46 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
 
-[ Upstream commit ca76282b6faffc83601c25bd2a95f635c03503ef ]
+[ Upstream commit 3159d41db3a04330c31ece32f8b29752fc114848 ]
 
-A race exists between build_pcms() and build_controls() phases of codec
-setup. Build_pcms() sets up notifier for jack events. If a monitor event
-is received before build_controls() is run, the initial jack state is
-lost and never reported via mixer controls.
+Check before programming the register since it isn't present on
+all IPs using this code.
 
-The problem can be hit at least with SOF as the controller driver. SOF
-calls snd_hda_codec_build_controls() in its workqueue-based probe and
-this can be delayed enough to hit the race condition.
-
-Fix the issue by invalidating the per-pin ELD information when
-build_controls() is called. The existing call to hdmi_present_sense()
-will update the ELD contents. This ensures initial monitor state is
-correctly reflected via mixer controls.
-
-BugLink: https://github.com/thesofproject/linux/issues/1687
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200428123836.24512-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Reviewed-by: Eric Bernstein <Eric.Bernstein@amd.com>
+Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 0c1a59d5ad59d..0f3250417b955 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2320,7 +2320,9 @@ static int generic_hdmi_build_controls(struct hda_codec *codec)
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
+index a444fed941849..ad422e00f9fec 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
+@@ -2306,7 +2306,8 @@ void dcn20_fpga_init_hw(struct dc *dc)
  
- 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
- 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
-+		struct hdmi_eld *pin_eld = &per_pin->sink_eld;
+ 	REG_UPDATE(DCHUBBUB_GLOBAL_TIMER_CNTL, DCHUBBUB_GLOBAL_TIMER_REFDIV, 2);
+ 	REG_UPDATE(DCHUBBUB_GLOBAL_TIMER_CNTL, DCHUBBUB_GLOBAL_TIMER_ENABLE, 1);
+-	REG_WRITE(REFCLK_CNTL, 0);
++	if (REG(REFCLK_CNTL))
++		REG_WRITE(REFCLK_CNTL, 0);
+ 	//
  
-+		pin_eld->eld_valid = false;
- 		hdmi_present_sense(per_pin, 0);
- 	}
  
 -- 
 2.20.1
