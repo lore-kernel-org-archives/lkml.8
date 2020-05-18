@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D139C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E00D207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14CA20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825046;
-	bh=GnBdQhONgJyiSt5zWJqn8JkDvXKh/3TzS2kKt72sA3Q=;
+	s=default; t=1589825050;
+	bh=9ychuZlDSEzXZQNjTC392RG4bW5HCYLMbeH7TWLjKcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRQYk2rHF2LbEnKRlsiZWDPFDNNl4ocwBahpVJX5mhgVG52Hp8O0JwuZ14m+wCDnA
-	 92NRmHLNUKCO8pwf7OeodfV5+5v5qAUC/GhD3xTm1mThnT/XMafZLWG1uuc+Zmpqbv
-	 IoUltyk23rjwTmZnNu18iIYwgCiO7SUahbuJTzf8=
+	b=uw2h2xD/zJOH1p4mpMdvDIC+wvuPiw0ymzHcZQ6Jfft9IuVd6Cz8DV01r+rQJmutM
+	 IBLaEZBfuamJSQ9UvIqtib+EmsaYCYJSXBipdsKfcBLyFOlKQfwI7sykjjpXSuItMD
+	 ac7nh6cpxnhTFJpR+pDLV0AQDW3Nqfgy2yppzB/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732737AbgERSEG (ORCPT
+        id S1732744AbgERSEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:04:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49814 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:04:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732189AbgERSD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:58 -0400
+        id S1732699AbgERSDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C88120715;
-        Mon, 18 May 2020 18:03:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EB6920715;
+        Mon, 18 May 2020 18:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825038;
-        bh=GnBdQhONgJyiSt5zWJqn8JkDvXKh/3TzS2kKt72sA3Q=;
+        s=default; t=1589825030;
+        bh=9ychuZlDSEzXZQNjTC392RG4bW5HCYLMbeH7TWLjKcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OgYhcGADimqHCjHxob5J7IDha8UPh6FSqVhhQd9Ei6x/v3w7rXVN9KXllPPAcEqtr
-         84SFqdCiGHxBxrjXiVHVNicP8hl/6XbWWppb7LOQm7uLMfTIfLMGmShZ59hSmyAleo
-         Ss1Y1Nphx3cG8+deNtYhn/b9fjlFDewbhd+MXRfg=
+        b=hwlykVNHXKjiuNH3q0Vjp+QH94vDHATwr/SNuXojrp6tR6+4U/V06wo9yuO0G3duQ
+         0Ij2hysby1L8cEzTKkdIJfMF/RN/FV+Iwz9Gs/nAS39xgZx3XnVjnuv19ti8a54P6v
+         r7thKrmX/Cf8cF+B84xNxY13GEZwzTZZjDkDxaPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Yi <yiche@redhat.com>,
-        Florian Westphal <fw@strlen.de>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 104/194] netfilter: conntrack: fix infinite loop on rmmod
-Date:   Mon, 18 May 2020 19:36:34 +0200
-Message-Id: <20200518173540.560612351@linuxfoundation.org>
+Subject: [PATCH 5.6 101/194] netfilter: conntrack: avoid gcc-10 zero-length-bounds warning
+Date:   Mon, 18 May 2020 19:36:31 +0200
+Message-Id: <20200518173540.347275379@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,90 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 54ab49fde95605a1077f759ce454d94e84b5ca45 ]
+[ Upstream commit 2c407aca64977ede9b9f35158e919773cae2082f ]
 
-'rmmod nf_conntrack' can hang forever, because the netns exit
-gets stuck in nf_conntrack_cleanup_net_list():
+gcc-10 warns around a suspicious access to an empty struct member:
 
-i_see_dead_people:
- busy = 0;
- list_for_each_entry(net, net_exit_list, exit_list) {
-  nf_ct_iterate_cleanup(kill_all, net, 0, 0);
-  if (atomic_read(&net->ct.count) != 0)
-   busy = 1;
- }
- if (busy) {
-  schedule();
-  goto i_see_dead_people;
- }
+net/netfilter/nf_conntrack_core.c: In function '__nf_conntrack_alloc':
+net/netfilter/nf_conntrack_core.c:1522:9: warning: array subscript 0 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[0]'} [-Wzero-length-bounds]
+ 1522 |  memset(&ct->__nfct_init_offset[0], 0,
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from net/netfilter/nf_conntrack_core.c:37:
+include/net/netfilter/nf_conntrack.h:90:5: note: while referencing '__nfct_init_offset'
+   90 |  u8 __nfct_init_offset[0];
+      |     ^~~~~~~~~~~~~~~~~~
 
-When nf_ct_iterate_cleanup iterates the conntrack table, all nf_conn
-structures can be found twice:
-once for the original tuple and once for the conntracks reply tuple.
+The code is correct but a bit unusual. Rework it slightly in a way that
+does not trigger the warning, using an empty struct instead of an empty
+array. There are probably more elegant ways to do this, but this is the
+smallest change.
 
-get_next_corpse() only calls the iterator when the entry is
-in original direction -- the idea was to avoid unneeded invocations
-of the iterator callback.
-
-When support for clashing entries was added, the assumption that
-all nf_conn objects are added twice, once in original, once for reply
-tuple no longer holds -- NF_CLASH_BIT entries are only added in
-the non-clashing reply direction.
-
-Thus, if at least one NF_CLASH entry is in the list then
-nf_conntrack_cleanup_net_list() always skips it completely.
-
-During normal netns destruction, this causes a hang of several
-seconds, until the gc worker removes the entry (NF_CLASH entries
-always have a 1 second timeout).
-
-But in the rmmod case, the gc worker has already been stopped, so
-ct.count never becomes 0.
-
-We can fix this in two ways:
-
-1. Add a second test for CLASH_BIT and call iterator for those
-   entries as well, or:
-2. Skip the original tuple direction and use the reply tuple.
-
-2) is simpler, so do that.
-
-Fixes: 6a757c07e51f80ac ("netfilter: conntrack: allow insertion of clashing entries")
-Reported-by: Chen Yi <yiche@redhat.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Fixes: c41884ce0562 ("netfilter: conntrack: avoid zeroing timer")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_core.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ include/net/netfilter/nf_conntrack.h | 2 +-
+ net/netfilter/nf_conntrack_core.c    | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index 9f551f3b69c65..90690e37a56f0 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -87,7 +87,7 @@ struct nf_conn {
+ 	struct hlist_node	nat_bysource;
+ #endif
+ 	/* all members below initialized via memset */
+-	u8 __nfct_init_offset[0];
++	struct { } __nfct_init_offset;
+ 
+ 	/* If we were expected by an expectation, this will be it */
+ 	struct nf_conn *master;
 diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 6a978d7e0d639..d11a583481334 100644
+index 1927fc296f951..6a978d7e0d639 100644
 --- a/net/netfilter/nf_conntrack_core.c
 +++ b/net/netfilter/nf_conntrack_core.c
-@@ -2137,8 +2137,19 @@ get_next_corpse(int (*iter)(struct nf_conn *i, void *data),
- 		nf_conntrack_lock(lockp);
- 		if (*bucket < nf_conntrack_htable_size) {
- 			hlist_nulls_for_each_entry(h, n, &nf_conntrack_hash[*bucket], hnnode) {
--				if (NF_CT_DIRECTION(h) != IP_CT_DIR_ORIGINAL)
-+				if (NF_CT_DIRECTION(h) != IP_CT_DIR_REPLY)
- 					continue;
-+				/* All nf_conn objects are added to hash table twice, one
-+				 * for original direction tuple, once for the reply tuple.
-+				 *
-+				 * Exception: In the IPS_NAT_CLASH case, only the reply
-+				 * tuple is added (the original tuple already existed for
-+				 * a different object).
-+				 *
-+				 * We only need to call the iterator once for each
-+				 * conntrack, so we just use the 'reply' direction
-+				 * tuple while iterating.
-+				 */
- 				ct = nf_ct_tuplehash_to_ctrack(h);
- 				if (iter(ct, data))
- 					goto found;
+@@ -1517,9 +1517,9 @@ __nf_conntrack_alloc(struct net *net,
+ 	ct->status = 0;
+ 	ct->timeout = 0;
+ 	write_pnet(&ct->ct_net, net);
+-	memset(&ct->__nfct_init_offset[0], 0,
++	memset(&ct->__nfct_init_offset, 0,
+ 	       offsetof(struct nf_conn, proto) -
+-	       offsetof(struct nf_conn, __nfct_init_offset[0]));
++	       offsetof(struct nf_conn, __nfct_init_offset));
+ 
+ 	nf_ct_zone_add(ct, zone);
+ 
 -- 
 2.20.1
 
