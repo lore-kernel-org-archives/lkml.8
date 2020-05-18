@@ -2,122 +2,98 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0877EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F58420756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8BF2207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589803744;
+	bh=SEByoyU7zUcqsSozfnjODsKZnvuUk1JfOriPckML+F4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=uPwoJ2SmU/rx/Bd0QQHT68lPcCBCiYwPyBV9WalJSxcpIOJKpmlHfqrvHdsJFZ8BU
+	 ICtyWQw8+fNjG6FG26dPcNVEOTgru0gdX7qbN9ngsi7UUPdL5Q1GMOMMnPjgJvzoF2
+	 vAasNWHhOOJZeWiIO8VuRycK3S18OKA/p8Qbt4wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgERMFu (ORCPT
+        id S1726907AbgERMJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:05:50 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58287 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgERMFt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:05:49 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jaeWg-0001cL-9J; Mon, 18 May 2020 12:05:46 +0000
-Date:   Mon, 18 May 2020 14:05:45 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Tycho Andersen <tycho@tycho.ws>, Aleksa Sarai <asarai@suse.de>,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
-Message-ID: <20200518120545.w7fgyq56gwzzcdrf@wittgenstein>
-References: <20200515234005.32370-1-sargun@sargun.me>
- <202005162344.74A02C2D@keescook>
- <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
- <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
- <20200517142316.GA1996744@cisco>
- <20200517143311.fmxaf3pnopuaezl4@wittgenstein>
- <20200517144603.GD1996744@cisco>
- <20200517150215.GE1996744@cisco>
- <202005171428.68F30AA0@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202005171428.68F30AA0@keescook>
+        Mon, 18 May 2020 08:09:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbgERMJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:09:03 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.188])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D14207D8;
+        Mon, 18 May 2020 12:09:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589803743;
+        bh=SEByoyU7zUcqsSozfnjODsKZnvuUk1JfOriPckML+F4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=l3i7U26etrohomOegVf5fBfK9nF8sMSrRZr9e1n0cdxHeZ4Spq8JggfufDwtUFK6/
+         cAujaYLrudSVf4FcCMAL/8TRYSkHDpQJwxLF4ly33rlqD/Ujx5kwHLdsNY4ja4eHSb
+         cf93eYsTh/FFxkQ3gvoPNnknZD/0SbtETKejRph0=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/2] ia64: Hide the archdata.iommu field behind generic IOMMU_API
+Date:   Mon, 18 May 2020 14:08:54 +0200
+Message-Id: <20200518120855.27822-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 02:30:57PM -0700, Kees Cook wrote:
-> On Sun, May 17, 2020 at 09:02:15AM -0600, Tycho Andersen wrote:
-> > On Sun, May 17, 2020 at 08:46:03AM -0600, Tycho Andersen wrote:
-> > > On Sun, May 17, 2020 at 04:33:11PM +0200, Christian Brauner wrote:
-> > > > struct seccomp_notif2 {
-> > > > 	__u32 notif_size;
-> > > > 	__u64 id;
-> > > > 	__u32 pid;
-> > > > 	__u32 flags;
-> > > > 	struct seccomp_data data;
-> > > > 	__u32 data_size;
-> > > > };
-> > > 
-> > > I guess you need to put data_size before data, otherwise old userspace
-> > > with a smaller struct seccomp_data will look in the wrong place.
-> > > 
-> > > But yes, that'll work if you put two sizes in, which is probably
-> > > reasonable since we're talking about two structs.
-> > 
-> > Well, no, it doesn't either. Suppose we add a new field first to
-> > struct seccomp_notif2:
-> > 
-> > struct seccomp_notif2 {
-> >     __u32 notif_size;
-> >     __u64 id;
-> >     __u32 pid;
-> >     __u32 flags;
-> >     struct seccomp_data data;
-> >     __u32 data_size;
-> >     __u32 new_field;
-> > };
-> > 
-> > And next we add a new field to struct secccomp_data. When a userspace
-> > compiled with just the new seccomp_notif2 field does:
-> > 
-> > seccomp_notif2.new_field = ...;
-> > 
-> > the compiler will put it in the wrong place for the kernel with the
-> > new seccomp_data field too.
-> > 
-> > Sort of feels like we should do:
-> > 
-> > struct seccomp_notif2 {
-> >     struct seccomp_notif *notif;
-> >     struct seccomp_data *data;
-> > };
-> 
-> I'm going read this thread more carefully tomorrow, but I just wanted to
-> mention that I'd *like* to extend seccomp_data for doing deep argument
-> inspection of the new syscalls. I think it's the least bad of many
-> designs, and I'll write that up in more detail. (I would *really* like
-> to avoid extending seccomp's BPF language, and instead allow probing
-> into the struct copied from userspace, etc.)
+There is a generic, kernel wide configuration symbol for enabling the
+IOMMU specific bits: CONFIG_IOMMU_API.  Implementations (including
+INTEL_IOMMU driver) select it so use it here as well.
 
-It's great to hear that you're on this. I haven't had time to work on
-this since our kernel summit session. :/
-And so far, I really like what I hear. I had the same general thought
-that not extending seccomp's bpf is what we want. And to stress this
-again before the mails come flooding in: we really need this in seccomp
-itself not in any current or future LSM. :)
+This makes the conditional archdata.iommu field consistent with other
+platforms and also fixes any compile test builds of other IOMMU drivers,
+when INTEL_IOMMU is not selected).
 
-> 
-> Anyway, it's very related to this, so, yeah, probably we need a v2 of the
-> notif API, but I'll try to get all the ideas here collected in one place.
+For the case when INTEL_IOMMU and COMPILE_TEST are not selected, this
+should create functionally equivalent code/choice.  With COMPILE_TEST
+this field could appear if other IOMMU drivers are chosen but
+INTEL_IOMMU not.
 
-Cool, I was kinda worried that people would think that's a crazy idea
-but I really think we're better off with a redesign. And I think that's
-totally ok and cleaner than hacking around it.
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Christian
+---
+
+See:
+https://lore.kernel.org/lkml/202005181412.frC4juFy%25lkp@intel.com/
+---
+ arch/ia64/include/asm/device.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/ia64/include/asm/device.h b/arch/ia64/include/asm/device.h
+index 410a769ece95..3eb397415381 100644
+--- a/arch/ia64/include/asm/device.h
++++ b/arch/ia64/include/asm/device.h
+@@ -6,7 +6,7 @@
+ #define _ASM_IA64_DEVICE_H
+ 
+ struct dev_archdata {
+-#ifdef CONFIG_INTEL_IOMMU
++#ifdef CONFIG_IOMMU_API
+ 	void *iommu; /* hook for IOMMU specific extension */
+ #endif
+ };
+-- 
+2.17.1
+
