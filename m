@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64875C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F1D20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA04207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825347;
-	bh=+DcNASjsA2v1ITdZ/hawtXHmtd2lUeMmvAxI3Pnpl5A=;
+	s=default; t=1589825356;
+	bh=1ZYtHKLOGLailgr19+33CoAv8a7qF/mC5bD07GcSEzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eDUdk+6RlF1KA4+uxLQfrUTlqs7GmOJCspcrtJlv8Yr8hTt3GdHT8yfozl0Jn6qbA
-	 PlTP0FaoZ0h+Rwp26uCSVUU7Eru9X1CzLeZ/irPNqnILpqRgRzXKU/ZdoOkDX9mwhb
-	 k57rY3In3Amlvie03a5V0r3YUvg7LLRUm6OQFnwI=
+	b=g+i2sW7bLXmF5MNLrK83WsBHy5kp4u2cA1OZiU5HcrhGO0ouRG5ThpDaReQlRG72p
+	 faAk/oe7HWRs70QrfM+zMK5V9RnMs2ANbiT7FsfPLypJcT5ZBj8jWyaxnnWkjwU1VI
+	 EytkwvtFKvX6LP3lZ37h8WKflNPLXaZBqJNO7eXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731867AbgERSHG (ORCPT
+        id S1733029AbgERSJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55530 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:09:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733238AbgERSHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:07:00 -0400
+        id S1732645AbgERSGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:06:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DBBE20897;
-        Mon, 18 May 2020 18:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C02C20826;
+        Mon, 18 May 2020 18:06:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825220;
-        bh=+DcNASjsA2v1ITdZ/hawtXHmtd2lUeMmvAxI3Pnpl5A=;
+        s=default; t=1589825211;
+        bh=1ZYtHKLOGLailgr19+33CoAv8a7qF/mC5bD07GcSEzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BlLNgPgDMAreHEUipj0yck+HJN72Wm4YQ+pbevm5dXIMXFzXc4TJXKPoC1xWjECz6
-         p8oBBTwsZhpL27p1Jv/pUyb5Cf145C/b4hmmdm83fFoqPxqGknmrcl/Q64IlBV9T9f
-         4l8Vbzh4zCCjOfPnY/xCclyMM0BwnHGSUyNVS2II=
+        b=MtvH42y8Qq4u5l9gzdfFPnZcrk574Z/MmTm2oQuql3MFrs1j0ttth0AYMzGPwtq1F
+         Wk7/B7mPRMdU2d1WaKcnmsQv78lkYAAbj3R1pxOX/R0L3IrVBJW20t0LmzIHKlIWXm
+         ZbEAH314BW23oLZrFpZ3sQRw3YAqPGe/xCQYOlmM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.6 178/194] arm64: dts: imx8mn: Change SDMA1 ahb clock for imx8mn
-Date:   Mon, 18 May 2020 19:37:48 +0200
-Message-Id: <20200518173546.353447019@linuxfoundation.org>
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 5.6 175/194] arm64: dts: meson-g12-common: fix dwc2 clock names
+Date:   Mon, 18 May 2020 19:37:45 +0200
+Message-Id: <20200518173546.178617308@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,34 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit 15ddc3e17aec0de4c69d595b873e184432b9791d upstream.
+commit e4f634d812634067b0c661af2e3cecfd629c89b8 upstream.
 
-Using SDMA1 with UART1 is causing a "Timeout waiting for CH0" error.
-This patch changes to ahb clock from SDMA1_ROOT to AHB which fixes the
-timeout error.
+Use the correct dwc2 clock name.
 
-Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 9baf7d6be730 ("arm64: dts: meson: g12a: Add G12A USB nodes")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Link: https://lore.kernel.org/r/20200326160857.11929-3-narmstrong@baylibre.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/freescale/imx8mn.dtsi |    2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -661,7 +661,7 @@
- 				reg = <0x30bd0000 0x10000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MN_CLK_SDMA1_ROOT>,
--					 <&clk IMX8MN_CLK_SDMA1_ROOT>;
-+					 <&clk IMX8MN_CLK_AHB>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -2204,7 +2204,7 @@
+ 				reg = <0x0 0xff400000 0x0 0x40000>;
+ 				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
+-				clock-names = "ddr";
++				clock-names = "otg";
+ 				phys = <&usb2_phy1>;
+ 				phy-names = "usb2-phy";
+ 				dr_mode = "peripheral";
 
 
