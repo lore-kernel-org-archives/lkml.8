@@ -2,122 +2,104 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C76C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCBE207F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3AF206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="jSi74qdC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EFc1O+Ij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgERNfA (ORCPT
+        id S1727911AbgERNfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:35:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49058 "EHLO
+        Mon, 18 May 2020 09:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgERNe7 (ORCPT
+        with ESMTP id S1726989AbgERNfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:34:59 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47EA1C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:34:59 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id f6so4809970pgm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:34:59 -0700 (PDT)
+        Mon, 18 May 2020 09:35:07 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E613CC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:35:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id d21so9851586ljg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:35:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GQYIfFlSp7tZJq6oV7LQdQDI1JsACLwiIo6iDjBJA/Q=;
-        b=jSi74qdCp01j6agYC3/nSZbM1FysxNQp7ifQfkD1AvuwZVVfLh+WR5Q8VCkm02Nyjq
-         fCWC9a/QdlkCrJfUZ5Ax7GkFBACD1ePRLGCprNMaIJpoAxLeTwd/Tp1WKIS9HVRkdNfX
-         WIc/l0yZBlueuZOOV7lW7u7aEiKmHMPjLMhh4Ni4ouhQtOSC6BfShXMctyT+3FJziU0d
-         xQMAE9+8sJOaHSRME+PPmSYBS1uUcEs/WO17khUbY1Zue0xSs4dbUP5BcOuZ5gcBSxTp
-         9T93RPE+t0bxV+IOu1ZXJEpltzODls6J0QyaEYjzl30RVvNA6Pf1sUJe5ueu1bGS8r11
-         kQaw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=TJEmqH8moaId2d4jgjNtmZXM7aLHVUBuzHkgd4v5uTQ=;
+        b=EFc1O+IjhL0SP1/08apU2IJjGo2zoURwB7EpGcYfnpzaNYLxDBq5IGfAAYnW/uj1wa
+         fdaaRESpTSmfECFJ0MgCWBPbFms4nyn50bZcaNU8MXSJ6Ui1dRNN1c0nHyo4LK7TDDsi
+         wAMqRpL1/XM9rurVOKhmQm6Av/KRCxTt8R9Y54hqodFdFYwpX/Ksq7K113FJj2YnW/UI
+         /bEnF3r8nCw32yJyKmoZVrFUudGUibpnkLNoYL3Roz5liry/239WuQUVCjFSTXWSq+RB
+         Uj5O+VGJD7rRXiB2mz5Lf2fsJ1rcd1duMuczxTXbMoE55TVohz9aZMnGDxFPBD8uFznf
+         ER/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GQYIfFlSp7tZJq6oV7LQdQDI1JsACLwiIo6iDjBJA/Q=;
-        b=W6kMe0O0MZwbgrflv9qiGS/9mRplrHFEHtNwcYp+IvGukqBiInGILiepNGV3wc5W/K
-         U8xDyY6aqFkM4hIFe/ERVpTtz6OnaRBc2T+DSvKfMBR1cSRn/r9JWIfT/2mQQJoEGxeR
-         3GV0OKczCbcUhoe1uviQpQqxBevU2X7WFMUWJJ8rDeC6DpwdwpxyXIacY77Mt3THBMnW
-         UgICRfMIe2uBJ1PYeByvQqPj8q133NKwkQvfrtBnxwxxnRlIr9PncvPWYEWR4xcGFsKe
-         8DXCeEvZuRG8Wx5REHo9giEdAgI+VI6od5KZeNYgNZ3OcbrV/NtsayBVjr5rmgNJ45D/
-         iM2A==
-X-Gm-Message-State: AOAM533ZTCWGtugFHffIKtwJSDUsepOPrVJndZAmCMeFx4h7NPfrphSF
-        vh1SN0paTG8SBnGD3K6YuPzTcg==
-X-Google-Smtp-Source: ABdhPJySpriIDJeajS+hklUSBQxHyVem2gUbCBTY5WTj6YG1ozk+6rq4FIDO+K9UA+m1Lel4x6bVxw==
-X-Received: by 2002:a63:145f:: with SMTP id 31mr6940036pgu.383.1589808898760;
-        Mon, 18 May 2020 06:34:58 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id c2sm7845969pgj.93.2020.05.18.06.34.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 06:34:57 -0700 (PDT)
-Subject: Re: [PATCHv3 12/50] csky: Add show_stack_loglvl()
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Guo Ren <guoren@kernel.org>
-References: <20200418201944.482088-1-dima@arista.com>
- <20200418201944.482088-13-dima@arista.com>
- <20200515122340.d0d93b7a29846934e161ef41@linux-foundation.org>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <fb27b64b-f0a0-b969-40dc-578f24426e41@arista.com>
-Date:   Mon, 18 May 2020 14:34:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200515122340.d0d93b7a29846934e161ef41@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TJEmqH8moaId2d4jgjNtmZXM7aLHVUBuzHkgd4v5uTQ=;
+        b=JFYJi6MMtB66AFE3SfLr8vcq3+EtPhoyxRpAef9/5VbMIE5rL/9l09Ow/hU9RSfVnc
+         6oZW1W0QKMMk/1+6x40yvgBrbyejtqrvgdOio5sLICS5vBIKSgnNApLgzpn2SsgqMcTe
+         GfOXYysG76ZfAxgNMQx44CFyfoWdadF0RwXxsxdJ7QmeVQR2PGjpiv42/eTZBh1Jclzb
+         4KdcgVfVRV/AJ44SzMUue65mi/US41KCmPmmfLHenwNFrUQC62LT5to3HF0pBARdC6aV
+         0BjY9Jx+YfnBmKxtCOkRCcjcpr9Ld6NrC2SMACIyfRYgf+oRBW6tWuEhhH8pXTHXNZ0V
+         ervg==
+X-Gm-Message-State: AOAM531EISReuo6Zj8XJ+bb+NvmeY2p6Fak3/3udwhDwK23iRC16ztvB
+        bhQsac1vuEXbOJmDLVV9+qduDdwz+EE=
+X-Google-Smtp-Source: ABdhPJzWPVMIjZuoi38Jtq2nlQdFddOvGFN0zc5c7R2qW5AFMCqDojyJ63Se3mFm1ug65K7K+JZ/Jw==
+X-Received: by 2002:a2e:2241:: with SMTP id i62mr10326881lji.13.1589808904951;
+        Mon, 18 May 2020 06:35:04 -0700 (PDT)
+Received: from localhost.localdomain ([176.59.41.83])
+        by smtp.gmail.com with ESMTPSA id w20sm1370439lfk.56.2020.05.18.06.35.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 06:35:03 -0700 (PDT)
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
+        linux-integrity@vger.kernel.org, arnd@linaro.org,
+        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
+Subject: [PATCH 0/2] optee: register drivers on optee bus
+Date:   Mon, 18 May 2020 16:34:57 +0300
+Message-Id: <20200518133459.28019-1-maxim.uvarov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Hello,
 
-On 5/15/20 8:23 PM, Andrew Morton wrote:
-> On Sat, 18 Apr 2020 21:19:06 +0100 Dmitry Safonov <dima@arista.com> wrote:
-> 
->> Currently, the log-level of show_stack() depends on a platform
->> realization. It creates situations where the headers are printed with
->> lower log level or higher than the stacktrace (depending on
->> a platform or user).
->>
->> Furthermore, it forces the logic decision from user to an architecture
->> side. In result, some users as sysrq/kdb/etc are doing tricks with
->> temporary rising console_loglevel while printing their messages.
->> And in result it not only may print unwanted messages from other CPUs,
->> but also omit printing at all in the unlucky case where the printk()
->> was deferred.
->>
->> Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
->> an easier approach than introducing more printk buffers.
->> Also, it will consolidate printings with headers.
->>
->> Introduce show_stack_loglvl(), that eventually will substitute
->> show_stack().
-> 
-> The csky code has changed a lot in linux-next due to 18c07d23da5a
-> ("csky: Fixup calltrace panic").  I redid this patch as below.  Can we
-> please review and test?
+This patchset fixes issues with probing() tee, optee and optee driver
+if they were compiled into kernel, built as modules or any mixed
+combination.
+These changes require optee-os changes which already were merged.
+Main corresponding commits are:
+https://github.com/OP-TEE/optee_os/commit/9389d8030ef198c9d7b8ab7ea8e877e0ace3369d
+https://github.com/OP-TEE/optee_os/commit/bc5921cdab538c8ae48422f5ffd600f1cbdd95b2
 
-The result looks good to me, thanks for the rebase!
+optee_enumerate_devices() which discovers Trusted Applications on tee
+bus is split up on 2 changes. Do probe of drivers which do not require
+userspace support of tee-supplicant and stage two to run drivers with
+support of tee-supplicant only after tee supplicant run. 
 
-Thanks,
-          Dmitry
+Best regards,
+Maxim.
+
+Maxim Uvarov (2):
+  optee: do drivers initialization before and after tee-supplicant run
+  tpm_ftpm_tee: register driver on tee bus
+
+ drivers/char/tpm/tpm_ftpm_tee.c   | 69 ++++++++++++++++++++++++++-----
+ drivers/tee/optee/core.c          | 25 +++++++++--
+ drivers/tee/optee/device.c        | 17 +++++---
+ drivers/tee/optee/optee_private.h |  8 +++-
+ 4 files changed, 99 insertions(+), 20 deletions(-)
+
+-- 
+2.17.1
+
