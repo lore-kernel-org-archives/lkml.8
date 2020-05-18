@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3206EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0923B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE2120671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824040;
-	bh=d8TpndUKMkZTzUSVBQ0ZYLadEtwCBmuqyFVt2tbwMRY=;
+	s=default; t=1589824044;
+	bh=pUIO6TEaK9n0rE5E5dO/hj2zx7EL6SpRabCZcLs9Ka8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WjWa24BZCry+8/8xHJ4bm25+CKKHhaFOAdnV3atYRJsIfcQysL110SmsEF16d5W/c
-	 J7hrLnrp07/y/sLkOO/PSOI3t5uidUoOYvE8urr20Nz8Y+xIWFGLTOlce9B33bnxvN
-	 CbqvK7C8CdKxZTBq64AoVB7TR5BD7YTeMu/72FTA=
+	b=uEzZms/i+F9EFVv5ZmRATMUbPj7QmuJE2z/ymoXlGaxcHPswcoqsPo9CNZ76S/JJG
+	 B8wIom4f+rDIF/ZEHEp3+rIptvXK3LoXPE7+653Q2c51zrF7/Q4cIdzSxatsJMYw1o
+	 X1LBaglAanzJ6aknPyi1Sjf7xJk32yg2g8Lk79Vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbgERRrT (ORCPT
+        id S1730217AbgERRrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47440 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:47:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730201AbgERRrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:47:13 -0400
+        id S1730181AbgERRrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:47:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D81C720715;
-        Mon, 18 May 2020 17:47:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8945820671;
+        Mon, 18 May 2020 17:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824033;
-        bh=d8TpndUKMkZTzUSVBQ0ZYLadEtwCBmuqyFVt2tbwMRY=;
+        s=default; t=1589824026;
+        bh=pUIO6TEaK9n0rE5E5dO/hj2zx7EL6SpRabCZcLs9Ka8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUU2w0W5IULydDXw+11M0ODlA53+b6+QfiDQL66BH2hGUtoVU6pKBWszTOOjNgWO2
-         y4Uk0aNW/KajmJul2VT1FdpO4YMTpRcBJgK475mJMP6Rx4KvhQbZ9F6iIbWJYuLr5e
-         5+G7JOMOqiQqOyVCv8cX/gjl5vvKnAWLepHRsQTo=
+        b=GyILyw8FnSwT4YnUwftxdijooWbwdTStg7HdCXkq2lYtuzygbps9iPEbI4uZ5Gq6v
+         O/ocEy9OyAWM1ImL82rbvgaPGSzYM3oMRvOUnB0w8FqW6QKCGuU8ceXAC5xlOzZdas
+         cwRBiQ3fohlA+b920VhmG60SWGTP+ZQ63giaCz+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.14 010/114] net/mlx5: Fix forced completion access non initialized command entry
-Date:   Mon, 18 May 2020 19:35:42 +0200
-Message-Id: <20200518173505.180863849@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 007/114] sch_choke: avoid potential panic in choke_reset()
+Date:   Mon, 18 May 2020 19:35:39 +0200
+Message-Id: <20200518173504.443663488@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,46 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit f3cb3cebe26ed4c8036adbd9448b372129d3c371 ]
+[ Upstream commit 8738c85c72b3108c9b9a369a39868ba5f8e10ae0 ]
 
-mlx5_cmd_flush() will trigger forced completions to all valid command
-entries. Triggered by an asynch event such as fast teardown it can
-happen at any stage of the command, including command initialization.
-It will trigger forced completion and that can lead to completion on an
-uninitialized command entry.
+If choke_init() could not allocate q->tab, we would crash later
+in choke_reset().
 
-Setting MLX5_CMD_ENT_STATE_PENDING_COMP only after command entry is
-initialized will ensure force completion is treated only if command
-entry is initialized.
+BUG: KASAN: null-ptr-deref in memset include/linux/string.h:366 [inline]
+BUG: KASAN: null-ptr-deref in choke_reset+0x208/0x340 net/sched/sch_choke.c:326
+Write of size 8 at addr 0000000000000000 by task syz-executor822/7022
 
-Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+CPU: 1 PID: 7022 Comm: syz-executor822 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ __kasan_report.cold+0x5/0x4d mm/kasan/report.c:515
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ check_memory_region_inline mm/kasan/generic.c:187 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:193
+ memset+0x20/0x40 mm/kasan/common.c:85
+ memset include/linux/string.h:366 [inline]
+ choke_reset+0x208/0x340 net/sched/sch_choke.c:326
+ qdisc_reset+0x6b/0x520 net/sched/sch_generic.c:910
+ dev_deactivate_queue.constprop.0+0x13c/0x240 net/sched/sch_generic.c:1138
+ netdev_for_each_tx_queue include/linux/netdevice.h:2197 [inline]
+ dev_deactivate_many+0xe2/0xba0 net/sched/sch_generic.c:1195
+ dev_deactivate+0xf8/0x1c0 net/sched/sch_generic.c:1233
+ qdisc_graft+0xd25/0x1120 net/sched/sch_api.c:1051
+ tc_modify_qdisc+0xbab/0x1a00 net/sched/sch_api.c:1670
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5454
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+
+Fixes: 77e62da6e60c ("sch_choke: drop all packets in queue during reset")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/sch_choke.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -831,7 +831,6 @@ static void cmd_work_handler(struct work
- 	}
+--- a/net/sched/sch_choke.c
++++ b/net/sched/sch_choke.c
+@@ -327,7 +327,8 @@ static void choke_reset(struct Qdisc *sc
  
- 	cmd->ent_arr[ent->idx] = ent;
--	set_bit(MLX5_CMD_ENT_STATE_PENDING_COMP, &ent->state);
- 	lay = get_inst(cmd, ent->idx);
- 	ent->lay = lay;
- 	memset(lay, 0, sizeof(*lay));
-@@ -853,6 +852,7 @@ static void cmd_work_handler(struct work
- 
- 	if (ent->callback)
- 		schedule_delayed_work(&ent->cb_timeout_work, cb_timeout);
-+	set_bit(MLX5_CMD_ENT_STATE_PENDING_COMP, &ent->state);
- 
- 	/* Skip sending command to fw if internal error */
- 	if (pci_channel_offline(dev->pdev) ||
+ 	sch->q.qlen = 0;
+ 	sch->qstats.backlog = 0;
+-	memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
++	if (q->tab)
++		memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
+ 	q->head = q->tail = 0;
+ 	red_restart(&q->vars);
+ }
 
 
