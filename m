@@ -2,111 +2,175 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB57C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C20C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8165207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327FC20809
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="reQJpdgK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhzh1omw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgERLcp (ORCPT
+        id S1727034AbgERLdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:32:45 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44912 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbgERLco (ORCPT
+        Mon, 18 May 2020 07:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgERLdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:32:44 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04IBR8En030210;
-        Mon, 18 May 2020 11:32:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=Nf4Rh2W7FuA5dcxB52Yb3a1cDcQWNzGxXYU7kpXcYOs=;
- b=reQJpdgKciM7tKTDXmtbEwWYIBsfiLz5q0YT3X14iPZz7K/GfjX8lEWRBFCqcsR9LX+i
- KKS9hLMm3Yxm95bKmOC17YhIBcm9frl/1HaS42mJzoLHMOuvGSKkhqeLeHFHGPj6MYIE
- woE/F9Odues1s1B2meS6bluwBuYbeGmy6DAG22T7QFVeHGLMJqFFJMFrqS+OebYYE7fo
- cfoN5XCqV9mgVaFIKqnZvDRgNbnh/WRhc0zZn0c4WvTeNlJDITcJfuD1G4LZoYp2DTDj
- ZxqDpe/v+Lf2EbEwuDgOBef67eoIJIlmi2M8K1m5icqF8s8t3NjH1ffCZ2swvqSJSYij OQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3127kqx7tp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 May 2020 11:32:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04IBSuGt121191;
-        Mon, 18 May 2020 11:30:36 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 312t30m2qd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 11:30:36 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04IBUTmb001719;
-        Mon, 18 May 2020 11:30:29 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 May 2020 04:30:29 -0700
-Date:   Mon, 18 May 2020 14:30:21 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] of: drop a reference on error in __of_attach_node_sysfs()
-Message-ID: <20200518113021.GB48709@mwanda>
+        Mon, 18 May 2020 07:33:55 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B1EDC061A0C;
+        Mon, 18 May 2020 04:33:55 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id b8so4660313pgi.11;
+        Mon, 18 May 2020 04:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eJccfybN0sdNJ8ylX53cDwC7dY9jWBu+I0/w3Xw+cBs=;
+        b=dhzh1omwrLM8jvSd0mWoUvTHmS4XEDbVWxMoTMADnXAKl3vN8Vx+B1sr4yx8mpwhN8
+         ERGpklHuqHhD7nk+hCZ6OD5cAEt1Q4kw+ePgxqT9Aa+eZT+Pf92cktTooIV4J4zrYVzK
+         GEwdlt9w1w6jQPJA2UB83YNy2B8J+lyYRfBcsXWSvI+VoyEzgjnp2/tNXESdBC2s0iVE
+         nvTsnGj4U40Yqdmkxqpq6Ow5jtHIWMuPxYMTahWTbGLLh42LHaNrB7Bzm2KTMxXfvQ53
+         +qPfPP2unWxuvvdjHxPdJU9VWELTuPyXY1LUwCAdDFYvJ+9Of06RfW7ltfDlwpc9rGVi
+         5NjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eJccfybN0sdNJ8ylX53cDwC7dY9jWBu+I0/w3Xw+cBs=;
+        b=jw5Gvc2dWAVM3kOXjqy6sPebmb2jpeiePPVgF3usdTvDlEIs4FGDckA4z3Hm6yPNwR
+         byf0p1FaNDcJw/1A+Z2zok2xZbw6DiHB7OsEkBwT1+efz5SAIINtZqek1r0WW2GojWrC
+         2z2/3JdEKgdLiyDNpvuGETVXIrhMN98gnJw7yZpzW78a3t2W4D39FyYGJXP2Vht8YP6x
+         BSuxFN7Inuwxs/slJ2Tpc4wXxpWjdme1GG8Gq3l6XHlIcsa+HdjEPPBEirGOOEaiQDUy
+         25Eh+D7Br3C+efh/ZTU5wCl1RUbIdQYQar3wcy8TCzTwMu9eQGHG+7nssYbOa8fogZp9
+         ac5Q==
+X-Gm-Message-State: AOAM530lDtwHam4UZFNDtTnmncIZ+JhvnH8J5mdGBrHCUkr9Q/U7JIIO
+        6NHFc4qwJj8dabJ2KunUOxee4aTWF4agBUZ0n/X2kZkD5As=
+X-Google-Smtp-Source: ABdhPJzvOKa+Hpz8yWlRZuCdRSLjZynM4FloBpo5HWvOJMO9MDeg+BZQ1TwU24yvRdCHiAzMpk5JcPujLByGvphCoag=
+X-Received: by 2002:a62:5ec7:: with SMTP id s190mr15951343pfb.130.1589801634593;
+ Mon, 18 May 2020 04:33:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005180104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1011 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005180103
+References: <1589798090-11136-1-git-send-email-agordeev@linux.ibm.com>
+In-Reply-To: <1589798090-11136-1-git-send-email-agordeev@linux.ibm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 May 2020 14:33:43 +0300
+Message-ID: <CAHp75VdM2yrpd2d3pK2RkmbhF3yiM4=fiTXL4i3yu3AxV3wY-A@mail.gmail.com>
+Subject: Re: [PATCH RESEND] lib: fix bitmap_parse() on 64-bit big endian archs
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We add a new of_node_get() to this function, but we should drop the
-reference if kobject_add().
+On Mon, May 18, 2020 at 1:40 PM Alexander Gordeev
+<agordeev@linux.ibm.com> wrote:
+>
+> Commit 2d6261583be0 ("lib: rework bitmap_parse()") does
+> not take into account order of halfwords on 64-bit big
+> endian architectures.
 
-Fixes: 5b2c2f5a0ea3 ("of: overlay: add missing of_node_get() in __of_attach_node_sysfs")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-From static analysis.  Maybe we should just call of_node_get() right
-before we return 0?
+Thanks for report and the patch!
 
- drivers/of/kobj.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Did it work before? Can we have a test case for that that we will see
+the failure?
 
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index c72eef988041..a90dc4b3b060 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -138,8 +138,10 @@ int __of_attach_node_sysfs(struct device_node *np)
- 
- 	rc = kobject_add(&np->kobj, parent, "%s", name);
- 	kfree(name);
--	if (rc)
-+	if (rc) {
-+		of_node_put(np);
- 		return rc;
-+	}
- 
- 	for_each_property_of_node(np, pp)
- 		__of_add_property_sysfs(np, pp);
+> Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
+> Cc: stable@vger.kernel.org
+> Cc: Yury Norov <yury.norov@gmail.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Amritha Nambiar <amritha.nambiar@intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Miklos Szeredi <mszeredi@redhat.com>
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Steffen Klassert <steffen.klassert@secunet.com>
+> Cc: "Tobin C . Harding" <tobin@kernel.org>
+> Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Willem de Bruijn <willemb@google.com>
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> ---
+>  lib/bitmap.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
+>
+> diff --git a/lib/bitmap.c b/lib/bitmap.c
+> index 89260aa..a725e46 100644
+> --- a/lib/bitmap.c
+> +++ b/lib/bitmap.c
+> @@ -717,6 +717,19 @@ static const char *bitmap_get_x32_reverse(const char *start,
+>         return end;
+>  }
+>
+> +#if defined(__BIG_ENDIAN) && defined(CONFIG_64BIT)
+> +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
+> +{
+> +       maskp += (chunk_idx / 2);
+> +       ((u32 *)maskp)[(chunk_idx & 1) ^ 1] = chunk;
+> +}
+> +#else
+> +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
+> +{
+> +       ((u32 *)maskp)[chunk_idx] = chunk;
+> +}
+> +#endif
+> +
+>  /**
+>   * bitmap_parse - convert an ASCII hex string into a bitmap.
+>   * @start: pointer to buffer containing string.
+> @@ -738,7 +751,8 @@ int bitmap_parse(const char *start, unsigned int buflen,
+>  {
+>         const char *end = strnchrnul(start, buflen, '\n') - 1;
+>         int chunks = BITS_TO_U32(nmaskbits);
+> -       u32 *bitmap = (u32 *)maskp;
+> +       int chunk_idx = 0;
+> +       u32 chunk;
+>         int unset_bit;
+>
+>         while (1) {
+> @@ -749,9 +763,11 @@ int bitmap_parse(const char *start, unsigned int buflen,
+>                 if (!chunks--)
+>                         return -EOVERFLOW;
+>
+> -               end = bitmap_get_x32_reverse(start, end, bitmap++);
+> +               end = bitmap_get_x32_reverse(start, end, &chunk);
+>                 if (IS_ERR(end))
+>                         return PTR_ERR(end);
+> +
+> +               save_x32_chunk(maskp, chunk, chunk_idx++);
+>         }
+>
+>         unset_bit = (BITS_TO_U32(nmaskbits) - chunks) * 32;
+> --
+> 1.8.3.1
+>
+
+
 -- 
-2.26.2
-
+With Best Regards,
+Andy Shevchenko
