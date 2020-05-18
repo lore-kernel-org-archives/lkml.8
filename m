@@ -2,107 +2,90 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40600C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25AE720657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3029C20829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589826521;
+	bh=92C6p6tlwbBMVt5XS+W92fxk5AXDJDTfJrbzkbFQ0D8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EeXnwCuPQDqn/zyNeawg+3ovd81Pe5LLNSc24yISl88w1ch6bV2pp1O2yp3a2SSfR
+	 cY3bq7hDzCurjmsZb+dfHylvASghCccLjipRMprLmpLCyJftCyfAxqw/NLcl9sdTSF
+	 uQoDCzxxa9zTPa1M8kzsF8UU7J5lqmfHZzbqTAIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387990AbgERS2f (ORCPT
+        id S2387996AbgERS2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:28:35 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:44046 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728986AbgERS2d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:28:33 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Mon, 18 May 2020 14:28:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729448AbgERRmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 4C81380674;
-        Mon, 18 May 2020 20:28:27 +0200 (CEST)
-Date:   Mon, 18 May 2020 20:28:25 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Gross <agross@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for
- Hot Plug Detect
-Message-ID: <20200518182825.GA862982@ravnborg.org>
-References: <20200507213500.241695-1-dianders@chromium.org>
- <20200509201511.GD30802@ravnborg.org>
- <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
- <CAD=FV=UNuwb+YYJKw9+HNMKUNfuNFxj+Gr+yB9tXANbXAvDgCg@mail.gmail.com>
- <20200518175939.GA770425@ravnborg.org>
- <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id C868320715;
+        Mon, 18 May 2020 17:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589823756;
+        bh=92C6p6tlwbBMVt5XS+W92fxk5AXDJDTfJrbzkbFQ0D8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PjyqmiU8iJm+kQtk8g2XYxZiqXDlGTOtlN/KEyQHMq5VieT5STm9FL4k6AwLqI6Hv
+         d1aFxYvY7ckmLp7kF4wCQmGFHayK8NZFYLsDQYyV6Mk6pSwDVGuKU0StFZINCi3C2o
+         17zOftUZPdlfBvj1qpHPC2KasOSN6IyOpl+ZJWX8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 03/90] fq_codel: fix TCA_FQ_CODEL_DROP_BATCH_SIZE sanity checks
+Date:   Mon, 18 May 2020 19:35:41 +0200
+Message-Id: <20200518173451.710909306@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
+References: <20200518173450.930655662@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8
-        a=hm5wBbS1sMirQhL_k6wA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Douglas,
-On Mon, May 18, 2020 at 11:05:58AM -0700, Doug Anderson wrote:
-> Sam,
-> 
-> On Mon, May 18, 2020 at 10:59 AM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > Hi Douglas.
-> >
-> > > > Given the previous feedback from Linus W, Stephen, and Laurent I
-> > > > expect things are good enough to land now, but it'd be good to get
-> > > > confirmation (I removed some of the previous tags just to get
-> > > > confirmation).  If we can get review tags early next week maybe it'll
-> > > > still be in time to land for 5.8?
-> > >
-> > > I think all the others have reviews now.  Is there anything blocking
-> > > them from getting applied?
-> > Applied, including the small fix pointed out by Linus.
-> 
-> Thanks!  Ugh, I just realized what the problem was.  I posted a v6
-> with this fix but insanely somehow didn't CC you (!!!).  It was here:
-> 
-> https://lore.kernel.org/r/20200513215902.261547-1-dianders@chromium.org
-> 
-> I'm super sorry about that and thanks for fixing the nit.  That was
-> the only difference between v5 and v6.  I just checked what you pushed
-> and it looks great, thank you.
-No worries as long as what hits drm-misc-next is OK, which it was in
-this case.
+From: Eric Dumazet <edumazet@google.com>
 
-	Sam
+[ Upstream commit 14695212d4cd8b0c997f6121b6df8520038ce076 ]
+
+My intent was to not let users set a zero drop_batch_size,
+it seems I once again messed with min()/max().
+
+Fixes: 9d18562a2278 ("fq_codel: add batch ability to fq_codel_drop()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/sched/sch_fq_codel.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/sched/sch_fq_codel.c
++++ b/net/sched/sch_fq_codel.c
+@@ -428,7 +428,7 @@ static int fq_codel_change(struct Qdisc
+ 		q->quantum = max(256U, nla_get_u32(tb[TCA_FQ_CODEL_QUANTUM]));
+ 
+ 	if (tb[TCA_FQ_CODEL_DROP_BATCH_SIZE])
+-		q->drop_batch_size = min(1U, nla_get_u32(tb[TCA_FQ_CODEL_DROP_BATCH_SIZE]));
++		q->drop_batch_size = max(1U, nla_get_u32(tb[TCA_FQ_CODEL_DROP_BATCH_SIZE]));
+ 
+ 	if (tb[TCA_FQ_CODEL_MEMORY_LIMIT])
+ 		q->memory_limit = min(1U << 31, nla_get_u32(tb[TCA_FQ_CODEL_MEMORY_LIMIT]));
+
+
