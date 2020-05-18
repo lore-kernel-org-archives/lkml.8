@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D414C433E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0917C433E4
 	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4127020715
+	by mail.kernel.org (Postfix) with ESMTP id B160A207D3
 	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1589825509;
-	bh=FkJLExItuks75TnP9rWu4Y876nPik2+uGczOJPytK8E=;
+	bh=E/Op+RaVrETQ1UOWJ3NjNwU0eayP3HX8NADC4kqwK90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m1+/zJzhBwyw9xiG4tAXSrksP8slm4ay66wtzxz+aQ2R+qN6WjKrZtIAjsbjFizmO
-	 UvkHObiLdeHmKCR5w+M8RS6A7CnyOZ8WRP4kZrKZN59FzqHt4x+EEEe6EZyqKY1mrL
-	 vE0G3C8X9MEuQ/cAhh3Sjp58UY8kdEPCNY5scYwA=
+	b=WF2TRsKQ4TYB8DxBvJWSwInGH4doWwNMw3hvMdnw+ZujrPl5cOBJFhW/5FgK7mvwx
+	 75SQNJSMlUraJU4b+nco5qgy5iV2w0DF4r3KQ9ZFXU2nuhIT8Ofe47GSP+nbROtMz9
+	 gDVOf+SypLP3LEICq/LiSuxi67X70oprHwnw0BJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732776AbgERSEX (ORCPT
+        id S1732769AbgERSEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50780 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:04:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732728AbgERSEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:04:13 -0400
+        id S1732699AbgERSEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 864F420715;
-        Mon, 18 May 2020 18:04:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1535B20826;
+        Mon, 18 May 2020 18:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825053;
-        bh=FkJLExItuks75TnP9rWu4Y876nPik2+uGczOJPytK8E=;
+        s=default; t=1589825050;
+        bh=E/Op+RaVrETQ1UOWJ3NjNwU0eayP3HX8NADC4kqwK90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0s1p+XESXLR2z0hudquESwOad8YbTLB5WvspfDd3VuLVa53lfB16lieqccn9mNIDf
-         ezYuhqK8hc4eTBOmtLEQ/2pCy3O+B0t2LbKHAg51jb7kg5/iLwuGv7BfmIcoLLCpmK
-         JD0/t+wrTKa3fw/fiDmoRrx74DbU+zXbHXFf5J2g=
+        b=wKeLE/LGGA3bZIUdjowffVhYoby9jvb3vpqU4n2tz/+LuhctWouicQsQrEgcokpcM
+         cTYi2ySd3SWhKrtqvcAXfpnloOyEtwbCaCqEaW389wla4xX3to9dbA0KsfDuCpaV9N
+         G45W4aE+f6soYqOVNxUewFvygeANiSGbzuBbsAUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Blakey <paulb@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 109/194] netfilter: flowtable: set NF_FLOW_TEARDOWN flag on entry expiration
-Date:   Mon, 18 May 2020 19:36:39 +0200
-Message-Id: <20200518173540.886988657@linuxfoundation.org>
+Subject: [PATCH 5.6 108/194] tracing: Wait for preempt irq delay thread to execute
+Date:   Mon, 18 May 2020 19:36:38 +0200
+Message-Id: <20200518173540.820723562@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,49 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 9ed81c8e0deb7bd2aa0d69371e4a0f9a7b31205d ]
+[ Upstream commit 8b1fac2e73e84ef0d6391051880a8e1d7044c847 ]
 
-If the flow timer expires, the gc sets on the NF_FLOW_TEARDOWN flag.
-Otherwise, the flowtable software path might race to refresh the
-timeout, leaving the state machine in inconsistent state.
+A bug report was posted that running the preempt irq delay module on a slow
+machine, and removing it quickly could lead to the thread created by the
+modlue to execute after the module is removed, and this could cause the
+kernel to crash. The fix for this was to call kthread_stop() after creating
+the thread to make sure it finishes before allowing the module to be
+removed.
 
-Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-Reported-by: Paul Blakey <paulb@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Now this caused the opposite problem on fast machines. What now happens is
+the kthread_stop() can cause the kthread never to execute and the test never
+to run. To fix this, add a completion and wait for the kthread to execute,
+then wait for it to end.
+
+This issue caused the ftracetest selftests to fail on the preemptirq tests.
+
+Link: https://lore.kernel.org/r/20200510114210.15d9e4af@oasis.local.home
+
+Cc: stable@vger.kernel.org
+Fixes: d16a8c31077e ("tracing: Wait for preempt irq delay thread to finish")
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ kernel/trace/preemptirq_delay_test.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
-index 70ebebaf5bc12..0ee78a1663786 100644
---- a/net/netfilter/nf_flow_table_core.c
-+++ b/net/netfilter/nf_flow_table_core.c
-@@ -271,7 +271,7 @@ static void flow_offload_del(struct nf_flowtable *flow_table,
+diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
+index c4c86de63cf91..312d1a0ca3b60 100644
+--- a/kernel/trace/preemptirq_delay_test.c
++++ b/kernel/trace/preemptirq_delay_test.c
+@@ -16,6 +16,7 @@
+ #include <linux/printk.h>
+ #include <linux/string.h>
+ #include <linux/sysfs.h>
++#include <linux/completion.h>
  
- 	if (nf_flow_has_expired(flow))
- 		flow_offload_fixup_ct(flow->ct);
--	else if (test_bit(NF_FLOW_TEARDOWN, &flow->flags))
-+	else
- 		flow_offload_fixup_ct_timeout(flow->ct);
+ static ulong delay = 100;
+ static char test_mode[12] = "irq";
+@@ -28,6 +29,8 @@ MODULE_PARM_DESC(delay, "Period in microseconds (100 us default)");
+ MODULE_PARM_DESC(test_mode, "Mode of the test such as preempt, irq, or alternate (default irq)");
+ MODULE_PARM_DESC(burst_size, "The size of a burst (default 1)");
  
- 	flow_offload_free(flow);
-@@ -348,8 +348,10 @@ static void nf_flow_offload_gc_step(struct flow_offload *flow, void *data)
- {
- 	struct nf_flowtable *flow_table = data;
- 
--	if (nf_flow_has_expired(flow) || nf_ct_is_dying(flow->ct) ||
--	    test_bit(NF_FLOW_TEARDOWN, &flow->flags)) {
-+	if (nf_flow_has_expired(flow) || nf_ct_is_dying(flow->ct))
-+		set_bit(NF_FLOW_TEARDOWN, &flow->flags);
++static struct completion done;
 +
-+	if (test_bit(NF_FLOW_TEARDOWN, &flow->flags)) {
- 		if (test_bit(NF_FLOW_HW, &flow->flags)) {
- 			if (!test_bit(NF_FLOW_HW_DYING, &flow->flags))
- 				nf_flow_offload_del(flow_table, flow);
+ #define MIN(x, y) ((x) < (y) ? (x) : (y))
+ 
+ static void busy_wait(ulong time)
+@@ -114,6 +117,8 @@ static int preemptirq_delay_run(void *data)
+ 	for (i = 0; i < s; i++)
+ 		(testfuncs[i])(i);
+ 
++	complete(&done);
++
+ 	set_current_state(TASK_INTERRUPTIBLE);
+ 	while (!kthread_should_stop()) {
+ 		schedule();
+@@ -128,15 +133,18 @@ static int preemptirq_delay_run(void *data)
+ static int preemptirq_run_test(void)
+ {
+ 	struct task_struct *task;
+-
+ 	char task_name[50];
+ 
++	init_completion(&done);
++
+ 	snprintf(task_name, sizeof(task_name), "%s_test", test_mode);
+ 	task =  kthread_run(preemptirq_delay_run, NULL, task_name);
+ 	if (IS_ERR(task))
+ 		return PTR_ERR(task);
+-	if (task)
++	if (task) {
++		wait_for_completion(&done);
+ 		kthread_stop(task);
++	}
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
