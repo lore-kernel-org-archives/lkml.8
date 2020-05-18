@@ -2,107 +2,92 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB833207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589822166;
-	bh=pVOSaluuYwIYnxfRZiDeGnvPZDVK2kglDb70XF77EyQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YvIbMkEe5OlunVac22f/KexsLe5CjciJufNO5K5I2BMW3kl7wuNIkQd5xEFYReoMU
-	 haEukaywOlqxMPJGAY8hr6E66NPCh/9pzu4+MtzAROCtJTY7/4yC+3mOba0Wp8RLFM
-	 25RyM2OA420iu91QI5hwJZKHYriyTGmUFPlrWuBE=
+	by mail.kernel.org (Postfix) with ESMTP id 9D86B207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgERRQG (ORCPT
+        id S1728384AbgERRR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:16:06 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45064 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgERRQF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:16:05 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z26so5119893pfk.12;
-        Mon, 18 May 2020 10:16:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oSxgBphvkiJdu6V2dtQBN/0DGb4vzo835la/M2fjiy8=;
-        b=tshHZE1aMxmYZm7w2jyAWilxOJJw9JNrvWFgvWCZuK/RNkyhAFGlLRhN/h3dB0Eate
-         Rvn7ARQ9ZYFGrYlKdpyMhgxkuT3JpExfGWfBbdoELtGquSWlhyzMylRJkOcui4VxiapH
-         hhWAnzvLHSVg/bISyS3eKKD8MuxXr89oTY8xqfcX5KJmhgjkU4Xp5foNHYIhzCm+6RSU
-         5mdHgINu+MXzkG6VioYMeZgtoCZF+svkfQ/bK9fzbSmYvOTWfY/sM4akI1dCc2TGdi1r
-         O+GukjhC20FpCES+bTYARBgUIBbUQoFdCKJOFBYZ0SEIDf5pSe2ji/KtUfBOIoOH9MYA
-         sBqQ==
-X-Gm-Message-State: AOAM532gaQ/tQYwm9EaaAj6bns8mnIT1dc1qDFZAJfqErbF9RmSuc8jv
-        OD6lcmUlnjHnYpwFVvU1JzU=
-X-Google-Smtp-Source: ABdhPJyAshFHOjZ/KBTljVH5Y/wZaJfQQJBDG8ktwGBNfOC7BLDqNWjToZdGNvIsJHsELXZqITgg1g==
-X-Received: by 2002:a65:62d6:: with SMTP id m22mr16290471pgv.314.1589822164760;
-        Mon, 18 May 2020 10:16:04 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id h7sm3412336pgn.60.2020.05.18.10.16.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 10:16:03 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id DE896404B0; Mon, 18 May 2020 17:16:02 +0000 (UTC)
-Date:   Mon, 18 May 2020 17:16:02 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     keescook@chromium.org, yzaikin@google.com, adobriyan@gmail.com,
-        patrick.bellasi@arm.com, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, gregkh@linuxfoundation.org,
-        Jisheng.Zhang@synaptics.com, bigeasy@linutronix.de,
-        pmladek@suse.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        wangle6@huawei.com, alex.huangjianhui@huawei.com
-Subject: Re: [PATCH v3 0/4] cleaning up the sysctls table (hung_task watchdog)
-Message-ID: <20200518171602.GK11244@42.do-not-panic.com>
-References: <1589774397-42485-1-git-send-email-nixiaoming@huawei.com>
+        Mon, 18 May 2020 13:17:27 -0400
+Received: from mga01.intel.com ([192.55.52.88]:20607 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbgERRR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:17:26 -0400
+IronPort-SDR: JLIKhrEF337eTps4szGdoq643geK3z6RP8ZDnqZjlegwUPBcARIZJKq9yS5vwzDuQzGjfo2y8F
+ oj6K4dNwmWGA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 10:17:26 -0700
+IronPort-SDR: GuRlUgewN1BJf4G2FSzoLvih3E3Ux4CmiLj2lgnXndxIo/H9owYp0NlWzjTfbPg7S4yXnnk0OM
+ mT3LvxMNmoUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="252959485"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 18 May 2020 10:16:44 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jajNe-007TXc-Nt; Mon, 18 May 2020 20:16:46 +0300
+Date:   Mon, 18 May 2020 20:16:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Maarten Brock <m.brock@vanmierlo.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, Heiko Stuebner <heiko@sntech.de>,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        matwey.kornilov@gmail.com, giulio.benetti@micronovasrl.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        linux-serial-owner@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] serial: 8250: Support separate rs485 rx-enable
+ GPIO
+Message-ID: <20200518171646.GO1634618@smile.fi.intel.com>
+References: <20200517215610.2131618-1-heiko@sntech.de>
+ <20200517215610.2131618-4-heiko@sntech.de>
+ <20200518151241.GG1634618@smile.fi.intel.com>
+ <20200518152247.slenjeiiplps7mcd@wunner.de>
+ <33547f6a596df2ca2ee8e647111e5fa1@vanmierlo.com>
+ <20200518163522.GK1634618@smile.fi.intel.com>
+ <f7d408a0ca747086c01999fc0db905da@vanmierlo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589774397-42485-1-git-send-email-nixiaoming@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f7d408a0ca747086c01999fc0db905da@vanmierlo.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 11:59:53AM +0800, Xiaoming Ni wrote:
-> Kernel/sysctl.c contains more than 190 interface files, and there are a 
-> large number of config macro controls. When modifying the sysctl 
-> interface directly in kernel/sysctl.c, conflicts are very easy to occur.
-> E.g: https://lkml.org/lkml/2020/5/10/413.
+On Mon, May 18, 2020 at 07:05:11PM +0200, Maarten Brock wrote:
+> On 2020-05-18 18:35, Andy Shevchenko wrote:
+> > On Mon, May 18, 2020 at 06:13:16PM +0200, Maarten Brock wrote:
+> > > On 2020-05-18 17:22, Lukas Wunner wrote:
+> > > > On Mon, May 18, 2020 at 06:12:41PM +0300, Andy Shevchenko wrote:
+> > > > > On Sun, May 17, 2020 at 11:56:08PM +0200, Heiko Stuebner wrote:
 
-FWIW un the future please avoid using lkmk.org and instead use
-https://lkml.kernel.org/r/<MESSAGE-ID> for references.
+...
 
-> Use register_sysctl() to register the sysctl interface to avoid
-> merge conflicts when different features modify sysctl.c at the same time.
+> > > But "High" on a gpio would disable the receiver when connected to !RE.
+> > 
+> > No, that's exactly the point of the terminology (asserted means active
+> > whatever
+> > polarity it is). You need to define active-low in GPIO description.
 > 
-> So consider cleaning up the sysctls table, details are in:
-> 	https://kernelnewbies.org/KernelProjects/proc
-> 	https://lkml.org/lkml/2020/5/13/990
-> 
-> The current patch set extracts register_sysctl_init and some sysctl_vals
-> variables, and clears the interface of hung_task and watchdog in sysctl.c.
-> 
-> The current patch set is based on commit b9bbe6ed63b2b9 ("Linux 5.7-rc6"),
-> which conflicts with the latest branch of linux-next:
-> 	9b4caf6941fc41d ("kernel / hung_task.c: introduce sysctl to print
-> all traces when a hung task is detected")
-> 
-> Should I modify to make patch based on the "linux-next" branch to avoid
-> conflicts, or other branches?
+> Is there anything wrong with defining GPIOD_OUT_ACTIVE or GPIOD_OUT_ASSERTED
+> for this very purpose? May I suggest to deprecate GPIOD_OUT_HIGH and replace
+> it?
 
-If you can do that, that would be appreciated. I have a sysctl fs cleanup
-stuff, so I can take your patches, and put my work ont op of yours and
-then send this to Andrew once done.
+Please, ask GPIO maintainers, I'm not one.
 
-  Luis
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
