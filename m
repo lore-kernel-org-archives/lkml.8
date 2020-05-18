@@ -2,232 +2,122 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA99C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A30C20787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:29:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LimDPPmi"
+	by mail.kernel.org (Postfix) with ESMTP id C9B1F20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgERE3f (ORCPT
+        id S1726369AbgEREgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 00:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgERE3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 00:29:35 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1844C061A0C;
-        Sun, 17 May 2020 21:29:34 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id n11so4225580pgl.9;
-        Sun, 17 May 2020 21:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7bbx1vjAcGJU7o+yFip4EyC/ilyC7OBp4VPSqw3/c2c=;
-        b=LimDPPmibz9vtWmb0MKZHn8c9RdWix1P/AFk6SDLaoXlBVdMlC7Hfce2We+MkFAz4E
-         R/2Wy61j9gG0ixy9mMyHuhS77QZ+W2IqUs+cNkzrG6dQaDcMMpIgqWZr6ft8gTO/HSMB
-         oF3oavsgnI2fjkM2QAjIyKAHhhOTcnWFH16xKUZkqjczHwsm/iprxuSgfWtVik27j84r
-         5n8U7fFfETauYry76p+6vX2RXQib8sKv+lhcWS2IP1EZ6KlTna+BQg/FRhPkbiW1PxTM
-         QM0E7X94qZuWMPHXEPUx2ysbg6/oZL89r6bgB9KXLUanLbbSlSBCGfqIrn7x7qAQncoA
-         /GCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7bbx1vjAcGJU7o+yFip4EyC/ilyC7OBp4VPSqw3/c2c=;
-        b=fspetB1iSKREVxaiGk79ebXIXJBkGrYgfqSzxk4+jcErfWVwfEW3xkHADcfeaW0lvk
-         /SbwH9vcAMAKWi7///amGZG947xCbjLQ5Rn4rdwrUSICXSoEDkJaJLoCxzDC++uoLANk
-         RM6QLxpxanlBbhnwzJRs903kfQcPXoTkE1GZsimNBVO0vkRmAImkmlCRaQF8tRG8hhs7
-         vDU7rnGnvREhQZ0yktfp9JSmaezVno/Mfr9HoKFdte6LtQ1VxcMFuNzGsawCNBjznxWB
-         jW5apJYcBBUTcHpaBZ+K/sSaNy17MTX32Al+Ou8G9v/KlcOb3B/U2LkEpkgcdkeFUflO
-         L71Q==
-X-Gm-Message-State: AOAM533+W4jEYv/y4BjeE2IYnU0KGy9iZJBEnYbakp7YY+u7Nk9hJzuB
-        vrv5WIjViJiNjs2w3Pnjj6s=
-X-Google-Smtp-Source: ABdhPJxbJqkFB3G+mfP7Q58PJuzXycNotbRv9vDLFxrEQ/xV/2+VRINR3zhBhOzJGROFI8CL8Y8+Lg==
-X-Received: by 2002:aa7:9a96:: with SMTP id w22mr15841791pfi.199.1589776174113;
-        Sun, 17 May 2020 21:29:34 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 62sm7548040pfc.204.2020.05.17.21.29.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 17 May 2020 21:29:33 -0700 (PDT)
-Date:   Sun, 17 May 2020 21:29:32 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        Mon, 18 May 2020 00:36:13 -0400
+Received: from mga03.intel.com ([134.134.136.65]:37316 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgEREgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 00:36:13 -0400
+IronPort-SDR: 0Ee9XBo2/mPDKSEPUA2IzW+LRwMK1/O9L+QOR13Lu2YY15nEF/F/NyKJPc8MAONHZUGxzGoWU/
+ kDMi+WMsZedg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 21:36:13 -0700
+IronPort-SDR: p6rRiXeEHC+/m4vNIGsbrHMJ9LBqCeWcTTsYh1TDx/sWGdIU7OJYQ9+K4mdJ2S+OmcV7dQxnhy
+ PjLe/HKozgUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
+   d="scan'208";a="411123175"
+Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
+  by orsmga004.jf.intel.com with ESMTP; 17 May 2020 21:36:11 -0700
+From:   Brent Lu <brent.lu@intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH V3 07/15] arch/kunmap_atomic: Consolidate duplicate code
-Message-ID: <20200518042932.GA59205@roeck-us.net>
-References: <20200507150004.1423069-1-ira.weiny@intel.com>
- <20200507150004.1423069-8-ira.weiny@intel.com>
- <20200516223306.GA161252@roeck-us.net>
- <20200518034938.GA3023182@iweiny-DESK2.sc.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518034938.GA3023182@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Brent Lu <brent.lu@intel.com>,
+        paulhsia <paulhsia@chromium.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ALSA: pcm: fix incorrect hw_base increase
+Date:   Mon, 18 May 2020 12:30:38 +0800
+Message-Id: <1589776238-23877-1-git-send-email-brent.lu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 08:49:39PM -0700, Ira Weiny wrote:
-> On Sat, May 16, 2020 at 03:33:06PM -0700, Guenter Roeck wrote:
-> > On Thu, May 07, 2020 at 07:59:55AM -0700, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > Every single architecture (including !CONFIG_HIGHMEM) calls...
-> > > 
-> > > 	pagefault_enable();
-> > > 	preempt_enable();
-> > > 
-> > > ... before returning from __kunmap_atomic().  Lift this code into the
-> > > kunmap_atomic() macro.
-> > > 
-> > > While we are at it rename __kunmap_atomic() to kunmap_atomic_high() to
-> > > be consistent.
-> > > 
-> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > This patch results in:
-> > 
-> > Starting init: /bin/sh exists but couldn't execute it (error -14)
-> > 
-> > when trying to boot microblazeel:petalogix-ml605 in qemu.
-> 
-> Thanks for the report.  I'm not readily seeing the issue.
-> 
-> Do you have a kernel config?  Specifically is CONFIG_HIGHMEM set?
-> 
-See below. Yes, CONFIG_HIGHMEM is set.
+There is a corner case that ALSA keeps increasing the hw_ptr but DMA
+already stop working/updating the position for a long time.
 
-The scripts used to build and boot the image are at:
+In following log we can see the position returned from DMA driver does
+not move at all but the hw_ptr got increased at some point of time so
+snd_pcm_avail() will return a large number which seems to be a buffer
+underrun event from user space program point of view. The program
+thinks there is space in the buffer and fill more data.
 
-https://github.com/groeck/linux-build-test/tree/master/rootfs/microblazeel
+[  418.510086] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+[  418.510149] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6910 avail 9554
+...
+[  418.681052] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15102 avail 1362
+[  418.681130] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+[  418.726515] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 16464 avail 16368
 
-Hope this helps,
+This is because the hw_base will be increased by runtime->buffer_size
+frames unconditionally if the hw_ptr is not updated for over half of
+buffer time. As the hw_base increases, so does the hw_ptr increased
+by the same number.
 
-Guenter
+The avail value returned from snd_pcm_avail() could exceed the limit
+(buffer_size) easily becase the hw_ptr itself got increased by same
+buffer_size samples when the corner case happens. In following log,
+the buffer_size is 16368 samples but the avail is 21810 samples so
+CRAS server complains about it.
 
+[  418.851755] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 27390 avail 5442
+[  418.926491] sound pcmC0D5p: pos 96 hw_ptr 32832 appl_ptr 27390 avail 21810
+
+cras_server[1907]: pcm_avail returned frames larger than buf_size:
+sof-glkda7219max: :0,5: 21810 > 16368
+
+By updating runtime->hw_ptr_jiffies each time the HWSYNC is called,
+the hw_base will keep the same when buffer stall happens at long as
+the interval between each HWSYNC call is shorter than half of buffer
+time.
+
+Following is a log captured by a patched kernel. The hw_base/hw_ptr
+value is fixed in this corner case and user space program should be
+aware of the buffer stall and handle it.
+
+[  293.525543] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+[  293.525606] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6880 avail 9584
+[  293.525975] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 10976 avail 5488
+[  293.611178] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15072 avail 1392
+[  293.696429] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+...
+[  381.139517] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+
+Signed-off-by: Brent Lu <brent.lu@intel.com>
 ---
-CONFIG_SYSVIPC=y
-CONFIG_POSIX_MQUEUE=y
-CONFIG_AUDIT=y
-CONFIG_IKCONFIG=y
-CONFIG_IKCONFIG_PROC=y
-CONFIG_SYSFS_DEPRECATED=y
-CONFIG_SYSFS_DEPRECATED_V2=y
-CONFIG_BLK_DEV_INITRD=y
-# CONFIG_BASE_FULL is not set
-CONFIG_KALLSYMS_ALL=y
-CONFIG_EMBEDDED=y
-CONFIG_SLAB=y
-CONFIG_KERNEL_BASE_ADDR=0x50000000
-CONFIG_XILINX_MICROBLAZE0_USE_MSR_INSTR=1
-CONFIG_XILINX_MICROBLAZE0_USE_PCMP_INSTR=1
-CONFIG_XILINX_MICROBLAZE0_USE_BARREL=1
-CONFIG_XILINX_MICROBLAZE0_USE_DIV=1
-CONFIG_XILINX_MICROBLAZE0_USE_HW_MUL=2
-CONFIG_XILINX_MICROBLAZE0_USE_FPU=2
-CONFIG_XILINX_MICROBLAZE0_HW_VER="10.0.a"
-CONFIG_HZ_100=y
-CONFIG_MMU=y
-CONFIG_HIGHMEM=y
-CONFIG_PCI_XILINX=y
-CONFIG_MODULES=y
-CONFIG_MODULE_UNLOAD=y
-# CONFIG_BLK_DEV_BSG is not set
-CONFIG_PARTITION_ADVANCED=y
-# CONFIG_EFI_PARTITION is not set
-CONFIG_NET=y
-CONFIG_PACKET=y
-CONFIG_UNIX=y
-CONFIG_INET=y
-# CONFIG_IPV6 is not set
-CONFIG_BRIDGE=m
-CONFIG_PCI=y
-CONFIG_DEVTMPFS=y
-CONFIG_DEVTMPFS_MOUNT=y
-CONFIG_MTD=y
-CONFIG_MTD_CFI=y
-CONFIG_MTD_CFI_INTELEXT=y
-CONFIG_MTD_CFI_AMDSTD=y
-CONFIG_BLK_DEV_RAM=y
-CONFIG_BLK_DEV_RAM_SIZE=8192
-CONFIG_NETDEVICES=y
-CONFIG_XILINX_EMACLITE=y
-CONFIG_XILINX_LL_TEMAC=y
-# CONFIG_INPUT is not set
-# CONFIG_SERIO is not set
-# CONFIG_VT is not set
-CONFIG_SERIAL_8250=y
-CONFIG_SERIAL_8250_CONSOLE=y
-CONFIG_SERIAL_OF_PLATFORM=y
-CONFIG_SERIAL_UARTLITE=y
-CONFIG_SERIAL_UARTLITE_CONSOLE=y
-# CONFIG_HW_RANDOM is not set
-CONFIG_XILINX_HWICAP=y
-CONFIG_I2C=y
-CONFIG_I2C_XILINX=y
-CONFIG_SPI=y
-CONFIG_SPI_XILINX=y
-CONFIG_GPIOLIB=y
-CONFIG_GPIO_SYSFS=y
-CONFIG_GPIO_XILINX=y
-# CONFIG_HWMON is not set
-CONFIG_WATCHDOG=y
-CONFIG_XILINX_WATCHDOG=y
-CONFIG_FB=y
-CONFIG_FB_XILINX=y
-# CONFIG_USB_SUPPORT is not set
-CONFIG_UIO=y
-CONFIG_UIO_PDRV_GENIRQ=y
-CONFIG_UIO_DMEM_GENIRQ=y
-CONFIG_EXT2_FS=y
-# CONFIG_DNOTIFY is not set
-CONFIG_CRAMFS=y
-CONFIG_ROMFS_FS=y
-CONFIG_NFS_FS=y
-CONFIG_CIFS=y
-CONFIG_CIFS_STATS2=y
-CONFIG_ENCRYPTED_KEYS=y
-CONFIG_DEBUG_INFO=y
-CONFIG_KGDB=y
-CONFIG_KGDB_TESTS=y
-CONFIG_KGDB_KDB=y
-CONFIG_DEBUG_SLAB=y
-CONFIG_DETECT_HUNG_TASK=y
-CONFIG_DEBUG_SPINLOCK=y
+ sound/core/pcm_lib.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index 872a852..d531e1b 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -433,6 +433,7 @@ static int snd_pcm_update_hw_ptr0(struct snd_pcm_substream *substream,
+ 
+  no_delta_check:
+ 	if (runtime->status->hw_ptr == new_hw_ptr) {
++		runtime->hw_ptr_jiffies = curr_jiffies;
+ 		update_audio_tstamp(substream, &curr_tstamp, &audio_tstamp);
+ 		return 0;
+ 	}
+-- 
+2.7.4
+
