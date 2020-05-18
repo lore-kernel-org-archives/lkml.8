@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68259C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D84F207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3AA207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824809;
-	bh=gECwyudJR4WdOiQnYSxpLUwUdy7ePxi/kDwXaWyQP58=;
+	s=default; t=1589824814;
+	bh=1HxIOp0p+Tyli1jlTBaZAeRhrVgH4wr28E09u2yL/oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F12ob0mgWd5hlS2W236ozuPrJOo5aXAYiTCFA/6xtDtvZ0lLzbkBzGEZ8jY5i1Gpw
-	 kD5RflTtkTIbVmczxHcWe054S6a+LV00FNMZ1i/LPjrTMvm5UXwSyNvIdnqphlklGG
-	 YDNsl6lOfeRIFAUWHLQp2YL0axpz5ZdJPd93pmaE=
+	b=LhgNgsBsMDiGhpLvi3fiNHxRNA+NrxRb1cmnDcD27N67XWM0g+TcA8dTbzMtgs8kl
+	 Guj+RjHPA44av5kFx0JO5w1I7RJsd1Yh0lIZsN33PQVEGZA6KtYS9UaV5c66/UeNl+
+	 6qbQflVNmdANndXaBavLoNza/bJ2ycJiZX+nupLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731709AbgERSAI (ORCPT
+        id S1731723AbgERSAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:00:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41074 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:00:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732170AbgERSAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:00:03 -0400
+        id S1731171AbgERSAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:00:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A3F207C4;
-        Mon, 18 May 2020 18:00:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3620A207C4;
+        Mon, 18 May 2020 18:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824801;
-        bh=gECwyudJR4WdOiQnYSxpLUwUdy7ePxi/kDwXaWyQP58=;
+        s=default; t=1589824806;
+        bh=1HxIOp0p+Tyli1jlTBaZAeRhrVgH4wr28E09u2yL/oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vDkjyKlW2CSJEzd6ptLQomrT5Zl5NosqMJCs3wSlMnkx2ZcXk+sf9ypbgwRCmTGVP
-         qQgCZFumNslmooXDlGOxplk8JOCvP1ksojidNYE8T+DoEquBnMsZL+YIpJ8YB8EG7m
-         FvWXg23pAzROCrvtn2vrvfqPrznhVP0PHIGgnpYk=
+        b=glmgJPq4Z6e835hHNHyJPstziocb3L4wbuIucfrjw1FZa705wetX7luG1N/vWV3GO
+         B+vhNfmhmpu9/pNdmoPV3PwWgf3x3nioVrfeeYfvP43uCqFn/gY4vYHe/IJj74Jdlk
+         q5Lz8j7uqJ7fugRcpt81/QtgcJ2SFLMw/HVONbTU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Grall <julien@xen.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 010/194] KVM: arm: vgic: Synchronize the whole guest on GIC{D,R}_I{S,C}ACTIVER read
-Date:   Mon, 18 May 2020 19:35:00 +0200
-Message-Id: <20200518173532.486874349@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 012/194] gpio: pca953x: Fix pca953x_gpio_set_config
+Date:   Mon, 18 May 2020 19:35:02 +0200
+Message-Id: <20200518173532.652633533@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,252 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit 9a50ebbffa9862db7604345f5fd763122b0f6fed ]
+[ Upstream commit dc87f6dd058a648cd2a35e4aa04592dccdc9f0c2 ]
 
-When a guest tries to read the active state of its interrupts,
-we currently just return whatever state we have in memory. This
-means that if such an interrupt lives in a List Register on another
-CPU, we fail to obsertve the latest active state for this interrupt.
+pca953x_gpio_set_config is setup to support pull-up/down
+bias.  Currently the driver uses a variable called 'config' to
+determine which options to use.  Unfortunately, this is incorrect.
 
-In order to remedy this, stop all the other vcpus so that they exit
-and we can observe the most recent value for the state. This is
-similar to what we are doing for the write side of the same
-registers, and results in new MMIO handlers for userspace (which
-do not need to stop the guest, as it is supposed to be stopped
-already).
+This patch uses function pinconf_to_config_param(config), which
+converts this 'config' parameter back to pinconfig to determine
+which option to use.
 
-Reported-by: Julien Grall <julien@xen.org>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Fixes: 15add06841a3 ("gpio: pca953x: add ->set_config implementation")
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-mmio-v2.c |   4 +-
- virt/kvm/arm/vgic/vgic-mmio-v3.c |  12 ++--
- virt/kvm/arm/vgic/vgic-mmio.c    | 100 ++++++++++++++++++++-----------
- virt/kvm/arm/vgic/vgic-mmio.h    |   3 +
- 4 files changed, 75 insertions(+), 44 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v2.c b/virt/kvm/arm/vgic/vgic-mmio-v2.c
-index 5945f062d7497..d63881f60e1a5 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v2.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v2.c
-@@ -422,11 +422,11 @@ static const struct vgic_register_region vgic_v2_dist_registers[] = {
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ(GIC_DIST_ACTIVE_SET,
- 		vgic_mmio_read_active, vgic_mmio_write_sactive,
--		NULL, vgic_mmio_uaccess_write_sactive, 1,
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_sactive, 1,
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ(GIC_DIST_ACTIVE_CLEAR,
- 		vgic_mmio_read_active, vgic_mmio_write_cactive,
--		NULL, vgic_mmio_uaccess_write_cactive, 1,
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_cactive, 1,
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ(GIC_DIST_PRI,
- 		vgic_mmio_read_priority, vgic_mmio_write_priority, NULL, NULL,
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-index ebc218840fc22..b1b066c148cee 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-@@ -494,11 +494,11 @@ static const struct vgic_register_region vgic_v3_dist_registers[] = {
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ_SHARED(GICD_ISACTIVER,
- 		vgic_mmio_read_active, vgic_mmio_write_sactive,
--		NULL, vgic_mmio_uaccess_write_sactive, 1,
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_sactive, 1,
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ_SHARED(GICD_ICACTIVER,
- 		vgic_mmio_read_active, vgic_mmio_write_cactive,
--		NULL, vgic_mmio_uaccess_write_cactive,
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_cactive,
- 		1, VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_BITS_PER_IRQ_SHARED(GICD_IPRIORITYR,
- 		vgic_mmio_read_priority, vgic_mmio_write_priority, NULL, NULL,
-@@ -566,12 +566,12 @@ static const struct vgic_register_region vgic_v3_rd_registers[] = {
- 		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_LENGTH_UACCESS(SZ_64K + GICR_ISACTIVER0,
- 		vgic_mmio_read_active, vgic_mmio_write_sactive,
--		NULL, vgic_mmio_uaccess_write_sactive,
--		4, VGIC_ACCESS_32bit),
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_sactive, 4,
-+		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_LENGTH_UACCESS(SZ_64K + GICR_ICACTIVER0,
- 		vgic_mmio_read_active, vgic_mmio_write_cactive,
--		NULL, vgic_mmio_uaccess_write_cactive,
--		4, VGIC_ACCESS_32bit),
-+		vgic_uaccess_read_active, vgic_mmio_uaccess_write_cactive, 4,
-+		VGIC_ACCESS_32bit),
- 	REGISTER_DESC_WITH_LENGTH(SZ_64K + GICR_IPRIORITYR0,
- 		vgic_mmio_read_priority, vgic_mmio_write_priority, 32,
- 		VGIC_ACCESS_32bit | VGIC_ACCESS_8bit),
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-index e7abd05ea8964..f659654b09a83 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -279,8 +279,39 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- 	}
- }
- 
--unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
--				    gpa_t addr, unsigned int len)
-+
-+/*
-+ * If we are fiddling with an IRQ's active state, we have to make sure the IRQ
-+ * is not queued on some running VCPU's LRs, because then the change to the
-+ * active state can be overwritten when the VCPU's state is synced coming back
-+ * from the guest.
-+ *
-+ * For shared interrupts as well as GICv3 private interrupts, we have to
-+ * stop all the VCPUs because interrupts can be migrated while we don't hold
-+ * the IRQ locks and we don't want to be chasing moving targets.
-+ *
-+ * For GICv2 private interrupts we don't have to do anything because
-+ * userspace accesses to the VGIC state already require all VCPUs to be
-+ * stopped, and only the VCPU itself can modify its private interrupts
-+ * active state, which guarantees that the VCPU is not running.
-+ */
-+static void vgic_access_active_prepare(struct kvm_vcpu *vcpu, u32 intid)
-+{
-+	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
-+		kvm_arm_halt_guest(vcpu->kvm);
-+}
-+
-+/* See vgic_access_active_prepare */
-+static void vgic_access_active_finish(struct kvm_vcpu *vcpu, u32 intid)
-+{
-+	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
-+		kvm_arm_resume_guest(vcpu->kvm);
-+}
-+
-+static unsigned long __vgic_mmio_read_active(struct kvm_vcpu *vcpu,
-+					     gpa_t addr, unsigned int len)
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 5638b4e5355f1..4269ea9a817e6 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -531,7 +531,7 @@ static int pca953x_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
  {
- 	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
- 	u32 value = 0;
-@@ -290,6 +321,10 @@ unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
- 	for (i = 0; i < len * 8; i++) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
  
-+		/*
-+		 * Even for HW interrupts, don't evaluate the HW state as
-+		 * all the guest is interested in is the virtual state.
-+		 */
- 		if (irq->active)
- 			value |= (1U << i);
- 
-@@ -299,6 +334,29 @@ unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
- 	return value;
- }
- 
-+unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
-+				    gpa_t addr, unsigned int len)
-+{
-+	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
-+	u32 val;
-+
-+	mutex_lock(&vcpu->kvm->lock);
-+	vgic_access_active_prepare(vcpu, intid);
-+
-+	val = __vgic_mmio_read_active(vcpu, addr, len);
-+
-+	vgic_access_active_finish(vcpu, intid);
-+	mutex_unlock(&vcpu->kvm->lock);
-+
-+	return val;
-+}
-+
-+unsigned long vgic_uaccess_read_active(struct kvm_vcpu *vcpu,
-+				    gpa_t addr, unsigned int len)
-+{
-+	return __vgic_mmio_read_active(vcpu, addr, len);
-+}
-+
- /* Must be called with irq->irq_lock held */
- static void vgic_hw_irq_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
- 				      bool active, bool is_uaccess)
-@@ -350,36 +408,6 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
- 		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
- }
- 
--/*
-- * If we are fiddling with an IRQ's active state, we have to make sure the IRQ
-- * is not queued on some running VCPU's LRs, because then the change to the
-- * active state can be overwritten when the VCPU's state is synced coming back
-- * from the guest.
-- *
-- * For shared interrupts, we have to stop all the VCPUs because interrupts can
-- * be migrated while we don't hold the IRQ locks and we don't want to be
-- * chasing moving targets.
-- *
-- * For private interrupts we don't have to do anything because userspace
-- * accesses to the VGIC state already require all VCPUs to be stopped, and
-- * only the VCPU itself can modify its private interrupts active state, which
-- * guarantees that the VCPU is not running.
-- */
--static void vgic_change_active_prepare(struct kvm_vcpu *vcpu, u32 intid)
--{
--	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid >= VGIC_NR_PRIVATE_IRQS)
--		kvm_arm_halt_guest(vcpu->kvm);
--}
--
--/* See vgic_change_active_prepare */
--static void vgic_change_active_finish(struct kvm_vcpu *vcpu, u32 intid)
--{
--	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid >= VGIC_NR_PRIVATE_IRQS)
--		kvm_arm_resume_guest(vcpu->kvm);
--}
--
- static void __vgic_mmio_write_cactive(struct kvm_vcpu *vcpu,
- 				      gpa_t addr, unsigned int len,
- 				      unsigned long val)
-@@ -401,11 +429,11 @@ void vgic_mmio_write_cactive(struct kvm_vcpu *vcpu,
- 	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
- 
- 	mutex_lock(&vcpu->kvm->lock);
--	vgic_change_active_prepare(vcpu, intid);
-+	vgic_access_active_prepare(vcpu, intid);
- 
- 	__vgic_mmio_write_cactive(vcpu, addr, len, val);
- 
--	vgic_change_active_finish(vcpu, intid);
-+	vgic_access_active_finish(vcpu, intid);
- 	mutex_unlock(&vcpu->kvm->lock);
- }
- 
-@@ -438,11 +466,11 @@ void vgic_mmio_write_sactive(struct kvm_vcpu *vcpu,
- 	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
- 
- 	mutex_lock(&vcpu->kvm->lock);
--	vgic_change_active_prepare(vcpu, intid);
-+	vgic_access_active_prepare(vcpu, intid);
- 
- 	__vgic_mmio_write_sactive(vcpu, addr, len, val);
- 
--	vgic_change_active_finish(vcpu, intid);
-+	vgic_access_active_finish(vcpu, intid);
- 	mutex_unlock(&vcpu->kvm->lock);
- }
- 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.h b/virt/kvm/arm/vgic/vgic-mmio.h
-index 5af2aefad4359..30713a44e3faa 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.h
-+++ b/virt/kvm/arm/vgic/vgic-mmio.h
-@@ -152,6 +152,9 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- unsigned long vgic_mmio_read_active(struct kvm_vcpu *vcpu,
- 				    gpa_t addr, unsigned int len);
- 
-+unsigned long vgic_uaccess_read_active(struct kvm_vcpu *vcpu,
-+				    gpa_t addr, unsigned int len);
-+
- void vgic_mmio_write_cactive(struct kvm_vcpu *vcpu,
- 			     gpa_t addr, unsigned int len,
- 			     unsigned long val);
+-	switch (config) {
++	switch (pinconf_to_config_param(config)) {
+ 	case PIN_CONFIG_BIAS_PULL_UP:
+ 	case PIN_CONFIG_BIAS_PULL_DOWN:
+ 		return pca953x_gpio_set_pull_up_down(chip, offset, config);
 -- 
 2.20.1
 
