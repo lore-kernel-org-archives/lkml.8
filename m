@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BADC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF5C420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3EA20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826149;
-	bh=kfMHTgfPvZhXBjE9U2TyVqn2jNWFs67OYABdUEjjAsI=;
+	s=default; t=1589826150;
+	bh=xXS+/MdvKi/RYb6jXSYyRnxzD0MlD9V7dETX8vxD1xE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XAyf56xZGdctQfnhXRukZCL1ECGa5WkNOMX4OxCUPh1EvNWEYrwmQHWDlYC3c6rsr
-	 WlfjKiOwmFfu0j/T9odvXkHGunGQLw1+Yu3pjb6VOEkuZMDXvvc7IT4R1QGQUAV3pF
-	 cFZQ82bWy9inaEJr6Glryh5syIVstxUrx+LieZQ4=
+	b=Ivxm24bFrqljwo7W+Io4YM7fzOOSd6LR1I5qpqNub7pvcBk+L5hQZGORu6Ac5DL2n
+	 BhFcScF47n9NbyMHCi9OPEpmKCHsbsY9N95ew8F6EaoFy5Csts8jZgkVKtkRGJsweM
+	 ngpWlyxPxAF2vV9en5+vWmkFh/FLSKfqWyrqnrSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbgERRub (ORCPT
+        id S1730668AbgERRu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:50:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728735AbgERRu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:50:27 -0400
+        id S1728608AbgERRuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5D53207F5;
-        Mon, 18 May 2020 17:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D9F220674;
+        Mon, 18 May 2020 17:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824227;
-        bh=kfMHTgfPvZhXBjE9U2TyVqn2jNWFs67OYABdUEjjAsI=;
+        s=default; t=1589824224;
+        bh=xXS+/MdvKi/RYb6jXSYyRnxzD0MlD9V7dETX8vxD1xE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2W7dPY1sVHqTC7vS8tKJv74PQT9YrHcwBqbPrHiXiB45/m+/7eWniFFPhXqxC83cy
-         PMA9R0se3I+OHuUcyoFuRH7KhXFzOwQ6oKFZreIkxpAtOLm9xj4EUMnVmToRdCxTVM
-         ioerF17vw88A0NBIzU7qsbTuRIbp7kgs5TfH1meI=
+        b=hRUFuZVbzoFBT2YuUCFLUUSYvo2ghOZgKtafyaEFJPtRfFfz+sqElzIGP9ZTFO92x
+         PKx1+CAWBEYv+Bj0UqsMIvJsGcNg+rcbKOJDpWEH4sy7akkRI32Lwd36029V65PlK+
+         x5NhBiZyQXClPClJ8P0sjDyQzyMCI4n5sEeo5ewM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jue Wang <juew@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Shier <pshier@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 113/114] KVM: x86: Fix off-by-one error in kvm_vcpu_ioctl_x86_setup_mce
-Date:   Mon, 18 May 2020 19:37:25 +0200
-Message-Id: <20200518173521.239124228@linuxfoundation.org>
+        stable@vger.kernel.org, Sergei Trofimovich <slyfox@gentoo.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas Backlund <tmb@mageia.org>
+Subject: [PATCH 4.14 114/114] Makefile: disallow data races on gcc-10 as well
+Date:   Mon, 18 May 2020 19:37:26 +0200
+Message-Id: <20200518173521.377720451@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -62,37 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Sergei Trofimovich <slyfox@gentoo.org>
 
-commit c4e0e4ab4cf3ec2b3f0b628ead108d677644ebd9 upstream.
+commit b1112139a103b4b1101d0d2d72931f2d33d8c978 upstream.
 
-Bank_num is a one-based count of banks, not a zero-based index. It
-overflows the allocated space only when strictly greater than
-KVM_MAX_MCE_BANKS.
+gcc-10 will rename --param=allow-store-data-races=0
+to -fno-allow-store-data-races.
 
-Fixes: a9e38c3e01ad ("KVM: x86: Catch potential overrun in MCE setup")
-Signed-off-by: Jue Wang <juew@google.com>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Message-Id: <20200511225616.19557-1-jmattson@google.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+The flag change happened at https://gcc.gnu.org/PR92046.
+
+Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Thomas Backlund <tmb@mageia.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3214,7 +3214,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(
- 	unsigned bank_num = mcg_cap & 0xff, bank;
+--- a/Makefile
++++ b/Makefile
+@@ -663,6 +663,7 @@ endif
  
- 	r = -EINVAL;
--	if (!bank_num || bank_num >= KVM_MAX_MCE_BANKS)
-+	if (!bank_num || bank_num > KVM_MAX_MCE_BANKS)
- 		goto out;
- 	if (mcg_cap & ~(kvm_mce_cap_supported | 0xff | 0xff0000))
- 		goto out;
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
++KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
+ 
+ # check for 'asm goto'
+ ifeq ($(shell $(CONFIG_SHELL) $(srctree)/scripts/gcc-goto.sh $(CC) $(KBUILD_CFLAGS)), y)
 
 
