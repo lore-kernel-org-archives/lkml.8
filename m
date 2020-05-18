@@ -2,115 +2,132 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B707C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6125DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48B5720787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589805796;
-	bh=1JZLry2PUegFM/l1H92CD7cKZOjtP39iyTkAp0FBJaw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k6NTCEiO8+59CDf6KgqtZHnah3kiE4ec1en2nM8o0kDoK78nHUrixsPXf/uS8WsoH
-	 QGy+Gqxss5ftofn3kVAJjCz09wOSLp3lDgowcA5RFmn2oHrVGUoojP87C6dlDkMmTB
-	 Z96jEphV7Z5AsA9LlUfYQ6ZDYUSwp/x8E6pYcK1k=
+	by mail.kernel.org (Postfix) with ESMTP id 38C66207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CE/lKTEp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgERMnP (ORCPT
+        id S1727036AbgERMo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:43:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgERMnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:43:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C1E20674;
-        Mon, 18 May 2020 12:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589805795;
-        bh=1JZLry2PUegFM/l1H92CD7cKZOjtP39iyTkAp0FBJaw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cV+jHkG2z8E9jTCW1ntbDqk46eqMjVxLyyvcNGW0rEPV+B9MMM1h9UHyRBdGXqF25
-         /KOzSTNKjYKDeXEQlGoRi4EPqnQV/ADFCuzVTJZ31I7wrM7AnVvHp09nS2WhMjtg3o
-         ORJZGnRyU8DV3qQxNo2a9N/+RvEKTWsOyRcj8egY=
-Date:   Mon, 18 May 2020 13:43:12 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request
- thresholds
-Message-ID: <20200518124312.GF8699@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
- <20200515143842.GG1634618@smile.fi.intel.com>
- <20200516200133.wmaqnfjbr7234fzo@mobilestation>
- <20200518110343.GY1634618@smile.fi.intel.com>
+        Mon, 18 May 2020 08:44:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbgERMo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:44:26 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA18C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:44:25 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id c3so7847783otr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:44:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mTr78JEsRcOgBqxtDKga7we0yjXSTYq9V0GCD/PQUyg=;
+        b=CE/lKTEpgYM+eYNrcA3Ul2PeORNYAihMtIUSAUQzxTlgCD13y2KcsoH6GD5VjDKKNR
+         Ody6r93SEfNyo5hY140gdOHy4FqjrYIbdQ8hMEY6vtZs6N7SsSER9uPCGE/yE922OQCD
+         ZF/ppEjVO7h0GHNRPGcvLt8407BUq3nCM6m7w9Lb9r1rZZjNMnhnRgA38osD5gY4DlBW
+         x6LZZogX9Y20y0SekHeIVXr2MlweNiNCFTUfGK4jpMipRHNCSnKZupnd9ji6JX179tie
+         Q6nOTKxIOeoap5TYYHhoTBQZQ4oWvssd/SVXkRhmkid/u1F//otjI0LuWfrpamEcBmmX
+         Y+gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mTr78JEsRcOgBqxtDKga7we0yjXSTYq9V0GCD/PQUyg=;
+        b=BciJx+mfv1ZflDvZte6YUmk4oMEx9M+PjrvvhNu2hE+/dTZdmGzofoDncJPnByGvh0
+         QYqCmtJ/tbgB/HAsFebzpEW+YZ4H6WVgGwCo3K8i05oqL2tmyQ6Tc76UtLx67X9Ln4W7
+         mcCs88nu+QC0Bf4qI4BbrtMdy7OpjBi32eFWI1CoWWU+YH9gQA+MozUQCAuB13ATleCi
+         fND1oSgDlxQ428F9GOG89KKie9worTiSWOU8h2ZdwnhFnTjBN0rmWqDar/f18xgehohs
+         2Mb9Y+8l+cxryp1GiGe7xHEtMw7ehBnVttvkrYOXCDfn5OYhGPgdRFg7JqvALpkePmAK
+         RUKA==
+X-Gm-Message-State: AOAM532ONM/1vOUTAcFdE/UzLiW47HdVmhyb6iocXtptm7dZEY46QjlS
+        F8PW0WzV5gVBZ80b9yj8BqQwhpRXI5meRqNqZp2S0w==
+X-Google-Smtp-Source: ABdhPJwPvMfYvq+F8WYaycOD8ztBRh6nouC6YLOhckJHzcj/zHjFs5D9P695EYaTVOD9n7NlLvtY4uqWYhuUFB5kdYA=
+X-Received: by 2002:a9d:7608:: with SMTP id k8mr12982752otl.233.1589805865139;
+ Mon, 18 May 2020 05:44:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Pql/uPZNXIm1JCle"
-Content-Disposition: inline
-In-Reply-To: <20200518110343.GY1634618@smile.fi.intel.com>
-X-Cookie: If in doubt, mumble.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200517011732.GE24705@shao2-debian> <20200517034739.GO2869@paulmck-ThinkPad-P72>
+ <CANpmjNNj37=mgrZpzX7joAwnYk-GsuiE8oOm13r48FYAK0gSQw@mail.gmail.com>
+In-Reply-To: <CANpmjNNj37=mgrZpzX7joAwnYk-GsuiE8oOm13r48FYAK0gSQw@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 18 May 2020 14:44:13 +0200
+Message-ID: <CANpmjNMx0+=Cac=WvHuzKb2zJvgNVvVxjo_W1wYWztywxDKeCQ@mail.gmail.com>
+Subject: Re: [rcu] 2f08469563: BUG:kernel_reboot-without-warning_in_boot_stage
+To:     "Paul E. McKenney" <paulmck@kernel.org>, kan.liang@linux.intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[+Cc clang-built-linux FYI]
 
---Pql/uPZNXIm1JCle
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, May 18, 2020 at 02:03:43PM +0300, Andy Shevchenko wrote:
-> On Sat, May 16, 2020 at 11:01:33PM +0300, Serge Semin wrote:
-
-> > Though if v3 is required I'll group these members together.
-
-> From what I see v3 is what Mark and me are waiting for. Mark, are we on the
-> same page here?
-
-I loose track of what's going on with this specific patch, sorry - it's
-patch 10 in the series so there's a good chance it has dependencies on
-some of the earlier changes anyway.
-
---Pql/uPZNXIm1JCle
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Cgt8ACgkQJNaLcl1U
-h9BaIwf/c47rPAJvBpcr8a/g6QrXgZlVY7AC2NAP+vI8mWBTUyQTI6Vr0gbsyWIY
-bi3KxMa/82i/bl9Vk7C4QEdXISENK0ARCtQ2K26ki/zMSp9ILaL8dYdSOQ4SLCse
-g/5XUQcQQRljj9dujtlDtgPWZV09QWYiNPzAPzNVEa2uXdNc0eFS1yJzw+35puXD
-p9n2nd6N5VJagIvPj9E/kPzLYcXkh1S3ooQOj2UUWE0iOIZOhlnY34Kt5nUbI/mR
-V6EnZEPlTbrVWNDJ5eGDzmtljrFhNojtbN/wQQqK2IJPECw0POmgVOR3FGh6Boox
-61dlLkz/OYgVuaebXcEvos8+gHh5CQ==
-=MUZo
------END PGP SIGNATURE-----
-
---Pql/uPZNXIm1JCle--
+On Mon, 18 May 2020 at 12:11, Marco Elver <elver@google.com> wrote:
+>
+> On Sun, 17 May 2020 at 05:47, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Sun, May 17, 2020 at 09:17:32AM +0800, kernel test robot wrote:
+> > > Greeting,
+> > >
+> > > FYI, we noticed the following commit (built with clang-11):
+> > >
+> > > commit: 2f08469563550d15cb08a60898d3549720600eee ("rcu: Mark rcu_state.ncpus to detect concurrent writes")
+> > > https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git dev.2020.05.14c
+> > >
+> > > in testcase: boot
+> > >
+> > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+> > >
+> > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> > >
+> > >
+> > >
+> > >
+> > > If you fix the issue, kindly add following tag
+> > > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> > >
+> > >
+> > > [    0.054943] BRK [0x05204000, 0x05204fff] PGTABLE
+> > > [    0.061181] BRK [0x05205000, 0x05205fff] PGTABLE
+> > > [    0.062403] BRK [0x05206000, 0x05206fff] PGTABLE
+> > > [    0.065200] RAMDISK: [mem 0x7a247000-0x7fffffff]
+> > > [    0.067344] ACPI: Early table checksum verification disabled
+> > > BUG: kernel reboot-without-warning in boot stage
+> >
+> > I am having some difficulty believing that this commit is at fault given
+> > that the .config does not list CONFIG_KCSAN=y, but CCing Marco Elver
+> > for his thoughts.  Especially given that I have never built with clang-11.
+> >
+> > But this does invoke ASSERT_EXCLUSIVE_WRITER() in early boot from
+> > rcu_init().  Might clang-11 have objections to early use of this macro?
+>
+> The macro is a noop without KCSAN. I think the bisection went wrong.
+>
+> I am able to reproduce a reboot-without-warning when building with
+> Clang 11 and the provided config. I did a bisect, starting with v5.6
+> (good), and found this:
+> - Since v5.6, first bad commit is
+> 20e2aa812620439d010a3f78ba4e05bc0b3e2861 (Merge tag
+> 'perf-urgent-2020-04-12' of
+> git://git.kernel.org/pub/scm/linux/kernel//git/tip/tip)
+> - The actual commit that introduced the problem is
+> 2b3b76b5ec67568da4bb475d3ce8a92ef494b5de (perf/x86/intel/uncore: Add
+> Ice Lake server uncore support) -- reverting it fixes the problem.
+>
+> Thanks,
+> -- Marco
