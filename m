@@ -2,57 +2,151 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF22C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16918C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D26CB20756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE6CA20756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:43:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mACWKIf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgERWml (ORCPT
+        id S1728237AbgERWn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:42:41 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:52962 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbgERWmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:42:40 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jaoT0-0000DN-Uw; Tue, 19 May 2020 00:42:39 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rockchip: add bus-width properties to mmc nodes for px30.dtsi
-Date:   Tue, 19 May 2020 00:42:37 +0200
-Message-Id: <158984175365.2264243.14630667398753198315.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200416183053.6045-1-jbx6244@gmail.com>
-References: <20200416183053.6045-1-jbx6244@gmail.com>
+        Mon, 18 May 2020 18:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbgERWn6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:43:58 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA26C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 15:43:58 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 145so5610601pfw.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 15:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Yqx7fwzdjHJkmgg9PpHSWruK1legOs9tOHB9RxnwbRs=;
+        b=mACWKIf6r3CqCdMcDBn6VjpepgfOd38WJ3opB+zwOCwxfXXdrBEKsrATprGGroAeMp
+         wot++3+d03nJK0ZPSe+gJZuyUoYC3hQ4Z5zmK5de4eRmDwRQmvmHX2BJc/BGWKLPpvpF
+         txm+8RCl4VFZUOqT3ZZr4VTpnCbW04VJfhQ3Lm3z/iRHkFx7eFp6mvCH9JcO46pQHYE/
+         8rdPZMVduzbwNmQWSV95602GHTGAunWlY9GxhKRCZ9fap3cJgkyAcVwwVPAmU+Ock3uh
+         vBcYLsSElqLyph0oIep9XjvpkQrsS7xjUIVE+jhf+sa8MScL7Z7/aSb6cVbcnRIcNI1+
+         61+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Yqx7fwzdjHJkmgg9PpHSWruK1legOs9tOHB9RxnwbRs=;
+        b=ugJP+uRa+z/iO/SzucE3Hxuddrn68q3rCf3SeVmArTrtnUEr/wTRimy8cCcwnEIfQR
+         Sd/0SnYlxHQl8kckPjQ74P/OtpaAtya7xjbr2zHC4K92SrCZoG343bnwZvI21qTHjPDw
+         uIA422Dy0hVktDulbLw2kBFvcaESbVG0kdy/YUvRMlavQVhNxNLgl4mxedUcTS55TIWK
+         1PFm8NwE2fxAUIZ8AkT2s3roZfDrmhxgHH1H9i52uAJG9iu2tYy/NalCv6ddbm0j2neK
+         SEIW+gpeRHHCEmgrHjtznAWKS+HIHz19AyT/bW2wbfMhN3Vdq4fKJ+S9XQuuo56xmaFZ
+         kbkA==
+X-Gm-Message-State: AOAM5327H2AVyGOFnuC8PRiB1jhSwFhpHgu30xa5DfTne57xfViPhytO
+        IJnHpxm1/N8Bum6bXwP3+EWz9Q==
+X-Google-Smtp-Source: ABdhPJxlIRTWrF03bepkBfTcA4XUBx8J3Q2qKZ56ZmeXbiQlsRaZjUwWtlIQFIFKflvwnVbnqLvxnA==
+X-Received: by 2002:aa7:973b:: with SMTP id k27mr2880419pfg.219.1589841837792;
+        Mon, 18 May 2020 15:43:57 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c21sm5583248pfo.131.2020.05.18.15.43.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 15:43:57 -0700 (PDT)
+Date:   Mon, 18 May 2020 15:42:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas B?hler <dev@aboehler.at>, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v13 3/5] usb: xhci: Add support for Renesas controller
+ with memory
+Message-ID: <20200518224234.GK2165@builder.lan>
+References: <20200506060025.1535960-1-vkoul@kernel.org>
+ <20200506060025.1535960-4-vkoul@kernel.org>
+ <CADYN=9JLeWHODRWDEcTE_6iZ3TX-E4yyx3OwqzK-H-ytLAmQUg@mail.gmail.com>
+ <20200518195719.GG374218@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518195719.GG374218@vkoul-mobl.Dlink>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 20:30:53 +0200, Johan Jonker wrote:
-> 'bus-width' and pinctrl containing the bus-pins
-> should be in the same file, so add them to
-> all mmc nodes in 'px30.dtsi'.
+On Mon 18 May 12:57 PDT 2020, Vinod Koul wrote:
 
-Applied, thanks!
+> Hi Anders,
+> 
+> On 18-05-20, 19:53, Anders Roxell wrote:
+> > On Wed, 6 May 2020 at 08:01, Vinod Koul <vkoul@kernel.org> wrote:
+> > >
+> > > Some rensas controller like uPD720201 and uPD720202 need firmware to be
+> > > loaded. Add these devices in pci table and invoke renesas firmware loader
+> > > functions to check and load the firmware into device memory when
+> > > required.
+> > >
+> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > 
+> > Hi, I got a build error when I built an arm64 allmodconfig kernel.
+> 
+> Thanks for this. This is happening as we have default y for USB_XHCI_PCI
+> and then we make USB_XHCI_PCI_RENESAS=m. That should be not allowed as
+> we export as symbol so both can be inbuilt or modules but USB_XHCI_PCI=y
+> and USB_XHCI_PCI_RENESAS=m cant. While it is valid that USB_XHCI_PCI=y|m
+> and USB_XHCI_PCI_RENESAS=n
+> 
+> So this seems to get fixed by below for me. I have tested with
+>  - both y and m (easy)
+>  - make USB_XHCI_PCI_RENESAS=n, USB_XHCI_PCI=y|m works
+>  - try making USB_XHCI_PCI=y and USB_XHCI_PCI_RENESAS=m, then
+>    USB_XHCI_PCI=m by kbuild :)
+>  - try making USB_XHCI_PCI=m and USB_XHCI_PCI_RENESAS=y, kbuild gives
+>    error prompt that it will be m due to depends
+> 
+> Thanks to all the fixes done by Arnd which pointed me to this. Pls
+> verify and I will send the fix with you as reported :)
+> 
+> ---- >8 ----
+> 
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index b5c542d6a1c5..92783d175b3f 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -40,11 +40,11 @@ config USB_XHCI_DBGCAP
+>  config USB_XHCI_PCI
+>         tristate
+>         depends on USB_PCI
+> +       depends on USB_XHCI_PCI_RENESAS || !USB_XHCI_PCI_RENESAS
 
-[1/1] arm64: dts: rockchip: add bus-width properties to mmc nodes for px30
-      commit: fb0ab17f1ab750d9662ec6b9fb3aa541a8ac1f5c
+This correctly captures the variations you describe above.
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+Regards,
+Bjorn
+
+>         default y
+>  
+>  config USB_XHCI_PCI_RENESAS
+>         tristate "Support for additional Renesas xHCI controller with firwmare"
+> -       depends on USB_XHCI_PCI
+>         ---help---
+>           Say 'Y' to enable the support for the Renesas xHCI controller with
+>           firwmare. Make sure you have the firwmare for the device and
+> 
+> -- 
+> ~Vinod
