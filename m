@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2226C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40463C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89D1B20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D7520671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825737;
-	bh=LYnkbzWRGUvBQJvhBeZXcEQgk/vKF/VSHag50RwZuMY=;
+	s=default; t=1589825751;
+	bh=+DJRvLsHScqFOnj5mYwjkkqVw5v/93AebKkp5ibkL3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LAjUGFXML6PpuRzDHGb5j+ANmIWnd6UNC0zKQHdq5is26AScMogDQuH8k3nLmr6br
-	 TIdwqt/CfHq66AcRmCOMAqsTlbyY70G08+gHw0X7II9sQiQn2yv4Ej645ywIaUsxJ3
-	 2Uhe9ULDFspRRxfnK7+2O4ybr9Ex5v6zRtrWzrRU=
+	b=e84P4CYiLFbtyTAcL8FDwLg8qQ7vGbHgV3aln6WntzUt5E2xu4q0YGv9hkQYhPPhe
+	 RKjriN7jzEbxlpWu5G54khYQg3XtiVzYWpYpuYlF7ujzvGAjPVdyQrziesmB7xFvNB
+	 AEl1fYYXurqVL5X2nxAigu7lNOYCF1RY0wrL+Ctk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387552AbgERSPh (ORCPT
+        id S1733155AbgERSPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40228 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:15:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732063AbgERR7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:59:35 -0400
+        id S1731460AbgERR7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:59:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3965120829;
-        Mon, 18 May 2020 17:59:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A55B820715;
+        Mon, 18 May 2020 17:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824774;
-        bh=LYnkbzWRGUvBQJvhBeZXcEQgk/vKF/VSHag50RwZuMY=;
+        s=default; t=1589824757;
+        bh=+DJRvLsHScqFOnj5mYwjkkqVw5v/93AebKkp5ibkL3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHqCU1tF8CmktJp/dwY0JBbLsVydg2rzZH7ZLm3iu/PrZ41XSO88rQyZH1/LQ4YMs
-         mn1xMK7ncRrCdmvRQginr77HtXxeFYc5jNBvdJuR1+3Jpb1fSESKEISRXT31kmhoan
-         sCb8sB67r1NEUCVEb2+O+QJA6itgkU/GGxLu0Jwk=
+        b=H+PXnvCEGGHPp6nFlxubQVknK31+0NnRvaDg4r9VzxGh667FzPl8nZGizqUF5+mHt
+         U/VVO7/BJdoPRCLS0Tc7iqggc0wCe6DV/9pAdi0PtfY7mOabQvORuhWiz9zYQDB0ve
+         Qg6+kFaEJHw7z/FGB9LnBj+NyRmxkIxsYqoaC6Ps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>
-Subject: [PATCH 5.4 146/147] selftest/bpf: fix backported test_select_reuseport selftest changes
-Date:   Mon, 18 May 2020 19:37:49 +0200
-Message-Id: <20200518173531.102047266@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 5.4 139/147] arm64: dts: renesas: r8a77980: Fix IPMMU VIP[01] nodes
+Date:   Mon, 18 May 2020 19:37:42 +0200
+Message-Id: <20200518173530.414072507@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -58,34 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Fix up RET_IF as CHECK macro to make selftests compile again.
+commit f4d71c6ea9e58c07dd4d02d09c5dd9bb780ec4b1 upstream.
 
-Fixes: b911c5e8686a ("selftests: bpf: Reset global state between reuseport test runs")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Missing the renesas,ipmmu-main property on ipmmu_vip[01] nodes.
+
+Fixes: 55697cbb44e4 ("arm64: dts: renesas: r8a779{65,80,90}: Add IPMMU devices nodes)
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1587108543-23786-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/bpf/test_select_reuseport.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/tools/testing/selftests/bpf/test_select_reuseport.c
-+++ b/tools/testing/selftests/bpf/test_select_reuseport.c
-@@ -668,12 +668,12 @@ static void cleanup_per_test(void)
- 
- 	for (i = 0; i < NR_RESULTS; i++) {
- 		err = bpf_map_update_elem(result_map, &i, &zero, BPF_ANY);
--		RET_IF(err, "reset elem in result_map",
-+		CHECK(err, "reset elem in result_map",
- 		       "i:%u err:%d errno:%d\n", i, err, errno);
- 	}
- 
- 	err = bpf_map_update_elem(linum_map, &zero, &zero, BPF_ANY);
--	RET_IF(err, "reset line number in linum_map", "err:%d errno:%d\n",
-+	CHECK(err, "reset line number in linum_map", "err:%d errno:%d\n",
- 	       err, errno);
- 
- 	for (i = 0; i < REUSEPORT_ARRAY_SIZE; i++)
+--- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+@@ -1318,6 +1318,7 @@
+ 		ipmmu_vip0: mmu@e7b00000 {
+ 			compatible = "renesas,ipmmu-r8a77980";
+ 			reg = <0 0xe7b00000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 4>;
+ 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+ 			#iommu-cells = <1>;
+ 		};
+@@ -1325,6 +1326,7 @@
+ 		ipmmu_vip1: mmu@e7960000 {
+ 			compatible = "renesas,ipmmu-r8a77980";
+ 			reg = <0 0xe7960000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 11>;
+ 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+ 			#iommu-cells = <1>;
+ 		};
 
 
