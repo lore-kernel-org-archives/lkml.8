@@ -2,52 +2,54 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C95C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27115C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA62720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F058020715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825554;
-	bh=YaMNDlpNTa7wJM8n8qlIKbnH1kBa17jOIxZI8kJS4OQ=;
+	s=default; t=1589825557;
+	bh=qPiPvnOGJzhRxWccUafyKknE9pRDCl2DUrjtZb6VY4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ALjcDcKAqrBHKrozGxYUL3xOnuyPmJqb8Z8XsDcUxGQqfJ0ohhXM2j7T9ZLW8FdE
-	 mfKGFixY6R+HbCuD0v9QhHExs2yqDqvyeHlpSWpM6v4dX0fV3dloXDkk0Dhi/GsrnK
-	 kZiWuTYfcujC12fdUrTweKnHjPPXxSaCELlJX2yg=
+	b=aM+xNL1GvbuXh41a9vxtmwKSQpgl5Hi3aKNm8vTk8IPG9c12DBMYBZxMhMEQNScfa
+	 hlryGrg030JYF+9EVKHjnc2RfIA1KD52mQm6FBpHzq5folA3U6rbyICi6C944ZVmWt
+	 hjHYpZj1z622G6LCoGkYtnWqTPfpzISRP22q3N3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732630AbgERSDQ (ORCPT
+        id S1732631AbgERSMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:03:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48190 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729329AbgERSDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:06 -0400
+        id S1731073AbgERSDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A5D0207F5;
-        Mon, 18 May 2020 18:03:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E4B120853;
+        Mon, 18 May 2020 18:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824985;
-        bh=YaMNDlpNTa7wJM8n8qlIKbnH1kBa17jOIxZI8kJS4OQ=;
+        s=default; t=1589825000;
+        bh=qPiPvnOGJzhRxWccUafyKknE9pRDCl2DUrjtZb6VY4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YTp6bB7kBnCkzGtH9qNNwIqOYA2vt+0UuP3TYXY5n+OH5qxLEGJ+Uh8bnZGGg9+9H
-         tGRgv+jq91OZ0eGNxyaQuqzMNE6HYtFwaGQNcK63euAHDl7f/WZZst7kVvfZUCgOxF
-         2V56YWilyzaoXUfUU4gPSjPzQj3BqA+rfMMPhdH0=
+        b=E1snMUohdoan0/P+MKbqUQ4U/ur3mu2vp4bV6Vy6JGFGhxWcH4XFqWaO0gg8BBrdH
+         RQfTpz8rqLvncqWpVSQxpfk9dsHmWZX5EtS/Bg3ZdpX2WUIOwqYOB033r97SILQn1P
+         PUUtM981Krj7HSNOgYWiMPxR2KgBjyOmndaKh8Qo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Zefan Li <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.6 045/194] netprio_cgroup: Fix unlimited memory leak of v2 cgroups
-Date:   Mon, 18 May 2020 19:35:35 +0200
-Message-Id: <20200518173535.546178543@linuxfoundation.org>
+        stable@vger.kernel.org, Grzegorz Kowal <custos.mentis@gmail.com>,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 090/194] mmc: sdhci-pci-gli: Fix can not access GL9750 after reboot from Windows 10
+Date:   Mon, 18 May 2020 19:36:20 +0200
+Message-Id: <20200518173539.125024739@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,50 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zefan Li <lizefan@huawei.com>
+From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
 
-[ Upstream commit 090e28b229af92dc5b40786ca673999d59e73056 ]
+[ Upstream commit b56ff195c317ad28c05d354aeecbb9995b8e08c1 ]
 
-If systemd is configured to use hybrid mode which enables the use of
-both cgroup v1 and v2, systemd will create new cgroup on both the default
-root (v2) and netprio_cgroup hierarchy (v1) for a new session and attach
-task to the two cgroups. If the task does some network thing then the v2
-cgroup can never be freed after the session exited.
+Need to clear some bits in a vendor-defined register after reboot from
+Windows 10.
 
-One of our machines ran into OOM due to this memory leak.
-
-In the scenario described above when sk_alloc() is called
-cgroup_sk_alloc() thought it's in v2 mode, so it stores
-the cgroup pointer in sk->sk_cgrp_data and increments
-the cgroup refcnt, but then sock_update_netprioidx()
-thought it's in v1 mode, so it stores netprioidx value
-in sk->sk_cgrp_data, so the cgroup refcnt will never be freed.
-
-Currently we do the mode switch when someone writes to the ifpriomap
-cgroup control file. The easiest fix is to also do the switch when
-a task is attached to a new cgroup.
-
-Fixes: bd1060a1d671 ("sock, cgroup: add sock->sk_cgroup")
-Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-Tested-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Zefan Li <lizefan@huawei.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e51df6ce668a ("mmc: host: sdhci-pci: Add Genesys Logic GL975x support")
+Reported-by: Grzegorz Kowal <custos.mentis@gmail.com>
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Grzegorz Kowal <custos.mentis@gmail.com>
+Link: https://lore.kernel.org/r/20200504063957.6638-1-benchuanggli@gmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/netprio_cgroup.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/sdhci-pci-gli.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/core/netprio_cgroup.c
-+++ b/net/core/netprio_cgroup.c
-@@ -236,6 +236,8 @@ static void net_prio_attach(struct cgrou
- 	struct task_struct *p;
- 	struct cgroup_subsys_state *css;
+diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
+index ff39d81a5742c..fd76aa672e020 100644
+--- a/drivers/mmc/host/sdhci-pci-gli.c
++++ b/drivers/mmc/host/sdhci-pci-gli.c
+@@ -26,6 +26,9 @@
+ #define   SDHCI_GLI_9750_DRIVING_2    GENMASK(27, 26)
+ #define   GLI_9750_DRIVING_1_VALUE    0xFFF
+ #define   GLI_9750_DRIVING_2_VALUE    0x3
++#define   SDHCI_GLI_9750_SEL_1        BIT(29)
++#define   SDHCI_GLI_9750_SEL_2        BIT(31)
++#define   SDHCI_GLI_9750_ALL_RST      (BIT(24)|BIT(25)|BIT(28)|BIT(30))
  
-+	cgroup_sk_alloc_disable();
-+
- 	cgroup_taskset_for_each(p, css, tset) {
- 		void *v = (void *)(unsigned long)css->id;
+ #define SDHCI_GLI_9750_PLL	      0x864
+ #define   SDHCI_GLI_9750_PLL_TX2_INV    BIT(23)
+@@ -122,6 +125,8 @@ static void gli_set_9750(struct sdhci_host *host)
+ 				    GLI_9750_DRIVING_1_VALUE);
+ 	driving_value |= FIELD_PREP(SDHCI_GLI_9750_DRIVING_2,
+ 				    GLI_9750_DRIVING_2_VALUE);
++	driving_value &= ~(SDHCI_GLI_9750_SEL_1|SDHCI_GLI_9750_SEL_2|SDHCI_GLI_9750_ALL_RST);
++	driving_value |= SDHCI_GLI_9750_SEL_2;
+ 	sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
  
+ 	sw_ctrl_value &= ~SDHCI_GLI_9750_SW_CTRL_4;
+-- 
+2.20.1
+
 
 
