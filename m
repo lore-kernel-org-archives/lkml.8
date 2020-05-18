@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA42C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5859CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86C3420835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8C2207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824794;
-	bh=MFX1D15+H6M6gUGFxg0qxvMGealBsCwkAo68PBUZB9I=;
+	s=default; t=1589824796;
+	bh=ZJxifm2L9pOtEbCR4LMQt0wDqcoKiXMau1jrI71o23k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fllh1o9Eel6+5XZcZypsTlHMWS2CYeWgk8/3eS1SVIVietL4BIXKcd9KG2R7i7/Oz
-	 FYEVodXdfSke3PbFO5AsdM/wKrXS+5lqIryqypuDQ5ExvQyRdW+Bo1sesrs4lyWxUW
-	 AZh3jgaYsHwrOYYbofFsYdEWQmWhpjdl2ilZxUdk=
+	b=V9vjgaJVDa0+a/1+k1gfNbHqnok9toXjTnyQDHVBksHEOqzOBopGqv4OJYfgpotQn
+	 COAMnhMVC9UpwIi0cKTIzASl0By0c44s5IX9jTJA3SI8BotvWZV+XD6IBVWhdxaIr+
+	 jpHG9rj66voLio/xB0Nbx1oNvpreF5hqjobvUgpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732139AbgERR7x (ORCPT
+        id S1732146AbgERR7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:59:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40632 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:59:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732117AbgERR7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:59:47 -0400
+        id S1731651AbgERR7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:59:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5470C20829;
-        Mon, 18 May 2020 17:59:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA976207C4;
+        Mon, 18 May 2020 17:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824786;
-        bh=MFX1D15+H6M6gUGFxg0qxvMGealBsCwkAo68PBUZB9I=;
+        s=default; t=1589824789;
+        bh=ZJxifm2L9pOtEbCR4LMQt0wDqcoKiXMau1jrI71o23k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fa0SlpgvXEb03jYXsKDOpHzd5L+FkFmTYIk2FAdsHQ1EVHLb9mbYC6mQElpXUwQQA
-         6UOixfXcDZsL1ZRjgmCyjoJbFnoxbHYM4inhuwyrv23a3VfNAYaw2F/7EWB5RqdAsC
-         Wgt4p5b21iXXnbXtcXGv7Gj5wmk7ifAI82xg6ma0=
+        b=d5WPWsnPFlWn8klHhxE9oYC7Tux8KP94aA/MuN4O1J5CkpvzRp5E39bCvwFyRNCYu
+         b9FLeXF6fvwHOSODaa86xlDgY6QjskZ72I7RjmotJPzLgO3hGMiYYGmMJ4ylntB8Hu
+         4Dj++BFVOYYaO+KjeDuGDjLCHxQVBw+Yws05HPwI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 5.4 123/147] exec: Move would_dump into flush_old_exec
-Date:   Mon, 18 May 2020 19:37:26 +0200
-Message-Id: <20200518173528.245364334@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Justin Swartz <justin.swartz@risingedge.co.za>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 5.4 124/147] clk: rockchip: fix incorrect configuration of rk3228 aclk_gpu* clocks
+Date:   Mon, 18 May 2020 19:37:27 +0200
+Message-Id: <20200518173528.345904956@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -58,58 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Justin Swartz <justin.swartz@risingedge.co.za>
 
-commit f87d1c9559164294040e58f5e3b74a162bf7c6e8 upstream.
+commit cec9d101d70a3509da9bd2e601e0b242154ce616 upstream.
 
-I goofed when I added mm->user_ns support to would_dump.  I missed the
-fact that in the case of binfmt_loader, binfmt_em86, binfmt_misc, and
-binfmt_script bprm->file is reassigned.  Which made the move of
-would_dump from setup_new_exec to __do_execve_file before exec_binprm
-incorrect as it can result in would_dump running on the script instead
-of the interpreter of the script.
+The following changes prevent the unrecoverable freezes and rcu_sched
+stall warnings experienced in each of my attempts to take advantage of
+lima.
 
-The net result is that the code stopped making unreadable interpreters
-undumpable.  Which allows them to be ptraced and written to disk
-without special permissions.  Oops.
+Replace the COMPOSITE_NOGATE definition of aclk_gpu_pre with a
+COMPOSITE that retains the selection of HDMIPHY as the PLL source, but
+instead makes uses of the aclk_gpu PLL source gate and parent names
+defined by mux_pll_src_4plls_p rather than mux_aclk_gpu_pre_p.
 
-The move was necessary because the call in set_new_exec was after
-bprm->mm was no longer valid.
+Remove the now unused mux_aclk_gpu_pre_p and the four named but also
+unused definitions (cpll_gpu, gpll_gpu, hdmiphy_gpu and usb480m_gpu)
+of the aclk_gpu PLL source gate.
 
-To correct this mistake move the misplaced would_dump from
-__do_execve_file into flos_old_exec, before exec_mmap is called.
+Use the correct gate offset for aclk_gpu and aclk_gpu_noc.
 
-I tested and confirmed that without this fix I can attach with gdb to
-a script with an unreadable interpreter, and with this fix I can not.
-
+Fixes: 307a2e9ac524 ("clk: rockchip: add clock controller for rk3228")
 Cc: stable@vger.kernel.org
-Fixes: f84df2a6f268 ("exec: Ensure mm->user_ns contains the execed files")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+[double-checked against SoC manual and added fixes tag]
+Link: https://lore.kernel.org/r/20200114162503.7548-1-justin.swartz@risingedge.co.za
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exec.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/rockchip/clk-rk3228.c |   17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1274,6 +1274,8 @@ int flush_old_exec(struct linux_binprm *
- 	 */
- 	set_mm_exe_file(bprm->mm, bprm->file);
+--- a/drivers/clk/rockchip/clk-rk3228.c
++++ b/drivers/clk/rockchip/clk-rk3228.c
+@@ -156,8 +156,6 @@ PNAME(mux_i2s_out_p)		= { "i2s1_pre", "x
+ PNAME(mux_i2s2_p)		= { "i2s2_src", "i2s2_frac", "xin12m" };
+ PNAME(mux_sclk_spdif_p)		= { "sclk_spdif_src", "spdif_frac", "xin12m" };
  
-+	would_dump(bprm, bprm->file);
-+
- 	/*
- 	 * Release all of the old mmap stuff
- 	 */
-@@ -1817,8 +1819,6 @@ static int __do_execve_file(int fd, stru
- 	if (retval < 0)
- 		goto out;
- 
--	would_dump(bprm, bprm->file);
+-PNAME(mux_aclk_gpu_pre_p)	= { "cpll_gpu", "gpll_gpu", "hdmiphy_gpu", "usb480m_gpu" };
 -
- 	retval = exec_binprm(bprm);
- 	if (retval < 0)
- 		goto out;
+ PNAME(mux_uart0_p)		= { "uart0_src", "uart0_frac", "xin24m" };
+ PNAME(mux_uart1_p)		= { "uart1_src", "uart1_frac", "xin24m" };
+ PNAME(mux_uart2_p)		= { "uart2_src", "uart2_frac", "xin24m" };
+@@ -468,16 +466,9 @@ static struct rockchip_clk_branch rk3228
+ 			RK2928_CLKSEL_CON(24), 6, 10, DFLAGS,
+ 			RK2928_CLKGATE_CON(2), 8, GFLAGS),
+ 
+-	GATE(0, "cpll_gpu", "cpll", 0,
+-			RK2928_CLKGATE_CON(3), 13, GFLAGS),
+-	GATE(0, "gpll_gpu", "gpll", 0,
+-			RK2928_CLKGATE_CON(3), 13, GFLAGS),
+-	GATE(0, "hdmiphy_gpu", "hdmiphy", 0,
+-			RK2928_CLKGATE_CON(3), 13, GFLAGS),
+-	GATE(0, "usb480m_gpu", "usb480m", 0,
++	COMPOSITE(0, "aclk_gpu_pre", mux_pll_src_4plls_p, 0,
++			RK2928_CLKSEL_CON(34), 5, 2, MFLAGS, 0, 5, DFLAGS,
+ 			RK2928_CLKGATE_CON(3), 13, GFLAGS),
+-	COMPOSITE_NOGATE(0, "aclk_gpu_pre", mux_aclk_gpu_pre_p, 0,
+-			RK2928_CLKSEL_CON(34), 5, 2, MFLAGS, 0, 5, DFLAGS),
+ 
+ 	COMPOSITE(SCLK_SPI0, "sclk_spi0", mux_pll_src_2plls_p, 0,
+ 			RK2928_CLKSEL_CON(25), 8, 1, MFLAGS, 0, 7, DFLAGS,
+@@ -582,8 +573,8 @@ static struct rockchip_clk_branch rk3228
+ 	GATE(0, "pclk_peri_noc", "pclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(12), 2, GFLAGS),
+ 
+ 	/* PD_GPU */
+-	GATE(ACLK_GPU, "aclk_gpu", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(13), 14, GFLAGS),
+-	GATE(0, "aclk_gpu_noc", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(13), 15, GFLAGS),
++	GATE(ACLK_GPU, "aclk_gpu", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(7), 14, GFLAGS),
++	GATE(0, "aclk_gpu_noc", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(7), 15, GFLAGS),
+ 
+ 	/* PD_BUS */
+ 	GATE(0, "sclk_initmem_mbist", "aclk_cpu", 0, RK2928_CLKGATE_CON(8), 1, GFLAGS),
 
 
