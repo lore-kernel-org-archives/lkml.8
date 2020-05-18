@@ -2,108 +2,159 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A095EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7015EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75EAF2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdDKS8HT"
+	by mail.kernel.org (Postfix) with ESMTP id 57AFF2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgERD1s (ORCPT
+        id S1727815AbgERD2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 23:27:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56612 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726639AbgERD1s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 23:27:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589772466;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XWq69cxc6uMliMSLmzS+y2EN4gmCm0BpLb7U6ruoHg0=;
-        b=CdDKS8HTH6L6NKbyOBHKBaJ8sHW5bkX2hpddAmkVwp/02k4l1dKMQIRFiHyXjAKtq8Yg82
-        kN59+1sez7du8a+HsKJPJWucS1KN/MVxOU/iStEePnWE8Vf+YXuRjBm9Gf67F5sA12P84K
-        J751ihtAAj8aSqmrzCQCU8OriqXdRQ0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-470-bZgQyu2AMO-a8DtVqHT04g-1; Sun, 17 May 2020 23:27:44 -0400
-X-MC-Unique: bZgQyu2AMO-a8DtVqHT04g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D42A8015D2;
-        Mon, 18 May 2020 03:27:43 +0000 (UTC)
-Received: from [10.72.13.232] (ovpn-13-232.pek2.redhat.com [10.72.13.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE12E10013D9;
-        Mon, 18 May 2020 03:27:38 +0000 (UTC)
-Subject: Re: [PATCH] vhost: missing __user tags
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     kbuild test robot <lkp@intel.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20200515153347.1092235-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <f6d7e432-0951-8c3f-829e-78466fd39446@redhat.com>
-Date:   Mon, 18 May 2020 11:27:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 17 May 2020 23:28:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:31717 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726639AbgERD2D (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 23:28:03 -0400
+IronPort-SDR: u2I0svCKkoeiUXwd/3/O5KtGs0bv1Qms/RejE1vCtH0kwfhbPDZkXLm+gJgDDoCKjk4xA1nIWU
+ jBlgW+wV2ijg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 20:28:03 -0700
+IronPort-SDR: ja+LyeYa1xKMqDArXzvdOS3aZS+0MH60F2YDIRNrMoOiN9JItgz5t2q+KFjFIe2nQKwK9Gv6bZ
+ dN0jAk/sGymg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,405,1583222400"; 
+   d="scan'208";a="254333137"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
+  by fmsmga008.fm.intel.com with ESMTP; 17 May 2020 20:28:00 -0700
+Subject: Re: [PATCH] perf evsel: Get group fd from CPU0 for system wide event
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200430013451.17196-1-yao.jin@linux.intel.com>
+ <20200501102337.GA1761222@krava>
+ <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
+ <20200505000352.GH1916255@krava>
+ <3e813227-4954-0d4b-bc7a-ca272b18454a@linux.intel.com>
+ <68e53765-6f45-9483-7543-0a2f961cdc62@linux.intel.com>
+ <20200515083312.GB3511648@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <5fe2efe4-f8a3-04ef-f5e8-7b9c433d4142@linux.intel.com>
+Date:   Mon, 18 May 2020 11:28:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200515153347.1092235-1-mst@redhat.com>
+In-Reply-To: <20200515083312.GB3511648@krava>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jiri,
 
-On 2020/5/15 下午11:33, Michael S. Tsirkin wrote:
-> sparse warns about converting void * to void __user *. This is not new
-> but only got noticed now that vhost is built on more systems.
-> This is just a question of __user tags missing in a couple of places,
-> so fix it up.
+On 5/15/2020 4:33 PM, Jiri Olsa wrote:
+> On Fri, May 15, 2020 at 02:04:57PM +0800, Jin, Yao wrote:
+> 
+> SNIP
+> 
+>> I think I get the root cause. That should be a serious bug in get_group_fd, access violation!
+>>
+>> For a group mixed with system-wide event and per-core event and the group
+>> leader is system-wide event, access violation will happen.
+>>
+>> perf_evsel__alloc_fd allocates one FD member for system-wide event (only FD(evsel, 0, 0) is valid).
+>>
+>> But for per core event, perf_evsel__alloc_fd allocates N FD members (N =
+>> ncpus). For example, for ncpus is 8, FD(evsel, 0, 0) to FD(evsel, 7, 0) are
+>> valid.
+>>
+>> get_group_fd(struct evsel *evsel, int cpu, int thread)
+>> {
+>>      struct evsel *leader = evsel->leader;
+>>
+>>      fd = FD(leader, cpu, thread);    /* access violation may happen here */
+>> }
+>>
+>> If leader is system-wide event, only the FD(leader, 0, 0) is valid.
+>>
+>> When get_group_fd accesses FD(leader, 1, 0), access violation happens.
+>>
+>> My fix is:
+>>
+>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>> index 28683b0eb738..db05b8a1e1a8 100644
+>> --- a/tools/perf/util/evsel.c
+>> +++ b/tools/perf/util/evsel.c
+>> @@ -1440,6 +1440,9 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
+>>          if (evsel__is_group_leader(evsel))
+>>                  return -1;
+>>
+>> +       if (leader->core.system_wide && !evsel->core.system_wide)
+>> +               return -2;
+> 
+> so this effectively stops grouping system_wide events with others,
+> and I think it's correct, how about events that differ in cpumask?
+> 
+
+My understanding for the events that differ in cpumaks is, if the leader's cpumask is not fully 
+matched with the evsel's cpumask then we stop the grouping. Is this understanding correct?
+
+I have done some tests and get some conclusions:
+
+1. If the group is mixed with core and uncore events, the system_wide checking can distinguish them.
+
+2. If the group is mixed with core and uncore events and "-a" is specified, the system_wide for core 
+event is also false. So system_wide checking can distinguish them too
+
+3. In my test, the issue only occurs when we collect the metric which is mixed with uncore event and 
+core event, so maybe checking the system_wide is OK.
+
+> should we perhaps ensure this before we call open? go throught all
+> groups and check they are on the same cpus?
 >
-> Fixes: f88949138058 ("vhost: introduce O(1) vq metadata cache")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   drivers/vhost/vhost.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index d450e16c5c25..21a59b598ed8 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -730,7 +730,7 @@ static inline void __user *vhost_vq_meta_fetch(struct vhost_virtqueue *vq,
->   	if (!map)
->   		return NULL;
->   
-> -	return (void *)(uintptr_t)(map->addr + addr - map->start);
-> +	return (void __user *)(uintptr_t)(map->addr + addr - map->start);
->   }
->   
->   /* Can we switch to this memory table? */
-> @@ -869,7 +869,7 @@ static void __user *__vhost_get_user_slow(struct vhost_virtqueue *vq,
->    * not happen in this case.
->    */
->   static inline void __user *__vhost_get_user(struct vhost_virtqueue *vq,
-> -					    void *addr, unsigned int size,
-> +					    void __user *addr, unsigned int size,
->   					    int type)
->   {
->   	void __user *uaddr = vhost_vq_meta_fetch(vq,
 
+The issue doesn't happen at most of the time (only for the metric consisting of uncore event and 
+core event), so fallback to stop grouping if call open is failed looks reasonable.
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+Thanks
+Jin Yao
 
-
+> thanks,
+> jirka
+> 
+> 
+>> +
+>>          /*
+>>           * Leader must be already processed/open,
+>>           * if not it's a bug.
+>> @@ -1665,6 +1668,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>>                                  pid = perf_thread_map__pid(threads, thread);
+>>
+>>                          group_fd = get_group_fd(evsel, cpu, thread);
+>> +                       if (group_fd == -2) {
+>> +                               errno = EINVAL;
+>> +                               err = -EINVAL;
+>> +                               goto out_close;
+>> +                       }
+>>   retry_open:
+>>                          test_attr__ready();
+>>
+>> It enables the perf_evlist__reset_weak_group. And in the second_pass (in
+>> __run_perf_stat), the events will be opened successfully.
+>>
+>> I have tested OK for this fix on cascadelakex.
+>>
+>> Thanks
+>> Jin Yao
+>>
+> 
