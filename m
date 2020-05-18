@@ -2,122 +2,149 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA65C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F963C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAE452070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:57:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589831849;
-	bh=DRz4DAY0Mnx2npyUdBsc9qwGVxIZLo1A/yWb9iqMvwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c1qEk4GiWuZGEUxmeJsBtKk/m0ze5duylGjD0UJU2Zl2USfA8AaUBpskNXVrqchrU
-	 RL9P6/gJn9HJ/vEAanIubCwM1oCrZC8sm0TfFSwcu8AWjzt/1RlCyzePzLV9gWzmBo
-	 iV7y1hWmOwoqnENOmyJVBhqf5XRU29IpY0RbAnS4=
+	by mail.kernel.org (Postfix) with ESMTP id 5177C20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgERT52 (ORCPT
+        id S1728666AbgERT6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgERT50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:57:26 -0400
-Received: from localhost (unknown [122.178.242.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E35B320657;
-        Mon, 18 May 2020 19:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589831845;
-        bh=DRz4DAY0Mnx2npyUdBsc9qwGVxIZLo1A/yWb9iqMvwc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qc0a6OQvdCAEnO3CUTnrYxiYhaPyQTi55+IhPmvKayJnYlwQi4oxEdbuCAAoaqMDa
-         dFImllZ7cfaCePbe7ebGoK91XABYlDlmrHmwm9ncKc6LY2DAeuS62km5DMrPTVNXnA
-         BpsvtV7X7O3awzJsEdsD90yUG11JfNCxNl9brLZE=
-Date:   Tue, 19 May 2020 01:27:19 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v13 3/5] usb: xhci: Add support for Renesas controller
- with memory
-Message-ID: <20200518195719.GG374218@vkoul-mobl.Dlink>
-References: <20200506060025.1535960-1-vkoul@kernel.org>
- <20200506060025.1535960-4-vkoul@kernel.org>
- <CADYN=9JLeWHODRWDEcTE_6iZ3TX-E4yyx3OwqzK-H-ytLAmQUg@mail.gmail.com>
+        Mon, 18 May 2020 15:58:11 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:59865 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgERT6L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 15:58:11 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mi27T-1j682b1BQX-00e3gP for <linux-kernel@vger.kernel.org>; Mon, 18 May
+ 2020 21:58:08 +0200
+Received: by mail-qt1-f181.google.com with SMTP id z18so9229952qto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:58:08 -0700 (PDT)
+X-Gm-Message-State: AOAM533egJnlRsUTgFrqYKuq1uDWB8+6Xhn35+uC0XPjIkYe08Y7hbX+
+        6gydE+7O0pne3/bxzKsxdezyqqiQsr5hPl4/u50=
+X-Google-Smtp-Source: ABdhPJyET2V+EnyL+uVionmACLzPAshzKIY/gAOVUdclORPQ+2iKe4XXf7jU97YzJietOrdUS32srVPAAUSj32ylqhM=
+X-Received: by 2002:ac8:2bce:: with SMTP id n14mr17792483qtn.18.1589831887122;
+ Mon, 18 May 2020 12:58:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADYN=9JLeWHODRWDEcTE_6iZ3TX-E4yyx3OwqzK-H-ytLAmQUg@mail.gmail.com>
+References: <CAK8P3a0QkqyA2wq_EbA+oWrLGgVdQwpBvb+G0aKyz60BOLs6fg@mail.gmail.com>
+ <20200507232941.jccuywl56bppxfyp@treble>
+In-Reply-To: <20200507232941.jccuywl56bppxfyp@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 18 May 2020 21:57:50 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0G9uOatw93R90nP3tURgx=WW7yDB7qDtC8cwx0DHZqCw@mail.gmail.com>
+Message-ID: <CAK8P3a0G9uOatw93R90nP3tURgx=WW7yDB7qDtC8cwx0DHZqCw@mail.gmail.com>
+Subject: Re: objtool warning breaks build for fs/dlm/lock.o
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: multipart/mixed; boundary="000000000000e2bad405a5f1942f"
+X-Provags-ID: V03:K1:F9AK6AtGvYwH5xn6manqUTG0H0XH3NxV+lQ1d1EX6M0UMcBX8Df
+ eZwJhQ4av1348TLM8TDuhd+PI/ERaD6ID+Y2EooZijAY2xbswiFZosge6UuzKBDCs2m/fTH
+ tB6yeZuwNGAPrE1oeYQZX/3MwWCQoRg8YkjQ/jc95YOd/TZ1d/14e7cd+nipPO2Rs2ms+5F
+ mQsttXl049e1PrVUFovRQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sXSSaTIjk/E=:V6vw54av3wqFQqlJ5z4jqc
+ L1L0m9/w1JQ9x94dzVPGZ821pC4VrRAnh5qs7+dGWuxXuHHnipsgX5cxN7fwAX+m6CEMpwH4O
+ hNjQy7oXk5hhoG4Kq0hvD3rPlDWT/24d1kptCdkaMGuGl0jtUPTCde6siFhI2NPstjohG8vlH
+ DXBtFINkdfAVJB/tfTubbJDHDg1FDzcpZrhMmVps1vajTip+9vp/qiVdVNo+lc2V9uvlsFhga
+ 90DZX+qkQTfhKEHHNDjSVO7dwvo3x8OFhkdx5eiJuyaq3ZQLCu26yKuJxUkXxgl6BjHf6KUAk
+ X5h7lr8wxYn2Ch1I3+ESlmpLppRUgiArNvwu44UX9aOSIuHt8DSFFSQ0I62EtI6NF47NDUsI9
+ lWGs86rNK5rsHWhH5WEiiPiypy3ouzDPUzNN90OuqUuc33H84bscSROMXwgRPDk5ZhVIMw53r
+ 9y0b2yOLmyDLque26v+oLUMSFCh/SO73pp79yfqIZ1UKxA16dAcDGI79PFuYjWdwFtZ81AW1f
+ yzuG1qJQACmb+GMnRaDR2hpRyURu7cCEPfP1DIdrJ2YXthcXmkP1dzFzG3caG2NPUGG78tkaA
+ T/f3D+NN+MBVOpIFCNn88UB1Cqfapx4n10G492ND7oTD62USYafkhtBwqN8QZkj3shxpH33N9
+ D29BHmoTaZaTqMF27865HvEDpK0nJdkb4Aqkh5rsn4hGdoAKUglPdzmZwzq2J4WgFKIyPloyM
+ xWOVvV7ggxhbvxZlGDY3ImhCM8XyDoBlpG+aUREevC06DVIHqH9enTkLi2SO000a1xqbiMvDm
+ /AtSIz5Njk94to7W7qXDCu8n6fM4gtn70jusdmZM1IfJWZzkII=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anders,
+--000000000000e2bad405a5f1942f
+Content-Type: text/plain; charset="UTF-8"
 
-On 18-05-20, 19:53, Anders Roxell wrote:
-> On Wed, 6 May 2020 at 08:01, Vinod Koul <vkoul@kernel.org> wrote:
+On Fri, May 8, 2020 at 1:29 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Wed, May 06, 2020 at 04:07:25PM +0200, Arnd Bergmann wrote:
+> > Hi,
 > >
-> > Some rensas controller like uPD720201 and uPD720202 need firmware to be
-> > loaded. Add these devices in pci table and invoke renesas firmware loader
-> > functions to check and load the firmware into device memory when
-> > required.
+> > During randconfig testing with clang-10 I came across a number
+> > of additional objtool warnings, I'll send another mail about those
+> > when I have collected more information and some object files.
 > >
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> 
-> Hi, I got a build error when I built an arm64 allmodconfig kernel.
+> > This one sticks out however, as objtool returns an error code that
+> > stops the build:
+>
+> > fs/dlm/lock.o: warning: objtool: __receive_convert_reply()+0x1e5: can't find jump dest instruction at .text+0xcaa7
+>
+> Thanks for sending the patch for this one.  Objtool always gets confused
+> by new compiler versions, I really think we need to revert
+>
+>   644592d32837 ("objtool: Fail the kernel build on fatal errors")
+>
+> because objtool is never going to be reliable enough such that we can be
+> confident that failing the build is the right thing to do.
 
-Thanks for this. This is happening as we have default y for USB_XHCI_PCI
-and then we make USB_XHCI_PCI_RENESAS=m. That should be not allowed as
-we export as symbol so both can be inbuilt or modules but USB_XHCI_PCI=y
-and USB_XHCI_PCI_RENESAS=m cant. While it is valid that USB_XHCI_PCI=y|m
-and USB_XHCI_PCI_RENESAS=n
+I'm now struggling with a clang -fintegrated-as related failure:
 
-So this seems to get fixed by below for me. I have tested with
- - both y and m (easy)
- - make USB_XHCI_PCI_RENESAS=n, USB_XHCI_PCI=y|m works
- - try making USB_XHCI_PCI=y and USB_XHCI_PCI_RENESAS=m, then
-   USB_XHCI_PCI=m by kbuild :)
- - try making USB_XHCI_PCI=m and USB_XHCI_PCI_RENESAS=y, kbuild gives
-   error prompt that it will be m due to depends
+arch/x86/kernel/ftrace_64.o: warning: objtool: missing symbol for insn
+at offset 0x16
+make[4]: *** [/git/arm-soc/scripts/Makefile.build:355:
+arch/x86/kernel/ftrace_64.o] Error 255
 
-Thanks to all the fixes done by Arnd which pointed me to this. Pls
-verify and I will send the fix with you as reported :)
+Using this as a local workaround, but I'd like to find out if this is a bug
+in clang or in objtool:
 
----- >8 ----
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index e77261db2391..b4a0f3dd321d 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -38,6 +38,9 @@ OBJECT_FILES_NON_STANDARD_paravirt_patch.o            := y
+ ifdef CONFIG_FRAME_POINTER
+ OBJECT_FILES_NON_STANDARD_ftrace_$(BITS).o             := y
+ endif
++ifdef CONFIG_CC_IS_CLANG
++AFLAGS_ftrace_64.o                                     += -fno-integrated-as
++endif
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index b5c542d6a1c5..92783d175b3f 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -40,11 +40,11 @@ config USB_XHCI_DBGCAP
- config USB_XHCI_PCI
-        tristate
-        depends on USB_PCI
-+       depends on USB_XHCI_PCI_RENESAS || !USB_XHCI_PCI_RENESAS
-        default y
- 
- config USB_XHCI_PCI_RENESAS
-        tristate "Support for additional Renesas xHCI controller with firwmare"
--       depends on USB_XHCI_PCI
-        ---help---
-          Say 'Y' to enable the support for the Renesas xHCI controller with
-          firwmare. Make sure you have the firwmare for the device and
+ # If instrumentation of this dir is enabled, boot hangs during first second.
+ # Probably could be more selective here, but note that files related to irqs,
 
--- 
-~Vinod
+Attaching the broken object file fore reference.
+
+     Arnd
+
+--000000000000e2bad405a5f1942f
+Content-Type: application/x-object; name="ftrace_64.o"
+Content-Disposition: attachment; filename="ftrace_64.o"
+Content-Transfer-Encoding: base64
+Content-ID: <f_kacwu4620>
+X-Attachment-Id: f_kacwu4620
+
+f0VMRgIBAQAAAAAAAAAAAAEAPgABAAAAAAAAAAAAAAAAAAAAAAAAAFACAAAAAAAAAAAAAEAAAAAA
+AEAABwABAEiBPCUAAAAAAAAAAHUBw0iB7KgAAABIiUQkUEiJTCRYSIlUJGBIiXQkaEiJfCRwTIlE
+JEhMiUwkQEjHRCR4AAAAAEiJ6kiJVCQgSIu0JLAAAABIi7wkqAAAAEiJvCSAAAAASIPvBUyLBCUA
+AAAAQf/QSItsJCBMi0wkQEyLRCRISIt8JHBIi3QkaEiLVCRgSItMJFhIi0QkUEiBxKgAAADpaf//
+/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8AAAAAAAUAAAAAAAAAAAAAAAAAAAAAADYAAAAA
+AAMADgAAAAAAAAAAAAAAAAAAAD0AAAAAAAMADwAAAAAAAAAAAAAAAAAAAG0AAAASAAMAAAAAAAAA
+AAClAAAAAAAAAEMAAAAQAAMADgAAAAAAAAAAAAAAAAAAABIAAAAQAAAAAAAAAAAAAAAAAAAAAAAA
+AAQAAAAAAAAACwAAAAYAAAAAAAAAAAAAAAgAAAAAAAAACwAAAAUAAAAAAAAAAAAAAGoAAAAAAAAA
+CwAAAAYAAAAAAAAAAAAAAAAucmVsYS5lbnRyeS50ZXh0AGZ0cmFjZV90cmFjZV9mdW5jdGlvbgAu
+ZGlzY2FyZC5rc3ltAGZncmFwaF90cmFjZQBmdHJhY2Vfc3R1YgAuc3RydGFiAC5zeW10YWIAX19r
+c3ltX21hcmtlcl9fX2ZlbnRyeV9fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABPAAAAAwAAAAAAAAAAAAAAAAAAAAAAAADYAQAA
+AAAAAHgAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAADAAAAAEAAAAGAAAAAAAAAAAAAAAA
+AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAYAAAABAAAABgAAAAAA
+AAAAAAAAAAAAAEAAAAAAAAAApQAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAABAAAABAAA
+AAAAAAAAAAAAAAAAAAAAAACQAQAAAAAAAEgAAAAAAAAABgAAAAMAAAAIAAAAAAAAABgAAAAAAAAA
+KAAAAAEAAAACAAAAAAAAAAAAAAAAAAAA5QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA
+AAAAAAAAAFcAAAACAAAAAAAAAAAAAAAAAAAAAAAAAOgAAAAAAAAAqAAAAAAAAAABAAAABAAAAAgA
+AAAAAAAAGAAAAAAAAAA=
+--000000000000e2bad405a5f1942f--
