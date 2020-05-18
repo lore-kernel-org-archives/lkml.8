@@ -2,75 +2,121 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DCEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C86C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858FD20787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:50:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Dg9vVUjd"
+	by mail.kernel.org (Postfix) with ESMTP id 82FAC20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgEROuz (ORCPT
+        id S1728113AbgEROvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:50:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37228 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726918AbgEROuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:50:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=g/tUXb4ly8xE4Vp3fNrWElVjFfmCixuKmriyRVpDO58=; b=Dg9vVUjdtMK1CDdz60T2BkGs2s
-        +Cio0LxX9eTLHhU6dIUIxajJSHd4x2QUYvm4NUwlJzZiomu7JnkSark9Flube+92vtx86die1Bf0f
-        lAcMlNM33JuaeaghBm5S+XAbrzHf1jGQ/kPoNVqRkDPzbjc6klBoTNTKGPu7CxpWbubg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jah6F-002cQU-Eu; Mon, 18 May 2020 16:50:39 +0200
-Date:   Mon, 18 May 2020 16:50:39 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     tanhuazhong <tanhuazhong@huawei.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com, kuba@kernel.org,
-        Yufeng Mo <moyufeng@huawei.com>,
-        Jian Shen <shenjian15@huawei.com>
-Subject: Re: [PATCH net-next] net: phy: realtek: add loopback support for
- RTL8211F
-Message-ID: <20200518145039.GA624248@lunn.ch>
-References: <1589358344-14009-1-git-send-email-tanhuazhong@huawei.com>
- <20200513131226.GA499265@lunn.ch>
- <cb82153d-e14e-8e97-b3b8-210135fbdee6@huawei.com>
+        Mon, 18 May 2020 10:51:19 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48492 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgEROvS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 10:51:18 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 127628030875;
+        Mon, 18 May 2020 14:51:15 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id h93v5wIYCrJM; Mon, 18 May 2020 17:51:14 +0300 (MSK)
+Date:   Mon, 18 May 2020 17:51:13 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        <linux-rtc@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Paul Burton <paulburton@kernel.org>
+Subject: Re: [PATCH v3 3/7] dt-bindings: interrupt-controller: Convert
+ mti,gic to DT schema
+Message-ID: <20200518145113.2ndiinqkjculiqmx@mobilestation>
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-4-Sergey.Semin@baikalelectronics.ru>
+ <20200514190632.GA9943@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <cb82153d-e14e-8e97-b3b8-210135fbdee6@huawei.com>
+In-Reply-To: <20200514190632.GA9943@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi, Andrew.
+Thomas, Jason, Marc
+Could you take a look at this patch and merge it in if you are ok with its
+content. We've got Rob's Reviewed-by tag here, so it's only waiting for your
+acceptance.
+
+-Sergey
+
+On Thu, May 14, 2020 at 02:06:32PM -0500, Rob Herring wrote:
+> On Thu, 7 May 2020 00:41:03 +0300, Serge Semin wrote:
+> > Modern device tree bindings are supposed to be created as YAML-files
+> > in accordance with DT schema. This commit replaces MIPS GIC legacy bare
+> > text binding with YAML file. As before the binding file states that the
+> > corresponding dts node is supposed to be compatible with MIPS Global
+> > Interrupt Controller indicated by the "mti,gic" compatible string and
+> > to provide a mandatory interrupt-controller and '#interrupt-cells'
+> > properties. There might be optional registers memory range,
+> > "mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
+> > specified.
+> > 
+> > MIPS GIC also includes a free-running global timer, per-CPU count/compare
+> > timers, and a watchdog. Since currently the GIC Timer is only supported the
+> > DT schema expects an IRQ and clock-phandler charged timer sub-node with
+> > "mti,mips-gic-timer" compatible string.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Alessandro Zummo <a.zummo@towertech.it>
+> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: linux-rtc@vger.kernel.org
+> > 
+> > ---
+> > 
+> > I don't really know who is the corresponding driver maintainer, so I
+> > added Paul to the maintainers property since he used to be looking for the
+> > MIPS arch and Thomas looking after it now. Any idea what email should be
+> > specified there instead?
+> > 
+> > Changelog v3:
+> > - Since timer sub-node has no unit-address, the node shouldn't be named
+> >   with one. So alter the MIPS GIC bindings to have a pure "timer"
+> >   sub-node.
+> > - Discard allOf: [ $ref: /schemas/interrupt-controller.yaml# ].
+> > - Since it's a conversion patch use GPL-2.0-only SPDX header.
+> > ---
+> >  .../interrupt-controller/mips-gic.txt         |  67 --------
+> >  .../interrupt-controller/mti,gic.yaml         | 148 ++++++++++++++++++
+> >  2 files changed, 148 insertions(+), 67 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+> > 
 > 
-> There are two type of phys we are using, rtl8211f and "Marvell 88E1512".
-> "Marvell 88E1512" has already supported loopback
-> (f0f9b4ed2338 ("net: phy: Add phy loopback support in net phy framework")).
-
-> So now we adds loopback support to the rtl8211f.
-> From the data sheet other phys should support this loopback as well, but
-> we have no way to verify it. What's your suggestion?
-
-So you checked the datasheets for the RTL8201CP, RTL8201F, RTL8208,
-RTL8211B, RTL8211DN, etc?
-
-For all those you have datasheets for, please also add loopback
-support. I'm just trying to avoid one PHY from twelve in that driver
-having loopback support, when they all probably can.
-
-       Andrew
+> Reviewed-by: Rob Herring <robh@kernel.org>
