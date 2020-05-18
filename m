@@ -2,155 +2,111 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42CA7207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56F22065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgERLzy (ORCPT
+        id S1727020AbgERL5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:55:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:39068 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbgERLzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:55:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A57B11FB;
-        Mon, 18 May 2020 04:55:52 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 068B03F774;
-        Mon, 18 May 2020 04:55:49 -0700 (PDT)
-Date:   Mon, 18 May 2020 12:55:47 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@am.com>,
-        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
-Subject: Re: [PATCH 3/6] arm64: scs: Use 'scs_sp' register alias for x18
-Message-ID: <20200518115547.GC1957@C02TD0UTHF1T.local>
-References: <20200515172756.27185-1-will@kernel.org>
- <20200515172756.27185-4-will@kernel.org>
+        Mon, 18 May 2020 07:57:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:48601 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgERL5c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:57:32 -0400
+Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M1q4e-1jcqFm3dlY-002J7X; Mon, 18 May 2020 13:57:31 +0200
+Received: by mail-qv1-f44.google.com with SMTP id r3so4535612qve.1;
+        Mon, 18 May 2020 04:57:30 -0700 (PDT)
+X-Gm-Message-State: AOAM531FwLcGxSgowINhwEXZGqrWN32MzxhrMcq20nhgg8uxpL1KgD1J
+        tJmhrt3znUP7YWVKGntf1Y4yaCOdgkRq8Kc5cK0=
+X-Google-Smtp-Source: ABdhPJyUnKr4SHUFnJe9QsFvJhBBCNQyLNfjUzwAzO8o0fxqdsPeqZBhu6yQh15LV+E3iObLKOIbnTvte/PqUNqOYLg=
+X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr14567610qvz.210.1589803049670;
+ Mon, 18 May 2020 04:57:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515172756.27185-4-will@kernel.org>
+References: <20200515105537.4876-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <202005152142.AWvx4xc5%lkp@intel.com> <CAHp75Ven9q-6dDYtP_uXigeS_r2uvpUZVR5Mh0RdEd36MbTG+Q@mail.gmail.com>
+ <CAK8P3a3RKJo-C5=19oAppx212s7T8NdnKJVmkj+h=34a8aKMNA@mail.gmail.com>
+ <5180e734-ff56-db5a-ab49-8a55cfa2f2c0@linux.intel.com> <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
+In-Reply-To: <CAHp75Ve_XjvvGBEQyhy=qVVJMFS+18j3aKxNxSQpGK5qJmzfBg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 18 May 2020 13:57:13 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
+Message-ID: <CAK8P3a25GbMwbtvkxgmuGss6nEfAW4_vVbOXPxOYuDOaU_zcjA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:aZXMNFxuDqcW7d7dZw64Yqx3tjdzNwT7mq238HcffP43zUt83W1
+ d/0DZtOgO3kcF/I9ZugCeXHx9Mr+BnLdHmnagJOE4hHuVTBMxw7e0TSSvRrjGKYCm2/sXce
+ BWyeM/sbmKx+rfCKtUZ8GMyPW9MmohWrrTVOD1DrWfg7lukuBLHzN2KJ68jsMVKs894lauB
+ 7tl13swvaq4lZnT4y6ChA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:37csoL6+g6A=:yBbzYVNceE2ZVVkrL0BrYB
+ DnIBwi3YLiDby6nRphphY39aXjhnijUSCVtVwrikSx+oy+IN4KbGmhhpNVnpSv73J811pybfS
+ tPKgD7XMNzUdVKDe6VmRk5Atl/OcpRnzwvJFxSzA640V2uAf9wrUYUG7H36a1AUL9+Z/d6Er0
+ OU2G+wxpLzRXhk2ow0HTg6A2QgNFisrf4+12O3pQb/WsN8y0CQMoJpIciel4TRLbyVQuZwRGW
+ PU4v5qZqlSQQOQmf3zfV7vh8id76S22HccCLNWCD2GmHZgV3ew7XYbM80dvdKzgr3lXJ/mx6B
+ JZ4wbO1DnjE2BzBWqee+/LMSmtOvhWG1izRAJvr55b5/peh1dCDnLBwE6bt4Ra3S7e/ccI5yE
+ P2q1Tn8vnHI3zQbKCYhNAhdzMvJKUEN8mvh7bqTdr7rLf529xjr9YUmqU858SFRTavR4LhRrv
+ 6K4RndzgkDhIXs+as3TWsEKNq34C+4Qrbxlyoz0LW1yNJIvrDr0HVjwE3M5cL89hi3zMBRedP
+ 6gh5M3hOYc+jMPg8w4sEJBXSzwSe1guj1yJW0+TwxdppWakyLf0YPaEZbLAPf4Njv1r21cfpE
+ ltaxHeFvKLnKb+bM1K108GXsOHF7E8kLHuRlMtZsC0mkRRYejnxGFvNRrX2SNaG5oU09VqXUR
+ ifylmLXr9ag9PJBUSmi0fXQLiz17L3QcjoA9bcf9GeUuoZlRMQIYJe/md+VAV2xukfUiRTXqj
+ tdBkRNfpwyzWwoeoiU6fOVWK49CQ47GtLBhBSwHqso7BPvsbZDb8vg2lVQdm5qmED9A+QR/Yn
+ zfcfylmN7M7OJKDTQNwk1zHUQDbGM3C8SpnGKOSYfyRl+ygoYE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 06:27:53PM +0100, Will Deacon wrote:
-> x18 holds the SCS stack pointer value, so introduce a register alias to
-> make this easier to read in assembly code.
-> 
-> Signed-off-by: Will Deacon <will@kernel.org>
+On Mon, May 18, 2020 at 1:43 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, May 18, 2020 at 2:39 PM Ramuthevar, Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> > On 15/5/2020 10:30 pm, Arnd Bergmann wrote:
+> > > On Fri, May 15, 2020 at 4:25 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > >> On Fri, May 15, 2020 at 4:48 PM kbuild test robot <lkp@intel.com> wrote:
+>
+> > > iowrite_be32() is the correct way to store word into a big-endian mmio register,
+> > > if that is the intention here.
+> > Thank you for suggestions to use iowrite32be(), it suits exactly.
+>
+> Can you before doing this comment what is the real intention here?
+>
+> And note, if you are going to use iowrite*() / ioread*() in one place,
+> you will probably need to replace all of the read*() / write*() to
+> respective io* API.
 
-I scanned through arm64 for all instances of x18, and it looks like
-you've covered all the relevant uses here. In kvm we save/restore x18 a
-bunch becasue it might be a platform register, but we do that
-unconditionally and without knowledge of what it contains, so I think
-that's fine to leave as-is. Therefore:
+The way that ioread/iowrite are defined, they are required to be a superset
+of what readl/writel do and can take __iomem pointers from either
+ioremap() or ioport_map()/pci_iomap() style mappings, while readl/writel
+are only required to work with ioremap().
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+There is no technical requirement to stick to one set or the other for
+ioremap(), but the overhead of ioread/iowrite is also small enough
+that it generally does not hurt.
 
-As an aside, the comment in entry-ftrace.S is now stale where it says
-that x18 is safe to clobber. I can send a patch to clean that up, unless
-you want to do that yourself.
-
-Mark.
-
-> ---
->  arch/arm64/include/asm/scs.h |  6 ++++--
->  arch/arm64/kernel/entry.S    | 10 +++++-----
->  arch/arm64/kernel/head.S     |  2 +-
->  3 files changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/scs.h b/arch/arm64/include/asm/scs.h
-> index 6b8cf4352fe3..d46efdd2060a 100644
-> --- a/arch/arm64/include/asm/scs.h
-> +++ b/arch/arm64/include/asm/scs.h
-> @@ -7,12 +7,14 @@
->  #include <asm/asm-offsets.h>
->  
->  #ifdef CONFIG_SHADOW_CALL_STACK
-> +	scs_sp	.req	x18
-> +
->  	.macro scs_load tsk, tmp
-> -	ldr	x18, [\tsk, #TSK_TI_SCS_SP]
-> +	ldr	scs_sp, [\tsk, #TSK_TI_SCS_SP]
->  	.endm
->  
->  	.macro scs_save tsk, tmp
-> -	str	x18, [\tsk, #TSK_TI_SCS_SP]
-> +	str	scs_sp, [\tsk, #TSK_TI_SCS_SP]
->  	.endm
->  #else
->  	.macro scs_load tsk, tmp
-> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> index cb0516e6f963..741faf0706f1 100644
-> --- a/arch/arm64/kernel/entry.S
-> +++ b/arch/arm64/kernel/entry.S
-> @@ -394,7 +394,7 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
->  	.macro	irq_stack_entry
->  	mov	x19, sp			// preserve the original sp
->  #ifdef CONFIG_SHADOW_CALL_STACK
-> -	mov	x24, x18		// preserve the original shadow stack
-> +	mov	x24, scs_sp		// preserve the original shadow stack
->  #endif
->  
->  	/*
-> @@ -416,7 +416,7 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
->  
->  #ifdef CONFIG_SHADOW_CALL_STACK
->  	/* also switch to the irq shadow stack */
-> -	adr_this_cpu x18, irq_shadow_call_stack, x26
-> +	adr_this_cpu scs_sp, irq_shadow_call_stack, x26
->  #endif
->  
->  9998:
-> @@ -430,7 +430,7 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
->  	.macro	irq_stack_exit
->  	mov	sp, x19
->  #ifdef CONFIG_SHADOW_CALL_STACK
-> -	mov	x18, x24
-> +	mov	scs_sp, x24
->  #endif
->  	.endm
->  
-> @@ -1071,9 +1071,9 @@ SYM_CODE_START(__sdei_asm_handler)
->  #ifdef CONFIG_SHADOW_CALL_STACK
->  	/* Use a separate shadow call stack for normal and critical events */
->  	cbnz	w4, 3f
-> -	adr_this_cpu dst=x18, sym=sdei_shadow_call_stack_normal, tmp=x6
-> +	adr_this_cpu dst=scs_sp, sym=sdei_shadow_call_stack_normal, tmp=x6
->  	b	4f
-> -3:	adr_this_cpu dst=x18, sym=sdei_shadow_call_stack_critical, tmp=x6
-> +3:	adr_this_cpu dst=scs_sp, sym=sdei_shadow_call_stack_critical, tmp=x6
->  4:
->  #endif
->  
-> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-> index 2b01c19c5483..1293baddfd20 100644
-> --- a/arch/arm64/kernel/head.S
-> +++ b/arch/arm64/kernel/head.S
-> @@ -426,7 +426,7 @@ SYM_FUNC_START_LOCAL(__primary_switched)
->  	mov	x29, sp
->  
->  #ifdef CONFIG_SHADOW_CALL_STACK
-> -	adr_l	x18, init_shadow_call_stack	// Set shadow call stack
-> +	adr_l	scs_sp, init_shadow_call_stack	// Set shadow call stack
->  #endif
->  
->  	str_l	x21, __fdt_pointer, x5		// Save FDT pointer
-> -- 
-> 2.26.2.761.g0e0b3e54be-goog
-> 
+       Arnd
