@@ -2,50 +2,50 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6735BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5EB207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4339720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824674;
-	bh=Bf23uZnLV3OlKoZqeEjp8dJdg25q3YALsYaxnGvftpM=;
+	s=default; t=1589824678;
+	bh=qPHsgWoFLk4NPnZi5Ufy/BdEGqUt4vkX6hmOfYFIzsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wIhvGexD1tEl5q5jNNM74SthethBDag7Meic2c8VHz0qujIOWN9nc2nrJOMCu23iw
-	 AJmCMZVMVCFc2z/k1UgHrJAU8uF7TbAJcHqbNg1be6Se2n0aaFot3iMcSw9xm47E7K
-	 +WDSrAJB8RwXTEWQckxG3wjxQhGVCjtBr2wVvOK4=
+	b=EQflayyXh1oHjOKmsE24oSXW3aVMjInEKQfWnTzERp43sAv/Mqet9VkO7Eyy2OLcy
+	 L9vOIhp4pPrM4diwZR20gBR33sai1HbeN6tPrl3tLKKgbAUq8/13SR2L9BrNXnK2UT
+	 uUbeNE+ldjJREBl1DC4Ogv/hq7kK8DPH0NDIq+xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731525AbgERR5x (ORCPT
+        id S1731840AbgERR55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36636 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:57:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731500AbgERR5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:57:48 -0400
+        id S1731518AbgERR5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:57:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2220F20826;
-        Mon, 18 May 2020 17:57:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F32DB20829;
+        Mon, 18 May 2020 17:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824667;
-        bh=Bf23uZnLV3OlKoZqeEjp8dJdg25q3YALsYaxnGvftpM=;
+        s=default; t=1589824672;
+        bh=qPHsgWoFLk4NPnZi5Ufy/BdEGqUt4vkX6hmOfYFIzsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NClvyZdAmi1Myq9wGuUUm3O5SY87MRvUdBcCmlfayILONkm53+o6arDjEAfvcLfun
-         U2S907Rc3D4H9ztDTBa6IQZtBrslVgGHaUKYMt9maIyAHK6cWxKX12qx+DNGJ/nEWb
-         ZNbgYGcm7oIaZdB9hI77mOZ5ZeOUOA9fg5IBw1qI=
+        b=kFk9DJy2KM+utDMjpv3PdhhPzbB/TM+oded0StbbAtCdHDceSEicaYDtlIbOTEq2b
+         x7jeN3rOsMHPQny19SRsqGR+SFbfcPSk76FUcTPqtZU+qu5Ts6egTe8asidHcSLOij
+         EKNzl2Ssa2x/Dl3btusyEzbSX5A05qULd++WoOzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH 5.4 103/147] usb: usbfs: correct kernel->user page attribute mismatch
-Date:   Mon, 18 May 2020 19:37:06 +0200
-Message-Id: <20200518173526.165987477@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 105/147] ALSA: hda/realtek - Limit int mic boost for Thinkpad T530
+Date:   Mon, 18 May 2020 19:37:08 +0200
+Message-Id: <20200518173526.379903952@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -58,61 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 2bef9aed6f0e22391c8d4570749b1acc9bc3981e upstream.
+commit b590b38ca305d6d7902ec7c4f7e273e0069f3bcc upstream.
 
-On some architectures (e.g. arm64) requests for
-IO coherent memory may use non-cachable attributes if
-the relevant device isn't cache coherent. If these
-pages are then remapped into userspace as cacheable,
-they may not be coherent with the non-cacheable mappings.
+Lenovo Thinkpad T530 seems to have a sensitive internal mic capture
+that needs to limit the mic boost like a few other Thinkpad models.
+Although we may change the quirk for ALC269_FIXUP_LENOVO_DOCK, this
+hits way too many other laptop models, so let's add a new fixup model
+that limits the internal mic boost on top of the existing quirk and
+apply to only T530.
 
-In particular this happens with libusb, when it attempts
-to create zero-copy buffers for use by rtl-sdr
-(https://github.com/osmocom/rtl-sdr/). On low end arm
-devices with non-coherent USB ports, the application will
-be unexpectedly killed, while continuing to work fine on
-arm machines with coherent USB controllers.
-
-This bug has been discovered/reported a few times over
-the last few years. In the case of rtl-sdr a compile time
-option to enable/disable zero copy was implemented to
-work around it.
-
-Rather than relaying on application specific workarounds,
-dma_mmap_coherent() can be used instead of remap_pfn_range().
-The page cache/etc attributes will then be correctly set in
-userspace to match the kernel mapping.
-
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200504201348.1183246-1-jeremy.linton@arm.com
+BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1171293
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200514160533.10337-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/usb/core/devio.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -217,6 +217,7 @@ static int usbdev_mmap(struct file *file
- {
- 	struct usb_memory *usbm = NULL;
- 	struct usb_dev_state *ps = file->private_data;
-+	struct usb_hcd *hcd = bus_to_hcd(ps->dev->bus);
- 	size_t size = vma->vm_end - vma->vm_start;
- 	void *mem;
- 	unsigned long flags;
-@@ -250,9 +251,7 @@ static int usbdev_mmap(struct file *file
- 	usbm->vma_use_count = 1;
- 	INIT_LIST_HEAD(&usbm->memlist);
- 
--	if (remap_pfn_range(vma, vma->vm_start,
--			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
--			size, vma->vm_page_prot) < 0) {
-+	if (dma_mmap_coherent(hcd->self.sysdev, vma, mem, dma_handle, size)) {
- 		dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
- 		return -EAGAIN;
- 	}
+---
+ sound/pci/hda/patch_realtek.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5856,6 +5856,7 @@ enum {
+ 	ALC269_FIXUP_HP_LINE1_MIC1_LED,
+ 	ALC269_FIXUP_INV_DMIC,
+ 	ALC269_FIXUP_LENOVO_DOCK,
++	ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST,
+ 	ALC269_FIXUP_NO_SHUTUP,
+ 	ALC286_FIXUP_SONY_MIC_NO_PRESENCE,
+ 	ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT,
+@@ -6175,6 +6176,12 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT
+ 	},
++	[ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc269_fixup_limit_int_mic_boost,
++		.chained = true,
++		.chain_id = ALC269_FIXUP_LENOVO_DOCK,
++	},
+ 	[ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc269_fixup_pincfg_no_hp_to_lineout,
+@@ -7317,7 +7324,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21ca, "Thinkpad L412", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21e9, "Thinkpad Edge 15", ALC269_FIXUP_SKU_IGNORE),
+-	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK),
++	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST),
+ 	SND_PCI_QUIRK(0x17aa, 0x21fa, "Thinkpad X230", ALC269_FIXUP_LENOVO_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x21f3, "Thinkpad T430", ALC269_FIXUP_LENOVO_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x21fb, "Thinkpad T430s", ALC269_FIXUP_LENOVO_DOCK),
+@@ -7456,6 +7463,7 @@ static const struct hda_model_fixup alc2
+ 	{.id = ALC269_FIXUP_HEADSET_MODE, .name = "headset-mode"},
+ 	{.id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC, .name = "headset-mode-no-hp-mic"},
+ 	{.id = ALC269_FIXUP_LENOVO_DOCK, .name = "lenovo-dock"},
++	{.id = ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST, .name = "lenovo-dock-limit-boost"},
+ 	{.id = ALC269_FIXUP_HP_GPIO_LED, .name = "hp-gpio-led"},
+ 	{.id = ALC269_FIXUP_HP_DOCK_GPIO_MIC1_LED, .name = "hp-dock-gpio-mic1-led"},
+ 	{.id = ALC269_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "dell-headset-multi"},
 
 
