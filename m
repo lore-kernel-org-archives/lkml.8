@@ -6,101 +6,187 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF076C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE29EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAFB3207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A28B5207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:20:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgERCLJ (ORCPT
+        id S1726729AbgERCUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 22:11:09 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:55246 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726670AbgERCLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 22:11:08 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Axlum37sFexeY1AA--.69S2;
-        Mon, 18 May 2020 10:11:03 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2] MIPS: Loongson: Enable devicetree based probing for 8250 ports in defconfig
-Date:   Mon, 18 May 2020 10:11:01 +0800
-Message-Id: <1589767861-9784-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Axlum37sFexeY1AA--.69S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1DuFWkXrWxXF47WrWDCFg_yoW8Xw15pa
-        1fAa1DJFWvqFn5tw48GFyDurWYyFnxAFW2gF47Ar15ua98tay0vw1Sy34jyr47WFWktayF
-        vr93KF9FyF43C3DanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9m14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v
-        4I1lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMx
-        CIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-        JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-        v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
-        j40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUcjjDUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Sun, 17 May 2020 22:20:25 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50154 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726680AbgERCUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 22:20:24 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 438601A0040;
+        Mon, 18 May 2020 04:20:22 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C5421A00EC;
+        Mon, 18 May 2020 04:20:18 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C1B57402A8;
+        Mon, 18 May 2020 10:20:13 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, l.stach@pengutronix.de,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: interrupt-controller: Convert imx irqsteer to json-schema
+Date:   Mon, 18 May 2020 10:10:41 +0800
+Message-Id: <1589767841-4213-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 87fcfa7b7fe6 ("MIPS: Loongson64: Add generic dts"),
-there already exists the node and property of Loongson CPU UART0
-in loongson3-package.dtsi:
+Convert the i.MX IRQSTEER binding to DT schema format using json-schema.
 
-cpu_uart0: serial@1fe001e0 {
-        compatible = "ns16550a";
-        reg = <0 0x1fe001e0 0x8>;
-        clock-frequency = <33000000>;
-        interrupt-parent = <&liointc>;
-        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-        no-loopback-test;
-};
-
-In order to support for serial console on the Loongson platform,
-add CONFIG_SERIAL_OF_PLATFORM=y to loongson3_defconfig.
-
-With this patch, we can see the following boot messages:
-
-[    1.877745] printk: console [ttyS0] disabled
-[    1.881979] 1fe001e0.serial: ttyS0 at MMIO 0x1fe001e0 (irq = 16, base_baud = 2062500) is a 16550A
-[    1.890838] printk: console [ttyS0] enabled
-
-And also, we can login normally from the serial console.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
+ .../bindings/interrupt-controller/fsl,irqsteer.txt | 35 ---------
+ .../interrupt-controller/fsl,irqsteer.yaml         | 87 ++++++++++++++++++++++
+ 2 files changed, 87 insertions(+), 35 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
 
-v2:
-  - Modify the patch subject
-
- arch/mips/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index 4df2434..3d4c7e9 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -217,6 +217,7 @@ CONFIG_SERIAL_8250_EXTENDED=y
- CONFIG_SERIAL_8250_MANY_PORTS=y
- CONFIG_SERIAL_8250_SHARE_IRQ=y
- CONFIG_SERIAL_8250_RSA=y
-+CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_HW_RANDOM=y
- CONFIG_RAW_DRIVER=m
- CONFIG_I2C_CHARDEV=y
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+deleted file mode 100644
+index 582991c..0000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
++++ /dev/null
+@@ -1,35 +0,0 @@
+-Freescale IRQSTEER Interrupt multiplexer
+-
+-Required properties:
+-
+-- compatible: should be:
+-	- "fsl,imx8m-irqsteer"
+-	- "fsl,imx-irqsteer"
+-- reg: Physical base address and size of registers.
+-- interrupts: Should contain the up to 8 parent interrupt lines used to
+-  multiplex the input interrupts. They should be specified sequentially
+-  from output 0 to 7.
+-- clocks: Should contain one clock for entry in clock-names
+-  see Documentation/devicetree/bindings/clock/clock-bindings.txt
+-- clock-names:
+-   - "ipg": main logic clock
+-- interrupt-controller: Identifies the node as an interrupt controller.
+-- #interrupt-cells: Specifies the number of cells needed to encode an
+-  interrupt source. The value must be 1.
+-- fsl,channel: The output channel that all input IRQs should be steered into.
+-- fsl,num-irqs: Number of input interrupts of this channel.
+-  Should be multiple of 32 input interrupts and up to 512 interrupts.
+-
+-Example:
+-
+-	interrupt-controller@32e2d000 {
+-		compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
+-		reg = <0x32e2d000 0x1000>;
+-		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
+-		clock-names = "ipg";
+-		fsl,channel = <0>;
+-		fsl,num-irqs = <64>;
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+new file mode 100644
+index 0000000..a2bc723
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale IRQSTEER Interrupt multiplexer
++
++maintainers:
++  - Lucas Stach <l.stach@pengutronix.de>
++
++properties:
++  compatible:
++    const: fsl,imx-irqsteer
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      should contain the up to 8 parent interrupt lines used to multiplex
++      the input interrupts. They should be specified sequentially from
++      output 0 to 7.
++    items:
++      - description: irqsteer channel 0
++      - description: irqsteer channel 1
++      - description: irqsteer channel 2
++      - description: irqsteer channel 3
++      - description: irqsteer channel 4
++      - description: irqsteer channel 5
++      - description: irqsteer channel 6
++      - description: irqsteer channel 7
++    minItems: 1
++    maxItems: 8
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: ipg
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 1
++
++  fsl,channel:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: |
++      u32 value representing the output channel that all input IRQs should be
++      steered into.
++
++  fsl,num-irqs:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: |
++      u32 value representing the number of input interrupts of this channel,
++      should be multiple of 32 input interrupts and up to 512 interrupts.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - interrupt-controller
++  - "#interrupt-cells"
++  - fsl,channel
++  - fsl,num-irqs
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx8mq-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    interrupt-controller@32e2d000 {
++        compatible = "fsl,imx-irqsteer";
++        reg = <0x32e2d000 0x1000>;
++        interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
++        clock-names = "ipg";
++        fsl,channel = <0>;
++        fsl,num-irqs = <64>;
++        interrupt-controller;
++        #interrupt-cells = <1>;
++    };
 -- 
-2.1.0
+2.7.4
 
