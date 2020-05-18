@@ -2,85 +2,149 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFF2C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D7DC433E0
 	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9B2F2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791D9207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589826574;
+	bh=vdMQj/9qhGZqyThEDHAJCjVdXrJdtn/z0t5QJuWwo9Y=;
+	h=Subject:From:To:Cc:Date:List-ID:From;
+	b=yTSCjceFME5MAkSqOFd66P9NwA/MLrtUZnfcziB78jn3ziXZabpyGUvguaLD1K8w8
+	 XuHKylhW+Cm4eg3Wqu//wIp4R0xyfl9G4rs/XY9PI+iGsomZNOnwtfsm/1e5Rnwe/7
+	 DvebP0Sz6zIIfcXY6huBFRzh+VmmVo4ontWXtuT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgERS3c (ORCPT
+        id S2388029AbgERS33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:29:32 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:42213 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729345AbgERS32 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:29:28 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 18 May 2020 11:29:26 -0700
-Received: from localhost (unknown [10.200.192.41])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 42FFC40320;
-        Mon, 18 May 2020 11:29:27 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:29:26 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 5/5] objtool: Report missing support for subcommands
-Message-ID: <20200518182926.GM9040@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <cover.1588888003.git.mhelsley@vmware.com>
- <38a0c7a1ec8d98238379a322866c0432befc259b.1588888003.git.mhelsley@vmware.com>
- <20200515210448.jqseippuz52wx7ct@treble>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515210448.jqseippuz52wx7ct@treble>
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+        Mon, 18 May 2020 14:29:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728819AbgERS31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:29:27 -0400
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E966120657;
+        Mon, 18 May 2020 18:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589826566;
+        bh=vdMQj/9qhGZqyThEDHAJCjVdXrJdtn/z0t5QJuWwo9Y=;
+        h=Subject:From:To:Cc:Date:From;
+        b=ZAmBTRT0wRPcr4ErnfK4yk9nqpO3KMYFjdQJLpBaUw386nYyFJYh4xFZfiPb6ni0+
+         ksLTy9NrNqleMgrTEodjEsDS+JNn8i1f0JZ9CEk+KIRpFmbuysc0MpBWAoFAjhILX/
+         AzL+Q1D2bJ+aWij5tzj9wHuv/NNcE3hxScvaHEiE=
+Message-ID: <90ea854dfb728390b50ddf8a8675238973ee014a.camel@kernel.org>
+Subject: [PATCH] tracing: Fix events.rst section numbering
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     lixinhai.lxh@gmail.com, linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 18 May 2020 13:29:24 -0500
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 04:04:48PM -0500, Josh Poimboeuf wrote:
-> On Mon, May 11, 2020 at 10:35:13AM -0700, Matt Helsley wrote:
-> > The check and orc-related subcommands for objtool are x86-specific.
-> > To make this clear to anyone using the tool return a non-zero exit
-> > code and indicate in the help and usage output which commands are
-> > (and are not) available.
-> > 
-> > Signed-off-by: Matt Helsley <mhelsley@vmware.com>
-> 
-> I think I'd rather the simplest approach of just having the weak
-> functions print an error and return an error code.  At least for now I
-> don't think we need to go through the trouble of advertising whether
-> certain commands are available.  Technically they are available, they
-> just always fail :-)
+The in-kernel trace event API should have its own section, and the
+duplicate section numbers need fixing as well.
 
-OK, that'll drop this patch from  the series.
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Reported-by: Li Xinhai <lixinhai.lxh@gmail.com>
+---
+ Documentation/trace/events.rst | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-> 
-> And, people don't tend to use objtool directly anyway.
-> 
-> BTW, several of the patches didn't apply cleanly to tip/master, so
-> you'll probably need to rebase for v2.  There've been a lot of objtool
-> changes lately.  Peter's been busy...
+diff --git a/Documentation/trace/events.rst b/Documentation/trace/events.rst
+index ed79b220bd07..1a3b7762cb0f 100644
+--- a/Documentation/trace/events.rst
++++ b/Documentation/trace/events.rst
+@@ -526,8 +526,8 @@ The following commands are supported:
+ 
+   See Documentation/trace/histogram.rst for details and examples.
+ 
+-6.3 In-kernel trace event API
+------------------------------
++7. In-kernel trace event API
++============================
+ 
+ In most cases, the command-line interface to trace events is more than
+ sufficient.  Sometimes, however, applications might find the need for
+@@ -559,8 +559,8 @@ following:
+   - tracing synthetic events from in-kernel code
+   - the low-level "dynevent_cmd" API
+ 
+-6.3.1 Dyamically creating synthetic event definitions
+------------------------------------------------------
++7.1 Dyamically creating synthetic event definitions
++---------------------------------------------------
+ 
+ There are a couple ways to create a new synthetic event from a kernel
+ module or other kernel code.
+@@ -665,8 +665,8 @@ registered by calling the synth_event_gen_cmd_end() function:
+ At this point, the event object is ready to be used for tracing new
+ events.
+ 
+-6.3.3 Tracing synthetic events from in-kernel code
+---------------------------------------------------
++7.2 Tracing synthetic events from in-kernel code
++------------------------------------------------
+ 
+ To trace a synthetic event, there are several options.  The first
+ option is to trace the event in one call, using synth_event_trace()
+@@ -677,8 +677,8 @@ synth_event_trace_start() and synth_event_trace_end() along with
+ synth_event_add_next_val() or synth_event_add_val() to add the values
+ piecewise.
+ 
+-6.3.3.1 Tracing a synthetic event all at once
+----------------------------------------------
++7.2.1 Tracing a synthetic event all at once
++-------------------------------------------
+ 
+ To trace a synthetic event all at once, the synth_event_trace() or
+ synth_event_trace_array() functions can be used.
+@@ -779,8 +779,8 @@ remove the event:
+ 
+        ret = synth_event_delete("schedtest");
+ 
+-6.3.3.1 Tracing a synthetic event piecewise
+--------------------------------------------
++7.2.2 Tracing a synthetic event piecewise
++-----------------------------------------
+ 
+ To trace a synthetic using the piecewise method described above, the
+ synth_event_trace_start() function is used to 'open' the synthetic
+@@ -863,8 +863,8 @@ Note that synth_event_trace_end() must be called at the end regardless
+ of whether any of the add calls failed (say due to a bad field name
+ being passed in).
+ 
+-6.3.4 Dyamically creating kprobe and kretprobe event definitions
+-----------------------------------------------------------------
++7.3 Dyamically creating kprobe and kretprobe event definitions
++--------------------------------------------------------------
+ 
+ To create a kprobe or kretprobe trace event from kernel code, the
+ kprobe_event_gen_cmd_start() or kretprobe_event_gen_cmd_start()
+@@ -940,8 +940,8 @@ used to give the kprobe event file back and delete the event:
+ 
+   ret = kprobe_event_delete("gen_kprobe_test");
+ 
+-6.3.4 The "dynevent_cmd" low-level API
+---------------------------------------
++7.4 The "dynevent_cmd" low-level API
++------------------------------------
+ 
+ Both the in-kernel synthetic event and kprobe interfaces are built on
+ top of a lower-level "dynevent_cmd" interface.  This interface is
+-- 
+2.17.1
 
-Will do.
 
-Cheers,
-    -Matt Helsley
