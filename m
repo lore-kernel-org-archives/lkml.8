@@ -2,229 +2,115 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC51DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7924C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D07205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4985205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="cKR3pqRH"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LmW2zV3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgERVhk (ORCPT
+        id S1728138AbgERVjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERVhj (ORCPT
+        Mon, 18 May 2020 17:39:48 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:56542 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726502AbgERVjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:37:39 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F9C5C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:37:38 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id k18so12415413ion.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PS//4W49LeX9Vs+lxZu9gg7QYyqRhCBlBHWbz6v23bo=;
-        b=cKR3pqRH2lLjEXlXFaO+eDoDtdxmLA25ueQY7ECKTbG7903OEMmVNkwirdBQ7LuA3k
-         wz3sZoA1MUXbfGSSc+bE9n1lP1+2AyTFD/8VaZLl0VlHcUy0sBfH7flEfcHbqgsUQ9fN
-         xOjGNn0KvmYzQ3yvdruPt2KQlPsQfk8cR0kjs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PS//4W49LeX9Vs+lxZu9gg7QYyqRhCBlBHWbz6v23bo=;
-        b=tDNg89dGssIZ/xx1LOaHYKl96F/0KeVJRFHfPQWBFI7KxZ6iTx8GXWU+EuGXLyewvs
-         ribSMM/jjJpNOG8Lcu8Ssg8WqR+B9DquHH+dbKrwDqEljUUYtXyG8tbuooSivaJFiyeI
-         qYikyxeGpPXQC/7+zZ8VvNid6h9FYPThZUzkZoQMT8Hvy0mTnkra2PHDttV1DquHJgUt
-         Y1QxoeUZ+Ms1QT7yKdzY/TsgucsgMD0x/VuMJIXTRyqFiIyoarCKL8+PyZKCpm+czMrS
-         1X5foIMC3FllaUuM0c6UuwoWhBm59YOieXAMbpwFVEoA4RYAtzGFV3IulyPnNEH/ehS7
-         3PlQ==
-X-Gm-Message-State: AOAM532qPTqCjKSTsSSNnZnGLY/f8wkNsNcjnUYY5HUMrF0jcjXnVxaW
-        RDPdqOfzdPkAq9XxW0FQWcyZRw==
-X-Google-Smtp-Source: ABdhPJwNC6ZrM01bUDFpeSIEpLw5mCNXAO6WtOX6hiP1ExKQ7BInjPiC+zdoq09ow1N0BwBUpdtlvA==
-X-Received: by 2002:a5d:94c5:: with SMTP id y5mr4097703ior.43.1589837857147;
-        Mon, 18 May 2020 14:37:37 -0700 (PDT)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id f10sm5235937ilj.85.2020.05.18.14.37.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 May 2020 14:37:36 -0700 (PDT)
-Date:   Mon, 18 May 2020 21:37:35 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Tycho Andersen <tycho@tycho.ws>, Aleksa Sarai <asarai@suse.de>,
-        Kees Cook <keescook@chromium.org>, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
-Message-ID: <20200518213734.GA25216@ircssh-2.c.rugged-nimbus-611.internal>
-References: <20200515234005.32370-1-sargun@sargun.me>
- <202005162344.74A02C2D@keescook>
- <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
- <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
- <20200517142316.GA1996744@cisco>
- <20200517143311.fmxaf3pnopuaezl4@wittgenstein>
- <20200517144603.GD1996744@cisco>
- <20200517150215.GE1996744@cisco>
- <20200518125325.l2lpixp3ch7zuiwx@wittgenstein>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518125325.l2lpixp3ch7zuiwx@wittgenstein>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 18 May 2020 17:39:47 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id ACEBE400B9;
+        Mon, 18 May 2020 21:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1589837987; bh=4fUtfqcSwPxDzsZvtjaryhdzMyuy3jPIOnsb1fo4TLE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LmW2zV3vqgfLtNGu6lM/+d6Fcr3odAXOx1mpOrnSof+11mW/l74QsXtnwaTKqce9I
+         uDfdtMdKwe41oYXsqdZgX2SD0Pt+TD0U10To7eG4t7BDtNNc78sghfN7RvlILSFyJA
+         ipdKw2/UhZezG/b79Qf8ZZgqxINOkOsFKCRm7ErvyHtxdlelaiBCOJr6pun9ta1oB8
+         oKuFMJbWK5n+KYL5DCdxFI7aI204vdNIL5AJ9AFpSgfGtbwZ8l0LXZIMkFwAtWPClX
+         QJ/5xREN94OsXPYjk1KNCgXFNUJxtcYe9bB4UPuZ5U2UHy/tkR6wUDz4FSS8rmy0Jb
+         qO/QgEz8NjF2Q==
+Received: from ru20arcgnu1.internal.synopsys.com (ru20arcgnu1.internal.synopsys.com [10.121.9.48])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 2B482A005C;
+        Mon, 18 May 2020 21:39:37 +0000 (UTC)
+From:   Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+To:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        Petr Vorel <petr.vorel@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        linux-snps-arc@lists.infradead.org,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Subject: [PATCH] Kernel selftests: Add check if tpm devices are supported
+Date:   Tue, 19 May 2020 00:39:34 +0300
+Message-Id: <20200518213934.23156-1-Nikita.Sobolev@synopsys.com>
+X-Mailer: git-send-email 2.16.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 02:53:25PM +0200, Christian Brauner wrote:
-> On Sun, May 17, 2020 at 09:02:15AM -0600, Tycho Andersen wrote:
-> > On Sun, May 17, 2020 at 08:46:03AM -0600, Tycho Andersen wrote:
-> > > On Sun, May 17, 2020 at 04:33:11PM +0200, Christian Brauner wrote:
-> > > > struct seccomp_notif2 {
-> > > > 	__u32 notif_size;
-> > > > 	__u64 id;
-> > > > 	__u32 pid;
-> > > > 	__u32 flags;
-> > > > 	struct seccomp_data data;
-> > > > 	__u32 data_size;
-> > > > };
-> > > 
-> > > I guess you need to put data_size before data, otherwise old userspace
-> > > with a smaller struct seccomp_data will look in the wrong place.
-> > > 
-> > > But yes, that'll work if you put two sizes in, which is probably
-> > > reasonable since we're talking about two structs.
-> > 
-> > Well, no, it doesn't either. Suppose we add a new field first to
-> > struct seccomp_notif2:
-> > 
-> > struct seccomp_notif2 {
-> >     __u32 notif_size;
-> >     __u64 id;
-> >     __u32 pid;
-> >     __u32 flags;
-> >     struct seccomp_data data;
-> >     __u32 data_size;
-> >     __u32 new_field;
-> > };
-> > 
-> > And next we add a new field to struct secccomp_data. When a userspace
-> > compiled with just the new seccomp_notif2 field does:
-> > 
-> > seccomp_notif2.new_field = ...;
-> > 
-> > the compiler will put it in the wrong place for the kernel with the
-> > new seccomp_data field too.
-> > 
-> > Sort of feels like we should do:
-> > 
-> > struct seccomp_notif2 {
-> >     struct seccomp_notif *notif;
-> >     struct seccomp_data *data;
-> > };
-> > 
-> > ?
-> 
-> Oh yes of course, sorry that was my stupid typo. I meant:
-> 
-> struct seccomp_notif2 {
->     __u32 notif_size;
->     __u64 id;
->     __u32 pid;
->     __u32 flags;
->     struct seccomp_data *data;
->     __u32 data_size;
->     __u32 new_field;
-> }
-One big difference in the approach I described is that the user gets to ask
-for specific fields, and can configure the listener upfront, versus having to
-do the dance of fetching the sizes, and dynamically allocating memory.
+tpm2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
+are available. In case, when these devices are not available test
+fails, but expected behaviour is test to be skipped.
 
-This way userspace can just do on-stack static allocations. We can get
-rid of the kbuf bits in my PR, if we incrementally fill up the userspace buffer
-(copy_to_user shouldn't be *that* costly).
+Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+---
+ tools/testing/selftests/tpm2/test_smoke.sh | 11 +++++++++--
+ tools/testing/selftests/tpm2/test_space.sh |  9 ++++++++-
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
-In addition, we're not copying a bunch of unnecessary data, or calculating
-values that the user may not be interested in. This is particularly valuable
-if we ever want to do things like passing optional fields (think PIDs) back.
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 8155c2ea7ccb..e55d3e400666 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -1,8 +1,15 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
+-python -m unittest -v tpm2_tests.SmokeTest
+-python -m unittest -v tpm2_tests.AsyncTest
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++
++if [ -f /dev/tpm0 ] ; then
++	python -m unittest -v tpm2_tests.SmokeTest
++	python -m unittest -v tpm2_tests.AsyncTest
++else
++	exit $ksft_skip
++fi
+ 
+ CLEAR_CMD=$(which tpm2_clear)
+ if [ -n $CLEAR_CMD ]; then
+diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+index a6f5e346635e..180b469c53b4 100755
+--- a/tools/testing/selftests/tpm2/test_space.sh
++++ b/tools/testing/selftests/tpm2/test_space.sh
+@@ -1,4 +1,11 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
+-python -m unittest -v tpm2_tests.SpaceTest
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++
++if [ -f /dev/tpmrm0 ] ; then
++	python -m unittest -v tpm2_tests.SpaceTest
++else
++	exit $ksft_skip
++fi
+-- 
+2.16.2
 
-Code-wise, it looks something like:
-struct read_output_format {
-	__u64 id;
-	__u32 tgid;
-	struct seccomp_data data;
-} __packed;
-
-TEST(user_notification_read)
-{
-	long ret;
-	int status, pid, listener, read_size;
-	struct seccomp_notif_config config = {};
-	struct seccomp_notif_resp resp = {};
-	struct read_output_format buf;
-
-	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-	ASSERT_EQ(0, ret) {
-		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-	}
-
-	listener = user_trap_syscall(__NR_dup, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-	ASSERT_GE(listener, 0);
-
-	EXPECT_EQ(read(listener, &buf, sizeof(buf)), -1) {
-		EXPECT_EQ(errno, -EINVAL);
-	}
-
-	config.size = sizeof(config);
-	config.seccomp_data_size = sizeof(struct seccomp_data);
-	config.optional_fields = ~(0);
-	/* Make sure invalid fields are not accepted */
-	ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_CONFIG, &config), -1);
-
-	config.optional_fields = SECCOMP_NOTIF_FIELD_TGID;
-	ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_CONFIG, &config), sizeof(buf));
-
-	pid = fork();
-	ASSERT_GE(pid, 0);
-	if (pid == 0)
-		exit(syscall(__NR_dup, 42, 1, 1, 1) != USER_NOTIF_MAGIC);
-
-
-	/* Passing a smaller value in should fail */
-	EXPECT_EQ(read(listener, &buf, read_size - 1), -1) {
-		EXPECT_EQ(errno, -E2BIG);
-	}
-	/* Passing a larger value in should succeed */
-	ASSERT_EQ(read(listener, &buf, 200), sizeof(buf));
-	EXPECT_EQ(buf.tgid, pid);
-	EXPECT_EQ(buf.data.args[0], 42);
-	EXPECT_EQ(buf.data.nr, __NR_dup);
-
-	resp.id = buf.id;
-	resp.error = 0;
-	resp.val = USER_NOTIF_MAGIC;
-
-	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
-
-	EXPECT_EQ(waitpid(pid, &status, 0), pid);
-	EXPECT_EQ(true, WIFEXITED(status));
-	EXPECT_EQ(0, WEXITSTATUS(status));
-}
-
-> 
-> at which point things should just work imho. This is similar to how the
-> set_tid array works. The kernel doesn't need to allocate any more too.
-> The kernel can just always use the currently know seccomp_data size.
-> If the kernel supports _less_ than what the caller expects, it can
-> report the supported size in data_size to userspace returning EINVAL. If
-> it supports more then it can just copy the known fields, I guess.
-> 
-> This way we don't need to add yet another ioctl...
-> 
-> Christian
