@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18210C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF92820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1D220829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824571;
-	bh=oumdqq5M0SuM2SQsIaos21dD5nC+FF03EA6GtDsuixI=;
+	s=default; t=1589824575;
+	bh=SUj2naAkwmQKm48N3wkhavOBfjGOL4aAvxca/OACGLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DNTsPLhOxuMd8ajPXTVs7tgK6Anlyh0Ms00FOy/wLV0gaGd32xlKnawNFeJH/6Jrr
-	 k2Zq2JG9hi6g4ISigRQVHwsNM4ZcjbekVR8sOrBJmZWA2V68vu14XOi1ESPLiyxWtR
-	 PSpQLC5s4VzCLTNpSDdGKjjhE6HXbp44bOmXIkq0=
+	b=qD/AAS1LdDV05ccUnOvaaBPC8DMPWU9/885VltwnNXcTVZO0crIpXz/ZMyVN7QtdJ
+	 PGyO/58q04d5B2V0M2Mn7GI3HwkrL66vb7YgA+l08jPxdDyGLZVDofp7N2Gnop4U69
+	 6dfjb1WnpqpXYWNIHFdOYKTDR/t7AXpQ0Pa+wx9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731603AbgERR4K (ORCPT
+        id S1731606AbgERR4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:56:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33818 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:56:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730533AbgERR4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:08 -0400
+        id S1731600AbgERR4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:56:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22BDD20674;
-        Mon, 18 May 2020 17:56:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 995B320674;
+        Mon, 18 May 2020 17:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824567;
-        bh=oumdqq5M0SuM2SQsIaos21dD5nC+FF03EA6GtDsuixI=;
+        s=default; t=1589824570;
+        bh=SUj2naAkwmQKm48N3wkhavOBfjGOL4aAvxca/OACGLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zRUJFIrTi6Pl2JfUH49ycirvBmyUeEbvjEGpLVoNvIjStfC9hrPLDrlru0rFNUPfO
-         dVjiq8E0CVWAYnzBo7sIaogP+9RNL+1Mxu04I+euAM+hQH//2wuqAovgMNYhAhk8R1
-         5nwrNZ1lX+TrKi2aVpZkK3b9WgIrcbJaB+ApWXcs=
+        b=l4rnuiE1+WQhDz+aAHqHxMob5QW9RMV9w+QRLuGMWcY4Ll2tduZhke27MQTq0hxS9
+         fTuLnGgd741a+U3enpK+Vix6aJPhiMbum2gvCaKvN/gaZ7IrbGFFYHp+ffN9fLBW2X
+         PtdNEFup7WSEUHEGSKkq9M2HW7iGOhE0C1j61t78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sultan Alsawaf <sultan@kerneltoast.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 063/147] drm/i915: Dont enable WaIncreaseLatencyIPCEnabled when IPC is disabled
-Date:   Mon, 18 May 2020 19:36:26 +0200
-Message-Id: <20200518173521.888772096@linuxfoundation.org>
+Subject: [PATCH 5.4 064/147] bpf, sockmap: msg_pop_data can incorrecty set an sge length
+Date:   Mon, 18 May 2020 19:36:27 +0200
+Message-Id: <20200518173522.043577325@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -62,39 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit 421abe200321a2c907ede1a6208c558284ba0b75 ]
+[ Upstream commit 3e104c23816220919ea1b3fd93fabe363c67c484 ]
 
-In commit 5a7d202b1574, a logical AND was erroneously changed to an OR,
-causing WaIncreaseLatencyIPCEnabled to be enabled unconditionally for
-kabylake and coffeelake, even when IPC is disabled. Fix the logic so
-that WaIncreaseLatencyIPCEnabled is only used when IPC is enabled.
+When sk_msg_pop() is called where the pop operation is working on
+the end of a sge element and there is no additional trailing data
+and there _is_ data in front of pop, like the following case,
 
-Fixes: 5a7d202b1574 ("drm/i915: Drop WaIncreaseLatencyIPCEnabled/1140 for cnl")
-Cc: stable@vger.kernel.org # 5.3.x+
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200430214654.51314-1-sultan@kerneltoast.com
-(cherry picked from commit 690d22dafa88b82453516387b475664047a6bd14)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+   |____________a_____________|__pop__|
+
+We have out of order operations where we incorrectly set the pop
+variable so that instead of zero'ing pop we incorrectly leave it
+untouched, effectively. This can cause later logic to shift the
+buffers around believing it should pop extra space. The result is
+we have 'popped' more data then we expected potentially breaking
+program logic.
+
+It took us a while to hit this case because typically we pop headers
+which seem to rarely be at the end of a scatterlist elements but
+we can't rely on this.
+
+Fixes: 7246d8ed4dcce ("bpf: helper to pop data from messages")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/158861288359.14306.7654891716919968144.stgit@john-Precision-5820-Tower
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_pm.c | 2 +-
+ net/core/filter.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
-index 3ccfc025fde21..ade607d93e45d 100644
---- a/drivers/gpu/drm/i915/intel_pm.c
-+++ b/drivers/gpu/drm/i915/intel_pm.c
-@@ -4784,7 +4784,7 @@ static void skl_compute_plane_wm(const struct intel_crtc_state *crtc_state,
- 	 * WaIncreaseLatencyIPCEnabled: kbl,cfl
- 	 * Display WA #1141: kbl,cfl
- 	 */
--	if ((IS_KABYLAKE(dev_priv) || IS_COFFEELAKE(dev_priv)) ||
-+	if ((IS_KABYLAKE(dev_priv) || IS_COFFEELAKE(dev_priv)) &&
- 	    dev_priv->ipc_enabled)
- 		latency += 4;
+diff --git a/net/core/filter.c b/net/core/filter.c
+index d59dbc88fef5d..f1f2304822e3b 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2590,8 +2590,8 @@ BPF_CALL_4(bpf_msg_pop_data, struct sk_msg *, msg, u32, start,
+ 			}
+ 			pop = 0;
+ 		} else if (pop >= sge->length - a) {
+-			sge->length = a;
+ 			pop -= (sge->length - a);
++			sge->length = a;
+ 		}
+ 	}
  
 -- 
 2.20.1
