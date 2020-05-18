@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D509C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAADC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B7D207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DC1207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824564;
-	bh=oiO+oGYe2TO77I0bRdx6WRJGyV4o5hYZ87yzWZ/FEvQ=;
+	s=default; t=1589824570;
+	bh=t3npKBEsuRcAzaeEdhUZ+UJDeNrUl67D2yV/RLVnfT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eCarjVEQ9gRWUQvQbuNkh/c6MDthkO5QcUsPtqPXOHM7Rr9zW3GoIra1xZa2HPFbF
-	 P+Fck2gCiCWQjLXXW0ncwJQ3DM6VUf0xSVzR0KK/Y4YnJNXzaN0JJqU5sRByb53qRy
-	 TQLlU2FdTr9H9QzQSw9G1J6BJdbss1Nj9UKsGz5c=
+	b=zTgyS4aBRK/xe5SkwxKP7dLMmKD7PHBcTxmKyiOZLg3HAmVg+nH4J6Ken0dSUGydE
+	 BQkejZcgAcnNHl5yWaDkKjGKQF39H8vo4bXtko6vyuEyjvJfPRv164ScmYJahGd3uL
+	 lEK1zPVALalUm5Lx2suaqSUI76JdPXmfRYj0Vm90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbgERR4D (ORCPT
+        id S1731596AbgERR4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33648 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731571AbgERR4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:00 -0400
+        id S1729073AbgERR4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:56:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC8620715;
-        Mon, 18 May 2020 17:55:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB53C207C4;
+        Mon, 18 May 2020 17:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824559;
-        bh=oiO+oGYe2TO77I0bRdx6WRJGyV4o5hYZ87yzWZ/FEvQ=;
+        s=default; t=1589824565;
+        bh=t3npKBEsuRcAzaeEdhUZ+UJDeNrUl67D2yV/RLVnfT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rbobwBJkni2iyna+ZK64Gp+x4W3bZYao2sSItBEyPeVq4YqJ7mVsM7fdByf7/Flui
-         3ECBz4/KWuA09i8vp2XtYicKjhTnrlMv8kRBdodKRIjde0Va9LU8nsBROPlccJjaqp
-         LcLh4qYhxU4hXvebbHaHzSKQxxztvFk+J+U+w7SY=
+        b=Iai5fJ2mbBdAwBta3BsLizbf5oocQx13KX7jdJMjKnjQ2PHsweEw8F6LyJxL8mtig
+         7/MTJJUX6wN2CW1MA62uLeKEZmJJy2d36BERfrowQLd80tGRYsj8TlLwHKaVu+0Jzj
+         wSKDm+eTD8tisRct1BSDnx7EdMXrWQmOO6ob0yE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 060/147] bpf: Fix error return code in map_lookup_and_delete_elem()
-Date:   Mon, 18 May 2020 19:36:23 +0200
-Message-Id: <20200518173521.476624061@linuxfoundation.org>
+Subject: [PATCH 5.4 062/147] i40iw: Fix error handling in i40iw_manage_arp_cache()
+Date:   Mon, 18 May 2020 19:36:25 +0200
+Message-Id: <20200518173521.766924092@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,38 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7f645462ca01d01abb94d75e6768c8b3ed3a188b ]
+[ Upstream commit 37e31d2d26a4124506c24e95434e9baf3405a23a ]
 
-Fix to return negative error code -EFAULT from the copy_to_user() error
-handling case instead of 0, as done elsewhere in this function.
+The i40iw_arp_table() function can return -EOVERFLOW if
+i40iw_alloc_resource() fails so we can't just test for "== -1".
 
-Fixes: bd513cd08f10 ("bpf: add MAP_LOOKUP_AND_DELETE_ELEM syscall")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200430081851.166996-1-weiyongjun1@huawei.com
+Fixes: 4e9042e647ff ("i40iw: add hw and utils files")
+Link: https://lore.kernel.org/r/20200422092211.GA195357@mwanda
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/syscall.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/i40iw/i40iw_hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 14f4a76b44d5f..946cfdd3b2cc2 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1146,8 +1146,10 @@ static int map_lookup_and_delete_elem(union bpf_attr *attr)
- 	if (err)
- 		goto free_value;
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_hw.c b/drivers/infiniband/hw/i40iw/i40iw_hw.c
+index 55a1fbf0e670c..ae8b97c306657 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_hw.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_hw.c
+@@ -534,7 +534,7 @@ void i40iw_manage_arp_cache(struct i40iw_device *iwdev,
+ 	int arp_index;
  
--	if (copy_to_user(uvalue, value, value_size) != 0)
-+	if (copy_to_user(uvalue, value, value_size) != 0) {
-+		err = -EFAULT;
- 		goto free_value;
-+	}
- 
- 	err = 0;
- 
+ 	arp_index = i40iw_arp_table(iwdev, ip_addr, ipv4, mac_addr, action);
+-	if (arp_index == -1)
++	if (arp_index < 0)
+ 		return;
+ 	cqp_request = i40iw_get_cqp_request(&iwdev->cqp, false);
+ 	if (!cqp_request)
 -- 
 2.20.1
 
