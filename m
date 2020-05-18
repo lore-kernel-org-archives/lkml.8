@@ -2,98 +2,132 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2214CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18151C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 063D4206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E642520787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgEROje (ORCPT
+        id S1728061AbgEROkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:39:34 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39217 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgEROjd (ORCPT
+        Mon, 18 May 2020 10:40:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48318 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbgEROkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:39:33 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b190so5044322pfg.6;
-        Mon, 18 May 2020 07:39:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=v/Lrwkj7ubPYecCIOxmLzR7ynh9p8lUjesL2Dh/wkrM=;
-        b=GH2AGYyJyuVwur+ava7+7Xq/o/bCLkYGr+aSOcanDeM2tZLls9m/EJgvl2L5x9+XMC
-         e9+mtiMayO4x8+vZSxbgRaW/xJDVb0o3OwiYy+mRWJ1Lg3E1+2jkRWOhcjzp4UrKHEio
-         sf/2pfdO4wi4ygU1wPlNYNwXr51+jF2AirJWHKFM3WK5KY7f9GOm7n527xcD7DMzVmjF
-         GeE/xw7O8uC9v8KmqW/WWuilItn9qhixj9YFU/twBWaKokR0Rckbw+QNunfDAfwJtItX
-         sgbuwvb/cdHqQj0Ma5cLJRcbWWsTW/BaIbzLyTDjWrwOOcwad8hzd0YhFoBR6nP8ntSP
-         p9Rg==
-X-Gm-Message-State: AOAM532qFBktGoso1J1vbPK97QJR8emKRpQ1GpnetT1+hZWZPgeWBMPx
-        rAqRizLo34bOHgn2F5tQxKlS3Au/
-X-Google-Smtp-Source: ABdhPJzMQhYMNQKtT9vPjCMAFxD4Keq2xnycG6+758d06IuIzPOgKFwolz+FoBqqNFBCyyBfHolgvQ==
-X-Received: by 2002:a63:f925:: with SMTP id h37mr15995306pgi.112.1589812772347;
-        Mon, 18 May 2020 07:39:32 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:dc5d:b628:d57b:164? ([2601:647:4000:d7:dc5d:b628:d57b:164])
-        by smtp.gmail.com with ESMTPSA id h7sm3194729pgn.60.2020.05.18.07.39.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 07:39:31 -0700 (PDT)
-Subject: Re: [PATCH] scsi: Fix incorrect usage of shost_for_each_device
-To:     Ye Bin <yebin10@huawei.com>, martin.petersen@oracle.com,
-        jejb@linux.ibm.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200518074420.39275-1-yebin10@huawei.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <95d13fe2-e267-a536-def4-083a20c016be@acm.org>
-Date:   Mon, 18 May 2020 07:39:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 10:40:51 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BAC7F8030875;
+        Mon, 18 May 2020 14:40:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rEoajLcuEEvu; Mon, 18 May 2020 17:40:46 +0300 (MSK)
+Date:   Mon, 18 May 2020 17:40:45 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
+ clocksource/sched-clocks usage
+Message-ID: <20200518144045.v56fajrhbnnrzbpf@mobilestation>
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
+ <20200515171004.GA760381@linaro.org>
+ <20200516121647.g6jua35kkihmw5r6@mobilestation>
+ <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200518074420.39275-1-yebin10@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-18 00:44, Ye Bin wrote:
-> shost_for_each_device(sdev, shost) \
-> 	for ((sdev) = __scsi_iterate_devices((shost), NULL); \
-> 	     (sdev); \
-> 	     (sdev) = __scsi_iterate_devices((shost), (sdev)))
-> 
-> When terminating shost_for_each_device() iteration with break or return,
-> scsi_device_put() should be used to prevent stale scsi device references from
-> being left behind.
+Daniel,
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+On Mon, May 18, 2020 at 03:59:16PM +0200, Daniel Lezcano wrote:
+> On 16/05/2020 14:16, Serge Semin wrote:
+> > Hello Daniel,
+> > 
+> > Thanks for your comment. My response is below.
+> > 
+> > On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
+> >> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
+> >>> Currently neither clocksource nor scheduler clock kernel framework
+> >>> support the clocks with variable frequency. Needless to say how many
+> >>> problems may cause the sudden base clocks frequency change. In a
+> >>> simplest case the system time will either slow down or speed up.
+> >>> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
+> >>> with CPU we must set some limitations on using it for these frameworks
+> >>> if CPU frequency may change. First of all it's not safe to have the
+> >>> MIPS GIC used for scheduler timings. So we shouldn't proceed with
+> >>> the clocks registration in the sched-subsystem. Secondly we must
+> >>> significantly decrease the MIPS GIC clocksource rating. This will let
+> >>> the system to use it only as a last resort.
+> >>>
+> >>> Note CM3.x-based systems may also experience the problems with MIPS GIC
+> >>> if the CPU-frequency change is activated for the whole CPU cluster
+> >>> instead of using the individual CPC core clocks divider.
+> >>
+> >> May be there is no alternative but the code looks a bit hacksih. Isn't possible
+> >> to do something with the sched_mark_unstable?
+> >>
+> >> Or just not use the timer at all ?
+> > 
+> > Not using the timer might be better, but not that good alternative either
+> > especially in our case due to very slow external timer. Me and Thomas
+> > Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
+> > available on MIPS:
+> > https://lkml.org/lkml/2020/5/11/576
+> > 
+> > To cut it short, you are right. The solution with using clocksource_mark_unstable()
+> > is better alternative spied up in x86 tsc implementation. I'll use a similar
+> > approach here and submit the updated patch in v3.
+> > 
+> > Could you please proceed with the rest of the series review? I'd like to send
+> > the next version with as many comments taken into account as possible. The
+> > patchset has been submitted a while ago, but except Rob noone have had any
+> > comments.(
+> 
+> For me other patches are ok.
+> 
+> I can apply patches 1, 2, 4, 5, 6
+> 
+> Will remain patches 3 et 7
+
+That's be great! Thanks. Is patch 3 supposed to be merged in by Rob or by you?
+I don't see one being in the Rob's repo. He might be waiting for you
+acknowledgment or something.
+
+I'll send the updated patch 3 shortly today.
+
+-Sergey
+
+> 
+> 
+> -- 
+> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
