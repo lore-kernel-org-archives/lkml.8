@@ -2,104 +2,83 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AD0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E178C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F13EA20853
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Uu4Xg/jr"
+	by mail.kernel.org (Postfix) with ESMTP id 731DC2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgERWUE (ORCPT
+        id S1728306AbgERWUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:20:04 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59829 "EHLO ozlabs.org"
+        Mon, 18 May 2020 18:20:18 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47013 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgERWUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:20:03 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Qtjt0xN6z9sRK;
-        Tue, 19 May 2020 08:20:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589840402;
-        bh=FjIS8vGcrmSBHisqyc6vQi6ntIWxCy8/k3LeKa2MooY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Uu4Xg/jrFle3EYUUFxbo03dp1YHPRpC5g+ssrda+pIvKzQkO/4saBL1iCVtp9AsqW
-         ggwjQv11wGZhUkQEfIVoWoQsjMw9K4EjMEyde02gQ7UF1EP/gvzbff+u1e6GTYqu2t
-         /hkI5DS2WSK3/LGx0mJr7vLKpn576v0KzV+cHvsH4GWE9fcgD/0PA1We8I7pEhgS/1
-         xp4tVQ12oh+CkZ8FemhVQyrBFlTLz3pdA8btVlPcmQPnZonF3+g64Rayj6CzAnTxHn
-         0bqbEh+QJeyV7AedhIBjTDaC0S4+BApT+1r/QCMtxS3o6PYW8kYHnFB4ZJkmKsTo0q
-         FSNwhebIsSNqw==
-Date:   Tue, 19 May 2020 08:20:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: linux-next: build failure in Linus tree
-Message-ID: <20200519082000.4909cfe6@canb.auug.org.au>
-In-Reply-To: <20200420214611.17a6411f@canb.auug.org.au>
-References: <20200420214611.17a6411f@canb.auug.org.au>
+        id S1726386AbgERWUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:20:18 -0400
+IronPort-SDR: nPtcy3ktJ2Aa5zGV7ptvVTd1UTnMi7Hrg/UVpVlvIkvekMpoaYEnStfvwwCu+nqE5xqg9Afcvu
+ MfWRPWqXxUDg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 15:20:18 -0700
+IronPort-SDR: bunCAUpkQe5rEtfhlNJhPWAzLxi8Vq+VFArHQiuw64K4VzT++yLn9vczgTv1L+qSPLrskSpF0b
+ V0DPyg0vOPhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="267675369"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga006.jf.intel.com with ESMTP; 18 May 2020 15:20:17 -0700
+Date:   Mon, 18 May 2020 15:20:37 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/2] x86, sched: Prevent divisions by zero in frequency
+ invariant accounting
+Message-ID: <20200518222037.GA14829@ranerica-svr.sc.intel.com>
+References: <20200428132450.24901-1-ggherdovich@suse.cz>
+ <20200428132450.24901-2-ggherdovich@suse.cz>
+ <20200501133042.GE3762@hirez.programming.kicks-ass.net>
+ <1588429500.8505.29.camel@suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+y.HsfQv2rB9O.Ik0uuV71p";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588429500.8505.29.camel@suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+y.HsfQv2rB9O.Ik0uuV71p
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, May 02, 2020 at 04:25:00PM +0200, Giovanni Gherdovich wrote:
+> > 
+> > I've changed the patch like so.. OK?
+> > 
+> > (ok, perhaps I went a little overboard with the paranoia ;-)
+> 
+> Right, I wasn't really checking for overflow, only for when the product
+> "mcnt * arch_max_freq_ratio" becomes zero.
+> 
+> Thanks for your edit (I took note of the macros check_*_overflow, didn't know
+> them). I fully subscribe to the paranoid approach.
+> 
+> I understand you've already edited the patches in your tree, so I am not
+> resending, just confirming my
+> 
+> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
 
-Hi all,
+Hi, have these changes been merged? I still don't see them in the tip or
+Linus' tree.
 
-On Mon, 20 Apr 2020 21:46:11 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi all,
->=20
-> [reported by kernelci.org bot]
->=20
-> For a while now, building Linus' tree, the linux-next build (arm
-> qcom_defconfig) fails like this:
->=20
-> ERROR: modpost: "rd_full" [drivers/gpu/drm/msm/msm.ko] undefined!
->=20
-> Caused by commit
->=20
->   e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buff=
-ers")
-
-I see a fix for this has gone into the drm-msm tree.  Since this is a
-bug in Linus' tree, is the intention to send this fix to Linus soon?
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+y.HsfQv2rB9O.Ik0uuV71p
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7DChAACgkQAVBC80lX
-0GzAMQgAk9kFf0Hv9JzbJhxAzxEScWAk04rJZiWTVJYtQ0ICFJwTQzP4z91rQpp3
-k3mDPLu4bgxd7rGw7kHGUs4ADFUC8LQRhBRDmyThLDvYJciuhhXQS7+C9tG1kI5c
-RmsSkEahr203+NXRPOkBOGSN+Tg1h5SxMnBcx+WWumgXZupcDVA1FflDx0gxJOyN
-h9GQk+h7cobMcUxuCS6q5G1PhjzOOGBOow60EblopwGSka1oE6Vmdr1wVnhEKjEJ
-eeWIReXeHn2Qsmvs4iN/aIV3fvjCc+HeFAJr3+TemtGX8UZCHmAJxuZGea8Mbahk
-QXsqwbuCDr6BwAYiM591FidxGRqAHQ==
-=U7Ry
------END PGP SIGNATURE-----
-
---Sig_/+y.HsfQv2rB9O.Ik0uuV71p--
+Thanks and BR,
+Ricardo
