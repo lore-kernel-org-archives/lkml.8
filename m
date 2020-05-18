@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44FC520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2C520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826505;
-	bh=++6rxJ4KjRISx6k9lCyq8Zf09OyDNFQaezhXx9FQq6Y=;
+	s=default; t=1589826508;
+	bh=WUEUGB2ztG/wBFWKvIh0YzlNR0DI/wK08Ilpm3Lx+Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DdNnUEMliP0y1qxUrIq8Mdn4IPeofG22Uhb8WReBo4dtlDqQHkTCktVC/DTiJt+NU
-	 gF/uxudIAhg3OEhi2mFR4w74/xzqAZ3uBR+P/c+C6p5izLG2atylj+p42cNSQid5+2
-	 33wYESjo9FBj78K/srcmVTORJi/uXr+1+YtFXOYM=
+	b=czWy/VrwGxhk8CL5FhYcWsevSjU/HPwFGKc80wwywwiV0FtlNf2TpXEXIcsSUCnso
+	 TegyakEmbf0nxV/6ZZHQO8ULPc2cTHJsQDEUc8LdvUphyskqWEq1barwW8qOBaSveI
+	 cKRrTnroFcSJSjx9yJeD3tGDCmiuwjLVIaGff8fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387988AbgERS2X (ORCPT
+        id S1732172AbgERS21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:28:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:28:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729520AbgERRnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:43:07 -0400
+        id S1728986AbgERRnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:43:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92DE020849;
-        Mon, 18 May 2020 17:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D67320829;
+        Mon, 18 May 2020 17:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823786;
-        bh=++6rxJ4KjRISx6k9lCyq8Zf09OyDNFQaezhXx9FQq6Y=;
+        s=default; t=1589823783;
+        bh=WUEUGB2ztG/wBFWKvIh0YzlNR0DI/wK08Ilpm3Lx+Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+hRe3mouFVpZkkkuIOY+ADNVQ5vGhpkSUD7mspi6eN9I3aR1q96k95//MoXY+8ru
-         w6M53SQEyrsbWT7/XhAJNTN4pmthRv4YN5pD4xTDcK7FDOz8fVi6pmSrjPhKevEoc5
-         GCIexGQI7xo+fadVpi+T6qkN068v9p3w+i/u4cgI=
+        b=Y7ePXNlKrCVoAsAyzlS8v4bg3j4CH+y9BI9foFQsbCG1dClTDGTS3+zWGbTVMxhL7
+         uM3+GFUkCV29awvfFDTgInSq5A0i/FYPLt0mQZfo1Sdl0kn49CCPxNBfuV/5NJGGM3
+         AHKgOosAi/e+NHtlyM2uNlBaVH9JCbmi3uOzQsUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "David S. Miller" <davem@davemloft.net>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 36/90] ptp: create "pins" together with the rest of attributes
-Date:   Mon, 18 May 2020 19:36:14 +0200
-Message-Id: <20200518173458.426221453@linuxfoundation.org>
+Subject: [PATCH 4.9 35/90] ptp: use is_visible method to hide unused attributes
+Date:   Mon, 18 May 2020 19:36:13 +0200
+Message-Id: <20200518173458.246665640@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -64,166 +64,210 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 85a66e55019583da1e0f18706b7a8281c9f6de5b upstream.
+commit af59e717d5ff9c8dbf9bcc581c0dfb3b2a9c9030 upstream.
 
-Let's switch to using device_create_with_groups(), which will allow us to
-create "pins" attribute group together with the rest of ptp device
-attributes, and before userspace gets notified about ptp device creation.
+Instead of creating selected attributes after the device is created (and
+after userspace potentially seen uevent), lets use attribute group
+is_visible() method to control which attributes are shown. This will allow
+us to create all attributes (except "pins" group, which will be taken care
+of later) before userspace gets notified about new ptp class device.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 4.9: adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ptp/ptp_clock.c   | 20 +++++++++++---------
- drivers/ptp/ptp_private.h |  7 ++++---
- drivers/ptp/ptp_sysfs.c   | 39 +++++++++------------------------------
- 3 files changed, 24 insertions(+), 42 deletions(-)
+ drivers/ptp/ptp_sysfs.c | 125 ++++++++++++++++++----------------------
+ 1 file changed, 55 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index 08f304b83ad13..d5ac33350889e 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -214,16 +214,17 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock_info *info,
- 	mutex_init(&ptp->pincfg_mux);
- 	init_waitqueue_head(&ptp->tsev_wq);
- 
-+	err = ptp_populate_pin_groups(ptp);
-+	if (err)
-+		goto no_pin_groups;
-+
- 	/* Create a new device in our class. */
--	ptp->dev = device_create(ptp_class, parent, ptp->devid, ptp,
--				 "ptp%d", ptp->index);
-+	ptp->dev = device_create_with_groups(ptp_class, parent, ptp->devid,
-+					     ptp, ptp->pin_attr_groups,
-+					     "ptp%d", ptp->index);
- 	if (IS_ERR(ptp->dev))
- 		goto no_device;
- 
--	err = ptp_populate_sysfs(ptp);
--	if (err)
--		goto no_sysfs;
--
- 	/* Register a new PPS source. */
- 	if (info->pps) {
- 		struct pps_source_info pps;
-@@ -251,10 +252,10 @@ no_clock:
- 	if (ptp->pps_source)
- 		pps_unregister_source(ptp->pps_source);
- no_pps:
--	ptp_cleanup_sysfs(ptp);
--no_sysfs:
- 	device_destroy(ptp_class, ptp->devid);
- no_device:
-+	ptp_cleanup_pin_groups(ptp);
-+no_pin_groups:
- 	mutex_destroy(&ptp->tsevq_mux);
- 	mutex_destroy(&ptp->pincfg_mux);
- 	ida_simple_remove(&ptp_clocks_map, index);
-@@ -273,8 +274,9 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
- 	/* Release the clock's resources. */
- 	if (ptp->pps_source)
- 		pps_unregister_source(ptp->pps_source);
--	ptp_cleanup_sysfs(ptp);
-+
- 	device_destroy(ptp_class, ptp->devid);
-+	ptp_cleanup_pin_groups(ptp);
- 
- 	posix_clock_unregister(&ptp->clock);
- 	return 0;
-diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
-index 9c5d41421b651..d95888974d0c6 100644
---- a/drivers/ptp/ptp_private.h
-+++ b/drivers/ptp/ptp_private.h
-@@ -54,6 +54,8 @@ struct ptp_clock {
- 	struct device_attribute *pin_dev_attr;
- 	struct attribute **pin_attr;
- 	struct attribute_group pin_attr_group;
-+	/* 1st entry is a pointer to the real group, 2nd is NULL terminator */
-+	const struct attribute_group *pin_attr_groups[2];
- };
- 
- /*
-@@ -94,8 +96,7 @@ uint ptp_poll(struct posix_clock *pc,
- 
- extern const struct attribute_group *ptp_groups[];
- 
--int ptp_cleanup_sysfs(struct ptp_clock *ptp);
--
--int ptp_populate_sysfs(struct ptp_clock *ptp);
-+int ptp_populate_pin_groups(struct ptp_clock *ptp);
-+void ptp_cleanup_pin_groups(struct ptp_clock *ptp);
- 
- #endif
 diff --git a/drivers/ptp/ptp_sysfs.c b/drivers/ptp/ptp_sysfs.c
-index a55a6eb4dfde9..731d0423c8aa7 100644
+index 302e626fe6b01..a55a6eb4dfde9 100644
 --- a/drivers/ptp/ptp_sysfs.c
 +++ b/drivers/ptp/ptp_sysfs.c
-@@ -268,25 +268,14 @@ static ssize_t ptp_pin_store(struct device *dev, struct device_attribute *attr,
+@@ -46,27 +46,6 @@ PTP_SHOW_INT(n_periodic_outputs, n_per_out);
+ PTP_SHOW_INT(n_programmable_pins, n_pins);
+ PTP_SHOW_INT(pps_available, pps);
+ 
+-static struct attribute *ptp_attrs[] = {
+-	&dev_attr_clock_name.attr,
+-	&dev_attr_max_adjustment.attr,
+-	&dev_attr_n_alarms.attr,
+-	&dev_attr_n_external_timestamps.attr,
+-	&dev_attr_n_periodic_outputs.attr,
+-	&dev_attr_n_programmable_pins.attr,
+-	&dev_attr_pps_available.attr,
+-	NULL,
+-};
+-
+-static const struct attribute_group ptp_group = {
+-	.attrs = ptp_attrs,
+-};
+-
+-const struct attribute_group *ptp_groups[] = {
+-	&ptp_group,
+-	NULL,
+-};
+-
+-
+ static ssize_t extts_enable_store(struct device *dev,
+ 				  struct device_attribute *attr,
+ 				  const char *buf, size_t count)
+@@ -91,6 +70,7 @@ static ssize_t extts_enable_store(struct device *dev,
+ out:
+ 	return err;
+ }
++static DEVICE_ATTR(extts_enable, 0220, NULL, extts_enable_store);
+ 
+ static ssize_t extts_fifo_show(struct device *dev,
+ 			       struct device_attribute *attr, char *page)
+@@ -124,6 +104,7 @@ out:
+ 	mutex_unlock(&ptp->tsevq_mux);
+ 	return cnt;
+ }
++static DEVICE_ATTR(fifo, 0444, extts_fifo_show, NULL);
+ 
+ static ssize_t period_store(struct device *dev,
+ 			    struct device_attribute *attr,
+@@ -151,6 +132,7 @@ static ssize_t period_store(struct device *dev,
+ out:
+ 	return err;
+ }
++static DEVICE_ATTR(period, 0220, NULL, period_store);
+ 
+ static ssize_t pps_enable_store(struct device *dev,
+ 				struct device_attribute *attr,
+@@ -177,6 +159,57 @@ static ssize_t pps_enable_store(struct device *dev,
+ out:
+ 	return err;
+ }
++static DEVICE_ATTR(pps_enable, 0220, NULL, pps_enable_store);
++
++static struct attribute *ptp_attrs[] = {
++	&dev_attr_clock_name.attr,
++
++	&dev_attr_max_adjustment.attr,
++	&dev_attr_n_alarms.attr,
++	&dev_attr_n_external_timestamps.attr,
++	&dev_attr_n_periodic_outputs.attr,
++	&dev_attr_n_programmable_pins.attr,
++	&dev_attr_pps_available.attr,
++
++	&dev_attr_extts_enable.attr,
++	&dev_attr_fifo.attr,
++	&dev_attr_period.attr,
++	&dev_attr_pps_enable.attr,
++	NULL
++};
++
++static umode_t ptp_is_attribute_visible(struct kobject *kobj,
++					struct attribute *attr, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct ptp_clock *ptp = dev_get_drvdata(dev);
++	struct ptp_clock_info *info = ptp->info;
++	umode_t mode = attr->mode;
++
++	if (attr == &dev_attr_extts_enable.attr ||
++	    attr == &dev_attr_fifo.attr) {
++		if (!info->n_ext_ts)
++			mode = 0;
++	} else if (attr == &dev_attr_period.attr) {
++		if (!info->n_per_out)
++			mode = 0;
++	} else if (attr == &dev_attr_pps_enable.attr) {
++		if (!info->pps)
++			mode = 0;
++	}
++
++	return mode;
++}
++
++static const struct attribute_group ptp_group = {
++	.is_visible	= ptp_is_attribute_visible,
++	.attrs		= ptp_attrs,
++};
++
++const struct attribute_group *ptp_groups[] = {
++	&ptp_group,
++	NULL
++};
+ 
+ static int ptp_pin_name2index(struct ptp_clock *ptp, const char *name)
+ {
+@@ -235,26 +268,11 @@ static ssize_t ptp_pin_store(struct device *dev, struct device_attribute *attr,
  	return count;
  }
  
--int ptp_cleanup_sysfs(struct ptp_clock *ptp)
-+int ptp_populate_pin_groups(struct ptp_clock *ptp)
+-static DEVICE_ATTR(extts_enable, 0220, NULL, extts_enable_store);
+-static DEVICE_ATTR(fifo,         0444, extts_fifo_show, NULL);
+-static DEVICE_ATTR(period,       0220, NULL, period_store);
+-static DEVICE_ATTR(pps_enable,   0220, NULL, pps_enable_store);
+-
+ int ptp_cleanup_sysfs(struct ptp_clock *ptp)
  {
--	struct device *dev = ptp->dev;
--	struct ptp_clock_info *info = ptp->info;
--
--	if (info->n_pins) {
--		sysfs_remove_group(&dev->kobj, &ptp->pin_attr_group);
--		kfree(ptp->pin_attr);
--		kfree(ptp->pin_dev_attr);
+ 	struct device *dev = ptp->dev;
+ 	struct ptp_clock_info *info = ptp->info;
+ 
+-	if (info->n_ext_ts) {
+-		device_remove_file(dev, &dev_attr_extts_enable);
+-		device_remove_file(dev, &dev_attr_fifo);
 -	}
--	return 0;
--}
+-	if (info->n_per_out)
+-		device_remove_file(dev, &dev_attr_period);
 -
--static int ptp_populate_pins(struct ptp_clock *ptp)
--{
+-	if (info->pps)
+-		device_remove_file(dev, &dev_attr_pps_enable);
+-
+ 	if (info->n_pins) {
+ 		sysfs_remove_group(&dev->kobj, &ptp->pin_attr_group);
+ 		kfree(ptp->pin_attr);
+@@ -307,46 +325,13 @@ no_dev_attr:
+ 
+ int ptp_populate_sysfs(struct ptp_clock *ptp)
+ {
 -	struct device *dev = ptp->dev;
  	struct ptp_clock_info *info = ptp->info;
- 	int err = -ENOMEM, i, n_pins = info->n_pins;
+ 	int err;
  
-+	if (!n_pins)
-+		return 0;
-+
- 	ptp->pin_dev_attr = kzalloc(n_pins * sizeof(*ptp->pin_dev_attr),
- 				    GFP_KERNEL);
- 	if (!ptp->pin_dev_attr)
-@@ -310,28 +299,18 @@ static int ptp_populate_pins(struct ptp_clock *ptp)
- 	ptp->pin_attr_group.name = "pins";
- 	ptp->pin_attr_group.attrs = ptp->pin_attr;
- 
--	err = sysfs_create_group(&dev->kobj, &ptp->pin_attr_group);
--	if (err)
--		goto no_group;
-+	ptp->pin_attr_groups[0] = &ptp->pin_attr_group;
-+
- 	return 0;
- 
--no_group:
--	kfree(ptp->pin_attr);
- no_pin_attr:
- 	kfree(ptp->pin_dev_attr);
- no_dev_attr:
- 	return err;
- }
- 
--int ptp_populate_sysfs(struct ptp_clock *ptp)
-+void ptp_cleanup_pin_groups(struct ptp_clock *ptp)
- {
--	struct ptp_clock_info *info = ptp->info;
--	int err;
--
--	if (info->n_pins) {
--		err = ptp_populate_pins(ptp);
+-	if (info->n_ext_ts) {
+-		err = device_create_file(dev, &dev_attr_extts_enable);
 -		if (err)
--			return err;
+-			goto out1;
+-		err = device_create_file(dev, &dev_attr_fifo);
+-		if (err)
+-			goto out2;
 -	}
--	return 0;
-+	kfree(ptp->pin_attr);
-+	kfree(ptp->pin_dev_attr);
+-	if (info->n_per_out) {
+-		err = device_create_file(dev, &dev_attr_period);
+-		if (err)
+-			goto out3;
+-	}
+-	if (info->pps) {
+-		err = device_create_file(dev, &dev_attr_pps_enable);
+-		if (err)
+-			goto out4;
+-	}
+ 	if (info->n_pins) {
+ 		err = ptp_populate_pins(ptp);
+ 		if (err)
+-			goto out5;
++			return err;
+ 	}
+ 	return 0;
+-out5:
+-	if (info->pps)
+-		device_remove_file(dev, &dev_attr_pps_enable);
+-out4:
+-	if (info->n_per_out)
+-		device_remove_file(dev, &dev_attr_period);
+-out3:
+-	if (info->n_ext_ts)
+-		device_remove_file(dev, &dev_attr_fifo);
+-out2:
+-	if (info->n_ext_ts)
+-		device_remove_file(dev, &dev_attr_extts_enable);
+-out1:
+-	return err;
  }
 -- 
 2.20.1
