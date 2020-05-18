@@ -2,73 +2,240 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21509C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F39EC2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C7E20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:20:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bwhULTYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgERNUH (ORCPT
+        id S1728093AbgERNUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:20:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:40412 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727917AbgERNTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:19:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DFC2101E;
-        Mon, 18 May 2020 06:19:41 -0700 (PDT)
-Received: from melchizedek.cambridge.arm.com (melchizedek.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E31863F305;
-        Mon, 18 May 2020 06:19:39 -0700 (PDT)
-From:   James Morse <james.morse@arm.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        James Morse <james.morse@arm.com>
-Subject: [PATCH v3 05/10] x86/resctrl: Include pid.h
-Date:   Mon, 18 May 2020 14:19:18 +0100
-Message-Id: <20200518131924.7741-6-james.morse@arm.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200518131924.7741-1-james.morse@arm.com>
-References: <20200518131924.7741-1-james.morse@arm.com>
+        Mon, 18 May 2020 09:20:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbgERNUQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:20:16 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F64C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:20:16 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Qfl1694vz9sTS;
+        Mon, 18 May 2020 23:20:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1589808015;
+        bh=RloeE0LdmqKAFSvpaXbVeVj8qQSByHsMtpiN5OEN8FA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=bwhULTYedxiW3vCTcPq1HpvpTZ/liHivPDSALic6bvBzZec6hbQyS7NnzjoHOCG/I
+         3XFfQuQXNzQP02yVygvIzzynBObCLbOcNjLOdFMbdpHhjhAI/JcjWuJ/53kLefYZrU
+         pFoeXYTnLUYJEHbOzoEBNLL2Zl1sr5/AT5lbVwSI1cIIafoy3soMr0elcJiCf0mSkc
+         1lGqYgY1hWJxzONtuO8S2HH9K+79wds1tzyjnkngLz16OyXPJIqzITYyd7cAxVHBdE
+         VeQb7ldLtjKDQyZbe68K2osL/ckc8LgtrqiH1cTw/mGjH+ZJdepen5zpLGYKAnXOKK
+         vyU6PWLjzbhyg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Remove WALNUT hacks in serio/i8042 (was Re: ld.lld: error: undefined symbol: kb_cs)
+In-Reply-To: <20200514030149.GA1841966@ubuntu-s3-xlarge-x86>
+References: <202005140845.lthaPgxR%lkp@intel.com> <20200514030149.GA1841966@ubuntu-s3-xlarge-x86>
+Date:   Mon, 18 May 2020 23:20:30 +1000
+Message-ID: <87a7254bxd.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are about to disturb the header soup. This header uses struct pid
-and struct pid_namespace. Include their header.
+[ Cc += linuxppc-dev ]
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
----
- include/linux/resctrl.h | 2 ++
- 1 file changed, 2 insertions(+)
+Nathan Chancellor <natechancellor@gmail.com> writes:
+> On Thu, May 14, 2020 at 08:13:48AM +0800, kbuild test robot wrote:
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>> head:   24085f70a6e1b0cb647ec92623284641d8270637
+>> commit: 5990cdee689c6885b27c6d969a3d58b09002b0bc lib/mpi: Fix building for powerpc with clang
+>
+> I am certain that this patch did nothing to cause this... Maybe exposed
+> it but not the root cause.
+>
+>> date:   3 weeks ago
+>> config: powerpc-randconfig-r034-20200514 (attached as .config)
+>> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 310d32cb80a611e6384a921e85607fea05841f26)
+>> reproduce:
+>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # install powerpc cross compiling tool for clang build
+>>         # apt-get install binutils-powerpc-linux-gnu
+>>         git checkout 5990cdee689c6885b27c6d969a3d58b09002b0bc
+>>         # save the attached .config to linux build tree
+>>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=powerpc 
+>> 
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>> 
+>> All errors (new ones prefixed by >>):
+>> 
+>> >> ld.lld: error: undefined symbol: kb_cs
+>> >>> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
+>> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+>> >>> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
+>> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+>> >>> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
+>> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+>> >>> referenced 45 more times
+>> --
+>> >> ld.lld: error: undefined symbol: kb_data
+>> >>> referenced by i8042.c:309 (drivers/input/serio/i8042.c:309)
+>> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+>> >>> referenced by i8042-ppcio.h:33 (drivers/input/serio/i8042-ppcio.h:33)
+>> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+>> >>> referenced by i8042.c:319 (drivers/input/serio/i8042.c:319)
+>> >>> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+>> >>> referenced 15 more times
+>
+> kb_cs and kb_data are declared as extern void pointers when
+> CONFIG_WALNUT is set, which this config does. However, it looks like
+> the definitions of these variables were removed in
+> commit  917f0af9e5a9 ("powerpc: Remove arch/ppc and include/asm-ppc"),
+> way back in 2.6.27-rc1... So presumably, this has been broken for 12
+> years and nobody noticed?
 
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index daf5cf64c6a6..9b05af9b3e28 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -2,6 +2,8 @@
- #ifndef _RESCTRL_H
- #define _RESCTRL_H
- 
-+#include <linux/pid.h>
-+
- #ifdef CONFIG_PROC_CPU_RESCTRL
- 
- int proc_resctrl_show(struct seq_file *m,
--- 
-2.19.1
+Hmm, nice. 12 years is a pretty typical time frame for finding bugs in
+the powerpc tree ... o_O
 
+Our ppc40x_defconfig has CONFIG_SERIO=m, but explicitly disables
+CONFIG_SERIO_I8042. And walnut_defconfig disables CONFIG_SERIO.
+
+So I guess it has a PS2 controller but most folks didn't use it?
+
+> Probably means there is a good amount of dead
+> code that can be removed, or we could just avoid ever selecting this
+> driver with CONFIG_WALNUT (if it does not actually work without the
+> special handling from i8042-ppcio.h) while removing the dead code.
+
+I'm inclined to let the driver be selected, rather than carry a wart for
+it. I doubt anyone will ever turn it on explicitly, and if they do they
+can have fun debugging it.
+
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 924c541a9260..59b2f655e39e 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -138,7 +138,7 @@ config PPC
+>  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+>  	select ARCH_KEEP_MEMBLOCK
+>  	select ARCH_MIGHT_HAVE_PC_PARPORT
+> -	select ARCH_MIGHT_HAVE_PC_SERIO
+> +	select ARCH_MIGHT_HAVE_PC_SERIO if !WALNUT
+>  	select ARCH_OPTIONAL_KERNEL_RWX		if ARCH_HAS_STRICT_KERNEL_RWX
+>  	select ARCH_SUPPORTS_ATOMIC_RMW
+>  	select ARCH_USE_BUILTIN_BSWAP
+
+So I'd drop this hunk.
+
+> diff --git a/drivers/input/serio/i8042-ppcio.h b/drivers/input/serio/i8042-ppcio.h
+> deleted file mode 100644
+> index 391f94d9e47d..000000000000
+> --- a/drivers/input/serio/i8042-ppcio.h
+> +++ /dev/null
+> @@ -1,57 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0-only */
+> -#ifndef _I8042_PPCIO_H
+> -#define _I8042_PPCIO_H
+> -
+> -
+> -#if defined(CONFIG_WALNUT)
+> -
+> -#define I8042_KBD_IRQ 25
+> -#define I8042_AUX_IRQ 26
+> -
+> -#define I8042_KBD_PHYS_DESC "walnutps2/serio0"
+> -#define I8042_AUX_PHYS_DESC "walnutps2/serio1"
+> -#define I8042_MUX_PHYS_DESC "walnutps2/serio%d"
+> -
+> -extern void *kb_cs;
+> -extern void *kb_data;
+> -
+> -#define I8042_COMMAND_REG (*(int *)kb_cs)
+> -#define I8042_DATA_REG (*(int *)kb_data)
+> -
+> -static inline int i8042_read_data(void)
+> -{
+> -	return readb(kb_data);
+> -}
+> -
+> -static inline int i8042_read_status(void)
+> -{
+> -	return readb(kb_cs);
+> -}
+> -
+> -static inline void i8042_write_data(int val)
+> -{
+> -	writeb(val, kb_data);
+> -}
+> -
+> -static inline void i8042_write_command(int val)
+> -{
+> -	writeb(val, kb_cs);
+> -}
+> -
+> -static inline int i8042_platform_init(void)
+> -{
+> -	i8042_reset = I8042_RESET_ALWAYS;
+> -	return 0;
+> -}
+> -
+> -static inline void i8042_platform_exit(void)
+> -{
+> -}
+> -
+> -#else
+> -
+> -#include "i8042-io.h"
+> -
+> -#endif
+> -
+> -#endif /* _I8042_PPCIO_H */
+> diff --git a/drivers/input/serio/i8042.h b/drivers/input/serio/i8042.h
+> index 38dc27ad3c18..eb376700dfff 100644
+> --- a/drivers/input/serio/i8042.h
+> +++ b/drivers/input/serio/i8042.h
+> @@ -17,8 +17,6 @@
+>  #include "i8042-ip22io.h"
+>  #elif defined(CONFIG_SNI_RM)
+>  #include "i8042-snirm.h"
+> -#elif defined(CONFIG_PPC)
+> -#include "i8042-ppcio.h"
+>  #elif defined(CONFIG_SPARC)
+>  #include "i8042-sparcio.h"
+>  #elif defined(CONFIG_X86) || defined(CONFIG_IA64)
+
+#elif defined(CONFIG_UNICORE32)
+#include "i8042-unicore32io.h"
+#else
+#include "i8042-io.h"
+#endif
+
+The rest of the context is ^
+
+Which makes it clear that your removal of the entire file results in no
+change when WALNUT=n.
+
+I'm not sure if anyone really maintains that code, but this is all PPC
+really so I think we could merge it.
+
+Do you want to send a proper SOB'ed patch?
+
+cheers
