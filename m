@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C316C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7591FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13DDF20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB4920671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825859;
-	bh=91tBj2hhqc++9j+sjqp/UDyBo96MSzo1RqiQ9zJ2CME=;
+	s=default; t=1589825863;
+	bh=ArCnMaJ2+sBqpCNTshjMt72aPj/mxeONg96DdATXufU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eCvfXAe2QUS3WOCAUlfGQ5wpnTNeoiSyVuapzVU7PCRCX4ZUEA3YAKl94WqqTnj3N
-	 Z1emneqKF5/JWGPXUXiE1eFVTC7lFjyFhF02dN9MZpGi9n0dC1YdbabqFI3KEnJ0Fs
-	 Par2Vr3eVEA2PKjUKqK/Cdn4TNjVHgDIyeSbI3Sw=
+	b=zh8lObi4Cs7lpdaLi01j0r6+DMXV319Qk1q1yTNAV8CF2n2kAxSD1AK9xeoHkk6xh
+	 jycFAyogrzbRVTyM6Kuwfk2/xiTI2Mfzw03DJFZOGy7pGl4PxOISN0GjrXwLZwR7j6
+	 CWiv8zuGSlzDttufRC8w1ZAyZpWJEKir/bNLafVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731499AbgERSRi (ORCPT
+        id S1731700AbgERR4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:17:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35474 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731161AbgERR5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:57:09 -0400
+        id S1730672AbgERR4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:56:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1016020884;
-        Mon, 18 May 2020 17:57:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E574C20715;
+        Mon, 18 May 2020 17:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824627;
-        bh=91tBj2hhqc++9j+sjqp/UDyBo96MSzo1RqiQ9zJ2CME=;
+        s=default; t=1589824607;
+        bh=ArCnMaJ2+sBqpCNTshjMt72aPj/mxeONg96DdATXufU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdPXaEROXdHuBQ/j8TjET76X2dSCFIBrjqqYokMT5pIEZUl8ZzqbV8LUlQXCeL609
-         dweAbUV03LPytQPhLf70ZNBCET87rhXLckYQs6zZwghnh+ESxSF6GyDmakwaNYieZu
-         Fbzhw0OmlBMHVDR3K7mXdQVJ6DgFis4u8mU0mAA8=
+        b=ZPbAbVPVDn0E4FeWVEN83vQ8DN5pek+r2BxlJlvqcBw3F9RfiKd61HhpFJ5e0OVw0
+         jdzNMMDgB8zrVxegtSCHk398UxJScRwT3+/dSTbWRQP8uvuhtFuse950F5oHtRWB+t
+         T3879r2wjpJU1i0ICfK2+3sJLdrOI8SfDBbaKl+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/147] RDMA/iw_cxgb4: Fix incorrect function parameters
-Date:   Mon, 18 May 2020 19:36:51 +0200
-Message-Id: <20200518173524.540038658@linuxfoundation.org>
+Subject: [PATCH 5.4 042/147] cpufreq: intel_pstate: Only mention the BIOS disabling turbo mode once
+Date:   Mon, 18 May 2020 19:36:05 +0200
+Message-Id: <20200518173519.296562904@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,49 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Potnuri Bharat Teja <bharat@chelsio.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit c8b1f340e54158662acfa41d6dee274846370282 ]
+[ Upstream commit 8c539776ac83c0857395e1ccc9c6b516521a2d32 ]
 
-While reading the TCB field in t4_tcb_get_field32() the wrong mask is
-passed as a parameter which leads the driver eventually to a kernel
-panic/app segfault from access to an illegal SRQ index while flushing the
-SRQ completions during connection teardown.
+Make a note of the first time we discover the turbo mode has been
+disabled by the BIOS, as otherwise we complain every time we try to
+update the mode.
 
-Fixes: 11a27e2121a5 ("iw_cxgb4: complete the cached SRQ buffers")
-Link: https://lore.kernel.org/r/20200511185608.5202-1-bharat@chelsio.com
-Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/cpufreq/intel_pstate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index d82e0589cfd26..6b4e7235d2f56 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -2891,8 +2891,7 @@ static int peer_abort(struct c4iw_dev *dev, struct sk_buff *skb)
- 			srqidx = ABORT_RSS_SRQIDX_G(
- 					be32_to_cpu(req->srqidx_status));
- 			if (srqidx) {
--				complete_cached_srq_buffers(ep,
--							    req->srqidx_status);
-+				complete_cached_srq_buffers(ep, srqidx);
- 			} else {
- 				/* Hold ep ref until finish_peer_abort() */
- 				c4iw_get_ep(&ep->com);
-@@ -3878,8 +3877,8 @@ static int read_tcb_rpl(struct c4iw_dev *dev, struct sk_buff *skb)
- 		return 0;
- 	}
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 45499e0b9f2f3..d3d7c4ef7d045 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1058,7 +1058,7 @@ static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
  
--	ep->srqe_idx = t4_tcb_get_field32(tcb, TCB_RQ_START_W, TCB_RQ_START_W,
--			TCB_RQ_START_S);
-+	ep->srqe_idx = t4_tcb_get_field32(tcb, TCB_RQ_START_W, TCB_RQ_START_M,
-+					  TCB_RQ_START_S);
- cleanup:
- 	pr_debug("ep %p tid %u %016x\n", ep, ep->hwtid, ep->srqe_idx);
- 
+ 	update_turbo_state();
+ 	if (global.turbo_disabled) {
+-		pr_warn("Turbo disabled by BIOS or unavailable on processor\n");
++		pr_notice_once("Turbo disabled by BIOS or unavailable on processor\n");
+ 		mutex_unlock(&intel_pstate_limits_lock);
+ 		mutex_unlock(&intel_pstate_driver_lock);
+ 		return -EPERM;
 -- 
 2.20.1
 
