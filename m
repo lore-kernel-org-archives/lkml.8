@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B947820826
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EBF20826
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825257;
-	bh=dauGskwhFdS0FQcA5fjSQecXpT+n6+sjzPuDZ4Qa8pM=;
+	s=default; t=1589825261;
+	bh=pIBnweJDLILGqQ1G6rH5bi6niKVnTxExVR+TsRgjWt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wk5QNENqgX3ve66+az+9JHWxydjvhdZSkGXltJuO6FVHpvdtDTIY9703fjSQTO79d
-	 280AJFxXiuc5GKUwriTJkKDcdwDinYJE20rSS7mqeAXJlZgkWQYbXuVUpeJ9/aawTM
-	 vNVYl2Q8PIF/r69JLFUkuE4q6l4VW+HXjuexj6bc=
+	b=n0BYYA6b7iRvcMazUqEBn5WoMzkBpO4flGijyyrei4sre5kL6CuS0bUJ51wsj8MTt
+	 XgpoeiUxScaH7ZjZ3L4HLUnLSMCab+/6wyOcK/3LSnSdIQ2m00+gklxqneClliW6mt
+	 Dt0ty/l26gEpi4tsHBBaD39aWgHLIwOMDX+o9Hdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbgERSHh (ORCPT
+        id S2387434AbgERSHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:07:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbgERSHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:07:20 -0400
+        id S2387409AbgERSHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:07:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 395A7207D3;
-        Mon, 18 May 2020 18:07:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D76220715;
+        Mon, 18 May 2020 18:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825239;
-        bh=dauGskwhFdS0FQcA5fjSQecXpT+n6+sjzPuDZ4Qa8pM=;
+        s=default; t=1589825250;
+        bh=pIBnweJDLILGqQ1G6rH5bi6niKVnTxExVR+TsRgjWt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ltSYRFDstALzko+ZVCXpQeq+wogfmc3Zem6/9tGsgcXxa2p0BKSuO3U/I36yZ6es/
-         4lQ5kQkvwdUpkqYL+rLdLT6uY5Dx8Xmyu75oHih5NPLk7dpvAE/QugxuUr1DIreGcQ
-         C0t31WkvmVVcCwhR5I6tXY/yPFl2ow8YB93rlaRs=
+        b=otJbsOCMbiMgPTLPWShJ+2sBCRKqY7WiC1jN7jqUrq57MaqkLI36JFtRfllgLyk8r
+         9cqCxLEM8lVsUYaYXsK7jXNHUR8HW23OLVp//kqVcTj9HTa24tn9Mb4lBS8m0vNAUU
+         PiyOmzjUnCmXpjuOM9+fRy+THZ1fJ3CjGgmxhduw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 185/194] powerpc/uaccess: Evaluate macro arguments once, before user access is allowed
-Date:   Mon, 18 May 2020 19:37:55 +0200
-Message-Id: <20200518173546.870174069@linuxfoundation.org>
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: [PATCH 5.6 189/194] riscv: perf: RISCV_BASE_PMU should be independent
+Date:   Mon, 18 May 2020 19:37:59 +0200
+Message-Id: <20200518173547.167753429@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,150 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-commit d02f6b7dab8228487268298ea1f21081c0b4b3eb upstream.
+commit 48084c3595cb7429f6ba734cfea1313573b9a7fa upstream.
 
-get/put_user() can be called with nontrivial arguments. fs/proc/page.c
-has a good example:
+Selecting PERF_EVENTS without selecting RISCV_BASE_PMU results in a build
+error.
 
-    if (put_user(stable_page_flags(ppage), out)) {
-
-stable_page_flags() is quite a lot of code, including spin locks in
-the page allocator.
-
-Ensure these arguments are evaluated before user access is allowed.
-
-This improves security by reducing code with access to userspace, but
-it also fixes a PREEMPT bug with KUAP on powerpc/64s:
-stable_page_flags() is currently called with AMR set to allow writes,
-it ends up calling spin_unlock(), which can call preempt_schedule. But
-the task switch code can not be called with AMR set (it relies on
-interrupts saving the register), so this blows up.
-
-It's fine if the code inside allow_user_access() is preemptible,
-because a timer or IPI will save the AMR, but it's not okay to
-explicitly cause a reschedule.
-
-Fixes: de78a9c42a79 ("powerpc: Add a framework for Kernel Userspace Access Protection")
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200407041245.600651-1-npiggin@gmail.com
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+[Palmer: commit text]
+Fixes: 178e9fc47aae("perf: riscv: preliminary RISC-V support")
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/uaccess.h |   49 ++++++++++++++++++++++++++-----------
- 1 file changed, 35 insertions(+), 14 deletions(-)
+ arch/riscv/include/asm/perf_event.h |    8 ++------
+ arch/riscv/kernel/Makefile          |    2 +-
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -166,13 +166,17 @@ do {								\
- ({								\
- 	long __pu_err;						\
- 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
-+	__typeof__(*(ptr)) __pu_val = (x);			\
-+	__typeof__(size) __pu_size = (size);			\
-+								\
- 	if (!is_kernel_addr((unsigned long)__pu_addr))		\
- 		might_fault();					\
--	__chk_user_ptr(ptr);					\
-+	__chk_user_ptr(__pu_addr);				\
- 	if (do_allow)								\
--		__put_user_size((x), __pu_addr, (size), __pu_err);		\
-+		__put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err);	\
- 	else									\
--		__put_user_size_allowed((x), __pu_addr, (size), __pu_err);	\
-+		__put_user_size_allowed(__pu_val, __pu_addr, __pu_size, __pu_err); \
-+								\
- 	__pu_err;						\
- })
+--- a/arch/riscv/include/asm/perf_event.h
++++ b/arch/riscv/include/asm/perf_event.h
+@@ -12,19 +12,14 @@
+ #include <linux/ptrace.h>
+ #include <linux/interrupt.h>
  
-@@ -180,9 +184,13 @@ do {								\
- ({									\
- 	long __pu_err = -EFAULT;					\
- 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);			\
-+	__typeof__(*(ptr)) __pu_val = (x);				\
-+	__typeof__(size) __pu_size = (size);				\
-+									\
- 	might_fault();							\
--	if (access_ok(__pu_addr, size))			\
--		__put_user_size((x), __pu_addr, (size), __pu_err);	\
-+	if (access_ok(__pu_addr, __pu_size))				\
-+		__put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
-+									\
- 	__pu_err;							\
- })
++#ifdef CONFIG_RISCV_BASE_PMU
+ #define RISCV_BASE_COUNTERS	2
  
-@@ -190,8 +198,12 @@ do {								\
- ({								\
- 	long __pu_err;						\
- 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
--	__chk_user_ptr(ptr);					\
--	__put_user_size((x), __pu_addr, (size), __pu_err);	\
-+	__typeof__(*(ptr)) __pu_val = (x);			\
-+	__typeof__(size) __pu_size = (size);			\
-+								\
-+	__chk_user_ptr(__pu_addr);				\
-+	__put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
-+								\
- 	__pu_err;						\
- })
+ /*
+  * The RISCV_MAX_COUNTERS parameter should be specified.
+  */
  
-@@ -283,15 +295,18 @@ do {								\
- 	long __gu_err;						\
- 	__long_type(*(ptr)) __gu_val;				\
- 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
--	__chk_user_ptr(ptr);					\
-+	__typeof__(size) __gu_size = (size);			\
-+								\
-+	__chk_user_ptr(__gu_addr);				\
- 	if (!is_kernel_addr((unsigned long)__gu_addr))		\
- 		might_fault();					\
- 	barrier_nospec();					\
- 	if (do_allow)								\
--		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);		\
-+		__get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err);	\
- 	else									\
--		__get_user_size_allowed(__gu_val, __gu_addr, (size), __gu_err);	\
-+		__get_user_size_allowed(__gu_val, __gu_addr, __gu_size, __gu_err); \
- 	(x) = (__typeof__(*(ptr)))__gu_val;			\
-+								\
- 	__gu_err;						\
- })
+-#ifdef CONFIG_RISCV_BASE_PMU
+ #define RISCV_MAX_COUNTERS	2
+-#endif
+-
+-#ifndef RISCV_MAX_COUNTERS
+-#error "Please provide a valid RISCV_MAX_COUNTERS for the PMU."
+-#endif
  
-@@ -300,12 +315,15 @@ do {								\
- 	long __gu_err = -EFAULT;					\
- 	__long_type(*(ptr)) __gu_val = 0;				\
- 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);		\
-+	__typeof__(size) __gu_size = (size);				\
-+									\
- 	might_fault();							\
--	if (access_ok(__gu_addr, (size))) {		\
-+	if (access_ok(__gu_addr, __gu_size)) {				\
- 		barrier_nospec();					\
--		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
-+		__get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
- 	}								\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;				\
-+									\
- 	__gu_err;							\
- })
+ /*
+  * These are the indexes of bits in counteren register *minus* 1,
+@@ -82,6 +77,7 @@ struct riscv_pmu {
+ 	int		irq;
+ };
  
-@@ -314,10 +332,13 @@ do {								\
- 	long __gu_err;						\
- 	__long_type(*(ptr)) __gu_val;				\
- 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
--	__chk_user_ptr(ptr);					\
-+	__typeof__(size) __gu_size = (size);			\
-+								\
-+	__chk_user_ptr(__gu_addr);				\
- 	barrier_nospec();					\
--	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
-+	__get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
-+								\
- 	__gu_err;						\
- })
++#endif
+ #ifdef CONFIG_PERF_EVENTS
+ #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
+ #endif
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -38,7 +38,7 @@ obj-$(CONFIG_MODULE_SECTIONS)	+= module-
+ obj-$(CONFIG_FUNCTION_TRACER)	+= mcount.o ftrace.o
+ obj-$(CONFIG_DYNAMIC_FTRACE)	+= mcount-dyn.o
  
+-obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
++obj-$(CONFIG_RISCV_BASE_PMU)	+= perf_event.o
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
+ obj-$(CONFIG_HAVE_PERF_REGS)	+= perf_regs.o
+ obj-$(CONFIG_RISCV_SBI)		+= sbi.o
 
 
