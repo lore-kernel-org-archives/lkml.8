@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD408C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E99CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7F9D20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2C1620671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825896;
-	bh=PL0ZmeWqc8FMIxU1IoNlidUEHrZGToEEtWQh6ygb26A=;
+	s=default; t=1589825902;
+	bh=6qEfNNkLVo3e/tdOgZTRkyRE14rmewna/2ALEwdJ98Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ICroXSWU6+kc/xV1mEzKfSysw/5gXeGCMlPdF/AwzhjkMYn3RVtsqYU0vfsaqUAT9
-	 XBxjycF43DMxM2MYclWHJeJXvMApuz24p93XXdhUbO8f99+bE+SYvWXOgg5NHVilp7
-	 61/RUoLrYEhNj1wzCd+BBBJ1O/nWcUx/1RZWs83U=
+	b=Qjh8NzAusNZAsXr2C7zd/1fgIPxPjh3cr0IrsigxLc80YcNmCMGZEYKgb37w+UpwL
+	 KXtjPgRhoSduxqypJtn6CmoVCWw7pHh9UgUyIy2SJFSMr5RPdvNNt5iu8kA5E9+Uzp
+	 cP/QRIWg1CRx9IWQC34CDpUu2Iu5Moq0h5pSwUYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731587AbgERR4H (ORCPT
+        id S2387569AbgERSSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:56:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33720 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:18:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730533AbgERR4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:03 -0400
+        id S1731564AbgERRz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:55:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ED0520674;
-        Mon, 18 May 2020 17:56:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1494320715;
+        Mon, 18 May 2020 17:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824562;
-        bh=PL0ZmeWqc8FMIxU1IoNlidUEHrZGToEEtWQh6ygb26A=;
+        s=default; t=1589824557;
+        bh=6qEfNNkLVo3e/tdOgZTRkyRE14rmewna/2ALEwdJ98Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LQTkzqr9z8kScq169296mnCLEYDi5RYKfaG0SxXqwF+esk7Of1phDCOAbAtn8kNpk
-         MLkq3tP/TtxYtsTvMokKQ3KQdzY0MECzazyfMPx/SE/QKxGRyEsBq0jGXg3SWbVL2H
-         uIytfMY9fXw97Xwn923bZOXDye+Os3XqD/Imc69o=
+        b=oGsBA8fUVRPan8J7Sf0Zke3hGzgNOQhXnkJ+2WfqO2m2i//ae8z4BjUOsVpwnznSq
+         rWVBhqai/yB++vE7sbNvVSDZ9AGTUdaldjFe7wqyTmdRbBHM50jjmXRDHd8wqY6ge9
+         TQ4zztMqux+XchECha4qUdALaT53uzZB4BxC0REE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/147] ALSA: firewire-lib: fix function sizeof not defined error of tracepoints format
-Date:   Mon, 18 May 2020 19:36:24 +0200
-Message-Id: <20200518173521.629862027@linuxfoundation.org>
+        stable@vger.kernel.org, Grace Kao <grace.kao@intel.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 059/147] pinctrl: cherryview: Add missing spinlock usage in chv_gpio_irq_handler
+Date:   Mon, 18 May 2020 19:36:22 +0200
+Message-Id: <20200518173521.334712282@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,57 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Grace Kao <grace.kao@intel.com>
 
-[ Upstream commit 1034872123a06b759aba772b1c99612ccb8e632a ]
+[ Upstream commit 69388e15f5078c961b9e5319e22baea4c57deff1 ]
 
-The snd-firewire-lib.ko has 'amdtp-packet' event of tracepoints. Current
-printk format for the event includes 'sizeof(u8)' macro expected to be
-extended in compilation time. However, this is not done. As a result,
-perf tools cannot parse the event for printing:
+According to Braswell NDA Specification Update (#557593),
+concurrent read accesses may result in returning 0xffffffff and write
+instructions may be dropped. We have an established format for the
+commit references, i.e.
+cdca06e4e859 ("pinctrl: baytrail: Add missing spinlock usage in
+byt_gpio_irq_handler")
 
-$ mount -l -t debugfs
-debugfs on /sys/kernel/debug type debugfs (rw,nosuid,nodev,noexec,relatime)
-$ cat /sys/kernel/debug/tracing/events/snd_firewire_lib/amdtp_packet/format
-...
-print fmt: "%02u %04u %04x %04x %02d %03u %02u %03u %02u %01u %02u %s",
-  REC->second, REC->cycle, REC->src, REC->dest, REC->channel,
-  REC->payload_quadlets, REC->data_blocks, REC->data_block_counter,
-  REC->packet_index, REC->irq, REC->index,
-  __print_array(__get_dynamic_array(cip_header),
-                __get_dynamic_array_len(cip_header),
-                sizeof(u8))
-
-$ sudo perf record -e snd_firewire_lib:amdtp_packet
-  [snd_firewire_lib:amdtp_packet] function sizeof not defined
-  Error: expected type 5 but read 0
-
-This commit fixes it by obsoleting the macro with actual size.
-
-Cc: <stable@vger.kernel.org>
-Fixes: bde2bbdb307a ("ALSA: firewire-lib: use dynamic array for CIP header of tracing events")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20200503045718.86337-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 0bd50d719b00 ("pinctrl: cherryview: prevent concurrent access to GPIO controllers")
+Signed-off-by: Grace Kao <grace.kao@intel.com>
+Reported-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/amdtp-stream-trace.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/firewire/amdtp-stream-trace.h b/sound/firewire/amdtp-stream-trace.h
-index 16c7f6605511e..26e7cb555d3c5 100644
---- a/sound/firewire/amdtp-stream-trace.h
-+++ b/sound/firewire/amdtp-stream-trace.h
-@@ -66,8 +66,7 @@ TRACE_EVENT(amdtp_packet,
- 		__entry->irq,
- 		__entry->index,
- 		__print_array(__get_dynamic_array(cip_header),
--			      __get_dynamic_array_len(cip_header),
--			      sizeof(u8)))
-+			      __get_dynamic_array_len(cip_header), 1))
- );
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 2c419fa5d1c1b..8f06445a8e39c 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1474,11 +1474,15 @@ static void chv_gpio_irq_handler(struct irq_desc *desc)
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	unsigned long pending;
++	unsigned long flags;
+ 	u32 intr_line;
  
- #endif
+ 	chained_irq_enter(chip, desc);
+ 
++	raw_spin_lock_irqsave(&chv_lock, flags);
+ 	pending = readl(pctrl->regs + CHV_INTSTAT);
++	raw_spin_unlock_irqrestore(&chv_lock, flags);
++
+ 	for_each_set_bit(intr_line, &pending, pctrl->community->nirqs) {
+ 		unsigned irq, offset;
+ 
 -- 
 2.20.1
 
