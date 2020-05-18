@@ -2,114 +2,137 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D68BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3352720657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBE420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B3gNMU7K"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="TNTTmdPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbgEROXk (ORCPT
+        id S1728148AbgEROYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:23:40 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21227 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726998AbgEROXk (ORCPT
+        Mon, 18 May 2020 10:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbgEROYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:23:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589811819; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=XnR/IfU/T1PqN5i2mz+2EYG87NYU7KY5NbZ546eRMTY=; b=B3gNMU7KTDA7bmgqcMlybzIWRTw34eZV6VWV3Teid0S2RFf4bB/FBoTuZ9ChKmrAxV3DrqXV
- HyUhA9esVA0mk5YCBeh0NA+bkUfRMRQgE2wzBbDV6QEmxGIX5qbHmc+jMhTzdfQbuf4oDMOL
- zXnuwniv4jWfi5cxgSX/hbltpmk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec29a6a.7f4e7306c420-smtp-out-n03;
- Mon, 18 May 2020 14:23:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7DF14C433F2; Mon, 18 May 2020 14:23:37 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D63DCC44791;
-        Mon, 18 May 2020 14:23:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D63DCC44791
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 18 May 2020 08:23:34 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, georgi.djakov@linaro.org,
-        mka@chromium.org
-Subject: Re: [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to set DDR
- bandwidth
-Message-ID: <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, georgi.djakov@linaro.org,
-        mka@chromium.org
-References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
- <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
+        Mon, 18 May 2020 10:24:08 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB4AC05BD0A
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:24:08 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 202so8205340lfe.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=n1fBLRPhoaETkliq/A27B/1RTPiV9jHJlDqYtxK0Yw0=;
+        b=TNTTmdPizHT9crmFFEjj9L02FrgJrG8L0bUlQVGrvvAH963M6bvF/nW2rf3Gp1o/73
+         k7PcRx0EdXy2xcLiIdONyHqqbStU4qU7eGASiXa25+hFP5vC30q6miUEVyYkY5KgvC4k
+         /zGKHQZ/uiTrC2U46IjBHynwE2FG1JUVhlKwaCHi5/xLauPlJ/oD/8qqhhgew/Xrx2Q/
+         tzl1KqMCLYbSyeGRG1MkqowBeKyhVM/S47EHW7K9JlQyAGNH8j1DlvsN4FL9vrTV499o
+         uJKlXDnE8hUNwBcGyAR0TgjgVM9GFlojBk/WbVgFVR5vEgAKK88vNPI5KG9TIpKxBixk
+         99tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=n1fBLRPhoaETkliq/A27B/1RTPiV9jHJlDqYtxK0Yw0=;
+        b=ZbxdHJuUWOhdIY3BR9b9bUJjtm8YMvWbhESx1dCR+BHVXxOM1xaE0DqWdt703ZNIEy
+         gRRZA4rdSV1yrtziPuGZBuUFc8H9fAPof0IHwqBPH+uNKY2bkY1IqcvIGNI3m+4CQFcA
+         8ALeXSg1oDKr0N67ZKPgRlxvkVjIIgx2eesfLwkU2B7S3PDNzhhQpdoFTU0hiUInRuQS
+         v06iVI40DFylYUtynhK8wlvTtynJB0TTaCmkrg2LvUZlg6+ijd9GOBR4sAoL99IyUlYl
+         iu2BEeYg6TpxEVwQdt9GLlrJR7MjWS03wQlyqWWJuD6t+J+poKVuPYlWsmL/g1lM0zBr
+         wRYg==
+X-Gm-Message-State: AOAM531vxcxZA8xmGZeWe/42wQh3pkcEOuPu8R6d++j20ySjPGutiGPu
+        eXhz7HIh/4lmMDnTn0l1gS+NeA==
+X-Google-Smtp-Source: ABdhPJz1oUVBZQTXPnfWBabJX27Y9GJSHH/mmmmILTNHRuqsL7eQMEbJSFWn9U8RcWnQA/QURPYc0A==
+X-Received: by 2002:a19:4854:: with SMTP id v81mr7521098lfa.189.1589811846308;
+        Mon, 18 May 2020 07:24:06 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id 3sm2581016lfq.55.2020.05.18.07.24.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 07:24:05 -0700 (PDT)
+Date:   Mon, 18 May 2020 16:24:02 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
+Message-ID: <20200518142402.GB916914@x1>
+References: <20200508165821.GA14555@x1>
+ <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
+ <875zcty7tt.fsf@kernel.org>
+ <CACRpkdZnnRXwv0-71t93HX42jL-muty4yJx5gW6_P3yOM-sGAg@mail.gmail.com>
+ <87zha5whf4.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <87zha5whf4.fsf@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
-> This patches replaces the previously used static DDR vote and uses
-> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
-> GPU frequency.
+On Mon, May 18, 2020 at 03:34:23PM +0300, Felipe Balbi wrote:
+> Linus Walleij <linus.walleij@linaro.org> writes:
 > 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 2d8124b..79433d3 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
-> 
->  	gmu->freq = gmu->gpu_freqs[perf_index];
-> 
-> -	/*
-> -	 * Eventually we will want to scale the path vote with the frequency but
-> -	 * for now leave it at max so that the performance is nominal.
-> -	 */
-> -	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> +	dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
->  }
+> > On Mon, May 18, 2020 at 10:18 AM Felipe Balbi <balbi@kernel.org> wrote:
+> >> Linus Walleij <linus.walleij@linaro.org> writes:
+> >> >> gpiochip0 - 32 lines:
+> >> >>         line   0:   "ethernet"       unused   input  active-high
+> >> >>         line   1:   "ethernet"       unused   input  active-high
+> >> >
+> >> > Why are the ethernet lines not tagged with respective signal name
+> >> > when right below the SPI lines are explicitly tagged with
+> >> > sclk, cs0 etc?
+> >> >
+> >> > Ethernet is usually RGMII and has signal names like
+> >> > tx_clk, tx_d0, tx_en etc.
+> >> >
+> >> > Also some lines seem to be tagged with the pin number
+> >> > like P9_22, P2_21 below, it seems a bit inconsistent
+> >> > to have much information on some pins and very sketchy
+> >> > information on some.
+> >>
+> >> the pin names match the beagle bone documentation and would help users
+> >> figure out which pins on the expansion headers match to a gpio signal.
 
-This adds an implicit requirement that all targets need bandwidth settings
-defined in the OPP or they won't get a bus vote at all. I would prefer that
-there be an default escape valve but if not you'll need to add
-bandwidth values for the sdm845 OPP that target doesn't regress.
+Thank you for pointing this out.  That is my goal with the line names.
 
-Jordan
-
->  unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
-> --
-> 2.7.4
+> >
+> > OK if it is how it looks in the documentation I agree that is what
+> > users need, maybe the documentation is confusing but there is not
+> > much to do about that.
 > 
+> the board has two expansion headers, P1 and P2:
+> 
+> https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#531_Expansion_Headers
+> 
+> Pins are always the pin number on the header, hence P2_21 and P1_10 and
+> so on.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Just to clarify, the patch was for the BeagleBone {White,Green,Black}
+which have P8 and P9 headers.
+
+The PocketBeagle has lower pin count headers labeled P1 and P2.  I do 
+plan to submit a patch for am335x-pocketbeagle.dts with the respective
+line names, but I wanted to first integrate feedback regarding P8/P9 on
+the bone.
+
+thanks,
+drew
