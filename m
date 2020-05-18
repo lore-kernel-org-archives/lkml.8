@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA6A20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A8E2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826652;
-	bh=RBtMrab00h/AfiPj6f36tLb+wuyzRhdgxgtjsWfA3y4=;
+	s=default; t=1589826656;
+	bh=ebooyL8HllyEeBf8CFf+dE7tTD3Gz4n2vRdK6/2AZug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zp+3SVwsWbQF3of9KldFBHXkagAhpoOjtiE2FWkZGpjh6aGBeJpui+k6VT6HfcMEi
-	 C5+OeqMBFAAkRRBoThZ8NB90d4gFPCED8EBCKR3rZbH1+FW2Cj/f1SdkyrPpEuXgHd
-	 ihQCDe5/UgtlVBN5mzT/qeHi2v6s0/QVCqSe7H9w=
+	b=AVOr9iqmc474cEzpkhuXyyVSbj0VS8IW0Oq5Ywz2rH1+7HktaT3EU0FKfhPKKcVoR
+	 JP+HqziIaG+cv3K+xnk3hzeIZQnpvrgHCJc1eEpi8q+T3Kcsgqx8vV1MvlEIG8SzOQ
+	 C9hsrzz2eadC0OqpAdIapCOnBfhxEZb1az3+66RQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388062AbgERSav (ORCPT
+        id S1728512AbgERRkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:30:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36132 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:40:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgERRkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:31 -0400
+        id S1729005AbgERRkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB57207C4;
-        Mon, 18 May 2020 17:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A171020835;
+        Mon, 18 May 2020 17:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823630;
-        bh=RBtMrab00h/AfiPj6f36tLb+wuyzRhdgxgtjsWfA3y4=;
+        s=default; t=1589823613;
+        bh=ebooyL8HllyEeBf8CFf+dE7tTD3Gz4n2vRdK6/2AZug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q4BHQv3rNhR4lKAzbqeg03/gmJpHEdW1zigDYo9R47V2yI5lcmuln5UVlNA1Jfe5r
-         mu5dK+f29yaXtFTh2Ey1xgFHeucyTVgB9VdcI32BzONPtOldKdC/Wp4vlXkxm74vf9
-         LFAPaROjCrXKcjcSV6B9jn2fwB+hXuWXRZfKo9Lc=
+        b=tiuJlny/YgE4pY6riVYxrMMgMs+PJCC+3SPD63+iDjLkGIxhcdzFBgdG3aij838wJ
+         FscmjBLa5lDgo++3SmgqqjWStUBwl/9fHH6VRiztSZ+9OROswJX813SgMK83boHQ3m
+         /vbmM/WT99v2fcLhf+im9xYEMGRmwz9Iw+2pa2Ss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 60/86] gcc-10: disable array-bounds warning for now
-Date:   Mon, 18 May 2020 19:36:31 +0200
-Message-Id: <20200518173502.586773004@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Johan Hovold <johan@kernel.org>,
+        syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 14/86] USB: serial: garmin_gps: add sanity checking for data length
+Date:   Mon, 18 May 2020 19:35:45 +0200
+Message-Id: <20200518173453.418944409@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -59,55 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 44720996e2d79e47d508b0abe99b931a726a3197 upstream.
+commit e9b3c610a05c1cdf8e959a6d89c38807ff758ee6 upstream.
 
-This is another fine warning, related to the 'zero-length-bounds' one,
-but hitting the same historical code in the kernel.
+We must not process packets shorter than a packet ID
 
-Because C didn't historically support flexible array members, we have
-code that instead uses a one-sized array, the same way we have cases of
-zero-sized arrays.
-
-The one-sized arrays come from either not wanting to use the gcc
-zero-sized array extension, or from a slight convenience-feature, where
-particularly for strings, the size of the structure now includes the
-allocation for the final NUL character.
-
-So with a "char name[1];" at the end of a structure, you can do things
-like
-
-       v = my_malloc(sizeof(struct vendor) + strlen(name));
-
-and avoid the "+1" for the terminator.
-
-Yes, the modern way to do that is with a flexible array, and using
-'offsetof()' instead of 'sizeof()', and adding the "+1" by hand.  That
-also technically gets the size "more correct" in that it avoids any
-alignment (and thus padding) issues, but this is another long-term
-cleanup thing that will not happen for 5.7.
-
-So disable the warning for now, even though it's potentially quite
-useful.  Having a slew of warnings that then hide more urgent new issues
-is not an improvement.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-and-tested-by: syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/serial/garmin_gps.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -797,6 +797,7 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+--- a/drivers/usb/serial/garmin_gps.c
++++ b/drivers/usb/serial/garmin_gps.c
+@@ -1162,8 +1162,8 @@ static void garmin_read_process(struct g
+ 		   send it directly to the tty port */
+ 		if (garmin_data_p->flags & FLAGS_QUEUING) {
+ 			pkt_add(garmin_data_p, data, data_length);
+-		} else if (bulk_data ||
+-			   getLayerId(data) == GARMIN_LAYERID_APPL) {
++		} else if (bulk_data || (data_length >= sizeof(u32) &&
++				getLayerId(data) == GARMIN_LAYERID_APPL)) {
  
- # We'll want to enable this eventually, but it's not going away for 5.7 at least
- KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
-+KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
- 
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ 			spin_lock_irqsave(&garmin_data_p->lock, flags);
+ 			garmin_data_p->flags |= APP_RESP_SEEN;
 
 
