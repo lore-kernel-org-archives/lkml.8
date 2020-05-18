@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB60C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA6E207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D87D207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgERJ2y (ORCPT
+        id S1726779AbgERJaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:28:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43806 "EHLO mx2.suse.de"
+        Mon, 18 May 2020 05:30:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44758 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbgERJ2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:28:54 -0400
+        id S1726127AbgERJaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:30:02 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6B1F8AFEB;
-        Mon, 18 May 2020 09:28:55 +0000 (UTC)
-Subject: Re: [PATCH v5 02/10] MMU notifier: use the new mmap locking API
+        by mx2.suse.de (Postfix) with ESMTP id 89C39AF57;
+        Mon, 18 May 2020 09:30:03 +0000 (UTC)
+Subject: Re: [PATCH v5 03/10] DMA reservations: use the new mmap locking API
 To:     Michel Lespinasse <walken@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-mm <linux-mm@kvack.org>
@@ -37,17 +37,16 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         David Rientjes <rientjes@google.com>,
         Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Davidlohr Bueso <dbueso@suse.de>
+        Daniel Jordan <daniel.m.jordan@oracle.com>
 References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-3-walken@google.com>
+ <20200422001422.232330-4-walken@google.com>
 From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <3085bc00-c93d-9e2e-3435-726cd39069db@suse.cz>
-Date:   Mon, 18 May 2020 11:28:52 +0200
+Message-ID: <89b3eddb-76c3-ca00-b49b-3f9d4076cd07@suse.cz>
+Date:   Mon, 18 May 2020 11:30:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200422001422.232330-3-walken@google.com>
+In-Reply-To: <20200422001422.232330-4-walken@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,37 +62,42 @@ On 4/22/20 2:14 AM, Michel Lespinasse wrote:
 > 
 > Signed-off-by: Michel Lespinasse <walken@google.com>
 > Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
 
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-> ---
->  include/linux/mmu_notifier.h | 5 +++--
+---
+>  drivers/dma-buf/dma-resv.c | 5 +++--
 >  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-> index 736f6918335e..2f462710a1a4 100644
-> --- a/include/linux/mmu_notifier.h
-> +++ b/include/linux/mmu_notifier.h
-> @@ -5,6 +5,7 @@
->  #include <linux/list.h>
->  #include <linux/spinlock.h>
->  #include <linux/mm_types.h>
-> +#include <linux/mmap_lock.h>
->  #include <linux/srcu.h>
->  #include <linux/interval_tree.h>
+> diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+> index 4264e64788c4..b45f8514dc82 100644
+> --- a/drivers/dma-buf/dma-resv.c
+> +++ b/drivers/dma-buf/dma-resv.c
+> @@ -34,6 +34,7 @@
 >  
-> @@ -277,9 +278,9 @@ mmu_notifier_get(const struct mmu_notifier_ops *ops, struct mm_struct *mm)
->  {
->  	struct mmu_notifier *ret;
+>  #include <linux/dma-resv.h>
+>  #include <linux/export.h>
+> +#include <linux/mm.h>
+>  #include <linux/sched/mm.h>
 >  
-> -	down_write(&mm->mmap_sem);
-> +	mmap_write_lock(mm);
->  	ret = mmu_notifier_get_locked(ops, mm);
-> -	up_write(&mm->mmap_sem);
-> +	mmap_write_unlock(mm);
->  	return ret;
->  }
->  void mmu_notifier_put(struct mmu_notifier *subscription);
+>  /**
+> @@ -109,7 +110,7 @@ static int __init dma_resv_lockdep(void)
+>  
+>  	dma_resv_init(&obj);
+>  
+> -	down_read(&mm->mmap_sem);
+> +	mmap_read_lock(mm);
+>  	ww_acquire_init(&ctx, &reservation_ww_class);
+>  	ret = dma_resv_lock(&obj, &ctx);
+>  	if (ret == -EDEADLK)
+> @@ -118,7 +119,7 @@ static int __init dma_resv_lockdep(void)
+>  	fs_reclaim_release(GFP_KERNEL);
+>  	ww_mutex_unlock(&obj.lock);
+>  	ww_acquire_fini(&ctx);
+> -	up_read(&mm->mmap_sem);
+> +	mmap_read_unlock(mm);
+>  	
+>  	mmput(mm);
+>  
 > 
 
