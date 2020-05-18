@@ -2,133 +2,145 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37010C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4D32070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="ATYdjM7a"
+	by mail.kernel.org (Postfix) with ESMTP id 199852070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgERBHD (ORCPT
+        id S1726855AbgERBIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 21:07:03 -0400
-Received: from ozlabs.org ([203.11.71.1]:43601 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726665AbgERBHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 21:07:03 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QLSz6PcGz9sPK;
-        Mon, 18 May 2020 11:06:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1589764021; bh=Nc6dohBCnRNOrZ1lpqEXvYZ9kCm+r1xCGET1JAWwSOA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ATYdjM7aKjYw0Scr9OWyzF/aZZ6lDvKze/viQikcdCpwIe8hKNY2ut2+XXAn3T07n
-         HWaQxXIqdUz3APbhNerv+td8xbQ18TKEXB5rQCU6ZYR+zlkg4Zw1FLV6KwfBDfCfMY
-         jP9WaK3oCeZG7sDHdTHQDFcW0U/9etV5qwwkdncMBNvh4ulAAyOvTdQwszrqjA+AzB
-         Wy7JC4hR047sIOXwSP6txjM/wUDz6xM4kt1p8B1KfKXW26Bavj4Axgv5GZ4Kn++zHv
-         wGXDqhbJOdJ7vedfeIqBzKCA63Dh2CXWa5ptCdxqap3iyRSjYmSaGqEtQFAfE53FLO
-         WOfa2mOZUhn2Q==
-Message-ID: <43d5717e7157fd300fd5bf893e517bbdf65c36f4.camel@ozlabs.org>
-Subject: Re: [PATCH] net: bmac: Fix stack corruption panic in bmac_probe()
-From:   Jeremy Kerr <jk@ozlabs.org>
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Paul Mackerras <paulus@samba.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Date:   Mon, 18 May 2020 09:06:59 +0800
-In-Reply-To: <769e9041942802d0e9ff272c12ee359a04b84a90.1589761211.git.fthain@telegraphics.com.au>
-References: <769e9041942802d0e9ff272c12ee359a04b84a90.1589761211.git.fthain@telegraphics.com.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Sun, 17 May 2020 21:08:21 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:42568 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726665AbgERBIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 21:08:21 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2v+38FeaOA1AA--.34S3;
+        Mon, 18 May 2020 09:08:15 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Loongson: Add support for serial console
+To:     WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1589612588-29196-1-git-send-email-yangtiezhu@loongson.cn>
+ <5aadf1a7-51c7-453e-beaa-3df6ceca5354@xen0n.name>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <d5fde4bc-69a9-c9c0-70de-106968ecc7c4@loongson.cn>
+Date:   Mon, 18 May 2020 09:08:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <5aadf1a7-51c7-453e-beaa-3df6ceca5354@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxr2v+38FeaOA1AA--.34S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw1UZF1kCw1rXr43Aw47Jwb_yoW5Gr43pF
+        4rJa1UKrWktFnYq397CrWkZrWFyrZxJFyDGF47Jr15ua98K34Fvw1xK34jv3y7WF95ta10
+        vFykKF9IkF47C3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUU
+        UU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Finn,
+On 05/16/2020 07:09 PM, WANG Xuerui wrote:
+> On 5/16/20 3:03 PM, Tiezhu Yang wrote:
+>
+>> After commit 87fcfa7b7fe6 ("MIPS: Loongson64: Add generic dts"),
+>> there already exists the node and property of Loongson CPU UART0
+>> in loongson3-package.dtsi:
+>>
+>> cpu_uart0: serial@1fe001e0 {
+>>          compatible = "ns16550a";
+>>          reg = <0 0x1fe001e0 0x8>;
+>>          clock-frequency = <33000000>;
+>>          interrupt-parent = <&liointc>;
+>>          interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+>>          no-loopback-test;
+>> };
+>>
+>> In order to support for serial console on the Loongson platform,
+>> add CONFIG_SERIAL_OF_PLATFORM=y to loongson3_defconfig.
+>>
+>> With this patch, we can see the following boot message:
+>>
+>> [    1.877745] printk: console [ttyS0] disabled
+>> [    1.881979] 1fe001e0.serial: ttyS0 at MMIO 0x1fe001e0 (irq = 16, 
+>> base_baud = 2062500) is a 16550A
+>> [    1.890838] printk: console [ttyS0] enabled
+>>
+>> And also, we can login normally from the serial console.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>
+>> Hi Jiaxun,
+>>
+>> Thank you very much for your suggestion.
+>>
+>>   arch/mips/configs/loongson3_defconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/mips/configs/loongson3_defconfig 
+>> b/arch/mips/configs/loongson3_defconfig
+>> index 6768c16..cd95f08 100644
+>> --- a/arch/mips/configs/loongson3_defconfig
+>> +++ b/arch/mips/configs/loongson3_defconfig
+>> @@ -217,6 +217,7 @@ CONFIG_SERIAL_8250_EXTENDED=y
+>>   CONFIG_SERIAL_8250_MANY_PORTS=y
+>>   CONFIG_SERIAL_8250_SHARE_IRQ=y
+>>   CONFIG_SERIAL_8250_RSA=y
+>> +CONFIG_SERIAL_OF_PLATFORM=y
+>>   CONFIG_HW_RANDOM=y
+>>   CONFIG_RAW_DRIVER=m
+>>   CONFIG_I2C_CHARDEV=y
+>
+> Hi,
+>
+> The patch title is again exaggerating things. This is a defconfig 
+> change, so please refer to `git log` output of `arch/mips/configs` and 
+> use something like "MIPS: Loongson: loongson3_defconfig: enable serial 
+> console" or "MIPS: Loongson: enable serial console in defconfig". The 
+> current title reads as if Loongson kernels never were able to use a 
+> serial console in the past.
 
-> This fixes an old bug recently revealed by CONFIG_STACKPROTECTOR.
+Hi Xuerui,
 
-Good catch. I'm not sure about the fix though. That variable ('addr')
-should be a ethernet hardware address; I'm surprised we're accessing
-past the 6th byte. The culprit seems to be this, where 'ea' is the
-address buffer:
+Thanks for your suggestion.
 
-   static void
-   bmac_get_station_address(struct net_device *dev, unsigned char *ea)
-   {
-        int i;
-        unsigned short data;
+We can not use the serial console without this patch,
+so I use the current patch subject.
 
-        for (i = 0; i < 6; i++)
-                {
-                        reset_and_select_srom(dev);
-                        data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
-                        ea[2*i]   = bitrev8(data & 0x0ff);
-                        ea[2*i+1] = bitrev8((data >> 8) & 0x0ff);
-                }
-   }
+Anyway, let me modify the patch subject to make it more accurate,
+I think the following is better:
+"MIPS: Loongson: Enable devicetree based probing for 8250 ports"
 
-- where it looks like the condition on that for-loop is wrong; we're
-reading two bytes at a time there.
+drivers/tty/serial/8250/Kconfig:
+config SERIAL_OF_PLATFORM
+         tristate "Devicetree based probing for 8250 ports"
 
-Can you try the attached patch?
+I will send v2 later.
 
-Ben/Paul - any thoughts?
-
-Cheers,
-
-
-Jeremy
-
------
-
-From 141b20bcbdb3ad7c166b83b4ea61f3521d0a0679 Mon Sep 17 00:00:00 2001
-From: Jeremy Kerr <jk@ozlabs.org>
-Date: Mon, 18 May 2020 08:54:25 +0800
-Subject: [PATCH] net: bmac: Fix read of MAC address from ROM
-
-In bmac_get_station_address, We're reading two bytes at a time from ROM,
-but we do that six times, resulting in 12 bytes of read & writes. This
-means we will write off the end of the six-byte destination buffer.
-
-This change fixes the for-loop to only read/write six bytes.
-
-Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Reported-by: Stan Johnson <userm57@yahoo.com>
-Reported-by: Finn Thain <fthain@telegraphics.com.au>
----
- drivers/net/ethernet/apple/bmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
-index a58185b1d8bf..3e3711b60d01 100644
---- a/drivers/net/ethernet/apple/bmac.c
-+++ b/drivers/net/ethernet/apple/bmac.c
-@@ -1182,7 +1182,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
-        int i;
-        unsigned short data;
- 
--       for (i = 0; i < 6; i++)
-+       for (i = 0; i < 3; i++)
-                {
-                        reset_and_select_srom(dev);
-                        data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
--- 
-2.17.1
-
-
+Thanks,
+Tiezhu Yang
 
