@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DACC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A50C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37CAE20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DF42065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826413;
-	bh=dfVQR4veVC0esrH3yIaUeif+5yaaxqOggWhhT+OkLVE=;
+	s=default; t=1589826415;
+	bh=urpJaHN2EIxnumCX9RaMskzOc4V4jk6eMrt58IG4yMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xHcv0NP6rYyszqEwK0B/o/ADJlKEH3YKQn91tR7z1XZP8mH0Wq2KWGDj7Eih7foCu
-	 XnuncUx5T5SVamT6kjhh0qT5N4z/KDzUVeMVeC0AymMhOye1d3FPPItMrc5lW0ZQqb
-	 ToAo2wReLrYVrQlkzz4afNsLZGOteI+RzzMicVqg=
+	b=lk8rCHjtScfL8gXPZvNZm8IAayvMRQp74xZkCZCSWh1qbgQLV+U+9daZ8/3yRcJio
+	 4Kb11wGBiEr3+FYxJpG648hnmO6dltEuNtpYsUdXjMA5/VF91ZsJdafPHusRIBpgVK
+	 0X+MDhFoPjLn93qvfiZPkktjwiRkbbnrDe7ZDeNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387939AbgERS0v (ORCPT
+        id S1729836AbgERRpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43682 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:45:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729847AbgERRpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:03 -0400
+        id S1729803AbgERRot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:44:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 592B620715;
-        Mon, 18 May 2020 17:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEA842083E;
+        Mon, 18 May 2020 17:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823902;
-        bh=dfVQR4veVC0esrH3yIaUeif+5yaaxqOggWhhT+OkLVE=;
+        s=default; t=1589823888;
+        bh=urpJaHN2EIxnumCX9RaMskzOc4V4jk6eMrt58IG4yMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nrpqngwMb10LhYtSce77MpW1M/KK10zC8Vqi5o9Ny0AtmLjA3t7gbKiGo+EdDr1GE
-         MRcOeBjeUavqHnvuMi8OY4NywlUIHV+ynkSB0RmeHWDU6jArTVEsjhmsdEeIf55JDO
-         wcPVCt10OcUhFlE2Je5olCbkDzykV1t76ha9IjxA=
+        b=r11vAlcpxpDYlORQrGasE5xY0aPvPMvQY4rNh3P7FUMuTl7PsUiLMgdQ1/m2VbJI6
+         5O0DVcoxNp1gYWygb5zYKH+qlepG3XV69cctWU+9Ifa2zGhEVNQurWQzOra1iO6PWm
+         H3imyApIYPvWWBg4ncrlfVyNi3cS156tQ1l72EwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 65/90] gcc-10: disable array-bounds warning for now
-Date:   Mon, 18 May 2020 19:36:43 +0200
-Message-Id: <20200518173504.341089242@linuxfoundation.org>
+        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.9 77/90] USB: gadget: fix illegal array access in binding with UDC
+Date:   Mon, 18 May 2020 19:36:55 +0200
+Message-Id: <20200518173506.941393298@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -59,55 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Kyungtae Kim <kt0755@gmail.com>
 
-commit 44720996e2d79e47d508b0abe99b931a726a3197 upstream.
+commit 15753588bcd4bbffae1cca33c8ced5722477fe1f upstream.
 
-This is another fine warning, related to the 'zero-length-bounds' one,
-but hitting the same historical code in the kernel.
+FuzzUSB (a variant of syzkaller) found an illegal array access
+using an incorrect index while binding a gadget with UDC.
 
-Because C didn't historically support flexible array members, we have
-code that instead uses a one-sized array, the same way we have cases of
-zero-sized arrays.
+Reference: https://www.spinics.net/lists/linux-usb/msg194331.html
 
-The one-sized arrays come from either not wanting to use the gcc
-zero-sized array extension, or from a slight convenience-feature, where
-particularly for strings, the size of the structure now includes the
-allocation for the final NUL character.
+This bug occurs when a size variable used for a buffer
+is misused to access its strcpy-ed buffer.
+Given a buffer along with its size variable (taken from user input),
+from which, a new buffer is created using kstrdup().
+Due to the original buffer containing 0 value in the middle,
+the size of the kstrdup-ed buffer becomes smaller than that of the original.
+So accessing the kstrdup-ed buffer with the same size variable
+triggers memory access violation.
 
-So with a "char name[1];" at the end of a structure, you can do things
-like
+The fix makes sure no zero value in the buffer,
+by comparing the strlen() of the orignal buffer with the size variable,
+so that the access to the kstrdup-ed buffer is safe.
 
-       v = my_malloc(sizeof(struct vendor) + strlen(name));
+BUG: KASAN: slab-out-of-bounds in gadget_dev_desc_UDC_store+0x1ba/0x200
+drivers/usb/gadget/configfs.c:266
+Read of size 1 at addr ffff88806a55dd7e by task syz-executor.0/17208
 
-and avoid the "+1" for the terminator.
+CPU: 2 PID: 17208 Comm: syz-executor.0 Not tainted 5.6.8 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ gadget_dev_desc_UDC_store+0x1ba/0x200 drivers/usb/gadget/configfs.c:266
+ flush_write_buffer fs/configfs/file.c:251 [inline]
+ configfs_write_file+0x2f1/0x4c0 fs/configfs/file.c:283
+ __vfs_write+0x85/0x110 fs/read_write.c:494
+ vfs_write+0x1cd/0x510 fs/read_write.c:558
+ ksys_write+0x18a/0x220 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+ do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Yes, the modern way to do that is with a flexible array, and using
-'offsetof()' instead of 'sizeof()', and adding the "+1" by hand.  That
-also technically gets the size "more correct" in that it avoids any
-alignment (and thus padding) issues, but this is another long-term
-cleanup thing that will not happen for 5.7.
-
-So disable the warning for now, even though it's potentially quite
-useful.  Having a slew of warnings that then hide more urgent new issues
-is not an improvement.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
+Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200510054326.GA19198@pizza01
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/configfs.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/Makefile
-+++ b/Makefile
-@@ -799,6 +799,7 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -259,6 +259,9 @@ static ssize_t gadget_dev_desc_UDC_store
+ 	char *name;
+ 	int ret;
  
- # We'll want to enable this eventually, but it's not going away for 5.7 at least
- KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
-+KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
- 
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
++	if (strlen(page) < len)
++		return -EOVERFLOW;
++
+ 	name = kstrdup(page, GFP_KERNEL);
+ 	if (!name)
+ 		return -ENOMEM;
 
 
