@@ -2,98 +2,119 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 512C720826
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9CC620825
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:47:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vK03JGNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgERHqq (ORCPT
+        id S1727896AbgERHri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 03:46:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51452 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726489AbgERHqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 03:46:46 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 33CF4265351D7FE83BD5;
-        Mon, 18 May 2020 15:46:39 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 18 May 2020
- 15:46:30 +0800
-From:   Ye Bin <yebin10@huawei.com>
-To:     <martin.petersen@oracle.com>, <jejb@linux.ibm.com>
-CC:     <yebin10@huawei.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] scsi: Fix incorrect usage of shost_for_each_device
-Date:   Mon, 18 May 2020 15:44:20 +0800
-Message-ID: <20200518074420.39275-1-yebin10@huawei.com>
-X-Mailer: git-send-email 2.21.3
+        Mon, 18 May 2020 03:47:38 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:57087 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgERHrh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 03:47:37 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 04I7lLUU009322
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:47:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 04I7lLUU009322
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1589788042;
+        bh=wlkpEnjVQhrTfI3Q/lY2Xz/QnYWGwFaUeURa+uAY6S8=;
+        h=From:Date:Subject:To:Cc:From;
+        b=vK03JGNW26ZyF7VyTqccspUPZCl+JqHrYb2iiq3KwDXW/bHPgY+yMouTgEgFOTzoj
+         6rE6xMWObtEtHizUN8IdUWwOIcl+CQJGSWjlMzOKqQpbIX7MB06EBdSpqgjbb6s/G9
+         XidclT+FpRCBEYOIpdYeyHewXwKs8T6N/DkK5nDEUdFvYhgc4PXAUhIK3R2Z5qS3xN
+         g00o+1voPDCp2hpDWpgEoUXrchdN1wW6bdB6XX6YdYvUvGSWS9cU0EYgz8lGF+X6qE
+         ZQmLHlxwoyBQKRSnPX4GH30uAZC2tEuepIAYfKKYHyVsLSpIl4D64LYD3WemBNl9kL
+         WduaZaHjBpa/w==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id k4so3112312uaq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 00:47:22 -0700 (PDT)
+X-Gm-Message-State: AOAM532mvbde0dF1W76JcP5DTaKPpYfD3glCp/KkLK+gRiLKbx7BADMr
+        3UfR3FrZeHeQ6Dr1CkhB4cYBARnN+BruyYMROiE=
+X-Google-Smtp-Source: ABdhPJx36t2lq6XUgRP8aZsWzniDSVT/3mB//NzrYGT15Oui9iLyTfcNDeSJpxItpJS9c+QQGTVe7lk7FYYZTxe6p7Y=
+X-Received: by 2002:a9f:3e0d:: with SMTP id o13mr10445027uai.25.1589788041123;
+ Mon, 18 May 2020 00:47:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 18 May 2020 16:46:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQXSpg4s0e0d-tp9j85Sj01t13zAa5+rqsOWu4ZvkpYhg@mail.gmail.com>
+Message-ID: <CAK7LNAQXSpg4s0e0d-tp9j85Sj01t13zAa5+rqsOWu4ZvkpYhg@mail.gmail.com>
+Subject: [GIT PULL] ARM: dts: uniphier: UniPhier DT updates for v5.8
+List-Id: <soc.lore.kernel.org>
+To:     soc@kernel.org, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-shost_for_each_device(sdev, shost) \
-	for ((sdev) = __scsi_iterate_devices((shost), NULL); \
-	     (sdev); \
-	     (sdev) = __scsi_iterate_devices((shost), (sdev)))
+Hi Olof, Arnd,
 
-When terminating shost_for_each_device() iteration with break or return,
-scsi_device_put() should be used to prevent stale scsi device references from
-being left behind.
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- drivers/scsi/scsi_error.c | 2 ++
- drivers/scsi/scsi_lib.c   | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Here are UniPhier DT (32bit) updates for the v5.8 merge window.
 
-diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-index 978be1602f71..927b1e641842 100644
---- a/drivers/scsi/scsi_error.c
-+++ b/drivers/scsi/scsi_error.c
-@@ -1412,6 +1412,7 @@ static int scsi_eh_stu(struct Scsi_Host *shost,
- 				sdev_printk(KERN_INFO, sdev,
- 					    "%s: skip START_UNIT, past eh deadline\n",
- 					    current->comm));
-+			scsi_device_put(sdev);
- 			break;
- 		}
- 		stu_scmd = NULL;
-@@ -1478,6 +1479,7 @@ static int scsi_eh_bus_device_reset(struct Scsi_Host *shost,
- 				sdev_printk(KERN_INFO, sdev,
- 					    "%s: skip BDR, past eh deadline\n",
- 					     current->comm));
-+			scsi_device_put(sdev);
- 			break;
- 		}
- 		bdr_scmd = NULL;
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index be1a4a9a5fca..173bc7fc2836 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -2859,8 +2859,10 @@ scsi_host_unblock(struct Scsi_Host *shost, int new_state)
- 
- 	shost_for_each_device(sdev, shost) {
- 		ret = scsi_internal_device_unblock(sdev, new_state);
--		if (ret)
-+		if (ret) {
-+			scsi_device_put(sdev);
- 			break;
-+		}
- 	}
- 	return ret;
- }
--- 
-2.21.3
+(I intentionally based this on -rc4
+because I needed a dt-binding fix from DMA engine tree
+to avoid 'make ARCH=arm dtbs_check' regression.
+I hope this is OK.)
 
+
+Please pull!
+
+
+
+
+
+The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
+
+  Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+tags/uniphier-dt-v5.8
+
+for you to fetch changes up to 137a1cecb89a024f8c92d71e07e73b14fc4d4161:
+
+  ARM: dts: uniphier: add #address-cells and #size-cells to SPI nodes
+(2020-05-04 10:07:22 +0900)
+
+----------------------------------------------------------------
+UniPhier ARM SoC DT updates for v5.8
+
+- add DMA controller nodes
+
+----------------------------------------------------------------
+Kunihiko Hayashi (2):
+      ARM: dts: uniphier: Add XDMAC node
+      ARM: dts: uniphier: Add ethernet aliases
+
+Masahiro Yamada (1):
+      ARM: dts: uniphier: add #address-cells and #size-cells to SPI nodes
+
+ arch/arm/boot/dts/uniphier-ld4.dtsi        |  2 ++
+ arch/arm/boot/dts/uniphier-ld6b-ref.dts    |  1 +
+ arch/arm/boot/dts/uniphier-pro4-ace.dts    |  1 +
+ arch/arm/boot/dts/uniphier-pro4-ref.dts    |  1 +
+ arch/arm/boot/dts/uniphier-pro4-sanji.dts  |  1 +
+ arch/arm/boot/dts/uniphier-pro4.dtsi       | 10 ++++++++++
+ arch/arm/boot/dts/uniphier-pro5.dtsi       | 12 ++++++++++++
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts |  1 +
+ arch/arm/boot/dts/uniphier-pxs2-vodka.dts  |  1 +
+ arch/arm/boot/dts/uniphier-pxs2.dtsi       | 12 ++++++++++++
+ arch/arm/boot/dts/uniphier-sld8.dtsi       |  2 ++
+ 11 files changed, 44 insertions(+)
