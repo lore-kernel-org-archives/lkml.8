@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFF8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1A420853
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2EC20849
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823742;
-	bh=Rb7UxkR8SUT5Bw8UAQG6g2rq3U0rT6XFV6zgMx0mh2o=;
+	s=default; t=1589823746;
+	bh=gVrthYkBfN2ySYLVUTOzmheUD2ZPxexmzYV/khAHBVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ngyF7bQdhvF9UjLwhaRpzCz7dN4dtWMLK6psbNokJcj06Il4JgOAmiLQBCHNu+qe2
-	 qYIX0wGjk+nrYRjcauDv3gbz2n6zH+JYs6o5RGSMf9PXBdypBJnCZvF44FFKticB35
-	 9MXFpUhNUvfcwtT9RB5TqqKOQUnbl1/sr26Sv0N4=
+	b=QpkoX3fPcmla+Lxwp6aUjuNiyM4AIWyqxreaK6PC5c7Y2RFtYVEVyKHEG6gE75Kfw
+	 e0udrSTa/7FI0+QJQSdtTxANv8viWSgls1yCQuK9CHjSeE/Q3IYpeWKHcoTQKqQMxc
+	 eh7qmNr+Pbw66zYSSrBAoGyASeN7nQ37ya41hwQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbgERRmV (ORCPT
+        id S1728858AbgERRmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:42:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38918 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729376AbgERRmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:07 -0400
+        id S1729382AbgERRmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F1F8207C4;
-        Mon, 18 May 2020 17:42:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0087920715;
+        Mon, 18 May 2020 17:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823726;
-        bh=Rb7UxkR8SUT5Bw8UAQG6g2rq3U0rT6XFV6zgMx0mh2o=;
+        s=default; t=1589823729;
+        bh=gVrthYkBfN2ySYLVUTOzmheUD2ZPxexmzYV/khAHBVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QCiyrKRKz+NazSHenuN755lfMi2REW1ZV3UobIqw8BqaeGo37xlIBfLWJSBulyys4
-         M2fsGxuwy+AgoxzuVeFwZLciuRdlXxX8JFMU2rFsQpPWsw9GO3bJq23Yx9ycHiA6QY
-         b/7ucnELhaz31rcbWn2Ag8jm2HzLsAAVbw2o73/M=
+        b=kOPEvOtYRyG1i5HhCro+HHy4gjSiKw/E6X5jS+xdkF7b+retIa3F6+TxBJxr6SStE
+         9KSZGDMTkJ5or98cvLGoAfgC8gPlxI0s7o4oQy13tC12qTnaHQGdgrwp2vMh04/ipF
+         Z3jwq4IAGNsrIDA681NINBxklO0eZfRv2hjbA88g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 12/90] bnxt_en: Improve AER slot reset.
-Date:   Mon, 18 May 2020 19:35:50 +0200
-Message-Id: <20200518173453.713553654@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 13/90] Revert "ACPI / video: Add force_native quirk for HP Pavilion dv6"
+Date:   Mon, 18 May 2020 19:35:51 +0200
+Message-Id: <20200518173453.920984244@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -59,46 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit bae361c54fb6ac6eba3b4762f49ce14beb73ef13 ]
+commit fd25ea29093e275195d0ae8b2573021a1c98959f upstream.
 
-Improve the slot reset sequence by disabling the device to prevent bad
-DMAs if slot reset fails.  Return the proper result instead of always
-PCI_ERS_RESULT_RECOVERED to the caller.
+Revert commit 6276e53fa8c0 (ACPI / video: Add force_native quirk for
+HP Pavilion dv6).
 
-Fixes: 6316ea6db93d ("bnxt_en: Enable AER support.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In the commit message for the quirk this revert removes I wrote:
+
+"Note that there are quite a few HP Pavilion dv6 variants, some
+woth ATI and some with NVIDIA hybrid gfx, both seem to need this
+quirk to have working backlight control. There are also some versions
+with only Intel integrated gfx, these may not need this quirk, but it
+should not hurt there."
+
+Unfortunately that seems wrong, I've already received 2 reports of
+this commit causing regressions on some dv6 variants (at least one
+of which actually has a nvidia GPU). So it seems that HP has made a
+mess here by using the same model-name both in marketing and in the
+DMI data for many different variants. Some of which need
+acpi_backlight=native for functional backlight control (as the
+quirk this commit reverts was doing), where as others are broken by
+it. So lets get back to the old sitation so as to avoid regressing
+on models which used to work without any kernel cmdline arguments
+before.
+
+Fixes: 6276e53fa8c0 (ACPI / video: Add force_native quirk for HP Pavilion dv6)
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -7166,8 +7166,11 @@ static pci_ers_result_t bnxt_io_slot_res
- 			result = PCI_ERS_RESULT_RECOVERED;
- 	}
+---
+ drivers/acpi/video_detect.c |   11 -----------
+ 1 file changed, 11 deletions(-)
+
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -314,17 +314,6 @@ static const struct dmi_system_id video_
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Dell System XPS L702X"),
+ 		},
+ 	},
+-	{
+-	/* https://bugzilla.redhat.com/show_bug.cgi?id=1204476 */
+-	/* https://bugs.launchpad.net/ubuntu/+source/linux-lts-trusty/+bug/1416940 */
+-	.callback = video_detect_force_native,
+-	.ident = "HP Pavilion dv6",
+-	.matches = {
+-		DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
+-		DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion dv6 Notebook PC"),
+-		},
+-	},
+-
+ 	{ },
+ };
  
--	if (result != PCI_ERS_RESULT_RECOVERED && netif_running(netdev))
--		dev_close(netdev);
-+	if (result != PCI_ERS_RESULT_RECOVERED) {
-+		if (netif_running(netdev))
-+			dev_close(netdev);
-+		pci_disable_device(pdev);
-+	}
- 
- 	rtnl_unlock();
- 
-@@ -7178,7 +7181,7 @@ static pci_ers_result_t bnxt_io_slot_res
- 			 err); /* non-fatal, continue */
- 	}
- 
--	return PCI_ERS_RESULT_RECOVERED;
-+	return result;
- }
- 
- /**
 
 
