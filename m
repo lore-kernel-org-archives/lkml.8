@@ -2,325 +2,99 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C790C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9A420758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C829320758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oEcbu6d2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="wMsHcUTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgERQhL (ORCPT
+        id S1728043AbgERQjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49636 "EHLO
+        Mon, 18 May 2020 12:39:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgERQhK (ORCPT
+        with ESMTP id S1726958AbgERQjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:37:10 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903F1C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:37:10 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id m12so179820wmc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pLMq4RspN08+KBIf5NTfKFLAQklkEesZlECI7b39+ZA=;
-        b=oEcbu6d2WCURNEoZlq/I6NmJMWyx77Xioz7StSmvfmdArO0tS3v5pS6zHGro1UMusZ
-         bYJSYQ+ftdzCPig5Qns59upojnFw0d/MDpeRYSLCabH0tc97OMIulp2QZ8HUWEU0oX9X
-         IFU1z+bDUUAE3dPUoFrEMh9ItLMi26yGbIcYlXiSp7QDxz3EwbznqWkEl/PNTH9yEuPJ
-         31knCVqqLjH2yXk3k3P3L9ChIJ9M/NC7b7ZYHECKWTUbpPiYb7cVX7qrwLdHIgy+g5Gk
-         4hbgYzKYfBi0eGW6S/mYyROXxCdVmkOpz+7XT/bD+Y8Wb5ns5JViFGtJJKil1Mughg/b
-         qeug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pLMq4RspN08+KBIf5NTfKFLAQklkEesZlECI7b39+ZA=;
-        b=YuiTGKeKxa7WqESA/dmp9igT3ZVuObP5kVuGI5UGytJNoymXeK+Me0G4pO1BWJZo6f
-         G/9hIV4Oh/820GTrBNYw508qCepG2oNSLMM7z09wKGaNKnC0NCEfXT3vk6eQBsu4W/gd
-         6RgAzKQVOiSNBUOo33bTYtc3QuHDdy6N8JosAxHpb7bJqgexKjUEWgw3NdPKaCNHrlE4
-         +9X7DHSEMwhPL6tZ6MkwX3wa9CbWgwhgdbzugH6pDFLX5dnCuUsfWySpy02NqAd0yyX4
-         dlK1r9HAfObEnQ7EYzRCLX89w3RrptQ0y0OpXA1woCoHlGdz0ZB3WqMRgozWx1EdLAO2
-         2mvw==
-X-Gm-Message-State: AOAM5323xmLJISnt85zWxt0k9ulf8B9FRAraYltR3FBqTSTqdgN+K3yq
-        oGtXdSYLgjncjWYLPpfBS0oYnw==
-X-Google-Smtp-Source: ABdhPJz/aJ6qf6PRlMaevwKJ0gIq+PsCnaSXhMljluPkiaAEtVZ7lSL6yXJJy6fPr3o1cbISq0ODgg==
-X-Received: by 2002:a7b:cb86:: with SMTP id m6mr225202wmi.41.1589819829165;
-        Mon, 18 May 2020 09:37:09 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
-        by smtp.googlemail.com with ESMTPSA id 7sm17809954wra.50.2020.05.18.09.37.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 09:37:08 -0700 (PDT)
-Subject: Re: [RFC][PATCH 3/5] thermal: Add support for setting notification
- thresholds
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
- <20200504181616.175477-4-srinivas.pandruvada@linux.intel.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <a9af415d-9fd0-dcea-79ee-0fb90f45045e@linaro.org>
-Date:   Mon, 18 May 2020 18:37:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 12:39:53 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFCCC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:39:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uxUQwkSwUxkH3FLsgT0bH6KrkNI2haRpYKPWpkc6Sm0=; b=wMsHcUTNr7cX72TtW/aR6d3qj
+        sihvtTWT36DNfWX5S+rgkZi5x2OmVjlYn09iqSnfgWCgsXKj9Q90D1n9zohsc8wWkYi2ZOb1NaDXL
+        UkTtzBicoI80s3K3Jx8i/1JLt3v/Kpa5GurNrhh91TLfXG1/ihRNzVkNVLbj8rUUwdv5gnbwhYKn5
+        4tYOOUYw+n0G81FnfFRb5peB1d+Fmbo36CCdfnz4o2JUbw+1t5DGmLX9Csfila13MnaorGmSwpnBC
+        HPfO3Hc/KS7dvjpA6piFC6LOOb64J3M85unRJS3HR8LACMiDhSJWH77FBZd4VnNtUleK2czCaUMog
+        mGDYYZFHQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59612)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jainm-0002s0-FB; Mon, 18 May 2020 17:39:42 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jaink-0004qr-NU; Mon, 18 May 2020 17:39:40 +0100
+Date:   Mon, 18 May 2020 17:39:40 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Fredrik Strupe <fredrik@strupe.net>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PING] [PATCH v2] arm: ptrace: Fix mask for thumb breakpoint hook
+Message-ID: <20200518163940.GW1551@shell.armlinux.org.uk>
+References: <20200413173841.29651-1-fredrik@strupe.net>
+ <d7381f90-f597-2a9c-4387-5714b41e02e6@strupe.net>
+ <20200518141858.GV1551@shell.armlinux.org.uk>
+ <0afefde9-f121-c88c-2ceb-7c02f7561979@strupe.net>
 MIME-Version: 1.0
-In-Reply-To: <20200504181616.175477-4-srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0afefde9-f121-c88c-2ceb-7c02f7561979@strupe.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/2020 20:16, Srinivas Pandruvada wrote:
-> Add new attributes in thermal syfs when a thermal drivers provides
-> callbacks for them and CONFIG_THERMAL_USER_EVENT_INTERFACE is defined.
+On Mon, May 18, 2020 at 05:02:27PM +0200, Fredrik Strupe wrote:
+> On 18.05.2020 16:18, Russell King - ARM Linux admin wrote:
+> > On Mon, May 18, 2020 at 03:12:06PM +0200, Fredrik Strupe wrote:
+> >> call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
+> >> and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
+> >> (0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
+> >> instructions will be masked out. This makes the function match 32-bit
+> >> thumb instructions where the second half-word is equal to instr_val,
+> >> regardless of the first half-word.
+> >>
+> >> The result in this case is that all undefined 32-bit thumb instructions
+> >> with the second half-word equal to de01 (udf #1) work as breakpoints
+> >> and will raise a SIGTRAP instead of a SIGILL, instead of just the one
+> >> intended 16-bit instruction. An example of such an instruction is
+> >> eaa0b650, which is unallocated according to Arm ARM and should raise a
+> >> SIGILL, but instead raises a SIGTRAP.
+> >
+> > How can 0xeaa0b650 match 0xde01 when masked with 0xffff ?
+> >
 > 
-> These attribute allow user space to stop polling for temperature.
+> Sorry, that is a typo; it should say 0xeaa0de01.
 > 
-> These attributes are:
-> - temp_thres_low: Specify a notification temperature for a low
-> temperature threshold event.
-> temp_thres_high: Specify a notification temperature for a high
-> temperature threshold event.
-> temp_thres_hyst: Specify a change in temperature to send notification
-> again.
-> 
-> This is implemented by adding additional sysfs attribute group. The
-> changes in this patch are trivial to add new attributes in thermal
-> sysfs as done for other attributes.
+> For reference, this is similar to the problem with SETEND emulation that
+> was fixed in commit fc2266011acc in the mainline kernel
+> (or as discussed here: https://lkml.org/lkml/2020/4/8/274).
 
-Isn't it duplicate with the trip point?
-
-
-
-
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
->  drivers/thermal/thermal_sysfs.c | 136 +++++++++++++++++++++++++++++++-
->  include/linux/thermal.h         |  10 ++-
->  2 files changed, 143 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-> index aa99edb4dff7..aa85424c3ac4 100644
-> --- a/drivers/thermal/thermal_sysfs.c
-> +++ b/drivers/thermal/thermal_sysfs.c
-> @@ -215,6 +215,125 @@ trip_point_hyst_show(struct device *dev, struct device_attribute *attr,
->  	return ret ? ret : sprintf(buf, "%d\n", temperature);
->  }
->  
-> +#if IS_ENABLED(CONFIG_THERMAL_USER_EVENT_INTERFACE)
-> +
-> +#define create_thres_attr(name)					\
-> +	static ssize_t							\
-> +	name##_show(struct device *dev, struct device_attribute *devattr, \
-> +		char *buf)						\
-> +	{								\
-> +	struct thermal_zone_device *tz = to_thermal_zone(dev);	\
-> +	int temperature, ret;						\
-> +									\
-> +	ret = tz->ops->get_##name(tz, &temperature);			\
-> +									\
-> +	return ret ? ret : sprintf(buf, "%d\n", temperature);	\
-> +	}								\
-> +									\
-> +	static ssize_t							\
-> +	name##_store(struct device *dev, struct device_attribute *devattr, \
-> +		const char *buf, size_t count)				\
-> +	{								\
-> +		struct thermal_zone_device *tz = to_thermal_zone(dev);	\
-> +		int temperature, ret;					\
-> +									\
-> +		if (kstrtoint(buf, 10, &temperature))			\
-> +			return -EINVAL;				\
-> +									\
-> +		ret = tz->ops->set_##name(tz, temperature);		\
-> +		return ret ? ret : count;				\
-> +	}
-> +
-> +create_thres_attr(temp_thres_low);
-> +create_thres_attr(temp_thres_high);
-> +create_thres_attr(temp_thres_hyst);
-> +
-> +static int create_user_events_attrs(struct thermal_zone_device *tz)
-> +{
-> +	struct attribute **attrs;
-> +	int index = 0;
-> +
-> +	if (tz->ops->get_temp_thres_low)
-> +		++index;
-> +	if (tz->ops->get_temp_thres_high)
-> +		++index;
-> +	if (tz->ops->get_temp_thres_high)
-> +		++index;
-> +
-> +	/* One additional space for NULL */
-> +	attrs = kcalloc(index + 1, sizeof(*attrs), GFP_KERNEL);
-> +	if (!attrs)
-> +		return -ENOMEM;
-> +
-> +	tz->threshold_attrs = kcalloc(index, sizeof(*tz->threshold_attrs), GFP_KERNEL);
-> +	if (!tz->threshold_attrs) {
-> +		kfree(attrs);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	index = 0;
-> +
-> +	if (tz->ops->get_temp_thres_low) {
-> +		snprintf(tz->threshold_attrs[index].name, THERMAL_NAME_LENGTH,
-> +			 "temp_thres_low");
-> +
-> +		sysfs_attr_init(&tz->threshold_attrs[index].attr.attr);
-> +		tz->threshold_attrs[index].attr.attr.name =
-> +						tz->threshold_attrs[index].name;
-> +		tz->threshold_attrs[index].attr.attr.mode = S_IWUSR | S_IRUGO;
-> +		tz->threshold_attrs[index].attr.show = temp_thres_low_show;
-> +		tz->threshold_attrs[index].attr.store = temp_thres_low_store;
-> +		attrs[index] = &tz->threshold_attrs[index].attr.attr;
-> +		++index;
-> +	}
-> +	if (tz->ops->get_temp_thres_high) {
-> +		snprintf(tz->threshold_attrs[index].name, THERMAL_NAME_LENGTH,
-> +			 "temp_thres_high");
-> +
-> +		sysfs_attr_init(&tz->threshold_attrs[index].attr.attr);
-> +		tz->threshold_attrs[index].attr.attr.name =
-> +						tz->threshold_attrs[index].name;
-> +		tz->threshold_attrs[index].attr.attr.mode = S_IWUSR | S_IRUGO;
-> +		tz->threshold_attrs[index].attr.show = temp_thres_high_show;
-> +		tz->threshold_attrs[index].attr.store = temp_thres_high_store;
-> +		attrs[index] = &tz->threshold_attrs[index].attr.attr;
-> +		++index;
-> +	}
-> +	if (tz->ops->get_temp_thres_hyst) {
-> +		snprintf(tz->threshold_attrs[index].name, THERMAL_NAME_LENGTH,
-> +			 "temp_thres_hyst");
-> +
-> +		sysfs_attr_init(&tz->threshold_attrs[index].attr.attr);
-> +		tz->threshold_attrs[index].attr.attr.name =
-> +						tz->threshold_attrs[index].name;
-> +		tz->threshold_attrs[index].attr.attr.mode = S_IWUSR | S_IRUGO;
-> +		tz->threshold_attrs[index].attr.show = temp_thres_hyst_show;
-> +		tz->threshold_attrs[index].attr.store = temp_thres_hyst_store;
-> +		attrs[index] = &tz->threshold_attrs[index].attr.attr;
-> +		++index;
-> +	}
-> +	attrs[index] = NULL;
-> +	tz->threshold_attribute_group.attrs = attrs;
-> +
-> +	return 0;
-> +}
-> +
-> +static void delete_user_events_attrs(struct thermal_zone_device *tz)
-> +{
-> +	kfree(tz->threshold_attrs);
-> +	kfree(tz->threshold_attribute_group.attrs);
-> +}
-> +#else
-> +static int create_user_events_attrs(struct thermal_zone_device *tz)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static void delete_user_events_attrs(struct thermal_zone_device *tz)
-> +{
-> +}
-> +#endif
-> +
->  static ssize_t
->  passive_store(struct device *dev, struct device_attribute *attr,
->  	      const char *buf, size_t count)
-> @@ -625,16 +744,27 @@ int thermal_zone_create_device_groups(struct thermal_zone_device *tz,
->  {
->  	const struct attribute_group **groups;
->  	int i, size, result;
-> +	int start = 0;
->  
->  	/* we need one extra for trips and the NULL to terminate the array */
->  	size = ARRAY_SIZE(thermal_zone_attribute_groups) + 2;
-> +
-> +	result = create_user_events_attrs(tz);
-> +	if (!result) {
-> +		++size;
-> +		++start;
-> +	}
-> +
->  	/* This also takes care of API requirement to be NULL terminated */
->  	groups = kcalloc(size, sizeof(*groups), GFP_KERNEL);
->  	if (!groups)
->  		return -ENOMEM;
->  
-> -	for (i = 0; i < size - 2; i++)
-> -		groups[i] = thermal_zone_attribute_groups[i];
-> +	if (start)
-> +		groups[0] = &tz->threshold_attribute_group;
-> +
-> +	for (i = 0; i < size - 2 - start; i++)
-> +		groups[i + start] = thermal_zone_attribute_groups[i];
->  
->  	if (tz->trips) {
->  		result = create_trip_attrs(tz, mask);
-> @@ -660,6 +790,8 @@ void thermal_zone_destroy_device_groups(struct thermal_zone_device *tz)
->  	if (tz->trips)
->  		destroy_trip_attrs(tz);
->  
-> +	delete_user_events_attrs(tz);
-> +
->  	kfree(tz->device.groups);
->  }
->  
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index f5e1e7c6a9a2..ee9d79ace7ce 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -102,6 +102,12 @@ struct thermal_zone_device_ops {
->  			  enum thermal_trend *);
->  	int (*notify) (struct thermal_zone_device *, int,
->  		       enum thermal_trip_type);
-> +	int (*set_temp_thres_low)(struct thermal_zone_device *, int);
-> +	int (*set_temp_thres_high)(struct thermal_zone_device *, int);
-> +	int (*set_temp_thres_hyst)(struct thermal_zone_device *, int);
-> +	int (*get_temp_thres_low)(struct thermal_zone_device *, int *);
-> +	int (*get_temp_thres_high)(struct thermal_zone_device *, int *);
-> +	int (*get_temp_thres_hyst)(struct thermal_zone_device *, int *);
->  };
->  
->  struct thermal_cooling_device_ops {
-> @@ -208,6 +214,8 @@ struct thermal_zone_device {
->  	struct list_head node;
->  	struct delayed_work poll_queue;
->  	enum thermal_notify_event notify_event;
-> +	struct attribute_group threshold_attribute_group;
-> +	struct thermal_attr *threshold_attrs;
->  };
->  
->  /**
-> @@ -558,7 +566,7 @@ enum thermal_device_events {
->  	THERMAL_PERF_CHANGED,
->  };
->  
-> -#ifdef CONFIG_THERMAL_USER_EVENT_INTERFACE
-> +#if IS_ENABLED(CONFIG_THERMAL_USER_EVENT_INTERFACE)
->  int thermal_dev_send_event(int zone_id, enum thermal_device_events event, u64 event_data);
->  #else
->  int thermal_dev_send_event(int zone_id, enum thermal_device_events event, u64 event_data)
-> 
-
+Thanks for the clarification.  Please update the patch description and
+put it in the patch system, thanks.
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
