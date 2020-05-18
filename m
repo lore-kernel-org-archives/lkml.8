@@ -2,143 +2,137 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8414CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA39C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5931020756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69B520756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rOdNevU/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UzmCAWI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgERU6r (ORCPT
+        id S1727799AbgERVAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34240 "EHLO
+        Mon, 18 May 2020 17:00:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgERU6r (ORCPT
+        with ESMTP id S1726250AbgERVAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:58:47 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B26C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:58:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id k5so4799069lji.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:58:45 -0700 (PDT)
+        Mon, 18 May 2020 17:00:04 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 608A4C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:00:04 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id e7so4465879vsm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hRgohj4ZV7BAqug+Up6EM0XNiUu7ZgBs3u6nUNC3XVM=;
-        b=rOdNevU/0mLEdSxCbmh65V2KFMBeoX//d0FtXPHjZ8d9daBS8aYWdyHgpcqgGnTI34
-         QACNCLwNTer3Xdk2mYreZ/8bieP7gG4rNZsMHonf/mfI/NXQg8eXQdBK93azmIjHz5kR
-         HKFluM3XIKkNA96y/QJyispsiw7mGOYH2kvpzm3OATveSrYAtGpzXCIJ8JVq2OTYmxNS
-         X1KAVninjF+PklHw217wXvsCV0/Ugi4UKa7UBDBQ+p6OMcMGnsnhAO1DqDZQHBsBsp8d
-         00D5NwNEEJQXEAMJhPvzhUj10L+QzKTHDVYavpLzWy/8eelKEBtAV8UWleNILT29Gr9/
-         pjOg==
+        bh=4vQAvXs8YebqJQNpvsgx+YOpDZkNHLr4/g7pen09M+Y=;
+        b=UzmCAWI3Et1k/ZetXQXo8P7q5FAsHXBwwnFSCGgtDVWBYyDfVAPaFJFOP+/jbBxQPZ
+         x63KZMFIM/dDJIh3QlTuH2yECcrZwYZCpiYH9MFtMCDOG8n18NeS6lZ7oPGMpcTGWu85
+         xnn+GfXK8uB79yIF6irfWr1brh/7UoNiSPDHs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hRgohj4ZV7BAqug+Up6EM0XNiUu7ZgBs3u6nUNC3XVM=;
-        b=n+dRvPeO/+Xds5M9M3wEDXekmf/Eh2PkQl8sTjl8rhXrOZXnXsu1RUWRA7fHmD5C66
-         viGgMQ/mGrgtP56ctA9SKuUqnjx2GXfn9OrIWN0xX1Wfp7YBPD1t8uB/xKIjlXYc7kWi
-         BKkLCVdlcTCLiF7vQxJ2a/VWk6lsx4I89I9cXGc1CRkiPJIOMx47Yz7/az4DEUB6IGjw
-         jbC4EYW9+6N8G4lyGW2L0slnyVLM5+ZWyPCWx3YGyY5HKLIbYQiwYn5uSnWtvfQ4i/Pa
-         jc0kYA1QcIRGRxbKm695hIlUrOtL8wdve+o31z6XX26+I9M9l0hhMs6/j1oUOY7Hf6WI
-         g80A==
-X-Gm-Message-State: AOAM531aH3RCYtYSy2Wd7D+tmMy7KVJKMkF46O37T0nof5SgbZWfAKH2
-        ul3i91Cz/gJSynjZPXJlUmGNKrF0kDfgi8L+rHp7L4je
-X-Google-Smtp-Source: ABdhPJz0uicoFSCahdZXLSYMWd5wQ4xkgjldsqXDe1+/Xhg5qmkvdblvgGEByl8zYDmZjNVc8BMpJF8C7muKhSE+qpA=
-X-Received: by 2002:a05:651c:1a5:: with SMTP id c5mr11319490ljn.217.1589835523866;
- Mon, 18 May 2020 13:58:43 -0700 (PDT)
+        bh=4vQAvXs8YebqJQNpvsgx+YOpDZkNHLr4/g7pen09M+Y=;
+        b=ImecVOMy1VJOjDcZlBfSZmun7Gaq/IPeq5aCQ3DLxukDaUnc+DfE2RQI8K0ZLQBder
+         RH+sj9EWCtFs6HGBjo2wA/2G4PCzaCoDXQT07uOL9q+z9VXdlWLTUzQqYwz9umUoWutP
+         dHDdR+60f4FLWHB5aHy2lobYX3wO3wCUkoTXN6oVPtYafNq7QfvKsi39kV4nfZHodNjF
+         qEg0m299yItjiCCcTTliWdP0XR3oDJw4YHkBFVzCu42Qs0k2UK9BXRekhGOm+s6m6xzD
+         KPpzAzY9cLEwRNL4avFE8NjL93OmTWnxgviSQZz72R8KeqzATRn5Rpo1Ze3Ts3gl8NAd
+         6bUQ==
+X-Gm-Message-State: AOAM533n+DVdaw1Eeme2lJN8WBF8Ot3QEwJwybVnIfcveCxSXYr6bYOS
+        dq+W+ai5xR7HzqK35J4RgPNd2Ht4sD0=
+X-Google-Smtp-Source: ABdhPJxuUJFdYeUGAqN3gSiaNMAXBqYc5/yGDCn+TMAy4JZVzIDDyqvCGobYJ51tcDXfnolxPNK6Lw==
+X-Received: by 2002:a67:de97:: with SMTP id r23mr6866619vsk.102.1589835601976;
+        Mon, 18 May 2020 14:00:01 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id v3sm3565225vka.45.2020.05.18.14.00.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 14:00:01 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id k4so3991454uaq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 14:00:00 -0700 (PDT)
+X-Received: by 2002:ab0:b13:: with SMTP id b19mr12713480uak.91.1589835600274;
+ Mon, 18 May 2020 14:00:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589831903-27800-1-git-send-email-jrdr.linux@gmail.com>
- <20200518201737.GV16070@bombadil.infradead.org> <CAFqt6zbcn5kEbtY1fod4yy_PETKX8zVM2NjsY0HHyOixiu2q4w@mail.gmail.com>
- <975cc333-e9f4-29e4-db0e-00ea8b8a7c25@nvidia.com>
-In-Reply-To: <975cc333-e9f4-29e4-db0e-00ea8b8a7c25@nvidia.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 19 May 2020 02:36:45 +0530
-Message-ID: <CAFqt6zZoFBkvkZKOc9mbGVO6_Gst+0k=wpjmXYSKvFru=HgczA@mail.gmail.com>
-Subject: Re: [RFC] mm/gup.c: Use gup_flags as parameter instead of passing
- write flag
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+References: <1588329036-18732-1-git-send-email-smasetty@codeaurora.org>
+ <1588329036-18732-2-git-send-email-smasetty@codeaurora.org>
+ <CAD=FV=WXv9DYf7LWoFBvro=7Bzeb1_0bXAvRH-suzxnrCu+V2A@mail.gmail.com> <20200518143920.GJ32394@willie-the-truck>
+In-Reply-To: <20200518143920.GJ32394@willie-the-truck>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 18 May 2020 13:59:49 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=We2+5QHimzr+ukit9qkDKQaaTHYEZGkVbOwsNuy11k9A@mail.gmail.com>
+Message-ID: <CAD=FV=We2+5QHimzr+ukit9qkDKQaaTHYEZGkVbOwsNuy11k9A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: arm-smmu: Add sc7180 compatible string
+To:     Will Deacon <will@kernel.org>
+Cc:     Sharat Masetty <smasetty@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 2:15 AM John Hubbard <jhubbard@nvidia.com> wrote:
+Hi,
+
+On Mon, May 18, 2020 at 7:39 AM Will Deacon <will@kernel.org> wrote:
 >
-> On 2020-05-18 13:44, Souptick Joarder wrote:
-> > On Tue 19 May, 2020, 1:47 AM Matthew Wilcox, <willy@infradead.org> wrote:
-> >>
-> >> On Tue, May 19, 2020 at 01:28:23AM +0530, Souptick Joarder wrote:
-> >>> The idea is to get rid of write parameter. Instead caller will pass
-> >>> FOLL_WRITE to __get_user_pages_fast(). This will not change any
-> >>> functionality of the API. Once it is upstream all the callers will
-> >>> be changed to pass FOLL_WRITE.
-> >>
-> >> Uhh ... until you change all the callers, haven't you just broken all
-> >> the callers?
+> On Fri, May 15, 2020 at 12:05:39PM -0700, Doug Anderson wrote:
+> > On Fri, May 1, 2020 at 3:30 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+> > >
+> > > This patch simply adds a new compatible string for SC7180 platform.
+> > >
+> > > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > > index 6515dbe..986098b 100644
+> > > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > > @@ -28,6 +28,7 @@ properties:
+> > >            - enum:
+> > >                - qcom,msm8996-smmu-v2
+> > >                - qcom,msm8998-smmu-v2
+> > > +              - qcom,sc7180-smmu-v2
+> > >                - qcom,sdm845-smmu-v2
+> > >            - const: qcom,smmu-v2
 > >
-> > All the callers have called the API with either 1 or 0.  I think, it's
-> > not going to break
-> > any of the callers.
+> > Is anything blocking this patch from landing now?
 >
-> Maybe so, but it's still "wrong" to do that, because it only works more
-> or less accidentally. That is, it works in spite of a type safety
-> violation. So we don't want to do that sort of thing unless there is
-> a compelling reason.
+> I thought updates to the bindings usually went via Rob and the device-tree
+> tree, but neither of those are on cc.
 >
-> In addition to that, I am at the exact moment putting together a minor
-> refactoring of this function, because I need a FOLL_PIN variant:
-> __pin_user_pages_fast(), as part of my work to change over a few dozen
-> gup call sites to pin_user_pages*().
->
-> (In fact, I was wondering whether to stick with the "write" parameter, for
-> the new __pin_user_pages_fast(), or go with gup_flags. That could go either
-> way: gup_flags provides a nicer API, but "write" matches the existing
-> callers.)
->
-> So in other words, if you do go out and change all the call sites (there only
-> seem to be about 7, outside of gup.c, actually), that's going to conflict
-> a little bit with what I'm doing here.
->
-> So, how would you like proceed? If you want to do the full conversion
-> (which really should include the call sites), it would be easier for me
-> if you based it on my upcoming small patchset, which I expect to post
-> shortly (later today).
+> Perhaps resend with that fixed?
 
-Sure, I will wait for your patchset :)
+Ah, I guess I wasn't familiar with how things worked for this file, or
+maybe things have changed recently?  I'm used to most bindings going
+through the same tree as the drivers that use them.  Usually if things
+are at all complicated maintainers wait for an Ack from Rob (so he
+should have been CCed for sure) and then land.
 
-As there are only 7 callers of the __get_user_pages_fast(), I prefer to do
-full conversion in a single commit. But if it is not preferred way, I would go
-as per feedback.
+In this case it actually looks like Bjorn landed it in the Qualcomm
+and I just didn't realize it.  That seems like it should be fine since
+it's in the middle of a clause that's all Qualcomm and the change
+shouldn't be controversial in any way.  :-)
 
-> >>
-> >>> -int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
-> >>> -                       struct page **pages)
-> >>> +int __get_user_pages_fast(unsigned long start, int nr_pages,
-> >>> +                     unsigned int gup_flags, struct page **pages)
-> >>>   {
-> >>>        unsigned long len, end;
-> >>>        unsigned long flags;
-> >>> @@ -2685,10 +2692,7 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
-> >>>         * Internally (within mm/gup.c), gup fast variants must set FOLL_GET,
-> >>>         * because gup fast is always a "pin with a +1 page refcount" request.
-> >>>         */
-> >>> -     unsigned int gup_flags = FOLL_GET;
-> >>> -
-> >>> -     if (write)
-> >>> -             gup_flags |= FOLL_WRITE;
-> >>> +     gup_flags |= FOLL_GET;
-> >
->
+Thanks!
+
+-Doug
