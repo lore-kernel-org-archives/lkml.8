@@ -2,167 +2,106 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AE3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7FD920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7E020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8DuRMtZ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="k72I2PjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgERIVf (ORCPT
+        id S1727066AbgERIWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:21:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgERIVe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:21:34 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30258C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:21:34 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f13so8293323wmc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4ke8BoO5EmHk4SIG95iemEMZnR5BDFJSAvPbDzk3LsE=;
-        b=y8DuRMtZ5m32J99ssZXJXSq+X+AfOmJ+8dm6KSocF9Z7GTbedT/x+AWJ7/buNAr3pg
-         Lc4iDOZnNKa1b971lpHeSODJhZ4KsL7pg3cd7aNHPsLWp+woLitHcV75oXe/SFMpFWH6
-         mRETIVp45P9yo8Vo9q/avbqmc59f2lnBmAsRsoyJV/oWG0W9PRJE5a53kk1GMfdahNzp
-         h090VIAv9PNzyF+oVrlPFrp3oBdB27BDMGL8b36Wy4DkS9m435f3D3if4j6tR0cRQfhC
-         OnVMJiDqXESB8zrBykPNUJIbFiwQqwRHG2yZRbwCdOYvKuT2iI0SkwgGXHSRhw29Fo9U
-         mGbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4ke8BoO5EmHk4SIG95iemEMZnR5BDFJSAvPbDzk3LsE=;
-        b=HSfe+6rzOB1TkOLrNgihr+u5hWx9C4UxIpDdkcoibC2IWkVje1w1wxaJi8m0fvgBLO
-         DH5nSEAo12pGPr6uUUwwKg6e5u18tMxnkvp6k8OHbkyub4ZXFix1Epz7fnNW3tzjg2Ou
-         Cmr+NRjgq4EiPoh8jGJ3b+wgWiD7uFVf3HsmzsedbtFkpwzvKdBs4CS82bJhUpvuQxRY
-         svsCteXov0bXfl7fsRqeW+2sOZqcEYxFDAV5hWZaloaJVAGxRqY6bHNoAOMbVeYAQHjt
-         pOwU5gXUucxgxThwfMmdumPiuAIN47lcU4mjsT2dhnkHpOTbyNFFFe4q3sacAc7SGq8o
-         lOEA==
-X-Gm-Message-State: AOAM530cmIylmTvYnj084QkTrMtnqVvdLhERvvG3CHOAeeBkYZidcloR
-        x4HHbVqeDFyd6EmljoWyCO8NNw==
-X-Google-Smtp-Source: ABdhPJz3/vAFGGLjGfXRhTYtndwC2SARogPWWAdkeE9QbQBVTa6G6s3MYYvtL+u+txx74j1Lpr8f7w==
-X-Received: by 2002:a7b:ce01:: with SMTP id m1mr6593049wmc.116.1589790092914;
-        Mon, 18 May 2020 01:21:32 -0700 (PDT)
-Received: from localhost.localdomain ([37.120.32.219])
-        by smtp.gmail.com with ESMTPSA id x184sm15849567wmg.38.2020.05.18.01.21.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 01:21:32 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     Nicolas Dechesne <nicolas.dechesne@linaro.org>,
-        Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v3] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm APQ8016 SBC + D3Camera mezzanine
-Date:   Mon, 18 May 2020 10:21:29 +0200
-Message-Id: <20200518082129.2103683-1-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Mon, 18 May 2020 04:22:14 -0400
+Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:14916
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726053AbgERIWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 04:22:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AcNibDdGIH+mcxJOxG5rGR4T7983+kVGEjxDgGsF6OKpyiPszTAAY4dlo1cd4zETXHOohSroNEMWAasvaYbkzjvhwPatHa5kJ8PaHuI3EPtef53LRuYUu4QAgHQ9ZDgEaAzdPe4qtClhj9acNBNgE93CyHf6b00QszwM0AWtKzDgqLgvH18/WGtrREfpHOqQ5G+dnREYLpWkVpj8v6mHl97qSrkJAtqX2oO7QC5IIlg81Vh6xkvqQQ+VKsqWLNGcICiFdHYexX2bbqjePKWebu37fnNZpPPIb3189IlLQQaRrqc2NAXSXfUvKFeWTlhaX+oEaGuOCkD5nvJ0QKlEcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qk44PiulreE2GHUcWJ3yJHep3oe220fBad+UoMHe568=;
+ b=oPzOBEiQ5SNG+nNQhj0eXSvh7G0kL5/CAjT3PUh86hvUbHUJh7C8FG55K6CD+bvnwdGKAhZHPxHqHqerpvv8qROKTt5bBjRw1qxMuqMz4by30Dsw7h+qZ3XeC5UA61zblAPIZ5aTR7vP55SIYDO86EV1/OvfZQXjreBwjsk/V+vJKcgM1Dz7D6pkWm013AcjBjloYDYIoUzpQSwz77ycm14HJVYCJZxcX6JqSjNG/y7+yvzUdhqr5c+AsoKVZDoGBzSTdFX9Gx9pf8UbrXnqWU8icAIzXRgNvToor4yxLDMvQHfZ6aWlOV/lsVmudd9ZO7fFda2tRtioMnWy2+xEBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qk44PiulreE2GHUcWJ3yJHep3oe220fBad+UoMHe568=;
+ b=k72I2PjFe++xnr7DD0hkcwuUM2qX7TGSfuva2YNVoM9EPqbTvwLaRttRKOtcMS3DEU82nYJ8LFZA/a2QCYFHbn1uHAwj+xbPuVpT2Rkxs5dVaIT7z14u9I8AwZauqj6sLNuNXww+EkhNNInCpnQk+EYxxznTyFm0QrcW27tzH4U=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB4773.eurprd04.prod.outlook.com (2603:10a6:20b:10::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Mon, 18 May
+ 2020 08:22:09 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.033; Mon, 18 May 2020
+ 08:22:09 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "tremyfr@gmail.com" <tremyfr@gmail.com>,
+        "p.bruenn@beckhoff.com" <p.bruenn@beckhoff.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] dt-bindings: rtc: Convert MXC RTC to json-schema
+Thread-Topic: [PATCH 1/2] dt-bindings: rtc: Convert MXC RTC to json-schema
+Thread-Index: AQHWKbgcc7RomLaMP0CjqGuIdgrwv6ithztg
+Date:   Mon, 18 May 2020 08:22:09 +0000
+Message-ID: <AM6PR04MB4966D63DDC5568C27ECF224680B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1589436805-22923-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1589436805-22923-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: badca178-50bd-456f-52ad-08d7fb048f4a
+x-ms-traffictypediagnostic: AM6PR04MB4773:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB47739FB7D4C9A65317E45CBA80B80@AM6PR04MB4773.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:949;
+x-forefront-prvs: 04073E895A
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: p46ZcTXV0tQ3+Qn8aW3gDLRVmB19xA37DidgakbM7NVDdLKhiKT/CqCoOtALIf5yCvfI4qtT+Mj1ILUanD85qUei2paQrohto+AsyFZx0jPLc6tlx+cLp3ILyJWjN/E86akJUE1MmvOKQEgFi/VtFYjId02FH0WpB8uI6UoLwWXt+PccKN30wx0WtJz7ZI18bGKjY6ATAEwdNY5n3C2qXzpMQtgDK15jt97UrAtmRKJUUoX6fPEsJlFmgg2lGO5dwPDenDakH0zl6o0TrJOEySQwUBaKutUevutVZizq76jxgDNa47AuIwJhPt5uR72cZScsBAuOq0eAAhrimJrmbVkbTEmasscAYs7qhupf5COCDflltMRToNgm24cEXKgVVqvsA/D/tXElc1KQxMYj8RS23KLSB+L/sR9xqwoiQ/Sa0TSi2dJJRHB2/NVVKwQS
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(39860400002)(346002)(136003)(366004)(558084003)(71200400001)(33656002)(4326008)(6506007)(26005)(7696005)(5660300002)(44832011)(110136005)(186003)(316002)(64756008)(66476007)(8936002)(66556008)(66446008)(76116006)(2906002)(66946007)(55016002)(9686003)(86362001)(478600001)(8676002)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: J1tPgDzbLX9LB9Tv5Lcptp1apDcb8kJtUxOUuUSyvp3dbKMbAmWTjcHLBHbcK+Acx0dgu6dfgOr9i7arVr72FAN2aCRMkZG0poJgSQFWUlskIlOhuuEFvVpBtlGd0hcn/31UBHmE1bKX9GMoGmeMC1XSo1Bt6yeqE+48NmDf0NRPjGE1ExrhXekMxdDg7TL6BRoxG7y5+5KDsMHuZDLdJyWcvtVKcdfeSVHLwx1MQAQkgZftCgiidsnDEMs3YR7zkA0Kql74KjtMHX/z5AxOUT8uo4KY9uY9KSkZymNpY9+SiPwiT1Mrkhu8ivUUXnD4mbCWmA1cNujPWL6Q8O1U9gm5t2UxA/G8hpP8U3QuG011rDOSbQ8jwiNnJQ/SLTdI1SGAlZWKofCJtp/+RImIevp3aWtcIpRnr5bx65157R27OW8M3VnD+8vWjCDT34FS9Zi7hXPEcs/4Ly2Ac+rxg3N4M87FSBE2++cB0+zOcI99qOxlijceY2zLq5+l69HF
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: badca178-50bd-456f-52ad-08d7fb048f4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 08:22:09.7438
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: s/zl9sfNYWA20WrJogs87UoaFNo8JBBjvnJ3HGFzRzvYzATp6iRAmCl3bo7UtDAy5Bp8xTGJJfO2VbyWb3WZmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4773
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
-the Dragonboard 410c with the D3Camera mezzanine expansion board.
-
-The D3Camera mezzanine ships in a kit with a OmniVision 5640 sensor module,
-which is what this DT targets.
-
-Signed-off-by: Robert Foss <robert.foss@linaro.org>
----
-
-Changes since v2:
- - Vinod: Change copyright assignment to Linaro
-
-Changes since v1:
- - Vinod: Changed license to GPL+BSD
- - Vinod: Changed copyright year to 2020
- - Nico: Changed name of mezzanine to d3camera
-
- arch/arm64/boot/dts/qcom/Makefile             |  1 +
- .../boot/dts/qcom/apq8016-sbc-d3camera.dts    | 45 +++++++++++++++++++
- 2 files changed, 46 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index cc103f7020fd..3f95b522694e 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3camera.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
- dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-new file mode 100644
-index 000000000000..752e5ec47499
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include "apq8016-sbc.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3Camera Mezzanine";
-+	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
-+};
-+
-+&cci_i2c0 {
-+	/delete-node/ camera_rear@3b;
-+
-+	camera_rear@76 {
-+		compatible = "ovti,ov5640";
-+		reg = <0x76>;
-+
-+		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&camera_rear_default>;
-+
-+		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-+		clock-names = "xclk";
-+		clock-frequency = <23880000>;
-+
-+		vdddo-supply = <&camera_vdddo_1v8>;
-+		vdda-supply = <&camera_vdda_2v8>;
-+		vddd-supply = <&camera_vddd_1v5>;
-+
-+		status = "ok";
-+
-+		port {
-+			ov5640_ep: endpoint {
-+				clock-lanes = <1>;
-+				data-lanes = <0 2>;
-+				remote-endpoint = <&csiphy0_ep>;
-+			};
-+		};
-+	};
-+};
--- 
-2.25.1
-
+PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVGh1cnNk
+YXksIE1heSAxNCwgMjAyMCAyOjEzIFBNDQo+IA0KPiBDb252ZXJ0IHRoZSBNWEMgUlRDIGJpbmRp
+bmcgdG8gRFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29uLXNjaGVtYS4NCj4gDQo+IFNpZ25lZC1v
+ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KDQpSZXZpZXdlZC1ieTog
+RG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVnYXJkcw0KQWlzaGVuZw0K
