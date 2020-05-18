@@ -2,51 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59456C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD0920835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57EF520826
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824326;
-	bh=ASD+fFzp4NJHBwKGUBzfOTPXS0YJQ2vb0CTvZsbplXk=;
+	s=default; t=1589824329;
+	bh=H3lARfiaXtBGdgWpOv2deCtz4iA5GbK5Cy1r8oPgU3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IMx9q24YakPPjx0n4Ap3Hg9blW8tHseMFMlqUDc963LTdAscfvScfQAeAxjTvEYm4
-	 HcWu7bIL9qOXVjeRXQ2bFcWhyFRviAZG5JQcACdPwaRJqG1TQkUt48A1uPOXgAWlbW
-	 7xWs6RXskDbKKdZduaYMcqpB4KaayanT+CjohqCI=
+	b=2Kmcr2VOf+l438Of6z/Kidg3iQogVkKiywuwCfjMq+6z3cpU/B7n5zAXP8JJ/tu6v
+	 KK4hSDJ0DQ1rxBW1X8Q4SjAQhfVt+4dkU/JTx8EeLPQ3QQOODu0Dl2tNrrCSOce/sn
+	 Gmr1Up6GChZeEyaJ5z/EZbm/AgquLiGC8ydouk+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730928AbgERRwF (ORCPT
+        id S1730938AbgERRwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:52:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730905AbgERRwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:00 -0400
+        id S1730925AbgERRwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2714120826;
-        Mon, 18 May 2020 17:51:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04F7D20826;
+        Mon, 18 May 2020 17:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824319;
-        bh=ASD+fFzp4NJHBwKGUBzfOTPXS0YJQ2vb0CTvZsbplXk=;
+        s=default; t=1589824324;
+        bh=H3lARfiaXtBGdgWpOv2deCtz4iA5GbK5Cy1r8oPgU3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lnPRfDYGutuG6lP5yN3qxwy7h7+6I1uxBZOEwys4l3KM2fi9RX9cdfIqFy5qBj8An
-         thJ7ofuA4SzMia7EUZPhBSjmujrJZJMqs5CbIjxBvBNbvbYfCUMbJDbBIMIbRWbqJY
-         y3Jtzz/eGZlWLq5Z/ZRyNw7ESe1371UDsY/EYWIU=
+        b=BU7QVo2BevLFvqCm4OpzlOL5asmiAYM1WyRL8ikgSwCdC0kb/p3GJKhtAUf6w/5ZS
+         Oct7NP3t2B6K+AYQfQphR86AhEcgOOf2kRZtNmzYGTyDoNdYqSH2qedjR0lJbCoQYV
+         RhOowsggt7nULcQp3nW1jrBhOZXtSll/nBCdiXZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 44/80] pnp: Use list_for_each_entry() instead of open coding
-Date:   Mon, 18 May 2020 19:37:02 +0200
-Message-Id: <20200518173459.201037598@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH 4.19 46/80] kbuild: compute false-positive -Wmaybe-uninitialized cases in Kconfig
+Date:   Mon, 18 May 2020 19:37:04 +0200
+Message-Id: <20200518173459.723033759@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -59,90 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-commit 01b2bafe57b19d9119413f138765ef57990921ce upstream.
+commit b303c6df80c9f8f13785aa83a0471fca7e38b24d upstream.
 
-Aside from good practice, this avoids a warning from gcc 10:
+Since -Wmaybe-uninitialized was introduced by GCC 4.7, we have patched
+various false positives:
 
-./include/linux/kernel.h:997:3: warning: array subscript -31 is outside array bounds of ‘struct list_head[1]’ [-Warray-bounds]
-  997 |  ((type *)(__mptr - offsetof(type, member))); })
-      |  ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/list.h:493:2: note: in expansion of macro ‘container_of’
-  493 |  container_of(ptr, type, member)
-      |  ^~~~~~~~~~~~
-./include/linux/pnp.h:275:30: note: in expansion of macro ‘list_entry’
-  275 | #define global_to_pnp_dev(n) list_entry(n, struct pnp_dev, global_list)
-      |                              ^~~~~~~~~~
-./include/linux/pnp.h:281:11: note: in expansion of macro ‘global_to_pnp_dev’
-  281 |  (dev) != global_to_pnp_dev(&pnp_global); \
-      |           ^~~~~~~~~~~~~~~~~
-arch/x86/kernel/rtc.c:189:2: note: in expansion of macro ‘pnp_for_each_dev’
-  189 |  pnp_for_each_dev(dev) {
+ - commit e74fc973b6e5 ("Turn off -Wmaybe-uninitialized when building
+   with -Os") turned off this option for -Os.
 
-Because the common code doesn't cast the starting list_head to the
-containing struct.
+ - commit 815eb71e7149 ("Kbuild: disable 'maybe-uninitialized' warning
+   for CONFIG_PROFILE_ALL_BRANCHES") turned off this option for
+   CONFIG_PROFILE_ALL_BRANCHES
 
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-[ rjw: Whitespace adjustments ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ - commit a76bcf557ef4 ("Kbuild: enable -Wmaybe-uninitialized warning
+   for "make W=1"") turned off this option for GCC < 4.9
+   Arnd provided more explanation in https://lkml.org/lkml/2017/3/14/903
+
+I think this looks better by shifting the logic from Makefile to Kconfig.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/350
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/pnp.h |   29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+ Makefile             |   11 ++++-------
+ init/Kconfig         |   17 +++++++++++++++++
+ kernel/trace/Kconfig |    1 +
+ 3 files changed, 22 insertions(+), 7 deletions(-)
 
---- a/include/linux/pnp.h
-+++ b/include/linux/pnp.h
-@@ -220,10 +220,8 @@ struct pnp_card {
- #define global_to_pnp_card(n) list_entry(n, struct pnp_card, global_list)
- #define protocol_to_pnp_card(n) list_entry(n, struct pnp_card, protocol_list)
- #define to_pnp_card(n) container_of(n, struct pnp_card, dev)
--#define pnp_for_each_card(card) \
--	for((card) = global_to_pnp_card(pnp_cards.next); \
--	(card) != global_to_pnp_card(&pnp_cards); \
--	(card) = global_to_pnp_card((card)->global_list.next))
-+#define pnp_for_each_card(card)	\
-+	list_for_each_entry(card, &pnp_cards, global_list)
+--- a/Makefile
++++ b/Makefile
+@@ -657,17 +657,14 @@ KBUILD_CFLAGS	+= $(call cc-disable-warni
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
  
- struct pnp_card_link {
- 	struct pnp_card *card;
-@@ -276,14 +274,9 @@ struct pnp_dev {
- #define card_to_pnp_dev(n) list_entry(n, struct pnp_dev, card_list)
- #define protocol_to_pnp_dev(n) list_entry(n, struct pnp_dev, protocol_list)
- #define	to_pnp_dev(n) container_of(n, struct pnp_dev, dev)
--#define pnp_for_each_dev(dev) \
--	for((dev) = global_to_pnp_dev(pnp_global.next); \
--	(dev) != global_to_pnp_dev(&pnp_global); \
--	(dev) = global_to_pnp_dev((dev)->global_list.next))
--#define card_for_each_dev(card,dev) \
--	for((dev) = card_to_pnp_dev((card)->devices.next); \
--	(dev) != card_to_pnp_dev(&(card)->devices); \
--	(dev) = card_to_pnp_dev((dev)->card_list.next))
-+#define pnp_for_each_dev(dev) list_for_each_entry(dev, &pnp_global, global_list)
-+#define card_for_each_dev(card, dev)	\
-+	list_for_each_entry(dev, &(card)->devices, card_list)
- #define pnp_dev_name(dev) (dev)->name
+ ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+-KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
+-else
+-ifdef CONFIG_PROFILE_ALL_BRANCHES
+-KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,)
++KBUILD_CFLAGS   += -Os
+ else
+ KBUILD_CFLAGS   += -O2
+ endif
+-endif
  
- static inline void *pnp_get_drvdata(struct pnp_dev *pdev)
-@@ -437,14 +430,10 @@ struct pnp_protocol {
- };
+-KBUILD_CFLAGS += $(call cc-ifversion, -lt, 0409, \
+-			$(call cc-disable-warning,maybe-uninitialized,))
++ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
++KBUILD_CFLAGS   += -Wno-maybe-uninitialized
++endif
  
- #define to_pnp_protocol(n) list_entry(n, struct pnp_protocol, protocol_list)
--#define protocol_for_each_card(protocol,card) \
--	for((card) = protocol_to_pnp_card((protocol)->cards.next); \
--	(card) != protocol_to_pnp_card(&(protocol)->cards); \
--	(card) = protocol_to_pnp_card((card)->protocol_list.next))
--#define protocol_for_each_dev(protocol,dev) \
--	for((dev) = protocol_to_pnp_dev((protocol)->devices.next); \
--	(dev) != protocol_to_pnp_dev(&(protocol)->devices); \
--	(dev) = protocol_to_pnp_dev((dev)->protocol_list.next))
-+#define protocol_for_each_card(protocol, card)	\
-+	list_for_each_entry(card, &(protocol)->cards, protocol_list)
-+#define protocol_for_each_dev(protocol, dev)	\
-+	list_for_each_entry(dev, &(protocol)->devices, protocol_list)
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -26,6 +26,22 @@ config CLANG_VERSION
+ config CC_HAS_ASM_GOTO
+ 	def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
  
- extern struct bus_type pnp_bus_type;
++config CC_HAS_WARN_MAYBE_UNINITIALIZED
++	def_bool $(cc-option,-Wmaybe-uninitialized)
++	help
++	  GCC >= 4.7 supports this option.
++
++config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
++	bool
++	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
++	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
++	help
++	  GCC's -Wmaybe-uninitialized is not reliable by definition.
++	  Lots of false positive warnings are produced in some cases.
++
++	  If this option is enabled, -Wno-maybe-uninitialzed is passed
++	  to the compiler to suppress maybe-uninitialized warnings.
++
+ config CONSTRUCTORS
+ 	bool
+ 	depends on !UML
+@@ -1083,6 +1099,7 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
  
+ config CC_OPTIMIZE_FOR_SIZE
+ 	bool "Optimize for size"
++	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  Enabling this option will pass "-Os" instead of "-O2" to
+ 	  your compiler resulting in a smaller kernel.
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -370,6 +370,7 @@ config PROFILE_ANNOTATED_BRANCHES
+ config PROFILE_ALL_BRANCHES
+ 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
+ 	select TRACE_BRANCH_PROFILING
++	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  This tracer profiles all branch conditions. Every if ()
+ 	  taken in the kernel is recorded whether it hit or miss.
 
 
