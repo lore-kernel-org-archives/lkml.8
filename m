@@ -7,113 +7,86 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BCBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5233CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C464920787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D16E20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hoyvxbOl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wksZWPQz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgERMcC (ORCPT
+        id S1726993AbgERMdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:32:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26688 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726709AbgERMcA (ORCPT
+        Mon, 18 May 2020 08:33:25 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57598 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgERMdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:32:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589805118;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JSwYOVViRmho7SQfsfACP8dXKwqAgv5XuIjfF821PSU=;
-        b=hoyvxbOlXky1wnDbrX6jMt2qm58vX5BLcULP2RfWStKOeG0/dfL7qENbYU8mo4hz1dVbk/
-        LC/Ki9w2zmitNlD9CfevHCXMxuzB7h6qbxDCmRMfJvReVZUkz7n1FmTQ0wjbo0IuFI51se
-        lK+5Ncs17vcJPS96t5RCTLin2q432jI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-ka7Mp5RJMsappvmJuyJKPw-1; Mon, 18 May 2020 08:31:57 -0400
-X-MC-Unique: ka7Mp5RJMsappvmJuyJKPw-1
-Received: by mail-wr1-f69.google.com with SMTP id z10so5623606wrs.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:31:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JSwYOVViRmho7SQfsfACP8dXKwqAgv5XuIjfF821PSU=;
-        b=SGwu+x4qq0CRKV4r/ZOxbPWj47IR0zXtWOIw8DX9zCy7yy87rckSGSWvgqSMj17nl9
-         CqJFIuN/IrTlHx9oypVvRhzoGCbiI9bgvUm9IWzOpRjQPW3Qpt0zvfBBA/b5X9TdfFVD
-         ZSAAj4wfxIUaXXsIO8ynyOKyyty1WOSBuBHXfQPdEgn7xbp00nqz7IgW2qQiQaMALRlR
-         BzpwrHj1ngt5nZqOW8DQcX5ztGBMZy1lDbHrEw1eaGY4YHzxsTpoSL5m/jClBDPoRZSf
-         +0e4/EYvtoScyBuvW8lnGDEn0l/xh/f3hreR02J8cyL84rDP280USoTOpS28cUn+8Urg
-         PvgQ==
-X-Gm-Message-State: AOAM533Ch+Y85G3GZ+E60bTMgV9jByC+FqdK8Rk4lyHYORubWvCjZaGd
-        MoGQh2Q7v4KCkAiyaZ5+0p3Uj2CAh55WxdHdQNeb1EfTfKJVwZN2+hLvNFeNZGiyBbURg2tYWOS
-        GKdBdrHqcYmYVTbrFdSGpIQtK
-X-Received: by 2002:a1c:c2c6:: with SMTP id s189mr20300113wmf.25.1589805115985;
-        Mon, 18 May 2020 05:31:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxeeGxVDfzc+aC9AYtRchJxAqaRHN553hwC8AKlTRhhdZrmctqO5FrFE9595gxCNWK9MUNt4w==
-X-Received: by 2002:a1c:c2c6:: with SMTP id s189mr20300085wmf.25.1589805115732;
-        Mon, 18 May 2020 05:31:55 -0700 (PDT)
-Received: from [192.168.178.58] ([151.30.90.67])
-        by smtp.gmail.com with ESMTPSA id b12sm16992464wmj.0.2020.05.18.05.31.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 05:31:55 -0700 (PDT)
-Subject: Re: [PATCH] kvm: x86: Use KVM CPU capabilities to determine CR4
- reserved bits
-To:     Xiaoyao Li <xiaoyao.li@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jmattson@google.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200506094436.3202-1-pbonzini@redhat.com>
- <6a4daca4-6034-901a-261f-215df7d606a6@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <09cb27f8-fa02-4b37-94de-1a4d86b9bdbd@redhat.com>
-Date:   Mon, 18 May 2020 14:31:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 18 May 2020 08:33:25 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04ICXNGI126863;
+        Mon, 18 May 2020 07:33:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589805203;
+        bh=Uj0iQWKwrGFqJF+im6DxPdmW4Sz4gCpfpR62iAKn/bU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wksZWPQz4vQfucESuu27ANcF3B6XPXLPFvtYTJUD0yGOURf9ZAR74d3U+EIHtmO2E
+         dmNPWG0ek99bv2lHsr+YmaF6BccleJYQyPWFPI6+AZFwVE0tz9WMA0GCESWI0YYVrM
+         0hHh317OpGcRqGQH67x9zPzxAyfAQamQs3/yO900=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04ICXNBj096464
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 May 2020 07:33:23 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
+ May 2020 07:33:22 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 18 May 2020 07:33:23 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04ICXKZA033369;
+        Mon, 18 May 2020 07:33:21 -0500
+Subject: Re: [PATCH 0/2] phy: ti: am654: Add USB super-speed support
+To:     Roger Quadros <rogerq@ti.com>
+CC:     <vigneshr@ti.com>, <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>
+References: <20200513131254.10497-1-rogerq@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <63756378-164c-930a-5bda-91ab2a80649e@ti.com>
+Date:   Mon, 18 May 2020 18:03:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <6a4daca4-6034-901a-261f-215df7d606a6@intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200513131254.10497-1-rogerq@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/05/20 06:52, Xiaoyao Li wrote:
-> On 5/6/2020 5:44 PM, Paolo Bonzini wrote:
->> Using CPUID data can be useful for the processor compatibility
->> check, but that's it.  Using it to compute guest-reserved bits
->> can have both false positives (such as LA57 and UMIP which we
->> are already handling) and false negatives: 
+
+
+On 5/13/2020 6:42 PM, Roger Quadros wrote:
+> Hi Kishon,
 > 
->> in particular, with
->> this patch we don't allow anymore a KVM guest to set CR4.PKE
->> when CR4.PKE is clear on the host.
+> This series adds USB3.0 support to am654-serdes PHY driver.
+
+merged, thanks!
+
+-Kishon
 > 
-> A common question about whether a feature can be exposed to guest:
+> cheers,
+> -roger
 > 
-> Given a feature, there is a CPUID bit to enumerate it, and a CR4 bit to
-> turn it on/off. Whether the feature can be exposed to guest only depends
-> on host CR4 setting? I.e., if CPUID bit is not cleared in cpu_data in
-> host but host kernel doesn't set the corresponding CR4 bit to turn it
-> on, we cannot expose the feature to guest. right?
-
-It depends.  The most obvious case is that the host kernel doesn't use
-CR4.PSE but we even use 4MB pages to emulate paging disabled mode when
-the processor doesn't support unrestricted guests.
-
-Basically, the question is whether we are able to save/restore any
-processor state attached to the CR4 bit on vmexit/vmentry.  In this case
-there is no PKRU field in the VMCS and the RDPKRU/WRPKRU instructions
-require CR4.PKE=1; therefore, we cannot let the guest enable CR4.PKE
-unless it's also enabled on the host.
-
-Paolo
-
+> Roger Quadros (2):
+>   phy: ti: am654: show up in regmap debugfs
+>   phy: ti: am654: add support for USB super-speed
+> 
+>  drivers/phy/ti/phy-am654-serdes.c | 104 +++++++++++++++++++++++++++++-
+>  1 file changed, 102 insertions(+), 2 deletions(-)
+> 
