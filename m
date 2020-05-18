@@ -7,53 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0070FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9EA120715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5004720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825712;
-	bh=C3QjyvfMA2/0h9o42z5Tga0tOWFXXJ4MGKYsh8FyOF4=;
+	s=default; t=1589825720;
+	bh=2LASOvTvTrONAR+ocAmH7QR9a1jeIKG1nWnEI8PmZrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XBtUYnwmVoCH+X1gVD8pSZtFb/GD8qK695wcqitH6wc2FO4YHGUKh/IadbaiWwOzk
-	 xLJcEebyOWdf+tLW30h10q4F2fL11BLWy4zgy55ULg5YA2imDHrdYXP34zkePcGnY3
-	 fTH7I5N6xiUxx3D8Fs76a8m1MGcYkAtC1ZNMQV5A=
+	b=hcu9miW585ONkGifiOjyZ1PjDidHfTQZuc6/vxhDosGTO/JA+GhhbDegwOc+ErUDk
+	 iEJ+XznJC4HdJkcJQBw+eN56A3RGiSGBb9MYCNaDEZg2mwCMTDxb9TsouTf+uJc+CT
+	 cx24fEeai/b60j3N0smIK4vbO0v1/N5N5lzCZOwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387670AbgERSPL (ORCPT
+        id S1732112AbgERR7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40760 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:59:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732134AbgERR7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:59:52 -0400
+        id S1732095AbgERR7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:59:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A14F20835;
-        Mon, 18 May 2020 17:59:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2A34207C4;
+        Mon, 18 May 2020 17:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824791;
-        bh=C3QjyvfMA2/0h9o42z5Tga0tOWFXXJ4MGKYsh8FyOF4=;
+        s=default; t=1589824779;
+        bh=2LASOvTvTrONAR+ocAmH7QR9a1jeIKG1nWnEI8PmZrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vJBYpAlSEDTxBoymVt4v55fR8flZL0WSkkZNn6U1mQRMqylVWI8g3J12IOQy9zwdp
-         cLYIS9+3NKP4iKbTKMGr3In8ke4ogM94/3X3f+yFuzLPQAcj8R6NMMnS4PeA4Wr6DZ
-         6Hsl9MUNy56I/a4sFJs2jsNuO2goiXqELKfQyzX4=
+        b=ZK8bCoMYUYjZz7jrHkLDS61A8EEP740NC0C3VULUxfFqUpM5Z2dtofI29v5OfLy2p
+         2Wsce7P1Xa3npHP3EjqYACb1efr9iwfz/1wPJLZ42ksCgTYUe/tAQyGx76DlJdUkYJ
+         Irsje9wTiP86n1szph4pDSVfXgVZJbe9tER9McrA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YongQin Liu <yongqin.liu@linaro.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Josh Gao <jmgao@google.com>,
-        Todd Kjos <tkjos@google.com>, Felipe Balbi <balbi@kernel.org>,
-        linux-usb@vger.kernel.org, John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 5.4 125/147] dwc3: Remove check for HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
-Date:   Mon, 18 May 2020 19:37:28 +0200
-Message-Id: <20200518173528.444595278@linuxfoundation.org>
+        Kamal Mostafa <kamal@canonical.com>
+Subject: [PATCH 5.4 147/147] bpf: Test_progs, fix test_get_stack_rawtp_err.c build
+Date:   Mon, 18 May 2020 19:37:50 +0200
+Message-Id: <20200518173531.196702589@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -66,54 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+From: Kamal Mostafa <kamal@canonical.com>
 
-commit 00e21763f2c8cab21b7befa52996d1b18bde5c42 upstream.
+The linux-5.4.y commit 8781011a302b ("bpf: Test_progs, add test to catch
+retval refine error handling") fails to build when libbpf headers are
+not installed, as it tries to include <bpf/bpf_helpers.h>:
 
-The check for the HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
-causes us to break out of the loop before we call
-dwc3_gadget_ep_reclaim_completed_trb(), which is what likely
-should be clearing the HWO flag.
+  progs/test_get_stack_rawtp_err.c:4:10:
+      fatal error: 'bpf/bpf_helpers.h' file not found
 
-This can cause odd behavior where we never reclaim all the trbs
-in the sg list, so we never call giveback on a usb req, and that
-will causes transfer stalls.
+For 5.4-stable (only) the new test prog needs to include "bpf_helpers.h"
+instead (like all the rest of progs/*.c do) because 5.4-stable does not
+carry commit e01a75c15969 ("libbpf: Move bpf_{helpers, helper_defs,
+endian, tracing}.h into libbpf").
 
-This effectively resovles the adb stalls seen on HiKey960
-after userland changes started only using AIO in adbd.
-
-Cc: YongQin Liu <yongqin.liu@linaro.org>
-Cc: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Cc: Yang Fei <fei.yang@intel.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: Josh Gao <jmgao@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Cc: stable@vger.kernel.org #4.20+
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Kamal Mostafa <kamal@canonical.com>
+Fixes: 8781011a302b ("bpf: Test_progs, add test to catch retval refine error handling")
+Cc: <stable@vger.kernel.org> # v5.4
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |    3 ---
- 1 file changed, 3 deletions(-)
+ tools/testing/selftests/bpf/progs/test_get_stack_rawtp_err.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2480,9 +2480,6 @@ static int dwc3_gadget_ep_reclaim_trb_sg
- 	for_each_sg(sg, s, pending, i) {
- 		trb = &dep->trb_pool[dep->trb_dequeue];
+--- a/tools/testing/selftests/bpf/progs/test_get_stack_rawtp_err.c
++++ b/tools/testing/selftests/bpf/progs/test_get_stack_rawtp_err.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
  
--		if (trb->ctrl & DWC3_TRB_CTRL_HWO)
--			break;
--
- 		req->sg = sg_next(s);
- 		req->num_pending_sgs--;
+ #include <linux/bpf.h>
+-#include <bpf/bpf_helpers.h>
++#include "bpf_helpers.h"
+ 
+ #define MAX_STACK_RAWTP 10
  
 
 
