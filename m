@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43883C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706C120715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181B520671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825143;
-	bh=iVaQ01TA7rrWyhKD+pi6al0fOTLwJwW1sYYX16Xtivw=;
+	s=default; t=1589825148;
+	bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KwLTZSncLE0gs0sElmuBdvfbgvKKAKwp2j9MUlvVjpL9vJSs8i1lGEPtjEdmKP5Rv
-	 BXx/tIpUPJgRx1BEB7LN81/PQlaUz+JNgXKt4TKAR7K533oXZYWj+CITCVmVAXGeX2
-	 ec0g5JeZe4pn85i2fuDaRW+9QWu552VnfhX8eidk=
+	b=fCi7Bl7THzlr7P6tM/LM6rjSJjD1nVd4dVjAaNhKXOwlzYkVDckLK7Na5eEgoTIEN
+	 R5Bsw0oOxX+jUu6NZKnvCELHR2QlrmoQ8OIKemdTpoi7VX84FT+GFih/LuZN/ay9dv
+	 2yEese7MymgIV1rVKyIfyItsD4nVB7nX5FCZ6lWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732347AbgERSFm (ORCPT
+        id S1733051AbgERSFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:05:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:05:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733063AbgERSFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:38 -0400
+        id S1731959AbgERSFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18FEE20671;
-        Mon, 18 May 2020 18:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8973420715;
+        Mon, 18 May 2020 18:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825137;
-        bh=iVaQ01TA7rrWyhKD+pi6al0fOTLwJwW1sYYX16Xtivw=;
+        s=default; t=1589825140;
+        bh=Q6OxYPg+HEkGz2LIWB5H4R2fxd0AQ+iGVhEsHiX43Pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pNUbu+RC2w/OXk50ZOP4HtpDEGyp6pMB3u98oOV7knozTRVYYbTqiwXXmzEXt7UDK
-         cxXcrIqJrLH+n2ZLIbv4gqjvfP1zsxmioftk8d81UUolovvg/0YPk3aUwsHdiH2a8w
-         jVhQC+0bzJVXn4wZj6lpPRMJYfVOV5nPLHQYkKNw=
+        b=IKH3pr0s/QANThuXi9yON0GvCZ1jKhxuBdzgG3dHsJFPhdUHHZEnrwsGxiqZ1DvBs
+         8hFTeYMH0vKZ8K66gBXnwh4WBMI/qeywQ19aVi/H3caR4C8sG1dOz5nke283rqeGLy
+         Tt6xhyfbkDz90u8vQlDbmtpgStj0A/CQJPM3VE80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
+        stable@vger.kernel.org, Kyungtae Kim <kt0755@gmail.com>,
         Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.6 144/194] usb: cdns3: gadget: prev_req->trb is NULL for ep0
-Date:   Mon, 18 May 2020 19:37:14 +0200
-Message-Id: <20200518173543.271587521@linuxfoundation.org>
+Subject: [PATCH 5.6 145/194] USB: gadget: fix illegal array access in binding with UDC
+Date:   Mon, 18 May 2020 19:37:15 +0200
+Message-Id: <20200518173543.348668217@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,97 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Kyungtae Kim <kt0755@gmail.com>
 
-commit 95cd7dc47abd71d1a0c9c43594ff2fa32552f46c upstream.
+commit 15753588bcd4bbffae1cca33c8ced5722477fe1f upstream.
 
-And there are no multiple TRBs on EP0 and WA1 workaround,
-so it doesn't need to change TRB for EP0. It fixes below oops.
+FuzzUSB (a variant of syzkaller) found an illegal array access
+using an incorrect index while binding a gadget with UDC.
 
-configfs-gadget gadget: high-speed config #1: b
-android_work: sent uevent USB_STATE=CONFIGURED
-Unable to handle kernel read from unreadable memory at virtual address 0000000000000008
-Mem abort info:
-android_work: sent uevent USB_STATE=DISCONNECTED
-  ESR = 0x96000004
-  EC = 0x25: DABT (current EL), IL = 32 bits
+Reference: https://www.spinics.net/lists/linux-usb/msg194331.html
 
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000004
-  CM = 0, WnR = 0
-user pgtable: 4k pages, 48-bit VAs, pgdp=00000008b5bb7000
-[0000000000000008] pgd=0000000000000000
-Internal error: Oops: 96000004 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 2 PID: 430 Comm: HwBinder:401_1 Not tainted 5.4.24-06071-g6fa8921409c1-dirty #77
-Hardware name: Freescale i.MX8QXP MEK (DT)
-pstate: 60400085 (nZCv daIf +PAN -UAO)
-pc : cdns3_gadget_ep_dequeue+0x1d4/0x270
-lr : cdns3_gadget_ep_dequeue+0x48/0x270
-sp : ffff800012763ba0
-x29: ffff800012763ba0 x28: ffff00082c653c00
-x27: 0000000000000000 x26: ffff000068fa7b00
-x25: ffff0000699b2000 x24: ffff00082c6ac000
-x23: ffff000834f0a480 x22: ffff000834e87b9c
-x21: 0000000000000000 x20: ffff000834e87800
-x19: ffff000069eddc00 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0000000000000000
-x13: 0000000000000000 x12: 0000000000000001
-x11: ffff80001180fbe8 x10: 0000000000000001
-x9 : ffff800012101558 x8 : 0000000000000001
-x7 : 0000000000000006 x6 : ffff000835d9c668
-x5 : ffff000834f0a4c8 x4 : 0000000096000000
-x3 : 0000000000001810 x2 : 0000000000000000
-x1 : ffff800024bd001c x0 : 0000000000000001
-Call trace:
- cdns3_gadget_ep_dequeue+0x1d4/0x270
- usb_ep_dequeue+0x34/0xf8
- composite_dev_cleanup+0x154/0x170
- configfs_composite_unbind+0x6c/0xa8
- usb_gadget_remove_driver+0x44/0x70
- usb_gadget_unregister_driver+0x74/0xe0
- unregister_gadget+0x28/0x58
- gadget_dev_desc_UDC_store+0x80/0x110
- configfs_write_file+0x1e0/0x2a0
- __vfs_write+0x48/0x90
- vfs_write+0xe4/0x1c8
- ksys_write+0x78/0x100
- __arm64_sys_write+0x24/0x30
- el0_svc_common.constprop.0+0x74/0x168
- el0_svc_handler+0x34/0xa0
- el0_svc+0x8/0xc
-Code: 52830203 b9407660 f94042e4 11000400 (b9400841)
----[ end trace 1574516e4c1772ca ]---
-Kernel panic - not syncing: Fatal exception
-SMP: stopping secondary CPUs
-Kernel Offset: disabled
-CPU features: 0x0002,20002008
-Memory Limit: none
-Rebooting in 5 seconds..
+This bug occurs when a size variable used for a buffer
+is misused to access its strcpy-ed buffer.
+Given a buffer along with its size variable (taken from user input),
+from which, a new buffer is created using kstrdup().
+Due to the original buffer containing 0 value in the middle,
+the size of the kstrdup-ed buffer becomes smaller than that of the original.
+So accessing the kstrdup-ed buffer with the same size variable
+triggers memory access violation.
 
-Fixes: f616c3bda47e ("usb: cdns3: Fix dequeue implementation")
+The fix makes sure no zero value in the buffer,
+by comparing the strlen() of the orignal buffer with the size variable,
+so that the access to the kstrdup-ed buffer is safe.
+
+BUG: KASAN: slab-out-of-bounds in gadget_dev_desc_UDC_store+0x1ba/0x200
+drivers/usb/gadget/configfs.c:266
+Read of size 1 at addr ffff88806a55dd7e by task syz-executor.0/17208
+
+CPU: 2 PID: 17208 Comm: syz-executor.0 Not tainted 5.6.8 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ gadget_dev_desc_UDC_store+0x1ba/0x200 drivers/usb/gadget/configfs.c:266
+ flush_write_buffer fs/configfs/file.c:251 [inline]
+ configfs_write_file+0x2f1/0x4c0 fs/configfs/file.c:283
+ __vfs_write+0x85/0x110 fs/read_write.c:494
+ vfs_write+0x1cd/0x510 fs/read_write.c:558
+ ksys_write+0x18a/0x220 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+ do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
+Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Link: https://lore.kernel.org/r/20200510054326.GA19198@pizza01
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/cdns3/gadget.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/configfs.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/cdns3/gadget.c
-+++ b/drivers/usb/cdns3/gadget.c
-@@ -2548,7 +2548,7 @@ found:
- 	link_trb = priv_req->trb;
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -260,6 +260,9 @@ static ssize_t gadget_dev_desc_UDC_store
+ 	char *name;
+ 	int ret;
  
- 	/* Update ring only if removed request is on pending_req_list list */
--	if (req_on_hw_ring) {
-+	if (req_on_hw_ring && link_trb) {
- 		link_trb->buffer = TRB_BUFFER(priv_ep->trb_pool_dma +
- 			((priv_req->end_trb + 1) * TRB_SIZE));
- 		link_trb->control = (link_trb->control & TRB_CYCLE) |
++	if (strlen(page) < len)
++		return -EOVERFLOW;
++
+ 	name = kstrdup(page, GFP_KERNEL);
+ 	if (!name)
+ 		return -ENOMEM;
 
 
