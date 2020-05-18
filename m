@@ -2,139 +2,115 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4395C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DCEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5DE120671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5373A20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mk9a0EE3"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="U4v+NFub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgERQZY (ORCPT
+        id S1728439AbgERQZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbgERQZX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:25:23 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE94C05BD09;
-        Mon, 18 May 2020 09:25:23 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id be9so4810706edb.2;
-        Mon, 18 May 2020 09:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=C9o4dW1opf6PK9dDJU+olx6LivIhnF/LUajcX/auTKM=;
-        b=mk9a0EE30LQPszKX5ot6/btd4Lvv+bgSkXNddm9G/X4xPGhTcYfGn9iToM4kQPb/aU
-         bCDe3NfgCGMurJGVDAnSpPBLaTOXEd/bT2NFKE/v4MuX2/c2VqGk+EFAfp7T2o2JYqMA
-         zsJwIKhZtvZ7nq9HWgQl35cR3+Ew4PlBMq6VU8M0Ii/nrjhC4DWDeqVzm5wmoA02AZHy
-         aHi0JKC+zVh29NEUQL+FyqnIzfROsHeli2W1Lc2Lop/O2qTCY5exQhzQXiRDVaqnRNKF
-         nC62vqaYbx5FkbjCkN6dXtoAEhJxwRuhHYF2cCsn1WJ6lfpVyExb4l1U+fIwjAg1W4AN
-         GfMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=C9o4dW1opf6PK9dDJU+olx6LivIhnF/LUajcX/auTKM=;
-        b=M1zNNeqSHzaJHlA8Ygw1NXYyDMeK8r2DA7jEs2ykoCWjJ0BimjqxJrHO8P/+HWuxuI
-         4AulfHf379MAOT2zt2/B8mqdsjOZpa88XgOHvrvtTI87cYhk31REH7uhPtdDESizq9bW
-         KS6n+8cmH+oqu2Nu9eu0RcpPfINX48Rf6btD/5NyLDUZnAMtXJQfQMXv5anx8pgsOH+y
-         30dYhUQJ53itOhS6tEWmgXI4krT/1vfwfcJ8fis5TgTUxwDQN03+lrvik0k/+VN3EzQG
-         bj4gbxZj1+O4BCcOTYxy3A8wV7RaiU4WpYo3PekQWNMeb3U3QW1mUk/5s9hNCrI9v57E
-         nJfw==
-X-Gm-Message-State: AOAM533rI4c+hclhXg4kVpSFlJDT/+DbhrTYxLwnenoX4K9gbNoDvKC9
-        E3adgO174xa5kDtjjcWE0ejpe3/8E5gZytcLFo0=
-X-Google-Smtp-Source: ABdhPJwYjoPZytoziRsU8pzisjXxK0MKS7CxJZXMVVTHEUikl7yW7jJlqgckmGbHBkbra1XtkUxs8t43eY3HhJcYOUQ=
-X-Received: by 2002:a05:6402:1a29:: with SMTP id be9mr7821163edb.70.1589819121915;
- Mon, 18 May 2020 09:25:21 -0700 (PDT)
+        Mon, 18 May 2020 12:25:52 -0400
+Received: from mail-eopbgr70041.outbound.protection.outlook.com ([40.107.7.41]:6083
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728209AbgERQZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:25:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YdpO86mMYWbT/mX8zz0i7kE3g9bTjLRbwHXMJI2lxhu5CJAff4n/YkGDmNdvWkkp/KfWDQG6fuGDZxTLuNlCT+vN6EftEpH/cKyRrzS08SBqz3BmHlUWd4EKqv67FaNT7S68nUOjqF3A/olvOSd7AfAxPXZbYXSOGG9d6pJVaO8EHzYL4vM61F4W8oyNpZm70tma9GNrW3THJTkccXS1DDOGC04LKK/oyWMN81UIHrj8tJBVQMjSlAkNSvrJ2r+FdfU8YyLE0x9j28ZUFmEiq/A8xd/qEzn+xSAg/43F2KRxN5w1vgBoF0mtQ2tTIY0/jzTvHDYHVjo2LKX/pQVXAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jb8drt9yrcm6vN++z8r7eKlWcxSzx8T4T+thIJJMH9E=;
+ b=DeMP5EBVvNS8SVivxvjbqEbG6rM5/llaxqXyxfWcU/T2JIjMO7cEuYAcjpQ9zdlRlCgbnHcYUuDHyZj4jb+uHYRn9THtq2HjquODGT+L+mntNZGvwfntObkzF0jNb/2NgfvqWF8IxkhCz8tbNFFZupr8t376TJZt+/kbFRPMNCzMuJVOFIvSpU5w2nhX/MhF6gwgR/ujJ3l9/f3DE8NUF0fXQUXqBr1uk7ZLMUM9TxYn046oiVfD/JDEqzLxG94Zeazj5xwygLkEC2T8GHcNYZXIWmTgU9vdaqA7PCUWxeRiv8f6AM1Ql6mHhm0VyOUQfhvVv0/A3QI+SzM8rEFURg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jb8drt9yrcm6vN++z8r7eKlWcxSzx8T4T+thIJJMH9E=;
+ b=U4v+NFubzZQNUCH8zeGd4JX8cwhtQu0jxRBI/evudhx1vw/w0413NmlLBmeqh3rdOpHBvqMvz/Fk4evNJFefdL2q7HUrcGTBRQE+Gz6oLScYApk3MIn0PxibORl/LqI7SSXNBhl5QUgZoldlwZFW5DNDCMHI92CRTo5YLVqai+I=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB4608.eurprd05.prod.outlook.com (2603:10a6:802:5f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.31; Mon, 18 May
+ 2020 16:25:47 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::2405:4594:97a:13c]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::2405:4594:97a:13c%2]) with mapi id 15.20.3000.034; Mon, 18 May 2020
+ 16:25:47 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "tangbin@cmss.chinamobile.com" <tangbin@cmss.chinamobile.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>
+CC:     Leon Romanovsky <leonro@mellanox.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "zhangshengju@cmss.chinamobile.com" 
+        <zhangshengju@cmss.chinamobile.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] net/mlx5e: Use IS_ERR() to check and simplify code
+Thread-Topic: [PATCH v2] net/mlx5e: Use IS_ERR() to check and simplify code
+Thread-Index: AQHWKw1vt3qLm47COkubT/zbZ86R9aiuC9uA
+Date:   Mon, 18 May 2020 16:25:47 +0000
+Message-ID: <bffa9aeea3d70ba6ecc93bdddad952970d88e5af.camel@mellanox.com>
+References: <20200515230633.2832-1-tangbin@cmss.chinamobile.com>
+In-Reply-To: <20200515230633.2832-1-tangbin@cmss.chinamobile.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: cmss.chinamobile.com; dkim=none (message not signed)
+ header.d=none;cmss.chinamobile.com; dmarc=none action=none
+ header.from=mellanox.com;
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 784753d1-7a90-4617-292e-08d7fb481f5a
+x-ms-traffictypediagnostic: VI1PR05MB4608:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB4608B60D9A4F77C0BEA29B14BEB80@VI1PR05MB4608.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:459;
+x-forefront-prvs: 04073E895A
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 66BB0VQtuJUUdd8/ZqKjLeuclg0btyeOyBb8HIVUvPeeiYtGWAgK5VA8AP2zdwVK+p9pezvUEQvK3d2QuosYu00AzsK/MuyGG1sLb1fvAFAFURLyB7OSrnEtLvuyADF9V0bnnr/1JGellCAlcE3E6gWEnBbXZwnQnrQQ+d6N2EoVEyTjUsfW/19aVoPzdNqurw+44ijYasZIK5eQTI8BmpTFyB3wZQzKZg3zwYuVwLBTl4vUVrYXNHE442cK9+hJNp6Rp0qT2K7gEB8fQFeFt2xLFPKbcuz7tfVfIzsKy80xPYF8chyGYMBVBU8yrNROEn8rBHqS4HzQZJmvQk2Hknum8mny4hVqzXUdYs5Zj7J8JBgqrqvIVq0aBN8B3eYdqO2OyzSG0V/lcYrrQ6LtRNK/ZAEncm1czQjx7flHxcdwLlkbyizj/xuFc0dsAEN8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(366004)(136003)(396003)(4744005)(8936002)(2906002)(8676002)(36756003)(4326008)(76116006)(6512007)(91956017)(66946007)(66446008)(66556008)(66476007)(64756008)(478600001)(71200400001)(6486002)(2616005)(5660300002)(6506007)(26005)(86362001)(186003)(316002)(54906003)(110136005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: NFLY/SebuCwsjqTKbCkC46PYwe6DvlG0GIq5J4OrCtqX96aC4FZO52VzmlWKpG4V4bpM1k7IO8q2fl1faQdkwPydhpiRVwmy3Rw366z4hh0wcBS5aZqkd1Dci1Hhr6sMv4szJ+ESDXd2XamxwisemgojCYbknMS9eSYUiOIZI7LbupvEPZuL88FWzRz/dkvbu/cCNAzNqST6JIMGFsjqCMB9aUKVq9feKutOxSZFU8q6hWKXd72recf+06XW7h4qG/e5zVLlxtYJnd7+52VhV6aBY9+erwArf5nWIok23lnEoF+vZZN6qRW0+BqYvzYt4mv42hon2SYJxIJdu5YE/S7awfbsceZuxOELjnkINSfWCDlBXTRULEEnvGJGaGlUwm3rZMC6aKRiD3KMRMGPzLFOvyzW6Ov9Y1EKwQ2IX4eAFvaY/1fnNzX+i2ntc8cgX20bea7iPQ60k32TD47C1Ik3RX630coaP7Q80vT2D1s=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1EFF41507CA78E48AF51E9CEE67C324B@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
- <1589453659-27581-6-git-send-email-smasetty@codeaurora.org> <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
-In-Reply-To: <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 18 May 2020 09:25:41 -0700
-Message-ID: <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
- set DDR bandwidth
-To:     Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 784753d1-7a90-4617-292e-08d7fb481f5a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 16:25:47.7264
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: D8sKvYVSNhEtvKelaZ1s/W3Xbm6JBvCGx+kWJZt3jAmSEAr1HpgkIcAdoV9MUUqjMsG0K9wsSisv+LOahdVg5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4608
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
-> > This patches replaces the previously used static DDR vote and uses
-> > dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
-> > GPU frequency.
-> >
-> > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> > ---
-> >  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
-> >  1 file changed, 1 insertion(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > index 2d8124b..79433d3 100644
-> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
-> >
-> >       gmu->freq = gmu->gpu_freqs[perf_index];
-> >
-> > -     /*
-> > -      * Eventually we will want to scale the path vote with the frequency but
-> > -      * for now leave it at max so that the performance is nominal.
-> > -      */
-> > -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> > +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
-> >  }
->
-> This adds an implicit requirement that all targets need bandwidth settings
-> defined in the OPP or they won't get a bus vote at all. I would prefer that
-> there be an default escape valve but if not you'll need to add
-> bandwidth values for the sdm845 OPP that target doesn't regress.
->
-
-it looks like we could maybe do something like:
-
-  ret = dev_pm_opp_set_bw(...);
-  if (ret) {
-      dev_warn_once(dev, "no bandwidth settings");
-      icc_set_bw(...);
-  }
-
-?
-
-BR,
--R
-
-> Jordan
->
-> >  unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
-> > --
-> > 2.7.4
-> >
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+T24gU2F0LCAyMDIwLTA1LTE2IGF0IDA3OjA2ICswODAwLCBUYW5nIEJpbiB3cm90ZToNCj4gVXNl
+IElTX0VSUigpIGFuZCBQVFJfRVJSKCkgaW5zdGVhZCBvZiBQVFJfRVJSX09SX1pFUk8oKSB0bw0K
+PiBzaW1wbGlmeSBjb2RlLCBhdm9pZCByZWR1bmRhbnQganVkZ2VtZW50cy4NCj4gDQo+IFNpZ25l
+ZC1vZmYtYnk6IFpoYW5nIFNoZW5nanUgPHpoYW5nc2hlbmdqdUBjbXNzLmNoaW5hbW9iaWxlLmNv
+bT4NCj4gU2lnbmVkLW9mZi1ieTogVGFuZyBCaW4gPHRhbmdiaW5AY21zcy5jaGluYW1vYmlsZS5j
+b20+DQo+IFJldmlld2VkLWJ5OiBMZW9uIFJvbWFub3Zza3kgPGxlb25yb0BtZWxsYW5veC5jb20+
+DQo+IC0tLQ0KPiBDaGFuZ2VzIGZyb20gdjENCj4gIC0gZml4IHRoZSBjb21taXQgbWVzc2FnZSBm
+b3IgdHlwby4NCj4gLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2Nv
+cmUvZW4vdGNfdHVuLmMgfCA1ICsrLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25z
+KCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCg0KQXBwbGllZCB0byBuZXQtbmV4dC1tbHg1IA0KDQpU
+aGFua3MsDQpTYWVlZC4NCg0K
