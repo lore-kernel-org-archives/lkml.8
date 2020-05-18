@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAAAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC81207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20ED7207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823803;
-	bh=aWKxntaITNK5Crmzs5lhTI9tLJXLyzOlCRtDtXkeG0w=;
+	s=default; t=1589823806;
+	bh=R5QK326AH5inWhvKfzZwcHD32UTKHTovUyeZHJAtRzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fe+ykNKBMsrEwrz2Qe3vOl7amZStJ5NxaGNEd9P8gFVL0MHrl37BLGAmPb/gI7Jwl
-	 D/l5sg+68vgW4bpqqp/3o+9OKUZ/h7U7LNYbF1yd+GpNVGIoHwP5RqonhDAUgAdo8W
-	 DRP9PBIBubNyufHrOnVNwsfohX7DDAn0AecTa1Ww=
+	b=rCglYj5A0Xg5WvyoFcS/4+UiKKyeqL0/xv6GB9kj3+4PMbW8A/wdXHPhCL1Iy0hj6
+	 39YMTPsxhrHTcMrqgPyyF+DYRryADa8run6Ca8cZxVnJyES6aLdpPHM/4ltbWSS8Nn
+	 9fa4YeZwqfOBeeL7D+PI24OPwj2VrcNilGjl6VRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgERRnV (ORCPT
+        id S1729049AbgERRnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:43:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729526AbgERRnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:43:09 -0400
+        id S1729552AbgERRnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:43:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F18020829;
-        Mon, 18 May 2020 17:43:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF27220835;
+        Mon, 18 May 2020 17:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823788;
-        bh=aWKxntaITNK5Crmzs5lhTI9tLJXLyzOlCRtDtXkeG0w=;
+        s=default; t=1589823798;
+        bh=R5QK326AH5inWhvKfzZwcHD32UTKHTovUyeZHJAtRzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vSmJmymPy088njy4ZziB0PZfCsweKPmWyfkg+fdexgDESoAYL1UapoQNa0MQK91GC
-         uP52eeuBxzSQQVxQYaxHRtRIbRM9A66jCtagnRbbcJWmug8uNT1Ftm+dGEfYluoreu
-         VOcemsNUNJoBWltLuEstWjTsNYMh2gF2DJv5Q1iQ=
+        b=DQRhVrgGl9+Hga66EN/rCwzPRE9GYz8tAstC/1DWQqDMxDKtngmlPSwUo9eUsPsBa
+         eH2FjnEE/S9Y5TTPXN66YC3+h/9WWucNwf1XxihIjQtlIhgeovok4vmWOaqP1nJlC0
+         xenHFYlGjvLJ20A0SM00HHI3/l1GBhKWylTLeS8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        stable@vger.kernel.org,
+        syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com,
+        syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 37/90] chardev: add helper function to register char devs with a struct device
-Date:   Mon, 18 May 2020 19:36:15 +0200
-Message-Id: <20200518173458.652973043@linuxfoundation.org>
+Subject: [PATCH 4.9 41/90] shmem: fix possible deadlocks on shmlock_user_lock
+Date:   Mon, 18 May 2020 19:36:19 +0200
+Message-Id: <20200518173459.560223961@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -63,215 +65,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Hugh Dickins <hughd@google.com>
 
-commit 233ed09d7fdacf592ee91e6c97ce5f4364fbe7c0 upstream.
+[ Upstream commit ea0dfeb4209b4eab954d6e00ed136bc6b48b380d ]
 
-Credit for this patch goes is shared with Dan Williams [1]. I've
-taken things one step further to make the helper function more
-useful and clean up calling code.
+Recent commit 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page()
+when punching hole") has allowed syzkaller to probe deeper, uncovering a
+long-standing lockdep issue between the irq-unsafe shmlock_user_lock,
+the irq-safe xa_lock on mapping->i_pages, and shmem inode's info->lock
+which nests inside xa_lock (or tree_lock) since 4.8's shmem_uncharge().
 
-There's a common pattern in the kernel whereby a struct cdev is placed
-in a structure along side a struct device which manages the life-cycle
-of both. In the naive approach, the reference counting is broken and
-the struct device can free everything before the chardev code
-is entirely released.
+user_shm_lock(), servicing SysV shmctl(SHM_LOCK), wants
+shmlock_user_lock while its caller shmem_lock() holds info->lock with
+interrupts disabled; but hugetlbfs_file_setup() calls user_shm_lock()
+with interrupts enabled, and might be interrupted by a writeback endio
+wanting xa_lock on i_pages.
 
-Many developers have solved this problem by linking the internal kobjs
-in this fashion:
+This may not risk an actual deadlock, since shmem inodes do not take
+part in writeback accounting, but there are several easy ways to avoid
+it.
 
-cdev.kobj.parent = &parent_dev.kobj;
+Requiring interrupts disabled for shmlock_user_lock would be easy, but
+it's a high-level global lock for which that seems inappropriate.
+Instead, recall that the use of info->lock to guard info->flags in
+shmem_lock() dates from pre-3.1 days, when races with SHMEM_PAGEIN and
+SHMEM_TRUNCATE could occur: nowadays it serves no purpose, the only flag
+added or removed is VM_LOCKED itself, and calls to shmem_lock() an inode
+are already serialized by the caller.
 
-The cdev code explicitly gets and puts a reference to it's kobj parent.
-So this seems like it was intended to be used this way. Dmitrty Torokhov
-first put this in place in 2012 with this commit:
+Take info->lock out of the chain and the possibility of deadlock or
+lockdep warning goes away.
 
-2f0157f char_dev: pin parent kobject
-
-and the first instance of the fix was then done in the input subsystem
-in the following commit:
-
-4a215aa Input: fix use-after-free introduced with dynamic minor changes
-
-Subsequently over the years, however, this issue seems to have tripped
-up multiple developers independently. For example, see these commits:
-
-0d5b7da iio: Prevent race between IIO chardev opening and IIO device
-(by Lars-Peter Clausen in 2013)
-
-ba0ef85 tpm: Fix initialization of the cdev
-(by Jason Gunthorpe in 2015)
-
-5b28dde [media] media: fix use-after-free in cdev_put() when app exits
-after driver unbind
-(by Shauh Khan in 2016)
-
-This technique is similarly done in at least 15 places within the kernel
-and probably should have been done so in another, at least, 5 places.
-The kobj line also looks very suspect in that one would not expect
-drivers to have to mess with kobject internals in this way.
-Even highly experienced kernel developers can be surprised by this
-code, as seen in [2].
-
-To help alleviate this situation, and hopefully prevent future
-wasted effort on this problem, this patch introduces a helper function
-to register a char device along with its parent struct device.
-This creates a more regular API for tying a char device to its parent
-without the developer having to set members in the underlying kobject.
-
-This patch introduce cdev_device_add and cdev_device_del which
-replaces a common pattern including setting the kobj parent, calling
-cdev_add and then calling device_add. It also introduces cdev_set_parent
-for the few cases that set the kobject parent without using device_add.
-
-[1] https://lkml.org/lkml/2017/2/13/700
-[2] https://lkml.org/lkml/2017/2/10/370
-
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Hans Verkuil <hans.verkuil@cisco.com>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Fixes: 4595ef88d136 ("shmem: make shmem_inode_info::lock irq-safe")
+Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
+Reported-by: syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2004161707410.16322@eggly.anvils
+Link: https://lore.kernel.org/lkml/000000000000e5838c05a3152f53@google.com/
+Link: https://lore.kernel.org/lkml/0000000000003712b305a331d3b1@google.com/
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/char_dev.c        | 86 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/cdev.h |  5 +++
- 2 files changed, 91 insertions(+)
+ mm/shmem.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/char_dev.c b/fs/char_dev.c
-index 23e0477edf7d6..1bbb966c0783f 100644
---- a/fs/char_dev.c
-+++ b/fs/char_dev.c
-@@ -477,6 +477,85 @@ int cdev_add(struct cdev *p, dev_t dev, unsigned count)
- 	return 0;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 90ccbb35458bd..31b0c09fe6c60 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2082,7 +2082,11 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
+ 	struct shmem_inode_info *info = SHMEM_I(inode);
+ 	int retval = -ENOMEM;
+ 
+-	spin_lock_irq(&info->lock);
++	/*
++	 * What serializes the accesses to info->flags?
++	 * ipc_lock_object() when called from shmctl_do_lock(),
++	 * no serialization needed when called from shm_destroy().
++	 */
+ 	if (lock && !(info->flags & VM_LOCKED)) {
+ 		if (!user_shm_lock(inode->i_size, user))
+ 			goto out_nomem;
+@@ -2097,7 +2101,6 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
+ 	retval = 0;
+ 
+ out_nomem:
+-	spin_unlock_irq(&info->lock);
+ 	return retval;
  }
  
-+/**
-+ * cdev_set_parent() - set the parent kobject for a char device
-+ * @p: the cdev structure
-+ * @kobj: the kobject to take a reference to
-+ *
-+ * cdev_set_parent() sets a parent kobject which will be referenced
-+ * appropriately so the parent is not freed before the cdev. This
-+ * should be called before cdev_add.
-+ */
-+void cdev_set_parent(struct cdev *p, struct kobject *kobj)
-+{
-+	WARN_ON(!kobj->state_initialized);
-+	p->kobj.parent = kobj;
-+}
-+
-+/**
-+ * cdev_device_add() - add a char device and it's corresponding
-+ *	struct device, linkink
-+ * @dev: the device structure
-+ * @cdev: the cdev structure
-+ *
-+ * cdev_device_add() adds the char device represented by @cdev to the system,
-+ * just as cdev_add does. It then adds @dev to the system using device_add
-+ * The dev_t for the char device will be taken from the struct device which
-+ * needs to be initialized first. This helper function correctly takes a
-+ * reference to the parent device so the parent will not get released until
-+ * all references to the cdev are released.
-+ *
-+ * This helper uses dev->devt for the device number. If it is not set
-+ * it will not add the cdev and it will be equivalent to device_add.
-+ *
-+ * This function should be used whenever the struct cdev and the
-+ * struct device are members of the same structure whose lifetime is
-+ * managed by the struct device.
-+ *
-+ * NOTE: Callers must assume that userspace was able to open the cdev and
-+ * can call cdev fops callbacks at any time, even if this function fails.
-+ */
-+int cdev_device_add(struct cdev *cdev, struct device *dev)
-+{
-+	int rc = 0;
-+
-+	if (dev->devt) {
-+		cdev_set_parent(cdev, &dev->kobj);
-+
-+		rc = cdev_add(cdev, dev->devt, 1);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	rc = device_add(dev);
-+	if (rc)
-+		cdev_del(cdev);
-+
-+	return rc;
-+}
-+
-+/**
-+ * cdev_device_del() - inverse of cdev_device_add
-+ * @dev: the device structure
-+ * @cdev: the cdev structure
-+ *
-+ * cdev_device_del() is a helper function to call cdev_del and device_del.
-+ * It should be used whenever cdev_device_add is used.
-+ *
-+ * If dev->devt is not set it will not remove the cdev and will be equivalent
-+ * to device_del.
-+ *
-+ * NOTE: This guarantees that associated sysfs callbacks are not running
-+ * or runnable, however any cdevs already open will remain and their fops
-+ * will still be callable even after this function returns.
-+ */
-+void cdev_device_del(struct cdev *cdev, struct device *dev)
-+{
-+	device_del(dev);
-+	if (dev->devt)
-+		cdev_del(cdev);
-+}
-+
- static void cdev_unmap(dev_t dev, unsigned count)
- {
- 	kobj_unmap(cdev_map, dev, count);
-@@ -488,6 +567,10 @@ static void cdev_unmap(dev_t dev, unsigned count)
-  *
-  * cdev_del() removes @p from the system, possibly freeing the structure
-  * itself.
-+ *
-+ * NOTE: This guarantees that cdev device will no longer be able to be
-+ * opened, however any cdevs already open will remain and their fops will
-+ * still be callable even after cdev_del returns.
-  */
- void cdev_del(struct cdev *p)
- {
-@@ -576,5 +659,8 @@ EXPORT_SYMBOL(cdev_init);
- EXPORT_SYMBOL(cdev_alloc);
- EXPORT_SYMBOL(cdev_del);
- EXPORT_SYMBOL(cdev_add);
-+EXPORT_SYMBOL(cdev_set_parent);
-+EXPORT_SYMBOL(cdev_device_add);
-+EXPORT_SYMBOL(cdev_device_del);
- EXPORT_SYMBOL(__register_chrdev);
- EXPORT_SYMBOL(__unregister_chrdev);
-diff --git a/include/linux/cdev.h b/include/linux/cdev.h
-index f8763615a5f2d..408bc09ce497b 100644
---- a/include/linux/cdev.h
-+++ b/include/linux/cdev.h
-@@ -4,6 +4,7 @@
- #include <linux/kobject.h>
- #include <linux/kdev_t.h>
- #include <linux/list.h>
-+#include <linux/device.h>
- 
- struct file_operations;
- struct inode;
-@@ -26,6 +27,10 @@ void cdev_put(struct cdev *p);
- 
- int cdev_add(struct cdev *, dev_t, unsigned);
- 
-+void cdev_set_parent(struct cdev *p, struct kobject *kobj);
-+int cdev_device_add(struct cdev *cdev, struct device *dev);
-+void cdev_device_del(struct cdev *cdev, struct device *dev);
-+
- void cdev_del(struct cdev *);
- 
- void cd_forget(struct inode *);
 -- 
 2.20.1
 
