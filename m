@@ -2,127 +2,181 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A43420758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3556520758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dMwg11uC"
+	dkim=pass (2048-bit key) header.d=benboeckel.net header.i=@benboeckel.net header.b="NuHvEljJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2Dsh/SQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgERPux (ORCPT
+        id S1728431AbgERPvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:50:53 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26420 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727020AbgERPux (ORCPT
+        Mon, 18 May 2020 11:51:52 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:34445 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727005AbgERPvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:50:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589817052; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=MA7x95uTokqN/aU7nVR9VOVc4EF74ZFKJm4hvl9kPak=; b=dMwg11uCHw18KMXBOJmTbThho/QRAsHH9gH6KSIOjYx6o+2wKi75ZFEcKIviAppNjmv+t1AR
- s0ZpMHXflBTq58/EZKmSx2e4VVXhntG2LBcsizs5AlO4KYTBCfxSUljrVqNFeY2sMSO+mcbX
- qvFVg8kPTzl0A+zHW0Xi532Jb6Q=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec2aecd.7fd5868fa960-smtp-out-n01;
- Mon, 18 May 2020 15:50:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B71BDC433D2; Mon, 18 May 2020 15:50:37 +0000 (UTC)
-Received: from groverm-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: groverm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6C9E4C43636;
-        Mon, 18 May 2020 15:50:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6C9E4C43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=groverm@codeaurora.org
-From:   Mayank Grover <groverm@codeaurora.org>
-To:     linus.walleij@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, neeraju@codeaurora.org,
-        Mayank Grover <groverm@codeaurora.org>
-Subject: [PATCH] pinctrl: msm: Add check for pinctrl group is valid
-Date:   Mon, 18 May 2020 21:20:25 +0530
-Message-Id: <1589817025-21886-1-git-send-email-groverm@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 18 May 2020 11:51:51 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 5654D846;
+        Mon, 18 May 2020 11:51:50 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Mon, 18 May 2020 11:51:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=benboeckel.net;
+         h=date:from:to:cc:subject:message-id:reply-to:references
+        :mime-version:content-type:in-reply-to; s=fm1; bh=/k6Uxefv5KR5De
+        o3sESOUjXzq3bRzNHWL0Vw3jNx8TM=; b=NuHvEljJ+d74MxbNbt0IcdDN9xc84T
+        EHDdvqt6RshgLbRFK11KxarFQSg70p+Yxu84qM7lnNczEPSpda/54k4frRshT1R+
+        mnvd5x6t3qobpjBelcWkpRa220yT/HRfma6Uo7cne5YZd9kg2UskjsSamJs1sH8/
+        JA8PHE6IGQsj7w5iehy6XA6qqldh2z8dIDZ8tMH6dCoTen95zf4fyT3AoBX/H2TP
+        fCEdNzyqF8ix2q6KA+CadEgziyKc7NsWnwou7E8pez7bukRDTTksrMlIu43yMg50
+        xPfJuXBPHqLh1kUt3LS0y7vRAi5+geDedxdo18mrnN3LYqPx+no2BH3g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:reply-to:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=/k6Uxefv5KR5Deo3sESOUjXzq3bRzNHWL0Vw3jNx8TM=; b=2Dsh/SQK
+        jh0rMCyIN1dsj3q/pvM29qDgAKEEn8qBwoQ96CGb8MnYpgoslHQ2lqii4qza6FOO
+        fQ4zj69L+Huv3c0qwZSv16LSAKj70prQQVwTH4TmAbaPDalmNBXEKRebbpubvS5y
+        s1HNJ7FuOsaSS9hmClcDd7exNhAR1r+2e6pYalGRVDSqLkYQb+zqsT6JLPjA4HK1
+        7voixJCaR5FeomBF3To98M0vSKj4GFyl4xhBX6GtzU6JcjslkY4KGUXI/JkL+QGL
+        FuaE5Uz9vF/urYEUQfXhcJO52sQ5zE9dQawtHWClo9AA9nyBQlBfdyoGgVjzwvxI
+        3lGaBlAV/65V8g==
+X-ME-Sender: <xms:Fa_CXqMd_B97yruaVQXL4CFEm8jLzuxkrixrkxh8qou0A-fq4XGR9w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddthedgledvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhrfhggtggujggfsehttdertddtreejnecuhfhrohhmpeeuvghn
+    uceuohgvtghkvghluceomhgvsegsvghnsghovggtkhgvlhdrnhgvtheqnecuggftrfgrth
+    htvghrnhepjedtvdffheetgfektdehvefgieelgeefheejvdehtdduieetgedtfedtleev
+    vdffnecukfhppeeiledrvddtgedrudeikedrvdeffeenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgessggvnhgsohgvtghkvghlrdhnvght
+X-ME-Proxy: <xmx:Fa_CXo8sMxWTUWmv33PUjhTxoMuKU7rvHqc7EWQ3INq8FFxQT8gMCA>
+    <xmx:Fa_CXhTLBg6uuY7B0m3xh1NPwmYx5ciDsH2XpqWXAyxcwKgI56REtg>
+    <xmx:Fa_CXqvbq-ZBzOBW1yy4gEEI5foZBb09cHJZ5ra5EvuEcWddAG6ugQ>
+    <xmx:Fa_CXvFsXzihHcpc90fzRH_BtU5FWd7GCiMfwYd9AqDrbQI68lNZ0A>
+Received: from localhost (cpe-69-204-168-233.nycap.res.rr.com [69.204.168.233])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 77A3730663FD;
+        Mon, 18 May 2020 11:51:49 -0400 (EDT)
+Date:   Mon, 18 May 2020 11:51:48 -0400
+From:   Ben Boeckel <me@benboeckel.net>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        keyrings@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, fweimer@redhat.com
+Subject: Re: [PATCH] dns: Apply a default TTL to records obtained from
+ getaddrinfo()
+Message-ID: <20200518155148.GA2595638@erythro.dev.benboeckel.internal>
+Reply-To: me@benboeckel.net
+References: <158981176590.872823.11683683537698750702.stgit@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <158981176590.872823.11683683537698750702.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.13.3 (2020-01-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The list of reserved gpio pins for platform are populated
-in gpiochip valid_mask.
+On Mon, May 18, 2020 at 15:22:45 +0100, David Howells wrote:
+> Address records obtained from getaddrinfo() don't come with any TTL
+> information, even if they're obtained from the DNS, with the result that
+> key.dns_resolver upcall program doesn't set an expiry time on dns_resolver
+> records unless they include a component obtained directly from the DNS,
+> such as an SRV or AFSDB record.
+> 
+> Fix this to apply a default TTL of 10mins in the event that we haven't got
+> one.  This can be configured in /etc/keyutils/key.dns_resolver.conf by
+> adding the line:
+> 
+> 	default_ttl: <number-of-seconds>
+> 
+> to the file.
 
-Here on MSM common driver introduce ability to check if
-pingroup is valid, by parsing pins in pingroup against
-reserved pins for gpios. This does not handle non-gpio
-pingroups.
+Is there precedent for this config file format? It looks like possible
+YAML, but this patch doesn't mention that anywhere. Is there a good
+reason to not be using an existing format (ini, toml, json, shell-alike,
+anything)? I have no preference for anything other than a format that
+already exists out there. Maybe one that supports comments too so that
+these settings can have context associated with them in real
+deployments (which effectively rules out json)?
 
-Signed-off-by: Mayank Grover <groverm@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> +	while (fgets(buf, sizeof(buf) - 1, f)) {
+> +		line++;
+> +		if (buf[0] == '#')
+> +			continue;
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 85858c1..b6ebe26 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -261,6 +261,24 @@ static unsigned msm_regval_to_drive(u32 val)
- 	return (val + 1) * 2;
- }
- 
-+static bool msm_pingroup_is_valid(struct msm_pinctrl *pctrl,
-+				  const struct msm_pingroup *g)
-+{
-+	const unsigned int *pins = g->pins;
-+	unsigned int num_pins = g->npins;
-+	struct gpio_chip *chip = &pctrl->chip;
-+	unsigned int max_gpios = chip->ngpio;
-+	unsigned int i;
-+
-+	for (i = 0; i < num_pins; i++) {
-+		/* Doesn't handle non-gpio pingroups */
-+		if (pins[i] < max_gpios &&
-+		    !gpiochip_line_is_valid(chip, pins[i]))
-+			return false;
-+	}
-+	return true;
-+}
-+
- static int msm_config_group_get(struct pinctrl_dev *pctldev,
- 				unsigned int group,
- 				unsigned long *config)
-@@ -276,6 +294,10 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
- 
- 	g = &pctrl->soc->groups[group];
- 
-+	/* Check if group has all valid pins */
-+	if (!msm_pingroup_is_valid(pctrl, g))
-+		return -EINVAL;
-+
- 	ret = msm_config_reg(pctrl, g, param, &mask, &bit);
- 	if (ret < 0)
- 		return ret;
-@@ -355,6 +377,10 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
- 
- 	g = &pctrl->soc->groups[group];
- 
-+	/* Check if group has all valid pins */
-+	if (!msm_pingroup_is_valid(pctrl, g))
-+		return -EINVAL;
-+
- 	for (i = 0; i < num_configs; i++) {
- 		param = pinconf_to_config_param(configs[i]);
- 		arg = pinconf_to_config_argument(configs[i]);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+So it does support comments...
+
+> +		p = strchr(buf, '\n');
+> +		if (!p)
+> +			error("%s:%u: line missing newline or too long", config_file, line);
+> +		while (p > buf && isspace(p[-1]))
+> +			p--;
+> +		*p = 0;
+> +
+> +		if (strncmp(buf, "default_ttl:", 12) == 0) {
+> +			p = buf + 12;
+> +			while (isspace(*p))
+> +				p++;
+
+...but not if it starts with whitespace. So if one does indent the
+`default_ttl` setting for whatever reason, the comment is stuck at the
+first column.
+
+> +			if (sscanf(p, "%u%n", &u, &n) != 1)
+> +				error("%s:%u: default_ttl: Bad value",
+> +				      config_file, line);
+> +			if (p[n])
+> +				error("%s:%u: default_ttl: Extra data supplied",
+> +				      config_file, line);
+
+But no trailing whitespace is allowed?
+
+> +			if (u < 1 || u > INT_MAX)
+> +				error("%s:%u: default_ttl: Out of range",
+> +				      config_file, line);
+
+The valid range should be mentioned in the docs (basically that 0 is not
+allowed and has no special meaning (it could mean leaving off the TTL as
+previously done)).
+
+> +			key_expiry = u;
+> +		} else {
+> +			error("%s:%u: Unknown option", config_file, line);
+
+Forwards compatibility is hard with such behavior. Is there any reason
+this can't be a warning?
+
+> @@ -24,6 +26,21 @@ It can be called in debugging mode to test its functionality by passing a
+>  \fB\-D\fR flag on the command line.  For this to work, the key description and
+>  the callout information must be supplied.  Verbosity can be increased by
+>  supplying one or more \fB\-v\fR flags.
+> +.P
+> +A configuration file can be supplied to adjust various parameters.  The file
+> +is looked for at:
+> +.IP
+> +/etc/keyutils/key.dns_resolver.conf
+> +.P
+> +unless otherwise specified with the \fB\-c\fR flag.
+> +.P
+> +Configuration options include:
+> +.TP
+> +.B default_ttl: <number>
+> +The number of seconds to set as the expiration on a cached record.  This will
+> +be overridden if the program manages to retrieve TTL information along with
+> +the addresses (if, for example, it accesses the DNS directly).  The default is
+> +600 seconds.
+
+There's no mention of the leading whitespace support or comments here.
+Does the file deserve its own manpage?
+
+--Ben
