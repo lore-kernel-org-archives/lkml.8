@@ -2,153 +2,143 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08180C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9216320758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3AC720758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X+1avSNL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MArjN6+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgERQBC (ORCPT
+        id S1728198AbgERQCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:01:02 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23131 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727007AbgERQBB (ORCPT
+        Mon, 18 May 2020 12:02:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgERQCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:01:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589817659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uGfWaxhY+jU5M2XGBqXdmB1wFIx1369hpMAG9rZmmys=;
-        b=X+1avSNLUE8YRAkfGKF/iQbVTE1uDk2wyFlzylAWi20PRx46Wyz3gdlRFvx/HanOltlAhJ
-        AuCrcD5D5pRe3Wy+uEA1SozfaMqmyBoUKF0R+02lcrRrf4tZqt/j0dI7mB9e6i5ICigeG/
-        TOgYxAy4L9SSV9Alsg/YiCXFtuvr+do=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-HK4e_NAUO26FMqQqHNcGgg-1; Mon, 18 May 2020 12:00:56 -0400
-X-MC-Unique: HK4e_NAUO26FMqQqHNcGgg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 759A9835BC4;
-        Mon, 18 May 2020 16:00:53 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D36507958F;
-        Mon, 18 May 2020 16:00:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200518145723.65b89375@canb.auug.org.au>
-References: <20200518145723.65b89375@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        linux-kbuild@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: How should we handle a bool depending on a tristate?
+        Mon, 18 May 2020 12:02:00 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745C2C061A0C;
+        Mon, 18 May 2020 09:01:59 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s8so12501818wrt.9;
+        Mon, 18 May 2020 09:01:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9SSAcWWQEWD0r3Pko5lkNYBqf2cJb3ilW4xHvkzbc9I=;
+        b=MArjN6+oacAwZQGLd8doq6gdFJ0WT4Kb25b+spk8eQpNEELJfKBkAiwG9HaZYt3kfV
+         n5AZKmlkj/DXuI/Rc0m4dWo4+ZJKH2LZVXZuQbQ735O0LaMitBaRTdBV3Bd7Fkjw8HoR
+         oRAFfSozNAKRNaKSL+j2nIDT4rV0zp0IFfAgnr3Z6rO6qoVDjDcRDgpJVTwSf1WxUFHm
+         Kdx0yV0GVZI52ulLcFDWl7DU1qRHEoRbMugSprRMnJj2p5jM9INfkX8ZnDYDjqcKBuVk
+         MavDletV6NJe2uUYog3u/jaK+4wROkr7iDFVoOivj4Rf152ZddwNy7kbAK2qGrSKKmr6
+         TVzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9SSAcWWQEWD0r3Pko5lkNYBqf2cJb3ilW4xHvkzbc9I=;
+        b=kwcyc+aff9wNLHOjU71gZzW7NA4JpBM4X8mplckvG+cwVtJiomBgtX8ujFqHLdSHdg
+         xrHuZqXaIIieY0xi9W1EGG6TrEhL2LtWCP085XMirkJ7Dov539gfV+tWr37b+lQWtQM9
+         HTLNB9jFpg5h0l96tRKCVTao5ha+7XC18lgAu1LQ67tOCrnL5+VME8ZmhxV8wmbP6k2G
+         tVqA/xNOanJaomG3GHWq1O2FgMbP9A6aNiIDMvPa2oeUqQI6iexI3MD1z800rTFFDATq
+         CivKJ0bhrk+sL26KZFBPJysl4HT4Tnp49gYzjFb9uPAiqb/5617coxMW8yJxOSLZRfV4
+         ERPQ==
+X-Gm-Message-State: AOAM533zfXtoREVUE3kGfUb47qd50xyuofyb+OfZ3FJFVW08foQpuosf
+        44nX1eLNiGjzRQi/NSPVjBg=
+X-Google-Smtp-Source: ABdhPJxlB/26iS1Qh1s66tzdQo+jkzTvK0fB4tNlbfmbOIrBYS3GZJGvXhEyqbh9cO61i0owgfIf9A==
+X-Received: by 2002:adf:e90b:: with SMTP id f11mr20601532wrm.364.1589817718065;
+        Mon, 18 May 2020 09:01:58 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id q5sm18237471wra.36.2020.05.18.09.01.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 May 2020 09:01:56 -0700 (PDT)
+Date:   Mon, 18 May 2020 18:01:20 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
+Message-ID: <20200518160120.GA21361@ict14-OptiPlex-980>
+References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
+ <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+ <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <968393.1589817650.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 18 May 2020 17:00:50 +0100
-Message-ID: <968394.1589817650@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Mon, May 18, 2020 at 05:55:51PM +0300, Andy Shevchenko wrote:
+> On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
+> <jonathan.albrieux@gmail.com> wrote:
+> 
+> > +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
+> 
+> (1)
+> 
+> ...
+> 
+> > +       /*
+> > +        * If reset pin is provided then will be set to high on power on
+> > +        * and to low on power off according to AK09911 datasheet
+> > +        */
+> 
+> Wording is confusing, perhaps you have to use 'asserted / deasserted'.
 
-> After merging the keys tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> =
+Thank you for the suggestion, I'll be working on rewording as soon as
+possible.
 
-> x86_64-linux-gnu-ld: security/keys/big_key.o: in function `big_key_read'=
-:
-> big_key.c:(.text+0x562): undefined reference to `chacha20poly1305_decryp=
-t'
-> x86_64-linux-gnu-ld: security/keys/big_key.o: in function `big_key_prepa=
-rse':
-> big_key.c:(.text+0x825): undefined reference to `chacha20poly1305_encryp=
-t'
-> =
+> Btw, in (1) it's also "high" (asserted). I barely understand how it's
+> supposed to work in all cases?
+> 
+> > +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
+> > +                                             "reset", GPIOD_OUT_HIGH);
+> > +       if (IS_ERR(reset_gpiod))
+> > +               return PTR_ERR(reset_gpiod);
+> 
 
-> Caused by commit
-> =
+I'm sorry but I'm not sure about what you mean by saying all cases.
+Currently  I'm testing this driver on a msm8916 device having AK09911
+magnetometer. At the current stage the driver is failing on probe 
+because reset pin is not connected to VID (as datasheet requires in case
+of pin not being used). In case of reset pin not asserted, register's
+reset is triggered resulting in empty registers, leading to probe fail.
+For this reason pin is asserted during power on in order to have 
+informations in registers and deasserted before power off triggering
+a reset.
 
->   e0a715753a88 ("security/keys: rewrite big_key crypto to use library in=
-terface")
-> =
+A workaround that gets AK09911 working on device is by setting the
+reset pin always high on device tree. This way registers gets reset by
+a Power On Reset circuit autonomously and reset pin never triggers the
+reset.
 
-> I have used the version from next-20200512 again tdoay.
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 
-Blech.  Yeah.  "depends on" doesn't work either.  The problem actually lie=
-s
-within the Kconfig framework.  It doesn't know how to handle a bool depend=
-ing
-on a tristate.
-
-So the issue is that with Jason's patch, we now have:
-
-	config BIG_KEYS
-		bool "Large payload keys"
-		depends on KEYS
-		depends on TMPFS
-		depends on CRYPTO_LIB_CHACHA20POLY1305
-
-	...
-
-	config CRYPTO_LIB_CHACHA20POLY1305
-		tristate "ChaCha20-Poly1305 AEAD support (8-byte nonce library version)"
-		depends on CRYPTO_ARCH_HAVE_LIB_CHACHA || !CRYPTO_ARCH_HAVE_LIB_CHACHA
-		depends on CRYPTO_ARCH_HAVE_LIB_POLY1305 || !CRYPTO_ARCH_HAVE_LIB_POLY13=
-05
-		select CRYPTO_LIB_CHACHA
-		select CRYPTO_LIB_POLY1305
-
-But you're allowed to set CONFIG_CRYPTO_LIB_CHACHA20POLY1305=3Dm.
-
-Using "select" instead can lead to warnings about circular dependencies an=
-d,
-in any case, doesn't propagate the selection up the tree.
-
-Also, in this case, having BIG_KEYS select everything isn't practical as
-CRYPTO_LIB_CHACHA20POLY1305 has a logical-XOR in its depends on.
-
-I think one or more of the following things need to happen:
-
- (1) The configurator needs to give an error if it detects this.
-
- (2) The configurator needs to propagate select rootwards.
-
- (3) The configurator needs to propagate "=3Dy" rootwards over depends on,
-     prohibiting "=3Dm".
-
- (4) The BIG_KEYS config needs to switch to a tristate.[*]
-
-Do we have a preference?
-
-David
-
-[*] Note there have been situations where switching to a tristate isn't
-    technically an option because the dependency target was required durin=
-g
-    boot (crypto used by module checking, for example), but we've just had=
- to
-    work around it and hope whoever was configuring the kernel built
-    everything in.
-
+Hoping to having answered to your question,
+Best regards,
+Jonathan Albrieux
