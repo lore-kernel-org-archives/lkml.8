@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E08DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A42B20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F151020715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824334;
-	bh=48APL4Me6i32PibkpfwGlIUpRfmeApshF9jBQdy6avw=;
+	s=default; t=1589824339;
+	bh=mbshnHENIYRB/FCVM459hXbxASVXtHsDAXUwyCDDyBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u66kOrZchBOw5AJh/hMwkT7xR0h00KqBNPOro3TTmq5SClZd2okBomkhmJMoN8dHY
-	 J3hJ9m5L3aP9SsLBmKvtC7SLbLBz16ctWZpJBMZO8ut8vYwgdlaXC51TMnZb4VrRII
-	 ADpSJxc/lC65Rku1o6GXUZDcEs3C5BWMIw4n6vkM=
+	b=I8sw3j2YiLJUeIgsQeIDLy0riOTH5LKlGqWBPEgLUBhACN23phXn7l2meEYJ0Ck5B
+	 xsqNoGyhxLaevozDGkz38BmfsfjOjSDQJg2PpjgYLTFWajspF2NRJYn/K96PSTxyW4
+	 UbHKIjSirAY5b0kpI6AS7LE9JCdySmdIRN7u0uZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbgERRwN (ORCPT
+        id S1730959AbgERRwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55236 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:52:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730931AbgERRwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:07 -0400
+        id S1730914AbgERRwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64F3C20835;
-        Mon, 18 May 2020 17:52:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 572B020715;
+        Mon, 18 May 2020 17:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824326;
-        bh=48APL4Me6i32PibkpfwGlIUpRfmeApshF9jBQdy6avw=;
+        s=default; t=1589824331;
+        bh=mbshnHENIYRB/FCVM459hXbxASVXtHsDAXUwyCDDyBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N0MhCDSaV/Bw/MaIwxKN0hnePG8HdbiTo4zGxxE9hCfwEaI41P4j/tdp9Np5kvYJs
-         bixGw5ummocijamHZ6q0OGCHdH6BvjnruuNCVGlcTHp2o2X79PqQwUbWhxi8mipr8p
-         xG547uQCzkREcnl34srGCBCj5KYv9K+Kw08sMLWw=
+        b=OziNCjWPuBW+xLloKa62AvDOrj7eClBljeA2uAY0AWs7CXjbwjoVQGslMgL3o17rj
+         /lt7F5Fq+5EBp9AFCYy92QP32xjnZzjM1vrJkYcCBhfdlTeyBPHg9jYZG5RNQHuajc
+         Ef6556VcqTLRA6QANrf0HQgJUxVE9imGh5XYiIc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 47/80] Stop the ad-hoc games with -Wno-maybe-initialized
-Date:   Mon, 18 May 2020 19:37:05 +0200
-Message-Id: <20200518173459.930021014@linuxfoundation.org>
+Subject: [PATCH 4.19 49/80] gcc-10: disable array-bounds warning for now
+Date:   Mon, 18 May 2020 19:37:07 +0200
+Message-Id: <20200518173500.338372416@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -61,107 +61,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75 upstream.
+commit 44720996e2d79e47d508b0abe99b931a726a3197 upstream.
 
-We have some rather random rules about when we accept the
-"maybe-initialized" warnings, and when we don't.
+This is another fine warning, related to the 'zero-length-bounds' one,
+but hitting the same historical code in the kernel.
 
-For example, we consider it unreliable for gcc versions < 4.9, but also
-if -O3 is enabled, or if optimizing for size.  And then various kernel
-config options disabled it, because they know that they trigger that
-warning by confusing gcc sufficiently (ie PROFILE_ALL_BRANCHES).
+Because C didn't historically support flexible array members, we have
+code that instead uses a one-sized array, the same way we have cases of
+zero-sized arrays.
 
-And now gcc-10 seems to be introducing a lot of those warnings too, so
-it falls under the same heading as 4.9 did.
+The one-sized arrays come from either not wanting to use the gcc
+zero-sized array extension, or from a slight convenience-feature, where
+particularly for strings, the size of the structure now includes the
+allocation for the final NUL character.
 
-At the same time, we have a very straightforward way to _enable_ that
-warning when wanted: use "W=2" to enable more warnings.
+So with a "char name[1];" at the end of a structure, you can do things
+like
 
-So stop playing these ad-hoc games, and just disable that warning by
-default, with the known and straight-forward "if you want to work on the
-extra compiler warnings, use W=123".
+       v = my_malloc(sizeof(struct vendor) + strlen(name));
 
-Would it be great to have code that is always so obvious that it never
-confuses the compiler whether a variable is used initialized or not?
-Yes, it would.  In a perfect world, the compilers would be smarter, and
-our source code would be simpler.
+and avoid the "+1" for the terminator.
 
-That's currently not the world we live in, though.
+Yes, the modern way to do that is with a flexible array, and using
+'offsetof()' instead of 'sizeof()', and adding the "+1" by hand.  That
+also technically gets the size "more correct" in that it avoids any
+alignment (and thus padding) issues, but this is another long-term
+cleanup thing that will not happen for 5.7.
+
+So disable the warning for now, even though it's potentially quite
+useful.  Having a slew of warnings that then hide more urgent new issues
+is not an improvement.
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile             |    7 +++----
- init/Kconfig         |   17 -----------------
- kernel/trace/Kconfig |    1 -
- 3 files changed, 3 insertions(+), 22 deletions(-)
+ Makefile |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/Makefile
 +++ b/Makefile
-@@ -662,10 +662,6 @@ else
- KBUILD_CFLAGS   += -O2
- endif
+@@ -794,6 +794,7 @@ KBUILD_CFLAGS += $(call cc-disable-warni
  
--ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--KBUILD_CFLAGS   += -Wno-maybe-uninitialized
--endif
--
- # Tell gcc to never replace conditional load with a non-conditional one
- KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
+ # We'll want to enable this eventually, but it's not going away for 5.7 at least
+ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
++KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
  
-@@ -796,6 +792,9 @@ KBUILD_CFLAGS += $(call cc-disable-warni
- # disable stringop warnings in gcc 8+
- KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
- 
-+# Enabled with W=2, disabled by default as noisy
-+KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
-+
- # disable invalid "can't wrap" optimizations for signed / pointers
- KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
- 
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -26,22 +26,6 @@ config CLANG_VERSION
- config CC_HAS_ASM_GOTO
- 	def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
- 
--config CC_HAS_WARN_MAYBE_UNINITIALIZED
--	def_bool $(cc-option,-Wmaybe-uninitialized)
--	help
--	  GCC >= 4.7 supports this option.
--
--config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--	bool
--	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
--	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
--	help
--	  GCC's -Wmaybe-uninitialized is not reliable by definition.
--	  Lots of false positive warnings are produced in some cases.
--
--	  If this option is enabled, -Wno-maybe-uninitialzed is passed
--	  to the compiler to suppress maybe-uninitialized warnings.
--
- config CONSTRUCTORS
- 	bool
- 	depends on !UML
-@@ -1099,7 +1083,6 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
- 
- config CC_OPTIMIZE_FOR_SIZE
- 	bool "Optimize for size"
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Enabling this option will pass "-Os" instead of "-O2" to
- 	  your compiler resulting in a smaller kernel.
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -370,7 +370,6 @@ config PROFILE_ANNOTATED_BRANCHES
- config PROFILE_ALL_BRANCHES
- 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
- 	select TRACE_BRANCH_PROFILING
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  This tracer profiles all branch conditions. Every if ()
- 	  taken in the kernel is recorded whether it hit or miss.
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
 
 
