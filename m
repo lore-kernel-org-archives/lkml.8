@@ -2,73 +2,121 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A678FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFA9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79EFC207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A1C207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:43:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgERNme (ORCPT
+        id S1727884AbgERNnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:42:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgERNme (ORCPT
+        Mon, 18 May 2020 09:43:12 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:47766 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgERNnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:42:34 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2335C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:42:33 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 336D3386; Mon, 18 May 2020 15:42:31 +0200 (CEST)
-Date:   Mon, 18 May 2020 15:42:29 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
-        anan.sun@mediatek.com
-Subject: Re: [PATCH] iommu/mediatek-v1: Add def_domain_type
-Message-ID: <20200518134229.GD18353@8bytes.org>
-References: <1589530123-30240-1-git-send-email-yong.wu@mediatek.com>
+        Mon, 18 May 2020 09:43:12 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A21AA8030807;
+        Mon, 18 May 2020 13:43:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id P0oDyOYnwCBc; Mon, 18 May 2020 16:43:08 +0300 (MSK)
+Date:   Mon, 18 May 2020 16:43:06 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request
+ thresholds
+Message-ID: <20200518134306.7rvydoasv7pmxwxl@mobilestation>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
+ <20200515143842.GG1634618@smile.fi.intel.com>
+ <20200516200133.wmaqnfjbr7234fzo@mobilestation>
+ <20200518110343.GY1634618@smile.fi.intel.com>
+ <20200518125253.r4fpr4mjflclqpym@mobilestation>
+ <CAHp75VeMcv-hQViCANQARiNh0LwmugsDWk=MF1c5E3t7z5h02Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1589530123-30240-1-git-send-email-yong.wu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75VeMcv-hQViCANQARiNh0LwmugsDWk=MF1c5E3t7z5h02Q@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 04:08:43PM +0800, Yong Wu wrote:
-> The MediaTek V1 IOMMU is arm32 whose default domain type is
-> IOMMU_DOMAIN_UNMANAGED. Add this to satisfy the bus_iommu_probe to
-> enter "probe_finalize".
+On Mon, May 18, 2020 at 04:25:20PM +0300, Andy Shevchenko wrote:
+> On Mon, May 18, 2020 at 3:53 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Mon, May 18, 2020 at 02:03:43PM +0300, Andy Shevchenko wrote:
+> > > On Sat, May 16, 2020 at 11:01:33PM +0300, Serge Semin wrote:
+> > > > On Fri, May 15, 2020 at 05:38:42PM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, May 15, 2020 at 01:47:49PM +0300, Serge Semin wrote:
 > 
-> The iommu framework will create a iommu domain for each a device.
-> But all the devices share a iommu domain here, thus we skip all the
-> other domains in the "attach_device" except the domain we create
-> internally with arm_iommu_create_mapping.
+> ...
 > 
-> Also a minor change: in the attach_device, "data" always is not null.
-> Remove "if (!data) return".
+> > > > > >         struct dma_chan         *txchan;
+> > > > > > +       u32                     txburst;
+> > > > > >         struct dma_chan         *rxchan;
+> > > > > > +       u32                     rxburst;
+> > > > >
+> > > > > Leave u32 together, it may be optimal on 64-bit architectures where ABIs require padding.
+> > > >
+> > > > It's not like anyone cared about padding in this structure in the first place)
+> > >
+> > > I think I have been caring (to some extend).
+> >
+> > Well, If you have then instead of asking to rearrange just two members (which
+> > by the way finely grouped by the Tx-Rx affiliation) why not sending a
+> > patch, which would refactor the whole structure so to be optimal for the x64
+> > platforms? I don't really see why this gets very important for you seeing
+> > Mark is Ok with this. My current commit follows the common driver design
+> > including the DW SSI data members grouping. On the second thought I'll leave
+> > it as is then.
 > 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
-> a. rebase on linux-next.
-> b. After this patch and fixed the mutex issue(locally I only move
->    mutex_unlock(&group->mutex) before __iommu_group_dma_attach(group)),
->    the mtk_iommu_v1.c could work normally.
-> ---
->  drivers/iommu/mtk_iommu_v1.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
+> Again same issue here. What is really easy to do for you here, will
+> become a burden and additional churn to anybody else.
+> So, why not to minimize it in the first place? Same with comma in
+> another patch. Sorry, I really don't get it.
 
-Applied, thanks.
+If comma is more or less understandable (though adding it is absolutely
+redundant there and doesn't worth even a bit of time spending for the
+discussion), here you consider the patch from padding point of view.
+The driver developer didn't care about it, but did care about grouping the
+members in a corresponding way. The padding burden will be there anyway and
+should be fixed for the whole structure in an additional patch. Until then
+the way of grouping should be preserved.
+
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
