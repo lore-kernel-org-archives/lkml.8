@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D728C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1106C206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00735206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ji4Ch8+n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fp14o64Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgERLrO (ORCPT
+        id S1728052AbgERLr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:47:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60540 "EHLO
+        Mon, 18 May 2020 07:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgERLrN (ORCPT
+        with ESMTP id S1727940AbgERLrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:47:13 -0400
+        Mon, 18 May 2020 07:47:21 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFCE0C061A0C;
-        Mon, 18 May 2020 04:47:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944BCC061A0C;
+        Mon, 18 May 2020 04:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=gEcIlXPDOpnjvuoYXNVQDG0cqiJg1ipM9BnENUoDM9Q=; b=ji4Ch8+nR06ugr2MZMVLewab6O
-        af1x6Rp4xlvnh3PuEv8xv9DqMlhGnrJdDRH3Zj/06boKtnySGh9SYrJ/UQ2U9EtmZj1wR9dp5egac
-        J450c7TOnzDE1rSUXdkKAkGmD+Q0ItIrX2oDdQk4Q4VVyJ7MuwLQFoWSFRUxxtIh0UjRzgS2rp+M2
-        /Oo4SNJeoC8tZ3HaR61wJ+/WbJYhphNqmk8qddu0HMMoY4i95IHLtVrfNH7UlTrAfBxqamzi+OrWp
-        zBw3udr8LLZ8cJ+sqzNBIjRPPwaJYlVu4F2Yma5sqIXGWelNQ8pqpDwEIplAivkxksvof2F/XpdS1
-        StfTLb2g==;
+        bh=ztGaRGjmnfTDhAKwb1uAT+sXQk1EV/hKojrYxDtc3CE=; b=Fp14o64Z/CJWKLmMlRtEC3HPc9
+        T77pwgekM0h9mdHlFmziuIfO9LP+RsgT+EPPPO1VhagZIUfFuaBYsei7fsLcgZhag39354IxAQziD
+        JDV12RNE4MB0Tur/wheuBhEV/j5o/QyK6tdN99YaLu/VtDBf25u9Qwlg2DVRzYZk+dozaIHPx7vhO
+        jWsxBLoTzfMpwHlZBKqRV2eN7IiUZxg6UuB/T6TJmaaS/hBoHiSAiduGZcj7fM9J/uL43WIhPEXT5
+        qGBv+BCveSAKhjZeB4jeVsunjjKud7r3hhUvgSpVxu25TvIvvZkPZ++rOpfA9opC+cMRkfMct1Flk
+        9iguvSPA==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jaeEZ-0004Nd-En; Mon, 18 May 2020 11:47:03 +0000
+        id 1jaeEm-0004P2-6i; Mon, 18 May 2020 11:47:16 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -47,9 +47,9 @@ Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/9] ipv4: consolidate the VIFF_TUNNEL handling in ipmr_new_tunnel
-Date:   Mon, 18 May 2020 13:46:48 +0200
-Message-Id: <20200518114655.987760-3-hch@lst.de>
+Subject: [PATCH 7/9] ipv6: stub out even more of addrconf_set_dstaddr if SIT is disabled
+Date:   Mon, 18 May 2020 13:46:53 +0200
+Message-Id: <20200518114655.987760-8-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518114655.987760-1-hch@lst.de>
 References: <20200518114655.987760-1-hch@lst.de>
@@ -61,98 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also move the dev_set_allmulti call and the error handling into the
-ioctl helper.  This allows reusing already looked up tunnel_dev pointer
-and the set up argument structure for the deletion in the error handler.
+There is no point in copying the structure from userspace or looking up
+a device if SIT support is not disabled and we'll eventually return
+-ENODEV anyway.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- net/ipv4/ipmr.c | 53 ++++++++++++-------------------------------------
- 1 file changed, 13 insertions(+), 40 deletions(-)
+ net/ipv6/addrconf.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-index a1169b6941134..cd1a3260a99af 100644
---- a/net/ipv4/ipmr.c
-+++ b/net/ipv4/ipmr.c
-@@ -421,37 +421,6 @@ static void ipmr_free_table(struct mr_table *mrt)
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index ab7e839753aed..8300176f91e74 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -2794,6 +2794,9 @@ int addrconf_set_dstaddr(struct net *net, void __user *arg)
+ 	struct net_device *dev;
+ 	int err = -EINVAL;
  
- /* Service routines creating virtual interfaces: DVMRP tunnels and PIMREG */
++	if (!IS_ENABLED(CONFIG_IPV6_SIT))
++		return -ENODEV;
++
+ 	rtnl_lock();
  
--static void ipmr_del_tunnel(struct net_device *dev, struct vifctl *v)
--{
--	struct net *net = dev_net(dev);
--
--	dev_close(dev);
--
--	dev = __dev_get_by_name(net, "tunl0");
--	if (dev) {
--		const struct net_device_ops *ops = dev->netdev_ops;
--		struct ifreq ifr;
--		struct ip_tunnel_parm p;
--
--		memset(&p, 0, sizeof(p));
--		p.iph.daddr = v->vifc_rmt_addr.s_addr;
--		p.iph.saddr = v->vifc_lcl_addr.s_addr;
--		p.iph.version = 4;
--		p.iph.ihl = 5;
--		p.iph.protocol = IPPROTO_IPIP;
--		sprintf(p.name, "dvmrp%d", v->vifc_vifi);
--		ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
--
--		if (ops->ndo_do_ioctl) {
--			mm_segment_t oldfs = get_fs();
--
--			set_fs(KERNEL_DS);
--			ops->ndo_do_ioctl(dev, &ifr, SIOCDELTUNNEL);
--			set_fs(oldfs);
--		}
--	}
--}
--
- /* Initialize ipmr pimreg/tunnel in_device */
- static bool ipmr_init_vif_indev(const struct net_device *dev)
- {
-@@ -509,12 +478,22 @@ static struct net_device *ipmr_new_tunnel(struct net *net, struct vifctl *v)
- 	if (dev_open(new_dev, NULL))
- 		goto out_unregister;
- 	dev_hold(new_dev);
-+	err = dev_set_allmulti(new_dev, 1);
-+	if (err) {
-+		dev_close(new_dev);
-+		set_fs(KERNEL_DS);
-+		tunnel_dev->netdev_ops->ndo_do_ioctl(tunnel_dev, &ifr,
-+				SIOCDELTUNNEL);
-+		set_fs(oldfs);
-+		dev_put(new_dev);
-+		new_dev = ERR_PTR(err);
-+	}
- 	return new_dev;
+ 	err = -EFAULT;
+@@ -2806,7 +2809,6 @@ int addrconf_set_dstaddr(struct net *net, void __user *arg)
+ 	if (!dev)
+ 		goto err_exit;
  
- out_unregister:
- 	unregister_netdevice(new_dev);
- out:
--	return NULL;
-+	return ERR_PTR(-ENOBUFS);
- }
+-#if IS_ENABLED(CONFIG_IPV6_SIT)
+ 	if (dev->type == ARPHRD_SIT) {
+ 		const struct net_device_ops *ops = dev->netdev_ops;
+ 		struct ifreq ifr;
+@@ -2842,7 +2844,6 @@ int addrconf_set_dstaddr(struct net *net, void __user *arg)
+ 			err = dev_open(dev, NULL);
+ 		}
+ 	}
+-#endif
  
- #if defined(CONFIG_IP_PIMSM_V1) || defined(CONFIG_IP_PIMSM_V2)
-@@ -866,14 +845,8 @@ static int vif_add(struct net *net, struct mr_table *mrt,
- 		break;
- 	case VIFF_TUNNEL:
- 		dev = ipmr_new_tunnel(net, vifc);
--		if (!dev)
--			return -ENOBUFS;
--		err = dev_set_allmulti(dev, 1);
--		if (err) {
--			ipmr_del_tunnel(dev, vifc);
--			dev_put(dev);
--			return err;
--		}
-+		if (IS_ERR(dev))
-+			return PTR_ERR(dev);
- 		break;
- 	case VIFF_USE_IFINDEX:
- 	case 0:
+ err_exit:
+ 	rtnl_unlock();
 -- 
 2.26.2
 
