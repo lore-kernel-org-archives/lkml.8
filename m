@@ -2,53 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD463C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58935C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0932207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C819207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823631;
-	bh=wQj4eX7/FxHkNa5dyrYIrZEZLqrzpC4NjNtQNYdvArI=;
+	s=default; t=1589823637;
+	bh=+5Hx6j8XeznTB/ncyoRGCyiroW+T2QpU5wS0iwqqkEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ti8QD0AekZdB45YqQ93eYRedjvNX6mnoSXXx3uBpv0Lx34/sC33ZyvmJ+nXNgU4NR
-	 SXnc6aRglgPCVj0UY6DL5tMgfEpq2MWfUxtM/jUelefouKYSMjpWnOoG3rop1JzSqi
-	 oNOiGsWgCA8rJ5RB59iHg8Luoy88OvNl0QL6QIiw=
+	b=Ybpg7u4R99HSvcQ4YRtjHkEnFmLfGUpBoO3ol2px364WJU5w6cbtGxh9AFhqQRVR7
+	 HAPukonnTgbTrz2UNgxqzxn8p4+j68BH7IBYPz1ucIqJynnsW3Dt83FbB9/vSRWJJK
+	 Zu90nJ936WE9XZ6ueuSYSL1ATidTkUWhVFdL+YQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbgERRka (ORCPT
+        id S1729102AbgERRkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:40:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729036AbgERRkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:21 -0400
+        id S1729055AbgERRk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C5F7206D4;
-        Mon, 18 May 2020 17:40:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F3D920657;
+        Mon, 18 May 2020 17:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823620;
-        bh=wQj4eX7/FxHkNa5dyrYIrZEZLqrzpC4NjNtQNYdvArI=;
+        s=default; t=1589823625;
+        bh=+5Hx6j8XeznTB/ncyoRGCyiroW+T2QpU5wS0iwqqkEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NB70sqOsgyE8COQNV8uszeFoztdBC/1geOAAPGujyEWRvsFnHXnNvJs7aACLTPPfp
-         f04coi+vHbKTIViF17cIK9zA5K0T9tsdqrczqY9Uz9D5N/BuuN2gq86WTn28FXMKWd
-         kR2zPYbB5+Y2R+ofIpSDKvouDH5sNnurtSf2ubR8=
+        b=CifkUaDDmLvQ3+Rx0sisk5GcM93F1axhYyh52xo/F/c78E0ryCHicy8YeijL8v3cX
+         d6vFl+MRNU//7cxVuKnyvloHBpH9Q26vTBai/VWPtGI6QtzF1sBeAxna/ZDI7pg+XL
+         uboJ2MvFPje1oxfshiY88H4p6LX7bQS1PGmIW5vw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 17/86] phy: micrel: Disable auto negotiation on startup
-Date:   Mon, 18 May 2020 19:35:48 +0200
-Message-Id: <20200518173453.976038108@linuxfoundation.org>
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 09/86] ipv6: fix cleanup ordering for ip6_mr failure
+Date:   Mon, 18 May 2020 19:35:40 +0200
+Message-Id: <20200518173452.201457230@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -61,58 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 99f81afc139c6edd14d77a91ee91685a414a1c66 ]
+commit afe49de44c27a89e8e9631c44b5ffadf6ace65e2 upstream.
 
-Disable auto negotiation on init to properly detect an already plugged
-cable at boot.
+Commit 15e668070a64 ("ipv6: reorder icmpv6_init() and ip6_mr_init()")
+moved the cleanup label for ipmr_fail, but should have changed the
+contents of the cleanup labels as well. Now we can end up cleaning up
+icmpv6 even though it hasn't been initialized (jump to icmp_fail or
+ipmr_fail).
 
-At boot, when the phy is started, it is in the PHY_UP state.
-However, if a cable is plugged at boot, because auto negociation is already
-enabled at the time we get the first interrupt, the phy is already running.
-But the state machine then switches from PHY_UP to PHY_AN and calls
-phy_start_aneg(). phy_start_aneg() will not do anything because aneg is
-already enabled on the phy. It will then wait for a interrupt before going
-further. This interrupt will never happen unless the cable is unplugged and
-then replugged.
+Simply undo things in the reverse order of their initialization.
 
-It was working properly before 321beec5047a (net: phy: Use interrupts when
-available in NOLINK state) because switching to NOLINK meant starting
-polling the phy, even if IRQ were enabled.
+Example of panic (triggered by faking a failure of icmpv6_init):
 
-Fixes: 321beec5047a (net: phy: Use interrupts when available in NOLINK state)
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+    kasan: GPF could be caused by NULL-ptr deref or user memory access
+    general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
+    [...]
+    RIP: 0010:__list_del_entry_valid+0x79/0x160
+    [...]
+    Call Trace:
+     ? lock_release+0x8a0/0x8a0
+     unregister_pernet_operations+0xd4/0x560
+     ? ops_free_list+0x480/0x480
+     ? down_write+0x91/0x130
+     ? unregister_pernet_subsys+0x15/0x30
+     ? down_read+0x1b0/0x1b0
+     ? up_read+0x110/0x110
+     ? kmem_cache_create_usercopy+0x1b4/0x240
+     unregister_pernet_subsys+0x1d/0x30
+     icmpv6_cleanup+0x1d/0x30
+     inet6_init+0x1b5/0x23f
+
+Fixes: 15e668070a64 ("ipv6: reorder icmpv6_init() and ip6_mr_init()")
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/phy/micrel.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ net/ipv6/af_inet6.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 4eba646789c30..98166e144f2dd 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -285,6 +285,17 @@ static int kszphy_config_init(struct phy_device *phydev)
- 	if (priv->led_mode >= 0)
- 		kszphy_setup_led(phydev, type->led_mode_reg, priv->led_mode);
- 
-+	if (phy_interrupt_is_valid(phydev)) {
-+		int ctl = phy_read(phydev, MII_BMCR);
-+
-+		if (ctl < 0)
-+			return ctl;
-+
-+		ret = phy_write(phydev, MII_BMCR, ctl & ~BMCR_ANENABLE);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.20.1
-
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -1029,11 +1029,11 @@ netfilter_fail:
+ igmp_fail:
+ 	ndisc_cleanup();
+ ndisc_fail:
+-	ip6_mr_cleanup();
++	icmpv6_cleanup();
+ icmp_fail:
+-	unregister_pernet_subsys(&inet6_net_ops);
++	ip6_mr_cleanup();
+ ipmr_fail:
+-	icmpv6_cleanup();
++	unregister_pernet_subsys(&inet6_net_ops);
+ register_pernet_fail:
+ 	sock_unregister(PF_INET6);
+ 	rtnl_unregister_all(PF_INET6);
 
 
