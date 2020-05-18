@@ -2,144 +2,93 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05516C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DECC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3A5B20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAA720671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589825535;
+	bh=DAqFb2at6gzjG5aQG5qxZP41nD3lsCEFZqbFHAwqhUc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AoGHloKNfiJJ2tuw/0CBIZGH24lfyTi55rL/HEGi3kjgpSrwWlKARs/yWRA2vNt9e
+	 YK+on4xV5aCohAlQ8P/dFqIyfNieCjmoaRHTqSJ6Z7+VSzJDIBKATPLpvqAHXX6FW5
+	 W116zkzrBcciG7s8HkdYPsyQJhut4TBHVStSz3Ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbgERSMI (ORCPT
+        id S2387577AbgERSMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:12:08 -0400
-Received: from mga04.intel.com ([192.55.52.120]:52605 "EHLO mga04.intel.com"
+        Mon, 18 May 2020 14:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733191AbgERSL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:11:59 -0400
-IronPort-SDR: J7lJHpi9Bn2FDwYipCbFVsWQctskGUN1RT5vtQ5XQXv11B6nf87aGpNXckkZB51/SLrwubZyKW
- qVSsxLYUdY1g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:11:59 -0700
-IronPort-SDR: ZuNQWmTQ1nLBxtu+5TE/j+AXF8rFdc6kEiAmzXEFcKTfs6vyQ9ShsZPXaT/ddSnQv64auWHBNE
- rrbMWn7+V4eA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="373470912"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga001.fm.intel.com with ESMTP; 18 May 2020 11:11:59 -0700
-Date:   Mon, 18 May 2020 11:11:59 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Mike Rapoport <rppt@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, elver@google.com, tglx@linutronix.de,
-        paulmck@kernel.org, mingo@kernel.org, peterz@infradead.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
- PTE tables
-Message-ID: <20200518181158.GA3028105@iweiny-DESK2.sc.intel.com>
-References: <20200511204150.27858-1-will@kernel.org>
- <20200511204150.27858-5-will@kernel.org>
- <20200517000050.GA87467@roeck-us.net>
- <20200517000750.GA157503@roeck-us.net>
- <20200518083715.GA31383@willie-the-truck>
- <418aa44b-6fb3-c3d8-a920-1a26e5edec62@roeck-us.net>
- <20200518142310.GC1118872@kernel.org>
- <20200518160811.GA66689@roeck-us.net>
+        id S1732695AbgERSDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A82DB20873;
+        Mon, 18 May 2020 18:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589825028;
+        bh=DAqFb2at6gzjG5aQG5qxZP41nD3lsCEFZqbFHAwqhUc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XayakXkVRD04H0TkwmXY9m9/WoSnZ6JCar3ti+DOzp6F9NWGLN3Gsydyyf3oEJSNZ
+         sAKZegGox7ft+qY38knPQrVnQtbZXhl2QmP2E85QnZ/ffx1T6unkYu+yK8j9S/Ptwc
+         /MGb7EJBUoHvqkC0wU+b0YT8DKbicJfDrjgw+1/E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 100/194] hwmon: (drivetemp) Fix SCT support if SCT data tables are not supported
+Date:   Mon, 18 May 2020 19:36:30 +0200
+Message-Id: <20200518173540.286482871@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
+References: <20200518173531.455604187@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518160811.GA66689@roeck-us.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 09:08:11AM -0700, Guenter Roeck wrote:
-> On Mon, May 18, 2020 at 05:23:10PM +0300, Mike Rapoport wrote:
-> > On Mon, May 18, 2020 at 02:48:18AM -0700, Guenter Roeck wrote:
-> > > On 5/18/20 1:37 AM, Will Deacon wrote:
-> > > > On Sat, May 16, 2020 at 05:07:50PM -0700, Guenter Roeck wrote:
-> > > >> On Sat, May 16, 2020 at 05:00:50PM -0700, Guenter Roeck wrote:
-> > > >>> On Mon, May 11, 2020 at 09:41:36PM +0100, Will Deacon wrote:
-> > > >>>> Now that the page table allocator can free page table allocations
-> > > >>>> smaller than PAGE_SIZE, reduce the size of the PMD and PTE allocations
-> > > >>>> to avoid needlessly wasting memory.
-> > > >>>>
-> > > >>>> Cc: "David S. Miller" <davem@davemloft.net>
-> > > >>>> Cc: Peter Zijlstra <peterz@infradead.org>
-> > > >>>> Signed-off-by: Will Deacon <will@kernel.org>
-> > > >>>
-> > > >>> Something in the sparc32 patches in linux-next causes all my sparc32 emulations
-> > > >>> to crash. bisect points to this patch, but reverting it doesn't help, and neither
-> > > >>> does reverting the rest of the series.
-> > > >>>
-> > > >> Actually, turns out I see the same pattern (lots of scheduling while atomic
-> > > >> followed by 'killing interrupt handler' in cryptomgr_test) with several
-> > > >> powerpc boot tests.  I am currently bisecting those crashes. I'll report
-> > > >> the results here as well as soon as I have it.
-> > > > 
-> > > > FWIW, I retested my sparc32 patches with PREEMPT=y and I don't see any
-> > > > issues. However, linux-next is a different story, where I don't get very far
-> > > > at all:
-> > > > 
-> > > > BUG: Bad page state in process swapper  pfn:005b4
-> > 
-> > This one seems to be due to commit 24aab577764f ("mm: memmap_init:
-> > iterate over memblock regions rather that check each PFN") and reverting
-> > it and partially reverting the next cleanup commits makes those
-> > dissapear. sparc32 boot still fails on today's linux-next and mmotm for me with
-> > 
-> > Run /sbin/init as init process
-> >   with arguments:
-> >     /sbin/init
-> >   with environment:
-> >     HOME=/
-> >     TERM=linux
-> > Starting init: /sbin/init exists but couldn't execute it (error -14)
-> > 
-> 
-> Interesting; that is also seen on microblazeel:petalogix-ml605. Bisect there
-> suggests 'arch/kmap_atomic: consolidate duplicate code' as the culprit,
-> which is part of Ira's series.
-> 
-> Today's -next is even worse, unfortunately; now all microblaze boot tests
-> (both little and big endian) fail, plus everything that failed last
-> time, plus new compile failures. Another round of bisects ...
+From: Guenter Roeck <linux@roeck-us.net>
 
-I've found this bug in microblaze for sure still looking through the other archs...
+[ Upstream commit bcb543cc3d4034da3f3fd8bc4296a26dfeadf47d ]
 
-commit 82c284b2bb74ca195dfcd35b70a175f010b9fd46 (HEAD -> lm-kmap17)
-Author: Ira Weiny <ira.weiny@intel.com>
-Date:   Mon May 18 11:01:10 2020 -0700
+If SCT is supported but SCT data tables are not, the driver unnecessarily
+tries to fall back to SMART. Use SCT without data tables instead in this
+situation.
 
-    microblaze/kmap: Don't enable pagefault/preempt twice
-    
-    The kunmap_atomic clean up failed to remove the pagefault/preempt
-    enables on this path.
-    
-    Fixes: bee2128a09e6 ("arch/kunmap_atomic: consolidate duplicate code")
-    Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Fixes: 5b46903d8bf3 ("hwmon: Driver for disk and solid state drives with temperature sensors")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hwmon/drivetemp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/microblaze/mm/highmem.c b/arch/microblaze/mm/highmem.c
-index ee8a422b2b76..92e0890416c9 100644
---- a/arch/microblaze/mm/highmem.c
-+++ b/arch/microblaze/mm/highmem.c
-@@ -57,11 +57,8 @@ void kunmap_atomic_high(void *kvaddr)
-        int type;
-        unsigned int idx;
+diff --git a/drivers/hwmon/drivetemp.c b/drivers/hwmon/drivetemp.c
+index 9179460c2d9d5..0d4f3d97ffc61 100644
+--- a/drivers/hwmon/drivetemp.c
++++ b/drivers/hwmon/drivetemp.c
+@@ -346,7 +346,7 @@ static int drivetemp_identify_sata(struct drivetemp_data *st)
+ 	st->have_temp_highest = temp_is_valid(buf[SCT_STATUS_TEMP_HIGHEST]);
  
--       if (vaddr < __fix_to_virt(FIX_KMAP_END)) {
--               pagefault_enable();
--               preempt_enable();
-+       if (vaddr < __fix_to_virt(FIX_KMAP_END))
-                return;
--       }
+ 	if (!have_sct_data_table)
+-		goto skip_sct;
++		goto skip_sct_data;
  
-        type = kmap_atomic_idx();
+ 	/* Request and read temperature history table */
+ 	memset(buf, '\0', sizeof(st->smartdata));
+-- 
+2.20.1
+
+
 
