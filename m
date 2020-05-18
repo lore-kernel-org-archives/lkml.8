@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2371EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E701220897
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E43120884
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824959;
-	bh=SzXkSbZLavbpySA8SPOGSVH6HZgXsI0Fz963gWwXshQ=;
+	s=default; t=1589824963;
+	bh=PXKcnrdYSP9RGpx8YL6Ph46rp7ixJa2f5AWPppSHqVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NDp93WGVRtf4i/9NNFPAd3Jez2TnZ9UW0pcy/+Vuah+yCaztu0aX/rt1B6/O1aZq
-	 Be6EJlSWxDVfonO9V+BvaWeNwRPqknQ8pYtSEGUtpVDXymixNWhhVEFj0qqgjcrTMN
-	 7lbPUykI23y3zlEZQUKwKF9m2RwxNIJ7BihNGx50=
+	b=hQfCS6SJJ70mpsg+jNFKx6zbZ7Sj55hht/wjr7mAH5m4KP2lHJrkf9au2SE5JlPmt
+	 MSAS1WOCPGSpDChjWgfN0TZ2aYzWCCWxS6I8peKMl3TLsYU0LVzdmNd5gbQOXywOMs
+	 v3qscuuP0x51lDUcWCbUNG0bgvOBmDYVidR57WUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732549AbgERSCi (ORCPT
+        id S1731787AbgERSCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46744 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732537AbgERSCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:32 -0400
+        id S1732537AbgERSCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4318B21582;
-        Mon, 18 May 2020 18:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8290220884;
+        Mon, 18 May 2020 18:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824951;
-        bh=SzXkSbZLavbpySA8SPOGSVH6HZgXsI0Fz963gWwXshQ=;
+        s=default; t=1589824959;
+        bh=PXKcnrdYSP9RGpx8YL6Ph46rp7ixJa2f5AWPppSHqVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YBljnOdtdmZJKm1Eq9ZcTvA+LKYVT8Cb+/PZVjWMy9M9XfVUUMpzkUqg+yaQTbj/U
-         5o5iYdcAA2dioY/gotZYAXF1NRWiE3OS1gQCtkk13xKie9TPMh/V5YNLXv7/DHUXaX
-         UF9V9Ro7bgZl1tv8FnnsVGKjAFamZaVh1OKKN/Fc=
+        b=mguJ5S2OvLtrrQtdR2AOLFctH/I/2CF5AJsK3agOgA9o2kmCJwJCTh85EO3n/T3x2
+         Rf6EmwlFMiQAgnjiV6qKMLzAEC6jg2x2RollUzNFnSGIwrxb2BWCC1ES9CfFyc3ZZu
+         7+RmUuehroQz19nAcN9gTWvQPyY8JOIIoQPtn6Ss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 068/194] io_uring: check non-sync defer_list carefully
-Date:   Mon, 18 May 2020 19:35:58 +0200
-Message-Id: <20200518173537.403295842@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 071/194] gfs2: Another gfs2_walk_metadata fix
+Date:   Mon, 18 May 2020 19:36:01 +0200
+Message-Id: <20200518173537.694046759@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,33 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 4ee3631451c9a62e6b6bc7ee51fb9a5b34e33509 ]
+[ Upstream commit 566a2ab3c9005f62e784bd39022d58d34ef4365c ]
 
-io_req_defer() do double-checked locking. Use proper helpers for that,
-i.e. list_empty_careful().
+Make sure we don't walk past the end of the metadata in gfs2_walk_metadata: the
+inode holds fewer pointers than indirect blocks.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Slightly clean up gfs2_iomap_get.
+
+Fixes: a27a0c9b6a20 ("gfs2: gfs2_walk_metadata fix")
+Cc: stable@vger.kernel.org # v5.3+
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/gfs2/bmap.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 01f71b9efb88f..832e042531bc4 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4258,7 +4258,7 @@ static int io_req_defer(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	int ret;
+diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
+index 08f6fbb3655e2..31ed264356253 100644
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -528,10 +528,12 @@ static int gfs2_walk_metadata(struct inode *inode, struct metapath *mp,
  
- 	/* Still need defer if there is pending req in defer list. */
--	if (!req_need_defer(req) && list_empty(&ctx->defer_list))
-+	if (!req_need_defer(req) && list_empty_careful(&ctx->defer_list))
- 		return 0;
+ 		/* Advance in metadata tree. */
+ 		(mp->mp_list[hgt])++;
+-		if (mp->mp_list[hgt] >= sdp->sd_inptrs) {
+-			if (!hgt)
++		if (hgt) {
++			if (mp->mp_list[hgt] >= sdp->sd_inptrs)
++				goto lower_metapath;
++		} else {
++			if (mp->mp_list[hgt] >= sdp->sd_diptrs)
+ 				break;
+-			goto lower_metapath;
+ 		}
  
- 	if (!req->io && io_alloc_async_ctx(req))
+ fill_up_metapath:
+@@ -876,10 +878,9 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
+ 					ret = -ENOENT;
+ 					goto unlock;
+ 				} else {
+-					/* report a hole */
+ 					iomap->offset = pos;
+ 					iomap->length = length;
+-					goto do_alloc;
++					goto hole_found;
+ 				}
+ 			}
+ 			iomap->length = size;
+@@ -933,8 +934,6 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
+ 	return ret;
+ 
+ do_alloc:
+-	iomap->addr = IOMAP_NULL_ADDR;
+-	iomap->type = IOMAP_HOLE;
+ 	if (flags & IOMAP_REPORT) {
+ 		if (pos >= size)
+ 			ret = -ENOENT;
+@@ -956,6 +955,9 @@ static int gfs2_iomap_get(struct inode *inode, loff_t pos, loff_t length,
+ 		if (pos < size && height == ip->i_height)
+ 			ret = gfs2_hole_size(inode, lblock, len, mp, iomap);
+ 	}
++hole_found:
++	iomap->addr = IOMAP_NULL_ADDR;
++	iomap->type = IOMAP_HOLE;
+ 	goto out;
+ }
+ 
 -- 
 2.20.1
 
