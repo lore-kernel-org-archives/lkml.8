@@ -2,57 +2,55 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB6DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC843C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0E8207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF63A20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824266;
-	bh=l42xB4oGlhaeR8PUztWRNqvqP554Gac2q5JPYzz4pVk=;
+	s=default; t=1589824268;
+	bh=WmONSK4ctFdQWjz26WZgwfs5SpenNY5/I3xlW0g0H4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lu4uHn04ViYFnT7wH19hEyW9eu6/o27I48BZJERbShLvuiN6h5p9iuO+AVFMbSeNT
-	 yZ5xhMfzHxQCFpo/STjOGFA1cVrOy8CJx8BfnPWUHBovoNswo6/xqQ32YAgdDsTexW
-	 5ma1TRdAi+7DavU4RL1EJzwNXqdfC0h2CO229ISQ=
+	b=rO3H2irMyOp0NasxDth6WUkfr6B7pvWV3z/+uYXyWIABxgPOgR6nd2n6t1v9jqit7
+	 Zn8xIVdApT7D5Sr8VIa4zVyVo1niPRzNnSf7fVb/5X9Khe6xxP2pWAHp7zuZOMN8++
+	 2KaKIJsnaw0FbmQSQHGaCIvhxP75ahkLC+7mANck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730813AbgERRvG (ORCPT
+        id S1730822AbgERRvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53382 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:51:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730768AbgERRu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:50:58 -0400
+        id S1730807AbgERRvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07342207C4;
-        Mon, 18 May 2020 17:50:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6533820674;
+        Mon, 18 May 2020 17:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824257;
-        bh=l42xB4oGlhaeR8PUztWRNqvqP554Gac2q5JPYzz4pVk=;
+        s=default; t=1589824264;
+        bh=WmONSK4ctFdQWjz26WZgwfs5SpenNY5/I3xlW0g0H4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fsBpyGhMySQNvDGMZ2INmTu1rNIPRTxwCAyV2Yzq8P/rVBTWPCgh6hCLEWqeoh6e9
-         uRrIDch3E1Vuu8N/S99fVpTI1jqAMIBRk+ITX6xNfk5Ye4igiNGpgP+wauFRc1cT8G
-         MA9A3PAjClctQoTn+j/YPEPmzU/GUI8AT5XNzAgA=
+        b=nSoHist7/jqWI0XlRi95ZYfvIjBdhez75e7bz0DYFU6sN8jO9EwmAyPIEQPEQpd66
+         CC5j9Fynee6AsPH1hKWnhHA7MUnSOGq7scnzCRvFbGZ+Fv0Q+zfjiwnao+EEblMAgF
+         42g7mDOkFbz3oqMHvMEjVrummft9JvN9Rdp1VKuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com,
-        syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/80] shmem: fix possible deadlocks on shmlock_user_lock
-Date:   Mon, 18 May 2020 19:36:20 +0200
-Message-Id: <20200518173450.633393924@linuxfoundation.org>
+Subject: [PATCH 4.19 22/80] riscv: fix vdso build with lld
+Date:   Mon, 18 May 2020 19:36:40 +0200
+Message-Id: <20200518173454.857080221@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -65,77 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Ilie Halip <ilie.halip@gmail.com>
 
-[ Upstream commit ea0dfeb4209b4eab954d6e00ed136bc6b48b380d ]
+[ Upstream commit 3c1918c8f54166598195d938564072664a8275b1 ]
 
-Recent commit 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page()
-when punching hole") has allowed syzkaller to probe deeper, uncovering a
-long-standing lockdep issue between the irq-unsafe shmlock_user_lock,
-the irq-safe xa_lock on mapping->i_pages, and shmem inode's info->lock
-which nests inside xa_lock (or tree_lock) since 4.8's shmem_uncharge().
+When building with the LLVM linker this error occurrs:
+    LD      arch/riscv/kernel/vdso/vdso-syms.o
+  ld.lld: error: no input files
 
-user_shm_lock(), servicing SysV shmctl(SHM_LOCK), wants
-shmlock_user_lock while its caller shmem_lock() holds info->lock with
-interrupts disabled; but hugetlbfs_file_setup() calls user_shm_lock()
-with interrupts enabled, and might be interrupted by a writeback endio
-wanting xa_lock on i_pages.
+This happens because the lld treats -R as an alias to -rpath, as opposed
+to ld where -R means --just-symbols.
 
-This may not risk an actual deadlock, since shmem inodes do not take
-part in writeback accounting, but there are several easy ways to avoid
-it.
+Use the long option name for compatibility between the two.
 
-Requiring interrupts disabled for shmlock_user_lock would be easy, but
-it's a high-level global lock for which that seems inappropriate.
-Instead, recall that the use of info->lock to guard info->flags in
-shmem_lock() dates from pre-3.1 days, when races with SHMEM_PAGEIN and
-SHMEM_TRUNCATE could occur: nowadays it serves no purpose, the only flag
-added or removed is VM_LOCKED itself, and calls to shmem_lock() an inode
-are already serialized by the caller.
-
-Take info->lock out of the chain and the possibility of deadlock or
-lockdep warning goes away.
-
-Fixes: 4595ef88d136 ("shmem: make shmem_inode_info::lock irq-safe")
-Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
-Reported-by: syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2004161707410.16322@eggly.anvils
-Link: https://lore.kernel.org/lkml/000000000000e5838c05a3152f53@google.com/
-Link: https://lore.kernel.org/lkml/0000000000003712b305a331d3b1@google.com/
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/805
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/shmem.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/riscv/kernel/vdso/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 0a2e1e7801d68..dea5120565d30 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2149,7 +2149,11 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
- 	struct shmem_inode_info *info = SHMEM_I(inode);
- 	int retval = -ENOMEM;
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index 87f71a6cd3ef8..1dd134fc0d84a 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -30,15 +30,15 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
+ 	$(call if_changed,vdsold)
  
--	spin_lock_irq(&info->lock);
-+	/*
-+	 * What serializes the accesses to info->flags?
-+	 * ipc_lock_object() when called from shmctl_do_lock(),
-+	 * no serialization needed when called from shm_destroy().
-+	 */
- 	if (lock && !(info->flags & VM_LOCKED)) {
- 		if (!user_shm_lock(inode->i_size, user))
- 			goto out_nomem;
-@@ -2164,7 +2168,6 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
- 	retval = 0;
+ # We also create a special relocatable object that should mirror the symbol
+-# table and layout of the linked DSO.  With ld -R we can then refer to
+-# these symbols in the kernel code rather than hand-coded addresses.
++# table and layout of the linked DSO. With ld --just-symbols we can then
++# refer to these symbols in the kernel code rather than hand-coded addresses.
  
- out_nomem:
--	spin_unlock_irq(&info->lock);
- 	return retval;
- }
+ SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
+                             $(call cc-ldoption, -Wl$(comma)--hash-style=both)
+ $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
+ 	$(call if_changed,vdsold)
+ 
+-LDFLAGS_vdso-syms.o := -r -R
++LDFLAGS_vdso-syms.o := -r --just-symbols
+ $(obj)/vdso-syms.o: $(obj)/vdso-dummy.o FORCE
+ 	$(call if_changed,ld)
  
 -- 
 2.20.1
