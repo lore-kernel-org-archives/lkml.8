@@ -2,52 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A194C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4E220671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44DEE20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825644;
-	bh=KONOyviHySfFCx8g+X0yBPg7f/PqbVDlYmS8u/zo1G8=;
+	s=default; t=1589825649;
+	bh=6NoDHuyUjbD1VRYy9KYkvyxDEQqnWpl0fO+zIhe750U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hw+FcLDbvuQ7dxjS8kmwAq/LRZjC1ja16lrsMqOwgYsZnRIlcon6XxPBqbonziO4K
-	 m+Ihgg4M8K7Vtm5acEqBq7TMsc0e7pp6sMmHJ6rqUDhgDx9SktOpneJ2wmCZrCI5/z
-	 J0UgIKxw3USgPVR9aIUEam2CWTWL0R9eALbgkyFc=
+	b=wc9ybZFxPPLu6sWntEIXbg8R+uJZBs+Yr40RnA2/7UlfioBAkdcdIK8Pjzp5DmIOI
+	 wfFTAxeAbpG8xNfx4+lNR/E1YJOMlWxBVx0A96vhJvH8M1Q5gjekjUbLB9UvADrRdV
+	 nIVe5h6Mz2d6s2eVv/V6eXAV+lFUoXnWFM5srhcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387661AbgERSOB (ORCPT
+        id S2387663AbgERSOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732411AbgERSBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:01:34 -0400
+        id S1732376AbgERSBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:01:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A70FE20826;
-        Mon, 18 May 2020 18:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E200E20829;
+        Mon, 18 May 2020 18:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824894;
-        bh=KONOyviHySfFCx8g+X0yBPg7f/PqbVDlYmS8u/zo1G8=;
+        s=default; t=1589824874;
+        bh=6NoDHuyUjbD1VRYy9KYkvyxDEQqnWpl0fO+zIhe750U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A+EqDaOjSou/6OPOCD0XE8RR+zAvOMsrzY9XL+yzS+n9KPEamMi9BUqPw5UJqsdYf
-         d6pNHEFzOKw3oQHMBW3jQhE6Xrfs1NeMOhwMOy+RjcjSuTUtqMhUgHihf5d3zRlDgz
-         oIK6F+dW4yMhcaeSJyQeGAWm2Cba1MOR2JUlW2Cw=
+        b=Z/LuYQ/7TfYp6snGnudIvLzAcLsyXs7+Jq/scHOyP0f98yMdifgQ566ku5U5GgSp+
+         Ys85RWRganQ7DaVoUmszcgHyO/PYeya2tqVQQWc2QIj5bD9v/RX8cXBvY/oMELC+eQ
+         mn12rFVmayGua+aA1h2hsIz/GDCmc2YWjcXFLrEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.6 047/194] nfp: abm: fix error return code in nfp_abm_vnic_alloc()
-Date:   Mon, 18 May 2020 19:35:37 +0200
-Message-Id: <20200518173535.739283263@linuxfoundation.org>
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 004/194] xprtrdma: Fix trace point use-after-free race
+Date:   Mon, 18 May 2020 19:34:54 +0200
+Message-Id: <20200518173531.920337563@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,35 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 5099dea0a59f1c89525bb0ceac36689178a4c125 ]
+[ Upstream commit bdb2ce82818577ba6e57b7d68b698b8d17329281 ]
 
-Fix to return negative error code -ENOMEM from the kzalloc() error
-handling case instead of 0, as done elsewhere in this function.
+It's not safe to use resources pointed to by the @send_wr of
+ib_post_send() _after_ that function returns. Those resources are
+typically freed by the Send completion handler, which can run before
+ib_post_send() returns.
 
-Fixes: 174ab544e3bc ("nfp: abm: add cls_u32 offload for simple band classification")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thus the trace points currently around ib_post_send() in the
+client's RPC/RDMA transport are a hazard, even when they are
+disabled. Rearrange them so that they touch the Work Request only
+_before_ ib_post_send() is invoked.
+
+Fixes: ab03eff58eb5 ("xprtrdma: Add trace points in RPC Call transmit paths")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/abm/main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/trace/events/rpcrdma.h | 12 ++++--------
+ net/sunrpc/xprtrdma/verbs.c    |  2 +-
+ 2 files changed, 5 insertions(+), 9 deletions(-)
 
---- a/drivers/net/ethernet/netronome/nfp/abm/main.c
-+++ b/drivers/net/ethernet/netronome/nfp/abm/main.c
-@@ -333,8 +333,10 @@ nfp_abm_vnic_alloc(struct nfp_app *app,
- 		goto err_free_alink;
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index fa14adf242353..43158151821c4 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -721,11 +721,10 @@ TRACE_EVENT(xprtrdma_prepsend_failed,
  
- 	alink->prio_map = kzalloc(abm->prio_map_len, GFP_KERNEL);
--	if (!alink->prio_map)
-+	if (!alink->prio_map) {
-+		err = -ENOMEM;
- 		goto err_free_alink;
-+	}
+ TRACE_EVENT(xprtrdma_post_send,
+ 	TP_PROTO(
+-		const struct rpcrdma_req *req,
+-		int status
++		const struct rpcrdma_req *req
+ 	),
  
- 	/* This is a multi-host app, make sure MAC/PHY is up, but don't
- 	 * make the MAC/PHY state follow the state of any of the ports.
+-	TP_ARGS(req, status),
++	TP_ARGS(req),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(const void *, req)
+@@ -734,7 +733,6 @@ TRACE_EVENT(xprtrdma_post_send,
+ 		__field(unsigned int, client_id)
+ 		__field(int, num_sge)
+ 		__field(int, signaled)
+-		__field(int, status)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -747,15 +745,13 @@ TRACE_EVENT(xprtrdma_post_send,
+ 		__entry->sc = req->rl_sendctx;
+ 		__entry->num_sge = req->rl_wr.num_sge;
+ 		__entry->signaled = req->rl_wr.send_flags & IB_SEND_SIGNALED;
+-		__entry->status = status;
+ 	),
+ 
+-	TP_printk("task:%u@%u req=%p sc=%p (%d SGE%s) %sstatus=%d",
++	TP_printk("task:%u@%u req=%p sc=%p (%d SGE%s) %s",
+ 		__entry->task_id, __entry->client_id,
+ 		__entry->req, __entry->sc, __entry->num_sge,
+ 		(__entry->num_sge == 1 ? "" : "s"),
+-		(__entry->signaled ? "signaled " : ""),
+-		__entry->status
++		(__entry->signaled ? "signaled" : "")
+ 	)
+ );
+ 
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 4b9fbf69b4955..a48b99f3682c3 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1523,8 +1523,8 @@ int rpcrdma_post_sends(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ 		--ep->rep_send_count;
+ 	}
+ 
++	trace_xprtrdma_post_send(req);
+ 	rc = frwr_send(r_xprt, req);
+-	trace_xprtrdma_post_send(req, rc);
+ 	if (rc)
+ 		return -ENOTCONN;
+ 	return 0;
+-- 
+2.20.1
+
 
 
