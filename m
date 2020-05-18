@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63663C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 839BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 466072086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BA9207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823596;
-	bh=zZkOHLlY0C4rzlyING27MznEU+bpSrDuBYLW1QwahNw=;
+	s=default; t=1589823599;
+	bh=21RvU87suyQJ5Bno2TZaPg+6cnc/R8INOsdBybhJ+a4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZMsNOhcYcEJchWnNlK+4UYEzUxIwod0zfgkZ4dVKrQCFaHtrNhh4lxJVoOmcfBpNA
-	 Xdjv8u4lCCuf77fQFSaBEl15CQpFyt47dZNkybr25Fz1aZ0JSVeRyMbprb8qB3zUMt
-	 zkO45urHTn9jTIxwyXRyAj5WaIUwTT6IHqoooY7I=
+	b=MKcSu/eH3LhE0yazHGjbclMWDMpCPlNtM+jzNLje97RxxytTrfb80NnL/8CDeaRn0
+	 puiQbCXOC0lElzqCmdaBktlQ/Hd5zpqgNPADdy9kUOUtZFV7hVXVWFq04UnzPfjtcE
+	 M8qccLLkcg/ulzpbvPHo5CNkArAcm4Mxk06DFycM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbgERRjz (ORCPT
+        id S1728940AbgERRj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:39:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728883AbgERRjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:51 -0400
+        id S1728915AbgERRjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CE4F2083E;
-        Mon, 18 May 2020 17:39:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E04512086A;
+        Mon, 18 May 2020 17:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823590;
-        bh=zZkOHLlY0C4rzlyING27MznEU+bpSrDuBYLW1QwahNw=;
+        s=default; t=1589823593;
+        bh=21RvU87suyQJ5Bno2TZaPg+6cnc/R8INOsdBybhJ+a4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O7C9j1xblen4afFFbUZ1HXPgwfRDwbN85anoy8EmLvxE1ImDRCd3HHQEOJJwo0hMt
-         en0gbPJGnVnAaJe9GkyFuW+cNNbx/1n2M4pnE/5IKn8eRpxDzwvSpVSPhToUGbguVX
-         m7bAseA5bGH+ZqEU/s9x7ud2iFMugUDJficz9jDs=
+        b=EzckmMIint4WAj6+lhtT0GgKR2VNBJ1gLmkqxmH8810lBqh/3JLY9J4sgGfC/J+Tw
+         /CpaYxQ1ZqXPuq6zugs19L2Ryew/YDm6SJ7LLkHnAyOPQncjls9+Jd2znwYpUCrU9B
+         9qOtRBdCSGdIKtINn2CNeukgCZA8N5SnzOJhiaP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 42/86] cifs: Fix a race condition with cifs_echo_request
-Date:   Mon, 18 May 2020 19:36:13 +0200
-Message-Id: <20200518173458.913521023@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 43/86] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
+Date:   Mon, 18 May 2020 19:36:14 +0200
+Message-Id: <20200518173459.156844096@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -61,63 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit f2caf901c1b7ce65f9e6aef4217e3241039db768 ]
+[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
 
-There is a race condition with how we send (or supress and don't send)
-smb echos that will cause the client to incorrectly think the
-server is unresponsive and thus needs to be reconnected.
+pd->dma.dev is read in irq handler pd_irq().
+However, it is set to pdev->dev after request_irq().
+Therefore, set pd->dma.dev to pdev->dev before request_irq() to
+avoid data race between pch_dma_probe() and pd_irq().
 
-Summary of the race condition:
- 1) Daisy chaining scheduling creates a gap.
- 2) If traffic comes unfortunate shortly after
-    the last echo, the planned echo is suppressed.
- 3) Due to the gap, the next echo transmission is delayed
-    until after the timeout, which is set hard to twice
-    the echo interval.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-This is fixed by changing the timeouts from 2 to three times the echo interval.
-
-Detailed description of the bug: https://lutz.donnerhacke.de/eng/Blog/Groundhog-Day-with-SMB-remount
-
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/dma/pch_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 7022750cae2fd..21ddfd77966eb 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -548,10 +548,10 @@ static bool
- server_unresponsive(struct TCP_Server_Info *server)
- {
- 	/*
--	 * We need to wait 2 echo intervals to make sure we handle such
-+	 * We need to wait 3 echo intervals to make sure we handle such
- 	 * situations right:
- 	 * 1s  client sends a normal SMB request
--	 * 2s  client gets a response
-+	 * 3s  client gets a response
- 	 * 30s echo workqueue job pops, and decides we got a response recently
- 	 *     and don't need to send another
- 	 * ...
-@@ -560,9 +560,9 @@ server_unresponsive(struct TCP_Server_Info *server)
- 	 */
- 	if ((server->tcpStatus == CifsGood ||
- 	    server->tcpStatus == CifsNeedNegotiate) &&
--	    time_after(jiffies, server->lstrp + 2 * SMB_ECHO_INTERVAL)) {
-+	    time_after(jiffies, server->lstrp + 3 * SMB_ECHO_INTERVAL)) {
- 		cifs_dbg(VFS, "Server %s has not responded in %d seconds. Reconnecting...\n",
--			 server->hostname, (2 * SMB_ECHO_INTERVAL) / HZ);
-+			 server->hostname, (3 * SMB_ECHO_INTERVAL) / HZ);
- 		cifs_reconnect(server);
- 		wake_up(&server->response_q);
- 		return true;
+diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+index 113605f6fe208..32517003e118e 100644
+--- a/drivers/dma/pch_dma.c
++++ b/drivers/dma/pch_dma.c
+@@ -877,6 +877,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
+ 	}
+ 
+ 	pci_set_master(pdev);
++	pd->dma.dev = &pdev->dev;
+ 
+ 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
+ 	if (err) {
+@@ -892,7 +893,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
+ 		goto err_free_irq;
+ 	}
+ 
+-	pd->dma.dev = &pdev->dev;
+ 
+ 	INIT_LIST_HEAD(&pd->dma.channels);
+ 
 -- 
 2.20.1
 
