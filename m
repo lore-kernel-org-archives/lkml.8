@@ -2,95 +2,96 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E69C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E992E20809
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73C420829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:06:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=spun.io header.i=@spun.io header.b="xEF7JtA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgEROFl convert rfc822-to-8bit (ORCPT
+        id S1727782AbgEROGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:05:41 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34365 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgEROFk (ORCPT
+        Mon, 18 May 2020 10:06:45 -0400
+Received: from mail-40131.protonmail.ch ([185.70.40.131]:42408 "EHLO
+        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbgEROGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:05:40 -0400
-Received: from mail-pl1-f197.google.com ([209.85.214.197])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jagOg-0003fD-MT
-        for linux-kernel@vger.kernel.org; Mon, 18 May 2020 14:05:38 +0000
-Received: by mail-pl1-f197.google.com with SMTP id t13so7506647plo.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:05:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=eAqYxR1VuKxANFGYDzoTuNI/yexhnse0Gr19klQrpbA=;
-        b=oVmYZEUggoRbn34OCipwxZRHlFTY/w3KTiILcMAkIxiL7tPPhOVii6myhHkkIH2gqE
-         m3R+efcwFTXn3tCRY3Y3TPyHtBZuHFHqN6aEA/x03BeRz/au7IfesT9UYccVb9a6fuHM
-         +VOJbmK/V4zgESrHEPUr5usc4ElJLRODI4238VE3q0AsTwwk37u9n+/sAL17/4rQ3bU6
-         2NJPBs4uSdpUxVksRhfgByiT26/5EmsobDnRG15yR9f3fOqsdeGjGyh1FOpRCVCJYANc
-         yxYcHzO/VhwlMplp3N7tbJVOzA5cnjcZyqmccE7tAOlTRgtaSshFoy62jQLA7fhir35J
-         A/JA==
-X-Gm-Message-State: AOAM532t02jPTdU9H6dtJO4XCk2XqKR35n+szrOloJFtIGXyGiQOTq9d
-        Wk98AsH5ph6LLSBt4onM1Mfk3n1HsJBOwzkexKDdvQQNvbUKo0KkOHVGAlKBl+s9HD++bnknF3B
-        53fB8N/XYMPM3V83ZX3CSdsjHWSTgKWRt2lIshH1lQA==
-X-Received: by 2002:a17:902:8344:: with SMTP id z4mr16353679pln.207.1589810736905;
-        Mon, 18 May 2020 07:05:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJycffwbiHEQeNnNPZHbLIlc4DR6IBr7Axdu2pVGpb6ozEfZIbMcE3K2RMJRPR58CpoAsG+cNQ==
-X-Received: by 2002:a17:902:8344:: with SMTP id z4mr16353654pln.207.1589810736557;
-        Mon, 18 May 2020 07:05:36 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id a16sm7971187pfl.167.2020.05.18.07.05.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 07:05:36 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [Regression] "iommu/amd: Relax locking in dma_ops path" makes tg3
- ethernet transmit queue timeout
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20200518133209.GM8135@suse.de>
-Date:   Mon, 18 May 2020 22:05:33 +0800
-Cc:     iommu@lists.linux-foundation.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <381D21C9-C913-4C33-A6F4-0440B5D11670@canonical.com>
-References: <4E9B03FB-9DA5-4831-B4CE-A0AA645D3F22@canonical.com>
- <20200518133209.GM8135@suse.de>
-To:     Joerg Roedel <jroedel@suse.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 18 May 2020 10:06:45 -0400
+Date:   Mon, 18 May 2020 14:06:37 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spun.io;
+        s=protonmail; t=1589810800;
+        bh=+46M3shS9Qa/OOwsn8DgcyOFXKauUYbyDUsb0bgOOuQ=;
+        h=Date:To:From:Reply-To:Subject:From;
+        b=xEF7JtA4jXLk0OHSYOECUbyleqJS1JhnM/L6nRvftueUD6HB7m8z2jUh6E2OQSirK
+         ACY1WmRIEY2r3udbKGdWU6Ukx25ggOQlL+/qewV6b9XzwA3LMprq0PI2hRY99qbTUh
+         0ZQgYulwe0FtmepQgSJ45nWOrhMC/e2j7YjYSVXo=
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+From:   Nick Price <nick@spun.io>
+Reply-To: Nick Price <nick@spun.io>
+Subject: ixgbe: firmware spam on X520-T2 NIC (82599EB)
+Message-ID: <990c978692b74204f7b4d0a2c72f3d0d43b823ea.camel@spun.io>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In ixgbe_main.c around line 7882, the call to ixgbe_check_fw_error
+causes spammy messages on certain adapters because the fwsm register
+returns 0, triggering the !(fwsm & IXGBE_FWSM_FW_VAL_BIT) condition.
+
+This causes, every two seconds, one error message to be emitted per
+interface:
+
+[79062.730890] ixgbe 0000:2a:00.0: Warning firmware error detected
+FWSM: 0x00000000
+[79062.890877] ixgbe 0000:2a:00.1: Warning firmware error detected
+FWSM: 0x00000000
+[79064.746743] ixgbe 0000:2a:00.0: Warning firmware error detected
+FWSM: 0x00000000
+[79064.906728] ixgbe 0000:2a:00.1: Warning firmware error detected
+FWSM: 0x00000000
+
+Bit 15 of this register is supposed to be set to 1 upon card
+initialization per the Intel 82599 datasheet, however, these particular
+cards do not behave per their documentation and there are no firmware
+updates available from Intel or Dell that resolve this issue (there
+have been firmware updates for other models which have resolved this
+problem)
+
+Would it make sense to skip the error message if the entire fwsm
+register is zero?  Or maybe only emit it once?
+
+Or do we just continue to spam because technically this *is* a firmware
+error although it does not impact functionality and there is seemingly
+no resolution on the vendor side.
+
+Anyone have any thoughts? Some references below.
+
+Thanks!
+Nick
 
 
-> On May 18, 2020, at 21:32, Joerg Roedel <jroedel@suse.de> wrote:
-> 
-> On Mon, May 18, 2020 at 05:06:45PM +0800, Kai-Heng Feng wrote:
->> Particularly, as soon as the spinlock is removed, the issue can be reproduced.
->> Function domain_flush_complete() doesn't seem to affect the status.
->> 
->> However, the .map_page callback was removed by be62dbf554c5
->> ("iommu/amd: Convert AMD iommu driver to the dma-iommu api"), so
->> there's no easy revert for this issue.
->> 
->> This is still reproducible as of today's mainline kernel, v5.7-rc6.
-> 
-> Is there any error message from the IOMMU driver?
-> 
+For reference:
+The commit that added this message is at=20
+https://github.com/torvalds/linux/commit/59dd45d550c518a2c297b2888f194633cb=
+8e5700
 
-As of mainline kernel, there's no error message from IOMMU driver.
-There are some complains from v4.15-rc1:
-https://pastebin.ubuntu.com/p/qn4TXkFxsc/
+More threads on the subject - it seems people are either patching the
+kernel to eliminate the check completely or switching to Intel's
+driver:
+https://bugs.centos.org/view.php?id=3D16495
+https://patchwork.criu.org/patch/11882/
+https://forum.proxmox.com/threads/pve-6-0-7-ixgbe-firmware-errors.58592/
 
-Kai-Heng
+
+
+
