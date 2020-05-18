@@ -2,242 +2,158 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E9D20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8984C20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YsFijEJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgERBBr (ORCPT
+        id S1726813AbgERBCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 21:01:47 -0400
-Received: from mga17.intel.com ([192.55.52.151]:15784 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbgERBBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 21:01:47 -0400
-IronPort-SDR: l14H6Uj1eMXhwPz+bjCuveFDFBU1tmVvosQ893jiwNMcB5MEbZF/aUknerfsKb6ifWvP7phQKb
- Eu7WPLgSjN6g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 18:01:45 -0700
-IronPort-SDR: g4r+Vpzx6y6zgrPq+KnTwHY7k5FF7Hmrbsp6uIUrcbnw2Jb+1IAb/XXgKE5PB8g9/no8wx2dTa
- YV+BTNgNrS3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,405,1583222400"; 
-   d="scan'208";a="465592442"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 17 May 2020 18:01:43 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jaUA3-000DzV-3n; Mon, 18 May 2020 09:01:43 +0800
-Date:   Mon, 18 May 2020 09:00:45 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.05.16b] BUILD SUCCESS
- a136026322ab53d8e6c16d5394d8858ff58734ec
-Message-ID: <5ec1de3d.SCfGkmG1H/TWe5nn%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sun, 17 May 2020 21:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726665AbgERBCS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 21:02:18 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BCF5C061A0C;
+        Sun, 17 May 2020 18:02:17 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id u6so8022634ljl.6;
+        Sun, 17 May 2020 18:02:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cElIIYyJDPkLVWUxrz4v0d1891qYoBkXO8M2vNfJEH4=;
+        b=YsFijEJHPXeg94GNEmqZJLNcWewKowqaDTETzBP1hzhBlf5dXDzrOloBm21bmvyeN+
+         6hoexuKacMYoUy2FGrqb5zz1pE9vIXCMRRL0Nz8zgvkyBRV+yOYQ5kzNpssT38FuFee4
+         6sAJJZWy1Pth2HLVK09p/3c4Y0Ye/QX2h4owQQuTUo+N3kaRwqWKSl0FuhYK8He0hSCj
+         qI/4aM3fkrPMvYPIU1UIYU/tnvfieZnQYWV0mnRQX6AInyrg5dFzWLRK3UgD7nfO7Ws9
+         Qd/5rGvcHYP0aT89CKO2Y5lKTekO/Z1qnEuCFByvWufQ2hamJL2nWlqjYRVmzNCFk0BV
+         f61g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cElIIYyJDPkLVWUxrz4v0d1891qYoBkXO8M2vNfJEH4=;
+        b=ASy61LHdncg2i6cI1bHm6/+aC14hLvcuF5AdoiZKkIa7dOXq29iWCGTbA8hYXnnGkk
+         nHdCNMDgnU99J8Q//utorhof3WHtXoATShUT7yMU4cK+mMw2h+pq+5kOpdbv0lQkz8XH
+         01AtOqBxr2aqnBoL43YG0jjvOneDZY09yXQJLpi4yswvgQL8gokweP7+9wMcGMjqfuuH
+         r50qhNkPMm9EvprzS3fW665vq5cxnnoibh+44eqowq4tcbraCQVJ7LVFfpKNDXucr6SU
+         zNnjkCIVUGelXjhjapRej1TNSrhgHId+dYeJvFmdeENrAyQ0HOdWLpkGk8aE8mdyINxd
+         fPWQ==
+X-Gm-Message-State: AOAM531BT8OsT44WePqfMAnz8dJuiiZ8J9kpcWtuQDBDeaTjAbcmdcd4
+        BpFAHFslDr0gMFOdEo1zcz3z6jyLAkjT2k5ePXg=
+X-Google-Smtp-Source: ABdhPJzHTda9lpdlJDy3TE3YR8EMfRVlmgl+cKKojgVanXQPBKR/80ucTM+XJb0QWU72z9u7k2YbnjR83ZQguE6nNgM=
+X-Received: by 2002:a2e:b891:: with SMTP id r17mr8744535ljp.34.1589763735537;
+ Sun, 17 May 2020 18:02:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <cd119ce943d9ec62ef1bff237ebb49e35a337c3b.1589407872.git.lance.digby@gmail.com>
+ <93c437ce-f881-9f54-5e39-afa8afd96141@redhat.com> <CAHh6B+poeCFeZjCt04QT2c12bgvCf9UN+5vdx5EeK6PcgD2y3g@mail.gmail.com>
+ <fb2b881c-fe23-4a80-53c3-189d744f2fe3@redhat.com>
+In-Reply-To: <fb2b881c-fe23-4a80-53c3-189d744f2fe3@redhat.com>
+From:   Lance Digby <lance.digby@gmail.com>
+Date:   Mon, 18 May 2020 11:02:03 +1000
+Message-ID: <CAHh6B+q4b34awGvKxh7vh+Vn75WjBme11NumusNLxiyZ+t4GxA@mail.gmail.com>
+Subject: Re: [PATCH target] target: Add initiatorname to NON_EXISTENT_LUN error
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.05.16b
-branch HEAD: a136026322ab53d8e6c16d5394d8858ff58734ec  tick/nohz: Narrow down noise while setting current task's tick dependency
+Thanks again Mike will send out a new version.
 
-i386-tinyconfig vmlinux size:
-
-============================================================================================================================
- TOTAL  TEXT  arch/x86/events/zhaoxin/built-in.*                                                                            
-============================================================================================================================
-  -225  -224                                -136  f21d375f5014 Merge branch 'kcsan-dev.2020.04.13c' into HEAD               
-     0     0                                +136  a2dbbcab9f92 Merge branch 'lkmm-dev.2020.05.16a' into HEAD                
-   +38   +38                                   0  2b1504d6d829 fork: Annotate a data race in vm_area_dup()                  
-     0     0                                   0  0f70c0f4492e x86/mm/pat: Mark an intentional data race                    
-     0     0                                   0  de41f941b567 rculist: Add ASSERT_EXCLUSIVE_ACCESS() to __list_splice_init 
-     0     0                                   0  1abab1ad92eb locktorture: Use true and false to assign to bool variables  
-     0     0                                   0  9cbf290947d6 srcu: Fix a typo in comment "amoritized"->"amortized"        
-     0     0                                   0  6c1e0ae41c11 rcu: Simplify the calculation of rcu_state.ncpus             
-     0     0                                   0  b1685eebf4e7 docs: RCU: Convert checklist.txt to ReST                     
-     0     0                                   0  16e20563df88 docs: RCU: Convert lockdep-splat.txt to ReST                 
-     0     0                                   0  e4c987790ff4 docs: RCU: Convert lockdep.txt to ReST                       
-     0     0                                   0  edc1a6b38d58 docs: RCU: Convert rculist_nulls.txt to ReST                 
-     0     0                                   0  a6b7ad30b208 docs: RCU: Convert torture.txt to ReST                       
-     0     0                                   0  91eb3f11b9e1 docs: RCU: Convert rcuref.txt to ReST                        
-     0     0                                   0  1ebcbb15d737 docs: RCU: Convert stallwarn.txt to ReST                     
-     0     0                                   0  598b9f862211 docs: RCU: Don't duplicate chapter names in rculist_nulls.rs 
-     0     0                                   0  8aaeb5125243 rcutorture: Add races with task-exit processing              
-     0     0                                   0  5c8e537402d9 torture: Set configfile variable to current scenario         
-     0     0                                   0  db29a71d6cce rcutorture: Handle non-statistic bang-string error messages  
-     0     0                                   0  ead35f54f211 rcutorture: NULL rcu_torture_current earlier in cleanup code 
-     0     0                                   0  faf865144299 kcsan: Add test suite                                        
-     0     0                                   0  2f48f720b7bc torture:  Remove qemu dependency on EFI firmware             
-     0     0                                   0  8ae4131601ef doc: Timer problems can cause RCU CPU stall warnings         
-     0     0                                   0  c25a812e9ecc rcu: Add callbacks-invoked counters                          
-     0     0                                   0  6c4efe2625f9 rcu: Add comment documenting rcu_callback_map's purpose      
-    +1     0                                   0  1b2530e7d0c3 Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom o 
-     0     0                                   0  03f31532d0ce rcu/tree: Add better tracing for dyntick-idle                
-     0     0                                   0  a309d5ce2335 rcu/tree: Clean up dynticks counter usage                    
-     0     0                                   0  5c6e734fbaeb rcu/tree: Remove dynticks_nmi_nesting counter                
-     0     0                                   0  bc666ef50700 trace: events: rcu: Change description of rcu_dyntick trace  
-     0     0                                   0  9055994e10c9 torture: Add script to smoke-test commits in a branch        
-     0     0                                   0  ff29aecf039b torture: Remove whitespace from identify_qemu_vcpus output   
-     0     0                                   0  fcf95b789b06 torture: Add --allcpus argument to the kvm.sh script         
-     0     0                                   0  9346f5c9537e rcu: Grace-period-kthread related sleeps to idle priority    
-     0     0                                   0  f4f61f144291 rcu: Priority-boost-related sleeps to idle priority          
-     0     0                                   0  5835f972e185 rcu: No-CBs-related sleeps to idle priority                  
-     0     0                                   0  c397985b487e rcu: Expedited grace-period sleeps to idle priority          
-     0     0                                   0  69e95e6e69ef rcu-tasks: Convert sleeps to idle priority                   
-     0     0                                   0  211ef52376c7 fs/btrfs: Add cond_resched() for try_release_extent_mapping( 
-     0     0                                   0  d4f27f5f67dc locking/osq_lock: Annotate a data race in osq_lock           
-     0     0                                   0  01d362c93e79 doc: Tasks RCU must protect instructions before trampoline   
-     0     0                                   0  22db64813afb ubsan, kcsan: Don't combine sanitizer with kcov on clang     
-     0     0                                   0  63141f73adb1 doc: Update comment from rsp->rcu_gp_seq to rsp->gp_seq      
-     0     0                                   0  a136026322ab tick/nohz: Narrow down noise while setting current task's ti 
-  -177  -177                                   0  0adeeee7dd32..a136026322ab (ALL COMMITS)                                  
-============================================================================================================================
-
-elapsed time: 482m
-
-configs tested: 123
-configs skipped: 6
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sparc                            allyesconfig
-mips                             allyesconfig
-m68k                             allyesconfig
-mips                  cavium_octeon_defconfig
-microblaze                          defconfig
-powerpc64                        alldefconfig
-arm                      integrator_defconfig
-arc                     nsimosci_hs_defconfig
-s390                                defconfig
-arm                  colibri_pxa300_defconfig
-arm                        clps711x_defconfig
-mips                  maltasmvp_eva_defconfig
-arm                        magician_defconfig
-sh                                allnoconfig
-mips                          malta_defconfig
-arm                         assabet_defconfig
-arm                          exynos_defconfig
-m68k                                defconfig
-sparc64                             defconfig
-arm                       multi_v4t_defconfig
-sh                        dreamcast_defconfig
-powerpc                     skiroot_defconfig
-powerpc                    amigaone_defconfig
-mips                           mtx1_defconfig
-parisc                generic-64bit_defconfig
-c6x                         dsk6455_defconfig
-sh                           sh2007_defconfig
-arm                         s3c6400_defconfig
-arm                              zx_defconfig
-arm                        mvebu_v5_defconfig
-arc                        nsim_700_defconfig
-sh                        sh7757lcr_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-microblaze                        allnoconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a005-20200517
-x86_64               randconfig-a003-20200517
-x86_64               randconfig-a006-20200517
-x86_64               randconfig-a004-20200517
-x86_64               randconfig-a001-20200517
-x86_64               randconfig-a002-20200517
-i386                 randconfig-a006-20200517
-i386                 randconfig-a005-20200517
-i386                 randconfig-a003-20200517
-i386                 randconfig-a001-20200517
-i386                 randconfig-a004-20200517
-i386                 randconfig-a002-20200517
-i386                 randconfig-a012-20200517
-i386                 randconfig-a016-20200517
-i386                 randconfig-a014-20200517
-i386                 randconfig-a011-20200517
-i386                 randconfig-a013-20200517
-i386                 randconfig-a015-20200517
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+On Mon, May 18, 2020 at 5:16 AM Mike Christie <mchristi@redhat.com> wrote:
+>
+> On 5/16/20 6:29 PM, Lance Digby wrote:
+> > Mike,  Thanks for the review!
+> >   The pr_err  Detected NON_EXISTENT_LUN is the error messages issued
+> > for the TCM_NON_EXISTENT_LUN retcode so I believe they are the same.
+> >   Simply scanning for the wrong lun on an initiator will generate this
+> > error on the target but not generate an error on the initiator. And I
+> > have seen installs, with a lot of initiators, automate the scanning of
+> > such luns incorrectly deemed missing.
+> >   While this looks like a simple problem it can take days to get
+> > access or the tcp traces to sort it out.
+> >
+> >    Within the same routine there is another pr_err for
+> > TCM_WRITE_PROTECTED that I did not add the initiatorname to as I
+> > thought this would leave a heavy footprint on the initiator. If you
+>
+> I'm not sure what you mean by heavy footprint on the initiator part means.
+>
+> I would say do whatever is helpful to you to debug the problem. For
+> TCM_WRITE_PROTECTED I'm not sure the initiatorname is helpful. I think
+> the target name and tpg would be useful, because I think you sometimes
+> set it at the tpg level then it gets inherited by the LU. But I think
+> it's a pain to get to the target name from this code path, so I wouldn't
+> worry about adding it now.
+>
+> > believe this should be changed for consistency please let me know and
+> > I will add this and change to nacl->initiatorname.
+>
+> Just to make sure we are on the same page. I was just commenting about
+> the other NON_EXISTENT_LUN instace in transport_lookup_tmr_lun. I just
+> thought we would want/need the same info there.
+>
+>
+> >
+> >
+> >
+> >
+> >
+> >
+> >
+> >
+> >
+> > On Sat, May 16, 2020 at 9:50 AM Mike Christie <mchristi@redhat.com> wrote:
+> >>
+> >> On 5/13/20 11:01 PM, Lance Digby wrote:
+> >>> The NON_EXISTENT_LUN error can be written without an error condition
+> >>>  on the initiator responsible. Adding the initiatorname to this message
+> >>>  will reduce the effort required to fix this when many initiators are
+> >>> supported by a target.
+> >>>
+> >>> Signed-off-by: Lance Digby <lance.digby@gmail.com>
+> >>> ---
+> >>>  drivers/target/target_core_device.c | 5 +++--
+> >>>  1 file changed, 3 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+> >>> index 4cee113..604dea0 100644
+> >>> --- a/drivers/target/target_core_device.c
+> >>> +++ b/drivers/target/target_core_device.c
+> >>> @@ -100,9 +100,10 @@
+> >>>                */
+> >>>               if (unpacked_lun != 0) {
+> >>>                       pr_err("TARGET_CORE[%s]: Detected NON_EXISTENT_LUN"
+> >>> -                             " Access for 0x%08llx\n",
+> >>> +                             " Access for 0x%08llx from %s\n",
+> >>>                               se_cmd->se_tfo->fabric_name,
+> >>> -                             unpacked_lun);
+> >>> +                             unpacked_lun,
+> >>> +                             se_sess->se_node_acl->initiatorname);
+> >>
+> >> You can do nacl->initiatorname.
+> >>
+> >> Do you also want add the name to the tmr case? It's probably not common,
+> >> but the error message would be consistent.
+> >>
+> >>>                       return TCM_NON_EXISTENT_LUN;
+> >>>               }
+> >>>
+> >>
+> >
+>
