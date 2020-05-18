@@ -2,75 +2,104 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B99C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E195FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDEF820853
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF8162065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:03:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYFJWDsE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgERPCb (ORCPT
+        id S1728198AbgERPDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:02:31 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40135 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgERPCa (ORCPT
+        Mon, 18 May 2020 11:03:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbgERPDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:02:30 -0400
-X-Originating-IP: 84.210.220.251
-Received: from [192.168.1.123] (cm-84.210.220.251.getinternet.no [84.210.220.251])
-        (Authenticated sender: fredrik@strupe.net)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 38FBCC000F;
-        Mon, 18 May 2020 15:02:27 +0000 (UTC)
-Subject: Re: [PING] [PATCH v2] arm: ptrace: Fix mask for thumb breakpoint hook
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>
-References: <20200413173841.29651-1-fredrik@strupe.net>
- <d7381f90-f597-2a9c-4387-5714b41e02e6@strupe.net>
- <20200518141858.GV1551@shell.armlinux.org.uk>
-From:   Fredrik Strupe <fredrik@strupe.net>
-Message-ID: <0afefde9-f121-c88c-2ceb-7c02f7561979@strupe.net>
-Date:   Mon, 18 May 2020 17:02:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 11:03:13 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4741C061A0C;
+        Mon, 18 May 2020 08:03:13 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g11so4347008plp.1;
+        Mon, 18 May 2020 08:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4vTekQhuHY9lAKdz6m7oQYFi8rFTF9tZZ83Zd0IQ7ww=;
+        b=CYFJWDsEfiOaifGK1CWOjBUftQG5AWCsi4chqbFA4LLQBF4m8PKAezQ6Hf7gCXefKU
+         7r+NcfdAS2zznOiR3Tkkrfe9979ZSei5IRDgT2+0CvB25rYuewUoDttmpo/4GiBMe6lh
+         YFSf6AZ4dDQZKom1umIdhs+pJFFDx+8MpWRAl1PyoDKcD56iAW2MBLGx8AU126aE3Ldf
+         f59taMLSyjDCq6ohz0/n40ZM4nndndCrERtWQ7h9pd4ZF+OcnNc8pXuJheY2hWz9V6Q6
+         UrzNxU1SrjzHCtzOJNvTnxeXmeg+jDGAUzZ8djSsCNA+I4BEDo+sLhUq0G44zVLdCcqs
+         DHrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4vTekQhuHY9lAKdz6m7oQYFi8rFTF9tZZ83Zd0IQ7ww=;
+        b=SytHsixxJp0T5otM/pl9Y4sPuOpBZCtPjzadYlc55iuHNR3xOuJyOwrtCjXdkswnK1
+         PBbdAD11RqN9Vktxoy1lFqK2ffX3c1o/3tgVsdEskl3+h0VgNF1cNYa9OcxI1PXR0wCe
+         UWC7QbkfZalSzhq9KlOLRXA17YJpLNuoW1qL+2EGFiDfJ878/UkpQ5SFBSyr5MHOAsAh
+         UywpQpCpsl3Wj5wk0jQEvAVrDeJtPXzbhfg/9MSMXqw8IzP0P/khAYHcx/KMZOZtT5iU
+         AtYWnkgZr+oTEBsnOIR5ZA0iM8BrvzlQg0N3pbTxSj8qSmzGWn5gCoH5jURE0SSEmtjV
+         l5Ag==
+X-Gm-Message-State: AOAM530kNLugnzzdpHEt7yWQAheLtLGtlyuD7JJKzFQf5zovLdxXNVqT
+        8/vdHjIqfzvEEeNd42sdGzs=
+X-Google-Smtp-Source: ABdhPJwFZCQ71Tc10vG0Uf9SapqrNelBOBekbF1rdtm4LN/rq6dbbqi5HLKbSGohd2YBQZ0G8bym3g==
+X-Received: by 2002:a17:90a:950d:: with SMTP id t13mr21093885pjo.102.1589814193156;
+        Mon, 18 May 2020 08:03:13 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.209])
+        by smtp.gmail.com with ESMTPSA id k1sm7963142pgh.78.2020.05.18.08.03.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 08:03:11 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        netdev@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, rjw@rjwysocki.net,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, skhan@linuxfoundation.org
+Subject: [PATCH net-next v3 0/2] realtek ethernet : use generic power management.
+Date:   Mon, 18 May 2020 20:32:12 +0530
+Message-Id: <20200518150214.100491-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200518141858.GV1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.05.2020 16:18, Russell King - ARM Linux admin wrote:
-> On Mon, May 18, 2020 at 03:12:06PM +0200, Fredrik Strupe wrote:
->> call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
->> and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
->> (0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
->> instructions will be masked out. This makes the function match 32-bit
->> thumb instructions where the second half-word is equal to instr_val,
->> regardless of the first half-word.
->>
->> The result in this case is that all undefined 32-bit thumb instructions
->> with the second half-word equal to de01 (udf #1) work as breakpoints
->> and will raise a SIGTRAP instead of a SIGILL, instead of just the one
->> intended 16-bit instruction. An example of such an instruction is
->> eaa0b650, which is unallocated according to Arm ARM and should raise a
->> SIGILL, but instead raises a SIGTRAP.
->
-> How can 0xeaa0b650 match 0xde01 when masked with 0xffff ?
->
+The purpose of this patch series is to remove legacy power management callbacks
+from realtek ethernet drivers.
 
-Sorry, that is a typo; it should say 0xeaa0de01.
+The callbacks performing suspend() and resume() operations are still calling
+pci_save_state(), pci_set_power_state(), etc. and handling the powermanagement
+themselves, which is not recommended.
 
-For reference, this is similar to the problem with SETEND emulation that
-was fixed in commit fc2266011acc in the mainline kernel
-(or as discussed here: https://lkml.org/lkml/2020/4/8/274).
+The conversion requires the removal of the those function calls and change the
+callback definition accordingly.
 
-Fredrik
+All Changes are compile-tested only.
+
+Vaibhav Gupta (2):
+  realtek/8139too: use generic power management
+  realtek/8139cp: use generic power management
+
+ drivers/net/ethernet/realtek/8139cp.c  | 25 ++++++++-----------------
+ drivers/net/ethernet/realtek/8139too.c | 26 +++++++-------------------
+ 2 files changed, 15 insertions(+), 36 deletions(-)
+
+-- 
+2.26.2
 
