@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31295C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5464AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 124D720874
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E0420826
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824242;
-	bh=XjSsmsaj+0cGZzRkm6yFrZT7XEPAlcmNRcivnp2RI7s=;
+	s=default; t=1589824248;
+	bh=mZDpFq78a3s4o+gGZkg4N/z1GPyCKTvpTor0KpjQaMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KngTsc5K+lZvIbfg3A9C2q3E3yc0Fz1djwJ5WIpO9lF3DH0dC4Qug1lR0DiifEDfZ
-	 TAcEr6BIeJQ9B5W+k1lnOP/0R4UVqD9J73xLAFajLMOlRJ5O1Yycv1kOanGpLbAyln
-	 F33PH/kgKwRGrujW/4SJlPFw5N5VeygLpUJ1GrIs=
+	b=jm28FaCVzjC87WRN9OVo8XBGdIrPPx2faKuop4Q0ouIt8e0DbHdM89JqkBmBHjsEk
+	 tHxB0JdX5s+Cj5uRax9dkufkM8V4lHlTbR/0voQg/U+CSZkG7K8tUkO0El5bWm1T3h
+	 xpbGigW2q6r154Fy8B280BEIWa2lXN122H2QEWEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbgERRul (ORCPT
+        id S1730783AbgERRur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:50:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52730 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:50:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730696AbgERRuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:50:32 -0400
+        id S1729939AbgERRuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 968B720674;
-        Mon, 18 May 2020 17:50:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E592E20715;
+        Mon, 18 May 2020 17:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824232;
-        bh=XjSsmsaj+0cGZzRkm6yFrZT7XEPAlcmNRcivnp2RI7s=;
+        s=default; t=1589824239;
+        bh=mZDpFq78a3s4o+gGZkg4N/z1GPyCKTvpTor0KpjQaMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dG4EJZhcwon6UtZ9rmbV5I2aiEL4aYQszD8CtKk7rLIXziQbEgIcz3zTthBilhaSB
-         Tmy37pKTki3gT9rxu9ZQrE5asURdUlccQ3syKVRrozNaiu2IW/1hOsQBhGCspXD1at
-         xvTvfLvtAqdl7Wrtpsg5qnjA4GVAi/kZILptQq1E=
+        b=hMR+ZM2nI4ugMew2zUhWsOYclE3pj915utCLmYevN/vf1YZEJkseRoRWdHuiRqorW
+         iSnFW0/4BG3u0O62gL+FMPNJCpztBoWTFvUVFxQEKKlAmQzvKOMp1HPQasLzbnS43i
+         0oUpMrbzzZ+eitLk1w7LHsxbgVPF/BL6GQB0fQw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Sheets <matthew.sheets@gd-ms.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 10/80] netlabel: cope with NULL catmap
-Date:   Mon, 18 May 2020 19:36:28 +0200
-Message-Id: <20200518173452.287129397@linuxfoundation.org>
+Subject: [PATCH 4.19 13/80] Revert "ipv6: add mtu lock check in __ip6_rt_update_pmtu"
+Date:   Mon, 18 May 2020 19:36:31 +0200
+Message-Id: <20200518173453.039802676@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -61,84 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: "Maciej Żenczykowski" <maze@google.com>
 
-[ Upstream commit eead1c2ea2509fd754c6da893a94f0e69e83ebe4 ]
+[ Upstream commit 09454fd0a4ce23cb3d8af65066c91a1bf27120dd ]
 
-The cipso and calipso code can set the MLS_CAT attribute on
-successful parsing, even if the corresponding catmap has
-not been allocated, as per current configuration and external
-input.
+This reverts commit 19bda36c4299ce3d7e5bce10bebe01764a655a6d:
 
-Later, selinux code tries to access the catmap if the MLS_CAT flag
-is present via netlbl_catmap_getlong(). That may cause null ptr
-dereference while processing incoming network traffic.
+| ipv6: add mtu lock check in __ip6_rt_update_pmtu
+|
+| Prior to this patch, ipv6 didn't do mtu lock check in ip6_update_pmtu.
+| It leaded to that mtu lock doesn't really work when receiving the pkt
+| of ICMPV6_PKT_TOOBIG.
+|
+| This patch is to add mtu lock check in __ip6_rt_update_pmtu just as ipv4
+| did in __ip_rt_update_pmtu.
 
-Address the issue setting the MLS_CAT flag only if the catmap is
-really allocated. Additionally let netlbl_catmap_getlong() cope
-with NULL catmap.
+The above reasoning is incorrect.  IPv6 *requires* icmp based pmtu to work.
+There's already a comment to this effect elsewhere in the kernel:
 
-Reported-by: Matthew Sheets <matthew.sheets@gd-ms.com>
-Fixes: 4b8feff251da ("netlabel: fix the horribly broken catmap functions")
-Fixes: ceba1832b1b2 ("calipso: Set the calipso socket label to match the secattr.")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
+  $ git grep -p -B1 -A3 'RTAX_MTU lock'
+  net/ipv6/route.c=4813=
+
+  static int rt6_mtu_change_route(struct fib6_info *f6i, void *p_arg)
+  ...
+    /* In IPv6 pmtu discovery is not optional,
+       so that RTAX_MTU lock cannot disable it.
+       We still use this lock to block changes
+       caused by addrconf/ndisc.
+    */
+
+This reverts to the pre-4.9 behaviour.
+
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Cc: Xin Long <lucien.xin@gmail.com>
+Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+Fixes: 19bda36c4299 ("ipv6: add mtu lock check in __ip6_rt_update_pmtu")
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/cipso_ipv4.c        |    6 ++++--
- net/ipv6/calipso.c           |    3 ++-
- net/netlabel/netlabel_kapi.c |    6 ++++++
- 3 files changed, 12 insertions(+), 3 deletions(-)
+ net/ipv6/route.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -1272,7 +1272,8 @@ static int cipso_v4_parsetag_rbm(const s
- 			return ret_val;
- 		}
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -2360,8 +2360,10 @@ static void __ip6_rt_update_pmtu(struct
+ 	const struct in6_addr *daddr, *saddr;
+ 	struct rt6_info *rt6 = (struct rt6_info *)dst;
  
--		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
-+		if (secattr->attr.mls.cat)
-+			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
- 	}
+-	if (dst_metric_locked(dst, RTAX_MTU))
+-		return;
++	/* Note: do *NOT* check dst_metric_locked(dst, RTAX_MTU)
++	 * IPv6 pmtu discovery isn't optional, so 'mtu lock' cannot disable it.
++	 * [see also comment in rt6_mtu_change_route()]
++	 */
  
- 	return 0;
-@@ -1453,7 +1454,8 @@ static int cipso_v4_parsetag_rng(const s
- 			return ret_val;
- 		}
- 
--		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
-+		if (secattr->attr.mls.cat)
-+			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
- 	}
- 
- 	return 0;
---- a/net/ipv6/calipso.c
-+++ b/net/ipv6/calipso.c
-@@ -1061,7 +1061,8 @@ static int calipso_opt_getattr(const uns
- 			goto getattr_return;
- 		}
- 
--		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
-+		if (secattr->attr.mls.cat)
-+			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
- 	}
- 
- 	secattr->type = NETLBL_NLTYPE_CALIPSO;
---- a/net/netlabel/netlabel_kapi.c
-+++ b/net/netlabel/netlabel_kapi.c
-@@ -748,6 +748,12 @@ int netlbl_catmap_getlong(struct netlbl_
- 	if ((off & (BITS_PER_LONG - 1)) != 0)
- 		return -EINVAL;
- 
-+	/* a null catmap is equivalent to an empty one */
-+	if (!catmap) {
-+		*offset = (u32)-1;
-+		return 0;
-+	}
-+
- 	if (off < catmap->startbit) {
- 		off = catmap->startbit;
- 		*offset = off;
+ 	if (iph) {
+ 		daddr = &iph->daddr;
 
 
