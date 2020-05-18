@@ -2,151 +2,96 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7987AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E72C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D98420715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wpk1EG3w"
+	by mail.kernel.org (Postfix) with ESMTP id C850020715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgERSlg (ORCPT
+        id S1729056AbgERSmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbgERSlg (ORCPT
+        Mon, 18 May 2020 14:42:40 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:45612 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbgERSmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:41:36 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B25C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:41:35 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id u35so5242304pgk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 11:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BbV/LEIOeouRXOmK+GKN6o5kBO4anE2Qst31rAC/h8s=;
-        b=wpk1EG3wH9AfuuSAZTKJ+/n0Q9IjxGLodBjTu4ynOAG7Oao8ePt7F7SjaPQi9rYFBW
-         vTCGn5jpPiGn8sP5TKR4fBIzl8X9fsFTOYKFPTb5F3AHf4SMLBDa30kiGOOx9gMf0vy1
-         aCFLjZgohKiam+RjD+RPJxjAMEV3Movg6BLoGWxnmo9SwsN7aYuVgFyq3fhx2D23ln2S
-         YfMxuQDebgG45W/1YRp1agw9YqdJ9v0+swjux9ma+c/ER6RwDShQ18qxv2t9S/AHctoO
-         lxbR3qnHIIx8VG8ImM0hPjjD/EYgZ8jlOYCuvhtqOm3rlT2aF+H9ymdN8ob3LH3KMKPa
-         NDrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BbV/LEIOeouRXOmK+GKN6o5kBO4anE2Qst31rAC/h8s=;
-        b=lgsx4gLj/wdG/0b0OjT51cD/1u9Wvr5H7pwRTLrRALOVdEmDY0NXCe2jeSRZlssbTx
-         hguODWN7DvbnP7/nQ9qX0SFwohV+5PPm8garidhpbuAAh6mdg+6N6a6DWiezDDgUX9uR
-         mzJMzjNr4+4FFXon03kUHIs27EDSuHFKx4ftj4CWu9KSqzy0eq3EX1FDuoBmQXO9uBPx
-         JeJ4fH71LT014G0cQeUk460XnLLLVqVRGJgLi7w1fqtU8Rq+DNG15UnYVQbxJHNy+DaR
-         Mwz6ROAOTZ9LjBYjKrycsfdt2lvOMaUXccvjlmPb0pkqxyomU14J9CoMl0xzBe7PMJJ/
-         JXTw==
-X-Gm-Message-State: AOAM533A/aGeAftSxeqNjqh2FsvNE0EqJoD7KCca6zV9pRgEMdejYAVo
-        UJI+QhWCOr1sJWevlZiHMVutgw==
-X-Google-Smtp-Source: ABdhPJz0TbunwEJ3QS58Piw9hJtSVbZ5pMCjwwHgcI7aZsqjDXKf1WlgVOn75F7erOVKbayPWGlQIA==
-X-Received: by 2002:a63:f64d:: with SMTP id u13mr15918251pgj.151.1589827294403;
-        Mon, 18 May 2020 11:41:34 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x62sm9251663pfc.46.2020.05.18.11.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:41:33 -0700 (PDT)
-Date:   Mon, 18 May 2020 11:40:10 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] interconnect: Disallow interconnect core to be built as
- a module
-Message-ID: <20200518184010.GF2165@builder.lan>
-References: <b789cce388dd1f2906492f307dea6780c398bc6a.1567065991.git.viresh.kumar@linaro.org>
- <CAOCOHw4ri6ikRpkJWtAdaPQiMhdKMrdNciqQ8YNaXR+ApSnAew@mail.gmail.com>
- <66c3d470-48e2-619a-dd95-6064a85161e0@linaro.org>
- <20200515071152.GA1274556@kroah.com>
+        Mon, 18 May 2020 14:42:40 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 8E39480642;
+        Mon, 18 May 2020 20:42:36 +0200 (CEST)
+Date:   Mon, 18 May 2020 20:42:35 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/2] drm/bridge: ti-sn65dsi86: Implement lane
+ reordering + polarity
+Message-ID: <20200518184235.GD862982@ravnborg.org>
+References: <20200506140208.v2.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
+ <CAF6AEGvXkeOrHGMHo=C1zXhDc9rquQJc8oGDB4VDfhTfdtqyTg@mail.gmail.com>
+ <CAD=FV=V9Aphv=sV36CcK=ka2zNh7Hwiog4qiUEC7wpgjqYSi5Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515071152.GA1274556@kroah.com>
+In-Reply-To: <CAD=FV=V9Aphv=sV36CcK=ka2zNh7Hwiog4qiUEC7wpgjqYSi5Q@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=cm27Pg_UAAAA:8
+        a=gaDAzqFsDMoa8Jq105UA:9 a=CjuIK1q_8ugA:10 a=xmb-EsYY8bH0VWELuYED:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 15 May 00:11 PDT 2020, Greg Kroah-Hartman wrote:
+Hi Douglas.
 
-> On Fri, May 15, 2020 at 07:48:47AM +0300, Georgi Djakov wrote:
-> > On 9/12/19 19:33, Bjorn Andersson wrote:
-> > > On Thu, Aug 29, 2019 at 1:07 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >>
-> > >> Building individual drivers as modules is fine but allowing a core
-> > >> framework to be built as a module makes it really complex and should be
-> > >> avoided.
-> > >>
-> > >> Whatever uses the interconnect core APIs must also be built as a module
-> > >> if interconnect core is built as module, else we will see compilation
-> > >> failures.
-> > >>
-> > >> If another core framework (like cpufreq, clk, etc), that can't be built
-> > >> as module, needs to use interconnect APIs then we will start seeing
-> > >> compilation failures with allmodconfig configurations as the symbols
-> > >> (like of_icc_get()) used in other frameworks will not be available in
-> > >> the built-in image.
-> > >>
-> > >> Disallow the interconnect core to be built as a module to avoid all
-> > >> these issues.
-> > 
-> > Hi Greg,
-> > 
-> > We had a discussion [1] a few months back about frameworks being built as
-> > modules. IIUC, you initially expressed some doubts about this patch, so i
-> > wanted to check with you again on this.
-> > 
-> > While i think that the possibility for a framework core to be a module is a
-> > nice feature, and we should try to be as modular as possible, it seems that
-> > handling dependencies between the different core frameworks becomes difficult
-> > when one of them is tristate.
-> > 
-> > This of course affects the drivers which use it (every client should express
-> > the dependency in Kconfig as a "depends on framework || !framework"), in order
-> > to avoid build failures in the case when framework=m and client=y. However, this
-> > is not a big issue.
-> > 
-> > But it gets more complex when another framework2 becomes a client of the modular
-> > framework and especially when framework2 is "select"-ed in Kconfig by it's
-> > users. When selects are used in Kconfig, it forces the option, without ever
-> > visiting the dependencies. I am not sure what we should do in this case, maybe
-> > we can continue and sprinkle more "depends on framework || !framework" also for
-> > every single user which selects framework2.. But i believe that this is very
-> > inconvenient.
-> > 
-> > Well, the above is not impossible, but other frameworks (regulator, clk, reset,
-> > pinctrl, etc.) are solving this problem by just being bool, instead of tristate.
-> > This makes life much easier for everyone. So i am wondering if it wouldn't be
-> > more appropriate to use the same approach here too?
+On Mon, May 18, 2020 at 11:22:22AM -0700, Doug Anderson wrote:
+> Sam,
 > 
-> Ok, if it makes things easier, perhaps this is the best way to handle
-> it.
+> On Fri, May 15, 2020 at 2:43 PM Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > On Wed, May 6, 2020 at 2:03 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > >
+> > > The ti-sn65dsi86 MIPI DSI to eDP bridge chip supports arbitrary
+> > > remapping of eDP lanes and also polarity inversion.  Both of these
+> > > features have been described in the device tree bindings for the
+> > > device since the beginning but were never implemented in the driver.
+> > > Implement both of them.
+> > >
+> > > Part of this change also allows you to (via the same device tree
+> > > bindings) specify to use fewer than the max number of DP lanes that
+> > > the panel reports.  This could be useful if your display supports more
+> > > lanes but only a few are hooked up on your board.
+> > >
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> >
+> > Reviewed-by: Rob Clark <robdclark@gmail.com>
 > 
+> I guess get_maintainer is somehow not tagging you and I haven't got it
+> through my thick skull to CC you each time.  If you're willing, I
+> think this patch is ready too.  Happy to re-post it with you in the To
+> list if it helps.
 
-It most certainly does.
+I have long lost the original patch, so shall I apply then please
+re-send.
 
-With INTERCONNECT as a bool we can handle its absence with stub
-functions - like every other framework does. But as a tristate then
-every driver with a call to the interconnect api needs an entry in
-Kconfig to ensure the client driver must be a module if the interconnect
-framework is.
-
-Regards,
-Bjorn
+	Sam
