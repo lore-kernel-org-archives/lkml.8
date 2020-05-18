@@ -2,77 +2,175 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A84BC206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18E1206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:37:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oCucQLvj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgERNh0 (ORCPT
+        id S1728186AbgERNha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:37:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:40820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgERNhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:37:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C84A101E;
-        Mon, 18 May 2020 06:37:21 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.29.34])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28C743F305;
-        Mon, 18 May 2020 06:37:18 -0700 (PDT)
-Date:   Mon, 18 May 2020 14:37:16 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@am.com>,
-        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
-Subject: Re: [PATCH 6/6] scs: Move DEFINE_SCS macro into core code
-Message-ID: <20200518133716.GD2787@C02TD0UTHF1T.local>
-References: <20200515172756.27185-1-will@kernel.org>
- <20200515172756.27185-7-will@kernel.org>
- <20200518121441.GE1957@C02TD0UTHF1T.local>
- <20200518132612.GE32394@willie-the-truck>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518132612.GE32394@willie-the-truck>
+        Mon, 18 May 2020 09:37:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgERNhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:37:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79773C05BD09;
+        Mon, 18 May 2020 06:37:22 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 50so11862604wrc.11;
+        Mon, 18 May 2020 06:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=uGj/EHUKtmvC6mOszdrKA/qYKAYI/PCc4BudRf6DR7o=;
+        b=oCucQLvjKY4OgRb/yeNCquPu1c0cwSmKsMn1eifkhfsCMT7XgTaC3u+2ggszg5BT+n
+         HMEmbVQY5nDxNDeqCwzHm34KRMITIJkX11EuytyrozUMmAQtYba8i8yPIjNzOCmtlCr/
+         iM0iifZJFegEuBiYzcSzOJrr7/3iat4viehMokp20D+xiADDv+r4s0ptvuq9GnS2e3uH
+         461Lk8S1uw/fO82Aw3oCfL1XBoE/IPZPy89bSh8rpsbywRDKR4HdfQHuduID17/Mq97U
+         irC20Y0orc1g7aqvbW/N1p40d+0j6r5BWOhZQiSXdHBXylQFdZWY1RG3+bqMkf/bcNY3
+         ElQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=uGj/EHUKtmvC6mOszdrKA/qYKAYI/PCc4BudRf6DR7o=;
+        b=Jyo9t5ZtucEljKV9kbsIkaMmT4VyufmfCveAu4WfJusrsvi9Pe/UxJwSYHqotrJD57
+         ZcMq2YnBCNWY2BayFZ/crrvmNguS4ntllFasYpV7xXSO7eAsy9sF9Vw7RLjBaEZCDxJ5
+         IuMoloP07kGtPX1jcYsuhg3uQ25vo7FSSPw8plh0LUW0MPQ2RRnSQNK2T/YEcCs86Gl4
+         63SSBdI4JXtqCE2duzp9uLaymLFCDSob8/+0gJQB3pcFlTnPF8sOZG4yya+glOm/1xfX
+         h9dOAdfaAo4v08a6wz2XdFCy4qbLmS3IOUt+J3savrK3IdnqpZ9zknf7ZouAOJLN0ptc
+         xWvg==
+X-Gm-Message-State: AOAM530YxiMHbdl9kl89sLlFt1kH64/r5L6dA5kIwWTwyvHqnWkgJw2q
+        e7YhFlqJpJLjcGTc89iZUWSvu+lWMXk=
+X-Google-Smtp-Source: ABdhPJw/jQG4GyBF5BdTtT1sopi05okIYUybE0FoSjCBIwTXlwtXFd401wOtOvd5h2pN6e1s2KB0RQ==
+X-Received: by 2002:a5d:66c5:: with SMTP id k5mr19518322wrw.17.1589809040661;
+        Mon, 18 May 2020 06:37:20 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id o26sm17054328wro.83.2020.05.18.06.37.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 06:37:20 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
+Date:   Mon, 18 May 2020 15:36:38 +0200
+Message-Id: <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
+References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 02:26:12PM +0100, Will Deacon wrote:
-> On Mon, May 18, 2020 at 01:14:41PM +0100, Mark Rutland wrote:
-> > On Fri, May 15, 2020 at 06:27:56PM +0100, Will Deacon wrote:
-> > > Defining static shadow call stacks is not architecture-specific, so move
-> > > the DEFINE_SCS() macro into the core header file.
-> > > 
-> > > Signed-off-by: Will Deacon <will@kernel.org>
-> > 
-> > I think that we'll have to pull this back into arch code if/when we deal
-> > with VMAP'd stacks, so I'm not sure this is worthwhile given the
-> > diffstat is balanced.
-> 
-> I dunno, if another architecture wants to use this then having the stuff
-> in the core code makes sense to me. I also want to kill asm/scs.h entirely
-> and move our asm macros somewhere else where they're not mixed up with the
-> C headers.
+Set reset gpio to high on ak8975_power_on, set reset gpio to low on
+ak8975_power_off.
 
-Thinking about it a bit further, we'd have to make bigger changes anyhow
-(to dynamically allocate), but given we can do that for regular stacks
-we can probably do something similar here.
+Without setting it to high on ak8975_power_on driver's probe fails
+on ak8975_who_i_am while checking for device identity for AK09911 chip
 
-So no strong feelings either way on this patch.
+AK09911 has a reset gpio to handle register's reset. If reset gpio is
+set to low it will trigger the reset. AK09911 datasheed says that if not
+used reset pin should be connected to VID and this patch emulates this
+situation
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+---
+ drivers/iio/magnetometer/ak8975.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-Mark.
+diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
+index 3c881541ae72..c1ba5cd2cb6c 100644
+--- a/drivers/iio/magnetometer/ak8975.c
++++ b/drivers/iio/magnetometer/ak8975.c
+@@ -358,6 +358,7 @@ struct ak8975_data {
+ 	u8			asa[3];
+ 	long			raw_to_gauss[3];
+ 	struct gpio_desc	*eoc_gpiod;
++	struct gpio_desc	*reset_gpiod;
+ 	int			eoc_irq;
+ 	wait_queue_head_t	data_ready_queue;
+ 	unsigned long		flags;
+@@ -384,10 +385,13 @@ static int ak8975_power_on(const struct ak8975_data *data)
+ 			 "Failed to enable specified Vid supply\n");
+ 		return ret;
+ 	}
++
++	gpiod_set_value_cansleep(data->reset_gpiod, 0);
++
+ 	/*
+-	 * According to the datasheet the power supply rise time i 200us
++	 * According to the datasheet the power supply rise time is 200us
+ 	 * and the minimum wait time before mode setting is 100us, in
+-	 * total 300 us. Add some margin and say minimum 500us here.
++	 * total 300us. Add some margin and say minimum 500us here.
+ 	 */
+ 	usleep_range(500, 1000);
+ 	return 0;
+@@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
+ /* Disable attached power regulator if any. */
+ static void ak8975_power_off(const struct ak8975_data *data)
+ {
++	gpiod_set_value_cansleep(data->reset_gpiod, 1);
++
+ 	regulator_disable(data->vid);
+ 	regulator_disable(data->vdd);
+ }
+@@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
+ 	struct ak8975_data *data;
+ 	struct iio_dev *indio_dev;
+ 	struct gpio_desc *eoc_gpiod;
++	struct gpio_desc *reset_gpiod;
+ 	const void *match;
+ 	unsigned int i;
+ 	int err;
+@@ -856,6 +863,15 @@ static int ak8975_probe(struct i2c_client *client,
+ 	if (eoc_gpiod)
+ 		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
+ 
++	/*
++	 * If reset pin is provided then will be set to high on power on
++	 * and to low on power off according to AK09911 datasheet
++	 */
++	reset_gpiod = devm_gpiod_get_optional(&client->dev,
++					      "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(reset_gpiod))
++		return PTR_ERR(reset_gpiod);
++
+ 	/* Register with IIO */
+ 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+ 	if (indio_dev == NULL)
+@@ -866,6 +882,7 @@ static int ak8975_probe(struct i2c_client *client,
+ 
+ 	data->client = client;
+ 	data->eoc_gpiod = eoc_gpiod;
++	data->reset_gpiod = reset_gpiod;
+ 	data->eoc_irq = 0;
+ 
+ 	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
+-- 
+2.17.1
+
