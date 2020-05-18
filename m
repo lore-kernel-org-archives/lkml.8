@@ -2,81 +2,109 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A456C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF74C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6325F20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98A120643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:07:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="p8OBSAuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgERJHg (ORCPT
+        id S1726490AbgERJHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:07:36 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2218 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726040AbgERJHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:07:36 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id F1628BB492F0240FEF8D;
-        Mon, 18 May 2020 10:07:31 +0100 (IST)
-Received: from [127.0.0.1] (10.210.170.146) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 18 May
- 2020 10:07:30 +0100
-Subject: Re: [PATCH] libata: Use per port sync for detach
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-CC:     Jens Axboe <axboe@kernel.dk>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200515110916.11556-1-kai.heng.feng@canonical.com>
- <555101fd-71bc-fa0b-98c2-69249bb3eda6@huawei.com>
- <15CFC20D-B8CB-43D7-8973-60E82DE6B894@canonical.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <91334913-eac8-c8e0-ced6-f1bb8d8b2507@huawei.com>
-Date:   Mon, 18 May 2020 10:06:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 18 May 2020 05:07:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERJHh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:07:37 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41CEBC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 02:07:37 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f06e800d0e940b9e23b2e71.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:e800:d0e9:40b9:e23b:2e71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A2CE01EC0337;
+        Mon, 18 May 2020 11:07:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589792855;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=A/D3q8YYDdeKyT3tygabeARK+4DUMllrL5T+0I7hDFU=;
+        b=p8OBSAuqYqA5YLgDRnT25NeP8c+4NwxVwolZRI46j3088JJiY6wRMKmLgUKXmldSKl6H6M
+        /K7mlVE63FwsAeogqjBWyDX4CzxqSJPeAJURSEZgXDHp5LJTyEqWFE6PErHnfNdcgSVIiE
+        f27ohitVagUNRfpcQZbVFhCtVPmA14Q=
+Date:   Mon, 18 May 2020 11:07:27 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Benjamin Thiel <b.thiel@posteo.de>,
+        Dave Young <dyoung@redhat.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Lenny Szubowicz <lszubowi@redhat.com>,
+        linux-acpi@vger.kernel.org, Loic Yhuel <loic.yhuel@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Subject: Re: [GIT PULL 0/7] EFI fixes for v5.7
+Message-ID: <20200518090727.GB25034@zn.tnic>
+References: <20200517125754.8934-1-ardb@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <15CFC20D-B8CB-43D7-8973-60E82DE6B894@canonical.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.170.146]
-X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200517125754.8934-1-ardb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/05/2020 18:48, Kai-Heng Feng wrote:
->> 841]  ret_from_fork+0x10/0x1c
->> [   28.393400] ---[ end trace 9972785c7052048f ]---
->> [   28.435826] ahci 0000:b4:03.0: SSS flag set, parallel bus scan disabled
-> Can you please test the following patch:
-> 
-> diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
-> index 474c6c34fe02..51ee0cc4d414 100644
-> --- a/drivers/ata/libata-eh.c
-> +++ b/drivers/ata/libata-eh.c
-> @@ -3583,8 +3583,10 @@ int ata_eh_recover(struct ata_port *ap, ata_prereset_fn_t prereset,
->          rc = 0;
->   
->          /* if UNLOADING, finish immediately */
-> -       if (ap->pflags & ATA_PFLAG_UNLOADING)
-> +       if (ap->pflags & ATA_PFLAG_UNLOADING) {
-> +               ap->pflags |= ATA_PFLAG_UNLOADED;
->                  goto out;
-> +       }
-> 
-> It's only compile-tested, many drivers panic with CONFIG_DEBUG_TEST_DRIVER_REMOVE enabled, so the system I have can't even boot properly:(
+Hi,
 
-ok, let me debug this today.
+On Sun, May 17, 2020 at 02:57:47PM +0200, Ard Biesheuvel wrote:
+> The following changes since commit a088b858f16af85e3db359b6c6aaa92dd3bc0921:
+> 
+>   efi/x86: Revert struct layout change to fix kexec boot regression (2020-04-14 08:32:17 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent
 
-Thanks,
-John
+can you please make your tags unique? For example call this one:
+
+efi-urgent-for-v5.7-rc6
+
+or so so that the git history can show for which -rc that urgent tag was
+meant?
+
+I mean, technically one can do that already with git but it would be
+easier if it had the rc in the name. We do that already in tip - either
+-rc name or the date of the tag.
+
+Also, using the same tag gives:
+
+From git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi
+ ! [rejected]                  efi-next           -> efi-next  (would clobber existing tag)
+ ! [rejected]                  efi-urgent         -> efi-urgent  (would clobber existing tag)
+
+when I try to fetch from you and I can delete the old tag but having
+unique tag names makes the history more user-friendly, I'd say.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
