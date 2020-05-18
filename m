@@ -2,104 +2,147 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFFDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCEF020643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:37:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Z1AP4zi6"
+	by mail.kernel.org (Postfix) with ESMTP id B3B7720756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589834441;
+	bh=8de3UBP7OZuHm20Fet+BjlMemdZC5TSnfOPgXDe+Ghg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mF8BAWWxmhZDWMC73a4rzRTVlyM8twEzQ0Cb8CwN1hUw87/B8KIR7b2EuTVmbJ1WG
+	 yvjw9w8/O/muFXEG20dSf6X7rxFG4rHJqdXqc9OKmV3jRIwgEFnAg4JRymL3e29P7V
+	 vPZ4criN1t/ahYYl1EkMi+j56orEuuRCngmIHdGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgERUhS (ORCPT
+        id S1727837AbgERUkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:37:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgERUhR (ORCPT
+        Mon, 18 May 2020 16:40:41 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35507 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgERUkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:37:17 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D55CC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:37:17 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b91so9695101edf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=07U9JgzItnQ21O3cGWVkQXvBXHI4OBd4+wXXui3XRR0=;
-        b=Z1AP4zi61x3wo9PxT/phHkmzA3EL3TiC2l4ce5QYnRI+gNaIBCtZsusW5TnU2XKX8k
-         u4dN0vnaZyFrVTywHk/jJGtJbXwUO6MtJzW2sDNSukwbQMetMsYIOSyW63CCr1qRhuHr
-         PbKaHJb4k4yJIM8bIrmaSl4NodDBLaiz9tMyihW0DJN9l0pg802XJdP8mm3EllBmK0fD
-         g4KLJY4jEtoaezDx1LWVKEYWU7xXWMp01XJGicRTj2vG+YCCJRA9ITE/VNAgg+mYYW8z
-         0CwP+Gyp0DfGvUZP/SE0X3uYsznT0nE0bv4XTXqMdAeh4WQ3iqzaD0XLulU/wWdkmWQz
-         H0ZQ==
+        Mon, 18 May 2020 16:40:40 -0400
+Received: by mail-il1-f195.google.com with SMTP id a14so5912010ilk.2;
+        Mon, 18 May 2020 13:40:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=07U9JgzItnQ21O3cGWVkQXvBXHI4OBd4+wXXui3XRR0=;
-        b=MZCLXKp2+8hxwDTg/5578ntbidGQy+wqWB9wRNp9TtWQBcyC66GZ52QUdj2tmR5r9j
-         6EuXfts8wqDM9m6QnAho2l1uqJ7XAqB66aKL/HpdJaxI5L9zWjOLno8lreQEq5FuVoxi
-         UQC6Tq/V2Q9LArhmV2kwckGhczSR9QUKYoYAaJGk3EjL6t2/Dj8HWQWvOVl3LDZrSvoF
-         s2Q1zvNZum/gMnBd+OxrEAckaJbdJ+0hdgjBGJr7BgqBNlpO/c7y0zU/hbSwCqHs8WC5
-         P/c0cjMui/ha7pdeeUpzC5QoiDtrYG/qmELo8mGn6F0bNhvZ7QH50Nyfa+J4JvqyB+Qg
-         QRmA==
-X-Gm-Message-State: AOAM532daIqSEQdP7fIIjma8rMH0+g5aqIQLSfw8a1cQL83c8xLLgb0k
-        rizK5Sb2aXfDA6ACoGYI14EWgGCnWLVirGa1Cwg=
-X-Google-Smtp-Source: ABdhPJy5JXiayrpQcj/jHe174FGQYD6A3Gu5IvH/UisH5NSWucd/M4A20R9xxjUK69lv7FRQy5b2OYjITsgwLhYY8YA=
-X-Received: by 2002:a50:a985:: with SMTP id n5mr15258638edc.338.1589834235965;
- Mon, 18 May 2020 13:37:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3XIblm8zUqQuuY/X/TRE5azM2syRVCTbnkaQ5PvYeqQ=;
+        b=CgOIpOr7aRmEtY+sNfPRku4mULjelQH08nxiiyd4/Iz2V1Ku2AyCQHLPeB5Bv9HYtD
+         AXDvsnpaq9RC9UijbJX3yQEktMazTO0URsa+n4IVulCEaD1Dz3X6LwNrPd99w+zetvfm
+         8uXzhhlKZ0pczIvsV/ISXIykptgyK70F6npju3iRdqhnq2lYC3e6oM29HJqf6HKrTmb5
+         zzmBUzpPUe9bo+mhTIi6fKTTjWDfVMadTy2va/Y66mxgKPy2+3AITm2J+FT7CRenYaAz
+         K0aEtgQ8Ib/pyDvteiZ3/BVpZX9U0agX51oL2bnYJHG48akHuqFTwjk1C1Jy5Ww99DxA
+         BREw==
+X-Gm-Message-State: AOAM531/dIFwBdFgqimkhwJjnlj3xeNrC/0hKIszL0egb+k6uuULKSKl
+        JtfX7wgr4PBSXLS3wx/pMQ==
+X-Google-Smtp-Source: ABdhPJzP6946xepHNazaOLD4ewVhDy31f9QxjZeD/1Q0ypDixwfmV7lyLnzYrKfUH8Jo45fkyUMnUg==
+X-Received: by 2002:a92:5acb:: with SMTP id b72mr18300906ilg.76.1589834439429;
+        Mon, 18 May 2020 13:40:39 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id r9sm5157600ilm.10.2020.05.18.13.40.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 13:40:38 -0700 (PDT)
+Received: (nullmailer pid 9739 invoked by uid 1000);
+        Mon, 18 May 2020 20:40:37 -0000
+Date:   Mon, 18 May 2020 14:40:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-mips@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] dt-bindings: watchdog: dw-wdt: Add watchdog TOPs
+ array property
+Message-ID: <20200518204037.GA4909@bogus>
+References: <20200306132758.703FC8030704@mail.baikalelectronics.ru>
+ <20200510105807.880-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510105807.880-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <bcefba5b-107c-716b-bb60-5b4b2476894b@o2online.de>
- <CAFBinCD8-tr97GCVhBi5R1nzxLhy=_6VuLY8ubUO1SDTFjiELw@mail.gmail.com>
- <22af498b-44a0-ced3-86f3-114427a73910@o2online.de> <CAFBinCCGAkhPCwOW=mAvsV2qdixq8Gf8yQw1gYErHpz7KmuAZg@mail.gmail.com>
- <5de6db87-a71f-d14c-390d-b0caeab5d650@o2online.de> <CAFBinCDB9c2uMRXO9DKSX4hC7EBgnRfBa+BM5-VdEPZeieKn_w@mail.gmail.com>
- <813dfc08-f13a-dcac-0bd9-821d188bba08@o2online.de> <CAFBinCCgZF5Pu944q-_+V0yQ-nc6q82xDjJHjsnj6=uOQL+DEw@mail.gmail.com>
- <8cbbf90c-54ba-8fa3-3386-022c9c997a20@o2online.de> <CAFBinCBukGbzgO-Y1dCRYXZHhX2PcSEQQ_XvhHqLcnw0fGDP8w@mail.gmail.com>
- <a95f5fe1-4376-f872-961a-c2237c36811c@o2online.de>
-In-Reply-To: <a95f5fe1-4376-f872-961a-c2237c36811c@o2online.de>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 18 May 2020 22:37:05 +0200
-Message-ID: <CAFBinCCgFtv=u4ZKW3rdoDPZ_jh3jU03MDxHoDk=pbi+4pxB_w@mail.gmail.com>
-Subject: Re: RTL8723BS driver doesn't work for,me but I can help testing
-To:     Tobias Baumann <017623705678@o2online.de>
-Cc:     hdegoede@redhat.com, Larry.Finger@lwfinger.net,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510105807.880-4-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tobias,
+On Sun, May 10, 2020 at 01:58:03PM +0300, Serge Semin wrote:
+> In case if DW Watchdog IP core is built with WDT_USE_FIX_TOP == false,
+> a custom timeout periods are used to preset the timer counter. In
+> this case that periods should be specified in a new "snps,watchdog-tops"
+> property of the DW watchdog dts node.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: linux-mips@vger.kernel.org
+> 
+> ---
+> 
+> Rob, I had to remove your Reviewed-by tag, since the patch needed
+> to be updated a bit (see changelog).
+> 
+> Changelog v2:
+> - Rearrange SoBs.
+> - Move $ref to the root level of the "snps,watchdog-tops" property
+>   so does the constraints.
+> - Add default TOP values array.
+> - Discard the label definition from the new bindings example.
+> ---
+>  .../bindings/watchdog/snps,dw-wdt.yaml        | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> index 5bf6dc6377f3..cc741fb5a685 100644
+> --- a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> @@ -39,6 +39,24 @@ properties:
+>      description: Phandle to the DW Watchdog reset lane
+>      maxItems: 1
+>  
+> +  snps,watchdog-tops:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: |
+> +      DW APB Watchdog custom timer intervals - Timeout Period ranges (TOPs).
+> +      Each TOP is a number loaded into the watchdog counter at the moment of
+> +      the timer restart. The counter decrementing happens each tick of the
+> +      reference clock. Therefore the TOPs array is equivalent to an array of
+> +      the timer expiration intervals supported by the DW APB Watchdog. Note
+> +      DW APB Watchdog IP-core might be synthesized with fixed TOP values,
+> +      in which case this property is unnecessary with default TOPs utilized.
+> +    default: [0x0001000 0x0002000 0x0004000 0x0008000
+> +      0x0010000 0x0020000 0x0040000 0x0080000
+> +      0x0100000 0x0200000 0x0400000 0x0800000
+> +      0x1000000 0x2000000 0x4000000 0x8000000]
+> +    items:
+> +      minItems: 16
+> +      maxItems: 16
 
-On Mon, May 18, 2020 at 7:59 AM Tobias Baumann <017623705678@o2online.de> wrote:
->
-> hi martin
->
-> i activate your patch ; wlan works ;  also with only  edit GPIOX_11 wlan
-> works
->
-> its now GPIO-402 out high ACTIVE_LOW  ( 3.3V on pin12)
-great, thank you for doing the research!
+Drop 'items' and move these up a level. That may have given you some 
+issues, but I made some fixes recently.
 
-did you find out if GPIOAO_6 is needed at all?
-the 3.10 kernel enables it and sets it to HIGH. my understanding is
-that you didn't change this one so the output is still LOW.
-so I'm wondering if it is needed at all (I wouldn't be surprised if it
-was not needed, these 3.10 kernel .dts files seem to be copy&pasted
-from various vendors and do not necessarily reflect the actual
-hardware setup inside the box)
+With that,
 
-> i also attached the performance infos  Wlan0->Router and RAM->SDHC
-that's pretty good, great to see that it works fine for you :-)
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-
-Martin
+Rob
