@@ -2,52 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A194C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF803C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44DEE20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD15620671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825649;
-	bh=6NoDHuyUjbD1VRYy9KYkvyxDEQqnWpl0fO+zIhe750U=;
+	s=default; t=1589825653;
+	bh=vJwxjENKjponhZzinjr7aum5pc/rXKXOdzUWMBC5U60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wc9ybZFxPPLu6sWntEIXbg8R+uJZBs+Yr40RnA2/7UlfioBAkdcdIK8Pjzp5DmIOI
-	 wfFTAxeAbpG8xNfx4+lNR/E1YJOMlWxBVx0A96vhJvH8M1Q5gjekjUbLB9UvADrRdV
-	 nIVe5h6Mz2d6s2eVv/V6eXAV+lFUoXnWFM5srhcI=
+	b=bY6ujWt4o5B8e+96PB4oU5QQy7sBiAqX4JrtZewA3Quw1Ty69O0XNOmK//sv+6k49
+	 5CmEy+p0/0HgcY6370X0GVbBrMYiL45E1uvCq8V05WLuHV2/+nmW4JtgYTIURqCc7p
+	 y+Yh3I8xQNfnpw4uzNyMAWi4xr6EawqwbwueYV3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387663AbgERSOI (ORCPT
+        id S1731500AbgERSBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43434 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:01:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732376AbgERSBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:01:15 -0400
+        id S1731150AbgERSBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:01:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E200E20829;
-        Mon, 18 May 2020 18:01:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB269207C4;
+        Mon, 18 May 2020 18:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824874;
-        bh=6NoDHuyUjbD1VRYy9KYkvyxDEQqnWpl0fO+zIhe750U=;
+        s=default; t=1589824864;
+        bh=vJwxjENKjponhZzinjr7aum5pc/rXKXOdzUWMBC5U60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z/LuYQ/7TfYp6snGnudIvLzAcLsyXs7+Jq/scHOyP0f98yMdifgQ566ku5U5GgSp+
-         Ys85RWRganQ7DaVoUmszcgHyO/PYeya2tqVQQWc2QIj5bD9v/RX8cXBvY/oMELC+eQ
-         mn12rFVmayGua+aA1h2hsIz/GDCmc2YWjcXFLrEs=
+        b=yucnuTgu2D6LEY2dsVHLkBKWO1vmWb0nM+Kltaww81eafMi/aKNt3Okp3XW4OgKC1
+         NofwQoP4d4osHihWGI5Bz0PaCjwSJNknFjhoKg/HqPfBFzwwsK9vjAI/ihgN6Fq/0U
+         CIDKrNAppfJKt+zoInk3JRivBWvnni4xTUwLetVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 004/194] xprtrdma: Fix trace point use-after-free race
-Date:   Mon, 18 May 2020 19:34:54 +0200
-Message-Id: <20200518173531.920337563@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Sheets <matthew.sheets@gd-ms.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 033/194] netlabel: cope with NULL catmap
+Date:   Mon, 18 May 2020 19:35:23 +0200
+Message-Id: <20200518173534.346207764@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,89 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit bdb2ce82818577ba6e57b7d68b698b8d17329281 ]
+[ Upstream commit eead1c2ea2509fd754c6da893a94f0e69e83ebe4 ]
 
-It's not safe to use resources pointed to by the @send_wr of
-ib_post_send() _after_ that function returns. Those resources are
-typically freed by the Send completion handler, which can run before
-ib_post_send() returns.
+The cipso and calipso code can set the MLS_CAT attribute on
+successful parsing, even if the corresponding catmap has
+not been allocated, as per current configuration and external
+input.
 
-Thus the trace points currently around ib_post_send() in the
-client's RPC/RDMA transport are a hazard, even when they are
-disabled. Rearrange them so that they touch the Work Request only
-_before_ ib_post_send() is invoked.
+Later, selinux code tries to access the catmap if the MLS_CAT flag
+is present via netlbl_catmap_getlong(). That may cause null ptr
+dereference while processing incoming network traffic.
 
-Fixes: ab03eff58eb5 ("xprtrdma: Add trace points in RPC Call transmit paths")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Address the issue setting the MLS_CAT flag only if the catmap is
+really allocated. Additionally let netlbl_catmap_getlong() cope
+with NULL catmap.
+
+Reported-by: Matthew Sheets <matthew.sheets@gd-ms.com>
+Fixes: 4b8feff251da ("netlabel: fix the horribly broken catmap functions")
+Fixes: ceba1832b1b2 ("calipso: Set the calipso socket label to match the secattr.")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/trace/events/rpcrdma.h | 12 ++++--------
- net/sunrpc/xprtrdma/verbs.c    |  2 +-
- 2 files changed, 5 insertions(+), 9 deletions(-)
+ net/ipv4/cipso_ipv4.c        |    6 ++++--
+ net/ipv6/calipso.c           |    3 ++-
+ net/netlabel/netlabel_kapi.c |    6 ++++++
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index fa14adf242353..43158151821c4 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -721,11 +721,10 @@ TRACE_EVENT(xprtrdma_prepsend_failed,
+--- a/net/ipv4/cipso_ipv4.c
++++ b/net/ipv4/cipso_ipv4.c
+@@ -1258,7 +1258,8 @@ static int cipso_v4_parsetag_rbm(const s
+ 			return ret_val;
+ 		}
  
- TRACE_EVENT(xprtrdma_post_send,
- 	TP_PROTO(
--		const struct rpcrdma_req *req,
--		int status
-+		const struct rpcrdma_req *req
- 	),
- 
--	TP_ARGS(req, status),
-+	TP_ARGS(req),
- 
- 	TP_STRUCT__entry(
- 		__field(const void *, req)
-@@ -734,7 +733,6 @@ TRACE_EVENT(xprtrdma_post_send,
- 		__field(unsigned int, client_id)
- 		__field(int, num_sge)
- 		__field(int, signaled)
--		__field(int, status)
- 	),
- 
- 	TP_fast_assign(
-@@ -747,15 +745,13 @@ TRACE_EVENT(xprtrdma_post_send,
- 		__entry->sc = req->rl_sendctx;
- 		__entry->num_sge = req->rl_wr.num_sge;
- 		__entry->signaled = req->rl_wr.send_flags & IB_SEND_SIGNALED;
--		__entry->status = status;
- 	),
- 
--	TP_printk("task:%u@%u req=%p sc=%p (%d SGE%s) %sstatus=%d",
-+	TP_printk("task:%u@%u req=%p sc=%p (%d SGE%s) %s",
- 		__entry->task_id, __entry->client_id,
- 		__entry->req, __entry->sc, __entry->num_sge,
- 		(__entry->num_sge == 1 ? "" : "s"),
--		(__entry->signaled ? "signaled " : ""),
--		__entry->status
-+		(__entry->signaled ? "signaled" : "")
- 	)
- );
- 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 4b9fbf69b4955..a48b99f3682c3 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1523,8 +1523,8 @@ int rpcrdma_post_sends(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 		--ep->rep_send_count;
+-		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
++		if (secattr->attr.mls.cat)
++			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
  	}
  
-+	trace_xprtrdma_post_send(req);
- 	rc = frwr_send(r_xprt, req);
--	trace_xprtrdma_post_send(req, rc);
- 	if (rc)
- 		return -ENOTCONN;
  	return 0;
--- 
-2.20.1
-
+@@ -1439,7 +1440,8 @@ static int cipso_v4_parsetag_rng(const s
+ 			return ret_val;
+ 		}
+ 
+-		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
++		if (secattr->attr.mls.cat)
++			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
+ 	}
+ 
+ 	return 0;
+--- a/net/ipv6/calipso.c
++++ b/net/ipv6/calipso.c
+@@ -1047,7 +1047,8 @@ static int calipso_opt_getattr(const uns
+ 			goto getattr_return;
+ 		}
+ 
+-		secattr->flags |= NETLBL_SECATTR_MLS_CAT;
++		if (secattr->attr.mls.cat)
++			secattr->flags |= NETLBL_SECATTR_MLS_CAT;
+ 	}
+ 
+ 	secattr->type = NETLBL_NLTYPE_CALIPSO;
+--- a/net/netlabel/netlabel_kapi.c
++++ b/net/netlabel/netlabel_kapi.c
+@@ -734,6 +734,12 @@ int netlbl_catmap_getlong(struct netlbl_
+ 	if ((off & (BITS_PER_LONG - 1)) != 0)
+ 		return -EINVAL;
+ 
++	/* a null catmap is equivalent to an empty one */
++	if (!catmap) {
++		*offset = (u32)-1;
++		return 0;
++	}
++
+ 	if (off < catmap->startbit) {
+ 		off = catmap->startbit;
+ 		*offset = off;
 
 
