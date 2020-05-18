@@ -2,107 +2,123 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C915CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 883FA20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LW4xKvNP"
+	by mail.kernel.org (Postfix) with ESMTP id A65472081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589834093;
+	bh=DMn1FbDiLFopxge/UneNTHBSYyIveL3gLvj9Zyu7KCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SQ9if0m9Lv769335fUplccpEh8LH3mHL3f6LIHO6XytDPNY5z/weIFcI9XUqx8klv
+	 lpOdWAflKdl0xU7yk4oeOuS6/LvkKLlgeQwaExENQDn4ySP2wfkDRcCWVZfzmMsTUp
+	 WfmqAmKdR1oPMIn4MPZHjHKuLN7V4yaYGcR/rOVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgERUec (ORCPT
+        id S1727847AbgERUex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:34:32 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:39868 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERUeb (ORCPT
+        Mon, 18 May 2020 16:34:53 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35910 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726367AbgERUew (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:34:31 -0400
-Received: from [10.0.0.249] (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 57B3620B717B;
-        Mon, 18 May 2020 13:34:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 57B3620B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1589834070;
-        bh=6GRSvZ+sGLVcKGDOcmVDyb0gXRdx/T0QTMk1YgrIXo0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LW4xKvNPjvTQHNTCPc5dw87VMVrDKT0UTsZNlxXJSb2DhjQsGt1aArwi+2Pq25xMN
-         S4zSHJ+EQn4yAg/KghG/RYbBFjia5QNFJZWhHHgsJ+dbDFHzqYrmxyRfw7yrJDSiU3
-         PE4kQbDFbQkwN9xGgKO718cCWGbRNXaZolR1rV5E=
-Subject: Re: [RFC][PATCH 1/2] Add a layer of abstraction to use the memory
- reserved by device tree for ima buffer pass.
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
-        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
-        tao.li@vivo.com, christophe.leroy@c-s.fr,
-        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-References: <20200504203829.6330-1-prsriva@linux.microsoft.com>
- <20200504203829.6330-2-prsriva@linux.microsoft.com>
- <20200512230954.GB2654@bogus>
-From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
-Message-ID: <8b8bb74b-a3ac-1eb8-4b21-d00402a2bf62@linux.microsoft.com>
-Date:   Mon, 18 May 2020 13:34:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 16:34:52 -0400
+Received: by mail-io1-f67.google.com with SMTP id k6so12201697iob.3;
+        Mon, 18 May 2020 13:34:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FPMBwfiZVk3j4Ctqnv2H9eGRXj7eNBfK/u6YKzz2+rM=;
+        b=JDj+W0mErdE2JQeolvKrKmQqHPG50OfY7u+9jdrW9MZf5JpO849iCmz0GVUpxsB9xx
+         VxHIKX0shWIfWx06Iw1JxboLoB/Nya4+GqaiOUqKsBOoCqx3YWtyCGEwQjZtNOGeyUwq
+         9pSLsdAZ/xQVS/D9W2XgeitLjCPhPi9PdpDoGAuCFgsiDQPKTIMcX1kqXYKe5dm3NNQl
+         0vT5vJoxmK8jNb1QaRgB54E0qqTIvjOnTXu6VFjPhwGW2KCPIDS25n3pI1AtJo7iDQc+
+         M7kUhQNOgzDIMqqAalgY5GzlgHEZ2V0+Ez/7YDtR+7nX6yN8AsOdDz/eO9SyLIZB0ojS
+         maRw==
+X-Gm-Message-State: AOAM532Hc5/xAsf5ZNOit3shQQjOntDO8Y+BAL78CfrKqUlYJxtdlv2m
+        yMJswSqkdMyXRxNNbFi5gw==
+X-Google-Smtp-Source: ABdhPJxPAQ/6uPUZ1zru5yJ1OYVX0KAbu5hmv/CV4Yru4mW2940N2L7A/OQbxrTC3KlWuB7X6GzEYg==
+X-Received: by 2002:a6b:d219:: with SMTP id q25mr14825078iob.202.1589834091409;
+        Mon, 18 May 2020 13:34:51 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id i78sm5194353ile.87.2020.05.18.13.34.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 13:34:50 -0700 (PDT)
+Received: (nullmailer pid 1050 invoked by uid 1000);
+        Mon, 18 May 2020 20:34:49 -0000
+Date:   Mon, 18 May 2020 14:34:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Paul Burton <paulburton@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
+        linux-hwmon@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-mips@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: Add Baikal-T1 PVT sensor
+ binding
+Message-ID: <20200518203449.GA989@bogus>
+References: <20200306132611.103408030701@mail.baikalelectronics.ru>
+ <20200510103211.27905-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510103211.27905-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200512230954.GB2654@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510103211.27905-2-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/12/20 4:09 PM, Rob Herring wrote:
-> On Mon, May 04, 2020 at 01:38:28PM -0700, Prakhar Srivastava wrote:
->> Introduce a device tree layer for to read and store ima buffer
->> from the reserved memory section of a device tree.
+On Sun, 10 May 2020 13:32:10 +0300, Serge Semin wrote:
+> Baikal-T1 SoC is equipped with an embedded process, voltage and
+> temperature sensor to monitor the chip internal environment like
+> temperature, supply voltage and transistors performance.
 > 
-> But why do I need 'a layer of abstraction'? I don't like them.
+> This bindings describes the external Baikal-T1 PVT control interfaces
+> like MMIO registers space, interrupt request number and clocks source.
+> These are then used by the corresponding hwmon device driver to
+> implement the sysfs files-based access to the sensors functionality.
 > 
-This is a common path for the all architectures to carry over the
-IMA measurement logs. A single layer will avoid any code duplication.
-
->> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
->> ---
->>   drivers/of/Kconfig  |   6 ++
->>   drivers/of/Makefile |   1 +
->>   drivers/of/of_ima.c | 165 ++++++++++++++++++++++++++++++++++++++++++++
+> Co-developed-by: Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
+> Signed-off-by: Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-mips@vger.kernel.org
 > 
-> Who are the users of this code and why does it need to be here? Most
-> code for specific bindings are not in drivers/of/ but with the user. It
-> doesn't sound like there's more than 1 user.
+> ---
 > 
-Currently the path is exercised by arm64 kexec_file_load path. A slight
-restructuring is needed on the powerpc side to use the same code path 
-and other architectures can follow to add carrying over IMA logs over
-kexec with just a few function calls.
+> Changelog v2:
+> - Lowercase the node-name in the example.
+> - Add dual-license header.
+> - Don't use a multi-arg clock phandle reference in the examples dt-binding
+>   property. Thus reundant include pre-processor statement can be removed.
+> - Replace "additionalProperties: false" property with
+>   "unevaluatedProperties: false".
+> - Discard label definition from the example.
+> - Align settings of the "#thermal-sensor-cells" property with two spaces
+>   ahead of the property line start.
+> ---
+>  .../bindings/hwmon/baikal,bt1-pvt.yaml        | 95 +++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/baikal,bt1-pvt.yaml
+> 
 
-I have attempted to bring the code path down to the highest common 
-layer, however please do suggest if i can move this some where else.
-
-Thanks,
-Prakhar
-
->>   include/linux/of.h  |  34 +++++++++
->>   4 files changed, 206 insertions(+)
->>   create mode 100644 drivers/of/of_ima.c
+Reviewed-by: Rob Herring <robh@kernel.org>
