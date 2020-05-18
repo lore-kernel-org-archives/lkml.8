@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 458ED20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B2520829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823771;
-	bh=eRR5JLpyGQWbddfqfgr7COthF+C/JL4OZYqmjDeULOc=;
+	s=default; t=1589823774;
+	bh=luDRrkNQ6wD/z/htdkPpWLZzmTGUoA+LXWWPZouOebg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CgJcWrXWJ2jFOdcZrBjEIInQ84gBHHU/tuRobN6Wp41XF0EJUOeDPE+8WG9oMjaga
-	 w4q/3abNQcmGxMQypyFS053suYpdkHfr0PlXklJN9PAjOKOeh5ZreuE5GJfI30SDYU
-	 XyUWNmhJUeeXiibq+ivKMfwr1hxUKKOYpTvThw9s=
+	b=p8QiSp9auCa4JSZLpx0ufkiY/B41pkpErK/YrnVz+jM+0sQ8yE5WjR7Wr9K5JtdM/
+	 RffQuV6NxiQbY4SF4fvkrpcIZ+egQJ3dPKWPr7rWFDJPdhDV5KsAmTMwZIU3Ketble
+	 adDNdu4y55w6T3d7ahZzn+rXon1SZhA5VsXwL6V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729480AbgERRmu (ORCPT
+        id S1729488AbgERRmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:42:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39732 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729456AbgERRmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:39 -0400
+        id S1728641AbgERRml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37AF8207C4;
-        Mon, 18 May 2020 17:42:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1B9820715;
+        Mon, 18 May 2020 17:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823758;
-        bh=eRR5JLpyGQWbddfqfgr7COthF+C/JL4OZYqmjDeULOc=;
+        s=default; t=1589823761;
+        bh=luDRrkNQ6wD/z/htdkPpWLZzmTGUoA+LXWWPZouOebg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IAHbCaLYC6aOsjE/M0VshmOAOhDjOGcUEkolOhvnR9kC28iZP6en1eE2dgavQwcG5
-         AEezsiR98KvW36ytguNlFcpSOpsUiIz0k42YWhBCyYrqfzOmsR3HcGpTjMtnU/kkQ6
-         w0Q888U9zA0YRU+F4F5/UK2CQVT7U7MV3/aj8Bzc=
+        b=2YAHk+0OeOrr7VOFck15xBgXI84FNQLiSHNdqDcL4fYRgwzQba549WUtdXC2ByI7y
+         v2xsQxOG0yp17JxTD07tDA4x4yLqAhFWRxSB8GzP9W+b9rNNEfKThGWKOmI8QZHihL
+         82D8iT8BYXcqcEbQ5lgMuRzt/F92/Lqd9w3hRC6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Dial <scott@scottdial.com>,
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 04/90] net: macsec: preserve ingress frame ordering
-Date:   Mon, 18 May 2020 19:35:42 +0200
-Message-Id: <20200518173451.911405640@linuxfoundation.org>
+Subject: [PATCH 4.9 05/90] net/mlx4_core: Fix use of ENOSPC around mlx4_counter_alloc()
+Date:   Mon, 18 May 2020 19:35:43 +0200
+Message-Id: <20200518173452.132141899@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -59,75 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Dial <scott@scottdial.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-[ Upstream commit ab046a5d4be4c90a3952a0eae75617b49c0cb01b ]
+[ Upstream commit 40e473071dbad04316ddc3613c3a3d1c75458299 ]
 
-MACsec decryption always occurs in a softirq context. Since
-the FPU may not be usable in the softirq context, the call to
-decrypt may be scheduled on the cryptd work queue. The cryptd
-work queue does not provide ordering guarantees. Therefore,
-preserving order requires masking out ASYNC implementations
-of gcm(aes).
+When ENOSPC is set the idx is still valid and gets set to the global
+MLX4_SINK_COUNTER_INDEX.  However gcc's static analysis cannot tell that
+ENOSPC is impossible from mlx4_cmd_imm() and gives this warning:
 
-For instance, an Intel CPU with AES-NI makes available the
-generic-gcm-aesni driver from the aesni_intel module to
-implement gcm(aes). However, this implementation requires
-the FPU, so it is not always available to use from a softirq
-context, and will fallback to the cryptd work queue, which
-does not preserve frame ordering. With this change, such a
-system would select gcm_base(ctr(aes-aesni),ghash-generic).
-While the aes-aesni implementation prefers to use the FPU, it
-will fallback to the aes-asm implementation if unavailable.
+drivers/net/ethernet/mellanox/mlx4/main.c:2552:28: warning: 'idx' may be
+used uninitialized in this function [-Wmaybe-uninitialized]
+ 2552 |    priv->def_counter[port] = idx;
 
-By using a synchronous version of gcm(aes), the decryption
-will complete before returning from crypto_aead_decrypt().
-Therefore, the macsec_decrypt_done() callback will be called
-before returning from macsec_decrypt(). Thus, the order of
-calls to macsec_post_decrypt() for the frames is preserved.
+Also, when ENOSPC is returned mlx4_allocate_default_counters should not
+fail.
 
-While it's presumable that the pure AES-NI version of gcm(aes)
-is more performant, the hybrid solution is capable of gigabit
-speeds on modest hardware. Regardless, preserving the order
-of frames is paramount for many network protocols (e.g.,
-triggering TCP retries). Within the MACsec driver itself, the
-replay protection is tripped by the out-of-order frames, and
-can cause frames to be dropped.
-
-This bug has been present in this code since it was added in
-v4.6, however it may not have been noticed since not all CPUs
-have FPU offload available. Additionally, the bug manifests
-as occasional out-of-order packets that are easily
-misattributed to other network phenomena.
-
-When this code was added in v4.6, the crypto/gcm.c code did
-not restrict selection of the ghash function based on the
-ASYNC flag. For instance, x86 CPUs with PCLMULQDQ would
-select the ghash-clmulni driver instead of ghash-generic,
-which submits to the cryptd work queue if the FPU is busy.
-However, this bug was was corrected in v4.8 by commit
-b30bdfa86431afbafe15284a3ad5ac19b49b88e3, and was backported
-all the way back to the v3.14 stable branch, so this patch
-should be applicable back to the v4.6 stable branch.
-
-Signed-off-by: Scott Dial <scott@scottdial.com>
+Fixes: 6de5f7f6a1fa ("net/mlx4_core: Allocate default counter per port")
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/macsec.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx4/main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1315,7 +1315,8 @@ static struct crypto_aead *macsec_alloc_
- 	struct crypto_aead *tfm;
- 	int ret;
+--- a/drivers/net/ethernet/mellanox/mlx4/main.c
++++ b/drivers/net/ethernet/mellanox/mlx4/main.c
+@@ -2478,6 +2478,7 @@ static int mlx4_allocate_default_counter
  
--	tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
-+	/* Pick a sync gcm(aes) cipher to ensure order is preserved. */
-+	tfm = crypto_alloc_aead("gcm(aes)", 0, CRYPTO_ALG_ASYNC);
- 
- 	if (IS_ERR(tfm))
- 		return tfm;
+ 		if (!err || err == -ENOSPC) {
+ 			priv->def_counter[port] = idx;
++			err = 0;
+ 		} else if (err == -ENOENT) {
+ 			err = 0;
+ 			continue;
+@@ -2527,7 +2528,8 @@ int mlx4_counter_alloc(struct mlx4_dev *
+ 				   MLX4_CMD_TIME_CLASS_A, MLX4_CMD_WRAPPED);
+ 		if (!err)
+ 			*idx = get_param_l(&out_param);
+-
++		if (WARN_ON(err == -ENOSPC))
++			err = -EINVAL;
+ 		return err;
+ 	}
+ 	return __mlx4_counter_alloc(dev, idx);
 
 
