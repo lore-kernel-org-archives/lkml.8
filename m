@@ -2,52 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE21AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F45C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1BD620715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EDBD20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824369;
-	bh=RfkX7dMrDN71LREFdUGr1HWXv6KFGxNUxXuzOej2pdg=;
+	s=default; t=1589824372;
+	bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fu6fHoSXV/IkkEUkYPH7R1f8SGRbCwT7F66TQ50+cOQ54umMUF9c6oiXlCREujPeG
-	 gD+3oH13m6v7b8P+nS1L67ZHmskJJVo5ft99ykwrJ0XI73lit6CpjxihftG6WonKMT
-	 0/aSNj9zrOzhG+T0c90Rq2nlLHll1rOtfDNbx2jY=
+	b=yHw2a9w1h9gh0eCa8s/GBoMh9PFeTgmlt77JUpyQ0BA33JnssJ0ldZJ9c9kjCjKgh
+	 Y9apWK9zpmYdELHfEEGrHdFJrxxLGFNeKwi4Z7ZcdE4E6ytXnKGNqbJmNgU611lPTb
+	 p1byg+yB+oVYkp/Dk7tfMbzPSLdWgWRHINhL3yfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731042AbgERRwt (ORCPT
+        id S1731054AbgERRwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:52:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731027AbgERRwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:44 -0400
+        id S1731043AbgERRwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 745EF20674;
-        Mon, 18 May 2020 17:52:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6776920674;
+        Mon, 18 May 2020 17:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824363;
-        bh=RfkX7dMrDN71LREFdUGr1HWXv6KFGxNUxXuzOej2pdg=;
+        s=default; t=1589824368;
+        bh=hrN4jo85YX8bUHMiL0SJw51uMtj6bE77uz+J0atkXvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=exxoKnkTo6IGBe9n5RzcKrfxNSTh1dn9Qdd0iVXlJB7F9GmHiLs0nKLZaG5YJxxqm
-         mvwW0InBXIVLSUqMtOivpWZlG3vnjRcObjrqB4WjGh1S/dEcKV87SypafKds8QrlQm
-         a+Ec808rLcq8/yGKPmJfguCVVScN/JWGGit7Rzw0=
+        b=hVFy47iunnY9kbIaoz3IAmDO+CQCo8IDznah10rjz0XHK2EQ0c0tM3EFk6MJLo5mK
+         u0gjg8MSt9nlUousaDz1wnWJTC+W7Dvh/OSNIadNChUFEQxVnlfGSehWKk/IVVTZp9
+         B2vTvQJLVZj78eHxgiD1rfjh/gNHKpL+d2K3zpqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.19 61/80] ARM: dts: imx27-phytec-phycard-s-rdk: Fix the I2C1 pinctrl entries
-Date:   Mon, 18 May 2020 19:37:19 +0200
-Message-Id: <20200518173502.772199489@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 27/80] drm/qxl: lost qxl_bo_kunmap_atomic_page in qxl_image_init_helper()
+Date:   Mon, 18 May 2020 19:36:45 +0200
+Message-Id: <20200518173455.852883272@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,43 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 0caf34350a25907515d929a9c77b9b206aac6d1e upstream.
+[ Upstream commit 5b5703dbafae74adfbe298a56a81694172caf5e6 ]
 
-The I2C2 pins are already used and the following errors are seen:
+v2: removed TODO reminder
 
-imx27-pinctrl 10015000.iomuxc: pin MX27_PAD_I2C2_SDA already requested by 10012000.i2c; cannot claim for 1001d000.i2c
-imx27-pinctrl 10015000.iomuxc: pin-69 (1001d000.i2c) status -22
-imx27-pinctrl 10015000.iomuxc: could not request pin 69 (MX27_PAD_I2C2_SDA) from group i2c2grp  on device 10015000.iomuxc
-imx-i2c 1001d000.i2c: Error applying setting, reverse things back
-imx-i2c: probe of 1001d000.i2c failed with error -22
-
-Fix it by adding the correct I2C1 IOMUX entries for the pinctrl_i2c1 group.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 61664d0b432a ("ARM: dts: imx27 phyCARD-S pinctrl")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/a4e0ae09-a73c-1c62-04ef-3f990d41bea9@virtuozzo.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/qxl/qxl_image.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-@@ -81,8 +81,8 @@
- 	imx27-phycard-s-rdk {
- 		pinctrl_i2c1: i2c1grp {
- 			fsl,pins = <
--				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
--				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
-+				MX27_PAD_I2C_DATA__I2C_DATA 0x0
-+				MX27_PAD_I2C_CLK__I2C_CLK 0x0
- 			>;
- 		};
- 
+diff --git a/drivers/gpu/drm/qxl/qxl_image.c b/drivers/gpu/drm/qxl/qxl_image.c
+index 7fbcc35e8ad35..c89c10055641e 100644
+--- a/drivers/gpu/drm/qxl/qxl_image.c
++++ b/drivers/gpu/drm/qxl/qxl_image.c
+@@ -210,7 +210,8 @@ qxl_image_init_helper(struct qxl_device *qdev,
+ 		break;
+ 	default:
+ 		DRM_ERROR("unsupported image bit depth\n");
+-		return -EINVAL; /* TODO: cleanup */
++		qxl_bo_kunmap_atomic_page(qdev, image_bo, ptr);
++		return -EINVAL;
+ 	}
+ 	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
+ 	image->u.bitmap.x = width;
+-- 
+2.20.1
+
 
 
