@@ -2,236 +2,113 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC42C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9973F207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454DA207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:10:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CxtilwHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgERIIr (ORCPT
+        id S1726990AbgERIKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:08:47 -0400
-Received: from mga18.intel.com ([134.134.136.126]:41834 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726573AbgERIIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:08:47 -0400
-IronPort-SDR: DR4ceoYP6nHFOBiDd56ccozFIKzX90gNGLZYN+A1NnAiPWssoiBlxuthr5lrhePN4jlL4XoDfe
- bTt/374j5gXA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 01:08:46 -0700
-IronPort-SDR: npM7UJ3sPDJcwMqyeOSP3rs1HB1aRK9avL61nL57nkuOZNPQadrQNVHsKc2+xCw0WQYdOSM0kO
- 0ExJRiD4mYDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
-   d="scan'208";a="308034687"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 May 2020 01:08:46 -0700
-Received: from [10.249.230.167] (abudanko-mobl.ccr.corp.intel.com [10.249.230.167])
-        by linux.intel.com (Postfix) with ESMTP id 21F6A580100;
-        Mon, 18 May 2020 01:08:43 -0700 (PDT)
-Subject: Re: [PATCH v3 0/9] perf: support enable and disable commands in stat
- and record modes
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <f7ef424f-da30-4bf4-3ffd-c1704ed06df0@linux.intel.com>
-Date:   Mon, 18 May 2020 11:08:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 04:10:54 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56720 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgERIKy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 04:10:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Iqm24iEcNucTMf6Splm9sZE31pThskAEE0cgautDMiA=; b=CxtilwHRWrNOBYZqwwg63gS68t
+        zfiFiPm0vagijAvdVfx3a1AMm1nlTz8fkXw7mt8X/YMhiRtmNL8jGMgonq13QHfGmgun8wTaBWqhg
+        SYxW/+LrdoeX7B3ihWGRweAm5ZW4I2hibuF42qRBaEnKRcGch8hmCDbZ48TJlbAqmG3SWeBUbQIhr
+        iuYAL7yOC8m0xDWFr9vpKEXh1c58RV6pQWhtgWKSRSUvYmW13v0YovB4E8zuGxC3QBnEWv3vn72KB
+        0z6kctMotILE430FP6CvS+yKlkSqAYujqXv/nQuqjKpv4ytJ1ydYoZOux2AF4jm7nBfXTtvmVKD5R
+        nhSQe2OA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaaoq-0003ab-HU; Mon, 18 May 2020 08:08:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 53F92306089;
+        Mon, 18 May 2020 10:08:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0D79B2B3CDC70; Mon, 18 May 2020 10:08:14 +0200 (CEST)
+Date:   Mon, 18 May 2020 10:08:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>
+Subject: Re: [patch V6 04/37] x86: Make hardware latency tracing explicit
+Message-ID: <20200518080814.GJ2940@hirez.programming.kicks-ass.net>
+References: <20200515234547.710474468@linutronix.de>
+ <20200515235124.783722942@linutronix.de>
+ <20200518080133.GI2940@hirez.programming.kicks-ass.net>
+ <874ksdzmzf.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874ksdzmzf.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, May 18, 2020 at 10:05:56AM +0200, Thomas Gleixner wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
+> > On Sat, May 16, 2020 at 01:45:51AM +0200, Thomas Gleixner wrote:
+> >> --- a/arch/x86/kernel/nmi.c
+> >> +++ b/arch/x86/kernel/nmi.c
+> >> @@ -334,6 +334,7 @@ static noinstr void default_do_nmi(struc
+> >>  	__this_cpu_write(last_nmi_rip, regs->ip);
+> >>  
+> >>  	instrumentation_begin();
+> >> +	ftrace_nmi_handler_enter();
+> >>  
+> >>  	handled = nmi_handle(NMI_LOCAL, regs);
+> >>  	__this_cpu_add(nmi_stats.normal, handled);
+> >> @@ -420,6 +421,7 @@ static noinstr void default_do_nmi(struc
+> >>  		unknown_nmi_error(reason, regs);
+> >>  
+> >>  out:
+> >> +	ftrace_nmi_handler_exit();
+> >>  	instrumentation_end();
+> >>  }
+> >
+> > Yeah, so I'm confused about this and the previous patch too. Why not
+> > do just this? Remove that ftrace_nmi_handler.* crud from
+> > nmi_{enter,exit}() and stick it here? Why do we needs the
+> > nmi_{enter,exit}_notrace() thing?
+> 
+> Because you then have to fixup _all_ architectures which use
+> nmi_enter/exit().
 
-Is there anything else that could be done from my side to move this forward?
-
-Thanks,
-Alexey
-
-On 13.05.2020 10:53, Alexey Budankov wrote:
-> 
-> Changes in v3:
-> - renamed functions and types from perf_evlist_ to evlist_ to avoid
->   clash with libperf code;
-> - extended commands to be strings of variable length consisting of
->   command name and also possibly including command specific data;
-> - merged docs update with the code changes;
-> - updated docs for -D,--delay=-1 option for stat and record modes;
-> 
-> v2: https://lore.kernel.org/lkml/d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com/
-> 
-> Changes in v2:
-> - renamed resume and pause commands to enable and disable ones, renamed
->   CTL_CMD_RESUME and CTL_CMD_PAUSE to CTL_CMD_ENABLE and CTL_CMD_DISABLE
->   to fit to the appropriate ioctls and avoid mixing up with PAUSE_OUTPUT
->   ioctl;
-> - factored out event handling loop into a handle_events() for stat mode;
-> - separated -D,--delay=-1 into separate patches for stat and record modes;
-> 
-> v1: https://lore.kernel.org/lkml/825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com/
-> 
-> repo: tip of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-> 
-> The patch set implements handling of 'start disabled', 'enable' and 'disable'
-> external control commands which can be provided for stat and record modes
-> of the tool from an external controlling process. 'start disabled' command
-> can be used to postpone enabling of events in the beginning of a monitoring
-> session. 'enable' and 'disable' commands can be used to enable and disable
-> events correspondingly any time after the start of the session.
-> 
-> The 'start disabled', 'enable' and 'disable' external control commands can be
-> used to focus measurement on specially selected time intervals of workload
-> execution. Focused measurement reduces tool intrusion and influence on
-> workload behavior, reduces distortion and amount of collected and stored
-> data, mitigates data accuracy loss because measurement and data capturing
-> happen only during intervals of interest.
-> 
-> A controlling process can be a bash shell script [1], native executable or
-> any other language program that can directly work with file descriptors,
-> e.g. pipes [2], and spawn a process, specially the tool one.
-> 
-> -D,--delay <val> option is extended with -1 value to skip events enabling
-> in the beginning of a monitoring session ('start disabled' command).
-> --ctl-fd and --ctl-fd-ack command line options are introduced to provide the
-> tool with a pair of file descriptors to listen to control commands and reply
-> to the controlling process on the completion of received commands.
-> 
-> The tool reads control command message from ctl-fd descriptor, handles the
-> command and optionally replies acknowledgement message to fd-ack descriptor,
-> if it is specified on the command line. 'enable' command is recognized as
-> 'enable' string message and 'disable' command is recognized as 'disable'
-> string message both received from ctl-fd descriptor. Completion message is
-> 'ack\n' and sent to fd-ack descriptor.
-> 
-> Example bash script demonstrating simple use case follows:
-> 
-> #!/bin/bash
-> 
-> ctl_dir=/tmp/
-> 
-> ctl_fifo=${ctl_dir}perf_ctl.fifo
-> test -p ${ctl_fifo} && unlink ${ctl_fifo}
-> mkfifo ${ctl_fifo} && exec {ctl_fd}<>${ctl_fifo}
-> 
-> ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-> test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-> mkfifo ${ctl_ack_fifo} && exec {ctl_fd_ack}<>${ctl_ack_fifo}
-> 
-> perf stat -D -1 -e cpu-cycles -a -I 1000                \
->           --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
->           -- sleep 40 &
-> perf_pid=$!
-> 
-> sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-> sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-> sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e2 && echo "enabled(${e2})"
-> sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d2 && echo "disabled(${d2})"
-> 
-> exec {ctl_fd_ack}>&- && unlink ${ctl_ack_fifo}
-> exec {ctl_fd}>&- && unlink ${ctl_fifo}
-> 
-> wait -n ${perf_pid}
-> exit $?
-> 
-> 
-> Script output:
-> 
-> [root@host dir] example
-> Events disabled
-> #           time             counts unit events
->      1.001101062      <not counted>      cpu-cycles                                                  
->      2.002994944      <not counted>      cpu-cycles                                                  
->      3.004864340      <not counted>      cpu-cycles                                                  
->      4.006727177      <not counted>      cpu-cycles                                                  
-> Events enabled
-> enabled(ack)
->      4.993808464          3,124,246      cpu-cycles                                                  
->      5.008597004          3,325,624      cpu-cycles                                                  
->      6.010387483         83,472,992      cpu-cycles                                                  
->      7.012266598         55,877,621      cpu-cycles                                                  
->      8.014175695         97,892,729      cpu-cycles                                                  
->      9.016056093         68,461,242      cpu-cycles                                                  
->     10.017937507         55,449,643      cpu-cycles                                                  
->     11.019830154         68,938,167      cpu-cycles                                                  
->     12.021719952         55,164,101      cpu-cycles                                                  
->     13.023627550         70,535,720      cpu-cycles                                                  
->     14.025580995         53,240,125      cpu-cycles                                                  
-> disabled(ack)
->     14.997518260         53,558,068      cpu-cycles                                                  
-> Events disabled
->     15.027216416      <not counted>      cpu-cycles                                                  
->     16.029052729      <not counted>      cpu-cycles                                                  
->     17.030904762      <not counted>      cpu-cycles                                                  
->     18.032073424      <not counted>      cpu-cycles                                                  
->     19.033805074      <not counted>      cpu-cycles                                                  
-> Events enabled
-> enabled(ack)
->     20.001279097          3,021,022      cpu-cycles                                                  
->     20.035044381          6,434,367      cpu-cycles                                                  
->     21.036923813         89,358,251      cpu-cycles                                                  
->     22.038825169         72,516,351      cpu-cycles                                                  
-> #           time             counts unit events
->     23.040715596         55,046,157      cpu-cycles                                                  
->     24.042643757         78,128,649      cpu-cycles                                                  
->     25.044558535         61,052,428      cpu-cycles                                                  
->     26.046452785         62,142,806      cpu-cycles                                                  
->     27.048353021         74,477,971      cpu-cycles                                                  
->     28.050241286         61,001,623      cpu-cycles                                                  
->     29.052149961         61,653,502      cpu-cycles                                                  
-> disabled(ack)
->     30.004980264         82,729,640      cpu-cycles                                                  
-> Events disabled
->     30.053516176      <not counted>      cpu-cycles                                                  
->     31.055348366      <not counted>      cpu-cycles                                                  
->     32.057202097      <not counted>      cpu-cycles                                                  
->     33.059040702      <not counted>      cpu-cycles                                                  
->     34.060843288      <not counted>      cpu-cycles                                                  
->     35.000888624      <not counted>      cpu-cycles                                                  
-> [root@host dir]# 
-> 
-> [1] http://man7.org/linux/man-pages/man1/bash.1.html
-> [2] http://man7.org/linux/man-pages/man2/pipe.2.html
-> 
-> ---
-> Alexey Budankov (9):
->   perf evlist: introduce control file descriptors
->   perf evlist: implement control command handling functions
->   perf stat: factor out event handling loop into a function
->   perf stat: extend -D,--delay option with -1 value
->   perf stat: implement control commands handling
->   perf stat: introduce --ctl-fd[-ack] options
->   perf record: extend -D,--delay option with -1 value
->   perf record: implement control commands handling
->   perf record: introduce --ctl-fd[-ack] options
-> 
->  tools/perf/Documentation/perf-record.txt |  44 +++++++-
->  tools/perf/Documentation/perf-stat.txt   |  45 +++++++-
->  tools/perf/builtin-record.c              |  39 ++++++-
->  tools/perf/builtin-stat.c                | 137 ++++++++++++++++-------
->  tools/perf/builtin-trace.c               |   2 +-
->  tools/perf/util/evlist.c                 | 131 ++++++++++++++++++++++
->  tools/perf/util/evlist.h                 |  24 ++++
->  tools/perf/util/record.h                 |   4 +-
->  tools/perf/util/stat.h                   |   4 +-
->  9 files changed, 379 insertions(+), 51 deletions(-)
-> 
+We probably have to anyway. But I can do that later I suppose.
