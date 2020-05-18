@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B938BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57788C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A98420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FD120835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824057;
-	bh=uXIgwYldt3Qt6/DL3+ObImCY0Z8vbGt4xt21X1y3Uz8=;
+	s=default; t=1589824064;
+	bh=mR3ZUFwRrS+NDGgVw/89s9D33YVvx+Ef+5iNUudGRGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqjmjAd0dliSAXk/aVHGUtTuHCF3+BQi7fVhCXqVpx/Y0GiFBvro+CiqJdQp8/jNz
-	 gmKPcK79hlTKjHRxgpVUgFteeREILgzLjO1gIsMGSyiFCq2Dq9DH8BZNL+lYDfp/mB
-	 m10mQA8bP4uPO2o/GLngMnFzRMV4AbDsKkiZepBs=
+	b=MYKvh6XkwgEY8iAJ20rR0IRD3rx54kAkKAtCrgD2hGFA2SUy2FTyijZw4/aB91VUu
+	 PSVJVkvGvGxQbin7uDItdWw40KREKdy3MM7W6rjWJFj77egbFxihGeAPHzPHwH6emV
+	 AfoBpAnYU5uuCpC8E0JFWoHokry2ekyIJzxXa8H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgERRrg (ORCPT
+        id S1730251AbgERRrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:47:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47862 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:47:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730230AbgERRrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:47:31 -0400
+        id S1729938AbgERRri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:47:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57CCD20674;
-        Mon, 18 May 2020 17:47:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4F202083E;
+        Mon, 18 May 2020 17:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824050;
-        bh=uXIgwYldt3Qt6/DL3+ObImCY0Z8vbGt4xt21X1y3Uz8=;
+        s=default; t=1589824058;
+        bh=mR3ZUFwRrS+NDGgVw/89s9D33YVvx+Ef+5iNUudGRGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0f0mGh9Phtluv05T5fpOvlud7UAYKqNddzT/iQlwkhPIFtFUkEU4FUtR+3egalN2J
-         fZhlfOBritF5sDT+2k9DB931qbSsYSsUXL3U8D+UmQMCOyA1cPzUrCad3iOwX90E8W
-         rPYImwNc5a2H59OvwbfvJ6Mc6iM9q+i+hsWyPJ1Q=
+        b=XQu6bZeyWW28lYvFwRz7UWGH8DYkajMZoQU7jr52d9AmOFJ2BO0Bl6tufhIhulNW8
+         GYmgNw6rwtv6JtRf74k1a5URoDOw9+iovk3AbVuUjrmZpb5gWqqR+jrE7R6y2lMrpa
+         rqguyP6Q9CxeSeCoWPGPBKKszHMVyXmpolhhOXng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/114] drop_monitor: work around gcc-10 stringop-overflow warning
-Date:   Mon, 18 May 2020 19:36:24 +0200
-Message-Id: <20200518173512.666804892@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 055/114] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
+Date:   Mon, 18 May 2020 19:36:27 +0200
+Message-Id: <20200518173513.173629443@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -61,71 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit dc30b4059f6e2abf3712ab537c8718562b21c45d ]
+[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
 
-The current gcc-10 snapshot produces a false-positive warning:
+pd->dma.dev is read in irq handler pd_irq().
+However, it is set to pdev->dev after request_irq().
+Therefore, set pd->dma.dev to pdev->dev before request_irq() to
+avoid data race between pch_dma_probe() and pd_irq().
 
-net/core/drop_monitor.c: In function 'trace_drop_common.constprop':
-cc1: error: writing 8 bytes into a region of size 0 [-Werror=stringop-overflow=]
-In file included from net/core/drop_monitor.c:23:
-include/uapi/linux/net_dropmon.h:36:8: note: at offset 0 to object 'entries' with size 4 declared here
-   36 |  __u32 entries;
-      |        ^~~~~~~
+Found by Linux Driver Verification project (linuxtesting.org).
 
-I reported this in the gcc bugzilla, but in case it does not get
-fixed in the release, work around it by using a temporary variable.
-
-Fixes: 9a8afc8d3962 ("Network Drop Monitor: Adding drop monitor implementation & Netlink protocol")
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94881
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/drop_monitor.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/dma/pch_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 70ccda233bd1f..ef9fe5f95093b 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -154,6 +154,7 @@ static void sched_send_work(unsigned long _data)
- static void trace_drop_common(struct sk_buff *skb, void *location)
- {
- 	struct net_dm_alert_msg *msg;
-+	struct net_dm_drop_point *point;
- 	struct nlmsghdr *nlh;
- 	struct nlattr *nla;
- 	int i;
-@@ -172,11 +173,13 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 	nlh = (struct nlmsghdr *)dskb->data;
- 	nla = genlmsg_data(nlmsg_data(nlh));
- 	msg = nla_data(nla);
-+	point = msg->points;
- 	for (i = 0; i < msg->entries; i++) {
--		if (!memcmp(&location, msg->points[i].pc, sizeof(void *))) {
--			msg->points[i].count++;
-+		if (!memcmp(&location, &point->pc, sizeof(void *))) {
-+			point->count++;
- 			goto out;
- 		}
-+		point++;
+diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+index f9028e9d0dfc2..d6af2d439b979 100644
+--- a/drivers/dma/pch_dma.c
++++ b/drivers/dma/pch_dma.c
+@@ -873,6 +873,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
  	}
- 	if (msg->entries == dm_hit_limit)
- 		goto out;
-@@ -185,8 +188,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 	 */
- 	__nla_reserve_nohdr(dskb, sizeof(struct net_dm_drop_point));
- 	nla->nla_len += NLA_ALIGN(sizeof(struct net_dm_drop_point));
--	memcpy(msg->points[msg->entries].pc, &location, sizeof(void *));
--	msg->points[msg->entries].count = 1;
-+	memcpy(point->pc, &location, sizeof(void *));
-+	point->count = 1;
- 	msg->entries++;
  
- 	if (!timer_pending(&data->send_timer)) {
+ 	pci_set_master(pdev);
++	pd->dma.dev = &pdev->dev;
+ 
+ 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
+ 	if (err) {
+@@ -888,7 +889,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
+ 		goto err_free_irq;
+ 	}
+ 
+-	pd->dma.dev = &pdev->dev;
+ 
+ 	INIT_LIST_HEAD(&pd->dma.channels);
+ 
 -- 
 2.20.1
 
