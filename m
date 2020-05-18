@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF35C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 843F320715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD5120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825453;
-	bh=c+kKypr0TA5TgWuMuZZZ+dMSCVKlESVb8rQtUPAIsOI=;
+	s=default; t=1589825456;
+	bh=FjxbjY8TPADnA/AF5u+7Spbw+rwAX8aoWlhgy1tMX3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dLRzorlOykCQyvBADybZRt6n9aD1eTGtKG+nnLU7o7CEY9SOztcr7Qyt41g9PgDgs
-	 Nm5E+4p1XLF9emeqo7M0vX5XiicGaN9JXrh1ZrunGlOAEwpdwvM/vMgGsN52X4McFR
-	 I/QFe35GSZ14i6bYP7Q+GEiFJzuhWs+e3ABESahc=
+	b=1oEPiTWUnT9t5jAHH0/Yup739D6autNPhOg3lZ8WvZTBAvj89+6sbjBROgy+xpmjo
+	 LwNGJij72PAlGH+OPw0YRi3ta9cihpN+Oc4cZ9y4nW4wCEe5VXtvPC0NK3lQ+87Ggu
+	 F1frDLDRwLK0N/ibPRe6MOSSgkZIIRfM84yrNyj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732922AbgERSFR (ORCPT
+        id S1729620AbgERSK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52512 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732887AbgERSFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:05 -0400
+        id S1732923AbgERSFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2D2420715;
-        Mon, 18 May 2020 18:05:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F579207D3;
+        Mon, 18 May 2020 18:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825105;
-        bh=c+kKypr0TA5TgWuMuZZZ+dMSCVKlESVb8rQtUPAIsOI=;
+        s=default; t=1589825117;
+        bh=FjxbjY8TPADnA/AF5u+7Spbw+rwAX8aoWlhgy1tMX3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1tDqJwRDmAenEyQ2Vk4bXWYuFm7YMKC8/w3jzaKGFV2cbVDO4BZRJE+ELQYetwqx1
-         3EtQbxX+Zp0fYkyg267cq+sDiEfgCdzKCox84Wxc6oBkizAgHvuA0deTCmaBn/G74W
-         m70fTIxO4aULDcOSqLoHK8ancvcZxnec6Iw7Gd9E=
+        b=fDOZrX3k3zhNp5bIuEnDz4ksHLioMhksrKWhKVbxtME3rI4p2BxpgVk2FR7auo6bc
+         0Zcd96lbUlAXgLOB6w1VrT2lj7hnV/SE4MMW0RSsU1bpbCQmh8fiu7gJjq5ceKR7t0
+         KjT04/gj0b8f/CsBvPyRu+/O9t24OkKvomcyxXkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 132/194] gcc-10: mark more functions __init to avoid section mismatch warnings
-Date:   Mon, 18 May 2020 19:37:02 +0200
-Message-Id: <20200518173542.433611594@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hillf Danton <hdanton@sina.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com
+Subject: [PATCH 5.6 137/194] USB: usbfs: fix mmap dma mismatch
+Date:   Mon, 18 May 2020 19:37:07 +0200
+Message-Id: <20200518173542.781416927@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,56 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit e99332e7b4cda6e60f5b5916cf9943a79dbef902 upstream.
+commit a0e710a7def471b8eb779ff551fc27701da49599 upstream.
 
-It seems that for whatever reason, gcc-10 ends up not inlining a couple
-of functions that used to be inlined before.  Even if they only have one
-single callsite - it looks like gcc may have decided that the code was
-unlikely, and not worth inlining.
+In commit 2bef9aed6f0e ("usb: usbfs: correct kernel->user page attribute
+mismatch") we switched from always calling remap_pfn_range() to call
+dma_mmap_coherent() to handle issues with systems with non-coherent USB host
+controller drivers.  Unfortunatly, as syzbot quickly told us, not all the world
+is host controllers with DMA support, so we need to check what host controller
+we are attempting to talk to before doing this type of allocation.
 
-The code generation difference is harmless, but caused a few new section
-mismatch errors, since the (now no longer inlined) function wasn't in
-the __init section, but called other init functions:
+Thanks to Christoph for the quick idea of how to fix this.
 
-   Section mismatch in reference from the function kexec_free_initrd() to the function .init.text:free_initrd_mem()
-   Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memremap()
-   Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
-
-So add the appropriate __init annotation to make modpost not complain.
-In both cases there were trivially just a single callsite from another
-__init function.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 2bef9aed6f0e ("usb: usbfs: correct kernel->user page attribute mismatch")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jeremy Linton <jeremy.linton@arm.com>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com
+Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/20200514112711.1858252-1-gregkh@linuxfoundation.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/tpm.c |    2 +-
- init/initramfs.c           |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/core/devio.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -16,7 +16,7 @@
- int efi_tpm_final_log_size;
- EXPORT_SYMBOL(efi_tpm_final_log_size);
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -251,9 +251,19 @@ static int usbdev_mmap(struct file *file
+ 	usbm->vma_use_count = 1;
+ 	INIT_LIST_HEAD(&usbm->memlist);
  
--static int tpm2_calc_event_log_size(void *data, int count, void *size_info)
-+static int __init tpm2_calc_event_log_size(void *data, int count, void *size_info)
- {
- 	struct tcg_pcr_event2_head *header;
- 	int event_size, size = 0;
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -542,7 +542,7 @@ void __weak free_initrd_mem(unsigned lon
- }
+-	if (dma_mmap_coherent(hcd->self.sysdev, vma, mem, dma_handle, size)) {
+-		dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
+-		return -EAGAIN;
++	if (hcd->localmem_pool || !hcd_uses_dma(hcd)) {
++		if (remap_pfn_range(vma, vma->vm_start,
++				    virt_to_phys(usbm->mem) >> PAGE_SHIFT,
++				    size, vma->vm_page_prot) < 0) {
++			dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
++			return -EAGAIN;
++		}
++	} else {
++		if (dma_mmap_coherent(hcd->self.sysdev, vma, mem, dma_handle,
++				      size)) {
++			dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
++			return -EAGAIN;
++		}
+ 	}
  
- #ifdef CONFIG_KEXEC_CORE
--static bool kexec_free_initrd(void)
-+static bool __init kexec_free_initrd(void)
- {
- 	unsigned long crashk_start = (unsigned long)__va(crashk_res.start);
- 	unsigned long crashk_end   = (unsigned long)__va(crashk_res.end);
+ 	vma->vm_flags |= VM_IO;
 
 
