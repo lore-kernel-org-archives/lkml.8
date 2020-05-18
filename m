@@ -2,96 +2,69 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5397C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 625CE207D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jbwPB+32"
+	by mail.kernel.org (Postfix) with ESMTP id A068C207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589818904;
+	bh=Hy6eh4EEN/gX8lLoYHqML6egri7+0PB5MVzlAu/UEdE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SdKJD1lhF4tlth8n7HSv+w5mOZmsi3hT2oAGOwqMKWglqcv41DsCNbpbYK2O/z5xd
+	 5MGa3iw7UDUP7IGbKQ8/rj0mOgPNUYsSssPxAQyDI5ViPUAp6fxEYVZe47+kYjTbOM
+	 yMwRvlkEAKHmn5XXY7XU1lC4zKVMIVASxK0QaLZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgERQVi (ORCPT
+        id S1728437AbgERQVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:21:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgERQVi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:21:38 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1024C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:21:37 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id w7so12527298wre.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:21:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mPan/iOK3FlJrRcEPq0sqHhm0unuccyfQDLEwiWdKUY=;
-        b=jbwPB+32E8dRbvJ2wuQ2JG0caMLHZmmizHiGemUQmDcbJFiV+TvTZGRDL3d8PDtLsY
-         2ofvAnRHxEjj2ccKFu/Y5AQ4iCGeV1QxDIb1SuzLFLi9OIJdiJas6gQG5cCvWSMPOGBU
-         x/V/WqmQj0E7HnKvep4LT6igUvk+nrxoUYNON3dPkrUZJ9KDQUPW6Har3ir+HmcgWsqf
-         alrdsuwFyryYBcb3FZss6FzqoR50INrutQ/9FhINws5OiGc6tiKlOXePO31DMMzaYdT8
-         /Y2of1GPQsIZoDVqZozjtvQotHRUsqHUJo+Fk8R0XnV0TubHTbxg8/nwPjxSaIXvslXu
-         PaVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mPan/iOK3FlJrRcEPq0sqHhm0unuccyfQDLEwiWdKUY=;
-        b=Tk77iQqU7eWn1nKKaoiTdxCJ8KnBt4v4EXc6KigNqgjld6J/JZlOZcHkL8uRxovzIW
-         rVy7rt4avQOazrkjayoVTNyRt4XjBf994Bidvv3aSPeRTsbGW1Wrr4udAYCfOBLEGyzJ
-         bUKNBOkSZ0NSKz2WZlTdkSebOjSafgG30HciqOla0+feNwIVt1FMBeS/4ysjIBgVHTmX
-         UrvsUNbsW42EOVBv0RPTDjhdI5c4J7KgI5e8PhPX0YBXGYC3amlwLTmSNYxifpKVFKmG
-         rM8pn3mlv+JbZ9HFErhXnAuoC8Kljy8ABl8JDOg0h161pNqBiQaX0YjTnangxa7uhxNc
-         PEmQ==
-X-Gm-Message-State: AOAM532HG8+SXHKQoWiuU4/gLqfQJFOZIPGCPnnfLemW1GVcsMdJ5I4/
-        m1jEvOni74XHTMd2M4h9iZoA91wo+24=
-X-Google-Smtp-Source: ABdhPJyiDuft1ud8pm340dhXzBtCA6hZi5QfdvTeiEMwEovwvB9rBLz7UQdecu8ItPbWcTbrcrKeiQ==
-X-Received: by 2002:adf:f40a:: with SMTP id g10mr21964592wro.117.1589818896319;
-        Mon, 18 May 2020 09:21:36 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
-        by smtp.googlemail.com with ESMTPSA id i74sm17145474wri.49.2020.05.18.09.21.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 09:21:35 -0700 (PDT)
-Subject: Re: [PATCH v1] clocksource: arc_timer: remove duplicate error message
-To:     Dejin Zheng <zhengdejin5@gmail.com>, vgupta@synopsys.com,
-        tglx@linutronix.de, linux-snps-arc@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200429151223.3120-1-zhengdejin5@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <54f33384-2d2e-ce84-4242-d15286f65dfa@linaro.org>
-Date:   Mon, 18 May 2020 18:21:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 12:21:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728384AbgERQVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:21:43 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE40F20657;
+        Mon, 18 May 2020 16:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589818903;
+        bh=Hy6eh4EEN/gX8lLoYHqML6egri7+0PB5MVzlAu/UEdE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=URW+jr2/ij4OHUH3l1dYu0vEOAqVOp3f/xKs+g59bwgrvslaqrGimYslXAPlRJ5uO
+         BZJ87Zco5GGC7EpYcrpQJ/tsFvA13x3Hw50J9OIFYCUx508WirF356eMx82KqXmjdM
+         hOD3+MCnp5SY1xYt529jr947ggHOscOMeJKAQYho=
+Date:   Mon, 18 May 2020 11:26:29 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KEYS: Replace zero-length array with flexible-array
+Message-ID: <20200518162629.GC9868@embeddedor>
+References: <20200507185710.GA14910@embeddedor>
+ <932086.1589814864@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200429151223.3120-1-zhengdejin5@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <932086.1589814864@warthog.procyon.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2020 17:12, Dejin Zheng wrote:
-> it will print an error message by itself when arc_get_timer_clk()
-> goes wrong. so remove the duplicate error message.
+On Mon, May 18, 2020 at 04:14:24PM +0100, David Howells wrote:
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> Applied to keys-next.
+> 
 
-Applied, thanks
+Thanks, David.
 
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+--
+Gustavo
