@@ -2,122 +2,262 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C768C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3FB20787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="t97kv+dc"
+	by mail.kernel.org (Postfix) with ESMTP id D565C20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgERMy3 (ORCPT
+        id S1727067AbgERM5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:54:29 -0400
-Received: from mail-eopbgr50122.outbound.protection.outlook.com ([40.107.5.122]:61194
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726726AbgERMy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:54:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yzvi412MnlYEMNKQRRUhyAacbj1yxPu8mhZrKH0pLofHn4eoeGxA0LlUBEEDGKDxfbKnShBH28hKfPBhCa51aMepGAAqXp3z+2anfDWVxzyeimUwoI7+yp8SzMcZeu3BErdt+IQjZ6VNp/qZdFMdAsYg26OITzAOdpaZatemp+131PkxZrLq4662yNEWFXWvvHsYVZPT6e7s/yXilH3Tv1CirBq2TlA4faoa7CZdnupP5tR6iEliJr1q7D2+Nrqu6ildwfcgYY5wwI+JmlbLyHxbOHhIEPYFH/njnOMjQa5kLKRsrC7iaOrOskf6asDq308TwW/eRFtKetLNoT9w8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PUU2XvCtOWkW8oYBKMrbYFKytvQQVW87VGExJa9wUVw=;
- b=VmzTi+Jz4vAE4sB2htwbTqIcl17Qi8CBySzkcReSOvRuBNf600sGi+k7enM31JDbsERg87KKOqDyZG/XVqfmXw2Rd8qxCLnvlx0U1pThZUKQHzZ+1Y2/dATvNwmd/MJM3xixBMsUBogvyVBoG6NTzOd8TX/h6lLEmcC78iPb1kciYGOTv15hTUkKm+7MT0XQVAQgxwEZDHWWw5WOePx4eniYRO+5DbeKtzikrLcHo3pkewPKsHYhGNNlq+SDYfUlMSeINj6HlrTmy3rPjiDw5zJVJCm3t12EPBHp0HaCzWbdIZ7CKsFlEgPl79DPR0cRImUEtuyztZrSKyiBGD1DiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
- dkim=pass header.d=sony.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PUU2XvCtOWkW8oYBKMrbYFKytvQQVW87VGExJa9wUVw=;
- b=t97kv+dcrFBkSdCDIFvGRy25IJMyio6FrCb8Y90EQsf9cNdnVLtGcot3Dzb7WDeo7HxifJAPwlrn8ctDLvDAIdAhYGlAeY0ezfWKbl2YWctFBN1yFB8TzCmb3B11DkVhf7tbsXoAAlwTGUFFxT90Ef2g15fSGip5cHRdeb5V8ug=
-Received: from VI1P193MB0384.EURP193.PROD.OUTLOOK.COM (2603:10a6:803:43::23)
- by VI1P193MB0589.EURP193.PROD.OUTLOOK.COM (2603:10a6:800:15d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Mon, 18 May
- 2020 12:54:25 +0000
-Received: from VI1P193MB0384.EURP193.PROD.OUTLOOK.COM
- ([fe80::4c2a:55d3:f81b:ded5]) by VI1P193MB0384.EURP193.PROD.OUTLOOK.COM
- ([fe80::4c2a:55d3:f81b:ded5%4]) with mapi id 15.20.3000.034; Mon, 18 May 2020
- 12:54:24 +0000
-From:   "Enderborg, Peter" <Peter.Enderborg@sony.com>
-To:     Guilherme Piccoli <gpiccoli@canonical.com>
-CC:     David Rientjes <rientjes@google.com>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gavin Guo <gavin.guo@canonical.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [PATCH] mm, compaction: Indicate when compaction is manually
- triggered by sysctl
-Thread-Topic: [PATCH] mm, compaction: Indicate when compaction is manually
- triggered by sysctl
-Thread-Index: AQHWLQ4JT53iIUBh1EGtbwEppGChNaitzMsA
-Date:   Mon, 18 May 2020 12:54:24 +0000
-Message-ID: <cd43b4d6-7a2e-3e92-0a15-19597e9df4fd@sony.com>
-References: <20200507215946.22589-1-gpiccoli@canonical.com>
- <20200507160438.ed336a1e00c23c6863d75ae5@linux-foundation.org>
- <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com>
- <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
- <CAHD1Q_wF6Mzf5JipXGZKvn2YDR+FQ6ePuKOe-1W-t_VapxMCxg@mail.gmail.com>
- <alpine.DEB.2.22.394.2005101821160.172131@chino.kir.corp.google.com>
- <CAHD1Q_zrQmUTRpdW3bZ0CRKuu2dKgueXUjqCNtC5oyZ67CGp2A@mail.gmail.com>
- <6bf5e178-f2c8-f453-9035-93e31995bb53@sony.com>
- <CAHD1Q_yk4GhUgTMc5KcvpaW-oMNEfvSj7vxOCOQGALs4qe8VUQ@mail.gmail.com>
-In-Reply-To: <CAHD1Q_yk4GhUgTMc5KcvpaW-oMNEfvSj7vxOCOQGALs4qe8VUQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-authentication-results: canonical.com; dkim=none (message not signed)
- header.d=none;canonical.com; dmarc=none action=none header.from=sony.com;
-x-originating-ip: [37.139.156.40]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 86365bc5-850d-46f6-4a50-08d7fb2a97c1
-x-ms-traffictypediagnostic: VI1P193MB0589:
-x-microsoft-antispam-prvs: <VI1P193MB05893AF10A8EF3EBA1004AB886B80@VI1P193MB0589.EURP193.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 04073E895A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iRcmIa8ZkIoxpDgWZD2VlDGHR2trBRGf9Ip3oDzlYF2dDYZrEt5LI0bps42z/zNl5LVx7Lf/oBdbTAeLjRCCPvsq+U/MtTSTpTQPopnjXoko/31K3Zf0x3bRne0lTjqjNDVG0n3O4CMQrlM+WXZ1o57uyZ2jyLLEd6w4GKSnmtB+YTVnCDAJUKio+i3cLycBp2ClWPfSB+cfc5608+Z0AOepwX/TyxL7CuBaakO2n2wdUW+HXtlqGMI9hKkogz1EWnAAa2ISLTAJOvwNiHCjGowUGNXfjZWwHWBlwL/RHI87G8fRZ/Z66joNKImHp6h/eRNNTGt5h9sRDN0cIcvqgkPlY7nOrGd3AFWPSYA6LH9scveRWZDNkSZjV2kfZQXLEQgrqpJQ0nz+Hii33u7VMOLjitymYJ/98YNMJxmxr8xK58H8BgLPTie51bNfJYBiFK2RTzqOKssP7fQ1QQYTQxQzSeGehvCnMV52quzD9zq+Iw6RFnNQEpUGbewPa9tW
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P193MB0384.EURP193.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(366004)(396003)(136003)(346002)(86362001)(66946007)(66556008)(64756008)(66446008)(31696002)(53546011)(6506007)(54906003)(66476007)(36756003)(71200400001)(316002)(8676002)(8936002)(6916009)(478600001)(2616005)(31686004)(6512007)(5660300002)(6486002)(2906002)(186003)(4326008)(91956017)(76116006)(26005)(4744005)(43740500002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: tU8Zi9FIDreL/9Jp9vy075zIbDPO6T4pcFOfQP2OaN3aNWkmMtOXCUUakA6+g4F9LYjsl6mg6Ys5UfV28VRNGFAqD6Y5jEeO9JtTZHrTqfvMiIF5YxUg8aa2gmhx/x3V45umRH46fXkSg6Xko/i5qO6rLsfINCq9GFHYxFj02rlGUen8O7bnsS0w3w+AmCsEskir2CJeqWe/o7LaKZZqAVFlxkFLD8cHIM/sjQiL18x6culA/sJ4CPM/bQNDMF6iCNiDRCwl4DVagI2YLH6WJTXqsPH9PRtqqNg7+KvMbHJaRu6v+hyDE1An9epWoHMOWIg5oExDwXiroXMicdo0nCzWQKuwk6mO9gZDw8A8enfsOPesb/e0r8d6Gg8XkVanFnkIemP36rCbXRShzCAQrfkT2xyC/234d1aXTT1MquFZKpN9EubRVF0hB/YixLDjVy8OzzsBC8fjs/5qzIA0avz9VHBXhxgBOd/xC6848Rg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F85BEAA8FB24184C94B39681B953C6A8@EURP193.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Mon, 18 May 2020 08:57:00 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:35572 "EHLO raptor.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726709AbgERM47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:56:59 -0400
+Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id 0BEDD20479;
+        Mon, 18 May 2020 12:56:52 +0000 (UTC)
+Date:   Mon, 18 May 2020 14:56:48 +0200
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+c1af344512918c61362c@syzkaller.appspotmail.com>,
+        jmorris@namei.org, linux-next@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v2] proc: proc_pid_ns takes super_block as an argument
+Message-ID: <20200518125648.robgr7mud7esao2o@comp-core-i7-2640m-0182e6>
+References: <87lfltcbc4.fsf@x220.int.ebiederm.org>
+ <20200518111716.2896385-1-gladkov.alexey@gmail.com>
+ <871rnh78di.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86365bc5-850d-46f6-4a50-08d7fb2a97c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 12:54:24.7011
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xREqSwzz5FEHC3yH+B97gaSRmi2H28Ao8UGJMbR+zwrVlUbsfN2uJZGS9OjS4rRyUmGDCfjd/W2lWjfsB//V1B2y4/c0/1Z5ipudL5P80GM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P193MB0589
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871rnh78di.fsf@x220.int.ebiederm.org>
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Mon, 18 May 2020 12:56:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNS8xOC8yMCAyOjE0IFBNLCBHdWlsaGVybWUgUGljY29saSB3cm90ZToNCj4gSGkgUGV0ZXIs
-IHRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLiBXaGF0IGRvIHlvdSBtZWFuIGJ5ICJ0cmFjZQ0KPiBu
-b3RpZmljYXRpb24iID8gV2Ugc2VlbSB0byBoYXZlIGEgdHJhY2UgZXZlbnQgaW4gdGhhdCBmdW5j
-dGlvbiB5b3UNCj4gbWVudGlvbmVkLiBBbHNvLCBhY2NvdW50aW5nIGZvciB0aGF0IGZ1bmN0aW9u
-IGlzIGVub3VnaCB0bw0KPiBkaWZmZXJlbnRpYXRlIHdoZW4gdGhlIGNvbXBhY3Rpb24gaXMgdHJp
-Z2dlcmVkIGJ5IHRoZSBrZXJuZWwgaXRzZWxmIG9yDQo+IGJ5IHRoZSB1c2VyICh3aGljaCBpcyBv
-dXIgdXNlIGNhc2UgaGVyZSkgPw0KDQpVc3VhbGx5IGNoYW5nZSBleGlzdGluZyBjYXVzZXMgY29u
-ZnVzaW9uLiBJdCBzaG91bGQgbm90IGJlIGEgcHJvYmxlbSBidXQgaXQgaGFwcGVuLg0KDQoNCj4g
-Q2hlZXJzLA0KPg0KPg0KPiBHdWlsaGVybWUNCg0K
+On Mon, May 18, 2020 at 07:08:57AM -0500, Eric W. Biederman wrote:
+> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+> 
+> > The proc_pid_ns() can be used for both inode and dentry. To avoid making
+> > two identical functions, change the argument type of the proc_pid_ns().
+> >
+> > Link: https://lore.kernel.org/lkml/c3461e26-1407-2262-c709-dac0df3da2d0@i-love.sakura.ne.jp/
+> > Reported-by: syzbot+c1af344512918c61362c@syzkaller.appspotmail.com
+> > Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+> 
+> So overall this looks good.
+> 
+> However, the description leaves a little bit to be desired as it does
+> not describe why it is bad to use dentry->d_sb.  A fixes tag would be
+> nice if for no other reason than to help anyone who decides to backport
+> this.
+
+OK. I will add it.
+
+> And can you please compile test this?
+> 
+> There is a very silly typo in proc that keeps this from compiling.
+
+I compiled the kernel with this patch and ran the kernel, but accidentally
+did not check children_seq_show(). Sorry.
+
+> Thank you,
+> Eric
+> 
+> > ---
+> >  fs/locks.c                 |  4 ++--
+> >  fs/proc/array.c            |  2 +-
+> >  fs/proc/base.c             | 10 +++++-----
+> >  fs/proc/self.c             |  2 +-
+> >  fs/proc/thread_self.c      |  2 +-
+> >  include/linux/proc_fs.h    |  4 ++--
+> >  kernel/fork.c              |  2 +-
+> >  net/ipv6/ip6_flowlabel.c   |  2 +-
+> >  security/tomoyo/realpath.c |  2 +-
+> >  9 files changed, 15 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/fs/locks.c b/fs/locks.c
+> > index 399c5dbb72c4..ab702d6efb55 100644
+> > --- a/fs/locks.c
+> > +++ b/fs/locks.c
+> > @@ -2823,7 +2823,7 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
+> >  {
+> >  	struct inode *inode = NULL;
+> >  	unsigned int fl_pid;
+> > -	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file));
+> > +	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file)->i_sb);
+> >  
+> >  	fl_pid = locks_translate_pid(fl, proc_pidns);
+> >  	/*
+> > @@ -2901,7 +2901,7 @@ static int locks_show(struct seq_file *f, void *v)
+> >  {
+> >  	struct locks_iterator *iter = f->private;
+> >  	struct file_lock *fl, *bfl;
+> > -	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file));
+> > +	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file)->i_sb);
+> >  
+> >  	fl = hlist_entry(v, struct file_lock, fl_link);
+> >  
+> > diff --git a/fs/proc/array.c b/fs/proc/array.c
+> > index 8e16f14bb05a..a4d4763731e0 100644
+> > --- a/fs/proc/array.c
+> > +++ b/fs/proc/array.c
+> > @@ -728,7 +728,7 @@ static int children_seq_show(struct seq_file *seq, void *v)
+> >  {
+> >  	struct inode *inode = file_inode(seq->file);
+> >  
+> > -	seq_printf(seq, "%d ", pid_nr_ns(v, proc_pid_ns(inode)));
+> > +	seq_printf(seq, "%d ", pid_nr_ns(v, proc_pid_ns(inode)->i_sb));
+> >  	return 0;
+> >  }
+> >  
+> > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > index 5a307b3bb2d1..30c9fceca0b7 100644
+> > --- a/fs/proc/base.c
+> > +++ b/fs/proc/base.c
+> > @@ -754,7 +754,7 @@ static const struct inode_operations proc_def_inode_operations = {
+> >  static int proc_single_show(struct seq_file *m, void *v)
+> >  {
+> >  	struct inode *inode = m->private;
+> > -	struct pid_namespace *ns = proc_pid_ns(inode);
+> > +	struct pid_namespace *ns = proc_pid_ns(inode->i_sb);
+> >  	struct pid *pid = proc_pid(inode);
+> >  	struct task_struct *task;
+> >  	int ret;
+> > @@ -1423,7 +1423,7 @@ static const struct file_operations proc_fail_nth_operations = {
+> >  static int sched_show(struct seq_file *m, void *v)
+> >  {
+> >  	struct inode *inode = m->private;
+> > -	struct pid_namespace *ns = proc_pid_ns(inode);
+> > +	struct pid_namespace *ns = proc_pid_ns(inode->i_sb);
+> >  	struct task_struct *p;
+> >  
+> >  	p = get_proc_task(inode);
+> > @@ -2466,7 +2466,7 @@ static int proc_timers_open(struct inode *inode, struct file *file)
+> >  		return -ENOMEM;
+> >  
+> >  	tp->pid = proc_pid(inode);
+> > -	tp->ns = proc_pid_ns(inode);
+> > +	tp->ns = proc_pid_ns(inode->i_sb);
+> >  	return 0;
+> >  }
+> >  
+> > @@ -3377,7 +3377,7 @@ int proc_pid_readdir(struct file *file, struct dir_context *ctx)
+> >  {
+> >  	struct tgid_iter iter;
+> >  	struct proc_fs_info *fs_info = proc_sb_info(file_inode(file)->i_sb);
+> > -	struct pid_namespace *ns = proc_pid_ns(file_inode(file));
+> > +	struct pid_namespace *ns = proc_pid_ns(file_inode(file)->i_sb);
+> >  	loff_t pos = ctx->pos;
+> >  
+> >  	if (pos >= PID_MAX_LIMIT + TGID_OFFSET)
+> > @@ -3730,7 +3730,7 @@ static int proc_task_readdir(struct file *file, struct dir_context *ctx)
+> >  	/* f_version caches the tgid value that the last readdir call couldn't
+> >  	 * return. lseek aka telldir automagically resets f_version to 0.
+> >  	 */
+> > -	ns = proc_pid_ns(inode);
+> > +	ns = proc_pid_ns(inode->i_sb);
+> >  	tid = (int)file->f_version;
+> >  	file->f_version = 0;
+> >  	for (task = first_tid(proc_pid(inode), tid, ctx->pos - 2, ns);
+> > diff --git a/fs/proc/self.c b/fs/proc/self.c
+> > index 309301ac0136..ca5158fa561c 100644
+> > --- a/fs/proc/self.c
+> > +++ b/fs/proc/self.c
+> > @@ -12,7 +12,7 @@ static const char *proc_self_get_link(struct dentry *dentry,
+> >  				      struct inode *inode,
+> >  				      struct delayed_call *done)
+> >  {
+> > -	struct pid_namespace *ns = proc_pid_ns(inode);
+> > +	struct pid_namespace *ns = proc_pid_ns(inode->i_sb);
+> >  	pid_t tgid = task_tgid_nr_ns(current, ns);
+> >  	char *name;
+> >  
+> > diff --git a/fs/proc/thread_self.c b/fs/proc/thread_self.c
+> > index 2493cbbdfa6f..ac284f409568 100644
+> > --- a/fs/proc/thread_self.c
+> > +++ b/fs/proc/thread_self.c
+> > @@ -12,7 +12,7 @@ static const char *proc_thread_self_get_link(struct dentry *dentry,
+> >  					     struct inode *inode,
+> >  					     struct delayed_call *done)
+> >  {
+> > -	struct pid_namespace *ns = proc_pid_ns(inode);
+> > +	struct pid_namespace *ns = proc_pid_ns(inode->i_sb);
+> >  	pid_t tgid = task_tgid_nr_ns(current, ns);
+> >  	pid_t pid = task_pid_nr_ns(current, ns);
+> >  	char *name;
+> > diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+> > index 2cb424e6f36a..6ec524d8842c 100644
+> > --- a/include/linux/proc_fs.h
+> > +++ b/include/linux/proc_fs.h
+> > @@ -202,9 +202,9 @@ int open_related_ns(struct ns_common *ns,
+> >  		   struct ns_common *(*get_ns)(struct ns_common *ns));
+> >  
+> >  /* get the associated pid namespace for a file in procfs */
+> > -static inline struct pid_namespace *proc_pid_ns(const struct inode *inode)
+> > +static inline struct pid_namespace *proc_pid_ns(struct super_block *sb)
+> >  {
+> > -	return proc_sb_info(inode->i_sb)->pid_ns;
+> > +	return proc_sb_info(sb)->pid_ns;
+> >  }
+> >  
+> >  #endif /* _LINUX_PROC_FS_H */
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 4385f3d639f2..e7bdaccad942 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -1745,7 +1745,7 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+> >  	pid_t nr = -1;
+> >  
+> >  	if (likely(pid_has_task(pid, PIDTYPE_PID))) {
+> > -		ns = proc_pid_ns(file_inode(m->file));
+> > +		ns = proc_pid_ns(file_inode(m->file)->i_sb);
+> >  		nr = pid_nr_ns(pid, ns);
+> >  	}
+> >  
+> > diff --git a/net/ipv6/ip6_flowlabel.c b/net/ipv6/ip6_flowlabel.c
+> > index d64b83e85642..ce4fbba4acce 100644
+> > --- a/net/ipv6/ip6_flowlabel.c
+> > +++ b/net/ipv6/ip6_flowlabel.c
+> > @@ -779,7 +779,7 @@ static void *ip6fl_seq_start(struct seq_file *seq, loff_t *pos)
+> >  {
+> >  	struct ip6fl_iter_state *state = ip6fl_seq_private(seq);
+> >  
+> > -	state->pid_ns = proc_pid_ns(file_inode(seq->file));
+> > +	state->pid_ns = proc_pid_ns(file_inode(seq->file)->i_sb);
+> >  
+> >  	rcu_read_lock_bh();
+> >  	return *pos ? ip6fl_get_idx(seq, *pos - 1) : SEQ_START_TOKEN;
+> > diff --git a/security/tomoyo/realpath.c b/security/tomoyo/realpath.c
+> > index 08b096e2f7e3..df4798980416 100644
+> > --- a/security/tomoyo/realpath.c
+> > +++ b/security/tomoyo/realpath.c
+> > @@ -162,7 +162,7 @@ static char *tomoyo_get_local_path(struct dentry *dentry, char * const buffer,
+> >  	if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
+> >  		char *ep;
+> >  		const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
+> > -		struct pid_namespace *proc_pidns = proc_pid_ns(d_inode(dentry));
+> > +		struct pid_namespace *proc_pidns = proc_pid_ns(sb);
+> >  
+> >  		if (*ep == '/' && pid && pid ==
+> >  		    task_tgid_nr_ns(current, proc_pidns)) {
+> 
+
+-- 
+Rgrds, legion
+
