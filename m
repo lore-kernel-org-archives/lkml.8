@@ -2,150 +2,67 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B65DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E89F920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9440E2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgERKqJ (ORCPT
+        id S1726920AbgERKqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:46:09 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:46200 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgERKqI (ORCPT
+        Mon, 18 May 2020 06:46:32 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:10929 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgERKqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:46:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 72611803080B;
-        Mon, 18 May 2020 10:46:05 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GXTt2X8lPm2O; Mon, 18 May 2020 13:46:04 +0300 (MSK)
-Date:   Mon, 18 May 2020 13:46:02 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
- setting
-Message-ID: <20200518104602.mjh2p5iltf2x4wmq@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200518102415.k4c5qglodij5ac6h@vireshk-i7>
- <20200518103102.t3a3g4uxeeuwsnix@mobilestation>
- <5284478.EF2IWm2iUs@kreacher>
+        Mon, 18 May 2020 06:46:32 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee95ec2676f8b4-36cf1; Mon, 18 May 2020 18:46:08 +0800 (CST)
+X-RM-TRANSID: 2ee95ec2676f8b4-36cf1
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.146.121] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95ec2676e50b-b7d11;
+        Mon, 18 May 2020 18:46:07 +0800 (CST)
+X-RM-TRANSID: 2ee95ec2676e50b-b7d11
+Subject: Re: [PATCH] ASoC: fsl_micfil: Fix format and unused assignment
+To:     Mark Brown <broonie@kernel.org>
+Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        perex@perex.cz, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200518074405.14880-1-tangbin@cmss.chinamobile.com>
+ <20200518102513.GA8699@sirena.org.uk>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <9ab0ef1f-6acf-ac5a-9d16-e00fbb39ae11@cmss.chinamobile.com>
+Date:   Mon, 18 May 2020 18:47:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <5284478.EF2IWm2iUs@kreacher>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200518102513.GA8699@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:41:19PM +0200, Rafael J. Wysocki wrote:
-> On Monday, May 18, 2020 12:31:02 PM CEST Serge Semin wrote:
-> > On Mon, May 18, 2020 at 03:54:15PM +0530, Viresh Kumar wrote:
-> > > On 18-05-20, 12:22, Rafael J. Wysocki wrote:
-> > > > On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
-> > > > > On 18-05-20, 11:53, Rafael J. Wysocki wrote:
-> > > > > > That said if you really only want it to return 0 on success, you may as well
-> > > > > > add a ret = 0; statement (with a comment explaining why it is needed) after
-> > > > > > the last break in the loop.
-> > > > > 
-> > > > > That can be done as well, but will be a bit less efficient as the loop
-> > > > > will execute once for each policy, and so the statement will run
-> > > > > multiple times. Though it isn't going to add any significant latency
-> > > > > in the code.
-> > > > 
-> > > > Right.
-> > > > 
-> > > > However, the logic in this entire function looks somewhat less than
-> > > > straightforward to me, because it looks like it should return an
-> > > > error on the first policy without a frequency table (having a frequency
-> > > > table depends on the driver and that is the same for all policies, so it
-> > > > is pointless to iterate any further in that case).
-> > > > 
-> > > > Also, the error should not be -EINVAL, because that means "invalid
-> > > > argument" which would be the state value.
-> > > > 
-> > > > So I would do something like this:
-> > > > 
-> > > > ---
-> > > >  drivers/cpufreq/cpufreq.c |   11 ++++++-----
-> > > >  1 file changed, 6 insertions(+), 5 deletions(-)
-> > > > 
-> > > > Index: linux-pm/drivers/cpufreq/cpufreq.c
-> > > > ===================================================================
-> > > > --- linux-pm.orig/drivers/cpufreq/cpufreq.c
-> > > > +++ linux-pm/drivers/cpufreq/cpufreq.c
-> > > > @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
-> > > >  static int cpufreq_boost_set_sw(int state)
-> > > >  {
-> > > >  	struct cpufreq_policy *policy;
-> > > > -	int ret = -EINVAL;
-> > > >  
-> > > >  	for_each_active_policy(policy) {
-> > > > +		int ret;
-> > > > +
-> > > >  		if (!policy->freq_table)
-> > > > -			continue;
-> > > > +			return -ENXIO;
-> > > >  
-> > > >  		ret = cpufreq_frequency_table_cpuinfo(policy,
-> > > >  						      policy->freq_table);
-> > > >  		if (ret) {
-> > > >  			pr_err("%s: Policy frequency update failed\n",
-> > > >  			       __func__);
-> > > > -			break;
-> > > > +			return ret;
-> > > >  		}
-> > > >  
-> > > >  		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
-> > > >  		if (ret < 0)
-> > > > -			break;
-> > > > +			return ret;
-> > > >  	}
-> > > >  
-> > > > -	return ret;
-> > > > +	return 0;
-> > > >  }
-> > > >  
-> > > >  int cpufreq_boost_trigger_state(int state)
-> > > 
-> > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > 
-> > Ok. Thanks for the comments. Shall I resend the patch with update Rafael
-> > suggests or you'll merge the Rafael's fix in yourself?
-> 
-> I'll apply the fix directly, thanks!
 
-Great. Is it going to be available in the repo:
-https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/
-?
-I'll need it to back port into my local kernel tree. Thanks.
+On 2020/5/18 18:25, Mark Brown wrote:
+> On Mon, May 18, 2020 at 03:44:05PM +0800, Tang Bin wrote:
+>> In the function fsl_micfil_startup(), the two lines of dev_err()
+>> can be shortened to one line. And delete unused initialized value
+>> of 'ret', because it will be assigned by the function
+>> fsl_micfil_set_mclk_rate().
+> This is two separate changes with no overlap so would have been better
+> sent as separate patches.
 
--Sergey
+Got it, Thanks
 
-> 
-> 
-> 
+Tang Bin
+
+
+
