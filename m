@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E0AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE495C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E761120715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C462920671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825886;
-	bh=U8uXab8S/0VqSIOvJlQ4HEIViMdPlfMG23RGCtqDmaY=;
+	s=default; t=1589825890;
+	bh=lVcD8Iglm5L3dUlMBoeQCYLzsmbVnShCoMIN3gjOd98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dg6FfeoQCUXUxPRxc6woYaD7yJjpjM9pT/Z5Isn9eCctFIZ4PyGhDHT3SaPTjwEKq
-	 +Jy2nu5QWw01vRyX4yMNeWXVaQQ1ePPpdKzFfoYVESFMUH9vnEBz+d5wwZopC3UftX
-	 7JWPsFOCjFvbWgE0dm5/+87vpiM8ccTei2ldvdME=
+	b=p69pRGNpdkLMkKyVMSOb98SGAE7gTUFF6XmCWW4leobsN0V5QRjokIXTohYjVnRKG
+	 Rx95K4ndHMFCOLn8pyezs3QL+DsJJ638FdmdiRKJ6MlqQu5K8ZVIydOm86xuMjL7Xu
+	 FS64+xbOF9owgmLgbo2FXggqTFVxjWBTzRG2QPPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387708AbgERSSF (ORCPT
+        id S2387714AbgERSSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34288 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730827AbgERR4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:56:25 -0400
+        id S1731610AbgERR4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:56:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82C4D20674;
-        Mon, 18 May 2020 17:56:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0044520826;
+        Mon, 18 May 2020 17:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824585;
-        bh=U8uXab8S/0VqSIOvJlQ4HEIViMdPlfMG23RGCtqDmaY=;
+        s=default; t=1589824577;
+        bh=lVcD8Iglm5L3dUlMBoeQCYLzsmbVnShCoMIN3gjOd98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=crmHxqxlitOHpR4L1vMpllAiQ+2J8qOzZpxja8ECPMo7xryyWsOaTKPTFhpTnpJVz
-         lXESSos97vpEfyETkcpUKkGQIEwFqOtgR1ZU9QeVej8Of9f/8m45vSp0JFvXtPPJ8Y
-         JwCooww/RqQMeSiASF9s4CqJHTyvOlTYnU7cn8us=
+        b=RdbK2iYSf66R+UNsN406tSwf+sJ8nYJ3Rp8hhS5Dt5POz9Gj5tz5GmqxSXeQk+JND
+         tdNFN8MI5iCtYU6TEq2IS91/NwQ7ZRQLnDsaCMuai6Q7/N2O4M5YV87kRSP7oVs8Ko
+         EN4qaJGfa8V7yEAA0E9wUnX+Zm2IYD2fadEx6DGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
-        Sarthak Garg <sartgarg@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 069/147] mmc: core: Fix recursive locking issue in CQE recovery path
-Date:   Mon, 18 May 2020 19:36:32 +0200
-Message-Id: <20200518173522.620037806@linuxfoundation.org>
+Subject: [PATCH 5.4 066/147] mmc: alcor: Fix a resource leak in the error path for ->probe()
+Date:   Mon, 18 May 2020 19:36:29 +0200
+Message-Id: <20200518173522.255300152@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -62,74 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sarthak Garg <sartgarg@codeaurora.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 39a22f73744d5baee30b5f134ae2e30b668b66ed ]
+[ Upstream commit 7c277dd2b0ff6a16f1732a66c2c52a29f067163e ]
 
-Consider the following stack trace
+If devm_request_threaded_irq() fails, the allocated struct mmc_host needs
+to be freed via calling mmc_free_host(), so let's do that.
 
--001|raw_spin_lock_irqsave
--002|mmc_blk_cqe_complete_rq
--003|__blk_mq_complete_request(inline)
--003|blk_mq_complete_request(rq)
--004|mmc_cqe_timed_out(inline)
--004|mmc_mq_timed_out
-
-mmc_mq_timed_out acquires the queue_lock for the first
-time. The mmc_blk_cqe_complete_rq function also tries to acquire
-the same queue lock resulting in recursive locking where the task
-is spinning for the same lock which it has already acquired leading
-to watchdog bark.
-
-Fix this issue with the lock only for the required critical section.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
-Suggested-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/1588868135-31783-1-git-send-email-vbadigan@codeaurora.org
+Fixes: c5413ad815a6 ("mmc: add new Alcor Micro Cardreader SD/MMC driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20200426202355.43055-1-christophe.jaillet@wanadoo.fr
+Cc: stable@vger.kernel.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/queue.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/mmc/host/alcor.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-index 9edc08685e86d..4d1e468d39823 100644
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -107,7 +107,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
- 	case MMC_ISSUE_DCMD:
- 		if (host->cqe_ops->cqe_timeout(host, mrq, &recovery_needed)) {
- 			if (recovery_needed)
--				__mmc_cqe_recovery_notifier(mq);
-+				mmc_cqe_recovery_notifier(mrq);
- 			return BLK_EH_RESET_TIMER;
- 		}
- 		/* No timeout (XXX: huh? comment doesn't make much sense) */
-@@ -125,18 +125,13 @@ static enum blk_eh_timer_return mmc_mq_timed_out(struct request *req,
- 	struct request_queue *q = req->q;
- 	struct mmc_queue *mq = q->queuedata;
- 	unsigned long flags;
--	int ret;
-+	bool ignore_tout;
+diff --git a/drivers/mmc/host/alcor.c b/drivers/mmc/host/alcor.c
+index 1aee485d56d4c..026ca9194ce5b 100644
+--- a/drivers/mmc/host/alcor.c
++++ b/drivers/mmc/host/alcor.c
+@@ -1104,7 +1104,7 @@ static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
  
- 	spin_lock_irqsave(&mq->lock, flags);
--
--	if (mq->recovery_needed || !mq->use_cqe)
--		ret = BLK_EH_RESET_TIMER;
--	else
--		ret = mmc_cqe_timed_out(req);
--
-+	ignore_tout = mq->recovery_needed || !mq->use_cqe;
- 	spin_unlock_irqrestore(&mq->lock, flags);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to get irq for data line\n");
+-		return ret;
++		goto free_host;
+ 	}
  
--	return ret;
-+	return ignore_tout ? BLK_EH_RESET_TIMER : mmc_cqe_timed_out(req);
+ 	mutex_init(&host->cmd_mutex);
+@@ -1116,6 +1116,10 @@ static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
+ 	dev_set_drvdata(&pdev->dev, host);
+ 	mmc_add_host(mmc);
+ 	return 0;
++
++free_host:
++	mmc_free_host(mmc);
++	return ret;
  }
  
- static void mmc_mq_recovery_handler(struct work_struct *work)
+ static int alcor_pci_sdmmc_drv_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
