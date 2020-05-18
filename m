@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A499C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C3820671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1264820715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824207;
-	bh=AIDuqpFwK4loOrrBPfN4kswXj1atAMquNwmhwqFlyYI=;
+	s=default; t=1589824210;
+	bh=3jL/axdTlYd33laaCHBdmLeN7tXf5UZO0qK9ao31xS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TMqCGgu6Tp700aTSgrOWCHptB4pVwV8QWJskA3/VThnz1H9JlWrkFgEOarHN304tk
-	 hl2fROi5UnRvNWHpagV8yMuLEA7Gott4VC0hlM/ktlqsb3gaecwUXZD4m+FTuU6PJz
-	 /pBYCFGAq0hFZWp66malKZFZcdcp7ygXaxzaKtzs=
+	b=L8e3kZhfqW784ZqEdkd3CW4LiLtT2t4ybWMj+yVtpGyBsbbab7cxVdCMkS4SsoO9t
+	 PX3TgmwjfGrZ/dkxgygaHhvkYis3acRhzCVhq+46Bi1T+jbZY008ijDXb5UfApD8u9
+	 sULOyy6K2aUr4H2jv81hW3VaFundU9yVhY8XpUvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgERRuG (ORCPT
+        id S1730636AbgERRuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51918 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730618AbgERRuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:50:03 -0400
+        id S1730627AbgERRuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 335C220671;
-        Mon, 18 May 2020 17:50:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C10E20715;
+        Mon, 18 May 2020 17:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824202;
-        bh=AIDuqpFwK4loOrrBPfN4kswXj1atAMquNwmhwqFlyYI=;
+        s=default; t=1589824205;
+        bh=3jL/axdTlYd33laaCHBdmLeN7tXf5UZO0qK9ao31xS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mANI1i9bDryIa3w/8Zn1wrN18mif/yZaErsgEagv7q9jsHebiCNIY4DfRGr8ZBF35
-         Q7IC9h6o7wIWGfS1NHgPWAP3CmDsXz1W8AiIR2zZYP4i0KMrqy5pWYYOlGHbDocfiU
-         d0VxywmwX/wmqmIzXrTYebrTgbhuxS2VKXrEx4YI=
+        b=D5nTuw96YfPdhhRqcv7k5YSpKicJB4a3T+BCbDDqL6Oz8qjT/wqmrXYA8XIgb6R8o
+         nvUt+gWtQIh7E+Gh2tW066lkF0g5GSYuhGgO7VblC90fknTm6NnSUXWIOfx+Mvsy9S
+         4XNt3UPGUUSBgWODtTjYfG7bbpcrdSG2g2JkgOzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4.14 111/114] ARM: dts: r8a73a4: Add missing CMT1 interrupts
-Date:   Mon, 18 May 2020 19:37:23 +0200
-Message-Id: <20200518173520.976032946@linuxfoundation.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulrich Hecht <uli+renesas@fpond.eu>
+Subject: [PATCH 4.14 112/114] ARM: dts: r8a7740: Add missing extal2 to CPG node
+Date:   Mon, 18 May 2020 19:37:24 +0200
+Message-Id: <20200518173521.106309759@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -61,38 +62,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 0f739fdfe9e5ce668bd6d3210f310df282321837 upstream.
+commit e47cb97f153193d4b41ca8d48127da14513d54c7 upstream.
 
-The R-Mobile APE6 Compare Match Timer 1 generates 8 interrupts, one for
-each channel, but currently only 1 is described.
-Fix this by adding the missing interrupts.
+The Clock Pulse Generator (CPG) device node lacks the extal2 clock.
+This may lead to a failure registering the "r" clock, or to a wrong
+parent for the "usb24s" clock, depending on MD_CK2 pin configuration and
+boot loader CPG_USBCKCR register configuration.
 
-Fixes: f7b65230019b9dac ("ARM: shmobile: r8a73a4: Add CMT1 node")
+This went unnoticed, as this does not affect the single upstream board
+configuration, which relies on the first clock input only.
+
+Fixes: d9ffd583bf345e2e ("ARM: shmobile: r8a7740: add SoC clocks to DTS")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20200408090926.25201-1-geert+renesas@glider.be
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Link: https://lore.kernel.org/r/20200508095918.6061-1-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/r8a73a4.dtsi |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7740.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -133,7 +133,14 @@
- 	cmt1: timer@e6130000 {
- 		compatible = "renesas,cmt-48-r8a73a4", "renesas,cmt-48-gen2";
- 		reg = <0 0xe6130000 0 0x1004>;
--		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&pd_c5>;
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -467,7 +467,7 @@
+ 		cpg_clocks: cpg_clocks@e6150000 {
+ 			compatible = "renesas,r8a7740-cpg-clocks";
+ 			reg = <0xe6150000 0x10000>;
+-			clocks = <&extal1_clk>, <&extalr_clk>;
++			clocks = <&extal1_clk>, <&extal2_clk>, <&extalr_clk>;
+ 			#clock-cells = <1>;
+ 			clock-output-names = "system", "pllc0", "pllc1",
+ 					     "pllc2", "r",
 
 
