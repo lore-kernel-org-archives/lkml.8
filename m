@@ -2,95 +2,94 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC8BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B1420829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B379D20829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589824737;
+	bh=PohRqmfAs2f/sUR7D6+FHLMFJ38MEbs5ngp267iS3Bg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GaezZ29dXXVIXsNhCP6KWUNj/eg1khaEsj7hAB/DzaWcSHaJP025Kj5+L4WRpB//u
+	 u1vJaGSasIQtetmk+fx8ZXyUpFqWaxpbUK2jof7Pm/FtbEGVYyr1g0ug1ziV6FXwam
+	 YrBwJNOrYd6VHx7vDk4+yLZDfLkZq82hvAetzIMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731972AbgERR6w (ORCPT
+        id S1731982AbgERR64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 May 2020 13:58:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731953AbgERR6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 May 2020 13:58:52 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11062 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731953AbgERR6r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:58:47 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IHWN5m007797;
-        Mon, 18 May 2020 13:58:46 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312btudkax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 13:58:45 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04IHuMJv014543;
-        Mon, 18 May 2020 17:58:42 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 313xehg28h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 17:58:42 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IHwedg65339580
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 17:58:40 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A97B5204E;
-        Mon, 18 May 2020 17:58:40 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.145.145])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B5FBF52050;
-        Mon, 18 May 2020 17:58:39 +0000 (GMT)
-Message-ID: <1589824719.5111.126.camel@linux.ibm.com>
-Subject: Re: [GIT PULL] integrity subsystem fixes for v5.7
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 18 May 2020 13:58:39 -0400
-In-Reply-To: <CAHk-=wh_Zw7ug+iMALAKfQkdyVAUWC0UB0bfRRPMOCC7U5uTFQ@mail.gmail.com>
-References: <1589816971.5111.113.camel@linux.ibm.com>
-         <CAHk-=wh_Zw7ug+iMALAKfQkdyVAUWC0UB0bfRRPMOCC7U5uTFQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7D32207C4;
+        Mon, 18 May 2020 17:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824732;
+        bh=PohRqmfAs2f/sUR7D6+FHLMFJ38MEbs5ngp267iS3Bg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fBqS8xHCrOBS7I9R6GPERYDz8DBPVIIBG4sgrPJJeBEoS+1AaO5p0xWYtrvnRTpBu
+         OHs5WGNr2ysqMFKwmjn5ahHyDk9nJe1RvAQ4oVgm4oj2pin4zwQrlYlq/iMUAtLgVz
+         rMvmRsm56/0FbyuF1bB6EVxizpk9QTf33855Q+Jk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 130/147] usb: gadget: legacy: fix error return code in cdc_bind()
+Date:   Mon, 18 May 2020 19:37:33 +0200
+Message-Id: <20200518173529.613355115@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
+References: <20200518173513.009514388@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 mlxscore=0 mlxlogscore=812
- impostorscore=0 spamscore=0 clxscore=1015 cotscore=-2147483648
- lowpriorityscore=0 adultscore=0 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005180143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 10:47 -0700, Linus Torvalds wrote:
-> On Mon, May 18, 2020 at 8:49 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity.fixes
-> 
-> No such head.
-> 
-> It looks like the plain 'fixes' branch has the same commit ID, but
-> there's no next-integrity.fixes.
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-Ugh, that's the name of my local branch.  The remote branch is "fixes"
-as you figured out.
+commit e8f7f9e3499a6d96f7f63a4818dc7d0f45a7783b upstream.
 
-> 
-> Btw, any chance you could start using signed tags? I've been
-> encouraging people to do that even on kernel.org, and we've got fairly
-> high coverage these days..
+If 'usb_otg_descriptor_alloc()' fails, we must return a
+negative error code -ENOMEM, not 0.
 
-Sure, will figure out how in time for the next open window, if that is
-Ok.
+Fixes: ab6796ae9833 ("usb: gadget: cdc2: allocate and init otg descriptor by otg capabilities")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Mimi
+---
+ drivers/usb/gadget/legacy/cdc2.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/usb/gadget/legacy/cdc2.c
++++ b/drivers/usb/gadget/legacy/cdc2.c
+@@ -179,8 +179,10 @@ static int cdc_bind(struct usb_composite
+ 		struct usb_descriptor_header *usb_desc;
+ 
+ 		usb_desc = usb_otg_descriptor_alloc(gadget);
+-		if (!usb_desc)
++		if (!usb_desc) {
++			status = -ENOMEM;
+ 			goto fail1;
++		}
+ 		usb_otg_descriptor_init(gadget, usb_desc);
+ 		otg_desc[0] = usb_desc;
+ 		otg_desc[1] = NULL;
+
+
