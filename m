@@ -2,112 +2,73 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB18C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A996C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3778206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5679320709
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgERLYb (ORCPT
+        id S1726958AbgERL0R convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:24:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40584 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgERLYa (ORCPT
+        Mon, 18 May 2020 07:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbgERL0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:24:30 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d26so7695593otc.7;
-        Mon, 18 May 2020 04:24:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S+/xJo9DYFV5x/KGWI9bYykM6mq0Xnr1uVyyiFMOM94=;
-        b=Y1TXobsoU2Lmp4U/8L5YGzh0WkqFwCw/MDZ87ObhHLJTWmtMOimQskBr1/pbdWjP75
-         MJzrlD6TnptUtEaImuH9sNuPt4YyZY3kI/HTJ2Up2RSXirs4GYPSz0Fge7nicdEz/GXA
-         QFVOLgiLVF0FCpbcs/Es3B5UpiA2WBiJE6tQOqg0k9esI9Xo0rtm0BDS8NTQRvTC52rI
-         T2MUGuFN/USBlEWEvvu8A7v1EurJ9jMydykR8leyxtxK7z6sN0sRdwm799HfTLh1wBbA
-         R09IycWVjec5eWiT1qKk9BmSI0iz5xpu/HVR2h+lOnPH5CgksqfwPiBu4DvmfixZXtoV
-         hKKQ==
-X-Gm-Message-State: AOAM5312P1nLMyt2BTLykHafZ924Fj7G0tJKVbPDOAEitDbdmca0qxiM
-        EkRPKMopYj89LiZqofOeAGvu6VLLt0g0JqaA9SA=
-X-Google-Smtp-Source: ABdhPJwNoxButZwgH4SDPteHjBuwwMLD1bqxVYkjDcQmRozmQtDNJ0fFE+TRSmeEzroqrNyEaK173xc8SAa+z83VsXs=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr7897454ote.107.1589801068351;
- Mon, 18 May 2020 04:24:28 -0700 (PDT)
+        Mon, 18 May 2020 07:26:17 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 388E4C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 04:26:17 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jaduR-0008K2-H1; Mon, 18 May 2020 13:26:15 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 03E0E100606; Mon, 18 May 2020 13:26:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Missing CLOCK_BOOTTIME_RAW?
+In-Reply-To: <20200518111103.sj73h5j3r75zv2wp@pali>
+References: <20200508213122.f7srcd2gnduamtvs@pali> <87zhah4evs.fsf@nanos.tec.linutronix.de> <20200518111103.sj73h5j3r75zv2wp@pali>
+Date:   Mon, 18 May 2020 13:26:14 +0200
+Message-ID: <87ftbxxz55.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200515171754.GF19423@ninjato>
-In-Reply-To: <20200515171754.GF19423@ninjato>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 18 May 2020 13:24:15 +0200
-Message-ID: <CAMuHMdXgRgP8acDzn-p31wmomEbzFXJ2i2vOW1ppuHP-K6-UpQ@mail.gmail.com>
-Subject: Re: [PATCH 05/17] mmc: renesas_sdhi_sys_dmac: Add support for r8a7742 SoC
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram, Prabhakar,
-
-On Fri, May 15, 2020 at 7:17 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> On Fri, May 15, 2020 at 04:08:45PM +0100, Lad Prabhakar wrote:
-> > Add support for r8a7742 SoC. Renesas RZ/G1H (R8A7742) SDHI is identical to
-> > the R-Car Gen2 family.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Pali Rohár <pali@kernel.org> writes:
+> On Saturday 09 May 2020 11:49:27 Thomas Gleixner wrote:
+>> Sure, but what's the problem? The adjustemt is done to make the observed
+>> time as correct as possible.
 >
-> I think we can skip this because of the generic fallback? The other
+> Yes. But correction may take lot of time, e.g. also more then one day.
+>
+> So during this period when correction is in progress, measuring time
+> difference via CLOCK_MONITONIC will have incorrect results.
+>
+> It already happened for me, system clock was shifted by one hour and
+> chronyd started adjustment, it slow down system clock. 6 real hours
+> passed and via system clock was measured time difference only about
+> 5 hours and 20 minutes (correction was still in progress as system
+> clock at that time was still shifted by about 20 minutes).
 
-Agreed.
+System clock shifted by one hour? You mean DST change? If chronyd
+adjusts that by smoothing the frequency, that's just broken and really
+not the kernel's problem.
 
-> entries come from a time when we had a different policy IIRC.
+Thanks,
 
-Indeed.  Commit c16a854e4463078a ("mmc: renesas_sdhi: Add r8a7743/5
-support") predated commit d6dc425ae595e140 ("mmc: renesas_sdhi:
-implement R-Car Gen[123] fallback compatibility strings").
-
-> > --- a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-> > +++ b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-> > @@ -75,6 +75,7 @@ static const struct of_device_id renesas_sdhi_sys_dmac_of_match[] = {
-> >       { .compatible = "renesas,sdhi-r7s72100", .data = &of_rz_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7778", .data = &of_rcar_gen1_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7779", .data = &of_rcar_gen1_compatible, },
-> > +     { .compatible = "renesas,sdhi-r8a7742", .data = &of_rcar_gen2_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7743", .data = &of_rcar_gen2_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7745", .data = &of_rcar_gen2_compatible, },
-> >       { .compatible = "renesas,sdhi-r8a7790", .data = &of_rcar_gen2_compatible, },
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+        tglx
