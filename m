@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-10.8 required=3.0
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F11C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A94120888
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA7D2081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 21:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgERV2s (ORCPT
+        id S1727896AbgERVc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 17:28:48 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:49621 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERV2r (ORCPT
+        Mon, 18 May 2020 17:32:57 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:53601 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgERVc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 17:28:47 -0400
+        Mon, 18 May 2020 17:32:57 -0400
 X-Originating-IP: 90.65.91.255
 Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 03753C000A;
-        Mon, 18 May 2020 21:28:44 +0000 (UTC)
-Date:   Mon, 18 May 2020 23:28:44 +0200
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 36E80FF805;
+        Mon, 18 May 2020 21:32:55 +0000 (UTC)
+Date:   Mon, 18 May 2020 23:32:54 +0200
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: <soc.lore.kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
@@ -34,8 +34,8 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
 Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: at91: DT for 5.8
-Message-ID: <20200518212844.GA26356@piout.net>
+Subject: [GIT PULL] ARM: at91: defconfig for 5.8
+Message-ID: <20200518213254.GA26598@piout.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -46,9 +46,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Arnd, Olof,
 
-Despite a new evaluation board being added this cycle, the move of the
-flexcom nodes to the sama5d2 dtsi and the switch to the new PMC bindings
-result in the deletion of about 100 lines.
+Very little is added to the sama5_defconfig: support for the gpios from
+the security module and a pmic for the SAMA5D27 WLSOM1.
 
 The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
@@ -56,102 +55,24 @@ The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.8-dt
+  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.8-defconfig
 
-for you to fetch changes up to 88d801aec6e971c15a0bfb4d46d02476dde9e8aa:
+for you to fetch changes up to 6a2ab88ca789804cad89d558625147edd26a1d37:
 
-  ARM: dts: at91: sama5d2_xplained: Add aliases for the dedicated I2C IPs (2020-05-18 16:51:58 +0200)
-
-----------------------------------------------------------------
-AT91 DT for 5.8
-
- - New board: Microchip SAMA5D2 Industrial Connectivity Platform
- - All SoCs are now converted to the new PMC device tree binding
- - sama5d2 flexcom nodes are now fully described in sama5d2.dtsi
+  ARM: configs: at91: sama5: enable MCP16502 regulator (2020-04-13 13:00:16 +0200)
 
 ----------------------------------------------------------------
-Alexandre Belloni (4):
-      ARM: dts: at91: sama5d3: switch to new clock bindings
-      ARM: dts: at91: at91sam9n12: switch to new clock bindings
-      ARM: dts: at91: at91sam9g45: switch to new clock bindings
-      ARM: dts: at91: rm9200: switch to new clock bindings
+AT91 defconfig for 5.8
 
-Claudiu Beznea (1):
-      ARM: dts: at91: sama5d27_som1: Add SPI NOR flash mapping
+ - Add PIOBU and MCP16502 regulator to sama5 defconfig
 
-Codrin Ciubotariu (2):
-      dt-bindings: ARM: Document SAMA5D2-ICP
-      ARM: dts: at91: Configure I2C SCL gpio as open drain
+----------------------------------------------------------------
+Razvan Stefanescu (2):
+      ARM: configs: at91: sama5: enable SAMA5D2_PIOBU
+      ARM: configs: at91: sama5: enable MCP16502 regulator
 
-Cristian Birsan (1):
-      ARM: dts: at91: sama5d2-icp: add SAMA5D2-ICP
-
-Cyrille Pitchen (1):
-      ARM: dts: at91: sama5d2_xplained: Add QSPI0 + SPI NOR memory nodes
-
-Ludovic Desroches (6):
-      ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node description
-      ARM: dts: at91: sama5d2_ptc_ek: fix vbus pin
-      ARM: dts: at91: sama5d2_ptc_ek: add PB_USER as wakeup source
-      ARM: dts: at91: sama5d27_som1_ek: enable i2c0
-      ARM: dts: at91: sama5d27_som1_ek: add an alias for i2c0
-      ARM: dts: at91: at91-sama5d27_som1: Enable eeprom device
-
-Tudor Ambarus (20):
-      ARM: dts: at91: sam9x60ek: Use quad mode in the spi-nor flash
-      ARM: dts: at91: sam9x60ek: Add sdmmc1 node
-      ARM: dts: at91: sama5d27_wlsom1: Add alias for i2c0
-      ARM: dts: at91: sama5d2: Fix the label numbering for flexcom functions
-      ARM: dts: at91: sama5d2: Move flx4 definitions in the SoC dtsi
-      ARM: dts: at91: sama5d2: Move flx3 definitions in the SoC dtsi
-      ARM: dts: at91: sama5d2: Move flx2 definitions in the SoC dtsi
-      ARM: dts: at91: sama5d2: Move flx1 definitions in the SoC dtsi
-      ARM: dts: at91: sama5d2: Move flx0 definitions in the SoC dtsi
-      ARM: dts: at91: sama5d2: Specify the FIFO size for the Flexcom UART
-      ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and UART flx4 functions
-      ARM: dts: at91: sama5d2: Add DMA bindings for the flx3 SPI function
-      ARM: dts: at91: sama5d2: Add DMA bindings for the flx1 I2C function
-      ARM: dts: at91: sama5d2: Add DMA bindings for the SPI and I2C flx0 functions
-      ARM: dts: at91: sama5d2: Remove i2s and tcb aliases from SoC dtsi
-      ARM: dts: at91: sama5d2: Add missing flexcom definitions
-      ARM: dts: at91: sama5d2_xplained: Add alias for DBGU
-      ARM: dts: at91: sama5d2_ptc_ek: Add comments to describe the aliases
-      ARM: dts: at91: sama5d2_xplained: Describe the flx0 I2C function
-      ARM: dts: at91: sama5d2_xplained: Add aliases for the dedicated I2C IPs
-
- .../devicetree/bindings/arm/atmel-at91.yaml        |   7 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/at91-dvk_su60_somc.dtsi          |   2 +-
- arch/arm/boot/dts/at91-kizbox3-hs.dts              |   4 +-
- arch/arm/boot/dts/at91-kizbox3_common.dtsi         |  48 +-
- arch/arm/boot/dts/at91-sam9x60ek.dts               |  23 +
- arch/arm/boot/dts/at91-sama5d27_som1.dtsi          |  54 ++
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts        |  64 +-
- arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi        |  16 +-
- arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts      |  12 -
- arch/arm/boot/dts/at91-sama5d2_icp.dts             | 767 +++++++++++++++++++++
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts          |  25 +-
- arch/arm/boot/dts/at91-sama5d2_xplained.dts        | 118 +++-
- arch/arm/boot/dts/at91-wb50n.dtsi                  |   4 -
- arch/arm/boot/dts/at91rm9200.dtsi                  | 296 +-------
- arch/arm/boot/dts/at91sam9g45.dtsi                 | 338 +--------
- arch/arm/boot/dts/at91sam9m10g45ek.dts             |   4 +-
- arch/arm/boot/dts/at91sam9n12.dtsi                 | 324 +--------
- arch/arm/boot/dts/at91sam9n12ek.dts                |   2 +-
- arch/arm/boot/dts/sama5d2.dtsi                     | 295 +++++++-
- arch/arm/boot/dts/sama5d3.dtsi                     | 430 ++----------
- arch/arm/boot/dts/sama5d3_can.dtsi                 |  20 +-
- arch/arm/boot/dts/sama5d3_emac.dtsi                |   8 +-
- arch/arm/boot/dts/sama5d3_gmac.dtsi                |  11 +-
- arch/arm/boot/dts/sama5d3_lcd.dtsi                 |  19 +-
- arch/arm/boot/dts/sama5d3_mci2.dtsi                |  11 +-
- arch/arm/boot/dts/sama5d3_tcb1.dtsi                |  12 +-
- arch/arm/boot/dts/sama5d3_uart.dtsi                |  20 +-
- arch/arm/boot/dts/sama5d3xmb.dtsi                  |   6 +-
- arch/arm/boot/dts/sama5d3xmb_cmp.dtsi              |   6 +-
- arch/arm/boot/dts/sama5d4.dtsi                     |   6 +-
- 31 files changed, 1429 insertions(+), 1524 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91-sama5d2_icp.dts
+ arch/arm/configs/sama5_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
 -- 
 Alexandre Belloni, Bootlin
