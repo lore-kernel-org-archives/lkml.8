@@ -2,51 +2,56 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70729C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD9420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D93F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826671;
-	bh=krDD4ztRtlpneNTbB+Wy4C8g2LMKXTuwNJpmlDzaQhw=;
+	s=default; t=1589826676;
+	bh=X4pfsZFG/GXb7yKk7eiqDfPfsrLUvS8kWjXq2j952qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgL6HyEA9gOgp48VFe5FRqChv8u49RkWNCLvz9uY6guMlREnTVT/f5fhq0uPMqzg7
-	 uFMxnX49qZ18oK3+09JoU6R3kJ1wDKFEcu0OMlvm6mKd7Uhf8JsJzKnusMTb+Y2BMB
-	 3xnKmSAY+MEEHQMKxXuIWMAVqMUXhsn3eOSU3xcI=
+	b=xDzUBy8eGT0aYATBBUTN6JdbKTsRk0osTzg3ejgwZFDhRds5DsiC3VQ9BoGJjGOC/
+	 +zpkHa6GIO8JvEBVzn8jG9KUgslZZUNLzd1dxkKSVdWydAsCrWkguZuL0uOVfDjDt4
+	 3ul9CeuWKjDobqf8ZMjfBp3uunNGasLOHz7V6eTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbgERRkD (ORCPT
+        id S1728888AbgERRjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34960 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:39:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbgERRj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:56 -0400
+        id S1728857AbgERRjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55F312083E;
-        Mon, 18 May 2020 17:39:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6349420849;
+        Mon, 18 May 2020 17:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823595;
-        bh=krDD4ztRtlpneNTbB+Wy4C8g2LMKXTuwNJpmlDzaQhw=;
+        s=default; t=1589823580;
+        bh=X4pfsZFG/GXb7yKk7eiqDfPfsrLUvS8kWjXq2j952qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1fMFdYXRSVEC4QcQoyUeOj3+tftt6Za6wiZkEjSArLChlKFH+8W/xEwH86y8dzS4x
-         22gr/aqc7TuJ2dsuurumey3T6tMC+Q6h6q7km684NZqFE+BP4wKgtUwMMOBnoQ6ta6
-         1ZPqrNy7EuPK1eGMK6YSCMVy3+Q/hfxIBLLrRP/k=
+        b=fdO71+hHGG3W20BSrxRXN9R3n4lXgR44T/mx5XhRPsvnvq6Pgu+cBeAdrTzZz+fwt
+         fTYsc+tHBkCaen8t4G19Xc90hIQZHtp3hl8magg1YHfmsetdFbgO0V9/DFmxrOEI7z
+         V3veKKiWBd9qFX12EIU7bOsgL3VQZblFb9MgMg1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 44/86] dmaengine: mmp_tdma: Reset channel error on release
-Date:   Mon, 18 May 2020 19:36:15 +0200
-Message-Id: <20200518173459.426322918@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Alex Estrin <alex.estrin@intel.com>,
+        Feras Daoud <ferasda@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 12/86] Revert "IB/ipoib: Update broadcast object if PKey value was changed in index 0"
+Date:   Mon, 18 May 2020 19:35:43 +0200
+Message-Id: <20200518173452.990204365@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -59,41 +64,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Alex Estrin <alex.estrin@intel.com>
 
-[ Upstream commit 0c89446379218698189a47871336cb30286a7197 ]
+commit 612601d0013f03de9dc134809f242ba6da9ca252 upstream.
 
-When a channel configuration fails, the status of the channel is set to
-DEV_ERROR so that an attempt to submit it fails. However, this status
-sticks until the heat end of the universe, making it impossible to
-recover from the error.
+commit 9a9b8112699d will cause core to fail UD QP from being destroyed
+on ipoib unload, therefore cause resources leakage.
+On pkey change event above patch modifies mgid before calling underlying
+driver to detach it from QP. Drivers' detach_mcast() will fail to find
+modified mgid it was never given to attach in a first place.
+Core qp->usecnt will never go down, so ib_destroy_qp() will fail.
 
-Let's reset it when the channel is released so that further use of the
-channel with correct configuration is not impacted.
+IPoIB driver actually does take care of new broadcast mgid based on new
+pkey by destroying an old mcast object in ipoib_mcast_dev_flush())
+....
+	if (priv->broadcast) {
+		rb_erase(&priv->broadcast->rb_node, &priv->multicast_tree);
+		list_add_tail(&priv->broadcast->list, &remove_list);
+		priv->broadcast = NULL;
+	}
+...
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Link: https://lore.kernel.org/r/20200419164912.670973-5-lkundrak@v3.sk
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+then in restarted ipoib_macst_join_task() creating a new broadcast mcast
+object, sending join request and on completion tells the driver to attach
+to reinitialized QP:
+...
+if (!priv->broadcast) {
+...
+	broadcast = ipoib_mcast_alloc(dev, 0);
+...
+	memcpy(broadcast->mcmember.mgid.raw, priv->dev->broadcast + 4,
+	       sizeof (union ib_gid));
+	priv->broadcast = broadcast;
+...
+
+Fixes: 9a9b8112699d ("IB/ipoib: Update broadcast object if PKey value was changed in index 0")
+Cc: stable@vger.kernel.org
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Alex Estrin <alex.estrin@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Reviewed-by: Feras Daoud <ferasda@mellanox.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/dma/mmp_tdma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/ulp/ipoib/ipoib_ib.c |   13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index 3df0422607d59..ac9aede1bfbec 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -364,6 +364,8 @@ static void mmp_tdma_free_descriptor(struct mmp_tdma_chan *tdmac)
- 		gen_pool_free(gpool, (unsigned long)tdmac->desc_arr,
- 				size);
- 	tdmac->desc_arr = NULL;
-+	if (tdmac->status == DMA_ERROR)
-+		tdmac->status = DMA_COMPLETE;
+--- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
+@@ -945,19 +945,6 @@ static inline int update_parent_pkey(str
+ 		 */
+ 		priv->dev->broadcast[8] = priv->pkey >> 8;
+ 		priv->dev->broadcast[9] = priv->pkey & 0xff;
+-
+-		/*
+-		 * Update the broadcast address in the priv->broadcast object,
+-		 * in case it already exists, otherwise no one will do that.
+-		 */
+-		if (priv->broadcast) {
+-			spin_lock_irq(&priv->lock);
+-			memcpy(priv->broadcast->mcmember.mgid.raw,
+-			       priv->dev->broadcast + 4,
+-			sizeof(union ib_gid));
+-			spin_unlock_irq(&priv->lock);
+-		}
+-
+ 		return 0;
+ 	}
  
- 	return;
- }
--- 
-2.20.1
-
 
 
