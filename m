@@ -2,80 +2,166 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DEEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54B0B20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hgKqhTbe"
+	by mail.kernel.org (Postfix) with ESMTP id EBA1E207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgERTk1 (ORCPT
+        id S1728366AbgERTkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:40:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45787 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728333AbgERTk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:40:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589830826;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tG4NW0XrpKeglSu1M3LhtqURiiCPd6FFbzkD+elHvV4=;
-        b=hgKqhTbe8oJUr8lG6xaOpKDqS5ubTWgo5iPHkqUXu6haE/drB72AdYwlk27tAJQ4AVlzup
-        xRRE2CrW6rGpwo2zb8nSiSp4scy66KvOmTxakE3pFkcYQphXr3Z+9XyDMTmiCF/Y6x6nuw
-        9K6LfuA79In2ZHzhzUWuYBZdde1PKIo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396-U05quBLcPiW7lZDGRiusAg-1; Mon, 18 May 2020 15:40:24 -0400
-X-MC-Unique: U05quBLcPiW7lZDGRiusAg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90C0E835B40;
-        Mon, 18 May 2020 19:40:23 +0000 (UTC)
-Received: from [10.10.118.151] (ovpn-118-151.rdu2.redhat.com [10.10.118.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E9ED919634;
-        Mon, 18 May 2020 19:40:22 +0000 (UTC)
-Subject: Re: [PATCH v1 target] target: Add initiatorname to NON_EXISTENT_LUN
- error
-To:     Lance Digby <lance.digby@gmail.com>, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <9b13bb2e1f52f1792cd81850ee95bf3781bb5363.1589759816.git.lance.digby@gmail.com>
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <cc4c1a62-ec8d-e0f4-f0ac-8584ec1d1885@redhat.com>
-Date:   Mon, 18 May 2020 14:40:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 18 May 2020 15:40:43 -0400
+Received: from mga09.intel.com ([134.134.136.24]:62509 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728333AbgERTkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 15:40:43 -0400
+IronPort-SDR: WB8l8ozWCnHeOLi3XqAFNk9h5gqR3A+PdP8SpDoQ/69QJXCh1X3k/Dq4QmTCqqXJIyFZLDrr83
+ nbey5Z89+HhQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 12:40:42 -0700
+IronPort-SDR: FCQwbrmoNEmzkd3AhjNBNBeJvHvlerjbIyby+1tbu20wFou110yI+AoNFVVTvpMwkSEyQf98iV
+ uwHJV3pzkjog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="267632562"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 18 May 2020 12:40:41 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jalcu-0002pt-7p; Tue, 19 May 2020 03:40:40 +0800
+Date:   Tue, 19 May 2020 03:40:06 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ bba413deb1065f1291cb1f366247513f11215520
+Message-ID: <5ec2e496.Nvf13P0/CgQEVToV%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <9b13bb2e1f52f1792cd81850ee95bf3781bb5363.1589759816.git.lance.digby@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/17/20 8:02 PM, Lance Digby wrote:
-> The NON_EXISTENT_LUN error can be written without an error condition
-> on the initiator responsible. Adding the initiatorname to this message
-> will reduce the effort required to fix this when many initiators are
-> supported by a target.
-> 
-> This version ensures the initiator name is also printed on the same
-> message in transport_lookup_tmr_lun for consistency.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: bba413deb1065f1291cb1f366247513f11215520  Merge branch 'core/core'
 
-Reviewed-by: Mike Christie <mchristi@redhat.com>
+elapsed time: 566m
 
+configs tested: 99
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+mips                             allyesconfig
+powerpc                      tqm8xx_defconfig
+arm                       omap2plus_defconfig
+sh                         apsh4a3a_defconfig
+mips                   sb1250_swarm_defconfig
+c6x                        evmc6457_defconfig
+arm                           corgi_defconfig
+mips                     cu1000-neo_defconfig
+mips                           xway_defconfig
+arm                          ixp4xx_defconfig
+arm                            mps2_defconfig
+mips                 pnx8335_stb225_defconfig
+arc                              alldefconfig
+sh                          lboxre2_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200518
+i386                 randconfig-a005-20200518
+i386                 randconfig-a001-20200518
+i386                 randconfig-a003-20200518
+i386                 randconfig-a004-20200518
+i386                 randconfig-a002-20200518
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
