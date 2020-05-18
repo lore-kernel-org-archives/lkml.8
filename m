@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E91AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC1720826
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D4A207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824871;
-	bh=1aBEUp+/e3gYMptFBPvb8F4b1qs5iocbB6uHnnswR5k=;
+	s=default; t=1589824873;
+	bh=raz+isdNy/E92/IIzC/JGNOPqLGNyz1rATIizl4+t6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ei94TnkT6A5WrEsyHyuLnM1RlzcgMEjzVCMO4wmnvNtABsNziGyNVgZMRV/GlRsjb
-	 MIQwjKZFDeaYKWCO9oK6AMuBWCGBlo77z80HcHYNTN32RplWoJOki0oABJc1RNWNJ4
-	 oJ4l+mcfW4K335KO6CqFWJnDG1VcoOFysz+d3q8o=
+	b=qgzEB1QHUsaMPnXmzmXKNbYhRqZdF7XxDyeqRiW4O4Vp3Eiw58KdIAzbnPZAgzpCu
+	 oe9q30Qr5ShVl7TSuGt5+wmrcphbUCMqpFXsuf8xqKTfa5TdJEvna9ubvwYjeabDBS
+	 uOQowbxve+0/BLyFUitjepFfOIP84HvVXT9qGYuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732366AbgERSBK (ORCPT
+        id S1729029AbgERSBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43024 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:01:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731516AbgERSBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:01:02 -0400
+        id S1732358AbgERSBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:01:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59B1820826;
-        Mon, 18 May 2020 18:01:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4103020826;
+        Mon, 18 May 2020 18:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824861;
-        bh=1aBEUp+/e3gYMptFBPvb8F4b1qs5iocbB6uHnnswR5k=;
+        s=default; t=1589824866;
+        bh=raz+isdNy/E92/IIzC/JGNOPqLGNyz1rATIizl4+t6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ic/vSbgdXHgOqT8G4lnmYEFFhK63qAzgxg3kS7d61PlIZLBiOWkZIqlVAL2EOeHIU
-         TrKNwQTx+jxKNe5sw9ORXjd6iNSSBrUa5zGlM3ftgwuWYjx6O++QGlcQA737bfRgl+
-         A0uLshvafsT0EPtFuH54izuE9GKPsMxNB43I1r94=
+        b=ci8+iqAcd4vXrF68qZNWU+BzY/ERBoQCRJtSXLBQv24nGxs5N36qhY71YQJyeXS96
+         fyOL+q8zb1jmEORrEgy1yTo+FZlD2RvssOwZ4I9wRwk4Y6AxCf/YYo8GDWeM4wgtkp
+         ThNLeKXer1+Gky13YTzj0EPRZj4gIwM2p6woCdek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com,
-        syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com,
-        Jarod Wilson <jarod@redhat.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 032/194] net: fix a potential recursive NETDEV_FEAT_CHANGE
-Date:   Mon, 18 May 2020 19:35:22 +0200
-Message-Id: <20200518173534.232518410@linuxfoundation.org>
+Subject: [PATCH 5.6 034/194] net: phy: fix aneg restart in phy_ethtool_set_eee
+Date:   Mon, 18 May 2020 19:35:24 +0200
+Message-Id: <20200518173534.458219948@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -67,66 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit dd912306ff008891c82cd9f63e8181e47a9cb2fb ]
+[ Upstream commit 9de5d235b60a7cdfcdd5461e70c5663e713fde87 ]
 
-syzbot managed to trigger a recursive NETDEV_FEAT_CHANGE event
-between bonding master and slave. I managed to find a reproducer
-for this:
+phy_restart_aneg() enables aneg in the PHY. That's not what we want
+if phydev->autoneg is disabled. In this case still update EEE
+advertisement register, but don't enable aneg and don't trigger an
+aneg restart.
 
-  ip li set bond0 up
-  ifenslave bond0 eth0
-  brctl addbr br0
-  ethtool -K eth0 lro off
-  brctl addif br0 bond0
-  ip li set br0 up
-
-When a NETDEV_FEAT_CHANGE event is triggered on a bonding slave,
-it captures this and calls bond_compute_features() to fixup its
-master's and other slaves' features. However, when syncing with
-its lower devices by netdev_sync_lower_features() this event is
-triggered again on slaves when the LRO feature fails to change,
-so it goes back and forth recursively until the kernel stack is
-exhausted.
-
-Commit 17b85d29e82c intentionally lets __netdev_update_features()
-return -1 for such a failure case, so we have to just rely on
-the existing check inside netdev_sync_lower_features() and skip
-NETDEV_FEAT_CHANGE event only for this specific failure case.
-
-Fixes: fd867d51f889 ("net/core: generic support for disabling netdev features down stack")
-Reported-by: syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com
-Reported-by: syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com
-Cc: Jarod Wilson <jarod@redhat.com>
-Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Reviewed-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: f75abeb8338e ("net: phy: restart phy autonegotiation after EEE advertisment change")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/phy/phy.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -8890,11 +8890,13 @@ static void netdev_sync_lower_features(s
- 			netdev_dbg(upper, "Disabling feature %pNF on lower dev %s.\n",
- 				   &feature, lower->name);
- 			lower->wanted_features &= ~feature;
--			netdev_update_features(lower);
-+			__netdev_update_features(lower);
- 
- 			if (unlikely(lower->features & feature))
- 				netdev_WARN(upper, "failed to disable %pNF on %s!\n",
- 					    &feature, lower->name);
-+			else
-+				netdev_features_change(lower);
- 		}
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -1132,9 +1132,11 @@ int phy_ethtool_set_eee(struct phy_devic
+ 		/* Restart autonegotiation so the new modes get sent to the
+ 		 * link partner.
+ 		 */
+-		ret = phy_restart_aneg(phydev);
+-		if (ret < 0)
+-			return ret;
++		if (phydev->autoneg == AUTONEG_ENABLE) {
++			ret = phy_restart_aneg(phydev);
++			if (ret < 0)
++				return ret;
++		}
  	}
- }
+ 
+ 	return 0;
 
 
