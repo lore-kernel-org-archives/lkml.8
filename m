@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F46C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE33C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3DB520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F602083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824631;
-	bh=xtTsyYfsgItSKEaBHLrJ0+2xE14hvp9SsYBsLBVY7Ds=;
+	s=default; t=1589824634;
+	bh=Q5FvV5cPVWRI5q1Z0YUIdKRP3XU6yINX90WbjAROKSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kUwuZhKhCfXjHs9VeOJ1ZsqAyghmWRGCBS6RJa4QwT7XRwwIbUSMes4J7+WnIxLz/
-	 QXAiZWaYatlI+Nl9JXUEr0QzMWs0Auxg6lV8Rk3OCwvcC4FwcNToOJXqWoqdCFems+
-	 A9/bIEX1RjWk3l2DyV6TcL1uJMjBGcRuN/5IwaD4=
+	b=KBrJbWZXL33Em4tQGLL2fGlqcdVJL/7H5vrxPNSNHreJORAFnMVyv3dCgIJhejmFR
+	 U6dra9Y+7hFYUbQtbk1s6EKLCAF2jSnQmBuHQBP27KP2TM051mMx5M3EWy+CmQLDWd
+	 w08ylueYBY/b7zn7iUrGgpFqv0qb5GxTfsT3vftw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731741AbgERR5K (ORCPT
+        id S1731748AbgERR5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35406 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:57:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731735AbgERR5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:57:05 -0400
+        id S1731729AbgERR5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:57:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94E3920715;
-        Mon, 18 May 2020 17:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FDD220674;
+        Mon, 18 May 2020 17:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824625;
-        bh=xtTsyYfsgItSKEaBHLrJ0+2xE14hvp9SsYBsLBVY7Ds=;
+        s=default; t=1589824622;
+        bh=Q5FvV5cPVWRI5q1Z0YUIdKRP3XU6yINX90WbjAROKSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MLp94sijjGfTfaMx189pJyK/wNlA0DQdKFt3lYd21y6emPMY4N5RIUoAzwkn5CBjr
-         4/gBa+cKTbXRtnb64++zc/BCV183S7/oeVkOYcZjbGue7BF+lngp2cVR2KY6ydELhn
-         GpCpYRY8dTrwFa3soNqyA8nm9MjRJ3rEMnWzT28U=
+        b=GNBSuF3oWYc6Y1tBpzX4wfsDUtTfa2wep3MZNc4Jiq9dL3AApoFyBMXM5l1yJSykK
+         bl2yd+5F2aVNMyOROkb63bZkeF4IBrlv1OlVkgCsFiYYGF+E3SuhZV7zCEaADJkDnE
+         ljIaRSYy7hjaSigsAu8JuGhnYIPkbdizVg8LgagE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
         Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 087/147] RDMA/core: Fix double put of resource
-Date:   Mon, 18 May 2020 19:36:50 +0200
-Message-Id: <20200518173524.410646270@linuxfoundation.org>
+Subject: [PATCH 5.4 086/147] IB/core: Fix potential NULL pointer dereference in pkey cache
+Date:   Mon, 18 May 2020 19:36:49 +0200
+Message-Id: <20200518173524.288487895@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,37 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 50bbe3d34fea74b7c0fabe553c40c2f4a48bb9c3 ]
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-Do not decrease the reference count of resource tracker object twice in
-the error flow of res_get_common_doit.
+[ Upstream commit 1901b91f99821955eac2bd48fe25ee983385dc00 ]
 
-Fixes: c5dfe0ea6ffa ("RDMA/nldev: Add resource tracker doit callback")
-Link: https://lore.kernel.org/r/20200507062942.98305-1-leon@kernel.org
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+The IB core pkey cache is populated by procedure ib_cache_update().
+Initially, the pkey cache pointer is NULL. ib_cache_update allocates a
+buffer and populates it with the device's pkeys, via repeated calls to
+procedure ib_query_pkey().
+
+If there is a failure in populating the pkey buffer via ib_query_pkey(),
+ib_cache_update does not replace the old pkey buffer cache with the
+updated one -- it leaves the old cache as is.
+
+Since initially the pkey buffer cache is NULL, when calling
+ib_cache_update the first time, a failure in ib_query_pkey() will cause
+the pkey buffer cache pointer to remain NULL.
+
+In this situation, any calls subsequent to ib_get_cached_pkey(),
+ib_find_cached_pkey(), or ib_find_cached_pkey_exact() will try to
+dereference the NULL pkey cache pointer, causing a kernel panic.
+
+Fix this by checking the ib_cache_update() return value.
+
+Fixes: 8faea9fd4a39 ("RDMA/cache: Move the cache per-port data into the main ib_port_data")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Link: https://lore.kernel.org/r/20200507071012.100594-1-leon@kernel.org
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/nldev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/cache.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
-index ef4b0c7061e4c..244ebf285fc3f 100644
---- a/drivers/infiniband/core/nldev.c
-+++ b/drivers/infiniband/core/nldev.c
-@@ -1248,10 +1248,10 @@ static int res_get_common_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
+diff --git a/drivers/infiniband/core/cache.c b/drivers/infiniband/core/cache.c
+index 65b10efca2b8c..7affe6b4ae210 100644
+--- a/drivers/infiniband/core/cache.c
++++ b/drivers/infiniband/core/cache.c
+@@ -1542,8 +1542,11 @@ int ib_cache_setup_one(struct ib_device *device)
+ 	if (err)
+ 		return err;
  
- 	has_cap_net_admin = netlink_capable(skb, CAP_NET_ADMIN);
- 	ret = fe->fill_res_func(msg, has_cap_net_admin, res, port);
--	rdma_restrack_put(res);
- 	if (ret)
- 		goto err_free;
+-	rdma_for_each_port (device, p)
+-		ib_cache_update(device, p, true);
++	rdma_for_each_port (device, p) {
++		err = ib_cache_update(device, p, true);
++		if (err)
++			return err;
++	}
  
-+	rdma_restrack_put(res);
- 	nlmsg_end(msg, nlh);
- 	ib_device_put(device);
- 	return rdma_nl_unicast(sock_net(skb->sk), msg, NETLINK_CB(skb).portid);
+ 	return 0;
+ }
 -- 
 2.20.1
 
