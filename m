@@ -6,118 +6,112 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D519720758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AEB20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NwBu0r7w"
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="cZyh3hBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgERQ6d (ORCPT
+        id S1728451AbgERQ65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgERQ6c (ORCPT
+        Mon, 18 May 2020 12:58:57 -0400
+Received: from mail2.candelatech.com ([208.74.158.173]:34494 "EHLO
+        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgERQ64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:58:32 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F64DC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:58:32 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 50so12669078wrc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7UrsBklbWEQlXSIzoleVC5S+OEDveOLRjfhFBfKj/1U=;
-        b=NwBu0r7wl1gpM7daM6EL/QGiMubgwQrMS7DCx8+Wm8Lyg+2vJddtUQcJeERAwQZJL5
-         fPsxNVWNDou4B0PGdUAVuryOhMY0JAn5H7lujgsQObRDL1W/aBlkfInsKn6+u8uvDosc
-         qozNeuLAP3u48HfASCRiEDkctG8WgFnHziKs14NtB8EJyIfB9hPN8qYfBhk5ijnxF764
-         W0k7+ogDFppnKzURVA2wi86cCUAs2twWBridx7yCjgdykjs8UuHNecYybeC2X0kHut/Z
-         p+J/s8zIvyXlFlnM5w4aqPbHCk/waq1N9OgYU74c8WHzHYe28XBAi3kpKL/8WQYf2EWM
-         JpnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7UrsBklbWEQlXSIzoleVC5S+OEDveOLRjfhFBfKj/1U=;
-        b=gSOjNC3Yo9b6NppyUA5yIRW30IE9KCtvvwTIBxcYsailGV7KRXLeRmXje2Z8wKWJ4T
-         cJlhbFmfllsnzhVfCZFzeRdBEDSg+zsdunHR2lRYvbHSiOqX7udcRwzzR1raPgeEzb7u
-         8zSszQMmHR/eDZr18h4+vXTkJ+Q6KjpL2Jx86MgFIyt+rg/feU141H8FXtsiDhnjOnnA
-         F5PhwPkScjMvJ7j8ygpM1YQ/wNGcgejQeZ4aG5ohvwG09qu4oZCsCggGmR5weY9BKrpa
-         8t7zo4WDesKfg5ryO+71XAyPhK/Qy9wb7CdiOmJwUksZeQgfZU1XXlMFIfUBWsXT1cRB
-         X/Qw==
-X-Gm-Message-State: AOAM5337tBlZ1fqUjJOc6jGLdInbaVglF/ziguERCXguCPRiqtRkToeD
-        0Zd+2l+xAH4buQT4/Sga0QCaNg==
-X-Google-Smtp-Source: ABdhPJyz8YyWk+tq57qcErRl35YmZbUh3jm8IYRNJPP4QVZjm2zuQSf2e2RY9yuWYPSrTDhi0GW0MQ==
-X-Received: by 2002:adf:e985:: with SMTP id h5mr21630490wrm.239.1589821111188;
-        Mon, 18 May 2020 09:58:31 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
-        by smtp.googlemail.com with ESMTPSA id j190sm193855wmb.33.2020.05.18.09.58.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 09:58:30 -0700 (PDT)
-Subject: Re: [PATCHv3 00/14] Update omaps to use drivers/clocksource timers
-To:     Tony Lindgren <tony@atomide.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-References: <20200507172330.18679-1-tony@atomide.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <340cdd4a-d996-073f-127d-89ce6c05f221@linaro.org>
-Date:   Mon, 18 May 2020 18:58:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 12:58:56 -0400
+Received: from [192.168.254.4] (unknown [50.34.197.93])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail3.candelatech.com (Postfix) with ESMTPSA id DFE0A13C2B0;
+        Mon, 18 May 2020 09:58:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com DFE0A13C2B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+        s=default; t=1589821136;
+        bh=6ZIoXbMXxw4WcnY1CZ2nowts+dksxVL0SXCsldVPTmw=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=cZyh3hBAu8T8moMyFlKqCPnzpUBdR7y8+DBRg8oaujckvLRpCCDXOWp8OScV1IHQm
+         GLqxMSe21UIlDQO6gJL+/t+/IKiS5KfclPRc/R5dyCipAw9AQAgN7XXp93sgA4xLV1
+         qtLwBDyzpjYQZdanGM+aoyiOwHQFYlvaQT7MSZnQ=
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>
+References: <20200515212846.1347-1-mcgrof@kernel.org>
+ <20200515212846.1347-13-mcgrof@kernel.org>
+ <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+ <20200518165154.GH11244@42.do-not-panic.com>
+Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
+        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
+        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
+        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
+        daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org
+From:   Ben Greear <greearb@candelatech.com>
+Message-ID: <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
+Date:   Mon, 18 May 2020 09:58:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200507172330.18679-1-tony@atomide.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200518165154.GH11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Tony,
 
-On 07/05/2020 19:23, Tony Lindgren wrote:
-> Hi all,
-> 
-> Here's v3 series to udpate omaps to use drivers/clocksource timers for
-> the 32k counter and dmtimer, and to remove the old legacy platform code.
-> Please review and test.
-> 
-> I've updated the timer-ti-dm-systimer.c patch based on the comments from
-> Daniel and Rob, and added support for selecting the preferred timers to
-> use.
-> 
-> Then for merging when folks are happy with this series, Daniel if you
-> can please apply the first three patches into an immutable branch it
-> would be great.
+On 05/18/2020 09:51 AM, Luis Chamberlain wrote:
+> On Sat, May 16, 2020 at 03:24:01PM +0200, Johannes Berg wrote:
+>> On Fri, 2020-05-15 at 21:28 +0000, Luis Chamberlain wrote:> module_firmware_crashed
+>>
+>> You didn't CC me or the wireless list on the rest of the patches, so I'm
+>> replying to a random one, but ...
+>>
+>> What is the point here?
+>>
+>> This should in no way affect the integrity of the system/kernel, for
+>> most devices anyway.
+>
+> Keyword you used here is "most device". And in the worst case, *who*
+> knows what other odd things may happen afterwards.
+>
+>> So what if ath10k's firmware crashes? If there's a driver bug it will
+>> not handle it right (and probably crash, WARN_ON, or something else),
+>> but if the driver is working right then that will not affect the kernel
+>> at all.
+>
+> Sometimes the device can go into a state which requires driver removal
+> and addition to get things back up.
 
-so the clk patch also ?
+It would be lovely to be able to detect this case in the driver/system
+somehow!  I haven't seen any such cases recently, but in case there is
+some common case you see, maybe we can think of a way to detect it?
 
-[ ... ]
+>
+>> So maybe I can understand that maybe you want an easy way to discover -
+>> per device - that the firmware crashed, but that still doesn't warrant a
+>> complete kernel taint.
+>
+> That is one reason, another is that a taint helps support cases *fast*
+> easily detect if the issue was a firmware crash, instead of scraping
+> logs for driver specific ways to say the firmware has crashed.
+
+You can listen for udev events (I think that is the right term),
+and find crashes that way.  You get the actual crash info as well.
+
+Thanks,
+Ben
 
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Ben Greear <greearb@candelatech.com>
+Candela Technologies Inc  http://www.candelatech.com
