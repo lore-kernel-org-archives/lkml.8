@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F943C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBBE820835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A795207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823842;
-	bh=EHKhD3gXwdngNPGPb9pG6smmQeya9nmvVhYi+tzowL8=;
+	s=default; t=1589823847;
+	bh=55PKlhmg1rmfRguUkGNgpg1h9UfCnaM6roGxuu9k3bA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kl/r57XNT9kSIW90C112rcVppuEx73i+XhPrMrfy2uuznBLURsRTVD7L3GDa4YcBY
-	 eTt1l1AXAPX1NaRmbIfH9aZXs+5KvxFLppG0/LFI75/CoqU3KBHZnyz0+ZjhSTt6jn
-	 9s3D78ovBpV2asZF7SxSdaRC5MeX4mWHpAps6Ti8=
+	b=O2mQFBWxJH7HtrjzxT9yPZzAI9U37KL1sEwdut84lzR4YnUB+xuCpybLopslDpghh
+	 hpUg/CKnxmL+DG8te+hiYTmo25pMFJcHcGPRRoextMw5HDmENqX6o0/M7ZqMtBSIRO
+	 fASuayUIGcrrtBRuy9d6O8ZCDC7yGWwJMnLF0Quk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbgERRoC (ORCPT
+        id S1729683AbgERRoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41892 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729657AbgERRn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:43:56 -0400
+        id S1729650AbgERRoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:44:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F76620835;
-        Mon, 18 May 2020 17:43:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F52207C4;
+        Mon, 18 May 2020 17:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823835;
-        bh=EHKhD3gXwdngNPGPb9pG6smmQeya9nmvVhYi+tzowL8=;
+        s=default; t=1589823840;
+        bh=55PKlhmg1rmfRguUkGNgpg1h9UfCnaM6roGxuu9k3bA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZbG6t32H+ehh0sRe1DVqczC5c5rnjoyuqchDVSS9vy6n/5uM13jQtSrWDuDOvlRL
-         t5jwUg69UGkADTeg7ydVPSGHIZ7U+IkpFcOK4N44ImRk6COt6wlhIpcE24b6dmaaci
-         tjYxbbdJ4m+lYhaQgtb8DBfle1Cejfk2BggCnszU=
+        b=MeHs8rx51KjpLOeGLfBxFioS3orUU6j2CSay1DozoCbChJywlgKCCmz9snO9MUwaF
+         LfVXiL52tr45QpJW3xGzbZaiRnhd6hQlhBKlrmr0p0p3X0PCd/nY4RFa8PTdkCBxTt
+         q+cAICmtfaFPawRxwTKaPo6LGXBT26BFuUyWaqAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Grace Kao <grace.kao@intel.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 54/90] pinctrl: cherryview: Add missing spinlock usage in chv_gpio_irq_handler
-Date:   Mon, 18 May 2020 19:36:32 +0200
-Message-Id: <20200518173502.111936595@linuxfoundation.org>
+Subject: [PATCH 4.9 56/90] netfilter: conntrack: avoid gcc-10 zero-length-bounds warning
+Date:   Mon, 18 May 2020 19:36:34 +0200
+Message-Id: <20200518173502.512499313@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -62,47 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grace Kao <grace.kao@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 69388e15f5078c961b9e5319e22baea4c57deff1 ]
+[ Upstream commit 2c407aca64977ede9b9f35158e919773cae2082f ]
 
-According to Braswell NDA Specification Update (#557593),
-concurrent read accesses may result in returning 0xffffffff and write
-instructions may be dropped. We have an established format for the
-commit references, i.e.
-cdca06e4e859 ("pinctrl: baytrail: Add missing spinlock usage in
-byt_gpio_irq_handler")
+gcc-10 warns around a suspicious access to an empty struct member:
 
-Fixes: 0bd50d719b00 ("pinctrl: cherryview: prevent concurrent access to GPIO controllers")
-Signed-off-by: Grace Kao <grace.kao@intel.com>
-Reported-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+net/netfilter/nf_conntrack_core.c: In function '__nf_conntrack_alloc':
+net/netfilter/nf_conntrack_core.c:1522:9: warning: array subscript 0 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[0]'} [-Wzero-length-bounds]
+ 1522 |  memset(&ct->__nfct_init_offset[0], 0,
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from net/netfilter/nf_conntrack_core.c:37:
+include/net/netfilter/nf_conntrack.h:90:5: note: while referencing '__nfct_init_offset'
+   90 |  u8 __nfct_init_offset[0];
+      |     ^~~~~~~~~~~~~~~~~~
+
+The code is correct but a bit unusual. Rework it slightly in a way that
+does not trigger the warning, using an empty struct instead of an empty
+array. There are probably more elegant ways to do this, but this is the
+smallest change.
+
+Fixes: c41884ce0562 ("netfilter: conntrack: avoid zeroing timer")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/net/netfilter/nf_conntrack.h | 2 +-
+ net/netfilter/nf_conntrack_core.c    | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index e8c08eb975301..d1a99b2e2d4c3 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1509,11 +1509,15 @@ static void chv_gpio_irq_handler(struct irq_desc *desc)
- 	struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	unsigned long pending;
-+	unsigned long flags;
- 	u32 intr_line;
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index b57a9f37c297b..7befec513295d 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -103,7 +103,7 @@ struct nf_conn {
+ 	struct hlist_node	nat_bysource;
+ #endif
+ 	/* all members below initialized via memset */
+-	u8 __nfct_init_offset[0];
++	struct { } __nfct_init_offset;
  
- 	chained_irq_enter(chip, desc);
+ 	/* If we were expected by an expectation, this will be it */
+ 	struct nf_conn *master;
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 1bdae8f188e1f..d507d0fc7858a 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -1124,9 +1124,9 @@ __nf_conntrack_alloc(struct net *net,
+ 	*(unsigned long *)(&ct->tuplehash[IP_CT_DIR_REPLY].hnnode.pprev) = hash;
+ 	ct->status = 0;
+ 	write_pnet(&ct->ct_net, net);
+-	memset(&ct->__nfct_init_offset[0], 0,
++	memset(&ct->__nfct_init_offset, 0,
+ 	       offsetof(struct nf_conn, proto) -
+-	       offsetof(struct nf_conn, __nfct_init_offset[0]));
++	       offsetof(struct nf_conn, __nfct_init_offset));
  
-+	raw_spin_lock_irqsave(&chv_lock, flags);
- 	pending = readl(pctrl->regs + CHV_INTSTAT);
-+	raw_spin_unlock_irqrestore(&chv_lock, flags);
-+
- 	for_each_set_bit(intr_line, &pending, pctrl->community->nirqs) {
- 		unsigned irq, offset;
+ 	nf_ct_zone_add(ct, zone);
  
 -- 
 2.20.1
