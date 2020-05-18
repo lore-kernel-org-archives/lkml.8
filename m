@@ -2,107 +2,99 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D776C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0365320787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AGCeSWw1"
+	by mail.kernel.org (Postfix) with ESMTP id CF524207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:03:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589789010;
+	bh=mmzwWq+x+YwuOlGAZGoYiIL6vmZz6USIebAEuTVHsoI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2hQfUVRuh3H16g1CZKizi124U0xTPVVTxecTezBrHLRWr0/KXTHeFVS17Ve1BGFWP
+	 omccm5P1i8HZvtuQV48BELnzWmYy0pmIQO6I8Seit/3t7gbz3wG+VrkcijpQWRalGP
+	 Ewu8An5aOTjOjy/supCNF4/KOYH3AsSIFVV2lWog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgERICJ (ORCPT
+        id S1727823AbgERIDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgERICI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:02:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA48EC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OliYoPmApMwDOHWsUxWzzlLoF4O4orV+YLS9RaxjrMw=; b=AGCeSWw1H7TP4HeQRRRncdVmin
-        gN/Q0QiXiisyOOaP2xe8tzMKvo7i2TYWtsGZef48hP4qeBj5G3s3GSVX4IfNpWwDrFcCnBKSL6Y+e
-        VWXRhlRAPHo9FyLbdwFQZ7d87AB80BppaTyhtNLvX0L55U5zIt7vH8Jxbz6dfNyP6IbCEFjcNcp6E
-        TwLtHg6hadv20BwucTHbt37Ki/CZhk/dV4kyZ+RVKlOy9wUUT1gWisClaifFVBPal5xFL5apXaiX6
-        ZNhsgDf2Byw/3JgnGBboOYDvl4ThYChij6t/zqOTAH6614tdSHq+0Id77u4l9uENdg43xNihknduH
-        EoHbTPKA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jaaiO-0004iF-AJ; Mon, 18 May 2020 08:01:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 18 May 2020 04:03:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbgERID3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 04:03:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B2657306089;
-        Mon, 18 May 2020 10:01:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 51982200CB610; Mon, 18 May 2020 10:01:33 +0200 (CEST)
-Date:   Mon, 18 May 2020 10:01:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>
-Subject: Re: [patch V6 04/37] x86: Make hardware latency tracing explicit
-Message-ID: <20200518080133.GI2940@hirez.programming.kicks-ass.net>
-References: <20200515234547.710474468@linutronix.de>
- <20200515235124.783722942@linutronix.de>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3654A20787;
+        Mon, 18 May 2020 08:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589789009;
+        bh=mmzwWq+x+YwuOlGAZGoYiIL6vmZz6USIebAEuTVHsoI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LUbxTyMJoLhlFyJf6S+Z4mA1VGurHEXkQR8E3CWtDnlF4QNEWJ13lsZRMgaSbcNT3
+         TYdgn3nLl4KA894AygpL2ERKc75sdjqujxr8PuA9DYtuPtr4tTqrUGsRR+B3r826Q1
+         XnoFtKY/VztwzbA1h2Ewjxcl3BKSvC6zacF1ry4M=
+Date:   Mon, 18 May 2020 10:03:27 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] driver core: Fix memory leak when adding
+ SYNC_STATE_ONLY device links
+Message-ID: <20200518080327.GA3126260@kroah.com>
+References: <20200516080718.166676-1-saravanak@google.com>
+ <CAGETcx8Ro_tsmYEQwzZKsm2xzimw=MBcChbSW5Nx9arUni53wQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515235124.783722942@linutronix.de>
+In-Reply-To: <CAGETcx8Ro_tsmYEQwzZKsm2xzimw=MBcChbSW5Nx9arUni53wQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 01:45:51AM +0200, Thomas Gleixner wrote:
-> --- a/arch/x86/kernel/nmi.c
-> +++ b/arch/x86/kernel/nmi.c
-> @@ -334,6 +334,7 @@ static noinstr void default_do_nmi(struc
->  	__this_cpu_write(last_nmi_rip, regs->ip);
->  
->  	instrumentation_begin();
-> +	ftrace_nmi_handler_enter();
->  
->  	handled = nmi_handle(NMI_LOCAL, regs);
->  	__this_cpu_add(nmi_stats.normal, handled);
-> @@ -420,6 +421,7 @@ static noinstr void default_do_nmi(struc
->  		unknown_nmi_error(reason, regs);
->  
->  out:
-> +	ftrace_nmi_handler_exit();
->  	instrumentation_end();
->  }
+On Mon, May 18, 2020 at 12:48:42AM -0700, Saravana Kannan wrote:
+> On Sat, May 16, 2020 at 1:07 AM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
+> > core: Add device link support for SYNC_STATE_ONLY flag"),
+> > device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
+> > device link to the supplier's and consumer's "device link" list. So the
+> > "device link" is lost forever from driver core if the caller didn't keep
+> > track of it (typically isn't expected to).
+> >
+> > If the same SYNC_STATE_ONLY device link is created again using
+> > device_link_add(), instead of returning the pointer to the previously
+> > created device link, a new device link is created and returned. This can
+> > cause memory leaks in conjunction with fw_devlinks.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> 
+> Greg/Rafael,
+> 
+> This patch causes a warning for SYNC_STATE_ONLY links because they
+> allow consumers to probe before suppliers but the device link
+> status/state change code wasn't written with that possibility in mind.
+> So I need to fix up that warning or state change code.
 
-Yeah, so I'm confused about this and the previous patch too. Why not
-do just this? Remove that ftrace_nmi_handler.* crud from
-nmi_{enter,exit}() and stick it here? Why do we needs the
-nmi_{enter,exit}_notrace() thing?
+What type of warning happens?
+
+> Depending on how urgent you think memory leak fixes are, you can take
+> it as is for now and I can send a separate patch to fix the
+> warning/state change code later. Or if we can sit on this memory leak
+> for a week, I might be able to fix the warning before then.
+
+memory leaks are not ok, but neither is adding runtime warnings.  Any
+chance we can't just get a fix for both?  :)
+
+thanks,
+
+greg k-h
