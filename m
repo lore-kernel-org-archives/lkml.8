@@ -2,91 +2,90 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5715BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C76C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B739206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B054420756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NnbKbGQl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ozieOzdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgEROnt (ORCPT
+        id S1728109AbgEROnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59882 "EHLO
+        Mon, 18 May 2020 10:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbgEROns (ORCPT
+        with ESMTP id S1726997AbgEROnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:43:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE92C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:43:48 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w10so10156589ljo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 07:43:48 -0700 (PDT)
+        Mon, 18 May 2020 10:43:50 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD13C061A0C;
+        Mon, 18 May 2020 07:43:50 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id x27so8161961lfg.9;
+        Mon, 18 May 2020 07:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vmKMl5YPAbtYvThGAufK7+pRDXytMF6DEwy6+OdOT6c=;
-        b=NnbKbGQluk5lNt1OMh91AzLf43ctbuCx11Qrf3/SH8c37zea2KCW1nBzzZxOP6eBMJ
-         mNikiWnBzqw1Qh5gemWUCvWkJrCIW8yDSnkDx8R6ZYBzKq+OLJjZPeFz2G9mgUvlkVTM
-         dm8UA+SmF8OQXRg6DdCXiTcqKrEVyEYP7SLPKT2yHm+RCB4cGu3cFPb2AjVfi0QY5rUq
-         qAGDKXTutca8F5XEP0TqE545HEJbER9IgNbvIFzIa9jPi0OuqeYk/x+vJdTSoeTUygoI
-         8E5aJEpfXrwXeNyCuMqf4Iw1FJkWkKCQGV1kAlYV1sACiLyt3C6WFh/ySD2nZG5gBeFu
-         wwUg==
+        bh=DyWQUbdQsaHneMIkUnV+0Uk+0v8VHubO0aOYCQH2OTE=;
+        b=ozieOzdt8X9dRrNZ2ZBFb/NJ0RGMHbQ3G0pKcrAI4K8deYDIHTwEHkizIvfUP2PJf3
+         0jgF4HQmgdaYp1xOhtyN3xLe0Ntm40NsHOIxwe56JxpTa30T4cZvOVlwDhOFBXDOGate
+         Wpenob7UAHBnLuJQ/4BT8tbW1BTo9qk//+WZ1zsA50SUULGQ7H9xeU9IKiQfCwOB+6jq
+         qWuBcMqRn9aVcwpJRUSyfmr2db/NuDRbd1ElsaN/e8NsTaPFme/pjzrcBfrmW0ZESFoh
+         ia6R8Yrf92SS6WwoRdKM+mBeNbDJFizblaBIIi/dWxeEZbpJHHWknoLXa7chPAl+QRsr
+         o9Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vmKMl5YPAbtYvThGAufK7+pRDXytMF6DEwy6+OdOT6c=;
-        b=g163u/S98qYSXe3I9+YL6e3zcTIIgNSd22ia6Qw6AqrSqgHB3nfVtwPEKwWsfES6Sm
-         1/ZYtfxiuBtDc4txQ8mHhfVcb9JxuyghTmBfIWJ0iULSNcdjRDdT8tdnYrFwVOAm9ic5
-         sL4GKN4CnzrR+GDg0B2znPKFpmXVs0eu6epLKOIsWWRdeiGRNWFFJenUS9pVTO4QNACL
-         +JOeuCVZonwFjmfoxAzdWo+cd5Y5ShRzkBNWd/NnuLymXAudQ/lwN1P7hN5tT+9TgjY7
-         FR2qiHob4tRG33kGwZ60jp77STLUMUOHYDEeaeP8DZR1wj6UsruLm5r1scNWHfKPRraF
-         1ZKQ==
-X-Gm-Message-State: AOAM533qlH+HcWzWC9ufUeu6nkGD2cLcoiX6BuZ3qXj9ILywc3P3lSa7
-        4NHrc+kHcA75Ss/OL0hwiLwGqePRyM3XcxIa6DEQIA==
-X-Google-Smtp-Source: ABdhPJxtr0BKnKjn6pCHBXg0CBH0lcE95cP/SI2TsQx+b5KMUXKtBPY9ZvGp2Yty+kEdByTnUauiLd0kc/yHpxl0ygk=
-X-Received: by 2002:a2e:8e8c:: with SMTP id z12mr2985329ljk.221.1589813026603;
- Mon, 18 May 2020 07:43:46 -0700 (PDT)
+        bh=DyWQUbdQsaHneMIkUnV+0Uk+0v8VHubO0aOYCQH2OTE=;
+        b=K1bCv8TT+DcDU1dW1O0p0zlW9xQrwxoVt2cJSoKL3p+ntW1YrMYPQIRvVj3bxZrgWO
+         7TLr/7PIXWulpFMqJF0P3aKmDY5NnH+9yQCOENkm5Qw5XYQmf+BQXXmnVLq6sFFVywBr
+         KrSOyp4UGTP63Ohh/32Q+11WmL4iLVIcrY296b0DZicGw0e19ueJ4x2x2ssRy+4x40Im
+         3Zzh/zKs7URhjOPxsGdjvVVDyKeY6xZQ0nc7pPMtXHO77A/V42R6Sk3lcaXNqbB4AdSA
+         DVNxWhtPFbV7tzwMPkrQAesMWXJarviyOlRN6rdn1P6zIFbUujPuRvdH4nOZU/876XTU
+         yVig==
+X-Gm-Message-State: AOAM532wEhQisodktmxy2MNsOFPJkskDQ4IGm8ZBnlmBqCdzdzE4jY3i
+        qrPYz05m0bf6dT8bXzX5WzD2k+9LhBNW8CKV7MHrzlqV
+X-Google-Smtp-Source: ABdhPJzqZ8nVo/dLSyrZUSSg9UbXrWgh7ZRtGhpGbCTSwOmErjkT5zwNhl9/wuvY2EmNrcCww0AbHYRzQN6W515PhCs=
+X-Received: by 2002:a19:c6c2:: with SMTP id w185mr10282694lff.69.1589813028498;
+ Mon, 18 May 2020 07:43:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200518055457.12302-1-keescook@chromium.org> <20200518055457.12302-2-keescook@chromium.org>
- <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
-In-Reply-To: <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 18 May 2020 16:43:20 +0200
-Message-ID: <CAG48ez1FspvvypJSO6badG7Vb84KtudqjRk1D7VyHRm06AiEbQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
+References: <1589810819-19851-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1589810819-19851-1-git-send-email-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 18 May 2020 11:45:07 -0300
+Message-ID: <CAOMZO5BeBcvmAwEJTUhHSn=_chx7OVkkxj2oB+50hGH-7H7SfA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clock: Convert i.MX7D clock to json-schema
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Frank Li <Frank.Li@freescale.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 3:03 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-> Also - gulp (puts on flame proof suit) - may I suggest we check if there
-> are any distros out there that still set CONFIG_USELIB=y
+On Mon, May 18, 2020 at 11:16 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-Debian seems to have it enabled on x86...
+> +maintainers:
+> +  - Frank Li <Frank.Li@freescale.com>
 
-https://salsa.debian.org/kernel-team/linux/-/blob/master/debian/config/kernelarch-x86/config#L1896
-
-A random Ubuntu 19.10 VM I have here has it enabled, too.
+The freescale.com e-mail domain is no longer valid for quite some time :-)
