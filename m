@@ -2,112 +2,109 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E99C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7E020758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76B320758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgERQfZ (ORCPT
+        id S1728288AbgERQf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:35:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42489 "EHLO mga04.intel.com"
+        Mon, 18 May 2020 12:35:28 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16277 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgERQfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:35:25 -0400
-IronPort-SDR: KvElP5/2Y7fTqu6FoVpLkWWMKzv155dsgLkDqyBd+64stnJCSJUASKVMKbarWal+DJ48hSuGIk
- a993Qs2DqCAw==
+        id S1727006AbgERQf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:35:27 -0400
+IronPort-SDR: acu3cf1c8cHr+7y7/Wc9xG7bmN/rctQv9hc1StRF9NZT0OFmb0QMd1DFGOLaJ3c1jF3iOzxP0s
+ UnJLMnJqBXUQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:35:25 -0700
-IronPort-SDR: Qj+WXnA/CMDKXyowwwN+TrZetsAKeFYv7fSU5HWhoEvvxAtdWiX7hFyI6kx6ruaLQ1/tRW2ve8
- xe+TfSNshqKg==
-X-ExtLoop1: 1
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:35:27 -0700
+IronPort-SDR: tIiZalxemVzC8wfCTjMDmUhf1WwA+VczUG28LAnt+JhT2xRo+Xk9R6nL8NzzqNQXQ+2ucqEMow
+ LX0J846Z3BLQ==
 X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="465640555"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 18 May 2020 09:35:20 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jaija-007T56-Mt; Mon, 18 May 2020 19:35:22 +0300
-Date:   Mon, 18 May 2020 19:35:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Maarten Brock <m.brock@vanmierlo.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, Heiko Stuebner <heiko@sntech.de>,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        matwey.kornilov@gmail.com, giulio.benetti@micronovasrl.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        linux-serial-owner@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] serial: 8250: Support separate rs485 rx-enable
- GPIO
-Message-ID: <20200518163522.GK1634618@smile.fi.intel.com>
-References: <20200517215610.2131618-1-heiko@sntech.de>
- <20200517215610.2131618-4-heiko@sntech.de>
- <20200518151241.GG1634618@smile.fi.intel.com>
- <20200518152247.slenjeiiplps7mcd@wunner.de>
- <33547f6a596df2ca2ee8e647111e5fa1@vanmierlo.com>
+   d="scan'208";a="264014280"
+Received: from kharjox-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.180.35])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:35:25 -0700
+From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>
+Subject: [PATCH V2 0/3] PCI: Add basic Compute eXpress Link DVSEC decode
+Date:   Mon, 18 May 2020 09:35:20 -0700
+Message-Id: <20200518163523.1225643-1-sean.v.kelley@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33547f6a596df2ca2ee8e647111e5fa1@vanmierlo.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 06:13:16PM +0200, Maarten Brock wrote:
-> On 2020-05-18 17:22, Lukas Wunner wrote:
-> > On Mon, May 18, 2020 at 06:12:41PM +0300, Andy Shevchenko wrote:
-> > > On Sun, May 17, 2020 at 11:56:08PM +0200, Heiko Stuebner wrote:
-> > > > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > > >
-> > > > The RE signal is used to control the duplex mode of transmissions,
-> > > > aka receiving data while sending in full duplex mode, while stopping
-> > > > receiving data in half-duplex mode.
-> > > >
-> > > > On a number of boards the !RE signal is tied to ground so reception
-> > > > is always enabled except if the UART allows disabling the receiver.
-> > > > This can be taken advantage of to implement half-duplex mode - like
-> > > > done on 8250_bcm2835aux.
-> > > >
-> > > > Another solution is to tie !RE to RTS always forcing half-duplex mode.
-> > > >
-> > > > And finally there is the option to control the RE signal separately,
-> > > > like done here by introducing a new rs485-specific gpio that can be
-> > > > set depending on the RX_DURING_TX setting in the common em485 callbacks.
-> > > 
-> > > ...
-> > > 
-> > > > +	port->rs485_re_gpio = devm_gpiod_get_optional(dev, "rs485-rx-enable",
-> > > > +						      GPIOD_OUT_HIGH);
-> > > 
-> > > While reviewing some other patch I realized that people are missing
-> > > the
-> > > point of these GPIO flags when pin is declared to be output.
-> > > 
-> > > HIGH here means "asserted" (consider active-high vs. active-low in
-> > > general). Is that the intention here?
-> > > 
-> > > Lukas, same question to your patch.
-> > 
-> > Yes.  "High", i.e. asserted, means "termination enabled" in the case of
-> > my patch and "receiver enabled" in the case of Heiko's patch.
-> 
-> But "High" on a gpio would disable the receiver when connected to !RE.
+Changes since v1 [1]:
 
-No, that's exactly the point of the terminology (asserted means active whatever
-polarity it is). You need to define active-low in GPIO description.
+- Make use pci_info() and FLAG(), as in pcie_init().
+- Wrap new cxl_cap in pci_dev struct within #ifdef PCI_CXL.
+(Bjorn Helgaas)
 
--- 
-With Best Regards,
-Andy Shevchenko
+- Added functionality for some CXL.mem and CXL.cache helper functions.
+Snoop filter helper functions along with a performance hint as
+well as a toggle for viral self-isolation mode could be implemented.
+However, in the absence of CXL devices with their associated drivers, it
+perhaps makes best sense to be in a holding pattern on this until we have
+something to exercise it with.
 
+Thoughts?
+
+[1] https://lore.kernel.org/linux-pci/20200515175528.980103-1-sean.v.kelley@linux.intel.com/
+
+This patch series implements basic Designated Vendor-Specific Extended
+Capabilities (DVSEC) decode for Compute eXpress Link devices, a new CPU
+interconnect building upon PCIe. As a basis for the CXL support it provides
+PCI init handling for detection, decode, and caching of CXL device
+capabilities.  Moreover, it makes use of the DVSEC Vendor ID and DVSEC ID so
+as to identify a CXL capable device. (PCIe r5.0, sec 7.9.6.2)
+
+DocLink: https://www.computeexpresslink.org/
+
+For your reference, a parallel series of patches have been submitted to enable
+lspci decode of CXL DVSEC and may be tracked.
+
+Link: https://lore.kernel.org/linux-pci/20200511174618.10589-1-sean.v.kelley@linux.intel.com/
+
+This patch makes use of pending DVSEC related header additions and the
+first patch of that series is included here. It can be sorted out when the
+upstream merge is done.
+
+Link: https://lore.kernel.org/linux-pci/20200508021844.6911-2-david.e.box@linux.intel.com/
+
+Sample dmesg output of a CXL Type 3 device (CXL.io, CXL.mem):
+[    2.997177] pci 0000:6b:00.0: CXL: Cache- IO+ Mem+ Viral- HDMCount 1
+[    2.997188] pci 0000:6b:00.0: CXL: cap ctrl status ctrl2 status2 lock
+[    2.997201] pci 0000:6b:00.0: CXL: 001e 0002 0000 0000 0000 0000
+
+David E. Box (1):
+  pci: Add Designated Vendor Specific Capability
+
+Sean V Kelley (2):
+  PCI: Add basic Compute eXpress Link DVSEC decode
+  PCI: Add helpers to enable/disable CXL.mem and CXL.cache
+
+ drivers/pci/Kconfig           |   9 ++
+ drivers/pci/Makefile          |   1 +
+ drivers/pci/cxl.c             | 175 ++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h             |  15 +++
+ drivers/pci/probe.c           |   1 +
+ include/linux/pci.h           |   3 +
+ include/uapi/linux/pci_regs.h |   5 +
+ 7 files changed, 209 insertions(+)
+ create mode 100644 drivers/pci/cxl.c
+
+--
+2.26.2
 
