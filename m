@@ -2,53 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21454C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBACC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03D6120643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A65AF20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826118;
-	bh=+6HXk2UMA27rJGUNFJRM/kYWivwQLBdXHPemxk9PlsQ=;
+	s=default; t=1589826125;
+	bh=5DKwiWJyRxq7YiGnGwAaSbObySpsOz8YE1NrzOWGdHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CmsD10ugUSul87oTvSh6Asc1yqNUnSBK2mYJI+XWWtVR+5SMiIUUJBYSAZNe6sxA3
-	 QKFm3KzM5u94j1Ie749y1CTqWqx4+O1zNRaqdOEL1839eapJlmSjfgjpNerryP5tvf
-	 URk8htZpEN+VAyQL5xtBit8b0g+pP8s6LJRnovpQ=
+	b=QuCfrS0UTrmmom4rlspJ/OKe5a5nFYzoM1ept6Qg/FZL84u5suPVbkTXsUvXrUqyW
+	 POcwzDa/jrnjlqI1hz97fXss0UEWc/PKmUYCBa+Ql36YpYcAnSUmXdyR26Zcapl9vP
+	 yXv/ui4XF+RTLEoNxmdt4/s7xz0p2VEJdnECxI3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387821AbgERSV5 (ORCPT
+        id S1732733AbgERSWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:21:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53802 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:22:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728824AbgERRvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:12 -0400
+        id S1730275AbgERRvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F33EF20835;
-        Mon, 18 May 2020 17:51:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6F8A20715;
+        Mon, 18 May 2020 17:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824272;
-        bh=+6HXk2UMA27rJGUNFJRM/kYWivwQLBdXHPemxk9PlsQ=;
+        s=default; t=1589824262;
+        bh=5DKwiWJyRxq7YiGnGwAaSbObySpsOz8YE1NrzOWGdHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0Iwm86ICY1e1Ao4JLW0svFL5Ya2TWDs5/i8Zk/5GwPWNSID8o2QG3SoAHFe1bVqn
-         nCXaLF+YJFfGJZad2+xD1HRZ8r8BXs6ZKvOsSEsroWqXOfez5DfjNDffGEB56P4QPi
-         X+8mlAfII54L1ujd5Kc6VsS3VirPnRoFpDv4NMFQ=
+        b=BwQ8/uIwJqll5CRea7UXaQcxOaY7iIu0R2eb7jqiKtKzxSImFB1c9FQUFP9WNUr0q
+         oqdvR6yeCli3m9TebIW5vBndgCMJG0voyw7hS1X+dwwKxIVrju9XiYL7tq+YUwxXKD
+         Ci7GepW9d1MXrXLvOWHqETbeSBLdqTfHRJSjnReg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 05/80] drop_monitor: work around gcc-10 stringop-overflow warning
-Date:   Mon, 18 May 2020 19:36:23 +0200
-Message-Id: <20200518173451.203122210@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 21/80] tcp: fix SO_RCVLOWAT hangs with fat skbs
+Date:   Mon, 18 May 2020 19:36:39 +0200
+Message-Id: <20200518173454.663518050@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -61,73 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit dc30b4059f6e2abf3712ab537c8718562b21c45d ]
+[ Upstream commit 24adbc1676af4e134e709ddc7f34cf2adc2131e4 ]
 
-The current gcc-10 snapshot produces a false-positive warning:
+We autotune rcvbuf whenever SO_RCVLOWAT is set to account for 100%
+overhead in tcp_set_rcvlowat()
 
-net/core/drop_monitor.c: In function 'trace_drop_common.constprop':
-cc1: error: writing 8 bytes into a region of size 0 [-Werror=stringop-overflow=]
-In file included from net/core/drop_monitor.c:23:
-include/uapi/linux/net_dropmon.h:36:8: note: at offset 0 to object 'entries' with size 4 declared here
-   36 |  __u32 entries;
-      |        ^~~~~~~
+This works well when skb->len/skb->truesize ratio is bigger than 0.5
 
-I reported this in the gcc bugzilla, but in case it does not get
-fixed in the release, work around it by using a temporary variable.
+But if we receive packets with small MSS, we can end up in a situation
+where not enough bytes are available in the receive queue to satisfy
+RCVLOWAT setting.
+As our sk_rcvbuf limit is hit, we send zero windows in ACK packets,
+preventing remote peer from sending more data.
 
-Fixes: 9a8afc8d3962 ("Network Drop Monitor: Adding drop monitor implementation & Netlink protocol")
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94881
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Even autotuning does not help, because it only triggers at the time
+user process drains the queue. If no EPOLLIN is generated, this
+can not happen.
+
+Note poll() has a similar issue, after commit
+c7004482e8dc ("tcp: Respect SO_RCVLOWAT in tcp_poll().")
+
+Fixes: 03f45c883c6f ("tcp: avoid extra wakeups for SO_RCVLOWAT users")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/drop_monitor.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ include/net/tcp.h    |   13 +++++++++++++
+ net/ipv4/tcp.c       |   14 +++++++++++---
+ net/ipv4/tcp_input.c |    3 ++-
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index c7785efeea577..3978a5e8d261c 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -154,6 +154,7 @@ static void sched_send_work(struct timer_list *t)
- static void trace_drop_common(struct sk_buff *skb, void *location)
- {
- 	struct net_dm_alert_msg *msg;
-+	struct net_dm_drop_point *point;
- 	struct nlmsghdr *nlh;
- 	struct nlattr *nla;
- 	int i;
-@@ -172,11 +173,13 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 	nlh = (struct nlmsghdr *)dskb->data;
- 	nla = genlmsg_data(nlmsg_data(nlh));
- 	msg = nla_data(nla);
-+	point = msg->points;
- 	for (i = 0; i < msg->entries; i++) {
--		if (!memcmp(&location, msg->points[i].pc, sizeof(void *))) {
--			msg->points[i].count++;
-+		if (!memcmp(&location, &point->pc, sizeof(void *))) {
-+			point->count++;
- 			goto out;
- 		}
-+		point++;
- 	}
- 	if (msg->entries == dm_hit_limit)
- 		goto out;
-@@ -185,8 +188,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 	 */
- 	__nla_reserve_nohdr(dskb, sizeof(struct net_dm_drop_point));
- 	nla->nla_len += NLA_ALIGN(sizeof(struct net_dm_drop_point));
--	memcpy(msg->points[msg->entries].pc, &location, sizeof(void *));
--	msg->points[msg->entries].count = 1;
-+	memcpy(point->pc, &location, sizeof(void *));
-+	point->count = 1;
- 	msg->entries++;
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1373,6 +1373,19 @@ static inline int tcp_full_space(const s
+ 	return tcp_win_from_space(sk, sk->sk_rcvbuf);
+ }
  
- 	if (!timer_pending(&data->send_timer)) {
--- 
-2.20.1
-
++/* We provision sk_rcvbuf around 200% of sk_rcvlowat.
++ * If 87.5 % (7/8) of the space has been consumed, we want to override
++ * SO_RCVLOWAT constraint, since we are receiving skbs with too small
++ * len/truesize ratio.
++ */
++static inline bool tcp_rmem_pressure(const struct sock *sk)
++{
++	int rcvbuf = READ_ONCE(sk->sk_rcvbuf);
++	int threshold = rcvbuf - (rcvbuf >> 3);
++
++	return atomic_read(&sk->sk_rmem_alloc) > threshold;
++}
++
+ extern void tcp_openreq_init_rwin(struct request_sock *req,
+ 				  const struct sock *sk_listener,
+ 				  const struct dst_entry *dst);
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -488,9 +488,17 @@ static void tcp_tx_timestamp(struct sock
+ static inline bool tcp_stream_is_readable(const struct tcp_sock *tp,
+ 					  int target, struct sock *sk)
+ {
+-	return (READ_ONCE(tp->rcv_nxt) - tp->copied_seq >= target) ||
+-		(sk->sk_prot->stream_memory_read ?
+-		sk->sk_prot->stream_memory_read(sk) : false);
++	int avail = READ_ONCE(tp->rcv_nxt) - READ_ONCE(tp->copied_seq);
++
++	if (avail > 0) {
++		if (avail >= target)
++			return true;
++		if (tcp_rmem_pressure(sk))
++			return true;
++	}
++	if (sk->sk_prot->stream_memory_read)
++		return sk->sk_prot->stream_memory_read(sk);
++	return false;
+ }
+ 
+ /*
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -4683,7 +4683,8 @@ void tcp_data_ready(struct sock *sk)
+ 	const struct tcp_sock *tp = tcp_sk(sk);
+ 	int avail = tp->rcv_nxt - tp->copied_seq;
+ 
+-	if (avail < sk->sk_rcvlowat && !sock_flag(sk, SOCK_DONE))
++	if (avail < sk->sk_rcvlowat && !tcp_rmem_pressure(sk) &&
++	    !sock_flag(sk, SOCK_DONE))
+ 		return;
+ 
+ 	sk->sk_data_ready(sk);
 
 
