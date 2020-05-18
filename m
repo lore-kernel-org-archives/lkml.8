@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA2020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B471E2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825027;
-	bh=y7ri0T3VsAoCqHNlvv+DHPx9EnBdK9XAZxmV8cFAfNc=;
+	s=default; t=1589825030;
+	bh=ZqQ6gElMZ/x2TaD1DB0XdqW3oRJNriZd1+VAyLuW2yI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MxgtsOp/MuTA2sw3uX5lTvBcHRfa8g+15XSC1OahKzNP/7ztyLJigVcl2haP3wZWC
-	 uKkysFLfAzAJh0tcie9KL2OSo8teY1yWRh0j1+pVkh99RwZ150UBGdi0clJpz5vZCi
-	 YUJ22Yz1CV5WqGpSCfBUll7xmLVuSy3jjgsrpUOY=
+	b=k6jzymVCFCNoFQ30ZJy83JAOr0WhKTDCT7KeSrsHA4j4/G/LDvUGoqNFLxSpTGyYq
+	 GP9CEAUOHDuMTE+qKy1ul796m/UfYHWQ0ztQ93AntAT8Vy5slweCcwyDZUysVK4vXU
+	 rzKAyvenV7onmZ5r8AYYkbmj4ObYzBBFh4OYU7JI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732239AbgERSDq (ORCPT
+        id S1732697AbgERSDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:03:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48978 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:03:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732655AbgERSDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:03:31 -0400
+        id S1732660AbgERSDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:03:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0111E2083E;
-        Mon, 18 May 2020 18:03:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DEE320826;
+        Mon, 18 May 2020 18:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825010;
-        bh=y7ri0T3VsAoCqHNlvv+DHPx9EnBdK9XAZxmV8cFAfNc=;
+        s=default; t=1589825012;
+        bh=ZqQ6gElMZ/x2TaD1DB0XdqW3oRJNriZd1+VAyLuW2yI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9qp6sg6S7PnX+EocUffDNJnsEs59xdzMc0A0cFG54pShFHwgVXzScnU2xNMxIhwV
-         mY3t9T7fvyORYYi2xpvcS7HVsNwnYZlUI8YF4Kd80A5TiSQpfIqBOdwDhbSQnaT/1F
-         T+c8KmhXNzLfltxPVIlsy6omWWe4rFPkfKyxwdHw=
+        b=MTXv23UK3yFXZQtEbJ/gSz8WJgSph2x1jogtIFX9M8roFN8i7YkpDzauSrlZuPfEE
+         obAP8Q+tcA0ue8iHFxalip4ZjvhnmCTHpiJmZDDKoYUzsWc//xQYbTRZwDLaT+Ylhg
+         Oy8SQMXrCiDc3GjCuiRkDPrM8oeFtY1TtBhwiQhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
+        stable@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        Florian Weimer <fw@deneb.enyo.de>, libc-alpha@sourceware.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 094/194] gfs2: More gfs2_find_jhead fixes
-Date:   Mon, 18 May 2020 19:36:24 +0200
-Message-Id: <20200518173539.965917703@linuxfoundation.org>
+Subject: [PATCH 5.6 095/194] fork: prevent accidental access to clone3 features
+Date:   Mon, 18 May 2020 19:36:25 +0200
+Message-Id: <20200518173540.020913971@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,82 +64,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Christian Brauner <christian.brauner@ubuntu.com>
 
-[ Upstream commit aa83da7f47b26c9587bade6c4bc4736ffa308f0a ]
+[ Upstream commit 3f2c788a13143620c5471ac96ac4f033fc9ac3f3 ]
 
-It turns out that when extending an existing bio, gfs2_find_jhead fails to
-check if the block number is consecutive, which leads to incorrect reads for
-fragmented journals.
+Jan reported an issue where an interaction between sign-extending clone's
+flag argument on ppc64le and the new CLONE_INTO_CGROUP feature causes
+clone() to consistently fail with EBADF.
 
-In addition, limit the maximum bio size to an arbitrary value of 2 megabytes:
-since commit 07173c3ec276 ("block: enable multipage bvecs"), if we just keep
-adding pages until bio_add_page fails, bios will grow much larger than useful,
-which pins more memory than necessary with barely any additional performance
-gains.
+The whole story is a little longer. The legacy clone() syscall is odd in a
+bunch of ways and here two things interact. First, legacy clone's flag
+argument is word-size dependent, i.e. it's an unsigned long whereas most
+system calls with flag arguments use int or unsigned int. Second, legacy
+clone() ignores unknown and deprecated flags. The two of them taken
+together means that users on 64bit systems can pass garbage for the upper
+32bit of the clone() syscall since forever and things would just work fine.
+Just try this on a 64bit kernel prior to v5.7-rc1 where this will succeed
+and on v5.7-rc1 where this will fail with EBADF:
 
-Fixes: f4686c26ecc3 ("gfs2: read journal in large chunks")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+int main(int argc, char *argv[])
+{
+        pid_t pid;
+
+        /* Note that legacy clone() has different argument ordering on
+         * different architectures so this won't work everywhere.
+         *
+         * Only set the upper 32 bits.
+         */
+        pid = syscall(__NR_clone, 0xffffffff00000000 | SIGCHLD,
+                      NULL, NULL, NULL, NULL);
+        if (pid < 0)
+                exit(EXIT_FAILURE);
+        if (pid == 0)
+                exit(EXIT_SUCCESS);
+        if (wait(NULL) != pid)
+                exit(EXIT_FAILURE);
+
+        exit(EXIT_SUCCESS);
+}
+
+Since legacy clone() couldn't be extended this was not a problem so far and
+nobody really noticed or cared since nothing in the kernel ever bothered to
+look at the upper 32 bits.
+
+But once we introduced clone3() and expanded the flag argument in struct
+clone_args to 64 bit we opened this can of worms. With the first flag-based
+extension to clone3() making use of the upper 32 bits of the flag argument
+we've effectively made it possible for the legacy clone() syscall to reach
+clone3() only flags. The sign extension scenario is just the odd
+corner-case that we needed to figure this out.
+
+The reason we just realized this now and not already when we introduced
+CLONE_CLEAR_SIGHAND was that CLONE_INTO_CGROUP assumes that a valid cgroup
+file descriptor has been given. So the sign extension (or the user
+accidently passing garbage for the upper 32 bits) caused the
+CLONE_INTO_CGROUP bit to be raised and the kernel to error out when it
+didn't find a valid cgroup file descriptor.
+
+Let's fix this by always capping the upper 32 bits for all codepaths that
+are not aware of clone3() features. This ensures that we can't reach
+clone3() only features by accident via legacy clone as with the sign
+extension case and also that legacy clone() works exactly like before, i.e.
+ignoring any unknown flags.  This solution risks no regressions and is also
+pretty clean.
+
+Fixes: 7f192e3cd316 ("fork: add clone3")
+Fixes: ef2c41cf38a7 ("clone3: allow spawning processes into cgroups")
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dmitry V. Levin <ldv@altlinux.org>
+Cc: Andreas Schwab <schwab@linux-m68k.org>
+Cc: Florian Weimer <fw@deneb.enyo.de>
+Cc: libc-alpha@sourceware.org
+Cc: stable@vger.kernel.org # 5.3+
+Link: https://sourceware.org/pipermail/libc-alpha/2020-May/113596.html
+Link: https://lore.kernel.org/r/20200507103214.77218-1-christian.brauner@ubuntu.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/lops.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ kernel/fork.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
-index c090d5ad3f221..3a020bdc358cd 100644
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -259,7 +259,7 @@ static struct bio *gfs2_log_alloc_bio(struct gfs2_sbd *sdp, u64 blkno,
- 	struct super_block *sb = sdp->sd_vfs;
- 	struct bio *bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
- 
--	bio->bi_iter.bi_sector = blkno << (sb->s_blocksize_bits - 9);
-+	bio->bi_iter.bi_sector = blkno << sdp->sd_fsb2bb_shift;
- 	bio_set_dev(bio, sb->s_bdev);
- 	bio->bi_end_io = end_io;
- 	bio->bi_private = sdp;
-@@ -505,7 +505,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 	unsigned int bsize = sdp->sd_sb.sb_bsize, off;
- 	unsigned int bsize_shift = sdp->sd_sb.sb_bsize_shift;
- 	unsigned int shift = PAGE_SHIFT - bsize_shift;
--	unsigned int readahead_blocks = BIO_MAX_PAGES << shift;
-+	unsigned int max_bio_size = 2 * 1024 * 1024;
- 	struct gfs2_journal_extent *je;
- 	int sz, ret = 0;
- 	struct bio *bio = NULL;
-@@ -533,12 +533,17 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 				off = 0;
- 			}
- 
--			if (!bio || (bio_chained && !off)) {
-+			if (!bio || (bio_chained && !off) ||
-+			    bio->bi_iter.bi_size >= max_bio_size) {
- 				/* start new bio */
- 			} else {
--				sz = bio_add_page(bio, page, bsize, off);
--				if (sz == bsize)
--					goto block_added;
-+				sector_t sector = dblock << sdp->sd_fsb2bb_shift;
-+
-+				if (bio_end_sector(bio) == sector) {
-+					sz = bio_add_page(bio, page, bsize, off);
-+					if (sz == bsize)
-+						goto block_added;
-+				}
- 				if (off) {
- 					unsigned int blocks =
- 						(PAGE_SIZE - off) >> bsize_shift;
-@@ -564,7 +569,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 			off += bsize;
- 			if (off == PAGE_SIZE)
- 				page = NULL;
--			if (blocks_submitted < blocks_read + readahead_blocks) {
-+			if (blocks_submitted < 2 * max_bio_size >> bsize_shift) {
- 				/* Keep at least one bio in flight */
- 				continue;
- 			}
+diff --git a/kernel/fork.c b/kernel/fork.c
+index d90af13431c7e..c9ba2b7bfef9d 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2486,11 +2486,11 @@ long do_fork(unsigned long clone_flags,
+ 	      int __user *child_tidptr)
+ {
+ 	struct kernel_clone_args args = {
+-		.flags		= (clone_flags & ~CSIGNAL),
++		.flags		= (lower_32_bits(clone_flags) & ~CSIGNAL),
+ 		.pidfd		= parent_tidptr,
+ 		.child_tid	= child_tidptr,
+ 		.parent_tid	= parent_tidptr,
+-		.exit_signal	= (clone_flags & CSIGNAL),
++		.exit_signal	= (lower_32_bits(clone_flags) & CSIGNAL),
+ 		.stack		= stack_start,
+ 		.stack_size	= stack_size,
+ 	};
+@@ -2508,8 +2508,9 @@ long do_fork(unsigned long clone_flags,
+ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
+ {
+ 	struct kernel_clone_args args = {
+-		.flags		= ((flags | CLONE_VM | CLONE_UNTRACED) & ~CSIGNAL),
+-		.exit_signal	= (flags & CSIGNAL),
++		.flags		= ((lower_32_bits(flags) | CLONE_VM |
++				    CLONE_UNTRACED) & ~CSIGNAL),
++		.exit_signal	= (lower_32_bits(flags) & CSIGNAL),
+ 		.stack		= (unsigned long)fn,
+ 		.stack_size	= (unsigned long)arg,
+ 	};
+@@ -2570,11 +2571,11 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
+ #endif
+ {
+ 	struct kernel_clone_args args = {
+-		.flags		= (clone_flags & ~CSIGNAL),
++		.flags		= (lower_32_bits(clone_flags) & ~CSIGNAL),
+ 		.pidfd		= parent_tidptr,
+ 		.child_tid	= child_tidptr,
+ 		.parent_tid	= parent_tidptr,
+-		.exit_signal	= (clone_flags & CSIGNAL),
++		.exit_signal	= (lower_32_bits(clone_flags) & CSIGNAL),
+ 		.stack		= newsp,
+ 		.tls		= tls,
+ 	};
 -- 
 2.20.1
 
