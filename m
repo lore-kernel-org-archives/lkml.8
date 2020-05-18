@@ -2,159 +2,107 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00228C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDFB32081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589834003;
-	bh=c5ZGzDwFxwJ/mKm9/cs6h1I7lVBdjmvurxjtp6Si0Wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VYB5QirGC4SqpC1rVuAZcUvA488i+OIpZZc/B6gH7uQ/NDyRseXnPF/W1xPp+xvuw
-	 3XY8U1xrBQZ7NrMi2m+4P/zoGEVct9rEYHnu9hlkUy8lFENdv8xm0Zd+li+puy3J01
-	 nX7GqInzRqcpTC9A5TK3KuFlDnJFXLNNs3QsFzVo=
+	by mail.kernel.org (Postfix) with ESMTP id 883FA20829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LW4xKvNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgERUdX (ORCPT
+        id S1727772AbgERUec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:33:23 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:46978 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERUdW (ORCPT
+        Mon, 18 May 2020 16:34:32 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:39868 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgERUeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:33:22 -0400
-Received: by mail-il1-f193.google.com with SMTP id w18so11204998ilm.13;
-        Mon, 18 May 2020 13:33:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aCdfZ7ueYmEHhf27ECx3pl3zz6CbgFMjwskwT2kCHRE=;
-        b=c6ccFKzM1au209IPK3k0fg/V6jXBqQly2G7SGHEigdfijov6p9AxSAgmZ1vKZvraxq
-         KrhYd/ZpEzqzwYmEdJ/o+Y/unOnCl5oXBsYD+P47TIAN6sa+1lea+vpmKA5GsCRxoqfj
-         0XCZxssUrFZlxYCRKDoYGH7N5+zTdBV53mt0Dz5wuWvwRKx+6i68SoF1Y/wSRZS0MKvo
-         rBnGLTtxY4FfMsLgIJGOYS1JkWYsKs87kUBt/4zj1c+z6wL+nkg3AbQ7lpmf+x5uqhPX
-         IH+jnW2bD1EUSwbF5MPgseWFU8J22UWjX22Z3NPsKa3SyEtBwiTQqbOSb/E9uV5u3jKO
-         Rq9Q==
-X-Gm-Message-State: AOAM533+/Y9oRLw4ii58lWK+ZF0BtQ6dagcNe/X5kGn1yWI8CBAWjDpp
-        xnPjIwnqsIUYc4ZjlP772Q==
-X-Google-Smtp-Source: ABdhPJwGNhQsjXHbVcG/RCJvvyF1a7+gc39oF1lqupbQlZeHsmLopWJZSzTWyAp5EdP5nZruQOvORg==
-X-Received: by 2002:a92:4909:: with SMTP id w9mr18358517ila.302.1589834001709;
-        Mon, 18 May 2020 13:33:21 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id e19sm4266220iob.1.2020.05.18.13.33.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 13:33:21 -0700 (PDT)
-Received: (nullmailer pid 31386 invoked by uid 1000);
-        Mon, 18 May 2020 20:33:19 -0000
-Date:   Mon, 18 May 2020 14:33:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/12] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C
- controller
-Message-ID: <20200518203319.GA14243@bogus>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-4-Sergey.Semin@baikalelectronics.ru>
+        Mon, 18 May 2020 16:34:31 -0400
+Received: from [10.0.0.249] (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 57B3620B717B;
+        Mon, 18 May 2020 13:34:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 57B3620B717B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1589834070;
+        bh=6GRSvZ+sGLVcKGDOcmVDyb0gXRdx/T0QTMk1YgrIXo0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LW4xKvNPjvTQHNTCPc5dw87VMVrDKT0UTsZNlxXJSb2DhjQsGt1aArwi+2Pq25xMN
+         S4zSHJ+EQn4yAg/KghG/RYbBFjia5QNFJZWhHHgsJ+dbDFHzqYrmxyRfw7yrJDSiU3
+         PE4kQbDFbQkwN9xGgKO718cCWGbRNXaZolR1rV5E=
+Subject: Re: [RFC][PATCH 1/2] Add a layer of abstraction to use the memory
+ reserved by device tree for ima buffer pass.
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, vincenzo.frascino@arm.com,
+        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
+        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
+        tao.li@vivo.com, christophe.leroy@c-s.fr,
+        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
+        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
+References: <20200504203829.6330-1-prsriva@linux.microsoft.com>
+ <20200504203829.6330-2-prsriva@linux.microsoft.com>
+ <20200512230954.GB2654@bogus>
+From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
+Message-ID: <8b8bb74b-a3ac-1eb8-4b21-d00402a2bf62@linux.microsoft.com>
+Date:   Mon, 18 May 2020 13:34:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200510095019.20981-4-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512230954.GB2654@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 12:50:09PM +0300, Serge Semin wrote:
-> Add the "baikal,bt1-sys-i2c" compatible string to the DW I2C binding and
-> make sure the reg property isn't required in this case because the
-> controller is embedded into the Baikal-T1 System Controller. The rest of
-> the DW APB I2C properties are compatible and can be freely used to describe
-> the Baikal-T1 I2C controller dts-node.
 
-Is there not a sub-range of the system controller with the I2C 
-registers? I'd assume there is, so you can still have 'reg' even if 
-Linux doesn't use it (currently).
 
+On 5/12/20 4:09 PM, Rob Herring wrote:
+> On Mon, May 04, 2020 at 01:38:28PM -0700, Prakhar Srivastava wrote:
+>> Introduce a device tree layer for to read and store ima buffer
+>> from the reserved memory section of a device tree.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: linux-mips@vger.kernel.org
+> But why do I need 'a layer of abstraction'? I don't like them.
 > 
-> ---
+This is a common path for the all architectures to carry over the
+IMA measurement logs. A single layer will avoid any code duplication.
+
+>> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+>> ---
+>>   drivers/of/Kconfig  |   6 ++
+>>   drivers/of/Makefile |   1 +
+>>   drivers/of/of_ima.c | 165 ++++++++++++++++++++++++++++++++++++++++++++
 > 
-> Rob, I had to remove your acked-by tag because of the changes introduced
-> in v2 of the patch.
+> Who are the users of this code and why does it need to be here? Most
+> code for specific bindings are not in drivers/of/ but with the user. It
+> doesn't sound like there's more than 1 user.
 > 
-> Changelog v2:
-> - Make the reg property being optional if it's Baikal-T1 System I2C DT
->   node.
-> ---
->  .../devicetree/bindings/i2c/snps,designware-i2c.yaml | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> index 8d4e5fccbd1c..579964098eb9 100644
-> --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> @@ -21,6 +21,15 @@ allOf:
->        properties:
->          reg:
->            maxItems: 1
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          not:
-> +            contains:
-> +              const: baikal,bt1-sys-i2c
-> +    then:
-> +      required:
-> +        - reg
->  
->  properties:
->    compatible:
-> @@ -31,6 +40,8 @@ properties:
->          items:
->            - const: mscc,ocelot-i2c
->            - const: snps,designware-i2c
-> +      - description: Baikal-T1 SoC System I2C controller
-> +        const: baikal,bt1-sys-i2c
->  
->    reg:
->      minItems: 1
-> @@ -98,7 +109,6 @@ unevaluatedProperties: false
->  
->  required:
->    - compatible
-> -  - reg
->    - "#address-cells"
->    - "#size-cells"
->    - interrupts
-> -- 
-> 2.25.1
-> 
+Currently the path is exercised by arm64 kexec_file_load path. A slight
+restructuring is needed on the powerpc side to use the same code path 
+and other architectures can follow to add carrying over IMA logs over
+kexec with just a few function calls.
+
+I have attempted to bring the code path down to the highest common 
+layer, however please do suggest if i can move this some where else.
+
+Thanks,
+Prakhar
+
+>>   include/linux/of.h  |  34 +++++++++
+>>   4 files changed, 206 insertions(+)
+>>   create mode 100644 drivers/of/of_ima.c
