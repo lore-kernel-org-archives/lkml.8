@@ -2,188 +2,309 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A030C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1205D20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826043;
-	bh=oDwcpv/8V8kB+Z21IAF/pMlJObdn91w86k2jINRfYTE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UC94dx5m03mHZgta9zYtAauOrhvxeB5ZHFtfiD7eeH0fZ5jGA2IJU/FRkowuIo3Ie
-	 PhahxTUcQFAgTp7bc6FwtWlzTENktm4ke32omFy25myNS9cvNIkpJ8yTbfldZ9hHoV
-	 yU9mAYgTOwj+gDF91OAFGDQjfg312FGTpw3N5SQE=
+	by mail.kernel.org (Postfix) with ESMTP id 1D77C20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbgERRwc (ORCPT
+        id S2387728AbgERSUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730977AbgERRw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 559A420674;
-        Mon, 18 May 2020 17:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824346;
-        bh=oDwcpv/8V8kB+Z21IAF/pMlJObdn91w86k2jINRfYTE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vlpwEJ2DBfD9EELgTKuG8yUB9EdBCk2WKXKTtdQUJXFlAcMZhKELfkBOx8fbePKzo
-         smV9BAUS7yRPENBmauxabq2jmSNigmzAkqqqmEPdw7VDdntpsmwGABVRmLRmm2qQ2h
-         56VZ6xIdcDf5kKFgYZqNenvZ65JUB9vzOS6BbXrM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, butt3rflyh4ck <butterflyhuangxx@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 54/80] ALSA: rawmidi: Fix racy buffer resize under concurrent accesses
-Date:   Mon, 18 May 2020 19:37:12 +0200
-Message-Id: <20200518173501.318402400@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
-References: <20200518173450.097837707@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 18 May 2020 14:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730997AbgERRwe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:34 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DADC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 10:52:33 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id CF53F2A10C9
+Subject: Re: [PATCH v14 03/11] soc: mediatek: Add basic_clk_name to
+ scp_power_data
+To:     Weiyi Lu <weiyi.lu@mediatek.com>
+Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        Fan Chen <fan.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1588752963-19934-1-git-send-email-weiyi.lu@mediatek.com>
+ <1588752963-19934-4-git-send-email-weiyi.lu@mediatek.com>
+ <7ad67855-a3f8-f979-8849-3765bd8289d3@collabora.com>
+ <1589176947.21832.9.camel@mtksdaap41> <1589513724.16252.3.camel@mtksdaap41>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <c510cc46-3285-fa53-b2e1-0420b0bfb61c@collabora.com>
+Date:   Mon, 18 May 2020 19:52:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1589513724.16252.3.camel@mtksdaap41>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+Hi Weiyi,
 
-commit c1f6e3c818dd734c30f6a7eeebf232ba2cf3181d upstream.
+On 15/5/20 5:35, Weiyi Lu wrote:
+> On Mon, 2020-05-11 at 14:02 +0800, Weiyi Lu wrote:
+>> On Wed, 2020-05-06 at 23:01 +0200, Enric Balletbo i Serra wrote:
+>>> Hi Weiyi,
+>>>
+>>> Thank you for your patch.
+>>>
+>>> On 6/5/20 10:15, Weiyi Lu wrote:
+>>>> Try to stop extending the clk_id or clk_names if there are
+>>>> more and more new BASIC clocks. To get its own clocks by the
+>>>> basic_clk_name of each power domain.
+>>>> And then use basic_clk_name strings for all compatibles, instead of
+>>>> mixing clk_id and clk_name.
+>>>>
+>>>> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+>>>> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+>>>> ---
+>>>>  drivers/soc/mediatek/mtk-scpsys.c | 134 ++++++++++++--------------------------
+>>>>  1 file changed, 41 insertions(+), 93 deletions(-)
+>>>>
+>>>> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+>>>> index f669d37..c9c3cf7 100644
+>>>> --- a/drivers/soc/mediatek/mtk-scpsys.c
+>>>> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+>>>> @@ -78,34 +78,6 @@
+>>>>  #define PWR_STATUS_HIF1			BIT(26)	/* MT7622 */
+>>>>  #define PWR_STATUS_WB			BIT(27)	/* MT7622 */
+>>>>  
+>>>> -enum clk_id {
+>>>> -	CLK_NONE,
+>>>> -	CLK_MM,
+>>>> -	CLK_MFG,
+>>>> -	CLK_VENC,
+>>>> -	CLK_VENC_LT,
+>>>> -	CLK_ETHIF,
+>>>> -	CLK_VDEC,
+>>>> -	CLK_HIFSEL,
+>>>> -	CLK_JPGDEC,
+>>>> -	CLK_AUDIO,
+>>>> -	CLK_MAX,
+>>>> -};
+>>>> -
+>>>> -static const char * const clk_names[] = {
+>>>> -	NULL,
+>>>> -	"mm",
+>>>> -	"mfg",
+>>>> -	"venc",
+>>>> -	"venc_lt",
+>>>> -	"ethif",
+>>>> -	"vdec",
+>>>> -	"hif_sel",
+>>>> -	"jpgdec",
+>>>> -	"audio",
+>>>> -	NULL,
+>>>> -};
+>>>> -
+>>>>  #define MAX_CLKS	3
+>>>>  
+>>>>  /**
+>>>> @@ -116,7 +88,7 @@ enum clk_id {
+>>>>   * @sram_pdn_bits: The mask for sram power control bits.
+>>>>   * @sram_pdn_ack_bits: The mask for sram power control acked bits.
+>>>>   * @bus_prot_mask: The mask for single step bus protection.
+>>>> - * @clk_id: The basic clocks required by this power domain.
+>>>> + * @basic_clk_name: The basic clocks required by this power domain.
+>>>>   * @caps: The flag for active wake-up action.
+>>>>   */
+>>>>  struct scp_domain_data {
+>>>> @@ -126,7 +98,7 @@ struct scp_domain_data {
+>>>>  	u32 sram_pdn_bits;
+>>>>  	u32 sram_pdn_ack_bits;
+>>>>  	u32 bus_prot_mask;
+>>>> -	enum clk_id clk_id[MAX_CLKS];
+>>>> +	const char *basic_clk_name[MAX_CLKS];
+>>>
+>>> I only reviewed v13, so sorry if this was already discussed. I am wondering if
+>>> would be better take advantage of the devm_clk_bulk_get() function instead of
+>>> kind of reimplementing the same, something like this
+>>>
+>>> 	const struct clk_bulk_data *basic_clocks;
+>>>
+>>
+>> I thought it should be const struct clk_bulk_data
+>> basic_clocks[MAX_CLKS]; instead of const struct clk_bulk_data
+>> *basic_clocks; in struct scp_domain_data data type
+>>
+>>>>  	u8 caps;
+>>>>  };
+>>>>  
+>>>> @@ -411,12 +383,19 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+>>>>  	return ret;
+>>>>  }
+>>>>  
+>>>> -static void init_clks(struct platform_device *pdev, struct clk **clk)
+>>>> +static int init_basic_clks(struct platform_device *pdev, struct clk **clk,
+>>>> +			const char * const *name)
+>>>>  {
+>>>>  	int i;
+>>>>  
+>>>> -	for (i = CLK_NONE + 1; i < CLK_MAX; i++)
+>>>> -		clk[i] = devm_clk_get(&pdev->dev, clk_names[i]);
+>>>> +	for (i = 0; i < MAX_CLKS && name[i]; i++) {
+>>>> +		clk[i] = devm_clk_get(&pdev->dev, name[i]);
+>>>> +
+>>>> +		if (IS_ERR(clk[i]))
+>>>> +			return PTR_ERR(clk[i]);
+>>>> +	}
+>>>
+>>> You will be able to remove this function, see below ...
+>>>
+>>>> +
+>>>> +	return 0;
+>>>>  }
+>>>>  
+>>>>  static struct scp *init_scp(struct platform_device *pdev,
+>>>> @@ -426,9 +405,8 @@ static struct scp *init_scp(struct platform_device *pdev,
+>>>>  {
+>>>>  	struct genpd_onecell_data *pd_data;
+>>>>  	struct resource *res;
+>>>> -	int i, j;
+>>>> +	int i, ret;
+>>>>  	struct scp *scp;
+>>>> -	struct clk *clk[CLK_MAX];
+>>>>  
+>>>>  	scp = devm_kzalloc(&pdev->dev, sizeof(*scp), GFP_KERNEL);
+>>>>  	if (!scp)
+>>>> @@ -481,8 +459,6 @@ static struct scp *init_scp(struct platform_device *pdev,
+>>>>  
+>>>>  	pd_data->num_domains = num;
+>>>>  
+>>>> -	init_clks(pdev, clk);
+>>>> -
+>>>>  	for (i = 0; i < num; i++) {
+>>>>  		struct scp_domain *scpd = &scp->domains[i];
+>>>>  		struct generic_pm_domain *genpd = &scpd->genpd;
+>>>> @@ -493,17 +469,9 @@ static struct scp *init_scp(struct platform_device *pdev,
+>>>>  
+>>>>  		scpd->data = data;
+>>>>  
+>>>> -		for (j = 0; j < MAX_CLKS && data->clk_id[j]; j++) {
+>>>> -			struct clk *c = clk[data->clk_id[j]];
+>>>> -
+>>>> -			if (IS_ERR(c)) {
+>>>> -				dev_err(&pdev->dev, "%s: clk unavailable\n",
+>>>> -					data->name);
+>>>> -				return ERR_CAST(c);
+>>>> -			}
+>>>> -
+>>>> -			scpd->clk[j] = c;
+>>>> -		}
+>>>> +		ret = init_basic_clks(pdev, scpd->clk, data->basic_clk_name);
+>>>> +		if (ret)
+>>>> +			return ERR_PTR(ret);
+>>>
+>>> Just call:
+>>>
+>>> 	ret = devm_clk_bulk_get(&pdev->dev, ARRAY_SIZE(basic_clocks),
+>>> 				data->basic_clocks);
+>>> 	if (ret)
+>>> 		return ERR_PTR(ret);
+>>>
+>>>>  
+>>>>  		genpd->name = data->name;
+>>>>  		genpd->power_off = scpsys_power_off;
+>>>> @@ -560,7 +528,6 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+>>>>  		.ctl_offs = SPM_CONN_PWR_CON,
+>>>>  		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_CONN_M |
+>>>>  				 MT2701_TOP_AXI_PROT_EN_CONN_S,
+>>>> -		.clk_id = {CLK_NONE},
+>>>>  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
+>>>>  	},
+>>>>  	[MT2701_POWER_DOMAIN_DISP] = {
+>>>> @@ -568,7 +535,7 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+>>>>  		.sta_mask = PWR_STATUS_DISP,
+>>>>  		.ctl_offs = SPM_DIS_PWR_CON,
+>>>>  		.sram_pdn_bits = GENMASK(11, 8),
+>>>> -		.clk_id = {CLK_MM},
+>>>> +		.basic_clk_name = {"mm"},
+>>>
+>>> 		.basic_clocks[] = {
+>>> 			{ .id = "mm" },
+>>> 		};
+>>>
+>>
+>> Those basic clocks without given a name (name: null) would get incorrect
+>> clock via clk_bulk_get(...) due to 
+>>
+>> /**
+>>  * of_parse_clkspec() - Parse a DT clock specifier for a given device
+>> node
+>>  * @np: device node to parse clock specifier from
+>>  * @index: index of phandle to parse clock out of. If index < 0, @name
+>> is used
+>>  * @name: clock name to find and parse. If name is NULL, the index is
+>> used
+>>
+>> And the index is 0 here in this callstack
+>>
+>> I guess something need to be improved before we use the clk_bulk_ APIs.
+>>
+> 
+> Hi Enric,
+> 
+> According to the result above, is it necessary to change the APIs or
+> maybe I should send the next version v15 first to fix other problems you
+> mentioned? Many thanks.
+> 
 
-The rawmidi core allows user to resize the runtime buffer via ioctl,
-and this may lead to UAF when performed during concurrent reads or
-writes: the read/write functions unlock the runtime lock temporarily
-during copying form/to user-space, and that's the race window.
+It is fine to send a next version without changing the APIs, it depends on the
+extra work if you are fine with the change. To be honest I didn't see the
+problem above but I think can be fixed.
 
-This patch fixes the hole by introducing a reference counter for the
-runtime buffer read/write access and returns -EBUSY error when the
-resize is performed concurrently against read/write.
-
-Note that the ref count field is a simple integer instead of
-refcount_t here, since the all contexts accessing the buffer is
-basically protected with a spinlock, hence we need no expensive atomic
-ops.  Also, note that this busy check is needed only against read /
-write functions, and not in receive/transmit callbacks; the race can
-happen only at the spinlock hole mentioned in the above, while the
-whole function is protected for receive / transmit callbacks.
-
-Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
-Link: https://lore.kernel.org/r/s5heerw3r5z.wl-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- include/sound/rawmidi.h |    1 +
- sound/core/rawmidi.c    |   31 +++++++++++++++++++++++++++----
- 2 files changed, 28 insertions(+), 4 deletions(-)
-
---- a/include/sound/rawmidi.h
-+++ b/include/sound/rawmidi.h
-@@ -76,6 +76,7 @@ struct snd_rawmidi_runtime {
- 	size_t avail_min;	/* min avail for wakeup */
- 	size_t avail;		/* max used buffer for wakeup */
- 	size_t xruns;		/* over/underruns counter */
-+	int buffer_ref;		/* buffer reference count */
- 	/* misc */
- 	spinlock_t lock;
- 	wait_queue_head_t sleep;
---- a/sound/core/rawmidi.c
-+++ b/sound/core/rawmidi.c
-@@ -112,6 +112,17 @@ static void snd_rawmidi_input_event_work
- 		runtime->event(runtime->substream);
- }
- 
-+/* buffer refcount management: call with runtime->lock held */
-+static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
-+{
-+	runtime->buffer_ref++;
-+}
-+
-+static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
-+{
-+	runtime->buffer_ref--;
-+}
-+
- static int snd_rawmidi_runtime_create(struct snd_rawmidi_substream *substream)
- {
- 	struct snd_rawmidi_runtime *runtime;
-@@ -661,6 +672,11 @@ static int resize_runtime_buffer(struct
- 		if (!newbuf)
- 			return -ENOMEM;
- 		spin_lock_irq(&runtime->lock);
-+		if (runtime->buffer_ref) {
-+			spin_unlock_irq(&runtime->lock);
-+			kvfree(newbuf);
-+			return -EBUSY;
-+		}
- 		oldbuf = runtime->buffer;
- 		runtime->buffer = newbuf;
- 		runtime->buffer_size = params->buffer_size;
-@@ -960,8 +976,10 @@ static long snd_rawmidi_kernel_read1(str
- 	long result = 0, count1;
- 	struct snd_rawmidi_runtime *runtime = substream->runtime;
- 	unsigned long appl_ptr;
-+	int err = 0;
- 
- 	spin_lock_irqsave(&runtime->lock, flags);
-+	snd_rawmidi_buffer_ref(runtime);
- 	while (count > 0 && runtime->avail) {
- 		count1 = runtime->buffer_size - runtime->appl_ptr;
- 		if (count1 > count)
-@@ -980,16 +998,19 @@ static long snd_rawmidi_kernel_read1(str
- 		if (userbuf) {
- 			spin_unlock_irqrestore(&runtime->lock, flags);
- 			if (copy_to_user(userbuf + result,
--					 runtime->buffer + appl_ptr, count1)) {
--				return result > 0 ? result : -EFAULT;
--			}
-+					 runtime->buffer + appl_ptr, count1))
-+				err = -EFAULT;
- 			spin_lock_irqsave(&runtime->lock, flags);
-+			if (err)
-+				goto out;
- 		}
- 		result += count1;
- 		count -= count1;
- 	}
-+ out:
-+	snd_rawmidi_buffer_unref(runtime);
- 	spin_unlock_irqrestore(&runtime->lock, flags);
--	return result;
-+	return result > 0 ? result : err;
- }
- 
- long snd_rawmidi_kernel_read(struct snd_rawmidi_substream *substream,
-@@ -1261,6 +1282,7 @@ static long snd_rawmidi_kernel_write1(st
- 			return -EAGAIN;
- 		}
- 	}
-+	snd_rawmidi_buffer_ref(runtime);
- 	while (count > 0 && runtime->avail > 0) {
- 		count1 = runtime->buffer_size - runtime->appl_ptr;
- 		if (count1 > count)
-@@ -1292,6 +1314,7 @@ static long snd_rawmidi_kernel_write1(st
- 	}
-       __end:
- 	count1 = runtime->avail < runtime->buffer_size;
-+	snd_rawmidi_buffer_unref(runtime);
- 	spin_unlock_irqrestore(&runtime->lock, flags);
- 	if (count1)
- 		snd_rawmidi_output_trigger(substream, 1);
+Cheers,
+ Enric
 
 
+>>
+>>>>  		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_MM_M0,
+>>>>  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
+>>>>  	},
+>>>> @@ -578,7 +545,7 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+>>>>  		.ctl_offs = SPM_MFG_PWR_CON,
+>>>>  		.sram_pdn_bits = GENMASK(11, 8),
+>>>>  		.sram_pdn_ack_bits = GENMASK(12, 12),
+>>>> -		.clk_id = {CLK_MFG},
+>>>> +		.basic_clk_name = {"mfg"},
+>>>
+>>> 		.basic_clocks[] = {
+>>> 			{ .id = "mfg" },
+>>> 		};
+>>>
+>>>>  		.caps = MTK_SCPD_ACTIVE_WAKEUP,
+>>>>  	},
+>>>>  	[MT2701_POWER_DOMAIN_VDEC] = {
+>>>> @@ -587,7 +554,7 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+>>>>  		.ctl_offs = SPM_VDE_PWR_CON,
+>>>>  		.sram_pdn_bits = GENMASK(11, 8),
+>>>>  		.sram_pdn_ack_bits = GENMASK(12, 12),
+>>>> -		.clk_id = {CLK_MM},
+>>>> +		.basic_clk_name = {"mm"},
+>>>
+>>> ...
+>>>
+>>> [snip]
+>>
+>>
+> 
