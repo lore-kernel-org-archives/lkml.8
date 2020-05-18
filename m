@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE399C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E47207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277B920872
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824385;
-	bh=LITUiDanmyPNVVRug+i/F4XppzmpAHindcAVfWDej58=;
+	s=default; t=1589824388;
+	bh=wafRwZl9fucQ6Kdo8iS7pAL+wKFsNGDbbPPINuz48ZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1yNa4sxQb0E48D1q/j1sTJig4e1M1aID6ovDb6dbqAqnWuOi0egRcH92DDGNY/Q6L
-	 9IIehJVdtdJNhQw1OWt5/4AghA/z4J2DWrUCbb//YoUINUuGidOCyFZWH8vgEuCfTi
-	 NEPBMGsNTpbmtOc7YS2PATIJS60upBxGwLKPstaI=
+	b=CdHw80Iyw9Q2UyY9Bl37KFPkueeaTZ/eQdpLRbOQwrADSElffANklptNfU/H2vL8S
+	 5izcBbFg7n8F1EFAFNKbWcAMOpx8AyoQEff0iO8w9JmxIaf0yC7Z3V/jwTe61hyVit
+	 yepCF+vMw7LMb5Cv+n1gHUyQzdBohTWaxowLFTAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731086AbgERRxE (ORCPT
+        id S1731094AbgERRxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:53:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731073AbgERRxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:53:01 -0400
+        id S1731081AbgERRxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:53:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C98E20674;
-        Mon, 18 May 2020 17:53:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB91420674;
+        Mon, 18 May 2020 17:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824381;
-        bh=LITUiDanmyPNVVRug+i/F4XppzmpAHindcAVfWDej58=;
+        s=default; t=1589824383;
+        bh=wafRwZl9fucQ6Kdo8iS7pAL+wKFsNGDbbPPINuz48ZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLPzbXB1jzCMf5zrcf1WOP+02c6RXl/gMRpOH2EXExYUVYlbvcFzc8hwxrZDb7rdC
-         oh5YuIn03UaEqG68tQwpq6njEykMBFTFqLJLhUWky9A9Qg2nLR8egTCzJVIIiC87P5
-         YbMVCcQqUvClsjNb8GG15uUTLjUJmhLUs00fSHoY=
+        b=da8Fe5lHHQJaDKXPJwQbOSHBP8iBsKEf6jbXrfLhFr6yi2f5Ifh/C7GlaiFNhD26J
+         zKrvPVhd1VUr56BDjCuvB1vIkQdtqexV8xNrdGKSuT+wTA70vplMhMZVW385hPZvCq
+         Z5Cz6z/VZKofXsv8aRFt7yJ+uHsFzII0CbLmDoeM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Grace Kao <grace.kao@intel.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/80] pinctrl: cherryview: Add missing spinlock usage in chv_gpio_irq_handler
-Date:   Mon, 18 May 2020 19:36:50 +0200
-Message-Id: <20200518173456.941785811@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 23/80] dmaengine: pch_dma.c: Avoid data race between probe and irq handler
+Date:   Mon, 18 May 2020 19:36:41 +0200
+Message-Id: <20200518173455.035907064@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -62,47 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grace Kao <grace.kao@intel.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 69388e15f5078c961b9e5319e22baea4c57deff1 ]
+[ Upstream commit 2e45676a4d33af47259fa186ea039122ce263ba9 ]
 
-According to Braswell NDA Specification Update (#557593),
-concurrent read accesses may result in returning 0xffffffff and write
-instructions may be dropped. We have an established format for the
-commit references, i.e.
-cdca06e4e859 ("pinctrl: baytrail: Add missing spinlock usage in
-byt_gpio_irq_handler")
+pd->dma.dev is read in irq handler pd_irq().
+However, it is set to pdev->dev after request_irq().
+Therefore, set pd->dma.dev to pdev->dev before request_irq() to
+avoid data race between pch_dma_probe() and pd_irq().
 
-Fixes: 0bd50d719b00 ("pinctrl: cherryview: prevent concurrent access to GPIO controllers")
-Signed-off-by: Grace Kao <grace.kao@intel.com>
-Reported-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Link: https://lore.kernel.org/r/20200416062335.29223-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/dma/pch_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index f16baf9b86962..25932d2a71547 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1485,11 +1485,15 @@ static void chv_gpio_irq_handler(struct irq_desc *desc)
- 	struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	unsigned long pending;
-+	unsigned long flags;
- 	u32 intr_line;
+diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+index afd8f27bda969..6e91584c36770 100644
+--- a/drivers/dma/pch_dma.c
++++ b/drivers/dma/pch_dma.c
+@@ -873,6 +873,7 @@ static int pch_dma_probe(struct pci_dev *pdev,
+ 	}
  
- 	chained_irq_enter(chip, desc);
+ 	pci_set_master(pdev);
++	pd->dma.dev = &pdev->dev;
  
-+	raw_spin_lock_irqsave(&chv_lock, flags);
- 	pending = readl(pctrl->regs + CHV_INTSTAT);
-+	raw_spin_unlock_irqrestore(&chv_lock, flags);
-+
- 	for_each_set_bit(intr_line, &pending, pctrl->community->nirqs) {
- 		unsigned irq, offset;
+ 	err = request_irq(pdev->irq, pd_irq, IRQF_SHARED, DRV_NAME, pd);
+ 	if (err) {
+@@ -888,7 +889,6 @@ static int pch_dma_probe(struct pci_dev *pdev,
+ 		goto err_free_irq;
+ 	}
+ 
+-	pd->dma.dev = &pdev->dev;
+ 
+ 	INIT_LIST_HEAD(&pd->dma.channels);
  
 -- 
 2.20.1
