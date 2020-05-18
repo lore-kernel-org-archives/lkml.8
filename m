@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26209C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9B9F20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D4C207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824699;
-	bh=kVjtdmkF7nZwBOwVr6H9sprK2ZBhzSY0oqfnYe0VdP0=;
+	s=default; t=1589824704;
+	bh=Fq473D+whRVjLlot7rBxZ1jmAR8eyjkU37pEWOtJWyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mUY2rOsLfzYq3NIEPIU5IOXotJkuHuKTyH+qRJKtbkc+SPyUC3EyEcnZl7ZrPJN50
-	 IWvi5dJ/uFvXDQYME+9GbviWJb09SN9SGlAz4x2M0N5aZYQAfzpuY4aWJLpfUwxUtG
-	 WdGt3A7Yh0hjpTRE6mSJqWVXiEgrig2lh6GIg6SM=
+	b=RF0c4Q3CgBlhIJ06BZUOXfjI5DBK5AMONvO2O8bPmnINcHV6V8gKQO85IIg2cHs0V
+	 Xrm7GYgPz9CLUL0umRtUwnflf4wvBvbbkMJOPEYpFFpUcGidK7JXibaQWDXE1ESZmK
+	 XFKKI4zjk+nx4MuLgYQzMm8d9rcNRIj8ohLOE31g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731887AbgERR6T (ORCPT
+        id S1731894AbgERR6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:58:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37504 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729934AbgERR6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:58:16 -0400
+        id S1730713AbgERR6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:58:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8548520715;
-        Mon, 18 May 2020 17:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFF3220715;
+        Mon, 18 May 2020 17:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824695;
-        bh=kVjtdmkF7nZwBOwVr6H9sprK2ZBhzSY0oqfnYe0VdP0=;
+        s=default; t=1589824697;
+        bh=Fq473D+whRVjLlot7rBxZ1jmAR8eyjkU37pEWOtJWyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ztuASY9L2MKJTH7p/N0N2aSpjk+N6+eSYBJ8OW9rsx8kIGhZUO+diHzPubrOrIb9C
-         gQcm/mXrlh1XdOvxKkc/1t9rK8bfY657+/V50Dxs/F20WTFK77wFLLw5d5KyTlf11+
-         +c7o4Bt2/RXkrYthqVyDKjW9bgFFokW1Mey+t1+8=
+        b=OGfv5Li8dA/mmBIfQkoAL3BX09ZqNV2HED6eSYxrOOMeFVgfOZfmhWtH49vHY9XIj
+         1j2LHjfuLKnfHaGDNAIaM9LUO8udlv7cioPgf2q097pMxG8epxR04OSnvA2TB4TCvq
+         hIwYqluGqUzZZzq1Iduaj6eZJuwwKPqnzeGUd+Tc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.4 113/147] usb: xhci: Fix NULL pointer dereference when enqueuing trbs from urb sg list
-Date:   Mon, 18 May 2020 19:37:16 +0200
-Message-Id: <20200518173527.171668275@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Jones <pjones@redhat.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>
+Subject: [PATCH 5.4 114/147] Make the "Reducing compressed framebufer size" message be DRM_INFO_ONCE()
+Date:   Mon, 18 May 2020 19:37:17 +0200
+Message-Id: <20200518173527.265985773@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -60,74 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sriharsha Allenki <sallenki@codeaurora.org>
+From: Peter Jones <pjones@redhat.com>
 
-commit 3c6f8cb92c9178fc0c66b580ea3df1fa3ac1155a upstream.
+commit 82152d424b6cb6fc1ede7d03d69c04e786688740 upstream.
 
-On platforms with IOMMU enabled, multiple SGs can be coalesced into one
-by the IOMMU driver. In that case the SG list processing as part of the
-completion of a urb on a bulk endpoint can result into a NULL pointer
-dereference with the below stack dump.
+This was sort of annoying me:
 
-<6> Unable to handle kernel NULL pointer dereference at virtual address 0000000c
-<6> pgd = c0004000
-<6> [0000000c] *pgd=00000000
-<6> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-<2> PC is at xhci_queue_bulk_tx+0x454/0x80c
-<2> LR is at xhci_queue_bulk_tx+0x44c/0x80c
-<2> pc : [<c08907c4>]    lr : [<c08907bc>]    psr: 000000d3
-<2> sp : ca337c80  ip : 00000000  fp : ffffffff
-<2> r10: 00000000  r9 : 50037000  r8 : 00004000
-<2> r7 : 00000000  r6 : 00004000  r5 : 00000000  r4 : 00000000
-<2> r3 : 00000000  r2 : 00000082  r1 : c2c1a200  r0 : 00000000
-<2> Flags: nzcv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
-<2> Control: 10c0383d  Table: b412c06a  DAC: 00000051
-<6> Process usb-storage (pid: 5961, stack limit = 0xca336210)
-<snip>
-<2> [<c08907c4>] (xhci_queue_bulk_tx)
-<2> [<c0881b3c>] (xhci_urb_enqueue)
-<2> [<c0831068>] (usb_hcd_submit_urb)
-<2> [<c08350b4>] (usb_sg_wait)
-<2> [<c089f384>] (usb_stor_bulk_transfer_sglist)
-<2> [<c089f2c0>] (usb_stor_bulk_srb)
-<2> [<c089fe38>] (usb_stor_Bulk_transport)
-<2> [<c089f468>] (usb_stor_invoke_transport)
-<2> [<c08a11b4>] (usb_stor_control_thread)
-<2> [<c014a534>] (kthread)
+random:~$ dmesg | tail -1
+[523884.039227] [drm] Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.
+random:~$ dmesg | grep -c "Reducing the compressed"
+47
 
-The above NULL pointer dereference is the result of block_len and the
-sent_len set to zero after the first SG of the list when IOMMU driver
-is enabled. Because of this the loop of processing the SGs has run
-more than num_sgs which resulted in a sg_next on the last SG of the
-list which has SG_END set.
+This patch makes it DRM_INFO_ONCE() just like the similar message
+farther down in that function is pr_info_once().
 
-Fix this by check for the sg before any attributes of the sg are
-accessed.
-
-[modified reason for null pointer dereference in commit message subject -Mathias]
-Fixes: f9c589e142d04 ("xhci: TD-fragment, align the unsplittable case with a bounce buffer")
 Cc: stable@vger.kernel.org
-Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200514110432.25564-2-mathias.nyman@linux.intel.com
+Signed-off-by: Peter Jones <pjones@redhat.com>
+Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/1745
+Link: https://patchwork.freedesktop.org/patch/msgid/20180706190424.29194-1-pjones@redhat.com
+[vsyrjala: Rebase due to per-device logging]
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+(cherry picked from commit 6b7fc6a3e6af4ff5773949d0fed70d8e7f68d5ce)
+[Rodrigo: port back to DRM_INFO_ONCE]
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/display/intel_fbc.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -3421,8 +3421,8 @@ int xhci_queue_bulk_tx(struct xhci_hcd *
- 			/* New sg entry */
- 			--num_sgs;
- 			sent_len -= block_len;
--			if (num_sgs != 0) {
--				sg = sg_next(sg);
-+			sg = sg_next(sg);
-+			if (num_sgs != 0 && sg) {
- 				block_len = sg_dma_len(sg);
- 				addr = (u64) sg_dma_address(sg);
- 				addr += sent_len;
+--- a/drivers/gpu/drm/i915/display/intel_fbc.c
++++ b/drivers/gpu/drm/i915/display/intel_fbc.c
+@@ -504,8 +504,7 @@ static int intel_fbc_alloc_cfb(struct in
+ 	if (!ret)
+ 		goto err_llb;
+ 	else if (ret > 1) {
+-		DRM_INFO("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
+-
++		DRM_INFO_ONCE("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
+ 	}
+ 
+ 	fbc->threshold = ret;
 
 
