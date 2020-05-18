@@ -2,140 +2,93 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D094DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B05C9207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA447207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 00:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WhVTQuEf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtsuPBBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgERAkI (ORCPT
+        id S1726722AbgERAsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 20:40:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54462 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726668AbgERAkI (ORCPT
+        Sun, 17 May 2020 20:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbgERAsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 20:40:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589762406;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ldgf5qCz+KPm0qgqX51insh5mQ/IcQUyFZCFAsumpxs=;
-        b=WhVTQuEfg46pETpoPphlLD3XlthdZ23nGyAOgIaK+JwFtftFhS2yadHWXbPwM4TabKbX12
-        Cc5LcBG3KGzE4SBzJtb32ym81h70taEmN8aCWR+hniD13pRpl2EOJ0b5lvt6bDG0vyCkZj
-        UEgug1kgHZ1VwGcUvCaGe+G/Pj9pmX0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-fyxGpy4-PmylBpGtDqWUaA-1; Sun, 17 May 2020 20:40:04 -0400
-X-MC-Unique: fyxGpy4-PmylBpGtDqWUaA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3266ABFC7;
-        Mon, 18 May 2020 00:39:51 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C55460C81;
-        Mon, 18 May 2020 00:39:22 +0000 (UTC)
-Date:   Sun, 17 May 2020 20:39:20 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     fw@strlen.de, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG
- record to cover async unregister
-Message-ID: <20200518003920.e6vyzhvadyi5wdjd@madcap2.tricolour.ca>
-References: <cover.1587500467.git.rgb@redhat.com>
- <b8ba40255978a73ea15e3859d5c945ecd5fede8e.1587500467.git.rgb@redhat.com>
- <CAHC9VhR9sNB58A8uQ4FNgAXOgVJ3RaWF4y5MAo=3mcTojaym0Q@mail.gmail.com>
- <20200517141515.qqx3jx5ulb2546tx@madcap2.tricolour.ca>
- <CAHC9VhQVRyJ7GRHrujW5Ri-pvBRBgFM2Y8+OYQxca1bUyv2eyg@mail.gmail.com>
+        Sun, 17 May 2020 20:48:17 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3801C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 17:48:16 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id l19so8006458lje.10
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 17:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=99zfnT+jlIhxeXf7C8eEbI957pcTZl11keR9XegYgeE=;
+        b=NtsuPBBfeEL33RNoTJvk4KDKHPZxPoL5nT8FBW6cqNeNkd2tdfKBLWF/Nofnr2TfkR
+         WfPGJL65Oxi+rSWIbNRQ+VQWLZkPj2HXThR5EhgWhs0xwaypVZWO4gkM+DpzfZaOdd1h
+         1eQfW+hzDVDhZddBFOw9o9Zg5geXUxs4j/uWk/VGX3jKIT2hbAuPv+kZtEXZGFLk4OGH
+         hrNX5qQ6YrIZRWuf8yPYeNLo9qzT5sWv9+QrD56DdGtymCQm64pwXV0FqQh4H+gAZZsg
+         tsROiqfGaUH5judBbY0i96U1WP7c9IrGjk9k6iGrO60hh+gw9Y6V+KPx0tsVY7a3uIB+
+         9KaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=99zfnT+jlIhxeXf7C8eEbI957pcTZl11keR9XegYgeE=;
+        b=FU+NLej9D0qTuUYquMapDGMkeTzwxM/eNyOvJwEI8R+q/U+wq4wP5R4AC5O+PJdVl/
+         nq8Enjdl5wGU03lLS7gLDchGA6wL6/mizeZw4c/bHu56PKSrz71Yr1yqJUap6+VYFb3G
+         PZpZVGx5vfsdRuE1d/pgV/oueZgIWKyv6iGwZMUi5kRsLk77cBcJWgjky0blKSzG97Ab
+         OuMJRcdw8KD+2AZqTx0Rt57gTZwG2n5zoFvqVGNPYVZBXqqOrYXcujzcxfbiEbX9zD+f
+         PottQ+aRBqfMyJI5P7Pil143jVdXp6wt7Hm/0Zt52SUizI9jusmRdtFew1HLQM/J++Fo
+         vkww==
+X-Gm-Message-State: AOAM532gYu1Qj+mWr+uWh2u0RuRC2nm1M572F6emLYFQjEB/WUbVlqXf
+        WVU19UXQT86geblwq8EBNs5hUPFiOyoDy77mFN4=
+X-Google-Smtp-Source: ABdhPJwtWVqQezl+R0G++NNh4poFaGzeaFqxE4QFP8wtthGe2uE9QL06bgdch8juVQ20JTz/gbJq+ymyF1xss2G2R40=
+X-Received: by 2002:a2e:4952:: with SMTP id b18mr8867279ljd.41.1589762895194;
+ Sun, 17 May 2020 17:48:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhQVRyJ7GRHrujW5Ri-pvBRBgFM2Y8+OYQxca1bUyv2eyg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200515070742.14151-1-steves.lee@maximintegrated.com>
+ <CAJKOXPf-Q-e_K-puR-N2NRwQCmaKD=EczzON4rBymvV2CyoiTg@mail.gmail.com> <20200515122948.GD5066@sirena.org.uk>
+In-Reply-To: <20200515122948.GD5066@sirena.org.uk>
+From:   Steve Lee <steves.lee.maxim@gmail.com>
+Date:   Mon, 18 May 2020 09:48:04 +0900
+Message-ID: <CABff4NSSpK5bZg9WRJ77+QzR_Z_eNaNcMviAOiNWxHCch_S6sw@mail.gmail.com>
+Subject: Re: [V5 PATCH 2/2] ASoC: max98390: Added Amplifier Driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, ckeepax@opensource.cirrus.com,
+        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
+        =?UTF-8?B?U2h1bWluZyBb6IyD5pu46YqYXQ==?= <shumingf@realtek.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        dmurphy@ti.com, jack.yu@realtek.com, nuno.sa@analog.com,
+        steves.lee@maximintegrated.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-17 17:50, Paul Moore wrote:
-> On Sun, May 17, 2020 at 10:15 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-04-28 18:25, Paul Moore wrote:
-> > > On Wed, Apr 22, 2020 at 5:40 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > Some table unregister actions seem to be initiated by the kernel to
-> > > > garbage collect unused tables that are not initiated by any userspace
-> > > > actions.  It was found to be necessary to add the subject credentials to
-> > > > cover this case to reveal the source of these actions.  A sample record:
-> > > >
-> > > >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 uid=root auid=unset tty=(none) ses=unset subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2 exe=(null)
-> > >
-> > > [I'm going to comment up here instead of in the code because it is a
-> > > bit easier for everyone to see what the actual impact might be on the
-> > > records.]
-> > >
-> > > Steve wants subject info in this case, okay, but let's try to trim out
-> > > some of the fields which simply don't make sense in this record; I'm
-> > > thinking of fields that are unset/empty in the kernel case and are
-> > > duplicates of other records in the userspace/syscall case.  I think
-> > > that means we can drop "tty", "ses", "comm", and "exe" ... yes?
-> > >
-> > > While "auid" is a potential target for removal based on the
-> > > dup-or-unset criteria, I think it falls under Steve's request for
-> > > subject info here, even if it is garbage in this case.
-> >
-> > Can you explain why auid falls under this criteria but ses does not if
-> > both are unset?
-> 
-> "While "auid" is a potential target for removal based on the
-> dup-or-unset criteria, I think it falls under Steve's request for
-> subject info here, even if it is garbage in this case."
-> 
-> It's a concession to Steve.  As I mentioned previously, I think the
-> subject info is bogus in this case; either it is valid and we get it
-> from the SYSCALL record or it simply isn't present in any meaningful
-> way.
+On Fri, May 15, 2020 at 9:29 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, May 15, 2020 at 10:42:24AM +0200, Krzysztof Kozlowski wrote:
+>
+> > Your "From" address still does not match the Signed-off-by. Set the
+> > author of commit to the signed-off person.
+>
+> git commit --amend --author='foo <foo@example.com>'
 
-Sorry for being so dense.  I still don't follow your explanation.  You've
-repeated the same paragraph that didn't make sense to me the first time.
-
-What definition of "subject info" are you working with?  I had assumed
-it was the set of fields that contain information that came from that
-task's struct task_struct.  Some of those fields contain information
-that isn't helpful.  Why not remove them all rather than keep one that
-still contains no useful information?  Or is it a matter of keeping one
-key field that contains no useful information that proves that the rest
-is bogus?  Steve said that daemons leave no useful information in auid
-as well, so I don't see how keeping this field helps us.  My
-understanding is that the subj field's "...:kernel_t:..." is the key
-here and that pid and comm give us a bit more of a clue that it is a
-kernel thread.  Is that correct?  What use does including auid serve
-here?
-
-I suppose that the uid field is somewhat useful, since the kernel could
-conceivably switch to a particular user to run a kernel thread.  Is that
-even currently possible?
-
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+ Thanks. I will resend patch with matching email with signed off by.
