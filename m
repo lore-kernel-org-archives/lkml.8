@@ -2,104 +2,104 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15061C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E326420643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:18:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fbtz5h4N"
+	by mail.kernel.org (Postfix) with ESMTP id E0613207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:18:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589793497;
+	bh=vspP1UlkLkB/JOB38JTRPvKN/7nlnibhBIT98ITQ3lU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GmVE+URo7greRb8dfXdtGCkNxckCI3sUOOwtHHmf/UfFY8Vnvlr/BxC5DlE4rTpze
+	 1tay8UCUOr4iyoNBJF3WlhDRmEGdTJWiwElPVqNXPeanNa4tGOihI0tTIm/cHKAGwm
+	 uI1OS0mZKHiAw6U0YGhaBUwxSlPQJ3OEyy8MLARs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgERJSJ (ORCPT
+        id S1726676AbgERJSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgERJSI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:18:08 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88925C061A0C;
-        Mon, 18 May 2020 02:18:08 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id z22so7406899lfd.0;
-        Mon, 18 May 2020 02:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sc8TUDXWPz7UQKQUqaWBNuivArjYMb9Icx1lmuCCfNg=;
-        b=Fbtz5h4NZGIcKdvkQ7P8zHwq7+qlt4zclrBTWmuEgUaLhQ2IBoqhASDfNuaq22600K
-         wGIB4UljSHga6l5daQ7N9rOrcVPF8M7up4bcHJrMvNxHMFgRMChnsuCUIqmPD9dzyHSt
-         z7vPd+SZdosdwIchkrzgcQ6E+vJ6EUQHZnSNLAKl+dngY5aF0466RNYux/P/RLa3iP6c
-         kQA3Mk4rn2Kh9em6i4CxjNcXvW/cUOnDhCntPyTP6F0UnWmpfhzGWB0itObN0sFGDumV
-         YL5R/CFx7hB6GSK13PvavA4Gh46aRYhs5G5Qb0QMFlbX+mFh2vXwe0izo5KrEtZCfw1V
-         foGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sc8TUDXWPz7UQKQUqaWBNuivArjYMb9Icx1lmuCCfNg=;
-        b=EJQ3uperuv1lhEwlTCrQBIjbwJn4PJw5sLArNmUCttbzvphajw/DH+f46VtNzpJm2k
-         dG5VhPs2Vp0PDkpv411xwbbRxDolgVUcO7/qtDmI8Ger1932X0mUQrUCKKizDm4759PQ
-         VavTaJtQigFg8v6e7iq0mKFUGMUqf30thVGdSKeJdS4q2JtSVd5g2N9wrkQl6xY0MjZr
-         jjl+v4N8NJOSJd2YwZndyLm0Azhqi4l/Om8TSa28lHcljKfIClpbnxjXkCsgPOChIf8n
-         8kZ/7N7m4pEWYkEs7WhHU18polIPZKiiG235p5gPBSh+bt1V2jYx7KVa9nl7Qiq2oxna
-         H+Rw==
-X-Gm-Message-State: AOAM533mHVds6Al7mbkjDYNr96GhfrqOh6vOqvWqie2g0laqXa2XYuHO
-        Y3q9R3Hh4ydVE7v8NOHqNX9Kur49
-X-Google-Smtp-Source: ABdhPJwWYtw9yvtS4VLAIwALqTqRjz45YJjXgzIjUmNCCOn81RI7ieRhD30Sj8mgHQ3FcZjlqEZ37Q==
-X-Received: by 2002:a19:f11c:: with SMTP id p28mr4191532lfh.0.1589793486849;
-        Mon, 18 May 2020 02:18:06 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id 192sm5329868ljj.41.2020.05.18.02.18.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 02:18:06 -0700 (PDT)
-Subject: Re: [PATCH v5 01/10] input: elants: document some registers and
- values
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     David Heidelberg <david@ixit.cz>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
- <a8c17a4c804ad5c429269cc0468d8cb4c0783a47.1587923061.git.mirq-linux@rere.qmqm.pl>
- <20200518040710.GQ89269@dtor-ws>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c2a02c41-3474-583f-4f14-a81c8b5846cf@gmail.com>
-Date:   Mon, 18 May 2020 12:18:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 05:18:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgERJSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:18:16 -0400
+Received: from kernel.org (unknown [87.71.47.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7589B20643;
+        Mon, 18 May 2020 09:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589793495;
+        bh=vspP1UlkLkB/JOB38JTRPvKN/7nlnibhBIT98ITQ3lU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vfdf64MjvNL9DCh3shYDOVNCelvO9k5qgFnbkaxnR8CSLafylND93fl4SPC090Ssx
+         lXfNFdN1PlH2g/dyjYg825Qq/jLIopm9sZB3QX0TXj9AkpwseV+4rnot/t4CrE2YEL
+         jKieBIbULKqfz91L4Op8g2B/VKTZ+vlYF/sTSX3c=
+Date:   Mon, 18 May 2020 12:18:07 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        elver@google.com, tglx@linutronix.de, paulmck@kernel.org,
+        mingo@kernel.org, peterz@infradead.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
+ PTE tables
+Message-ID: <20200518091807.GB1118872@kernel.org>
+References: <20200511204150.27858-1-will@kernel.org>
+ <20200511204150.27858-5-will@kernel.org>
+ <20200517000050.GA87467@roeck-us.net>
+ <20200517000750.GA157503@roeck-us.net>
+ <20200518083715.GA31383@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200518040710.GQ89269@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518083715.GA31383@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.05.2020 07:07, Dmitry Torokhov пишет:
-...
->> +/* FW write command, 0x54 0x?? 0x0, 0x01 */
->> +#define E_POWER_MODE_BATTERY	0x40
->> +#define E_POWER_MODE_AC		0x41
->> +#define E_POWER_MODE_USB	0x42
+On Mon, May 18, 2020 at 09:37:15AM +0100, Will Deacon wrote:
+> On Sat, May 16, 2020 at 05:07:50PM -0700, Guenter Roeck wrote:
+> > On Sat, May 16, 2020 at 05:00:50PM -0700, Guenter Roeck wrote:
+> > > On Mon, May 11, 2020 at 09:41:36PM +0100, Will Deacon wrote:
+> > > > Now that the page table allocator can free page table allocations
+> > > > smaller than PAGE_SIZE, reduce the size of the PMD and PTE allocations
+> > > > to avoid needlessly wasting memory.
+> > > > 
+> > > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > Signed-off-by: Will Deacon <will@kernel.org>
+> > > 
+> > > Something in the sparc32 patches in linux-next causes all my sparc32 emulations
+> > > to crash. bisect points to this patch, but reverting it doesn't help, and neither
+> > > does reverting the rest of the series.
+> > > 
+> > Actually, turns out I see the same pattern (lots of scheduling while atomic
+> > followed by 'killing interrupt handler' in cryptomgr_test) with several
+> > powerpc boot tests.  I am currently bisecting those crashes. I'll report
+> > the results here as well as soon as I have it.
 > 
-> What is this for?
+> FWIW, I retested my sparc32 patches with PREEMPT=y and I don't see any
+> issues. However, linux-next is a different story, where I don't get very far
+> at all:
+> 
+> BUG: Bad page state in process swapper  pfn:005b4
+> 
+> If you're seeing this on powerpc too, I wonder if it's related to:
+> 
+> https://lore.kernel.org/r/20200514170327.31389-1-rppt@kernel.org
+> 
+> since I think it just hit -next and the diffstat is all over the place. I've
+> added Mike to CC just in case.
 
-It is possible to switch the touchscreen's power source. Downstream
-kernel switches away from the battery source when USB cable is connected
-and baterry is charging. This is not supported by upstream driver yet, I
-guess it should be good to postpone adding these FW opcodes until they
-will become actually needed.
+Thanks, Will, I'll take a look.
+
+> Will
+
+-- 
+Sincerely yours,
+Mike.
