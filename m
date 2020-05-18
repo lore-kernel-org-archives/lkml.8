@@ -2,51 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1C1C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53256C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 006AF20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7A6207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824295;
-	bh=WnNstYCDUFAAXrsF4FoTE8vpCGvT/AX729NNv95uTrM=;
+	s=default; t=1589824300;
+	bh=S2PjfQJo09RQhAQV6KCBLCWeUPBTH9UMZI6xUNXjn7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A4+s6IltI4RHQ2Qf/eYNPah5POMtSor59jnyo/TaJbEyHOX6dYhQF6mNGz0Q8ZAzS
-	 PQmDpIZINr2iiCnl3gsxSttkMq/MhWsUPcFzEJL7K+L4A/4i0vkei7ercXccTetU9l
-	 wmetCf2nLX55u88qEJRa/juL2wGS1UGdE1HBRITs=
+	b=aX5g9e3ZpMCE4Xsy1TRusDfR0lYLB8wztNmmu+oy+w5Qi+B4v1dWF0q7GNA1WOnZi
+	 LTADPFBSKU1Nkl9l5SnWyhYn93BA0uFTw+7XibLGFzvll0TVfnYPxKJ0CtQzfcGPDK
+	 twZvFJzj8pDx74iY8IJGbhN7wq2iK0vZG5iOQjfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbgERRve (ORCPT
+        id S1730889AbgERRvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:51:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730348AbgERRv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:28 -0400
+        id S1730752AbgERRuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:50:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACC7920715;
-        Mon, 18 May 2020 17:51:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7981820674;
+        Mon, 18 May 2020 17:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824287;
-        bh=WnNstYCDUFAAXrsF4FoTE8vpCGvT/AX729NNv95uTrM=;
+        s=default; t=1589824236;
+        bh=S2PjfQJo09RQhAQV6KCBLCWeUPBTH9UMZI6xUNXjn7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B5yPLn9F/3DRwj+PH5BmVcAxmIlD3U+TGRsixSXdGVARzKxu+6UdrbAJUlqZHJprt
-         UvOAwsITA9qwEyLi3tq6L97faLjAkMNiEcB+oPzgxn4pvHM/ieYPIrA6YOBJVpvRCa
-         wyA258heGjurDMtkvyL+e1Cc4JT0WpFHoPE4rsRs=
+        b=v3Yj1jUpdLUlgi5mjJhPge+c9IAV5sbQJSxnzLROZfE/0WgJL3hbT0CJ7yPotL43s
+         4uMb7CYWJO595/u/ArpG3zclP2Mywy7SIhPO35DNX9EGMnVChXsYwsBFDtNrh76Awv
+         qjR8d+NGh7Jcu9FBTHlKEXP2dEpFuHJPttdho7V0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 24/80] dmaengine: mmp_tdma: Reset channel error on release
-Date:   Mon, 18 May 2020 19:36:42 +0200
-Message-Id: <20200518173455.213498172@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?David=20Bala=C5=BEic?= <xerces9@gmail.com>,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 12/80] pppoe: only process PADT targeted at local interfaces
+Date:   Mon, 18 May 2020 19:36:30 +0200
+Message-Id: <20200518173452.813559136@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -59,41 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Guillaume Nault <gnault@redhat.com>
 
-[ Upstream commit 0c89446379218698189a47871336cb30286a7197 ]
+[ Upstream commit b8c158395119be62294da73646a3953c29ac974b ]
 
-When a channel configuration fails, the status of the channel is set to
-DEV_ERROR so that an attempt to submit it fails. However, this status
-sticks until the heat end of the universe, making it impossible to
-recover from the error.
+We don't want to disconnect a session because of a stray PADT arriving
+while the interface is in promiscuous mode.
+Furthermore, multicast and broadcast packets make no sense here, so
+only PACKET_HOST is accepted.
 
-Let's reset it when the channel is released so that further use of the
-channel with correct configuration is not impacted.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Link: https://lore.kernel.org/r/20200419164912.670973-5-lkundrak@v3.sk
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: David Balažic <xerces9@gmail.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/dma/mmp_tdma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ppp/pppoe.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index 13c68b6434ce2..15b4a44e60069 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -362,6 +362,8 @@ static void mmp_tdma_free_descriptor(struct mmp_tdma_chan *tdmac)
- 		gen_pool_free(gpool, (unsigned long)tdmac->desc_arr,
- 				size);
- 	tdmac->desc_arr = NULL;
-+	if (tdmac->status == DMA_ERROR)
-+		tdmac->status = DMA_COMPLETE;
+--- a/drivers/net/ppp/pppoe.c
++++ b/drivers/net/ppp/pppoe.c
+@@ -497,6 +497,9 @@ static int pppoe_disc_rcv(struct sk_buff
+ 	if (!skb)
+ 		goto out;
  
- 	return;
- }
--- 
-2.20.1
-
++	if (skb->pkt_type != PACKET_HOST)
++		goto abort;
++
+ 	if (!pskb_may_pull(skb, sizeof(struct pppoe_hdr)))
+ 		goto abort;
+ 
 
 
