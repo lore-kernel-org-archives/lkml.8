@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CC1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7547F207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D462220715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824833;
-	bh=1HRobCZzCaPpFrUUerPfRMtZ5WaP6Ertr4EDYNZ66XM=;
+	s=default; t=1589824840;
+	bh=SAfOCFHBexJBzEkBuz8E/9AxJgu9uGJhvz1+5p2MdQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgM2ElIo2yFRFh6Zn1lnern5nEaK1nMyK0jrZVAYwGLwD0UmwG46e18O1Uka2cw0O
-	 k7VzNhB93tUcH3rg9z0yXXK4Hc2DIReKXWK97jj+RLwsk2yzGo1HCTca1Z5XV5yOIL
-	 VjSm4uporulXiGzGDLs3+UpF2KC9rVrBCVYrjm7U=
+	b=i72lFBtmQlqfwkaYeLVpwEeaQBLIqB+LHfAMWMpLxxK25uFz8skVGDlxmVOH6Fqp7
+	 JId6oVmsUfyuDV7X952bQ7yIcAq3+CsJ1A+qqKn6m6f6untTbHMcO6AG+2Fp8QJfzu
+	 gf9VXMnhVkM+psMfNT5lTPrnm0y3uve6ja0BaflQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731786AbgERSAc (ORCPT
+        id S1732314AbgERSAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42004 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732225AbgERSAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:00:30 -0400
+        id S1732244AbgERSAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:00:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5506207D3;
-        Mon, 18 May 2020 18:00:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD900207F5;
+        Mon, 18 May 2020 18:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824829;
-        bh=1HRobCZzCaPpFrUUerPfRMtZ5WaP6Ertr4EDYNZ66XM=;
+        s=default; t=1589824834;
+        bh=SAfOCFHBexJBzEkBuz8E/9AxJgu9uGJhvz1+5p2MdQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oyTGh3W7FLTMLLJn6OukdZUQXSgy620TsdUGWveFg8yl7rd3+Fo0p13uWjnSG4su8
-         pziR++3SPqtwIUPF4OO/yOtJVwT1TRUDgMJ7uQX4gXovV2aVHuCcdsX+8bIfcS03Cn
-         +EfpeRDm7kwR/0QCstEhIj9DFayFwoy6v9Cg5/5k=
+        b=XqzJPjJH3vxr5kGAo3k0uT2FdW17dRWCOXeGlWvU5TKzzu6leTOMuVtDIZA3QuqvQ
+         rIrvE8KFXd57Ze1uEKwD7wfLFrdLfOE10THWI+RhGOBgrz/Pe9gVxQ6P5fM1MNdaGN
+         T19uxAE6HhggUoY5ltxelJij0A9vvYD+4lSswUgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 020/194] drop_monitor: work around gcc-10 stringop-overflow warning
-Date:   Mon, 18 May 2020 19:35:10 +0200
-Message-Id: <20200518173533.228738359@linuxfoundation.org>
+Subject: [PATCH 5.6 022/194] sun6i: dsi: fix gcc-4.8
+Date:   Mon, 18 May 2020 19:35:12 +0200
+Message-Id: <20200518173533.369441916@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -63,69 +64,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit dc30b4059f6e2abf3712ab537c8718562b21c45d ]
+[ Upstream commit 3a3a71f97c30983f1627c2c550d43566e9b634d2 ]
 
-The current gcc-10 snapshot produces a false-positive warning:
+Older compilers warn about initializers with incorrect curly
+braces:
 
-net/core/drop_monitor.c: In function 'trace_drop_common.constprop':
-cc1: error: writing 8 bytes into a region of size 0 [-Werror=stringop-overflow=]
-In file included from net/core/drop_monitor.c:23:
-include/uapi/linux/net_dropmon.h:36:8: note: at offset 0 to object 'entries' with size 4 declared here
-   36 |  __u32 entries;
-      |        ^~~~~~~
+drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c: In function 'sun6i_dsi_encoder_enable':
+drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:720:8: error: missing braces around initializer [-Werror=missing-braces]
+  union phy_configure_opts opts = { 0 };
+        ^
+drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:720:8: error: (near initialization for 'opts.mipi_dphy') [-Werror=missing-braces]
 
-I reported this in the gcc bugzilla, but in case it does not get
-fixed in the release, work around it by using a temporary variable.
+Use the GNU empty initializer extension to avoid this.
 
-Fixes: 9a8afc8d3962 ("Network Drop Monitor: Adding drop monitor implementation & Netlink protocol")
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94881
+Fixes: bb3b6fcb6849 ("sun6i: dsi: Convert to generic phy handling")
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200428215105.3928459-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/drop_monitor.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 31700e0c39283..04d8e8779384d 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -212,6 +212,7 @@ static void sched_send_work(struct timer_list *t)
- static void trace_drop_common(struct sk_buff *skb, void *location)
- {
- 	struct net_dm_alert_msg *msg;
-+	struct net_dm_drop_point *point;
- 	struct nlmsghdr *nlh;
- 	struct nlattr *nla;
- 	int i;
-@@ -230,11 +231,13 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 	nlh = (struct nlmsghdr *)dskb->data;
- 	nla = genlmsg_data(nlmsg_data(nlh));
- 	msg = nla_data(nla);
-+	point = msg->points;
- 	for (i = 0; i < msg->entries; i++) {
--		if (!memcmp(&location, msg->points[i].pc, sizeof(void *))) {
--			msg->points[i].count++;
-+		if (!memcmp(&location, &point->pc, sizeof(void *))) {
-+			point->count++;
- 			goto out;
- 		}
-+		point++;
- 	}
- 	if (msg->entries == dm_hit_limit)
- 		goto out;
-@@ -243,8 +246,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 	 */
- 	__nla_reserve_nohdr(dskb, sizeof(struct net_dm_drop_point));
- 	nla->nla_len += NLA_ALIGN(sizeof(struct net_dm_drop_point));
--	memcpy(msg->points[msg->entries].pc, &location, sizeof(void *));
--	msg->points[msg->entries].count = 1;
-+	memcpy(point->pc, &location, sizeof(void *));
-+	point->count = 1;
- 	msg->entries++;
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index a75fcb1131724..2b6d77ca3dfc2 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -719,7 +719,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
+ 	struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
+ 	struct sun6i_dsi *dsi = encoder_to_sun6i_dsi(encoder);
+ 	struct mipi_dsi_device *device = dsi->device;
+-	union phy_configure_opts opts = { 0 };
++	union phy_configure_opts opts = { };
+ 	struct phy_configure_opts_mipi_dphy *cfg = &opts.mipi_dphy;
+ 	u16 delay;
  
- 	if (!timer_pending(&data->send_timer)) {
 -- 
 2.20.1
 
