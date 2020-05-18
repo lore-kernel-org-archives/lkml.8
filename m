@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FDBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E807DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C0F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C1E207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823622;
-	bh=+9GdmBuolRCyZ3pi6dKFM2QtqpE5BRC0JJodR3rBbQI=;
+	s=default; t=1589823626;
+	bh=rI69ELdrINCHlnyvofm74tGYIw+cV8yJBh7GJpNNMKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r+4Rsr1zV7WxGz3wRQPbif/7ktQjc12+ZbWDpIjJcEvlaId8//5fB1EQIAiGJbao/
-	 LQbKj8WXuTzyiq48iJMvjCEtF06bBJ7uizFQ4d3mbtmHFbSm3BoBrQkVuuTSy9Q1ik
-	 7w4HF4KUu+5de88p1JMjXhhJeVpwJA+Ut6vH2UBI=
+	b=zILH2EDkZzruFHUZ4PhfIj2lu6sMoRQS46d6q6kjWU7Ltin0cxY3BZxLBU9S0yIy5
+	 QhalHrcFGIhovKqheLF+wdjDWJxYwHF37kkY2/mU/CrfHHHSgVIubDMIiPxuhGDYH8
+	 ZrmMCB5nVOBy333UkH6wTyuFznxhQR14sfcKMc0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgERRkV (ORCPT
+        id S1729053AbgERRkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:40:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729017AbgERRkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:16 -0400
+        id S1729029AbgERRkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C34720657;
-        Mon, 18 May 2020 17:40:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4634207FB;
+        Mon, 18 May 2020 17:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823615;
-        bh=+9GdmBuolRCyZ3pi6dKFM2QtqpE5BRC0JJodR3rBbQI=;
+        s=default; t=1589823618;
+        bh=rI69ELdrINCHlnyvofm74tGYIw+cV8yJBh7GJpNNMKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CmsarTpYXN9c7bYTi7na5YRPOFQgyw66rj1UgYsNvve87eg/0YTDE5S18XoEVDShy
-         hDoUhc+pt5kGWjbfgGeJ4JNEqSK7UZ58bhxlPGkZPvHUEzOmVAnv05F+j6r7hXJJ67
-         HvQT3ve47IkIYoFPo/w0ORix015arR2OZX+lf51k=
+        b=TY9bXI6gzfFcxHp526oLrQBIup8fSCtv0u1zhU4WdFfLuDw7QG/gBPyRRjnr3RQMu
+         PKN7TA8SRhl2LhFzL8cjdedLB7IpzT0YrYxmVYk1TCu1cgsCSwBM7IrI7tHtEQAf1w
+         XxAt0eBIfqKJnfqSvC9ACFmcz8LXndLz66/n5AUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, George Spelvin <lkml@sdf.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 15/86] batman-adv: fix batadv_nc_random_weight_tq
-Date:   Mon, 18 May 2020 19:35:46 +0200
-Message-Id: <20200518173453.612485931@linuxfoundation.org>
+        stable@vger.kernel.org, Ivan Delalande <colona@arista.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 16/86] scripts/decodecode: fix trapping instruction formatting
+Date:   Mon, 18 May 2020 19:35:47 +0200
+Message-Id: <20200518173453.793425023@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -60,66 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Spelvin <lkml@sdf.org>
+From: Ivan Delalande <colona@arista.com>
 
-commit fd0c42c4dea54335967c5a86f15fc064235a2797 upstream.
+commit e08df079b23e2e982df15aa340bfbaf50f297504 upstream.
 
-and change to pseudorandom numbers, as this is a traffic dithering
-operation that doesn't need crypto-grade.
+If the trapping instruction contains a ':', for a memory access through
+segment registers for example, the sed substitution will insert the '*'
+marker in the middle of the instruction instead of the line address:
 
-The previous code operated in 4 steps:
+	2b:   65 48 0f c7 0f          cmpxchg16b %gs:*(%rdi)          <-- trapping instruction
 
-1. Generate a random byte 0 <= rand_tq <= 255
-2. Multiply it by BATADV_TQ_MAX_VALUE - tq
-3. Divide by 255 (= BATADV_TQ_MAX_VALUE)
-4. Return BATADV_TQ_MAX_VALUE - rand_tq
+I started to think I had forgotten some quirk of the assembly syntax
+before noticing that it was actually coming from the script.  Fix it to
+add the address marker at the right place for these instructions:
 
-This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
-value between 0/255 and 255/255.
+	28:   49 8b 06                mov    (%r14),%rax
+	2b:*  65 48 0f c7 0f          cmpxchg16b %gs:(%rdi)           <-- trapping instruction
+	30:   0f 94 c0                sete   %al
 
-But!  The intermediate value between steps 3 and 4 is stored in a u8
-variable.  So it's truncated, and most of the time, is less than 255, after
-which the division produces 0.  Specifically, if tq is odd, the product is
-always even, and can never be 255.  If tq is even, there's exactly one
-random byte value that will produce a product byte of 255.
-
-Thus, the return value is 255 (511/512 of the time) or 254 (1/512
-of the time).
-
-If we assume that the truncation is a bug, and the code is meant to scale
-the input, a simpler way of looking at it is that it's returning a random
-value between tq and BATADV_TQ_MAX_VALUE, inclusive.
-
-Well, we have an optimized function for doing just that.
-
-Fixes: 3c12de9a5c75 ("batman-adv: network coding - code and transmit packets if possible")
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 18ff44b189e2 ("scripts/decodecode: make faulting insn ptr more robust")
+Signed-off-by: Ivan Delalande <colona@arista.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Link: http://lkml.kernel.org/r/20200419223653.GA31248@visor
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/network-coding.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ scripts/decodecode |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/batman-adv/network-coding.c
-+++ b/net/batman-adv/network-coding.c
-@@ -991,15 +991,8 @@ static struct batadv_nc_path *batadv_nc_
-  */
- static u8 batadv_nc_random_weight_tq(u8 tq)
- {
--	u8 rand_val, rand_tq;
--
--	get_random_bytes(&rand_val, sizeof(rand_val));
--
- 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
--	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
--
--	/* normalize the randomized packet loss */
--	rand_tq /= BATADV_TQ_MAX_VALUE;
-+	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
+--- a/scripts/decodecode
++++ b/scripts/decodecode
+@@ -98,7 +98,7 @@ faultlinenum=$(( $(wc -l $T.oo  | cut -d
+ faultline=`cat $T.dis | head -1 | cut -d":" -f2-`
+ faultline=`echo "$faultline" | sed -e 's/\[/\\\[/g; s/\]/\\\]/g'`
  
- 	/* convert to (randomized) estimated tq again */
- 	return BATADV_TQ_MAX_VALUE - rand_tq;
+-cat $T.oo | sed -e "${faultlinenum}s/^\(.*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
++cat $T.oo | sed -e "${faultlinenum}s/^\([^:]*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
+ echo
+ cat $T.aa
+ cleanup
 
 
