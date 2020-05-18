@@ -2,54 +2,51 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC40BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4CE520643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E7C20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826276;
-	bh=QKJKtRoLIqCaEfc6uLGClsCSoy4x2Et0ySrYl6L8788=;
+	s=default; t=1589826280;
+	bh=WnNstYCDUFAAXrsF4FoTE8vpCGvT/AX729NNv95uTrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpobQkEEug3Vy3PbVdUrTA4KlT+FriRq00AqDowPaDypG7GaTQPje9aCHaz6vCH+6
-	 /R43Ersk2ltHdDvfMKrheEAbKfjnykA1HuPFw/P/wW8GUynQ+Pkb5rSgDiVbgrf8jI
-	 py1Bw74FbsAshcL17DKza/UNN8yL5GBeeKohLfzc=
+	b=hBldyGKcMB9Q8muzO6ihPac4Tym8tTHBbYHsh4lqbp42CNUoinrBoVnwzzxyVScd2
+	 x1hsMrB4ZgHdkzZS7nQQOAS73FybpGWrefX7e0+4Z+KMgnaFcBBT2PL2+GyrG51PlB
+	 96RbegOr121/2IeblpAHDeHULijIzwA8b9pARoIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgERRrl (ORCPT
+        id S2387713AbgERSYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47964 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:24:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730235AbgERRrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:47:36 -0400
+        id S1729955AbgERRrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:47:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3669520671;
-        Mon, 18 May 2020 17:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1682420657;
+        Mon, 18 May 2020 17:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824055;
-        bh=QKJKtRoLIqCaEfc6uLGClsCSoy4x2Et0ySrYl6L8788=;
+        s=default; t=1589824060;
+        bh=WnNstYCDUFAAXrsF4FoTE8vpCGvT/AX729NNv95uTrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qlQvxGIXUen/dO0inW8k+OphuW1is6k7IGaxTVZRKZZZMGgeW4rRoezeKD7LO+Tq9
-         A94IpWifYac5IWOdbXreesy2w7qR2ZV6kIBKQd6oA0Z+C88dOGDUlM4R4IneDvzL4I
-         k1pvuFj+1x1Gf7RSmWj7O8EqAvUfGAumfTXIIdwM=
+        b=BwV2maedGC6nz+z76WmBUUmFn7G8ab+trAKh7AhBo/3Apil3JBYD38BSZ7fWgLK4Q
+         fjNc/ZmjwqWQ+IFouiOF96A+ZsBQbrIAZpqXwJrjG7DrWiB87X6gjvfzeAtH4kaYnm
+         pra2WETZkmQHJW1Qy7RlXmN10UYaERAyz/8V8QyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
-        Wu Bo <wubo40@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 054/114] scsi: sg: add sg_remove_request in sg_write
-Date:   Mon, 18 May 2020 19:36:26 +0200
-Message-Id: <20200518173513.039706661@linuxfoundation.org>
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 056/114] dmaengine: mmp_tdma: Reset channel error on release
+Date:   Mon, 18 May 2020 19:36:28 +0200
+Message-Id: <20200518173513.332274606@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -62,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-commit 83c6f2390040f188cc25b270b4befeb5628c1aee upstream.
+[ Upstream commit 0c89446379218698189a47871336cb30286a7197 ]
 
-If the __copy_from_user function failed we need to call sg_remove_request
-in sg_write.
+When a channel configuration fails, the status of the channel is set to
+DEV_ERROR so that an attempt to submit it fails. However, this status
+sticks until the heat end of the universe, making it impossible to
+recover from the error.
 
-Link: https://lore.kernel.org/r/610618d9-e983-fd56-ed0f-639428343af7@huawei.com
-Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: Wu Bo <wubo40@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Let's reset it when the channel is released so that further use of the
+channel with correct configuration is not impacted.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Link: https://lore.kernel.org/r/20200419164912.670973-5-lkundrak@v3.sk
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
-[groeck: Backport to v5.4.y and older kernels]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/scsi/sg.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/mmp_tdma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -695,8 +695,10 @@ sg_write(struct file *filp, const char _
- 	hp->flags = input_size;	/* structure abuse ... */
- 	hp->pack_id = old_hdr.pack_id;
- 	hp->usr_ptr = NULL;
--	if (__copy_from_user(cmnd, buf, cmd_size))
-+	if (__copy_from_user(cmnd, buf, cmd_size)) {
-+		sg_remove_request(sfp, srp);
- 		return -EFAULT;
-+	}
- 	/*
- 	 * SG_DXFER_TO_FROM_DEV is functionally equivalent to SG_DXFER_FROM_DEV,
- 	 * but is is possible that the app intended SG_DXFER_TO_DEV, because there
+diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
+index 13c68b6434ce2..15b4a44e60069 100644
+--- a/drivers/dma/mmp_tdma.c
++++ b/drivers/dma/mmp_tdma.c
+@@ -362,6 +362,8 @@ static void mmp_tdma_free_descriptor(struct mmp_tdma_chan *tdmac)
+ 		gen_pool_free(gpool, (unsigned long)tdmac->desc_arr,
+ 				size);
+ 	tdmac->desc_arr = NULL;
++	if (tdmac->status == DMA_ERROR)
++		tdmac->status = DMA_COMPLETE;
+ 
+ 	return;
+ }
+-- 
+2.20.1
+
 
 
