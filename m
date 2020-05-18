@@ -2,112 +2,120 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00404C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0B6720758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:18:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SxAWC9wD"
+	by mail.kernel.org (Postfix) with ESMTP id CE40B2075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgERUSa (ORCPT
+        id S1726954AbgERUWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:18:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56174 "EHLO
+        Mon, 18 May 2020 16:22:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgERUS3 (ORCPT
+        with ESMTP id S1726349AbgERUWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:18:29 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587C2C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:18:29 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e16so13329393wra.7
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BuJAIlJzNVfUnKFpYlKJrQaksovEb6r2MOQ70C3Y5sE=;
-        b=SxAWC9wD97Nx9RF3x3Gt/iZfKa8M2cx51v1EjKYupLeGpf+OXQcl28YEfu07NNYBzp
-         oG+fZxxrewBemj4QfFHPCIkMV+hJAXiaAzGtFMWoKqaKX9APTvHFWnpqBpvZStJP6MY5
-         ZJL49q+YvgR1TsQW6DuEjc0vHci857/8g7zyBbXevlDpKtC16cdZUMFYwaSBtu/Azadr
-         hcWfZEHCdEnqumpagVLp+S3vV4xtpbduKy+4NNZEuG21ZOK5ZrWQACre05Eqq834JNCW
-         Tr0rVO6giGivX1D6FKN3hG2Y2HP0AELLOVuUdTe7C7HDFMMswLp//vZnCo7l4qyKIsq0
-         HEGg==
+        Mon, 18 May 2020 16:22:51 -0400
+Received: from omr1.cc.vt.edu (omr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:c6:2117:b0e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D75FC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:22:51 -0700 (PDT)
+Received: from mr5.cc.vt.edu (mr5.cc.vt.edu [IPv6:2607:b400:92:8400:0:72:232:758b])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04IKMo04026701
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:22:50 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04IKMjnh017574
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:22:50 -0400
+Received: by mail-qt1-f200.google.com with SMTP id p31so13302476qte.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:22:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BuJAIlJzNVfUnKFpYlKJrQaksovEb6r2MOQ70C3Y5sE=;
-        b=c96CBqGOFMMmLkq/Dr8s1clxPDvNhqpPD8F4JChGiCniriXUOn1p+8jNRh5acILnTS
-         ABpWhVt0zTDtFBw2TDTNC8tmFLasrTalDeqhDcx+g0lLfkO5PlWpD7F9a1lApjpJoIhv
-         EIkhhhJgatpO2O00KzjTh+n3tQW8bfxcWSkGBYfJ/Vp0ip7xgaNWmfao08zDiysTphDR
-         hnFbR1tZ+l0hj/pQK79Chg+mm7Qz7yLCJw/2ElPrJElnjn3gBo6BlilUhbNxLuuBH8aJ
-         Ud3lqosWEBXHwBXhWF3Kd7tR0gsh820/WzpX08x/3Ggi8JBLH16weI6rhoiJBJA1UAKz
-         4a+g==
-X-Gm-Message-State: AOAM5301UuXibGMXhJFkClO801rch4RNQoXK0Yd7TfNiY0jHCrml0taT
-        YKjnRno4z4cIBCrrLxjwxPvpkxohqAs=
-X-Google-Smtp-Source: ABdhPJwPiPMglSYT2/xaOY59iHe2nTbksNb6WmRUz9mJuUv5IbPqRFkca7BsAXDI/I3ojYQVTFNCww==
-X-Received: by 2002:adf:806e:: with SMTP id 101mr21994991wrk.225.1589833107923;
-        Mon, 18 May 2020 13:18:27 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
-        by smtp.googlemail.com with ESMTPSA id z11sm17107463wrr.32.2020.05.18.13.18.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 13:18:27 -0700 (PDT)
-Subject: Re: [PATCH v7 5/6] clocksource: Add Low Power STM32 timers driver
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        fabrice.gasnier@st.com, lee.jones@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, tglx@linutronix.de
-Cc:     devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Pascal Paillet <p.paillet@st.com>
-References: <20200420121620.2099-1-benjamin.gaignard@st.com>
- <20200420121620.2099-6-benjamin.gaignard@st.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <9f737934-d92c-9ddf-f6fb-3ee64057ea18@linaro.org>
-Date:   Mon, 18 May 2020 22:18:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200420121620.2099-6-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=HCM0z9rljt16BROVf1iAlmj4G0K4AH3m18Cka4/RF1w=;
+        b=MsRiau7PALj/oYCM8XvVIDvxPzXjE2r372t8qKToQxq/+pqcejc2dh2jKsmGbeLX9M
+         YHp+65OYy49rcY5cc5R4qX59OUNzGOF9r9yhx78Xmlu9H20MmKW4LdcnoOSdFFjdEWMr
+         x0OXN3sS65gAwS4IY8EsIROQvtUtC5MfO86Js+0NBCSdeXZO6nH/tjiRwPrmb4ufamss
+         Iom/qfxMEzMCENqJJAJxjjCjw7uhTaPSPQQyA9+vboXaXcjWPZD8rjfgiW23ZXeSvnRL
+         +tbNtsHfeEH7H3d7Xy1djvV3GLEe2y7vrtFt31AnQuaK6PagMi40Aq07Sy5Z0+lFdzjb
+         F0OQ==
+X-Gm-Message-State: AOAM530YoV3PstQdHOxPJVVNMWNTJPJPIa7ozpDw7RpYvqCv8UQKotQS
+        FWjlPkRyjMp96ddCbLQ+M1MYZlDL4Y7KKSN6ydvhu9GEc8R2uApshkuMeoiDYuLNbEr2WGqU6Ui
+        rawroLG7CdzZFss24WP/auLiFUDowXXqIBO0=
+X-Received: by 2002:a37:6547:: with SMTP id z68mr17705296qkb.197.1589833364997;
+        Mon, 18 May 2020 13:22:44 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz5CNdFEQSK8WWfGbjtmZd6EWpYQj4GLJIi6JCfHh7zXZY77TsLFbZ8OUETO75hTZ3buwp8tw==
+X-Received: by 2002:a37:6547:: with SMTP id z68mr17705270qkb.197.1589833364681;
+        Mon, 18 May 2020 13:22:44 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id h12sm10341360qtb.19.2020.05.18.13.22.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 13:22:43 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Hannes Reinecke <hare@suse.de>, Alasdair Kergon <agk@redhat.com>,
+        dm-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: next-20200514 - build issue in drivers/md/dm-zoned-target.c
+In-Reply-To: <20200518164449.GA24518@redhat.com>
+References: <367320.1589627953@turing-police> <7bb0d1c8-b164-d5f3-0218-5c71047c3a8c@suse.de>
+ <20200518164449.GA24518@redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1589833361_31675P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 18 May 2020 16:22:42 -0400
+Message-ID: <74618.1589833362@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/04/2020 14:16, Benjamin Gaignard wrote:
-> From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> 
-> Implement clock event driver using low power STM32 timers.
-> Low power timer counters running even when CPUs are stopped.
-> It could be used as clock event broadcaster to wake up CPUs but not like
-> a clocksource because each it rise an interrupt the counter restart from 0.
-> 
-> Low power timers have a 16 bits counter and a prescaler which allow to
-> divide the clock per power of 2 to up 128 to target a 32KHz rate.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Signed-off-by: Pascal Paillet <p.paillet@st.com>
+--==_Exmh_1589833361_31675P
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+On Mon, 18 May 2020 12:44:49 -0400, Mike Snitzer said:
 
-[ ... ]
+> Unless I'm missing something it was fixed up with this commit last
+> wednesday (13th):
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.=
+git/commit/?h=3Ddm-5.8&id=3D81a3a1453ec4e5da081e1395732801a600feb352
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+That says:
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+author	Nathan Chancellor <natechancellor=40gmail.com>	2020-05-13 01:45:22=
+ -0700
+committer	Mike Snitzer <snitzer=40redhat.com>	2020-05-15 10:29:39 -0400
+
+So it didn't make it into next-0514, which is why I got bit by it.  It's =
+in today's linux-next
+and life is good. :)
+
+--==_Exmh_1589833361_31675P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXsLukQdmEQWDXROgAQJj2w//XgM9u5d10BsMq/vpw2IiM1yGckHbK/ar
+oGAc7biiwgohYKxuoVDjWaqvxLyWjRKKY51HLw1hW0iW+s6GRkXmJMOiCUIYRUgl
+cBJmUKzAUnHuWN2aXTRMk2iMR2cT76ymT/JCgdhl/ohiBIgHg3nhF9+eNLgxme+C
+PT9jC+TzcaMMpxwkAgpEVVpYsx+4S+4Y0iIKH/tsTbfMlGaUtBRKx/uiEcnugIP8
+VpOGjU6aUwpWNQpztpya2Be8E63mTkHv+QkjIMzt+B8Oo3NzqT4hFkr6X8bQ2Xsb
+b7Pd7f5ca2r6g2Y7JOvK2yawZTVoKt57Y3ri/fvaHLL1gk3Nj66D/XLEWtioiEq4
+hw4hmCIinwKg1EmWomkgHzaGEylZZIMWRuKcX00JhVqqtM6BEG5rSFC5b67LxARr
+BEkrlRCYM4PIaNYGnh7lbwdiwAORk/60JXmlzVq8DyRJXjmNjAGUL5aAIVRsACzN
+VY8FWX/KGblmvyp6mkq2CUEa3HAIh2BlUccA+wWJtwQbCtsB87obhcyd60iHso55
+apXGB/y3HCKAmyuET/GPGfRPb84RwZR98ylJbhvkU9KHNImaNpQcIJe/kGZUqqWd
+5tvPtuWstOixl3czNpAym0S1QGvgqebzKZQAeJPdRNmg8/WSt/LdOXt7Snt8AOss
+gikLBdM2Rzs=
+=24y2
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1589833361_31675P--
