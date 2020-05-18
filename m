@@ -2,152 +2,143 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD27C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD4D20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F2720674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qjxhrtzg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vgb110JP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgERN7V (ORCPT
+        id S1727815AbgERN76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:59:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52884 "EHLO
+        Mon, 18 May 2020 09:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgERN7U (ORCPT
+        with ESMTP id S1726989AbgERN76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:59:20 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0AABC05BD0B
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:59:20 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l17so12009794wrr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:59:20 -0700 (PDT)
+        Mon, 18 May 2020 09:59:58 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA93FC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:59:57 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id k12so9403577wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 06:59:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Qp3KMqm4FQRyseSw00gSsB5YgPJWvTQnwqqnC4fzNYk=;
-        b=QjxhrtzgoF4UOeAXmKcLvcQXo3nn09VjgwT3pzwmtMt4UHCM4eXIyEKiKQGvfl5PYd
-         5ar6mXkoazv5YLYLkuuFoqM7DPXWgD7ewwKfXdzkrxtG05ZLxLdzDKiUxTAigwZxaN6W
-         DCxDQ7qCjJMugmdWYRpb/+ZQU15iI+b20wQTP/582ApRzoBNgp7xJgDuueFczjwl/B5S
-         +lXXf0JtBQxyRcf4B9w6JvcBfeyoANEdWihQWeYg83qiDyAGSY6akppZPl435dwpHUTG
-         qP5b7zXt1QKCU8HTi0cCR6OrHAFRhKpCb+eBTnR9gr0ARNNFX8JuN7Q9bLHW3k/YYzNF
-         XcuQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=vq51n84RcgHv+d8wqLYGOsdzlKQOGpPL5C5pKYyl18E=;
+        b=Vgb110JPtOOtPYB2ns99Lh8QR7EaypmU/StfaF7Fs7LrDKz5zEPOzGEAO0yS8WtUrz
+         eYOXSKM6zeCARBcoE9Hd4blN3SQG6KUBIjheyVjFPdO35HlFBV7Uw5ZQ2IwJ+V32kGRa
+         7N2MAJtvp8b9sB41BjCuffu9Al3BJoKumbkm8tt3X6+3NDOfK9UBhyDyp1a+ftia9Xvk
+         FLhLxALwNCFZfjYRl8gXIgfC2AZ5+RFxZdZc+Z23bsmoERexHV2GbpALGSBsIF59KaWk
+         uVlQs8DbtdKUI5JScCOOTIzhyN02dfBpl1GyoEom8YR0wKT5TxntsvibOLR+n02atD9s
+         srWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Qp3KMqm4FQRyseSw00gSsB5YgPJWvTQnwqqnC4fzNYk=;
-        b=SKcYxPVSeojrkIHkE+bfQUhYfFguKYnoWgSFAm/6dEzK1UQzOS4ak9QQHe4kJedmk4
-         3hHS6tfjIXnsR5Qh5idjwyGjQbpSfHbUWiEZmEnssek+96tFmexXh+P2JbOBnTEExNCe
-         igWtd1XtaIp8QON7swLDuDDw1OwkZ7dmjDmhXV6Yep17FuQ5b/lrpUoTS3awt0875AbN
-         3kvzbkE1ssEIk4LZX/2BHnZNsqvRDBatnxpHQY61+/b6GvXXU9wbDgQs8lUQCbk3ildm
-         YyOHJxeeV6NFl1oajj8cm3E5DMc0/RZYzmHgXdFQzqhbl+zmSEPjPUqFATmdAFNUe7cJ
-         Zm7A==
-X-Gm-Message-State: AOAM532w8uULq9LNPCJMVMbWiW9+R07fsIteTQGaNxSW4PuKfS6SsdBv
-        bKS+LVJTqlhdohIIwf6QqmIUaX2HnhA=
-X-Google-Smtp-Source: ABdhPJy7x6BVz0Xb+O2uc1Xy1BGI6onEzzHz8JHpWyLqk248mRHXNwXCml8Ac0UNNl6/MtBOQHjuxg==
-X-Received: by 2002:adf:e80e:: with SMTP id o14mr17715940wrm.307.1589810358929;
-        Mon, 18 May 2020 06:59:18 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
-        by smtp.googlemail.com with ESMTPSA id 5sm17082716wmd.19.2020.05.18.06.59.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 06:59:18 -0700 (PDT)
-Subject: Re: [PATCH v3 7/7] clocksource: mips-gic-timer: Set limitations on
- clocksource/sched-clocks usage
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
- <20200506214107.25956-8-Sergey.Semin@baikalelectronics.ru>
- <20200515171004.GA760381@linaro.org>
- <20200516121647.g6jua35kkihmw5r6@mobilestation>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <4c723219-62f8-be6a-47ea-a586859d832d@linaro.org>
-Date:   Mon, 18 May 2020 15:59:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200516121647.g6jua35kkihmw5r6@mobilestation>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vq51n84RcgHv+d8wqLYGOsdzlKQOGpPL5C5pKYyl18E=;
+        b=AuzpnKpjdBlK1pKd6bEnz1MAw6NzsgBM3Ynf02uLX26VEvRWYpbwO8064GQZ1pobt0
+         BRnok76y8UbVar4eyLN4d7EZiE2wvzaK+hS8Xcdu9g+yF1exRxv7aSJ3yJaIKMaCNfsu
+         GUBaTw/Bnx1nCRdQh2VtLF0GzXQY8MmMprZO+4ydUlWhmV5Zmk5KZ42sr5mV0LV2tGce
+         n3ZeQcMgBirbQ6yUeBrE+Mg7tPpgvKmH2vePAlGv+Oyg1Fq0qpnco9iUMxknIwrIJMjT
+         8pwCX8LwNcgu+ndDen+9rGpuUI4P8NWLfo1lZ+73QlHkfHcGCjgAdMH75QabomPqk4k7
+         8QsQ==
+X-Gm-Message-State: AOAM530Ly6AedEnCbT2PhjLXXfQ9HHn05eDYAexAuq9OyovFqrsIKyZT
+        eS9GDLex0WlIj0+3bJbxCZE=
+X-Google-Smtp-Source: ABdhPJzKKzuOZ953BF0u4QVx3G927Bzn2sz1T21uKit3CoAGs+d3hNub8IdCnSzu8tpDYL4lalNNnA==
+X-Received: by 2002:a1c:7213:: with SMTP id n19mr19640599wmc.88.1589810396564;
+        Mon, 18 May 2020 06:59:56 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:598:b884:8d4:84ab:c471:b6eb:fcab])
+        by smtp.gmail.com with ESMTPSA id 81sm18114519wme.16.2020.05.18.06.59.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 06:59:55 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        s.hauer@pengutronix.de, boris.brezillon@collabora.com,
+        derosier@gmail.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        huobean@gmail.com, Bean Huo <beanhuo@micron.com>
+Subject: [PATCH v4 0/5] Micron SLC NAND filling block
+Date:   Mon, 18 May 2020 15:59:38 +0200
+Message-Id: <20200518135943.11749-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/05/2020 14:16, Serge Semin wrote:
-> Hello Daniel,
-> 
-> Thanks for your comment. My response is below.
-> 
-> On Fri, May 15, 2020 at 07:10:04PM +0200, Daniel Lezcano wrote:
->> On Thu, May 07, 2020 at 12:41:07AM +0300, Serge Semin wrote:
->>> Currently neither clocksource nor scheduler clock kernel framework
->>> support the clocks with variable frequency. Needless to say how many
->>> problems may cause the sudden base clocks frequency change. In a
->>> simplest case the system time will either slow down or speed up.
->>> Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
->>> with CPU we must set some limitations on using it for these frameworks
->>> if CPU frequency may change. First of all it's not safe to have the
->>> MIPS GIC used for scheduler timings. So we shouldn't proceed with
->>> the clocks registration in the sched-subsystem. Secondly we must
->>> significantly decrease the MIPS GIC clocksource rating. This will let
->>> the system to use it only as a last resort.
->>>
->>> Note CM3.x-based systems may also experience the problems with MIPS GIC
->>> if the CPU-frequency change is activated for the whole CPU cluster
->>> instead of using the individual CPC core clocks divider.
->>
->> May be there is no alternative but the code looks a bit hacksih. Isn't possible
->> to do something with the sched_mark_unstable?
->>
->> Or just not use the timer at all ?
-> 
-> Not using the timer might be better, but not that good alternative either
-> especially in our case due to very slow external timer. Me and Thomas
-> Bogendoerfer discussed the similar commit I've provided to the csrc-r4k driver
-> available on MIPS:
-> https://lkml.org/lkml/2020/5/11/576
-> 
-> To cut it short, you are right. The solution with using clocksource_mark_unstable()
-> is better alternative spied up in x86 tsc implementation. I'll use a similar
-> approach here and submit the updated patch in v3.
-> 
-> Could you please proceed with the rest of the series review? I'd like to send
-> the next version with as many comments taken into account as possible. The
-> patchset has been submitted a while ago, but except Rob noone have had any
-> comments.(
+From: Bean Huo <beanhuo@micron.com>
 
-For me other patches are ok.
+Hi,
 
-I can apply patches 1, 2, 4, 5, 6
+on some legacy planar 2D Micron NAND devices when a block erase command is
+issued, occasionally even though a block erase operation completes and returns
+a pass status, the flash block may not be completely erased. Subsequent
+operations to this block on very rare cases can result in subtle failures or
+corruption. These extremely rare cases should nevertheless be considered. This
+patchset is to address this potential issue.
 
-Will remain patches 3 et 7
+After submission of patch V1 [1] and V2 [2], we stopped its update since we get
+stuck in the solution on how to avoid the power-loss issue in case power-cut
+hits the block filling. In the v1 and v2, to avoid this issue, we always damaged
+page0, page1, this's based on the hypothesis that NAND FS is UBIFS. This
+FS-specifical code is unacceptable in the MTD layer. Also, it cannot cover all
+NAND based file system. Based on the current discussion, seems that re-write all
+first 15 page from page0 is a satisfactory solution.
 
+Meanwhile, I borrowed one idea from Miquel Raynal patchset [3], in which keeps
+a recode of programmed pages, base on it, for most of the cases, we don't need
+to read every page to see if current erasing block is a partially programmed
+block.
+
+Changelog:
+
+v3 - v4:
+    1. In the patch 4/5, change to directly use ecc.strength to judge the page
+       is a empty page or not, rather than max_bitflips < mtd->bitflip_threshold
+    2. In the patch 5/5, for the powerloss case, from the next time boot up,
+       lots of page will be programmed from >page15 address, if still using
+       first_p as GENMASK() bitmask starting position, writtenp will be always 0,
+       fix it by changing its bitmask starting at bit position 0.
+
+v2 - v3:
+    1. Rebase patch to the latest MTD git tree
+    2. Add a record that keeps tracking the programmed pages in the first 16
+       pages
+    3. Change from program odd pages, damage page 0 and page 1, to program all
+       first 15 pages
+    4. Address issues which exist in the V2.
+
+v1 - v2:
+    1. Rebased V1 to latest Linux kernel.
+    2. Add erase preparation function pointer in nand_manufacturer_ops.
+
+
+[1] https://www.spinics.net/lists/linux-mtd/msg04112.html
+[2] https://www.spinics.net/lists/linux-mtd/msg04450.html
+[3] https://www.spinics.net/lists/linux-mtd/msg13083.html
+
+
+Bean Huo (5):
+  mtd: rawnand: group all NAND specific ops into new nand_chip_ops
+  mtd: rawnand: Add {pre,post}_erase hooks in nand_chip_ops
+  mtd: rawnand: Add write_oob hook in nand_chip_ops
+  mtd: rawnand: Introduce a new function nand_check_is_erased_page()
+  mtd: rawnand: micron: Micron SLC NAND filling block
+
+ drivers/mtd/nand/raw/internals.h     |   3 +-
+ drivers/mtd/nand/raw/nand_base.c     |  88 +++++++++++++++++++----
+ drivers/mtd/nand/raw/nand_hynix.c    |   2 +-
+ drivers/mtd/nand/raw/nand_macronix.c |  10 +--
+ drivers/mtd/nand/raw/nand_micron.c   | 104 ++++++++++++++++++++++++++-
+ include/linux/mtd/rawnand.h          |  40 +++++++----
+ 6 files changed, 212 insertions(+), 35 deletions(-)
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.17.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
