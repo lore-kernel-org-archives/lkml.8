@@ -2,132 +2,164 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D28C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2CBC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA4FD2081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358A72081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qe8apbDx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eq0txyu2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgERBWF (ORCPT
+        id S1727775AbgERBWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 21:22:05 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17142 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgERBWB (ORCPT
+        Sun, 17 May 2020 21:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgERBWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 21:22:01 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec1e2aa0001>; Sun, 17 May 2020 18:19:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 17 May 2020 18:21:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 17 May 2020 18:21:59 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
- 2020 01:21:59 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 18 May 2020 01:21:59 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec1e3370001>; Sun, 17 May 2020 18:21:59 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
+        Sun, 17 May 2020 21:22:00 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE50C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 18:21:59 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id s69so4338598pjb.4
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 18:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=iQHut3TWDpS+1BbAQqnoumWntS6DRZLFGDslgYPZ4Rg=;
+        b=eq0txyu2Ftx04gtPzCcrZv9oqtdu6gNNNK2so7t2no0Y1RGxazrPHc1+d76NBLgDVD
+         1owbvFTrlzmCvDGLeY6SLFzUqsNXhM1+xLwQ3/cR0roYz58oBPMV/9agtNpGn8g9Mxi4
+         2ENRKxudLVWFx/bIPXUiszi4FUTOboW2PBN9CqUZRpcGXgz5a/z2FJ/QyXiOmN7JJ/gP
+         dirI90dYsXwtA1SdOTvQFFMqqb26CYZC/o4KXNSkwHNvq73P6RduZw8M3VhWBHSjeyPy
+         7wvaez7i/5xNGeeiX/CQs010NSjG1W1iGG3qOfwvVarjKpUcaskICjupZ0p5YB7ZgW5X
+         /sTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=iQHut3TWDpS+1BbAQqnoumWntS6DRZLFGDslgYPZ4Rg=;
+        b=npGP6qAqJgAtJyjOfZQ4SJvkN15urjCXxw4hvmsvX8U6g1ospyNwwJe1Xw+Qs02DuE
+         JxgtjBe6gU8GFjZRUYXV3ZSn4US55vDLmzw4t2Y5kwzm/c2H78OUiZ5T8vbzVNwEtb3E
+         KWBTIQuW1zK41DzzcQDA//CU36lJMaca7KXFenILSuay+0+G0/+aAgb1qZ1lXlv6mMC5
+         qDlgfyvps6vtqcF0ar3BiAwFHwyk4r6+iQ7k2vXUfWSoE5r7gN5z5kvIhwLadrq7YMip
+         ekSf+mmAuYfT7rRgWqQ+c4Ioci9O7hNLTuY91h5tpXaX4c/VYwJqtng7ifbrEPP6ubW/
+         HA2Q==
+X-Gm-Message-State: AOAM5312Re6KruC01Qiu5ivGq9g8B/SePJzIxc2dpaDdM1NtwDTd+YL1
+        wof3zPanVD622P9O2SuNtel7W/Ur
+X-Google-Smtp-Source: ABdhPJwHx2hX6OBiQAwdJsZR3ZinBl6C7YdDZoo1I2M7LaNSjQ0Dt+eaBEgVh+xKlgw27CmAFAVuEQ==
+X-Received: by 2002:a17:90a:8c98:: with SMTP id b24mr17146622pjo.226.1589764919331;
+        Sun, 17 May 2020 18:21:59 -0700 (PDT)
+Received: from localhost.localdomain ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id fw4sm1544376pjb.31.2020.05.17.18.21.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 17 May 2020 18:21:58 -0700 (PDT)
+From:   js1304@gmail.com
+X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Andy Walls <awalls@md.metrocast.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH 1/2] mm/gup: introduce pin_user_pages_unlocked
-Date:   Sun, 17 May 2020 18:21:56 -0700
-Message-ID: <20200518012157.1178336-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518012157.1178336-1-jhubbard@nvidia.com>
-References: <20200518012157.1178336-1-jhubbard@nvidia.com>
-MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589764778; bh=+Bd2dKwO1m4xCknqEnntHu5ZR7ZzO/a9Yy+seiDwYQk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=qe8apbDxfUOL34853vKL5Pm+EM2eEzJsyeg7TK3MuFDBhyRG+KGRXrfIauwl9kbnd
-         EmVvRzb6mGS5pB2ULYsghn/hyU+gebu4Pp5pnV2Wts3D8L9LcSKErKF2UKsYujF2Nm
-         ckthj0MxtSyWUcabjdBEafMngtKanymPa8HEh9J77CLEDvdtTJsstct6wlz7pqEEfW
-         nYhEvXxAUiyGKHHIZ7F8RGZVsseT35PmooJKRPSH+h6gO9FK3ql5Ci8niH2a0WVQL4
-         hH0G2nciKNm0jpEWVSZ+/uOKp3kNxLfdba5Pg7NwIKXwTNJnon+5wJ2U81Xci+1kzL
-         bMPhYFJb+cIXw==
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: [PATCH 06/11] mm/hugetlb: do not modify user provided gfp_mask
+Date:   Mon, 18 May 2020 10:20:52 +0900
+Message-Id: <1589764857-6800-7-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589764857-6800-1-git-send-email-iamjoonsoo.kim@lge.com>
+References: <1589764857-6800-1-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce pin_user_pages_unlocked(), which is nearly identical to the
-get_user_pages_unlocked() that it wraps, except that it sets FOLL_PIN
-and rejects FOLL_GET.
+From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+It's not good practice to modify user input. Instead of using it to
+build correct gfp_mask for APIs, this patch introduces another gfp_mask
+field, __gfp_mask, for internal usage.
+
+Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- include/linux/mm.h |  2 ++
- mm/gup.c           | 17 +++++++++++++++++
- 2 files changed, 19 insertions(+)
+ mm/hugetlb.c  | 15 ++++++++-------
+ mm/internal.h |  2 ++
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 5a323422d783..a5594ac9ebe3 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1702,6 +1702,8 @@ long get_user_pages_locked(unsigned long start, unsig=
-ned long nr_pages,
- 		    unsigned int gup_flags, struct page **pages, int *locked);
- long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
- 		    struct page **pages, unsigned int gup_flags);
-+long pin_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-+		    struct page **pages, unsigned int gup_flags);
-=20
- int get_user_pages_fast(unsigned long start, int nr_pages,
- 			unsigned int gup_flags, struct page **pages);
-diff --git a/mm/gup.c b/mm/gup.c
-index 87a6a59fe667..50cd9323efff 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2939,3 +2939,20 @@ long pin_user_pages(unsigned long start, unsigned lo=
-ng nr_pages,
- 				     pages, vmas, gup_flags);
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 53edd02..5f43b7e 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1069,15 +1069,15 @@ static struct page *dequeue_huge_page_nodemask(struct hstate *h,
+ 	struct zoneref *z;
+ 	int node = NUMA_NO_NODE;
+ 
+-	zonelist = node_zonelist(ac->nid, ac->gfp_mask);
++	zonelist = node_zonelist(ac->nid, ac->__gfp_mask);
+ 
+ retry_cpuset:
+ 	cpuset_mems_cookie = read_mems_allowed_begin();
+ 	for_each_zone_zonelist_nodemask(zone, z, zonelist,
+-			gfp_zone(ac->gfp_mask), ac->nmask) {
++			gfp_zone(ac->__gfp_mask), ac->nmask) {
+ 		struct page *page;
+ 
+-		if (!cpuset_zone_allowed(zone, ac->gfp_mask))
++		if (!cpuset_zone_allowed(zone, ac->__gfp_mask))
+ 			continue;
+ 		/*
+ 		 * no need to ask again on the same node. Pool is node rather than
+@@ -1952,7 +1952,7 @@ static struct page *alloc_migrate_huge_page(struct hstate *h,
+ 	if (hstate_is_gigantic(h))
+ 		return NULL;
+ 
+-	page = alloc_fresh_huge_page(h, ac->gfp_mask,
++	page = alloc_fresh_huge_page(h, ac->__gfp_mask,
+ 				ac->nid, ac->nmask, NULL);
+ 	if (!page)
+ 		return NULL;
+@@ -1990,9 +1990,10 @@ struct page *alloc_buddy_huge_page_with_mpol(struct hstate *h,
+ struct page *alloc_huge_page_nodemask(struct hstate *h,
+ 				struct alloc_control *ac)
+ {
+-	ac->gfp_mask |= htlb_alloc_mask(h);
++	ac->__gfp_mask = htlb_alloc_mask(h);
++	ac->__gfp_mask |= ac->gfp_mask;
+ 	if (ac->thisnode && ac->nid != NUMA_NO_NODE)
+-		ac->gfp_mask |= __GFP_THISNODE;
++		ac->__gfp_mask |= __GFP_THISNODE;
+ 
+ 	spin_lock(&hugetlb_lock);
+ 	if (h->free_huge_pages - h->resv_huge_pages > 0) {
+@@ -2011,7 +2012,7 @@ struct page *alloc_huge_page_nodemask(struct hstate *h,
+ 	 * will not come from CMA area
+ 	 */
+ 	if (ac->skip_cma)
+-		ac->gfp_mask &= ~__GFP_MOVABLE;
++		ac->__gfp_mask &= ~__GFP_MOVABLE;
+ 
+ 	return alloc_migrate_huge_page(h, ac);
  }
- EXPORT_SYMBOL(pin_user_pages);
+diff --git a/mm/internal.h b/mm/internal.h
+index 6b6507e..3239d71 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -620,6 +620,8 @@ struct alloc_control {
+ 	gfp_t gfp_mask;
+ 	bool thisnode;
+ 	bool skip_cma;
 +
-+/*
-+ * pin_user_pages_unlocked() is the FOLL_PIN variant of
-+ * get_user_pages_unlocked(). Behavior is the same, except that this one s=
-ets
-+ * FOLL_PIN and rejects FOLL_GET.
-+ */
-+long pin_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-+			     struct page **pages, unsigned int gup_flags)
-+{
-+	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
-+	if (WARN_ON_ONCE(gup_flags & FOLL_GET))
-+		return -EINVAL;
-+
-+	gup_flags |=3D FOLL_PIN;
-+	return get_user_pages_unlocked(start, nr_pages, pages, gup_flags);
-+}
-+EXPORT_SYMBOL(pin_user_pages_unlocked);
-
-base-commit: b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce
-prerequisite-patch-id: 0496235d2f0b29f75b9835e63a6923ddad6d0260
-prerequisite-patch-id: 2711b9393a74cd0e1fcf48befea3618f7bb1ca9e
-prerequisite-patch-id: 95e2521748b3058710fb2a161b2c76389644665b
-prerequisite-patch-id: eeae300399f69db2cd61535b40c1f1ee1929195a
-prerequisite-patch-id: 9ed26cdb071ab084a204c85a08986806d6bae877
---=20
-2.26.2
++	gfp_t __gfp_mask;	/* Used internally in API implementation */
+ };
+ 
+ #endif	/* __MM_INTERNAL_H */
+-- 
+2.7.4
 
