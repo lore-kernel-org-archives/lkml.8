@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDCD20829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B842207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824484;
-	bh=iMihi8owIMhhtIY0aZ2L0HimIy2ey9tF7Onc9PxSMck=;
+	s=default; t=1589824486;
+	bh=I7ZALXXVOmBFTfZITXUzTD3CtqIk1G4NRb3LHdSXTvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QH+qk2y3jEVbcZcwFCzPBAk0h/fJdhtR6yCCP949GIhLk7ZUEOdcdvbhzprMSRcu3
-	 6RHSvcSpxisHIKErN5s0kpbd8Dmhkuhn9kcZSi7fPLJqnYt0R8jV6I+TcYTJWVWUJ+
-	 80q01ztOnAyDzvdm+dKMKxxEGvc8AW6CSf6W1ZXY=
+	b=S0FVKEY5a34sCZX3tLsCx7U/n/YW0MVjWK/P4B4dOvL0SulBuG3wxwwn8ZjimUM47
+	 HVwUAoZkHTFqK006RjCXgcd+iygV76LxTsgdPhT8SjNotkau8Sw6Za6eNQH+76z9Zy
+	 5nM7SLVrLl5zzsAmy/qC6ukGypuzACqZyokY66R4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731345AbgERRyn (ORCPT
+        id S1731352AbgERRyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:54:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59470 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:54:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730528AbgERRyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:38 -0400
+        id S1730819AbgERRyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FDAB207C4;
-        Mon, 18 May 2020 17:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA110207F5;
+        Mon, 18 May 2020 17:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824477;
-        bh=iMihi8owIMhhtIY0aZ2L0HimIy2ey9tF7Onc9PxSMck=;
+        s=default; t=1589824480;
+        bh=I7ZALXXVOmBFTfZITXUzTD3CtqIk1G4NRb3LHdSXTvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fYgg6dRFO9D50NXzd2VyGxmuhMZ5gSEAIjk21NguaFctnQHb7ODwPXh7Q9LU6qzDP
-         I30SiTQXLIqh9dscbnr84AwCchLu86SYvkR2E/EaD9C+qrN/qkPIQO+iPynlFmDvQV
-         g3tF4L9vxNIJFDeq0WJlvHetDRfSGDiag4i7Olvg=
+        b=pU87a98upJvZ8w6tik5pdbjtk1kwbinmKqO+RCoO5xw4lTzPw2m9X9/COzine+7R5
+         FkZweyomjaQOo5dJZoeVjT9Ko5aaZPE2HY7cHGuNSIbJmEyrcH/rvKF+bsKcLcZ9dM
+         wV47TEvvrO1NcUMFp0n81POfdTelj1wICH8iIynY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 027/147] virtio_net: fix lockdep warning on 32 bit
-Date:   Mon, 18 May 2020 19:35:50 +0200
-Message-Id: <20200518173517.215977116@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.4 028/147] dpaa2-eth: prevent array underflow in update_cls_rule()
+Date:   Mon, 18 May 2020 19:35:51 +0200
+Message-Id: <20200518173517.346460685@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,57 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael S. Tsirkin" <mst@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 01c3259818a11f3cc3cd767adbae6b45849c03c1 ]
+[ Upstream commit 6d32a5119811d2e9b5caa284181944c6f1f192ed ]
 
-When we fill up a receive VQ, try_fill_recv currently tries to count
-kicks using a 64 bit stats counter. Turns out, on a 32 bit kernel that
-uses a seqcount. sequence counts are "lock" constructs where you need to
-make sure that writers are serialized.
+The "location" is controlled by the user via the ethtool_set_rxnfc()
+function.  This update_cls_rule() function checks for array overflows
+but it doesn't check if the value is negative.  I have changed the type
+to unsigned to prevent array underflows.
 
-In turn, this means that we mustn't run two try_fill_recv concurrently.
-Which of course we don't. We do run try_fill_recv sometimes from a
-softirq napi context, and sometimes from a fully preemptible context,
-but the later always runs with napi disabled.
-
-However, when it comes to the seqcount, lockdep is trying to enforce the
-rule that the same lock isn't accessed from preemptible and softirq
-context - it doesn't know about napi being enabled/disabled. This causes
-a false-positive warning:
-
-WARNING: inconsistent lock state
-...
-inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-
-As a work around, shut down the warning by switching
-to u64_stats_update_begin_irqsave - that works by disabling
-interrupts on 32 bit only, is a NOP on 64 bit.
-
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: afb90dbb5f78 ("dpaa2-eth: Add ethtool support for flow classification")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/virtio_net.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -1231,9 +1231,11 @@ static bool try_fill_recv(struct virtnet
- 			break;
- 	} while (rq->vq->num_free);
- 	if (virtqueue_kick_prepare(rq->vq) && virtqueue_notify(rq->vq)) {
--		u64_stats_update_begin(&rq->stats.syncp);
-+		unsigned long flags;
-+
-+		flags = u64_stats_update_begin_irqsave(&rq->stats.syncp);
- 		rq->stats.kicks++;
--		u64_stats_update_end(&rq->stats.syncp);
-+		u64_stats_update_end_irqrestore(&rq->stats.syncp, flags);
- 	}
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
+@@ -590,7 +590,7 @@ static int num_rules(struct dpaa2_eth_pr
  
- 	return !oom;
+ static int update_cls_rule(struct net_device *net_dev,
+ 			   struct ethtool_rx_flow_spec *new_fs,
+-			   int location)
++			   unsigned int location)
+ {
+ 	struct dpaa2_eth_priv *priv = netdev_priv(net_dev);
+ 	struct dpaa2_eth_cls_rule *rule;
 
 
