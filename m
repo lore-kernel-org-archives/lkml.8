@@ -2,73 +2,89 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D83C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E88DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7400F2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE682070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:54:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsCVTvxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgEREwe (ORCPT
+        id S1726499AbgEREyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 00:52:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27658 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgEREwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 00:52:34 -0400
-IronPort-SDR: OC6EWW+Vk7cng3kDaga7QCfjVGLO/uiWRl8hM72U30fKw/K5OkX2q/Kgq/QBhl/Mb+NtD6WHrV
- 670k7/W0TNAQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 21:52:33 -0700
-IronPort-SDR: /1eK/3D18pvC54bUbXbIaKUoz8Bwg3J3K9WccOBj9l/69wTQmPmoDV+7VQ2DHfsLS1u+snO7kD
- ZAfMvHrvoqbA==
-X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
-   d="scan'208";a="411125766"
-Received: from unknown (HELO [10.239.13.122]) ([10.239.13.122])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 21:52:32 -0700
-Subject: Re: [PATCH] kvm: x86: Use KVM CPU capabilities to determine CR4
- reserved bits
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jmattson@google.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200506094436.3202-1-pbonzini@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <6a4daca4-6034-901a-261f-215df7d606a6@intel.com>
-Date:   Mon, 18 May 2020 12:52:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 00:54:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgEREyN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 00:54:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C8DC061A0C;
+        Sun, 17 May 2020 21:54:13 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t7so3738638plr.0;
+        Sun, 17 May 2020 21:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CNyAh3C19OfyBhM8UYQrB5bR+7wKmGoyo3pyav8YnVo=;
+        b=BsCVTvxE0mGB5xc/3+LSNQW99Lq6bU0DvZnZ7VAbz3ttY2BP2Qjxecfp/BUfMEsCFV
+         jZoOi2MgCyZConAzujtJZwKveV8yckPzTq7SCpQuKdCk58EAaLhE3rWvuu4VJt5PlpiH
+         NkdeL6e6F8UpgW0FdQrDQja+1QMUl78qTTyhIUCJaLO6hlW6qU6MAl/r7jUCiBM1RYzT
+         c7TRlKmCbZlO8x4vPJ/P1O5M9nGZPljHjKZ8h9JvjF/LZPnTxNUu/Tn6QbN/cGtlIIGx
+         xqo1TzA+VmnV50mgLBTcvy2JljOeGq1D6CXH3W6DjOgNviBKCjIYEugK62csu1ZOJYIr
+         pc9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CNyAh3C19OfyBhM8UYQrB5bR+7wKmGoyo3pyav8YnVo=;
+        b=aV7NCSvHs3dKTNKjE26WhUH9z3S1C3BbhMoTmW8MPrmlrGBB7Zo+Y01vupKzLTrgyT
+         vmC2sxfWUX3xPHeS2PhuePYd3m2FebqbrtvtkZ3Zd3l3ppVJbPB7iNxd6SyQmO+R4/OU
+         ic8Kc/KkSKgV243Uj4paIUym7K/hCe2Jkc4SI2BFuAxM6kGAA86zWkw3zL4SojO99Vih
+         DDsvOyj5JkLHcL4oInqg6xm8e7wdavb6aruLfR3sAkMtaf4o61gXjS6+46b2tkECy96T
+         MW8Xnm+9QHOaw0dzWR6AWmYgW1mzcwb7QFt94TvlLXyBnWWlmvUYkO8z2grP6548BTL5
+         wuWw==
+X-Gm-Message-State: AOAM532DMxyID1219SO8n5Ni78XSy6ZtF8PxWuGixB93a4vz9MpQN4X9
+        Fb/ePin5ptcSc+6JGKARHBfnkZbeOiGYag==
+X-Google-Smtp-Source: ABdhPJzqwUM4FYI2rhy+2ZBNtNxAHPmwoAipKaMxVpRm7Z/NIRE2PgJIIrTSk05knuGDBQfGA/9Www==
+X-Received: by 2002:a17:90a:ce18:: with SMTP id f24mr3604918pju.198.1589777652680;
+        Sun, 17 May 2020 21:54:12 -0700 (PDT)
+Received: from f3 (ae055068.dynamic.ppp.asahi-net.or.jp. [14.3.55.68])
+        by smtp.gmail.com with ESMTPSA id q3sm1549124pgp.69.2020.05.17.21.54.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 21:54:11 -0700 (PDT)
+Date:   Mon, 18 May 2020 13:54:07 +0900
+From:   Benjamin Poirier <benjamin.poirier@gmail.com>
+To:     Xiangyang Zhang <xyz.sun.ok@gmail.com>
+Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: qlge: unmap dma when lock failed
+Message-ID: <20200518045407.GA73179@f3>
+References: <20200517054638.10764-1-xyz.sun.ok@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200506094436.3202-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200517054638.10764-1-xyz.sun.ok@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/2020 5:44 PM, Paolo Bonzini wrote:
-> Using CPUID data can be useful for the processor compatibility
-> check, but that's it.  Using it to compute guest-reserved bits
-> can have both false positives (such as LA57 and UMIP which we
-> are already handling) and false negatives: 
+On 2020-05-17 13:46 +0800, Xiangyang Zhang wrote:
+> DMA not unmapped when lock failed, this patch fixed it.
+> 
 
-> in particular, with
-> this patch we don't allow anymore a KVM guest to set CR4.PKE
-> when CR4.PKE is clear on the host.
+Fixes: 4322c5bee85e ("qlge: Expand coverage of hw lock for config register.")
 
-A common question about whether a feature can be exposed to guest:
-
-Given a feature, there is a CPUID bit to enumerate it, and a CR4 bit to 
-turn it on/off. Whether the feature can be exposed to guest only depends 
-on host CR4 setting? I.e., if CPUID bit is not cleared in cpu_data in 
-host but host kernel doesn't set the corresponding CR4 bit to turn it 
-on, we cannot expose the feature to guest. right?
-
-
+> Signed-off-by: Xiangyang Zhang <xyz.sun.ok@gmail.com>
+> ---
+>  drivers/staging/qlge/qlge_main.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
