@@ -2,108 +2,101 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFBFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2545920756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D955F207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:21:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qh8nh5l/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgERTUQ (ORCPT
+        id S1727936AbgERTVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:20:16 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:19760 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727066AbgERTUO (ORCPT
+        Mon, 18 May 2020 15:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbgERTVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:20:14 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 18 May 2020 12:20:13 -0700
-Received: from localhost (unknown [10.200.192.41])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 2D0C9404BC;
-        Mon, 18 May 2020 12:20:14 -0700 (PDT)
-Date:   Mon, 18 May 2020 12:20:13 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 4/5] objtool: Enable compilation of objtool for all
- architectures
-Message-ID: <20200518192013.GP9040@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <cover.1588888003.git.mhelsley@vmware.com>
- <9f709ea2ae66cc03b3ff3329baa8f670ccd0e368.1588888003.git.mhelsley@vmware.com>
- <20200515205610.fmdimt7wbafypuqc@treble>
+        Mon, 18 May 2020 15:21:06 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6DF0C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:21:05 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id d26so9108716otc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:21:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=rcEDr+6fG66dv1/hXLkkZjCfS8T1ynKA/WGu4jgXbJg=;
+        b=qh8nh5l/TDw4IKfIEpeZes87n2oPS5ChN6CvDKb82ZmvCFwx4b+BpykTnO+Wat1CfB
+         eenMGnTQf0usWew0hx+F+Y3/GySIoJ50nS38m4NnaKSxWIPL3AjEegH7KFcFd5sGtwif
+         wRmKDVPxaS/UmKTdW7Y3xLX6goHQwVAamTQhxGIj1oZUgt+YZCDgpMNOe+InURgfHVhm
+         kmX2WaXFjI+In4hWO6+x4tn3gtVAjyyDo1g3V/BXkEVmft6M/7fGbzQQuHHJ4N+m2LeV
+         xrLvFsO3WA0mEVPOGRbqTXdAOuxonqY+eOJLMqscxGeTyk5vkalQC43E1n0wXlbTXT4v
+         HW8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:to:from:subject:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=rcEDr+6fG66dv1/hXLkkZjCfS8T1ynKA/WGu4jgXbJg=;
+        b=UYxwIeTRS4Z8rbHFXsfa8y0NqCwcDsFR+1Or5bF7OumZpfrAxg/m5Fg08GipLitXd8
+         +g2D1PD+ts1eQVsnd+ojTQop51B4TvnS9/F/mftW4F/2N8FdPTH44rNcZb5MM9FO+KL7
+         ycDuWLsINpMTVvfd2IDkeTpvgOjzWE8c/13yZougpPaSdrEWv0emlLANWsvBKQT5Gpqy
+         hSdEcf92mrkax9o7JuUX3zYX3z0PQsnpcDWFQch96SuCyMuiZ4Ik/2tfxfw612CM0fci
+         4FrqXwdh3ekLLnAkPz33u2X0rNmimI03QaLM2UXpP2CRkaLfAZ28ma5Phn1wZy8RBWV0
+         Aexg==
+X-Gm-Message-State: AOAM533CwprV9KSc079/J4CxIxP/MUkS235PNQ+ZY+MPxMuTqTFHubBO
+        u/u57vzIB7oqG1/WmBJilKoL2wl2
+X-Google-Smtp-Source: ABdhPJxJohjWoyUYrwKDNDY1WdIW9jOk/28nyhXa4CBArE3BYBLcMkCBLgCSGhdKS6HbLUpDrSvU9w==
+X-Received: by 2002:a05:6830:1353:: with SMTP id r19mr13204140otq.248.1589829665202;
+        Mon, 18 May 2020 12:21:05 -0700 (PDT)
+Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id t24sm958048otp.69.2020.05.18.12.21.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 12:21:04 -0700 (PDT)
+To:     LKML <linux-kernel@vger.kernel.org>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Indicated kmemleak in msr_build_context() for Kernel 5.7.0-rc5
+Message-ID: <9f1bb619-c4ee-21c4-a251-870bd4db04fa@lwfinger.net>
+Date:   Mon, 18 May 2020 14:21:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515205610.fmdimt7wbafypuqc@treble>
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:56:10PM -0500, Josh Poimboeuf wrote:
-> On Mon, May 11, 2020 at 10:35:12AM -0700, Matt Helsley wrote:
-> > +struct insn_state {
-> > +	struct cfi_reg cfa;
-> > +	struct cfi_reg regs[CFI_NUM_REGS];
-> > +	int stack_size;
-> > +	unsigned char type;
-> > +	bool bp_scratch;
-> > +	bool drap, end, uaccess, df;
-> > +	bool noinstr;
-> > +	s8 instr;
-> > +	unsigned int uaccess_stack;
-> > +	int drap_reg, drap_offset;
-> > +	struct cfi_reg vals[CFI_NUM_REGS];
-> > +};
-> > +
-> > +struct instruction {
-> > +	struct list_head list;
-> > +	struct hlist_node hash;
-> > +	struct section *sec;
-> > +	unsigned long offset;
-> > +	unsigned int len;
-> > +	enum insn_type type;
-> > +	unsigned long immediate;
-> > +	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
-> > +	bool retpoline_safe;
-> > +	s8 instr;
-> > +	u8 visited;
-> > +	struct symbol *call_dest;
-> > +	struct instruction *jump_dest;
-> > +	struct instruction *first_jump_src;
-> > +	struct rela *jump_table;
-> > +	struct list_head alts;
-> > +	struct symbol *func;
-> > +	struct stack_op stack_op;
-> > +	struct insn_state state;
-> > +	struct orc_entry orc;
-> > +};
-> 
-> Why were these moved to arch.h?  They're not necessarily arch-specific,
-> but rather "check"-specific, so I think they still belong in check.h, if
-> possible.
+On a system with an AMD FX-8320E Eight-Core Processor running kernel 5.7.0-rc5, 
+I am seeing the following memory leak:
 
-Hmm, good question. I thought it had something to do with the CFI_NUM_REGS
-definition but even if that's the case I think you're right that it should
-stay in "check" -- I can verify and if that's the case just just define it
-to some dummy value (1?) when it's missing.
+localhost:~ # cat /sys/kernel/debug/kmemleak
+unreferenced object 0xffff88840ca02540 (size 64):
+   comm "swapper/0", pid 1, jiffies 4294892775 (age 138786.084s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 04 10 01 c0 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<0000000005004530>] msr_build_context.constprop.0+0x32/0xbe
+     [<00000000bb4e1265>] msr_save_cpuid_features+0x28/0x2c
+     [<0000000011ec0f08>] pm_check_save_msr+0x2e/0x40
+     [<000000000cd50945>] do_one_initcall+0x46/0x220
+     [<00000000fd0d2fc9>] kernel_init_freeable+0x1c6/0x23f
+     [<000000009f9b95ca>] kernel_init+0xa/0xfc
+     [<000000000a571fca>] ret_from_fork+0x22/0x40
 
-Cheers,
-	-Matt Helsley
+This is a "family 0x15" AMD CPU, thus MSR saving is needed during suspending. I 
+believe this to be a false positive.
+
+The indicated memory allocation has been in the kernel since v4.5.0. Should a 
+patch be sent to clear this false memory leak indication for systems with AMD 
+processors?
+
+Larry
