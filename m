@@ -2,91 +2,82 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5233CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D16E20787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:33:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wksZWPQz"
+	by mail.kernel.org (Postfix) with ESMTP id 9ADD020787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589805242;
+	bh=HaY3ABwfaRO6UoNgRn0bHMV0yl53SNp5iJWDXXT9BPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AhAdB0fhI7yoB5YifclgaGdSRP+77bT4SxqDkh/YNBZepDavjdUBKtBURfJubz+OS
+	 hwMuhmasWg/b1F+LFILVKe47SDL+dPVCdPbiQIxKDfbkOSWecVU2+ZmiyCVAHeOJBJ
+	 M/OqOorPF/p3APoOyEToujVVpmYvCtmjShJG6q6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgERMdZ (ORCPT
+        id S1727020AbgERMeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:33:25 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57598 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgERMdZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:33:25 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04ICXNGI126863;
-        Mon, 18 May 2020 07:33:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589805203;
-        bh=Uj0iQWKwrGFqJF+im6DxPdmW4Sz4gCpfpR62iAKn/bU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wksZWPQz4vQfucESuu27ANcF3B6XPXLPFvtYTJUD0yGOURf9ZAR74d3U+EIHtmO2E
-         dmNPWG0ek99bv2lHsr+YmaF6BccleJYQyPWFPI6+AZFwVE0tz9WMA0GCESWI0YYVrM
-         0hHh317OpGcRqGQH67x9zPzxAyfAQamQs3/yO900=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04ICXNBj096464
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 May 2020 07:33:23 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
- May 2020 07:33:22 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 18 May 2020 07:33:23 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04ICXKZA033369;
-        Mon, 18 May 2020 07:33:21 -0500
-Subject: Re: [PATCH 0/2] phy: ti: am654: Add USB super-speed support
-To:     Roger Quadros <rogerq@ti.com>
-CC:     <vigneshr@ti.com>, <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>
-References: <20200513131254.10497-1-rogerq@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <63756378-164c-930a-5bda-91ab2a80649e@ti.com>
-Date:   Mon, 18 May 2020 18:03:20 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 08:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726800AbgERMeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:34:01 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB34120657;
+        Mon, 18 May 2020 12:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589805241;
+        bh=HaY3ABwfaRO6UoNgRn0bHMV0yl53SNp5iJWDXXT9BPk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iTIot6i8i/rMUu0LpUwSA3/CrD7rN47ZuKU6rxdlLVSiHIcM4AwgItpxYOm5FRAdE
+         UvUVqk/hAy+Bs68TL8l4zuCqxQ+T14akon6FrWCNabDo+pcMTKl4FknUqHoyiaMlw6
+         bQaPVtCUPUJwMwSjsWTui942qqdacj4+qW1OzIfk=
+Date:   Mon, 18 May 2020 08:33:59 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        luto@kernel.org, hpa@zytor.com, dave.hansen@intel.com,
+        tony.luck@intel.com, ak@linux.intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+Message-ID: <20200518123359.GB33628@sasha-vm>
+References: <20200511045311.4785-1-sashal@kernel.org>
+ <20200518061836.GA15641@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200513131254.10497-1-rogerq@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200518061836.GA15641@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 17, 2020 at 11:18:36PM -0700, Christoph Hellwig wrote:
+>On Mon, May 11, 2020 at 12:52:53AM -0400, Sasha Levin wrote:
+>> Benefits:
+>> Currently a user process that wishes to read or write the FS/GS base must
+>> make a system call. But recent X86 processors have added new instructions
+>> for use in 64-bit mode that allow direct access to the FS and GS segment
+>> base addresses.  The operating system controls whether applications can
+>> use these instructions with a %cr4 control bit.
+>>
+>> In addition to benefits to applications, performance improvements to the
+>> OS context switch code are possible by making use of these instructions. A
+>> third party reported out promising performance numbers out of their
+>> initial benchmarking of the previous version of this patch series [9].
+>
+>The [9] reference can't be resolved anywhere in this mail.
 
+Sorry, I'll fix it up. The reference was supposed to be pointing to:
 
-On 5/13/2020 6:42 PM, Roger Quadros wrote:
-> Hi Kishon,
-> 
-> This series adds USB3.0 support to am654-serdes PHY driver.
+	https://www.phoronix.com/scan.php?page=article&item=linux-wip-fsgsbase&num=1
 
-merged, thanks!
-
--Kishon
-> 
-> cheers,
-> -roger
-> 
-> Roger Quadros (2):
->   phy: ti: am654: show up in regmap debugfs
->   phy: ti: am654: add support for USB super-speed
-> 
->  drivers/phy/ti/phy-am654-serdes.c | 104 +++++++++++++++++++++++++++++-
->  1 file changed, 102 insertions(+), 2 deletions(-)
-> 
+-- 
+Thanks,
+Sasha
