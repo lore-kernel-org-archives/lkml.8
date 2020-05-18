@@ -2,129 +2,162 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E68C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93396C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B30C20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824304;
-	bh=SH8FZeK1r0kMgLiWFQS1MyVZECWgi/jMC86bQKXOmz8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLJYlH8DWebXT9gxQT5bgYwyJ1CX2ac4v6BASnL0W33VpLDIxOebTYML4aO2zJJk/
-	 kcg4xrSBDZg7+BxOb2hc5zdd3lzxyceKO/JeP0Q1fVWLoK7Go7VvHq1fVRz0rJ9x9I
-	 mnSrWhoW3GNVrbOMASPwQhLn2HcEg6Obo60GtVig=
+	by mail.kernel.org (Postfix) with ESMTP id 76BDB207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TE8I8dQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgERRvn (ORCPT
+        id S1730742AbgERRvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 May 2020 13:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730892AbgERRvn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 May 2020 13:51:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730330AbgERRvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0FD20829;
-        Mon, 18 May 2020 17:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824297;
-        bh=SH8FZeK1r0kMgLiWFQS1MyVZECWgi/jMC86bQKXOmz8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NRMXiK2yxZvQ5bdkT6uQxFJ2yGe7d7FGSNmqLi1VaVKVJP3xdgG/aCtpnJ7SKgrBX
-         aOh0OBMV/xp8vi5jL1+NkQaqfPV+zzyQpUdUyqkR8O6XAdqfOstP1/faljnuq5YgDN
-         adVEZU69luHUom3GcMSHAaR0uW376Y3RN8nyIwi8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/80] NFS: Fix fscache super_cookie index_key from changing after umount
-Date:   Mon, 18 May 2020 19:36:54 +0200
-Message-Id: <20200518173457.689854455@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
-References: <20200518173450.097837707@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EDCAC061A0C;
+        Mon, 18 May 2020 10:51:43 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m7so4531902plt.5;
+        Mon, 18 May 2020 10:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tJ3DKY7Zr9PGXQiFNc8d9vTcSjgnnAbCq5O6/G8CCg4=;
+        b=TE8I8dQ8Wqs7x5u+poBX2PYL7VHczF4L9tZyWg6xg3w7P79g+iqBbReWmXghjCoR01
+         LYy5qDvCnk8MectVa5opXCkC11SatAw583tfW8J6jU1W/RzPyC/AeYqMB5rvfjK90zeP
+         PCy8cphadcqrBHoIzn8l7Pg8DKAan7BYZH2XSGT1V05mEQTEAA8SQgXH8alQwL96qiaC
+         L6Wv++5GBfGLoEey0OvOFDKd6QiDjTs175byY+ygjaFO5Za76iUzblYpAZKZNq3z4Zyx
+         ImH/tR0GZLtvnrlJdaHAdCRbssVr1pIAUX97DeL9UEFZamk+StjYrPMkJYqjBH/ySkld
+         dM0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tJ3DKY7Zr9PGXQiFNc8d9vTcSjgnnAbCq5O6/G8CCg4=;
+        b=m8MAY0rZl23B+/3P5WqOnzFliQpTA7ahlyWU7r3YcodRhRCgl6WumvVa8AFTF6/Ub0
+         Pa+HPG2V6XUHOYpJD4ScOhc+T/0dm8ESuRAcKR68JUSMnBcTnEf4PdVPzrtuFtoUraNI
+         yMw+LYgC/4f+hBruXA7gnzzFBe5jk/OfTuSM8pFTVVeFhBzm7MLSOzKBHMlnZzNEpGmE
+         YBgcWyl9hPMhB59k689DDsYlzrHl0FTmsDSMyOKNzLKJ1hv22zk5lTvYKswFHqlnRJ4U
+         hpK39GPjwzCUsMiHGqTb9a0ywkjLX1o11Yni546rfczyX9JlQgr7KUS5Pf5V/DtuVL7l
+         LTow==
+X-Gm-Message-State: AOAM532s+A3BaXH5uDlKidSyCDXIDE89D8r8kfHpAB/KzN5t5bKvtQGp
+        u0sKHztd0b+NIbspV53WJv7MUwOdWPsonLE8Ozo=
+X-Google-Smtp-Source: ABdhPJyb6Ux94KIQxWhThm1nR3vxSwRgDHR84pJnBiq3Gp6b7lfOJIwcfwHL78kFpu1IMemoj8IrA0sd48dB46iCXHg=
+X-Received: by 2002:a17:902:930c:: with SMTP id bc12mr17510090plb.255.1589824301578;
+ Mon, 18 May 2020 10:51:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
+ <20200518133645.19127-4-jonathan.albrieux@gmail.com> <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
+ <20200518160120.GA21361@ict14-OptiPlex-980> <20200518164317.GL1634618@smile.fi.intel.com>
+ <20200518174335.GA6392@jonathan-N53SV>
+In-Reply-To: <20200518174335.GA6392@jonathan-N53SV>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 May 2020 20:51:29 +0300
+Message-ID: <CAHp75VcJ+LU_T4jRVNDBed50xaALDLNC_8brxszv5FpUGHF7+A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+On Mon, May 18, 2020 at 8:43 PM Jonathan Albrieux
+<jonathan.albrieux@gmail.com> wrote:
+>
+> On Mon, May 18, 2020 at 07:43:17PM +0300, Andy Shevchenko wrote:
+> > On Mon, May 18, 2020 at 06:01:20PM +0200, Jonathan Albrieux wrote:
+> > > On Mon, May 18, 2020 at 05:55:51PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
+> > > > <jonathan.albrieux@gmail.com> wrote:
+> > > >
+> > > > > +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
+> > > >
+> > > > (1)
+> > > >
+> > > > ...
+> > > >
+> > > > > +       /*
+> > > > > +        * If reset pin is provided then will be set to high on power on
+> > > > > +        * and to low on power off according to AK09911 datasheet
+> > > > > +        */
+> > > >
+> > > > Wording is confusing, perhaps you have to use 'asserted / deasserted'.
+> > >
+> > > Thank you for the suggestion, I'll be working on rewording as soon as
+> > > possible.
+> > >
+> > > > Btw, in (1) it's also "high" (asserted). I barely understand how it's
+> > > > supposed to work in all cases?
+> > > >
+> > > > > +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
+> > > > > +                                             "reset", GPIOD_OUT_HIGH);
+> > > > > +       if (IS_ERR(reset_gpiod))
+> > > > > +               return PTR_ERR(reset_gpiod);
+> > > >
+> > >
+> > > I'm sorry but I'm not sure about what you mean by saying all cases.
+> > > Currently  I'm testing this driver on a msm8916 device having AK09911
+> > > magnetometer. At the current stage the driver is failing on probe
+> > > because reset pin is not connected to VID (as datasheet requires in case
+> > > of pin not being used). In case of reset pin not asserted, register's
+> > > reset is triggered resulting in empty registers, leading to probe fail.
+> > > For this reason pin is asserted during power on in order to have
+> > > informations in registers and deasserted before power off triggering
+> > > a reset.
+> > >
+> > > A workaround that gets AK09911 working on device is by setting the
+> > > reset pin always high on device tree. This way registers gets reset by
+> > > a Power On Reset circuit autonomously and reset pin never triggers the
+> > > reset.
+> >
+> > You need to distinguish electrical level from logical (GPIO flag defines
+> > logical). So, I'm talking about active-high vs. active-low case.
+> >
+> > Now I re-read above, and see that here you assert the reset signal. But where
+> > is desertion?
+>
+> Oh I see, I'll try explaining by points the proposed approach:
+> - reset pin is active low
+> - during power on gpio is set to 0 so the reset pin is high, thus no reset
 
-[ Upstream commit d9bfced1fbcb35b28d8fbed4e785d2807055ed2b ]
+deasserted
 
-Commit 402cb8dda949 ("fscache: Attach the index key and aux data to
-the cookie") added the index_key and index_key_len parameters to
-fscache_acquire_cookie(), and updated the callers in the NFS client.
-One of the callers was inside nfs_fscache_get_super_cookie()
-and was changed to use the full struct nfs_fscache_key as the
-index_key.  However, a couple members of this structure contain
-pointers and thus will change each time the same NFS share is
-remounted.  Since index_key is used for fscache_cookie->key_hash
-and this subsequently is used to compare cookies, the effectiveness
-of fscache with NFS is reduced to the point at which a umount
-occurs.   Any subsequent remount of the same share will cause a
-unique NFS super_block index_key and key_hash to be generated for
-the same data, rendering any prior fscache data unable to be
-found.  A simple reproducer demonstrates the problem.
+> - during power off gpio is set to 1 so the reset pin becomes low, thus resetting
 
-1. Mount share with 'fsc', create a file, drop page cache
-systemctl start cachefilesd
-mount -o vers=3,fsc 127.0.0.1:/export /mnt
-dd if=/dev/zero of=/mnt/file1.bin bs=4096 count=1
-echo 3 > /proc/sys/vm/drop_caches
+asserted
 
-2. Read file into page cache and fscache, then unmount
-dd if=/mnt/file1.bin of=/dev/null bs=4096 count=1
-umount /mnt
+> this is a possible solution but maybe there are other ways to achieve that,
+> do you have suggestions on how to get a better approach for solving this issue?
 
-3. Remount and re-read which should come from fscache
-mount -o vers=3,fsc 127.0.0.1:/export /mnt
-echo 3 > /proc/sys/vm/drop_caches
-dd if=/mnt/file1.bin of=/dev/null bs=4096 count=1
+I see now, that at requesting reset you wanted to chip be in reset
+state (asserted) till driver calls power_on().
 
-4. Check for READ ops in mountstats - there should be none
-grep READ: /proc/self/mountstats
+Seems everything you done is correct. Just correct terminology, please.
 
-Looking at the history and the removed function, nfs_super_get_key(),
-we should only use nfs_fscache_key.key plus any uniquifier, for
-the fscache index_key.
-
-Fixes: 402cb8dda949 ("fscache: Attach the index key and aux data to the cookie")
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/fscache.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 6f45b1a957397..b931169c2bb24 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -192,7 +192,8 @@ void nfs_fscache_get_super_cookie(struct super_block *sb, const char *uniq, int
- 	/* create a cache index for looking up filehandles */
- 	nfss->fscache = fscache_acquire_cookie(nfss->nfs_client->fscache,
- 					       &nfs_fscache_super_index_def,
--					       key, sizeof(*key) + ulen,
-+					       &key->key,
-+					       sizeof(key->key) + ulen,
- 					       NULL, 0,
- 					       nfss, 0, true);
- 	dfprintk(FSCACHE, "NFS: get superblock cookie (0x%p/0x%p)\n",
 -- 
-2.20.1
-
-
-
+With Best Regards,
+Andy Shevchenko
