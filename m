@@ -2,51 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF76C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 824E820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3A520671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825430;
-	bh=8W5kfFh37VEb/OX1ZIecgC5GijoPKDRsNoEBJ4aaWZo=;
+	s=default; t=1589825433;
+	bh=KPQ5ee/rVhZdwHtanFh23NNG/VV1y3tWvTV40prfyPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1pgyopzBUNOmSWWYZtEgG5m/OPbE2ftCzb3WfVknPd4hrw6qZEPU1mWon8NVfJeOJ
-	 px2RUqBauxovvtfpcp0j3Ad8YONK5rE0+SmyLcj/CwBdiuQF3BFrqXQafnHAiSYcBW
-	 v2IXfcl3G/ZGI/ryicKj08FMXNuIYF1j3B5/JiEo=
+	b=zzUm06c96Co0M3qwMVXN4ayYX4X8O0EAxRJLwXEkJIO8EJkdqwlvleGCLFVN1HbGr
+	 LMlHLXDQ43Zvcwk+3KGW/bzTdzaKejgnjXGk2f1cuG2wo55zjtiuT18hzn7w4vW/Wl
+	 Xf50UGj5JwEPlA5dBcxcThCkh0kHWHfV99PVUY4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733008AbgERSFf (ORCPT
+        id S1732989AbgERSFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 18 May 2020 14:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:52984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732160AbgERSF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:28 -0400
+        id S1732953AbgERSF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DF52207D3;
-        Mon, 18 May 2020 18:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAC9E20873;
+        Mon, 18 May 2020 18:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825127;
-        bh=8W5kfFh37VEb/OX1ZIecgC5GijoPKDRsNoEBJ4aaWZo=;
+        s=default; t=1589825125;
+        bh=KPQ5ee/rVhZdwHtanFh23NNG/VV1y3tWvTV40prfyPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWsmzPFR0BV9gebp4vdGRNu01UVTKuXvvFyoRqjlEzzYj3lVyr9q8sPOaNwfVNQE7
-         pVVfdAEn34yTLha5+ohYwmZaNgo2dUuWF2VPnYjI1ZlJH+xzB/taTyFgxf4dd4v6O/
-         mCW4ciE4hw6L9fmDygtfarZEVTn7MS6ES4/Q/5yk=
+        b=d6S83y4ch699cGelMEDzCiZtEfqrBvGfZZQSNpRRbdYEp+6gI+n5ooTPLioMIWzFF
+         RPLU0jPWmogalcuDbuEuwtCOOQ0q8RTquYhw2vVfO2yxMZ/EXu2AAJ+4KrWq+ap4HL
+         lt4Z1MANmlBXL1iFmy0BDTK7Dr+JP9PR0RkXrXNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, butt3rflyh4ck <butterflyhuangxx@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 140/194] ALSA: rawmidi: Fix racy buffer resize under concurrent accesses
-Date:   Mon, 18 May 2020 19:37:10 +0200
-Message-Id: <20200518173542.979747345@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 122/194] bpf: Fix bug in mmap() implementation for BPF array map
+Date:   Mon, 18 May 2020 19:36:52 +0200
+Message-Id: <20200518173541.756566468@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,131 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+[ Upstream commit 333291ce5055f2039afc907badaf5b66bc1adfdc ]
 
-commit c1f6e3c818dd734c30f6a7eeebf232ba2cf3181d upstream.
+mmap() subsystem allows user-space application to memory-map region with
+initial page offset. This wasn't taken into account in initial implementation
+of BPF array memory-mapping. This would result in wrong pages, not taking into
+account requested page shift, being memory-mmaped into user-space. This patch
+fixes this gap and adds a test for such scenario.
 
-The rawmidi core allows user to resize the runtime buffer via ioctl,
-and this may lead to UAF when performed during concurrent reads or
-writes: the read/write functions unlock the runtime lock temporarily
-during copying form/to user-space, and that's the race window.
-
-This patch fixes the hole by introducing a reference counter for the
-runtime buffer read/write access and returns -EBUSY error when the
-resize is performed concurrently against read/write.
-
-Note that the ref count field is a simple integer instead of
-refcount_t here, since the all contexts accessing the buffer is
-basically protected with a spinlock, hence we need no expensive atomic
-ops.  Also, note that this busy check is needed only against read /
-write functions, and not in receive/transmit callbacks; the race can
-happen only at the spinlock hole mentioned in the above, while the
-whole function is protected for receive / transmit callbacks.
-
-Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
-Link: https://lore.kernel.org/r/s5heerw3r5z.wl-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: fc9702273e2e ("bpf: Add mmap() support for BPF_MAP_TYPE_ARRAY")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/20200512235925.3817805-1-andriin@fb.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/rawmidi.h |    1 +
- sound/core/rawmidi.c    |   31 +++++++++++++++++++++++++++----
- 2 files changed, 28 insertions(+), 4 deletions(-)
+ kernel/bpf/arraymap.c                         | 7 ++++++-
+ tools/testing/selftests/bpf/prog_tests/mmap.c | 9 +++++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
---- a/include/sound/rawmidi.h
-+++ b/include/sound/rawmidi.h
-@@ -61,6 +61,7 @@ struct snd_rawmidi_runtime {
- 	size_t avail_min;	/* min avail for wakeup */
- 	size_t avail;		/* max used buffer for wakeup */
- 	size_t xruns;		/* over/underruns counter */
-+	int buffer_ref;		/* buffer reference count */
- 	/* misc */
- 	spinlock_t lock;
- 	wait_queue_head_t sleep;
---- a/sound/core/rawmidi.c
-+++ b/sound/core/rawmidi.c
-@@ -120,6 +120,17 @@ static void snd_rawmidi_input_event_work
- 		runtime->event(runtime->substream);
+diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+index 95d77770353c9..1d6120fd5ba68 100644
+--- a/kernel/bpf/arraymap.c
++++ b/kernel/bpf/arraymap.c
+@@ -486,7 +486,12 @@ static int array_map_mmap(struct bpf_map *map, struct vm_area_struct *vma)
+ 	if (!(map->map_flags & BPF_F_MMAPABLE))
+ 		return -EINVAL;
+ 
+-	return remap_vmalloc_range(vma, array_map_vmalloc_addr(array), pgoff);
++	if (vma->vm_pgoff * PAGE_SIZE + (vma->vm_end - vma->vm_start) >
++	    PAGE_ALIGN((u64)array->map.max_entries * array->elem_size))
++		return -EINVAL;
++
++	return remap_vmalloc_range(vma, array_map_vmalloc_addr(array),
++				   vma->vm_pgoff + pgoff);
  }
  
-+/* buffer refcount management: call with runtime->lock held */
-+static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
-+{
-+	runtime->buffer_ref++;
-+}
-+
-+static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
-+{
-+	runtime->buffer_ref--;
-+}
-+
- static int snd_rawmidi_runtime_create(struct snd_rawmidi_substream *substream)
- {
- 	struct snd_rawmidi_runtime *runtime;
-@@ -669,6 +680,11 @@ static int resize_runtime_buffer(struct
- 		if (!newbuf)
- 			return -ENOMEM;
- 		spin_lock_irq(&runtime->lock);
-+		if (runtime->buffer_ref) {
-+			spin_unlock_irq(&runtime->lock);
-+			kvfree(newbuf);
-+			return -EBUSY;
-+		}
- 		oldbuf = runtime->buffer;
- 		runtime->buffer = newbuf;
- 		runtime->buffer_size = params->buffer_size;
-@@ -1019,8 +1035,10 @@ static long snd_rawmidi_kernel_read1(str
- 	long result = 0, count1;
- 	struct snd_rawmidi_runtime *runtime = substream->runtime;
- 	unsigned long appl_ptr;
-+	int err = 0;
+ const struct bpf_map_ops array_map_ops = {
+diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
+index 16a814eb4d645..b0e789678aa46 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mmap.c
++++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
+@@ -197,6 +197,15 @@ void test_mmap(void)
+ 	CHECK_FAIL(map_data->val[far] != 3 * 321);
  
- 	spin_lock_irqsave(&runtime->lock, flags);
-+	snd_rawmidi_buffer_ref(runtime);
- 	while (count > 0 && runtime->avail) {
- 		count1 = runtime->buffer_size - runtime->appl_ptr;
- 		if (count1 > count)
-@@ -1039,16 +1057,19 @@ static long snd_rawmidi_kernel_read1(str
- 		if (userbuf) {
- 			spin_unlock_irqrestore(&runtime->lock, flags);
- 			if (copy_to_user(userbuf + result,
--					 runtime->buffer + appl_ptr, count1)) {
--				return result > 0 ? result : -EFAULT;
--			}
-+					 runtime->buffer + appl_ptr, count1))
-+				err = -EFAULT;
- 			spin_lock_irqsave(&runtime->lock, flags);
-+			if (err)
-+				goto out;
- 		}
- 		result += count1;
- 		count -= count1;
- 	}
-+ out:
-+	snd_rawmidi_buffer_unref(runtime);
- 	spin_unlock_irqrestore(&runtime->lock, flags);
--	return result;
-+	return result > 0 ? result : err;
- }
- 
- long snd_rawmidi_kernel_read(struct snd_rawmidi_substream *substream,
-@@ -1342,6 +1363,7 @@ static long snd_rawmidi_kernel_write1(st
- 			return -EAGAIN;
- 		}
- 	}
-+	snd_rawmidi_buffer_ref(runtime);
- 	while (count > 0 && runtime->avail > 0) {
- 		count1 = runtime->buffer_size - runtime->appl_ptr;
- 		if (count1 > count)
-@@ -1373,6 +1395,7 @@ static long snd_rawmidi_kernel_write1(st
- 	}
-       __end:
- 	count1 = runtime->avail < runtime->buffer_size;
-+	snd_rawmidi_buffer_unref(runtime);
- 	spin_unlock_irqrestore(&runtime->lock, flags);
- 	if (count1)
- 		snd_rawmidi_output_trigger(substream, 1);
+ 	munmap(tmp2, 4 * page_size);
++
++	/* map all 4 pages, but with pg_off=1 page, should fail */
++	tmp1 = mmap(NULL, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
++		    data_map_fd, page_size /* initial page shift */);
++	if (CHECK(tmp1 != MAP_FAILED, "adv_mmap7", "unexpected success")) {
++		munmap(tmp1, 4 * page_size);
++		goto cleanup;
++	}
++
+ cleanup:
+ 	if (bss_mmaped)
+ 		CHECK_FAIL(munmap(bss_mmaped, bss_sz));
+-- 
+2.20.1
+
 
 
