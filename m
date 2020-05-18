@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF29C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3BE20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F078A20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825966;
-	bh=atgqXYkEgqWD2b2PPiG23BKYGUxZMe4ntwxE0wwZT94=;
+	s=default; t=1589825970;
+	bh=G39XeJgKsFQKD6l++4rTfPIrCA35P4H72OQ6BSkkFaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l2nOxQ4VgKCWva56fKG0KBQ7bcSbN0ybr0t2rJzBMihFrjWRYOi41JhM1oDV2eILY
-	 6oUEqtDab/q+6Gpm1LyOFA/1Ubov/cGsB5Dw2oWEJTG7qSXBM1LLHQ0h07UqDG5phc
-	 +bihU/CH54LgyVaTfWR3hwoJ64NS4bmTnon1fhzs=
+	b=vBKbiXSudV9pM2ahShR6UcgxZMQE0pGhYQ6I4lHmSUw5XVJmbjmfJcOxUUCcref33
+	 L+14/WLz8gT/BMVFa512wGqoEMEJ7HCwElt7XKEoejiqzdp7Wtv3oulSOQ5tpaYP0w
+	 /wuoGz3oYetBs3kg2Ldp1tmkwxYnz6+VvcYhETCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729361AbgERRyT (ORCPT
+        id S2387743AbgERST3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:54:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58692 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:19:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731263AbgERRyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:13 -0400
+        id S1731268AbgERRyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC8120715;
-        Mon, 18 May 2020 17:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF29F207C4;
+        Mon, 18 May 2020 17:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824452;
-        bh=atgqXYkEgqWD2b2PPiG23BKYGUxZMe4ntwxE0wwZT94=;
+        s=default; t=1589824455;
+        bh=G39XeJgKsFQKD6l++4rTfPIrCA35P4H72OQ6BSkkFaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p79Mrs6r6FeBSn4haf9jTDHkt2EpM8qaUyC5fmlQF/c595WOuaDMvR2GixrVxxVLM
-         zPeKsxw/AWKWWbCDWm6DMG7N6w+AGrCeVInCRF7CwJbLM/nLBlE5ZeTZkmXx2H6wBJ
-         bjtsReyOKE0vM6BS7JLU4lgjxvw3/EPpFoGy7i1E=
+        b=tjXqzGUHaUuQbLzhhnltcfOs6We9uxMSBPRLh4eD4+UmNzDoPRfogFW3xQ1f5FQhf
+         yhfiDFEFAneVDH5/5SC4+hWalZv6z3OC79nGpHZrD3QNjSviiS+oZIkzS/x8pI4Uhm
+         +eSIjRe3CidUPn1aIuIMquiXCbQY+2FMDAvWVDA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        stable@vger.kernel.org,
+        syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com,
+        syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com,
+        Jarod Wilson <jarod@redhat.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 018/147] dpaa2-eth: properly handle buffer size restrictions
-Date:   Mon, 18 May 2020 19:35:41 +0200
-Message-Id: <20200518173516.052075569@linuxfoundation.org>
+Subject: [PATCH 5.4 019/147] net: fix a potential recursive NETDEV_FEAT_CHANGE
+Date:   Mon, 18 May 2020 19:35:42 +0200
+Message-Id: <20200518173516.176813757@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,153 +67,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit efa6a7d07523ffbbf6503c1a7eeb52201c15c0e3 ]
+[ Upstream commit dd912306ff008891c82cd9f63e8181e47a9cb2fb ]
 
-Depending on the WRIOP version, the buffer size on the RX path must by a
-multiple of 64 or 256. Handle this restriction properly by aligning down
-the buffer size to the necessary value. Also, use the new buffer size
-dynamically computed instead of the compile time one.
+syzbot managed to trigger a recursive NETDEV_FEAT_CHANGE event
+between bonding master and slave. I managed to find a reproducer
+for this:
 
-Fixes: 27c874867c4e ("dpaa2-eth: Use a single page per Rx buffer")
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+  ip li set bond0 up
+  ifenslave bond0 eth0
+  brctl addbr br0
+  ethtool -K eth0 lro off
+  brctl addif br0 bond0
+  ip li set br0 up
+
+When a NETDEV_FEAT_CHANGE event is triggered on a bonding slave,
+it captures this and calls bond_compute_features() to fixup its
+master's and other slaves' features. However, when syncing with
+its lower devices by netdev_sync_lower_features() this event is
+triggered again on slaves when the LRO feature fails to change,
+so it goes back and forth recursively until the kernel stack is
+exhausted.
+
+Commit 17b85d29e82c intentionally lets __netdev_update_features()
+return -1 for such a failure case, so we have to just rely on
+the existing check inside netdev_sync_lower_features() and skip
+NETDEV_FEAT_CHANGE event only for this specific failure case.
+
+Fixes: fd867d51f889 ("net/core: generic support for disabling netdev features down stack")
+Reported-by: syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com
+Reported-by: syzbot+c2fb6f9ddcea95ba49b5@syzkaller.appspotmail.com
+Cc: Jarod Wilson <jarod@redhat.com>
+Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Reviewed-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c |   29 +++++++++++++----------
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h |    1 
- 2 files changed, 18 insertions(+), 12 deletions(-)
+ net/core/dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-@@ -86,7 +86,7 @@ static void free_rx_fd(struct dpaa2_eth_
- 	for (i = 1; i < DPAA2_ETH_MAX_SG_ENTRIES; i++) {
- 		addr = dpaa2_sg_get_addr(&sgt[i]);
- 		sg_vaddr = dpaa2_iova_to_virt(priv->iommu_domain, addr);
--		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, addr, priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -8595,11 +8595,13 @@ static void netdev_sync_lower_features(s
+ 			netdev_dbg(upper, "Disabling feature %pNF on lower dev %s.\n",
+ 				   &feature, lower->name);
+ 			lower->wanted_features &= ~feature;
+-			netdev_update_features(lower);
++			__netdev_update_features(lower);
  
- 		free_pages((unsigned long)sg_vaddr, 0);
-@@ -144,7 +144,7 @@ static struct sk_buff *build_frag_skb(st
- 		/* Get the address and length from the S/G entry */
- 		sg_addr = dpaa2_sg_get_addr(sge);
- 		sg_vaddr = dpaa2_iova_to_virt(priv->iommu_domain, sg_addr);
--		dma_unmap_page(dev, sg_addr, DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, sg_addr, priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
- 
- 		sg_length = dpaa2_sg_get_len(sge);
-@@ -185,7 +185,7 @@ static struct sk_buff *build_frag_skb(st
- 				(page_address(page) - page_address(head_page));
- 
- 			skb_add_rx_frag(skb, i - 1, head_page, page_offset,
--					sg_length, DPAA2_ETH_RX_BUF_SIZE);
-+					sg_length, priv->rx_buf_size);
+ 			if (unlikely(lower->features & feature))
+ 				netdev_WARN(upper, "failed to disable %pNF on %s!\n",
+ 					    &feature, lower->name);
++			else
++				netdev_features_change(lower);
  		}
- 
- 		if (dpaa2_sg_is_final(sge))
-@@ -211,7 +211,7 @@ static void free_bufs(struct dpaa2_eth_p
- 
- 	for (i = 0; i < count; i++) {
- 		vaddr = dpaa2_iova_to_virt(priv->iommu_domain, buf_array[i]);
--		dma_unmap_page(dev, buf_array[i], DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, buf_array[i], priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
- 		free_pages((unsigned long)vaddr, 0);
  	}
-@@ -331,7 +331,7 @@ static u32 run_xdp(struct dpaa2_eth_priv
- 		break;
- 	case XDP_REDIRECT:
- 		dma_unmap_page(priv->net_dev->dev.parent, addr,
--			       DPAA2_ETH_RX_BUF_SIZE, DMA_BIDIRECTIONAL);
-+			       priv->rx_buf_size, DMA_BIDIRECTIONAL);
- 		ch->buf_count--;
- 		xdp.data_hard_start = vaddr;
- 		err = xdp_do_redirect(priv->net_dev, &xdp, xdp_prog);
-@@ -370,7 +370,7 @@ static void dpaa2_eth_rx(struct dpaa2_et
- 	trace_dpaa2_rx_fd(priv->net_dev, fd);
- 
- 	vaddr = dpaa2_iova_to_virt(priv->iommu_domain, addr);
--	dma_sync_single_for_cpu(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
-+	dma_sync_single_for_cpu(dev, addr, priv->rx_buf_size,
- 				DMA_BIDIRECTIONAL);
- 
- 	fas = dpaa2_get_fas(vaddr, false);
-@@ -389,13 +389,13 @@ static void dpaa2_eth_rx(struct dpaa2_et
- 			return;
- 		}
- 
--		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, addr, priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
- 		skb = build_linear_skb(ch, fd, vaddr);
- 	} else if (fd_format == dpaa2_fd_sg) {
- 		WARN_ON(priv->xdp_prog);
- 
--		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
-+		dma_unmap_page(dev, addr, priv->rx_buf_size,
- 			       DMA_BIDIRECTIONAL);
- 		skb = build_frag_skb(priv, ch, buf_data);
- 		free_pages((unsigned long)vaddr, 0);
-@@ -963,7 +963,7 @@ static int add_bufs(struct dpaa2_eth_pri
- 		if (!page)
- 			goto err_alloc;
- 
--		addr = dma_map_page(dev, page, 0, DPAA2_ETH_RX_BUF_SIZE,
-+		addr = dma_map_page(dev, page, 0, priv->rx_buf_size,
- 				    DMA_BIDIRECTIONAL);
- 		if (unlikely(dma_mapping_error(dev, addr)))
- 			goto err_map;
-@@ -973,7 +973,7 @@ static int add_bufs(struct dpaa2_eth_pri
- 		/* tracing point */
- 		trace_dpaa2_eth_buf_seed(priv->net_dev,
- 					 page, DPAA2_ETH_RX_BUF_RAW_SIZE,
--					 addr, DPAA2_ETH_RX_BUF_SIZE,
-+					 addr, priv->rx_buf_size,
- 					 bpid);
- 	}
- 
-@@ -1680,7 +1680,7 @@ static bool xdp_mtu_valid(struct dpaa2_e
- 	int mfl, linear_mfl;
- 
- 	mfl = DPAA2_ETH_L2_MAX_FRM(mtu);
--	linear_mfl = DPAA2_ETH_RX_BUF_SIZE - DPAA2_ETH_RX_HWA_SIZE -
-+	linear_mfl = priv->rx_buf_size - DPAA2_ETH_RX_HWA_SIZE -
- 		     dpaa2_eth_rx_head_room(priv) - XDP_PACKET_HEADROOM;
- 
- 	if (mfl > linear_mfl) {
-@@ -2432,6 +2432,11 @@ static int set_buffer_layout(struct dpaa
- 	else
- 		rx_buf_align = DPAA2_ETH_RX_BUF_ALIGN;
- 
-+	/* We need to ensure that the buffer size seen by WRIOP is a multiple
-+	 * of 64 or 256 bytes depending on the WRIOP version.
-+	 */
-+	priv->rx_buf_size = ALIGN_DOWN(DPAA2_ETH_RX_BUF_SIZE, rx_buf_align);
-+
- 	/* tx buffer */
- 	buf_layout.private_data_size = DPAA2_ETH_SWA_SIZE;
- 	buf_layout.pass_timestamp = true;
-@@ -3096,7 +3101,7 @@ static int bind_dpni(struct dpaa2_eth_pr
- 	pools_params.num_dpbp = 1;
- 	pools_params.pools[0].dpbp_id = priv->dpbp_dev->obj_desc.id;
- 	pools_params.pools[0].backup_pool = 0;
--	pools_params.pools[0].buffer_size = DPAA2_ETH_RX_BUF_SIZE;
-+	pools_params.pools[0].buffer_size = priv->rx_buf_size;
- 	err = dpni_set_pools(priv->mc_io, 0, priv->mc_token, &pools_params);
- 	if (err) {
- 		dev_err(dev, "dpni_set_pools() failed\n");
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
-@@ -373,6 +373,7 @@ struct dpaa2_eth_priv {
- 	u16 tx_data_offset;
- 
- 	struct fsl_mc_device *dpbp_dev;
-+	u16 rx_buf_size;
- 	u16 bpid;
- 	struct iommu_domain *iommu_domain;
- 
+ }
 
 
