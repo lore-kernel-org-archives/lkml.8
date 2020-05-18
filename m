@@ -2,129 +2,252 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C79DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF8520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B39420835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 19:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q4COzxuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgERTur (ORCPT
+        id S1728582AbgERTyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 15:50:47 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:51977 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727817AbgERTuq (ORCPT
+        Mon, 18 May 2020 15:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728526AbgERTyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 15:50:46 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 18 May 2020 12:50:44 -0700
-Received: from localhost (unknown [10.200.192.41])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id BDFAF40BA4;
-        Mon, 18 May 2020 12:50:45 -0700 (PDT)
-Date:   Mon, 18 May 2020 12:50:45 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 4/5] objtool: Enable compilation of objtool for all
- architectures
-Message-ID: <20200518195045.GQ9040@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <cover.1588888003.git.mhelsley@vmware.com>
- <9f709ea2ae66cc03b3ff3329baa8f670ccd0e368.1588888003.git.mhelsley@vmware.com>
- <20200515205610.fmdimt7wbafypuqc@treble>
+        Mon, 18 May 2020 15:54:43 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D8EFC061A0C;
+        Mon, 18 May 2020 12:54:43 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id l5so3076587edn.7;
+        Mon, 18 May 2020 12:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/s33/VvXYGOPrAm8r0pCzT0GNMPPVkhgGa11qWBep6g=;
+        b=q4COzxuc6flvPfQ7Crk9oiFTtCqk4q6pYceNjhtyzBY2b/tzAoQKnXgt7+aQUfbc/W
+         ojDgtYBtUDoSUg/vQ5Qk+1/RBB5swNARUbTJumOU6slx5dC2o1KTeFJkn6z07efBnBXr
+         KxP06lQVdRPYtNrTZjWZqjECATRM1XFZhfQiXCDuArOGDJpf+sTEkoi45rxYxmucal6Z
+         rOpTQt4jW7LQA7WHcLUknh/EkfcjWhXB57gz+CYFvhD0CK2jFqVvJGDTuol1CLosyl5n
+         PzQOMM47ExzalqvaSiGZPmhtUPTMxH7LnhheGpj4TD46V2GKvb+3JBxKNW/YkY6t2z5w
+         JApg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/s33/VvXYGOPrAm8r0pCzT0GNMPPVkhgGa11qWBep6g=;
+        b=msYBcN+9Ft2a8/bvmKWEkvVNJEz2FTjDDhHixxjhbzUWMUwk4308UaT8gt5szpHT2M
+         5mozwoUpCpDSsf2VTQ3uYuanKNcCPlGUFDdR5w8hLc4OFLq1gCaRMhAKK2DA/es7fji3
+         TvicrjRYb2LKYK5l+8xv0PRK9YBv3kmoY/hmUuH/OMtEskat6iaOus8JBUl0bzAylXwR
+         Ria98fN0qdudrFmnkCDhmlSEI772OsyCd2wucaTD/l9AMglJ41sMtrQOYUYJNnUrOa6u
+         lLMEuS6VDpU2slbyquK/b52qvFRUC3m+LKPBqtM/jTbjCtwMMBC2h/k/Mm0uuzvCYJhB
+         u0lw==
+X-Gm-Message-State: AOAM533SYKljFVJcv7z2ZH6FBRB57LgbsqbVyYleG2PdE3H90K1nd2im
+        c55w9jd5ehORvrUUV/GzHcyRkKPYfHHeO63WbCs=
+X-Google-Smtp-Source: ABdhPJyuUmiJ9daRIL60EFvhWnqZ4xns4kX/SorOJMxCWXj78jxGrxNseGdt5d+cgR5YxvNusMUaYdGsL8GboHwmrH8=
+X-Received: by 2002:aa7:c6c6:: with SMTP id b6mr11008427eds.53.1589831681502;
+ Mon, 18 May 2020 12:54:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200515205610.fmdimt7wbafypuqc@treble>
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+References: <20200515013556.5582-1-kim.andrewsy@gmail.com> <20200517171654.8194-1-kim.andrewsy@gmail.com>
+ <alpine.LFD.2.21.2005182027460.4524@ja.home.ssi.bg>
+In-Reply-To: <alpine.LFD.2.21.2005182027460.4524@ja.home.ssi.bg>
+From:   Andrew Kim <kim.andrewsy@gmail.com>
+Date:   Mon, 18 May 2020 15:54:30 -0400
+Message-ID: <CABc050G-yW-frv0mCmg=hMnC4iOx9Ht2Zv8eoS1cxQ8uKX6NQw@mail.gmail.com>
+Subject: Re: [PATCH] netfilter/ipvs: immediately expire UDP connections
+ matching unavailable destination if expire_nodest_conn=1
+To:     Julian Anastasov <ja@ssi.bg>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "open list:IPVS" <netdev@vger.kernel.org>,
+        "open list:IPVS" <lvs-devel@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
+        "open list:NETFILTER" <coreteam@netfilter.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:56:10PM -0500, Josh Poimboeuf wrote:
-> On Mon, May 11, 2020 at 10:35:12AM -0700, Matt Helsley wrote:
-> > +struct insn_state {
-> > +	struct cfi_reg cfa;
-> > +	struct cfi_reg regs[CFI_NUM_REGS];
-> > +	int stack_size;
-> > +	unsigned char type;
-> > +	bool bp_scratch;
-> > +	bool drap, end, uaccess, df;
-> > +	bool noinstr;
-> > +	s8 instr;
-> > +	unsigned int uaccess_stack;
-> > +	int drap_reg, drap_offset;
-> > +	struct cfi_reg vals[CFI_NUM_REGS];
-> > +};
+Hi Julian,
+
+Thank you for getting back to me. I will update the patch based on
+your feedback shortly.
+
+Regards,
+
+Andrew
+
+On Mon, May 18, 2020 at 3:10 PM Julian Anastasov <ja@ssi.bg> wrote:
+>
+>
+>         Hello,
+>
+> On Sun, 17 May 2020, Andrew Sy Kim wrote:
+>
+> > If expire_nodest_conn=1 and a UDP destination is deleted, IPVS should
+> > also expire all matching connections immiediately instead of waiting for
+> > the next matching packet. This is particulary useful when there are a
+> > lot of packets coming from a few number of clients. Those clients are
+> > likely to match against existing entries if a source port in the
+> > connection hash is reused. When the number of entries in the connection
+> > tracker is large, we can significantly reduce the number of dropped
+> > packets by expiring all connections upon deletion.
+> >
+> > Signed-off-by: Andrew Sy Kim <kim.andrewsy@gmail.com>
+> > ---
+> >  include/net/ip_vs.h             |  7 ++++++
+> >  net/netfilter/ipvs/ip_vs_conn.c | 38 +++++++++++++++++++++++++++++++++
+> >  net/netfilter/ipvs/ip_vs_core.c |  5 -----
+> >  net/netfilter/ipvs/ip_vs_ctl.c  |  9 ++++++++
+> >  4 files changed, 54 insertions(+), 5 deletions(-)
+> >
+>
+> > diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs_conn.c
+> > index 02f2f636798d..c69dfbbc3416 100644
+> > --- a/net/netfilter/ipvs/ip_vs_conn.c
+> > +++ b/net/netfilter/ipvs/ip_vs_conn.c
+> > @@ -1366,6 +1366,44 @@ static void ip_vs_conn_flush(struct netns_ipvs *ipvs)
+> >               goto flush_again;
+> >       }
+> >  }
 > > +
-> > +struct instruction {
-> > +	struct list_head list;
-> > +	struct hlist_node hash;
-> > +	struct section *sec;
-> > +	unsigned long offset;
-> > +	unsigned int len;
-> > +	enum insn_type type;
-> > +	unsigned long immediate;
-> > +	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
-> > +	bool retpoline_safe;
-> > +	s8 instr;
-> > +	u8 visited;
-> > +	struct symbol *call_dest;
-> > +	struct instruction *jump_dest;
-> > +	struct instruction *first_jump_src;
-> > +	struct rela *jump_table;
-> > +	struct list_head alts;
-> > +	struct symbol *func;
-> > +	struct stack_op stack_op;
-> > +	struct insn_state state;
-> > +	struct orc_entry orc;
-> > +};
-> 
-> Why were these moved to arch.h?  They're not necessarily arch-specific,
-> but rather "check"-specific, so I think they still belong in check.h, if
-> possible.
-
-Ah, found it. They are arch specific due to struct orc_entry, which is
-presently not defined for any archs besides x86.
-
-Prior to the patch (-> means "includes"):
-	check.h -> asm/orc_types.h (defines struct orc_entry)
-	orc_gen.c -> check,h
-
-After patch:
-	check.c -> asm/orc_types.h
-	orc_gen.c -> asm/orc_types.h
-	orc_gen.c -> check.h
-	orc_gen.c -> arch.h
-	{ now weak.c } -> check.h
-
-So this prevents the headers, which help us keep the weak definitions
-consistent with the strong definitions, from breaking compiles on archs
-that lack struct orc_entry.
-
-I'm not sure what the best way to remove this dependency is without
-a nasty void * for the orc entry, or some #ifdef games related to
-checking for cpp defines from asm/orc_types.h. This approach neatly
-avoids conditional preprocessor games and type casting though I do
-agree it's surprising.
-
-Do you have any advice here?
-
-Cheers,
-	-Matt Helsley
+> > +/*   Flush all the connection entries in the ip_vs_conn_tab with a
+> > + *   matching destination.
+> > + */
+> > +void ip_vs_conn_flush_dest(struct netns_ipvs *ipvs, struct ip_vs_dest *dest)
+> > +{
+> > +     int idx;
+> > +     struct ip_vs_conn *cp, *cp_c;
+> > +
+> > +     rcu_read_lock();
+> > +     for (idx = 0; idx < ip_vs_conn_tab_size; idx++) {
+> > +             hlist_for_each_entry_rcu(cp, &ip_vs_conn_tab[idx], c_list) {
+> > +                     if (cp->ipvs != ipvs)
+> > +                             continue;
+> > +
+> > +                     if (cp->dest != dest)
+> > +                             continue;
+> > +
+> > +                     /* As timers are expired in LIFO order, restart
+> > +                      * the timer of controlling connection first, so
+> > +                      * that it is expired after us.
+> > +                      */
+> > +                     cp_c = cp->control;
+> > +                     /* cp->control is valid only with reference to cp */
+> > +                     if (cp_c && __ip_vs_conn_get(cp)) {
+> > +                             IP_VS_DBG(4, "del controlling connection\n");
+> > +                             ip_vs_conn_expire_now(cp_c);
+> > +                             __ip_vs_conn_put(cp);
+> > +                     }
+> > +                     IP_VS_DBG(4, "del connection\n");
+> > +                     ip_vs_conn_expire_now(cp);
+> > +             }
+> > +             cond_resched_rcu();
+>
+>         Such kind of loop is correct if done in another context:
+>
+> 1. kthread
+> or
+> 2. delayed work: mod_delayed_work(system_long_wq, ...)
+>
+>         Otherwise cond_resched_rcu() can schedule() while holding
+> __ip_vs_mutex. Also, it will add long delay if many dests are
+> removed.
+>
+>         If such loop analyzes instead all cp->dest for
+> IP_VS_DEST_F_AVAILABLE, it should be done after calling
+> __ip_vs_conn_get().
+>
+> >  static int sysctl_snat_reroute(struct netns_ipvs *ipvs) { return 0; }
+> > diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+> > index 8d14a1acbc37..f87c03622874 100644
+> > --- a/net/netfilter/ipvs/ip_vs_ctl.c
+> > +++ b/net/netfilter/ipvs/ip_vs_ctl.c
+> > @@ -1225,6 +1225,15 @@ ip_vs_del_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
+> >        */
+> >       __ip_vs_del_dest(svc->ipvs, dest, false);
+> >
+> > +     /*      If expire_nodest_conn is enabled and protocol is UDP,
+> > +      *      attempt best effort flush of all connections with this
+> > +      *      destination.
+> > +      */
+> > +     if (sysctl_expire_nodest_conn(svc->ipvs) &&
+> > +         dest->protocol == IPPROTO_UDP) {
+> > +             ip_vs_conn_flush_dest(svc->ipvs, dest);
+>
+>         Above work should be scheduled from __ip_vs_del_dest().
+> Check for UDP is not needed, sysctl_expire_nodest_conn() is for
+> all protocols.
+>
+>         If the flushing is complex to implement, we can still allow
+> rescheduling for unavailable dests:
+>
+> - first we should move this block above the ip_vs_try_to_schedule()
+> block because:
+>
+>         1. the scheduling does not return unavailabel dests, even
+>         for persistence, so no need to check new connections for
+>         the flag
+>
+>         2. it will allow to create new connection if dest for
+>         existing connection is unavailable
+>
+>         if (cp && cp->dest && !(cp->dest->flags & IP_VS_DEST_F_AVAILABLE)) {
+>                 /* the destination server is not available */
+>
+>                 if (sysctl_expire_nodest_conn(ipvs)) {
+>                         bool uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
+>
+>                         ip_vs_conn_expire_now(cp);
+>                         __ip_vs_conn_put(cp);
+>                         if (uses_ct)
+>                                 return NF_DROP;
+>                         cp = NULL;
+>                 } else {
+>                         __ip_vs_conn_put(cp);
+>                         return NF_DROP;
+>                 }
+>         }
+>
+>         if (unlikely(!cp)) {
+>                 int v;
+>
+>                 if (!ip_vs_try_to_schedule(ipvs, af, skb, pd, &v, &cp, &iph))
+>                         return v;
+>         }
+>
+>         Before now, we always waited one jiffie connection to expire,
+> now one packet will:
+>
+> - schedule expiration for existing connection with unavailable dest,
+> as before
+>
+> - create new connection to available destination that will be found
+> first in lists. But it can work only when sysctl var "conntrack" is 0,
+> we do not want to create two netfilter conntracks to different
+> real servers.
+>
+>         Note that we intentionally removed the timer_pending() check
+> because we can not see existing ONE_PACKET connections in table.
+>
+> Regards
+>
+> --
+> Julian Anastasov <ja@ssi.bg>
