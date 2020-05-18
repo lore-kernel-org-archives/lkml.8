@@ -2,107 +2,104 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF381C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B09B420829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589840311;
-	bh=GAsP72OzLRqNeGGIYQczDNH78GgALiPWljn3TChp7vo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HEMYO2hu1GgLbaB2O/llAECwnAuzdN1Gwlxz0Cly5Cx+lIHOf+i7KotlZlbGeOMFY
-	 wyU1v4g9pncxPPU0AuGqWH7lMpnA4vBiZC73gdrc6sLYso8fdIFB3ON39IKK0nVMXX
-	 Hg2yPldsKeTDc65VUvuXqIaqhopjcnCAj94abxBc=
+	by mail.kernel.org (Postfix) with ESMTP id F13EA20853
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:20:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Uu4Xg/jr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgERWSb (ORCPT
+        id S1728276AbgERWUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33760 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 18:20:04 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59829 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbgERWSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:18:30 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726386AbgERWUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:20:03 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7BC62081A;
-        Mon, 18 May 2020 22:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589840309;
-        bh=GAsP72OzLRqNeGGIYQczDNH78GgALiPWljn3TChp7vo=;
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Qtjt0xN6z9sRK;
+        Tue, 19 May 2020 08:20:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589840402;
+        bh=FjIS8vGcrmSBHisqyc6vQi6ntIWxCy8/k3LeKa2MooY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zZ+klVAaZtV27MGlVb0LzirdC6IcRNdxtR8vdL8+p1v703lmi5J9HVBsa59wZfYS2
-         rcHhIFOwmI6Yc/w9iEWdmxMN/U7GWNm4qd9W6owTNY+8aCiuJZFmriA8jGFyro1lnf
-         B2QLoucZDhxzU0xGGj8zNn76nXG71emZmJGgdURs=
-Date:   Mon, 18 May 2020 15:18:28 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v3 2/7] mm/vmalloc: Track which page-table levels were
- modified
-Message-Id: <20200518151828.ad3c714a29209b359e326ec4@linux-foundation.org>
-In-Reply-To: <20200516125641.GK8135@suse.de>
-References: <20200515140023.25469-1-joro@8bytes.org>
-        <20200515140023.25469-3-joro@8bytes.org>
-        <20200515130142.4ca90ee590e9d8ab88497676@linux-foundation.org>
-        <20200516125641.GK8135@suse.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        b=Uu4Xg/jrFle3EYUUFxbo03dp1YHPRpC5g+ssrda+pIvKzQkO/4saBL1iCVtp9AsqW
+         ggwjQv11wGZhUkQEfIVoWoQsjMw9K4EjMEyde02gQ7UF1EP/gvzbff+u1e6GTYqu2t
+         /hkI5DS2WSK3/LGx0mJr7vLKpn576v0KzV+cHvsH4GWE9fcgD/0PA1We8I7pEhgS/1
+         xp4tVQ12oh+CkZ8FemhVQyrBFlTLz3pdA8btVlPcmQPnZonF3+g64Rayj6CzAnTxHn
+         0bqbEh+QJeyV7AedhIBjTDaC0S4+BApT+1r/QCMtxS3o6PYW8kYHnFB4ZJkmKsTo0q
+         FSNwhebIsSNqw==
+Date:   Tue, 19 May 2020 08:20:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: linux-next: build failure in Linus tree
+Message-ID: <20200519082000.4909cfe6@canb.auug.org.au>
+In-Reply-To: <20200420214611.17a6411f@canb.auug.org.au>
+References: <20200420214611.17a6411f@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/+y.HsfQv2rB9O.Ik0uuV71p";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 16 May 2020 14:56:41 +0200 Joerg Roedel <jroedel@suse.de> wrote:
+--Sig_/+y.HsfQv2rB9O.Ik0uuV71p
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Hi Andrew,
-> 
-> On Fri, May 15, 2020 at 01:01:42PM -0700, Andrew Morton wrote:
-> > On Fri, 15 May 2020 16:00:18 +0200 Joerg Roedel <joro@8bytes.org> wrote:
-> > Lots of collisions here with Christoph's "decruft the vmalloc API" series
-> > (http://lkml.kernel.org/r/20200414131348.444715-1-hch@lst.de).
-> > 
-> > I attempted to fix things up.
-> > 
-> > unmap_kernel_range_noflush() needed to be redone.
-> > 
-> > map_kernel_range_noflush() might need the arch_sync_kernel_mappings() call?
-> 
-> Yes, map_kernel_range_noflush() needs the arch_sync_kernel_mappings()
-> call as well.
-> 
+Hi all,
 
-This?
+On Mon, 20 Apr 2020 21:46:11 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Hi all,
+>=20
+> [reported by kernelci.org bot]
+>=20
+> For a while now, building Linus' tree, the linux-next build (arm
+> qcom_defconfig) fails like this:
+>=20
+> ERROR: modpost: "rd_full" [drivers/gpu/drm/msm/msm.ko] undefined!
+>=20
+> Caused by commit
+>=20
+>   e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buff=
+ers")
 
---- a/mm/vmalloc.c~mm-vmalloc-track-which-page-table-levels-were-modified-fix
-+++ a/mm/vmalloc.c
-@@ -309,6 +309,9 @@ int map_kernel_range_noflush(unsigned lo
- 			return err;
- 	} while (pgd++, addr = next, addr != end);
- 
-+	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
-+		arch_sync_kernel_mappings(start, end);
-+
- 	return 0;
- }
- 
+I see a fix for this has gone into the drm-msm tree.  Since this is a
+bug in Linus' tree, is the intention to send this fix to Linus soon?
 
-It would be nice to get all this (ie, linux-next) retested before we
-send it upstream, please.  
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+y.HsfQv2rB9O.Ik0uuV71p
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7DChAACgkQAVBC80lX
+0GzAMQgAk9kFf0Hv9JzbJhxAzxEScWAk04rJZiWTVJYtQ0ICFJwTQzP4z91rQpp3
+k3mDPLu4bgxd7rGw7kHGUs4ADFUC8LQRhBRDmyThLDvYJciuhhXQS7+C9tG1kI5c
+RmsSkEahr203+NXRPOkBOGSN+Tg1h5SxMnBcx+WWumgXZupcDVA1FflDx0gxJOyN
+h9GQk+h7cobMcUxuCS6q5G1PhjzOOGBOow60EblopwGSka1oE6Vmdr1wVnhEKjEJ
+eeWIReXeHn2Qsmvs4iN/aIV3fvjCc+HeFAJr3+TemtGX8UZCHmAJxuZGea8Mbahk
+QXsqwbuCDr6BwAYiM591FidxGRqAHQ==
+=U7Ry
+-----END PGP SIGNATURE-----
+
+--Sig_/+y.HsfQv2rB9O.Ik0uuV71p--
