@@ -2,83 +2,77 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C457C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 089F0207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342DD207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgERNCM (ORCPT
+        id S1727884AbgERNDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:02:12 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38741 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgERNCM (ORCPT
+        Mon, 18 May 2020 09:03:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60458 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgERNDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:02:12 -0400
-X-Originating-IP: 84.210.220.251
-Received: from consensus.lan (cm-84.210.220.251.getinternet.no [84.210.220.251])
-        (Authenticated sender: fredrik@strupe.net)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 31480C0010;
-        Mon, 18 May 2020 13:01:58 +0000 (UTC)
-From:   Fredrik Strupe <fredrik@strupe.net>
-To:     Russell King <linux@armlinux.org.uk>, Rabin Vincent <rabin@rab.in>,
-        "David A . Long" <dave.long@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Fredrik Strupe <fredrik@strupe.net>
-Subject: [PATCH] arm: uprobes: Don't hook on thumb instructions
-Date:   Mon, 18 May 2020 14:59:48 +0200
-Message-Id: <20200518125948.25315-1-fredrik@strupe.net>
-X-Mailer: git-send-email 2.20.1
+        Mon, 18 May 2020 09:03:01 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jafPw-0006cd-7l; Mon, 18 May 2020 13:02:52 +0000
+Date:   Mon, 18 May 2020 15:02:51 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
+Message-ID: <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
+References: <20200518055457.12302-1-keescook@chromium.org>
+ <20200518055457.12302-2-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200518055457.12302-2-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since uprobes is not supported for thumb, check that the thumb bit is
-not set when matching the uprobes instruction hooks.
+On Sun, May 17, 2020 at 10:54:54PM -0700, Kees Cook wrote:
+> Change uselib(2)' S_ISREG() error return to EACCES instead of EINVAL so
+> the behavior matches execve(2), and the seemingly documented value.
+> The "not a regular file" failure mode of execve(2) is explicitly
+> documented[1], but it is not mentioned in uselib(2)[2] which does,
+> however, say that open(2) and mmap(2) errors may apply. The documentation
+> for open(2) does not include a "not a regular file" error[3], but mmap(2)
+> does[4], and it is EACCES.
+> 
+> [1] http://man7.org/linux/man-pages/man2/execve.2.html#ERRORS
+> [2] http://man7.org/linux/man-pages/man2/uselib.2.html#ERRORS
+> [3] http://man7.org/linux/man-pages/man2/open.2.html#ERRORS
+> [4] http://man7.org/linux/man-pages/man2/mmap.2.html#ERRORS
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-The Arm UDF instructions used for uprobes triggering
-(UPROBE_SWBP_ARM_INSN and UPROBE_SS_ARM_INSN) coincidentally share the
-same encoding as a pair of unallocated 32-bit thumb instructions (not
-UDF) when the condition code is 0b1111 (0xf). This in effect makes it
-possible to trigger the uprobes functionality from thumb, and at that
-using two unallocated instructions which are not permanently undefined.
+This is all extremely weird.
+uselib has been deprected since forever basically which makes me doubt
+this matters much but:
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
-Fixes: c7edc9e326d5 ("ARM: add uprobes support")
----
- arch/arm/probes/uprobes/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Also - gulp (puts on flame proof suit) - may I suggest we check if there
+are any distros out there that still set CONFIG_USELIB=y and if not do
+what we did with the sysctl syscall and remove it? If someone yells we
+can always backpaddle...
 
-diff --git a/arch/arm/probes/uprobes/core.c b/arch/arm/probes/uprobes/core.c
-index c4b49b322e8a..f5f790c6e5f8 100644
---- a/arch/arm/probes/uprobes/core.c
-+++ b/arch/arm/probes/uprobes/core.c
-@@ -204,7 +204,7 @@ unsigned long uprobe_get_swbp_addr(struct pt_regs *regs)
- static struct undef_hook uprobes_arm_break_hook = {
- 	.instr_mask	= 0x0fffffff,
- 	.instr_val	= (UPROBE_SWBP_ARM_INSN & 0x0fffffff),
--	.cpsr_mask	= MODE_MASK,
-+	.cpsr_mask	= (PSR_T_BIT | MODE_MASK),
- 	.cpsr_val	= USR_MODE,
- 	.fn		= uprobe_trap_handler,
- };
-@@ -212,7 +212,7 @@ static struct undef_hook uprobes_arm_break_hook = {
- static struct undef_hook uprobes_arm_ss_hook = {
- 	.instr_mask	= 0x0fffffff,
- 	.instr_val	= (UPROBE_SS_ARM_INSN & 0x0fffffff),
--	.cpsr_mask	= MODE_MASK,
-+	.cpsr_mask	= (PSR_T_BIT | MODE_MASK),
- 	.cpsr_val	= USR_MODE,
- 	.fn		= uprobe_trap_handler,
- };
--- 
-2.20.1
-
+Christian
