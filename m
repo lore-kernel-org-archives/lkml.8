@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF398C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC7B20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9DE20888
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824314;
-	bh=apyINV/WR9h+x6sTsPQBpcA3la2uvXtDenbZTh6bPSw=;
+	s=default; t=1589824317;
+	bh=ewKaz7VLHOf9HNs60KfzVpxH3IxyiCDrULONC5NIVjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qOBKL+JSFmwlZJtC+k+8glYVP3IHCUWtVKWrUCqovly6h3YDtYLQQbWoyt34TEqC7
-	 j/j4pTYYr5thb7VwivUcH5doWNo8b4t6Ytb7k6EFS1RsMtKopW2/UvGW8Ewnfr0DSe
-	 6cwlxDokm1jZyncdmUL5XJIPdnFAIlgv+/QMsf8M=
+	b=mpSGTKS+nZITo0O3kSHbOEV01X4T2F7uApqZqRCw3uDDX7/ov20ZWqfA9tA+rDAhz
+	 uNnSezH5st/PokzSsRC9+tS640UhzbCZmfSiSpsCTV47LgtKlIqXC6oO/csARJoYgW
+	 MTzxAPfP1wew7WtKvO21N9ErxWy1VqLAxOhPJ8mU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbgERRvx (ORCPT
+        id S1730901AbgERRv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:51:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730740AbgERRvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:45 -0400
+        id S1730761AbgERRvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 496F02083E;
-        Mon, 18 May 2020 17:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 265FB207F5;
+        Mon, 18 May 2020 17:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824304;
-        bh=apyINV/WR9h+x6sTsPQBpcA3la2uvXtDenbZTh6bPSw=;
+        s=default; t=1589824309;
+        bh=ewKaz7VLHOf9HNs60KfzVpxH3IxyiCDrULONC5NIVjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zc8ZGneMQYd1qOG0DVmdJK1LKtz58cp6Rmj31PpsZ+m0XXiKxXXy83MdmKH3b96Vf
-         qPOAbxwPl85M07vS/A+C+mIbMgjvV8JW5+ljBUNu9rkXAySR58Z4abQgovZk5opcLR
-         YqyuTSJP9muOD66OoGuWw92SUm2ouXVmXjGfgaXI=
+        b=Mr1akdaB6yrUfGWd6n+sLrOCWPboZJsPrZv+qJVdj1G7rurCmuSdZUODzMwoH86Zk
+         E2iwbrAmX3EeNW3TMMcV1DoKLVUe51WfXHRsTYzWPWZwnuRQje9KYOqGaZIs5GLwJK
+         NwPPlsyezz9374io3gcgWQRMhDdRMsqFbT+wBBXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Stefano Brivio <sbrivio@redhat.com>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/80] netfilter: conntrack: avoid gcc-10 zero-length-bounds warning
-Date:   Mon, 18 May 2020 19:36:57 +0200
-Message-Id: <20200518173458.224369406@linuxfoundation.org>
+Subject: [PATCH 4.19 41/80] netfilter: nft_set_rbtree: Introduce and use nft_rbtree_interval_start()
+Date:   Mon, 18 May 2020 19:36:59 +0200
+Message-Id: <20200518173458.612903024@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,64 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit 2c407aca64977ede9b9f35158e919773cae2082f ]
+[ Upstream commit 6f7c9caf017be8ab0fe3b99509580d0793bf0833 ]
 
-gcc-10 warns around a suspicious access to an empty struct member:
+Replace negations of nft_rbtree_interval_end() with a new helper,
+nft_rbtree_interval_start(), wherever this helps to visualise the
+problem at hand, that is, for all the occurrences except for the
+comparison against given flags in __nft_rbtree_get().
 
-net/netfilter/nf_conntrack_core.c: In function '__nf_conntrack_alloc':
-net/netfilter/nf_conntrack_core.c:1522:9: warning: array subscript 0 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[0]'} [-Wzero-length-bounds]
- 1522 |  memset(&ct->__nfct_init_offset[0], 0,
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from net/netfilter/nf_conntrack_core.c:37:
-include/net/netfilter/nf_conntrack.h:90:5: note: while referencing '__nfct_init_offset'
-   90 |  u8 __nfct_init_offset[0];
-      |     ^~~~~~~~~~~~~~~~~~
+This gets especially useful in the next patch.
 
-The code is correct but a bit unusual. Rework it slightly in a way that
-does not trigger the warning, using an empty struct instead of an empty
-array. There are probably more elegant ways to do this, but this is the
-smallest change.
-
-Fixes: c41884ce0562 ("netfilter: conntrack: avoid zeroing timer")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/netfilter/nf_conntrack.h | 2 +-
- net/netfilter/nf_conntrack_core.c    | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nft_set_rbtree.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
-index f45141bdbb837..ac4d70aeee129 100644
---- a/include/net/netfilter/nf_conntrack.h
-+++ b/include/net/netfilter/nf_conntrack.h
-@@ -85,7 +85,7 @@ struct nf_conn {
- 	struct hlist_node	nat_bysource;
- #endif
- 	/* all members below initialized via memset */
--	u8 __nfct_init_offset[0];
-+	struct { } __nfct_init_offset;
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index 0221510328d4f..84d317418d184 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -36,6 +36,11 @@ static bool nft_rbtree_interval_end(const struct nft_rbtree_elem *rbe)
+ 	       (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END);
+ }
  
- 	/* If we were expected by an expectation, this will be it */
- 	struct nf_conn *master;
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index c6073d17c3244..ad1da6b2fb607 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -1352,9 +1352,9 @@ __nf_conntrack_alloc(struct net *net,
- 	*(unsigned long *)(&ct->tuplehash[IP_CT_DIR_REPLY].hnnode.pprev) = hash;
- 	ct->status = 0;
- 	write_pnet(&ct->ct_net, net);
--	memset(&ct->__nfct_init_offset[0], 0,
-+	memset(&ct->__nfct_init_offset, 0,
- 	       offsetof(struct nf_conn, proto) -
--	       offsetof(struct nf_conn, __nfct_init_offset[0]));
-+	       offsetof(struct nf_conn, __nfct_init_offset));
++static bool nft_rbtree_interval_start(const struct nft_rbtree_elem *rbe)
++{
++	return !nft_rbtree_interval_end(rbe);
++}
++
+ static bool nft_rbtree_equal(const struct nft_set *set, const void *this,
+ 			     const struct nft_rbtree_elem *interval)
+ {
+@@ -67,7 +72,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 			if (interval &&
+ 			    nft_rbtree_equal(set, this, interval) &&
+ 			    nft_rbtree_interval_end(rbe) &&
+-			    !nft_rbtree_interval_end(interval))
++			    nft_rbtree_interval_start(interval))
+ 				continue;
+ 			interval = rbe;
+ 		} else if (d > 0)
+@@ -92,7 +97,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
  
- 	nf_ct_zone_add(ct, zone);
- 
+ 	if (set->flags & NFT_SET_INTERVAL && interval != NULL &&
+ 	    nft_set_elem_active(&interval->ext, genmask) &&
+-	    !nft_rbtree_interval_end(interval)) {
++	    nft_rbtree_interval_start(interval)) {
+ 		*ext = &interval->ext;
+ 		return true;
+ 	}
+@@ -221,9 +226,9 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+ 			p = &parent->rb_right;
+ 		else {
+ 			if (nft_rbtree_interval_end(rbe) &&
+-			    !nft_rbtree_interval_end(new)) {
++			    nft_rbtree_interval_start(new)) {
+ 				p = &parent->rb_left;
+-			} else if (!nft_rbtree_interval_end(rbe) &&
++			} else if (nft_rbtree_interval_start(rbe) &&
+ 				   nft_rbtree_interval_end(new)) {
+ 				p = &parent->rb_right;
+ 			} else if (nft_set_elem_active(&rbe->ext, genmask)) {
+@@ -314,10 +319,10 @@ static void *nft_rbtree_deactivate(const struct net *net,
+ 			parent = parent->rb_right;
+ 		else {
+ 			if (nft_rbtree_interval_end(rbe) &&
+-			    !nft_rbtree_interval_end(this)) {
++			    nft_rbtree_interval_start(this)) {
+ 				parent = parent->rb_left;
+ 				continue;
+-			} else if (!nft_rbtree_interval_end(rbe) &&
++			} else if (nft_rbtree_interval_start(rbe) &&
+ 				   nft_rbtree_interval_end(this)) {
+ 				parent = parent->rb_right;
+ 				continue;
 -- 
 2.20.1
 
