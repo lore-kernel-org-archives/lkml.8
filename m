@@ -2,113 +2,163 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64603C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD38220643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589793320;
-	bh=sNUlztveAJmm2fG/0q/M4GeYZ6rBhLJUQL5DhHVZvK4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lzfBUfGHkPy/apJw0iGGRQtLSHgoVVxqKQaSrH1HCCUPV13lHHdn9uwjV6m/D6uTC
-	 RbeTR+YSjK+z1+hvC0vjICfRvWtybzbYxeCwVj0KDcrDykcQRyEXc0otSZ6fn/IZnp
-	 NpL8Y29aRixU7TwXr40zAtHgz1t3BT/WF4E6hVM4=
+	by mail.kernel.org (Postfix) with ESMTP id 3EFEE20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:15:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pe/UcA4k";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ImAHvXyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgERJPU (ORCPT
+        id S1726907AbgERJPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:15:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbgERJPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:15:17 -0400
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2965720829;
-        Mon, 18 May 2020 09:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589793317;
-        bh=sNUlztveAJmm2fG/0q/M4GeYZ6rBhLJUQL5DhHVZvK4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r5tppO3WttYFqmI/6cAYpnHh/CB7jLrjAuoFpekIdwtZjUlgdWxkGYoeau60MVckb
-         MKh8qAINrYZ75mPxTwngXfHrBeyouZMkl387o0bZjw/YOIH1ytd7gRNRig9xcCy2Bd
-         S/bViTImsCWu+9R97Rfrm3MfsKKHD8yvC9529sLE=
-Received: by mail-il1-f182.google.com with SMTP id 18so184228iln.9;
-        Mon, 18 May 2020 02:15:17 -0700 (PDT)
-X-Gm-Message-State: AOAM532Sn2almpxnWIjlaZ0HzJlM40/U1+3RMxwbP+MF5WNubomZ/zQq
-        KJXLTTbeX62WUPP0oslCxPRzDJwebBB0M3vr3qQ=
-X-Google-Smtp-Source: ABdhPJw0Jj+zCyjLeSB2lkHXVRYCqJYNFRmf+fCB5ep87YsnuouFjIitXVOzsn92D0RXZ2WlhL8KQ+OuPoyOfADrS2Q=
-X-Received: by 2002:a92:a312:: with SMTP id a18mr15414538ili.80.1589793316534;
- Mon, 18 May 2020 02:15:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200517125754.8934-1-ardb@kernel.org> <20200518090727.GB25034@zn.tnic>
-In-Reply-To: <20200518090727.GB25034@zn.tnic>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 18 May 2020 11:15:05 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGArZihaTkq49vSi0=3UWQrtsCDMeBbuK=EO9R1ik5AcQ@mail.gmail.com>
-Message-ID: <CAMj1kXGArZihaTkq49vSi0=3UWQrtsCDMeBbuK=EO9R1ik5AcQ@mail.gmail.com>
-Subject: Re: [GIT PULL 0/7] EFI fixes for v5.7
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Mon, 18 May 2020 05:15:23 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:34474 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbgERJPT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:15:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1589793318; x=1621329318;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=AzuIogHzZYQvqN23TBsb403HWX2gEwjYaX7xsAYR0Y8=;
+  b=pe/UcA4k5eGl1DdSo6yB2kmCZ5/7K0IVptFl09KGvcUymxVk8rh+ypdS
+   RsBZbs84MYxu6PJL5Px0lrc7kH/RYRJLsSlHGc1fjVtZgEeTOV4CbRlHH
+   B2lwYvMUVDN57G7DtrE32O9NtahxgRc9WLkHNRkVOmXS6Qkkxdoivi2gH
+   tevdJcD1sezBYXmqNkRQ4wTn0nhiqU5NYfuXvxl1iq26unrt3L01L+YX7
+   wZpyxdcKVu2yjXjuDUBIQDAO0RyzJL7nCXtAYZoMWryPT/GVxKrJ/EMI7
+   blS2RuhTZi/Q4+VhVKwPlx9BgcAWt6NQAN8ZNCJRjhIRMDKiZUUvjzVka
+   A==;
+IronPort-SDR: 4q5FZKwOGvWBQMnajh8kfq+wbXtGbc8+okAtRgvrwOocg51LtnTAPsx/yKnkboPgmk/l/UF0f0
+ 1gg934MtkWc95OGsaH/xNf592Jw2OvarBPncexCAoOgX1BRhXpIpdsDZ4OV5a0Y0h8AG7OywPF
+ Or9oQfWmCkokoSBOw+nj0uHjV9v9jKMAL1/iKyV6tZOrpvYmMrIBKhmiP7BJZvhumhSneDt+Sp
+ wlpTWfmhD1A0zAdxScWPDpqkMLFyPCVXn8aGk/rZK3siQV/1iQI7rm+QXBgwYboI4DchL+a+ze
+ ilA=
+X-IronPort-AV: E=Sophos;i="5.73,406,1583164800"; 
+   d="scan'208";a="246916598"
+Received: from mail-mw2nam12lp2040.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.40])
+  by ob1.hgst.iphmx.com with ESMTP; 18 May 2020 17:15:17 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X/lkny08xTsftgmJ15W/iNbQhkkBu9r74xyTmjIbEHQs8Cdl9WOgR+VdnzVS5drQRmK0IggKLdBcbzoKGrMbpro/1HRoFXpmFUzkKehmxM+D5jlE6tnqhtKZL5hJRQr6WdCHi63af/ihnxEe/dZ482znuYsnDXFbek5F74noLNAkn+CU9N1lr5LhD43htCmfMg2CZ3268t9hB6ma7bV6cyMOq3gnMbsZhonkOmU+adjQSvotKZqSAKiC/kAFDNRgy2hKCKMDpFMAMKwYt3qFJq/LiD5BVPwSz5d2JGjTxI8ZqfgIcrx6YtP2o5VCFiNYaPptTs56N44NGZke+UN9Fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YRrRMaOWFiYI9DDq3IcN9J4GqHHnNpZek9RYaNR/4Yw=;
+ b=ggqrhDLOzoXuBItmaHQzMyfIePk666XqUhC3qH1LCzyjoiqWzrTa6mVWFFGI8aARLXW6HrydN9m81y3IeShnIT4XWA3GJSmw9taVAgVQexTd+/r0p2P4DXrvZdCO87mSAYFCnl1GYlpMgkOnnGDAEhHpiqWvNlusCyQjhrRBCni3TrRn1xU0BpYPjYSXbJgIYONYPvd+BdBDdFK0IFftCBFil7obNeMKfCytyKTsjSP9626cOP1Ja9/B0XnVi31bccRBTNK5bZrqyzL0zf11LZpK9AvGGTFYuZD11Aq9NJcOeIb81gSAyTgBo/5Wh2m2h2GFTyabUsjnOXCOIqgTwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YRrRMaOWFiYI9DDq3IcN9J4GqHHnNpZek9RYaNR/4Yw=;
+ b=ImAHvXytfVxixDvEREDFK+TZp8NdVjf1CMyr+4/a5O3Gyrd7mGfKt4orH1PX7yvZ7wEOlcwQkLB9O5ShOfMJDuF8Uj1Ih6Y74caPqMVPQGpbuklLAZEhJg5gB+kfy9e+4flbJ7aqbUW3QSCUBAT3FU3D7r3LKx6aFegXxIm+jJc=
+Authentication-Results: dabbelt.com; dkim=none (message not signed)
+ header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
+ by DM6PR04MB4155.namprd04.prod.outlook.com (2603:10b6:5:a3::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Mon, 18 May
+ 2020 09:15:16 +0000
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::f8b3:c124:482b:52e0]) by DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::f8b3:c124:482b:52e0%5]) with mapi id 15.20.3000.033; Mon, 18 May 2020
+ 09:15:16 +0000
+From:   Anup Patel <anup.patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Dave Young <dyoung@redhat.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Lenny Szubowicz <lszubowi@redhat.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Loic Yhuel <loic.yhuel@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Mike Lothian <mike@fireburn.co.uk>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Content-Type: text/plain; charset="UTF-8"
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup Patel <anup.patel@wdc.com>, stable@vger.kernel.org
+Subject: [PATCH v2 1/3] irqchip/sifive-plic: Set default irq affinity in plic_irqdomain_map()
+Date:   Mon, 18 May 2020 14:44:39 +0530
+Message-Id: <20200518091441.94843-2-anup.patel@wdc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200518091441.94843-1-anup.patel@wdc.com>
+References: <20200518091441.94843-1-anup.patel@wdc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MA1PR01CA0155.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:71::25) To DM6PR04MB6201.namprd04.prod.outlook.com
+ (2603:10b6:5:127::32)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from wdc.com (106.51.27.1) by MA1PR01CA0155.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25 via Frontend Transport; Mon, 18 May 2020 09:15:12 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [106.51.27.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3e5d2f3b-48c4-4fae-ab21-08d7fb0bfa6a
+X-MS-TrafficTypeDiagnostic: DM6PR04MB4155:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR04MB415555C5CA58D879D1BE9E998DB80@DM6PR04MB4155.namprd04.prod.outlook.com>
+WDCIPOUTBOUND: EOP-TRUE
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 04073E895A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Hqqb6oRFNkxTNjrAtI1HgLREv1kGeBs60SSex504367h9t+ZbbcZuWPqcUeswA4jOrCDMsSezR4H1IJp+2UE5+pgPTbfNPt9rwawuACWGuA1ghNAxiX+jhNuRUoDZjRJSLSoQTzApsd9hCp+1WFNfoqBPI4Gf4nAiv5GYgfxZVPlNOgtS3WBbICSnZw1M1ssgaJ0+uR1MiiKqTwFWPmBHmUAFx5aRVZ35L82XXgq8b1fqEHmfHePFl+50FbpaoqCrJbl7wZXB3yrsx/xIIAUjCTFqyIFEKoi+rJlXYJUn3KxQNcSlUA1dVoXkoa1T+1PhIkGPXI35bHvajwYh4l/YVhuXOgF6xmqmzNgyz1X7uxBSyeX9l1B62tSGquUx9Z39gHSy3jRBK/4CDN+RNm69hq8A9MLWJoBSvw6tAQwOA8bofRY6U6+lMh34TYTZJwO
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(39860400002)(396003)(366004)(55236004)(26005)(36756003)(316002)(1006002)(2906002)(86362001)(478600001)(6666004)(110136005)(54906003)(8886007)(2616005)(44832011)(55016002)(956004)(1076003)(52116002)(7696005)(16526019)(66556008)(186003)(66946007)(4326008)(66476007)(5660300002)(8676002)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: GUSLyCvxRIUJRYon7Pz6xCHLtWzEvVdSZmARAIQYMEA23/oXbZlHuBe8dKOFAkMZ1VizRTq6fyDokUM/GGoUqJ7Q2fimRZzzWcTumdZSemq9P+XaXlHXpa+ktwNVrsk/GhtkbzLzH78g+MVNBh9lVAbaEFgvXbC4PLCnzHbQovOX2XmfSvXlZs5/jRZ7BpFOeFICfvzZO0KnlieWZCgHsxPWg4/gRawcmDTOiFCH8UwRaLeepMAq2YhrvKSH3/RGXMD5TFKuY3gyhxNKRC52oiwYTP7zGiWzi8DVW6Whj4/Bsj9d8SYJzq4N8E1ZrdEk4L6LEC5LnSY4x8NiTAyWy0ff3QmYyADkIgqrRxs72X9LqGQeJfrcqNVAUTG5+7W8DrVU+vxHw1zBK/VPxtcTSFzRA7YD0JrSHxmQ9OYfw/Nci3eb19QqGawJj7RTXhWTpbMMHrx1hHW1VhGs5uo3CWhRLaZR1QKM43f/c4rMoas=
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e5d2f3b-48c4-4fae-ab21-08d7fb0bfa6a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2020 09:15:16.5178
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yDa3eT6PUvQkvLLKFg1IJUfmAxKT2CEYJfYKTVUt+0kDClNWCtlkmaixwjSlVyDNeTLsPwlJH7EkmU/1es3clw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB4155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 at 11:07, Borislav Petkov <bp@alien8.de> wrote:
->
-> Hi,
->
-> On Sun, May 17, 2020 at 02:57:47PM +0200, Ard Biesheuvel wrote:
-> > The following changes since commit a088b858f16af85e3db359b6c6aaa92dd3bc0921:
-> >
-> >   efi/x86: Revert struct layout change to fix kexec boot regression (2020-04-14 08:32:17 +0200)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent
->
-> can you please make your tags unique? For example call this one:
->
-> efi-urgent-for-v5.7-rc6
->
-> or so so that the git history can show for which -rc that urgent tag was
-> meant?
->
-> I mean, technically one can do that already with git but it would be
-> easier if it had the rc in the name. We do that already in tip - either
-> -rc name or the date of the tag.
->
-> Also, using the same tag gives:
->
-> From git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi
->  ! [rejected]                  efi-next           -> efi-next  (would clobber existing tag)
->  ! [rejected]                  efi-urgent         -> efi-urgent  (would clobber existing tag)
->
-> when I try to fetch from you and I can delete the old tag but having
-> unique tag names makes the history more user-friendly, I'd say.
->
+For multiple PLIC instances, each PLIC can only target a subset of
+CPUs which is represented by "lmask" in the "struct plic_priv".
 
-Sure
+Currently, the default irq affinity for each PLIC interrupt is all
+online CPUs which is illegal value for default irq affinity when we
+have multiple PLIC instances. To fix this, we now set "lmask" as the
+default irq affinity in for each interrupt in plic_irqdomain_map().
+
+Fixes: f1ad1133b18f ("irqchip/sifive-plic: Add support for multiple PLICs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+---
+ drivers/irqchip/irq-sifive-plic.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index 822e074c0600..9f7f8ce88c00 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -176,9 +176,12 @@ static struct irq_chip plic_chip = {
+ static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
+ 			      irq_hw_number_t hwirq)
+ {
++	struct plic_priv *priv = d->host_data;
++
+ 	irq_domain_set_info(d, irq, hwirq, &plic_chip, d->host_data,
+ 			    handle_fasteoi_irq, NULL, NULL);
+ 	irq_set_noprobe(irq);
++	irq_set_affinity(irq, &priv->lmask);
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
+
