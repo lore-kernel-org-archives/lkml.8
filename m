@@ -2,108 +2,114 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E70C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF8212065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:50:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vOW5E9hO"
+	by mail.kernel.org (Postfix) with ESMTP id 67798207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgERLuQ (ORCPT
+        id S1727911AbgERLu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:50:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbgERLuP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:50:15 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92292C061A0C;
-        Mon, 18 May 2020 04:50:15 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f6so4696722pgm.1;
-        Mon, 18 May 2020 04:50:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=X9lxL53iNCPyN2ZJcc89KlTBlpJfTdzY+QocElqkDm8=;
-        b=vOW5E9hOzDafN252KJEens8aK+rEN7j0K5Qqc5FRQbtY2ZftrIEr+zbOY5SauSHg3T
-         mjWbdfKErANDwBoqZeK0ydjoT4EItktS9awZiBW1Z6vPouYXP0WqAKrU+ae0p7zG3Bqd
-         Yt+s4lGFW7q534tU8wEjc6OkeS4p3x9RJrHKPpaV9jZqW0SVJQaYZNB/NFUNcwoQXJpR
-         1Z7ihz0VeB/x8Njyt6TW5H9+NBvWg81vqm39ZG1Fe/NIZOwTLRWLzTZkk/3/9BEdXzX6
-         TYRqPHopdaKGFTCHNI3kAVkYi7e1V5LBdwfSzr2E9+4uqut9rH/bLkEKr756oyfxSdWB
-         7MMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=X9lxL53iNCPyN2ZJcc89KlTBlpJfTdzY+QocElqkDm8=;
-        b=Ydvg7rY77bBlR4nqbf33G4WXCyCBsjrfETPM8cV6W8U6j52yZey5o+KNEr3PMqfhOh
-         Cxc6u5GglNkoxq22AU9NcwoHD1qhHKBFVJo+mMiJh1ymlDqlkP4x0E1RndN+rVoz3YHW
-         pQuJ3fgYc1wNc/hhdHgAyC7pnS3fwuv+Bwi1+G0Byx7XROZQZ6IRPWiDgRYgNfzS8f5T
-         J612KIUx6jX3efQ561zdTRQLEsN4pRKlG+9KkcocqHQWpQdfbRr4210GJfyf158gwZXC
-         oBzecCixBSyXoPFVQcA8Q1rEwUDMVcPqvbgQXpnCxGiuI5aDs0nHXrDjr0Z7soCi/pVp
-         V7OA==
-X-Gm-Message-State: AOAM532uXWFxvXmAUMRNlMQWV0KG5nqKgM135Jb6IekShqp5tkmtGl8h
-        5GvaOf5cLOocdIPQ5+6/9L4WyehnHLNO7g==
-X-Google-Smtp-Source: ABdhPJw/Es3Ip9d4nChplTcYkSM7jkwCZIXCoahQSaa/x+jIWG+nKjmoiHMLJTriH8P8bpIcVPCFcg==
-X-Received: by 2002:a63:4f5c:: with SMTP id p28mr14724042pgl.412.1589802614975;
-        Mon, 18 May 2020 04:50:14 -0700 (PDT)
-Received: from localhost.localdomain ([103.227.71.184])
-        by smtp.googlemail.com with ESMTPSA id l1sm7432933pgj.48.2020.05.18.04.50.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 04:50:14 -0700 (PDT)
-From:   Harshal Chaudhari <harshalchau04@gmail.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] watchdog: gef_wdt.c: convert to module_platform_driver()
-Date:   Mon, 18 May 2020 17:19:54 +0530
-Message-Id: <20200518114954.7417-1-harshalchau04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 18 May 2020 07:50:27 -0400
+Received: from mga18.intel.com ([134.134.136.126]:56847 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726413AbgERLu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:50:27 -0400
+IronPort-SDR: Vh9h9idzE6eWoqdabY/KOynM68kUAfda29wy/x6E6MXvWy8uHBcTMWPDsQGpOMH+XTt6/u/aU4
+ oUVlafE2ofPQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 04:50:27 -0700
+IronPort-SDR: Q8YgNhXeK5Zw+scoukr6PZp9MnDceel08RkPENGwlOzSx0S9bP8VGxY59TeeSjva+G2QzLh5e5
+ wcKz5ClPSA5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="281945665"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 18 May 2020 04:50:24 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jaeHq-007PoR-Tp; Mon, 18 May 2020 14:50:26 +0300
+Date:   Mon, 18 May 2020 14:50:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>
+Cc:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com, kuo-lang.tseng@intel.com,
+        ravi.v.shankar@intel.com, mingo@redhat.com, babu.moger@amd.com,
+        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 4/4] x86/resctrl: Use appropriate API for strings
+ terminated by newline
+Message-ID: <20200518115026.GA1634618@smile.fi.intel.com>
+References: <cover.1589652468.git.reinette.chatre@intel.com>
+ <0c04b58148f181ba182b9a487465e4853e4eadbb.1589652468.git.reinette.chatre@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c04b58148f181ba182b9a487465e4853e4eadbb.1589652468.git.reinette.chatre@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver init and exit function don't do anything besides registering
-and unregistering the platform driver, so the module_platform_driver()
-macro could just be used instead of having separate functions.
+On Sat, May 16, 2020 at 11:28:41AM -0700, Reinette Chatre wrote:
+> The user input to files in the resctrl filesystem are expected to be
+> terminated with a newline. Testing the user input includes a test for
+> the presence of a newline and then replacing the newline with NUL
+> byte followed by comparison using strcmp().
+> 
+> sysfs_streq() exists to test if strings are equal, treating both NUL and
+> newline-then-NUL as equivalent string terminations. Even more,
+> sysfs_match_string() exists to match a given string in an array using
+> sysfs_streq().
+> 
+> Replace existing strcmp() comparisons of strings that are terminated
+> with a newline with more appropriate sysfs_streq() via the
+> sysfs_match_string() API that can perform the match across the different
+> mode strings that are already maintained in an array.
 
-Signed-off-by: Harshal Chaudhari <harshalchau04@gmail.com>
----
- drivers/watchdog/gef_wdt.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+Sorry for late comment, but just have noticed...
 
-diff --git a/drivers/watchdog/gef_wdt.c b/drivers/watchdog/gef_wdt.c
-index f6541d1b65e3..4421a452d0f5 100644
---- a/drivers/watchdog/gef_wdt.c
-+++ b/drivers/watchdog/gef_wdt.c
-@@ -311,19 +311,7 @@ static struct platform_driver gef_wdt_driver = {
- 	.remove		= gef_wdt_remove,
- };
- 
--static int __init gef_wdt_init(void)
--{
--	pr_info("GE watchdog driver\n");
--	return platform_driver_register(&gef_wdt_driver);
--}
--
--static void __exit gef_wdt_exit(void)
--{
--	platform_driver_unregister(&gef_wdt_driver);
--}
--
--module_init(gef_wdt_init);
--module_exit(gef_wdt_exit);
-+module_platform_driver(gef_wdt_driver);
- 
- MODULE_AUTHOR("Martyn Welch <martyn.welch@ge.com>");
- MODULE_DESCRIPTION("GE watchdog driver");
+>  	if (mode == RDT_MODE_PSEUDO_LOCKED) {
+> @@ -1445,14 +1450,14 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+>  		goto out;
+>  	}
+>  
+> -	if (!strcmp(buf, "shareable")) {
+> +	if (user_m == RDT_MODE_SHAREABLE) {
+>  		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
+>  			ret = rdtgroup_locksetup_exit(rdtgrp);
+>  			if (ret)
+>  				goto out;
+>  		}
+
+>  		rdtgrp->mode = RDT_MODE_SHAREABLE;
+
+...can we simple move this and similar (in other branches) to...
+
+
+> -	} else {
+> -		rdt_last_cmd_puts("Unknown or unsupported mode\n");
+> -		ret = -EINVAL;
+>  	}
+
+...here as
+
+		rdtgrp->mode = user_m;
+
+?
+
+>  out:
+
+Note, I didn't check all branches carefully.
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
