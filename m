@@ -2,83 +2,72 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F124DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77223207D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4EF207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:46:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589791609;
+	bh=l41k8WOcSAevgUEovK3C8Xo8J7ox25uuSDhcFkvYpME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z7UyETeb7BXTKvLjTQOv1Cv/ppscIZdrEdWFlvDEApfv5a2YFxOkpb5ow4NaOMECK
+	 647o5Nz81FihOEa1x5E490hMlyPi++WtM5xYAaTN+FSsWJFRnHM/koWwDz/gwz3tzh
+	 uw24r9wvPHJ2dXi82w4/M2dQqFKAp4aeJE/zsyn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgERIqN (ORCPT
+        id S1727909AbgERIqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:46:13 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:59587 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbgERIp7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:45:59 -0400
-X-Originating-IP: 91.175.115.186
-Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 889556000B;
-        Mon, 18 May 2020 08:45:56 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v2 0/3] TTY improve n_gsm support
-Date:   Mon, 18 May 2020 10:45:14 +0200
-Message-Id: <20200518084517.2173242-4-gregory.clement@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518084517.2173242-1-gregory.clement@bootlin.com>
-References: <20200518084517.2173242-1-gregory.clement@bootlin.com>
+        Mon, 18 May 2020 04:46:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbgERIqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 04:46:48 -0400
+Received: from localhost (unknown [171.76.87.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0AEC20787;
+        Mon, 18 May 2020 08:46:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589791608;
+        bh=l41k8WOcSAevgUEovK3C8Xo8J7ox25uuSDhcFkvYpME=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kCMS6DwyvYiVn3BYBDobSkQ6vUV+f3uqfoIWHATqXG/4v+T3yG793kDq1wE0gym+y
+         UgEUzF69Aey/VAHOD4rtW/Jc03pUSdMHzB3ihyFYGqCw433kLDYusnJYfPvYMuNAc6
+         htZfQaeanyYlle3yRa61rmTkYGEnGagllo055HHs=
+Date:   Mon, 18 May 2020 14:16:37 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Subject: Re: [PATCH v3] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm
+ APQ8016 SBC + D3Camera mezzanine
+Message-ID: <20200518084637.GE374218@vkoul-mobl.Dlink>
+References: <20200518082129.2103683-1-robert.foss@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518082129.2103683-1-robert.foss@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 18-05-20, 10:21, Robert Foss wrote:
+> Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
+> the Dragonboard 410c with the D3Camera mezzanine expansion board.
+> 
+> The D3Camera mezzanine ships in a kit with a OmniVision 5640 sensor module,
+> which is what this DT targets.
 
-This series is the second version of patch improving n_gms support
-especially with TELIT LE910. However the fix should benefit to any
-modem supporting cmux.
-
-The first patch is just about improving debugging output.
-
-The second one removes a tty optimization which make the LE910 hang.
-
-The last one fixes an issue observed on the LE910 but should benefit
-to all the modem. We observed that pretty quickly the transfer done
-using the virtual tty were blocked. We found that it was due of a
-wakeup to the real tty. Without this fix, the real tty wait for
-indefinitely.
-
-Thanks to Jiri Slaby for the review.
-
-Changelog:
- v1 -> v2:
- - don't replace the pr_info by pr_debug
- - remove the superfluous printk("\n");
- - use --follow option with git log to find the original commit to fix
- - use tty_port_tty_wakeup
- - use 'for' loop instead of 'while'
-
-Gregory
-
-Gregory CLEMENT (3):
-  tty: n_gsm: Improve debug output
-  tty: n_gsm: Fix SOF skipping
-  tty: n_gsm: Fix waking up upper tty layer when room available
-
- drivers/tty/n_gsm.c | 48 +++++++++++++++++++++++----------------------
- 1 file changed, 25 insertions(+), 23 deletions(-)
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
 -- 
-2.26.2
-
+~Vinod
