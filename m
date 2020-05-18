@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B729C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1980F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD9420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826670;
-	bh=Bbrs+y755BSyM/MVYEODb6BWtxLA7BzsDuuqPjzRNUM=;
+	s=default; t=1589826671;
+	bh=krDD4ztRtlpneNTbB+Wy4C8g2LMKXTuwNJpmlDzaQhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBmrZuA6MikkH8Zvl5rqFKMbpGRsKVZEPwjPho8WwOzpK1CalvqSi96HbsHrYXWLW
-	 JopuCdkor/bNLwyYGL7/RLmY5VYmKHmJKAVbBh5fyuWvWL8h+bybsXJmAAJteKagoQ
-	 WpUpwks4QEgWyE6Xu4mmp146nJ18FrlC0zuJo9Mc=
+	b=rgL6HyEA9gOgp48VFe5FRqChv8u49RkWNCLvz9uY6guMlREnTVT/f5fhq0uPMqzg7
+	 uFMxnX49qZ18oK3+09JoU6R3kJ1wDKFEcu0OMlvm6mKd7Uhf8JsJzKnusMTb+Y2BMB
+	 3xnKmSAY+MEEHQMKxXuIWMAVqMUXhsn3eOSU3xcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732356AbgERSbJ (ORCPT
+        id S1728955AbgERRkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35376 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbgERRkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:05 -0400
+        id S1728927AbgERRj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3D3820884;
-        Mon, 18 May 2020 17:40:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55F312083E;
+        Mon, 18 May 2020 17:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823605;
-        bh=Bbrs+y755BSyM/MVYEODb6BWtxLA7BzsDuuqPjzRNUM=;
+        s=default; t=1589823595;
+        bh=krDD4ztRtlpneNTbB+Wy4C8g2LMKXTuwNJpmlDzaQhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zwxPysCdZZEig3igjJ1hGQpTTKC0P/es6UnunpjpVkX3YmakNJ8EauJ8C37tU2/MZ
-         skGD5bNQrSGKTug3MI/JuOqCOK936rc4d7sItamCRjK3SI8w5dE7zgkoRcFCKbOwet
-         M/GoPGfHztWVxa1qSVNA0fB+qGa4D6k8Y/ghrd3Y=
+        b=1fMFdYXRSVEC4QcQoyUeOj3+tftt6Za6wiZkEjSArLChlKFH+8W/xEwH86y8dzS4x
+         22gr/aqc7TuJ2dsuurumey3T6tMC+Q6h6q7km684NZqFE+BP4wKgtUwMMOBnoQ6ta6
+         1ZPqrNy7EuPK1eGMK6YSCMVy3+Q/hfxIBLLrRP/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 48/86] gre: do not keep the GRE header around in collect medata mode
-Date:   Mon, 18 May 2020 19:36:19 +0200
-Message-Id: <20200518173500.350608854@linuxfoundation.org>
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 44/86] dmaengine: mmp_tdma: Reset channel error on release
+Date:   Mon, 18 May 2020 19:36:15 +0200
+Message-Id: <20200518173459.426322918@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -60,54 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit e271c7b4420ddbb9fae82a2b31a5ab3edafcf4fe ]
+[ Upstream commit 0c89446379218698189a47871336cb30286a7197 ]
 
-For ipgre interface in collect metadata mode, it doesn't make sense for the
-interface to be of ARPHRD_IPGRE type. The outer header of received packets
-is not needed, as all the information from it is present in metadata_dst. We
-already don't set ipgre_header_ops for collect metadata interfaces, which is
-the only consumer of mac_header pointing to the outer IP header.
+When a channel configuration fails, the status of the channel is set to
+DEV_ERROR so that an attempt to submit it fails. However, this status
+sticks until the heat end of the universe, making it impossible to
+recover from the error.
 
-Just set the interface type to ARPHRD_NONE in collect metadata mode for
-ipgre (not gretap, that still correctly stays ARPHRD_ETHER) and reset
-mac_header.
+Let's reset it when the channel is released so that further use of the
+channel with correct configuration is not impacted.
 
-Fixes: a64b04d86d14 ("gre: do not assign header_ops in collect metadata mode")
-Fixes: 2e15ea390e6f4 ("ip_gre: Add support to collect tunnel metadata.")
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Link: https://lore.kernel.org/r/20200419164912.670973-5-lkundrak@v3.sk
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_gre.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/dma/mmp_tdma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/ipv4/ip_gre.c b/net/ipv4/ip_gre.c
-index e5448570d6483..900ee28bda99a 100644
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -399,7 +399,10 @@ static int ipgre_rcv(struct sk_buff *skb, const struct tnl_ptk_info *tpi)
- 				  iph->saddr, iph->daddr, tpi->key);
+diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
+index 3df0422607d59..ac9aede1bfbec 100644
+--- a/drivers/dma/mmp_tdma.c
++++ b/drivers/dma/mmp_tdma.c
+@@ -364,6 +364,8 @@ static void mmp_tdma_free_descriptor(struct mmp_tdma_chan *tdmac)
+ 		gen_pool_free(gpool, (unsigned long)tdmac->desc_arr,
+ 				size);
+ 	tdmac->desc_arr = NULL;
++	if (tdmac->status == DMA_ERROR)
++		tdmac->status = DMA_COMPLETE;
  
- 	if (tunnel) {
--		skb_pop_mac_header(skb);
-+		if (tunnel->dev->type != ARPHRD_NONE)
-+			skb_pop_mac_header(skb);
-+		else
-+			skb_reset_mac_header(skb);
- 		if (tunnel->collect_md) {
- 			__be16 flags;
- 			__be64 tun_id;
-@@ -1015,6 +1018,8 @@ static void ipgre_netlink_parms(struct net_device *dev,
- 		struct ip_tunnel *t = netdev_priv(dev);
- 
- 		t->collect_md = true;
-+		if (dev->type == ARPHRD_IPGRE)
-+			dev->type = ARPHRD_NONE;
- 	}
+ 	return;
  }
- 
 -- 
 2.20.1
 
