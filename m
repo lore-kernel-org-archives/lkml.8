@@ -2,62 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9850FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CE1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C97F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81038207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826346;
-	bh=OJtl/DPKcnPBAinaU+XsrpPzPk9DjxH6KkyxoHcCLeE=;
+	s=default; t=1589826352;
+	bh=bNPbWd2gqtfRj8808VRysk3d+7TcYOolVI5Fr4orOK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O4nKrXaG6RYrASeMAFI4PUgh36UH514peG9CFpzIp961ORNm0xxQ4RJSucM7iRSBS
-	 09jRVWFbb7ZQO12oaReRJFE88XppxIFiU8HrMIHUSwsKCIW7J++0mB++OGnyCfAjs7
-	 H9hFsl+mtJgprxw2gKsxcnEqoVMOpwttXGIQBjGA=
+	b=R2wb5VZtbLE6b3OIScblcCqR4Ik9yx49GWOeThApKrsFFt/HtTj8Fg88roJNK5B2k
+	 Lpp+cR+hjTtlEj/d4pL9z2++eoEqu6UIZFJEM2q49NCMA1EQvACloH6bLXNqSV8qpm
+	 rwc7c8oHKX77vLF0k1NR548H8xtusTTZ+5i9Q8tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbgERRq2 (ORCPT
+        id S1731907AbgERSZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:46:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45942 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730073AbgERRqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:46:23 -0400
+        id S1729197AbgERRqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77FFD20671;
-        Mon, 18 May 2020 17:46:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB91A20715;
+        Mon, 18 May 2020 17:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823982;
-        bh=OJtl/DPKcnPBAinaU+XsrpPzPk9DjxH6KkyxoHcCLeE=;
+        s=default; t=1589823974;
+        bh=bNPbWd2gqtfRj8808VRysk3d+7TcYOolVI5Fr4orOK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ezn0817SQQ/QDpZgw4DjkFYoZrnFJjGH/aXXjyaKyoJREYK8uuMeVzIdgPx3WtAxE
-         UN/M1/Je5nHx5wXSDo/2+r3A8PFbEqFtzAczlpYJlO8QAtoz6Ylgb8IE/VBmnqyQhF
-         wgH4cdtkJ/L/KZlLfOEHQKRBd02/Sg8HnBrTCcRI=
+        b=stEb4iKlMoCUr2t5FJbxCgNXhYH/ZQn3CVdtYX3STif7ouLmc7ldYEArC8xnBL+9X
+         3XPz7WAiegFhgl+vIcchmJkZGbfIHWEzWoSQd+yrGnLZEpXtiMKG4rkPUI7lFZ3B0p
+         bDeDmYNwJhxsIoJpzM9kRWTA4JxXeDJmXtLmC12E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 023/114] mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
-Date:   Mon, 18 May 2020 19:35:55 +0200
-Message-Id: <20200518173507.906629646@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 003/114] fq_codel: fix TCA_FQ_CODEL_DROP_BATCH_SIZE sanity checks
+Date:   Mon, 18 May 2020 19:35:35 +0200
+Message-Id: <20200518173503.692350759@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -70,62 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit e84fe99b68ce353c37ceeecc95dce9696c976556 upstream.
+[ Upstream commit 14695212d4cd8b0c997f6121b6df8520038ce076 ]
 
-Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
-e.g., while booting up.
+My intent was to not let users set a zero drop_batch_size,
+it seems I once again messed with min()/max().
 
-  watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:1]
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-next-20200331+ #4
-  Hardware name: Red Hat KVM, BIOS 1.11.1-4.module+el8.1.0+4066+0f1aadab 04/01/2014
-  RIP: __pageblock_pfn_to_page+0x134/0x1c0
-  Call Trace:
-   set_zone_contiguous+0x56/0x70
-   page_alloc_init_late+0x166/0x176
-   kernel_init_freeable+0xfa/0x255
-   kernel_init+0xa/0x106
-   ret_from_fork+0x35/0x40
-
-The issue becomes visible when having a lot of memory (e.g., 4TB)
-assigned to a single NUMA node - a system that can easily be created
-using QEMU.  Inside VMs on a hypervisor with quite some memory
-overcommit, this is fairly easy to trigger.
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200416073417.5003-1-david@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 9d18562a2278 ("fq_codel: add batch ability to fq_codel_drop()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/page_alloc.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/sched/sch_fq_codel.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1405,6 +1405,7 @@ void set_zone_contiguous(struct zone *zo
- 		if (!__pageblock_pfn_to_page(block_start_pfn,
- 					     block_end_pfn, zone))
- 			return;
-+		cond_resched();
- 	}
+--- a/net/sched/sch_fq_codel.c
++++ b/net/sched/sch_fq_codel.c
+@@ -427,7 +427,7 @@ static int fq_codel_change(struct Qdisc
+ 		q->quantum = max(256U, nla_get_u32(tb[TCA_FQ_CODEL_QUANTUM]));
  
- 	/* We confirm that there is no hole */
+ 	if (tb[TCA_FQ_CODEL_DROP_BATCH_SIZE])
+-		q->drop_batch_size = min(1U, nla_get_u32(tb[TCA_FQ_CODEL_DROP_BATCH_SIZE]));
++		q->drop_batch_size = max(1U, nla_get_u32(tb[TCA_FQ_CODEL_DROP_BATCH_SIZE]));
+ 
+ 	if (tb[TCA_FQ_CODEL_MEMORY_LIMIT])
+ 		q->memory_limit = min(1U << 31, nla_get_u32(tb[TCA_FQ_CODEL_MEMORY_LIMIT]));
 
 
