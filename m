@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45069C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCC9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB6020671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E04520674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823927;
-	bh=whLZqJ4O2o7JyMgCL/E/IdRRjGMiXMlO2C7ihhGEA5I=;
+	s=default; t=1589823934;
+	bh=TkyQUb/hHwF5Zmma86qgaGPQM3IxEGf+vjAG8OOTAOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UyEcG6/irTf2yHypEFSz86Vx85p5zsRxMf2vFExqCUU+KTN1uKgq7i+8fjMB5Jy0n
-	 qGBUHUXcP8TborquA3loLdmw3KIbvPdw9nK29J9yNwiRlIFVuunWIzCP4xGyul3EnF
-	 YY8uELom7b5WrQGcG7SpAKFf4knujMqdyzjtPtKg=
+	b=Gw34lhP71zR3DHLkETR92HmEThnXm5BHZ82+F+0R8PzJZUr5hkN6WyukALECtLpi+
+	 TbtBsw6PUPf+XKamHkuLwJs6TLsKNSzgpuTNyXxAitlCJp+A5C/GJf4QBkO+epFS55
+	 edkcLDzG5p6dYmsowMGH7eK7aYH0XceRm97T+wEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbgERRp0 (ORCPT
+        id S1729366AbgERRpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44160 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:45:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbgERRpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:23 -0400
+        id S1729922AbgERRpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:45:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A20420671;
-        Mon, 18 May 2020 17:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B02B420671;
+        Mon, 18 May 2020 17:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823922;
-        bh=whLZqJ4O2o7JyMgCL/E/IdRRjGMiXMlO2C7ihhGEA5I=;
+        s=default; t=1589823925;
+        bh=TkyQUb/hHwF5Zmma86qgaGPQM3IxEGf+vjAG8OOTAOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UPFYx+YrnWwf6/63d1ZqITDIZbVomY8XW9STjmEjUr0HS0N6TjBA5eqQ+QOwztMBh
-         5X7u7hTo9zDsyFXKdhmVv7fGpkuRlG6Ri/eiLcXVylEJpNt7H4hFqZ1TbatJ5fRLoa
-         MdvyscS3fsidCNlo5wj1UlkBTl8NjOBOcNz4khrI=
+        b=P12pIEqPU9Y2R3hvSjzEzu7yWym/iJm/sSpyiyn6HI9zzqAAsPunhcsOp0fhLWkXK
+         0YZGE481DpdGNlBgGdrWXwAFAqGNW6ogkZwS2YGhWnSCu3/u2K1zOuo7DKngdiWeyl
+         7OhzwMbiFpcAN6QTQ36sZwzKHD9hNPlpZEz0uAaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergei Trofimovich <slyfox@gentoo.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thomas Backlund <tmb@mageia.org>
-Subject: [PATCH 4.9 90/90] Makefile: disallow data races on gcc-10 as well
-Date:   Mon, 18 May 2020 19:37:08 +0200
-Message-Id: <20200518173509.336728757@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 66/90] gcc-10: disable stringop-overflow warning for now
+Date:   Mon, 18 May 2020 19:36:44 +0200
+Message-Id: <20200518173504.566882619@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -61,19 +59,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Trofimovich <slyfox@gentoo.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit b1112139a103b4b1101d0d2d72931f2d33d8c978 upstream.
+commit 5a76021c2eff7fcf2f0918a08fd8a37ce7922921 upstream.
 
-gcc-10 will rename --param=allow-store-data-races=0
-to -fno-allow-store-data-races.
+This is the final array bounds warning removal for gcc-10 for now.
 
-The flag change happened at https://gcc.gnu.org/PR92046.
+Again, the warning is good, and we should re-enable all these warnings
+when we have converted all the legacy array declaration cases to
+flexible arrays. But in the meantime, it's just noise.
 
-Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
-Acked-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Thomas Backlund <tmb@mageia.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
@@ -82,13 +78,13 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/Makefile
 +++ b/Makefile
-@@ -665,6 +665,7 @@ endif
+@@ -800,6 +800,7 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+ # We'll want to enable this eventually, but it's not going away for 5.7 at least
+ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
++KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
  
- # Tell gcc to never replace conditional load with a non-conditional one
- KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
-+KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
- 
- # check for 'asm goto'
- ifeq ($(shell $(CONFIG_SHELL) $(srctree)/scripts/gcc-goto.sh $(CC) $(KBUILD_CFLAGS)), y)
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
 
 
