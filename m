@@ -2,76 +2,72 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9E2207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:17:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589782648;
-	bh=mMVK8O15D2yC9R88JfE4ZWT1oH/SPci4NILiZTUIhyU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uXokBXChH87Baq+9iz32jEfctbIfX0WmmVHrgJOKmjXad0qY0T9ZKirTTH0rdjY8g
-	 ntXChsmaurB5nyNPDTiRpIrk9hRlrBIH2umCYoNrVRBDzOoYjFmcwTyLt2Yug/xQoy
-	 4wijc1Kbl/shMA9g2NyBUPBDd+LuPzGDSMZpssrw=
+	by mail.kernel.org (Postfix) with ESMTP id E815720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:18:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e3j2mJNz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgERGR1 (ORCPT
+        id S1726500AbgERGSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:17:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgERGR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:17:27 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 744D520657;
-        Mon, 18 May 2020 06:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589782647;
-        bh=mMVK8O15D2yC9R88JfE4ZWT1oH/SPci4NILiZTUIhyU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xFsubk8KHe0iZS2oUrWQTQZR2LSm7JmHnXm8/94Y7cNtkbHlVADQhgaABZzF98D4M
-         GhwSFzYuzRyfS7Mt6gSkSMQNDvqmY2Sp/vyjVQ7VuSQI7VcNlXeg5jvzVfo0vB6I1T
-         C/YfLJZxfVFmz4cLfBLGdxNHpCIZfmxd3U4iSq6o=
-Date:   Mon, 18 May 2020 09:17:23 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Doug Ledford <dledford@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Sagi Grimberg <sagi@rimberg.me>,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: Re: [PATCH rdma-next v1 00/10] Enable asynchronous event FD per
- object
-Message-ID: <20200518061723.GE60005@unreal>
-References: <20200506082444.14502-1-leon@kernel.org>
- <20200517233713.GA20969@ziepe.ca>
+        Mon, 18 May 2020 02:18:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERGSh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 02:18:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4745C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 23:18:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mi/Yaj0SaOPBvEr8cdz4RwbxKfrvmg/VoMxx24QWS8c=; b=e3j2mJNzk+fSyCgHrmi8Y5KRYB
+        4BwPvb62ZD3MD9HmtwxBaPKd5lyatjJEwDTnbJa4LHvZzVGftI2H4Dsvz8mLzRiZM5TfVZjQXFPVd
+        oNogyGHS9pKoU2SyE2yndFHNnx335mC8Hk3cMKoheaY4OI66OVMWwItzw6OdoVA6I+vS/Uy/EItNJ
+        6ALgssZ4/SaDqGyZ+ueYvet/pXld/lzUKFjCYp27Zj53Y034fn9/g9iw1ffRUpHSTOK03dVyBvBds
+        pngg2/befR3UifMqLTWzmU5P0AQkTruuUo0FjYnctUZ5ZSR3Ce2cBkc8SZmtofDNfzn1tt7aumgMA
+        SN14rg0A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaZ6i-0004VM-LX; Mon, 18 May 2020 06:18:36 +0000
+Date:   Sun, 17 May 2020 23:18:36 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        luto@kernel.org, hpa@zytor.com, dave.hansen@intel.com,
+        tony.luck@intel.com, ak@linux.intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+Message-ID: <20200518061836.GA15641@infradead.org>
+References: <20200511045311.4785-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200517233713.GA20969@ziepe.ca>
+In-Reply-To: <20200511045311.4785-1-sashal@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 08:37:13PM -0300, Jason Gunthorpe wrote:
-> On Wed, May 06, 2020 at 11:24:34AM +0300, Leon Romanovsky wrote:
->
-> >   RDMA/core: Consolidate ib_create_srq flows
-> >   IB/uverbs: Cleanup wq/srq context usage from uverbs layer
-> >   IB/uverbs: Fix create WQ to use the given user handle
->
-> I took these small fixed to for-next, the others need some minor
-> adjusting
+On Mon, May 11, 2020 at 12:52:53AM -0400, Sasha Levin wrote:
+> Benefits:
+> Currently a user process that wishes to read or write the FS/GS base must
+> make a system call. But recent X86 processors have added new instructions
+> for use in 64-bit mode that allow direct access to the FS and GS segment
+> base addresses.  The operating system controls whether applications can
+> use these instructions with a %cr4 control bit.
+> 
+> In addition to benefits to applications, performance improvements to the
+> OS context switch code are possible by making use of these instructions. A
+> third party reported out promising performance numbers out of their
+> initial benchmarking of the previous version of this patch series [9].
 
-Thanks, I saw your comments and agree with all of them, we will fix.
-
-Thanks
-
->
-> Thanks,
-> Jason
+The [9] reference can't be resolved anywhere in this mail.
