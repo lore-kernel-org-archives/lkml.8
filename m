@@ -2,151 +2,75 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD67FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B99C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 941A02065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDEF820853
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgERPCW (ORCPT
+        id S1728152AbgERPCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:02:22 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37808 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726918AbgERPCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:02:21 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6344A200941;
-        Mon, 18 May 2020 17:02:19 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 290352009C2;
-        Mon, 18 May 2020 17:02:14 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6D2F9402AF;
-        Mon, 18 May 2020 23:02:07 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, Frank.Li@nxp.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: clock: Convert i.MX7D clock to json-schema
-Date:   Mon, 18 May 2020 22:52:34 +0800
-Message-Id: <1589813554-20929-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 18 May 2020 11:02:31 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40135 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgERPCa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 11:02:30 -0400
+X-Originating-IP: 84.210.220.251
+Received: from [192.168.1.123] (cm-84.210.220.251.getinternet.no [84.210.220.251])
+        (Authenticated sender: fredrik@strupe.net)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 38FBCC000F;
+        Mon, 18 May 2020 15:02:27 +0000 (UTC)
+Subject: Re: [PING] [PATCH v2] arm: ptrace: Fix mask for thumb breakpoint hook
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>
+References: <20200413173841.29651-1-fredrik@strupe.net>
+ <d7381f90-f597-2a9c-4387-5714b41e02e6@strupe.net>
+ <20200518141858.GV1551@shell.armlinux.org.uk>
+From:   Fredrik Strupe <fredrik@strupe.net>
+Message-ID: <0afefde9-f121-c88c-2ceb-7c02f7561979@strupe.net>
+Date:   Mon, 18 May 2020 17:02:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200518141858.GV1551@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX7D clock binding to DT schema format using json-schema.
+On 18.05.2020 16:18, Russell King - ARM Linux admin wrote:
+> On Mon, May 18, 2020 at 03:12:06PM +0200, Fredrik Strupe wrote:
+>> call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
+>> and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
+>> (0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
+>> instructions will be masked out. This makes the function match 32-bit
+>> thumb instructions where the second half-word is equal to instr_val,
+>> regardless of the first half-word.
+>>
+>> The result in this case is that all undefined 32-bit thumb instructions
+>> with the second half-word equal to de01 (udf #1) work as breakpoints
+>> and will raise a SIGTRAP instead of a SIGILL, instead of just the one
+>> intended 16-bit instruction. An example of such an instruction is
+>> eaa0b650, which is unallocated according to Arm ARM and should raise a
+>> SIGILL, but instead raises a SIGTRAP.
+>
+> How can 0xeaa0b650 match 0xde01 when masked with 0xffff ?
+>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Update maintainer's e-mail address.
----
- .../devicetree/bindings/clock/imx7d-clock.txt      | 13 -----
- .../devicetree/bindings/clock/imx7d-clock.yaml     | 64 ++++++++++++++++++++++
- 2 files changed, 64 insertions(+), 13 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/imx7d-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/imx7d-clock.yaml
+Sorry, that is a typo; it should say 0xeaa0de01.
 
-diff --git a/Documentation/devicetree/bindings/clock/imx7d-clock.txt b/Documentation/devicetree/bindings/clock/imx7d-clock.txt
-deleted file mode 100644
-index 9d3026d..0000000
---- a/Documentation/devicetree/bindings/clock/imx7d-clock.txt
-+++ /dev/null
-@@ -1,13 +0,0 @@
--* Clock bindings for Freescale i.MX7 Dual
--
--Required properties:
--- compatible: Should be "fsl,imx7d-ccm"
--- reg: Address and length of the register set
--- #clock-cells: Should be <1>
--- clocks: list of clock specifiers, must contain an entry for each required
--  entry in clock-names
--- clock-names: should include entries "ckil", "osc"
--
--The clock consumer should specify the desired clock by having the clock
--ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx7d-clock.h
--for the full list of i.MX7 Dual clock IDs.
-diff --git a/Documentation/devicetree/bindings/clock/imx7d-clock.yaml b/Documentation/devicetree/bindings/clock/imx7d-clock.yaml
-new file mode 100644
-index 0000000..8cd0573
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx7d-clock.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/imx7d-clock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Clock bindings for Freescale i.MX7 Dual
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+description: |
-+  The clock consumer should specify the desired clock by having the clock
-+  ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx7d-clock.h
-+  for the full list of i.MX7 Dual clock IDs.
-+
-+properties:
-+  compatible:
-+    const: fsl,imx7d-ccm
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: CCM interrupt request 1
-+      - description: CCM interrupt request 2
-+    maxItems: 2
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  clocks:
-+    items:
-+      - description: 32k osc
-+      - description: 24m osc
-+
-+  clock-names:
-+    items:
-+      - const: ckil
-+      - const: osc
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    clock-controller@30380000 {
-+        compatible = "fsl,imx7d-ccm";
-+        reg = <0x30380000 0x10000>;
-+        interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+        #clock-cells = <1>;
-+        clocks = <&ckil>, <&osc>;
-+        clock-names = "ckil", "osc";
-+    };
--- 
-2.7.4
+For reference, this is similar to the problem with SETEND emulation that
+was fixed in commit fc2266011acc in the mainline kernel
+(or as discussed here: https://lkml.org/lkml/2020/4/8/274).
+
+Fredrik
 
