@@ -2,221 +2,204 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B53BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BDFF20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823563;
-	bh=Q5vjR3A42sT572+2XiUaWuDAb7OcxXQ3NdwNQGDIreo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rqg3iQKisBn2dWfHMsnIzeppnba2D3rZoR3qH20RgznJmwMKQ5h6MxS+T7xLHpAZQ
-	 40BivkfbKJ5yA1XQg4l+b4VrN1fhnhjWBaeA+MEsW+tzgTPl2Xa3lY7obrWZWrdaUz
-	 vrmVXKxVyCLrpLsoRBtiAv3jLXR6IDgx9+MXr2es=
+	by mail.kernel.org (Postfix) with ESMTP id 0408320874
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgERRjW (ORCPT
+        id S1728793AbgERRjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:39:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728747AbgERRjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:39:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE29B20873;
-        Mon, 18 May 2020 17:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823558;
-        bh=Q5vjR3A42sT572+2XiUaWuDAb7OcxXQ3NdwNQGDIreo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R2s6iiiQb3NHneSU1kZx44uq89LRh3eWudcqH+Ti61iU+Pjdix/8TL7GWgUNiY9nS
-         cwb19xlBKraIDG8mrm+wSbeSIqYwGx3osmdkxqeyfHzuyeZtFeNakkB4xOJ4QvLgP0
-         UdL1AhIDiVFM92T0MRuqH26k/AKDU+FmAeLKkVRY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 30/86] ptp: create "pins" together with the rest of attributes
-Date:   Mon, 18 May 2020 19:36:01 +0200
-Message-Id: <20200518173456.604969976@linuxfoundation.org>
+        Mon, 18 May 2020 13:39:25 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42756 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbgERRjX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:39:23 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C85AE2A0CAD
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>
+Cc:     narmstrong@baylibre.com, a.hajda@samsung.com,
+        boris.brezillon@collabora.com, laurent.pinchart@ideasonboard.com,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [RESEND PATCH 2/3] drm/mediatek: mtk_dpi: Convert to bridge driver
+Date:   Mon, 18 May 2020 19:39:08 +0200
+Message-Id: <20200518173909.2259259-3-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
-References: <20200518173450.254571947@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200518173909.2259259-1-enric.balletbo@collabora.com>
+References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Convert mtk_dpi to a bridge driver with built-in encoder support for
+compatibility with existing component drivers.
 
-commit 85a66e55019583da1e0f18706b7a8281c9f6de5b upstream.
-
-Let's switch to using device_create_with_groups(), which will allow us to
-create "pins" attribute group together with the rest of ptp device
-attributes, and before userspace gets notified about ptp device creation.
-
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 4.9: adjust context]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 ---
- drivers/ptp/ptp_clock.c   |   20 +++++++++++---------
- drivers/ptp/ptp_private.h |    7 ++++---
- drivers/ptp/ptp_sysfs.c   |   39 +++++++++------------------------------
- 3 files changed, 24 insertions(+), 42 deletions(-)
 
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -214,16 +214,17 @@ struct ptp_clock *ptp_clock_register(str
- 	mutex_init(&ptp->pincfg_mux);
- 	init_waitqueue_head(&ptp->tsev_wq);
- 
-+	err = ptp_populate_pin_groups(ptp);
-+	if (err)
-+		goto no_pin_groups;
-+
- 	/* Create a new device in our class. */
--	ptp->dev = device_create(ptp_class, parent, ptp->devid, ptp,
--				 "ptp%d", ptp->index);
-+	ptp->dev = device_create_with_groups(ptp_class, parent, ptp->devid,
-+					     ptp, ptp->pin_attr_groups,
-+					     "ptp%d", ptp->index);
- 	if (IS_ERR(ptp->dev))
- 		goto no_device;
- 
--	err = ptp_populate_sysfs(ptp);
--	if (err)
--		goto no_sysfs;
--
- 	/* Register a new PPS source. */
- 	if (info->pps) {
- 		struct pps_source_info pps;
-@@ -251,10 +252,10 @@ no_clock:
- 	if (ptp->pps_source)
- 		pps_unregister_source(ptp->pps_source);
- no_pps:
--	ptp_cleanup_sysfs(ptp);
--no_sysfs:
- 	device_destroy(ptp_class, ptp->devid);
- no_device:
-+	ptp_cleanup_pin_groups(ptp);
-+no_pin_groups:
- 	mutex_destroy(&ptp->tsevq_mux);
- 	mutex_destroy(&ptp->pincfg_mux);
- no_slot:
-@@ -272,8 +273,9 @@ int ptp_clock_unregister(struct ptp_cloc
- 	/* Release the clock's resources. */
- 	if (ptp->pps_source)
- 		pps_unregister_source(ptp->pps_source);
--	ptp_cleanup_sysfs(ptp);
-+
- 	device_destroy(ptp_class, ptp->devid);
-+	ptp_cleanup_pin_groups(ptp);
- 
- 	posix_clock_unregister(&ptp->clock);
- 	return 0;
---- a/drivers/ptp/ptp_private.h
-+++ b/drivers/ptp/ptp_private.h
-@@ -54,6 +54,8 @@ struct ptp_clock {
- 	struct device_attribute *pin_dev_attr;
- 	struct attribute **pin_attr;
- 	struct attribute_group pin_attr_group;
-+	/* 1st entry is a pointer to the real group, 2nd is NULL terminator */
-+	const struct attribute_group *pin_attr_groups[2];
+ drivers/gpu/drm/mediatek/mtk_dpi.c | 66 +++++++++++++++---------------
+ 1 file changed, 34 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+index 7112125dc3d1..baad198c69eb 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dpi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+@@ -61,6 +61,7 @@ enum mtk_dpi_out_color_format {
+ struct mtk_dpi {
+ 	struct mtk_ddp_comp ddp_comp;
+ 	struct drm_encoder encoder;
++	struct drm_bridge bridge;
+ 	struct drm_bridge *next_bridge;
+ 	void __iomem *regs;
+ 	struct device *dev;
+@@ -77,9 +78,9 @@ struct mtk_dpi {
+ 	int refcount;
  };
  
- /*
-@@ -94,8 +96,7 @@ uint ptp_poll(struct posix_clock *pc,
- 
- extern const struct attribute_group *ptp_groups[];
- 
--int ptp_cleanup_sysfs(struct ptp_clock *ptp);
--
--int ptp_populate_sysfs(struct ptp_clock *ptp);
-+int ptp_populate_pin_groups(struct ptp_clock *ptp);
-+void ptp_cleanup_pin_groups(struct ptp_clock *ptp);
- 
- #endif
---- a/drivers/ptp/ptp_sysfs.c
-+++ b/drivers/ptp/ptp_sysfs.c
-@@ -268,25 +268,14 @@ static ssize_t ptp_pin_store(struct devi
- 	return count;
+-static inline struct mtk_dpi *mtk_dpi_from_encoder(struct drm_encoder *e)
++static inline struct mtk_dpi *bridge_to_dpi(struct drm_bridge *b)
+ {
+-	return container_of(e, struct mtk_dpi, encoder);
++	return container_of(b, struct mtk_dpi, bridge);
  }
  
--int ptp_cleanup_sysfs(struct ptp_clock *ptp)
-+int ptp_populate_pin_groups(struct ptp_clock *ptp)
+ enum mtk_dpi_polarity {
+@@ -518,50 +519,44 @@ static const struct drm_encoder_funcs mtk_dpi_encoder_funcs = {
+ 	.destroy = mtk_dpi_encoder_destroy,
+ };
+ 
+-static bool mtk_dpi_encoder_mode_fixup(struct drm_encoder *encoder,
+-				       const struct drm_display_mode *mode,
+-				       struct drm_display_mode *adjusted_mode)
++static int mtk_dpi_bridge_attach(struct drm_bridge *bridge,
++				 enum drm_bridge_attach_flags flags)
  {
--	struct device *dev = ptp->dev;
--	struct ptp_clock_info *info = ptp->info;
--
--	if (info->n_pins) {
--		sysfs_remove_group(&dev->kobj, &ptp->pin_attr_group);
--		kfree(ptp->pin_attr);
--		kfree(ptp->pin_dev_attr);
--	}
+-	return true;
++	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
++
++	return drm_bridge_attach(bridge->encoder, dpi->next_bridge,
++				 &dpi->bridge, flags);
+ }
+ 
+-static void mtk_dpi_encoder_mode_set(struct drm_encoder *encoder,
+-				     struct drm_display_mode *mode,
+-				     struct drm_display_mode *adjusted_mode)
++static void mtk_dpi_bridge_mode_set(struct drm_bridge *bridge,
++				const struct drm_display_mode *mode,
++				const struct drm_display_mode *adjusted_mode)
+ {
+-	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
++	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
+ 
+ 	drm_mode_copy(&dpi->mode, adjusted_mode);
+ }
+ 
+-static void mtk_dpi_encoder_disable(struct drm_encoder *encoder)
++static void mtk_dpi_bridge_disable(struct drm_bridge *bridge)
+ {
+-	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
++	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
+ 
+ 	mtk_dpi_power_off(dpi);
+ }
+ 
+-static void mtk_dpi_encoder_enable(struct drm_encoder *encoder)
++static void mtk_dpi_bridge_enable(struct drm_bridge *bridge)
+ {
+-	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
++	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
+ 
+ 	mtk_dpi_power_on(dpi);
+ 	mtk_dpi_set_display_mode(dpi, &dpi->mode);
+ }
+ 
+-static int mtk_dpi_atomic_check(struct drm_encoder *encoder,
+-				struct drm_crtc_state *crtc_state,
+-				struct drm_connector_state *conn_state)
+-{
 -	return 0;
 -}
 -
--static int ptp_populate_pins(struct ptp_clock *ptp)
--{
--	struct device *dev = ptp->dev;
- 	struct ptp_clock_info *info = ptp->info;
- 	int err = -ENOMEM, i, n_pins = info->n_pins;
+-static const struct drm_encoder_helper_funcs mtk_dpi_encoder_helper_funcs = {
+-	.mode_fixup = mtk_dpi_encoder_mode_fixup,
+-	.mode_set = mtk_dpi_encoder_mode_set,
+-	.disable = mtk_dpi_encoder_disable,
+-	.enable = mtk_dpi_encoder_enable,
+-	.atomic_check = mtk_dpi_atomic_check,
++static const struct drm_bridge_funcs mtk_dpi_bridge_funcs = {
++	.attach = mtk_dpi_bridge_attach,
++	.mode_set = mtk_dpi_bridge_mode_set,
++	.disable = mtk_dpi_bridge_disable,
++	.enable = mtk_dpi_bridge_enable,
+ };
  
-+	if (!n_pins)
-+		return 0;
-+
- 	ptp->pin_dev_attr = kzalloc(n_pins * sizeof(*ptp->pin_dev_attr),
- 				    GFP_KERNEL);
- 	if (!ptp->pin_dev_attr)
-@@ -310,28 +299,18 @@ static int ptp_populate_pins(struct ptp_
- 	ptp->pin_attr_group.name = "pins";
- 	ptp->pin_attr_group.attrs = ptp->pin_attr;
+ static void mtk_dpi_start(struct mtk_ddp_comp *comp)
+@@ -602,16 +597,13 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
+ 		dev_err(dev, "Failed to initialize decoder: %d\n", ret);
+ 		goto err_unregister;
+ 	}
+-	drm_encoder_helper_add(&dpi->encoder, &mtk_dpi_encoder_helper_funcs);
  
--	err = sysfs_create_group(&dev->kobj, &ptp->pin_attr_group);
--	if (err)
--		goto no_group;
-+	ptp->pin_attr_groups[0] = &ptp->pin_attr_group;
-+
- 	return 0;
+ 	/* Currently DPI0 is fixed to be driven by OVL1 */
+ 	dpi->encoder.possible_crtcs = BIT(1);
  
--no_group:
--	kfree(ptp->pin_attr);
- no_pin_attr:
- 	kfree(ptp->pin_dev_attr);
- no_dev_attr:
- 	return err;
- }
- 
--int ptp_populate_sysfs(struct ptp_clock *ptp)
-+void ptp_cleanup_pin_groups(struct ptp_clock *ptp)
- {
--	struct ptp_clock_info *info = ptp->info;
--	int err;
--
--	if (info->n_pins) {
--		err = ptp_populate_pins(ptp);
--		if (err)
--			return err;
+-	ret = drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, 0);
+-	if (ret) {
+-		dev_err(dev, "Failed to attach bridge: %d\n", ret);
++	ret = drm_bridge_attach(&dpi->encoder, &dpi->bridge, NULL, 0);
++	if (ret)
+ 		goto err_cleanup;
 -	}
--	return 0;
-+	kfree(ptp->pin_attr);
-+	kfree(ptp->pin_dev_attr);
+ 
+ 	dpi->bit_num = MTK_DPI_OUT_BIT_NUM_8BITS;
+ 	dpi->channel_swap = MTK_DPI_OUT_CHANNEL_SWAP_RGB;
+@@ -768,8 +760,15 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, dpi);
+ 
++	dpi->bridge.funcs = &mtk_dpi_bridge_funcs;
++	dpi->bridge.of_node = dev->of_node;
++	dpi->bridge.type = DRM_MODE_CONNECTOR_DPI;
++
++	drm_bridge_add(&dpi->bridge);
++
+ 	ret = component_add(dev, &mtk_dpi_component_ops);
+ 	if (ret) {
++		drm_bridge_remove(&dpi->bridge);
+ 		dev_err(dev, "Failed to add component: %d\n", ret);
+ 		return ret;
+ 	}
+@@ -779,7 +778,10 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+ 
+ static int mtk_dpi_remove(struct platform_device *pdev)
+ {
++	struct mtk_dpi *dpi = platform_get_drvdata(pdev);
++
+ 	component_del(&pdev->dev, &mtk_dpi_component_ops);
++	drm_bridge_remove(&dpi->bridge);
+ 
+ 	return 0;
  }
-
+-- 
+2.26.2
 
