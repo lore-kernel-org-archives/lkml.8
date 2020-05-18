@@ -2,60 +2,62 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501E7C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0070FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30E7D20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9EA120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825705;
-	bh=c48ogVGF6S4M1K07w86brOJZ061L4fbVfuNXGCQGEbc=;
+	s=default; t=1589825712;
+	bh=C3QjyvfMA2/0h9o42z5Tga0tOWFXXJ4MGKYsh8FyOF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CRK8WhWbMsWH3HTAx97doUWGmX4OfpmVgoMpkpwDEFlRpkEDx0xtYpYXYBBOs7fLF
-	 v/yNrndpVMA632mPzzuvjOj6qiQ0KnC4mluSw1JUjXzXBZf365uvri1oYFp/meopUk
-	 FQNJD0kwy5Zjcv8gvhSqODcvLFcMdzNLhss7H2eQ=
+	b=XBtUYnwmVoCH+X1gVD8pSZtFb/GD8qK695wcqitH6wc2FO4YHGUKh/IadbaiWwOzk
+	 xLJcEebyOWdf+tLW30h10q4F2fL11BLWy4zgy55ULg5YA2imDHrdYXP34zkePcGnY3
+	 fTH7I5N6xiUxx3D8Fs76a8m1MGcYkAtC1ZNMQV5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732174AbgERSAD (ORCPT
+        id S2387670AbgERSPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40994 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732162AbgERR77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:59:59 -0400
+        id S1732134AbgERR7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:59:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB8F920715;
-        Mon, 18 May 2020 17:59:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A14F20835;
+        Mon, 18 May 2020 17:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824799;
-        bh=c48ogVGF6S4M1K07w86brOJZ061L4fbVfuNXGCQGEbc=;
+        s=default; t=1589824791;
+        bh=C3QjyvfMA2/0h9o42z5Tga0tOWFXXJ4MGKYsh8FyOF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EtjhCKUVHsForUIVA1WnRVACBYXTy55RtVvcxzqSWG5Lmdr7aDq/E0ZFXoKJQ/los
-         jFZJTxhmYE5Zfj8jSoMcFTRp348Puaq+YmQM4AGEI2r/ZkyQS8d9ZMkUsD3NGgS6ls
-         bptRAZh/V/Eea4qnlItdpn16C+jLGchMjWBfWva8=
+        b=vJBYpAlSEDTxBoymVt4v55fR8flZL0WSkkZNn6U1mQRMqylVWI8g3J12IOQy9zwdp
+         cLYIS9+3NKP4iKbTKMGr3In8ke4ogM94/3X3f+yFuzLPQAcj8R6NMMnS4PeA4Wr6DZ
+         6Hsl9MUNy56I/a4sFJs2jsNuO2goiXqELKfQyzX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 001/194] KVM: nVMX: Consolidate nested MTF checks to helper function
-Date:   Mon, 18 May 2020 19:34:51 +0200
-Message-Id: <20200518173531.615601713@linuxfoundation.org>
+        stable@vger.kernel.org, YongQin Liu <yongqin.liu@linaro.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Josh Gao <jmgao@google.com>,
+        Todd Kjos <tkjos@google.com>, Felipe Balbi <balbi@kernel.org>,
+        linux-usb@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 5.4 125/147] dwc3: Remove check for HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
+Date:   Mon, 18 May 2020 19:37:28 +0200
+Message-Id: <20200518173528.444595278@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
-References: <20200518173531.455604187@linuxfoundation.org>
+In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
+References: <20200518173513.009514388@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,39 +66,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit 212617dbb6bac2a21dec6ef7d6012d96bb6dbb5d ]
+commit 00e21763f2c8cab21b7befa52996d1b18bde5c42 upstream.
 
-commit 5ef8acbdd687 ("KVM: nVMX: Emulate MTF when performing
-instruction emulation") introduced a helper to check the MTF
-VM-execution control in vmcs12. Change pre-existing check in
-nested_vmx_exit_reflected() to instead use the helper.
+The check for the HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
+causes us to break out of the loop before we call
+dwc3_gadget_ep_reclaim_completed_trb(), which is what likely
+should be clearing the HWO flag.
 
-Signed-off-by: Oliver Upton <oupton@google.com>
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This can cause odd behavior where we never reclaim all the trbs
+in the sg list, so we never call giveback on a usb req, and that
+will causes transfer stalls.
+
+This effectively resovles the adb stalls seen on HiKey960
+after userland changes started only using AIO in adbd.
+
+Cc: YongQin Liu <yongqin.liu@linaro.org>
+Cc: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: Yang Fei <fei.yang@intel.com>
+Cc: Thinh Nguyen <thinhn@synopsys.com>
+Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Josh Gao <jmgao@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: stable@vger.kernel.org #4.20+
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/vmx/nested.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index eec7b2d93104c..b773989308015 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5618,7 +5618,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
- 	case EXIT_REASON_MWAIT_INSTRUCTION:
- 		return nested_cpu_has(vmcs12, CPU_BASED_MWAIT_EXITING);
- 	case EXIT_REASON_MONITOR_TRAP_FLAG:
--		return nested_cpu_has(vmcs12, CPU_BASED_MONITOR_TRAP_FLAG);
-+		return nested_cpu_has_mtf(vmcs12);
- 	case EXIT_REASON_MONITOR_INSTRUCTION:
- 		return nested_cpu_has(vmcs12, CPU_BASED_MONITOR_EXITING);
- 	case EXIT_REASON_PAUSE_INSTRUCTION:
--- 
-2.20.1
-
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2480,9 +2480,6 @@ static int dwc3_gadget_ep_reclaim_trb_sg
+ 	for_each_sg(sg, s, pending, i) {
+ 		trb = &dep->trb_pool[dep->trb_dequeue];
+ 
+-		if (trb->ctrl & DWC3_TRB_CTRL_HWO)
+-			break;
+-
+ 		req->sg = sg_next(s);
+ 		req->num_pending_sgs--;
+ 
 
 
