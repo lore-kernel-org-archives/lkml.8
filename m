@@ -2,90 +2,122 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C56C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68A8220835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XqqnFt+c"
+	by mail.kernel.org (Postfix) with ESMTP id DE3EC20829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589841313;
+	bh=bim+Wqlbpg3ow1ruxMttpLSJEZx5ODlUGcT0+LbS9x0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Is3KOkUdbCGcf8ww+O4OMxMczDmZ431OhHlWU1k1aq8+/3KcxSIF9K+BhY1qTPw/L
+	 7wZE9RtbkwClyqLhFcYzM8EVg7Mm3BpVj3GfTJ9Y25rz882VEU96aeh3CmixKJYjDt
+	 /RWyyFW2wSs4NobN2aXoHfV9DBx9CIMmiPxm58uA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgERWam (ORCPT
+        id S1728229AbgERWfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:30:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgERWam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:30:42 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A05AC061A0C;
-        Mon, 18 May 2020 15:30:42 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 18 May 2020 18:35:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726959AbgERWfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:35:12 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Qty74L52z9sRK;
-        Tue, 19 May 2020 08:30:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589841039;
-        bh=bigoxCg1iXX5sCstqeE44NNN/1nfzI5CL5y/EfgzvU0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XqqnFt+cA6yTP0rR1HoWtcCXzWBQhc8g7W/oVKTm0SH6b949btij96UdHBOt6rflq
-         jBsYbY4oSe6YjLxXA8qGY9N/w84oRj1/MHrU+H6Qd5vckC+rGQGg8QoqG0WV574ngm
-         7EOSmVzP2pNJaccFWnwyF6aDrbu+tl5qTogTHemY5QIt3H1VxmeVeorjTPdoXDmInj
-         oQ41d/Vx+WAuMxJSOXEe76dLb9wsGWNU15MR47Ab5LsPB0DCMelW563w+XgUGhncvf
-         jwbPc5g25Vkr30WvXYEW+MSNUhcz7y1vWe78La20EIX2mjxvRgIVgVJUOG3FOyynko
-         7tYtcp0NmZIWA==
-Date:   Tue, 19 May 2020 08:30:37 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the keys tree
-Message-ID: <20200519083037.39fbdd36@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B32B20756;
+        Mon, 18 May 2020 22:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589841312;
+        bh=bim+Wqlbpg3ow1ruxMttpLSJEZx5ODlUGcT0+LbS9x0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pW9TdC2c/QFLC760zBJw3wq1A6pU7sv35XuqiL3ktsDSb7AnHVhrD1n1NHujzr+6i
+         1u+b5j7oBdWo0V5B4DA0cLNUUCBe6PeZ2ZXRTJRreG7KDyN1Ykcipc8Z5LRegzeBsj
+         gCmzd+K/dcftxZhEl/xiq7BXIQGYUBjS+EYGZFrk=
+Date:   Mon, 18 May 2020 23:35:07 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH V2] arm64/cpuinfo: Move HWCAP name arrays alongside their
+ bit definitions
+Message-ID: <20200518223506.GA5866@willie-the-truck>
+References: <1588858150-26823-1-git-send-email-anshuman.khandual@arm.com>
+ <20200513150405.GS21779@arm.com>
+ <0999fa28-3ee7-3f02-4def-a0c6013ec6dd@arm.com>
+ <20200514073613.GB4280@willie-the-truck>
+ <8ddd0ca5-07c9-3a99-2ec6-4a201725ebe8@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1XO=K56dui0GKESkAaCqnTR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ddd0ca5-07c9-3a99-2ec6-4a201725ebe8@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1XO=K56dui0GKESkAaCqnTR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 15, 2020 at 08:58:05AM +0530, Anshuman Khandual wrote:
+> On 05/14/2020 01:06 PM, Will Deacon wrote:
+> > Why is it a change? We've never reported e.g. "java" on an arm64 kernel, so
+> 
+> We already have "java" defined in existing compat_hwcap_str[] array even
+> though it might never get set in compat_elf_hwcap. AFAICS, compat_elf_hwcap
+> will have the following capabilities set (at the most).
+> 
+> Via COMPAT_ELF_HWCAP_DEFAULT
+> 
+> 01.  COMPAT_HWCAP_HALF
+> 02.  COMPAT_HWCAP_THUMB
+> 03.  COMPAT_HWCAP_FAST_MULT
+> 04.  COMPAT_HWCAP_EDSP
+> 05.  COMPAT_HWCAP_TLS
+> 06.  COMPAT_HWCAP_IDIV
+> 07.  COMPAT_HWCAP_LPAE
+> 
+> Via setup_elf_hwcaps(compat_elf_hwcaps) <-- setup_cpu_features()
+> 
+> 8.  COMPAT_HWCAP_NEON
+> 9.  COMPAT_HWCAP_VFPv4
+> 10. COMPAT_HWCAP_VFP
+> 11. COMPAT_HWCAP_VFPv3
+> 
+> Via arch_timer_set_evtstrm_feature()
+> 
+> 12. COMPAT_HWCAP_EVTSTRM
+> 
+> The code exists for "java" string to be displayed with /proc/cpuinfo but it
+> may never get triggered as compat_elf_hwcap will never have JAVA capability
+> unless there is a bug as you had rightly mentioned.
 
-Hi all,
+Fair enough, but applying this patch causes a *tonne* of warnings from
+aiaiai:
 
-Commit
++In file included from arch/arm64/include/asm/cpufeature.h:11,
++                 from arch/arm64/include/asm/ptrace.h:11,
++                 from arch/arm64/include/asm/irqflags.h:10,
++                 from include/linux/irqflags.h:16,
++                 from include/linux/spinlock.h:54,
++                 from include/linux/seqlock.h:36,
++                 from include/linux/time.h:6,
++                 from arch/arm64/include/asm/stat.h:12,
++                 from include/linux/stat.h:6,
++                 from include/linux/module.h:13,
++                 from drivers/media/rc/keymaps/rc-imon-mce.mod.c:1:
++arch/arm64/include/asm/hwcap.h:189:26: warning: ‘compat_hwcap2_str’ defined but not used [-Wunused-const-variable=]
++  189 | static const char *const compat_hwcap2_str[] = {
++      |                          ^~~~~~~~~~~~~~~~~
 
-  2a1dbdae70b5 ("Documentation: security: core.rst: add missing argument")
+so I'm dropping this for now.
 
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/1XO=K56dui0GKESkAaCqnTR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7DDI0ACgkQAVBC80lX
-0Gxklwf/WWxgRpiD46SBuf0Pm1DZkV/+oADDRo0wavY0GxQecY1tZww9gDE/Q63W
-Qnb5wM1oYYK5tvqqU9E5LBz5ymsT/bAXB77xD+sun2/hGQ5NTior2hyW64EhL6eV
-h8IXA6ZuPDITa7clxBS+LGMQVYepKtD8C42dusswssiQt5Hk4m8HpThiUwQr8RMF
-Ice2keRXkjumJaMIkxtlPM3CebWglNlAhFm+nM5l2Eibg7WJuC2c51/bPzGj1t3I
-R+lCgqYH6zfJkhNLLrljXjDl3smK6ub2mi5wMoHC7YIQk2XNomEb1SubfJXqQyJj
-xSBaejBlOR0OVe0IMd3BYv97zrYuuQ==
-=Jq3t
------END PGP SIGNATURE-----
-
---Sig_/1XO=K56dui0GKESkAaCqnTR--
+Will
