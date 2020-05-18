@@ -2,159 +2,261 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7015EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D401C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57AFF2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B88720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 03:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgERD2E (ORCPT
+        id S1726972AbgERDdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 23:28:04 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31717 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726639AbgERD2D (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 23:28:03 -0400
-IronPort-SDR: u2I0svCKkoeiUXwd/3/O5KtGs0bv1Qms/RejE1vCtH0kwfhbPDZkXLm+gJgDDoCKjk4xA1nIWU
- jBlgW+wV2ijg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 20:28:03 -0700
-IronPort-SDR: ja+LyeYa1xKMqDArXzvdOS3aZS+0MH60F2YDIRNrMoOiN9JItgz5t2q+KFjFIe2nQKwK9Gv6bZ
- dN0jAk/sGymg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,405,1583222400"; 
-   d="scan'208";a="254333137"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by fmsmga008.fm.intel.com with ESMTP; 17 May 2020 20:28:00 -0700
-Subject: Re: [PATCH] perf evsel: Get group fd from CPU0 for system wide event
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200430013451.17196-1-yao.jin@linux.intel.com>
- <20200501102337.GA1761222@krava>
- <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
- <20200505000352.GH1916255@krava>
- <3e813227-4954-0d4b-bc7a-ca272b18454a@linux.intel.com>
- <68e53765-6f45-9483-7543-0a2f961cdc62@linux.intel.com>
- <20200515083312.GB3511648@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <5fe2efe4-f8a3-04ef-f5e8-7b9c433d4142@linux.intel.com>
-Date:   Mon, 18 May 2020 11:28:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 17 May 2020 23:33:36 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:44026 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726696AbgERDdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 23:33:36 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2oFAsJeS+81AA--.22S3;
+        Mon, 18 May 2020 11:33:26 +0800 (CST)
+Subject: Re: mm/memory.c: Add update local tlb for smp race
+To:     David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <1589439021-17005-1-git-send-email-maobibo@loongson.cn>
+ <c86a9a0d-3975-adbe-d97b-deceb566786e@redhat.com>
+ <df1ab51c-810a-f7ce-e591-d4fbbed95dab@loongson.cn>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <c5cec2be-c6ae-3c1f-d3b5-2e5e68e2dc2b@loongson.cn>
+Date:   Mon, 18 May 2020 11:33:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <20200515083312.GB3511648@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <df1ab51c-810a-f7ce-e591-d4fbbed95dab@loongson.cn>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxn2oFAsJeS+81AA--.22S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxKw4xKFW8AFW7ur1xWFWktFb_yoWxurW7pF
+        93GanFqFs7Xr1UCr4Iqw1qvr1Sva4rKFyUJry3K3WFy3srtr1fKay5G3yF9FWkArn3Gwsr
+        JF4jgF43uayrZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
+        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG
+        8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+        IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUgg_TUUUUU
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
 
-On 5/15/2020 4:33 PM, Jiri Olsa wrote:
-> On Fri, May 15, 2020 at 02:04:57PM +0800, Jin, Yao wrote:
-> 
-> SNIP
-> 
->> I think I get the root cause. That should be a serious bug in get_group_fd, access violation!
->>
->> For a group mixed with system-wide event and per-core event and the group
->> leader is system-wide event, access violation will happen.
->>
->> perf_evsel__alloc_fd allocates one FD member for system-wide event (only FD(evsel, 0, 0) is valid).
->>
->> But for per core event, perf_evsel__alloc_fd allocates N FD members (N =
->> ncpus). For example, for ncpus is 8, FD(evsel, 0, 0) to FD(evsel, 7, 0) are
->> valid.
->>
->> get_group_fd(struct evsel *evsel, int cpu, int thread)
->> {
->>      struct evsel *leader = evsel->leader;
->>
->>      fd = FD(leader, cpu, thread);    /* access violation may happen here */
->> }
->>
->> If leader is system-wide event, only the FD(leader, 0, 0) is valid.
->>
->> When get_group_fd accesses FD(leader, 1, 0), access violation happens.
->>
->> My fix is:
->>
->> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->> index 28683b0eb738..db05b8a1e1a8 100644
->> --- a/tools/perf/util/evsel.c
->> +++ b/tools/perf/util/evsel.c
->> @@ -1440,6 +1440,9 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
->>          if (evsel__is_group_leader(evsel))
->>                  return -1;
->>
->> +       if (leader->core.system_wide && !evsel->core.system_wide)
->> +               return -2;
-> 
-> so this effectively stops grouping system_wide events with others,
-> and I think it's correct, how about events that differ in cpumask?
-> 
 
-My understanding for the events that differ in cpumaks is, if the leader's cpumask is not fully 
-matched with the evsel's cpumask then we stop the grouping. Is this understanding correct?
-
-I have done some tests and get some conclusions:
-
-1. If the group is mixed with core and uncore events, the system_wide checking can distinguish them.
-
-2. If the group is mixed with core and uncore events and "-a" is specified, the system_wide for core 
-event is also false. So system_wide checking can distinguish them too
-
-3. In my test, the issue only occurs when we collect the metric which is mixed with uncore event and 
-core event, so maybe checking the system_wide is OK.
-
-> should we perhaps ensure this before we call open? go throught all
-> groups and check they are on the same cpus?
->
-
-The issue doesn't happen at most of the time (only for the metric consisting of uncore event and 
-core event), so fallback to stop grouping if call open is failed looks reasonable.
-
-Thanks
-Jin Yao
-
-> thanks,
-> jirka
+On 05/16/2020 05:34 PM, maobibo wrote:
 > 
 > 
->> +
->>          /*
->>           * Leader must be already processed/open,
->>           * if not it's a bug.
->> @@ -1665,6 +1668,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
->>                                  pid = perf_thread_map__pid(threads, thread);
+> On 05/15/2020 09:50 PM, David Hildenbrand wrote:
+>> On 14.05.20 08:50, Bibo Mao wrote:
+>>> If there are two threads hitting page fault at the address, one
+>>> thread updates pte entry and local tlb, the other thread can update
+>>> local tlb also, rather than give up and let page fault happening
+>>> again.
 >>
->>                          group_fd = get_group_fd(evsel, cpu, thread);
->> +                       if (group_fd == -2) {
->> +                               errno = EINVAL;
->> +                               err = -EINVAL;
->> +                               goto out_close;
->> +                       }
->>   retry_open:
->>                          test_attr__ready();
+>> Let me suggest
 >>
->> It enables the perf_evlist__reset_weak_group. And in the second_pass (in
->> __run_perf_stat), the events will be opened successfully.
+>> "mm/memory: optimize concurrent page faults at same address
 >>
->> I have tested OK for this fix on cascadelakex.
+>> If two threads concurrently fault at the same address, the thread that
+>> won the race updates the PTE and its local TLB. For now, the other
+>> thread gives up, simply does nothing, and continues.
 >>
->> Thanks
->> Jin Yao
+>> It could happen that this second thread triggers another fault, whereby
+>> it only updates its local TLB while handling the fault. Instead of
+>> triggering another fault, let's directly update the local TLB of the
+>> second thread.
+>> "
 >>
+>> If I got the intention of this patch correctly.
+>>
+>> Are there any performance numbers to support this patch?
+>>
+>> (I can't say too much about the correctness and/or usefulness of this patch)
 > 
+> yes, that is the situation. On MIPS platform software can update TLB,
+> so update_mmu_cache is used here. This does not happen frequently, and with the three series patches in later mail. I test lat_pagefault in lmbench, here is is result:
+> 
+> with these three series patches, 
+> # ./lat_pagefault  -N 10  /tmp/1 
+> Pagefaults on /tmp/1: 1.4973 microseconds
+> # ./lat_pagefault -P 4 -N 10  /tmp/1 
+> Pagefaults on /tmp/1: 1.5716 microseconds
+> 
+> original version, without these three series patch
+> #  ./lat_pagefault  -N 10  /tmp/1 
+> Pagefaults on /tmp/1: 1.6489 microseconds
+> # ./lat_pagefault -P 4 -N 10  /tmp/1
+> Pagefaults on /tmp/1: 1.7214 microseconds
+> 
+
+I tested the three patches one by one, there is no obvious improvement with
+lat_pagefault case, I guess that it happens seldom where multiple threads access
+the same page at the same time. 
+
+The improvement is because of another modification where pte_mkyoung is added
+to get readable privilege on MIPS system.
+
+regards
+bibo, mao
+
+>>>
+>>> 	modified:   mm/memory.c
+>>
+>> This does not belong into a patch description.
+> 
+> well, I will modify the patch description.
+> 
+> regards
+> bibo,mao
+> 
+> 
+>>
+>>
+>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>> ---
+>>>  mm/memory.c | 30 ++++++++++++++++++++++--------
+>>>  1 file changed, 22 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/mm/memory.c b/mm/memory.c
+>>> index f703fe8..3a741ce 100644
+>>> --- a/mm/memory.c
+>>> +++ b/mm/memory.c
+>>> @@ -2436,11 +2436,10 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+>>>  		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+>>>  			/*
+>>>  			 * Other thread has already handled the fault
+>>> -			 * and we don't need to do anything. If it's
+>>> -			 * not the case, the fault will be triggered
+>>> -			 * again on the same address.
+>>> +			 * and update local tlb only
+>>>  			 */
+>>>  			ret = false;
+>>> +			update_mmu_cache(vma, addr, vmf->pte);
+>>>  			goto pte_unlock;
+>>>  		}
+>>>  
+>>> @@ -2463,8 +2462,9 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+>>>  		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+>>>  		locked = true;
+>>>  		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+>>> -			/* The PTE changed under us. Retry page fault. */
+>>> +			/* The PTE changed under us. update local tlb */
+>>>  			ret = false;
+>>> +			update_mmu_cache(vma, addr, vmf->pte);
+>>>  			goto pte_unlock;
+>>>  		}
+>>>  
+>>> @@ -2704,6 +2704,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+>>>  		}
+>>>  		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+>>>  		entry = mk_pte(new_page, vma->vm_page_prot);
+>>> +		entry = pte_mkyoung(entry);
+>>>  		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+>>>  		/*
+>>>  		 * Clear the pte entry and flush it first, before updating the
+>>> @@ -2752,6 +2753,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+>>>  		new_page = old_page;
+>>>  		page_copied = 1;
+>>>  	} else {
+>>> +		update_mmu_cache(vma, vmf->address, vmf->pte);
+>>>  		mem_cgroup_cancel_charge(new_page, memcg, false);
+>>>  	}
+>>>  
+>>> @@ -2812,6 +2814,7 @@ vm_fault_t finish_mkwrite_fault(struct vm_fault *vmf)
+>>>  	 * pte_offset_map_lock.
+>>>  	 */
+>>>  	if (!pte_same(*vmf->pte, vmf->orig_pte)) {
+>>> +		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
+>>>  		pte_unmap_unlock(vmf->pte, vmf->ptl);
+>>>  		return VM_FAULT_NOPAGE;
+>>>  	}
+>>> @@ -2936,6 +2939,7 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+>>>  			vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+>>>  					vmf->address, &vmf->ptl);
+>>>  			if (!pte_same(*vmf->pte, vmf->orig_pte)) {
+>>> +				update_mmu_cache(vma, vmf->address, vmf->pte);
+>>>  				unlock_page(vmf->page);
+>>>  				pte_unmap_unlock(vmf->pte, vmf->ptl);
+>>>  				put_page(vmf->page);
+>>> @@ -3341,8 +3345,10 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+>>>  						vma->vm_page_prot));
+>>>  		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+>>>  				vmf->address, &vmf->ptl);
+>>> -		if (!pte_none(*vmf->pte))
+>>> +		if (!pte_none(*vmf->pte)) {
+>>> +			update_mmu_cache(vma, vmf->address, vmf->pte);
+>>>  			goto unlock;
+>>> +		}
+>>>  		ret = check_stable_address_space(vma->vm_mm);
+>>>  		if (ret)
+>>>  			goto unlock;
+>>> @@ -3373,13 +3379,16 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+>>>  	__SetPageUptodate(page);
+>>>  
+>>>  	entry = mk_pte(page, vma->vm_page_prot);
+>>> +	entry = pte_mkyoung(entry);
+>>>  	if (vma->vm_flags & VM_WRITE)
+>>>  		entry = pte_mkwrite(pte_mkdirty(entry));
+>>>  
+>>>  	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+>>>  			&vmf->ptl);
+>>> -	if (!pte_none(*vmf->pte))
+>>> +	if (!pte_none(*vmf->pte)) {
+>>> +		update_mmu_cache(vma, vmf->address, vmf->pte);
+>>>  		goto release;
+>>> +	}
+>>>  
+>>>  	ret = check_stable_address_space(vma->vm_mm);
+>>>  	if (ret)
+>>> @@ -3646,11 +3655,14 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+>>>  	}
+>>>  
+>>>  	/* Re-check under ptl */
+>>> -	if (unlikely(!pte_none(*vmf->pte)))
+>>> +	if (unlikely(!pte_none(*vmf->pte))) {
+>>> +		update_mmu_cache(vma, vmf->address, vmf->pte);
+>>>  		return VM_FAULT_NOPAGE;
+>>> +	}
+>>>  
+>>>  	flush_icache_page(vma, page);
+>>>  	entry = mk_pte(page, vma->vm_page_prot);
+>>> +	entry = pte_mkyoung(entry);
+>>>  	if (write)
+>>>  		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+>>>  	/* copy-on-write page */
+>>> @@ -4224,8 +4236,10 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+>>>  	vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
+>>>  	spin_lock(vmf->ptl);
+>>>  	entry = vmf->orig_pte;
+>>> -	if (unlikely(!pte_same(*vmf->pte, entry)))
+>>> +	if (unlikely(!pte_same(*vmf->pte, entry))) {
+>>> +		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
+>>>  		goto unlock;
+>>> +	}
+>>>  	if (vmf->flags & FAULT_FLAG_WRITE) {
+>>>  		if (!pte_write(entry))
+>>>  			return do_wp_page(vmf);
+>>>
+>>
+>>
+
