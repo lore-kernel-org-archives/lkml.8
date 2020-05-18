@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 556C8207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9193207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826536;
-	bh=xmOIEw70a5FE80g1DFmUn2FjbmTpBNFJhhp4JZAkVjw=;
+	s=default; t=1589826540;
+	bh=TMnk9m68iVlJ4LzBplDanu5lel2viDBbZ466dVlUj3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2EY1ycuOokJ/kFwQXB0RdWsmhU1M0D1/WUE/QbNwzPIXHBNXoguKYniErKsrVn4O4
-	 jK+VXGnQ/citUkbPlHjcHOiE50xxKXe3wc88Rkpv2Y0i8NhvrAd5+m6dQdAkd7w+fe
-	 6upkuS/bct74reW3m6dSGYmgkqKhjWDXsdAEcQ/g=
+	b=J9wvYtwJqaehZfGz5pSxc4StnNB8Wxa4/tQSPWRLJ8zO2FS25VdVVXWD2N+I6hTG4
+	 OpL+BiSSfdVDg1a7MuuGYjRPwbzgbXwZWYDuyHvKOOD5SJ96Hd1hNUfDP79RofzR6t
+	 pGp6YfjGMSA29QnNDsWQRVOoWQ3dxAdcVcPpp+WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbgERS2z (ORCPT
+        id S2388006AbgERS27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:28:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39428 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729420AbgERRm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:42:26 -0400
+        id S1728841AbgERRmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFEEC20829;
-        Mon, 18 May 2020 17:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FD292083E;
+        Mon, 18 May 2020 17:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823746;
-        bh=xmOIEw70a5FE80g1DFmUn2FjbmTpBNFJhhp4JZAkVjw=;
+        s=default; t=1589823743;
+        bh=TMnk9m68iVlJ4LzBplDanu5lel2viDBbZ466dVlUj3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fpMvkncp9QwiHG1oHOZHMzd0Nkf7d4NQyXQO0FnjqOgplTl/0x/Wom3A96XbINqpo
-         phvwK/zLtGmIoQotedlL8EJ/ESYnwAZqF+5rDDvBxgKV3/BZL7tcegVhmxblOWCZDJ
-         5/7rCFgbTM9Y3tneJigb2MQqP7nVmVOayJ6hB9pY=
+        b=09C5N90MAzevv7L/QRZCwXvWGZLP+qzfWbABcuI/PutWPf3VyHV8RiQdQrfjLsCNv
+         2aR3MIoqXNw39RMMwTGwlE2gZjRfrc4sEyvGZZBe8dhHO1ZrvcnJnsqhBG9J9bDNqj
+         56nFP/8hvDeG6JgKvtj/4c8NGat9i1alWc1ZcD+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 02/90] dp83640: reverse arguments to list_add_tail
-Date:   Mon, 18 May 2020 19:35:40 +0200
-Message-Id: <20200518173451.432316239@linuxfoundation.org>
+        stable@vger.kernel.org, George Spelvin <lkml@sdf.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.9 19/90] batman-adv: fix batadv_nc_random_weight_tq
+Date:   Mon, 18 May 2020 19:35:57 +0200
+Message-Id: <20200518173455.116745688@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -59,34 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@inria.fr>
+From: George Spelvin <lkml@sdf.org>
 
-[ Upstream commit 865308373ed49c9fb05720d14cbf1315349b32a9 ]
+commit fd0c42c4dea54335967c5a86f15fc064235a2797 upstream.
 
-In this code, it appears that phyter_clocks is a list head, based on
-the previous list_for_each, and that clock->list is intended to be a
-list element, given that it has just been initialized in
-dp83640_clock_init.  Accordingly, switch the arguments to
-list_add_tail, which takes the list head as the second argument.
+and change to pseudorandom numbers, as this is a traffic dithering
+operation that doesn't need crypto-grade.
 
-Fixes: cb646e2b02b27 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The previous code operated in 4 steps:
+
+1. Generate a random byte 0 <= rand_tq <= 255
+2. Multiply it by BATADV_TQ_MAX_VALUE - tq
+3. Divide by 255 (= BATADV_TQ_MAX_VALUE)
+4. Return BATADV_TQ_MAX_VALUE - rand_tq
+
+This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
+value between 0/255 and 255/255.
+
+But!  The intermediate value between steps 3 and 4 is stored in a u8
+variable.  So it's truncated, and most of the time, is less than 255, after
+which the division produces 0.  Specifically, if tq is odd, the product is
+always even, and can never be 255.  If tq is even, there's exactly one
+random byte value that will produce a product byte of 255.
+
+Thus, the return value is 255 (511/512 of the time) or 254 (1/512
+of the time).
+
+If we assume that the truncation is a bug, and the code is meant to scale
+the input, a simpler way of looking at it is that it's returning a random
+value between tq and BATADV_TQ_MAX_VALUE, inclusive.
+
+Well, we have an optimized function for doing just that.
+
+Fixes: 3c12de9a5c75 ("batman-adv: network coding - code and transmit packets if possible")
+Signed-off-by: George Spelvin <lkml@sdf.org>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/dp83640.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1108,7 +1108,7 @@ static struct dp83640_clock *dp83640_clo
- 		goto out;
- 	}
- 	dp83640_clock_init(clock, bus);
--	list_add_tail(&phyter_clocks, &clock->list);
-+	list_add_tail(&clock->list, &phyter_clocks);
- out:
- 	mutex_unlock(&phyter_clocks_lock);
+---
+ net/batman-adv/network-coding.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+--- a/net/batman-adv/network-coding.c
++++ b/net/batman-adv/network-coding.c
+@@ -1012,15 +1012,8 @@ static struct batadv_nc_path *batadv_nc_
+  */
+ static u8 batadv_nc_random_weight_tq(u8 tq)
+ {
+-	u8 rand_val, rand_tq;
+-
+-	get_random_bytes(&rand_val, sizeof(rand_val));
+-
+ 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
+-	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
+-
+-	/* normalize the randomized packet loss */
+-	rand_tq /= BATADV_TQ_MAX_VALUE;
++	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
  
+ 	/* convert to (randomized) estimated tq again */
+ 	return BATADV_TQ_MAX_VALUE - rand_tq;
 
 
