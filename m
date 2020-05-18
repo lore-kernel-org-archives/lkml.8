@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7103C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B752BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6A520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AAAA20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825378;
-	bh=8QXeBMlGAUFl3D0rEqDXnBSX/SsHzNShv8lCkysrbfc=;
+	s=default; t=1589825382;
+	bh=fB+roZHtIxggYejk2OF7luJkFNMNH6aS08BxOIv9KII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g1t+gEBeJw7XDIH93zW4aTW6KoyaQAIZ/n9CJMg4DJPTkNso6j6E/f93heDARwXDm
-	 CbaEKsShzKrax5PmCvyuvEDoy5nRy5jPZdkAGgHbWNhpZ1kz/Dwgq9XrUPyzV8PRjc
-	 q8V3W1iODgz2J1b+BbfYhqilMERdZJIeVnotaoL4=
+	b=2SscDOJYpfAas/74yVcL4nU94iDSZguk25Wptr94XgOsvZm+qcO/y5Wv4Zyqsd2j9
+	 RkWt6MBK5IbiIcHlR23GaJ1f8slVpT/OZBVyQU3UPg6d7Nbf4d4c4gbLKgqY7yGZKD
+	 3tm3sebO/ymF1Pnd+Ibm5Wii/IHR8kmImlsCjTrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbgERSJd (ORCPT
+        id S1733121AbgERSGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54750 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:06:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731506AbgERSGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:06:33 -0400
+        id S1733087AbgERSF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2293320715;
-        Mon, 18 May 2020 18:06:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F3662087D;
+        Mon, 18 May 2020 18:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825192;
-        bh=8QXeBMlGAUFl3D0rEqDXnBSX/SsHzNShv8lCkysrbfc=;
+        s=default; t=1589825157;
+        bh=fB+roZHtIxggYejk2OF7luJkFNMNH6aS08BxOIv9KII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vo/XXnQDvVoj8CjDPxEMJl1i1um86GKnpd0cNMTBwxaqhoiXHgN+hv/M6Rm6YxLPp
-         ch6HHS2r3/Aaptyd9cDLQEhjF1raouQsipVG/LjNcCx7J1JK1/l0Vf9GxtdjXku9xS
-         KrOWx2oRRHX47kd9eztc3+v0LpFqjCZ9UdTmkFZA=
+        b=StB1YKkzsDU9acBW1T4GWmOP5Zh3sM7/JXaEcGVIGEYgz9H2x5EgTw6JtSoBV1NsC
+         tPNxnjiHJzaoDzvWDZMU0B9Zlvp5yRStGEoris/3u6A4Z/bFnuJ74aJSlB+OA/AIo0
+         uUjqlAv5PGvJj6e9hZOuIwPSdf74M4GlKC5qbews=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 128/194] gcc-10: disable array-bounds warning for now
-Date:   Mon, 18 May 2020 19:36:58 +0200
-Message-Id: <20200518173542.156930968@linuxfoundation.org>
+        stable@vger.kernel.org, Simon Ser <contact@emersion.fr>,
+        Roman Gilg <subdiff@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Harry Wentland <hwentlan@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Subject: [PATCH 5.6 151/194] drm/amd/display: add basic atomic check for cursor plane
+Date:   Mon, 18 May 2020 19:37:21 +0200
+Message-Id: <20200518173543.827591423@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,55 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Simon Ser <contact@emersion.fr>
 
-commit 44720996e2d79e47d508b0abe99b931a726a3197 upstream.
+commit 626bf90fe03fa080d8df06bb0397c95c53ae8e27 upstream.
 
-This is another fine warning, related to the 'zero-length-bounds' one,
-but hitting the same historical code in the kernel.
+This patch adds a basic cursor check when an atomic test-only commit is
+performed. The position and size of the cursor plane is checked.
 
-Because C didn't historically support flexible array members, we have
-code that instead uses a one-sized array, the same way we have cases of
-zero-sized arrays.
+This should fix user-space relying on atomic checks to assign buffers to
+planes.
 
-The one-sized arrays come from either not wanting to use the gcc
-zero-sized array extension, or from a slight convenience-feature, where
-particularly for strings, the size of the structure now includes the
-allocation for the final NUL character.
-
-So with a "char name[1];" at the end of a structure, you can do things
-like
-
-       v = my_malloc(sizeof(struct vendor) + strlen(name));
-
-and avoid the "+1" for the terminator.
-
-Yes, the modern way to do that is with a flexible array, and using
-'offsetof()' instead of 'sizeof()', and adding the "+1" by hand.  That
-also technically gets the size "more correct" in that it avoids any
-alignment (and thus padding) issues, but this is another long-term
-cleanup thing that will not happen for 5.7.
-
-So disable the warning for now, even though it's potentially quite
-useful.  Having a slew of warnings that then hide more urgent new issues
-is not an improvement.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Simon Ser <contact@emersion.fr>
+Reported-by: Roman Gilg <subdiff@gmail.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Harry Wentland <hwentlan@amd.com>
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   26 ++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -859,6 +859,7 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -7716,6 +7716,7 @@ static int dm_update_plane_state(struct
+ 	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+ 	struct dm_crtc_state *dm_new_crtc_state, *dm_old_crtc_state;
+ 	struct dm_plane_state *dm_new_plane_state, *dm_old_plane_state;
++	struct amdgpu_crtc *new_acrtc;
+ 	bool needs_reset;
+ 	int ret = 0;
  
- # We'll want to enable this eventually, but it's not going away for 5.7 at least
- KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
-+KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
+@@ -7725,9 +7726,30 @@ static int dm_update_plane_state(struct
+ 	dm_new_plane_state = to_dm_plane_state(new_plane_state);
+ 	dm_old_plane_state = to_dm_plane_state(old_plane_state);
  
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+-	/*TODO Implement atomic check for cursor plane */
+-	if (plane->type == DRM_PLANE_TYPE_CURSOR)
++	/*TODO Implement better atomic check for cursor plane */
++	if (plane->type == DRM_PLANE_TYPE_CURSOR) {
++		if (!enable || !new_plane_crtc ||
++			drm_atomic_plane_disabling(plane->state, new_plane_state))
++			return 0;
++
++		new_acrtc = to_amdgpu_crtc(new_plane_crtc);
++
++		if ((new_plane_state->crtc_w > new_acrtc->max_cursor_width) ||
++			(new_plane_state->crtc_h > new_acrtc->max_cursor_height)) {
++			DRM_DEBUG_ATOMIC("Bad cursor size %d x %d\n",
++							 new_plane_state->crtc_w, new_plane_state->crtc_h);
++			return -EINVAL;
++		}
++
++		if (new_plane_state->crtc_x <= -new_acrtc->max_cursor_width ||
++			new_plane_state->crtc_y <= -new_acrtc->max_cursor_height) {
++			DRM_DEBUG_ATOMIC("Bad cursor position %d, %d\n",
++							 new_plane_state->crtc_x, new_plane_state->crtc_y);
++			return -EINVAL;
++		}
++
+ 		return 0;
++	}
+ 
+ 	needs_reset = should_reset_plane(state, plane, old_plane_state,
+ 					 new_plane_state);
 
 
