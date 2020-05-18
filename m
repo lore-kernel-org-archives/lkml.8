@@ -2,191 +2,169 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE29EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B34C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A28B5207F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B23D207BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 02:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589768467;
+	bh=7RJuET2p1c9crhC6k5Md3KsYrDZ64Vq388qDBF/PKT4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AY/i6uRVryO6UDg/6o3A/SpgypulRLYo4+3zoiV80ultZQ5VRptQvGFKoHz9ukceO
+	 galUPdIweRiEx6+dtmWozU1THnkEq1l0Sv0UKxW03iUY0uhzqEE7HMWZuaWMTVbQpT
+	 eQXIlcaqehELjyrIKUOVhZ0ABn533YHl3Y0T4P/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgERCUZ (ORCPT
+        id S1726803AbgERCVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 22:20:25 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:50154 "EHLO inva020.nxp.com"
+        Sun, 17 May 2020 22:21:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbgERCUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 22:20:24 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 438601A0040;
-        Mon, 18 May 2020 04:20:22 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C5421A00EC;
-        Mon, 18 May 2020 04:20:18 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C1B57402A8;
-        Mon, 18 May 2020 10:20:13 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, l.stach@pengutronix.de,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: interrupt-controller: Convert imx irqsteer to json-schema
-Date:   Mon, 18 May 2020 10:10:41 +0800
-Message-Id: <1589767841-4213-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726680AbgERCVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 22:21:05 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9334420758;
+        Mon, 18 May 2020 02:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589768464;
+        bh=7RJuET2p1c9crhC6k5Md3KsYrDZ64Vq388qDBF/PKT4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qKUPHDhKfAvKoQDw6aUbF5oxk/2fSXt6cYTcG445x6tHLCS0hMJXSKIXc5Z28WHUO
+         nlFuCGycnKryukgl1b3dKlivig1RoGMgEXo6P+4drDpHbZO6YsywoMt6lOz6h4/dae
+         CgzG2Fh0kTL1dKHu4p+ITL+Ewb1+xwPHzKxpolUU=
+Date:   Mon, 18 May 2020 11:20:59 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk,
+        mhiramat@kernel.org, labbott@redhat.com,
+        mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: kprobes: Avoid fortify_panic() when copying
+ optprobe template
+Message-Id: <20200518112059.c19899ffb17a4843bf4f74ab@kernel.org>
+In-Reply-To: <202005171447.00CFE0C@keescook>
+References: <20200517153959.293224-1-andrew@aj.id.au>
+        <202005171447.00CFE0C@keescook>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX IRQSTEER binding to DT schema format using json-schema.
+On Sun, 17 May 2020 14:48:52 -0700
+Kees Cook <keescook@chromium.org> wrote:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../bindings/interrupt-controller/fsl,irqsteer.txt | 35 ---------
- .../interrupt-controller/fsl,irqsteer.yaml         | 87 ++++++++++++++++++++++
- 2 files changed, 87 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+> On Mon, May 18, 2020 at 01:09:59AM +0930, Andrew Jeffery wrote:
+> > As mentioned, a couple of attempts have been made to address the issue
+> > by casting a pointer to optprobe_template_entry before providing it to
+> > memcpy(), however gccs such as Ubuntu 20.04's arm-linux-gnueabi-gcc
+> > 9.3.0 (Ubuntu 9.3.0-10ubuntu1) see through these efforts.
+> 
+> Ah, dang. :P
+> 
+> How about converting them all to unsized arrays, which would also allow
+> the code to drop the "&" everywhere, I think. This is untested:
+> 
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-deleted file mode 100644
-index 582991c..0000000
---- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-+++ /dev/null
-@@ -1,35 +0,0 @@
--Freescale IRQSTEER Interrupt multiplexer
--
--Required properties:
--
--- compatible: should be:
--	- "fsl,imx8m-irqsteer"
--	- "fsl,imx-irqsteer"
--- reg: Physical base address and size of registers.
--- interrupts: Should contain the up to 8 parent interrupt lines used to
--  multiplex the input interrupts. They should be specified sequentially
--  from output 0 to 7.
--- clocks: Should contain one clock for entry in clock-names
--  see Documentation/devicetree/bindings/clock/clock-bindings.txt
--- clock-names:
--   - "ipg": main logic clock
--- interrupt-controller: Identifies the node as an interrupt controller.
--- #interrupt-cells: Specifies the number of cells needed to encode an
--  interrupt source. The value must be 1.
--- fsl,channel: The output channel that all input IRQs should be steered into.
--- fsl,num-irqs: Number of input interrupts of this channel.
--  Should be multiple of 32 input interrupts and up to 512 interrupts.
--
--Example:
--
--	interrupt-controller@32e2d000 {
--		compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
--		reg = <0x32e2d000 0x1000>;
--		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
--		clock-names = "ipg";
--		fsl,channel = <0>;
--		fsl,num-irqs = <64>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--	};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-new file mode 100644
-index 0000000..a2bc723
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale IRQSTEER Interrupt multiplexer
-+
-+maintainers:
-+  - Lucas Stach <l.stach@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx-irqsteer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: |
-+      should contain the up to 8 parent interrupt lines used to multiplex
-+      the input interrupts. They should be specified sequentially from
-+      output 0 to 7.
-+    items:
-+      - description: irqsteer channel 0
-+      - description: irqsteer channel 1
-+      - description: irqsteer channel 2
-+      - description: irqsteer channel 3
-+      - description: irqsteer channel 4
-+      - description: irqsteer channel 5
-+      - description: irqsteer channel 6
-+      - description: irqsteer channel 7
-+    minItems: 1
-+    maxItems: 8
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: ipg
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  fsl,channel:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value representing the output channel that all input IRQs should be
-+      steered into.
-+
-+  fsl,num-irqs:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value representing the number of input interrupts of this channel,
-+      should be multiple of 32 input interrupts and up to 512 interrupts.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - fsl,channel
-+  - fsl,num-irqs
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx8mq-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    interrupt-controller@32e2d000 {
-+        compatible = "fsl,imx-irqsteer";
-+        reg = <0x32e2d000 0x1000>;
-+        interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
-+        clock-names = "ipg";
-+        fsl,channel = <0>;
-+        fsl,num-irqs = <64>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+    };
+This looks good to me since it uses same technique in sections.h.
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you!
+
+> 
+> diff --git a/arch/arm/include/asm/kprobes.h b/arch/arm/include/asm/kprobes.h
+> index 213607a1f45c..e26a278d301a 100644
+> --- a/arch/arm/include/asm/kprobes.h
+> +++ b/arch/arm/include/asm/kprobes.h
+> @@ -44,20 +44,20 @@ int kprobe_exceptions_notify(struct notifier_block *self,
+>  			     unsigned long val, void *data);
+>  
+>  /* optinsn template addresses */
+> -extern __visible kprobe_opcode_t optprobe_template_entry;
+> -extern __visible kprobe_opcode_t optprobe_template_val;
+> -extern __visible kprobe_opcode_t optprobe_template_call;
+> -extern __visible kprobe_opcode_t optprobe_template_end;
+> -extern __visible kprobe_opcode_t optprobe_template_sub_sp;
+> -extern __visible kprobe_opcode_t optprobe_template_add_sp;
+> -extern __visible kprobe_opcode_t optprobe_template_restore_begin;
+> -extern __visible kprobe_opcode_t optprobe_template_restore_orig_insn;
+> -extern __visible kprobe_opcode_t optprobe_template_restore_end;
+> +extern __visible kprobe_opcode_t optprobe_template_entry[];
+> +extern __visible kprobe_opcode_t optprobe_template_val[];
+> +extern __visible kprobe_opcode_t optprobe_template_call[];
+> +extern __visible kprobe_opcode_t optprobe_template_end[];
+> +extern __visible kprobe_opcode_t optprobe_template_sub_sp[];
+> +extern __visible kprobe_opcode_t optprobe_template_add_sp[];
+> +extern __visible kprobe_opcode_t optprobe_template_restore_begin[];
+> +extern __visible kprobe_opcode_t optprobe_template_restore_orig_insn[];
+> +extern __visible kprobe_opcode_t optprobe_template_restore_end[];
+>  
+>  #define MAX_OPTIMIZED_LENGTH	4
+>  #define MAX_OPTINSN_SIZE				\
+> -	((unsigned long)&optprobe_template_end -	\
+> -	 (unsigned long)&optprobe_template_entry)
+> +	((unsigned long)optprobe_template_end -	\
+> +	 (unsigned long)optprobe_template_entry)
+>  #define RELATIVEJUMP_SIZE	4
+>  
+>  struct arch_optimized_insn {
+> diff --git a/arch/arm/probes/kprobes/opt-arm.c b/arch/arm/probes/kprobes/opt-arm.c
+> index 7a449df0b359..c78180172120 100644
+> --- a/arch/arm/probes/kprobes/opt-arm.c
+> +++ b/arch/arm/probes/kprobes/opt-arm.c
+> @@ -85,21 +85,21 @@ asm (
+>  			"optprobe_template_end:\n");
+>  
+>  #define TMPL_VAL_IDX \
+> -	((unsigned long *)&optprobe_template_val - (unsigned long *)&optprobe_template_entry)
+> +	((unsigned long *)optprobe_template_val - (unsigned long *)optprobe_template_entry)
+>  #define TMPL_CALL_IDX \
+> -	((unsigned long *)&optprobe_template_call - (unsigned long *)&optprobe_template_entry)
+> +	((unsigned long *)optprobe_template_call - (unsigned long *)optprobe_template_entry)
+>  #define TMPL_END_IDX \
+> -	((unsigned long *)&optprobe_template_end - (unsigned long *)&optprobe_template_entry)
+> +	((unsigned long *)optprobe_template_end - (unsigned long *)optprobe_template_entry)
+>  #define TMPL_ADD_SP \
+> -	((unsigned long *)&optprobe_template_add_sp - (unsigned long *)&optprobe_template_entry)
+> +	((unsigned long *)optprobe_template_add_sp - (unsigned long *)optprobe_template_entry)
+>  #define TMPL_SUB_SP \
+> -	((unsigned long *)&optprobe_template_sub_sp - (unsigned long *)&optprobe_template_entry)
+> +	((unsigned long *)optprobe_template_sub_sp - (unsigned long *)optprobe_template_entry)
+>  #define TMPL_RESTORE_BEGIN \
+> -	((unsigned long *)&optprobe_template_restore_begin - (unsigned long *)&optprobe_template_entry)
+> +	((unsigned long *)optprobe_template_restore_begin - (unsigned long *)optprobe_template_entry)
+>  #define TMPL_RESTORE_ORIGN_INSN \
+> -	((unsigned long *)&optprobe_template_restore_orig_insn - (unsigned long *)&optprobe_template_entry)
+> +	((unsigned long *)optprobe_template_restore_orig_insn - (unsigned long *)optprobe_template_entry)
+>  #define TMPL_RESTORE_END \
+> -	((unsigned long *)&optprobe_template_restore_end - (unsigned long *)&optprobe_template_entry)
+> +	((unsigned long *)optprobe_template_restore_end - (unsigned long *)optprobe_template_entry)
+>  
+>  /*
+>   * ARM can always optimize an instruction when using ARM ISA, except
+> @@ -234,7 +234,7 @@ int arch_prepare_optimized_kprobe(struct optimized_kprobe *op, struct kprobe *or
+>  	}
+>  
+>  	/* Copy arch-dep-instance from template. */
+> -	memcpy(code, (unsigned long *)&optprobe_template_entry,
+> +	memcpy(code, (unsigned long *)optprobe_template_entry,
+>  			TMPL_END_IDX * sizeof(kprobe_opcode_t));
+>  
+>  	/* Adjust buffer according to instruction. */
+> 
+> -- 
+> Kees Cook
+
+
 -- 
-2.7.4
-
+Masami Hiramatsu <mhiramat@kernel.org>
