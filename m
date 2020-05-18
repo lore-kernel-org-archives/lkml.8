@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4184720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC7B20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824311;
-	bh=plqYo22biTGHgNsqsufKV0Ht2FGCe/Y2/qOpDAwRLo4=;
+	s=default; t=1589824314;
+	bh=apyINV/WR9h+x6sTsPQBpcA3la2uvXtDenbZTh6bPSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dD98u8JNZSK4qHteb4OJIBCzcW+1rk+RUv6ucqhouduDn3laxiX1GQokAo/8+JJ5V
-	 6gTWtzI+FQlPBur/zPX/LgxCx+4PaNqvVJ/FPiGfbDUXEVbEwzQK+PbhHZMeOeL06m
-	 XZSC0NfVhkEj/5gcHN/Z5t2b7a7sxHMznzV+gXr4=
+	b=qOBKL+JSFmwlZJtC+k+8glYVP3IHCUWtVKWrUCqovly6h3YDtYLQQbWoyt34TEqC7
+	 j/j4pTYYr5thb7VwivUcH5doWNo8b4t6Ytb7k6EFS1RsMtKopW2/UvGW8Ewnfr0DSe
+	 6cwlxDokm1jZyncdmUL5XJIPdnFAIlgv+/QMsf8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbgERRvu (ORCPT
+        id S1730894AbgERRvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:51:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730330AbgERRvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:44 -0400
+        id S1730740AbgERRvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB50120829;
-        Mon, 18 May 2020 17:51:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 496F02083E;
+        Mon, 18 May 2020 17:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824302;
-        bh=plqYo22biTGHgNsqsufKV0Ht2FGCe/Y2/qOpDAwRLo4=;
+        s=default; t=1589824304;
+        bh=apyINV/WR9h+x6sTsPQBpcA3la2uvXtDenbZTh6bPSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=md9UwGjptTlt2edX345D92kKHSrbVvm/LSH7jQxqBB9NoGI3s0ftF+qtV4zRTrfh/
-         nGnPQumBdKfFCJQ2amxNgryfHQVuPlljtZMtjl0W34hNmQD+eL050iwwqGgjvddpHq
-         ERXGYibA1qOcyVONacPyq4+G/E8r0UHU2677N2g8=
+        b=Zc8ZGneMQYd1qOG0DVmdJK1LKtz58cp6Rmj31PpsZ+m0XXiKxXXy83MdmKH3b96Vf
+         qPOAbxwPl85M07vS/A+C+mIbMgjvV8JW5+ljBUNu9rkXAySR58Z4abQgovZk5opcLR
+         YqyuTSJP9muOD66OoGuWw92SUm2ouXVmXjGfgaXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
-        David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/80] NFSv4: Fix fscache cookie aux_data to ensure change_attr is included
-Date:   Mon, 18 May 2020 19:36:56 +0200
-Message-Id: <20200518173458.056584883@linuxfoundation.org>
+Subject: [PATCH 4.19 39/80] netfilter: conntrack: avoid gcc-10 zero-length-bounds warning
+Date:   Mon, 18 May 2020 19:36:57 +0200
+Message-Id: <20200518173458.224369406@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,98 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 50eaa652b54df1e2b48dc398d9e6114c9ed080eb ]
+[ Upstream commit 2c407aca64977ede9b9f35158e919773cae2082f ]
 
-Commit 402cb8dda949 ("fscache: Attach the index key and aux data to
-the cookie") added the aux_data and aux_data_len to parameters to
-fscache_acquire_cookie(), and updated the callers in the NFS client.
-In the process it modified the aux_data to include the change_attr,
-but missed adding change_attr to a couple places where aux_data was
-used.  Specifically, when opening a file and the change_attr is not
-added, the following attempt to lookup an object will fail inside
-cachefiles_check_object_xattr() = -116 due to
-nfs_fscache_inode_check_aux() failing memcmp on auxdata and returning
-FSCACHE_CHECKAUX_OBSOLETE.
+gcc-10 warns around a suspicious access to an empty struct member:
 
-Fix this by adding nfs_fscache_update_auxdata() to set the auxdata
-from all relevant fields in the inode, including the change_attr.
+net/netfilter/nf_conntrack_core.c: In function '__nf_conntrack_alloc':
+net/netfilter/nf_conntrack_core.c:1522:9: warning: array subscript 0 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[0]'} [-Wzero-length-bounds]
+ 1522 |  memset(&ct->__nfct_init_offset[0], 0,
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from net/netfilter/nf_conntrack_core.c:37:
+include/net/netfilter/nf_conntrack.h:90:5: note: while referencing '__nfct_init_offset'
+   90 |  u8 __nfct_init_offset[0];
+      |     ^~~~~~~~~~~~~~~~~~
 
-Fixes: 402cb8dda949 ("fscache: Attach the index key and aux data to the cookie")
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+The code is correct but a bit unusual. Rework it slightly in a way that
+does not trigger the warning, using an empty struct instead of an empty
+array. There are probably more elegant ways to do this, but this is the
+smallest change.
+
+Fixes: c41884ce0562 ("netfilter: conntrack: avoid zeroing timer")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/fscache.c | 34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ include/net/netfilter/nf_conntrack.h | 2 +-
+ net/netfilter/nf_conntrack_core.c    | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 0a4d6b35545a3..7dfa45a380882 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -231,6 +231,19 @@ void nfs_fscache_release_super_cookie(struct super_block *sb)
- 	}
- }
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index f45141bdbb837..ac4d70aeee129 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -85,7 +85,7 @@ struct nf_conn {
+ 	struct hlist_node	nat_bysource;
+ #endif
+ 	/* all members below initialized via memset */
+-	u8 __nfct_init_offset[0];
++	struct { } __nfct_init_offset;
  
-+static void nfs_fscache_update_auxdata(struct nfs_fscache_inode_auxdata *auxdata,
-+				  struct nfs_inode *nfsi)
-+{
-+	memset(auxdata, 0, sizeof(*auxdata));
-+	auxdata->mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata->mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata->ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata->ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
-+
-+	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
-+		auxdata->change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
-+}
-+
- /*
-  * Initialise the per-inode cache cookie pointer for an NFS inode.
-  */
-@@ -244,14 +257,7 @@ void nfs_fscache_init_inode(struct inode *inode)
- 	if (!(nfss->fscache && S_ISREG(inode->i_mode)))
- 		return;
+ 	/* If we were expected by an expectation, this will be it */
+ 	struct nf_conn *master;
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index c6073d17c3244..ad1da6b2fb607 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -1352,9 +1352,9 @@ __nf_conntrack_alloc(struct net *net,
+ 	*(unsigned long *)(&ct->tuplehash[IP_CT_DIR_REPLY].hnnode.pprev) = hash;
+ 	ct->status = 0;
+ 	write_pnet(&ct->ct_net, net);
+-	memset(&ct->__nfct_init_offset[0], 0,
++	memset(&ct->__nfct_init_offset, 0,
+ 	       offsetof(struct nf_conn, proto) -
+-	       offsetof(struct nf_conn, __nfct_init_offset[0]));
++	       offsetof(struct nf_conn, __nfct_init_offset));
  
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
--	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
--	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
--	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
--
--	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
--		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
-+	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 	nf_ct_zone_add(ct, zone);
  
- 	nfsi->fscache = fscache_acquire_cookie(NFS_SB(inode->i_sb)->fscache,
- 					       &nfs_fscache_inode_object_def,
-@@ -271,11 +277,7 @@ void nfs_fscache_clear_inode(struct inode *inode)
- 
- 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
- 
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
--	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
--	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
--	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
-+	nfs_fscache_update_auxdata(&auxdata, nfsi);
- 	fscache_relinquish_cookie(cookie, &auxdata, false);
- 	nfsi->fscache = NULL;
- }
-@@ -315,11 +317,7 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
- 	if (!fscache_cookie_valid(cookie))
- 		return;
- 
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
--	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
--	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
--	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
-+	nfs_fscache_update_auxdata(&auxdata, nfsi);
- 
- 	if (inode_is_open_for_write(inode)) {
- 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
 -- 
 2.20.1
 
