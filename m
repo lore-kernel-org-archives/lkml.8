@@ -2,88 +2,95 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E59B2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:20:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rUAx0b4Z"
+	by mail.kernel.org (Postfix) with ESMTP id 162172067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589804453;
+	bh=IGtFnKA3PTWP8rsR4j+vSqYn3bZBs96vL7tOCMtjgM4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aB9N5soHlGxOZwejHgTnOE4Vhb5xF1AtGAxro8FIdB9sX6xUB++NcwEtpxWhLHyVY
+	 QkhwBRBzzXCWARJrsOrkZZbFIvBK3g9C3keg4H10cF2CrIMBmrTxzyT70fEB15MepW
+	 idBYM57r/uuFbfnpcDDwXkVyPU71ltGQ2XzZMZxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgERMUn (ORCPT
+        id S1727912AbgERMUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:20:43 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40892 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726855AbgERMUm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:20:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589804442; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=MAxhP+teqZIXPoeMS5hBv8vDuvdydsbV2LjXEfVR9mM=; b=rUAx0b4ZBcXCJf8UHlMjrpPc+AXL+ITX9qiPDGmrWgNdLLN7w62eHUdRY7okt+oupRp5kbP+
- TIxyIQGCNh18UxmmCdXbpAnEGwxdzBQ2l1u2Mqp7yHUCuQpiE+aQjv3osmQZDiQvTqE6xunu
- YN8KB0jHnZiJRO60d389uWyogAI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec27d8c.7f2e1d21fb20-smtp-out-n05;
- Mon, 18 May 2020 12:20:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9679EC43637; Mon, 18 May 2020 12:20:28 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 18 May 2020 08:20:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726855AbgERMUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:20:52 -0400
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5AB9CC432C2;
-        Mon, 18 May 2020 12:20:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5AB9CC432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
-        dianders@chromium.org, Maulik Shah <mkshah@codeaurora.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: sc7180: Correct the pdc interrupt ranges
-Date:   Mon, 18 May 2020 17:50:02 +0530
-Message-Id: <1589804402-27130-1-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        by mail.kernel.org (Postfix) with ESMTPSA id 1552F207E8
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 12:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589804451;
+        bh=IGtFnKA3PTWP8rsR4j+vSqYn3bZBs96vL7tOCMtjgM4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tsXaUVKAoEnaCWFJ9o3uoDw402mQmpmGRwvboZAT5yx2IX2wU2ebACTtpoRWdOLMP
+         NGTkLPwWD/hcTD4Ktp60dh1kH/xtl0YHtzxueJpK7E7t7sUO11NFXUgHQS3FVfl5DF
+         hO+5jSgp2HsTgW2cHL7YruzA+oMgM7KnLglxObBc=
+Received: by mail-lj1-f174.google.com with SMTP id k5so3012378lji.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:20:50 -0700 (PDT)
+X-Gm-Message-State: AOAM531yYftw+C4fzj21WokX92eL4FPF/6fVZpTqp1Ya2TkyJv2J3AU3
+        f2y+qgNp0VUp9MrkZb8U7jTrIl342Ktt8qVir2Q=
+X-Google-Smtp-Source: ABdhPJwxGBhX034lD8nMf0ETFIFjxuj9WWsn6zNJrx4fakx4upciH6XL6SMtKyIwQOE8VrFbgOImyd8Iovj6arYpxPU=
+X-Received: by 2002:a2e:7e04:: with SMTP id z4mr10510107ljc.50.1589804449167;
+ Mon, 18 May 2020 05:20:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <202005160245.q5ILqcLs%lkp@intel.com>
+In-Reply-To: <202005160245.q5ILqcLs%lkp@intel.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 18 May 2020 14:20:38 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfL37pCgMRAv=2iOWjDtW0jeM20FTORvH0MaJRjaDYxVg@mail.gmail.com>
+Message-ID: <CAJKOXPfL37pCgMRAv=2iOWjDtW0jeM20FTORvH0MaJRjaDYxVg@mail.gmail.com>
+Subject: Re: drivers/iommu/rockchip-iommu.c:839:43: error: 'struct
+ dev_archdata' has no member named 'iommu'
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <jroedel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Few PDC interrupts do not map to respective parent GIC interrupt.
-Fix this by correcting the pdc interrupt map.
+On Fri, 15 May 2020 at 21:00, kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi Krzysztof,
+>
+> First bad commit (maybe != root cause):
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   051e6b7e34b9bd24f46725f74994a4d3a653966e
+> commit: e93a1695d7fb551376b1c1220a267d032b6ad159 iommu: Enable compile testing for some of drivers
+> date:   2 months ago
+> config: ia64-randconfig-r015-20200515 (attached as .config)
+> compiler: ia64-linux-gcc (GCC) 9.3.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout e93a1695d7fb551376b1c1220a267d032b6ad159
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=ia64
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
 
-Fixes: 22f185ee81d2 ("arm64: dts: qcom: sc7180: Add pdc interrupt controller")
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Hi all,
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index f1280e0..f6b4ee8 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2308,8 +2308,7 @@
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
--			qcom,pdc-ranges = <0 480 15>, <17 497 98>,
--					  <119 634 4>, <124 639 1>;
-+			qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
- 			#interrupt-cells = <2>;
- 			interrupt-parent = <&intc>;
- 			interrupt-controller;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+I fixed this and Exynos IOMMU compile-test error with the patch here:
+https://lore.kernel.org/linux-iommu/20200518120855.27822-1-krzk@kernel.org/T/#t
+
+Best regards,
+Krzysztof
