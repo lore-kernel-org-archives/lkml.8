@@ -2,122 +2,172 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60619C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9592F20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4312620643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589826097;
+	bh=NwoxlKm386/Ta1pu7y0OFbs9BZsszEG+foliAgIk/cs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=trB89NrrOnqU32LyzUpA+2VF+9wRIXXZTeaug46AXDL+Ppo8+MtEE3NP4NVcQSv9i
+	 ZHm3XcWc/fDzduYsU1Y4ASire43v1JW+O+EaL29RNRAkTmcIB3vChpC5All3GOC0u5
+	 OlafIqx0jaLvqY/kgc0wEgh7P9vjYbJULjMZVv00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387855AbgERSVb (ORCPT
+        id S2387781AbgERSVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:21:31 -0400
-Received: from mga18.intel.com ([134.134.136.126]:25025 "EHLO mga18.intel.com"
+        Mon, 18 May 2020 14:21:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbgERSV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:21:29 -0400
-IronPort-SDR: /CHKg+F+kKGPVhSLo5QVa8NT/C4QeeL8zcA+KvNC2sJooXBo+ZFotMUkp+WY6UWpdPTQBR0rl7
- BFP1fzmiTZwA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:21:28 -0700
-IronPort-SDR: aLZL/bfb/qZo1KU95odrebxhUWR287im03hp/XSbmZhst44S5LoX7sXcy3LR78oZi5T9kBe7tL
- QDLzyr6iUcXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="411353713"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga004.jf.intel.com with ESMTP; 18 May 2020 11:21:28 -0700
-Date:   Mon, 18 May 2020 11:21:28 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Mike Rapoport <rppt@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, elver@google.com, tglx@linutronix.de,
-        paulmck@kernel.org, mingo@kernel.org, peterz@infradead.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
- PTE tables
-Message-ID: <20200518182127.GC3028105@iweiny-DESK2.sc.intel.com>
-References: <20200511204150.27858-1-will@kernel.org>
- <20200511204150.27858-5-will@kernel.org>
- <20200517000050.GA87467@roeck-us.net>
- <20200517000750.GA157503@roeck-us.net>
- <20200518083715.GA31383@willie-the-truck>
- <418aa44b-6fb3-c3d8-a920-1a26e5edec62@roeck-us.net>
- <20200518142310.GC1118872@kernel.org>
- <b171fbbd-f5b2-ac17-24e5-7188f6ce80f0@roeck-us.net>
+        id S1729686AbgERRvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E19920674;
+        Mon, 18 May 2020 17:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824299;
+        bh=NwoxlKm386/Ta1pu7y0OFbs9BZsszEG+foliAgIk/cs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Lln/scyE6mScGSF3VwfaTkDGL4bPz04ABbif1H4BcMQvCzV2sQMzdOB7hUdrSwRU0
+         y7n70x6phYqDkpV5h0JZ78YbAPpt3sTGK6L1xsG5+TSejqD+qelB8rTV2zHgvoE5bF
+         6a1iqAV1FuHQsSAEOzNkaGJDeZai2E3r60jqrbHU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 37/80] nfs: fscache: use timespec64 in inode auxdata
+Date:   Mon, 18 May 2020 19:36:55 +0200
+Message-Id: <20200518173457.878160967@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
+References: <20200518173450.097837707@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b171fbbd-f5b2-ac17-24e5-7188f6ce80f0@roeck-us.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 11:09:46AM -0700, Guenter Roeck wrote:
-> On 5/18/20 7:23 AM, Mike Rapoport wrote:
-> > On Mon, May 18, 2020 at 02:48:18AM -0700, Guenter Roeck wrote:
-> >> On 5/18/20 1:37 AM, Will Deacon wrote:
-> >>> On Sat, May 16, 2020 at 05:07:50PM -0700, Guenter Roeck wrote:
-> >>>> On Sat, May 16, 2020 at 05:00:50PM -0700, Guenter Roeck wrote:
-> >>>>> On Mon, May 11, 2020 at 09:41:36PM +0100, Will Deacon wrote:
-> >>>>>> Now that the page table allocator can free page table allocations
-> >>>>>> smaller than PAGE_SIZE, reduce the size of the PMD and PTE allocations
-> >>>>>> to avoid needlessly wasting memory.
-> >>>>>>
-> >>>>>> Cc: "David S. Miller" <davem@davemloft.net>
-> >>>>>> Cc: Peter Zijlstra <peterz@infradead.org>
-> >>>>>> Signed-off-by: Will Deacon <will@kernel.org>
-> >>>>>
-> >>>>> Something in the sparc32 patches in linux-next causes all my sparc32 emulations
-> >>>>> to crash. bisect points to this patch, but reverting it doesn't help, and neither
-> >>>>> does reverting the rest of the series.
-> >>>>>
-> >>>> Actually, turns out I see the same pattern (lots of scheduling while atomic
-> >>>> followed by 'killing interrupt handler' in cryptomgr_test) with several
-> >>>> powerpc boot tests.  I am currently bisecting those crashes. I'll report
-> >>>> the results here as well as soon as I have it.
-> >>>
-> >>> FWIW, I retested my sparc32 patches with PREEMPT=y and I don't see any
-> >>> issues. However, linux-next is a different story, where I don't get very far
-> >>> at all:
-> >>>
-> >>> BUG: Bad page state in process swapper  pfn:005b4
-> > 
-> > This one seems to be due to commit 24aab577764f ("mm: memmap_init:
-> > iterate over memblock regions rather that check each PFN") and reverting
-> > it and partially reverting the next cleanup commits makes those
-> > dissapear. sparc32 boot still fails on today's linux-next and mmotm for me with
-> > 
-> > Run /sbin/init as init process
-> >   with arguments:
-> >     /sbin/init
-> >   with environment:
-> >     HOME=/
-> >     TERM=linux
-> > Starting init: /sbin/init exists but couldn't execute it (error -14)
-> > 
-> > I've tried to bisect mmotm and I've got the first bad commits in
-> > different places in the middle of arch/kmap series [1] so I've added Ira
-> > to CC as well :)
-> > 
-> > I'll continue to look into "bad page" on sparc32
+From: Arnd Bergmann <arnd@arndb.de>
 
-mips is broken too.
+[ Upstream commit 6e31ded6895adfca97211118cc9b72236e8f6d53 ]
 
-Does anyone know what this FIXME was for?
+nfs currently behaves differently on 32-bit and 64-bit kernels regarding
+the on-disk format of nfs_fscache_inode_auxdata.
 
-...
-        if (vaddr < FIXADDR_START) { // FIXME
-...
+That format should really be the same on any kernel, and we should avoid
+the 'timespec' type in order to remove that from the kernel later on.
 
-I'm going to remove it...
+Using plain 'timespec64' would not be good here, since that includes
+implied padding and would possibly leak kernel stack data to the on-disk
+format on 32-bit architectures.
 
-Ira
+struct __kernel_timespec would work as a replacement, but open-coding
+the two struct members in nfs_fscache_inode_auxdata makes it more
+obvious what's going on here, and keeps the current format for 64-bit
+architectures.
+
+Cc: David Howells <dhowells@redhat.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/fscache-index.c |  6 ++++--
+ fs/nfs/fscache.c       | 18 ++++++++++++------
+ fs/nfs/fscache.h       |  8 +++++---
+ 3 files changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/fs/nfs/fscache-index.c b/fs/nfs/fscache-index.c
+index 666415d13d521..b7ca0b85b1fe2 100644
+--- a/fs/nfs/fscache-index.c
++++ b/fs/nfs/fscache-index.c
+@@ -88,8 +88,10 @@ enum fscache_checkaux nfs_fscache_inode_check_aux(void *cookie_netfs_data,
+ 		return FSCACHE_CHECKAUX_OBSOLETE;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+ 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index b931169c2bb24..0a4d6b35545a3 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -245,8 +245,10 @@ void nfs_fscache_init_inode(struct inode *inode)
+ 		return;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+ 		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
+@@ -270,8 +272,10 @@ void nfs_fscache_clear_inode(struct inode *inode)
+ 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 	fscache_relinquish_cookie(cookie, &auxdata, false);
+ 	nfsi->fscache = NULL;
+ }
+@@ -312,8 +316,10 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
+ 		return;
+ 
+ 	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime = timespec64_to_timespec(nfsi->vfs_inode.i_mtime);
+-	auxdata.ctime = timespec64_to_timespec(nfsi->vfs_inode.i_ctime);
++	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+ 
+ 	if (inode_is_open_for_write(inode)) {
+ 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
+diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
+index 6363ea9568581..89d2f956668f2 100644
+--- a/fs/nfs/fscache.h
++++ b/fs/nfs/fscache.h
+@@ -66,9 +66,11 @@ struct nfs_fscache_key {
+  * cache object.
+  */
+ struct nfs_fscache_inode_auxdata {
+-	struct timespec	mtime;
+-	struct timespec	ctime;
+-	u64		change_attr;
++	s64	mtime_sec;
++	s64	mtime_nsec;
++	s64	ctime_sec;
++	s64	ctime_nsec;
++	u64	change_attr;
+ };
+ 
+ /*
+-- 
+2.20.1
+
+
 
