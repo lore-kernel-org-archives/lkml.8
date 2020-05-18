@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B32C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BDCD20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA4F20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823891;
-	bh=7Rk3dkiwRft2E+yMeP72ukGIM/B290+0Kj4EJOs1NUQ=;
+	s=default; t=1589823895;
+	bh=eDNVAQR9bAqbtW3RfWRqf3JH/mbMza7PvaMw3TiDEdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y4gChlAok8xunG75q70QH15FDm78vz7iOaLlD/xc522HwC+Vag0yOkiSeYhcbjVsu
-	 Q3AT6hkgG2fcMuOID6zL9gtNECpZrYl3qspVQ7gQYVIKRpXv89kE/I8b1mfvPtwdzo
-	 3hFlCln/T5CBvnNKICQ+tsPcq5e8C0hB1yZU6bx4=
+	b=rckzNfgHo0N+aOb3Lwb1EjcJbyk82fy/egwrgOKDGBqvBf2A0pNJTdbPEk4orVa/y
+	 AWPQnBHoH2RR1auICD50fBKqfzYPBhAUd16tF0hgLMa61IFT3ysMEP8al8B1QRU1QD
+	 weBZomJi/zn714o5NtvCehsWXztfkRDcNXIS2OH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgERRou (ORCPT
+        id S1729820AbgERRoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:44:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43056 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729773AbgERRoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:44:38 -0400
+        id S1728904AbgERRok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:44:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86E5120829;
-        Mon, 18 May 2020 17:44:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 062F72083E;
+        Mon, 18 May 2020 17:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823878;
-        bh=7Rk3dkiwRft2E+yMeP72ukGIM/B290+0Kj4EJOs1NUQ=;
+        s=default; t=1589823880;
+        bh=eDNVAQR9bAqbtW3RfWRqf3JH/mbMza7PvaMw3TiDEdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ekT/dYTIWaYLsqRH2fDgWoVGGco3gM+xvkxVwqgOhGycseu7qhU52XQQi9hYWyDRd
-         nv1+W+CyuO/wzPIt1lUTZ3sWX3bCmX0xOqg0Xt9mw0+XI6PKKVIK6aGLsozQrtGDZG
-         gRiFCVdkh+McWsrGPL5dyfGI5SYagaMQaC2673pQ=
+        b=oaz2aZk89cJMysBM7GavwX9QrjV/Fl/iJR/p/gSDb2KoWSuGy6q+gkNcabJr/HurG
+         jFbX0KatNxi6NM43YRNPPy6robeZiKy9urR8lJU2Usq8HP8NzdWDs3piH+USR+xfdP
+         dcE83o8RzE8f2tfAJpIXvLigqHIrMUCsL2EwCCKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 73/90] ALSA: hda/realtek - Limit int mic boost for Thinkpad T530
-Date:   Mon, 18 May 2020 19:36:51 +0200
-Message-Id: <20200518173506.169552391@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+194dffdb8b22fc5d207a@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 74/90] ALSA: rawmidi: Initialize allocated buffers
+Date:   Mon, 18 May 2020 19:36:52 +0200
+Message-Id: <20200518173506.329434545@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -60,64 +62,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit b590b38ca305d6d7902ec7c4f7e273e0069f3bcc upstream.
+commit 5a7b44a8df822e0667fc76ed7130252523993bda upstream.
 
-Lenovo Thinkpad T530 seems to have a sensitive internal mic capture
-that needs to limit the mic boost like a few other Thinkpad models.
-Although we may change the quirk for ALC269_FIXUP_LENOVO_DOCK, this
-hits way too many other laptop models, so let's add a new fixup model
-that limits the internal mic boost on top of the existing quirk and
-apply to only T530.
+syzbot reported the uninitialized value exposure in certain situations
+using virmidi loop.  It's likely a very small race at writing and
+reading, and the influence is almost negligible.  But it's safer to
+paper over this just by replacing the existing kvmalloc() with
+kvzalloc().
 
-BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1171293
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200514160533.10337-1-tiwai@suse.de
+Reported-by: syzbot+194dffdb8b22fc5d207a@syzkaller.appspotmail.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ sound/core/rawmidi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -4890,6 +4890,7 @@ enum {
- 	ALC269_FIXUP_HP_LINE1_MIC1_LED,
- 	ALC269_FIXUP_INV_DMIC,
- 	ALC269_FIXUP_LENOVO_DOCK,
-+	ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST,
- 	ALC269_FIXUP_NO_SHUTUP,
- 	ALC286_FIXUP_SONY_MIC_NO_PRESENCE,
- 	ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT,
-@@ -5157,6 +5158,12 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT
- 	},
-+	[ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc269_fixup_limit_int_mic_boost,
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_LENOVO_DOCK,
-+	},
- 	[ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc269_fixup_pincfg_no_hp_to_lineout,
-@@ -5820,7 +5827,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x21ca, "Thinkpad L412", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x21e9, "Thinkpad Edge 15", ALC269_FIXUP_SKU_IGNORE),
--	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK),
-+	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST),
- 	SND_PCI_QUIRK(0x17aa, 0x21fa, "Thinkpad X230", ALC269_FIXUP_LENOVO_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x21f3, "Thinkpad T430", ALC269_FIXUP_LENOVO_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x21fb, "Thinkpad T430s", ALC269_FIXUP_LENOVO_DOCK),
-@@ -5945,6 +5952,7 @@ static const struct hda_model_fixup alc2
- 	{.id = ALC269_FIXUP_HEADSET_MODE, .name = "headset-mode"},
- 	{.id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC, .name = "headset-mode-no-hp-mic"},
- 	{.id = ALC269_FIXUP_LENOVO_DOCK, .name = "lenovo-dock"},
-+	{.id = ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST, .name = "lenovo-dock-limit-boost"},
- 	{.id = ALC269_FIXUP_HP_GPIO_LED, .name = "hp-gpio-led"},
- 	{.id = ALC269_FIXUP_HP_DOCK_GPIO_MIC1_LED, .name = "hp-dock-gpio-mic1-led"},
- 	{.id = ALC269_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "dell-headset-multi"},
+--- a/sound/core/rawmidi.c
++++ b/sound/core/rawmidi.c
+@@ -125,7 +125,7 @@ static int snd_rawmidi_runtime_create(st
+ 		runtime->avail = 0;
+ 	else
+ 		runtime->avail = runtime->buffer_size;
+-	if ((runtime->buffer = kmalloc(runtime->buffer_size, GFP_KERNEL)) == NULL) {
++	if ((runtime->buffer = kzalloc(runtime->buffer_size, GFP_KERNEL)) == NULL) {
+ 		kfree(runtime);
+ 		return -ENOMEM;
+ 	}
+@@ -650,7 +650,7 @@ int snd_rawmidi_output_params(struct snd
+ 		return -EINVAL;
+ 	}
+ 	if (params->buffer_size != runtime->buffer_size) {
+-		newbuf = kmalloc(params->buffer_size, GFP_KERNEL);
++		newbuf = kzalloc(params->buffer_size, GFP_KERNEL);
+ 		if (!newbuf)
+ 			return -ENOMEM;
+ 		spin_lock_irq(&runtime->lock);
 
 
