@@ -6,38 +6,33 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB27C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41869207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B77A20787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgERHxZ (ORCPT
+        id S1727805AbgERHyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 03:53:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52970 "EHLO mx2.suse.de"
+        Mon, 18 May 2020 03:54:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53754 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgERHxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 03:53:25 -0400
+        id S1726872AbgERHyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 03:54:22 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DE496AE67;
-        Mon, 18 May 2020 07:53:25 +0000 (UTC)
-Date:   Mon, 18 May 2020 09:53:21 +0200
-Message-ID: <s5hv9ktk7bi.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 48198AD7C;
+        Mon, 18 May 2020 07:54:24 +0000 (UTC)
+Date:   Mon, 18 May 2020 09:54:21 +0200
+Message-ID: <s5htv0dk79u.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     Brent Lu <brent.lu@intel.com>
-Cc:     <alsa-devel@alsa-project.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulhsia <paulhsia@chromium.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ALSA: pcm: fix incorrect hw_base increase
-In-Reply-To: <1589776238-23877-1-git-send-email-brent.lu@intel.com>
-References: <1589776238-23877-1-git-send-email-brent.lu@intel.com>
+To:     Christian Lachner <gladiac@gmail.com>
+Cc:     patch@alsa-project.org, alsa-devel@alsa-project.org,
+        tiwai@suse.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Xtreme
+In-Reply-To: <20200518053844.42743-2-gladiac@gmail.com>
+References: <20200518053844.42743-1-gladiac@gmail.com>
+        <20200518053844.42743-2-gladiac@gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -48,63 +43,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 06:30:38 +0200,
-Brent Lu wrote:
+On Mon, 18 May 2020 07:38:44 +0200,
+Christian Lachner wrote:
 > 
-> There is a corner case that ALSA keeps increasing the hw_ptr but DMA
-> already stop working/updating the position for a long time.
+> The Gigabyte X570 Aorus Xtreme motherboard with ALC1220 codec
+> requires a similar workaround for Clevo laptops to enforce the
+> DAC/mixer connection path. Set up a quirk entry for that.
 > 
-> In following log we can see the position returned from DMA driver does
-> not move at all but the hw_ptr got increased at some point of time so
-> snd_pcm_avail() will return a large number which seems to be a buffer
-> underrun event from user space program point of view. The program
-> thinks there is space in the buffer and fill more data.
-> 
-> [  418.510086] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
-> [  418.510149] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6910 avail 9554
-> ...
-> [  418.681052] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15102 avail 1362
-> [  418.681130] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
-> [  418.726515] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 16464 avail 16368
-> 
-> This is because the hw_base will be increased by runtime->buffer_size
-> frames unconditionally if the hw_ptr is not updated for over half of
-> buffer time. As the hw_base increases, so does the hw_ptr increased
-> by the same number.
-> 
-> The avail value returned from snd_pcm_avail() could exceed the limit
-> (buffer_size) easily becase the hw_ptr itself got increased by same
-> buffer_size samples when the corner case happens. In following log,
-> the buffer_size is 16368 samples but the avail is 21810 samples so
-> CRAS server complains about it.
-> 
-> [  418.851755] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 27390 avail 5442
-> [  418.926491] sound pcmC0D5p: pos 96 hw_ptr 32832 appl_ptr 27390 avail 21810
-> 
-> cras_server[1907]: pcm_avail returned frames larger than buf_size:
-> sof-glkda7219max: :0,5: 21810 > 16368
-> 
-> By updating runtime->hw_ptr_jiffies each time the HWSYNC is called,
-> the hw_base will keep the same when buffer stall happens at long as
-> the interval between each HWSYNC call is shorter than half of buffer
-> time.
-> 
-> Following is a log captured by a patched kernel. The hw_base/hw_ptr
-> value is fixed in this corner case and user space program should be
-> aware of the buffer stall and handle it.
-> 
-> [  293.525543] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
-> [  293.525606] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6880 avail 9584
-> [  293.525975] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 10976 avail 5488
-> [  293.611178] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15072 avail 1392
-> [  293.696429] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
-> ...
-> [  381.139517] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
-> 
-> Signed-off-by: Brent Lu <brent.lu@intel.com>
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
+> Signed-off-by: Christian Lachner <gladiac@gmail.com>
 
-Thanks, applied now with Reviewed-by tag from Jaroslav.
-I also put Cc to stable, as it can fix the actual issues.
+Applied now.
 
+
+thanks,
 
 Takashi
