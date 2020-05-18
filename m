@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8192C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4550C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBCAE2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA5A20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824184;
-	bh=uTBIJlybcM3W1oW3VUQHvQu5bP/hn68P7BCE1Var7H4=;
+	s=default; t=1589824187;
+	bh=g4Jyh2Gc6YE07mZy7KLvOjWpGKn97k7Ero/fLyqsXVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bgIwA5MKOvbv9qiQnegX9yH6pWwQyD020pm/ZF3aJt7OmlgURVBZqGfJQpfEIfsY8
-	 CbUNtwQopVgASlRiOybxwIVwBwi/1e8+Q5fzJV7Y2shT4yNvBqtxRoX5kpRFPc4xpu
-	 MisFfp+XGd7LzWEEOFz9/FlmK9hUmBJ97aVyfG0s=
+	b=L04DsHcuAbdeSkGmnG7zYkH08ziXHphf6dtR/N3UsDACWiiUc3siDzw5oJLTqU5/m
+	 7JJTy98ymKqcGSQZeoLCUw6XBSdsV+020UjClVvRPJ4QlhUjo41ADvC4f5EzrwMydC
+	 ZBGLVvnpD34DWWPcnkByaP293yeCBfGRhva8H/dA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgERRtn (ORCPT
+        id S1730581AbgERRtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:49:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51340 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:49:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbgERRti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:49:38 -0400
+        id S1730568AbgERRtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:49:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A01620715;
-        Mon, 18 May 2020 17:49:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 397E220835;
+        Mon, 18 May 2020 17:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824177;
-        bh=uTBIJlybcM3W1oW3VUQHvQu5bP/hn68P7BCE1Var7H4=;
+        s=default; t=1589824182;
+        bh=g4Jyh2Gc6YE07mZy7KLvOjWpGKn97k7Ero/fLyqsXVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHy2jgk5DjR5iWUlj3EvnGeZkSy5U5lTpBU1DR/PqE5UMlx5GENggZe0Y35OkZeiA
-         Z2HpNWtW3YF3vqRJSqudRMGMaoDh2i/XCSo3pvK/DvYS22K+A65t2MufycGzRQGs8D
-         w4sniTW0FCYYzRVcjfAsCN7j1voh+7rSWhLgy0IQ=
+        b=QQEc9VP9BFbrHN2hg8qJOSvT6fJ0hko2xNpklF8uTr3T8CCJAYEicM7HfGA7uvUlT
+         tB2hLt3CKMVvS0GjwZwk/IYNsOdVUdrb3mgGLPXDBTxMoyOXUB1Z1b70+OR5A6CVyQ
+         Qy000Yb/sNr8PTXX9tyGL+71ycSjzzrX5zTiia+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 4.14 102/114] exec: Move would_dump into flush_old_exec
-Date:   Mon, 18 May 2020 19:37:14 +0200
-Message-Id: <20200518173519.856865511@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 077/114] gcc-10: disable restrict warning for now
+Date:   Mon, 18 May 2020 19:36:49 +0200
+Message-Id: <20200518173516.629894741@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -58,58 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit f87d1c9559164294040e58f5e3b74a162bf7c6e8 upstream.
+commit adc71920969870dfa54e8f40dac8616284832d02 upstream.
 
-I goofed when I added mm->user_ns support to would_dump.  I missed the
-fact that in the case of binfmt_loader, binfmt_em86, binfmt_misc, and
-binfmt_script bprm->file is reassigned.  Which made the move of
-would_dump from setup_new_exec to __do_execve_file before exec_binprm
-incorrect as it can result in would_dump running on the script instead
-of the interpreter of the script.
+gcc-10 now warns about passing aliasing pointers to functions that take
+restricted pointers.
 
-The net result is that the code stopped making unreadable interpreters
-undumpable.  Which allows them to be ptraced and written to disk
-without special permissions.  Oops.
+That's actually a great warning, and if we ever start using 'restrict'
+in the kernel, it might be quite useful.  But right now we don't, and it
+turns out that the only thing this warns about is an idiom where we have
+declared a few functions to be "printf-like" (which seems to make gcc
+pick up the restricted pointer thing), and then we print to the same
+buffer that we also use as an input.
 
-The move was necessary because the call in set_new_exec was after
-bprm->mm was no longer valid.
+And people do that as an odd concatenation pattern, with code like this:
 
-To correct this mistake move the misplaced would_dump from
-__do_execve_file into flos_old_exec, before exec_mmap is called.
+    #define sysfs_show_gen_prop(buffer, fmt, ...) \
+        snprintf(buffer, PAGE_SIZE, "%s"fmt, buffer, __VA_ARGS__)
 
-I tested and confirmed that without this fix I can attach with gdb to
-a script with an unreadable interpreter, and with this fix I can not.
+where we have 'buffer' as both the destination of the final result, and
+as the initial argument.
 
-Cc: stable@vger.kernel.org
-Fixes: f84df2a6f268 ("exec: Ensure mm->user_ns contains the execed files")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Yes, it's a bit questionable.  And outside of the kernel, people do have
+standard declarations like
+
+    int snprintf( char *restrict buffer, size_t bufsz,
+                  const char *restrict format, ... );
+
+where that output buffer is marked as a restrict pointer that cannot
+alias with any other arguments.
+
+But in the context of the kernel, that 'use snprintf() to concatenate to
+the end result' does work, and the pattern shows up in multiple places.
+And we have not marked our own version of snprintf() as taking restrict
+pointers, so the warning is incorrect for now, and gcc picks it up on
+its own.
+
+If we do start using 'restrict' in the kernel (and it might be a good
+idea if people find places where it matters), we'll need to figure out
+how to avoid this issue for snprintf and friends.  But in the meantime,
+this warning is not useful.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exec.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Makefile |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1264,6 +1264,8 @@ int flush_old_exec(struct linux_binprm *
- 	 */
- 	set_mm_exe_file(bprm->mm, bprm->file);
+--- a/Makefile
++++ b/Makefile
+@@ -805,6 +805,9 @@ KBUILD_CFLAGS += $(call cc-disable-warni
+ KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
  
-+	would_dump(bprm, bprm->file);
++# Another good warning that we'll want to enable eventually
++KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
 +
- 	/*
- 	 * Release all of the old mmap stuff
- 	 */
-@@ -1797,8 +1799,6 @@ static int do_execveat_common(int fd, st
- 	if (retval < 0)
- 		goto out;
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
  
--	would_dump(bprm, bprm->file);
--
- 	retval = exec_binprm(bprm);
- 	if (retval < 0)
- 		goto out;
 
 
