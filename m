@@ -2,120 +2,105 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F282620829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA22E20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826530;
-	bh=M6+1nKPWIWpMgmZAECb6NVpZv7SnhR0M+siamq5wA1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xW3Ayskxo8q5VpKC8bQDVsEH713pyHzOm9tTAszmCfVmNRpygnr3BFGgl8+AMJnBt
-	 /AnBzqk1EXxj8eE+9vCIxbSjsf+I+NyEq4RPjQXmetdfCVFvC0nAKIcRmOLXXzEAOe
-	 F2xFRK8MDU8l0mJvDhEaUuqWGDrwstftCULcpcxs=
+	s=default; t=1589826531;
+	bh=xAPiogzeBOxR1l1GaWLJLWxOsHKwkXJ7VszwhDHFGOE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=P5VaZgpTBo/THlwLf813XPBqi9hSpXew+aRi/jTerdUK2sJmL93Dvx5xZ5faZ6YTJ
+	 nMzG0VLLYO2DFhJNd6V0ivE8vQNafj+Na+lbs2AA6OIfk0j2CPqHb3yaUFf+8CzxgK
+	 nJ0Mr60pvBL4AsIQKOt6tQ4+RPmx0txGYfqNe5CI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388005AbgERS2t (ORCPT
+        id S1730105AbgERS2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:28:49 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39320 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387852AbgERS2q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:28:46 -0400
-Received: by mail-io1-f66.google.com with SMTP id x5so11736276ioh.6;
-        Mon, 18 May 2020 11:28:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/p9YM/GnXrG9SKVwxPAWMOdMPZXYXdovPfbgwwKorf0=;
-        b=uTdl7pZOW8+uirJ3eO/GWJwnWxrfAzJUIbEElcUSMKU+sIVDYzSiBXubBIFSp5au0O
-         +GhBp3u+JwUFs30BhMReStMIs3sxPwNzjJ7z7IanEixBk3Kt0Gpewsc2jJ9Y8kh1UjbZ
-         HJpmGglImj/rYWH2QD97u6HoF61H3/f2yK0BBK6HZMHwhV3s+KI1VBbWIv/u3TX4Yl4a
-         yhLIqbPQ+/CRGqqxLSrru9LqzZWFb4WyWg6SRUK55r+Dv+42G5/AShhnrghncwvfrgnz
-         SpeSAw5zNKkEO1utlGz6z/1TVVeKljd2E6endhC/OO36wGT+SzC+Jaj5DqBTs27ADCCG
-         dKlw==
-X-Gm-Message-State: AOAM530T7Eq/0EebV/XYrG5aEDxTlkPhRKNP5OkqJKyWyOO3IMfZEJcf
-        9Rbu1byRVb+P2cGLsF0R+w==
-X-Google-Smtp-Source: ABdhPJyQMHKgCPUCeovV3BchpiRD9KADEVI8p81q+CRYTGF8ksnKQdsZoo8KTJr7NyfISNcmJcVulQ==
-X-Received: by 2002:a5e:c303:: with SMTP id a3mr15796959iok.15.1589826525234;
-        Mon, 18 May 2020 11:28:45 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j2sm4147519ioo.8.2020.05.18.11.28.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:28:44 -0700 (PDT)
-Received: (nullmailer pid 5690 invoked by uid 1000);
-        Mon, 18 May 2020 18:28:43 -0000
-Date:   Mon, 18 May 2020 12:28:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     srk@48.io
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sean Cross <xobs@kosagi.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: n133hse-ea1: Add Innolux N133HSE panel
-Message-ID: <20200518182843.GA4265@bogus>
-References: <20200509111834.26335-1-srk@48.io>
- <20200509111834.26335-2-srk@48.io>
+        Mon, 18 May 2020 14:28:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729439AbgERRme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:42:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62935207C4;
+        Mon, 18 May 2020 17:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589823753;
+        bh=xAPiogzeBOxR1l1GaWLJLWxOsHKwkXJ7VszwhDHFGOE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qS4EtUcQD1GJVmHzAXpihFYQRCssgHwAuRtZnCtZDhdqjsu7B+wNxWayOk6sjaaNK
+         5tWYZ5BH+Hkm/UCfd5NdPqY9XtEEdAm4G++ihiA/1PDq4OtPNDjuvQddRLVS5ywp2l
+         sRQOnYgZmYkEC6pWicLWOxWsM8Pm0p/1P4w/a0MM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.9 22/90] batman-adv: Fix refcnt leak in batadv_v_ogm_process
+Date:   Mon, 18 May 2020 19:36:00 +0200
+Message-Id: <20200518173455.676037840@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
+References: <20200518173450.930655662@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509111834.26335-2-srk@48.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 01:18:33PM +0200, srk@48.io wrote:
-> From: Sean Cross <xobs@kosagi.com>
-> 
-> The Innolux N133HSE panel is a 13.3" 1920x1080 panel that contains an
-> integrated backlight, and connects via eDP.
-> 
-> It is used in the Kosagi Novena.
-> 
-> Signed-off-by: Sean Cross <xobs@kosagi.com>
-> Signed-off-by: Richard Marko <srk@48.io>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> To: dri-devel@lists.freedesktop.org
-> ---
->  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> index 393ffc6acbba..756bf6a48e8d 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> @@ -139,6 +139,8 @@ properties:
->        - innolux,g121i1-l01
->          # Innolux Corporation 12.1" G121X1-L03 XGA (1024x768) TFT LCD panel
->        - innolux,g121x1-l03
-> +        # Innolux Corporation 13.3" FHD (1920x1080) TFT LCD panel
-> +      - innolux,n133hse-ea1
->          # Innolux Corporation 11.6" WXGA (1366x768) TFT LCD panel
->        - innolux,n116bge
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-Alpha-numeric order please.
+commit 6f91a3f7af4186099dd10fa530dd7e0d9c29747d upstream.
 
->          # InnoLux 15.6" WXGA TFT LCD panel
-> -- 
-> 2.25.1
-> 
+batadv_v_ogm_process() invokes batadv_hardif_neigh_get(), which returns
+a reference of the neighbor object to "hardif_neigh" with increased
+refcount.
+
+When batadv_v_ogm_process() returns, "hardif_neigh" becomes invalid, so
+the refcount should be decreased to keep refcount balanced.
+
+The reference counting issue happens in one exception handling paths of
+batadv_v_ogm_process(). When batadv_v_ogm_orig_get() fails to get the
+orig node and returns NULL, the refcnt increased by
+batadv_hardif_neigh_get() is not decreased, causing a refcnt leak.
+
+Fix this issue by jumping to "out" label when batadv_v_ogm_orig_get()
+fails to get the orig node.
+
+Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ net/batman-adv/bat_v_ogm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -709,7 +709,7 @@ static void batadv_v_ogm_process(const s
+ 
+ 	orig_node = batadv_v_ogm_orig_get(bat_priv, ogm_packet->orig);
+ 	if (!orig_node)
+-		return;
++		goto out;
+ 
+ 	neigh_node = batadv_neigh_node_get_or_create(orig_node, if_incoming,
+ 						     ethhdr->h_source);
+
+
