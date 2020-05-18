@@ -2,96 +2,85 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3990C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D713B207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826566;
-	bh=d4BMgLQoXzWEKnQZXDP1fQuQggJi+WIqwZC85rLTDCQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MhUTVtvq0XUTbLjmE5WW4vQYPyv9weAudwXrCAJiu1vyGtkYkdOIL+PBf9Wpb6QZC
-	 ftOsTH+bB/HTpqYzEF/VifmatbeAyj4E9USsNRoAXe+B7v9PzcL310P88OU69N5tvM
-	 r6yBWz58olNcjRr8pLvrE5fQXrKcTR5oPYD3RcTI=
+	by mail.kernel.org (Postfix) with ESMTP id D9B2F2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgERRlo (ORCPT
+        id S1729313AbgERS3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbgERRlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:41:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8748420657;
-        Mon, 18 May 2020 17:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823695;
-        bh=d4BMgLQoXzWEKnQZXDP1fQuQggJi+WIqwZC85rLTDCQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YMFzhB7UshjTh1m+AllZ3M0AdMtCLywJfRhZnGr78FYAJ1ME9CTDAAvRydKAPyi/l
-         RbGIJCcW2EQ8kzbs4gTSJT34St2/yzgbBF8b/TIV3d4WJoTEP17pgXSHSrQWSs466T
-         s2GbwWFbmomP4PbXiGpLwvvsvFMdBg2zCpDHUuKo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulrich Hecht <uli+renesas@fpond.eu>
-Subject: [PATCH 4.4 84/86] ARM: dts: r8a7740: Add missing extal2 to CPG node
-Date:   Mon, 18 May 2020 19:36:55 +0200
-Message-Id: <20200518173507.594465380@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
-References: <20200518173450.254571947@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 18 May 2020 14:29:32 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:42213 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729345AbgERS32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:29:28 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 18 May 2020 11:29:26 -0700
+Received: from localhost (unknown [10.200.192.41])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 42FFC40320;
+        Mon, 18 May 2020 11:29:27 -0700 (PDT)
+Date:   Mon, 18 May 2020 11:29:26 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH 5/5] objtool: Report missing support for subcommands
+Message-ID: <20200518182926.GM9040@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <cover.1588888003.git.mhelsley@vmware.com>
+ <38a0c7a1ec8d98238379a322866c0432befc259b.1588888003.git.mhelsley@vmware.com>
+ <20200515210448.jqseippuz52wx7ct@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200515210448.jqseippuz52wx7ct@treble>
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, May 15, 2020 at 04:04:48PM -0500, Josh Poimboeuf wrote:
+> On Mon, May 11, 2020 at 10:35:13AM -0700, Matt Helsley wrote:
+> > The check and orc-related subcommands for objtool are x86-specific.
+> > To make this clear to anyone using the tool return a non-zero exit
+> > code and indicate in the help and usage output which commands are
+> > (and are not) available.
+> > 
+> > Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> 
+> I think I'd rather the simplest approach of just having the weak
+> functions print an error and return an error code.  At least for now I
+> don't think we need to go through the trouble of advertising whether
+> certain commands are available.  Technically they are available, they
+> just always fail :-)
 
-commit e47cb97f153193d4b41ca8d48127da14513d54c7 upstream.
+OK, that'll drop this patch from  the series.
 
-The Clock Pulse Generator (CPG) device node lacks the extal2 clock.
-This may lead to a failure registering the "r" clock, or to a wrong
-parent for the "usb24s" clock, depending on MD_CK2 pin configuration and
-boot loader CPG_USBCKCR register configuration.
+> 
+> And, people don't tend to use objtool directly anyway.
+> 
+> BTW, several of the patches didn't apply cleanly to tip/master, so
+> you'll probably need to rebase for v2.  There've been a lot of objtool
+> changes lately.  Peter's been busy...
 
-This went unnoticed, as this does not affect the single upstream board
-configuration, which relies on the first clock input only.
+Will do.
 
-Fixes: d9ffd583bf345e2e ("ARM: shmobile: r8a7740: add SoC clocks to DTS")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Link: https://lore.kernel.org/r/20200508095918.6061-1-geert+renesas@glider.be
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/boot/dts/r8a7740.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -461,7 +461,7 @@
- 		cpg_clocks: cpg_clocks@e6150000 {
- 			compatible = "renesas,r8a7740-cpg-clocks";
- 			reg = <0xe6150000 0x10000>;
--			clocks = <&extal1_clk>, <&extalr_clk>;
-+			clocks = <&extal1_clk>, <&extal2_clk>, <&extalr_clk>;
- 			#clock-cells = <1>;
- 			clock-output-names = "system", "pllc0", "pllc1",
- 					     "pllc2", "r",
-
-
+Cheers,
+    -Matt Helsley
