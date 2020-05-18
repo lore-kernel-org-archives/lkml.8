@@ -2,105 +2,135 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B45DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E305C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7346B2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE63720801
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589797783;
-	bh=arObw6BOIgBBUZeksezIt2wHSMyc4GY++N1SgQCNWYU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AZsGrcPmJ2a9fo8bljDNTphR/o+2qn0OXAfOvua+ZqmlpsJqcR/RD6YiqWPrfXkrW
-	 Q7/XxNn0OaTfjkh8Y2YXUBdKmoujeKrm1cl1XNYtRNDyIfWySILyMND1L1Tpbt07CM
-	 IAw3+N5mODGhE86LZ/Dghr4iE/poRv50ivragmUw=
+	s=default; t=1589797809;
+	bh=Sf1JheQuxgic/yXSR/EPXNFwtvaoa4Ub/q1l21Oq5jo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dWqaxhO37gG9byP/O+h3nSvN3kLbnxpgU+RQ8TxPPwdnZ1li4IzM00Lacn2nXughB
+	 91Ivj1WSvyUSgpHsOWxQu2bTovHrOMlVFa22IGP7WYH1wS3QW/aRvn67UFt4BrOaNt
+	 kl/nZ5Byr3MgoGzufo6ECeb1lR18tn5TvV3CA6b8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgERK3m (ORCPT
+        id S1726585AbgERKaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60764 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 06:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgERK3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:29:42 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        id S1726279AbgERKaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 06:30:07 -0400
+Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4B9020657;
-        Mon, 18 May 2020 10:29:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF8FC207ED;
+        Mon, 18 May 2020 10:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589797781;
-        bh=arObw6BOIgBBUZeksezIt2wHSMyc4GY++N1SgQCNWYU=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=XLXmi8lYEgfVAf1iAAlNqfd9FbKq/O1BYHhqOu6QaRtVcGF9TUXzxSfFUstCRX1PI
-         djnTSpO9reSXFNM5T6CelZdwu7RLwc00rzclzjq/k6OkWYBYZB5iXAuy0IUER1bWS/
-         bjRw3CklOp4wvePz3Op4MStBNXFDM/k6xBoSaVDc=
-Date:   Mon, 18 May 2020 12:29:37 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-cc:     WANG Wenhu <wenhu.wang@vivo.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        wenhu.pku@gmail.com
-Subject: Re: [PATCH] powerpc/sysdev: fix compile errors
-In-Reply-To: <62251ec1-dd42-6522-dcb2-613838cd5504@c-s.fr>
-Message-ID: <nycvar.YFH.7.76.2005181228480.25812@cbobk.fhfr.pm>
-References: <20200302053801.26027-1-wenhu.wang@vivo.com> <62251ec1-dd42-6522-dcb2-613838cd5504@c-s.fr>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        s=default; t=1589797806;
+        bh=Sf1JheQuxgic/yXSR/EPXNFwtvaoa4Ub/q1l21Oq5jo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2RSZnkvH3M3vTEJsTumTgFRb/xWah7mnoyzpfX1RsCwszzwCQnrWL/+Z22YZaL5Vx
+         gUMP3eLiOIog+yoyhMDpx31Mce7Xtifss5kcjXvd08M7qZqnHEZrbwMRkbM1TN0ETk
+         zvRJdSZmv869eUhJxKjn8WRLf8tKwniFbUQZp1d0=
+Received: by pali.im (Postfix)
+        id 64D1089D; Mon, 18 May 2020 12:30:04 +0200 (CEST)
+Date:   Mon, 18 May 2020 12:30:04 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
+ Compex wifi cards
+Message-ID: <20200518103004.6tydnad3apkfn77y@pali>
+References: <20200430080625.26070-1-pali@kernel.org>
+ <20200513135643.478ffbda@windsurf.home>
+ <87pnb2h7w1.fsf@FE-laptop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87pnb2h7w1.fsf@FE-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020, Christophe Leroy wrote:
-
-> > Include linux/io.h into fsl_85xx_cache_sram.c to fix the
-> > implicit-declaration compile errors when building Cache-Sram.
-> > 
-> > arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function
-> > ‘instantiate_cache_sram’:
-> > arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration
-> > of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’?
-> > [-Werror=implicit-function-declaration]
-> >    cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-> >                            ^~~~~~~~~~~~~~~~
-> >                            bitmap_complement
-> > arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes
-> > pointer from integer without a cast [-Werror=int-conversion]
-> >    cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-> >                          ^
-> > arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration
-> > of function ‘iounmap’; did you mean ‘roundup’?
-> > [-Werror=implicit-function-declaration]
-> >    iounmap(cache_sram->base_virt);
-> >    ^~~~~~~
-> >    roundup
-> > cc1: all warnings being treated as errors
-> > 
-> > Fixed: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
-> > Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
+On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote:
+> Hello,
 > 
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> > Hello,
+> >
+> > On Thu, 30 Apr 2020 10:06:13 +0200
+> > Pali Rohár <pali@kernel.org> wrote:
+> >
+> >> Marek Behún (5):
+> >>   PCI: aardvark: Improve link training
+> >>   PCI: aardvark: Add PHY support
+> >>   dt-bindings: PCI: aardvark: Describe new properties
+> >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
+> >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
+> >> 
+> >> Pali Rohár (7):
+> >>   PCI: aardvark: Train link immediately after enabling training
+> >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
+> >>     read-only register
+> >>   PCI: of: Zero max-link-speed value is invalid
+> >>   PCI: aardvark: Issue PERST via GPIO
+> >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
+> >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
+> >>     macros
+> >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
+> >
+> > Thanks a lot for this work. For a number of reasons, I'm less involved
+> > in Marvell platform support in Linux, but I reviewed your series and
+> > followed the discussions around it, and I'm happy to give my:
+> >
+> > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> 
+> With this acked-by for the series, the reviewed-by from Rob on the
+> binding and the tested-by, I am pretty confident so I applied the
+> patches 10, 11 and 12 on mvebu/dt64.
+> 
+> Thanks,
+> 
+> Gregory
 
-As this doesn't seem to have been picked up for linux-next yet, I am 
-picking it up now.
+Thank you!
 
-Thanks,
+Lorenzo, would you now take remaining patches?
 
--- 
-Jiri Kosina
-SUSE Labs
-
+> 
+> >
+> > for the whole series. The changes all seem sensible, and have been
+> > tested by several folks.
+> >
+> > Thanks!
+> >
+> > Thomas
+> > -- 
+> > Thomas Petazzoni, CTO, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> 
+> -- 
+> Gregory Clement, Bootlin
+> Embedded Linux and Kernel engineering
+> http://bootlin.com
