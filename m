@@ -2,110 +2,99 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26AD7207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23797207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824444;
-	bh=FGetf+iVgy0vcrFX5izmqoZB7XMZZxHn5IEkcjsJXMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DbEkwYlVzWfIE166vDpNH3sdy+J0z1zya7BLmHVVCS/lLttBbHwXa1Sq2Uo82BdnG
-	 Ij7z7wVJyAWAeDXxvQTFixbwXzJocfqZE8t/llzONFdn21qfASWp0pcnWW4twccWsC
-	 He1jMx5akKYAVSfUg6/TZq7GyV4v61SXCf5uecns=
+	s=default; t=1589824451;
+	bh=4obmFbAA/DVvTb4BHmCCLVDrga54rTsJEGqlCpJWLQU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QBfunHAs9PdrosBOe7+77knWXnMzm00DW1mc+3Sbgi4nZUPXVQiK1Ami9Bi1wSEOX
+	 o0b94KTvPC3r+mq1KBBuPkF0O9x6yxROdyAxBtRaho7AXZXzWyJwY50uJrq9heDHrS
+	 gefVpQ0WEacyAYJ9jSJMYf/BET7Uy0IIVmlp2gX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731244AbgERRyD (ORCPT
+        id S1731254AbgERRyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:54:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58368 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:54:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730747AbgERRyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:01 -0400
-Received: from localhost (unknown [104.132.1.66])
+        id S1728981AbgERRyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB45220826;
-        Mon, 18 May 2020 17:54:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A1A207F5;
+        Mon, 18 May 2020 17:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824441;
-        bh=FGetf+iVgy0vcrFX5izmqoZB7XMZZxHn5IEkcjsJXMY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nyph8D8EtgCp2cujLjccSTM+tAFK5nAoCfNCnEw1Hu786e9LMfic2dssZoVavfoEx
-         LhGiKRQxbUfg1E+TjlgUbRoRTdasRXmGPceJ9d2dxt5nn4hsvEWAGsuSt3JLOTVpuO
-         aVjJOs7d0f3qaMejLDDZFFUKGak54OZHObqMUKBw=
-Date:   Mon, 18 May 2020 10:54:00 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Subject: Re: [f2fs-dev] [PATCH] f2fs: flush dirty meta pages when flushing
- them
-Message-ID: <20200518175400.GA218254@google.com>
-References: <20200515021554.226835-1-jaegeuk@kernel.org>
- <9ba6e5ef-068d-a925-1eb9-107b0523666c@huawei.com>
- <20200515144509.GA46028@google.com>
- <cd964a56-b2a7-48de-97a6-5d89d9a590a3@huawei.com>
+        s=default; t=1589824445;
+        bh=4obmFbAA/DVvTb4BHmCCLVDrga54rTsJEGqlCpJWLQU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hkC/N9BpkSKpXnqehgmT9JJDWzw4sYiDJfWjibwMgeG1iiVIckHcxhym18OzcqSRX
+         8TDSi6nC62KUMoLkVimx048vtWwnOzyJFD8g6ikmGzzECkkuXonqB1IGWPZIdT+/0T
+         g20LSjRDJdkXXFpZ95ChUPIBLyDm/4gCxCB1Y9iE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
+        Wu Bo <wubo40@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.4 015/147] scsi: sg: add sg_remove_request in sg_write
+Date:   Mon, 18 May 2020 19:35:38 +0200
+Message-Id: <20200518173515.636749011@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
+References: <20200518173513.009514388@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd964a56-b2a7-48de-97a6-5d89d9a590a3@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/18, Chao Yu wrote:
-> On 2020/5/15 22:45, Jaegeuk Kim wrote:
-> > On 05/15, Chao Yu wrote:
-> >> On 2020/5/15 10:15, Jaegeuk Kim wrote:
-> >>> Let's guarantee flusing dirty meta pages to avoid infinite loop.
-> >>
-> >> What's the root cause? Race case or meta page flush failure?
-> > 
-> > Investigating, but at least, this can avoid the inifinite loop there.
-> 
-> Hmm... this fix may cover the root cause..
+From: Wu Bo <wubo40@huawei.com>
 
-We're getting reached out to one related to this issue where single SSA
-page is dirtied at the moment. Anyway, I think it'd be fine to get this
-as we can detect any fs consistency issue by fsck. So far, I haven't seen
-any problem in all my local stress tests.
+commit 83c6f2390040f188cc25b270b4befeb5628c1aee upstream.
 
-> 
-> Thanks,
-> 
-> > 
-> > V2:
-> > 
-> >>From c60ce8e7178004fd6cba96e592247e43b5fd98d8 Mon Sep 17 00:00:00 2001
-> > From: Jaegeuk Kim <jaegeuk@kernel.org>
-> > Date: Wed, 13 May 2020 21:12:53 -0700
-> > Subject: [PATCH] f2fs: flush dirty meta pages when flushing them
-> > 
-> > Let's guarantee flusing dirty meta pages to avoid infinite loop.
-> > 
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> > ---
-> >  fs/f2fs/checkpoint.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> > index 620a386d82c1a..3dc3ac6fe1432 100644
-> > --- a/fs/f2fs/checkpoint.c
-> > +++ b/fs/f2fs/checkpoint.c
-> > @@ -1266,6 +1266,9 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
-> >  		if (unlikely(f2fs_cp_error(sbi)))
-> >  			break;
-> >  
-> > +		if (type == F2FS_DIRTY_META)
-> > +			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
-> > +							FS_CP_META_IO);
-> >  		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
-> >  	}
-> >  	finish_wait(&sbi->cp_wait, &wait);
-> > 
+If the __copy_from_user function failed we need to call sg_remove_request
+in sg_write.
+
+Link: https://lore.kernel.org/r/610618d9-e983-fd56-ed0f-639428343af7@huawei.com
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+[groeck: Backport to v5.4.y and older kernels]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/sg.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -689,8 +689,10 @@ sg_write(struct file *filp, const char _
+ 	hp->flags = input_size;	/* structure abuse ... */
+ 	hp->pack_id = old_hdr.pack_id;
+ 	hp->usr_ptr = NULL;
+-	if (__copy_from_user(cmnd, buf, cmd_size))
++	if (__copy_from_user(cmnd, buf, cmd_size)) {
++		sg_remove_request(sfp, srp);
+ 		return -EFAULT;
++	}
+ 	/*
+ 	 * SG_DXFER_TO_FROM_DEV is functionally equivalent to SG_DXFER_FROM_DEV,
+ 	 * but is is possible that the app intended SG_DXFER_TO_DEV, because there
+
+
