@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAABC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C903C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9705020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C2720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823962;
-	bh=OieQ1O9n5MvWlMhty8zIfO6HjQ6PPi8mI7Vrkk0pb68=;
+	s=default; t=1589823969;
+	bh=JS5+hmvc0xkMPZIL1DRSWYsqF1q6mRp78PlRsc1ctZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aTFLdNjczm1zDtN+4DuzBOC094wUQwGAdM8JRaTihpqXBA7jbHON+PxzLAZ6oN06U
-	 6Ct/fN8AdUJ0cKeecohme0LxJS2sY7mTmSTxgXFRwViPnR/hN1PrgJMGf6YqA8De3r
-	 rD6wipYwLwyfrVog63kRPsBYU4sfAA09B0BZmjAo=
+	b=1eZwgwJ2sdAoElyYWixFllvpU281t3LiBxn5HDIX12ecHoqFRw9JKxf/DEiweIAtB
+	 fyLuWPhlEOrEcXFDncnrKbY22MDPlbDM1Y6mjpn+2BgLZhYueGS83jrtLCXhf3fEex
+	 aLxjgyQaq33QqpCzyzQFFuU50EZ2vIZ9hPP9WyvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgERRqB (ORCPT
+        id S1730041AbgERRqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:46:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45288 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729998AbgERRp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:45:58 -0400
+        id S1730022AbgERRqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E18EC20674;
-        Mon, 18 May 2020 17:45:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FB5E20657;
+        Mon, 18 May 2020 17:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823957;
-        bh=OieQ1O9n5MvWlMhty8zIfO6HjQ6PPi8mI7Vrkk0pb68=;
+        s=default; t=1589823964;
+        bh=JS5+hmvc0xkMPZIL1DRSWYsqF1q6mRp78PlRsc1ctZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ffQz3j4uj8ILsVIhEtarxS3GCz92Q0/qwzdUj+6PKxoGR2azv2MFx4foVmznIJ7U+
-         afu2pAI+GTuwWaaPNh4fGb72pcJ9YpsEL0wBbU4p16Q+Y4MoA2cGcuZsXL9rABZm5I
-         JLNzxxIQKAnu6RAAD3RPb0MD9b7IjVmjqXILo24Y=
+        b=glRrbu3UCHm0XqMTZIFx4k3L7/bFv9aYNLFqfNAWinVSqY+XwsHndiA2dce5IY6F+
+         Shz6zPIy3zDP220KUqbnHka1bZszTMYHzZmbFBRxNG45gGLUGj4FcbdHaowcqd9YLa
+         qTjpM3jpxkJv+x9xvpBRm9fg4MQ1Vo8yYB/nftZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 014/114] net: stricter validation of untrusted gso packets
-Date:   Mon, 18 May 2020 19:35:46 +0200
-Message-Id: <20200518173506.216684812@linuxfoundation.org>
+Subject: [PATCH 4.14 017/114] geneve: only configure or fill UDP_ZERO_CSUM6_RX/TX info when CONFIG_IPV6
+Date:   Mon, 18 May 2020 19:35:49 +0200
+Message-Id: <20200518173506.795255584@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -60,103 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 9274124f023b5c56dc4326637d4f787968b03607 ]
+commit f9094b7603c011d27db7ba109e69881c72fa611d upstream.
 
-Syzkaller again found a path to a kernel crash through bad gso input:
-a packet with transport header extending beyond skb_headlen(skb).
+Stefano pointed that configure or show UDP_ZERO_CSUM6_RX/TX info doesn't
+make sense if we haven't enabled CONFIG_IPV6. Fix it by adding
+if IS_ENABLED(CONFIG_IPV6) check.
 
-Tighten validation at kernel entry:
-
-- Verify that the transport header lies within the linear section.
-
-    To avoid pulling linux/tcp.h, verify just sizeof tcphdr.
-    tcp_gso_segment will call pskb_may_pull (th->doff * 4) before use.
-
-- Match the gso_type against the ip_proto found by the flow dissector.
-
-Fixes: bfd5f4a3d605 ("packet: Add GSO/csum offload support.")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
+Fixes: abe492b4f50c ("geneve: UDP checksum configuration via netlink")
+Fixes: fd7eafd02121 ("geneve: fix fill_info when link down")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/virtio_net.h |   24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
 
---- a/include/linux/virtio_net.h
-+++ b/include/linux/virtio_net.h
-@@ -3,6 +3,8 @@
- #define _LINUX_VIRTIO_NET_H
- 
- #include <linux/if_vlan.h>
-+#include <uapi/linux/tcp.h>
-+#include <uapi/linux/udp.h>
- #include <uapi/linux/virtio_net.h>
- 
- static inline int virtio_net_hdr_set_proto(struct sk_buff *skb,
-@@ -28,17 +30,25 @@ static inline int virtio_net_hdr_to_skb(
- 					bool little_endian)
- {
- 	unsigned int gso_type = 0;
-+	unsigned int thlen = 0;
-+	unsigned int ip_proto;
- 
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
- 		switch (hdr->gso_type & ~VIRTIO_NET_HDR_GSO_ECN) {
- 		case VIRTIO_NET_HDR_GSO_TCPV4:
- 			gso_type = SKB_GSO_TCPV4;
-+			ip_proto = IPPROTO_TCP;
-+			thlen = sizeof(struct tcphdr);
- 			break;
- 		case VIRTIO_NET_HDR_GSO_TCPV6:
- 			gso_type = SKB_GSO_TCPV6;
-+			ip_proto = IPPROTO_TCP;
-+			thlen = sizeof(struct tcphdr);
- 			break;
- 		case VIRTIO_NET_HDR_GSO_UDP:
- 			gso_type = SKB_GSO_UDP;
-+			ip_proto = IPPROTO_UDP;
-+			thlen = sizeof(struct udphdr);
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -57,16 +67,20 @@ static inline int virtio_net_hdr_to_skb(
- 
- 		if (!skb_partial_csum_set(skb, start, off))
- 			return -EINVAL;
-+
-+		if (skb_transport_offset(skb) + thlen > skb_headlen(skb))
-+			return -EINVAL;
- 	} else {
- 		/* gso packets without NEEDS_CSUM do not set transport_offset.
- 		 * probe and drop if does not match one of the above types.
- 		 */
- 		if (gso_type && skb->network_header) {
-+			struct flow_keys keys;
-+
- 			if (!skb->protocol)
- 				virtio_net_hdr_set_proto(skb, hdr);
- retry:
--			skb_probe_transport_header(skb, -1);
--			if (!skb_transport_header_was_set(skb)) {
-+			if (!skb_flow_dissect_flow_keys(skb, &keys, 0)) {
- 				/* UFO does not specify ipv4 or 6: try both */
- 				if (gso_type & SKB_GSO_UDP &&
- 				    skb->protocol == htons(ETH_P_IP)) {
-@@ -75,6 +89,12 @@ retry:
- 				}
- 				return -EINVAL;
- 			}
-+
-+			if (keys.control.thoff + thlen > skb_headlen(skb) ||
-+			    keys.basic.ip_proto != ip_proto)
-+				return -EINVAL;
-+
-+			skb_set_transport_header(skb, keys.control.thoff);
- 		}
+---
+ drivers/net/geneve.c |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -1369,21 +1369,33 @@ static int geneve_nl2info(struct nlattr
  	}
+ 
+ 	if (data[IFLA_GENEVE_UDP_ZERO_CSUM6_TX]) {
++#if IS_ENABLED(CONFIG_IPV6)
+ 		if (changelink) {
+ 			attrtype = IFLA_GENEVE_UDP_ZERO_CSUM6_TX;
+ 			goto change_notsup;
+ 		}
+ 		if (nla_get_u8(data[IFLA_GENEVE_UDP_ZERO_CSUM6_TX]))
+ 			info->key.tun_flags &= ~TUNNEL_CSUM;
++#else
++		NL_SET_ERR_MSG_ATTR(extack, data[IFLA_GENEVE_UDP_ZERO_CSUM6_TX],
++				    "IPv6 support not enabled in the kernel");
++		return -EPFNOSUPPORT;
++#endif
+ 	}
+ 
+ 	if (data[IFLA_GENEVE_UDP_ZERO_CSUM6_RX]) {
++#if IS_ENABLED(CONFIG_IPV6)
+ 		if (changelink) {
+ 			attrtype = IFLA_GENEVE_UDP_ZERO_CSUM6_RX;
+ 			goto change_notsup;
+ 		}
+ 		if (nla_get_u8(data[IFLA_GENEVE_UDP_ZERO_CSUM6_RX]))
+ 			*use_udp6_rx_checksums = false;
++#else
++		NL_SET_ERR_MSG_ATTR(extack, data[IFLA_GENEVE_UDP_ZERO_CSUM6_RX],
++				    "IPv6 support not enabled in the kernel");
++		return -EPFNOSUPPORT;
++#endif
+ 	}
+ 
+ 	return 0;
+@@ -1559,11 +1571,13 @@ static int geneve_fill_info(struct sk_bu
+ 		goto nla_put_failure;
+ 
+ 	if (metadata && nla_put_flag(skb, IFLA_GENEVE_COLLECT_METADATA))
+-			goto nla_put_failure;
++		goto nla_put_failure;
+ 
++#if IS_ENABLED(CONFIG_IPV6)
+ 	if (nla_put_u8(skb, IFLA_GENEVE_UDP_ZERO_CSUM6_RX,
+ 		       !geneve->use_udp6_rx_checksums))
+ 		goto nla_put_failure;
++#endif
+ 
+ 	return 0;
  
 
 
