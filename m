@@ -2,166 +2,117 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65011C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F4EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB2920787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC2520787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgERKgG (ORCPT
+        id S1726560AbgERKhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:36:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25472 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726283AbgERKgE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:36:04 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IAXKG7178322;
-        Mon, 18 May 2020 06:35:10 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 312cagnj07-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 06:35:10 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04IAXPUH178863;
-        Mon, 18 May 2020 06:35:09 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 312cagnhy3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 06:35:09 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IAVTwY009196;
-        Mon, 18 May 2020 10:35:07 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 3127t5hk4d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 10:35:06 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IAXqJe59376112
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 10:33:52 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C10611C054;
-        Mon, 18 May 2020 10:35:04 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93D0711C04C;
-        Mon, 18 May 2020 10:35:03 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.23.117])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 18 May 2020 10:35:03 +0000 (GMT)
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        stable@vger.kernel.org, Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Willem de Bruijn <willemb@google.com>
-Subject: [PATCH RESEND] lib: fix bitmap_parse() on 64-bit big endian archs
-Date:   Mon, 18 May 2020 12:34:50 +0200
-Message-Id: <1589798090-11136-1-git-send-email-agordeev@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_04:2020-05-15,2020-05-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=1
- bulkscore=0 mlxlogscore=999 adultscore=0 clxscore=1011 impostorscore=0
- lowpriorityscore=0 cotscore=-2147483648 phishscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005180095
+        Mon, 18 May 2020 06:37:01 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:38755 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgERKhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 06:37:00 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49Qb6W1q99z9txc5;
+        Mon, 18 May 2020 12:36:51 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id aoBlJkWUGX65; Mon, 18 May 2020 12:36:51 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49Qb6W12mbz9txc4;
+        Mon, 18 May 2020 12:36:51 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A6DC38B76A;
+        Mon, 18 May 2020 12:36:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ure_5nwPKksx; Mon, 18 May 2020 12:36:57 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 91A498B796;
+        Mon, 18 May 2020 12:36:56 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/sysdev: fix compile errors
+To:     Jiri Kosina <jikos@kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     WANG Wenhu <wenhu.wang@vivo.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        wenhu.pku@gmail.com
+References: <20200302053801.26027-1-wenhu.wang@vivo.com>
+ <62251ec1-dd42-6522-dcb2-613838cd5504@c-s.fr>
+ <nycvar.YFH.7.76.2005181228480.25812@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.2005181232140.25812@cbobk.fhfr.pm>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <494faa28-e994-14e9-71da-07f5214b4579@csgroup.eu>
+Date:   Mon, 18 May 2020 12:36:36 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <nycvar.YFH.7.76.2005181232140.25812@cbobk.fhfr.pm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 2d6261583be0 ("lib: rework bitmap_parse()") does
-not take into account order of halfwords on 64-bit big
-endian architectures.
 
-Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
-Cc: stable@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Amritha Nambiar <amritha.nambiar@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Miklos Szeredi <mszeredi@redhat.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: "Tobin C . Harding" <tobin@kernel.org>
-Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- lib/bitmap.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 89260aa..a725e46 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -717,6 +717,19 @@ static const char *bitmap_get_x32_reverse(const char *start,
- 	return end;
- }
- 
-+#if defined(__BIG_ENDIAN) && defined(CONFIG_64BIT)
-+static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
-+{
-+	maskp += (chunk_idx / 2);
-+	((u32 *)maskp)[(chunk_idx & 1) ^ 1] = chunk;
-+}
-+#else
-+static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
-+{
-+	((u32 *)maskp)[chunk_idx] = chunk;
-+}
-+#endif
-+
- /**
-  * bitmap_parse - convert an ASCII hex string into a bitmap.
-  * @start: pointer to buffer containing string.
-@@ -738,7 +751,8 @@ int bitmap_parse(const char *start, unsigned int buflen,
- {
- 	const char *end = strnchrnul(start, buflen, '\n') - 1;
- 	int chunks = BITS_TO_U32(nmaskbits);
--	u32 *bitmap = (u32 *)maskp;
-+	int chunk_idx = 0;
-+	u32 chunk;
- 	int unset_bit;
- 
- 	while (1) {
-@@ -749,9 +763,11 @@ int bitmap_parse(const char *start, unsigned int buflen,
- 		if (!chunks--)
- 			return -EOVERFLOW;
- 
--		end = bitmap_get_x32_reverse(start, end, bitmap++);
-+		end = bitmap_get_x32_reverse(start, end, &chunk);
- 		if (IS_ERR(end))
- 			return PTR_ERR(end);
-+
-+		save_x32_chunk(maskp, chunk, chunk_idx++);
- 	}
- 
- 	unset_bit = (BITS_TO_U32(nmaskbits) - chunks) * 32;
--- 
-1.8.3.1
+Le 18/05/2020 à 12:32, Jiri Kosina a écrit :
+> On Mon, 18 May 2020, Jiri Kosina wrote:
+> 
+>>>> Include linux/io.h into fsl_85xx_cache_sram.c to fix the
+>>>> implicit-declaration compile errors when building Cache-Sram.
+>>>>
+>>>> arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function
+>>>> ‘instantiate_cache_sram’:
+>>>> arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration
+>>>> of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’?
+>>>> [-Werror=implicit-function-declaration]
+>>>>     cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+>>>>                             ^~~~~~~~~~~~~~~~
+>>>>                             bitmap_complement
+>>>> arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes
+>>>> pointer from integer without a cast [-Werror=int-conversion]
+>>>>     cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+>>>>                           ^
+>>>> arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration
+>>>> of function ‘iounmap’; did you mean ‘roundup’?
+>>>> [-Werror=implicit-function-declaration]
+>>>>     iounmap(cache_sram->base_virt);
+>>>>     ^~~~~~~
+>>>>     roundup
+>>>> cc1: all warnings being treated as errors
+>>>>
+>>>> Fixed: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+>>>> Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
+>>>
+>>> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>
+>> As this doesn't seem to have been picked up for linux-next yet, I am
+>> picking it up now.
+> 
+> Only now I've noticed that this is actually a dead code o_O as this file
+> can't be built by any combination of config options. So I am dropping the
+> patch again, but why do we keep it in the tree in the first place?
+> 
 
+There is a series aiming at making use of it, see 
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=172421
+
+Christophe
