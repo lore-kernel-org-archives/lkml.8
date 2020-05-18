@@ -2,99 +2,133 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBEAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A1DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 709B420758
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4D32070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:07:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="ATYdjM7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgERBC3 (ORCPT
+        id S1726735AbgERBHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 21:02:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45736 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726665AbgERBC3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 21:02:29 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-242-4JzaRyvBOUKOHEemSFbP9g-1; Sun, 17 May 2020 21:02:25 -0400
-X-MC-Unique: 4JzaRyvBOUKOHEemSFbP9g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 17 May 2020 21:07:03 -0400
+Received: from ozlabs.org ([203.11.71.1]:43601 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726665AbgERBHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 May 2020 21:07:03 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29B68474;
-        Mon, 18 May 2020 01:02:24 +0000 (UTC)
-Received: from ldigby.remote.csb (vpn2-54-25.bne.redhat.com [10.64.54.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 907A1398;
-        Mon, 18 May 2020 01:02:22 +0000 (UTC)
-From:   Lance Digby <lance.digby@gmail.com>
-To:     mchristi@redhat.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 target] target: Add initiatorname to NON_EXISTENT_LUN error
-Date:   Mon, 18 May 2020 11:02:16 +1000
-Message-Id: <9b13bb2e1f52f1792cd81850ee95bf3781bb5363.1589759816.git.lance.digby@gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: gmail.com
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QLSz6PcGz9sPK;
+        Mon, 18 May 2020 11:06:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1589764021; bh=Nc6dohBCnRNOrZ1lpqEXvYZ9kCm+r1xCGET1JAWwSOA=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ATYdjM7aKjYw0Scr9OWyzF/aZZ6lDvKze/viQikcdCpwIe8hKNY2ut2+XXAn3T07n
+         HWaQxXIqdUz3APbhNerv+td8xbQ18TKEXB5rQCU6ZYR+zlkg4Zw1FLV6KwfBDfCfMY
+         jP9WaK3oCeZG7sDHdTHQDFcW0U/9etV5qwwkdncMBNvh4ulAAyOvTdQwszrqjA+AzB
+         Wy7JC4hR047sIOXwSP6txjM/wUDz6xM4kt1p8B1KfKXW26Bavj4Axgv5GZ4Kn++zHv
+         wGXDqhbJOdJ7vedfeIqBzKCA63Dh2CXWa5ptCdxqap3iyRSjYmSaGqEtQFAfE53FLO
+         WOfa2mOZUhn2Q==
+Message-ID: <43d5717e7157fd300fd5bf893e517bbdf65c36f4.camel@ozlabs.org>
+Subject: Re: [PATCH] net: bmac: Fix stack corruption panic in bmac_probe()
+From:   Jeremy Kerr <jk@ozlabs.org>
+To:     Finn Thain <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Paul Mackerras <paulus@samba.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Date:   Mon, 18 May 2020 09:06:59 +0800
+In-Reply-To: <769e9041942802d0e9ff272c12ee359a04b84a90.1589761211.git.fthain@telegraphics.com.au>
+References: <769e9041942802d0e9ff272c12ee359a04b84a90.1589761211.git.fthain@telegraphics.com.au>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The NON_EXISTENT_LUN error can be written without an error condition
-on the initiator responsible. Adding the initiatorname to this message
-will reduce the effort required to fix this when many initiators are
-supported by a target.
+Hi Finn,
 
-This version ensures the initiator name is also printed on the same
-message in transport_lookup_tmr_lun for consistency.
+> This fixes an old bug recently revealed by CONFIG_STACKPROTECTOR.
 
-Signed-off-by: Lance Digby <lance.digby@gmail.com>
+Good catch. I'm not sure about the fix though. That variable ('addr')
+should be a ethernet hardware address; I'm surprised we're accessing
+past the 6th byte. The culprit seems to be this, where 'ea' is the
+address buffer:
+
+   static void
+   bmac_get_station_address(struct net_device *dev, unsigned char *ea)
+   {
+        int i;
+        unsigned short data;
+
+        for (i = 0; i < 6; i++)
+                {
+                        reset_and_select_srom(dev);
+                        data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
+                        ea[2*i]   = bitrev8(data & 0x0ff);
+                        ea[2*i+1] = bitrev8((data >> 8) & 0x0ff);
+                }
+   }
+
+- where it looks like the condition on that for-loop is wrong; we're
+reading two bytes at a time there.
+
+Can you try the attached patch?
+
+Ben/Paul - any thoughts?
+
+Cheers,
+
+
+Jeremy
+
+-----
+
+From 141b20bcbdb3ad7c166b83b4ea61f3521d0a0679 Mon Sep 17 00:00:00 2001
+From: Jeremy Kerr <jk@ozlabs.org>
+Date: Mon, 18 May 2020 08:54:25 +0800
+Subject: [PATCH] net: bmac: Fix read of MAC address from ROM
+
+In bmac_get_station_address, We're reading two bytes at a time from ROM,
+but we do that six times, resulting in 12 bytes of read & writes. This
+means we will write off the end of the six-byte destination buffer.
+
+This change fixes the for-loop to only read/write six bytes.
+
+Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Reported-by: Stan Johnson <userm57@yahoo.com>
+Reported-by: Finn Thain <fthain@telegraphics.com.au>
 ---
- drivers/target/target_core_device.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/apple/bmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/target/target_core_device.c b/drivers/target/target_co=
-re_device.c
-index 4cee113..15064a5 100644
---- a/drivers/target/target_core_device.c
-+++ b/drivers/target/target_core_device.c
-@@ -100,9 +100,10 @@
- =09=09 */
- =09=09if (unpacked_lun !=3D 0) {
- =09=09=09pr_err("TARGET_CORE[%s]: Detected NON_EXISTENT_LUN"
--=09=09=09=09" Access for 0x%08llx\n",
-+=09=09=09=09" Access for 0x%08llx from %s\n",
- =09=09=09=09se_cmd->se_tfo->fabric_name,
--=09=09=09=09unpacked_lun);
-+=09=09=09=09unpacked_lun,
-+=09=09=09=09nacl->initiatorname);
- =09=09=09return TCM_NON_EXISTENT_LUN;
- =09=09}
-=20
-@@ -174,9 +175,10 @@ int transport_lookup_tmr_lun(struct se_cmd *se_cmd, u6=
-4 unpacked_lun)
-=20
- =09if (!se_lun) {
- =09=09pr_debug("TARGET_CORE[%s]: Detected NON_EXISTENT_LUN"
--=09=09=09" Access for 0x%08llx\n",
-+=09=09=09" Access for 0x%08llx for %s\n",
- =09=09=09se_cmd->se_tfo->fabric_name,
--=09=09=09unpacked_lun);
-+=09=09=09unpacked_lun,
-+=09=09=09nacl->initiatorname);
- =09=09return -ENODEV;
- =09}
- =09se_cmd->se_dev =3D rcu_dereference_raw(se_lun->lun_se_dev);
---=20
-1.8.3.1
+diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
+index a58185b1d8bf..3e3711b60d01 100644
+--- a/drivers/net/ethernet/apple/bmac.c
++++ b/drivers/net/ethernet/apple/bmac.c
+@@ -1182,7 +1182,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
+        int i;
+        unsigned short data;
+ 
+-       for (i = 0; i < 6; i++)
++       for (i = 0; i < 3; i++)
+                {
+                        reset_and_select_srom(dev);
+                        data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
+-- 
+2.17.1
+
+
 
