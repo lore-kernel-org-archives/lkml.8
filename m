@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ACBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2391420872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1B820715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824272;
-	bh=zLUCqSvC236bu0DFeMlfYuTWti5TF2S5odgN6soGDug=;
+	s=default; t=1589824276;
+	bh=v17KLpkrUK8PVtqnolrS1fM1oTtoXKQykSbkQwFs/cU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A8qE7MvJiuE6g3cnNmkG8BDNVD6kaV0KeURosmr/TWkJRRYFfUo1baJYtSpB4BXRs
-	 m3yOHpPamVBNuXx6ntB0JqKcGvg+E0CY9RuhKIQ20Rnx4apSDWr/HX/BoUVeG/ivou
-	 62SQZMUcsuppA7oqz5IIQP6bah9ngRxLekesqPiY=
+	b=XvspzEL7Mesge3idDDZn4S5z5Hl/1BEYlKY/D4y7dgvE5r/tKsjFiPgPmkqzX2d94
+	 Cn8AIOIvQbn9mBOEL/gJKY+3Xlf3MhlU+WndozZ2CUfg6svbtni+/8VxFGxRN7BdM+
+	 DcQpBBmsdBTopzui+v/OHkOaVVdONStEzZDCh36s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730831AbgERRvL (ORCPT
+        id S1728967AbgERRvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53670 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730821AbgERRvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:08 -0400
+        id S1730829AbgERRvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D37E3207F5;
-        Mon, 18 May 2020 17:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85C9F20674;
+        Mon, 18 May 2020 17:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824267;
-        bh=zLUCqSvC236bu0DFeMlfYuTWti5TF2S5odgN6soGDug=;
+        s=default; t=1589824270;
+        bh=v17KLpkrUK8PVtqnolrS1fM1oTtoXKQykSbkQwFs/cU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uLE8z4l9rSKNIZH9GoBDTq/S7C91Vk1kL637d1ckucBMTLHZCpS1ezB5550Fh3NMh
-         p9+K7hVGoMFDToixtuSkLjP5hGPWQLAwPiPjyo7H9PtIf8eRIYuJlq2buvb68kZQgc
-         ltYBVA+pucmMVqmop4hd7L8CfWwNNoUeSWHqof3A=
+        b=hJrx6oZggjKNW1LRiAOLvr4DMB93cOmymIaLv8k5SJWcPSKvNY554lz9380Dj3bvx
+         ZckAWTv0SZNdh9iqpLB0d1cEIIfTDO04/fkqd5EV2jcrEh2Pgknk9uKJv1EdAJnmyf
+         Dpnvj5UYSLqIf7VY5VHNknSYx3rfYaq9bcALXWIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/80] net/sonic: Fix a resource leak in an error handling path in jazz_sonic_probe()
-Date:   Mon, 18 May 2020 19:36:21 +0200
-Message-Id: <20200518173450.825849382@linuxfoundation.org>
+Subject: [PATCH 4.19 04/80] net: moxa: Fix a potential double free_irq()
+Date:   Mon, 18 May 2020 19:36:22 +0200
+Message-Id: <20200518173451.021483004@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -63,45 +63,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 10e3cc180e64385edc9890c6855acf5ed9ca1339 ]
+[ Upstream commit ee8d2267f0e39a1bfd95532da3a6405004114b27 ]
 
-A call to 'dma_alloc_coherent()' is hidden in 'sonic_alloc_descriptors()',
-called from 'sonic_probe1()'.
+Should an irq requested with 'devm_request_irq' be released explicitly,
+it should be done by 'devm_free_irq()', not 'free_irq()'.
 
-This is correctly freed in the remove function, but not in the error
-handling path of the probe function.
-Fix it and add the missing 'dma_free_coherent()' call.
-
-While at it, rename a label in order to be slightly more informative.
-
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Fixes: 6c821bd9edc9 ("net: Add MOXA ART SoCs ethernet driver")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/jazzsonic.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/moxa/moxart_ether.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
-index 51fa82b429a3c..40970352d2082 100644
---- a/drivers/net/ethernet/natsemi/jazzsonic.c
-+++ b/drivers/net/ethernet/natsemi/jazzsonic.c
-@@ -235,11 +235,13 @@ static int jazz_sonic_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/moxa/moxart_ether.c b/drivers/net/ethernet/moxa/moxart_ether.c
+index b34055ac476f7..4db3431b79ac1 100644
+--- a/drivers/net/ethernet/moxa/moxart_ether.c
++++ b/drivers/net/ethernet/moxa/moxart_ether.c
+@@ -561,7 +561,7 @@ static int moxart_remove(struct platform_device *pdev)
+ 	struct net_device *ndev = platform_get_drvdata(pdev);
  
- 	err = register_netdev(dev);
- 	if (err)
--		goto out1;
-+		goto undo_probe1;
+ 	unregister_netdev(ndev);
+-	free_irq(ndev->irq, ndev);
++	devm_free_irq(&pdev->dev, ndev->irq, ndev);
+ 	moxart_mac_free_memory(ndev);
+ 	free_netdev(ndev);
  
- 	return 0;
- 
--out1:
-+undo_probe1:
-+	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
-+			  lp->descriptors, lp->descriptors_laddr);
- 	release_mem_region(dev->base_addr, SONIC_MEM_SIZE);
- out:
- 	free_netdev(dev);
 -- 
 2.20.1
 
