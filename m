@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5428C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDC1207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E39AF20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589843069;
-	bh=KGUQGz4db3YjWPudFeOfKSYM0sWPkRsvPRm4npW190o=;
+	s=default; t=1589843073;
+	bh=lrFNLpW8KhYy18+5zt78mNnTXnB06Ha6B7EMQ8Ew1kM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sBqM/trGhNDjh402XZV5BtI+BJHHY35zgJx+jTENN95Zz3N2W8HfjO4EiYorS8/+j
-	 C4HSmIrYoFYMemnvuWGYDiXsAPNdiIblvtjI3uZIsx4PXsfUYH+aKmBhW7+1AaDJzY
-	 XpKjO08T56RhijoQdR3MRuo5pfWagX5OeSsWaswQ=
+	b=vYq/cI1dx3cAkzbKBxMuxHNg0M3L3gRLVM7eOBu1mDXEXQWS0Vuo3Jmx+xE1I1SMg
+	 ok9baWH88c4JtZn/GFl+E8ObxucnZCP68QJB1orqF30ffDBU3k2FCvGmCmChHq/36v
+	 Waw5Osnr9gIjCKi9nae+0Z1i3/8dY6Mx1Cur59Ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgERXE3 (ORCPT
+        id S1728441AbgERXEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 19:04:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50238 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 19:04:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgERXE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 19:04:28 -0400
+        id S1726490AbgERXEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 19:04:32 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D56B7207F9;
-        Mon, 18 May 2020 23:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E8B8207ED;
+        Mon, 18 May 2020 23:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589843068;
-        bh=KGUQGz4db3YjWPudFeOfKSYM0sWPkRsvPRm4npW190o=;
+        s=default; t=1589843072;
+        bh=lrFNLpW8KhYy18+5zt78mNnTXnB06Ha6B7EMQ8Ew1kM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QiYgQErP+LqAuYyClBRqQfZb8lTctaFLjv1rRjDatVQa4+ACebdT3cczztU9y/m4X
-         E6a5RwRyF7McE6jg2mwRHz+DInqvnyTv0xcLfVldVojV0mFkp/NvQmKk06TlQy2MHS
-         K6mn7Pw3TmAhV73dowk5GXTeTO8eObZgPHiY4Zv0=
+        b=AWpoxrgPDf7dHjixCPxuo1Su1pauZNr02N4tTNozX2hUN/540HjmaC0K1kG3jKhaB
+         9Ox9BcHZdgsvrPOlZvZOvy2c6CqmdwH5J+gUZpdzTbcTjfT3omagoaIg20l8Iye4eI
+         KHJ9xy5WlX37vdnwk31MsMLcKJHaZuqphRw62ENQ=
 From:   Will Deacon <will@kernel.org>
-To:     robin.murphy@arm.com, swboyd@chromium.org, joro@8bytes.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
-        dianders@chromium.org, iommu@lists.linux-foundation.org,
-        bjorn.andersson@linaro.org, mka@chromium.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, evgreen@chromium.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] iommu/arm-smmu-qcom: Request direct mapping for modem device
-Date:   Tue, 19 May 2020 00:04:08 +0100
-Message-Id: <158981250642.239015.17275693427372248725.b4-ty@kernel.org>
+To:     catalin.marinas@arm.com, 0x7f454c46@gmail.com,
+        hewenliang4@huawei.com, lorenzo.pieralisi@arm.com,
+        Dave.Martin@arm.com, hushiyuan@huawei.com, tglx@linutronix.de,
+        mark.rutland@arm.com, james.morse@arm.com,
+        linux-kernel@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2] arm64: stacktrace: Factor out some common code into on_stack()
+Date:   Tue, 19 May 2020 00:04:10 +0100
+Message-Id: <158982146278.388.8558956941501712685.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200511175532.25874-1-sibis@codeaurora.org>
-References: <20200511175532.25874-1-sibis@codeaurora.org>
+In-Reply-To: <07b3b0e6-3f58-4fed-07ea-7d17b7508948@huawei.com>
+References: <07b3b0e6-3f58-4fed-07ea-7d17b7508948@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,20 +60,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 23:25:32 +0530, Sibi Sankar wrote:
-> The modem remote processor has two access paths to DDR. One path is
-> directly connected to DDR and another path goes through an SMMU. The
-> SMMU path is configured to be a direct mapping because it's used by
-> various peripherals in the modem subsystem. Typically this direct
-> mapping is configured statically at EL2 by QHEE (Qualcomm's Hypervisor
-> Execution Environment) before the kernel is entered.
+On Fri, 8 May 2020 11:15:45 +0800, Yunfeng Ye wrote:
+> There are some common codes for stack checking, so factors it out into
+> the function on_stack().
 > 
-> [...]
+> No functional change.
 
-Applied to will (for-joerg/arm-smmu/updates), thanks!
+Applied to arm64 (for-next/misc), thanks!
 
-[1/1] iommu/arm-smmu-qcom: Request direct mapping for modem device
-      https://git.kernel.org/will/c/d100ff3843b7
+[1/1] arm64: stacktrace: Factor out some common code into on_stack()
+      https://git.kernel.org/arm64/c/bd4298c72b56
 
 Cheers,
 -- 
