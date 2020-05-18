@@ -2,141 +2,126 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA475C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B90CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F972081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDF92081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgERKbM (ORCPT
+        id S1726694AbgERKcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:31:12 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:46076 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgERKbM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:31:12 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A9843803080B;
-        Mon, 18 May 2020 10:31:08 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id EV95sK1xaunt; Mon, 18 May 2020 13:31:08 +0300 (MSK)
-Date:   Mon, 18 May 2020 13:31:02 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
- setting
-Message-ID: <20200518103102.t3a3g4uxeeuwsnix@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <a8dfa493-f858-e35d-7e57-78478be555c4@intel.com>
- <20200518101109.4uggngudy4gfmlvo@vireshk-i7>
- <10461949.HoJUxHt8jL@kreacher>
- <20200518102415.k4c5qglodij5ac6h@vireshk-i7>
+        Mon, 18 May 2020 06:32:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54562 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgERKcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 06:32:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 66A57AA4F;
+        Mon, 18 May 2020 10:32:07 +0000 (UTC)
+Subject: Re: [PATCH v5 06/10] mmap locking API: convert nested write lock
+ sites
+To:     Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+References: <20200422001422.232330-1-walken@google.com>
+ <20200422001422.232330-7-walken@google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <6a23fcce-181b-01ad-4a83-ea24d07ac724@suse.cz>
+Date:   Mon, 18 May 2020 12:32:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200518102415.k4c5qglodij5ac6h@vireshk-i7>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200422001422.232330-7-walken@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 03:54:15PM +0530, Viresh Kumar wrote:
-> On 18-05-20, 12:22, Rafael J. Wysocki wrote:
-> > On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
-> > > On 18-05-20, 11:53, Rafael J. Wysocki wrote:
-> > > > That said if you really only want it to return 0 on success, you may as well
-> > > > add a ret = 0; statement (with a comment explaining why it is needed) after
-> > > > the last break in the loop.
-> > > 
-> > > That can be done as well, but will be a bit less efficient as the loop
-> > > will execute once for each policy, and so the statement will run
-> > > multiple times. Though it isn't going to add any significant latency
-> > > in the code.
-> > 
-> > Right.
-> > 
-> > However, the logic in this entire function looks somewhat less than
-> > straightforward to me, because it looks like it should return an
-> > error on the first policy without a frequency table (having a frequency
-> > table depends on the driver and that is the same for all policies, so it
-> > is pointless to iterate any further in that case).
-> > 
-> > Also, the error should not be -EINVAL, because that means "invalid
-> > argument" which would be the state value.
-> > 
-> > So I would do something like this:
-> > 
-> > ---
-> >  drivers/cpufreq/cpufreq.c |   11 ++++++-----
-> >  1 file changed, 6 insertions(+), 5 deletions(-)
-> > 
-> > Index: linux-pm/drivers/cpufreq/cpufreq.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/cpufreq/cpufreq.c
-> > +++ linux-pm/drivers/cpufreq/cpufreq.c
-> > @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
-> >  static int cpufreq_boost_set_sw(int state)
-> >  {
-> >  	struct cpufreq_policy *policy;
-> > -	int ret = -EINVAL;
-> >  
-> >  	for_each_active_policy(policy) {
-> > +		int ret;
-> > +
-> >  		if (!policy->freq_table)
-> > -			continue;
-> > +			return -ENXIO;
-> >  
-> >  		ret = cpufreq_frequency_table_cpuinfo(policy,
-> >  						      policy->freq_table);
-> >  		if (ret) {
-> >  			pr_err("%s: Policy frequency update failed\n",
-> >  			       __func__);
-> > -			break;
-> > +			return ret;
-> >  		}
-> >  
-> >  		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
-> >  		if (ret < 0)
-> > -			break;
-> > +			return ret;
-> >  	}
-> >  
-> > -	return ret;
-> > +	return 0;
-> >  }
-> >  
-> >  int cpufreq_boost_trigger_state(int state)
+On 4/22/20 2:14 AM, Michel Lespinasse wrote:
+> Add API for nested write locks and convert the few call sites doing that.
 > 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Michel Lespinasse <walken@google.com>
+> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-Ok. Thanks for the comments. Shall I resend the patch with update Rafael
-suggests or you'll merge the Rafael's fix in yourself?
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
--Sergey
+Perhaps we could even move SINGLE_DEPTH_NESTING into the wrapper? It's unlikely
+there will be a new user with a different subclass?
+
+> ---
+>  arch/um/include/asm/mmu_context.h | 3 ++-
+>  include/linux/mmap_lock.h         | 5 +++++
+>  kernel/fork.c                     | 2 +-
+>  3 files changed, 8 insertions(+), 2 deletions(-)
 > 
-> -- 
-> viresh
+> diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
+> index 62262c5c7785..17ddd4edf875 100644
+> --- a/arch/um/include/asm/mmu_context.h
+> +++ b/arch/um/include/asm/mmu_context.h
+> @@ -8,6 +8,7 @@
+>  
+>  #include <linux/sched.h>
+>  #include <linux/mm_types.h>
+> +#include <linux/mmap_lock.h>
+>  
+>  #include <asm/mmu.h>
+>  
+> @@ -47,7 +48,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
+>  	 * when the new ->mm is used for the first time.
+>  	 */
+>  	__switch_mm(&new->context.id);
+> -	down_write_nested(&new->mmap_sem, 1);
+> +	mmap_write_lock_nested(new, SINGLE_DEPTH_NESTING);
+>  	uml_setup_stubs(new);
+>  	mmap_write_unlock(new);
+>  }
+> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+> index 97ac53b66052..a757cb30ae77 100644
+> --- a/include/linux/mmap_lock.h
+> +++ b/include/linux/mmap_lock.h
+> @@ -11,6 +11,11 @@ static inline void mmap_write_lock(struct mm_struct *mm)
+>  	down_write(&mm->mmap_sem);
+>  }
+>  
+> +static inline void mmap_write_lock_nested(struct mm_struct *mm, int subclass)
+> +{
+> +	down_write_nested(&mm->mmap_sem, subclass);
+> +}
+> +
+>  static inline int mmap_write_lock_killable(struct mm_struct *mm)
+>  {
+>  	return down_write_killable(&mm->mmap_sem);
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 41d3f45c058e..a5d1d20ccba7 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -499,7 +499,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+>  	/*
+>  	 * Not linked in yet - no deadlock potential:
+>  	 */
+> -	down_write_nested(&mm->mmap_sem, SINGLE_DEPTH_NESTING);
+> +	mmap_write_lock_nested(mm, SINGLE_DEPTH_NESTING);
+>  
+>  	/* No ordering required: file already has been exposed. */
+>  	RCU_INIT_POINTER(mm->exe_file, get_mm_exe_file(oldmm));
+> 
+
