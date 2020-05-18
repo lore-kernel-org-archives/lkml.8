@@ -2,78 +2,80 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D08C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C25C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67F712067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB5E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgERMWo (ORCPT
+        id S1727083AbgERMW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:22:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4812 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726585AbgERMWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:22:44 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C07DBD3A8A3B99E9CC35;
-        Mon, 18 May 2020 20:22:41 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 18 May 2020
- 20:22:33 +0800
-From:   Wu Bo <wubo40@huawei.com>
-To:     <tj@kernel.org>, <axboe@kernel.dk>
-CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <Markus.Elfring@web.de>, <linux-kernel@vger.kernel.org>,
-        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>,
-        <wubo40@huawei.com>
-Subject: [PATCH] blkcg:Fix memory leaks in blkg_conf_prep()
-Date:   Mon, 18 May 2020 20:36:06 +0800
-Message-ID: <1589805366-328489-1-git-send-email-wubo40@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 18 May 2020 08:22:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgERMW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:22:56 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 077F7C061A0C;
+        Mon, 18 May 2020 05:22:56 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 897EA2CC;
+        Mon, 18 May 2020 12:22:54 +0000 (UTC)
+Date:   Mon, 18 May 2020 06:22:53 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Kitt <steve@sk2.org>, Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: manual merge of the jc_docs tree with the vfs and
+ net-next trees
+Message-ID: <20200518062253.24709cec@lwn.net>
+In-Reply-To: <20200518123013.6e4cb3cc@canb.auug.org.au>
+References: <20200518123013.6e4cb3cc@canb.auug.org.au>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+On Mon, 18 May 2020 12:30:13 +1000
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-If a call of the function blkg_lookup_check() failed,
-we should be release the previously allocated block group 
-before jumping to the lable 'fail_unlock' in the implementation of 
-the function blkg_conf_prep().
+> Today's linux-next merge of the jc_docs tree got a conflict in:
+> 
+>   kernel/sysctl.c
+> 
+> between commit:
+> 
+>   f461d2dcd511 ("sysctl: avoid forward declarations")
+> 
+> from the vfs tree and commit:
+> 
+>   2f4c33063ad7 ("docs: sysctl/kernel: document ngroups_max")
+> 
+> from the jc_docs tree.
 
-Suggested-by: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Wu Bo <wubo40@huawei.com>
+Hmm...that's somewhat messy.  I somehow managed to miss the change to
+kernel/sysctl.c that doesn't have much to do with documentation.  Stephen
+(Kitt): I've reverted that change for now.  Could I ask you to resubmit it
+as two different patches?  I'll happily take the actual docs change; the
+sysctl change can be sent to the VFS tree on top of the changes there.
 
----
-V2: omit the source code quotation from 
-    the change description
+In general we really don't want to mix unrelated changes like this.
 
----
- block/blk-cgroup.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 930212c..afeb769 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -682,6 +682,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
- 		blkg = blkg_lookup_check(pos, pol, q);
- 		if (IS_ERR(blkg)) {
- 			ret = PTR_ERR(blkg);
-+			blkg_free(new_blkg);
- 			goto fail_unlock;
- 		}
- 
--- 
-1.8.3.1
-
+jon
