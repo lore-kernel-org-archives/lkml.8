@@ -2,217 +2,128 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB21C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B3720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:51:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tr+7QO/E"
+	by mail.kernel.org (Postfix) with ESMTP id D033520674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589820719;
+	bh=P4k/oumOl2Kh3KRdE41h/K202GgjjPZFiWYCSGEqhDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AZr43kS3o/OUyaBxAWcO0GzxpaTUQfmUM6kc2yFnuYcE039dKaB2GBTUliQWNXkDG
+	 MJwAeyQwMUOUmr7qIxSOZsBl21pUOKcolEaOj/2Jn2cC6bsPjRwi0tCs08iVn2yA4h
+	 Jyur3dMS9y0RXAJ7KEdU7huZZYtl6SFiDC/rWzqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgERQvD (ORCPT
+        id S1728468AbgERQv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgERQvD (ORCPT
+        Mon, 18 May 2020 12:51:59 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37577 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgERQv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:51:03 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F021AC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:51:02 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id d207so423896wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rRdH9wSpot0NrcZPFvHZWOLU6dqlCA3ptvEFBk4r7OE=;
-        b=Tr+7QO/ElHxeYDWXbWC5zGXwAzNcr0ia39LJGWhGpidg5GNj5Ksu/F+pGOsek0BR8M
-         qSjr2EYsjTGv/ejUFu+C3SK9ZqAyECr4Io1IDcpD1s43rQ7ugSjqbiYKetYN6rEFqLgw
-         5+9zNs80eSmD/52xKvmP0Y9Wk8lWraoR8G5zeXEUts0a/eP892jJsR7FRaoZNX0MKPHP
-         NOd0vSskWcS5EPHjAXtCAseBuEKr15ROlm1pYIlVHKbh9KHyhoWGVKIfn3bJm10kOWW7
-         EcInw/h5y7X7nukjH5EWsy/o1PADALkfnFglLkxrBwc9Yn7mjnHW+HsPPrpma8rGWhy7
-         uHrA==
+        Mon, 18 May 2020 12:51:58 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x10so4458592plr.4;
+        Mon, 18 May 2020 09:51:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rRdH9wSpot0NrcZPFvHZWOLU6dqlCA3ptvEFBk4r7OE=;
-        b=UQP4tR2SgYHOH/wrkyUl5KhIuL+iszIJyBD3xslFdC/8a074+7BXiVuDaIbO25cRmz
-         RE/49BOfhMSHg6ciCeE6fQZz2IoL8bDXf6wQBvCvcjoMLTsBrAvOCrgymWgRSICRKT9+
-         jKdkj3vJ+nkjSrcZagBARllOcC0TbEale04nd/dSm4vaPAbWDKNxHDjeJuuq4d026tmD
-         DpFTZwhdN4DJU97C2vsGCIhcXk4rl1B1b0jn9h2/LC1N8J6fo2+K0ptYPAwDN8cRp3mN
-         0HPuC9k0L7RecSvLAV2UMIDh8I7Leewwfrten2oTKe2ktXSaq9g6vKak/6KcYMhRq85H
-         CHeQ==
-X-Gm-Message-State: AOAM533E3ozAAk5XZVDAJJEtCMhvyEzV4/xXYFVhulzVUhOwYneUod+3
-        WljHdcJZHa6pB1MT/nzwF9VphQ==
-X-Google-Smtp-Source: ABdhPJx0zzjrFy7VftFdwzWAwm0lEENm7xU7BLBqWdjcpiSAl70WARM/F9HxlUwjeQIDwTEPtH+uEg==
-X-Received: by 2002:a1c:7410:: with SMTP id p16mr306095wmc.134.1589820661545;
-        Mon, 18 May 2020 09:51:01 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8? ([2a01:e34:ed2f:f020:9e7:3ac5:a930:2cd8])
-        by smtp.googlemail.com with ESMTPSA id b145sm161741wme.41.2020.05.18.09.51.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 09:51:01 -0700 (PDT)
-Subject: Re: [RFC][PATCH 4/5] thermal: Add support for setting polling
- interval
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
- <20200504181616.175477-5-srinivas.pandruvada@linux.intel.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c2aad548-32c2-f008-5ce4-97b76a19271d@linaro.org>
-Date:   Mon, 18 May 2020 18:51:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yd4VQPjSfVqPw2JwHOBUH7DvL28anQpLQnF2oRmOvUg=;
+        b=feXYZoGFDxp9/wWW8Vi0TYmI7PE+WdjwOmfK0ZI1tgeUmyEi4RDx4jLuhhTiDszGlJ
+         2jf1N+T27ejV94FPrKkU9yR/YBYsuZMsG4Aa3U3SRiGBP9x7ABbr5DDLOYsfBVCWz+xZ
+         7P6O2u2WkXLxuVpnbD3+pxC8TxGVMQbHE2C2FMG35UiXLhqNtmXdX8vxdHqsycvyz1M6
+         UBb7NFAVqsJORDo7LqK2Tmsdeui+Mie8U4ilhVscT+TPujSW7VBWQkt/2W8kHX6I9RcL
+         p6sDL1cqhTKLBhdHiWQGb3vH0bYotLHQGccVHdfCds8UFmorjNISDQQwWzfhVoI9hhH8
+         vXig==
+X-Gm-Message-State: AOAM5306/If0lzHkt2A40miQ5/TzjXtiG54DGXKX83i90xGcgB70UvjE
+        PF454uHx9VlY+Zq+FIpzHwY=
+X-Google-Smtp-Source: ABdhPJxLH5VDUbuE1FDuR86WOwRMaXJWESAIbwJvrLBEYETZmBwxGlYnKUYGXtOmogknCzCtXf7ShQ==
+X-Received: by 2002:a17:90a:ad49:: with SMTP id w9mr365592pjv.20.1589820717327;
+        Mon, 18 May 2020 09:51:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id v27sm3350582pfi.61.2020.05.18.09.51.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 09:51:56 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 17421404B0; Mon, 18 May 2020 16:51:55 +0000 (UTC)
+Date:   Mon, 18 May 2020 16:51:54 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
+        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
+        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
+        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
+        daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+Message-ID: <20200518165154.GH11244@42.do-not-panic.com>
+References: <20200515212846.1347-1-mcgrof@kernel.org>
+ <20200515212846.1347-13-mcgrof@kernel.org>
+ <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
 MIME-Version: 1.0
-In-Reply-To: <20200504181616.175477-5-srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/2020 20:16, Srinivas Pandruvada wrote:
-> Add new attribute in the thermal syfs for setting temperature sampling
-> interval when CONFIG_THERMAL_USER_EVENT_INTERFACE is defined. The default
-> value is 0, which means no polling.
+On Sat, May 16, 2020 at 03:24:01PM +0200, Johannes Berg wrote:
+> On Fri, 2020-05-15 at 21:28 +0000, Luis Chamberlain wrote:> module_firmware_crashed
 > 
-> At this interval user space will get an event THERMAL_TEMP_SAMPLE with
-> temperature sample. This reuses existing polling mecahnism when polling
-> or passive delay is specified during zone registry. To avoid interference
-> with passive and polling delay, this new polling attribute can't be used
-> for those zones.
-
-The userspace can get the temperature whenever it wants via the
-temperature file. The polling is designed for a specific hardware and
-the slope of the temperature graphic.
-
-The userspace has the alternative of reading the temperature based on
-its own timer or wait for (and stick to) the thermal framework sampling
-rate. Adding a notification in the update is enough IMO.
-
-
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
->  drivers/thermal/thermal_core.c  |  7 +++++++
->  drivers/thermal/thermal_sysfs.c | 36 +++++++++++++++++++++++++++++++--
->  include/linux/thermal.h         |  1 +
->  3 files changed, 42 insertions(+), 2 deletions(-)
+> You didn't CC me or the wireless list on the rest of the patches, so I'm
+> replying to a random one, but ...
 > 
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 14770d882d42..17cd799b0073 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -313,6 +313,8 @@ static void monitor_thermal_zone(struct thermal_zone_device *tz)
->  		thermal_zone_device_set_polling(tz, tz->passive_delay);
->  	else if (tz->polling_delay)
->  		thermal_zone_device_set_polling(tz, tz->polling_delay);
-> +	else if (tz->temp_polling_delay)
-> +		thermal_zone_device_set_polling(tz, tz->temp_polling_delay);
->  	else
->  		thermal_zone_device_set_polling(tz, 0);
->  
-> @@ -446,6 +448,11 @@ static void update_temperature(struct thermal_zone_device *tz)
->  	tz->temperature = temp;
->  	mutex_unlock(&tz->lock);
->  
-> +	if (tz->temp_polling_delay) {
-> +		thermal_dev_send_event(tz->id, THERMAL_TEMP_SAMPLE, temp);
-> +		monitor_thermal_zone(tz);
-> +	}
-> +
->  	trace_thermal_temperature(tz);
->  	if (tz->last_temperature == THERMAL_TEMP_INVALID)
->  		dev_dbg(&tz->device, "last_temperature N/A, current_temperature=%d\n",
-> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-> index aa85424c3ac4..0df7997993fe 100644
-> --- a/drivers/thermal/thermal_sysfs.c
-> +++ b/drivers/thermal/thermal_sysfs.c
-> @@ -248,6 +248,36 @@ create_thres_attr(temp_thres_low);
->  create_thres_attr(temp_thres_high);
->  create_thres_attr(temp_thres_hyst);
->  
-> +static ssize_t
-> +temp_polling_delay_store(struct device *dev, struct device_attribute *attr,
-> +		   const char *buf, size_t count)
-> +{
-> +	struct thermal_zone_device *tz = to_thermal_zone(dev);
-> +	int val;
-> +
-> +	if (kstrtoint(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	if (val && val < 1000)
-> +		return -EINVAL;
-> +
-> +	tz->temp_polling_delay = val;
-> +	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t
-> +temp_polling_delay_show(struct device *dev, struct device_attribute *attr,
-> +		     char *buf)
-> +{
-> +	struct thermal_zone_device *tz = to_thermal_zone(dev);
-> +
-> +	return sprintf(buf, "%d\n", tz->temp_polling_delay);
-> +}
-> +
-> +static DEVICE_ATTR_RW(temp_polling_delay);
-> +
->  static int create_user_events_attrs(struct thermal_zone_device *tz)
->  {
->  	struct attribute **attrs;
-> @@ -260,8 +290,8 @@ static int create_user_events_attrs(struct thermal_zone_device *tz)
->  	if (tz->ops->get_temp_thres_high)
->  		++index;
->  
-> -	/* One additional space for NULL */
-> -	attrs = kcalloc(index + 1, sizeof(*attrs), GFP_KERNEL);
-> +	/* One additional space for NULL and temp_pollling_delay */
-> +	attrs = kcalloc(index + 2, sizeof(*attrs), GFP_KERNEL);
->  	if (!attrs)
->  		return -ENOMEM;
->  
-> @@ -312,6 +342,8 @@ static int create_user_events_attrs(struct thermal_zone_device *tz)
->  		attrs[index] = &tz->threshold_attrs[index].attr.attr;
->  		++index;
->  	}
-> +	if (!tz->polling_delay && !tz->passive_delay)
-> +		attrs[index++] = &dev_attr_temp_polling_delay.attr;
->  	attrs[index] = NULL;
->  	tz->threshold_attribute_group.attrs = attrs;
->  
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index ee9d79ace7ce..0ec4bd8c9c5c 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -216,6 +216,7 @@ struct thermal_zone_device {
->  	enum thermal_notify_event notify_event;
->  	struct attribute_group threshold_attribute_group;
->  	struct thermal_attr *threshold_attrs;
-> +	int temp_polling_delay;
->  };
->  
->  /**
+> What is the point here?
 > 
+> This should in no way affect the integrity of the system/kernel, for
+> most devices anyway.
 
+Keyword you used here is "most device". And in the worst case, *who*
+knows what other odd things may happen afterwards.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> So what if ath10k's firmware crashes? If there's a driver bug it will
+> not handle it right (and probably crash, WARN_ON, or something else),
+> but if the driver is working right then that will not affect the kernel
+> at all.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Sometimes the device can go into a state which requires driver removal
+and addition to get things back up.
+
+> So maybe I can understand that maybe you want an easy way to discover -
+> per device - that the firmware crashed, but that still doesn't warrant a
+> complete kernel taint.
+
+That is one reason, another is that a taint helps support cases *fast*
+easily detect if the issue was a firmware crash, instead of scraping
+logs for driver specific ways to say the firmware has crashed.
+
+> Instead of the kernel taint, IMHO you should provide an annotation in
+> sysfs (or somewhere else) for the *struct device* that had its firmware
+> crash.
+
+It would seem the way some folks are thinking about getting more details
+would be through devlink.
+
+> Or maybe, if it's too complex to walk the entire hierarchy
+> checking for that, have a uevent,  or add the ability for the kernel to
+> print out elsewhere in debugfs the list of devices that crashed at some
+> point... All of that is fine, but a kernel taint?
+
+debugfs is optional, a taint is simple, and device agnostic. From a
+support perspective it is very easy to see if a possible issue may
+be device firmware specific.
+
+  Luis
