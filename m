@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D759C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FCBB20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF13C20826
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825688;
-	bh=qL+mTuSLwqoTGoWdrlMCBkmZTudQ4BJUVXLqeLHnYyc=;
+	s=default; t=1589825697;
+	bh=PiIUnOhhtV6zwj7HabIkx+pTvU95yYRk5scr8HgFT8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LRODmBynZoyYhDs1Yq+xiWVvW2IQOaMBhXk2pH6jdlLzvWZ4btxOKIqLJm/pd3hFf
-	 nc5W31AiaQgNpZUgQyWKV0tCwVjrEcpiTQKqmv52kpLgqrG88QFprCrHVfruEk4BYX
-	 peDQLfUyU5uuGC6cyXg3o4giQeMZummAflMLVrLY=
+	b=MGLPC3b/6jCzf/4XcOMTyGbSGQTrFRyRhEsajAHD/zUdM8kVM6SRPcX/ilemkxxYP
+	 QlLnjsNV5Mj+T5Q9MqdKfIRUFY3r5dd8rYKUFuLnF2Rz5WO8efsPu+RTvHXNj7PQwY
+	 OqvCqkmAMlobD83vXy9F0qrkp6BqLwpuanu4FmKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732295AbgERSOr (ORCPT
+        id S1732975AbgERSO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:14:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732219AbgERSA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:00:27 -0400
+        id S1728666AbgERSAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:00:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DE9120715;
-        Mon, 18 May 2020 18:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A336207C4;
+        Mon, 18 May 2020 18:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824827;
-        bh=qL+mTuSLwqoTGoWdrlMCBkmZTudQ4BJUVXLqeLHnYyc=;
+        s=default; t=1589824811;
+        bh=PiIUnOhhtV6zwj7HabIkx+pTvU95yYRk5scr8HgFT8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nT4se/wezt39TeGe4EKxkCmtYOUYqwEDx2gmwuR5eJQL7fg86c2nT4zkc5FjCB236
-         SeYkcJ8jEC5yFnbWiMgNkbJRzKWhETjCcHyL6x1w4Ikyp/PIhpkjQbjzNFfndq5duQ
-         hruS2+mJqKmF2bgyGdig51HFyaqX1H2gr35S6TTc=
+        b=xsK6L7YBl2HGacmkK6NlFRvXsSBPL05A6i8vFYCtl6aFYuvsRbyPLGCV5SwyTcGsM
+         ZisDz8lDL1Mvdkfk4cucoPADLkS74nxKVf0BA9NjBn0JZ1rlBx0kQlWT7tFXOm05gd
+         cs6Xlv6O/AfMpYpx5+Da49QCBq2feWrEPsdWbkdI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 002/194] kvm: nVMX: reflect MTF VM-exits if injected by L1
-Date:   Mon, 18 May 2020 19:34:52 +0200
-Message-Id: <20200518173531.722065159@linuxfoundation.org>
+Subject: [PATCH 5.6 014/194] SUNRPC: Fix GSS privacy computation of auth->au_ralign
+Date:   Mon, 18 May 2020 19:35:04 +0200
+Message-Id: <20200518173532.802740199@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,69 +59,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit b045ae906b42afb361dc7ecf1a3cea110fb0a65f ]
+[ Upstream commit a7e429a6fa6d612d1dacde96c885dc1bb4a9f400 ]
 
-According to SDM 26.6.2, it is possible to inject an MTF VM-exit via the
-VM-entry interruption-information field regardless of the 'monitor trap
-flag' VM-execution control. KVM appropriately copies the VM-entry
-interruption-information field from vmcs12 to vmcs02. However, if L1
-has not set the 'monitor trap flag' VM-execution control, KVM fails to
-reflect the subsequent MTF VM-exit into L1.
+When the au_ralign field was added to gss_unwrap_resp_priv, the
+wrong calculation was used. Setting au_rslack == au_ralign is
+probably correct for kerberos_v1 privacy, but kerberos_v2 privacy
+adds additional GSS data after the clear text RPC message.
+au_ralign needs to be smaller than au_rslack in that fairly common
+case.
 
-Fix this by consulting the VM-entry interruption-information field of
-vmcs12 to determine if L1 has injected the MTF VM-exit. If so, reflect
-the exit, regardless of the 'monitor trap flag' VM-execution control.
+When xdr_buf_trim() is restored to gss_unwrap_kerberos_v2(), it does
+exactly what I feared it would: it trims off part of the clear text
+RPC message. However, that's because rpc_prepare_reply_pages() does
+not set up the rq_rcv_buf's tail correctly because au_ralign is too
+large.
 
-Fixes: 5f3d45e7f282 ("kvm/x86: add support for MONITOR_TRAP_FLAG")
-Signed-off-by: Oliver Upton <oupton@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Message-Id: <20200414224746.240324-1-oupton@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixing the au_ralign computation also corrects the alignment of
+rq_rcv_buf->pages so that the client does not have to shift reply
+data payloads after they are received.
+
+Fixes: 35e77d21baa0 ("SUNRPC: Add rpc_auth::au_ralign field")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx/nested.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ include/linux/sunrpc/gss_api.h      |  1 +
+ net/sunrpc/auth_gss/auth_gss.c      |  8 +++-----
+ net/sunrpc/auth_gss/gss_krb5_wrap.c | 19 +++++++++++++++----
+ 3 files changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index b773989308015..3a2f05ef51fa4 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5504,6 +5504,23 @@ static bool nested_vmx_exit_handled_vmcs_access(struct kvm_vcpu *vcpu,
- 	return 1 & (b >> (field & 7));
+diff --git a/include/linux/sunrpc/gss_api.h b/include/linux/sunrpc/gss_api.h
+index e9a79518d6527..bc07e51f20d1c 100644
+--- a/include/linux/sunrpc/gss_api.h
++++ b/include/linux/sunrpc/gss_api.h
+@@ -21,6 +21,7 @@
+ struct gss_ctx {
+ 	struct gss_api_mech	*mech_type;
+ 	void			*internal_ctx_id;
++	unsigned int		slack, align;
+ };
+ 
+ #define GSS_C_NO_BUFFER		((struct xdr_netobj) 0)
+diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+index a08a733f2d7c2..a7ad150fd4ee9 100644
+--- a/net/sunrpc/auth_gss/auth_gss.c
++++ b/net/sunrpc/auth_gss/auth_gss.c
+@@ -2030,7 +2030,6 @@ gss_unwrap_resp_priv(struct rpc_task *task, struct rpc_cred *cred,
+ 	struct xdr_buf *rcv_buf = &rqstp->rq_rcv_buf;
+ 	struct kvec *head = rqstp->rq_rcv_buf.head;
+ 	struct rpc_auth *auth = cred->cr_auth;
+-	unsigned int savedlen = rcv_buf->len;
+ 	u32 offset, opaque_len, maj_stat;
+ 	__be32 *p;
+ 
+@@ -2057,10 +2056,9 @@ gss_unwrap_resp_priv(struct rpc_task *task, struct rpc_cred *cred,
+ 	 */
+ 	xdr_init_decode(xdr, rcv_buf, p, rqstp);
+ 
+-	auth->au_rslack = auth->au_verfsize + 2 +
+-			  XDR_QUADLEN(savedlen - rcv_buf->len);
+-	auth->au_ralign = auth->au_verfsize + 2 +
+-			  XDR_QUADLEN(savedlen - rcv_buf->len);
++	auth->au_rslack = auth->au_verfsize + 2 + ctx->gc_gss_ctx->slack;
++	auth->au_ralign = auth->au_verfsize + 2 + ctx->gc_gss_ctx->align;
++
+ 	return 0;
+ unwrap_failed:
+ 	trace_rpcgss_unwrap_failed(task);
+diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+index c7589e35d5d92..4905652e75679 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
++++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+@@ -262,7 +262,8 @@ gss_wrap_kerberos_v1(struct krb5_ctx *kctx, int offset,
+ 
+ static u32
+ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, int len,
+-		       struct xdr_buf *buf)
++		       struct xdr_buf *buf, unsigned int *slack,
++		       unsigned int *align)
+ {
+ 	int			signalg;
+ 	int			sealalg;
+@@ -280,6 +281,7 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, int len,
+ 	u32			conflen = kctx->gk5e->conflen;
+ 	int			crypt_offset;
+ 	u8			*cksumkey;
++	unsigned int		saved_len = buf->len;
+ 
+ 	dprintk("RPC:       gss_unwrap_kerberos\n");
+ 
+@@ -383,6 +385,10 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, int len,
+ 	if (gss_krb5_remove_padding(buf, blocksize))
+ 		return GSS_S_DEFECTIVE_TOKEN;
+ 
++	/* slack must include room for krb5 padding */
++	*slack = XDR_QUADLEN(saved_len - buf->len);
++	/* The GSS blob always precedes the RPC message payload */
++	*align = *slack;
+ 	return GSS_S_COMPLETE;
  }
  
-+static bool nested_vmx_exit_handled_mtf(struct vmcs12 *vmcs12)
-+{
-+	u32 entry_intr_info = vmcs12->vm_entry_intr_info_field;
-+
-+	if (nested_cpu_has_mtf(vmcs12))
-+		return true;
-+
-+	/*
-+	 * An MTF VM-exit may be injected into the guest by setting the
-+	 * interruption-type to 7 (other event) and the vector field to 0. Such
-+	 * is the case regardless of the 'monitor trap flag' VM-execution
-+	 * control.
-+	 */
-+	return entry_intr_info == (INTR_INFO_VALID_MASK
-+				   | INTR_TYPE_OTHER_EVENT);
-+}
-+
- /*
-  * Return 1 if we should exit from L2 to L1 to handle an exit, or 0 if we
-  * should handle it ourselves in L0 (and then continue L2). Only call this
-@@ -5618,7 +5635,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
- 	case EXIT_REASON_MWAIT_INSTRUCTION:
- 		return nested_cpu_has(vmcs12, CPU_BASED_MWAIT_EXITING);
- 	case EXIT_REASON_MONITOR_TRAP_FLAG:
--		return nested_cpu_has_mtf(vmcs12);
-+		return nested_vmx_exit_handled_mtf(vmcs12);
- 	case EXIT_REASON_MONITOR_INSTRUCTION:
- 		return nested_cpu_has(vmcs12, CPU_BASED_MONITOR_EXITING);
- 	case EXIT_REASON_PAUSE_INSTRUCTION:
+@@ -489,7 +495,8 @@ gss_wrap_kerberos_v2(struct krb5_ctx *kctx, u32 offset,
+ 
+ static u32
+ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, int len,
+-		       struct xdr_buf *buf)
++		       struct xdr_buf *buf, unsigned int *slack,
++		       unsigned int *align)
+ {
+ 	time64_t	now;
+ 	u8		*ptr;
+@@ -583,6 +590,8 @@ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, int len,
+ 	/* Trim off the trailing "extra count" and checksum blob */
+ 	buf->len -= ec + GSS_KRB5_TOK_HDR_LEN + tailskip;
+ 
++	*align = XDR_QUADLEN(GSS_KRB5_TOK_HDR_LEN + headskip);
++	*slack = *align + XDR_QUADLEN(ec + GSS_KRB5_TOK_HDR_LEN + tailskip);
+ 	return GSS_S_COMPLETE;
+ }
+ 
+@@ -617,9 +626,11 @@ gss_unwrap_kerberos(struct gss_ctx *gctx, int offset,
+ 	case ENCTYPE_DES_CBC_RAW:
+ 	case ENCTYPE_DES3_CBC_RAW:
+ 	case ENCTYPE_ARCFOUR_HMAC:
+-		return gss_unwrap_kerberos_v1(kctx, offset, len, buf);
++		return gss_unwrap_kerberos_v1(kctx, offset, len, buf,
++					      &gctx->slack, &gctx->align);
+ 	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+ 	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+-		return gss_unwrap_kerberos_v2(kctx, offset, len, buf);
++		return gss_unwrap_kerberos_v2(kctx, offset, len, buf,
++					      &gctx->slack, &gctx->align);
+ 	}
+ }
 -- 
 2.20.1
 
