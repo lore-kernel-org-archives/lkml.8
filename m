@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B2A20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A173E20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826034;
-	bh=yrAxux62RVSsRCz4EE8zavy7cKRxl0L7f3iPoXjbJqQ=;
+	s=default; t=1589826036;
+	bh=yOFol0c9+sf5Gs+6AQDm15tcUupg6rvnwudQwUXFbME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wX7DnHxd/h6XypNIDGcOsI6YwJutpXFxBwKjeHPLDFdV1l4K/npZYYKyZTdN2XJE/
-	 kx4ViWC082JP6Sb6ypxv10ICWFmpZrBPtZk8I8aNaH5WInIXpH4nUAKLn4zbY64J9c
-	 8ZYUkKB63EKa0iID+3uJvJK7GCkcV67faMtz8Is4=
+	b=eUOG47uZmyZ/a0O6aoVIe4H/TSEMtX2uUeB3H6IYSu4h3gFq+CnajIF9FyI16NTGc
+	 0OT43m5gNeo8+1YYQSekv9ZLyUYLIxJQ/a56gxm08OhjcQOiNpXk4t/aQknnKf74cz
+	 YaHZmT+E6tchVLZnuZQAe8CpLJcBAokm4IkbST9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387700AbgERSUd (ORCPT
+        id S1731002AbgERRwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56280 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729761AbgERRwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:52:46 -0400
+        id S1730982AbgERRw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:52:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E00A9207F5;
-        Mon, 18 May 2020 17:52:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA31820674;
+        Mon, 18 May 2020 17:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824366;
-        bh=yrAxux62RVSsRCz4EE8zavy7cKRxl0L7f3iPoXjbJqQ=;
+        s=default; t=1589824349;
+        bh=yOFol0c9+sf5Gs+6AQDm15tcUupg6rvnwudQwUXFbME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uxXbeUomTWkCYGWy2feLzLDNlzNoa/tI9vtPX194MTGXFV1GbOt6Or791kJ36GdVs
-         CI0D2HSAJTlNxiT5T/H58OzVsFtkJIrv9Xvyvo9x411RszR77hjVXaApFz77xydrk1
-         +8J0gR6Zy1CYYl/BHRg/smwdUe/cTFWEkSFoeAv4=
+        b=LnAk6/0tRT/XT0WGotUYOzR/v3Bd41wiASg85um7iC3t7gc79429jsSs7dHtgPdbh
+         VZjBkKW7CBxlgUi0O1B3onjBJxUMxFleiYdQqeGXEcZ/6KXXEKKuZznV3xlfou1IBI
+         bYzWImwsrJ+4BXd/4ypAyje3HdtyrlTY2Idm3UDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam McCoy <adam@forsedomani.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 4.19 62/80] cifs: fix leaked reference on requeued write
-Date:   Mon, 18 May 2020 19:37:20 +0200
-Message-Id: <20200518173502.930083151@linuxfoundation.org>
+        stable@vger.kernel.org, Jesus Ramos <jesus-ramos@live.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 55/80] ALSA: usb-audio: Add control message quirk delay for Kingston HyperX headset
+Date:   Mon, 18 May 2020 19:37:13 +0200
+Message-Id: <20200518173501.520189184@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,40 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam McCoy <adam@forsedomani.com>
+From: Jesus Ramos <jesus-ramos@live.com>
 
-commit a48137996063d22ffba77e077425f49873856ca5 upstream.
+commit 073919e09ca445d4486968e3f851372ff44cf2b5 upstream.
 
-Failed async writes that are requeued may not clean up a refcount
-on the file, which can result in a leaked open. This scenario arises
-very reliably when using persistent handles and a reconnect occurs
-while writing.
+Kingston HyperX headset with 0951:16ad also needs the same quirk for
+delaying the frequency controls.
 
-cifs_writev_requeue only releases the reference if the write fails
-(rc != 0). The server->ops->async_writev operation will take its own
-reference, so the initial reference can always be released.
-
-Signed-off-by: Adam McCoy <adam@forsedomani.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Jesus Ramos <jesus-ramos@live.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/BY5PR19MB3634BA68C7CCA23D8DF428E796AF0@BY5PR19MB3634.namprd19.prod.outlook.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifssmb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/quirks.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/fs/cifs/cifssmb.c
-+++ b/fs/cifs/cifssmb.c
-@@ -2051,8 +2051,8 @@ cifs_writev_requeue(struct cifs_writedat
- 			}
- 		}
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1334,13 +1334,14 @@ void snd_usb_ctl_msg_quirk(struct usb_de
+ 	    && (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
+ 		msleep(20);
  
-+		kref_put(&wdata2->refcount, cifs_writedata_release);
- 		if (rc) {
--			kref_put(&wdata2->refcount, cifs_writedata_release);
- 			if (is_retryable_error(rc))
- 				continue;
- 			i += nr_pages;
+-	/* Zoom R16/24, Logitech H650e, Jabra 550a needs a tiny delay here,
+-	 * otherwise requests like get/set frequency return as failed despite
+-	 * actually succeeding.
++	/* Zoom R16/24, Logitech H650e, Jabra 550a, Kingston HyperX needs a tiny
++	 * delay here, otherwise requests like get/set frequency return as
++	 * failed despite actually succeeding.
+ 	 */
+ 	if ((chip->usb_id == USB_ID(0x1686, 0x00dd) ||
+ 	     chip->usb_id == USB_ID(0x046d, 0x0a46) ||
+-	     chip->usb_id == USB_ID(0x0b0e, 0x0349)) &&
++	     chip->usb_id == USB_ID(0x0b0e, 0x0349) ||
++	     chip->usb_id == USB_ID(0x0951, 0x16ad)) &&
+ 	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
+ 		usleep_range(1000, 2000);
+ }
 
 
