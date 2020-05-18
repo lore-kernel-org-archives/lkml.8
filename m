@@ -2,135 +2,141 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E305C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA475C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE63720801
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589797809;
-	bh=Sf1JheQuxgic/yXSR/EPXNFwtvaoa4Ub/q1l21Oq5jo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dWqaxhO37gG9byP/O+h3nSvN3kLbnxpgU+RQ8TxPPwdnZ1li4IzM00Lacn2nXughB
-	 91Ivj1WSvyUSgpHsOWxQu2bTovHrOMlVFa22IGP7WYH1wS3QW/aRvn67UFt4BrOaNt
-	 kl/nZ5Byr3MgoGzufo6ECeb1lR18tn5TvV3CA6b8=
+	by mail.kernel.org (Postfix) with ESMTP id 91F972081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbgERKaI (ORCPT
+        id S1726682AbgERKbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:30:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgERKaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:30:07 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF8FC207ED;
-        Mon, 18 May 2020 10:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589797806;
-        bh=Sf1JheQuxgic/yXSR/EPXNFwtvaoa4Ub/q1l21Oq5jo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2RSZnkvH3M3vTEJsTumTgFRb/xWah7mnoyzpfX1RsCwszzwCQnrWL/+Z22YZaL5Vx
-         gUMP3eLiOIog+yoyhMDpx31Mce7Xtifss5kcjXvd08M7qZqnHEZrbwMRkbM1TN0ETk
-         zvRJdSZmv869eUhJxKjn8WRLf8tKwniFbUQZp1d0=
-Received: by pali.im (Postfix)
-        id 64D1089D; Mon, 18 May 2020 12:30:04 +0200 (CEST)
-Date:   Mon, 18 May 2020 12:30:04 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
- Compex wifi cards
-Message-ID: <20200518103004.6tydnad3apkfn77y@pali>
-References: <20200430080625.26070-1-pali@kernel.org>
- <20200513135643.478ffbda@windsurf.home>
- <87pnb2h7w1.fsf@FE-laptop>
+        Mon, 18 May 2020 06:31:12 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:46076 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgERKbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 06:31:12 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A9843803080B;
+        Mon, 18 May 2020 10:31:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id EV95sK1xaunt; Mon, 18 May 2020 13:31:08 +0300 (MSK)
+Date:   Mon, 18 May 2020 13:31:02 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
+ setting
+Message-ID: <20200518103102.t3a3g4uxeeuwsnix@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <a8dfa493-f858-e35d-7e57-78478be555c4@intel.com>
+ <20200518101109.4uggngudy4gfmlvo@vireshk-i7>
+ <10461949.HoJUxHt8jL@kreacher>
+ <20200518102415.k4c5qglodij5ac6h@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87pnb2h7w1.fsf@FE-laptop>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200518102415.k4c5qglodij5ac6h@vireshk-i7>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday 17 May 2020 17:57:02 Gregory CLEMENT wrote:
-> Hello,
+On Mon, May 18, 2020 at 03:54:15PM +0530, Viresh Kumar wrote:
+> On 18-05-20, 12:22, Rafael J. Wysocki wrote:
+> > On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
+> > > On 18-05-20, 11:53, Rafael J. Wysocki wrote:
+> > > > That said if you really only want it to return 0 on success, you may as well
+> > > > add a ret = 0; statement (with a comment explaining why it is needed) after
+> > > > the last break in the loop.
+> > > 
+> > > That can be done as well, but will be a bit less efficient as the loop
+> > > will execute once for each policy, and so the statement will run
+> > > multiple times. Though it isn't going to add any significant latency
+> > > in the code.
+> > 
+> > Right.
+> > 
+> > However, the logic in this entire function looks somewhat less than
+> > straightforward to me, because it looks like it should return an
+> > error on the first policy without a frequency table (having a frequency
+> > table depends on the driver and that is the same for all policies, so it
+> > is pointless to iterate any further in that case).
+> > 
+> > Also, the error should not be -EINVAL, because that means "invalid
+> > argument" which would be the state value.
+> > 
+> > So I would do something like this:
+> > 
+> > ---
+> >  drivers/cpufreq/cpufreq.c |   11 ++++++-----
+> >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > 
+> > Index: linux-pm/drivers/cpufreq/cpufreq.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/cpufreq/cpufreq.c
+> > +++ linux-pm/drivers/cpufreq/cpufreq.c
+> > @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
+> >  static int cpufreq_boost_set_sw(int state)
+> >  {
+> >  	struct cpufreq_policy *policy;
+> > -	int ret = -EINVAL;
+> >  
+> >  	for_each_active_policy(policy) {
+> > +		int ret;
+> > +
+> >  		if (!policy->freq_table)
+> > -			continue;
+> > +			return -ENXIO;
+> >  
+> >  		ret = cpufreq_frequency_table_cpuinfo(policy,
+> >  						      policy->freq_table);
+> >  		if (ret) {
+> >  			pr_err("%s: Policy frequency update failed\n",
+> >  			       __func__);
+> > -			break;
+> > +			return ret;
+> >  		}
+> >  
+> >  		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+> >  		if (ret < 0)
+> > -			break;
+> > +			return ret;
+> >  	}
+> >  
+> > -	return ret;
+> > +	return 0;
+> >  }
+> >  
+> >  int cpufreq_boost_trigger_state(int state)
 > 
-> > Hello,
-> >
-> > On Thu, 30 Apr 2020 10:06:13 +0200
-> > Pali Rohár <pali@kernel.org> wrote:
-> >
-> >> Marek Behún (5):
-> >>   PCI: aardvark: Improve link training
-> >>   PCI: aardvark: Add PHY support
-> >>   dt-bindings: PCI: aardvark: Describe new properties
-> >>   arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
-> >>   arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
-> >> 
-> >> Pali Rohár (7):
-> >>   PCI: aardvark: Train link immediately after enabling training
-> >>   PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
-> >>     read-only register
-> >>   PCI: of: Zero max-link-speed value is invalid
-> >>   PCI: aardvark: Issue PERST via GPIO
-> >>   PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
-> >>   PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
-> >>     macros
-> >>   arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
-> >
-> > Thanks a lot for this work. For a number of reasons, I'm less involved
-> > in Marvell platform support in Linux, but I reviewed your series and
-> > followed the discussions around it, and I'm happy to give my:
-> >
-> > Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> 
-> With this acked-by for the series, the reviewed-by from Rob on the
-> binding and the tested-by, I am pretty confident so I applied the
-> patches 10, 11 and 12 on mvebu/dt64.
-> 
-> Thanks,
-> 
-> Gregory
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Thank you!
+Ok. Thanks for the comments. Shall I resend the patch with update Rafael
+suggests or you'll merge the Rafael's fix in yourself?
 
-Lorenzo, would you now take remaining patches?
-
-> 
-> >
-> > for the whole series. The changes all seem sensible, and have been
-> > tested by several folks.
-> >
-> > Thanks!
-> >
-> > Thomas
-> > -- 
-> > Thomas Petazzoni, CTO, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
+-Sergey
 > 
 > -- 
-> Gregory Clement, Bootlin
-> Embedded Linux and Kernel engineering
-> http://bootlin.com
+> viresh
