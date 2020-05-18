@@ -2,71 +2,111 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BFBC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F902070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B7520825
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgERJvP (ORCPT
+        id S1726590AbgERJx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:51:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgERJvP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:51:15 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA4AC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 02:51:14 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jacQO-0006d5-NZ; Mon, 18 May 2020 11:51:08 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 03561100606; Mon, 18 May 2020 11:51:07 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sasha Levin <sashal@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, luto@kernel.org,
-        hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ak@linux.intel.com, ravi.v.shankar@intel.com,
-        chang.seok.bae@intel.com
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-In-Reply-To: <20200515164013.GF29995@sasha-vm>
-References: <20200511045311.4785-1-sashal@kernel.org> <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com> <20200515164013.GF29995@sasha-vm>
-Date:   Mon, 18 May 2020 11:51:07 +0200
-Message-ID: <87o8qly3jo.fsf@nanos.tec.linutronix.de>
+        Mon, 18 May 2020 05:53:29 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29861 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgERJx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:53:28 -0400
+IronPort-SDR: fOjCcUXM30INFO0ZwLVMQwn3+o3YQtSBOVuGF3mmX3lnNvlIX0vDS3dHB4tjpbW6kaABYLmnlQ
+ 2ezaBRLQDbiA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 02:53:28 -0700
+IronPort-SDR: IPxhcZLdyUPpSJDtRywqmENMCEXb8iNw2LOGME7vov3Pi2g/kBh+2kmc4fcyM75/P26UqVcqln
+ tzZ03x2Y4dtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
+   d="scan'208";a="281919241"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.149.12]) ([10.249.149.12])
+  by orsmga002.jf.intel.com with ESMTP; 18 May 2020 02:53:22 -0700
+Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
+ setting
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, stable@vger.kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-21-Sergey.Semin@baikalelectronics.ru>
+ <c5109483-4c14-1a0c-efa9-51edf01c12de@intel.com>
+ <20200516125203.et5gkv6ullkerjyd@mobilestation>
+ <20200518074142.c6kbofpdlxro2pjz@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <a8dfa493-f858-e35d-7e57-78478be555c4@intel.com>
+Date:   Mon, 18 May 2020 11:53:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200518074142.c6kbofpdlxro2pjz@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sasha Levin <sashal@kernel.org> writes:
-> On Fri, May 15, 2020 at 12:24:14PM +0300, Jarkko Sakkinen wrote:
->>
->>Can you put me to the CC-loop for this patches. Some SGX-enabled
->>frameworks such as Graphene use out-of-tree changes to achieve this.
->>That's where the interest to possibly test this comes from.
+On 5/18/2020 9:41 AM, Viresh Kumar wrote:
+> On 16-05-20, 15:52, Serge Semin wrote:
+>> On Fri, May 15, 2020 at 05:58:47PM +0200, Rafael J. Wysocki wrote:
+>>>> @@ -2554,7 +2554,7 @@ static int cpufreq_boost_set_sw(int state)
+>>>>    			break;
+>>>>    	}
+>>>> -	return ret;
+>>>> +	return ret < 0 ? ret : 0;
+>>>>    }
+>>>>    int cpufreq_boost_trigger_state(int state)
+>>> IMO it is better to update the caller of this function to handle the
+>>> positive value possibly returned by it correctly.
+>> Could you elaborate why? Viresh seems to be ok with this solution.
+> And it is absolutely fine for Rafael to not agree with it :)
 >
-> Indeed, we've seen a few hacks that basically just enable FSGSBASE:
->
->  - https://github.com/oscarlab/graphene-sgx-driver
->  - https://github.com/occlum/enable_rdfsbase
+>> As I see it the caller doesn't expect the positive value returned by the
+>> original freq_qos_update_request(). It just doesn't need to know whether the
+>> effective policy has been updated or not, it only needs to make sure the
+>> operations has been successful. Moreover the positive value is related only
+>> to the !last! active policy, which doesn't give the caller a full picture
+>> of the policy change anyway. So taking all of these into account I'd leave the
+>> fix as is.
+> Rafael: This function is called via a function pointer, which can call
+> this or a platform dependent routine (like in acpi-cpufreq.c), and it
+> would be reasonable IMO for the return of that callback to only look
+> for 0 or negative values, as is generally done in the kernel.
 
-I'm really amazed by all these security experts enabling a full root
-hole. It clearly puts the SGX hypocrisy into perspective.
+But it only has one caller that can easily check ret < 0 instead of just 
+ret, so the extra branch can be saved.
 
-Thanks,
+That said if you really only want it to return 0 on success, you may as 
+well add a ret = 0; statement (with a comment explaining why it is 
+needed) after the last break in the loop.
 
-        tglx
+Cheers!
+
+
