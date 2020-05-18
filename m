@@ -2,115 +2,98 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D08C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079B620829
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589840837;
-	bh=Mc5wZR6935NKKgGq3HpDn/de/Md1HC2p9pCOvKfW0k4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rlXDXuVvZsdBVDxMSxZvFHEzXgxoxySLBfAkqC0NrJfKA5D4T5Zwm82cPeM5MbBxH
-	 1gqrWx0OQY8TV1Lf0whYBsPrYm6d0mwBcpbF+njYSNFLJVDi3Tf/Jy2Rn/6bCIjQDp
-	 Yln1CPllCb7/IZXGj8SYFESNkqX9FQ50RJvUYa+U=
+	by mail.kernel.org (Postfix) with ESMTP id 105C8207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DciQigMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgERW1Q (ORCPT
+        id S1728297AbgERW1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgERW1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:27:16 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F45B207ED;
-        Mon, 18 May 2020 22:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589840835;
-        bh=Mc5wZR6935NKKgGq3HpDn/de/Md1HC2p9pCOvKfW0k4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oOo2+UvHiPZA3GmWml8k/2bFs4i/qMTPPqSGWPtSlrIw+dlq6graqyHxT9Bd/63qi
-         a2x9hO4U4YGztj3+oTdalkOQw3hoTo8HQBrdlCXMYmAMR7vSkJciqggudB1GgvWnLA
-         EzkCdUSEBEim2V5zFX7dramyTIVEFIuznVWUp9ec=
-Date:   Mon, 18 May 2020 17:32:02 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org H. Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] x86/uv/time: Replace one-element array and save heap
- space
-Message-ID: <20200518223202.GD9868@embeddedor>
-References: <20200518190114.GA7757@embeddedor>
- <b03d196cdbbbc6e9e8456910c6c6673ab67f76cb.camel@perches.com>
+        Mon, 18 May 2020 18:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728223AbgERW1s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:27:48 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F651C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 15:27:47 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z26so5481878pfk.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 15:27:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QjsuewzhfZI6m+Hde5GIwD747MiEMVgDHLx6f9iIyuQ=;
+        b=DciQigMFiKQBAI+nDrFox05gdEbOalXst4/IvZVKSbr97ysgLO3Jnr3C2Org/JRDMi
+         zPkTpZL8gweMYiStFzBJUYVyLPGk6uO85DUDakpJ95uBUGtvgx77rWvjEwa81nvpf5m9
+         zjgnynD9lkFsaY690XDl/nsyWgnp0EPXRP6Jh/qpj8BzBFqaDAP3mnXhPVSyi7WZwXgm
+         CCswHh6+CPgxf/uT53rTYwIgMhL8BVYo1RzINNGxGEGFhlxZKZ4cZWWXeJZO4Ig90rDR
+         Ciz6oqiMiwABYc1o2n2v0A7cw2q0hwc9OsOnTFonHD7xRIWNk45uyQIG3yzLhw51NQh6
+         KlbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QjsuewzhfZI6m+Hde5GIwD747MiEMVgDHLx6f9iIyuQ=;
+        b=oGIMoN93XNFE3IMD284/Pck22uFdWnYAvZEFAqzBtiUuthHrz5r2OrIFYQcjkjuQSZ
+         Wb70q5YamhAzUANafd3bGZkux164WSZ6OK7BSrEkrfzE6vuXshe9g1IhQMF5KeVlXoou
+         gePxigd0/Z6tnnwyVGedqR0gRk8u89uKgpvtFGyhIXpUqZCvR70BkWqBVkKLXSQoVQP3
+         cJp3DX/LXZArC7vIQs2qinMqUfcrWM2ooVEfaTY8FOiByGKyYhl5EGjEdhcwW93FmJ4A
+         xJWkVEof6xNIgUGXXTfncKMc2DWn0d80FWrwlY8nWC8KVMJ3motmJSWwg7Uy/z/moX+B
+         IkKA==
+X-Gm-Message-State: AOAM5310zF0OKkG/kIS/S7hJkdyPbQdwvZv8pOQGkasP9H2FQHnnsfCT
+        DSNQRXw8cXCyCJQ6RLP7MT1hhA==
+X-Google-Smtp-Source: ABdhPJwXQpma2Z97nvUZzKCu239hl460Tco5kUWtUE9yL/qcG0JvxSHuAv1T7YyKEDBFNvrp2Ipklw==
+X-Received: by 2002:a63:ed50:: with SMTP id m16mr17808069pgk.271.1589840866953;
+        Mon, 18 May 2020 15:27:46 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x10sm8268963pgr.65.2020.05.18.15.27.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 15:27:46 -0700 (PDT)
+Date:   Mon, 18 May 2020 15:26:23 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Valdis Kl??tnieks <valdis.kletnieks@vt.edu>
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: wcss: Fix function call for new API
+Message-ID: <20200518222623.GI2165@builder.lan>
+References: <77652.1589836106@turing-police>
+ <77864.1589836457@turing-police>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b03d196cdbbbc6e9e8456910c6c6673ab67f76cb.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <77864.1589836457@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:09:16PM -0700, Joe Perches wrote:
-> On Mon, 2020-05-18 at 14:01 -0500, Gustavo A. R. Silva wrote:
-> > The current codebase makes use of one-element arrays in the following
-> > form:
-> > 
-> > struct something {
-> >     int length;
-> >     u8 data[1];
-> > };
-> []
-> > This issue has been out there since 2009.
-> > This issue was found with the help of Coccinelle and fixed _manually_.
-> []
-> > diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
-> > index 7af31b245636..993a8ae6fdfb 100644
-> > --- a/arch/x86/platform/uv/uv_time.c
-> > +++ b/arch/x86/platform/uv/uv_time.c
-> > @@ -52,7 +52,7 @@ struct uv_rtc_timer_head {
-> >  	struct {
-> >  		int	lcpu;		/* systemwide logical cpu number */
-> >  		u64	expires;	/* next timer expiration for this cpu */
-> > -	} cpu[1];
-> > +	} cpu[];
-> >  };
-> >  
-> >  /*
-> > @@ -156,9 +156,8 @@ static __init int uv_rtc_allocate_timers(void)
-> >  		struct uv_rtc_timer_head *head = blade_info[bid];
-> >  
-> >  		if (!head) {
-> > -			head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
-> > -				(uv_blade_nr_possible_cpus(bid) *
-> > -					2 * sizeof(u64)),
-> > +			head = kmalloc_node(struct_size(head, cpu,
-> > +				uv_blade_nr_possible_cpus(bid)),
-> 
-> It's probably safer to use kzalloc_node here as well.
-> 
+On Mon 18 May 14:14 PDT 2020, Valdis Kl??tnieks wrote:
 
-Thanks for your feedback, Joe. I'll wait for comments from the
-maintainers on this and the rest of the patch.
-
-Thanks
---
-Gustavo
-
-> >  				GFP_KERNEL, nid);
-> >  			if (!head) {
-> >  				uv_rtc_deallocate_timers();
+> On Mon, 18 May 2020 17:08:26 -0400, "Valdis Kl??tnieks" said:
+> > commit 8a226e2c71: remoteproc: wcss: add support for rpmsg communication
+> >
+> > throws a compile error:
+> >
+> >    CC [M]  drivers/remoteproc/qcom_q6v5_wcss.o
+> > drivers/remoteproc/qcom_q6v5_wcss.c: In function 'q6v5_wcss_probe':
 > 
+>  Ignore this - was fixed between when I noted the problem and when I sent the mail :)
+
+Right, I fixed this a few days back. Thanks for the patch and thanks for
+confirming that it's fixed!
+
+Regards,
+Bjorn
