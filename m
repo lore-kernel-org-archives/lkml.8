@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17948C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E133120826
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B1920715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825361;
-	bh=niMoW/NcqlytDsJs9MnEpxBRpo4qzbQDc39I//L98n0=;
+	s=default; t=1589825365;
+	bh=jEGs5cCX+TotOoxBhZ01jg/PVeC8CitSbGIkzwa184g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gwH32L0w+TU7S+JNh1kTIKBV7/stzGMZioZE9KdvBT2HXypwxKGvveaT/9RnXXhjs
-	 EPU41dYdQFKHdhQzHbJ6ny24RGkiWf33wLM3Gehgjmc3V6lo6hwULq/Fy9Aooyubda
-	 gOf4R1cBxonSSC6FWevzkbhz4b+Tlpi5UX/NY9RQ=
+	b=XQM9y8nTlObPXzj7Ah0Cz5gzaDDXQnASXY2rX6CtIXWYuBFBKzlperZaVnBqxFSgR
+	 pY3u31ATr3JeweNfnb03PeNLCOAhR4g7p7l1vrGkw6yZUnlhb8yuxqYXVh3mbj2/dL
+	 Z0H1mZl589YYB1GTlE7UPSNgCo6YceLOgSM5xfMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733093AbgERSJT (ORCPT
+        id S1733310AbgERSJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55254 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730517AbgERSGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:06:49 -0400
+        id S1733195AbgERSGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:06:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 042DF20853;
-        Mon, 18 May 2020 18:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17850207D3;
+        Mon, 18 May 2020 18:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825209;
-        bh=niMoW/NcqlytDsJs9MnEpxBRpo4qzbQDc39I//L98n0=;
+        s=default; t=1589825199;
+        bh=jEGs5cCX+TotOoxBhZ01jg/PVeC8CitSbGIkzwa184g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYtnHaiN8vKcjY/MmSgeUl5J6+XAN1M4CZNsQE12bFnhZwNpZJqjrug0WEETgt957
-         HXbzi3Evsel8zHbn4QJx2C0NAyIm6YqcljoQD7dNPBpHUFzJIj8qhwY8CrSubhu6jc
-         zfW3FLriQmioV3A5Hl4GKlFWsXW1KXTZcYNaUgf4=
+        b=BNtWEXTIPo4iiRQsaWAtNGLWcMeho4DRvxnwhKc7/UwToTYCwo3zArAUsBIBFPNik
+         1mR91hWEQwCskoU+ZYSauI9JPxcJyCzamiq+ET1O7hq610I2C6g6F46TX4t2QCjTFN
+         UUy2VYJku+awP6nBfOGxwourHtp1qI3+RLTgwQVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.6 174/194] arm64: dts: qcom: msm8996: Reduce vdd_apc voltage
-Date:   Mon, 18 May 2020 19:37:44 +0200
-Message-Id: <20200518173546.124111884@linuxfoundation.org>
+        stable@vger.kernel.org, YongQin Liu <yongqin.liu@linaro.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Josh Gao <jmgao@google.com>,
+        Todd Kjos <tkjos@google.com>, Felipe Balbi <balbi@kernel.org>,
+        linux-usb@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 5.6 162/194] dwc3: Remove check for HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
+Date:   Mon, 18 May 2020 19:37:32 +0200
+Message-Id: <20200518173544.709413214@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,38 +66,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: John Stultz <john.stultz@linaro.org>
 
-commit 28810eecae08f9458a44831978e36f14ed182c80 upstream.
+commit 00e21763f2c8cab21b7befa52996d1b18bde5c42 upstream.
 
-Some msm8996 based devices are unstable when run with VDD_APC of 1.23V,
-which is listed as the maximum voltage in "Turbo" mode. Given that the
-CPU cluster is not run in "Turbo" mode, reduce this to 0.98V - the
-maximum voltage for nominal operation.
+The check for the HWO flag in dwc3_gadget_ep_reclaim_trb_sg()
+causes us to break out of the loop before we call
+dwc3_gadget_ep_reclaim_completed_trb(), which is what likely
+should be clearing the HWO flag.
 
-Tested-by: Loic Poulain <loic.poulain@linaro.org>
-Fixes: 7a2a2231ef22 ("arm64: dts: apq8096-db820c: Fix VDD core voltage")
-Cc: Loic Poulain <loic.poulain@linaro.org>
-Link: https://lore.kernel.org/r/20200318054442.3066726-1-bjorn.andersson@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This can cause odd behavior where we never reclaim all the trbs
+in the sg list, so we never call giveback on a usb req, and that
+will causes transfer stalls.
+
+This effectively resovles the adb stalls seen on HiKey960
+after userland changes started only using AIO in adbd.
+
+Cc: YongQin Liu <yongqin.liu@linaro.org>
+Cc: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: Yang Fei <fei.yang@intel.com>
+Cc: Thinh Nguyen <thinhn@synopsys.com>
+Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Josh Gao <jmgao@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: stable@vger.kernel.org #4.20+
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/dwc3/gadget.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -658,8 +658,8 @@
- 	s11 {
- 		qcom,saw-leader;
- 		regulator-always-on;
--		regulator-min-microvolt = <1230000>;
--		regulator-max-microvolt = <1230000>;
-+		regulator-min-microvolt = <980000>;
-+		regulator-max-microvolt = <980000>;
- 	};
- };
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2483,9 +2483,6 @@ static int dwc3_gadget_ep_reclaim_trb_sg
+ 	for_each_sg(sg, s, pending, i) {
+ 		trb = &dep->trb_pool[dep->trb_dequeue];
+ 
+-		if (trb->ctrl & DWC3_TRB_CTRL_HWO)
+-			break;
+-
+ 		req->sg = sg_next(s);
+ 		req->num_pending_sgs--;
  
 
 
