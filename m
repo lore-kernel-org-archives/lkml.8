@@ -2,91 +2,94 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A21C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8F92084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589834509;
-	bh=eW9dA64CVaWgrcSFJ1x7C7dSa95K+pSpazmcCMpWNWY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z8Q5w885TjO2sEYPtWwa9w6QPUAJYsmAZNpWjljrhpDHBB9IyOO5X6eRCUshYgmGk
-	 /njOjOfIq9kkN4VIOiE1VKa+gUiev9sa8FMRc/vvNPtFV5zqE4MtakV1yrwxHLzfLS
-	 1p9GQU9i5GdhxactsHfDp1QohLjtCASx+ms6l1lQ=
+	by mail.kernel.org (Postfix) with ESMTP id 71440206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgERUls (ORCPT
+        id S1727938AbgERUmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:41:48 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36016 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgERUls (ORCPT
+        Mon, 18 May 2020 16:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgERUmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:41:48 -0400
-Received: by mail-io1-f66.google.com with SMTP id k6so12224530iob.3;
-        Mon, 18 May 2020 13:41:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gPZ7HwLu+ZKuhC4Z7Pkuo4nBmBsOY1+VIA/NUsuh/DA=;
-        b=hPnl35yePgl8YdiOdSELn7D9E2qQpli8lL7m/SRHQjlBgmELowWFwfnian+6lmNsum
-         4Rcr3bqQ6k117t/0FpH2Ee70WRhVeD5BgDktqDtBudEGe3neJoFQtkefmlA7rb12HS4p
-         4tLlpAWAsoDMTPWVldk4AFIAgNO5EBEXq3ADCUCp0onhMn73lrAMhagzFWKLrF/b5Z1D
-         xrDLY7coe5l3pAqEUfHEJOwQBahMJDJxrdTL9VUbhsSKFixNo0Q41H/Xu6kpJHPbUsU5
-         QSRXe5ic51p1I/xD7Yp/FQ53+bD8doWc4rnhyp4Zo4zK+HR3o4ajLnhU/RvoBs4YAIrt
-         YAtg==
-X-Gm-Message-State: AOAM532AehzK4vLrMtnYBbmpvQ7G4kT8TgeZneAVG8uWbhIABkitYEJQ
-        h6BbwN1j/sVdEH3xH7MHfQ==
-X-Google-Smtp-Source: ABdhPJxEyNCVrlRsyqtmHbcvip7RB0j/NMJOkoIw9BOe8G2f9o9OXhHUrDCilvK3zRKkp7L7ICe24A==
-X-Received: by 2002:a02:1746:: with SMTP id 67mr16973423jah.103.1589834506239;
-        Mon, 18 May 2020 13:41:46 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s22sm4249181iow.40.2020.05.18.13.41.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 13:41:45 -0700 (PDT)
-Received: (nullmailer pid 11333 invoked by uid 1000);
-        Mon, 18 May 2020 20:41:44 -0000
-Date:   Mon, 18 May 2020 14:41:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v14 1/2] dt-bindings: proximity: provide vcnl3020 device
- tree binding document
-Message-ID: <20200518204144.GA11276@bogus>
-References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
- <20200510184537.10335-2-i.mikhaylov@yadro.com>
+        Mon, 18 May 2020 16:42:23 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AE8C061A0C;
+        Mon, 18 May 2020 13:42:23 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jama5-00Fkrl-PA; Mon, 18 May 2020 22:41:49 +0200
+Message-ID: <d81601b17065d7dc3b78bf8d68faf0fbfdb8c936.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Steve deRosier <derosier@gmail.com>,
+        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com,
+        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
+        daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Date:   Mon, 18 May 2020 22:41:48 +0200
+In-Reply-To: <20200518133521.6052042e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <20200515212846.1347-1-mcgrof@kernel.org>
+         <20200515212846.1347-13-mcgrof@kernel.org>
+         <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+         <20200518165154.GH11244@42.do-not-panic.com>
+         <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
+         <20200518170934.GJ11244@42.do-not-panic.com>
+         <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
+         <20200518171801.GL11244@42.do-not-panic.com>
+         <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
+         <20200518190930.GO11244@42.do-not-panic.com>
+         <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
+         <20200518132828.553159d9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+         <8d7a3bed242ac9d3ec55a4c97e008081230f1f6d.camel@sipsolutions.net>
+         <20200518133521.6052042e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200510184537.10335-2-i.mikhaylov@yadro.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 May 2020 21:45:36 +0300, Ivan Mikhaylov wrote:
-> Mostly standard i2c driver with some additional led-current option
-> for vcnl3020.
+On Mon, 2020-05-18 at 13:35 -0700, Jakub Kicinski wrote:
 > 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> ---
->  .../iio/proximity/vishay,vcnl3020.yaml        | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> It's intended to be a generic netlink channel for configuring devices.
 > 
+> All the firmware-related interfaces have no dependencies on netdevs,
+> in fact that's one of the reasons we moved to devlink - we don't want
+> to hold rtnl lock just for talking to device firmware.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sounds good :)
+
+So I guess Luis just has to add some way in devlink to hook up devlink
+health in a simple way to drivers, perhaps? I mean, many drivers won't
+really want to use devlink for anything else, so I guess it should be as
+simple as the API that Luis proposed ("firmware crashed for this struct
+device"), if nothing more interesting is done with devlink?
+
+Dunno. But anyway sounds like it should somehow integrate there rather
+than the way this patchset proposed?
+
+johannes
+
