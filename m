@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ED0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF29C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC5120671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3BE20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825960;
-	bh=rzC9MGi2S9HCI1wE1EFNRig2v1+cv7Lofvm0RsNonKA=;
+	s=default; t=1589825966;
+	bh=atgqXYkEgqWD2b2PPiG23BKYGUxZMe4ntwxE0wwZT94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rnR+Ugi5DqsJK21mRnO3Xkb/O2HdzxBLVneL3AU4ONyI5Rm6GrKDf2FSoCZpdLC8G
-	 ACfyw/9Z0eDK4rGzMi3iVKR2Vijb4hyfOoEpy8ETdx2Iz+hDIFcag3LnQsUY8A9xY6
-	 Ig2EyBNZ7lOld21CmaahQcLh04b1JT+e/BvivZUU=
+	b=l2nOxQ4VgKCWva56fKG0KBQ7bcSbN0ybr0t2rJzBMihFrjWRYOi41JhM1oDV2eILY
+	 6oUEqtDab/q+6Gpm1LyOFA/1Ubov/cGsB5Dw2oWEJTG7qSXBM1LLHQ0h07UqDG5phc
+	 +bihU/CH54LgyVaTfWR3hwoJ64NS4bmTnon1fhzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387543AbgERSTT (ORCPT
+        id S1729361AbgERRyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:19:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59242 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731311AbgERRyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:54:31 -0400
+        id S1731263AbgERRyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E81CF207F5;
-        Mon, 18 May 2020 17:54:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC8120715;
+        Mon, 18 May 2020 17:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824470;
-        bh=rzC9MGi2S9HCI1wE1EFNRig2v1+cv7Lofvm0RsNonKA=;
+        s=default; t=1589824452;
+        bh=atgqXYkEgqWD2b2PPiG23BKYGUxZMe4ntwxE0wwZT94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FUsLEwERB1bU9hy+ZotabFhp+qCiXwi+tqvudxhK/TLIAhM8rkWdAL0jouWA0MIK9
-         8oIEqwrrNPGjB7YmqAy+BTjVv3mihIrLzDScZTrFSKlEzvhKDFeM3+fH/kZZMPeCqQ
-         Kn5GdzhjWe5fo+0f371SLj7z8fsoqkcSSFrR63y0=
+        b=p79Mrs6r6FeBSn4haf9jTDHkt2EpM8qaUyC5fmlQF/c595WOuaDMvR2GixrVxxVLM
+         zPeKsxw/AWKWWbCDWm6DMG7N6w+AGrCeVInCRF7CwJbLM/nLBlE5ZeTZkmXx2H6wBJ
+         bjtsReyOKE0vM6BS7JLU4lgjxvw3/EPpFoGy7i1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        stable@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 024/147] Revert "ipv6: add mtu lock check in __ip6_rt_update_pmtu"
-Date:   Mon, 18 May 2020 19:35:47 +0200
-Message-Id: <20200518173516.836413313@linuxfoundation.org>
+Subject: [PATCH 5.4 018/147] dpaa2-eth: properly handle buffer size restrictions
+Date:   Mon, 18 May 2020 19:35:41 +0200
+Message-Id: <20200518173516.052075569@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -63,63 +59,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Maciej Żenczykowski" <maze@google.com>
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
 
-[ Upstream commit 09454fd0a4ce23cb3d8af65066c91a1bf27120dd ]
+[ Upstream commit efa6a7d07523ffbbf6503c1a7eeb52201c15c0e3 ]
 
-This reverts commit 19bda36c4299ce3d7e5bce10bebe01764a655a6d:
+Depending on the WRIOP version, the buffer size on the RX path must by a
+multiple of 64 or 256. Handle this restriction properly by aligning down
+the buffer size to the necessary value. Also, use the new buffer size
+dynamically computed instead of the compile time one.
 
-| ipv6: add mtu lock check in __ip6_rt_update_pmtu
-|
-| Prior to this patch, ipv6 didn't do mtu lock check in ip6_update_pmtu.
-| It leaded to that mtu lock doesn't really work when receiving the pkt
-| of ICMPV6_PKT_TOOBIG.
-|
-| This patch is to add mtu lock check in __ip6_rt_update_pmtu just as ipv4
-| did in __ip_rt_update_pmtu.
-
-The above reasoning is incorrect.  IPv6 *requires* icmp based pmtu to work.
-There's already a comment to this effect elsewhere in the kernel:
-
-  $ git grep -p -B1 -A3 'RTAX_MTU lock'
-  net/ipv6/route.c=4813=
-
-  static int rt6_mtu_change_route(struct fib6_info *f6i, void *p_arg)
-  ...
-    /* In IPv6 pmtu discovery is not optional,
-       so that RTAX_MTU lock cannot disable it.
-       We still use this lock to block changes
-       caused by addrconf/ndisc.
-    */
-
-This reverts to the pre-4.9 behaviour.
-
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Cc: Xin Long <lucien.xin@gmail.com>
-Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
-Signed-off-by: Maciej Żenczykowski <maze@google.com>
-Fixes: 19bda36c4299 ("ipv6: add mtu lock check in __ip6_rt_update_pmtu")
+Fixes: 27c874867c4e ("dpaa2-eth: Use a single page per Rx buffer")
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c |   29 +++++++++++++----------
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h |    1 
+ 2 files changed, 18 insertions(+), 12 deletions(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -2728,8 +2728,10 @@ static void __ip6_rt_update_pmtu(struct
- 	const struct in6_addr *daddr, *saddr;
- 	struct rt6_info *rt6 = (struct rt6_info *)dst;
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -86,7 +86,7 @@ static void free_rx_fd(struct dpaa2_eth_
+ 	for (i = 1; i < DPAA2_ETH_MAX_SG_ENTRIES; i++) {
+ 		addr = dpaa2_sg_get_addr(&sgt[i]);
+ 		sg_vaddr = dpaa2_iova_to_virt(priv->iommu_domain, addr);
+-		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
++		dma_unmap_page(dev, addr, priv->rx_buf_size,
+ 			       DMA_BIDIRECTIONAL);
  
--	if (dst_metric_locked(dst, RTAX_MTU))
--		return;
-+	/* Note: do *NOT* check dst_metric_locked(dst, RTAX_MTU)
-+	 * IPv6 pmtu discovery isn't optional, so 'mtu lock' cannot disable it.
-+	 * [see also comment in rt6_mtu_change_route()]
+ 		free_pages((unsigned long)sg_vaddr, 0);
+@@ -144,7 +144,7 @@ static struct sk_buff *build_frag_skb(st
+ 		/* Get the address and length from the S/G entry */
+ 		sg_addr = dpaa2_sg_get_addr(sge);
+ 		sg_vaddr = dpaa2_iova_to_virt(priv->iommu_domain, sg_addr);
+-		dma_unmap_page(dev, sg_addr, DPAA2_ETH_RX_BUF_SIZE,
++		dma_unmap_page(dev, sg_addr, priv->rx_buf_size,
+ 			       DMA_BIDIRECTIONAL);
+ 
+ 		sg_length = dpaa2_sg_get_len(sge);
+@@ -185,7 +185,7 @@ static struct sk_buff *build_frag_skb(st
+ 				(page_address(page) - page_address(head_page));
+ 
+ 			skb_add_rx_frag(skb, i - 1, head_page, page_offset,
+-					sg_length, DPAA2_ETH_RX_BUF_SIZE);
++					sg_length, priv->rx_buf_size);
+ 		}
+ 
+ 		if (dpaa2_sg_is_final(sge))
+@@ -211,7 +211,7 @@ static void free_bufs(struct dpaa2_eth_p
+ 
+ 	for (i = 0; i < count; i++) {
+ 		vaddr = dpaa2_iova_to_virt(priv->iommu_domain, buf_array[i]);
+-		dma_unmap_page(dev, buf_array[i], DPAA2_ETH_RX_BUF_SIZE,
++		dma_unmap_page(dev, buf_array[i], priv->rx_buf_size,
+ 			       DMA_BIDIRECTIONAL);
+ 		free_pages((unsigned long)vaddr, 0);
+ 	}
+@@ -331,7 +331,7 @@ static u32 run_xdp(struct dpaa2_eth_priv
+ 		break;
+ 	case XDP_REDIRECT:
+ 		dma_unmap_page(priv->net_dev->dev.parent, addr,
+-			       DPAA2_ETH_RX_BUF_SIZE, DMA_BIDIRECTIONAL);
++			       priv->rx_buf_size, DMA_BIDIRECTIONAL);
+ 		ch->buf_count--;
+ 		xdp.data_hard_start = vaddr;
+ 		err = xdp_do_redirect(priv->net_dev, &xdp, xdp_prog);
+@@ -370,7 +370,7 @@ static void dpaa2_eth_rx(struct dpaa2_et
+ 	trace_dpaa2_rx_fd(priv->net_dev, fd);
+ 
+ 	vaddr = dpaa2_iova_to_virt(priv->iommu_domain, addr);
+-	dma_sync_single_for_cpu(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
++	dma_sync_single_for_cpu(dev, addr, priv->rx_buf_size,
+ 				DMA_BIDIRECTIONAL);
+ 
+ 	fas = dpaa2_get_fas(vaddr, false);
+@@ -389,13 +389,13 @@ static void dpaa2_eth_rx(struct dpaa2_et
+ 			return;
+ 		}
+ 
+-		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
++		dma_unmap_page(dev, addr, priv->rx_buf_size,
+ 			       DMA_BIDIRECTIONAL);
+ 		skb = build_linear_skb(ch, fd, vaddr);
+ 	} else if (fd_format == dpaa2_fd_sg) {
+ 		WARN_ON(priv->xdp_prog);
+ 
+-		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
++		dma_unmap_page(dev, addr, priv->rx_buf_size,
+ 			       DMA_BIDIRECTIONAL);
+ 		skb = build_frag_skb(priv, ch, buf_data);
+ 		free_pages((unsigned long)vaddr, 0);
+@@ -963,7 +963,7 @@ static int add_bufs(struct dpaa2_eth_pri
+ 		if (!page)
+ 			goto err_alloc;
+ 
+-		addr = dma_map_page(dev, page, 0, DPAA2_ETH_RX_BUF_SIZE,
++		addr = dma_map_page(dev, page, 0, priv->rx_buf_size,
+ 				    DMA_BIDIRECTIONAL);
+ 		if (unlikely(dma_mapping_error(dev, addr)))
+ 			goto err_map;
+@@ -973,7 +973,7 @@ static int add_bufs(struct dpaa2_eth_pri
+ 		/* tracing point */
+ 		trace_dpaa2_eth_buf_seed(priv->net_dev,
+ 					 page, DPAA2_ETH_RX_BUF_RAW_SIZE,
+-					 addr, DPAA2_ETH_RX_BUF_SIZE,
++					 addr, priv->rx_buf_size,
+ 					 bpid);
+ 	}
+ 
+@@ -1680,7 +1680,7 @@ static bool xdp_mtu_valid(struct dpaa2_e
+ 	int mfl, linear_mfl;
+ 
+ 	mfl = DPAA2_ETH_L2_MAX_FRM(mtu);
+-	linear_mfl = DPAA2_ETH_RX_BUF_SIZE - DPAA2_ETH_RX_HWA_SIZE -
++	linear_mfl = priv->rx_buf_size - DPAA2_ETH_RX_HWA_SIZE -
+ 		     dpaa2_eth_rx_head_room(priv) - XDP_PACKET_HEADROOM;
+ 
+ 	if (mfl > linear_mfl) {
+@@ -2432,6 +2432,11 @@ static int set_buffer_layout(struct dpaa
+ 	else
+ 		rx_buf_align = DPAA2_ETH_RX_BUF_ALIGN;
+ 
++	/* We need to ensure that the buffer size seen by WRIOP is a multiple
++	 * of 64 or 256 bytes depending on the WRIOP version.
 +	 */
++	priv->rx_buf_size = ALIGN_DOWN(DPAA2_ETH_RX_BUF_SIZE, rx_buf_align);
++
+ 	/* tx buffer */
+ 	buf_layout.private_data_size = DPAA2_ETH_SWA_SIZE;
+ 	buf_layout.pass_timestamp = true;
+@@ -3096,7 +3101,7 @@ static int bind_dpni(struct dpaa2_eth_pr
+ 	pools_params.num_dpbp = 1;
+ 	pools_params.pools[0].dpbp_id = priv->dpbp_dev->obj_desc.id;
+ 	pools_params.pools[0].backup_pool = 0;
+-	pools_params.pools[0].buffer_size = DPAA2_ETH_RX_BUF_SIZE;
++	pools_params.pools[0].buffer_size = priv->rx_buf_size;
+ 	err = dpni_set_pools(priv->mc_io, 0, priv->mc_token, &pools_params);
+ 	if (err) {
+ 		dev_err(dev, "dpni_set_pools() failed\n");
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
+@@ -373,6 +373,7 @@ struct dpaa2_eth_priv {
+ 	u16 tx_data_offset;
  
- 	if (iph) {
- 		daddr = &iph->daddr;
+ 	struct fsl_mc_device *dpbp_dev;
++	u16 rx_buf_size;
+ 	u16 bpid;
+ 	struct iommu_domain *iommu_domain;
+ 
 
 
