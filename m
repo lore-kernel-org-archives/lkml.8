@@ -2,156 +2,83 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B575C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A19EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE4620657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767B720756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EAX+Ye5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgERO07 (ORCPT
+        id S1727922AbgEROal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:26:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45833 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726989AbgERO06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:26:58 -0400
-IronPort-SDR: IaCvPQSTM0AMfqzVtKKP/B5gKWbhLdeQaRJaihKDJ9xDzKqP6F85j5ygczDEyz/MiyGd5DXyHy
- M1EEWNPEdnvA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 07:26:58 -0700
-IronPort-SDR: D9J9Ti4SRoEyQlac+WdBx3irF17x2lN2WH79bOyyVXHrR+HhDjTxiPx2BYk2mKvkN5PcdFxylx
- kd//gyzY73rQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="267534731"
-Received: from sksoni-mobl.amr.corp.intel.com (HELO [10.255.1.54]) ([10.255.1.54])
-  by orsmga006.jf.intel.com with ESMTP; 18 May 2020 07:26:53 -0700
-Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
- <20200429220732.31602-2-yu-cheng.yu@intel.com>
- <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com>
- <dd5b9bab31ecf247a0b4890e22bfbb486ff52001.camel@intel.com>
- <5cc163ff9058d1b27778e5f0a016c88a3b1a1598.camel@intel.com>
- <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com>
- <44c055342bda4fb4730703f987ae35195d1d0c38.camel@intel.com>
- <32235ffc-6e6c-fb3d-80c4-a0478e2d0e0f@intel.com>
- <b09658f92eb66c1d1be509813939b9ed827f9cf0.camel@intel.com>
- <631f071c-c755-a818-6a97-b333eb1fe21c@intel.com>
- <0f751be6d25364c25ee4bddc425b61e626dcd942.camel@intel.com>
- <6f2ef0e5-d3bb-2b52-dc81-8228fec4a3f5@intel.com>
- <CAMe9rOpX_6Zn69ZzwVt5Rdh5B9HwU7ccyoQLfyM067G8A=Eg-Q@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <05b4dd11-eb30-5ed8-4249-0396c3136428@intel.com>
-Date:   Mon, 18 May 2020 07:26:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 10:30:41 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47188 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727007AbgEROak (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 10:30:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589812239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/qLGWwr7pu6uwkkCaEo2q9GcnoY6Eg3hYnb4VN3qBPU=;
+        b=EAX+Ye5r4M/iQO4Igog1cqP0euM1OqUQcVHXnQ7PFtkqcLy+42QwxxdbLCut5vs8Pm+bPG
+        bOJ+nzlgK9ea9WKCQWFnYHpI8bD/wZ3H6XbLfTgiYuvPsTNVwoPbz4zWhH3405xw7T7KxU
+        0iwVAfN5N3j/H4rvfYP31AV6lXncNgs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-201-fSgEJzz0PV2LPqGaVrE7Gw-1; Mon, 18 May 2020 10:30:38 -0400
+X-MC-Unique: fSgEJzz0PV2LPqGaVrE7Gw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2166B80B71F;
+        Mon, 18 May 2020 14:30:37 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 57E311001925;
+        Mon, 18 May 2020 14:30:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAKgNAkioH1z-pVimHziWP=ZtyBgCOwoC7ekWGFwzaZ1FPYg-tA@mail.gmail.com>
+References: <CAKgNAkioH1z-pVimHziWP=ZtyBgCOwoC7ekWGFwzaZ1FPYg-tA@mail.gmail.com>
+To:     mtk.manpages@gmail.com
+Cc:     dhowells@redhat.com, Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Petr Vorel <pvorel@suse.cz>,
+        linux-man <linux-man@vger.kernel.org>
+Subject: Re: Setting mount propagation type in new mount API
 MIME-Version: 1.0
-In-Reply-To: <CAMe9rOpX_6Zn69ZzwVt5Rdh5B9HwU7ccyoQLfyM067G8A=Eg-Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <909695.1589812234.1@warthog.procyon.org.uk>
+Date:   Mon, 18 May 2020 15:30:34 +0100
+Message-ID: <909768.1589812234@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/20 7:01 AM, H.J. Lu wrote:
->> Could some of this information be added to the documentation, please?
->> It would also be nice to have some more details about how apps end up
->> using ARCH_X86_CET_STATUS.  Why would they care that CET is on?
-> CET software spec is at
-> 
-> https://gitlab.com/x86-psABIs/x86-64-ABI/-/wikis/Intel-CET-extension
-> 
-> My CET presentation at 2018 LPC is at
-> 
-> https://www.linuxplumbersconf.org/event/2/contributions/147/attachments/72/83/CET-LPC-2018.pdf
-> 
-> I am working on an updated CET presentation for 2020 LPC.  Let me know
-> if you want to see the early draft.
+Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
 
-There's a lot of great information in there!
+> I've been looking at the new mount API (fsopen(), fsconfig(),
+> fsmount(), move_mount(), etc.) and among the details that remain
+> mysterious to me is this: how does one set the propagation type
+> (private/shared/slave/unbindable) of a new mount and change the
+> propagation type of an existing mount?
 
-However, please remember that presentations are no substitute for old
-fashioned documentation in the kernel tree and changelogs.  The fact
-that we need to lean on them to answer basic questions about new
-interfaces is not a great sign.
+Christian said he was going to have a go at writing mount_setattr().  It's not
+trivial as it has to be able to handle AT_RECURSIVE.
+
+David
+
