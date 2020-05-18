@@ -6,114 +6,117 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFFC206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43440207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgERMxD (ORCPT
+        id S1727050AbgERMx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:53:03 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:47326 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgERMxA (ORCPT
+        Mon, 18 May 2020 08:53:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59920 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgERMx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:53:00 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B7B468030875;
-        Mon, 18 May 2020 12:52:55 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id txmeJSYd8bdj; Mon, 18 May 2020 15:52:55 +0300 (MSK)
-Date:   Mon, 18 May 2020 15:52:53 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Clement Leger <cleger@kalray.eu>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 10/19] spi: dw: Use DMA max burst to set the request
- thresholds
-Message-ID: <20200518125253.r4fpr4mjflclqpym@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
- <20200515104758.6934-11-Sergey.Semin@baikalelectronics.ru>
- <20200515143842.GG1634618@smile.fi.intel.com>
- <20200516200133.wmaqnfjbr7234fzo@mobilestation>
- <20200518110343.GY1634618@smile.fi.intel.com>
+        Mon, 18 May 2020 08:53:29 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jafGo-0005Y1-9c; Mon, 18 May 2020 12:53:26 +0000
+Date:   Mon, 18 May 2020 14:53:25 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Tycho Andersen <tycho@tycho.ws>
+Cc:     Aleksa Sarai <asarai@suse.de>, Kees Cook <keescook@chromium.org>,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seccomp: Add group_leader pid to seccomp_notif
+Message-ID: <20200518125325.l2lpixp3ch7zuiwx@wittgenstein>
+References: <20200515234005.32370-1-sargun@sargun.me>
+ <202005162344.74A02C2D@keescook>
+ <20200517104701.bbn2d2rqaplwchdw@wittgenstein>
+ <20200517112156.cphs2h33hx2wfcs4@yavin.dot.cyphar.com>
+ <20200517142316.GA1996744@cisco>
+ <20200517143311.fmxaf3pnopuaezl4@wittgenstein>
+ <20200517144603.GD1996744@cisco>
+ <20200517150215.GE1996744@cisco>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200518110343.GY1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200517150215.GE1996744@cisco>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 02:03:43PM +0300, Andy Shevchenko wrote:
-> On Sat, May 16, 2020 at 11:01:33PM +0300, Serge Semin wrote:
-> > On Fri, May 15, 2020 at 05:38:42PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 15, 2020 at 01:47:49PM +0300, Serge Semin wrote:
-> > > > Each channel of DMA controller may have a limited length of burst
-> > > > transaction (number of IO operations performed at ones in a single
-> > > > DMA client request). This parameter can be used to setup the most
-> > > > optimal DMA Tx/Rx data level values. In order to avoid the Tx buffer
-> > > > overrun we can set the DMA Tx level to be of FIFO depth minus the
-> > > > maximum burst transactions length. To prevent the Rx buffer underflow
-> > > > the DMA Rx level should be set to the maximum burst transactions length.
-> > > > This commit setups the DMA channels and the DW SPI DMA Tx/Rx levels
-> > > > in accordance with these rules.
-> 
-> ...
-> 
-> > > >  	/* DMA info */
-> > > >  	struct dma_chan		*txchan;
-> > > > +	u32			txburst;
-> > > >  	struct dma_chan		*rxchan;
-> > > > +	u32			rxburst;
-> > > 
-> > > Leave u32 together, it may be optimal on 64-bit architectures where ABIs require padding.
+On Sun, May 17, 2020 at 09:02:15AM -0600, Tycho Andersen wrote:
+> On Sun, May 17, 2020 at 08:46:03AM -0600, Tycho Andersen wrote:
+> > On Sun, May 17, 2020 at 04:33:11PM +0200, Christian Brauner wrote:
+> > > struct seccomp_notif2 {
+> > > 	__u32 notif_size;
+> > > 	__u64 id;
+> > > 	__u32 pid;
+> > > 	__u32 flags;
+> > > 	struct seccomp_data data;
+> > > 	__u32 data_size;
+> > > };
 > > 
-> > It's not like anyone cared about padding in this structure in the first place)
+> > I guess you need to put data_size before data, otherwise old userspace
+> > with a smaller struct seccomp_data will look in the wrong place.
+> > 
+> > But yes, that'll work if you put two sizes in, which is probably
+> > reasonable since we're talking about two structs.
 > 
-> I think I have been caring (to some extend).
+> Well, no, it doesn't either. Suppose we add a new field first to
+> struct seccomp_notif2:
+> 
+> struct seccomp_notif2 {
+>     __u32 notif_size;
+>     __u64 id;
+>     __u32 pid;
+>     __u32 flags;
+>     struct seccomp_data data;
+>     __u32 data_size;
+>     __u32 new_field;
+> };
+> 
+> And next we add a new field to struct secccomp_data. When a userspace
+> compiled with just the new seccomp_notif2 field does:
+> 
+> seccomp_notif2.new_field = ...;
+> 
+> the compiler will put it in the wrong place for the kernel with the
+> new seccomp_data field too.
+> 
+> Sort of feels like we should do:
+> 
+> struct seccomp_notif2 {
+>     struct seccomp_notif *notif;
+>     struct seccomp_data *data;
+> };
+> 
+> ?
 
-Well, If you have then instead of asking to rearrange just two members (which
-by the way finely grouped by the Tx-Rx affiliation) why not sending a
-patch, which would refactor the whole structure so to be optimal for the x64
-platforms? I don't really see why this gets very important for you seeing
-Mark is Ok with this. My current commit follows the common driver design
-including the DW SSI data members grouping. On the second thought I'll leave
-it as is then.
+Oh yes of course, sorry that was my stupid typo. I meant:
 
--Sergey
+struct seccomp_notif2 {
+    __u32 notif_size;
+    __u64 id;
+    __u32 pid;
+    __u32 flags;
+    struct seccomp_data *data;
+    __u32 data_size;
+    __u32 new_field;
+}
 
-> 
-> > Though if v3 is required I'll group these members together.
-> 
-> From what I see v3 is what Mark and me are waiting for. Mark, are we on the
-> same page here?
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+at which point things should just work imho. This is similar to how the
+set_tid array works. The kernel doesn't need to allocate any more too.
+The kernel can just always use the currently know seccomp_data size.
+If the kernel supports _less_ than what the caller expects, it can
+report the supported size in data_size to userspace returning EINVAL. If
+it supports more then it can just copy the known fields, I guess.
+
+This way we don't need to add yet another ioctl...
+
+Christian
