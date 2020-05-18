@@ -2,291 +2,124 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E0FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFBF1206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:45:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="g5cU7Peo"
+	by mail.kernel.org (Postfix) with ESMTP id D650E206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgERLp1 (ORCPT
+        id S1728031AbgERLps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:45:27 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:33444 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbgERLp0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:45:26 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9DF74258;
-        Mon, 18 May 2020 13:45:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589802323;
-        bh=1kluJnAc7GtmqSdWsc8UnPl9ntkFPKBdNDqtTvR3daM=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=g5cU7Peoxd6PV/66YuoMKvY/50rRaE6PJEmy4JdNJe41q3iwxUAh+10n6+T3K7mNe
-         Pxx7OovFpk8qOY+Kp1ytH4vVVNbj6XmKcZmGvtr0vITJF9QuInaf7Io/5iG4FfvSAv
-         qwqguj8W47sZ98ZE+EQG3wuOAP23J9phr0jnnx1c=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
- <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
- <20200516215103.GA857@valkosipuli.retiisi.org.uk>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <930009cd-d887-752a-4f1f-567c795101ee@ideasonboard.com>
-Date:   Mon, 18 May 2020 12:45:18 +0100
+        Mon, 18 May 2020 07:45:48 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8571 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726557AbgERLps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 07:45:48 -0400
+IronPort-SDR: 86wQlj8NtQSR9yC4+rAi3+XkfMrLKWqNiNeXkNmX273DC+31JvTjgChQ7DGhuxWEiddsSqzVcz
+ /uaF4qBkyakA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 04:45:47 -0700
+IronPort-SDR: fMp6Jh4c9tB5sz7JoIjbV5D9Mt6F+z2/CjIhsUUTUpDYYlNIkaUHc+Z+WgzA4GSyxrjPDjwB+x
+ KZkpAQS/bF+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="267492215"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
+  by orsmga006.jf.intel.com with ESMTP; 18 May 2020 04:45:45 -0700
+Subject: Re: [PATCH V1 1/2] mmc: sdhci: Introduce new quirk to use reserved
+ timeout
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Sarthak Garg <sartgarg@codeaurora.org>
+Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+References: <1588772671-19675-1-git-send-email-sartgarg@codeaurora.org>
+ <1588772671-19675-2-git-send-email-sartgarg@codeaurora.org>
+ <CAPDyKFo0CabC_O-NusH4tUzjnG37_XQhY=QNhgnkQMoTokfaQg@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <4db354d7-fff4-048e-dde5-647e8ba89a7d@intel.com>
+Date:   Mon, 18 May 2020 14:46:02 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200516215103.GA857@valkosipuli.retiisi.org.uk>
+In-Reply-To: <CAPDyKFo0CabC_O-NusH4tUzjnG37_XQhY=QNhgnkQMoTokfaQg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
-
-There are only fairly minor comments here, fix ups will be included in a
-v10.
-
-Is there anything major blocking integration?
-
-Regards
-
-Kieran
-
-
-
-On 16/05/2020 22:51, Sakari Ailus wrote:
-> Hi Kieran,
+On 18/05/20 12:39 pm, Ulf Hansson wrote:
+> On Wed, 6 May 2020 at 15:53, Sarthak Garg <sartgarg@codeaurora.org> wrote:
+>>
+>> Introduce a new quirk for letting vendor drivers to use reserved
+>> timeout value (0xF) in timeout control register.
+>>
+>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+>> ---
+>>  drivers/mmc/host/sdhci.c | 3 ++-
+>>  drivers/mmc/host/sdhci.h | 5 +++++
+>>  2 files changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>> index 1bb6b67..07528a9 100644
+>> --- a/drivers/mmc/host/sdhci.c
+>> +++ b/drivers/mmc/host/sdhci.c
+>> @@ -967,7 +967,8 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd,
+>>         }
+>>
+>>         if (count >= 0xF) {
+>> -               if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT))
+>> +               if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) ||
+>> +               !(host->quirks2 & SDHCI_QUIRK2_USE_RESERVED_MAX_TIMEOUT))
 > 
-> Thanks for the update.
+> I don't quite get how this can make your variant use 0xF rather than 0xE?
 > 
-> On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
-> 
-> ...
-> 
->> +static int max9286_enum_mbus_code(struct v4l2_subdev *sd,
->> +				  struct v4l2_subdev_pad_config *cfg,
->> +				  struct v4l2_subdev_mbus_code_enum *code)
->> +{
->> +	if (code->pad || code->index > 0)
->> +		return -EINVAL;
->> +
->> +	code->code = MEDIA_BUS_FMT_UYVY8_2X8;
-> 
-> Why UYVY8_2X8 and not UYVY8_1X16? In general, the single sample / pixel
-> variant of the format is generally used on the serial busses. This choice
-> was made when serial busses were introduced.
+> To me it looks like an updated conditional check to print a debug message, no?
 
-Ok - I presume this doesn't really have much effect anyway, they just
-have to match for the transmitter/receiver?
-
-But it makes sense to me, so I'll update to the 1x16 variant.
-
->> +
->> +	return 0;
->> +}
->> +
->> +static struct v4l2_mbus_framefmt *
->> +max9286_get_pad_format(struct max9286_priv *priv,
->> +		       struct v4l2_subdev_pad_config *cfg,
->> +		       unsigned int pad, u32 which)
->> +{
->> +	switch (which) {
->> +	case V4L2_SUBDEV_FORMAT_TRY:
->> +		return v4l2_subdev_get_try_format(&priv->sd, cfg, pad);
->> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
->> +		return &priv->fmt[pad];
->> +	default:
->> +		return NULL;
->> +	}
->> +}
->> +
->> +static int max9286_set_fmt(struct v4l2_subdev *sd,
->> +			   struct v4l2_subdev_pad_config *cfg,
->> +			   struct v4l2_subdev_format *format)
->> +{
->> +	struct max9286_priv *priv = sd_to_max9286(sd);
->> +	struct v4l2_mbus_framefmt *cfg_fmt;
->> +
->> +	if (format->pad >= MAX9286_SRC_PAD)
->> +		return -EINVAL;
-> 
-> You can remove these checks; it's been already done by the caller.
-> 
-
-Ok.
-
-
-> ...
-> 
->> +static int max9286_parse_dt(struct max9286_priv *priv)
->> +{
->> +	struct device *dev = &priv->client->dev;
->> +	struct device_node *i2c_mux;
->> +	struct device_node *node = NULL;
->> +	unsigned int i2c_mux_mask = 0;
->> +
->> +	of_node_get(dev->of_node);
->> +	i2c_mux = of_find_node_by_name(dev->of_node, "i2c-mux");
->> +	if (!i2c_mux) {
->> +		dev_err(dev, "Failed to find i2c-mux node\n");
->> +		of_node_put(dev->of_node);
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* Identify which i2c-mux channels are enabled */
->> +	for_each_child_of_node(i2c_mux, node) {
->> +		u32 id = 0;
->> +
->> +		of_property_read_u32(node, "reg", &id);
->> +		if (id >= MAX9286_NUM_GMSL)
->> +			continue;
->> +
->> +		if (!of_device_is_available(node)) {
->> +			dev_dbg(dev, "Skipping disabled I2C bus port %u\n", id);
->> +			continue;
->> +		}
->> +
->> +		i2c_mux_mask |= BIT(id);
->> +	}
->> +	of_node_put(node);
->> +	of_node_put(i2c_mux);
->> +
->> +	/* Parse the endpoints */
->> +	for_each_endpoint_of_node(dev->of_node, node) {
->> +		struct max9286_source *source;
->> +		struct of_endpoint ep;
->> +
->> +		of_graph_parse_endpoint(node, &ep);
->> +		dev_dbg(dev, "Endpoint %pOF on port %d",
->> +			ep.local_node, ep.port);
->> +
->> +		if (ep.port > MAX9286_NUM_GMSL) {
->> +			dev_err(dev, "Invalid endpoint %s on port %d",
->> +				of_node_full_name(ep.local_node), ep.port);
->> +			continue;
->> +		}
->> +
->> +		/* For the source endpoint just parse the bus configuration. */
->> +		if (ep.port == MAX9286_SRC_PAD) {
->> +			struct v4l2_fwnode_endpoint vep = {
->> +				.bus_type = V4L2_MBUS_CSI2_DPHY
->> +			};
->> +			int ret;
->> +
->> +			ret = v4l2_fwnode_endpoint_parse(
->> +					of_fwnode_handle(node), &vep);
->> +			if (ret) {
->> +				of_node_put(node);
->> +				of_node_put(dev->of_node);
->> +				return ret;
->> +			}
->> +
->> +			if (vep.bus_type != V4L2_MBUS_CSI2_DPHY) {
-> 
-> This won't happen, the bus type will stay if you set it to a non-zero
-> value.
-
-
-Ok - I'll remove this check.
-
+Probably need to introduce host->max_timeout_count, set it to 0xE in
+sdhci_alloc_host(), and change sdhci_calc_timeout() to use it in place of
+all the 0xE and 0xF constants.
 
 > 
->> +				dev_err(dev,
->> +					"Media bus %u type not supported\n",
->> +					vep.bus_type);
->> +				v4l2_fwnode_endpoint_free(&vep);
->> +				of_node_put(node);
->> +				of_node_put(dev->of_node);
->> +				return -EINVAL;
->> +			}
->> +
->> +			priv->csi2_data_lanes =
->> +				vep.bus.mipi_csi2.num_data_lanes;
->> +			v4l2_fwnode_endpoint_free(&vep);
+>>                         DBG("Too large timeout 0x%x requested for CMD%d!\n",
+>>                             count, cmd->opcode);
+>>                 count = 0xE;
+>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+>> index 8d2a096..02f8779 100644
+>> --- a/drivers/mmc/host/sdhci.h
+>> +++ b/drivers/mmc/host/sdhci.h
+>> @@ -476,6 +476,11 @@ struct sdhci_host {
+>>   * block count.
+>>   */
+>>  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT                 (1<<18)
+>> +/*
+>> + * Some controllers define the usage of 0xF in data timeout counter
+>> + * register (0x2E) which is actually a reserved bit as per specification.
+>> + */
+>> +#define SDHCI_QUIRK2_USE_RESERVED_MAX_TIMEOUT          (1<<19)
+>>
+>>         int irq;                /* Device IRQ */
+>>         void __iomem *ioaddr;   /* Mapped address */
+>> --
+>> 2.7.4
+>>
 > 
-> No need to call this unless you use v4l2_fwnode_endpoint_alloc_parse().
-> 
-> And as you don't, you also won't know which frequencies are known to be
-> safe to use. That said, perhaps where this device is used having a random
-> frequency on that bus could not be an issue. Perhaps.
-
-Does this generate a range? or a list of static supported frequencies?
-
-We configure the pixel clock based upon the number of cameras connected,
-and their pixel rates etc ...
-
-Are you saying that the frequency of this clock should be validated to
-be a specific range? or are you talking about a different frequency?
-
-
-For now I'll remove the v4l2_fwnode_endpoint_alloc_parse().
-
-
-
->> +
->> +			continue;
->> +		}
->> +
->> +		/* Skip if the corresponding GMSL link is unavailable. */
->> +		if (!(i2c_mux_mask & BIT(ep.port)))
->> +			continue;
->> +
->> +		if (priv->sources[ep.port].fwnode) {
->> +			dev_err(dev,
->> +				"Multiple port endpoints are not supported: %d",
->> +				ep.port);
->> +
->> +			continue;
->> +		}
->> +
->> +		source = &priv->sources[ep.port];
->> +		source->fwnode = fwnode_graph_get_remote_endpoint(
->> +						of_fwnode_handle(node));
->> +		if (!source->fwnode) {
->> +			dev_err(dev,
->> +				"Endpoint %pOF has no remote endpoint connection\n",
->> +				ep.local_node);
->> +
->> +			continue;
->> +		}
->> +
->> +		priv->source_mask |= BIT(ep.port);
->> +		priv->nsources++;
->> +	}
->> +	of_node_put(node);
->> +	of_node_put(dev->of_node);
->> +
->> +	priv->route_mask = priv->source_mask;
->> +
->> +	return 0;
->> +}
+> Kind regards
+> Uffe
 > 
 
