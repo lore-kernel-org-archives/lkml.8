@@ -2,155 +2,83 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F452C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87FB62081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:01:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+9BSmUU"
+	by mail.kernel.org (Postfix) with ESMTP id 56304207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 23:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgERXBf (ORCPT
+        id S1727045AbgERXDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 19:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53368 "EHLO
+        Mon, 18 May 2020 19:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbgERXBf (ORCPT
+        with ESMTP id S1726490AbgERXDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 19:01:35 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303B8C061A0C;
-        Mon, 18 May 2020 16:01:35 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id c75so4511142pga.3;
-        Mon, 18 May 2020 16:01:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=n/2OdOyoZ864HE1NL5cRmRErjnYTeC8BJcUUPBVh8xM=;
-        b=A+9BSmUUtr7xOkMfzrYupN58DMh1l96MQ613yRIEfsWKPqD1QJfdrtHrKaRavl4Zrr
-         +Q0xZEhP4en3JvaFqxqsP0LawRxX5xfdQiwkfUebitrU8BwZk2zluMK2JvXbET7SNkeb
-         OL94AHQq1J12qDvV1UZD4fPNog6B/SyHdmHdJO/wOcsmxWCQEzBChgrWNOucDZynuGq2
-         FkwxBesagZnWfwsQ5eb+S2EJFE5ASRMNah32uFQ1Ffs1xPDedB5/n0x4O/Hl8m9ttRzM
-         sw5YtZKStt+nGP4UWBD6gNxs0AiI/qJvNv9IFo10aVWNSyEnHCoTxmjbjpMLTwWuhMlm
-         1o/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n/2OdOyoZ864HE1NL5cRmRErjnYTeC8BJcUUPBVh8xM=;
-        b=NRk2u07dgaPIRXiKE5wyBCoNuI9kYpkyMJz6I+TCxvK8qlE+bueMX8hmVue2TSwoXJ
-         9O0DhxxyJO06/0qUAIIOHG6PxeJztz+8PByCdE+C0oFaDGSCBouEPujXdGfkSfauj4oU
-         CH9NjcKt6FUWU18vTcibuZkVk/o2mMfszmzcyPJggzgn5XExYr7/ShQsp0jWEXLm+yGG
-         popiyWacgB3PkZJ33HrU1/3e79TBktsgyFwOlpSLpwzXsAv96coTjONkJTn+2evBvmQb
-         Z4uGWI3GP2xxsZQmwZhGsu302b4gJtL9lJC5G86maFQTtZpoMdwE8Jf06j6uOFqGV3Cl
-         sRpQ==
-X-Gm-Message-State: AOAM530X54S7QQDVeuarY+CsgWi7td6IxtPM8g0eIZlQMr66xa4pzKAY
-        JXherPbNd/W6PiIcp4sH/58=
-X-Google-Smtp-Source: ABdhPJx7GzJtBjw0rqbTS8tx+JTXheQvDQG/wzKR5PbOQzB2X/jRHeKRAJEZwrDiaHNKIu2UGq/xuQ==
-X-Received: by 2002:a05:6a00:1494:: with SMTP id v20mr13966289pfu.150.1589842894625;
-        Mon, 18 May 2020 16:01:34 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w199sm3811206pfc.68.2020.05.18.16.01.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 May 2020 16:01:33 -0700 (PDT)
-Date:   Mon, 18 May 2020 16:01:32 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.6 000/194] 5.6.14-rc1 review
-Message-ID: <20200518230132.GA176285@roeck-us.net>
-References: <20200518173531.455604187@linuxfoundation.org>
+        Mon, 18 May 2020 19:03:40 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC124C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 16:03:39 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jaon8-0005Gg-6r; Tue, 19 May 2020 01:03:26 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id AF7351006A1; Tue, 19 May 2020 01:03:25 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
+        dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+In-Reply-To: <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
+References: <20200511045311.4785-1-sashal@kernel.org> <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com> <20200515164013.GF29995@sasha-vm> <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com> <20200518153407.GA499505@tassilo.jf.intel.com> <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
+Date:   Tue, 19 May 2020 01:03:25 +0200
+Message-ID: <87v9ksvoaq.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 07:34:50PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.14 release.
-> There are 194 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
-> Anything received after that time might be too late.
-> 
+Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> writes:
+> On Mon, 2020-05-18 at 08:34 -0700, Andi Kleen wrote:
+>> > Yes, for SGX this is functional feature because enclave entry points,
+>> > thread control structures (aka TCS's), reset FSBASE and GSBASE registers
+>> > to fixed (albeit user defined) values. And syscall's can be done only
+>> > outside of enclave.
+>> > 
+>> > This is a required feature for fancier runtimes (such as Graphene).
+>> 
+>> Can you please explain a bit more? What do they need GS for?
+>
+> Apparently, uses only wrfsbase:
+>
+> https://raw.githubusercontent.com/oscarlab/graphene/master/Pal/src/host/Linux-SGX/db_misc.c
+>
+> I'm not too familiar with the codebase yet but by reading some research
+> papers in the past the idea is to multiplex one TCS for multiple virtual
+> threads inside the enclave.
+>
+> E.g. TCS could represent a vcpu for a libos type of container and on
+> entry would pick on a thread and set fsbase accordingly for a thread
+> control block.
 
-Quick feedback:
+That justifies to write books which recommend to load a kernel module
+which creates a full unpriviledged root hole. I bet none of these papers
+ever mentioned that.
 
-You also need to pull in commit 92db978f0d68 ("net: ethernet: ti: Remove
-TI_CPTS_MOD workaround") which fixes commit b6d49cab44b5 ("net: Make
-PTP-specific drivers depend on PTP_1588_CLOCK"). This is necessary to
-avoid various compile errors (see below).
+Thanks,
 
-Guenter
-
----
-Building arm:omap2plus_defconfig ... failed
---------------
-Error log:
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
-drivers/net/ethernet/ti/cpsw.c:886: undefined reference to `cpts_unregister'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_remove':
-drivers/net/ethernet/ti/cpsw.c:1741: undefined reference to `cpts_release'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_rx_handler':
-drivers/net/ethernet/ti/cpsw.c:437: undefined reference to `cpts_rx_timestamp'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_open':
-drivers/net/ethernet/ti/cpsw.c:840: undefined reference to `cpts_register'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o: in function `cpsw_probe':
-drivers/net/ethernet/ti/cpsw.c:1716: undefined reference to `cpts_release'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o:(.debug_addr+0x34): undefined reference to `cpts_release'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o:(.debug_addr+0x194): undefined reference to `cpts_unregister'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o:(.debug_addr+0x350): undefined reference to `cpts_rx_timestamp'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw.o:(.debug_addr+0xb20): undefined reference to `cpts_register'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_priv.o: in function `cpsw_tx_handler':
-drivers/net/ethernet/ti/cpsw_priv.c:68: undefined reference to `cpts_tx_timestamp'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_priv.o: in function `cpsw_init_common':
-drivers/net/ethernet/ti/cpsw_priv.c:525: undefined reference to `cpts_create'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_priv.o:(.debug_addr+0xa38): undefined reference to `cpts_tx_timestamp'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_priv.o:(.debug_addr+0xc90): undefined reference to `cpts_create'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_ndo_stop':
-drivers/net/ethernet/ti/cpsw_new.c:814: undefined reference to `cpts_unregister'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_remove':
-drivers/net/ethernet/ti/cpsw_new.c:2028: undefined reference to `cpts_release'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_rx_handler':
-drivers/net/ethernet/ti/cpsw_new.c:379: undefined reference to `cpts_rx_timestamp'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_probe':
-drivers/net/ethernet/ti/cpsw_new.c:2004: undefined reference to `cpts_release'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o: in function `cpsw_ndo_open':
-drivers/net/ethernet/ti/cpsw_new.c:874: undefined reference to `cpts_register'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o:(.debug_addr+0x38): undefined reference to `cpts_release'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o:(.debug_addr+0x158): undefined reference to `cpts_unregister'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o:(.debug_addr+0x2c4): undefined reference to `cpts_rx_timestamp'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/cpsw_new.o:(.debug_addr+0xa60): undefined reference to `cpts_register'
-make[1]: *** [vmlinux] Error 1
-make: *** [sub-make] Error 2
---------------
-
-Building arm:keystone_defconfig ... failed
---------------
-Error log:
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_rxtstamp':
-drivers/net/ethernet/ti/netcp_ethss.c:2595: undefined reference to `cpts_rx_timestamp'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_probe':
-drivers/net/ethernet/ti/netcp_ethss.c:3719: undefined reference to `cpts_create'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_remove':
-drivers/net/ethernet/ti/netcp_ethss.c:3812: undefined reference to `cpts_release'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_unregister_cpts':
-drivers/net/ethernet/ti/netcp_ethss.c:2731: undefined reference to `cpts_unregister'
-arm-linux-gnueabi-ld: drivers/net/ethernet/ti/netcp_ethss.o: in function `gbe_register_cpts':
-drivers/net/ethernet/ti/netcp_ethss.c:2714: undefined reference to `cpts_register'
-make[1]: *** [vmlinux] Error 1
-make: *** [sub-make] Error 2
+        tglx
