@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441A8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18A1E207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFBC207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825058;
-	bh=kr4mAYS/7C1SqnmoS4djr0Ui+8MkF6b6y+xXe2x6Wy4=;
+	s=default; t=1589825071;
+	bh=wjNCLJm8je2dfTo3Dnvetm+uHr8DjiIVmachTBfbvW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9JR7lxGYSnIx7UWMdCvcXNvUf2ABhBZz8HFO/QJV9bdtH8rHjAEkXz8SvE81LklP
-	 edA/B3qmYHywEvQwQEXK669xtl4nOz0qNtmP6hTdotNJIUXWuoZyo/cQyW22awKRhS
-	 0VUIjsxrihSmVPa4Z1x7bZSjgvzGILoctZzvPXuc=
+	b=rxZqvCHNXaPUYvIYuYS8/c716YKDweT661TobgOK3O9Lbb7mQKp7IFzA3cEIft01s
+	 SszhpKvjRzBts7/GC69wYdamgAPZTvaAN+YQ75Oo4J/7SCG0dGRQDCuSIzb7dgaomp
+	 uGL40d40ib7mXLVRsxgs+rN4ak0Pr1ze1qHtvSw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732763AbgERSER (ORCPT
+        id S1732789AbgERSEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:04:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:04:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731171AbgERSEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:04:06 -0400
+        id S1732765AbgERSES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D55D20715;
-        Mon, 18 May 2020 18:04:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 709ED20715;
+        Mon, 18 May 2020 18:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825045;
-        bh=kr4mAYS/7C1SqnmoS4djr0Ui+8MkF6b6y+xXe2x6Wy4=;
+        s=default; t=1589825057;
+        bh=wjNCLJm8je2dfTo3Dnvetm+uHr8DjiIVmachTBfbvW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DEqWni0oL3Xy2HPwVFlzJJ7ZfZ/nqjS5X7ZEZZOEwuEuKhcbP2TZJecTcH77b87oI
-         gSj70x0vCkCEzE1V8nttYBnfrCqubdTnOX2RMpH5ZT/4AyBTVfFiGvdG6PZtdSeL29
-         ilBFmMivBTVEMzj6dQd1+Y3df1ox9VuuFqz7GT8U=
+        b=OS2lbltMMlra5FU+Bc4AQlNDZxqNz+PmsOT+xSydwlczd9vvbpIb0kpZHdRUax1mO
+         OZ5K0NhEiz7HYsHIYPWUS/+zaXcvkt3AKLpp4ojQ4Nnj6ApeqlA1R8dJXpKnmcZNGy
+         RgyPhFPcXwctjsL7VWf31NSRKtti+1m05agmzLG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 107/194] SUNRPC: Signalled ASYNC tasks need to exit
-Date:   Mon, 18 May 2020 19:36:37 +0200
-Message-Id: <20200518173540.755420559@linuxfoundation.org>
+Subject: [PATCH 5.6 111/194] RDMA/rxe: Always return ERR_PTR from rxe_create_mmap_info()
+Date:   Mon, 18 May 2020 19:36:41 +0200
+Message-Id: <20200518173541.021424362@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,41 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-[ Upstream commit ce99aa62e1eb793e259d023c7f6ccb7c4879917b ]
+[ Upstream commit bb43c8e382e5da0ee253e3105d4099820ff4d922 ]
 
-Ensure that signalled ASYNC rpc_tasks exit immediately instead of
-spinning until a timeout (or forever).
+The commit below modified rxe_create_mmap_info() to return ERR_PTR's but
+didn't update the callers to handle them. Modify rxe_create_mmap_info() to
+only return ERR_PTR and fix all error checking after
+rxe_create_mmap_info() is called.
 
-To avoid checking for the signal flag on every scheduler iteration,
-the check is instead introduced in the client's finite state
-machine.
+Ensure that all other exit paths properly set the error return.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Fixes: ae67bd3821bb ("SUNRPC: Fix up task signalling")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: ff23dfa13457 ("IB: Pass only ib_udata in function prototypes")
+Link: https://lore.kernel.org/r/20200425233545.17210-1-sudipm.mukherjee@gmail.com
+Link: https://lore.kernel.org/r/20200511183742.GB225608@mwanda
+Cc: stable@vger.kernel.org [5.4+]
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/clnt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/infiniband/sw/rxe/rxe_mmap.c  |  2 +-
+ drivers/infiniband/sw/rxe/rxe_queue.c | 11 +++++++----
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 7324b21f923e6..3ceaefb2f0bcf 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2416,6 +2416,11 @@ rpc_check_timeout(struct rpc_task *task)
- {
- 	struct rpc_clnt	*clnt = task->tk_client;
+diff --git a/drivers/infiniband/sw/rxe/rxe_mmap.c b/drivers/infiniband/sw/rxe/rxe_mmap.c
+index 48f48122ddcb8..6a413d73b95dd 100644
+--- a/drivers/infiniband/sw/rxe/rxe_mmap.c
++++ b/drivers/infiniband/sw/rxe/rxe_mmap.c
+@@ -151,7 +151,7 @@ struct rxe_mmap_info *rxe_create_mmap_info(struct rxe_dev *rxe, u32 size,
  
-+	if (RPC_SIGNALLED(task)) {
-+		rpc_call_rpcerror(task, -ERESTARTSYS);
-+		return;
-+	}
-+
- 	if (xprt_adjust_timeout(task->tk_rqstp) == 0)
- 		return;
+ 	ip = kmalloc(sizeof(*ip), GFP_KERNEL);
+ 	if (!ip)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
  
+ 	size = PAGE_ALIGN(size);
+ 
+diff --git a/drivers/infiniband/sw/rxe/rxe_queue.c b/drivers/infiniband/sw/rxe/rxe_queue.c
+index ff92704de32ff..245040c3a35d0 100644
+--- a/drivers/infiniband/sw/rxe/rxe_queue.c
++++ b/drivers/infiniband/sw/rxe/rxe_queue.c
+@@ -45,12 +45,15 @@ int do_mmap_info(struct rxe_dev *rxe, struct mminfo __user *outbuf,
+ 
+ 	if (outbuf) {
+ 		ip = rxe_create_mmap_info(rxe, buf_size, udata, buf);
+-		if (!ip)
++		if (IS_ERR(ip)) {
++			err = PTR_ERR(ip);
+ 			goto err1;
++		}
+ 
+-		err = copy_to_user(outbuf, &ip->info, sizeof(ip->info));
+-		if (err)
++		if (copy_to_user(outbuf, &ip->info, sizeof(ip->info))) {
++			err = -EFAULT;
+ 			goto err2;
++		}
+ 
+ 		spin_lock_bh(&rxe->pending_lock);
+ 		list_add(&ip->pending_mmaps, &rxe->pending_mmaps);
+@@ -64,7 +67,7 @@ int do_mmap_info(struct rxe_dev *rxe, struct mminfo __user *outbuf,
+ err2:
+ 	kfree(ip);
+ err1:
+-	return -EINVAL;
++	return err;
+ }
+ 
+ inline void rxe_queue_reset(struct rxe_queue *q)
 -- 
 2.20.1
 
