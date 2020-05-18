@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBEBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C80C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBA720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C37207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824402;
-	bh=BFpFtldCLwGRs/hMvTE3Xer8bN8X8knuqYNfGb5Age0=;
+	s=default; t=1589824405;
+	bh=a57QUVjycIWqq5gybYpQ5AcfJtRPK/9jBiOO2JvtkoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wXdebMl8DDvW4chytEeyBYcxATjZdu/e8g+iNY7V6nGxivDBC4DPBZ63xnKjDDBAL
-	 GyfMgDoUhHhEVA+0VzR94DECxPsfSwx164VLUEthInLcS0v9ceU+Sutqlu5HrN5zGY
-	 mOsHyVMu8vWrupiPMAdgbs7socz4Ybht3zKxFlKc=
+	b=0w1fFFkiM0XUTlQSyZ9VOF3TNzwUxY1V6eu+ZDB3skwxC+nOiuTtW4jxZBofY19WK
+	 uPegYwC/y4ukuhKPbyR5HZwYFOGaCD7SzIfF+p+wfWYdzvNODGGVRAaMj92eTcRHJm
+	 6HtXUarUpCkUFkztZTioAzVLFNfNYmGH4vBs23zI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731133AbgERRxV (ORCPT
+        id S1730088AbgERRxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:53:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57164 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:53:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731117AbgERRxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:53:18 -0400
+        id S1731130AbgERRxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:53:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE73220715;
-        Mon, 18 May 2020 17:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F80120674;
+        Mon, 18 May 2020 17:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824398;
-        bh=BFpFtldCLwGRs/hMvTE3Xer8bN8X8knuqYNfGb5Age0=;
+        s=default; t=1589824400;
+        bh=a57QUVjycIWqq5gybYpQ5AcfJtRPK/9jBiOO2JvtkoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qAESdU8h8IP8BpBWoKc6AUh5sZ4OAd/4m9dXjWVRVKSwee34vj7tM+fwbQz6kjvtw
-         ZauaDXGUbUWM7E3k7y8nx2eeEDNi5EU2cz16AZ3meIWB77pe/oB5oHRDKdW2VQGF19
-         yw9YsnKj1n1I9KQyFVibo9agvorz8KRHn//1bUHg=
+        b=bOsOFAvP1fdAwgNYgcbyvNvSOifbuqAp9h+ZG+7FmVXHy5p2M5f73rOgYxu/HrHQ2
+         P3gaP1AtGBqqxDePIwiymLtvg5MeLvKQ1yKU2Oi3WXZxYBjgEmSBf9CcPoKapGl8PF
+         96xk6wKnSS0awrAxfytm/5UQryF3JegAs+MBskc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4.19 77/80] arm64: dts: renesas: r8a77980: Fix IPMMU VIP[01] nodes
-Date:   Mon, 18 May 2020 19:37:35 +0200
-Message-Id: <20200518173506.179630060@linuxfoundation.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulrich Hecht <uli+renesas@fpond.eu>
+Subject: [PATCH 4.19 78/80] ARM: dts: r8a7740: Add missing extal2 to CPG node
+Date:   Mon, 18 May 2020 19:37:36 +0200
+Message-Id: <20200518173506.359601234@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -60,39 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit f4d71c6ea9e58c07dd4d02d09c5dd9bb780ec4b1 upstream.
+commit e47cb97f153193d4b41ca8d48127da14513d54c7 upstream.
 
-Missing the renesas,ipmmu-main property on ipmmu_vip[01] nodes.
+The Clock Pulse Generator (CPG) device node lacks the extal2 clock.
+This may lead to a failure registering the "r" clock, or to a wrong
+parent for the "usb24s" clock, depending on MD_CK2 pin configuration and
+boot loader CPG_USBCKCR register configuration.
 
-Fixes: 55697cbb44e4 ("arm64: dts: renesas: r8a779{65,80,90}: Add IPMMU devices nodes)
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1587108543-23786-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+This went unnoticed, as this does not affect the single upstream board
+configuration, which relies on the first clock input only.
+
+Fixes: d9ffd583bf345e2e ("ARM: shmobile: r8a7740: add SoC clocks to DTS")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Link: https://lore.kernel.org/r/20200508095918.6061-1-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/renesas/r8a77980.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/r8a7740.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-@@ -454,6 +454,7 @@
- 		ipmmu_vip0: mmu@e7b00000 {
- 			compatible = "renesas,ipmmu-r8a77980";
- 			reg = <0 0xe7b00000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 4>;
- 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			#iommu-cells = <1>;
- 		};
-@@ -461,6 +462,7 @@
- 		ipmmu_vip1: mmu@e7960000 {
- 			compatible = "renesas,ipmmu-r8a77980";
- 			reg = <0 0xe7960000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 11>;
- 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			#iommu-cells = <1>;
- 		};
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -479,7 +479,7 @@
+ 		cpg_clocks: cpg_clocks@e6150000 {
+ 			compatible = "renesas,r8a7740-cpg-clocks";
+ 			reg = <0xe6150000 0x10000>;
+-			clocks = <&extal1_clk>, <&extalr_clk>;
++			clocks = <&extal1_clk>, <&extal2_clk>, <&extalr_clk>;
+ 			#clock-cells = <1>;
+ 			clock-output-names = "system", "pllc0", "pllc1",
+ 					     "pllc2", "r",
 
 
