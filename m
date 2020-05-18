@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D650AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32547C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD56320715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1142D20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825515;
-	bh=PL0ZmeWqc8FMIxU1IoNlidUEHrZGToEEtWQh6ygb26A=;
+	s=default; t=1589825522;
+	bh=TxFjLSAL5zDasn9oik92yX0UwttPZd52H+DlXDaqvRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=duDAhjCwurDLIA+vTHdkEmkLThkV8U7RSr88WSaauqWm2ZgOAgoj4AzL2C/Cr8Dbz
-	 hFZhakubVr+2ZE75hZ9dKamk1amxy0E9gRlAoIJEEGleh5sR9V/99JpVuVa6uO8pSo
-	 XcMJcG21tdi2ySCDdwCz/yRcdg2PJnffdKfwBBMI=
+	b=hYrn+AWZeuc7/KrkNmJT/002MVgjo57YU0Hnb3XRuge/7M+2noqmlSG67AXpJ6k9S
+	 6RcTJ1/A/JLwCwcRRDOS6zDzxZNik2JWXo9CIw/c8CjgtOBP45ZENDN4jf8Aeq/NgK
+	 j7kQCX2IcPl2MuNzdvei2kxQJebKe4F5WHX7DeYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733154AbgERSLy (ORCPT
+        id S1729649AbgERSMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:11:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50326 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732742AbgERSEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:04:08 -0400
+        id S1732718AbgERSEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:04:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE3F207D3;
-        Mon, 18 May 2020 18:04:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEFC3207D3;
+        Mon, 18 May 2020 18:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825048;
-        bh=PL0ZmeWqc8FMIxU1IoNlidUEHrZGToEEtWQh6ygb26A=;
+        s=default; t=1589825040;
+        bh=TxFjLSAL5zDasn9oik92yX0UwttPZd52H+DlXDaqvRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bqGwkfj0fIPc4Flsn8eKLfqNo28LsXlGk4a4Byyuv3DyIgjRvl/o0CMrYotNQLnSH
-         oUfcEDSovy1y9TK8VHW9Wg5QU8yh+UryaDyzrLjU7XHHL5LYkKXHk3JycYwPdooACq
-         O++CbT+CYerK6lkeHOeDwc90Qe7hS1HvHWxXROcs=
+        b=kPWpWebnmUItS2DFmIcUjMO3C3nOd2Fdp2UON4pT5Hs+qonm1wLVBPd0RtHTO5GCb
+         EyM6HHzkA8LUtxFITwpfkvGhfv0CnVhZrGmYeBTS5fRqaF8SmG416uaFJ1LLfILslv
+         3Hw0Clh9LZl86L/i6RB2cIFXvmJ4cYfDtiUrSYHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 081/194] ALSA: firewire-lib: fix function sizeof not defined error of tracepoints format
-Date:   Mon, 18 May 2020 19:36:11 +0200
-Message-Id: <20200518173538.508531112@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 105/194] drm/i915: Mark concurrent submissions with a weak-dependency
+Date:   Mon, 18 May 2020 19:36:35 +0200
+Message-Id: <20200518173540.624943414@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,57 +61,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 1034872123a06b759aba772b1c99612ccb8e632a ]
+[ Upstream commit a9d094dcf7845af85f82adcad9f793e51e4d14c8 ]
 
-The snd-firewire-lib.ko has 'amdtp-packet' event of tracepoints. Current
-printk format for the event includes 'sizeof(u8)' macro expected to be
-extended in compilation time. However, this is not done. As a result,
-perf tools cannot parse the event for printing:
+We recorded the dependencies for WAIT_FOR_SUBMIT in order that we could
+correctly perform priority inheritance from the parallel branches to the
+common trunk. However, for the purpose of timeslicing and reset
+handling, the dependency is weak -- as we the pair of requests are
+allowed to run in parallel and not in strict succession.
 
-$ mount -l -t debugfs
-debugfs on /sys/kernel/debug type debugfs (rw,nosuid,nodev,noexec,relatime)
-$ cat /sys/kernel/debug/tracing/events/snd_firewire_lib/amdtp_packet/format
-...
-print fmt: "%02u %04u %04x %04x %02d %03u %02u %03u %02u %01u %02u %s",
-  REC->second, REC->cycle, REC->src, REC->dest, REC->channel,
-  REC->payload_quadlets, REC->data_blocks, REC->data_block_counter,
-  REC->packet_index, REC->irq, REC->index,
-  __print_array(__get_dynamic_array(cip_header),
-                __get_dynamic_array_len(cip_header),
-                sizeof(u8))
+The real significance though is that this allows us to rearrange
+groups of WAIT_FOR_SUBMIT linked requests along the single engine, and
+so can resolve user level inter-batch scheduling dependencies from user
+semaphores.
 
-$ sudo perf record -e snd_firewire_lib:amdtp_packet
-  [snd_firewire_lib:amdtp_packet] function sizeof not defined
-  Error: expected type 5 but read 0
-
-This commit fixes it by obsoleting the macro with actual size.
-
-Cc: <stable@vger.kernel.org>
-Fixes: bde2bbdb307a ("ALSA: firewire-lib: use dynamic array for CIP header of tracing events")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20200503045718.86337-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: c81471f5e95c ("drm/i915: Copy across scheduler behaviour flags across submit fences")
+Testcase: igt/gem_exec_fence/submit
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: <stable@vger.kernel.org> # v5.6+
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200507155109.8892-1-chris@chris-wilson.co.uk
+(cherry picked from commit 6b6cd2ebd8d071e55998e32b648bb8081f7f02bb)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/amdtp-stream-trace.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/i915/gt/intel_lrc.c         | 3 +++
+ drivers/gpu/drm/i915/i915_request.c         | 8 ++++++--
+ drivers/gpu/drm/i915/i915_scheduler.c       | 6 +++---
+ drivers/gpu/drm/i915/i915_scheduler.h       | 3 ++-
+ drivers/gpu/drm/i915/i915_scheduler_types.h | 1 +
+ 5 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/sound/firewire/amdtp-stream-trace.h b/sound/firewire/amdtp-stream-trace.h
-index 16c7f6605511e..26e7cb555d3c5 100644
---- a/sound/firewire/amdtp-stream-trace.h
-+++ b/sound/firewire/amdtp-stream-trace.h
-@@ -66,8 +66,7 @@ TRACE_EVENT(amdtp_packet,
- 		__entry->irq,
- 		__entry->index,
- 		__print_array(__get_dynamic_array(cip_header),
--			      __get_dynamic_array_len(cip_header),
--			      sizeof(u8)))
-+			      __get_dynamic_array_len(cip_header), 1))
- );
+diff --git a/drivers/gpu/drm/i915/gt/intel_lrc.c b/drivers/gpu/drm/i915/gt/intel_lrc.c
+index 5bebda4a2d0b4..637c03ee1a57f 100644
+--- a/drivers/gpu/drm/i915/gt/intel_lrc.c
++++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
+@@ -1626,6 +1626,9 @@ static void defer_request(struct i915_request *rq, struct list_head * const pl)
+ 			struct i915_request *w =
+ 				container_of(p->waiter, typeof(*w), sched);
  
- #endif
++			if (p->flags & I915_DEPENDENCY_WEAK)
++				continue;
++
+ 			/* Leave semaphores spinning on the other engines */
+ 			if (w->engine != rq->engine)
+ 				continue;
+diff --git a/drivers/gpu/drm/i915/i915_request.c b/drivers/gpu/drm/i915/i915_request.c
+index a18b2a2447066..32ab154db788c 100644
+--- a/drivers/gpu/drm/i915/i915_request.c
++++ b/drivers/gpu/drm/i915/i915_request.c
+@@ -951,7 +951,9 @@ i915_request_await_request(struct i915_request *to, struct i915_request *from)
+ 		return 0;
+ 
+ 	if (to->engine->schedule) {
+-		ret = i915_sched_node_add_dependency(&to->sched, &from->sched);
++		ret = i915_sched_node_add_dependency(&to->sched,
++						     &from->sched,
++						     I915_DEPENDENCY_EXTERNAL);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+@@ -1084,7 +1086,9 @@ __i915_request_await_execution(struct i915_request *to,
+ 
+ 	/* Couple the dependency tree for PI on this exposed to->fence */
+ 	if (to->engine->schedule) {
+-		err = i915_sched_node_add_dependency(&to->sched, &from->sched);
++		err = i915_sched_node_add_dependency(&to->sched,
++						     &from->sched,
++						     I915_DEPENDENCY_WEAK);
+ 		if (err < 0)
+ 			return err;
+ 	}
+diff --git a/drivers/gpu/drm/i915/i915_scheduler.c b/drivers/gpu/drm/i915/i915_scheduler.c
+index 34b654b4e58af..8e419d897c2b4 100644
+--- a/drivers/gpu/drm/i915/i915_scheduler.c
++++ b/drivers/gpu/drm/i915/i915_scheduler.c
+@@ -455,7 +455,8 @@ bool __i915_sched_node_add_dependency(struct i915_sched_node *node,
+ }
+ 
+ int i915_sched_node_add_dependency(struct i915_sched_node *node,
+-				   struct i915_sched_node *signal)
++				   struct i915_sched_node *signal,
++				   unsigned long flags)
+ {
+ 	struct i915_dependency *dep;
+ 
+@@ -464,8 +465,7 @@ int i915_sched_node_add_dependency(struct i915_sched_node *node,
+ 		return -ENOMEM;
+ 
+ 	if (!__i915_sched_node_add_dependency(node, signal, dep,
+-					      I915_DEPENDENCY_EXTERNAL |
+-					      I915_DEPENDENCY_ALLOC))
++					      flags | I915_DEPENDENCY_ALLOC))
+ 		i915_dependency_free(dep);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/i915/i915_scheduler.h b/drivers/gpu/drm/i915/i915_scheduler.h
+index d1dc4efef77b5..6f0bf00fc5690 100644
+--- a/drivers/gpu/drm/i915/i915_scheduler.h
++++ b/drivers/gpu/drm/i915/i915_scheduler.h
+@@ -34,7 +34,8 @@ bool __i915_sched_node_add_dependency(struct i915_sched_node *node,
+ 				      unsigned long flags);
+ 
+ int i915_sched_node_add_dependency(struct i915_sched_node *node,
+-				   struct i915_sched_node *signal);
++				   struct i915_sched_node *signal,
++				   unsigned long flags);
+ 
+ void i915_sched_node_fini(struct i915_sched_node *node);
+ 
+diff --git a/drivers/gpu/drm/i915/i915_scheduler_types.h b/drivers/gpu/drm/i915/i915_scheduler_types.h
+index d18e705500542..7186875088a0a 100644
+--- a/drivers/gpu/drm/i915/i915_scheduler_types.h
++++ b/drivers/gpu/drm/i915/i915_scheduler_types.h
+@@ -78,6 +78,7 @@ struct i915_dependency {
+ 	unsigned long flags;
+ #define I915_DEPENDENCY_ALLOC		BIT(0)
+ #define I915_DEPENDENCY_EXTERNAL	BIT(1)
++#define I915_DEPENDENCY_WEAK		BIT(2)
+ };
+ 
+ #endif /* _I915_SCHEDULER_TYPES_H_ */
 -- 
 2.20.1
 
