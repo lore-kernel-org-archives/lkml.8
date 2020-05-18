@@ -2,162 +2,118 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE71C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE09C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C34C920787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C61120787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:22:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="drv2mSAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgERJVp (ORCPT
+        id S1726632AbgERJWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:21:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36902 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgERJVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:21:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7A7F2AF57;
-        Mon, 18 May 2020 09:21:44 +0000 (UTC)
-Date:   Mon, 18 May 2020 11:21:39 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH] printk/kdb: Redirect printk messages into kdb in any
- context
-Message-ID: <20200518092139.GK7340@linux-b0ei>
-References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
- <20200512142533.ta4uejwmq5gchtlx@holly.lan>
- <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
- <20200514084230.GO17734@linux-b0ei>
- <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
- <20200515085021.GS17734@linux-b0ei>
- <20200515103308.GD42471@jagdpanzerIV.localdomain>
- <20200515134806.5cw4xxnxw7k3223l@holly.lan>
+        Mon, 18 May 2020 05:22:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgERJWz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:22:55 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD911C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 02:22:53 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id z4so7352055wmi.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 02:22:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=Z3XlctpSAnbYdb2+5Z7TFNZPigSvZMxY4yX670//TBU=;
+        b=drv2mSAuvezl8uk9ZvXfGTMENTCqHqLeB5OLJuBjylbY9VEyWGnJcxSWFwJQdlPu/F
+         MI0sf0aLcYB3VSz8CAh7zmlYeci5h117eeqYjrXYOCC+4FZogJ+cfjXmN/uxIvzq9fol
+         cFdzZiynTzFtdgY8iDZ6t1CIO4hPrPc3bmZcC9ULjdAW1X/nOAWsI+Yfsh4inCax8R6+
+         ZRcB3gZly/uFkn57tKqXLWK3t3WVpmcdf23zUg1kdMP3INamQ3kTEj4REZR1te4YaMYm
+         sXICAkHLFkf1OhzgL2/WBxfPrH9iJGAAg8735Xtf4myhO321CZ1v7azvSTBhhkrADJZw
+         gnnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=Z3XlctpSAnbYdb2+5Z7TFNZPigSvZMxY4yX670//TBU=;
+        b=fYM8VApe+SuVuDtmpfyloF1PnvT7tSZB9lei04iV31SB40Mdd0g1HFQbOhl6mw0Zr4
+         YekejUvN7jDas0OQ9rf62smg9Gf3PRXIMvp9IdaNK3zKGhZZdAcfwcnu+a0CJ7If5hg/
+         VxMpWhyupBdrK/EMhg1esS0P6vLH7JhdrexSCErLj/W2hCZNTw9i46l51k969c3pq4i9
+         XXSSJDqOHsPgOGOKiyLd2wbkq3uyv50csct1GLqmvNIdpNGr/FVwMmfhJapSQLM+FEyk
+         mk1frmEQDLNDFkw2Qm6tVMiW+sGIUbukLrHOOXiiyX9mAEp1GRvhRHTu3awQh/7VB886
+         kyKw==
+X-Gm-Message-State: AOAM531h+hT+0K/zTLkeE+wyGTJw98H2zthPJVAREWCjfn7FJCG9Xg+a
+        FaX98ZTWun2/6rXL4cI2Pi71e/phb6o=
+X-Google-Smtp-Source: ABdhPJy8I8LDsz/5SOI07W1BDAQYcizOum1eE7aOvMk3UKlv2qSI1RLiOS6YkMJ6LmH6Vrszb+qMJg==
+X-Received: by 2002:a05:600c:14c6:: with SMTP id i6mr18126796wmh.58.1589793772297;
+        Mon, 18 May 2020 02:22:52 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id h133sm16392525wmf.25.2020.05.18.02.22.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 May 2020 02:22:51 -0700 (PDT)
+Subject: Re: [PATCH v2 5/7] include: dt-bindings: sound: Add sc7180-lpass
+ bindings header
+To:     Ajit Pandey <ajitp@codeaurora.org>, broonie@kernel.org,
+        plai@codeaurora.org, bgoswami@codeaurora.org
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: =?UTF-8?Q?=3c=1c1586592171-31644-1-git-send-email-ajitp=40codeau?=
+ =?UTF-8?Q?rora=2eorg=1d=3e_=3c1589474298-29437-1-git-send-email-ajitp=40cod?=
+ =?UTF-8?Q?eaurora=2eorg=3e_=3c1589474298-29437-6-git-send-email-ajitp=40cod?=
+ =?UTF-8?Q?eaurora=2eorg=3e?=
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <e8859fcf-fc00-01fc-b64e-dba086c8155b@linaro.org>
+Date:   Mon, 18 May 2020 10:22:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515134806.5cw4xxnxw7k3223l@holly.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-05-15 14:48:06, Daniel Thompson wrote:
-> On Fri, May 15, 2020 at 07:33:08PM +0900, Sergey Senozhatsky wrote:
-> > On (20/05/15 10:50), Petr Mladek wrote:
-> > > kdb is able to stop kernel even in NMI context where printk() is redirected
-> > > to the printk_safe() lockless variant. Move the check and redirect to kdb
-> > > even in this case.
-> > 
-> > Can I please have some context what problem does this solve?
-> > I can see that vkdb_printf() calls into console drivers:
-> > 
-> > 	for_each_console(c) {
-> > 		c->write(c, cp, retlen - (cp - kdb_buffer));
-> > 		touch_nmi_watchdog();
-> > 	}
-> > 
-> > Is this guaranteed that we never execute this path from NMI?
 
-Good question!
 
-> Absolutely not.
+On 14/05/2020 17:38, Ajit Pandey wrote:
+> Add header defining dai-id and mclk id for SC7180 lpass soc.
 > 
-> The execution context for kdb is pretty much unique... we are running a
-> debug mode with all CPUs parked in a holding loop with interrupts
-> disabled. One CPU is at an unknown exception state and the others are
-> either handling an IRQ or NMI depending on architecture[1].
+> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+> ---
+>   include/dt-bindings/sound/sc7180-lpass.h | 10 ++++++++++
 
-This is similar to the situation in panic() when other CPUs are
-stopped. It is more safe when the CPUs are stopped using IRQ.
-There is higher danger of a deadlock when NMI is used.
+Why not reuse or rename include/dt-bindings/sound/apq8016-lpass.h to 
+include/dt-bindings/sound/lpass.h and reuse across all the LPASS variants?
 
-bust_spinlock() is used in panic() to increase the chance to go over
-the deadlock and actually see the messages. It is not enough when
-more locks are used by the console (VT/TTY is good example). And
-it is not guaranteed that the console will still work after
-the hack is disabled by bust_spinlocks(0).
+--srini
 
-
-> However there are a number of factors that IMHO weigh in favour of
-> allowing kdb to intercept here.
+>   1 file changed, 10 insertions(+)
+>   create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
 > 
-> 1. kgdb/kdb are designed to work from NMI, modulo the bugs that are
->    undoubtedly present.
-
-There is definitely a risk of deadlock when console drivers are called
-by KDB. There are plans to create some lockless console drivers to
-handle panic(). It might be usable in KDB as well.
-
-The question is what are the expectations of KDB users. How often does
-it happen that KDB does not work or that the system does not longer
-work when continue is called in KDB?
-
-
-> 2. A synchronous breakpoint (including an implicit breakpoint-on-oops)
->    from any code that executes with irqs disabled will exhibit most of
->    the same problems as an NMI but without waking up all the NMI logic.
-
-Makes sense.
-
-
-> 3. kdb_trap_printk is only set for *very* narrow time intervals by the
->    debug master (the single CPU in the system that is *not* in a
->    holding loop). Thus in all cases the system has already successfully
->    executed kdb_printf() several times before we ever call the printk()
->    interception code.
->
->    Or put another way, even if we did tickle a bug speculated about in
->    #1, it won't be the call to printk() that triggers it; we'd never
->    get that far!
-
-Good point. I would say that this patch will not make the situation
-worse. The code is called when KDB already uses consoles. It is just
-a trick how to use existing code to print even more messages in
-KDB context.
-
+> diff --git a/include/dt-bindings/sound/sc7180-lpass.h b/include/dt-bindings/sound/sc7180-lpass.h
+> new file mode 100644
+> index 0000000..7d988f6
+> --- /dev/null
+> +++ b/include/dt-bindings/sound/sc7180-lpass.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __DT_SC7180_LPASS_H
+> +#define __DT_SC7180_LPASS_H
+> +
+> +#define MI2S_PRIMARY	0
+> +#define MI2S_SECONDARY	1
+> +
+> +#define LPASS_MCLK0	0
+> +
+> +#endif /* __DT_APQ8016_LPASS_H */
 > 
-> > If so, can this please be added to the commit message? A more
-> > detailed commit message will help a lot.
-
-What about?
-
-"KDB has to get messages on consoles even when the system is stopped.
-It uses kdb_printf() internally and calls console drivers on its own.
-
-It uses a hack to reuse an existing code. It sets "kdb_trap_printk"
-global variable to redirect even the normal printk() into the
-kdb_printf() variant.
-
-The variable "kdb_trap_printk" is checked in printk_default() and
-it is ignored when printk is redirected to printk_safe in NMI context.
-Solve this by moving the check into printk_func().
-
-It is obvious that it is not fully safe. But it does not make things
-worse. The console drivers are already called in this context by
-kdb_printf() direct calls."
-
-> I suspect Petr might prefer any future flames about kdb_printf() to be
-> pointed at me rather than him ;-) so if adding anything to the commit
-> message then I'd suggest it be based on the reasoning in #3 above.
-
-This is fair :-)
-
-Best Regards,
-Petr
