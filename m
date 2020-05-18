@@ -2,51 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214E4C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66F3C20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECB020671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825568;
-	bh=HzhzUmDKmEhn4BXR+WRZZo9dgSDG/SsJmeYNmu1EgwM=;
+	s=default; t=1589825570;
+	bh=cTsk6Vd1CBdbHwWM2rAQN9WqRfHIR5FG9DzF31Adokw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGVuhYSwkA0izqoXgL1F6c4aL7kyWvvKYK2u1EFlTKFahGsRsRgGaoypd7OLM0fOX
-	 CwdxkicLiBi6GN7OUtk/HqNTIX6DEZqIbUY5o4eCNg/UefLUBh7sq1ED8QGfSx1I9Q
-	 iwMFzziMM17hyUAPCMWBe3Pgri3pXkBM89eP+KUM=
+	b=1QqgDvhoIJ9jiYKjz5JpFgnoEtkV/DuytL58Is+Oh90SnioR0VDf4j7G2bceW6cgs
+	 vDagYh2YJ48WkreAphdvhOJM3IEgtTjSepoARtqGiv8KdC8WIrnbHzLtDnsn5XfEip
+	 2wkaqi87jtSpVKNcf+MOyq5wYiVB6OKvBRNLPCVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732608AbgERSDG (ORCPT
+        id S1732601AbgERSDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:03:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47940 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:03:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732587AbgERSC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:59 -0400
+        id S1731198AbgERSC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:02:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07891207D3;
-        Mon, 18 May 2020 18:02:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4A8B207D3;
+        Mon, 18 May 2020 18:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824978;
-        bh=HzhzUmDKmEhn4BXR+WRZZo9dgSDG/SsJmeYNmu1EgwM=;
+        s=default; t=1589824976;
+        bh=cTsk6Vd1CBdbHwWM2rAQN9WqRfHIR5FG9DzF31Adokw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJ7g5ldxt/hnmovrgxFJihEuQg0UvLwhT0cDjOAf5DfHLxlwta+elYKQXGDi6OJFi
-         +KO+BeJiJXWM6J/s0Ikcg2SzN3DR8F/JnuD6okHDYGZUhmSNtp5bVgaZ8uOAlm//9J
-         WWjKodPm2uPb3mLNH53kVAEeWo3Xw1y09inSrsns=
+        b=XV9cywZWMaW4eKwjpvgF4UuTVoim1bO3wRhKOdHg/GKmCBBv233lD1iTgZEq5ffNo
+         pisZ2u3u6ZfvsXyfBiQb9VvcYIFu8I5RATM9FHfGvU6BtuqoxdWGJujnv2H/BEW3Ue
+         yBx86eGvChaSnKGO81nwN8uqsSgihUv/ijIDqEm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.6 042/194] hinic: fix a bug of ndo_stop
-Date:   Mon, 18 May 2020 19:35:32 +0200
-Message-Id: <20200518173535.263756891@linuxfoundation.org>
+        stable@vger.kernel.org, Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 077/194] pinctrl: qcom: fix wrong write in update_dual_edge
+Date:   Mon, 18 May 2020 19:36:07 +0200
+Message-Id: <20200518173538.215907782@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -59,119 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: Ansuel Smith <ansuelsmth@gmail.com>
 
-[ Upstream commit e8a1b0efd632d1c9db7d4e93da66377c7b524862 ]
+[ Upstream commit 90bcb0c3ca0809d1ed358bfbf838df4b3d4e58e0 ]
 
-if some function in ndo_stop interface returns failure because of
-hardware fault, must go on excuting rest steps rather than return
-failure directly, otherwise will cause memory leak.And bump the
-timeout for SET_FUNC_STATE to ensure that cmd won't return failure
-when hw is busy. Otherwise hw may stomp host memory if we free
-memory regardless of the return value of SET_FUNC_STATE.
+Fix a typo in the readl/writel accessor conversion where val is used
+instead of pol changing the behavior of the original code.
 
-Fixes: 51ba902a16e6 ("net-next/hinic: Initialize hw interface")
-Signed-off-by: Luo bin <luobin9@huawei.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Fixes: 6c73698904aa pinctrl: qcom: Introduce readl/writel accessors
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200414003726.25347-1-ansuelsmth@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c |   16 ++++++++++++----
- drivers/net/ethernet/huawei/hinic/hinic_main.c    |   18 +++---------------
- 2 files changed, 15 insertions(+), 19 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-@@ -45,6 +45,8 @@
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 1a948c3f54b7c..9f1c9951949ea 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -692,7 +692,7 @@ static void msm_gpio_update_dual_edge_pos(struct msm_pinctrl *pctrl,
  
- #define MGMT_MSG_TIMEOUT                5000
+ 		pol = msm_readl_intr_cfg(pctrl, g);
+ 		pol ^= BIT(g->intr_polarity_bit);
+-		msm_writel_intr_cfg(val, pctrl, g);
++		msm_writel_intr_cfg(pol, pctrl, g);
  
-+#define SET_FUNC_PORT_MGMT_TIMEOUT	25000
-+
- #define mgmt_to_pfhwdev(pf_mgmt)        \
- 		container_of(pf_mgmt, struct hinic_pfhwdev, pf_to_mgmt)
- 
-@@ -238,12 +240,13 @@ static int msg_to_mgmt_sync(struct hinic
- 			    u8 *buf_in, u16 in_size,
- 			    u8 *buf_out, u16 *out_size,
- 			    enum mgmt_direction_type direction,
--			    u16 resp_msg_id)
-+			    u16 resp_msg_id, u32 timeout)
- {
- 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
- 	struct pci_dev *pdev = hwif->pdev;
- 	struct hinic_recv_msg *recv_msg;
- 	struct completion *recv_done;
-+	unsigned long timeo;
- 	u16 msg_id;
- 	int err;
- 
-@@ -267,8 +270,9 @@ static int msg_to_mgmt_sync(struct hinic
- 		goto unlock_sync_msg;
- 	}
- 
--	if (!wait_for_completion_timeout(recv_done,
--					 msecs_to_jiffies(MGMT_MSG_TIMEOUT))) {
-+	timeo = msecs_to_jiffies(timeout ? timeout : MGMT_MSG_TIMEOUT);
-+
-+	if (!wait_for_completion_timeout(recv_done, timeo)) {
- 		dev_err(&pdev->dev, "MGMT timeout, MSG id = %d\n", msg_id);
- 		err = -ETIMEDOUT;
- 		goto unlock_sync_msg;
-@@ -342,6 +346,7 @@ int hinic_msg_to_mgmt(struct hinic_pf_to
- {
- 	struct hinic_hwif *hwif = pf_to_mgmt->hwif;
- 	struct pci_dev *pdev = hwif->pdev;
-+	u32 timeout = 0;
- 
- 	if (sync != HINIC_MGMT_MSG_SYNC) {
- 		dev_err(&pdev->dev, "Invalid MGMT msg type\n");
-@@ -353,9 +358,12 @@ int hinic_msg_to_mgmt(struct hinic_pf_to
- 		return -EINVAL;
- 	}
- 
-+	if (cmd == HINIC_PORT_CMD_SET_FUNC_STATE)
-+		timeout = SET_FUNC_PORT_MGMT_TIMEOUT;
-+
- 	return msg_to_mgmt_sync(pf_to_mgmt, mod, cmd, buf_in, in_size,
- 				buf_out, out_size, MGMT_DIRECT_SEND,
--				MSG_NOT_RESP);
-+				MSG_NOT_RESP, timeout);
- }
- 
- /**
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -483,7 +483,6 @@ static int hinic_close(struct net_device
- {
- 	struct hinic_dev *nic_dev = netdev_priv(netdev);
- 	unsigned int flags;
--	int err;
- 
- 	down(&nic_dev->mgmt_lock);
- 
-@@ -497,20 +496,9 @@ static int hinic_close(struct net_device
- 
- 	up(&nic_dev->mgmt_lock);
- 
--	err = hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
--	if (err) {
--		netif_err(nic_dev, drv, netdev,
--			  "Failed to set func port state\n");
--		nic_dev->flags |= (flags & HINIC_INTF_UP);
--		return err;
--	}
--
--	err = hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
--	if (err) {
--		netif_err(nic_dev, drv, netdev, "Failed to set port state\n");
--		nic_dev->flags |= (flags & HINIC_INTF_UP);
--		return err;
--	}
-+	hinic_port_set_state(nic_dev, HINIC_PORT_DISABLE);
-+
-+	hinic_port_set_func_state(nic_dev, HINIC_FUNC_PORT_DISABLE);
- 
- 	if (nic_dev->flags & HINIC_RSS_ENABLE) {
- 		hinic_rss_deinit(nic_dev);
+ 		val2 = msm_readl_io(pctrl, g) & BIT(g->in_bit);
+ 		intstat = msm_readl_intr_status(pctrl, g);
+-- 
+2.20.1
+
 
 
