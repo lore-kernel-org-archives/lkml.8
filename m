@@ -2,101 +2,87 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B085FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87AEB207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:10:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ngXBDPP7"
+	by mail.kernel.org (Postfix) with ESMTP id 8EEE120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 06:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgERGKY (ORCPT
+        id S1726675AbgERGNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 02:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgERGKX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 02:10:23 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67DE1C061A0C;
-        Sun, 17 May 2020 23:10:23 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id e2so7794423eje.13;
-        Sun, 17 May 2020 23:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1dl0gB34L7vj5HB7KjBUrlD+YFZKASRou35LziSn5MA=;
-        b=ngXBDPP7V+sFxhfGz7eX1ka++a6pa+l7RKUmwXqrQzbFmjphHHDjWT4Z+t8Tg1bvgL
-         azg9fbXA7osrfbYXAPw6LvgiLPLinl5k33BPC+VnSFfIlZnsYtJ642urAY4weP8A1iHp
-         7H/KfbbGnRZJfLGocdTw4wtvy9t2h0HYzojcWJ7hmUfDHqG1J1HwshLQXcHeWmQATwF8
-         tdq2T8HvfTFUR1XTACvkrBtGMQeoAIONUunb4U8MoG1gU/FkmXOO/cVL+t4X7+XioMad
-         JYxNuKHNyTlFeiaPD91hH3b13t2+VjbVwmDvTErQjFAVXgl4w4K95uRWcL/6CSWPoX0j
-         NY7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1dl0gB34L7vj5HB7KjBUrlD+YFZKASRou35LziSn5MA=;
-        b=owSQOp06837w60O+esCpE7s7xVNMg8aKbQfsI1ZoOzQA0h/+TI37xyyLlU35lk24ms
-         InYuFLBfRQReEZor5I8EMwXZvXIULL9FBWt821O6ORObUMvbiSnfUYwOeJSF03aJQOUy
-         0FhiK6h8SzYQ+06IQKFwXD87q0eTgqF3uGglRu241W9LBbysns4a+D+o1ViCiFnG6FRL
-         WRwNGunSC63cdZoaKy9yASNHa46B4DEi2JYqtWkbSE/sV9ie9ijN8ZapEzFYmBKe+VMH
-         EM8qR7XdRT98T2jG68WUB4RX7u2km46TMHyATtbdWrDlZAkzY/AzYfqaZeEEsSZLV451
-         3SNg==
-X-Gm-Message-State: AOAM533OWzxuBsUXz2ijo9WOTj/p/4h69rdJgOXkGpEAs5oj/DTtVgc/
-        3eFQbY5KACX76AeplyAN7K2SonTxsEyck6j7cMM=
-X-Google-Smtp-Source: ABdhPJxY9gkVeTbo+uTZO0tdm5GZSyegXi7knc+eTXy/57LC+MJDjSOgn9H7OOORDwbcmwGCymDkFiQB/Htl3yTQKoA=
-X-Received: by 2002:a17:907:4096:: with SMTP id nm6mr14030171ejb.30.1589782222059;
- Sun, 17 May 2020 23:10:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200518142720.4c0d9a87@canb.auug.org.au>
-In-Reply-To: <20200518142720.4c0d9a87@canb.auug.org.au>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 18 May 2020 08:10:11 +0200
-Message-ID: <CAFBinCDSHCkAtQZUXt0kyk736zmaJQVbWXsMOad91qPgxL1EeQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the mmc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 18 May 2020 02:13:44 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:40384 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726508AbgERGNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 02:13:43 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx39qRJ8Je+_s1AA--.5S2;
+        Mon, 18 May 2020 14:13:38 +0800 (CST)
+From:   Zhi Li <lizhi01@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Remove useless parameter of the bootcmdline_init()
+Date:   Mon, 18 May 2020 14:13:36 +0800
+Message-Id: <1589782416-2130-1-git-send-email-lizhi01@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dx39qRJ8Je+_s1AA--.5S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jr1rGr48try7Gr4rWF4kWFg_yoWDJrgEqr
+        17Xw48C3y293WY9rW7Z34fWrWFyw4Fq3ZIvFnagw4Yy34fAw1UAr9xXFySqrn8ur4ayFya
+        kFZayF4vgrZrKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbx8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+        0_GcWlnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+        648v4I1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j
+        6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUseO
+        AUUUUU=
+X-CM-SenderInfo: xol2xxqqr6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+The parameter "cmdline_p" is useless in bootcmdline_init(), remove it.
 
-On Mon, May 18, 2020 at 6:27 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the mmc tree, today's linux-next build (x86_64 allmodconfig)
-> failed like this:
->
-> WARNING: modpost: missing MODULE_LICENSE() in drivers/mmc/host/meson-mx-sdhc-clkc.o
-> see include/linux/module.h for more information
-> ERROR: modpost: "meson_mx_sdhc_register_clkc" [drivers/mmc/host/meson-mx-sdhc.ko] undefined!
->
-> Caused by commit
->
->   53ded1b676d1 ("mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host")
->
-> I have used the mmc tree from next-20200515 for today.
-brown paperbag time, sorry for this
-I just sent a fix, see: [0]
+Signed-off-by: Zhi Li <lizhi01@loongson.cn>
+---
+ arch/mips/kernel/setup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 8db533c..7b537fa 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -575,7 +575,7 @@ static int __init bootcmdline_scan_chosen(unsigned long node, const char *uname,
+ 
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
+ 
+-static void __init bootcmdline_init(char **cmdline_p)
++static void __init bootcmdline_init(void)
+ {
+ 	bool dt_bootargs = false;
+ 
+@@ -658,7 +658,7 @@ static void __init arch_mem_init(char **cmdline_p)
+ 	plat_mem_setup();
+ 	memblock_set_bottom_up(true);
+ 
+-	bootcmdline_init(cmdline_p);
++	bootcmdline_init();
+ 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+ 	*cmdline_p = command_line;
+ 
+-- 
+2.1.0
 
-Best regards,
-Martin
-
-
-[0] https://patchwork.kernel.org/patch/11554771/
