@@ -2,91 +2,114 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7445FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E52C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA5820657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF648206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:49:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VCHeNapr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgERNsZ (ORCPT
+        id S1727903AbgERNtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:48:25 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:47810 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgERNsZ (ORCPT
+        Mon, 18 May 2020 09:49:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40954 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbgERNtp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:48:25 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 354B1803080B;
-        Mon, 18 May 2020 13:48:22 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1EWyMC3tE5jO; Mon, 18 May 2020 16:48:21 +0300 (MSK)
-Date:   Mon, 18 May 2020 16:48:20 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200518134820.wedoumgbsllvhem6@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
- <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
+        Mon, 18 May 2020 09:49:45 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04IDnbe5096804;
+        Mon, 18 May 2020 08:49:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589809777;
+        bh=GwQF3k6O8rIzhSQ8vh0/BGxUXW9aYuYmfPlGt47XLWE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VCHeNaprJpzW3fNJuEpINNJ8qSs3LKApqpvpKoEtIcXdV4DqdJvnSr/RKu5gLOLWf
+         gN2/OAJX27+MJgfvK09sskNhrsriORYC0LKY4LNDruVdkVy4Wmu1dgEv7bXa8y2sL+
+         D57a0HTQjBnZtIX5dpyUKLjfW93NaWENPC5fckH4=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04IDnbQN130491;
+        Mon, 18 May 2020 08:49:37 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 18
+ May 2020 08:49:36 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 18 May 2020 08:49:36 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04IDnXZX048504;
+        Mon, 18 May 2020 08:49:34 -0500
+Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
+To:     Dilip Kota <eswara.kota@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh@kernel.org>, <andriy.shevchenko@intel.com>,
+        <cheol.yong.kim@intel.com>, <chuanhua.lei@linux.intel.com>,
+        <qi-ming.wu@intel.com>, <yixin.zhu@intel.com>
+References: <cover.1589530082.git.eswara.kota@linux.intel.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
+Date:   Mon, 18 May 2020 19:19:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <cover.1589530082.git.eswara.kota@linux.intel.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200515210647.GA22922@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 11:06:47PM +0200, Thomas Bogendoerfer wrote:
-> On Fri, May 15, 2020 at 10:48:27AM +0300, Serge Semin wrote:
-> > Thomas,
-> > Could you take a look at my comment below so I could proceed with the
-> > patchset v3 development?
+Dilip,
+
+On 5/15/2020 1:43 PM, Dilip Kota wrote:
+> This patch series adds Intel ComboPhy driver, respective yaml schemas
 > 
-> I can't help, but using r4k clocksource with changing frequency is
-> probaly only usefull as a random generator. So IMHO the only two
-> options are disabling it or implement what arch/x86/kernel/tsc.c does.
+> Changes on v8:
+>   As per PHY Maintainer's request add description in comments for doing
+>   register access through register map framework.
 > 
-> Thomas.
+> Changes on v7:
+>   As per System control driver maintainer's inputs remove
+>     fwnode_to_regmap() definition and use device_node_get_regmap()
 
-Thomas, could you proceed with the rest of the patches review?
-├─>[PATCH v2 16/20] bus: cdmm: Add MIPS R5 arch support
-├─>[PATCH v2 15/20] mips: cdmm: Add mti,mips-cdmm dtb node support
-├─>[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
-├─>[PATCH v2 12/20] mips: MAAR: Add XPA mode support
-├─>[PATCH v2 10/20] mips: Add CONFIG/CONFIG6/Cause reg fields macro
-└─>[PATCH v2 09/20] mips: Add CP0 Write Merge config support
+Can you fix this warning and resend the patch?
+drivers/phy/intel/phy-intel-combo.c:229:6: warning: ‘cb_mode’ may be used
+uninitialized in this function [-Wmaybe-uninitialized]
+  ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
+  ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/phy/intel/phy-intel-combo.c:204:24: note: ‘cb_mode’ was declared here
+  enum intel_combo_mode cb_mode;
+                        ^~~~~~~
 
-It would be great if I fixed more comments in the next patchset version.
-
--Sergey
-
+Thanks
+Kishon
+>     
+> Changes on v6:
+>   Rebase patches on the latest maintainer's branch
+>   https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
+> Dilip Kota (3):
+>   dt-bindings: phy: Add PHY_TYPE_XPCS definition
+>   dt-bindings: phy: Add YAML schemas for Intel ComboPhy
+>   phy: intel: Add driver support for ComboPhy
 > 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+>  .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
+>  drivers/phy/intel/Kconfig                          |  14 +
+>  drivers/phy/intel/Makefile                         |   1 +
+>  drivers/phy/intel/phy-intel-combo.c                | 632 +++++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                      |   1 +
+>  5 files changed, 749 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>  create mode 100644 drivers/phy/intel/phy-intel-combo.c
+> 
