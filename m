@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB34AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80398207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA06C20826
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824683;
-	bh=V1Ja0lg4oMTIl71tYsWdRm+4wxF6tLKWIy2gbpYiJMU=;
+	s=default; t=1589824687;
+	bh=O9xcISJN/z1FNJAF1HxhOJkTIsQ+vTAHx4xaTb60ltw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i7FbcHMW98TXTLqzjkwYVYF3Ri6Ud46FB/ELJ7j/Tblm667rpo7/PlvumPix/IgOs
-	 RCbulPWHfa8ZRaMRfO3UdrizIIMp7+MbyggG+zSszQ/lXClHUK7IoEZcHGXYeuLlFt
-	 AuRm+efQDkm+0IzF8mt7O8QvDId7O04ehvE0APr8=
+	b=zfuKsD57+2M8FjmOyQb54OMa0g+xoNWz+K5v2ModrfTq1kbDCRL/h+pbRlRmBb5Ak
+	 DV7mNa7n/uvOjcTXcfPByG0u4SFr26vCAbxgAfpV816EeIjO/ukjvO4ohaCwedoFkj
+	 /Rv0+K94Cm3T9XrtHaOCYKZailg/NWKVS25NGg8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgERR6C (ORCPT
+        id S1731314AbgERR6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37008 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:58:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731847AbgERR6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:58:00 -0400
+        id S1729934AbgERR6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:58:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52D2A20715;
-        Mon, 18 May 2020 17:57:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDCE720715;
+        Mon, 18 May 2020 17:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824679;
-        bh=V1Ja0lg4oMTIl71tYsWdRm+4wxF6tLKWIy2gbpYiJMU=;
+        s=default; t=1589824682;
+        bh=O9xcISJN/z1FNJAF1HxhOJkTIsQ+vTAHx4xaTb60ltw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MEcPpG/p40yL0xI0pnWgU2j6q+XlDrrluzImHhLCVeA9j+TFMr5o10LZuGImKefcU
-         nfoE2DQXTq/AGuI9o1t4tCUSQ/EAuPn6kg7OrKzquhjLgMn7KpPJyfxJC/OVy05NFN
-         wpSlthcdGb5xPyREBTkLUifCanjs3CxsAtRSoi88=
+        b=ZaT/1baEsJdeijgHk07C1r4JJVyZnTnuuRyJGQO+CM+5ln7EOHWSHKSdKn62zAMHP
+         1PDv/YiZ34z6GPbevSVHKvONmMnQFQakRoLkmD4hhcvcks1Gpk+/8CHI/Y8SNuCymP
+         YsDWkN+xBWMuPP7R7Y3g6LuKLDRzt6s0ez5e3L0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, butt3rflyh4ck <butterflyhuangxx@gmail.com>,
+        stable@vger.kernel.org, Jesus Ramos <jesus-ramos@live.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 107/147] ALSA: rawmidi: Fix racy buffer resize under concurrent accesses
-Date:   Mon, 18 May 2020 19:37:10 +0200
-Message-Id: <20200518173526.564944717@linuxfoundation.org>
+Subject: [PATCH 5.4 108/147] ALSA: usb-audio: Add control message quirk delay for Kingston HyperX headset
+Date:   Mon, 18 May 2020 19:37:11 +0200
+Message-Id: <20200518173526.673184044@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -59,131 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jesus Ramos <jesus-ramos@live.com>
 
-commit c1f6e3c818dd734c30f6a7eeebf232ba2cf3181d upstream.
+commit 073919e09ca445d4486968e3f851372ff44cf2b5 upstream.
 
-The rawmidi core allows user to resize the runtime buffer via ioctl,
-and this may lead to UAF when performed during concurrent reads or
-writes: the read/write functions unlock the runtime lock temporarily
-during copying form/to user-space, and that's the race window.
+Kingston HyperX headset with 0951:16ad also needs the same quirk for
+delaying the frequency controls.
 
-This patch fixes the hole by introducing a reference counter for the
-runtime buffer read/write access and returns -EBUSY error when the
-resize is performed concurrently against read/write.
-
-Note that the ref count field is a simple integer instead of
-refcount_t here, since the all contexts accessing the buffer is
-basically protected with a spinlock, hence we need no expensive atomic
-ops.  Also, note that this busy check is needed only against read /
-write functions, and not in receive/transmit callbacks; the race can
-happen only at the spinlock hole mentioned in the above, while the
-whole function is protected for receive / transmit callbacks.
-
-Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
+Signed-off-by: Jesus Ramos <jesus-ramos@live.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/CAFcO6XMWpUVK_yzzCpp8_XP7+=oUpQvuBeCbMffEDkpe8jWrfg@mail.gmail.com
-Link: https://lore.kernel.org/r/s5heerw3r5z.wl-tiwai@suse.de
+Link: https://lore.kernel.org/r/BY5PR19MB3634BA68C7CCA23D8DF428E796AF0@BY5PR19MB3634.namprd19.prod.outlook.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/rawmidi.h |    1 +
- sound/core/rawmidi.c    |   31 +++++++++++++++++++++++++++----
- 2 files changed, 28 insertions(+), 4 deletions(-)
+ sound/usb/quirks.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/include/sound/rawmidi.h
-+++ b/include/sound/rawmidi.h
-@@ -61,6 +61,7 @@ struct snd_rawmidi_runtime {
- 	size_t avail_min;	/* min avail for wakeup */
- 	size_t avail;		/* max used buffer for wakeup */
- 	size_t xruns;		/* over/underruns counter */
-+	int buffer_ref;		/* buffer reference count */
- 	/* misc */
- 	spinlock_t lock;
- 	wait_queue_head_t sleep;
---- a/sound/core/rawmidi.c
-+++ b/sound/core/rawmidi.c
-@@ -97,6 +97,17 @@ static void snd_rawmidi_input_event_work
- 		runtime->event(runtime->substream);
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1592,13 +1592,14 @@ void snd_usb_ctl_msg_quirk(struct usb_de
+ 	    && (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
+ 		msleep(20);
+ 
+-	/* Zoom R16/24, Logitech H650e, Jabra 550a needs a tiny delay here,
+-	 * otherwise requests like get/set frequency return as failed despite
+-	 * actually succeeding.
++	/* Zoom R16/24, Logitech H650e, Jabra 550a, Kingston HyperX needs a tiny
++	 * delay here, otherwise requests like get/set frequency return as
++	 * failed despite actually succeeding.
+ 	 */
+ 	if ((chip->usb_id == USB_ID(0x1686, 0x00dd) ||
+ 	     chip->usb_id == USB_ID(0x046d, 0x0a46) ||
+-	     chip->usb_id == USB_ID(0x0b0e, 0x0349)) &&
++	     chip->usb_id == USB_ID(0x0b0e, 0x0349) ||
++	     chip->usb_id == USB_ID(0x0951, 0x16ad)) &&
+ 	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
+ 		usleep_range(1000, 2000);
  }
- 
-+/* buffer refcount management: call with runtime->lock held */
-+static inline void snd_rawmidi_buffer_ref(struct snd_rawmidi_runtime *runtime)
-+{
-+	runtime->buffer_ref++;
-+}
-+
-+static inline void snd_rawmidi_buffer_unref(struct snd_rawmidi_runtime *runtime)
-+{
-+	runtime->buffer_ref--;
-+}
-+
- static int snd_rawmidi_runtime_create(struct snd_rawmidi_substream *substream)
- {
- 	struct snd_rawmidi_runtime *runtime;
-@@ -646,6 +657,11 @@ static int resize_runtime_buffer(struct
- 		if (!newbuf)
- 			return -ENOMEM;
- 		spin_lock_irq(&runtime->lock);
-+		if (runtime->buffer_ref) {
-+			spin_unlock_irq(&runtime->lock);
-+			kvfree(newbuf);
-+			return -EBUSY;
-+		}
- 		oldbuf = runtime->buffer;
- 		runtime->buffer = newbuf;
- 		runtime->buffer_size = params->buffer_size;
-@@ -945,8 +961,10 @@ static long snd_rawmidi_kernel_read1(str
- 	long result = 0, count1;
- 	struct snd_rawmidi_runtime *runtime = substream->runtime;
- 	unsigned long appl_ptr;
-+	int err = 0;
- 
- 	spin_lock_irqsave(&runtime->lock, flags);
-+	snd_rawmidi_buffer_ref(runtime);
- 	while (count > 0 && runtime->avail) {
- 		count1 = runtime->buffer_size - runtime->appl_ptr;
- 		if (count1 > count)
-@@ -965,16 +983,19 @@ static long snd_rawmidi_kernel_read1(str
- 		if (userbuf) {
- 			spin_unlock_irqrestore(&runtime->lock, flags);
- 			if (copy_to_user(userbuf + result,
--					 runtime->buffer + appl_ptr, count1)) {
--				return result > 0 ? result : -EFAULT;
--			}
-+					 runtime->buffer + appl_ptr, count1))
-+				err = -EFAULT;
- 			spin_lock_irqsave(&runtime->lock, flags);
-+			if (err)
-+				goto out;
- 		}
- 		result += count1;
- 		count -= count1;
- 	}
-+ out:
-+	snd_rawmidi_buffer_unref(runtime);
- 	spin_unlock_irqrestore(&runtime->lock, flags);
--	return result;
-+	return result > 0 ? result : err;
- }
- 
- long snd_rawmidi_kernel_read(struct snd_rawmidi_substream *substream,
-@@ -1268,6 +1289,7 @@ static long snd_rawmidi_kernel_write1(st
- 			return -EAGAIN;
- 		}
- 	}
-+	snd_rawmidi_buffer_ref(runtime);
- 	while (count > 0 && runtime->avail > 0) {
- 		count1 = runtime->buffer_size - runtime->appl_ptr;
- 		if (count1 > count)
-@@ -1299,6 +1321,7 @@ static long snd_rawmidi_kernel_write1(st
- 	}
-       __end:
- 	count1 = runtime->avail < runtime->buffer_size;
-+	snd_rawmidi_buffer_unref(runtime);
- 	spin_unlock_irqrestore(&runtime->lock, flags);
- 	if (count1)
- 		snd_rawmidi_output_trigger(substream, 1);
 
 
