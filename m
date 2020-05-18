@@ -6,78 +6,98 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F19C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35438C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8BFF206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A8B206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgERUBT (ORCPT
+        id S1728794AbgERUBW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:01:19 -0400
-Received: from mga06.intel.com ([134.134.136.31]:9690 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726367AbgERUBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:01:18 -0400
-IronPort-SDR: dRsUXzK0oTH5Ju1HZCDl76t9qTlbfY3ZGox7G5hlx5L68PJrzjiejdnItnVm1+sd/kj8KJbg41
- o1yi9gkDhTpg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 13:01:18 -0700
-IronPort-SDR: 3qfK7AynXe71zqJ5Bvdl7NRf5LA+A3fwZINumvmqUc80o4Kmt1AbGwzME3vhvh+M/rbouZPkaX
- sO/Y6TuT18uA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="267637992"
-Received: from afloress-mobl2.amr.corp.intel.com ([10.252.56.85])
-  by orsmga006.jf.intel.com with ESMTP; 18 May 2020 13:01:12 -0700
-Message-ID: <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, luto@kernel.org, hpa@zytor.com,
-        dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
-Date:   Mon, 18 May 2020 23:01:11 +0300
-In-Reply-To: <20200518153407.GA499505@tassilo.jf.intel.com>
-References: <20200511045311.4785-1-sashal@kernel.org>
-         <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
-         <20200515164013.GF29995@sasha-vm>
-         <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
-         <20200518153407.GA499505@tassilo.jf.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 18 May 2020 16:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726367AbgERUBU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 16:01:20 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB210C061A0C;
+        Mon, 18 May 2020 13:01:19 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jalwm-0003jY-9K; Mon, 18 May 2020 22:01:12 +0200
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] lan743x: Added fixed link support
+From:   Roelof Berg <rberg@berg-solutions.de>
+In-Reply-To: <20200517183710.GC606317@lunn.ch>
+Date:   Mon, 18 May 2020 22:01:07 +0200
+Cc:     Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <557C3EE7-72FE-455C-9BB8-1FFB635D89FA@berg-solutions.de>
+References: <20200516192402.4201-1-rberg@berg-solutions.de>
+ <20200517183710.GC606317@lunn.ch>
+To:     Andrew Lunn <andrew@lunn.ch>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1589832079;5b270686;
+X-HE-SMSGID: 1jalwm-0003jY-9K
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 08:34 -0700, Andi Kleen wrote:
-> > Yes, for SGX this is functional feature because enclave entry points,
-> > thread control structures (aka TCS's), reset FSBASE and GSBASE registers
-> > to fixed (albeit user defined) values. And syscall's can be done only
-> > outside of enclave.
-> > 
-> > This is a required feature for fancier runtimes (such as Graphene).
+Hi,
+
+thanks a lot for guiding me. A thought on the transparency of fixed-phy regarding this section:
+
 > 
-> Can you please explain a bit more? What do they need GS for?
+>> +			/* Set duplex mode */
+>> +			if (phydev->duplex)
+>> +				data |= MAC_CR_DPX_;
+>> +			else
+>> +				data &= ~MAC_CR_DPX_;
+>> +			/* Set bus speed */
+>> +			switch (phydev->speed) {
+>> +			case 10:
+>> +				data &= ~MAC_CR_CFG_H_;
+>> +				data &= ~MAC_CR_CFG_L_;
+>> +				break;
+>> +			case 100:
+(…)
+> 
+> The current code is unusual, in that it uses
+> phy_ethtool_get_link_ksettings(). That should do the right thing with
+> a fixed-link PHY, although i don't know if anybody uses it like
+> this. So in theory, the current code should take care of duplex, flow
+> control, and speed for you. Just watch out for bug/missing features in
+> fixed link.
+> 
+> 
 
-Apparently, uses only wrfsbase:
+I checked your recommendations and I really would have loved to find a transparent layer that hides the speed/duplex configuration. But unfortunately I found no place that would set above’s bits in the registers (it was me who introduced this bits to the header file in my patch, they are unknown to the kernel). But this register settings need to be done in fixed-link mode. (Fixed-Link => no auto-negotiation => driver has to configure this bits for speed and duplex.)
 
-https://raw.githubusercontent.com/oscarlab/graphene/master/Pal/src/host/Linux-SGX/db_misc.c
+The working mode of this device is usually:
+- Turn on auto-negotiation (by setting a register in the MAC from the MCU)
+- Wait until auto-negotiation is completed
+- The auto-negotiation can now read back (speed and duplex) from the MAC registers
+- However also the PHYs can be enumerated indirectly via MAC registers, which is where the kernel today gets the auto negotiation result from
 
-I'm not too familiar with the codebase yet but by reading some research
-papers in the past the idea is to multiplex one TCS for multiple virtual
-threads inside the enclave.
+Example from the data sheet of the lan7431 MAC layer:
+————————
+Automatic Speed Detection (ASD)
+When set, the MAC ignores the setting of the MAC Configuration (CFG) field
+and automatically determines the speed of operation. The MAC samples the
+RX_CLK input to accomplish speed detection and reports the last determined
+speed via the MAC Configuration (CFG) field.
+When reset, the setting of the MAC Configuration (CFG) field determines
+operational speed.
+————————
 
-E.g. TCS could represent a vcpu for a libos type of container and on
-entry would pick on a thread and set fsbase accordingly for a thread
-control block.
+So regarding the last sentence the driver will have to configure speed (also duplex) in fixed link mode and because no part of the kernel accesses this bits up to now, I’m afraid to come to the conclusion that we probably  need above’s code.
 
-/Jarkko
+Thanks for sparring our patch, highly appreciated. I’m sorry that there might be no better solution than the one provided, at least I found none.
 
