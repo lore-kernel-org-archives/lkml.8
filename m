@@ -2,122 +2,104 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58935C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C819207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823637;
-	bh=+5Hx6j8XeznTB/ncyoRGCyiroW+T2QpU5wS0iwqqkEQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ybpg7u4R99HSvcQ4YRtjHkEnFmLfGUpBoO3ol2px364WJU5w6cbtGxh9AFhqQRVR7
-	 HAPukonnTgbTrz2UNgxqzxn8p4+j68BH7IBYPz1ucIqJynnsW3Dt83FbB9/vSRWJJK
-	 Zu90nJ936WE9XZ6ueuSYSL1ATidTkUWhVFdL+YQc=
+	by mail.kernel.org (Postfix) with ESMTP id 8EB2F20835
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgERRkg (ORCPT
+        id S1729116AbgERRkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729055AbgERRk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:39 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42800 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729029AbgERRk0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 May 2020 13:40:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F3D920657;
-        Mon, 18 May 2020 17:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823625;
-        bh=+5Hx6j8XeznTB/ncyoRGCyiroW+T2QpU5wS0iwqqkEQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CifkUaDDmLvQ3+Rx0sisk5GcM93F1axhYyh52xo/F/c78E0ryCHicy8YeijL8v3cX
-         d6vFl+MRNU//7cxVuKnyvloHBpH9Q26vTBai/VWPtGI6QtzF1sBeAxna/ZDI7pg+XL
-         uboJ2MvFPje1oxfshiY88H4p6LX7bQS1PGmIW5vw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 09/86] ipv6: fix cleanup ordering for ip6_mr failure
-Date:   Mon, 18 May 2020 19:35:40 +0200
-Message-Id: <20200518173452.201457230@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
-References: <20200518173450.254571947@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 0978C2A0C85
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        gustavo.padovan@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v4 0/3] media: rkvdec: Add a VP9 backend
+Date:   Mon, 18 May 2020 14:40:08 -0300
+Message-Id: <20200518174011.15543-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+Fourth iteration of the VP9 stateless codec uAPI, plus
+support for Rockchip VDEC, just minor changes since v3.
 
-commit afe49de44c27a89e8e9631c44b5ffadf6ace65e2 upstream.
+Thanks!
+Ezequiel
 
-Commit 15e668070a64 ("ipv6: reorder icmpv6_init() and ip6_mr_init()")
-moved the cleanup label for ipmr_fail, but should have changed the
-contents of the cleanup labels as well. Now we can end up cleaning up
-icmpv6 even though it hasn't been initialized (jump to icmp_fail or
-ipmr_fail).
+Changelog
+---------
 
-Simply undo things in the reverse order of their initialization.
+v4:
 
-Example of panic (triggered by faking a failure of icmpv6_init):
+* Drop color_space field from the VP9 interface.
+  V4L2 API should be used for it.
+* Clarified Segment-ID comments.
+* Moved motion vector probabilities to a separate
+  struct.
 
-    kasan: GPF could be caused by NULL-ptr deref or user memory access
-    general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-    [...]
-    RIP: 0010:__list_del_entry_valid+0x79/0x160
-    [...]
-    Call Trace:
-     ? lock_release+0x8a0/0x8a0
-     unregister_pernet_operations+0xd4/0x560
-     ? ops_free_list+0x480/0x480
-     ? down_write+0x91/0x130
-     ? unregister_pernet_subsys+0x15/0x30
-     ? down_read+0x1b0/0x1b0
-     ? up_read+0x110/0x110
-     ? kmem_cache_create_usercopy+0x1b4/0x240
-     unregister_pernet_subsys+0x1d/0x30
-     icmpv6_cleanup+0x1d/0x30
-     inet6_init+0x1b5/0x23f
+v3:
 
-Fixes: 15e668070a64 ("ipv6: reorder icmpv6_init() and ip6_mr_init()")
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+* Fix documentation issues found by Hans.
+* Fix smatch detected issues as pointed out by Hans.
+* Added patch to fix wrong bytesused set on .buf_prepare.
 
----
- net/ipv6/af_inet6.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+v2:
 
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -1029,11 +1029,11 @@ netfilter_fail:
- igmp_fail:
- 	ndisc_cleanup();
- ndisc_fail:
--	ip6_mr_cleanup();
-+	icmpv6_cleanup();
- icmp_fail:
--	unregister_pernet_subsys(&inet6_net_ops);
-+	ip6_mr_cleanup();
- ipmr_fail:
--	icmpv6_cleanup();
-+	unregister_pernet_subsys(&inet6_net_ops);
- register_pernet_fail:
- 	sock_unregister(PF_INET6);
- 	rtnl_unregister_all(PF_INET6);
+* Documentation style issues pointed out by Nicolas internally.
+* s/VP9_PROFILE_MAX/V4L2_VP9_PROFILE_MAX/
+* Fix wrong kfree(ctx).
+* constify a couple structs on rkvdec-vp9.c
 
+
+*** BLURB HERE ***
+
+Boris Brezillon (2):
+  media: uapi: Add VP9 stateless decoder controls
+  media: rkvdec: Add the VP9 backend
+
+Ezequiel Garcia (1):
+  media: rkvdec: Fix .buf_prepare
+
+ .../userspace-api/media/v4l/biblio.rst        |   10 +
+ .../media/v4l/ext-ctrls-codec.rst             |  550 ++++++
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  239 +++
+ drivers/media/v4l2-core/v4l2-ioctl.c          |    1 +
+ drivers/staging/media/rkvdec/Makefile         |    2 +-
+ drivers/staging/media/rkvdec/rkvdec-vp9.c     | 1577 +++++++++++++++++
+ drivers/staging/media/rkvdec/rkvdec.c         |   66 +-
+ drivers/staging/media/rkvdec/rkvdec.h         |    6 +
+ include/media/v4l2-ctrls.h                    |    1 +
+ include/media/vp9-ctrls.h                     |  485 +++++
+ 10 files changed, 2932 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec-vp9.c
+ create mode 100644 include/media/vp9-ctrls.h
+
+-- 
+2.26.0.rc2
 
