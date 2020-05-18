@@ -2,60 +2,98 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDD0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17BF320671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5479420671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 15:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgERPJH (ORCPT
+        id S1728230AbgERPJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 11:09:07 -0400
-Received: from verein.lst.de ([213.95.11.211]:38896 "EHLO verein.lst.de"
+        Mon, 18 May 2020 11:09:20 -0400
+Received: from mga12.intel.com ([192.55.52.136]:22819 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726918AbgERPJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 11:09:07 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 27D5268B02; Mon, 18 May 2020 17:09:04 +0200 (CEST)
-Date:   Mon, 18 May 2020 17:09:03 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, x86@kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/18] maccess: allow architectures to provide kernel
- probing directly
-Message-ID: <20200518150903.GD8871@lst.de>
-References: <20200513160038.2482415-1-hch@lst.de> <20200513160038.2482415-15-hch@lst.de> <20200516124259.5b68a4e1d4670efa1397a1e0@kernel.org>
+        id S1726918AbgERPJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 11:09:19 -0400
+IronPort-SDR: SacNUC89LB64lbXUN6yQgwOqlVcMSw2Mzlrk0fQ2nDRTihdHr8Rtny6LBvnLz+cUPjwx8ucMJj
+ kZR67zZ2uRZg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 08:09:19 -0700
+IronPort-SDR: JV4KtZ9f2cCpPu9R8GwLJi+LB1C0o/3lquaOAl0+ha4d8Yw0ooZ6huVo1GYgXYbA+eAo8+2zMk
+ KbgvNlP0rKuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="254465710"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 18 May 2020 08:09:16 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jahOJ-007RzP-OT; Mon, 18 May 2020 18:09:19 +0300
+Date:   Mon, 18 May 2020 18:09:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        matwey.kornilov@gmail.com, giulio.benetti@micronovasrl.com,
+        lukas@wunner.de, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v3 1/5] serial: 8520_port: Fix function param
+ documentation
+Message-ID: <20200518150919.GF1634618@smile.fi.intel.com>
+References: <20200517215610.2131618-1-heiko@sntech.de>
+ <20200517215610.2131618-2-heiko@sntech.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200516124259.5b68a4e1d4670efa1397a1e0@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200517215610.2131618-2-heiko@sntech.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 12:42:59PM +0900, Masami Hiramatsu wrote:
-> > Provide alternative versions of probe_kernel_read, probe_kernel_write
-> > and strncpy_from_kernel_unsafe that don't need set_fs magic, but instead
-> > use arch hooks that are modelled after unsafe_{get,put}_user to access
-> > kernel memory in an exception safe way.
+On Sun, May 17, 2020 at 11:56:06PM +0200, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 > 
-> This patch seems to introduce new implementation of probe_kernel_read/write()
-> and strncpy_from_kernel_unsafe(), but also drops copy_from/to_kernel_nofault()
-> and strncpy_from_kernel_nofault() if HAVE_ARCH_PROBE_KERNEL is defined.
-> In the result, this cause a link error with BPF and kprobe events.
+> The parameter is named p while the documentation talks about up.
+> Fix the doc to be in line with the code.
+> 
 
-That was just a bug as I didn't commit the changes to switch everything
-to _nofault and remove _unsafe entirely, sorry.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Fixes: 058bc104f7ca ("serial: 8250: Generalize rs485 software emulation")
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>  drivers/tty/serial/8250/8250_port.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 9c0457e74d21..6975bd3ecb7d 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -1437,7 +1437,7 @@ static void serial8250_stop_rx(struct uart_port *port)
+>  
+>  /**
+>   * serial8250_em485_stop_tx() - generic ->rs485_stop_tx() callback
+> - * @up: uart 8250 port
+> + * @p: uart 8250 port
+>   *
+>   * Generic callback usable by 8250 uart drivers to stop rs485 transmission.
+>   */
+> -- 
+> 2.25.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
