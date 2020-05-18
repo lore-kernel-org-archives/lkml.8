@@ -2,120 +2,114 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE50C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6736C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77EE7207D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DD320643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:11:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFzKOHJH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mqABSTJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgERJLK (ORCPT
+        id S1726925AbgERJLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:11:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgERJLK (ORCPT
+        Mon, 18 May 2020 05:11:21 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60028 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbgERJLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:11:10 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 221BDC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 02:11:10 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id d207so18935147wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 02:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=UT/NakiOz79TTv31SXoxdGWEN3c4jFqpw85qdC2FHJc=;
-        b=VFzKOHJHnVBl5TytrLIvbXK9Wh5weDcaD3pQVtqaH9sMpErbACKPEA45cmEeb9yFEu
-         5gCq9BsgrwHQEp9RsVyRsAQWwTHfKLboS08+qN19kTAxSvG8axIyJ+nquEDA5sj6besl
-         wZ7D+cveTRhOZiDkiQEWP3VOWKzDw0KMqd692r7xS9YmTK8t04xm4IqCAuAoCsAmZA+I
-         u6Dq45rts4ZrspP27Ok/oHa9exUHGT6CqzGddOE/hS4xUyEV+rbm8eJpDsm2NPUjl84g
-         GGh8AouJuW5OvhQXrkyXJOxSPwoHkoyqChNn+tt5O2CZeCcZnbHBfNNF/Elqm1C8Vumz
-         1pRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=UT/NakiOz79TTv31SXoxdGWEN3c4jFqpw85qdC2FHJc=;
-        b=r0Lk9m4PGUxVfx8XMdqJ78PZoj9zPF/l8GhuDLKgVxBzBw8LoXPXGwlB6uiWu05FNJ
-         SQv29Gf5tRVcVydNv2MFEYlxUVWdstO3+hMWYS3SIJ6Gv2VzaWZUcp//lwi92fNnSgaH
-         GJSYwq9TKv932LtZ0LasWohHd/dlbFNqX+S3J4bbMGpezSscG0cUE4++LQHLuMbnZM/H
-         Fve3xAXZcPy3HP1srWwafC+NnDqrsW0jmH1h1SUIYrkMO5Zwff48qjPeJIyLdEQcZm/x
-         ipvUWbU5PClQ7rwArbSq629gC9nVI1Q62MZfcpG0htnV603d1VQTmgvfmsf8oXDxBdg6
-         CAaA==
-X-Gm-Message-State: AOAM530QnDOunuSnpDPwh6xAf8pdgbd/Myixr0NuJuCyrJDcCFn9Jm6V
-        Uw0pFJml9HxUTRyOQEpnyk/F0tmQTuY=
-X-Google-Smtp-Source: ABdhPJy/RHkH0eD1Wy1QiYVZABv/3WZw1Ug7pLTpaJvHX1SxniVJV7s4jHtULcilesmqqthGQ2LFqQ==
-X-Received: by 2002:a1c:ed08:: with SMTP id l8mr13276236wmh.169.1589793068120;
-        Mon, 18 May 2020 02:11:08 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id h1sm16515430wme.42.2020.05.18.02.11.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 02:11:07 -0700 (PDT)
-Subject: Re: [PATCH v2 2/7] ASoC: qcom: Add common array to initialize soc
- based core clocks
-To:     Ajit Pandey <ajitp@codeaurora.org>, broonie@kernel.org,
-        plai@codeaurora.org, bgoswami@codeaurora.org
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: =?UTF-8?Q?=3c=1c1586592171-31644-1-git-send-email-ajitp=40codeau?=
- =?UTF-8?Q?rora=2eorg=1d=3e_=3c1589474298-29437-1-git-send-email-ajitp=40cod?=
- =?UTF-8?Q?eaurora=2eorg=3e_=3c1589474298-29437-4-git-send-email-ajitp=40cod?=
- =?UTF-8?Q?eaurora=2eorg=3e?=
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <aa1ad5a5-94e8-0a6a-1937-e9d2abbb67f7@linaro.org>
-Date:   Mon, 18 May 2020 10:11:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 18 May 2020 05:11:20 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04I93ATR173287;
+        Mon, 18 May 2020 09:10:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=Rvkso+0xj+PaZPCgO7NcqlP3hcldz8TuQZ/t643+Io8=;
+ b=mqABSTJEenM30vsxFxjbAMut5oKHKCuD7bKCGWQ42NqBm0nm++F+hoWtMwoK4wBeWK94
+ T6twSyP80Unnh+6nQQX27JJjxLeQ54BqYzNTtvM45pG71Rk7fdme6UwZrZ1PyXRXaXgM
+ 5+tZGQwj/nSq51Ie8gR7Ki99ikUtPX9f/ZTeRpZ7XgIiBn2fE51RcDYPu3xNcy9ClBBW
+ 31cnpS00srfEXmwSqVChOFdXI+S0DdBXOchqTNTY8wX3h0Xqx7cap9JtdtcIEUACFUVX
+ HuKms+yjaw2OX/Mp8+j3RlAzN5Xpu/qF3893fuXBXl8I8GVwfSrFh19UrgKxgz4iWBDX qA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 3127kqwn1x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 May 2020 09:10:59 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04I94KsA115300;
+        Mon, 18 May 2020 09:10:58 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 312t3v7w3e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 May 2020 09:10:58 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04I9Ar6c001535;
+        Mon, 18 May 2020 09:10:53 GMT
+Received: from dhcp-10-175-184-176.vpn.oracle.com (/10.175.184.176)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 May 2020 02:10:52 -0700
+Date:   Mon, 18 May 2020 10:10:44 +0100 (BST)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@localhost
+To:     Yonghong Song <yhs@fb.com>
+cc:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org,
+        daniel@iogearbox.net, bpf@vger.kernel.org, joe@perches.com,
+        linux@rasmusvillemoes.dk, arnaldo.melo@gmail.com, kafai@fb.com,
+        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2 bpf-next 6/7] bpf: add support for %pT format specifier
+ for bpf_trace_printk() helper
+In-Reply-To: <040b71a1-9bbf-9a55-6f1a-e7b8c36f8c6e@fb.com>
+Message-ID: <alpine.LRH.2.21.2005181000520.893@localhost>
+References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com> <1589263005-7887-7-git-send-email-alan.maguire@oracle.com> <040b71a1-9bbf-9a55-6f1a-e7b8c36f8c6e@fb.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ phishscore=0 bulkscore=0 suspectscore=3 mlxscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005180081
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9624 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=3 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005180081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 13 May 2020, Yonghong Song wrote:
 
-On 14/05/2020 17:38, Ajit Pandey wrote:
-> AHB-I/X bus clocks inside LPASS coreis not a mandatory clocks for
-> SC7180 soc lpass variants, hence make it an optional one.
 > 
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> ---
-
-For some reason patch subject seems messed up!
-
-I see two patches with same subject "[PATCH v2 2/7] ASoC: qcom: Add 
-common array to initialize soc based core clocks" and totally different 
-content and PATCH v2 3/7 is missing as well!
-
---srini
-
-
-
-
->   sound/soc/qcom/lpass-cpu.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> > +				while (isbtffmt(fmt[i]))
+> > +					i++;
 > 
-> diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-> index e00a4af..729ca78 100644
-> --- a/sound/soc/qcom/lpass-cpu.c
-> +++ b/sound/soc/qcom/lpass-cpu.c
-> @@ -594,7 +594,7 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
->   		}
->   	}
->   
-> -	drvdata->ahbix_clk = devm_clk_get(dev, "ahbix-clk");
-> +	drvdata->ahbix_clk = devm_clk_get_optional(dev, "ahbix-clk");
->   	if (IS_ERR(drvdata->ahbix_clk)) {
->   		dev_err(dev, "error getting ahbix-clk: %ld\n",
->   			PTR_ERR(drvdata->ahbix_clk));
+> The pointer passed to the helper may not be valid pointer. I think you
+> need to do a probe_read_kernel() here. Do an atomic memory allocation
+> here should be okay as this is mostly for debugging only.
 > 
+
+Are there other examples of doing allocations in program execution
+context? I'd hate to be the first to introduce one if not. I was hoping
+I could get away with some per-CPU scratch space. Most data structures
+will fit within a small per-CPU buffer, but if multiple copies
+are required, performance isn't the key concern. It will make traversing
+the buffer during display a bit more complex but I think avoiding 
+allocation might make that complexity worth it. The other thought I had 
+was we could carry out an allocation associated with the attach, 
+but that's messy as it's possible run-time might determine the type for
+display (and thus the amount of the buffer we need to copy safely).
+
+Great news about LLVM support for __builtin_btf_type_id()!
+
+Thanks!
+
+Alan
