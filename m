@@ -2,198 +2,121 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5468CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EAAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5FF206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E06A206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 11:43:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ic+l84u8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BohCfE7L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgERLni (ORCPT
+        id S1727989AbgERLnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 07:43:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59966 "EHLO
+        Mon, 18 May 2020 07:43:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgERLni (ORCPT
+        with ESMTP id S1726957AbgERLnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 07:43:38 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133ADC061A0C;
-        Mon, 18 May 2020 04:43:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vqFtTJgrrYSVHcjYD6xL7NeKGj8OBrO9WYZrdZNFTPg=; b=Ic+l84u85aQa9NU4JISWSGcUT7
-        JspapLxIoUC4p2cSrnYXmwwkgCgvGxo0Q+bsGUzytgc0vP8MpdPy7S83x0dBTEMFz2XY3UuE8bSHJ
-        8YNjvaG19lKsoS5ccYJuzkZU/Q8pAsucYBHZGpqqZsXv5wE8fIZeKBYPQX9FO1L3Sec3P64yxzcm5
-        wGzdwYH7VrCpcu8J/EDmELUtDk50YDb3qAh+wlCRaDpqG2Iawy++/9E1zTsxRkYNmV+q5fpOzLUdq
-        ZvIuiYE8tnH0ZWhyDv8P5+OhRKNQtuu0b4ZEOGsp28K+uNyPmofy1h/Co0GLN1tYsOPL9Ib4ITumS
-        SL4VVMpw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jaeAx-0001CZ-0L; Mon, 18 May 2020 11:43:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0BCE03011E8;
-        Mon, 18 May 2020 13:43:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 066CB2B3D07AA; Mon, 18 May 2020 13:43:14 +0200 (CEST)
-Date:   Mon, 18 May 2020 13:43:13 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
-        wei.w.wang@intel.com
-Subject: Re: [PATCH v11 04/11] perf/x86: Add constraint to create guest LBR
- event without hw counter
-Message-ID: <20200518114313.GD277222@hirez.programming.kicks-ass.net>
-References: <20200514083054.62538-1-like.xu@linux.intel.com>
- <20200514083054.62538-5-like.xu@linux.intel.com>
+        Mon, 18 May 2020 07:43:52 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21FD2C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 04:43:52 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x2so4821074pfx.7
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 04:43:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/+h/QADilkLXAAqEbNjayFiUXOxdF0Ou6pFZQNdQMpw=;
+        b=BohCfE7LN+qojReJbiEHPS1E31OWhUKd+62lCnoHK6LR3FKHuXwhhH1ROmi9SxW/F8
+         nxwNqtHH3/Ubg5gzXQxy88TH+LwH3oK+aZ2Ur/lNR/H1lgapWWSly0Nh7p/BUunwkL6j
+         YMG7OJ0jyMtkc5+/eT/1nL2RAZZpstd34xKl2PfksIMK8IqcEdzzsiIGH+zAvYo8Snq7
+         HAc7I8yDOb11/+Bo8IJLUxNK0yuV8CeShO6JNFSw0bxihWcMqDE8I6yrG5fYvmfM/Jx0
+         +JU/m7SQipisQniBueJ1qScnkeelCzIONkSZRi4o3o3VE7D7RjiYj8hUWizJCr0NXhwG
+         V8Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/+h/QADilkLXAAqEbNjayFiUXOxdF0Ou6pFZQNdQMpw=;
+        b=g5cONNxj6PgaOArZssXEVTyJtXWzK74dKM3hAg50tt6Iyg6wZ5ku8sc7b0tFElpuYn
+         PRB0cSCowkJ0DUcQWXlGXyJKX3HzoAujx+pn4NpdO0RypyIOVNlumqVquQcFaQ/73T+w
+         b/LLVRMaDhriO/1HNXKwMxPHsBjPVK5QSkW6gy2TdXc+pENOCyLiGQdgCKTrE0jtE2YR
+         Qyhvx17265eSsrSn7NEW/4S9VI81Gk/fK8FKTVcDE+XpPU8uk/0dge2IQgRrpy1k2NsU
+         LyxFkD2/8B/Vs4kazWaTbNvQTVrGcR7EBS8nnvWwsGUNjMAzamDuuSbZnory/pNgk4B5
+         Fj/w==
+X-Gm-Message-State: AOAM5322PtzTcVputZYo7upyHfN4PYgSlECkcLacQT9ex03tzq+0B2Y7
+        NEDAP5QqgmVT9N/Pjpe68m+xcA==
+X-Google-Smtp-Source: ABdhPJz+VDiR86iaZub4WRwHtt7bWEIR+rFXakE5zDFB8/kSJmgfCgLz0WxmmsOZoAKHxpTxdzPIaw==
+X-Received: by 2002:a63:c04a:: with SMTP id z10mr14307442pgi.430.1589802231701;
+        Mon, 18 May 2020 04:43:51 -0700 (PDT)
+Received: from localhost ([122.167.130.103])
+        by smtp.gmail.com with ESMTPSA id lj12sm8539173pjb.21.2020.05.18.04.43.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 May 2020 04:43:50 -0700 (PDT)
+Date:   Mon, 18 May 2020 17:13:48 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     rjw@rjwysocki.net, Souvik.Chakravarty@arm.com,
+        Thanu.Rangarajan@arm.com, Sudeep.Holla@arm.com,
+        guohanjun@huawei.com, john.garry@huawei.com,
+        jonathan.cameron@huawei.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/3] cpufreq: handle the return value of
+ '.set_boost()' properly
+Message-ID: <20200518114348.z55kpbhgbfxenrhm@vireshk-i7>
+References: <1589785808-12138-1-git-send-email-wangxiongfeng2@huawei.com>
+ <1589785808-12138-2-git-send-email-wangxiongfeng2@huawei.com>
+ <20200518074619.yznopcgqmoq6ds7t@vireshk-i7>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514083054.62538-5-like.xu@linux.intel.com>
+In-Reply-To: <20200518074619.yznopcgqmoq6ds7t@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 18-05-20, 13:16, Viresh Kumar wrote:
+> On 18-05-20, 15:10, Xiongfeng Wang wrote:
+> > 'freq_qos_update_request()' called by 'cpufreq_boost_set_sw()' reutrns 1
+> > when the effective constraint value of frequency QoS has changed. It's
+> > not an error code. So handle the return value 1 of '.set_boost()' in
+> > 'cpufreq_boost_trigger_state()' properly.
+> > 
+> > Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> > ---
+> >  drivers/cpufreq/cpufreq.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 4adac3a..bb6746e 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -2540,7 +2540,10 @@ int cpufreq_boost_trigger_state(int state)
+> >  	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
+> >  
+> >  	ret = cpufreq_driver->set_boost(state);
+> > -	if (ret) {
+> > +	if (ret == 1) {
+> > +		pr_debug("The effective constraint value of frequency QoS has changed.\n");
+> > +		return 0;
+> > +	} else if (ret) {
+> 
+> Rafael, IMO it is better to pick patch from Sergey for this as this is
+> implementation detail.
+> 
+> >  		write_lock_irqsave(&cpufreq_driver_lock, flags);
+> >  		cpufreq_driver->boost_enabled = !state;
+> >  		write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 
-Subject: perf/x86: Add constraint to create guest LBR event without hw counter
-From: Like Xu <like.xu@linux.intel.com>
-Date: Thu, 14 May 2020 16:30:47 +0800
+This is already fixed in the PM tree with a different patch Xiongfeng.
 
-From: Like Xu <like.xu@linux.intel.com>
-
-The hypervisor may request the perf subsystem to schedule a time window
-to directly access the LBR stack msrs for its own use. Normally, it would
-create a guest LBR event with callstack mode enabled, which is scheduled
-along with other ordinary LBR events on the host but in an exclusive way.
-
-To avoid wasting a counter for the guest LBR event, the perf tracks it via
-needs_guest_lbr_without_counter() and assigns it with a fake VLBR counter
-with the help of new lbr_without_counter_constraint. As with the BTS event,
-there is actually no hardware counter assigned for the guest LBR event.
-
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200514083054.62538-5-like.xu@linux.intel.com
----
- arch/x86/events/core.c            |    1 +
- arch/x86/events/intel/core.c      |   18 ++++++++++++++++++
- arch/x86/events/intel/lbr.c       |    4 ++++
- arch/x86/events/perf_event.h      |    1 +
- arch/x86/include/asm/perf_event.h |   22 +++++++++++++++++++++-
- 5 files changed, 45 insertions(+), 1 deletion(-)
-
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1104,6 +1104,7 @@ static inline void x86_assign_hw_event(s
- 
- 	switch (hwc->idx) {
- 	case INTEL_PMC_IDX_FIXED_BTS:
-+	case INTEL_PMC_IDX_FIXED_VLBR:
- 		hwc->config_base = 0;
- 		hwc->event_base	= 0;
- 		break;
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2621,6 +2621,20 @@ intel_bts_constraints(struct perf_event
- 	return NULL;
- }
- 
-+/*
-+ * Note: matches a fake event, like Fixed2.
-+ */
-+static struct event_constraint *
-+intel_vlbr_constraints(struct perf_event *event)
-+{
-+	struct event_constraint *c = &vlbr_constraint;
-+
-+	if (unlikely(constraint_match(c, event->hw.config)))
-+		return c;
-+
-+	return NULL;
-+}
-+
- static int intel_alt_er(int idx, u64 config)
- {
- 	int alt_idx = idx;
-@@ -2811,6 +2825,10 @@ __intel_get_event_constraints(struct cpu
- {
- 	struct event_constraint *c;
- 
-+	c = intel_vlbr_constraints(event);
-+	if (c)
-+		return c;
-+
- 	c = intel_bts_constraints(event);
- 	if (c)
- 		return c;
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1363,3 +1363,7 @@ int x86_perf_get_lbr(struct x86_pmu_lbr
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
-+
-+struct event_constraint vlbr_constraint =
-+	FIXED_EVENT_CONSTRAINT(INTEL_FIXED_VLBR_EVENT,
-+			       (INTEL_PMC_IDX_FIXED_VLBR - INTEL_PMC_IDX_FIXED));
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -990,6 +990,7 @@ void release_ds_buffers(void);
- void reserve_ds_buffers(void);
- 
- extern struct event_constraint bts_constraint;
-+extern struct event_constraint vlbr_constraint;
- 
- void intel_pmu_enable_bts(u64 config);
- 
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -192,10 +192,30 @@ struct x86_pmu_capability {
- #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
- #define GLOBAL_STATUS_ASIF				BIT_ULL(60)
- #define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
--#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
-+#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
-+#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
- #define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
- 
- /*
-+ * We model guest LBR event tracing as another fixed-mode PMC like BTS.
-+ *
-+ * We choose bit 58 because it's used to indicate LBR stack frozen state
-+ * for architectural perfmon v4, also we unconditionally mask that bit in
-+ * the handle_pmi_common(), so it'll never be set in the overflow handling.
-+ *
-+ * With this fake counter assigned, the guest LBR event user (such as KVM),
-+ * can program the LBR registers on its own, and we don't actually do anything
-+ * with then in the host context.
-+ */
-+#define INTEL_PMC_IDX_FIXED_VLBR	(GLOBAL_STATUS_LBRS_FROZEN_BIT)
-+
-+/*
-+ * Pseudo-encoding the guest LBR event as event=0x00,umask=0x1b,
-+ * since it would claim bit 58 which is effectively Fixed26.
-+ */
-+#define INTEL_FIXED_VLBR_EVENT	0x1b00
-+
-+/*
-  * Adaptive PEBS v4
-  */
- 
+-- 
+viresh
