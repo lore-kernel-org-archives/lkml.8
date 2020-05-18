@@ -2,52 +2,50 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF76C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ED6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD3A520671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFC820671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825433;
-	bh=KPQ5ee/rVhZdwHtanFh23NNG/VV1y3tWvTV40prfyPs=;
+	s=default; t=1589825444;
+	bh=qPHsgWoFLk4NPnZi5Ufy/BdEGqUt4vkX6hmOfYFIzsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzUm06c96Co0M3qwMVXN4ayYX4X8O0EAxRJLwXEkJIO8EJkdqwlvleGCLFVN1HbGr
-	 LMlHLXDQ43Zvcwk+3KGW/bzTdzaKejgnjXGk2f1cuG2wo55zjtiuT18hzn7w4vW/Wl
-	 Xf50UGj5JwEPlA5dBcxcThCkh0kHWHfV99PVUY4c=
+	b=euYxQmW3PM0E4++b3UBA4ceMeTXKeMbIczrwfuzLRUWPEcDu5NRuJi0YjvucQBkWK
+	 7IeOswkzEm5C3kxB2Aj6Y0LBcgQoblyGGzX3/Exx3HD1fYsPS88cIERKtSCLYEoAny
+	 M09kh3ih6wkc6AvK/zbWP+3uaI41FG64RjSsF4pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732989AbgERSFf (ORCPT
+        id S2387602AbgERSKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52984 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732953AbgERSF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:26 -0400
+        id S1732933AbgERSFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAC9E20873;
-        Mon, 18 May 2020 18:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F79F20671;
+        Mon, 18 May 2020 18:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825125;
-        bh=KPQ5ee/rVhZdwHtanFh23NNG/VV1y3tWvTV40prfyPs=;
+        s=default; t=1589825120;
+        bh=qPHsgWoFLk4NPnZi5Ufy/BdEGqUt4vkX6hmOfYFIzsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6S83y4ch699cGelMEDzCiZtEfqrBvGfZZQSNpRRbdYEp+6gI+n5ooTPLioMIWzFF
-         RPLU0jPWmogalcuDbuEuwtCOOQ0q8RTquYhw2vVfO2yxMZ/EXu2AAJ+4KrWq+ap4HL
-         lt4Z1MANmlBXL1iFmy0BDTK7Dr+JP9PR0RkXrXNI=
+        b=cVdHxchjKWJfOqzft5v/XmnGgqPzoLQxErlqwgyFSqSsKABmUffrJWdoK8aGsHe+E
+         hGkzTpptP+LAVpmwAADIesgwgRdalvpUMZaFYQWJRUCGDtdJT5p9hd4FCEod1z1Jg6
+         CDa6FelO/6/PzIPxQfXZD4Mnpjq+97Je5TEM7SQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 122/194] bpf: Fix bug in mmap() implementation for BPF array map
-Date:   Mon, 18 May 2020 19:36:52 +0200
-Message-Id: <20200518173541.756566468@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 138/194] ALSA: hda/realtek - Limit int mic boost for Thinkpad T530
+Date:   Mon, 18 May 2020 19:37:08 +0200
+Message-Id: <20200518173542.846812514@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,65 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 333291ce5055f2039afc907badaf5b66bc1adfdc ]
+From: Takashi Iwai <tiwai@suse.de>
 
-mmap() subsystem allows user-space application to memory-map region with
-initial page offset. This wasn't taken into account in initial implementation
-of BPF array memory-mapping. This would result in wrong pages, not taking into
-account requested page shift, being memory-mmaped into user-space. This patch
-fixes this gap and adds a test for such scenario.
+commit b590b38ca305d6d7902ec7c4f7e273e0069f3bcc upstream.
 
-Fixes: fc9702273e2e ("bpf: Add mmap() support for BPF_MAP_TYPE_ARRAY")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200512235925.3817805-1-andriin@fb.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Lenovo Thinkpad T530 seems to have a sensitive internal mic capture
+that needs to limit the mic boost like a few other Thinkpad models.
+Although we may change the quirk for ALC269_FIXUP_LENOVO_DOCK, this
+hits way too many other laptop models, so let's add a new fixup model
+that limits the internal mic boost on top of the existing quirk and
+apply to only T530.
+
+BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1171293
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200514160533.10337-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/bpf/arraymap.c                         | 7 ++++++-
- tools/testing/selftests/bpf/prog_tests/mmap.c | 9 +++++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-index 95d77770353c9..1d6120fd5ba68 100644
---- a/kernel/bpf/arraymap.c
-+++ b/kernel/bpf/arraymap.c
-@@ -486,7 +486,12 @@ static int array_map_mmap(struct bpf_map *map, struct vm_area_struct *vma)
- 	if (!(map->map_flags & BPF_F_MMAPABLE))
- 		return -EINVAL;
- 
--	return remap_vmalloc_range(vma, array_map_vmalloc_addr(array), pgoff);
-+	if (vma->vm_pgoff * PAGE_SIZE + (vma->vm_end - vma->vm_start) >
-+	    PAGE_ALIGN((u64)array->map.max_entries * array->elem_size))
-+		return -EINVAL;
-+
-+	return remap_vmalloc_range(vma, array_map_vmalloc_addr(array),
-+				   vma->vm_pgoff + pgoff);
- }
- 
- const struct bpf_map_ops array_map_ops = {
-diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
-index 16a814eb4d645..b0e789678aa46 100644
---- a/tools/testing/selftests/bpf/prog_tests/mmap.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
-@@ -197,6 +197,15 @@ void test_mmap(void)
- 	CHECK_FAIL(map_data->val[far] != 3 * 321);
- 
- 	munmap(tmp2, 4 * page_size);
-+
-+	/* map all 4 pages, but with pg_off=1 page, should fail */
-+	tmp1 = mmap(NULL, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
-+		    data_map_fd, page_size /* initial page shift */);
-+	if (CHECK(tmp1 != MAP_FAILED, "adv_mmap7", "unexpected success")) {
-+		munmap(tmp1, 4 * page_size);
-+		goto cleanup;
-+	}
-+
- cleanup:
- 	if (bss_mmaped)
- 		CHECK_FAIL(munmap(bss_mmaped, bss_sz));
--- 
-2.20.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5856,6 +5856,7 @@ enum {
+ 	ALC269_FIXUP_HP_LINE1_MIC1_LED,
+ 	ALC269_FIXUP_INV_DMIC,
+ 	ALC269_FIXUP_LENOVO_DOCK,
++	ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST,
+ 	ALC269_FIXUP_NO_SHUTUP,
+ 	ALC286_FIXUP_SONY_MIC_NO_PRESENCE,
+ 	ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT,
+@@ -6175,6 +6176,12 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT
+ 	},
++	[ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc269_fixup_limit_int_mic_boost,
++		.chained = true,
++		.chain_id = ALC269_FIXUP_LENOVO_DOCK,
++	},
+ 	[ALC269_FIXUP_PINCFG_NO_HP_TO_LINEOUT] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc269_fixup_pincfg_no_hp_to_lineout,
+@@ -7317,7 +7324,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21ca, "Thinkpad L412", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21e9, "Thinkpad Edge 15", ALC269_FIXUP_SKU_IGNORE),
+-	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK),
++	SND_PCI_QUIRK(0x17aa, 0x21f6, "Thinkpad T530", ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST),
+ 	SND_PCI_QUIRK(0x17aa, 0x21fa, "Thinkpad X230", ALC269_FIXUP_LENOVO_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x21f3, "Thinkpad T430", ALC269_FIXUP_LENOVO_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x21fb, "Thinkpad T430s", ALC269_FIXUP_LENOVO_DOCK),
+@@ -7456,6 +7463,7 @@ static const struct hda_model_fixup alc2
+ 	{.id = ALC269_FIXUP_HEADSET_MODE, .name = "headset-mode"},
+ 	{.id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC, .name = "headset-mode-no-hp-mic"},
+ 	{.id = ALC269_FIXUP_LENOVO_DOCK, .name = "lenovo-dock"},
++	{.id = ALC269_FIXUP_LENOVO_DOCK_LIMIT_BOOST, .name = "lenovo-dock-limit-boost"},
+ 	{.id = ALC269_FIXUP_HP_GPIO_LED, .name = "hp-gpio-led"},
+ 	{.id = ALC269_FIXUP_HP_DOCK_GPIO_MIC1_LED, .name = "hp-dock-gpio-mic1-led"},
+ 	{.id = ALC269_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "dell-headset-multi"},
 
 
