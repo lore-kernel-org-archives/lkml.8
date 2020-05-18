@@ -2,112 +2,73 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1935BC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5F92067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="DCLJDuGd"
+	by mail.kernel.org (Postfix) with ESMTP id 431F5207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgERJ0J (ORCPT
+        id S1726341AbgERJ2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:26:09 -0400
-Received: from www.zeus03.de ([194.117.254.33]:58856 "EHLO mail.zeus03.de"
+        Mon, 18 May 2020 05:28:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43458 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgERJ0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:26:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=A/gIwIbzzT3voFbwbkkGYk2914xt
-        750bCNgjeYYwG4U=; b=DCLJDuGd6Lj3/JoYClXSkMfsnu44ooFH2veTmmfv58wE
-        Si1yB4o9j576NoXHeOMDvheD6Dr1yNYrnlSL+R3Lmh3UeMWIMMFRo5bEnSwsXfXg
-        WqcDVFPiSnoAfAzBzHAPQPIt0iYnusl46GnymUdlLqyVApFvd3skUS+/Johvh5E=
-Received: (qmail 947633 invoked from network); 18 May 2020 11:26:05 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 May 2020 11:26:05 +0200
-X-UD-Smtp-Session: l3s3148p1@WxWOwOilRKEgAwDPXwfCAIWBZdj99x2z
-Date:   Mon, 18 May 2020 11:26:01 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-i2c@vger.kernel.org,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 03/17] ARM: dts: r8a7742: Add I2C and IIC support
-Message-ID: <20200518092601.GA3268@ninjato>
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200515171031.GB19423@ninjato>
- <CA+V-a8t6rPs4s8uMCpBQEAUvwsVn7Cte-vX3z2atWRhy_RFLQw@mail.gmail.com>
+        id S1726040AbgERJ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:28:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C7D08AFB1;
+        Mon, 18 May 2020 09:28:13 +0000 (UTC)
+Subject: Re: [PATCH v5 01/10] mmap locking API: initial implementation as
+ rwsem wrappers
+To:     Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Davidlohr Bueso <dbueso@suse.de>
+References: <20200422001422.232330-1-walken@google.com>
+ <20200422001422.232330-2-walken@google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <a6ff3c5c-a6f6-c86d-aab6-f9f9b04c88ac@suse.cz>
+Date:   Mon, 18 May 2020 11:28:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8t6rPs4s8uMCpBQEAUvwsVn7Cte-vX3z2atWRhy_RFLQw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200422001422.232330-2-walken@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/22/20 2:14 AM, Michel Lespinasse wrote:
+> This change wraps the existing mmap_sem related rwsem calls into a new
+> mmap locking API. There are two justifications for the new API:
+> 
+> - At first, it provides an easy hooking point to instrument mmap_sem
+>   locking latencies independently of any other rwsems.
+> 
+> - In the future, it may be a starting point for replacing the rwsem
+>   implementation with a different one, such as range locks.
+> 
+> Signed-off-by: Michel Lespinasse <walken@google.com>
+> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> > However, both versions (with and without automatic transmission) are
-> > described with the same "renesas,iic-r8a7742" compatible. Is it possible
-> > to detect the reduced variant at runtime somehow?
-> >
-> I couldn't find anything the manual that would be useful to detect at run=
-time.
->=20
-> > My concern is that the peculiarity of this SoC might be forgotten if we
-> > describe it like this and ever add "automatic transmissions" somewhen.
-> >
-> Agreed.
-
-Well, I guess reading from a register which is supposed to not be there
-on the modified IP core is too hackish.
-
-Leaves us with a seperate compatible entry for it?
-
-
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7CVKUACgkQFA3kzBSg
-KbYDCA//fNp372/9fj/gtObfrZa0TxllW2uISdUH112lOK1XJS+XSvLkHbsTH9Gt
-x29LZpIF2R6xhl3wAQsARCEvWQ+ln6mhtYwIR6NBgmH/FrJ64ck0J1TW/MIBBP9/
-ljAi8HjzIwg5lS/u8iw7qJQBehFNjk7PMTye7G09CjQTq9VRn2fZoAdlu3jqQci9
-0KUneHGduxQA1r7hK2wl5xPH423IyaUGqhXvPSRyzfZu0fUaINAE/LIfstX41YiU
-Wj9lcT8gDQeNGwhRPhvokRqv2q9sFJZ4oT3mrpbtKjICEGQxRVqZbSw7XqjE+ntl
-Lkgi68z1RFja7drjGHXqRR7P7R+AT2vuD+S411fObxpl81GIhUTHKhcK7GC7fs5N
-QrSWGqP+gFSgoU54062r33GLSjH9jNl2xjQlNwafJHzkHisIEH6DYA/3QDf6CdPB
-OWqn8VNfeZKf+RTsJ+0pHuq4CLhBLDLLllhx1htpb/h1WUM8j8Y7OM3k1ltoJs4Y
-3HOpjHGVBWln/xYbGQwqQbZm/IhEDRIgOvU1IeaHQIXLJSj022gTD8DDEr5DQMd9
-hi7sPPL1StfvLKyJPeSTl3pfxumunmztsbFNCKpYpF7B4hbEyOL266sguAUoc+GZ
-qD4du02x1/QSMlilqkZaLWYWuExQToKLu/u1TTDVLDzpXr0WNNM=
-=+frY
------END PGP SIGNATURE-----
-
---2oS5YaxWCcQjTEyO--
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
