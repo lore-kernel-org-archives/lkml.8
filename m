@@ -2,96 +2,177 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E72C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5822DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C850020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CAA2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:46:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8f12VYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgERSmk (ORCPT
+        id S1729165AbgERSqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:42:40 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:45612 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbgERSmk (ORCPT
+        Mon, 18 May 2020 14:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbgERSqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:42:40 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 8E39480642;
-        Mon, 18 May 2020 20:42:36 +0200 (CEST)
-Date:   Mon, 18 May 2020 20:42:35 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] drm/bridge: ti-sn65dsi86: Implement lane
- reordering + polarity
-Message-ID: <20200518184235.GD862982@ravnborg.org>
-References: <20200506140208.v2.1.Ibc8eeddcee94984a608d6900b46f9ffde4045da4@changeid>
- <CAF6AEGvXkeOrHGMHo=C1zXhDc9rquQJc8oGDB4VDfhTfdtqyTg@mail.gmail.com>
- <CAD=FV=V9Aphv=sV36CcK=ka2zNh7Hwiog4qiUEC7wpgjqYSi5Q@mail.gmail.com>
+        Mon, 18 May 2020 14:46:54 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D0CC061A0C;
+        Mon, 18 May 2020 11:46:53 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l17so13088288wrr.4;
+        Mon, 18 May 2020 11:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ajUUjOWwQ0DqJ5ZMnnC6t+z/SimK+2ZbwTZGGdO/CyY=;
+        b=K8f12VYSqcYyx6phIY6bXX4cN19vPs+9Uv3zg4VH/KQLBDMIpN/gXJkbIqO62vycJm
+         j4tySzxQ4pTnKNepWLErP8Tg/BIQKvFoZsnMB4EHYWT/4D+7NzzHWZ61w3HHKNVMdJjW
+         +96ktIxV7En7owWoDOkgYD9KtTHxtF5aOHj2e86DgYnDR0siDem+KecZ3irdnVPD0OGc
+         MLLznwbf5tGlHLDCcEyp71fOZk8VWrgXXyDCminnWSMaeAYjo2TQ9ze+86Ue+uKewDQo
+         0LWewLgJQjScPAEXskYZTdLxg7jnfjxXgeaJlcM8yNd4uojxe4nj27etFHAGgYFZ4hRj
+         ZXUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ajUUjOWwQ0DqJ5ZMnnC6t+z/SimK+2ZbwTZGGdO/CyY=;
+        b=VJmBMnQmhPmcK+KvDMsfMPsDBRiTmZdNdxOFceDn+dmJMKcs4gEUCdUntFw67dioqp
+         mU0PSOGhdGkKldTrCfAmOEzsdISjQTNQdJYlQ0c/oYq849GSSo8OsIFWnNI7nODVogCg
+         dW59kclh/trILf1Cvrr7k76B6udUmPWCAsl42gdIEvPK7xhCFsHnS3OwrHP3ByxCLWep
+         LbnyMhjkRsLwD6Sl5xtXqh7Gp9ctWY9tScyiJq/in+/mAJHX0QrlmfkFEwK+6oUcQ59J
+         cLPSipZp28dhIqKeeqQz46H+G42ym6YDU0+htzQs5gWS2ebpEF2HnfY1TrLOuSespPpk
+         O9tQ==
+X-Gm-Message-State: AOAM530eFpBYrMvxWp9OmVK2KGbQ3PMiVTc4ZOAawRY0FouWI1iv8o+P
+        QunPAxkRtjHpfO+Ht/UTeJQ=
+X-Google-Smtp-Source: ABdhPJyVxBQA1CZQZ8/AbVOfq9TLfBCWGWupFjnKvhmwIohuaUM1Sh1TfEZUavn0bjGxZmtn19VJJQ==
+X-Received: by 2002:a5d:6a01:: with SMTP id m1mr22282524wru.64.1589827612345;
+        Mon, 18 May 2020 11:46:52 -0700 (PDT)
+Received: from jonathan-N53SV ([151.81.99.112])
+        by smtp.gmail.com with ESMTPSA id l11sm595119wmf.28.2020.05.18.11.46.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 May 2020 11:46:50 -0700 (PDT)
+Date:   Mon, 18 May 2020 20:46:47 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
+Message-ID: <20200518184647.GB6392@jonathan-N53SV>
+References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
+ <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+ <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
+ <20200518160120.GA21361@ict14-OptiPlex-980>
+ <20200518164317.GL1634618@smile.fi.intel.com>
+ <20200518174335.GA6392@jonathan-N53SV>
+ <CAHp75VcJ+LU_T4jRVNDBed50xaALDLNC_8brxszv5FpUGHF7+A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=V9Aphv=sV36CcK=ka2zNh7Hwiog4qiUEC7wpgjqYSi5Q@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=cm27Pg_UAAAA:8
-        a=gaDAzqFsDMoa8Jq105UA:9 a=CjuIK1q_8ugA:10 a=xmb-EsYY8bH0VWELuYED:22
+In-Reply-To: <CAHp75VcJ+LU_T4jRVNDBed50xaALDLNC_8brxszv5FpUGHF7+A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Douglas.
-
-On Mon, May 18, 2020 at 11:22:22AM -0700, Doug Anderson wrote:
-> Sam,
-> 
-> On Fri, May 15, 2020 at 2:43 PM Rob Clark <robdclark@gmail.com> wrote:
+On Mon, May 18, 2020 at 08:51:29PM +0300, Andy Shevchenko wrote:
+> On Mon, May 18, 2020 at 8:43 PM Jonathan Albrieux
+> <jonathan.albrieux@gmail.com> wrote:
 > >
-> > On Wed, May 6, 2020 at 2:03 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > On Mon, May 18, 2020 at 07:43:17PM +0300, Andy Shevchenko wrote:
+> > > On Mon, May 18, 2020 at 06:01:20PM +0200, Jonathan Albrieux wrote:
+> > > > On Mon, May 18, 2020 at 05:55:51PM +0300, Andy Shevchenko wrote:
+> > > > > On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
+> > > > > <jonathan.albrieux@gmail.com> wrote:
+> > > > >
+> > > > > > +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
+> > > > >
+> > > > > (1)
+> > > > >
+> > > > > ...
+> > > > >
+> > > > > > +       /*
+> > > > > > +        * If reset pin is provided then will be set to high on power on
+> > > > > > +        * and to low on power off according to AK09911 datasheet
+> > > > > > +        */
+> > > > >
+> > > > > Wording is confusing, perhaps you have to use 'asserted / deasserted'.
+> > > >
+> > > > Thank you for the suggestion, I'll be working on rewording as soon as
+> > > > possible.
+> > > >
+> > > > > Btw, in (1) it's also "high" (asserted). I barely understand how it's
+> > > > > supposed to work in all cases?
+> > > > >
+> > > > > > +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
+> > > > > > +                                             "reset", GPIOD_OUT_HIGH);
+> > > > > > +       if (IS_ERR(reset_gpiod))
+> > > > > > +               return PTR_ERR(reset_gpiod);
+> > > > >
+> > > >
+> > > > I'm sorry but I'm not sure about what you mean by saying all cases.
+> > > > Currently  I'm testing this driver on a msm8916 device having AK09911
+> > > > magnetometer. At the current stage the driver is failing on probe
+> > > > because reset pin is not connected to VID (as datasheet requires in case
+> > > > of pin not being used). In case of reset pin not asserted, register's
+> > > > reset is triggered resulting in empty registers, leading to probe fail.
+> > > > For this reason pin is asserted during power on in order to have
+> > > > informations in registers and deasserted before power off triggering
+> > > > a reset.
+> > > >
+> > > > A workaround that gets AK09911 working on device is by setting the
+> > > > reset pin always high on device tree. This way registers gets reset by
+> > > > a Power On Reset circuit autonomously and reset pin never triggers the
+> > > > reset.
 > > >
-> > > The ti-sn65dsi86 MIPI DSI to eDP bridge chip supports arbitrary
-> > > remapping of eDP lanes and also polarity inversion.  Both of these
-> > > features have been described in the device tree bindings for the
-> > > device since the beginning but were never implemented in the driver.
-> > > Implement both of them.
+> > > You need to distinguish electrical level from logical (GPIO flag defines
+> > > logical). So, I'm talking about active-high vs. active-low case.
 > > >
-> > > Part of this change also allows you to (via the same device tree
-> > > bindings) specify to use fewer than the max number of DP lanes that
-> > > the panel reports.  This could be useful if your display supports more
-> > > lanes but only a few are hooked up on your board.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > > Now I re-read above, and see that here you assert the reset signal. But where
+> > > is desertion?
 > >
-> > Reviewed-by: Rob Clark <robdclark@gmail.com>
+> > Oh I see, I'll try explaining by points the proposed approach:
+> > - reset pin is active low
+> > - during power on gpio is set to 0 so the reset pin is high, thus no reset
 > 
-> I guess get_maintainer is somehow not tagging you and I haven't got it
-> through my thick skull to CC you each time.  If you're willing, I
-> think this patch is ready too.  Happy to re-post it with you in the To
-> list if it helps.
+> deasserted
+> 
+> > - during power off gpio is set to 1 so the reset pin becomes low, thus resetting
+> 
+> asserted
+> 
+> > this is a possible solution but maybe there are other ways to achieve that,
+> > do you have suggestions on how to get a better approach for solving this issue?
+> 
+> I see now, that at requesting reset you wanted to chip be in reset
+> state (asserted) till driver calls power_on().
+> 
+> Seems everything you done is correct. Just correct terminology, please.
 
-I have long lost the original patch, so shall I apply then please
-re-send.
+Will surely do, thank you!
+ 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 
-	Sam
+Best regards,
+Jonathan Albrieux
