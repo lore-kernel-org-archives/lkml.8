@@ -2,162 +2,158 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93396C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76BDB207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TE8I8dQ8"
+	by mail.kernel.org (Postfix) with ESMTP id 4184720674
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589824311;
+	bh=plqYo22biTGHgNsqsufKV0Ht2FGCe/Y2/qOpDAwRLo4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dD98u8JNZSK4qHteb4OJIBCzcW+1rk+RUv6ucqhouduDn3laxiX1GQokAo/8+JJ5V
+	 6gTWtzI+FQlPBur/zPX/LgxCx+4PaNqvVJ/FPiGfbDUXEVbEwzQK+PbhHZMeOeL06m
+	 XZSC0NfVhkEj/5gcHN/Z5t2b7a7sxHMznzV+gXr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbgERRvr (ORCPT
+        id S1730760AbgERRvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730892AbgERRvn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:51:43 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EDCAC061A0C;
-        Mon, 18 May 2020 10:51:43 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id m7so4531902plt.5;
-        Mon, 18 May 2020 10:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tJ3DKY7Zr9PGXQiFNc8d9vTcSjgnnAbCq5O6/G8CCg4=;
-        b=TE8I8dQ8Wqs7x5u+poBX2PYL7VHczF4L9tZyWg6xg3w7P79g+iqBbReWmXghjCoR01
-         LYy5qDvCnk8MectVa5opXCkC11SatAw583tfW8J6jU1W/RzPyC/AeYqMB5rvfjK90zeP
-         PCy8cphadcqrBHoIzn8l7Pg8DKAan7BYZH2XSGT1V05mEQTEAA8SQgXH8alQwL96qiaC
-         L6Wv++5GBfGLoEey0OvOFDKd6QiDjTs175byY+ygjaFO5Za76iUzblYpAZKZNq3z4Zyx
-         ImH/tR0GZLtvnrlJdaHAdCRbssVr1pIAUX97DeL9UEFZamk+StjYrPMkJYqjBH/ySkld
-         dM0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tJ3DKY7Zr9PGXQiFNc8d9vTcSjgnnAbCq5O6/G8CCg4=;
-        b=m8MAY0rZl23B+/3P5WqOnzFliQpTA7ahlyWU7r3YcodRhRCgl6WumvVa8AFTF6/Ub0
-         Pa+HPG2V6XUHOYpJD4ScOhc+T/0dm8ESuRAcKR68JUSMnBcTnEf4PdVPzrtuFtoUraNI
-         yMw+LYgC/4f+hBruXA7gnzzFBe5jk/OfTuSM8pFTVVeFhBzm7MLSOzKBHMlnZzNEpGmE
-         YBgcWyl9hPMhB59k689DDsYlzrHl0FTmsDSMyOKNzLKJ1hv22zk5lTvYKswFHqlnRJ4U
-         hpK39GPjwzCUsMiHGqTb9a0ywkjLX1o11Yni546rfczyX9JlQgr7KUS5Pf5V/DtuVL7l
-         LTow==
-X-Gm-Message-State: AOAM532s+A3BaXH5uDlKidSyCDXIDE89D8r8kfHpAB/KzN5t5bKvtQGp
-        u0sKHztd0b+NIbspV53WJv7MUwOdWPsonLE8Ozo=
-X-Google-Smtp-Source: ABdhPJyb6Ux94KIQxWhThm1nR3vxSwRgDHR84pJnBiq3Gp6b7lfOJIwcfwHL78kFpu1IMemoj8IrA0sd48dB46iCXHg=
-X-Received: by 2002:a17:902:930c:: with SMTP id bc12mr17510090plb.255.1589824301578;
- Mon, 18 May 2020 10:51:41 -0700 (PDT)
+        Mon, 18 May 2020 13:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730330AbgERRvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:51:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB50120829;
+        Mon, 18 May 2020 17:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589824302;
+        bh=plqYo22biTGHgNsqsufKV0Ht2FGCe/Y2/qOpDAwRLo4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=md9UwGjptTlt2edX345D92kKHSrbVvm/LSH7jQxqBB9NoGI3s0ftF+qtV4zRTrfh/
+         nGnPQumBdKfFCJQ2amxNgryfHQVuPlljtZMtjl0W34hNmQD+eL050iwwqGgjvddpHq
+         ERXGYibA1qOcyVONacPyq4+G/E8r0UHU2677N2g8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 38/80] NFSv4: Fix fscache cookie aux_data to ensure change_attr is included
+Date:   Mon, 18 May 2020 19:36:56 +0200
+Message-Id: <20200518173458.056584883@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
+References: <20200518173450.097837707@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
- <20200518133645.19127-4-jonathan.albrieux@gmail.com> <CAHp75VdFJUNOtRyCNEGnvoOCZYoPvyhjC15_iC72JD-1sOavwA@mail.gmail.com>
- <20200518160120.GA21361@ict14-OptiPlex-980> <20200518164317.GL1634618@smile.fi.intel.com>
- <20200518174335.GA6392@jonathan-N53SV>
-In-Reply-To: <20200518174335.GA6392@jonathan-N53SV>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 18 May 2020 20:51:29 +0300
-Message-ID: <CAHp75VcJ+LU_T4jRVNDBed50xaALDLNC_8brxszv5FpUGHF7+A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 8:43 PM Jonathan Albrieux
-<jonathan.albrieux@gmail.com> wrote:
->
-> On Mon, May 18, 2020 at 07:43:17PM +0300, Andy Shevchenko wrote:
-> > On Mon, May 18, 2020 at 06:01:20PM +0200, Jonathan Albrieux wrote:
-> > > On Mon, May 18, 2020 at 05:55:51PM +0300, Andy Shevchenko wrote:
-> > > > On Mon, May 18, 2020 at 4:38 PM Jonathan Albrieux
-> > > > <jonathan.albrieux@gmail.com> wrote:
-> > > >
-> > > > > +       gpiod_set_value_cansleep(data->reset_gpiod, 1);
-> > > >
-> > > > (1)
-> > > >
-> > > > ...
-> > > >
-> > > > > +       /*
-> > > > > +        * If reset pin is provided then will be set to high on power on
-> > > > > +        * and to low on power off according to AK09911 datasheet
-> > > > > +        */
-> > > >
-> > > > Wording is confusing, perhaps you have to use 'asserted / deasserted'.
-> > >
-> > > Thank you for the suggestion, I'll be working on rewording as soon as
-> > > possible.
-> > >
-> > > > Btw, in (1) it's also "high" (asserted). I barely understand how it's
-> > > > supposed to work in all cases?
-> > > >
-> > > > > +       reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> > > > > +                                             "reset", GPIOD_OUT_HIGH);
-> > > > > +       if (IS_ERR(reset_gpiod))
-> > > > > +               return PTR_ERR(reset_gpiod);
-> > > >
-> > >
-> > > I'm sorry but I'm not sure about what you mean by saying all cases.
-> > > Currently  I'm testing this driver on a msm8916 device having AK09911
-> > > magnetometer. At the current stage the driver is failing on probe
-> > > because reset pin is not connected to VID (as datasheet requires in case
-> > > of pin not being used). In case of reset pin not asserted, register's
-> > > reset is triggered resulting in empty registers, leading to probe fail.
-> > > For this reason pin is asserted during power on in order to have
-> > > informations in registers and deasserted before power off triggering
-> > > a reset.
-> > >
-> > > A workaround that gets AK09911 working on device is by setting the
-> > > reset pin always high on device tree. This way registers gets reset by
-> > > a Power On Reset circuit autonomously and reset pin never triggers the
-> > > reset.
-> >
-> > You need to distinguish electrical level from logical (GPIO flag defines
-> > logical). So, I'm talking about active-high vs. active-low case.
-> >
-> > Now I re-read above, and see that here you assert the reset signal. But where
-> > is desertion?
->
-> Oh I see, I'll try explaining by points the proposed approach:
-> - reset pin is active low
-> - during power on gpio is set to 0 so the reset pin is high, thus no reset
+From: Dave Wysochanski <dwysocha@redhat.com>
 
-deasserted
+[ Upstream commit 50eaa652b54df1e2b48dc398d9e6114c9ed080eb ]
 
-> - during power off gpio is set to 1 so the reset pin becomes low, thus resetting
+Commit 402cb8dda949 ("fscache: Attach the index key and aux data to
+the cookie") added the aux_data and aux_data_len to parameters to
+fscache_acquire_cookie(), and updated the callers in the NFS client.
+In the process it modified the aux_data to include the change_attr,
+but missed adding change_attr to a couple places where aux_data was
+used.  Specifically, when opening a file and the change_attr is not
+added, the following attempt to lookup an object will fail inside
+cachefiles_check_object_xattr() = -116 due to
+nfs_fscache_inode_check_aux() failing memcmp on auxdata and returning
+FSCACHE_CHECKAUX_OBSOLETE.
 
-asserted
+Fix this by adding nfs_fscache_update_auxdata() to set the auxdata
+from all relevant fields in the inode, including the change_attr.
 
-> this is a possible solution but maybe there are other ways to achieve that,
-> do you have suggestions on how to get a better approach for solving this issue?
+Fixes: 402cb8dda949 ("fscache: Attach the index key and aux data to the cookie")
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/fscache.c | 34 ++++++++++++++++------------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-I see now, that at requesting reset you wanted to chip be in reset
-state (asserted) till driver calls power_on().
-
-Seems everything you done is correct. Just correct terminology, please.
-
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index 0a4d6b35545a3..7dfa45a380882 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -231,6 +231,19 @@ void nfs_fscache_release_super_cookie(struct super_block *sb)
+ 	}
+ }
+ 
++static void nfs_fscache_update_auxdata(struct nfs_fscache_inode_auxdata *auxdata,
++				  struct nfs_inode *nfsi)
++{
++	memset(auxdata, 0, sizeof(*auxdata));
++	auxdata->mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
++	auxdata->mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
++	auxdata->ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
++	auxdata->ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
++
++	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
++		auxdata->change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
++}
++
+ /*
+  * Initialise the per-inode cache cookie pointer for an NFS inode.
+  */
+@@ -244,14 +257,7 @@ void nfs_fscache_init_inode(struct inode *inode)
+ 	if (!(nfss->fscache && S_ISREG(inode->i_mode)))
+ 		return;
+ 
+-	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+-	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+-	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+-	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
+-
+-	if (NFS_SERVER(&nfsi->vfs_inode)->nfs_client->rpc_ops->version == 4)
+-		auxdata.change_attr = inode_peek_iversion_raw(&nfsi->vfs_inode);
++	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 
+ 	nfsi->fscache = fscache_acquire_cookie(NFS_SB(inode->i_sb)->fscache,
+ 					       &nfs_fscache_inode_object_def,
+@@ -271,11 +277,7 @@ void nfs_fscache_clear_inode(struct inode *inode)
+ 
+ 	dfprintk(FSCACHE, "NFS: clear cookie (0x%p/0x%p)\n", nfsi, cookie);
+ 
+-	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+-	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+-	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+-	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
++	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 	fscache_relinquish_cookie(cookie, &auxdata, false);
+ 	nfsi->fscache = NULL;
+ }
+@@ -315,11 +317,7 @@ void nfs_fscache_open_file(struct inode *inode, struct file *filp)
+ 	if (!fscache_cookie_valid(cookie))
+ 		return;
+ 
+-	memset(&auxdata, 0, sizeof(auxdata));
+-	auxdata.mtime_sec  = nfsi->vfs_inode.i_mtime.tv_sec;
+-	auxdata.mtime_nsec = nfsi->vfs_inode.i_mtime.tv_nsec;
+-	auxdata.ctime_sec  = nfsi->vfs_inode.i_ctime.tv_sec;
+-	auxdata.ctime_nsec = nfsi->vfs_inode.i_ctime.tv_nsec;
++	nfs_fscache_update_auxdata(&auxdata, nfsi);
+ 
+ 	if (inode_is_open_for_write(inode)) {
+ 		dfprintk(FSCACHE, "NFS: nfsi 0x%p disabling cache\n", nfsi);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
+
+
