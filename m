@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0084EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D260F207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB14420671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823974;
-	bh=vNZivytMBWAhlteQOYiqnhPyfZQnjhltAJXHLe92+kk=;
+	s=default; t=1589823978;
+	bh=nqk65ExJOdZgrlp+sPs18FmX7l3Sc++Un1T815Rqp1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yQDV5GVeX7PdcznqIOy07nn1jLh6z/InE17WsXT+wpG0rw7ehCqy0REw40J+83NsH
-	 z+DBi2/hP/owD1LuP1HBrlzqJemVzh8O6L+rkrbvNNeyMxVym+e9e+NCzLEVpKCox8
-	 zxxo/1AzaJLpamOVsJonfF6cMIfyTQcqLiVWIjEU=
+	b=Cip/90/kVaxrf3RR0cbvRsuEgrtTlj8FSZIqRq+HjkKfoijoA5ON6Id8lxlhdp+UZ
+	 FhXPdc07RUq7z2Jk1UW961hRjKIs9Vpo+/0PEI9DSBYnD7iQYwWgIck6wWvRmQAnG/
+	 PpthxDCqdPXVNftz3ymBx/n0U4MW/UQxijMp4EVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbgERRqO (ORCPT
+        id S1727006AbgERRqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45606 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbgERRqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:46:09 -0400
+        id S1730050AbgERRqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 084BC207C4;
-        Mon, 18 May 2020 17:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7674220657;
+        Mon, 18 May 2020 17:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823969;
-        bh=vNZivytMBWAhlteQOYiqnhPyfZQnjhltAJXHLe92+kk=;
+        s=default; t=1589823971;
+        bh=nqk65ExJOdZgrlp+sPs18FmX7l3Sc++Un1T815Rqp1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s6wlbgO2kk6/C8vKuorkoTYvwLLpdb0k+7VYK1BCHtxciRpCSFSi5ydb20NFzo8/D
-         zNDYSw9eO6F1sG43znGVI61Nm/DZ1ZxsEaY9BavJJvuAPCjhsvz9RAz0wkS4oQm5ri
-         gPal0BM4D37j4Q4/x8RaPoep6wbCpXpuPw9pPVY0=
+        b=s9XsjPLSaYVZfZIEIw/MnwuRr2xEsi7gmsUPmxtPY/sEDTDHtJXtzyo2ZYY+lLQR7
+         N4EM6iqsBxpjkYLFoQSwH5SkeBWlLH10SCK2pcuv/1K7aVoqIbk6agNov+KHTpl6wZ
+         E+j2Y5iLqFxehOGlitx5e9u7WwyHKy0jY3xp+4mE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        =?UTF-8?q?Julian=20Gro=C3=9F?= <julian.g@posteo.de>
-Subject: [PATCH 4.14 019/114] USB: uas: add quirk for LaCie 2Big Quadra
-Date:   Mon, 18 May 2020 19:35:51 +0200
-Message-Id: <20200518173507.149711736@linuxfoundation.org>
+        Johan Hovold <johan@kernel.org>,
+        syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 020/114] USB: serial: garmin_gps: add sanity checking for data length
+Date:   Mon, 18 May 2020 19:35:52 +0200
+Message-Id: <20200518173507.323289882@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -61,36 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit 9f04db234af691007bb785342a06abab5fb34474 upstream.
+commit e9b3c610a05c1cdf8e959a6d89c38807ff758ee6 upstream.
 
-This device needs US_FL_NO_REPORT_OPCODES to avoid going
-through prolonged error handling on enumeration.
+We must not process packets shorter than a packet ID
 
 Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: Julian Groß <julian.g@posteo.de>
+Reported-and-tested-by: syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200429155218.7308-1-oneukum@suse.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/unusual_uas.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/usb/serial/garmin_gps.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -41,6 +41,13 @@
-  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
-  */
+--- a/drivers/usb/serial/garmin_gps.c
++++ b/drivers/usb/serial/garmin_gps.c
+@@ -1161,8 +1161,8 @@ static void garmin_read_process(struct g
+ 		   send it directly to the tty port */
+ 		if (garmin_data_p->flags & FLAGS_QUEUING) {
+ 			pkt_add(garmin_data_p, data, data_length);
+-		} else if (bulk_data ||
+-			   getLayerId(data) == GARMIN_LAYERID_APPL) {
++		} else if (bulk_data || (data_length >= sizeof(u32) &&
++				getLayerId(data) == GARMIN_LAYERID_APPL)) {
  
-+/* Reported-by: Julian Groß <julian.g@posteo.de> */
-+UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
-+		"LaCie",
-+		"2Big Quadra USB3",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_NO_REPORT_OPCODES),
-+
- /*
-  * Apricorn USB3 dongle sometimes returns "USBSUSBSUSBS" in response to SCSI
-  * commands in UAS mode.  Observed with the 1.28 firmware; are there others?
+ 			spin_lock_irqsave(&garmin_data_p->lock, flags);
+ 			garmin_data_p->flags |= APP_RESP_SEEN;
 
 
