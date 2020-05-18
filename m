@@ -2,123 +2,81 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C915CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC96C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A65472081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589834093;
-	bh=DMn1FbDiLFopxge/UneNTHBSYyIveL3gLvj9Zyu7KCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SQ9if0m9Lv769335fUplccpEh8LH3mHL3f6LIHO6XytDPNY5z/weIFcI9XUqx8klv
-	 lpOdWAflKdl0xU7yk4oeOuS6/LvkKLlgeQwaExENQDn4ySP2wfkDRcCWVZfzmMsTUp
-	 WfmqAmKdR1oPMIn4MPZHjHKuLN7V4yaYGcR/rOVA=
+	by mail.kernel.org (Postfix) with ESMTP id 297732081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:34:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EXPcOwSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgERUex (ORCPT
+        id S1727924AbgERUe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:34:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35910 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgERUew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:34:52 -0400
-Received: by mail-io1-f67.google.com with SMTP id k6so12201697iob.3;
-        Mon, 18 May 2020 13:34:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FPMBwfiZVk3j4Ctqnv2H9eGRXj7eNBfK/u6YKzz2+rM=;
-        b=JDj+W0mErdE2JQeolvKrKmQqHPG50OfY7u+9jdrW9MZf5JpO849iCmz0GVUpxsB9xx
-         VxHIKX0shWIfWx06Iw1JxboLoB/Nya4+GqaiOUqKsBOoCqx3YWtyCGEwQjZtNOGeyUwq
-         9pSLsdAZ/xQVS/D9W2XgeitLjCPhPi9PdpDoGAuCFgsiDQPKTIMcX1kqXYKe5dm3NNQl
-         0vT5vJoxmK8jNb1QaRgB54E0qqTIvjOnTXu6VFjPhwGW2KCPIDS25n3pI1AtJo7iDQc+
-         M7kUhQNOgzDIMqqAalgY5GzlgHEZ2V0+Ez/7YDtR+7nX6yN8AsOdDz/eO9SyLIZB0ojS
-         maRw==
-X-Gm-Message-State: AOAM532Hc5/xAsf5ZNOit3shQQjOntDO8Y+BAL78CfrKqUlYJxtdlv2m
-        yMJswSqkdMyXRxNNbFi5gw==
-X-Google-Smtp-Source: ABdhPJxPAQ/6uPUZ1zru5yJ1OYVX0KAbu5hmv/CV4Yru4mW2940N2L7A/OQbxrTC3KlWuB7X6GzEYg==
-X-Received: by 2002:a6b:d219:: with SMTP id q25mr14825078iob.202.1589834091409;
-        Mon, 18 May 2020 13:34:51 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i78sm5194353ile.87.2020.05.18.13.34.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 13:34:50 -0700 (PDT)
-Received: (nullmailer pid 1050 invoked by uid 1000);
-        Mon, 18 May 2020 20:34:49 -0000
-Date:   Mon, 18 May 2020 14:34:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Paul Burton <paulburton@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
-        linux-hwmon@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        linux-mips@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: Add Baikal-T1 PVT sensor
- binding
-Message-ID: <20200518203449.GA989@bogus>
-References: <20200306132611.103408030701@mail.baikalelectronics.ru>
- <20200510103211.27905-1-Sergey.Semin@baikalelectronics.ru>
- <20200510103211.27905-2-Sergey.Semin@baikalelectronics.ru>
+        Mon, 18 May 2020 16:34:58 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:37780 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726367AbgERUe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 16:34:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=V0hUCdZRE2aQ0OAd4JagZgLT493qRfoUuMn4+XBpcNw=; b=EXPcOwSvzc/kvh5HmOjUqjo8Ny
+        8p0wFFbBo2hW+J2m/1mcR27CYAiwRvz1S03ex4x3tAgwSwqB0YO9zHaa4qOQmAlCE2pgwdjqRQugq
+        Kq6HFcSeHqzt85hDdC/OpAyxNNAldrek/GBD+ZKjqbQJtZD4Htd/ygn+jtRYKEuiqTW0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jamTH-002e2q-Qj; Mon, 18 May 2020 22:34:47 +0200
+Date:   Mon, 18 May 2020 22:34:47 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Roelof Berg <rberg@berg-solutions.de>
+Cc:     Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lan743x: Added fixed link support
+Message-ID: <20200518203447.GF624248@lunn.ch>
+References: <20200516192402.4201-1-rberg@berg-solutions.de>
+ <20200517183710.GC606317@lunn.ch>
+ <6E144634-8E2F-48F7-A0A4-6073164F2B70@berg-solutions.de>
+ <20200517235026.GD610998@lunn.ch>
+ <EB9FB222-D08A-464F-93C0-5885C010D582@berg-solutions.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200510103211.27905-2-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <EB9FB222-D08A-464F-93C0-5885C010D582@berg-solutions.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 May 2020 13:32:10 +0300, Serge Semin wrote:
-> Baikal-T1 SoC is equipped with an embedded process, voltage and
-> temperature sensor to monitor the chip internal environment like
-> temperature, supply voltage and transistors performance.
-> 
-> This bindings describes the external Baikal-T1 PVT control interfaces
-> like MMIO registers space, interrupt request number and clocks source.
-> These are then used by the corresponding hwmon device driver to
-> implement the sysfs files-based access to the sensors functionality.
-> 
-> Co-developed-by: Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
-> Signed-off-by: Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-mips@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Lowercase the node-name in the example.
-> - Add dual-license header.
-> - Don't use a multi-arg clock phandle reference in the examples dt-binding
->   property. Thus reundant include pre-processor statement can be removed.
-> - Replace "additionalProperties: false" property with
->   "unevaluatedProperties: false".
-> - Discard label definition from the example.
-> - Align settings of the "#thermal-sensor-cells" property with two spaces
->   ahead of the property line start.
-> ---
->  .../bindings/hwmon/baikal,bt1-pvt.yaml        | 95 +++++++++++++++++++
->  1 file changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/baikal,bt1-pvt.yaml
-> 
+> I double checked the vendor documentation and according to the data
+> sheet in this device the MAC detects speed and duplex mode. It uses
+> PINs, traces clocks … Also according to an application note of the
+> vendor duplex and speed detection should be enabled in the MAC
+> registers.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+In general, the MAC should not perform MDIO requests on the PHY.  The
+MAC has no access to the mutex which phylib users. So if the MAC
+directly accesses registers in the PHY, it could do it at the wrong
+time, when the PHY driver is active.
+
+This can be particularly bad when Marvell PHYs are used. They have
+paged registers. One example is the page with the temperature sensor.
+This can be selected due to a read on the hwmon device. If the MAC
+tried to read the speed/duplex which the temperature sensor is
+selected, it would wrongly read the temperature sensor registers, not
+the link state.
+
+There is no need for the MAC to directly access the PHY. It will get
+told what the result of auto-neg is. So please turn this off all the
+time.
+
+	Andrew
