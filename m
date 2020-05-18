@@ -2,132 +2,375 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D78BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD62C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1A0020657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589811773;
-	bh=RW8xRPxrGXGOpe1bLSa4F2bhx/YKvamqQLoaXyVD5bc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vek4KROnJnFNU3PFtRSWgupstGmPDiBtQYOXmbLD/8/kFWfpsSRRz+UqI2MXRGB1z
-	 fWjinS8wzW+GKe+eAVsm+svpwpL/MIYyEWh0LVopit8sR0PuFsob5S2tYShrfYsEkq
-	 2k7gjQuLnTKIJ5SXRW6WdsGxbEMp4145T1b8PT0U=
+	by mail.kernel.org (Postfix) with ESMTP id 3E723207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FOEGsKkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgEROWx (ORCPT
+        id S1728085AbgEROW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:22:53 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:43845 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgEROWw (ORCPT
+        Mon, 18 May 2020 10:22:57 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40494 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726918AbgEROW4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:22:52 -0400
-Received: by mail-il1-f195.google.com with SMTP id l20so9962537ilj.10;
-        Mon, 18 May 2020 07:22:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OBcPiRkFf2HqCBrlS/cgfO6TiTzCErqXJ+wgd+Jl1A0=;
-        b=YmsVn3AXDFZdD0iwwbOy6E8Qqbo3eYhnyy8p1ZNNEBMuxsz8UA9TDSxJluvba8+do3
-         BrFDD0zom1gWjW2YC2M5M24VeGDgKdtXBzBrTAWh8m7M3seEGuZntlpT+5zGBhbCYXui
-         OU+yvZCntS9hxtuTj/AtA8HE8BMhqWnyrEL+uAWaJ5ivE93vQcf00P1wPl9uJzzWmYI0
-         RDwFSwjW9jLZazGXusUrX4Pz79k7nsvPp8z8nqvLAkMtkiKt+d25NRIsVbYCPMyTs9HS
-         Q38/FlmHyKemf1CBooJkMHkzmKrvVUQXR1OhTtDgiINSCstnkMBSkoanGCRF0IwxLQ4C
-         Nmrg==
-X-Gm-Message-State: AOAM533eLpkFQzagXU28P4OaG0QnERqUudFeIjNo/u7WDYjxtP464wMl
-        jp4vI6dPKBQVXr5BZkwW1A==
-X-Google-Smtp-Source: ABdhPJzV6KNOjj8p+ww1n7tkHaJxwgQNVgNaGd9L1aIW1QqJKwwO89/xnJnvqKKO6gIiVKDYrGe3tA==
-X-Received: by 2002:a92:6b10:: with SMTP id g16mr16567750ilc.29.1589811771270;
-        Mon, 18 May 2020 07:22:51 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l16sm3364985ils.64.2020.05.18.07.22.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 07:22:50 -0700 (PDT)
-Received: (nullmailer pid 10442 invoked by uid 1000);
-        Mon, 18 May 2020 14:22:49 -0000
-Date:   Mon, 18 May 2020 08:22:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v7 6/7] dt-bindings: input: Add docs for ADC driven
- joystick.
-Message-ID: <20200518142249.GA10125@bogus>
-References: <20200517194904.34758-1-contact@artur-rojek.eu>
- <20200517194904.34758-6-contact@artur-rojek.eu>
+        Mon, 18 May 2020 10:22:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589811773;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=5T0wa0ZGQ5Gm8HF1P0Qio2NduZZ/K3dFSYEyCYcEGkM=;
+        b=FOEGsKknFgv1M3mQCXFTjPW4/AGObt/Wrif2IMZAeAJSiwgFOFwr6K8YhXzzpakFOVlFFj
+        S/caH45/ScfIu/h2XQVp1GLvDG+hv4VEu6s2hbyeV3AmTUN6eyqstFeWogsQAtrA5Ok6lP
+        sjOyd1LZInojGyWurvXAd5fSsGDgyxY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-406-bdbyJvCaPf6jVxSy4smGWg-1; Mon, 18 May 2020 10:22:49 -0400
+X-MC-Unique: bdbyJvCaPf6jVxSy4smGWg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48D37835B40;
+        Mon, 18 May 2020 14:22:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A544E60BF3;
+        Mon, 18 May 2020 14:22:46 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] dns: Apply a default TTL to records obtained from
+ getaddrinfo()
+From:   David Howells <dhowells@redhat.com>
+To:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org
+Cc:     dhowells@redhat.com, keyrings@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fweimer@redhat.com
+Date:   Mon, 18 May 2020 15:22:45 +0100
+Message-ID: <158981176590.872823.11683683537698750702.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517194904.34758-6-contact@artur-rojek.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 May 2020 21:49:03 +0200, Artur Rojek wrote:
-> Add documentation for the adc-joystick driver, used to provide support
-> for joysticks connected over ADC.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
->  Changes:
-> 
->  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
->      - rename `linux,abs-code` property to `linux,code`,
->      - drop `linux,` prefix from the remaining properties of axis subnode
-> 
->  v3: no change
-> 
->  v4: - remove "bindings" from the unique identifier string,
->      - replace `|` with `>` for all description properties,
->      - specify the number of items for `io-channels`,
->      - correct the regex pattern of `axis` property,
->      - specify the value range of `reg` property for each axis,
->      - put `abs-range` properties under `allOf`
-> 
->  v5: add `a-f` to the regex pattern of `axis` property
-> 
->  v6-v7: no change
-> 
->  .../bindings/input/adc-joystick.yaml          | 121 ++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
-> 
+Address records obtained from getaddrinfo() don't come with any TTL
+information, even if they're obtained from the DNS, with the result that
+key.dns_resolver upcall program doesn't set an expiry time on dns_resolver
+records unless they include a component obtained directly from the DNS,
+such as an SRV or AFSDB record.
 
+Fix this to apply a default TTL of 10mins in the event that we haven't got
+one.  This can be configured in /etc/keyutils/key.dns_resolver.conf by
+adding the line:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+	default_ttl: <number-of-seconds>
 
-Error: Documentation/devicetree/bindings/input/adc-joystick.example.dts:24.31-32 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml] Error 1
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+to the file.
 
-See https://patchwork.ozlabs.org/patch/1292230
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+ Makefile               |    1 +
+ dns.afsdb.c            |   16 ++++------
+ key.dns.h              |    2 +
+ key.dns_resolver.c     |   76 +++++++++++++++++++++++++++++++++++++++++++++---
+ man/key.dns_resolver.8 |   19 +++++++++++-
+ 5 files changed, 100 insertions(+), 14 deletions(-)
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+diff --git a/Makefile b/Makefile
+index 6f79446b..4d055701 100644
+--- a/Makefile
++++ b/Makefile
+@@ -202,6 +202,7 @@ endif
+ 	$(INSTALL) -D key.dns_resolver $(DESTDIR)$(SBINDIR)/key.dns_resolver
+ 	$(INSTALL) -D -m 0644 request-key.conf $(DESTDIR)$(ETCDIR)/request-key.conf
+ 	mkdir -p $(DESTDIR)$(ETCDIR)/request-key.d
++	mkdir -p $(DESTDIR)$(ETCDIR)/keyutils
+ 	mkdir -p $(DESTDIR)$(MAN1)
+ 	$(INSTALL) -m 0644 $(wildcard man/*.1) $(DESTDIR)$(MAN1)
+ 	mkdir -p $(DESTDIR)$(MAN3)
+diff --git a/dns.afsdb.c b/dns.afsdb.c
+index fa60e04f..986c0f38 100644
+--- a/dns.afsdb.c
++++ b/dns.afsdb.c
+@@ -37,8 +37,6 @@
+  */
+ #include "key.dns.h"
+ 
+-static unsigned long afs_ttl = ULONG_MAX;
+-
+ /*
+  *
+  */
+@@ -114,8 +112,8 @@ static void afsdb_hosts_to_addrs(ns_msg handle, ns_sect section)
+ 		}
+ 	}
+ 
+-	afs_ttl = ttl;
+-	info("ttl: %u", ttl);
++	key_expiry = ttl;
++	info("ttl: %u", key_expiry);
+ }
+ 
+ /*
+@@ -203,8 +201,8 @@ static void srv_hosts_to_addrs(ns_msg handle, ns_sect section)
+ 		}
+ 	}
+ 
+-	afs_ttl = ttl;
+-	info("ttl: %u", ttl);
++	key_expiry = ttl;
++	info("ttl: %u", key_expiry);
+ }
+ 
+ /*
+@@ -240,7 +238,7 @@ static int dns_query_AFSDB(const char *cell)
+ 	/* look up the hostnames we've obtained to get the actual addresses */
+ 	afsdb_hosts_to_addrs(handle, ns_s_an);
+ 
+-	info("DNS query AFSDB RR results:%u ttl:%lu", payload_index, afs_ttl);
++	info("DNS query AFSDB RR results:%u ttl:%u", payload_index, key_expiry);
+ 	return 0;
+ }
+ 
+@@ -279,7 +277,7 @@ static int dns_query_VL_SRV(const char *cell)
+ 	/* look up the hostnames we've obtained to get the actual addresses */
+ 	srv_hosts_to_addrs(handle, ns_s_an);
+ 
+-	info("DNS query VL SRV RR results:%u ttl:%lu", payload_index, afs_ttl);
++	info("DNS query VL SRV RR results:%u ttl:%u", payload_index, key_expiry);
+ 	return 0;
+ }
+ 
+@@ -293,7 +291,7 @@ void afs_instantiate(const char *cell)
+ 
+ 	/* set the key's expiry time from the minimum TTL encountered */
+ 	if (!debug_mode) {
+-		ret = keyctl_set_timeout(key, afs_ttl);
++		ret = keyctl_set_timeout(key, key_expiry);
+ 		if (ret == -1)
+ 			error("%s: keyctl_set_timeout: %m", __func__);
+ 	}
+diff --git a/key.dns.h b/key.dns.h
+index b143f4a4..e884cc4a 100644
+--- a/key.dns.h
++++ b/key.dns.h
+@@ -29,6 +29,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <time.h>
++#include <ctype.h>
+ 
+ #define	MAX_VLS			15	/* Max Volume Location Servers Per-Cell */
+ #define	INET_IP4_ONLY		0x1
+@@ -42,6 +43,7 @@
+ extern key_serial_t key;
+ extern int debug_mode;
+ extern unsigned mask;
++extern unsigned int key_expiry;
+ 
+ #define N_PAYLOAD 256
+ extern struct iovec payload[N_PAYLOAD];
+diff --git a/key.dns_resolver.c b/key.dns_resolver.c
+index 4ac27d30..df35493d 100644
+--- a/key.dns_resolver.c
++++ b/key.dns_resolver.c
+@@ -46,10 +46,13 @@ static const char key_type[] = "dns_resolver";
+ static const char a_query_type[] = "a";
+ static const char aaaa_query_type[] = "aaaa";
+ static const char afsdb_query_type[] = "afsdb";
++static const char *config_file = "/etc/keyutils/key.dns_resolver.conf";
++static bool config_specified = false;
+ key_serial_t key;
+ static int verbose;
+ int debug_mode;
+ unsigned mask = INET_ALL;
++unsigned int key_expiry = 10 * 60;
+ 
+ 
+ /*
+@@ -272,6 +275,7 @@ void dump_payload(void)
+ 	}
+ 
+ 	info("The key instantiation data is '%s'", buf);
++	info("The expiry time is %us", key_expiry);
+ 	free(buf);
+ }
+ 
+@@ -412,6 +416,9 @@ int dns_query_a_or_aaaa(const char *hostname, char *options)
+ 
+ 	/* load the key with data key */
+ 	if (!debug_mode) {
++		ret = keyctl_set_timeout(key, key_expiry);
++		if (ret == -1)
++			error("%s: keyctl_set_timeout: %m", __func__);
+ 		ret = keyctl_instantiate_iov(key, payload, payload_index, 0);
+ 		if (ret == -1)
+ 			error("%s: keyctl_instantiate: %m", __func__);
+@@ -420,6 +427,61 @@ int dns_query_a_or_aaaa(const char *hostname, char *options)
+ 	exit(0);
+ }
+ 
++/*
++ * Read the config file.
++ */
++static void read_config(void)
++{
++	FILE *f;
++	char buf[4096], *p;
++	unsigned int line = 0, u;
++	int n;
++
++	printf("READ CONFIG %s\n", config_file);
++
++	f = fopen(config_file, "r");
++	if (!f) {
++		if (errno == ENOENT && !config_specified) {
++			debug("%s: %m", config_file);
++			return;
++		}
++		error("%s: %m", config_file);
++	}
++
++	while (fgets(buf, sizeof(buf) - 1, f)) {
++		line++;
++		if (buf[0] == '#')
++			continue;
++		p = strchr(buf, '\n');
++		if (!p)
++			error("%s:%u: line missing newline or too long", config_file, line);
++		while (p > buf && isspace(p[-1]))
++			p--;
++		*p = 0;
++
++		if (strncmp(buf, "default_ttl:", 12) == 0) {
++			p = buf + 12;
++			while (isspace(*p))
++				p++;
++			if (sscanf(p, "%u%n", &u, &n) != 1)
++				error("%s:%u: default_ttl: Bad value",
++				      config_file, line);
++			if (p[n])
++				error("%s:%u: default_ttl: Extra data supplied",
++				      config_file, line);
++			if (u < 1 || u > INT_MAX)
++				error("%s:%u: default_ttl: Out of range",
++				      config_file, line);
++			key_expiry = u;
++		} else {
++			error("%s:%u: Unknown option", config_file, line);
++		}
++	}
++
++	if (ferror(f) || fclose(f) == EOF)
++		error("%s: %m", config_file);
++}
++
+ /*
+  * Print usage details,
+  */
+@@ -428,18 +490,19 @@ void usage(void)
+ {
+ 	if (isatty(2)) {
+ 		fprintf(stderr,
+-			"Usage: %s [-vv] key_serial\n",
++			"Usage: %s [-vv] [-c config] key_serial\n",
+ 			prog);
+ 		fprintf(stderr,
+-			"Usage: %s -D [-vv] <desc> <calloutinfo>\n",
++			"Usage: %s -D [-vv] [-c config] <desc> <calloutinfo>\n",
+ 			prog);
+ 	} else {
+-		info("Usage: %s [-vv] key_serial", prog);
++		info("Usage: %s [-vv] [-c config] key_serial", prog);
+ 	}
+ 	exit(2);
+ }
+ 
+ const struct option long_options[] = {
++	{ "config",	0, NULL, 'c' },
+ 	{ "debug",	0, NULL, 'D' },
+ 	{ "verbose",	0, NULL, 'v' },
+ 	{ "version",	0, NULL, 'V' },
+@@ -460,6 +523,10 @@ int main(int argc, char *argv[])
+ 
+ 	while ((ret = getopt_long(argc, argv, "vDV", long_options, NULL)) != -1) {
+ 		switch (ret) {
++		case 'c':
++			config_file = optarg;
++			config_specified = true;
++			continue;
+ 		case 'D':
+ 			debug_mode = 1;
+ 			continue;
+@@ -481,6 +548,7 @@ int main(int argc, char *argv[])
+ 
+ 	argc -= optind;
+ 	argv += optind;
++	read_config();
+ 
+ 	if (!debug_mode) {
+ 		if (argc != 1)
+@@ -542,7 +610,7 @@ int main(int argc, char *argv[])
+ 	name++;
+ 
+ 	info("Query type: '%*.*s'", qtlen, qtlen, keyend);
+-	
++
+ 	if ((qtlen == sizeof(a_query_type) - 1 &&
+ 	     memcmp(keyend, a_query_type, sizeof(a_query_type) - 1) == 0) ||
+ 	    (qtlen == sizeof(aaaa_query_type) - 1 &&
+diff --git a/man/key.dns_resolver.8 b/man/key.dns_resolver.8
+index e1882e06..f7c44300 100644
+--- a/man/key.dns_resolver.8
++++ b/man/key.dns_resolver.8
+@@ -13,7 +13,9 @@ key.dns_resolver \- upcall for request\-key to handle dns_resolver keys
+ .SH SYNOPSIS
+ \fB/sbin/key.dns_resolver \fR<key>
+ .br
+-\fB/sbin/key.dns_resolver \fR\-D [\-v] [\-v] <keydesc> <calloutinfo>
++\fB/sbin/key.dns_resolver \fR\-D [\-v] [\-v] [\-c <configfile>] <keydesc>
++.br
++<calloutinfo>
+ .SH DESCRIPTION
+ This program is invoked by request\-key on behalf of the kernel when kernel
+ services (such as NFS, CIFS and AFS) want to perform a hostname lookup and the
+@@ -24,6 +26,21 @@ It can be called in debugging mode to test its functionality by passing a
+ \fB\-D\fR flag on the command line.  For this to work, the key description and
+ the callout information must be supplied.  Verbosity can be increased by
+ supplying one or more \fB\-v\fR flags.
++.P
++A configuration file can be supplied to adjust various parameters.  The file
++is looked for at:
++.IP
++/etc/keyutils/key.dns_resolver.conf
++.P
++unless otherwise specified with the \fB\-c\fR flag.
++.P
++Configuration options include:
++.TP
++.B default_ttl: <number>
++The number of seconds to set as the expiration on a cached record.  This will
++be overridden if the program manages to retrieve TTL information along with
++the addresses (if, for example, it accesses the DNS directly).  The default is
++600 seconds.
+ .SH ERRORS
+ All errors will be logged to the syslog.
+ .SH SEE ALSO
 
-Please check and re-submit.
 
