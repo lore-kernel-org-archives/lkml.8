@@ -2,205 +2,256 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A445C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81B98207ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A037207F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 01:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6qFVekf"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CX1C6gQ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgERBWB (ORCPT
+        id S1727040AbgERBWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 May 2020 21:22:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgERBV4 (ORCPT
+        Sun, 17 May 2020 21:22:03 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17148 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgERBWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 May 2020 21:21:56 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D72C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 18:21:56 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z1so4210181pfn.3
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 18:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=s7ZF/TSgVPMfBiVL+g87/XdCmCQwJ5rXkaWI13NQ9/4=;
-        b=i6qFVekfMEKDNi1U1IPosOULPIAx+nSjOpugNRND1bVgup/cqL6ozD56uPC/QjGFZo
-         pVh/5YrY/zGj+XVrQdk16oy7cGfc8RZ4iOhpdtyB8g46pnSWce2MGzFfcGaJ3X2BBVJE
-         VwluPHIcLkkZY8ICNsLHt71CbIXxRoUjXpHsiqELgkIf+yZ4dDTEAynmegKvbL0j17yl
-         FMgQRRNqZoiPTb1D7xioV23OQtdX38JJVHJd4dC1wdDmiq7ditwiOAQ25/F//Cza8VNF
-         Ia7/XcKVEpqhAGOvbZ4o9yf+3jLghWOgNCKuclGFf8TBrv4KHJO8kiQsXU/veXUQXDl7
-         QR6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=s7ZF/TSgVPMfBiVL+g87/XdCmCQwJ5rXkaWI13NQ9/4=;
-        b=n/O9O1J6qnD2tk7tzh2cBB+wcKRXbkA2hSzk5K8m92Rtp14J64YVGORtZ7l6MzqR8V
-         on5Y0fAgsFe7AmUl04nz81X/lxzv3cCsS0dZxzyUGwG9hFBXXrCRpsNt+K6hGiB3QscR
-         eNPYdsyGYR9Oi5W3h4fNnE+ia2BHtXz/5zXDUqbh9IztR3ljx10wuLv8m6p4JrVDntkD
-         tKHHE+knvJW+Zyi0L2h1sxWj18WYpF+OFve24nEwceCycJxa2L7XGTexJUeu3lmYAnOC
-         6QPpA1TawJlMFYU21P15fTC+4B3iQNFMeS+SvFfS6dDFEuLNTFgyb1fgHoKnFSteCK3O
-         7nUw==
-X-Gm-Message-State: AOAM533Olt7ol3JV/Vf0Yr6AIvRmoVJ8E8Mctp+tyqhQDpEOUnLtVKjL
-        WtTzRyaayfj+smzihXn3xZ0=
-X-Google-Smtp-Source: ABdhPJzs7I2th1ALqmLEiamW68tTpAcgk740vzOfrPORpBpBUVeAsqL9hJ9ZCBdpBVIw38ka9LG+2g==
-X-Received: by 2002:a63:c146:: with SMTP id p6mr6866650pgi.55.1589764916099;
-        Sun, 17 May 2020 18:21:56 -0700 (PDT)
-Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id fw4sm1544376pjb.31.2020.05.17.18.21.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 May 2020 18:21:55 -0700 (PDT)
-From:   js1304@gmail.com
-X-Google-Original-From: iamjoonsoo.kim@lge.com
+        Sun, 17 May 2020 21:22:00 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec1e2aa0002>; Sun, 17 May 2020 18:19:38 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 17 May 2020 18:21:59 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 17 May 2020 18:21:59 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
+ 2020 01:21:59 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 18 May 2020 01:21:59 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.48.175]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ec1e3370002>; Sun, 17 May 2020 18:21:59 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH 05/11] mm/hugetlb: make hugetlb migration target allocation APIs CMA aware
-Date:   Mon, 18 May 2020 10:20:51 +0900
-Message-Id: <1589764857-6800-6-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589764857-6800-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1589764857-6800-1-git-send-email-iamjoonsoo.kim@lge.com>
+CC:     Andy Walls <awalls@md.metrocast.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 2/2] ivtv: convert get_user_pages() --> pin_user_pages()
+Date:   Sun, 17 May 2020 18:21:57 -0700
+Message-ID: <20200518012157.1178336-3-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518012157.1178336-1-jhubbard@nvidia.com>
+References: <20200518012157.1178336-1-jhubbard@nvidia.com>
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589764778; bh=xH5C6dG4bePEiW5mi0F4Wccp6bZO0ppe4EGiUHwyKL4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=CX1C6gQ3Uc4S7SSx/ZsxTBahVSnoaDpWC3l01HcZefatkGC66AlShWq5rJKl8AifA
+         vmW5VlhQ+4xVmr4wRskks+yW0d/6wd8ctYDfKqIVJNwkmEjThrCDShyUhqjvK1PyYF
+         1OdpyULk2UJckuFPpW3kXEuVt2CidPkPfH6LzRJhNUI0scO09uClU/UcEUjwHD9J0T
+         fQcr50jUUVPfi8XG6JThpmWKhEUKScyCEW4gI0754E5+rtHXPqHsekQkFnEkZzAIB5
+         FQsBTB9Dmtwpjx0KZeyPtowlZVDTtViOoniPMR//5lVfjA1TLHuHZnMnIKvreTJXLp
+         YZgjH86pydYVg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+This code was using get_user_pages*(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages*() + put_page() calls to
+pin_user_pages*() + unpin_user_pages() calls.
 
-There is a user who do not want to use CMA memory for migration. Until
-now, it is implemented by caller side but it's not optimal since there
-is limited information on caller. This patch implements it on callee side
-to get better result.
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+[1] Documentation/core-api/pin_user_pages.rst
+
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
+
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- include/linux/hugetlb.h |  2 --
- mm/gup.c                |  9 +++------
- mm/hugetlb.c            | 21 +++++++++++++++++----
- mm/internal.h           |  1 +
- 4 files changed, 21 insertions(+), 12 deletions(-)
+ drivers/media/pci/ivtv/ivtv-udma.c | 19 ++++++-------------
+ drivers/media/pci/ivtv/ivtv-yuv.c  | 17 ++++++-----------
+ drivers/media/pci/ivtv/ivtvfb.c    |  4 ++--
+ 3 files changed, 14 insertions(+), 26 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 4892ed3..6485e92 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -503,8 +503,6 @@ struct huge_bootmem_page {
- 	struct hstate *hstate;
- };
- 
--struct page *alloc_migrate_huge_page(struct hstate *h,
--				struct alloc_control *ac);
- struct page *alloc_huge_page_nodemask(struct hstate *h,
- 				struct alloc_control *ac);
- struct page *alloc_huge_page_vma(struct hstate *h, struct vm_area_struct *vma,
-diff --git a/mm/gup.c b/mm/gup.c
-index 9890fb0..1c86db5 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1618,14 +1618,11 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
- 		struct alloc_control ac = {
- 			.nid = nid,
- 			.nmask = NULL,
--			.gfp_mask = gfp_mask,
-+			.gfp_mask = __GFP_NOWARN,
-+			.skip_cma = true,
- 		};
- 
--		/*
--		 * We don't want to dequeue from the pool because pool pages will
--		 * mostly be from the CMA region.
--		 */
--		return alloc_migrate_huge_page(h, &ac);
-+		return alloc_huge_page_nodemask(h, &ac);
- 	}
- 
- 	if (PageTransHuge(page)) {
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 60b0983..53edd02 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1034,13 +1034,19 @@ static void enqueue_huge_page(struct hstate *h, struct page *page)
- 	h->free_huge_pages_node[nid]++;
- }
- 
--static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
-+static struct page *dequeue_huge_page_node_exact(struct hstate *h,
-+						int nid, bool skip_cma)
+diff --git a/drivers/media/pci/ivtv/ivtv-udma.c b/drivers/media/pci/ivtv/iv=
+tv-udma.c
+index 5f8883031c9c..0d8372cc364a 100644
+--- a/drivers/media/pci/ivtv/ivtv-udma.c
++++ b/drivers/media/pci/ivtv/ivtv-udma.c
+@@ -92,7 +92,7 @@ int ivtv_udma_setup(struct ivtv *itv, unsigned long ivtv_=
+dest_addr,
  {
- 	struct page *page;
- 
--	list_for_each_entry(page, &h->hugepage_freelists[nid], lru)
-+	list_for_each_entry(page, &h->hugepage_freelists[nid], lru) {
-+		if (skip_cma && is_migrate_cma_page(page))
-+			continue;
-+
- 		if (!PageHWPoison(page))
- 			break;
-+	}
-+
- 	/*
- 	 * if 'non-isolated free hugepage' not found on the list,
- 	 * the allocation fails.
-@@ -1081,7 +1087,7 @@ static struct page *dequeue_huge_page_nodemask(struct hstate *h,
- 			continue;
- 		node = zone_to_nid(zone);
- 
--		page = dequeue_huge_page_node_exact(h, node);
-+		page = dequeue_huge_page_node_exact(h, node, ac->skip_cma);
- 		if (page)
- 			return page;
+ 	struct ivtv_dma_page_info user_dma;
+ 	struct ivtv_user_dma *dma =3D &itv->udma;
+-	int i, err;
++	int err;
+=20
+ 	IVTV_DEBUG_DMA("ivtv_udma_setup, dst: 0x%08x\n", (unsigned int)ivtv_dest_=
+addr);
+=20
+@@ -111,16 +111,15 @@ int ivtv_udma_setup(struct ivtv *itv, unsigned long i=
+vtv_dest_addr,
+ 		return -EINVAL;
  	}
-@@ -1938,7 +1944,7 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
- 	return page;
- }
- 
--struct page *alloc_migrate_huge_page(struct hstate *h,
-+static struct page *alloc_migrate_huge_page(struct hstate *h,
- 				struct alloc_control *ac)
+=20
+-	/* Get user pages for DMA Xfer */
+-	err =3D get_user_pages_unlocked(user_dma.uaddr, user_dma.page_count,
++	/* Pin user pages for DMA Xfer */
++	err =3D pin_user_pages_unlocked(user_dma.uaddr, user_dma.page_count,
+ 			dma->map, FOLL_FORCE);
+=20
+ 	if (user_dma.page_count !=3D err) {
+ 		IVTV_DEBUG_WARN("failed to map user pages, returned %d instead of %d\n",
+ 			   err, user_dma.page_count);
+ 		if (err >=3D 0) {
+-			for (i =3D 0; i < err; i++)
+-				put_page(dma->map[i]);
++			unpin_user_pages(dma->map, err);
+ 			return -EINVAL;
+ 		}
+ 		return err;
+@@ -130,9 +129,7 @@ int ivtv_udma_setup(struct ivtv *itv, unsigned long ivt=
+v_dest_addr,
+=20
+ 	/* Fill SG List with new values */
+ 	if (ivtv_udma_fill_sg_list(dma, &user_dma, 0) < 0) {
+-		for (i =3D 0; i < dma->page_count; i++) {
+-			put_page(dma->map[i]);
+-		}
++		unpin_user_pages(dma->map, dma->page_count);
+ 		dma->page_count =3D 0;
+ 		return -ENOMEM;
+ 	}
+@@ -153,7 +150,6 @@ int ivtv_udma_setup(struct ivtv *itv, unsigned long ivt=
+v_dest_addr,
+ void ivtv_udma_unmap(struct ivtv *itv)
  {
- 	struct page *page;
-@@ -2000,6 +2006,13 @@ struct page *alloc_huge_page_nodemask(struct hstate *h,
- 	}
- 	spin_unlock(&hugetlb_lock);
- 
-+	/*
-+	 * clearing __GFP_MOVABLE flag ensure that allocated page
-+	 * will not come from CMA area
-+	 */
-+	if (ac->skip_cma)
-+		ac->gfp_mask &= ~__GFP_MOVABLE;
-+
- 	return alloc_migrate_huge_page(h, ac);
+ 	struct ivtv_user_dma *dma =3D &itv->udma;
+-	int i;
+=20
+ 	IVTV_DEBUG_INFO("ivtv_unmap_user_dma\n");
+=20
+@@ -169,10 +165,7 @@ void ivtv_udma_unmap(struct ivtv *itv)
+ 	/* sync DMA */
+ 	ivtv_udma_sync_for_cpu(itv);
+=20
+-	/* Release User Pages */
+-	for (i =3D 0; i < dma->page_count; i++) {
+-		put_page(dma->map[i]);
+-	}
++	unpin_user_pages(dma->map, dma->page_count);
+ 	dma->page_count =3D 0;
  }
- 
-diff --git a/mm/internal.h b/mm/internal.h
-index 574722d0..6b6507e 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -619,6 +619,7 @@ struct alloc_control {
- 	nodemask_t *nmask;
- 	gfp_t gfp_mask;
- 	bool thisnode;
-+	bool skip_cma;
- };
- 
- #endif	/* __MM_INTERNAL_H */
--- 
-2.7.4
+=20
+diff --git a/drivers/media/pci/ivtv/ivtv-yuv.c b/drivers/media/pci/ivtv/ivt=
+v-yuv.c
+index cd2fe2d444c0..5f7dc9771f8d 100644
+--- a/drivers/media/pci/ivtv/ivtv-yuv.c
++++ b/drivers/media/pci/ivtv/ivtv-yuv.c
+@@ -30,7 +30,6 @@ static int ivtv_yuv_prep_user_dma(struct ivtv *itv, struc=
+t ivtv_user_dma *dma,
+ 	struct yuv_playback_info *yi =3D &itv->yuv_info;
+ 	u8 frame =3D yi->draw_frame;
+ 	struct yuv_frame_info *f =3D &yi->new_frame_info[frame];
+-	int i;
+ 	int y_pages, uv_pages;
+ 	unsigned long y_buffer_offset, uv_buffer_offset;
+ 	int y_decode_height, uv_decode_height, y_size;
+@@ -62,12 +61,12 @@ static int ivtv_yuv_prep_user_dma(struct ivtv *itv, str=
+uct ivtv_user_dma *dma,
+ 	ivtv_udma_get_page_info (&y_dma, (unsigned long)args->y_source, 720 * y_d=
+ecode_height);
+ 	ivtv_udma_get_page_info (&uv_dma, (unsigned long)args->uv_source, 360 * u=
+v_decode_height);
+=20
+-	/* Get user pages for DMA Xfer */
+-	y_pages =3D get_user_pages_unlocked(y_dma.uaddr,
++	/* Pin user pages for DMA Xfer */
++	y_pages =3D pin_user_pages_unlocked(y_dma.uaddr,
+ 			y_dma.page_count, &dma->map[0], FOLL_FORCE);
+ 	uv_pages =3D 0; /* silence gcc. value is set and consumed only if: */
+ 	if (y_pages =3D=3D y_dma.page_count) {
+-		uv_pages =3D get_user_pages_unlocked(uv_dma.uaddr,
++		uv_pages =3D pin_user_pages_unlocked(uv_dma.uaddr,
+ 				uv_dma.page_count, &dma->map[y_pages],
+ 				FOLL_FORCE);
+ 	}
+@@ -81,8 +80,7 @@ static int ivtv_yuv_prep_user_dma(struct ivtv *itv, struc=
+t ivtv_user_dma *dma,
+ 				 uv_pages, uv_dma.page_count);
+=20
+ 			if (uv_pages >=3D 0) {
+-				for (i =3D 0; i < uv_pages; i++)
+-					put_page(dma->map[y_pages + i]);
++				unpin_user_pages(&dma->map[y_pages], uv_pages);
+ 				rc =3D -EFAULT;
+ 			} else {
+ 				rc =3D uv_pages;
+@@ -93,8 +91,7 @@ static int ivtv_yuv_prep_user_dma(struct ivtv *itv, struc=
+t ivtv_user_dma *dma,
+ 				 y_pages, y_dma.page_count);
+ 		}
+ 		if (y_pages >=3D 0) {
+-			for (i =3D 0; i < y_pages; i++)
+-				put_page(dma->map[i]);
++			unpin_user_pages(dma->map, y_pages);
+ 			/*
+ 			 * Inherit the -EFAULT from rc's
+ 			 * initialization, but allow it to be
+@@ -112,9 +109,7 @@ static int ivtv_yuv_prep_user_dma(struct ivtv *itv, str=
+uct ivtv_user_dma *dma,
+ 	/* Fill & map SG List */
+ 	if (ivtv_udma_fill_sg_list (dma, &uv_dma, ivtv_udma_fill_sg_list (dma, &y=
+_dma, 0)) < 0) {
+ 		IVTV_DEBUG_WARN("could not allocate bounce buffers for highmem userspace=
+ buffers\n");
+-		for (i =3D 0; i < dma->page_count; i++) {
+-			put_page(dma->map[i]);
+-		}
++		unpin_user_pages(dma->map, dma->page_count);
+ 		dma->page_count =3D 0;
+ 		return -ENOMEM;
+ 	}
+diff --git a/drivers/media/pci/ivtv/ivtvfb.c b/drivers/media/pci/ivtv/ivtvf=
+b.c
+index 0c2859844081..e2d56dca5be4 100644
+--- a/drivers/media/pci/ivtv/ivtvfb.c
++++ b/drivers/media/pci/ivtv/ivtvfb.c
+@@ -281,10 +281,10 @@ static int ivtvfb_prep_dec_dma_to_device(struct ivtv =
+*itv,
+ 	/* Map User DMA */
+ 	if (ivtv_udma_setup(itv, ivtv_dest_addr, userbuf, size_in_bytes) <=3D 0) =
+{
+ 		mutex_unlock(&itv->udma.lock);
+-		IVTVFB_WARN("ivtvfb_prep_dec_dma_to_device, Error with get_user_pages: %=
+d bytes, %d pages returned\n",
++		IVTVFB_WARN("ivtvfb_prep_dec_dma_to_device, Error with pin_user_pages: %=
+d bytes, %d pages returned\n",
+ 			       size_in_bytes, itv->udma.page_count);
+=20
+-		/* get_user_pages must have failed completely */
++		/* pin_user_pages must have failed completely */
+ 		return -EIO;
+ 	}
+=20
+--=20
+2.26.2
 
