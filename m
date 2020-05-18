@@ -2,88 +2,156 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F778C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE8320787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBEE207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:55:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lSJ7AfkV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgERFyg (ORCPT
+        id S1726803AbgERFzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 01:54:36 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30951 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgERFyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 01:54:36 -0400
-IronPort-SDR: dtH13p3NVYAhuj2dYUIND2xANb5a0hb8SIl+nCt3NAZKcr4B/+6XDu9OhXSOeuQoxdPKEkU8lP
- EqpPHAL66VlQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 22:54:35 -0700
-IronPort-SDR: ejyi4xJ0RNdgmh84jww5CqsEMq5fUCfoxTz3lNpMxC1Z+wSMv8Lxxx0+cNAnfwotYb8g5GBUNn
- lH9LD2vjHavA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
-   d="scan'208";a="263843818"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga003.jf.intel.com with ESMTP; 17 May 2020 22:54:32 -0700
-Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
-To:     paulmck@kernel.org, Qian Cai <cai@lca.pw>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>, philip.li@intel.com,
-        lkp@intel.com, fengguang.wu@intel.com
-References: <20200514181305.GT2869@paulmck-ThinkPad-P72>
- <CA610F47-290E-4826-B1D9-7CE09D7CEA6D@lca.pw>
- <20200517214716.GT2869@paulmck-ThinkPad-P72>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <659206f4-d326-4fd6-3091-085c7eabf280@intel.com>
-Date:   Mon, 18 May 2020 13:54:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 18 May 2020 01:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgERFzF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 01:55:05 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4478BC05BD0D
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 22:55:05 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id u35so4313519pgk.6
+        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 22:55:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XV8qUKmPjPOnYpALDdM3pvEx9LC9/D7hmFTEiazZWxM=;
+        b=lSJ7AfkVTX/INK1Va1FrJ2kRFSu0fwD/uapRFZ9DRii0sw6g+NoXZWHhKtBbWpBcE5
+         0cLn8ZEEnWXC5gy/csZhcuB1SVSxhXahc11dUroiH8AJmGVzNsYsk2QjmIm4N/cI1gfm
+         StZfWJtCQfcN+Z1gF/FJEU19a8a30PEC1YQEA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XV8qUKmPjPOnYpALDdM3pvEx9LC9/D7hmFTEiazZWxM=;
+        b=AZUIKZoyQdIqLrrrnJrX2207jMu6hpRlVKFwsFY6f65plkJh7V9dK45Zj37rNfB7b8
+         nqu4oawoH9W60K9H8D3tmcMIo1dA/dKORTkoOAw/+ZVaN8G53ufGeiz7RPptCXZ3LCkP
+         JzFsPhJor6LDhrjOUVUkhU/6Ao8DMm3Sk2l1CbX+H6wcmgJx77A0+f+ITDAIGgUPcQNo
+         dz3Tt1huLh+mGJ9ZjnkJ0kIHWuzRfKky+SFkV45Hfc6dck0ubo7X23h70v3NOMpC4RC/
+         31YwcVxv0uxj90k/hAfsWcmhjBb75WtesVQ320ZfbtxvYyPTl4LkvJmtA43g7yd6S7tX
+         DaVQ==
+X-Gm-Message-State: AOAM531fDQIlh0S6TtiSoSCPSYaoCJUmPO+Wf9ty53UZtioRGXhMSXRA
+        llC5x4hjxNwLSZJX0lPzvO1/Pw==
+X-Google-Smtp-Source: ABdhPJylh2Csr4xNvbU/rUwWgmLGkcLWZZ4FMBQXDpqTwiArqXNcE09IOv1f3hXX5PJlXakQZnXDlg==
+X-Received: by 2002:a62:29c3:: with SMTP id p186mr15271317pfp.237.1589781304828;
+        Sun, 17 May 2020 22:55:04 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x66sm7653474pfb.173.2020.05.17.22.55.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 22:55:03 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] fs: Include FMODE_EXEC when converting flags to f_mode
+Date:   Sun, 17 May 2020 22:54:57 -0700
+Message-Id: <20200518055457.12302-5-keescook@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200518055457.12302-1-keescook@chromium.org>
+References: <20200518055457.12302-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200517214716.GT2869@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Include FMODE_EXEC when building the f_mode field, so that code can
+actually test the correct field and values. Only three places actually
+examine f_flags for FMODE_EXEC:
 
+fs/open.c:      if (unlikely((f->f_mode & FMODE_EXEC) && !S_ISREG(inode->i_mode))) {
+include/linux/fsnotify.h:               if (file->f_mode & FMODE_EXEC) {
+include/linux/fsnotify.h:       if (file->f_mode & FMODE_EXEC)
 
-On 5/18/20 5:47 AM, Paul E. McKenney wrote:
-> On Fri, May 15, 2020 at 02:36:26PM -0400, Qian Cai wrote:
->>
->>> On May 14, 2020, at 2:13 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
->>>
->>> Fair enough!  And yes, the Linux kernel is quite large, so I certainly am
->>> not asking you to test the whole thing yourself.
->> Ok, I saw 0day bot also started to report those which is good. For example,
->>
->> lkml.org/lkml/2020/5/12/1358
->>
->> which so far is nit blocking 0day on linux-next since it does not use panic_on_warn yet (while syzbot does).
->>
->> Thus, I am more convinced that we should not revert the commit just for syzbot until someone could also convince 0day to select RCU_EXPERT and then DEBUG_RCU_LIST?
-> Let's ask the 0day people, now CCed, if they would be willing to
-> build with CONFIG_RCU_EXPERT=y and CONFIG_DEBUG_RCU_LIST=y on some
-> fraction of their testing.  ;-)
->
-> 							Thanx, Paul
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+I assume there must be some reason for FMODE_EXEC not being pulled into
+f_mode, but I couldn't find it. I guess this is my attempt to either fix
+an oversight or to learn by flames. :)
+---
+ fs/namei.c               | 4 ++--
+ include/linux/fs.h       | 3 ++-
+ include/linux/fsnotify.h | 4 ++--
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-Hi,
+diff --git a/fs/namei.c b/fs/namei.c
+index 6bb1b6624bad..362b1cc75f5c 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3213,8 +3213,8 @@ static int do_open(struct nameidata *nd,
+ 		return -ENOTDIR;
+ 
+ 	/* Opening for execution requires a regular file on an exec mnt. */
+-	if ((file->f_flags & FMODE_EXEC) && (!d_is_reg(nd->path.dentry) ||
+-					     path_noexec(&nd->path)))
++	if ((file->f_mode & FMODE_EXEC) && (!d_is_reg(nd->path.dentry) ||
++					    path_noexec(&nd->path)))
+ 		return -EACCES;
+ 
+ 	do_truncate = false;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 4f6f59b4f22a..8a2cabdcf531 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3545,10 +3545,11 @@ int __init get_filesystem_list(char *buf);
+ 
+ #define __FMODE_EXEC		((__force int) FMODE_EXEC)
+ #define __FMODE_NONOTIFY	((__force int) FMODE_NONOTIFY)
++#define __SMUGGLED_FMODE_FLAGS	(__FMODE_EXEC | __FMODE_NONOTIFY)
+ 
+ #define ACC_MODE(x) ("\004\002\006\006"[(x)&O_ACCMODE])
+ #define OPEN_FMODE(flag) ((__force fmode_t)(((flag + 1) & O_ACCMODE) | \
+-					    (flag & __FMODE_NONOTIFY)))
++					    (flag & __SMUGGLED_FMODE_FLAGS)))
+ 
+ static inline bool is_sxid(umode_t mode)
+ {
+diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
+index 5ab28f6c7d26..86761ed4b434 100644
+--- a/include/linux/fsnotify.h
++++ b/include/linux/fsnotify.h
+@@ -90,7 +90,7 @@ static inline int fsnotify_perm(struct file *file, int mask)
+ 	if (mask & MAY_OPEN) {
+ 		fsnotify_mask = FS_OPEN_PERM;
+ 
+-		if (file->f_flags & __FMODE_EXEC) {
++		if (file->f_mode & FMODE_EXEC) {
+ 			ret = fsnotify_file(file, FS_OPEN_EXEC_PERM);
+ 
+ 			if (ret)
+@@ -264,7 +264,7 @@ static inline void fsnotify_open(struct file *file)
+ {
+ 	__u32 mask = FS_OPEN;
+ 
+-	if (file->f_flags & __FMODE_EXEC)
++	if (file->f_mode & FMODE_EXEC)
+ 		mask |= FS_OPEN_EXEC;
+ 
+ 	fsnotify_file(file, mask);
+-- 
+2.20.1
 
-Thanks for your advice, we'll support it in the near future.
-
-Best Regards,
-Rong Chen
