@@ -2,77 +2,90 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C457C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 342DD207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25DA207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 13:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lwFJT7u6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgERNDB (ORCPT
+        id S1727912AbgERNDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 09:03:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60458 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgERNDB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 09:03:01 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jafPw-0006cd-7l; Mon, 18 May 2020 13:02:52 +0000
-Date:   Mon, 18 May 2020 15:02:51 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
-Message-ID: <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
-References: <20200518055457.12302-1-keescook@chromium.org>
- <20200518055457.12302-2-keescook@chromium.org>
+        Mon, 18 May 2020 09:03:16 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46965 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgERNDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 09:03:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QfMN6SDLz9sTC;
+        Mon, 18 May 2020 23:03:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589806993;
+        bh=2gvcFe7xk5po5g3UlIGKxvdmbLoE3llOYTT0e6mqOJU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lwFJT7u6BBGGPiufr4Ch9sqxg5yhP9wwR5EvlXf3HMSqrpt98otFcPxkc+5M1vH+d
+         JXEExOqBCA0a5Oc8We+l+DfZVQM3fYELa4Ij4NJpJlcMMrANoE7dLJcDBWkhg0SMgE
+         JJoWkCdDeQLFEf4S/Dh+iIlrdIUqd26PFcTPgGiM6Q8qG/aNb6PyzRbCa8RYqBB+w0
+         bxkTFGGf+i6rkGgY1PFGxLQqmvE1uuHji/0DiqDPuSLUrRe5Kr2XddJ3T61Xs5tqIu
+         oRSC2lPyW99VKaBdJVldE5ZWNvsDJIVov1LUCX1JZcYeeAFFI1GhcGZSAKkHS0PsXh
+         /Atij/bRpXh0g==
+Date:   Mon, 18 May 2020 23:03:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felix Fietkau <nbd@nbd.name>
+Subject: linux-next: Signed-off-by missing for commit in the
+ wireless-drivers-next tree
+Message-ID: <20200518230311.08df60cc@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200518055457.12302-2-keescook@chromium.org>
+Content-Type: multipart/signed; boundary="Sig_/J5hCWJ/AaAwOFDmtwxZtZ3j";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 10:54:54PM -0700, Kees Cook wrote:
-> Change uselib(2)' S_ISREG() error return to EACCES instead of EINVAL so
-> the behavior matches execve(2), and the seemingly documented value.
-> The "not a regular file" failure mode of execve(2) is explicitly
-> documented[1], but it is not mentioned in uselib(2)[2] which does,
-> however, say that open(2) and mmap(2) errors may apply. The documentation
-> for open(2) does not include a "not a regular file" error[3], but mmap(2)
-> does[4], and it is EACCES.
-> 
-> [1] http://man7.org/linux/man-pages/man2/execve.2.html#ERRORS
-> [2] http://man7.org/linux/man-pages/man2/uselib.2.html#ERRORS
-> [3] http://man7.org/linux/man-pages/man2/open.2.html#ERRORS
-> [4] http://man7.org/linux/man-pages/man2/mmap.2.html#ERRORS
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+--Sig_/J5hCWJ/AaAwOFDmtwxZtZ3j
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This is all extremely weird.
-uselib has been deprected since forever basically which makes me doubt
-this matters much but:
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Hi all,
 
-Also - gulp (puts on flame proof suit) - may I suggest we check if there
-are any distros out there that still set CONFIG_USELIB=y and if not do
-what we did with the sysctl syscall and remove it? If someone yells we
-can always backpaddle...
+Commits
 
-Christian
+  89829c9e65ab ("mt76: mt7663: fix DMA unmap length")
+  c0f8055b3986 ("mt76: mt7622: fix DMA unmap length")
+
+are missing a Signed-off-by from their committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/J5hCWJ/AaAwOFDmtwxZtZ3j
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Ch48ACgkQAVBC80lX
+0GxZpgf/drRAczBmtdwR2uQoY8jXEzxNb86cc6Xlv5/bkfWvmKoecA1MeP4h+WRG
+dRKrNgOHIZXqZYzlgRPzUOfepwanJHFeMjchyu7e5qa3tA25J31Fqhys/g7Of/Iq
+EDTD6z9fUadfJfpaHCAKEKyNKZ+C2NAUTuofGfJMJVBE77AAKOPCsfJW6+KxdwdK
+pwZ0z1Eod30BRrqoZdg06thioLk8z597FuAaOBCzG6egIhvnh+PS3SiUWDMaG4bf
+i66eVqorK6piiHOCXW+YErv7Nnqi5ASAQ/pcIkjyr0T5d7q8cxR8ASXvT9t/NISm
+80X+yBlvGQzUmq/emPYQuBI99yy0qA==
+=WpY0
+-----END PGP SIGNATURE-----
+
+--Sig_/J5hCWJ/AaAwOFDmtwxZtZ3j--
