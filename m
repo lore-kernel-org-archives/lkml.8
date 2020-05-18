@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F58C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF53520671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2B820671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824014;
-	bh=elBqDTYUwnIKKlx+yy0o5O7JNMP5I8Jusy8PmsFLkcI=;
+	s=default; t=1589824017;
+	bh=fhNrhicOFpTPi5d4hyZ4np9bnClrHaWnKQSRWxqvbFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TwfOiWwNJ7fhhei9gmgC6vpNMGfT5s9tpm/3KpWZrmdw15PniPpkJPFPzJYE5/X4k
-	 kG0vD3bHLwoRuYopp3xTLYpDpbmYSOQORM8VLdo71A06hWuUiiw2afOLlJQHClLCm9
-	 TZxN6ZCOZdE5/0xTNkE6BZaGb5unUjV4hVRwvke0=
+	b=FQyutJbskVnv+FQJqFv781+P44NIxb1Laa+FMgLQSWqBA63tjJTQg130NeInAddN4
+	 nv1JtWRcXuSAa3HGF/GVrkuhAiCWdTxJvYunnVLTAu5p6/c/OACNSCLaw3rqcur1Do
+	 pOddIDouVgIYvK2JtbiDb2nRCq+Nd3bZJTu4qu9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbgERRqx (ORCPT
+        id S1730158AbgERRq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46762 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730137AbgERRqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:46:49 -0400
+        id S1730138AbgERRqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C14D20674;
-        Mon, 18 May 2020 17:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0E9220835;
+        Mon, 18 May 2020 17:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824008;
-        bh=elBqDTYUwnIKKlx+yy0o5O7JNMP5I8Jusy8PmsFLkcI=;
+        s=default; t=1589824011;
+        bh=fhNrhicOFpTPi5d4hyZ4np9bnClrHaWnKQSRWxqvbFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2987zsXGc+POC3oRkA44dyZXk2oVLmfHgTLZdtu8uFlQJfCcEtu1qjmwpM8OBorw
-         m7EGrJAg6f9CiQu4x+MLY/V3RFyLRNS3f8AcUT9cGwz4fV7oxz+y1Vh4BN/XLUiCEy
-         HbhBFr0fqVHRRW2bUhnCmpnvOnOx6pQVOSaD4F2Q=
+        b=1GffhKS8V8P/qOwo5xBHYmYs+ZUSRXW6NIcsWsfdr+vg5LNSI+mileHYH8N1IqqTX
+         cgGlqRy444AQWmIpNLZKvt6/PGsmK8vdISHyQ9e8T8awRhNLpL4RdZY3o+x+VuSyta
+         rFHlxcLhnrxLpZ12xj/5hOD9OXrz3nYWjrYXbOOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 4.14 033/114] x86/unwind/orc: Fix error path for bad ORC entry type
-Date:   Mon, 18 May 2020 19:36:05 +0200
-Message-Id: <20200518173509.665006980@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.14 034/114] netfilter: nat: never update the UDP checksum when its 0
+Date:   Mon, 18 May 2020 19:36:06 +0200
+Message-Id: <20200518173509.806344582@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -65,41 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-commit a0f81bf26888048100bf017fadf438a5bdffa8d8 upstream.
+commit ea64d8d6c675c0bb712689b13810301de9d8f77a upstream.
 
-If the ORC entry type is unknown, nothing else can be done other than
-reporting an error.  Exit the function instead of breaking out of the
-switch statement.
+If the UDP header of a local VXLAN endpoint is NAT-ed, and the VXLAN
+device has disabled UDP checksums and enabled Tx checksum offloading,
+then the skb passed to udp_manip_pkt() has hdr->check == 0 (outer
+checksum disabled) and skb->ip_summed == CHECKSUM_PARTIAL (inner packet
+checksum offloaded).
 
-Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Jones <dsj@fb.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/a7fa668ca6eabbe81ab18b2424f15adbbfdc810a.1587808742.git.jpoimboe@redhat.com
+Because of the ->ip_summed value, udp_manip_pkt() tries to update the
+outer checksum with the new address and port, leading to an invalid
+checksum sent on the wire, as the original null checksum obviously
+didn't take the old address and port into account.
+
+So, we can't take ->ip_summed into account in udp_manip_pkt(), as it
+might not refer to the checksum we're acting on. Instead, we can base
+the decision to update the UDP checksum entirely on the value of
+hdr->check, because it's null if and only if checksum is disabled:
+
+  * A fully computed checksum can't be 0, since a 0 checksum is
+    represented by the CSUM_MANGLED_0 value instead.
+
+  * A partial checksum can't be 0, since the pseudo-header always adds
+    at least one non-zero value (the UDP protocol type 0x11) and adding
+    more values to the sum can't make it wrap to 0 as the carry is then
+    added to the wrapped number.
+
+  * A disabled checksum uses the special value 0.
+
+The problem seems to be there from day one, although it was probably
+not visible before UDP tunnels were implemented.
+
+Fixes: 5b1158e909ec ("[NETFILTER]: Add NAT support for nf_conntrack")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/unwind_orc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_nat_proto_udp.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -457,7 +457,7 @@ bool unwind_next_frame(struct unwind_sta
- 	default:
- 		orc_warn("unknown .orc_unwind entry type %d for ip %pB\n",
- 			 orc->type, (void *)orig_ip);
--		break;
-+		goto done;
- 	}
+--- a/net/netfilter/nf_nat_proto_udp.c
++++ b/net/netfilter/nf_nat_proto_udp.c
+@@ -66,15 +66,14 @@ static bool udp_manip_pkt(struct sk_buff
+ 			  enum nf_nat_manip_type maniptype)
+ {
+ 	struct udphdr *hdr;
+-	bool do_csum;
  
- 	/* Find BP: */
+ 	if (!skb_make_writable(skb, hdroff + sizeof(*hdr)))
+ 		return false;
+ 
+ 	hdr = (struct udphdr *)(skb->data + hdroff);
+-	do_csum = hdr->check || skb->ip_summed == CHECKSUM_PARTIAL;
++	__udp_manip_pkt(skb, l3proto, iphdroff, hdr, tuple, maniptype,
++			!!hdr->check);
+ 
+-	__udp_manip_pkt(skb, l3proto, iphdroff, hdr, tuple, maniptype, do_csum);
+ 	return true;
+ }
+ 
 
 
