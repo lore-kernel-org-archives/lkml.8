@@ -2,54 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8687620872
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394B520899
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824920;
-	bh=n1mz1mu8yVWyo3xoJFTGzVFj2+WDzOfgdPH4m6e8cBY=;
+	s=default; t=1589824923;
+	bh=VwcmmItEjqVTBSgKSIWyVmPAdQWcY785X7BPHFtUoPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYu8csvUErC0l/eQYF34ab+Nn7uOCowRdmVdQzq7QevnYr/8vRnecVk3K/pLAj3jF
-	 87JR/0tRguedT6W2DCR5ur/7TH7dS4VL0vvfsJQEtZvQANVIUpDMy7qZ7iRumANo8H
-	 X4v5KgsJVNm2kpD0uai8bbYiu/ew/R/K75Vryeak=
+	b=yguIUBjTZltgGJ1eKBR+xnC5dmfFjp/dxvFUXU9gtFz3qW+a8EMa7foSEMAzACix/
+	 +Dz5luFnkJ8QNT+aBEcI2kwCOSTWQXNYReWG/qD05rAjNAvQeawcy/zcKUkgg2VPY/
+	 +UflMdNrgRg0FW2vARPI44wwP/ERiTx8IGqltjbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732452AbgERSB7 (ORCPT
+        id S1732461AbgERSCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:01:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbgERSB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:01:57 -0400
+        id S1732447AbgERSB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:01:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15853207D3;
-        Mon, 18 May 2020 18:01:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 880DE20899;
+        Mon, 18 May 2020 18:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824916;
-        bh=n1mz1mu8yVWyo3xoJFTGzVFj2+WDzOfgdPH4m6e8cBY=;
+        s=default; t=1589824919;
+        bh=VwcmmItEjqVTBSgKSIWyVmPAdQWcY785X7BPHFtUoPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VcxpvjxgWmCNQuZN51UowBrmPeO83K3ELKViWD13KuOCbcMFwVD0Cai4UsNAw6Ygw
-         gRj/bkMCy2qliXDEUb8vPhejlatWsHVfMC/qanPnZ9lT40kFOIc6HWdLoLBcyeC5pR
-         mtY6rdeUxFim34/6ucEZjKjZtlmURbiHMzvxpIZQ=
+        b=uF42elj52YYAgYKZhrFIFRMvCDqvItewBZ9ItO0125iwF/BVC2FMe4ijnDr/X19Aa
+         hpj28zi/03uYbQdgLglgaEq6rXVdJioQL9XnWWTkvmmy4/+7cH24HWLSeERaxjyrkR
+         gxTeszlQ474+gEvOHh14vglpto1S+TXNiIISv8YQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaodong Yan <Xiaodong.Yan@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 056/194] drm/amd/display: blank dp stream before re-train the link
-Date:   Mon, 18 May 2020 19:35:46 +0200
-Message-Id: <20200518173536.399457226@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 039/194] tcp: fix SO_RCVLOWAT hangs with fat skbs
+Date:   Mon, 18 May 2020 19:35:29 +0200
+Message-Id: <20200518173534.998445474@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,59 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaodong Yan <Xiaodong.Yan@amd.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 718a5569b6fa6e1f49f1ae76a3c18acb4ddb74f1 ]
+[ Upstream commit 24adbc1676af4e134e709ddc7f34cf2adc2131e4 ]
 
-[Why]
-When link loss happened, monitor can not light up if only re-train the
-link.
+We autotune rcvbuf whenever SO_RCVLOWAT is set to account for 100%
+overhead in tcp_set_rcvlowat()
 
-[How]
-Blank all the DP streams on this link before re-train the link, and then
-unblank the stream
+This works well when skb->len/skb->truesize ratio is bigger than 0.5
 
-Signed-off-by: Xiaodong Yan <Xiaodong.Yan@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+But if we receive packets with small MSS, we can end up in a situation
+where not enough bytes are available in the receive queue to satisfy
+RCVLOWAT setting.
+As our sk_rcvbuf limit is hit, we send zero windows in ACK packets,
+preventing remote peer from sending more data.
+
+Even autotuning does not help, because it only triggers at the time
+user process drains the queue. If no EPOLLIN is generated, this
+can not happen.
+
+Note poll() has a similar issue, after commit
+c7004482e8dc ("tcp: Respect SO_RCVLOWAT in tcp_poll().")
+
+Fixes: 03f45c883c6f ("tcp: avoid extra wakeups for SO_RCVLOWAT users")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ include/net/tcp.h    |   13 +++++++++++++
+ net/ipv4/tcp.c       |   14 +++++++++++---
+ net/ipv4/tcp_input.c |    3 ++-
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index fd9e69634c50a..1b6c75a4dd60a 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2885,6 +2885,12 @@ bool dc_link_handle_hpd_rx_irq(struct dc_link *link, union hpd_irq_data *out_hpd
- 					sizeof(hpd_irq_dpcd_data),
- 					"Status: ");
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1421,6 +1421,19 @@ static inline int tcp_full_space(const s
+ 	return tcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf));
+ }
  
-+		for (i = 0; i < MAX_PIPES; i++) {
-+			pipe_ctx = &link->dc->current_state->res_ctx.pipe_ctx[i];
-+			if (pipe_ctx && pipe_ctx->stream && pipe_ctx->stream->link == link)
-+				link->dc->hwss.blank_stream(pipe_ctx);
-+		}
++/* We provision sk_rcvbuf around 200% of sk_rcvlowat.
++ * If 87.5 % (7/8) of the space has been consumed, we want to override
++ * SO_RCVLOWAT constraint, since we are receiving skbs with too small
++ * len/truesize ratio.
++ */
++static inline bool tcp_rmem_pressure(const struct sock *sk)
++{
++	int rcvbuf = READ_ONCE(sk->sk_rcvbuf);
++	int threshold = rcvbuf - (rcvbuf >> 3);
 +
- 		for (i = 0; i < MAX_PIPES; i++) {
- 			pipe_ctx = &link->dc->current_state->res_ctx.pipe_ctx[i];
- 			if (pipe_ctx && pipe_ctx->stream && pipe_ctx->stream->link == link)
-@@ -2904,6 +2910,12 @@ bool dc_link_handle_hpd_rx_irq(struct dc_link *link, union hpd_irq_data *out_hpd
- 		if (pipe_ctx->stream->signal == SIGNAL_TYPE_DISPLAY_PORT_MST)
- 			dc_link_reallocate_mst_payload(link);
++	return atomic_read(&sk->sk_rmem_alloc) > threshold;
++}
++
+ extern void tcp_openreq_init_rwin(struct request_sock *req,
+ 				  const struct sock *sk_listener,
+ 				  const struct dst_entry *dst);
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -476,9 +476,17 @@ static void tcp_tx_timestamp(struct sock
+ static inline bool tcp_stream_is_readable(const struct tcp_sock *tp,
+ 					  int target, struct sock *sk)
+ {
+-	return (READ_ONCE(tp->rcv_nxt) - READ_ONCE(tp->copied_seq) >= target) ||
+-		(sk->sk_prot->stream_memory_read ?
+-		sk->sk_prot->stream_memory_read(sk) : false);
++	int avail = READ_ONCE(tp->rcv_nxt) - READ_ONCE(tp->copied_seq);
++
++	if (avail > 0) {
++		if (avail >= target)
++			return true;
++		if (tcp_rmem_pressure(sk))
++			return true;
++	}
++	if (sk->sk_prot->stream_memory_read)
++		return sk->sk_prot->stream_memory_read(sk);
++	return false;
+ }
  
-+		for (i = 0; i < MAX_PIPES; i++) {
-+			pipe_ctx = &link->dc->current_state->res_ctx.pipe_ctx[i];
-+			if (pipe_ctx && pipe_ctx->stream && pipe_ctx->stream->link == link)
-+				link->dc->hwss.unblank_stream(pipe_ctx, &previous_link_settings);
-+		}
-+
- 		status = false;
- 		if (out_link_loss)
- 			*out_link_loss = true;
--- 
-2.20.1
-
+ /*
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -4761,7 +4761,8 @@ void tcp_data_ready(struct sock *sk)
+ 	const struct tcp_sock *tp = tcp_sk(sk);
+ 	int avail = tp->rcv_nxt - tp->copied_seq;
+ 
+-	if (avail < sk->sk_rcvlowat && !sock_flag(sk, SOCK_DONE))
++	if (avail < sk->sk_rcvlowat && !tcp_rmem_pressure(sk) &&
++	    !sock_flag(sk, SOCK_DONE))
+ 		return;
+ 
+ 	sk->sk_data_ready(sk);
 
 
