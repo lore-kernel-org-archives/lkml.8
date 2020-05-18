@@ -4,55 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDADFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C060C20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB49220657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826308;
-	bh=Dxtp7wZr+KCgB4BFiDjfvZsiwpeRcjrdT8Aibw8qr8g=;
+	s=default; t=1589826311;
+	bh=1WbaTJpCskWe+VDdU5uH9XMNgsIAJxBGSgPlR8VHLZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yxPc1a6GV6iu+kZv8rPJxGvh+laLx7mgEnzzREyUsqHv50hUC+JQnWzTEzfLK3B/z
-	 uWwCzgdmH0e48/8+wZUOC4WosgGwxAqyjf7grYL+dbP+8R4OSPzCbgLJ6zAfXkarrI
-	 GkpcsfrUHcwaKFBzl50urYB1Azx4G3F3d8KC4M5E=
+	b=L3omwigtMNh8mmkpqhSfitFA9poOSVriCD3dbPelBSgTTv17L7muIIbLdJhRnp+uu
+	 2eN94iJh9wbJndlpVlvcSfiqgIJhw6XnYICqzoxuHkx1HSSTE8pehc3WGC0aC2/w3q
+	 2hiZbXTmk8rm5NcxHzLgEnzQKwgB3auDoftgvdlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387918AbgERSZI (ORCPT
+        id S1730162AbgERRrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:25:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47484 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:47:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730209AbgERRrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:47:16 -0400
+        id S1730149AbgERRqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F1D820657;
-        Mon, 18 May 2020 17:47:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F229420715;
+        Mon, 18 May 2020 17:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824035;
-        bh=Dxtp7wZr+KCgB4BFiDjfvZsiwpeRcjrdT8Aibw8qr8g=;
+        s=default; t=1589824013;
+        bh=1WbaTJpCskWe+VDdU5uH9XMNgsIAJxBGSgPlR8VHLZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xg5JNgUWrh3g/aY0xzNefQXq01Ca/JSjo6C3mU3+VBUIuek7vWvTR1Jg0dVVhALJ7
-         jloYq4AKrj+FV9JVAJF71sFsHHBbG1rYmOr0Ft4CBFOANRmhrEHHgNNfXMDg3znVlm
-         jd2nwpfpvJjO/kxLM31/wOi5udHBjTq7INheIB+4=
+        b=a0X4g+w3rGgxnzscO089ZzYmlF0Pd6eicOFJTPF11/Brv8AM4xZWWdiHEjCRxdHrW
+         lvJHmqPBa3er0ke7Lfl+ba4XYDxrLDVF37KhuIl3fT/q/saLMWRq5E7loPxn8b9cLu
+         QoQ8WJvgSB+RRL7SDBI3wurMZYGmGmxEwOkf/07s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Jolly <Kangie@footclan.ninja>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 001/114] USB: serial: qcserial: Add DW5816e support
-Date:   Mon, 18 May 2020 19:35:33 +0200
-Message-Id: <20200518173503.301392253@linuxfoundation.org>
+        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
+        Dave Jones <dsj@fb.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Joe Mario <jmario@redhat.com>, Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 035/114] objtool: Fix stack offset tracking for indirect CFAs
+Date:   Mon, 18 May 2020 19:36:07 +0200
+Message-Id: <20200518173509.967486986@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,30 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Jolly <Kangie@footclan.ninja>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 78d6de3cfbd342918d31cf68d0d2eda401338aef upstream.
+commit d8dd25a461e4eec7190cb9d66616aceacc5110ad upstream.
 
-Add support for Dell Wireless 5816e to drivers/usb/serial/qcserial.c
+When the current frame address (CFA) is stored on the stack (i.e.,
+cfa->base == CFI_SP_INDIRECT), objtool neglects to adjust the stack
+offset when there are subsequent pushes or pops.  This results in bad
+ORC data at the end of the ENTER_IRQ_STACK macro, when it puts the
+previous stack pointer on the stack and does a subsequent push.
 
-Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+This fixes the following unwinder warning:
+
+  WARNING: can't dereference registers at 00000000f0a6bdba for ip interrupt_entry+0x9f/0xa0
+
+Fixes: 627fce14809b ("objtool: Add ORC unwind table generation")
+Reported-by: Vince Weaver <vincent.weaver@maine.edu>
+Reported-by: Dave Jones <dsj@fb.com>
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
+Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
+Reported-by: Joe Mario <jmario@redhat.com>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/853d5d691b29e250333332f09b8e27410b2d9924.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/qcserial.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/objtool/check.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/qcserial.c
-+++ b/drivers/usb/serial/qcserial.c
-@@ -177,6 +177,7 @@ static const struct usb_device_id id_tab
- 	{DEVICE_SWI(0x413c, 0x81b3)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
- 	{DEVICE_SWI(0x413c, 0x81b5)},	/* Dell Wireless 5811e QDL */
- 	{DEVICE_SWI(0x413c, 0x81b6)},	/* Dell Wireless 5811e QDL */
-+	{DEVICE_SWI(0x413c, 0x81cc)},	/* Dell Wireless 5816e */
- 	{DEVICE_SWI(0x413c, 0x81cf)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d0)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d1)},   /* Dell Wireless 5818 */
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1291,7 +1291,7 @@ static int update_insn_state_regs(struct
+ 	struct cfi_reg *cfa = &state->cfa;
+ 	struct stack_op *op = &insn->stack_op;
+ 
+-	if (cfa->base != CFI_SP)
++	if (cfa->base != CFI_SP && cfa->base != CFI_SP_INDIRECT)
+ 		return 0;
+ 
+ 	/* push */
 
 
