@@ -2,130 +2,99 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFCCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18846C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58DA3206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9E820756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:39:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589812767;
+	bh=GprrLmwAeZJ8PFHBulg/A1Y9wa1v1Z8pfqmPDRcBdhA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SoipSUgsyCLIr0atYfZ5de/rr+b3QjP6V+E52SzDFJ7eBhzJ+Ul4C01oDDlh1+1JR
+	 73b0yDfsTnokh1ciu0zNDpMn850q94aL8h1/aQBSyFOlFCB5tJA9L1T9yxBhpZMBov
+	 Q/rpVfXqJQQBbF/soo9xYkU2Kf5NFj3yaWcvxGtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgEROiq convert rfc822-to-8bit (ORCPT
+        id S1728039AbgEROj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:38:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:49683 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgEROiq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:38:46 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Ma0HM-1jXTMN436K-00W1bi; Mon, 18 May 2020 16:38:44 +0200
-Received: by mail-qk1-f176.google.com with SMTP id n14so10262052qke.8;
-        Mon, 18 May 2020 07:38:43 -0700 (PDT)
-X-Gm-Message-State: AOAM532gtYvic9MEdHYNR0Qc4moQduEJ+oK/yQsQt9DVOKy9z9UiZ1Kz
-        QKgfp5UJmt7BNvCV1RTs1VLuXeVxj8j/xLXlIaA=
-X-Google-Smtp-Source: ABdhPJxzhsnxVhq8ZSNDtJoBCI07uV5rPB2Xy6wBijq3wixD3dVCpTMzBq7wTOe/KdpPc4bGdgY7xrXJK4eQYms1WB8=
-X-Received: by 2002:a37:aa82:: with SMTP id t124mr15128415qke.3.1589812722617;
- Mon, 18 May 2020 07:38:42 -0700 (PDT)
+        Mon, 18 May 2020 10:39:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgEROj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 10:39:27 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3493206D4;
+        Mon, 18 May 2020 14:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589812766;
+        bh=GprrLmwAeZJ8PFHBulg/A1Y9wa1v1Z8pfqmPDRcBdhA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yI1drx19cqJLuwFH5QqQzEH2uc2tHmPgjP1Hu8gy+t8qJXWfN5Nb/+opvlnG5vn5o
+         I+MCPebT/mXZysMcaYzLjV18gouEW8lNXdeM/4v2f5fgfnEARWM7s1hkf8NDklsBM8
+         pQflbDnPil1K/Y8onoTayiwJ4cJbxZWcW7506fbw=
+Date:   Mon, 18 May 2020 15:39:21 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Sharat Masetty <smasetty@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 2/2] dt-bindings: arm-smmu: Add sc7180 compatible string
+Message-ID: <20200518143920.GJ32394@willie-the-truck>
+References: <1588329036-18732-1-git-send-email-smasetty@codeaurora.org>
+ <1588329036-18732-2-git-send-email-smasetty@codeaurora.org>
+ <CAD=FV=WXv9DYf7LWoFBvro=7Bzeb1_0bXAvRH-suzxnrCu+V2A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200514075942.10136-1-brgl@bgdev.pl> <20200514075942.10136-11-brgl@bgdev.pl>
- <CAK8P3a0XgJtZNKePZUUpzADO25-JZKyDiVHFS_yuHRXTjvjDwg@mail.gmail.com> <CAMRc=MeVyNzTWw_hk=J9kX1NE9reCE_O4P3wrNpMMc9z4xA_DA@mail.gmail.com>
-In-Reply-To: <CAMRc=MeVyNzTWw_hk=J9kX1NE9reCE_O4P3wrNpMMc9z4xA_DA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 18 May 2020 16:38:25 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1xaWE0gNx-PnJz08XzUkPW6YB7U6NfFS+Y1VXwG+VR+w@mail.gmail.com>
-Message-ID: <CAK8P3a1xaWE0gNx-PnJz08XzUkPW6YB7U6NfFS+Y1VXwG+VR+w@mail.gmail.com>
-Subject: Re: [PATCH v3 10/15] net: ethernet: mtk-eth-mac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:OB6VzK2054ZHQfz3CTgEBDfpQ26ehY5iVTYbtEgywu+eoe059Ia
- 155h7+afzU9IY+xpKJNhOOLCYvG+CVCVONbhge2PqpV/n60X2eLhfQhAZBVBHEL/+1R+1nH
- bkHyXDZArv+FJ2Mpb4xmr+JeC+E3em4yPC+eZXrv/hHpQtslM+EM5i1INXSMt3IWXUG7q4G
- CmzKbMVFQg56UvK6vbNHA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vxLiJ7JDE0g=:Up6ARmLIWMk+ak4wsEctGO
- rhiErvnlmZs6qhQQPDdfVywOzmJX7Mptu/6SGVVLaqdaZgtvqCNYjbQi2f4tTXASpL9hz5Arq
- EjfB0c9JxG0/BSAIHQWYto8dP+6fUmMCdGKRBYOS8RjGyTOrbcZN2wKbQxDJs9o4sgDfr/XYV
- byoDT4koyV0n2eYzFUoEVWDXi0s0hHd8htLVXjhybemtTQJosg8ZGke53TKCT0GfwHknHXzV5
- v/XQYMp7KOifvsdCG6DlXQ0o1azXT+QrzWAEIgedTlQq6c+oLQo7AAa+wsatiLz/NJEPOAggz
- GlbHPa6Xf1joz3dWalT7TE55mJRFvdzko0aabkIjts6ejiXIdyq5f0C0RgIlRKJR2HDEimDHu
- nR+FrNmnQV1bmd1IaFCLBlCS9mgkLBy7w3bwMxkOzg0Lu6OF7ubj/gmL1t5CJ5hcrE5pYeUL7
- bwBehMEyVplOBYbGDMn9v0ABdTji3YcYPKLe3nZeiET3FsYgGlsuuzPBnDcMZXdXhA3Ab+oYp
- wUctgNbumAXwoHwazZblpYReqHgMajU54iL5OSr19TlP9j6QUKk4zBkRE1KTx3YIxbkDfOAjC
- ks86QV6Sd6y+OLyrn/r5EA7Ghs05F+dGley2Vb6hskJmDtph+nYnAKbA9Jub0La7nKlE/xi+R
- Xw77Aih4WsE7WxOJOnp7rupPlNn39dwFEs+/ahTkDm3B/YafV6wwekr7ZUVLoKxHquc5kk5WI
- B1SH58SmfbDZkbaMmuVhoNHb//VPRj66Zyjm1MSAWb3bnLk4eIOK2b4VIYCHYhOHUFeD0W40g
- jX11DAu8ta1FlVRrDSBJhl3b1heQbBlno2h0SMSRBngQ3hA2ms=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WXv9DYf7LWoFBvro=7Bzeb1_0bXAvRH-suzxnrCu+V2A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 4:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> pt., 15 maj 2020 o 15:32 Arnd Bergmann <arnd@arndb.de> napisał(a):
-
-> > I would get rid of the 'count' here, as it duplicates the information
-> > that is already known from the difference between head and tail, and you
-> > can't update it atomically without holding a lock around the access to
-> > the ring. The way I'd do this is to have the head and tail pointers
-> > in separate cache lines, and then use READ_ONCE/WRITE_ONCE
-> > and smp barriers to access them, with each one updated on one
-> > thread but read by the other.
+On Fri, May 15, 2020 at 12:05:39PM -0700, Doug Anderson wrote:
+> On Fri, May 1, 2020 at 3:30 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
 > >
->
-> Your previous solution seems much more reliable though. For instance
-> in the above: when we're doing the TX cleanup (we got the TX ready
-> irq, we're iterating over descriptors until we know there are no more
-> packets scheduled (count == 0) or we encounter one that's still owned
-> by DMA), a parallel TX path can schedule new packets to be sent and I
-> don't see how we can atomically check the count (understood as a
-> difference between tail and head) and run a new iteration (where we'd
-> modify the head or tail) without risking the other path getting in the
-> way. We'd have to always check the descriptor.
+> > This patch simply adds a new compatible string for SC7180 platform.
+> >
+> > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> > ---
+> >  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > index 6515dbe..986098b 100644
+> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > @@ -28,6 +28,7 @@ properties:
+> >            - enum:
+> >                - qcom,msm8996-smmu-v2
+> >                - qcom,msm8998-smmu-v2
+> > +              - qcom,sc7180-smmu-v2
+> >                - qcom,sdm845-smmu-v2
+> >            - const: qcom,smmu-v2
+> 
+> Is anything blocking this patch from landing now?
 
-It should be enough to read both pointers once at the start of each
-side, then do whatever work you want to do (cleaning, sending,
-receiving, refilling) and finally updating the one pointer that changed.
-If both sides do that, you minimize the cache line bouncing and
-always do a useful amount of work that guarantees forward progress
-and does not interfere with the other side.
+I thought updates to the bindings usually went via Rob and the device-tree
+tree, but neither of those are on cc.
 
-> I experimented a bit with this and couldn't come up with anything that
-> would pass any stress test.
->
-> On the other hand: spin_lock_bh() works fine and I like your approach
-> from the previous e-mail - except for the work for updating stats as
-> we could potentially lose some stats when we're updating in process
-> context with RX/TX paths running in parallel in napi context but that
-> would be rare enough to overlook it.
->
-> I hope v4 will be good enough even with spinlocks. :)
+Perhaps resend with that fixed?
 
-Yes, it should be fine. Avoiding all the locks is mainly an optimization
-for the number of CPU cycles spent per packet, the other points
-are more important to get right, in particular the flow control.
-
-      Arnd
+Will
