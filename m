@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A33FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC9520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF53520671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824012;
-	bh=1IxgM8qSTOEdrK1L9TS8wCO2BnquIDeqgkd91GqoSFY=;
+	s=default; t=1589824014;
+	bh=elBqDTYUwnIKKlx+yy0o5O7JNMP5I8Jusy8PmsFLkcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YFLN/62LYegUfwxQvdpo2i19Mpu9T+4aZXpzM9A989Zwj8ceiuMD9HNG5zbFGLu6m
-	 cvknU0k7lJ9HV5a9DHOHkJb8dTX2P0szrvAKtp8gr2lcVg+Bt49pxGgBqL7lTrT+Xf
-	 5/cv47oxUWAiCpNaFXEa+JU8TzaPFX0h+QYTyFks=
+	b=TwfOiWwNJ7fhhei9gmgC6vpNMGfT5s9tpm/3KpWZrmdw15PniPpkJPFPzJYE5/X4k
+	 kG0vD3bHLwoRuYopp3xTLYpDpbmYSOQORM8VLdo71A06hWuUiiw2afOLlJQHClLCm9
+	 TZxN6ZCOZdE5/0xTNkE6BZaGb5unUjV4hVRwvke0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbgERRqu (ORCPT
+        id S1730151AbgERRqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:46:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:46:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730123AbgERRqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:46:44 -0400
+        id S1730137AbgERRqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:46:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A1A120715;
-        Mon, 18 May 2020 17:46:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C14D20674;
+        Mon, 18 May 2020 17:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824004;
-        bh=1IxgM8qSTOEdrK1L9TS8wCO2BnquIDeqgkd91GqoSFY=;
+        s=default; t=1589824008;
+        bh=elBqDTYUwnIKKlx+yy0o5O7JNMP5I8Jusy8PmsFLkcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xm6TcISxypH8/w75zPTNGTZEohsVw4/gKJz5i58314tmVyCh0ZeYu0bwh5MqYV8qO
-         xA67rFr07nO3uJyyBvrb7KNCI2CTsmnwuzO0UqqLg9cY2KfhWnD1BlZ7l+qywithdn
-         hjHVsKYcFiuzSlcqv5cw0s8HiGRbcGn1GhiT9rVg=
+        b=l2987zsXGc+POC3oRkA44dyZXk2oVLmfHgTLZdtu8uFlQJfCcEtu1qjmwpM8OBorw
+         m7EGrJAg6f9CiQu4x+MLY/V3RFyLRNS3f8AcUT9cGwz4fV7oxz+y1Vh4BN/XLUiCEy
+         HbhBFr0fqVHRRW2bUhnCmpnvOnOx6pQVOSaD4F2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,9 +50,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 4.14 031/114] x86/unwind/orc: Dont skip the first frame for inactive tasks
-Date:   Mon, 18 May 2020 19:36:03 +0200
-Message-Id: <20200518173509.357209406@linuxfoundation.org>
+Subject: [PATCH 4.14 033/114] x86/unwind/orc: Fix error path for bad ORC entry type
+Date:   Mon, 18 May 2020 19:36:05 +0200
+Message-Id: <20200518173509.665006980@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
 References: <20200518173503.033975649@linuxfoundation.org>
@@ -65,23 +65,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Benes <mbenes@suse.cz>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit f1d9a2abff66aa8156fbc1493abed468db63ea48 upstream.
+commit a0f81bf26888048100bf017fadf438a5bdffa8d8 upstream.
 
-When unwinding an inactive task, the ORC unwinder skips the first frame
-by default.  If both the 'regs' and 'first_frame' parameters of
-unwind_start() are NULL, 'state->sp' and 'first_frame' are later
-initialized to the same value for an inactive task.  Given there is a
-"less than or equal to" comparison used at the end of __unwind_start()
-for skipping stack frames, the first frame is skipped.
-
-Drop the equal part of the comparison and make the behavior equivalent
-to the frame pointer unwinder.
+If the ORC entry type is unknown, nothing else can be done other than
+reporting an error.  Exit the function instead of breaking out of the
+switch statement.
 
 Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Lutomirski <luto@kernel.org>
@@ -90,7 +83,7 @@ Cc: Jann Horn <jannh@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/7f08db872ab59e807016910acdbe82f744de7065.1587808742.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/a7fa668ca6eabbe81ab18b2424f15adbbfdc810a.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
@@ -99,14 +92,14 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/kernel/unwind_orc.c
 +++ b/arch/x86/kernel/unwind_orc.c
-@@ -574,7 +574,7 @@ void __unwind_start(struct unwind_state
- 	/* Otherwise, skip ahead to the user-specified starting frame: */
- 	while (!unwind_done(state) &&
- 	       (!on_stack(&state->stack_info, first_frame, sizeof(long)) ||
--			state->sp <= (unsigned long)first_frame))
-+			state->sp < (unsigned long)first_frame))
- 		unwind_next_frame(state);
+@@ -457,7 +457,7 @@ bool unwind_next_frame(struct unwind_sta
+ 	default:
+ 		orc_warn("unknown .orc_unwind entry type %d for ip %pB\n",
+ 			 orc->type, (void *)orig_ip);
+-		break;
++		goto done;
+ 	}
  
- 	return;
+ 	/* Find BP: */
 
 
