@@ -2,54 +2,52 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5549C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77D3A20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C3C20671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825765;
-	bh=EH6MWlBA5WcA1/4DxlAFaOYnSWjSaOtjexULjoaqPv8=;
+	s=default; t=1589825769;
+	bh=bDJ1mgZU+h5ToiLcvLdkwXTROH+5BR7TJ+0MyXthK4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fBz2c2NdMh9hJ/SumOMLzGv54sl/6HQs7LYsRyiP/tkqa3WJAmCIDwfceks7NvnKi
-	 NH2mxStr8CNRpV3eFn0iL49MGi3loi+FkrI43E88UPBzKYq3qJpHxk8Thlqwb+BICf
-	 WEo47dog03BZUJpby4PQcM44qHy9VQLVD+RJUQhc=
+	b=uzqu6Czkc5rMldX7JYgdXH/JrMfUn/N+UIfH0erJTl6xEpGsIgfJHT+QIFD4gkBmG
+	 P0r6XkOc7oy7AIBX5Q3yhL1dUfQDrESRIMJlSLZWoJVrs8g2FOhkCT98vq32QzwMD7
+	 8EWMy52ChgWncBL6qwYWlcJssJib1ReP/J0WQFZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbgERR6q (ORCPT
+        id S2387597AbgERSQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:58:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38214 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:16:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730168AbgERR6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:58:38 -0400
+        id S1731956AbgERR6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:58:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D59AA20835;
-        Mon, 18 May 2020 17:58:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC8E020835;
+        Mon, 18 May 2020 17:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824717;
-        bh=EH6MWlBA5WcA1/4DxlAFaOYnSWjSaOtjexULjoaqPv8=;
+        s=default; t=1589824727;
+        bh=bDJ1mgZU+h5ToiLcvLdkwXTROH+5BR7TJ+0MyXthK4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XfFxHgJHLFMEwi+P7DIvtsN3H4YoLhiqn10PGejOGeoQA1a9THqWdfVBYO3IBW1Mj
-         DEKSao0bJutPGazrRmbd/CdZoKvhYITu0EO0XyWT174xnPRdmrZthT1fdq+XavwHor
-         5fPcJ+dU8TKmaGVIG8Qdym3cdUgOEaBuD91853oc=
+        b=09yvAvfHYrjSARwapTM1jnZb4UppHdacF0XbMhaE58LbnDFPKxl7W4sMyg42Z0ZPY
+         8v2l/bAmqp1jLhJ2MIlg8KAhujT415ouQIS7Js63NBAVz2l5m4CGOL8z8+MkACG0hd
+         0ZcR6c+JNFJKZEmYiqTd6bwszufVauN7a8uwacs8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 085/147] IB/mlx4: Test return value of calls to ib_get_cached_pkey
-Date:   Mon, 18 May 2020 19:36:48 +0200
-Message-Id: <20200518173524.178929294@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 128/147] usb: gadget: audio: Fix a missing error return value in audio_bind()
+Date:   Mon, 18 May 2020 19:37:31 +0200
+Message-Id: <20200518173529.451507680@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -62,68 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 6693ca95bd4330a0ad7326967e1f9bcedd6b0800 ]
+commit 19b94c1f9c9a16d41a8de3ccbdb8536cf1aecdbf upstream.
 
-In the mlx4_ib_post_send() flow, some functions call ib_get_cached_pkey()
-without checking its return value. If ib_get_cached_pkey() returns an
-error code, these functions should return failure.
+If 'usb_otg_descriptor_alloc()' fails, we must return an error code, not 0.
 
-Fixes: 1ffeb2eb8be9 ("IB/mlx4: SR-IOV IB context objects and proxy/tunnel SQP support")
-Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand adapters")
-Fixes: e622f2f4ad21 ("IB: split struct ib_send_wr")
-Link: https://lore.kernel.org/r/20200426075921.130074-1-leon@kernel.org
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 56023ce0fd70 ("usb: gadget: audio: allocate and init otg descriptor by otg capabilities")
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/mlx4/qp.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/legacy/audio.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/qp.c b/drivers/infiniband/hw/mlx4/qp.c
-index bd4aa04416c6b..6e2b3e2f83f16 100644
---- a/drivers/infiniband/hw/mlx4/qp.c
-+++ b/drivers/infiniband/hw/mlx4/qp.c
-@@ -2891,6 +2891,7 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
- 	int send_size;
- 	int header_size;
- 	int spc;
-+	int err;
- 	int i;
+--- a/drivers/usb/gadget/legacy/audio.c
++++ b/drivers/usb/gadget/legacy/audio.c
+@@ -300,8 +300,10 @@ static int audio_bind(struct usb_composi
+ 		struct usb_descriptor_header *usb_desc;
  
- 	if (wr->wr.opcode != IB_WR_SEND)
-@@ -2925,7 +2926,9 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
- 
- 	sqp->ud_header.lrh.virtual_lane    = 0;
- 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
--	ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
-+	err = ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
-+	if (err)
-+		return err;
- 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
- 	if (sqp->qp.mlx4_ib_qp_type == MLX4_IB_QPT_TUN_SMI_OWNER)
- 		sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
-@@ -3212,9 +3215,14 @@ static int build_mlx_header(struct mlx4_ib_sqp *sqp, const struct ib_ud_wr *wr,
- 	}
- 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
- 	if (!sqp->qp.ibqp.qp_num)
--		ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index, &pkey);
-+		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index,
-+					 &pkey);
- 	else
--		ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index, &pkey);
-+		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index,
-+					 &pkey);
-+	if (err)
-+		return err;
-+
- 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
- 	sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
- 	sqp->ud_header.bth.psn = cpu_to_be32((sqp->send_psn++) & ((1 << 24) - 1));
--- 
-2.20.1
-
+ 		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
+-		if (!usb_desc)
++		if (!usb_desc) {
++			status = -ENOMEM;
+ 			goto fail;
++		}
+ 		usb_otg_descriptor_init(cdev->gadget, usb_desc);
+ 		otg_desc[0] = usb_desc;
+ 		otg_desc[1] = NULL;
 
 
