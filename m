@@ -2,94 +2,120 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF521C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A604BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA6B2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C5020842
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 07:11:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NfE56AHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgERHIN (ORCPT
+        id S1726958AbgERHLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 03:08:13 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:50554 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726676AbgERHIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 03:08:12 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx391YNMJevgA2AA--.0S2;
-        Mon, 18 May 2020 15:08:09 +0800 (CST)
-From:   Zhi Li <lizhi01@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] MIPS: Remove useless parameter of bootcmdline_init()
-Date:   Mon, 18 May 2020 15:08:08 +0800
-Message-Id: <1589785688-10426-1-git-send-email-lizhi01@loongson.cn>
-X-Mailer: git-send-email 2.1.0
+        Mon, 18 May 2020 03:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbgERHLU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 03:11:20 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF76FC05BD0A
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 00:11:19 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w10so8656811ljo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 00:11:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vabidfbMFc96pp/HPLlR3jZG3FkUzmqg2LVXthmSJ2M=;
+        b=NfE56AHSj2+vxlz/6yUuJTa3t1IV7WenHpdNYEo7f95qJmJJ7+A+i4PfeTiCIrPiWQ
+         uYSbSUg13aS4vfJaeyo4jtE6ZbrQ6PhWV2nsbkr+ogLPQ30ZHA1EqWD18NJP4hIn6G4P
+         RwcbxQBrPzrrKZXVShOpZv+GAEPFygjSUkP+dLcRxv3Z1CxpQsJhhxVSr+jjv/o4AlLh
+         wsC0H7Rt9LcPnL733Y458Bq+7fnwRXuqfAGhr/q0FVs1dT5VwHflTGdw7X1nGTXtt2Wz
+         7rvUt/oAzPVBSBYkjjaUrZqOR4LyEYN+kZXN7YN1C1gpvVgr4O2aFpkfXBlHUDzpyk8T
+         KNcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vabidfbMFc96pp/HPLlR3jZG3FkUzmqg2LVXthmSJ2M=;
+        b=nEbAw1Y1w3wI3GXUnjy9zNdJlufllotzaor/wA+dLRR4YWnK9tLC1cDNxxIvNm86vk
+         T8+uyMxXC+UsYqqmQjXWqsx5Wz8xK63QBBfNcz6i8ucbpq7yLTU3CEbrH/dls1gFlCH9
+         0QEJ3Sx/Jrly8UpbPofMZku04hbto628Z9eR4dfUqEGhGuVFln0WQuItTzgYhvB/1MvH
+         XyD/qJHm8qcdkB7sp9KUOwuvrs7Lk855zTRryDnD8httbnui4Fsn7x3xaX9VzX5XCRm8
+         VJgUWrqCghzDFNBQPHumfwqW+FHC5HdkhuyTpJzXKqUibHapWYxJN1CYOrsFWLcyKmTY
+         QqoQ==
+X-Gm-Message-State: AOAM533jtmPuJr6x72eubrYnuc8ywwLRxgWjbWLWGpks2UvHDWRtpLhy
+        YUIZsKxhzJ5WVW/Iip5Q3JTLOV0kg58Jm7jCzl6y3w==
+X-Google-Smtp-Source: ABdhPJw9hkh1xdtF0LAYyj2TI1WiZMc9QwdD8Q3PjEibbo2bM2I8adeqiZA3vX+G4exFdZvSrqFJyEySfS8r7g40xpc=
+X-Received: by 2002:a05:651c:154:: with SMTP id c20mr8865566ljd.99.1589785878126;
+ Mon, 18 May 2020 00:11:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dx391YNMJevgA2AA--.0S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jr1rGr48try7Gr4rXw4UXFb_yoWDZrXEqr
-        17Jw4kC3y293WY9rW7Z343GrWFywsav3ZIqF1fKw4Yya4fAw1UArZ5Xa4Svrn8ur4ayFWa
-        kFZayF40grZrWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbV8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
-        648v4I1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvE
-        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-        DU0xZFpf9x0JUcZ2-UUUUU=
-X-CM-SenderInfo: xol2xxqqr6z05rqj20fqof0/
+References: <20200508165821.GA14555@x1>
+In-Reply-To: <20200508165821.GA14555@x1>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 May 2020 09:11:07 +0200
+Message-ID: <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
+Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The parameter "cmdline_p" is useless in bootcmdline_init()，remove it.
+On Fri, May 8, 2020 at 6:57 PM Drew Fustini <drew@beagleboard.org> wrote:
 
-Signed-off-by: Zhi Li <lizhi01@loongson.cn>
----
+> Add gpio-line-names properties to the gpio controller nodes.
+> BeagleBone boards have P8 and P9 headers [0] which expose many the
+> AM3358 SoC balls to stacking expansion boards called "capes", or to
+> other external connections like jumper wires to a breadboard.
+>
+> Many of the P8/P9 header pins can muxed to a gpio line.  The
+> gpio-line-names describe which P8/P9 pin that line goes to and the
+> default mux for that P8/P9 pin.  Some lines are not routed to the
+> P8/P9 headers, but instead are dedicated to some functionality such as
+> status LEDs.  The line name will indicate this.  Some line names are
+> left empty as the corresponding AM3358 balls are not connected.
+>
+> The goal is to make it easier for a user viewing the output of gpioinfo
+> to determine which P8/P9 pin is connected to a line.  The output of
+> gpioinfo on a BeagleBone Black will now look like this:
+>
+> gpiochip0 - 32 lines:
+>         line   0:   "ethernet"       unused   input  active-high
+>         line   1:   "ethernet"       unused   input  active-high
 
-v2:
-   - Remove "the" before "bootcmdline_init()" in the patch subject.
+Why are the ethernet lines not tagged with respective signal name
+when right below the SPI lines are explicitly tagged with
+sclk, cs0 etc?
 
- arch/mips/kernel/setup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Ethernet is usually RGMII and has signal names like
+tx_clk, tx_d0, tx_en etc.
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 8db533c..7b537fa 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -575,7 +575,7 @@ static int __init bootcmdline_scan_chosen(unsigned long node, const char *uname,
- 
- #endif /* CONFIG_OF_EARLY_FLATTREE */
- 
--static void __init bootcmdline_init(char **cmdline_p)
-+static void __init bootcmdline_init(void)
- {
- 	bool dt_bootargs = false;
- 
-@@ -658,7 +658,7 @@ static void __init arch_mem_init(char **cmdline_p)
- 	plat_mem_setup();
- 	memblock_set_bottom_up(true);
- 
--	bootcmdline_init(cmdline_p);
-+	bootcmdline_init();
- 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
- 	*cmdline_p = command_line;
- 
--- 
-2.1.0
+Also some lines seem to be tagged with the pin number
+like P9_22, P2_21 below, it seems a bit inconsistent
+to have much information on some pins and very sketchy
+information on some.
 
+>         line  18:        "usb"       unused   input  active-high
+>         line  19:       "hdmi"       unused   input  active-high
+
+Similar comments for these.
+
+Yours,
+Linus Walleij
