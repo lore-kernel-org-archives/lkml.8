@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D24CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF522088E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E81820657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589826444;
-	bh=e6+b2OsZ5WKqMKktF8KKi0LqxDz+d30duXatQxMSEsY=;
+	s=default; t=1589826448;
+	bh=DA2Riofna2a6LVHWbQc8euvuKiv8rA6wkYpFEhamuDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VS+f5B34gaO9TEHPvZzTlBhysuDQGdZr5UxNu27C176lH3lhdrPkMdJywm+5AXXXq
-	 LAmuhlQK6ntenL5w4HkLDVZJYQ3kmJ0HLwqepHUpDYpvY8Y7ycBU5o7LosKcVU7mzU
-	 maKzjV4DLT+7r1Pr4MSV2qUVh4w5er0J4oWmBiKU=
+	b=Ed5lod0g815DICsJ0CoLhDAhUr9Il8hnnsHhvkavWR/cKvL25b9Oa15gD93sAjAFH
+	 9dO51iYwPUUFw1QfVtM9Amxlir5AFBZ08Zw5WrbNeyDaLbYRJrPQGQ8n86rz+zUKwe
+	 1ABpioEGNc0hj1rOBK8GjgKM6c71ZlT6Y2+pTS9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbgERS1X (ORCPT
+        id S2387397AbgERS11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42108 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:27:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729657AbgERRoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:44:04 -0400
+        id S1729072AbgERRn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:43:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACE57207C4;
-        Mon, 18 May 2020 17:44:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB56420835;
+        Mon, 18 May 2020 17:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823843;
-        bh=e6+b2OsZ5WKqMKktF8KKi0LqxDz+d30duXatQxMSEsY=;
+        s=default; t=1589823838;
+        bh=DA2Riofna2a6LVHWbQc8euvuKiv8rA6wkYpFEhamuDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y8ZsPzKtg4t3IrMmvL1a2Pt7AQlsUWseBNic8yLNicBgVwgHZYJ6gPYKWLLpppV3z
-         UA+OSspaN+/XeLeCs4watp4zxDBz9JtX6SZVmtNYlkRFQjNY8f/0eaujfgGf2wWOQD
-         J4vy13XMxBdbKOHMkHPxcziy7Cv1l3gaAkf30ebU=
+        b=b5kWiPBjkB00U0kE+0982zS/Rrja2BQfKTQs+cfqOrbdknaxriNYMgo3VyoYmk6p0
+         siaDP69X86hMf3pVw8NL2U/BcLbIr2gXjJzs2aREI3lRB+GHBmp78y+UpB5X8virvt
+         uEUSE1L6b2WvfsbIsg9BzLIDKtJLN3zqtqr3wjgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 57/90] IB/mlx4: Test return value of calls to ib_get_cached_pkey
-Date:   Mon, 18 May 2020 19:36:35 +0200
-Message-Id: <20200518173502.736675760@linuxfoundation.org>
+Subject: [PATCH 4.9 55/90] i40iw: Fix error handling in i40iw_manage_arp_cache()
+Date:   Mon, 18 May 2020 19:36:33 +0200
+Message-Id: <20200518173502.315554109@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.930655662@linuxfoundation.org>
 References: <20200518173450.930655662@linuxfoundation.org>
@@ -62,66 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 6693ca95bd4330a0ad7326967e1f9bcedd6b0800 ]
+[ Upstream commit 37e31d2d26a4124506c24e95434e9baf3405a23a ]
 
-In the mlx4_ib_post_send() flow, some functions call ib_get_cached_pkey()
-without checking its return value. If ib_get_cached_pkey() returns an
-error code, these functions should return failure.
+The i40iw_arp_table() function can return -EOVERFLOW if
+i40iw_alloc_resource() fails so we can't just test for "== -1".
 
-Fixes: 1ffeb2eb8be9 ("IB/mlx4: SR-IOV IB context objects and proxy/tunnel SQP support")
-Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand adapters")
-Fixes: e622f2f4ad21 ("IB: split struct ib_send_wr")
-Link: https://lore.kernel.org/r/20200426075921.130074-1-leon@kernel.org
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Fixes: 4e9042e647ff ("i40iw: add hw and utils files")
+Link: https://lore.kernel.org/r/20200422092211.GA195357@mwanda
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/qp.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/i40iw/i40iw_hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/qp.c b/drivers/infiniband/hw/mlx4/qp.c
-index 709d6491d2435..7284a9176844e 100644
---- a/drivers/infiniband/hw/mlx4/qp.c
-+++ b/drivers/infiniband/hw/mlx4/qp.c
-@@ -2307,6 +2307,7 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
- 	int send_size;
- 	int header_size;
- 	int spc;
-+	int err;
- 	int i;
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_hw.c b/drivers/infiniband/hw/i40iw/i40iw_hw.c
+index 0c92a40b3e869..e4867d6de7893 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_hw.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_hw.c
+@@ -479,7 +479,7 @@ void i40iw_manage_arp_cache(struct i40iw_device *iwdev,
+ 	int arp_index;
  
- 	if (wr->wr.opcode != IB_WR_SEND)
-@@ -2341,7 +2342,9 @@ static int build_sriov_qp0_header(struct mlx4_ib_sqp *sqp,
- 
- 	sqp->ud_header.lrh.virtual_lane    = 0;
- 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
--	ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
-+	err = ib_get_cached_pkey(ib_dev, sqp->qp.port, 0, &pkey);
-+	if (err)
-+		return err;
- 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
- 	if (sqp->qp.mlx4_ib_qp_type == MLX4_IB_QPT_TUN_SMI_OWNER)
- 		sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
-@@ -2618,9 +2621,14 @@ static int build_mlx_header(struct mlx4_ib_sqp *sqp, struct ib_ud_wr *wr,
- 	}
- 	sqp->ud_header.bth.solicited_event = !!(wr->wr.send_flags & IB_SEND_SOLICITED);
- 	if (!sqp->qp.ibqp.qp_num)
--		ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index, &pkey);
-+		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, sqp->pkey_index,
-+					 &pkey);
- 	else
--		ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index, &pkey);
-+		err = ib_get_cached_pkey(ib_dev, sqp->qp.port, wr->pkey_index,
-+					 &pkey);
-+	if (err)
-+		return err;
-+
- 	sqp->ud_header.bth.pkey = cpu_to_be16(pkey);
- 	sqp->ud_header.bth.destination_qpn = cpu_to_be32(wr->remote_qpn);
- 	sqp->ud_header.bth.psn = cpu_to_be32((sqp->send_psn++) & ((1 << 24) - 1));
+ 	arp_index = i40iw_arp_table(iwdev, ip_addr, ipv4, mac_addr, action);
+-	if (arp_index == -1)
++	if (arp_index < 0)
+ 		return;
+ 	cqp_request = i40iw_get_cqp_request(&iwdev->cqp, false);
+ 	if (!cqp_request)
 -- 
 2.20.1
 
