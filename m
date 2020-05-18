@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10517C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C56C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2E44207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D6A207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824895;
-	bh=qNHYMA83Jgcv+K+raxRtQrHGkwV/3IYbnkegAaQqcg0=;
+	s=default; t=1589824898;
+	bh=q8ZMBAb4Llu4GVHaTpArXUnY6o2YL79FpWPTzHjpttM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2pYoCBp3HVNH9gKYTEyGKmdFXpVynay7I9C/ygbK05NzZ7m4OMOyLSS8fPrTUaOZ
-	 QDOCk8AHzS/UZwVETR7Umh9H0qrlwNTrtKS4Q6C8BBmWR8VKrSROjspL35g8dH4nIz
-	 yWIlkaiQ3QOjF/1swd3C27VVMiPnz20T4ybCvWVo=
+	b=Uycom9v4KvvoiJj3NunWA9Qu79ysH/Wl8v/h2c/qc3BfvgDTDO344G/RYDI0chyZy
+	 RdWFErSeHRnjDDsydPmPHBobBb04gOd6Y4VazCx+R4DLdbVGVQaZ2zEC2adYht0fIt
+	 LkjNrP47IrmbtIkS7H4u/8U5ikrDim3+eDQTaOvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731844AbgERSBe (ORCPT
+        id S1732419AbgERSBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43558 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731865AbgERSBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:01:19 -0400
+        id S1732398AbgERSBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:01:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB082207C4;
-        Mon, 18 May 2020 18:01:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92B3F207F5;
+        Mon, 18 May 2020 18:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824879;
-        bh=qNHYMA83Jgcv+K+raxRtQrHGkwV/3IYbnkegAaQqcg0=;
+        s=default; t=1589824884;
+        bh=q8ZMBAb4Llu4GVHaTpArXUnY6o2YL79FpWPTzHjpttM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x8YozzdYChTLXjemojapjA98kmg9C3p7odY/mNycFWiGTduOM6deDjuFhBefF/xFi
-         oKUY72y6XdokKphFDtS0sXa54WC/sdLoHcUA1F5XXNiDneO9Zry7gxlLG997HiQKyF
-         WJPM2VQHkQ0bdl88YCkojpysLO8TEnW58Ub3+dwE=
+        b=wUE7amenrw8atbj8Yjq7SQ833+EI4MkcBvAMFbSKIL+eVVIx6RamcFRT9CTUAuXDW
+         4xYepLBRssVPs0Fv1D7pMV5amrOIxmSiso/0l7cfjTlx6HhPM5evqskcDKuA3NYayx
+         tGl01/Hr0Pl9rOUccP/ecQYWpJGj45hZ+zFp35KE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com,
+        syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 006/194] drm/i915/tgl: TBT AUX should use TC power well ops
-Date:   Mon, 18 May 2020 19:34:56 +0200
-Message-Id: <20200518173532.128190901@linuxfoundation.org>
+Subject: [PATCH 5.6 008/194] shmem: fix possible deadlocks on shmlock_user_lock
+Date:   Mon, 18 May 2020 19:34:58 +0200
+Message-Id: <20200518173532.317490114@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -63,84 +65,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Roper <matthew.d.roper@intel.com>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit 335f62e7606a7921775d7cc73f0ad8ffd899bc22 ]
+[ Upstream commit ea0dfeb4209b4eab954d6e00ed136bc6b48b380d ]
 
-As on ICL, we want to use the Type-C aux handlers for the TBT aux wells
-to ensure the DP_AUX_CH_CTL_TBT_IO flag is set properly.
+Recent commit 71725ed10c40 ("mm: huge tmpfs: try to split_huge_page()
+when punching hole") has allowed syzkaller to probe deeper, uncovering a
+long-standing lockdep issue between the irq-unsafe shmlock_user_lock,
+the irq-safe xa_lock on mapping->i_pages, and shmem inode's info->lock
+which nests inside xa_lock (or tree_lock) since 4.8's shmem_uncharge().
 
-Fixes: 656409bbaf87 ("drm/i915/tgl: Add power well support")
-Cc: José Roberto de Souza <jose.souza@intel.com>
-Cc: Imre Deak <imre.deak@intel.com>
-Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200415233435.3064257-1-matthew.d.roper@intel.com
-Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
-(cherry picked from commit 3cbdb97564a39020262e62b655e788b63cf426cb)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+user_shm_lock(), servicing SysV shmctl(SHM_LOCK), wants
+shmlock_user_lock while its caller shmem_lock() holds info->lock with
+interrupts disabled; but hugetlbfs_file_setup() calls user_shm_lock()
+with interrupts enabled, and might be interrupted by a writeback endio
+wanting xa_lock on i_pages.
+
+This may not risk an actual deadlock, since shmem inodes do not take
+part in writeback accounting, but there are several easy ways to avoid
+it.
+
+Requiring interrupts disabled for shmlock_user_lock would be easy, but
+it's a high-level global lock for which that seems inappropriate.
+Instead, recall that the use of info->lock to guard info->flags in
+shmem_lock() dates from pre-3.1 days, when races with SHMEM_PAGEIN and
+SHMEM_TRUNCATE could occur: nowadays it serves no purpose, the only flag
+added or removed is VM_LOCKED itself, and calls to shmem_lock() an inode
+are already serialized by the caller.
+
+Take info->lock out of the chain and the possibility of deadlock or
+lockdep warning goes away.
+
+Fixes: 4595ef88d136 ("shmem: make shmem_inode_info::lock irq-safe")
+Reported-by: syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com
+Reported-by: syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2004161707410.16322@eggly.anvils
+Link: https://lore.kernel.org/lkml/000000000000e5838c05a3152f53@google.com/
+Link: https://lore.kernel.org/lkml/0000000000003712b305a331d3b1@google.com/
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/display/intel_display_power.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ mm/shmem.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_display_power.c b/drivers/gpu/drm/i915/display/intel_display_power.c
-index 46c40db992dd7..5895b8c7662e3 100644
---- a/drivers/gpu/drm/i915/display/intel_display_power.c
-+++ b/drivers/gpu/drm/i915/display/intel_display_power.c
-@@ -4068,7 +4068,7 @@ static const struct i915_power_well_desc tgl_power_wells[] = {
- 	{
- 		.name = "AUX D TBT1",
- 		.domains = TGL_AUX_D_TBT1_IO_POWER_DOMAINS,
--		.ops = &hsw_power_well_ops,
-+		.ops = &icl_tc_phy_aux_power_well_ops,
- 		.id = DISP_PW_ID_NONE,
- 		{
- 			.hsw.regs = &icl_aux_power_well_regs,
-@@ -4079,7 +4079,7 @@ static const struct i915_power_well_desc tgl_power_wells[] = {
- 	{
- 		.name = "AUX E TBT2",
- 		.domains = TGL_AUX_E_TBT2_IO_POWER_DOMAINS,
--		.ops = &hsw_power_well_ops,
-+		.ops = &icl_tc_phy_aux_power_well_ops,
- 		.id = DISP_PW_ID_NONE,
- 		{
- 			.hsw.regs = &icl_aux_power_well_regs,
-@@ -4090,7 +4090,7 @@ static const struct i915_power_well_desc tgl_power_wells[] = {
- 	{
- 		.name = "AUX F TBT3",
- 		.domains = TGL_AUX_F_TBT3_IO_POWER_DOMAINS,
--		.ops = &hsw_power_well_ops,
-+		.ops = &icl_tc_phy_aux_power_well_ops,
- 		.id = DISP_PW_ID_NONE,
- 		{
- 			.hsw.regs = &icl_aux_power_well_regs,
-@@ -4101,7 +4101,7 @@ static const struct i915_power_well_desc tgl_power_wells[] = {
- 	{
- 		.name = "AUX G TBT4",
- 		.domains = TGL_AUX_G_TBT4_IO_POWER_DOMAINS,
--		.ops = &hsw_power_well_ops,
-+		.ops = &icl_tc_phy_aux_power_well_ops,
- 		.id = DISP_PW_ID_NONE,
- 		{
- 			.hsw.regs = &icl_aux_power_well_regs,
-@@ -4112,7 +4112,7 @@ static const struct i915_power_well_desc tgl_power_wells[] = {
- 	{
- 		.name = "AUX H TBT5",
- 		.domains = TGL_AUX_H_TBT5_IO_POWER_DOMAINS,
--		.ops = &hsw_power_well_ops,
-+		.ops = &icl_tc_phy_aux_power_well_ops,
- 		.id = DISP_PW_ID_NONE,
- 		{
- 			.hsw.regs = &icl_aux_power_well_regs,
-@@ -4123,7 +4123,7 @@ static const struct i915_power_well_desc tgl_power_wells[] = {
- 	{
- 		.name = "AUX I TBT6",
- 		.domains = TGL_AUX_I_TBT6_IO_POWER_DOMAINS,
--		.ops = &hsw_power_well_ops,
-+		.ops = &icl_tc_phy_aux_power_well_ops,
- 		.id = DISP_PW_ID_NONE,
- 		{
- 			.hsw.regs = &icl_aux_power_well_regs,
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 7406f91f8a528..153d889e32d1d 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2184,7 +2184,11 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
+ 	struct shmem_inode_info *info = SHMEM_I(inode);
+ 	int retval = -ENOMEM;
+ 
+-	spin_lock_irq(&info->lock);
++	/*
++	 * What serializes the accesses to info->flags?
++	 * ipc_lock_object() when called from shmctl_do_lock(),
++	 * no serialization needed when called from shm_destroy().
++	 */
+ 	if (lock && !(info->flags & VM_LOCKED)) {
+ 		if (!user_shm_lock(inode->i_size, user))
+ 			goto out_nomem;
+@@ -2199,7 +2203,6 @@ int shmem_lock(struct file *file, int lock, struct user_struct *user)
+ 	retval = 0;
+ 
+ out_nomem:
+-	spin_unlock_irq(&info->lock);
+ 	return retval;
+ }
+ 
 -- 
 2.20.1
 
