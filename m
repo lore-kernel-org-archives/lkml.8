@@ -2,121 +2,105 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A369BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D049C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 813A920715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1634D20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R9WyFrIS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hj4YsfGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgERFVp (ORCPT
+        id S1726543AbgERF2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 01:21:45 -0400
-Received: from mail-vi1eur05on2057.outbound.protection.outlook.com ([40.107.21.57]:55188
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726040AbgERFVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 01:21:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BRcU9Xt8GqkC9WLWoCbkX8WZ0T0zFQnyDENxEpHCGY/7S1/Kj4bIQCoZDXCsASGtGTgr9PVXtCcPA1iuFqKxy+Ocz3nMVLvQ6TWeilEPm7eRR/zTBqkIoOMW7+4xX2IO6RMUprr6JjsJV2sCU/dA6fz98vUnKcMHQ4lqcD+INorTbTcvK8WxG/OUeKC1+XStMiGp2BFD6wt5/XMYbFvy9nLL+R1san/aPfVXI3uBfcnNXfZCfYWyMfR0yxY0SvtoZHA+0/AOM1P1egLu+JHYPRgKjYZ5DGTUybiieFjy69HagSg7UnLBFymYpN8gONdHS7gzKOyDATW8hAXTIV9n9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oc6qIUXHz5IOosWzRmHZ6tUmHdy6uSb0rhM345nEyVI=;
- b=oK+GCbMuJesfuJdEq2LH/RsyFslZcWBtDUbETTEHtd63xIzs0wbyU2eYRMapK2w12leIl92SCsY2Ic28NUAgW9mVtxrJWEtASwRw2fp0Dqvq2c+2nCRehcMbPG+erkEh9BLI9DK4jq9FhOgRYgQqLX+miCYuDClLT3eF+9JM0/QrR9LJKyu9ywoO5p7dsTH4y+yc3Lch6mzXEi9MZmL5Pe9Hv7eA2/aqH7g3CUfmRLgY7NUhJRK4ZPN+18FUNteBzjDhc9FvCD0+BRRCr/Xjlxb2+Op82jVWc18Vo4hI+xTtLDY/2ZYCzrW3H4mEEnBiv6MWwO4xfS1V3In+l3ZUbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oc6qIUXHz5IOosWzRmHZ6tUmHdy6uSb0rhM345nEyVI=;
- b=R9WyFrIS31IffWf7D2iChOB03xOwb2HdK3Tde0GQP4QHSSlqUbEvVFJGnj/F/DwPMwpG3m6lwmZ5ktMxVAS+IyT2E9ZLUxTHCQ2eQXOOjCUQ8tamXlVc3OYacsnBZUnULCaNZYC6R7gbXaKua0VddBg38mH5VG7qNUsmVFerAHw=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB5687.eurprd04.prod.outlook.com (2603:10a6:20b:a2::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Mon, 18 May
- 2020 05:21:39 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.033; Mon, 18 May 2020
- 05:21:39 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
-Thread-Topic: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
-Thread-Index: AQHWKeXny41UDiiW/0yEHY+vY7fj6qitPUug
-Date:   Mon, 18 May 2020 05:21:38 +0000
-Message-ID: <AM6PR04MB4966B92CFFA23DD77748C77680B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e29da2b0-9a82-4d0c-3c5f-08d7faeb57b4
-x-ms-traffictypediagnostic: AM6PR04MB5687:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB5687A428288EA2E84E3EAD4880B80@AM6PR04MB5687.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 04073E895A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hcHSH6zlbJBkCbeXQXL8I4GkuwMuPxw1OsB16bniWkhrJzcd+kKtdJomQXmquMsHotO+k00Z8VF8m+BVpmpMqcND6RH6AywDXOk1sIaoQe5pdNGmDKJlT0ZmFciFcb6OdAwAOKhW73mTBMLQhPvVt1L8jvMrF9+/W7dq8y5mbVlq7KFezEXPxDFG+FtqU8WBL1D9IkUAQVdQybJr+88aZERyNKO+4eua6sRWJ7rRXCxCY4oArH3U8t2hFlRUZRAultNmLrwSH4AH1ZgzbrbQxNkba1EsauQEyNTfHX6MAS3C8E+iOdrzljLDIHYVUZn2PgZuEi1DxVtWBn7TWhe+N7tkvfEpYmwn25fIVXeY2rCLRMJac5WCM1/rr2YmHxqIWY0bDUHJ6NKZ4KLXB2k8S8WwCyPpvuZcwdqWrPpijaZ+Ik9+Zhu8+PZv8AHnMC+xHamfqYs1LgMjArEMbiv0TW5s7H1SOvDt5N8BCBt7xVI=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(39860400002)(396003)(366004)(8936002)(44832011)(71200400001)(8676002)(7416002)(7696005)(4744005)(186003)(26005)(5660300002)(33656002)(6506007)(86362001)(110136005)(55016002)(316002)(9686003)(66446008)(64756008)(478600001)(76116006)(66946007)(66476007)(66556008)(4326008)(52536014)(2906002)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: o4yrkKHSYK6pSpfr9uIV+UuFx9kkMyZ/l+aUjtG3oZXj+y9/fdhZ7dJL4ei7g30oi23mb5u6v/oqK8gze4KobC1PyZfZTzv1aEwLtC9RpyROL9vu2yn7qmKH6UuaQ+l9a9ZaJbCpPP87isfO8qGnKapzGt1p+Sv5eW2dYfeAktGWQCfGb0vLTjSCE96qdrFEgiCFB4zW9lPNvhTF4BV8TlKpHVBvrHXP3lRITFEgaBlUG+U20gcAQOZFHZwMyQOIoeiVAIAsZMGJPZB6m/1rLDA9WEw37Yy2ZWbo4+sf5Dr6Ef2N3GcWZylyaCEYGOnosNRuRaDmykE+e1hQbTadQbDUddhvrtnsKCrkRx96bUugHDrkfCgeTZBpDwNB7gsKLNIhwZJ+l6Y6YLDKnP73bDFVUtgx4qc/taPgycPUwCpY0BIGE+tOzIuHkEu+UhKTck2l6jNY1kLO8Tu+KGAI0OGQfeD/CQ/7QT5N93ANAys=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e29da2b0-9a82-4d0c-3c5f-08d7faeb57b4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 05:21:38.7595
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FRJm/gm3TQMINLWoUx9CsH/SnLfBhZSIbFKXcPI0s/qQtc9yBYMTqLQ/l0pZrew08p153rLe+yCrg22xcMgOdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5687
+        Mon, 18 May 2020 01:28:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgERF2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 01:28:21 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D72C061A0C;
+        Sun, 17 May 2020 22:28:21 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g11so3765551plp.1;
+        Sun, 17 May 2020 22:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WBVBIzp2b7Pg1EPe8d8y6PumURqXzl8cvQXQg0AQNAA=;
+        b=hj4YsfGYUb2YNgN2rYV/J1a6AVHr2yrndux2dSdQ3RTe+fM27+8IuY9ZsoSVS/+VDm
+         LYZm3dti8aaUt085/HPWSnE3Qe44JtqkpAjH819QZUU2vwW5ptsjI0ReocF+a5vkc/kN
+         GNq12gLNiOltbgqIDevqFJnXWZzOSNxGvDYlxtTgLB587i+eL9z4yDq7/If8tEx5eLrA
+         tiRpCaCmlctzEo31p/c+bb++kSNtePaqJIaGVhlQgCQURE/Qpwx9QWeDIyvm011P6pyY
+         uEePHDtdrlPCdbebkGvGIS0Y/wK9ZmHkUBzDBV+OWHN2jJC+YdMIeTLwiy/iXJWzPtwt
+         jooQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WBVBIzp2b7Pg1EPe8d8y6PumURqXzl8cvQXQg0AQNAA=;
+        b=rx+kXlP3RwMbXnPrIZoAvJbFoEaoR9QXKy8Gj+A1tkky1uRXZ2r3vbmONywVypcB3A
+         NAj5VNWnxLsGr49CTSpMzQti7w+3j5p4usET+6t1K2CgJEnsAW/bqUYvo2dV6dt9OfP0
+         ny40GN/ijW77cjUH+iZcjqrMQGHW1K4o/gNgmM4WtCZCb8DFHhbY2DiAb+PADr4avWqI
+         0V09ggLPf+eiObtpYGBbezezq3ClnmeAzTZu6P4JE5mHHmIx2on7Red7646Qn0l+Xt+U
+         P6XKoPlZsEYFDB+1Xq75ZXqheS49valstDxtJ2ML5LurKNcxStIhRIO9jwMiIHck8kuP
+         J8Rg==
+X-Gm-Message-State: AOAM5335SoMfYy851Ecdm9n0DrWAujw/9xYXbVPwLkMzYjasIm6FNyyA
+        zmQfERvBQP4EREg5tlkXP8o9rmF6LoU=
+X-Google-Smtp-Source: ABdhPJxmuetqrkkLnesTvgOybSfcegJ2cC2tdvVo0nHqY6DkBKjxLhQVEr05YSe+jrZzRgNA0btnew==
+X-Received: by 2002:a17:902:930c:: with SMTP id bc12mr14855642plb.255.1589779701248;
+        Sun, 17 May 2020 22:28:21 -0700 (PDT)
+Received: from DESKTOP-9405E5V.localdomain (h128-22-148-223.ablenetvps.ne.jp. [128.22.148.223])
+        by smtp.gmail.com with ESMTPSA id d124sm7572835pfa.98.2020.05.17.22.28.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 May 2020 22:28:20 -0700 (PDT)
+From:   Huang Qijun <dknightjun@gmail.com>
+To:     davem@davemloft.net
+Cc:     kuba@kernel.org, ap420073@gmail.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, allison@lohutok.net,
+        dknightjun@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] vlan: fix the bug that cannot create vlan4095
+Date:   Mon, 18 May 2020 13:27:55 +0800
+Message-Id: <20200518052755.27467-1-dknightjun@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiArdGl0bGU6IEZyZWVzY2FsZSBNWFMgUFdNIGNvbnRyb2xsZXINCj4gKw0KPiArbWFpbnRhaW5l
-cnM6DQo+ICsgIC0gU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4NCj4gKyAgLSBBbnNv
-biBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAg
-Y29tcGF0aWJsZToNCj4gKyAgICBlbnVtOg0KPiArICAgICAgLSBmc2wsaW14MjMtcHdtDQo+ICsN
-Cj4gKyAgcmVnOg0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4gKyAgIiNwd20tY2VsbHMiOg0K
-PiArICAgIGNvbnN0OiAzDQoNClNlZW1zIHlvdSBtaXNzZWQgdGhlIHJlZmVyZW5jZSB0byBwd20u
-eWFtbC4NCg0KUmVnYXJkcw0KQWlzaGVuZw0KDQo+ICsNCj4gKyAgZnNsLHB3bS1udW1iZXI6DQo+
-ICsgICAgJHJlZjogJy9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMicNCj4g
-KyAgICBkZXNjcmlwdGlvbjogdTMyIHZhbHVlIHJlcHJlc2VudGluZyB0aGUgbnVtYmVyIG9mIFBX
-TSBkZXZpY2VzDQo+ICsNCj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGlibGUNCj4gKyAgLSBy
-ZWcNCj4gKyAgLSAiI3B3bS1jZWxscyINCj4gKyAgLSBmc2wscHdtLW51bWJlcg0KPiArDQo+ICth
-ZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gKw0KPiArZXhhbXBsZXM6DQo+ICsgIC0gfA0K
-PiArICAgIHB3bUA4MDA2NDAwMCB7DQo+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDIz
-LXB3bSI7DQo+ICsgICAgICAgIHJlZyA9IDwweDgwMDY0MDAwIDB4MjAwMD47DQo+ICsgICAgICAg
-ICNwd20tY2VsbHMgPSA8Mz47DQo+ICsgICAgICAgIGZzbCxwd20tbnVtYmVyID0gPDg+Ow0KPiAr
-ICAgIH07DQo+IC0tDQo+IDIuNy40DQoNCg==
+According to the 8021q standard, the VLAN id range is 1 to 4095.
+But in the register_vlan_device function, the range is 1 to 4094,
+because ">= VLAN_VID_MASK" is used to determine whether the id
+is illegal. This will prevent the creation of the vlan4095 interface:
+    $ vconfig add sit0 4095
+    vconfig: ioctl error for add: Numerical result out of range
+
+To fix this error, this patch uses ">= VLAN_N_VID" instead to
+determine if the id is illegal.
+
+Signed-off-by: Huang Qijun <dknightjun@gmail.com>
+---
+ net/8021q/vlan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/8021q/vlan.c b/net/8021q/vlan.c
+index d4bcfd8f95bf..5de7861ddf64 100644
+--- a/net/8021q/vlan.c
++++ b/net/8021q/vlan.c
+@@ -219,7 +219,7 @@ static int register_vlan_device(struct net_device *real_dev, u16 vlan_id)
+ 	char name[IFNAMSIZ];
+ 	int err;
+ 
+-	if (vlan_id >= VLAN_VID_MASK)
++	if (vlan_id >= VLAN_N_VID)
+ 		return -ERANGE;
+ 
+ 	err = vlan_check_real_dev(real_dev, htons(ETH_P_8021Q), vlan_id,
+-- 
+2.17.1
+
