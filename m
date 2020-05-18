@@ -2,129 +2,371 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA2D020787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23BA620756
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 14:45:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qrZhuRM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgEROpF (ORCPT
+        id S1728166AbgEROpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 10:45:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:54773 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbgEROpE (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 10:45:04 -0400
-IronPort-SDR: EF5Lfdgy74IYwQ86r6wmatB8YvQZgY4mOO2VY8Hpc0r5bZlzckU+h0RJG30/qDXn4CzCiDVp7y
- AqOB7iLARSeg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 07:45:04 -0700
-IronPort-SDR: u5e5rPM4MNDxyUv86aT/GN85X7sYKIzuJJ9PQTchWQ99t3JEN/+ExEJ5A3dAkHVdka8nRL/+6b
- /9izMuLA2scA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="254460697"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.254.208.114]) ([10.254.208.114])
-  by fmsmga008.fm.intel.com with ESMTP; 18 May 2020 07:45:01 -0700
-Subject: Re: [PATCH v5 4/5] perf stat: Save aggr value to first member of
- prev_raw_counts
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200514053638.3736-1-yao.jin@linux.intel.com>
- <20200514053638.3736-5-yao.jin@linux.intel.com>
- <20200518124826.GF3726797@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <8ea36c95-3b38-a31e-b05a-41c9ccbada51@linux.intel.com>
-Date:   Mon, 18 May 2020 22:44:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 10:45:11 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46996 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728149AbgEROpK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 10:45:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589813109; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=3tDq+jKnVYb0dPQHWxScs1oepBrcNz/o2eMIFpFznZ4=; b=qrZhuRM8B1SAc2y5VznEteDpX6Cv1P14galSOYLrumIFuZrp3fW0v/K3I4hWjMDzSFV2JaPa
+ y52U4MExZZmJ3XxrElslQsk9pCBivX3wDR4hfVxbJaMr1Rh7kj4kKAGe4wKoT9IXnvhJAwGJ
+ WgdtbHOHrURhziHrNIgUNvb6ckY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ec29f61d915e862f6e2330f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 18 May 2020 14:44:49
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 709AEC433F2; Mon, 18 May 2020 14:44:47 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A52AC433F2;
+        Mon, 18 May 2020 14:44:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0A52AC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 18 May 2020 08:44:43 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 6/9] drm/msm/a6xx: A640/A650 GMU firmware path
+Message-ID: <20200518144443.GD3915@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
+        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200423210946.28867-1-jonathan@marek.ca>
+ <20200423210946.28867-7-jonathan@marek.ca>
 MIME-Version: 1.0
-In-Reply-To: <20200518124826.GF3726797@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423210946.28867-7-jonathan@marek.ca>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/18/2020 8:48 PM, Jiri Olsa wrote:
-> On Thu, May 14, 2020 at 01:36:37PM +0800, Jin Yao wrote:
->> To collect the overall statistics for interval mode, we copy the
->> counts from evsel->prev_raw_counts to evsel->counts.
->>
->> For AGGR_GLOBAL mode, because the perf_stat_process_counter creates
->> aggr values from per cpu values, but the per cpu values are 0,
->> so the calculated aggr values will be always 0.
->>
->> This patch uses a trick that saves the previous aggr value to
->> the first member of perf_counts, then aggr calculation in
->> process_counter_values can work correctly for AGGR_GLOBAL.
->>
->> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->> ---
->>   tools/perf/util/stat.c | 10 ++++++++++
->>   tools/perf/util/stat.h |  1 +
->>   2 files changed, 11 insertions(+)
->>
->> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
->> index aadc723ce871..fbabdd5b9b62 100644
->> --- a/tools/perf/util/stat.c
->> +++ b/tools/perf/util/stat.c
->> @@ -249,6 +249,16 @@ void perf_evlist__copy_prev_raw_counts(struct evlist *evlist)
->>   		perf_evsel__copy_prev_raw_counts(evsel);
->>   }
->>   
+On Thu, Apr 23, 2020 at 05:09:18PM -0400, Jonathan Marek wrote:
+> Newer GPUs have different GMU firmware path.
 > 
-> much better, please put some comments in here explaning wha
-> is this for, because it's not obvious ;-)
+> v3: updated a6xx_gmu_fw_load based on feedback, including gmu_write_bulk,
+> and removed extra whitespace change
+
+I'm not sure if you sent the XML updates to Rob yet, but don't forget to do that
+so we don't accidentally lose the registers if we do a refresh.
+
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c     | 138 +++++++++++++++++++---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.h     |  10 ++
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h |   6 +
+>  3 files changed, 138 insertions(+), 16 deletions(-)
 > 
-> thanks,
-> jirka
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index b22a69e2f4b0..988575fc8e71 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -571,6 +571,8 @@ static void a6xx_gmu_power_config(struct a6xx_gmu *gmu)
+>  {
+>  	/* Disable GMU WB/RB buffer */
+>  	gmu_write(gmu, REG_A6XX_GMU_SYS_BUS_CONFIG, 0x1);
+> +	gmu_write(gmu, REG_A6XX_GMU_ICACHE_CONFIG, 0x1);
+> +	gmu_write(gmu, REG_A6XX_GMU_DCACHE_CONFIG, 0x1);
+>  
+>  	gmu_write(gmu, REG_A6XX_GMU_PWR_COL_INTER_FRAME_CTRL, 0x9c40400);
+>  
+> @@ -600,14 +602,95 @@ static void a6xx_gmu_power_config(struct a6xx_gmu *gmu)
+>  		A6XX_GMU_RPMH_CTRL_GFX_VOTE_ENABLE);
+>  }
+>  
+> +struct block_header {
+> +	u32 addr;
+> +	u32 size;
+> +	u32 type;
+> +	u32 value;
+> +	u32 data[];
+> +};
+> +
+> +/* this should be a general kernel helper */
+> +static int in_range(u32 addr, u32 start, u32 size)
+> +{
+> +	return addr >= start && addr < start + size;
+> +}
+> +
+> +static bool fw_block_mem(struct a6xx_gmu_bo *bo, const struct block_header *blk)
+> +{
+> +	if (!in_range(blk->addr, bo->iova, bo->size))
+> +		return false;
+> +
+> +	memcpy(bo->virt + blk->addr - bo->iova, blk->data, blk->size);
+> +	return true;
+> +}
+> +
+> +static int a6xx_gmu_fw_load(struct a6xx_gmu *gmu)
+> +{
+> +	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
+> +	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+> +	const struct firmware *fw_image = adreno_gpu->fw[ADRENO_FW_GMU];
+> +	const struct block_header *blk;
+> +	u32 reg_offset;
+> +
+> +	u32 itcm_base = 0x00000000;
+> +	u32 dtcm_base = 0x00040000;
+> +
+> +	if (adreno_is_a650(adreno_gpu))
+> +		dtcm_base = 0x10004000;
+> +
+> +	if (gmu->legacy) {
+> +		/* Sanity check the size of the firmware that was loaded */
+> +		if (fw_image->size > 0x8000) {
+> +			DRM_DEV_ERROR(gmu->dev,
+> +				"GMU firmware is bigger than the available region\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		gmu_write_bulk(gmu, REG_A6XX_GMU_CM3_ITCM_START,
+> +			       (u32*) fw_image->data, fw_image->size);
+> +		return 0;
+> +	}
+> +
+> +
+> +	for (blk = (const struct block_header *) fw_image->data;
+> +	     (const u8*) blk < fw_image->data + fw_image->size;
+> +	     blk = (const struct block_header *) &blk->data[blk->size >> 2]) {
+> +		if (blk->size == 0)
+> +			continue;
+> +
+> +		if (in_range(blk->addr, itcm_base, SZ_16K)) {
+> +			reg_offset = (blk->addr - itcm_base) >> 2;
+> +			gmu_write_bulk(gmu,
+> +				REG_A6XX_GMU_CM3_ITCM_START + reg_offset,
+> +				blk->data, blk->size);
+> +		} else if (in_range(blk->addr, dtcm_base, SZ_16K)) {
+> +			reg_offset = (blk->addr - dtcm_base) >> 2;
+> +			gmu_write_bulk(gmu,
+> +				REG_A6XX_GMU_CM3_DTCM_START + reg_offset,
+> +				blk->data, blk->size);
+> +		} else if (!fw_block_mem(&gmu->icache, blk) &&
+> +			   !fw_block_mem(&gmu->dcache, blk) &&
+> +			   !fw_block_mem(&gmu->dummy, blk)) {
+> +			DRM_DEV_ERROR(gmu->dev,
+> +				"failed to match fw block (addr=%.8x size=%d data[0]=%.8x)\n",
+> +				blk->addr, blk->size, blk->data[0]);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
+>  {
+>  	static bool rpmh_init;
+>  	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
+>  	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+> -	int i, ret;
+> +	int ret;
+>  	u32 chipid;
+> -	u32 *image;
+> +
+> +	if (adreno_is_a650(adreno_gpu))
+> +		gmu_write(gmu, REG_A6XX_GPU_GMU_CX_GMU_CX_FAL_INTF, 1);
+>  
+>  	if (state == GMU_WARM_BOOT) {
+>  		ret = a6xx_rpmh_start(gmu);
+> @@ -618,13 +701,6 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
+>  			"GMU firmware is not loaded\n"))
+>  			return -ENOENT;
+>  
+> -		/* Sanity check the size of the firmware that was loaded */
+> -		if (adreno_gpu->fw[ADRENO_FW_GMU]->size > 0x8000) {
+> -			DRM_DEV_ERROR(gmu->dev,
+> -				"GMU firmware is bigger than the available region\n");
+> -			return -EINVAL;
+> -		}
+> -
+>  		/* Turn on register retention */
+>  		gmu_write(gmu, REG_A6XX_GMU_GENERAL_7, 1);
+>  
+> @@ -638,11 +714,9 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
+>  				return ret;
+>  		}
+>  
+> -		image = (u32 *) adreno_gpu->fw[ADRENO_FW_GMU]->data;
+> -
+> -		for (i = 0; i < adreno_gpu->fw[ADRENO_FW_GMU]->size >> 2; i++)
+> -			gmu_write(gmu, REG_A6XX_GMU_CM3_ITCM_START + i,
+> -				image[i]);
+> +		ret = a6xx_gmu_fw_load(gmu);
+> +		if (ret)
+> +			return ret;
+>  	}
+>  
+>  	gmu_write(gmu, REG_A6XX_GMU_CM3_FW_INIT_RESULT, 0);
+> @@ -775,6 +849,13 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>  	status = gmu_read(gmu, REG_A6XX_GMU_GENERAL_7) == 1 ?
+>  		GMU_WARM_BOOT : GMU_COLD_BOOT;
+>  
+> +	/*
+> +	 * Warm boot path does not work on newer GPUs
+> +	 * Presumably this is because icache/dcache regions must be restored
+> +	 */
+> +	if (!gmu->legacy)
+> +		status = GMU_COLD_BOOT;
+> +
+>  	ret = a6xx_gmu_fw_start(gmu, status);
+>  	if (ret)
+>  		goto out;
+> @@ -957,6 +1038,9 @@ static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu)
+>  {
+>  	msm_gem_kernel_put(gmu->hfi.obj, gmu->aspace, false);
+>  	msm_gem_kernel_put(gmu->debug.obj, gmu->aspace, false);
+> +	msm_gem_kernel_put(gmu->icache.obj, gmu->aspace, false);
+> +	msm_gem_kernel_put(gmu->dcache.obj, gmu->aspace, false);
+> +	msm_gem_kernel_put(gmu->dummy.obj, gmu->aspace, false);
+>  
+>  	gmu->aspace->mmu->funcs->detach(gmu->aspace->mmu);
+>  	msm_gem_address_space_put(gmu->aspace);
+> @@ -974,12 +1058,14 @@ static int a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo,
+>  	size = PAGE_ALIGN(size);
+>  	if (!iova) {
+>  		/* no fixed address - use GMU's uncached range */
+> -		range_start = 0x60000000;
+> +		range_start = 0x60000000 + PAGE_SIZE; /* skip dummy page */
+>  		range_end = 0x80000000;
+>  	} else {
+>  		/* range for fixed address */
+>  		range_start = iova;
+>  		range_end = iova + size;
+> +		/* use IOMMU_PRIV for icache/dcache */
+> +		flags |= MSM_BO_MAP_PRIV;
+>  	}
+>  
+>  	bo->obj = msm_gem_new(dev, size, flags);
+> @@ -1320,7 +1406,27 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+>  	if (ret)
+>  		goto err_put_device;
+>  
+> -	if (!adreno_is_a640(adreno_gpu) && !adreno_is_a650(adreno_gpu)) {
+> +	/* Allocate memory for the GMU dummy page */
+> +	ret = a6xx_gmu_memory_alloc(gmu, &gmu->dummy, SZ_4K, 0x60000000);
+> +	if (ret)
+> +		goto err_memory;
+> +
+> +	if (adreno_is_a650(adreno_gpu)) {
+> +		ret = a6xx_gmu_memory_alloc(gmu, &gmu->icache,
+> +			SZ_16M - SZ_16K, 0x04000);
+> +		if (ret)
+> +			goto err_memory;
+> +	} else if (adreno_is_a640(adreno_gpu)) {
+> +		ret = a6xx_gmu_memory_alloc(gmu, &gmu->icache,
+> +			SZ_256K - SZ_16K, 0x04000);
+> +		if (ret)
+> +			goto err_memory;
+> +
+> +		ret = a6xx_gmu_memory_alloc(gmu, &gmu->dcache,
+> +			SZ_256K - SZ_16K, 0x44000);
+> +		if (ret)
+> +			goto err_memory;
+> +	} else {
+>  		/* HFI v1, has sptprac */
+>  		gmu->legacy = true;
+>  
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> index 463e2d5f2bb9..c6d8c0d1f90b 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> @@ -57,6 +57,9 @@ struct a6xx_gmu {
+>  
+>  	struct a6xx_gmu_bo hfi;
+>  	struct a6xx_gmu_bo debug;
+> +	struct a6xx_gmu_bo icache;
+> +	struct a6xx_gmu_bo dcache;
+> +	struct a6xx_gmu_bo dummy;
+>  
+>  	int nr_clocks;
+>  	struct clk_bulk_data *clocks;
+> @@ -92,6 +95,13 @@ static inline void gmu_write(struct a6xx_gmu *gmu, u32 offset, u32 value)
+>  	return msm_writel(value, gmu->mmio + (offset << 2));
+>  }
+>  
+> +static inline void
+> +gmu_write_bulk(struct a6xx_gmu *gmu, u32 offset, const u32 *data, u32 size)
+> +{
+> +	memcpy_toio(gmu->mmio + (offset << 2), data, size);
+> +	wmb();
+> +}
+> +
+>  static inline void gmu_rmw(struct a6xx_gmu *gmu, u32 reg, u32 mask, u32 or)
+>  {
+>  	u32 val = gmu_read(gmu, reg);
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
+> index 1cc1c135236b..eb2cd41dae6e 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
+> @@ -101,6 +101,10 @@ static inline uint32_t A6XX_HFI_IRQ_OOB_MASK(uint32_t val)
+>  
+>  #define REG_A6XX_GMU_DCVS_RETURN				0x000023ff
+>  
+> +#define REG_A6XX_GMU_ICACHE_CONFIG				0x00004c00
+> +
+> +#define REG_A6XX_GMU_DCACHE_CONFIG				0x00004c01
+> +
+>  #define REG_A6XX_GMU_SYS_BUS_CONFIG				0x00004c0f
+>  
+>  #define REG_A6XX_GMU_CM3_SYSRESET				0x00005000
+> @@ -199,6 +203,8 @@ static inline uint32_t A6XX_GMU_GPU_NAP_CTRL_SID(uint32_t val)
+>  
+>  #define REG_A6XX_GPU_GMU_CX_GMU_RPMH_POWER_STATE		0x000050ec
+>  
+> +#define REG_A6XX_GPU_GMU_CX_GMU_CX_FAL_INTF			0x000050f0
+> +
+>  #define REG_A6XX_GMU_BOOT_KMD_LM_HANDSHAKE			0x000051f0
+>  
+>  #define REG_A6XX_GMU_LLM_GLM_SLEEP_CTRL				0x00005157
+> -- 
+> 2.26.1
 > 
 
-Thanks, I will put some comments in v6.
-
-Thanks
-Jin Yao
-
->> +void perf_evlist__save_aggr_prev_raw_counts(struct evlist *evlist)
->> +{
->> +	struct evsel *evsel;
->> +
->> +	evlist__for_each_entry(evlist, evsel) {
->> +		*perf_counts(evsel->prev_raw_counts, 0, 0) =
->> +			evsel->prev_raw_counts->aggr;
->> +	}
->> +}
->> +
->>   static void zero_per_pkg(struct evsel *counter)
->>   {
->>   	if (counter->per_pkg_mask)
->> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
->> index 62cf72c71869..18ead55756cc 100644
->> --- a/tools/perf/util/stat.h
->> +++ b/tools/perf/util/stat.h
->> @@ -199,6 +199,7 @@ void perf_evlist__free_stats(struct evlist *evlist);
->>   void perf_evlist__reset_stats(struct evlist *evlist);
->>   void perf_evlist__reset_prev_raw_counts(struct evlist *evlist);
->>   void perf_evlist__copy_prev_raw_counts(struct evlist *evlist);
->> +void perf_evlist__save_aggr_prev_raw_counts(struct evlist *evlist);
->>   
->>   int perf_stat_process_counter(struct perf_stat_config *config,
->>   			      struct evsel *counter);
->> -- 
->> 2.17.1
->>
-> 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
