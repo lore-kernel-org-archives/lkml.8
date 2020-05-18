@@ -2,126 +2,107 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B90CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21009C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEDF92081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14E32081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589797980;
+	bh=FoTk8zGbyQhLWnQF+6rWBcKNCczuvfeAk/nbxrmO/Ag=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=D6iREdlv727c9Fm/b9dnz5dEyOYS4/oL8PryCl5sg74xK1cuBdg6wkkNuSZTh+XaN
+	 xVhnMN9EPhy00rlEcK9KMIzw0g2hMPkdAJ2QNEHs5ANRySYObFX9/Qmy0gMf2FitPF
+	 c+dDKymsZqNF3TJJal8slBsUotMJTSA3BoiUhMr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgERKcH (ORCPT
+        id S1726494AbgERKc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:32:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54562 "EHLO mx2.suse.de"
+        Mon, 18 May 2020 06:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgERKcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:32:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 66A57AA4F;
-        Mon, 18 May 2020 10:32:07 +0000 (UTC)
-Subject: Re: [PATCH v5 06/10] mmap locking API: convert nested write lock
- sites
-To:     Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-7-walken@google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <6a23fcce-181b-01ad-4a83-ea24d07ac724@suse.cz>
-Date:   Mon, 18 May 2020 12:32:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726270AbgERKc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 06:32:58 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6956207ED;
+        Mon, 18 May 2020 10:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589797977;
+        bh=FoTk8zGbyQhLWnQF+6rWBcKNCczuvfeAk/nbxrmO/Ag=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=rScxuk1uhjeA7R0gJmBaGzaZdn7rhVquPJ/JiSKJMjHCd5r110YAA7L/YaRRR7ikB
+         MXZfmn0V0xzCp1hRp7QzeFoobRXgnV3FsmZw1hTGWnlFw6NUBpU6DJ/Lp7zsG8otb0
+         ld2XsF3bHH1bD0pLERZGzeN/FYLSzqqoSN6WWHKc=
+Date:   Mon, 18 May 2020 12:32:53 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+cc:     WANG Wenhu <wenhu.wang@vivo.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        wenhu.pku@gmail.com
+Subject: Re: [PATCH] powerpc/sysdev: fix compile errors
+In-Reply-To: <nycvar.YFH.7.76.2005181228480.25812@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.2005181232140.25812@cbobk.fhfr.pm>
+References: <20200302053801.26027-1-wenhu.wang@vivo.com> <62251ec1-dd42-6522-dcb2-613838cd5504@c-s.fr> <nycvar.YFH.7.76.2005181228480.25812@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200422001422.232330-7-walken@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/20 2:14 AM, Michel Lespinasse wrote:
-> Add API for nested write locks and convert the few call sites doing that.
-> 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
-> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+On Mon, 18 May 2020, Jiri Kosina wrote:
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-
-Perhaps we could even move SINGLE_DEPTH_NESTING into the wrapper? It's unlikely
-there will be a new user with a different subclass?
-
-> ---
->  arch/um/include/asm/mmu_context.h | 3 ++-
->  include/linux/mmap_lock.h         | 5 +++++
->  kernel/fork.c                     | 2 +-
->  3 files changed, 8 insertions(+), 2 deletions(-)
+> > > Include linux/io.h into fsl_85xx_cache_sram.c to fix the
+> > > implicit-declaration compile errors when building Cache-Sram.
+> > > 
+> > > arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function
+> > > ‘instantiate_cache_sram’:
+> > > arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration
+> > > of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’?
+> > > [-Werror=implicit-function-declaration]
+> > >    cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+> > >                            ^~~~~~~~~~~~~~~~
+> > >                            bitmap_complement
+> > > arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes
+> > > pointer from integer without a cast [-Werror=int-conversion]
+> > >    cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+> > >                          ^
+> > > arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration
+> > > of function ‘iounmap’; did you mean ‘roundup’?
+> > > [-Werror=implicit-function-declaration]
+> > >    iounmap(cache_sram->base_virt);
+> > >    ^~~~~~~
+> > >    roundup
+> > > cc1: all warnings being treated as errors
+> > > 
+> > > Fixed: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
+> > > Signed-off-by: WANG Wenhu <wenhu.wang@vivo.com>
+> > 
+> > Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > 
-> diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
-> index 62262c5c7785..17ddd4edf875 100644
-> --- a/arch/um/include/asm/mmu_context.h
-> +++ b/arch/um/include/asm/mmu_context.h
-> @@ -8,6 +8,7 @@
->  
->  #include <linux/sched.h>
->  #include <linux/mm_types.h>
-> +#include <linux/mmap_lock.h>
->  
->  #include <asm/mmu.h>
->  
-> @@ -47,7 +48,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
->  	 * when the new ->mm is used for the first time.
->  	 */
->  	__switch_mm(&new->context.id);
-> -	down_write_nested(&new->mmap_sem, 1);
-> +	mmap_write_lock_nested(new, SINGLE_DEPTH_NESTING);
->  	uml_setup_stubs(new);
->  	mmap_write_unlock(new);
->  }
-> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> index 97ac53b66052..a757cb30ae77 100644
-> --- a/include/linux/mmap_lock.h
-> +++ b/include/linux/mmap_lock.h
-> @@ -11,6 +11,11 @@ static inline void mmap_write_lock(struct mm_struct *mm)
->  	down_write(&mm->mmap_sem);
->  }
->  
-> +static inline void mmap_write_lock_nested(struct mm_struct *mm, int subclass)
-> +{
-> +	down_write_nested(&mm->mmap_sem, subclass);
-> +}
-> +
->  static inline int mmap_write_lock_killable(struct mm_struct *mm)
->  {
->  	return down_write_killable(&mm->mmap_sem);
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 41d3f45c058e..a5d1d20ccba7 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -499,7 +499,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->  	/*
->  	 * Not linked in yet - no deadlock potential:
->  	 */
-> -	down_write_nested(&mm->mmap_sem, SINGLE_DEPTH_NESTING);
-> +	mmap_write_lock_nested(mm, SINGLE_DEPTH_NESTING);
->  
->  	/* No ordering required: file already has been exposed. */
->  	RCU_INIT_POINTER(mm->exe_file, get_mm_exe_file(oldmm));
-> 
+> As this doesn't seem to have been picked up for linux-next yet, I am 
+> picking it up now.
+
+Only now I've noticed that this is actually a dead code o_O as this file 
+can't be built by any combination of config options. So I am dropping the 
+patch again, but why do we keep it in the tree in the first place?
+
+-- 
+Jiri Kosina
+SUSE Labs
 
