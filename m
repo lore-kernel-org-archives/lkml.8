@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94258C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7713B20835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88FA207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824906;
-	bh=YwR/IkxPnry38HzB6cCo5CFHREKB8qE6TIZ6NlKlKSM=;
+	s=default; t=1589824907;
+	bh=E62aFs6PBTk5tFC7+VokOo5cOK1GtOKO7f7fTsT5TE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d6xOcaw9qMhdsSDVtzTrHixSwYSYjoIwUrfAWJ3kknQZCyWlXHxFpCyYgKbI7woIR
-	 U/0NuOgQO3ZLXIk+LXOIEGrbYr8o0fJC4SgKqQ4oqI9zzPubc0zBsndJFGFKO11tjU
-	 +TnHJyKm1iMSGbp7BsBuSdPPnLufYnLFHPKtcpsY=
+	b=OxbVk07od2WixxCjelw87xI+6fUEVNFFoWgysmH3NMfN1dF8mxfrxjQf9zbEkvEfz
+	 jJURrFiyfEGR3NszFcmXqbEOTdmA2o0/AKdwXu5kmlq46mM3cNtkVnqrSfWQlpmGcw
+	 ZJPwKOo8IncAYJRz0xubAPZQw0wnqGdYRUnCjK8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731630AbgERSBp (ORCPT
+        id S1732287AbgERSBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43896 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730723AbgERSBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:01:31 -0400
+        id S1732415AbgERSBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:01:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18412207C4;
-        Mon, 18 May 2020 18:01:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39893207C4;
+        Mon, 18 May 2020 18:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824891;
-        bh=YwR/IkxPnry38HzB6cCo5CFHREKB8qE6TIZ6NlKlKSM=;
+        s=default; t=1589824896;
+        bh=E62aFs6PBTk5tFC7+VokOo5cOK1GtOKO7f7fTsT5TE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mX+ny6wm+3BJP314AjyOcGw35PoysE4+2M/K3hrnohcUsy2XbjJoIXCvWqS3bBjnZ
-         Geq3l70VUc/iO1NcRom2j2SjTMEfKQFsBNYzBp+6HqYHmSnYLUKZ7PpULjngwpK0xx
-         VUzw98arvAGA9Ij8QkdsV8TFPidPIjOENpyXr+yM=
+        b=LpDj2PErEKeCQALJhG3WOeJnWboS3j3vEvxtNXf12/oFTBgav8KWA8msPNeJvcCUr
+         mDuZKjc8urpD6G+9IkG+xO/4seoG5gLqw4/NZ1mGqi96uw7zqBJPCA3V0NsNHbWA8N
+         QS9rNqoxJCN5X9X/FeTNHngjRVMYrqDAie2FH7RY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 038/194] tcp: fix error recovery in tcp_zerocopy_receive()
-Date:   Mon, 18 May 2020 19:35:28 +0200
-Message-Id: <20200518173534.908155113@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Camale=C3=B3n?= <noelamac@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.6 048/194] r8169: re-establish support for RTL8401 chip version
+Date:   Mon, 18 May 2020 19:35:38 +0200
+Message-Id: <20200518173535.816265470@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -61,76 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit e776af608f692a7a647455106295fa34469e7475 ]
+[ Upstream commit 1f8492df081bd66255764f3ce82ba1b2c37def49 ]
 
-If user provides wrong virtual address in TCP_ZEROCOPY_RECEIVE
-operation we want to return -EINVAL error.
+r8169 never had native support for the RTL8401, however it reportedly
+worked with the fallback to RTL8101e [0]. Therefore let's add this
+as an explicit assignment.
 
-But depending on zc->recv_skip_hint content, we might return
--EIO error if the socket has SOCK_DONE set.
+[0] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=956868
 
-Make sure to return -EINVAL in this case.
-
-BUG: KMSAN: uninit-value in tcp_zerocopy_receive net/ipv4/tcp.c:1833 [inline]
-BUG: KMSAN: uninit-value in do_tcp_getsockopt+0x4494/0x6320 net/ipv4/tcp.c:3685
-CPU: 1 PID: 625 Comm: syz-executor.0 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- tcp_zerocopy_receive net/ipv4/tcp.c:1833 [inline]
- do_tcp_getsockopt+0x4494/0x6320 net/ipv4/tcp.c:3685
- tcp_getsockopt+0xf8/0x1f0 net/ipv4/tcp.c:3728
- sock_common_getsockopt+0x13f/0x180 net/core/sock.c:3131
- __sys_getsockopt+0x533/0x7b0 net/socket.c:2177
- __do_sys_getsockopt net/socket.c:2192 [inline]
- __se_sys_getsockopt+0xe1/0x100 net/socket.c:2189
- __x64_sys_getsockopt+0x62/0x80 net/socket.c:2189
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:297
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c829
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f1deeb72c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-RAX: ffffffffffffffda RBX: 00000000004e01e0 RCX: 000000000045c829
-RDX: 0000000000000023 RSI: 0000000000000006 RDI: 0000000000000009
-RBP: 000000000078bf00 R08: 0000000020000200 R09: 0000000000000000
-R10: 00000000200001c0 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000001d8 R14: 00000000004d3038 R15: 00007f1deeb736d4
-
-Local variable ----zc@do_tcp_getsockopt created at:
- do_tcp_getsockopt+0x1a74/0x6320 net/ipv4/tcp.c:3670
- do_tcp_getsockopt+0x1a74/0x6320 net/ipv4/tcp.c:3670
-
-Fixes: 05255b823a61 ("tcp: add TCP_ZEROCOPY_RECEIVE support for zerocopy receive")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b4cc2dcc9c7c ("r8169: remove default chip versions")
+Reported-by: Camaleón <noelamac@gmail.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/realtek/r8169_main.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1756,10 +1756,11 @@ static int tcp_zerocopy_receive(struct s
- 
- 	down_read(&current->mm->mmap_sem);
- 
--	ret = -EINVAL;
- 	vma = find_vma(current->mm, address);
--	if (!vma || vma->vm_start > address || vma->vm_ops != &tcp_vm_ops)
--		goto out;
-+	if (!vma || vma->vm_start > address || vma->vm_ops != &tcp_vm_ops) {
-+		up_read(&current->mm->mmap_sem);
-+		return -EINVAL;
-+	}
- 	zc->length = min_t(unsigned long, zc->length, vma->vm_end - address);
- 
- 	tp = tcp_sk(sk);
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -2127,6 +2127,8 @@ static void rtl8169_get_mac_version(stru
+ 		{ 0x7cf, 0x348,	RTL_GIGA_MAC_VER_07 },
+ 		{ 0x7cf, 0x248,	RTL_GIGA_MAC_VER_07 },
+ 		{ 0x7cf, 0x340,	RTL_GIGA_MAC_VER_13 },
++		/* RTL8401, reportedly works if treated as RTL8101e */
++		{ 0x7cf, 0x240,	RTL_GIGA_MAC_VER_13 },
+ 		{ 0x7cf, 0x343,	RTL_GIGA_MAC_VER_10 },
+ 		{ 0x7cf, 0x342,	RTL_GIGA_MAC_VER_16 },
+ 		{ 0x7c8, 0x348,	RTL_GIGA_MAC_VER_09 },
 
 
