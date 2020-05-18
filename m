@@ -2,148 +2,130 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5738C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3629AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD5920756
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:54:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="rVXkup6a";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="QyKo0hZU"
+	by mail.kernel.org (Postfix) with ESMTP id 0EDBC20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589835470;
+	bh=yFKL6q0Ss/A6Efr5StLQDz3hK+V4GQL8fArvDWrB8Iw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vvHIQHKOpCaxXCd3xCmF+mg0YQ8KfmMFUi++k9ESDDEbZUzpe4FXo08+i5NiMyhvY
+	 aOu5dEJ1IU1igLjVS9OSoBz+/wLjX3lt0Fi+wvObKmGeEtI0bAo45Dem2Nxk9oSy6D
+	 V0EEs5Cc3wBzig0y/YRgl/ND8pd2spdkFwJMK6MI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgERUyB (ORCPT
+        id S1727867AbgERU5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:54:01 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:48524 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgERUyA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:54:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589835240; x=1621371240;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=oHivHCG3pNRPX7P/BbN1hY8rHtlIGFN+lVGSlZzGCcU=;
-  b=rVXkup6anNTrsnv/B4U7UWKA2nxelRsSBEBtYQLdT0DSGS06ByOsuLLP
-   vWC1tKUfWI2cghfadMv0sO8PbQjYDE+79Zfk3sCSp2/itW4ngIR8oqWbA
-   /XnnqtsAoaNShKdmPf6OaLsmmtO329S8m4dSC7tTQrsiflC+zS5YzMDTR
-   fm2pss3B7p8yXIz/XqjxDZjvymKyQUfZlnjCQYlgkmmo06mQqs5XMdVpP
-   9tUizYyQCJVgtOEkVbtLPW41E09Z/d5CmjlwXmp8oSiaZi/+CER0L72bO
-   qCmmm71ME5QnXk27KpWYV6GjseQH3Zkd8sPQ8AGv24+mXXoW6EJ1B5qx8
-   Q==;
-IronPort-SDR: Y6yV4dZU4zvEn9khHDtfGl9adPZ+IYl00VeGvhMEvhYk1Y2bth5WfiWrdq5CEtGa6Ze7G+MP3+
- cGAKHS8/JsMo26TLNgJvuFT86qpwd+5N+26GaYN4ZjupuLJhKAdUNIgFhyZ1B3IZjcUcZRz8Ey
- 8jwiIK+dgIBKr9YFewqCs8/L8sB9H9dautMPFT4mjgGam2Pzo+VBQUrZ02r6vCupqZ6VKCcRwr
- 8htzLBzt3fGnlI9s8zkySVHKcogU/MjpkQRCvJC7HVGKpbYE5FdidmQ4KNhOdTT/yEVALT1mq3
- xYw=
-X-IronPort-AV: E=Sophos;i="5.73,407,1583218800"; 
-   d="scan'208";a="80081737"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 May 2020 13:54:00 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 18 May 2020 13:54:04 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Mon, 18 May 2020 13:54:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZRVAhXBRCTBv+wkXoEIh5J7mzsf2/4rWRvEkxYF+iIRAGmxVGGY0yKDmwkKBvEFmRwyzaTY1uQmKz5fwMY++/HRdwOoFZvZ7YMC3SaNInby75h5Ep0h7frmL9Ysog6WLL7JA3pQ+GLwwo2ycqWA48yGTu7fidSO/yUgyKnHYVdPxkbFopjyCCFfQhtPbKrBvzsxlifI4ekJiojeMCUzrr+hbnhWJgy/f4qUtPFXiyHuCM/mpZkdvY+guX2Z/c6IMctkrwTdfn6+lt1h7C4SUFx3euok2UBJLScCOTL/bXWxwDm4DS/8eFoARhn2I9++Ci3nPvEj7NXUklP25tpVEqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oHivHCG3pNRPX7P/BbN1hY8rHtlIGFN+lVGSlZzGCcU=;
- b=Hsu0FT4sl2BMBGHjh5Neg+xgPKLV5kMNDmB5w4R/hC1csUIXavzAvo1TzUTLbyO93BoG2f5PnjCWVXI+FsD9nArw1Wp6505rkAVzStv3zDRjOxcToZa87NhdobT2AatF++Sm7ukMxWFTQ+6V6gjQqQmgiqU8k26dwvD0bOmoQ1D+IN0EnUeXeiiMuv3IBafTxDtpXtgLVXKLpIPAGfbJMNmUlrW+W+wSW3doLjYlg7E5OqLAkWMNkUdnNYbyOAy1XH1wKhVn6WvIBokXXMzKlz5cRNem7gKXQprMXEKUVYnvUmQrxcd4yzA+EIRo8REz1S2DXGi0OTOrJ77lTJWIWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oHivHCG3pNRPX7P/BbN1hY8rHtlIGFN+lVGSlZzGCcU=;
- b=QyKo0hZU78MuN9Ytpv2E7qj7rPCVD1C+AvLOT5oVKtp8okdsOCan1X1s7oJ99zj+ngaWkHpBy42W92a+K5QS16C0ybQD3HWN+zLkowxN7Yri9k91sEGFknq1kemrIuWnOR1bllbPbR8qWny5lm79Bs5hX+BqC3tjfikgF7k01cE=
-Received: from MN2PR11MB3662.namprd11.prod.outlook.com (2603:10b6:208:ee::11)
- by MN2PR11MB4047.namprd11.prod.outlook.com (2603:10b6:208:13a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Mon, 18 May
- 2020 20:53:50 +0000
-Received: from MN2PR11MB3662.namprd11.prod.outlook.com
- ([fe80::c06c:6cb8:1212:e635]) by MN2PR11MB3662.namprd11.prod.outlook.com
- ([fe80::c06c:6cb8:1212:e635%7]) with mapi id 15.20.3000.033; Mon, 18 May 2020
- 20:53:50 +0000
-From:   <Bryan.Whitehead@microchip.com>
-To:     <rberg@berg-solutions.de>, <andrew@lunn.ch>
-CC:     <UNGLinuxDriver@microchip.com>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] lan743x: Added fixed link support
-Thread-Topic: [PATCH] lan743x: Added fixed link support
-Thread-Index: AQHWK7euItT4wjmI40iuduJ/xUyGzKisnOkAgAAjswCAAZO6QA==
-Date:   Mon, 18 May 2020 20:53:50 +0000
-Message-ID: <MN2PR11MB36622C2487892C997C5CC4C4FAB80@MN2PR11MB3662.namprd11.prod.outlook.com>
-References: <20200516192402.4201-1-rberg@berg-solutions.de>
- <20200517183710.GC606317@lunn.ch>
- <6E144634-8E2F-48F7-A0A4-6073164F2B70@berg-solutions.de>
-In-Reply-To: <6E144634-8E2F-48F7-A0A4-6073164F2B70@berg-solutions.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: berg-solutions.de; dkim=none (message not signed)
- header.d=none;berg-solutions.de; dmarc=none action=none
- header.from=microchip.com;
-x-originating-ip: [68.195.34.108]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b91d80f1-48cf-4bd7-e7d4-08d7fb6d913b
-x-ms-traffictypediagnostic: MN2PR11MB4047:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB4047212D4121982A3CE5823EFAB80@MN2PR11MB4047.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 04073E895A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UEiHVzrO+Tx5MPvpAEfQ0bBigqVPo4z8cRyfT2QQkcb+Pj39o+MFQsQSoyt01QeNnmlyI7Sm7W5yC0drpH51/MYQXtg0rnSYcYUhyE25XL+qVGGAtjpHPmE6TC+PSfhlSpAMCpN0DZ6+1hXJd+Zmc20pczRn7rBzyyQY76HoY8MF97RJCgKo2SLqN2ComvPUPHEiDRnnm6sg6n7TRvBi0ANpWYOlnHGvh3h2SxL2FG7audFB7hqhEKJqqvl3maB+QtkUXcFaFXUp3v6xlf0bHWMX7TXbRKHQMcGiZzz+xaITyUH9JHGou43jazEeUwnFJMJ2UVr84FJubsmR+2LZI4vIVJGrNfkGN7vv+UNxbuT7f2Rt243T04gjH8l9lMdKz1FBBOmUBDEADAQWIdlTzPLb7mu/tgiJvtJ73jxla+e2LDT/hFtC7frWiQ5arA35
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3662.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(396003)(366004)(376002)(346002)(71200400001)(110136005)(478600001)(4744005)(7696005)(53546011)(6506007)(316002)(4326008)(26005)(33656002)(54906003)(66574014)(52536014)(5660300002)(2906002)(8936002)(8676002)(186003)(66476007)(66556008)(64756008)(55016002)(66446008)(66946007)(86362001)(76116006)(9686003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Zu2S7daf+CDYU2xsh3eKLwyQbK2kEQpiiE5t1J6rmJbdUEaor75WS5mpJpMZ07Ml/hCdq+G1K/C09inCN/nCEV38y79cRcdotES+FPyQtii9ipTJoDiYWzmY5upX7XB0N6l+MIJP81cTfrIqp2hYcRePVkIl9GhRXDHdWdR2HU+00nF7fHSG/UHYFdKgEpwgGt08Cw9OIEQF4Y4/d+IdXeOpI/4tQfegGfe38qD8tJOFaoPtYzDpi8HRBECRwS+jzL8Wlhk/yuAzOwHyk7BXV7twa1SmzdogVyY8idB4nasZuYd3aMFldfAbVpZ+IaZ68IjDcxH/cLNlKfbI+90WbL4N11ZOuX8z1ZprYshma719iP8DfYtfuTUC/wW2Tq5j1xz7qKat/30/eC2n+X6hiXygVAF3IFs1is373ZiPy+sGUY2kzOdtAvfjxoeWK+pWJYWPCVm945EirCRbLr48QG2zaslWxiX7Xngoo5KAOz8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b91d80f1-48cf-4bd7-e7d4-08d7fb6d913b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 20:53:50.0865
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: l0CK8QXFcF6bsT9tV8wDSX4zxBXhh6+P3BbOkbGBM+ftstL8LNexFbXEzvxCNkMG9z1Sm2qbghh0T2wq6S5piTGifYBFlwtW4IGb9dTw1DI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4047
+        Mon, 18 May 2020 16:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgERU5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 16:57:49 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEF9420756;
+        Mon, 18 May 2020 20:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589835468;
+        bh=yFKL6q0Ss/A6Efr5StLQDz3hK+V4GQL8fArvDWrB8Iw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LrMMimDmiD2wKcJAwj8KJkVTOLP7zSYVhM0nSgkv2dxAoziNsQtUCrv+e6Ygu2g7v
+         HTQD6cDF7KorRQxy+qKJWsPpx7dcdp/nanguSzYFJgrd4P/bJxRDyBCGFgNp0xWmrJ
+         ajuEkib91P8ef9WiGs4TMRVcr84hLgRV9Z4IN3Iw=
+Date:   Mon, 18 May 2020 13:57:47 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Bibo Mao <maobibo@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3 3/3] mm/memory.c: Add memory read privilege before
+ filling PTE entry
+Message-Id: <20200518135747.d8837ba6742b2d193e14fbb0@linux-foundation.org>
+In-Reply-To: <1589778529-25627-3-git-send-email-maobibo@loongson.cn>
+References: <1589778529-25627-1-git-send-email-maobibo@loongson.cn>
+        <1589778529-25627-3-git-send-email-maobibo@loongson.cn>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2Vsb2YgQmVyZyA8cmJlcmdA
-YmVyZy1zb2x1dGlvbnMuZGU+DQo+IFNlbnQ6IFN1bmRheSwgTWF5IDE3LCAyMDIwIDQ6NDUgUE0N
-Cj4gVG86IEFuZHJldyBMdW5uIDxhbmRyZXdAbHVubi5jaD4NCj4gQ2M6IEJyeWFuIFdoaXRlaGVh
-ZCAtIEMyMTk1OCA8QnJ5YW4uV2hpdGVoZWFkQG1pY3JvY2hpcC5jb20+Ow0KPiBVTkdMaW51eERy
-aXZlciA8VU5HTGludXhEcml2ZXJAbWljcm9jaGlwLmNvbT47IERhdmlkIFMuIE1pbGxlcg0KPiA8
-ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD47IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBr
-ZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGxhbjc0M3g6IEFk
-ZGVkIGZpeGVkIGxpbmsgc3VwcG9ydA0KPiANCj4gRVhURVJOQUwgRU1BSUw6IERvIG5vdCBjbGlj
-ayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Uga25vdyB0aGUNCj4gY29udGVu
-dCBpcyBzYWZlDQo+IA0KPiBUbyBFdmVyeW9uZTogSSBuZWVkIGEgdGVzdCBoYXJkd2FyZSByZWNv
-bW1lbmRhdGlvbiBmb3IgYSBsYW43NDMxLzAgTklDIGluDQo+IG5vcm1hbCBtb2RlIChub3QgZml4
-ZWQtbGluayBtb2RlKS4gSW4gcHJpb3IgcGF0Y2hlcyB0aGlzIHdhcyBub3QgbmVjZXNzYXJ5LA0K
-PiBiZWNhdXNlIEkgd2FzIGFibGUgdG8gZW5zdXJlIDEwMCUgYmFja3dhcmRzIGNvbXBhdGliaWxp
-dHkgYnkgY2FyZWZ1bCBjb2RpbmcNCj4gYWxvbmUuIEJ1dCBJIG1pZ2h0IHNvb24gY29tZSB0byBh
-IHBvaW50IHdoZXJlIEkgbmVlZCB0byB0ZXN0IHBoeS1jb25uZWN0ZWQNCj4gZGV2aWNlcyBhcyB3
-ZWxsLg0KDQpIaSBSb2Vsb2YsDQoNCkkgYmVsaWV2ZSBJIGNhbiBmaW5kIHRoZSBoYXJkd2FyZSBi
-YWNrIGF0IHRoZSBvZmZpY2UuIEhvd2V2ZXIgYXQgdGhpcyB0aW1lLCBkdWUgdG8gdmlydXMgZmVh
-cnMsIEknbSB3b3JraW5nIGZyb20gaG9tZS4NCg0KQ2FuIGhhcmR3YXJlIHRlc3Rpbmcgd2FpdCB1
-bnRpbCB3ZSByZXR1cm4gdG8gdGhlIG9mZmljZT8NCg0KUmVnYXJkcywNCkJyeWFuDQoNCg==
+On Mon, 18 May 2020 13:08:49 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
+
+> On mips platform, hw PTE entry valid bit is set in pte_mkyoung
+> function, it is used to set physical page with readable privilege.
+
+pte_mkyoung() seems to be a strange place to set the pte's valid bit. 
+Why is it done there?  Can it be done within mips's mk_pte()?
+
+> Here add pte_mkyoung function to make page readable on MIPS platform
+> during page fault handling. This patch improves page fault latency
+> about 10% on my MIPS machine with lmbench lat_pagefault case.
+> 
+> ...
+>
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2704,6 +2704,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+>  		}
+>  		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+>  		entry = mk_pte(new_page, vma->vm_page_prot);
+> +		entry = pte_mkyoung(entry);
+>  		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+
+What is the effect on non-mips machines?  If it's only "additional
+overhead" then it would be better to add a new pte_mkvalid() (or
+whatever) and arrange for it to be a no-op on all but mips?
+
+>  		/*
+>  		 * Clear the pte entry and flush it first, before updating the
+> @@ -3378,6 +3379,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+>  	__SetPageUptodate(page);
+>  
+>  	entry = mk_pte(page, vma->vm_page_prot);
+> +	entry = pte_mkyoung(entry);
+>  	if (vma->vm_flags & VM_WRITE)
+>  		entry = pte_mkwrite(pte_mkdirty(entry));
+>  
+> @@ -3660,6 +3662,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+>  
+>  	flush_icache_page(vma, page);
+>  	entry = mk_pte(page, vma->vm_page_prot);
+> +	entry = pte_mkyoung(entry);
+>  	if (write)
+>  		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+>  	/* copy-on-write page */
+> diff --git a/mm/mprotect.c b/mm/mprotect.c
+> index 494192ca..673f1cd 100644
+> --- a/mm/mprotect.c
+> +++ b/mm/mprotect.c
+> @@ -131,6 +131,8 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+>  				ptent = pte_clear_uffd_wp(ptent);
+>  			}
+>  
+> +			if (vma->vm_flags & VM_READ)
+> +				ptent = pte_mkyoung(ptent);
+>  			/* Avoid taking write faults for known dirty pages */
+>  			if (dirty_accountable && pte_dirty(ptent) &&
+>  					(pte_soft_dirty(ptent) ||
+
