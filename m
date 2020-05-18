@@ -2,53 +2,55 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26209C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0D4C207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA041207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824704;
-	bh=Fq473D+whRVjLlot7rBxZ1jmAR8eyjkU37pEWOtJWyA=;
+	s=default; t=1589824706;
+	bh=aBpD8Zk58zULU1+vPiY62RVuKiddyR9oFgNH3T0LIJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RF0c4Q3CgBlhIJ06BZUOXfjI5DBK5AMONvO2O8bPmnINcHV6V8gKQO85IIg2cHs0V
-	 Xrm7GYgPz9CLUL0umRtUwnflf4wvBvbbkMJOPEYpFFpUcGidK7JXibaQWDXE1ESZmK
-	 XFKKI4zjk+nx4MuLgYQzMm8d9rcNRIj8ohLOE31g=
+	b=U9mezAqzxldLBQnfZf0ITpWmEMrJ8dlosczhGq+noEodscXKi6TuijJTOqdGtMnLX
+	 rAIMgaZSX0fr9K6PJcY44+cbzD/athaDJ5nLqb9caoIWPF7ZpWrXG2kGRGtxv62/zb
+	 Z27J1AAEIHGMBCE4UogOwmH18oF97QcHlaPN+M9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbgERR6X (ORCPT
+        id S1731899AbgERR6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:58:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37576 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730713AbgERR6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:58:18 -0400
+        id S1731891AbgERR6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:58:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFF3220715;
-        Mon, 18 May 2020 17:58:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD1D320715;
+        Mon, 18 May 2020 17:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824697;
-        bh=Fq473D+whRVjLlot7rBxZ1jmAR8eyjkU37pEWOtJWyA=;
+        s=default; t=1589824702;
+        bh=aBpD8Zk58zULU1+vPiY62RVuKiddyR9oFgNH3T0LIJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OGfv5Li8dA/mmBIfQkoAL3BX09ZqNV2HED6eSYxrOOMeFVgfOZfmhWtH49vHY9XIj
-         1j2LHjfuLKnfHaGDNAIaM9LUO8udlv7cioPgf2q097pMxG8epxR04OSnvA2TB4TCvq
-         hIwYqluGqUzZZzq1Iduaj6eZJuwwKPqnzeGUd+Tc=
+        b=PgHI+GOKtMHpj4SVcypnh19KAfUQQsVq3hQ66r+YJsdP8Xo2nDgQUYnXrt04SzU3y
+         h9dqDVL6pt45he8inLnCBUyftvztTrabuiGPFxF60CtWQe7hxW3V7YAX1NUXPmbbWA
+         IH0Wy6wkJDyuYRqwpAkg6z9DSk8R2iXnZ4DJbEJI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Jones <pjones@redhat.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>
-Subject: [PATCH 5.4 114/147] Make the "Reducing compressed framebufer size" message be DRM_INFO_ONCE()
-Date:   Mon, 18 May 2020 19:37:17 +0200
-Message-Id: <20200518173527.265985773@linuxfoundation.org>
+        stable@vger.kernel.org, Seiichi Ikarashi <s.ikarashi@fujitsu.com>,
+        Daisuke Matsuda <matsuda-daisuke@fujitsu.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 080/147] nfs: fix NULL deference in nfs4_get_valid_delegation
+Date:   Mon, 18 May 2020 19:36:43 +0200
+Message-Id: <20200518173523.689033645@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
 References: <20200518173513.009514388@linuxfoundation.org>
@@ -61,47 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Jones <pjones@redhat.com>
+From: J. Bruce Fields <bfields@redhat.com>
 
-commit 82152d424b6cb6fc1ede7d03d69c04e786688740 upstream.
+[ Upstream commit 29fe839976266bc7c55b927360a1daae57477723 ]
 
-This was sort of annoying me:
+We add the new state to the nfsi->open_states list, making it
+potentially visible to other threads, before we've finished initializing
+it.
 
-random:~$ dmesg | tail -1
-[523884.039227] [drm] Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.
-random:~$ dmesg | grep -c "Reducing the compressed"
-47
+That wasn't a problem when all the readers were also taking the i_lock
+(as we do here), but since we switched to RCU, there's now a possibility
+that a reader could see the partially initialized state.
 
-This patch makes it DRM_INFO_ONCE() just like the similar message
-farther down in that function is pr_info_once().
+Symptoms observed were a crash when another thread called
+nfs4_get_valid_delegation() on a NULL inode, resulting in an oops like:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Peter Jones <pjones@redhat.com>
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/1745
-Link: https://patchwork.freedesktop.org/patch/msgid/20180706190424.29194-1-pjones@redhat.com
-[vsyrjala: Rebase due to per-device logging]
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-(cherry picked from commit 6b7fc6a3e6af4ff5773949d0fed70d8e7f68d5ce)
-[Rodrigo: port back to DRM_INFO_ONCE]
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	BUG: unable to handle page fault for address: ffffffffffffffb0 ...
+	RIP: 0010:nfs4_get_valid_delegation+0x6/0x30 [nfsv4] ...
+	Call Trace:
+	 nfs4_open_prepare+0x80/0x1c0 [nfsv4]
+	 __rpc_execute+0x75/0x390 [sunrpc]
+	 ? finish_task_switch+0x75/0x260
+	 rpc_async_schedule+0x29/0x40 [sunrpc]
+	 process_one_work+0x1ad/0x370
+	 worker_thread+0x30/0x390
+	 ? create_worker+0x1a0/0x1a0
+	 kthread+0x10c/0x130
+	 ? kthread_park+0x80/0x80
+	 ret_from_fork+0x22/0x30
 
+Fixes: 9ae075fdd190 "NFSv4: Convert open state lookup to use RCU"
+Reviewed-by: Seiichi Ikarashi <s.ikarashi@fujitsu.com>
+Tested-by: Daisuke Matsuda <matsuda-daisuke@fujitsu.com>
+Tested-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/display/intel_fbc.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfs/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/display/intel_fbc.c
-+++ b/drivers/gpu/drm/i915/display/intel_fbc.c
-@@ -504,8 +504,7 @@ static int intel_fbc_alloc_cfb(struct in
- 	if (!ret)
- 		goto err_llb;
- 	else if (ret > 1) {
--		DRM_INFO("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
--
-+		DRM_INFO_ONCE("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
- 	}
- 
- 	fbc->threshold = ret;
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index b53bcf40e2a77..ea680f619438b 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -733,9 +733,9 @@ nfs4_get_open_state(struct inode *inode, struct nfs4_state_owner *owner)
+ 		state = new;
+ 		state->owner = owner;
+ 		atomic_inc(&owner->so_count);
+-		list_add_rcu(&state->inode_states, &nfsi->open_states);
+ 		ihold(inode);
+ 		state->inode = inode;
++		list_add_rcu(&state->inode_states, &nfsi->open_states);
+ 		spin_unlock(&inode->i_lock);
+ 		/* Note: The reclaim code dictates that we add stateless
+ 		 * and read-only stateids to the end of the list */
+-- 
+2.20.1
+
 
 
