@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DDFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 536602083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A1D2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825213;
-	bh=x2k6H2u4z4R3Mw2PyUDpbwdtIYEjroK2GYUDNPg6l3A=;
+	s=default; t=1589825216;
+	bh=0nWpkoZTFnZDxmQRiTmW17jXBn2XQVwmaW26jKfT8Fg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZmoH07PmzhBzCPnVY3aOaYkS5BCsCfRtyJXU8aRF7hcNpEtXrg0bee/JLoMdNJE2
-	 ss+by8g3HKA9Jn6C9WMZ7WPLT2T05ubaihJORefjvBInpvKIETmf5wxTxhH3n3CWZP
-	 88ZUk4/w/CBoMV4aVXQLDpIO3VlnAOO1CBnk3kFs=
+	b=TYy9C7H1T6OS/4Ise+GZWpLIq4B+aJAwwetSHIrE/OxnWS3OzAlkuA9GAvWZXUe7G
+	 qukv4QnfmSFgF7Ru7t1g8G81KLX+Bkdw6c+hZ9xTSte+cKwCeZPPl0e2SkUVuBNmLD
+	 s6ZIcQm9JupoiPHtlcwFN3bt/S+BCBhnwS9vIS7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733225AbgERSGw (ORCPT
+        id S1733229AbgERSG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55180 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:06:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732602AbgERSGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:06:47 -0400
+        id S1733213AbgERSGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:06:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87B29208FE;
-        Mon, 18 May 2020 18:06:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14F7420671;
+        Mon, 18 May 2020 18:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825207;
-        bh=x2k6H2u4z4R3Mw2PyUDpbwdtIYEjroK2GYUDNPg6l3A=;
+        s=default; t=1589825204;
+        bh=0nWpkoZTFnZDxmQRiTmW17jXBn2XQVwmaW26jKfT8Fg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z4mD39vn9gjnlvJLiRRm9xvGFgJouaUgRZzEnnrq037fvPq7w51OQ4S0bPUrM23fb
-         3w0ie9GajJ0aKVmvtPF2ok3EgBh6U7hfVCb109JSpVStp9UbNIffLUt2wT30IgThv2
-         eGcpCgRkfvn/8xD3RCHnDHehCfyqfdbv/IrqWtEE=
+        b=At/QbhYqvXAuv5kplCt66WatnzLVUkk8x5SelSJAsF+boCwaDEY/N7QhtvpzJKHXD
+         6a/t5HanlfXVvI8Ml4HJJbHpoNABwmtUkMaTnEHYZl+fGg7tet8nb3ighkNKiF0Esh
+         KF9WqFLdvWJ1iH4ALYRQ50VeQqqyTM205MElihso=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 5.6 173/194] arm64: dts: meson-g12b-khadas-vim3: add missing frddr_a status property
-Date:   Mon, 18 May 2020 19:37:43 +0200
-Message-Id: <20200518173546.071184445@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Subject: [PATCH 5.6 172/194] clk: Unlink clock if failed to prepare or enable
+Date:   Mon, 18 May 2020 19:37:42 +0200
+Message-Id: <20200518173546.018721426@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,40 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 5ac0869fb39b1c1ba84d4d75c550f82e0bf44c96 upstream.
+commit 018d4671b9bbd4a5c55cf6eab3e1dbc70a50b66e upstream.
 
-In the process of moving the VIM3 audio nodes to a G12B specific dtsi
-for enabling the SM1 based VIM3L, the frddr_a status = "okay" property
-got dropped.
-This re-enables the frddr_a node to fix audio support.
+On failing to prepare or enable a clock, remove the core structure
+from the list it has been inserted as it is about to be freed.
 
-Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
-Reported-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Tested-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20191018140216.4257-1-narmstrong@baylibre.com
+This otherwise leads to random crashes when subsequent clocks get
+registered, during which parsing of the clock tree becomes adventurous.
+
+Observed with QEMU's RPi-3 emulation.
+
+Fixes: 12ead77432f2 ("clk: Don't try to enable critical clocks if prepare failed")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Link: https://lkml.kernel.org/r/20200505140953.409430-1-maz@kernel.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/clk.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -152,6 +152,10 @@
- 	clock-latency = <50000>;
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3512,6 +3512,9 @@ static int __clk_core_init(struct clk_co
+ out:
+ 	clk_pm_runtime_put(core);
+ unlock:
++	if (ret)
++		hlist_del_init(&core->child_node);
 +
- &frddr_b {
- 	status = "okay";
- };
+ 	clk_prepare_unlock();
+ 
+ 	if (!ret)
 
 
