@@ -2,168 +2,106 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA6C20787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A85207D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:24:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="khcA87sH"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Va6hluz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgERJXM (ORCPT
+        id S1726412AbgERJYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:23:12 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27234 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726279AbgERJXL (ORCPT
+        Mon, 18 May 2020 05:24:50 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:62365 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726040AbgERJYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:23:11 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04I9H17F018541;
-        Mon, 18 May 2020 11:22:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=ed8LSXnQG+tlux2FuhY3S6F1qF+O17NCCBESiZMzfGE=;
- b=khcA87sH9LWjScV6dovE2U6oev5OAExticOqX0cSt+p4QiY4ex87jHH3HhgebjiAOIsA
- FRyFF9cZUrrwiTkpk+ZC1F6h8z1HnannGbiQSmeF14JsINshSkROZPAWCZsuhBo+qj5M
- r2ZJwKCsEkS1UBDDZMRmxO1CNcakFxYd0YidEtnzSuHArvVuZmSBPhrbAemzbpo5dcXd
- V+c1hnIPSsL5yobGjEalTXk/RTBIAmvfmSB2WsrkCeA/eDDrsj7G8yVLoL7wW5MYtHaa
- 0ap/LGgI3KIfH+TS9FQTsLhZeurf8R4++OxC1ZvvAVJGwHskkWuSxtU3uiyS7AtECIHq 7A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3125xxjta7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 11:22:44 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C0E3E10002A;
-        Mon, 18 May 2020 11:22:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A5CB42AE6BD;
-        Mon, 18 May 2020 11:22:42 +0200 (CEST)
-Received: from [10.211.8.57] (10.75.127.46) by SFHDAG5NODE1.st.com
- (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
- 2020 11:22:41 +0200
-Subject: Re: [PATCH] iio: stm32-dac: Replace indio_dev->mlock with own device
- lock
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200514085018.79948-1-sergiu.cuciurean@analog.com>
- <20200516163521.2812cf86@archlinux>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <9f271d8d-4ee9-1633-fb90-faca53072716@st.com>
-Date:   Mon, 18 May 2020 11:22:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 18 May 2020 05:24:50 -0400
+X-UUID: 38ef98bc9db2438b8e621db43415db51-20200518
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0DTYtg7DH/aaZsHajF1M0GEhpPDj6HE4U9Su4EW4ZBg=;
+        b=Va6hluz4/bYSptacD8bkhsa7nqDZ2RFMyTranQOalM8PvJkJFDufyvfFqfxrt16Eu3JTqNK1zXkkWjaYPe4/rTWrbAF32VKsT7VVlBavvczJ9jN19kkFozRrtllCR0Kyh2vL+FHwLlmDezX0unYUnglb0LuuuzxNYqAEFeq5e5w=;
+X-UUID: 38ef98bc9db2438b8e621db43415db51-20200518
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <roger.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1124336748; Mon, 18 May 2020 17:24:48 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 18 May 2020 17:24:45 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 18 May 2020 17:24:45 +0800
+From:   Roger Lu <roger.lu@mediatek.com>
+To:     Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Fan Chen <fan.chen@mediatek.com>,
+        HenryC Chen <HenryC.Chen@mediatek.com>,
+        YT Lee <yt.lee@mediatek.com>,
+        Xiaoqing Liu <Xiaoqing.Liu@mediatek.com>,
+        Charles Yang <Charles.Yang@mediatek.com>,
+        Angus Lin <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>, Roger Lu <roger.lu@mediatek.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: [PATCH v8 0/3] PM / AVS: SVS: Introduce SVS engine
+Date:   Mon, 18 May 2020 17:24:01 +0800
+Message-ID: <20200518092403.22647-1-roger.lu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200516163521.2812cf86@archlinux>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG5NODE1.st.com
- (10.75.127.13)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_03:2020-05-15,2020-05-18 signatures=0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 5934DDCDEAF0C437AC4DD8F51EBED5FD5EACA359D2BA842B5D2816D48513A4412000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/20 5:35 PM, Jonathan Cameron wrote:
-> On Thu, 14 May 2020 11:50:12 +0300
-> Sergiu Cuciurean <sergiu.cuciurean@analog.com> wrote:
-> 
->> As part of the general cleanup of indio_dev->mlock, this change replaces
->> it with a local lock on the device's state structure.
->>
->> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
->> ---
->>  drivers/iio/dac/stm32-dac.c | 12 ++++++++----
->>  1 file changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
->> index f22c1d9129b2..74b9474c8590 100644
->> --- a/drivers/iio/dac/stm32-dac.c
->> +++ b/drivers/iio/dac/stm32-dac.c
->> @@ -26,9 +26,11 @@
->>  /**
->>   * struct stm32_dac - private data of DAC driver
->>   * @common:		reference to DAC common data
->> + * @lock: lock to protect the data buffer during regmap ops
-> 
-> In this particular case I'm not sure that's what mlock was being used for.
-> I think it's about avoiding races around checking if powered down and
-> actually doing it.
+MS4gU1ZTIGRyaXZlciB1c2UgT1BQIGFkanVzdCBldmVudCBpbiBbMV0gdG8gdXBkYXRlIE9QUCB0
+YWJsZSB2b2x0YWdlIHBhcnQuDQoyLiBTVlMgZHRzIG5vZGUgcmVmZXJzIHRvIENQVSBvcHAgdGFi
+bGUgWzJdIGFuZCBHUFUgb3BwIHRhYmxlIFszXS4NCjMuIFNWUyBhbmQgdGhlcm1hbCBkdHMgdXNl
+IHRoZSBzYW1lIHRoZXJtYWwgZWZ1c2UgWzRdLg0KNC4gU1ZTIGR0cyBuZWVkcyBwb3dlci1kb21h
+aW4gWzVdWzZdIGFuZCBQTUlDIHJlZ3VsYXRvciBbN10uDQoNClsxXSBodHRwczovL3BhdGNod29y
+ay5rZXJuZWwub3JnL3BhdGNoLzExMTkzNTEzLw0KWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
+bC5vcmcvcGF0Y2gvMTEzMDQ5MzUvDQpbM10gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC8xMTQyMzAwOS8NCls0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEx
+MzE2NDk1Lw0KWzVdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMjM2
+ODc1Lw0KWzZdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMjM2ODc4
+Lw0KWzddIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEyODQ2MTcvDQoNCnBl
+bmRpbmcgZGlzY3Vzc2lvbjoNCi0gU1ZTIHN1Yi1ub2RlIGFyY2hpdGVjdHVyZSBjb25jZXJuIGlu
+IGJlbG93IHBhdGNoLg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzEx
+NzU5OTQvDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvMTE3NTk5NC8N
+Cg0KY2hhbmdlcyBzaW5jZSB2NzoNCi0gQWRkICJtdGtfc3ZzLnlhbWwiIGZvciBkZXZpY2UtdHJl
+ZSBiaW5kaW5nIGRvY3VtZW50Lg0KLSBBZGQgc3ZzX2FkZF90aGVybWFsX2RldmljZV9saW5rKCkg
+aW4gZHJpdmVyIGZvciBzdnMgZGV2aWNlIChjb25zdW1lcikNCnRvIGxpbmsgdGhlcm1hbCBkZXZp
+Y2UgKHN1cHBsaWVyKS4NCi0gcmVwbGFjZSBwbV9xb3NfYWRkX3JlcXVlc3QoKSB3aXRoIGNwdV9s
+YXRlbmN5X3Fvc19hZGRfcmVxdWVzdCgpIGZvcg0KbGV0dGluZyBDUFVzIGxlYXZlIGlkbGUtb2Zm
+IHN0YXRlLg0KDQpSb2dlciBMdSAoMyk6DQogIGR0LWJpbmRpbmdzOiBwb3dlcjogYXZzOiBhZGQg
+bXRrIHN2cyBkdC1iaW5kaW5ncw0KICBhcm02NDogZHRzOiBtdDgxODM6IGFkZCBzdnMgZGV2aWNl
+IGluZm9ybWF0aW9uDQogIFBNIC8gQVZTOiBTVlM6IEludHJvZHVjZSBTVlMgZW5naW5lDQoNCiAu
+Li4vYmluZGluZ3MvcG93ZXIvYXZzL210a19zdnMueWFtbCAgICAgICAgICAgfCAgMTQxICsrDQog
+YXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMtZXZiLmR0cyAgIHwgICAxNiArDQog
+YXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSAgICAgIHwgICA0MSArDQog
+ZHJpdmVycy9wb3dlci9hdnMvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICAxMCArDQog
+ZHJpdmVycy9wb3dlci9hdnMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAgMSArDQog
+ZHJpdmVycy9wb3dlci9hdnMvbXRrX3N2cy5jICAgICAgICAgICAgICAgICAgIHwgMjExOSArKysr
+KysrKysrKysrKysrKw0KIGluY2x1ZGUvbGludXgvcG93ZXIvbXRrX3N2cy5oICAgICAgICAgICAg
+ICAgICB8ICAgMjMgKw0KIDcgZmlsZXMgY2hhbmdlZCwgMjM1MSBpbnNlcnRpb25zKCspDQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9h
+dnMvbXRrX3N2cy55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcG93ZXIvYXZzL210
+a19zdnMuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L3Bvd2VyL210a19zdnMu
+aA0K
 
-Hi Sergiu,
-
-Indeed, purpose is to protect against a race here when reading CR, and
-updating it via regmap (this also makes the subsequent pm_runtime calls
-to be balanced based on this).
-(Side note: there is no data buffer involved for the DAC.)
-Could you please update the comment ?
-
-Thanks,
-Fabrice
-
-> 
-> 
->>   */
->>  struct stm32_dac {
->>  	struct stm32_dac_common *common;
->> +	struct mutex		lock;
->>  };
->>  
->>  static int stm32_dac_is_enabled(struct iio_dev *indio_dev, int channel)
->> @@ -58,10 +60,10 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
->>  	int ret;
->>  
->>  	/* already enabled / disabled ? */
->> -	mutex_lock(&indio_dev->mlock);
->> +	mutex_lock(&dac->lock);
->>  	ret = stm32_dac_is_enabled(indio_dev, ch);
->>  	if (ret < 0 || enable == !!ret) {
->> -		mutex_unlock(&indio_dev->mlock);
->> +		mutex_unlock(&dac->lock);
->>  		return ret < 0 ? ret : 0;
->>  	}
->>  
->> @@ -69,13 +71,13 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
->>  		ret = pm_runtime_get_sync(dev);
->>  		if (ret < 0) {
->>  			pm_runtime_put_noidle(dev);
->> -			mutex_unlock(&indio_dev->mlock);
->> +			mutex_unlock(&dac->lock);
->>  			return ret;
->>  		}
->>  	}
->>  
->>  	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, en);
->> -	mutex_unlock(&indio_dev->mlock);
->> +	mutex_unlock(&dac->lock);
->>  	if (ret < 0) {
->>  		dev_err(&indio_dev->dev, "%s failed\n", en ?
->>  			"Enable" : "Disable");
->> @@ -328,6 +330,8 @@ static int stm32_dac_probe(struct platform_device *pdev)
->>  	indio_dev->info = &stm32_dac_iio_info;
->>  	indio_dev->modes = INDIO_DIRECT_MODE;
->>  
->> +	mutex_init(&dac->lock);
->> +
->>  	ret = stm32_dac_chan_of_init(indio_dev);
->>  	if (ret < 0)
->>  		return ret;
-> 
