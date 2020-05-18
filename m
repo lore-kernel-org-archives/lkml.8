@@ -2,120 +2,122 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE90C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5D620835
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:31:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jZMmIFRS"
+	by mail.kernel.org (Postfix) with ESMTP id 6E6E4207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 05:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgERFbs (ORCPT
+        id S1726697AbgERFcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 01:31:48 -0400
-Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:17871
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726040AbgERFbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 01:31:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YJfAxd0P9Dk4DLE3hfzOyhYv2z0dDuMVO39WrtvDFegZsm4wqHgZnvvpIROFdXnN25dXJ94s9cGYoShsRT6RY0IzENR2FVU60mHzVhmVFmL6gur44hXeuJlfxs5GNdPVXzjJ3EhbYBD8IW1pu+wH+Q58QDdURAPoVd/cg4DCHz/Iue5f4krcitqnkWV0litn9T7sjesNCVQAz+cJm01a8NDq2KvZInpn/Qyj8MLtQsk3uKRFzaFt3p/8uPgVjMwIIZXez0SPz7RIPa1cj6/QP+29Mpd3HXzhjD3/xuIVe12j0MGe9yOShVKpgZmxQjq6FPPciHKezNJSOIraOR8pDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DRizpJhk7+qdJh3MbajO9cq3eB/cwAZ4p9CleWXEzdA=;
- b=WISaLMaIjk/8v4qp50tKZEzNSUJ+eBFSc7+CTYkIifwNkoGPOfee+C+7mG4IF1AapEPfqUacEEhifwiB98CNOC0qNzYNwF9X3FwdlhLHIxsJoxda5qumdCel2MTFEye4RS0SQiAmrudIAP0WpGHpAvPfhOcRtNqNqDliXoDrURubGonkFRCaR/NFoe8wJoaWUl683rtGXrxmluODwSBsdVdvtovGA7mO65/G1MxEO/maAyLUXrAERbuW4BXXtdYWTvjZcjxVOqWXX/CSC3WPpygiOC2M5cZE1L41BfTuravRxliNX4kk93ax6WZQuOd+XATjR56n1TaX8QDseFkfIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DRizpJhk7+qdJh3MbajO9cq3eB/cwAZ4p9CleWXEzdA=;
- b=jZMmIFRSKAtWd1t8HFjC8k5NkhV33MKh4gDEI1gTB12lQOfjW4scCMJZ7WIt47KXnvACNfDh2FUy1MLUOz4QRbPUjIgmCGnLEM2/RQrgQT1BbnAgFrkT8yKAf1gRpoz2SOgY1UmzTsFoY1/cARBzTuY9neqi4mk9SE+TTdMWyug=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3691.eurprd04.prod.outlook.com (2603:10a6:8:5::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.31; Mon, 18 May
- 2020 05:31:43 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3000.033; Mon, 18 May 2020
- 05:31:43 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
-Thread-Topic: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
-Thread-Index: AQHWKeXnwgIqcPijn06Ta1X0H9EaU6itVJ0AgAAB8bA=
-Date:   Mon, 18 May 2020 05:31:43 +0000
-Message-ID: <DB3PR0402MB3916B5980C0681BFF3C08FE5F5B80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB4966B92CFFA23DD77748C77680B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB4966B92CFFA23DD77748C77680B80@AM6PR04MB4966.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d7b47085-4ca6-4301-322b-08d7faecc010
-x-ms-traffictypediagnostic: DB3PR0402MB3691:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3691DEF429E06F2C6898F056F5B80@DB3PR0402MB3691.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 04073E895A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LDX3N41jtK/KebeZZ8f2no2NonKRWpI+w8ru/evEHqix5Xp8hG/S9Xkpgb3/vyCQHPFuIBLkzgx0RLPVvruZgFbW/MCfW6rvwCNW7GWIB8NfcrMA6Wls24SycJF+0BbkFPnKWmNQ7ND4cevA3qG54j7b5Z/Byj7EKetZ9gjbrdJQ57Nw8nLSoI5VrpwgRAeYqEdLDakE24T7paRg/eaqDafnAbqkGFpsyIcCnI/9YpOltb+SHFvvmcwIbrJERenQsCbd33IEEDHLSYFEIsM+d//wtcc5vWozenz4Y5YKNwqKpm/J2sqY4+vXDz0e9P9bqe1ArCPgrG/ymPxrlaWJ3qUGcRIGuOOTzXmgNAi3bKft+RZszZdhw5sChsUd0TYESu+Qwo4aeyqgIL25FV0BMoc4D4XnmvflnXjKeRh6cWMl0z6dA2o6cW9Ca/Hjk9bnDE2YxgSWZmmwNLyGdF2vPoWDiKkQy+/mAOPLCZTU/7w=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(66446008)(64756008)(66556008)(66476007)(76116006)(66946007)(86362001)(7696005)(478600001)(5660300002)(4326008)(2906002)(8676002)(6506007)(8936002)(55016002)(44832011)(71200400001)(9686003)(52536014)(26005)(186003)(110136005)(316002)(33656002)(7416002)(4744005)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: zQ5k9qRWnFoebgB+3CUOod6FgKs9wGvonejCjt7F4hR3AW3HR3XSryIPndQK46HgpnTkgXfhjbrA4qaDajy0Gry5UYClTkHWSUMkFpHMqP4bgBYLl529MNhZavZOrUN19MFF/y668LA5Jw3UoeHu0FZszxcyRs7zUq45Fp0VgNVbTD19hxnYqSlGn1afbTIsEK4203KCThLEwpjUF18szXlQCJUiZXGI/XgxgH/SjsyTsPR83H0pebZZrh04uKn0MAlNPkEq6IX9k4y3xocGEEPzVTiPwAvHEIkE7ujxPAfCfLtSZEc9pWS0TgBpTy+4Ta5zNxmjxYUHzbq5oT9AOu7dIjFbAhmIbjQtejL+p8XiDJ4xuMnRzDIlTvgbNM0ts74wFNcdjgt/xYG/SDa6IyZKiI99Z6rgA+wQP8Imu68BwLlIjIqPsE3q4jnKG9SeGHBSgoP6ocHVzznVe8qgegr41/sfL7cy++GH+5bMngxA/xNv4Dic7FcxRseld06a
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 18 May 2020 01:32:09 -0400
+Received: from mga05.intel.com ([192.55.52.43]:46275 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbgERFcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 01:32:09 -0400
+IronPort-SDR: t0drqDhrAzvgctAUMj7WXYBl0b5h+AxtllxUbFufHP+JU4Uv0swHI3ZSS99eniFEyctclbK9AT
+ qSAOiCnmyMVA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2020 22:32:08 -0700
+IronPort-SDR: 3FYr8W0oCV4c/oQ+sOt5p5Nh3NtHqVgXkB8CfcYLE9vAyq++sGDiWLe0tRVzXtw154rDbxCydD
+ QzVc++4Nsl2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
+   d="scan'208";a="342686939"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga001.jf.intel.com with ESMTP; 17 May 2020 22:32:07 -0700
+Date:   Sun, 17 May 2020 22:32:07 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/9] fs/ext4: Disallow verity if inode is DAX
+Message-ID: <20200518053207.GB3025231@iweiny-DESK2.sc.intel.com>
+References: <20200513054324.2138483-1-ira.weiny@intel.com>
+ <20200513054324.2138483-3-ira.weiny@intel.com>
+ <20200516014916.GF1009@sol.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7b47085-4ca6-4301-322b-08d7faecc010
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2020 05:31:43.6887
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X4pqvJLm0DZQqIl0787b5zod2+kZNjVMvoNBihtvYwyUZTNYYMt1uKcEZiogoLqP/L4esjUeC7mKl3IPsYV5xw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3691
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200516014916.GF1009@sol.localdomain>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gU3ViamVjdDogUkU6IFtQQVRDSF0gZHQtYmluZGluZ3M6IHB3bTogQ29udmVydCBteHMg
-cHdtIHRvIGpzb24tc2NoZW1hDQo+IA0KPiA+ICt0aXRsZTogRnJlZXNjYWxlIE1YUyBQV00gY29u
-dHJvbGxlcg0KPiA+ICsNCj4gPiArbWFpbnRhaW5lcnM6DQo+ID4gKyAgLSBTaGF3biBHdW8gPHNo
-YXduLmd1b0BsaW5hcm8ub3JnPg0KPiA+ICsgIC0gQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54
-cC5jb20+DQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGNvbXBhdGlibGU6DQo+ID4g
-KyAgICBlbnVtOg0KPiA+ICsgICAgICAtIGZzbCxpbXgyMy1wd20NCj4gPiArDQo+ID4gKyAgcmVn
-Og0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gKyAgIiNwd20tY2VsbHMiOg0KPiA+
-ICsgICAgY29uc3Q6IDMNCj4gDQo+IFNlZW1zIHlvdSBtaXNzZWQgdGhlIHJlZmVyZW5jZSB0byBw
-d20ueWFtbC4NCg0KSXQgaXMgYmVjYXVzZSBtYW55IHB3bSB5YW1sIGZpbGVzIGFsc28gaGFzIG5v
-ICIjcHdtLWNlbGxzIiByZWZlcmVuY2UsIHNvIEkNCmFtIE5PVCBzdXJlIGlmIGl0IGlzIGEgTVVT
-VDoNCg0KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9hbGx3aW5uZXIsc3Vu
-NGktYTEwLXB3bS55YW1sDQpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2dv
-b2dsZSxjcm9zLWVjLXB3bS55YW1sDQpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cHdtL2lxczYyMGEtcHdtLnlhbWwNCi4uLg0KDQpBbnNvbg0K
+On Fri, May 15, 2020 at 06:49:16PM -0700, Eric Biggers wrote:
+> On Tue, May 12, 2020 at 10:43:17PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Verity and DAX are incompatible.  Changing the DAX mode due to a verity
+> > flag change is wrong without a corresponding address_space_operations
+> > update.
+> > 
+> > Make the 2 options mutually exclusive by returning an error if DAX was
+> > set first.
+> > 
+> > (Setting DAX is already disabled if Verity is set first.)
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes:
+> > 	remove WARN_ON_ONCE
+> > 	Add documentation for DAX/Verity exclusivity
+> > ---
+> >  Documentation/filesystems/ext4/verity.rst | 7 +++++++
+> >  fs/ext4/verity.c                          | 3 +++
+> >  2 files changed, 10 insertions(+)
+> > 
+> > diff --git a/Documentation/filesystems/ext4/verity.rst b/Documentation/filesystems/ext4/verity.rst
+> > index 3e4c0ee0e068..51ab1aa17e59 100644
+> > --- a/Documentation/filesystems/ext4/verity.rst
+> > +++ b/Documentation/filesystems/ext4/verity.rst
+> > @@ -39,3 +39,10 @@ is encrypted as well as the data itself.
+> >  
+> >  Verity files cannot have blocks allocated past the end of the verity
+> >  metadata.
+> > +
+> > +Verity and DAX
+> > +--------------
+> > +
+> > +Verity and DAX are not compatible and attempts to set both of these flags on a
+> > +file will fail.
+> > +
+> 
+> If you build the documentation, this shows up as its own subsection
+> "2.13. Verity and DAX" alongside "2.12. Verity files", which looks odd.
+> I think you should delete this new subsection header so that this paragraph goes
+> in the existing "Verity files" subsection.
+
+Ok...  I'll fix it up...
+
+> 
+> Also, Documentation/filesystems/fsverity.rst already mentions DAX (similar to
+> fscrypt.rst).  Is it intentional that you added this to the ext4-specific
+> documentation instead?
+
+I proposed this text[1] and there were no objections...  I was looking at ext4
+because only ext4 supports verity and DAX.  I think having this in both the
+ext4 docs and the verity docs helps.
+
+Ira
+
+[1] https://lore.kernel.org/lkml/20200415191451.GA2305801@iweiny-DESK2.sc.intel.com/
+
+> 
+> - Eric
