@@ -2,53 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E807DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD463C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3C1E207C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0932207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589823626;
-	bh=rI69ELdrINCHlnyvofm74tGYIw+cV8yJBh7GJpNNMKA=;
+	s=default; t=1589823631;
+	bh=wQj4eX7/FxHkNa5dyrYIrZEZLqrzpC4NjNtQNYdvArI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zILH2EDkZzruFHUZ4PhfIj2lu6sMoRQS46d6q6kjWU7Ltin0cxY3BZxLBU9S0yIy5
-	 QhalHrcFGIhovKqheLF+wdjDWJxYwHF37kkY2/mU/CrfHHHSgVIubDMIiPxuhGDYH8
-	 ZrmMCB5nVOBy333UkH6wTyuFznxhQR14sfcKMc0A=
+	b=Ti8QD0AekZdB45YqQ93eYRedjvNX6mnoSXXx3uBpv0Lx34/sC33ZyvmJ+nXNgU4NR
+	 SXnc6aRglgPCVj0UY6DL5tMgfEpq2MWfUxtM/jUelefouKYSMjpWnOoG3rop1JzSqi
+	 oNOiGsWgCA8rJ5RB59iHg8Luoy88OvNl0QL6QIiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729053AbgERRkZ (ORCPT
+        id S1729079AbgERRka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35782 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:40:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729029AbgERRkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:40:19 -0400
+        id S1729036AbgERRkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:40:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4634207FB;
-        Mon, 18 May 2020 17:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C5F7206D4;
+        Mon, 18 May 2020 17:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589823618;
-        bh=rI69ELdrINCHlnyvofm74tGYIw+cV8yJBh7GJpNNMKA=;
+        s=default; t=1589823620;
+        bh=wQj4eX7/FxHkNa5dyrYIrZEZLqrzpC4NjNtQNYdvArI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TY9bXI6gzfFcxHp526oLrQBIup8fSCtv0u1zhU4WdFfLuDw7QG/gBPyRRjnr3RQMu
-         PKN7TA8SRhl2LhFzL8cjdedLB7IpzT0YrYxmVYk1TCu1cgsCSwBM7IrI7tHtEQAf1w
-         XxAt0eBIfqKJnfqSvC9ACFmcz8LXndLz66/n5AUA=
+        b=NB70sqOsgyE8COQNV8uszeFoztdBC/1geOAAPGujyEWRvsFnHXnNvJs7aACLTPPfp
+         f04coi+vHbKTIViF17cIK9zA5K0T9tsdqrczqY9Uz9D5N/BuuN2gq86WTn28FXMKWd
+         kR2zPYbB5+Y2R+ofIpSDKvouDH5sNnurtSf2ubR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Delalande <colona@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 16/86] scripts/decodecode: fix trapping instruction formatting
-Date:   Mon, 18 May 2020 19:35:47 +0200
-Message-Id: <20200518173453.793425023@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 17/86] phy: micrel: Disable auto negotiation on startup
+Date:   Mon, 18 May 2020 19:35:48 +0200
+Message-Id: <20200518173453.976038108@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
 References: <20200518173450.254571947@linuxfoundation.org>
@@ -61,46 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Delalande <colona@arista.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 
-commit e08df079b23e2e982df15aa340bfbaf50f297504 upstream.
+[ Upstream commit 99f81afc139c6edd14d77a91ee91685a414a1c66 ]
 
-If the trapping instruction contains a ':', for a memory access through
-segment registers for example, the sed substitution will insert the '*'
-marker in the middle of the instruction instead of the line address:
+Disable auto negotiation on init to properly detect an already plugged
+cable at boot.
 
-	2b:   65 48 0f c7 0f          cmpxchg16b %gs:*(%rdi)          <-- trapping instruction
+At boot, when the phy is started, it is in the PHY_UP state.
+However, if a cable is plugged at boot, because auto negociation is already
+enabled at the time we get the first interrupt, the phy is already running.
+But the state machine then switches from PHY_UP to PHY_AN and calls
+phy_start_aneg(). phy_start_aneg() will not do anything because aneg is
+already enabled on the phy. It will then wait for a interrupt before going
+further. This interrupt will never happen unless the cable is unplugged and
+then replugged.
 
-I started to think I had forgotten some quirk of the assembly syntax
-before noticing that it was actually coming from the script.  Fix it to
-add the address marker at the right place for these instructions:
+It was working properly before 321beec5047a (net: phy: Use interrupts when
+available in NOLINK state) because switching to NOLINK meant starting
+polling the phy, even if IRQ were enabled.
 
-	28:   49 8b 06                mov    (%r14),%rax
-	2b:*  65 48 0f c7 0f          cmpxchg16b %gs:(%rdi)           <-- trapping instruction
-	30:   0f 94 c0                sete   %al
-
-Fixes: 18ff44b189e2 ("scripts/decodecode: make faulting insn ptr more robust")
-Signed-off-by: Ivan Delalande <colona@arista.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Link: http://lkml.kernel.org/r/20200419223653.GA31248@visor
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 321beec5047a (net: phy: Use interrupts when available in NOLINK state)
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/decodecode |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/micrel.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/scripts/decodecode
-+++ b/scripts/decodecode
-@@ -98,7 +98,7 @@ faultlinenum=$(( $(wc -l $T.oo  | cut -d
- faultline=`cat $T.dis | head -1 | cut -d":" -f2-`
- faultline=`echo "$faultline" | sed -e 's/\[/\\\[/g; s/\]/\\\]/g'`
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 4eba646789c30..98166e144f2dd 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -285,6 +285,17 @@ static int kszphy_config_init(struct phy_device *phydev)
+ 	if (priv->led_mode >= 0)
+ 		kszphy_setup_led(phydev, type->led_mode_reg, priv->led_mode);
  
--cat $T.oo | sed -e "${faultlinenum}s/^\(.*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
-+cat $T.oo | sed -e "${faultlinenum}s/^\([^:]*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
- echo
- cat $T.aa
- cleanup
++	if (phy_interrupt_is_valid(phydev)) {
++		int ctl = phy_read(phydev, MII_BMCR);
++
++		if (ctl < 0)
++			return ctl;
++
++		ret = phy_write(phydev, MII_BMCR, ctl & ~BMCR_ANENABLE);
++		if (ret < 0)
++			return ret;
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
+
 
 
