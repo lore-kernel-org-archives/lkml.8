@@ -2,160 +2,98 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3BE207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC249207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:27:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hnm9iVrq"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dcstgaNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgEREZf (ORCPT
+        id S1726481AbgERE11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 00:25:35 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10274 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgEREZe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 00:25:34 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec20db00000>; Sun, 17 May 2020 21:23:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 17 May 2020 21:25:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 17 May 2020 21:25:33 -0700
-Received: from [10.40.100.11] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
- 2020 04:25:25 +0000
-Subject: Re: [PATCH v6 09/10] arm64: efi: Export screen_info
-From:   Nikhil Mahale <nmahale@nvidia.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
- <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
- <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
- <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
- <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com>
-X-Nvconfidentiality: Public
-Message-ID: <4202ea20-6e51-31d3-44b1-3861798a8158@nvidia.com>
-Date:   Mon, 18 May 2020 09:55:21 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 18 May 2020 00:27:27 -0400
+Received: from ozlabs.org ([203.11.71.1]:35931 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgERE10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 00:27:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49QQw973Hzz9sRN;
+        Mon, 18 May 2020 14:27:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589776044;
+        bh=1Nzkxf+aSIk8nn2W0ZptJe9cFICterAtZUZx4NjA5Go=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dcstgaNlnSh2TfgDx6DbGJhpSVED3cyoVUJ02Xs0Sw3lNNe8E0TOmjvFjAVqI9k5J
+         ASPfTrMBL/drQW0hZ3uc8cnlrweNph2PRcvT/AJ3b2nzG9EDFpn9DUJbX5oPuVQEwc
+         2hEgxECzr0UZumfIq+i98rhQ/xPk5MafLlHqES+7bUW0ydzZzTAaAfBGgcSg7BAW/9
+         VvSWleil6fdWW0M0/igKzAtGSMpQ047ifI42mW+mIJNfpyOTWWgq/gnoM0JOiM7deG
+         T1uiGeaN3D5UtJmcVACOPywBh/qDyn8RJ1qLYwn6sPiLSaj30bqatD4v0NPtq0lnjj
+         yVr6TE0mJnUkQ==
+Date:   Mon, 18 May 2020 14:27:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Subject: linux-next: build failure after merge of the mmc tree
+Message-ID: <20200518142720.4c0d9a87@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589775792; bh=ekIXZzrCnsEE0UL348V3okhZK7T2Db9hjgnyPCpZFQo=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=hnm9iVrq0+hxj9S+6CP6ONZHVycQsEsKBoV846kHFRHb/EfZmjjw1YnuEJO3PMK31
-         7Tp+RQs87fW+2hXs5HIPHryeAvOYSGRc9+UHWUBLrpullIG/JR1+KreOTaDSXJ19WR
-         JeLOJXR3gWEmPz+++aLpibN4o5szDoMAzbSEfOaRDFTz/O5xkQ0PeyApkA3P9AbQ2q
-         Ah8PsuSWn+XGG0FGIsl22iBXaOszg2/WJyQXMg2Twzrzi73HEYxTmN1cVqgTikkOak
-         J3K/0UDgQIKk+PmsmQNzZ/lXwCqBwcbsDtRdcFPBs45EevrTD027c1ngLGKycG8D4V
-         GD3lUMo+rBrHA==
+Content-Type: multipart/signed; boundary="Sig_/23ZVIktFKn3NAJzPYobrmCw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/20 7:56 PM, Nikhil Mahale wrote:
-> On 3/20/20 3:16 AM, Michael Kelley wrote:
->> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:27 AM
->>>
->>> On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
->>>> From: Arnd Bergmann <arnd@arndb.de>
->>>>> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
->>>>>>
->>>>>> The Hyper-V frame buffer driver may be built as a module, and
->>>>>> it needs access to screen_info. So export screen_info.
->>>>>>
->>>>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
->>>>>
->>>>> Is there any chance of using a more modern KMS based driver for the screen
->>>>> than the old fbdev subsystem? I had hoped to one day completely remove
->>>>> support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
->>>>> architectures.
->>>>>
->>>>
->>>> The current hyperv_fb.c driver is all we have today for the synthetic Hyper-V
->>>> frame buffer device.  That driver builds and runs on both ARM64 and x86.
->>>>
->>>> I'm not knowledgeable about video/graphics drivers, but when you
->>>> say "a more modern KMS based driver", are you meaning one based on
->>>> DRM & KMS?  Does DRM make sense for a "dumb" frame buffer device?
->>>> Are there any drivers that would be a good pattern to look at?
->>>
->>> It used to be a lot harder to write a DRM driver compared to an fbdev
->>> driver, but this has changed to the opposite over the years.
->>>
->>> A fairly minimal example would be drivers/gpu/drm/pl111/pl111_drv.c
->>> or anything in drivers/gpu/drm/tiny/, but you may want to look at the
->>> other hypervisor platforms first, i.e drivers/gpu/drm/virtio/virtgpu_drv.c,
->>> drivers/gpu/drm/vmwgfx/vmwgfx_drv.c, drivers/gpu/drm/xen/xen_drm_front.c,
->>> drivers/gpu/drm/qxl/qxl_drv.c, and drivers/gpu/drm/bochs/bochs_drv.c.
->>>
->>
->> Thanks for the pointers, especially for the other hypervisors.
->>
-> Sorry if anybody in 'to' or 'cc' is receiving this reply multiple times.
-> I had configured by email client incorrectly to reply.
-> 
-> screen_info is still useful with a modern KMS-based driver.  It exposes
-> the mode parameters that the GOP driver chose.  This information is
-> needed to implement seamless or glitchless boot, by both ensuring that
-> the scanout parameters don't change and being able to read back the
-> scanout image to populate the initial contents of the new surface.
-> 
-> This works today on arches which implement (U)EFI and export
-> screen_info, including x86 and powerpc, but doesn't work on arm or
-> arm64.  As arm64 systems that implement UEFI with real GOP drivers
-> become more prevalent, it would be nice to be have these features there
-> as well.
+--Sig_/23ZVIktFKn3NAJzPYobrmCw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-In addition to this, even if a driver doesn't implement a framebuffer
-console, or if it does but has an option to disable it, the driver still
-needs to know whether the EFI console is using resources on the GPU so
-it can avoid clobbering them. For example screen_info provides information
-like offset and size of EFI console, using this information driver can
-reserve memory used by console and prevent corruption on it.
+Hi all,
 
-I think arm64 should export screen_info.
+After merging the mmc tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-> Thanks,
-> Nikhil Mahale
-> 
->> Michael
->>
+WARNING: modpost: missing MODULE_LICENSE() in drivers/mmc/host/meson-mx-sdh=
+c-clkc.o
+see include/linux/module.h for more information
+ERROR: modpost: "meson_mx_sdhc_register_clkc" [drivers/mmc/host/meson-mx-sd=
+hc.ko] undefined!
+
+Caused by commit
+
+  53ded1b676d1 ("mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson=
+ SDHC host")
+
+I have used the mmc tree from next-20200515 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/23ZVIktFKn3NAJzPYobrmCw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7CDqgACgkQAVBC80lX
+0Gx/eQgAijQsCRNiBABuDVhQjjFMuI9q65qcOCgaAcQNRYJlbjEfj7C9xDlh8CK5
+k784cDJO3y2Ch1BtWh5qRfNtOVc7Zh9mLx6x5YDqlt9+WXsFX7sbJnNOTztPakm/
+F1eoQ5sUCfJSawI1vM51N34pLeASNjY5/61tCXkpguN4xAubxDKn229EFJlccDRa
+raXDHkznVE/iy0DO0MFcBkb8DFCYmVA2RlXKe1+TYjRW721OkPE7Fs8+QjSEKlcu
+OHtcwyiMyELFrUXUEzh98CiKcDOdvisOS1KQMwjqjNPT8bDs+ay15WkCDUM7aF9P
+Ay70Pje7EC5tpgi66W8fjeTPBAH0lA==
+=I6qY
+-----END PGP SIGNATURE-----
+
+--Sig_/23ZVIktFKn3NAJzPYobrmCw--
