@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4009920715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EAE6207C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 17:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824419;
-	bh=FpL7mcwiGgAZlwqxQo3u+VNrdlJ35y3eD3xLEbL3egI=;
+	s=default; t=1589824422;
+	bh=bDJ1mgZU+h5ToiLcvLdkwXTROH+5BR7TJ+0MyXthK4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VVoS4v66rlvvgb9CrgJApwkJmXlQAwvzcSA72XX4luZsdFLabJH4arNgojJdrmj/a
-	 enEXkEtKJnEv6my92WyBt5NdIsSwM+tXsXcZ3TP4ZqdCtVYE0T2Wm7S3W1bHvIsXgd
-	 fhhFXl0Eb6keI8bS2KD5kdfXoW/nsBz6uuJSyp2U=
+	b=FtkoBBruZVUTJhypv4xOXycZ+kmof5YIc4zlXMpX2fY+MyYmNihtUNXCLo/LxeTtc
+	 6V22iOqZpweLaDn6EOc4k/LvpYHLBEqu8frjmV9cWcjaq+YCBIcncjUk61S0QnXo7N
+	 ez/KQNSYLU0Zu/5KyCKRt+ywDuusuhgkRHkADdqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731175AbgERRxi (ORCPT
+        id S1731183AbgERRxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 13:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57656 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 13:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730369AbgERRxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 13:53:36 -0400
+        id S1731173AbgERRxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 13:53:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2583020829;
-        Mon, 18 May 2020 17:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A8CE207C4;
+        Mon, 18 May 2020 17:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824415;
-        bh=FpL7mcwiGgAZlwqxQo3u+VNrdlJ35y3eD3xLEbL3egI=;
+        s=default; t=1589824418;
+        bh=bDJ1mgZU+h5ToiLcvLdkwXTROH+5BR7TJ+0MyXthK4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQk7y9bNJdsm2rsqKnP0lpLCTBdhCDfMyHZ2wx2eKQh0vC3bMgrMNVLnlh/VzLnew
-         VAzyEmX4zvMWSfWeVKPgH+Tqad7oehmagVb3i9A2/CPgmi/VUFFoLQ3ooYx1w/vf9S
-         MmF35hC16OSwwiqy9MtoQPF00WfFu2KTEJYn1Txo=
+        b=QtmzQk6t6QyK3krBYCiiVE68wECaRlIE/a5IFSiuL9FfSU9JsHthh1TQelaGI4Da3
+         aBxnYPBR/+BUAWqu2Q26d3LC/2BQtN/IRE1TQbdCuUEsnSHF7mPZdL9dCXuZUH5him
+         1Vbq+gwC7uVgweDGc6E92m3iryVQCB4XwNSPpq7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.19 68/80] usb: gadget: net2272: Fix a memory leak in an error handling path in net2272_plat_probe()
-Date:   Mon, 18 May 2020 19:37:26 +0200
-Message-Id: <20200518173504.071419936@linuxfoundation.org>
+Subject: [PATCH 4.19 69/80] usb: gadget: audio: Fix a missing error return value in audio_bind()
+Date:   Mon, 18 May 2020 19:37:27 +0200
+Message-Id: <20200518173504.266735216@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173450.097837707@linuxfoundation.org>
 References: <20200518173450.097837707@linuxfoundation.org>
@@ -62,31 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit ccaef7e6e354fb65758eaddd3eae8065a8b3e295 upstream.
+commit 19b94c1f9c9a16d41a8de3ccbdb8536cf1aecdbf upstream.
 
-'dev' is allocated in 'net2272_probe_init()'. It must be freed in the error
-handling path, as already done in the remove function (i.e.
-'net2272_plat_remove()')
+If 'usb_otg_descriptor_alloc()' fails, we must return an error code, not 0.
 
-Fixes: 90fccb529d24 ("usb: gadget: Gadget directory cleanup - group UDC drivers")
+Fixes: 56023ce0fd70 ("usb: gadget: audio: allocate and init otg descriptor by otg capabilities")
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/net2272.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/legacy/audio.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/udc/net2272.c
-+++ b/drivers/usb/gadget/udc/net2272.c
-@@ -2653,6 +2653,8 @@ net2272_plat_probe(struct platform_devic
-  err_req:
- 	release_mem_region(base, len);
-  err:
-+	kfree(dev);
-+
- 	return ret;
- }
+--- a/drivers/usb/gadget/legacy/audio.c
++++ b/drivers/usb/gadget/legacy/audio.c
+@@ -300,8 +300,10 @@ static int audio_bind(struct usb_composi
+ 		struct usb_descriptor_header *usb_desc;
  
+ 		usb_desc = usb_otg_descriptor_alloc(cdev->gadget);
+-		if (!usb_desc)
++		if (!usb_desc) {
++			status = -ENOMEM;
+ 			goto fail;
++		}
+ 		usb_otg_descriptor_init(cdev->gadget, usb_desc);
+ 		otg_desc[0] = usb_desc;
+ 		otg_desc[1] = NULL;
 
 
