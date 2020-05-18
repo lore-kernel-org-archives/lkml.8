@@ -2,54 +2,53 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59862C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CC1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30336207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7547F207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589824829;
-	bh=KCg1yyOVD4K2OKUGu9sfernH4qKqFq5o9U83i/HgAkU=;
+	s=default; t=1589824833;
+	bh=1HRobCZzCaPpFrUUerPfRMtZ5WaP6Ertr4EDYNZ66XM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MPMSR/5S4oUsNcj8sCkdsBRKph5PousmRjN29kQI8smJKTUo9PkLSu3kUcwkJMU09
-	 hJuObi6EJvXXG7dtHoPIeWCfOifdqWuJpyOEghj/KCfOMGDDkshBIDtuuKPC4gqo+c
-	 IYDufOuUdfUuQ7H3wPLGXRRzCU61XRLpGQX6nPTA=
+	b=rgM2ElIo2yFRFh6Zn1lnern5nEaK1nMyK0jrZVAYwGLwD0UmwG46e18O1Uka2cw0O
+	 k7VzNhB93tUcH3rg9z0yXXK4Hc2DIReKXWK97jj+RLwsk2yzGo1HCTca1Z5XV5yOIL
+	 VjSm4uporulXiGzGDLs3+UpF2KC9rVrBCVYrjm7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732222AbgERSA2 (ORCPT
+        id S1731786AbgERSAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:00:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41706 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:00:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732203AbgERSAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:00:22 -0400
+        id S1732225AbgERSAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:00:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FE9820826;
-        Mon, 18 May 2020 18:00:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5506207D3;
+        Mon, 18 May 2020 18:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589824822;
-        bh=KCg1yyOVD4K2OKUGu9sfernH4qKqFq5o9U83i/HgAkU=;
+        s=default; t=1589824829;
+        bh=1HRobCZzCaPpFrUUerPfRMtZ5WaP6Ertr4EDYNZ66XM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AHClFn59kbv8PpAE5Wbq4hIuTFqmknY7veXML4zhfXmORtwrodr5lCRHXAQZtorxW
-         p+ZAU0P9fzM/JoeyZSXEtGQ/7ILpTAq7YUVG421NtE1aPSwBO3kDroEIB5bj3zFZxs
-         L0uyR5VmbRmAQqebduhsvBe5A4KbEbHlbaC3hzZU=
+        b=oyTGh3W7FLTMLLJn6OukdZUQXSgy620TsdUGWveFg8yl7rd3+Fo0p13uWjnSG4su8
+         pziR++3SPqtwIUPF4OO/yOtJVwT1TRUDgMJ7uQX4gXovV2aVHuCcdsX+8bIfcS03Cn
+         +EfpeRDm7kwR/0QCstEhIj9DFayFwoy6v9Cg5/5k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Neil Horman <nhorman@tuxdriver.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 018/194] hv_netvsc: Fix netvsc_start_xmits return type
-Date:   Mon, 18 May 2020 19:35:08 +0200
-Message-Id: <20200518173533.090744758@linuxfoundation.org>
+Subject: [PATCH 5.6 020/194] drop_monitor: work around gcc-10 stringop-overflow warning
+Date:   Mon, 18 May 2020 19:35:10 +0200
+Message-Id: <20200518173533.228738359@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -62,101 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7fdc66debebc6a7170a37c8c9b0d9585a9788fb4 ]
+[ Upstream commit dc30b4059f6e2abf3712ab537c8718562b21c45d ]
 
-netvsc_start_xmit is used as a callback function for the ndo_start_xmit
-function pointer. ndo_start_xmit's return type is netdev_tx_t but
-netvsc_start_xmit's return type is int.
+The current gcc-10 snapshot produces a false-positive warning:
 
-This causes a failure with Control Flow Integrity (CFI), which requires
-function pointer prototypes and callback function definitions to match
-exactly. When CFI is in enforcing, the kernel panics. When booting a
-CFI kernel with WSL 2, the VM is immediately terminated because of this.
+net/core/drop_monitor.c: In function 'trace_drop_common.constprop':
+cc1: error: writing 8 bytes into a region of size 0 [-Werror=stringop-overflow=]
+In file included from net/core/drop_monitor.c:23:
+include/uapi/linux/net_dropmon.h:36:8: note: at offset 0 to object 'entries' with size 4 declared here
+   36 |  __u32 entries;
+      |        ^~~~~~~
 
-The splat when CONFIG_CFI_PERMISSIVE is used:
+I reported this in the gcc bugzilla, but in case it does not get
+fixed in the release, work around it by using a temporary variable.
 
-[    5.916765] CFI failure (target: netvsc_start_xmit+0x0/0x10):
-[    5.916771] WARNING: CPU: 8 PID: 0 at kernel/cfi.c:29 __cfi_check_fail+0x2e/0x40
-[    5.916772] Modules linked in:
-[    5.916774] CPU: 8 PID: 0 Comm: swapper/8 Not tainted 5.7.0-rc3-next-20200424-microsoft-cbl-00001-ged4eb37d2c69-dirty #1
-[    5.916776] RIP: 0010:__cfi_check_fail+0x2e/0x40
-[    5.916777] Code: 48 c7 c7 70 98 63 a9 48 c7 c6 11 db 47 a9 e8 69 55 59 00 85 c0 75 02 5b c3 48 c7 c7 73 c6 43 a9 48 89 de 31 c0 e8 12 2d f0 ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 00 cc cc 00 00 85 f6 74 25
-[    5.916778] RSP: 0018:ffffa803c0260b78 EFLAGS: 00010246
-[    5.916779] RAX: 712a1af25779e900 RBX: ffffffffa8cf7950 RCX: ffffffffa962cf08
-[    5.916779] RDX: ffffffffa9c36b60 RSI: 0000000000000082 RDI: ffffffffa9c36b5c
-[    5.916780] RBP: ffff8ffc4779c2c0 R08: 0000000000000001 R09: ffffffffa9c3c300
-[    5.916781] R10: 0000000000000151 R11: ffffffffa9c36b60 R12: ffff8ffe39084000
-[    5.916782] R13: ffffffffa8cf7950 R14: ffffffffa8d12cb0 R15: ffff8ffe39320140
-[    5.916784] FS:  0000000000000000(0000) GS:ffff8ffe3bc00000(0000) knlGS:0000000000000000
-[    5.916785] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    5.916786] CR2: 00007ffef5749408 CR3: 00000002f4f5e000 CR4: 0000000000340ea0
-[    5.916787] Call Trace:
-[    5.916788]  <IRQ>
-[    5.916790]  __cfi_check+0x3ab58/0x450e0
-[    5.916793]  ? dev_hard_start_xmit+0x11f/0x160
-[    5.916795]  ? sch_direct_xmit+0xf2/0x230
-[    5.916796]  ? __dev_queue_xmit.llvm.11471227737707190958+0x69d/0x8e0
-[    5.916797]  ? neigh_resolve_output+0xdf/0x220
-[    5.916799]  ? neigh_connected_output.cfi_jt+0x8/0x8
-[    5.916801]  ? ip6_finish_output2+0x398/0x4c0
-[    5.916803]  ? nf_nat_ipv6_out+0x10/0xa0
-[    5.916804]  ? nf_hook_slow+0x84/0x100
-[    5.916807]  ? ip6_input_finish+0x8/0x8
-[    5.916807]  ? ip6_output+0x6f/0x110
-[    5.916808]  ? __ip6_local_out.cfi_jt+0x8/0x8
-[    5.916810]  ? mld_sendpack+0x28e/0x330
-[    5.916811]  ? ip_rt_bug+0x8/0x8
-[    5.916813]  ? mld_ifc_timer_expire+0x2db/0x400
-[    5.916814]  ? neigh_proxy_process+0x8/0x8
-[    5.916816]  ? call_timer_fn+0x3d/0xd0
-[    5.916817]  ? __run_timers+0x2a9/0x300
-[    5.916819]  ? rcu_core_si+0x8/0x8
-[    5.916820]  ? run_timer_softirq+0x14/0x30
-[    5.916821]  ? __do_softirq+0x154/0x262
-[    5.916822]  ? native_x2apic_icr_write+0x8/0x8
-[    5.916824]  ? irq_exit+0xba/0xc0
-[    5.916825]  ? hv_stimer0_vector_handler+0x99/0xe0
-[    5.916826]  ? hv_stimer0_callback_vector+0xf/0x20
-[    5.916826]  </IRQ>
-[    5.916828]  ? hv_stimer_global_cleanup.cfi_jt+0x8/0x8
-[    5.916829]  ? raw_setsockopt+0x8/0x8
-[    5.916830]  ? default_idle+0xe/0x10
-[    5.916832]  ? do_idle.llvm.10446269078108580492+0xb7/0x130
-[    5.916833]  ? raw_setsockopt+0x8/0x8
-[    5.916833]  ? cpu_startup_entry+0x15/0x20
-[    5.916835]  ? cpu_hotplug_enable.cfi_jt+0x8/0x8
-[    5.916836]  ? start_secondary+0x188/0x190
-[    5.916837]  ? secondary_startup_64+0xa5/0xb0
-[    5.916838] ---[ end trace f2683fa869597ba5 ]---
-
-Avoid this by using the right return type for netvsc_start_xmit.
-
-Fixes: fceaf24a943d8 ("Staging: hv: add the Hyper-V virtual network driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1009
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Fixes: 9a8afc8d3962 ("Network Drop Monitor: Adding drop monitor implementation & Netlink protocol")
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94881
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/core/drop_monitor.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 2c0a24c606fc7..28a5d46ad5266 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -710,7 +710,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 	goto drop;
- }
- 
--static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
-+				     struct net_device *ndev)
+diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+index 31700e0c39283..04d8e8779384d 100644
+--- a/net/core/drop_monitor.c
++++ b/net/core/drop_monitor.c
+@@ -212,6 +212,7 @@ static void sched_send_work(struct timer_list *t)
+ static void trace_drop_common(struct sk_buff *skb, void *location)
  {
- 	return netvsc_xmit(skb, ndev, false);
- }
+ 	struct net_dm_alert_msg *msg;
++	struct net_dm_drop_point *point;
+ 	struct nlmsghdr *nlh;
+ 	struct nlattr *nla;
+ 	int i;
+@@ -230,11 +231,13 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 	nlh = (struct nlmsghdr *)dskb->data;
+ 	nla = genlmsg_data(nlmsg_data(nlh));
+ 	msg = nla_data(nla);
++	point = msg->points;
+ 	for (i = 0; i < msg->entries; i++) {
+-		if (!memcmp(&location, msg->points[i].pc, sizeof(void *))) {
+-			msg->points[i].count++;
++		if (!memcmp(&location, &point->pc, sizeof(void *))) {
++			point->count++;
+ 			goto out;
+ 		}
++		point++;
+ 	}
+ 	if (msg->entries == dm_hit_limit)
+ 		goto out;
+@@ -243,8 +246,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 	 */
+ 	__nla_reserve_nohdr(dskb, sizeof(struct net_dm_drop_point));
+ 	nla->nla_len += NLA_ALIGN(sizeof(struct net_dm_drop_point));
+-	memcpy(msg->points[msg->entries].pc, &location, sizeof(void *));
+-	msg->points[msg->entries].count = 1;
++	memcpy(point->pc, &location, sizeof(void *));
++	point->count = 1;
+ 	msg->entries++;
+ 
+ 	if (!timer_pending(&data->send_timer)) {
 -- 
 2.20.1
 
