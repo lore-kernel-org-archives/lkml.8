@@ -2,108 +2,93 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF37C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6308EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D66820787
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:41:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K5EwfpGG"
+	by mail.kernel.org (Postfix) with ESMTP id 42FE120787
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 08:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgERIll (ORCPT
+        id S1726932AbgERImy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 04:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
+        Mon, 18 May 2020 04:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgERIll (ORCPT
+        with ESMTP id S1726640AbgERImy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 04:41:41 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88520C05BD0A
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:41:39 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b6so8932817ljj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 01:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gW1rAjHfmYzKLo3+HNuQ6JT9ne1hXLbLfKgSgNPGdgg=;
-        b=K5EwfpGGJek8HJALQ5BBP4EhM5+TcmvJ0549ZPJXQ1LBqqDkcK7A34/aoz+3/Ha3cU
-         BAlungwwWdbRz4uXzKryZ7Th8aWhwLWhiHelsPyZkqwP+W8QP31ScEiVaHOxIrRwSZhL
-         IkPW0UgVydkXTjEq8upjCKbEJuBnPzMsb3V+UgDSPAtyxM0ffQ0RrHpSgBRzrk7W2J+y
-         gmYRTTe7dn/vzEpwL0bDvGjdrLjhjFjBwOTw2PIj03u5zXIwnNLuTpd3LmYOlRvtvydN
-         FodQ/0qYPbzeK4GoENZpUx6XspQKlLcOAhvJw4YlNVFghb+uPUz0VSOODL1YVdeYmp2D
-         H6sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gW1rAjHfmYzKLo3+HNuQ6JT9ne1hXLbLfKgSgNPGdgg=;
-        b=ADTN5pKOyVDILD3Akyi44cNKgOMiB1FAa0IIuh3SCIQ7cNmsco3j5D0y8iFAFZn2Mq
-         6mu3cMNrR4GfSGyNCdKrJ7SkCoFVW4XqEDtpuLdj9tw7XS5ZiV6ilG+ll1ARiTVXO+S0
-         rCeaxJ2owtVm18lW7SUo13ph4sL0u6ukk3ZGIjguHsBTKMYKVRmBUl091e4obgStJ0jb
-         MzRwBuUgzF+S1SXK8CSWCobnclL9rVxZZW4obieyyRqxX3pnd2T/AObShPxOGujs5+m7
-         T8KGccx/sBU1bL3tarABZS0JtGD/zB2/GqNF24nEC7X21lKAAyZ4Zq9vY7WxCdyKZBUh
-         1hkg==
-X-Gm-Message-State: AOAM530fK6gatSpmdhqOGT0MaBiN3NHLObZis4R1R3LCC/E2kzDFgKnu
-        UDRDv8ygfuY32dN4Sww0c/v3T/dMTnfLmYEIxD8sKg==
-X-Google-Smtp-Source: ABdhPJwJqNAucGKak9tmuVXvkrW85iL40m6qGay/OUsbR1TLGL+cqw9EeIxK3o4zm/Fx0/yqOfMZHysGsnS4dRTj5ko=
-X-Received: by 2002:a05:651c:154:: with SMTP id c20mr9091003ljd.99.1589791297948;
- Mon, 18 May 2020 01:41:37 -0700 (PDT)
+        Mon, 18 May 2020 04:42:54 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27F7CC061A0C;
+        Mon, 18 May 2020 01:42:54 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jabM0-0005IY-I1; Mon, 18 May 2020 10:42:32 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 026F6100606; Mon, 18 May 2020 10:42:31 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Anastassios Nanos <ananos@nubificus.co.uk>, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 0/2] Expose KVM API to Linux Kernel
+In-Reply-To: <cover.1589784221.git.ananos@nubificus.co.uk>
+References: <cover.1589784221.git.ananos@nubificus.co.uk>
+Date:   Mon, 18 May 2020 10:42:31 +0200
+Message-ID: <87y2ppy6q0.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200508165821.GA14555@x1> <CACRpkdb+ZP6rfjGg6Ef9_wYvNf6qmSc7LZyYBVKA3XWCtxPfqQ@mail.gmail.com>
- <875zcty7tt.fsf@kernel.org>
-In-Reply-To: <875zcty7tt.fsf@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 May 2020 10:41:27 +0200
-Message-ID: <CACRpkdZnnRXwv0-71t93HX42jL-muty4yJx5gW6_P3yOM-sGAg@mail.gmail.com>
-Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 10:18 AM Felipe Balbi <balbi@kernel.org> wrote:
-> Linus Walleij <linus.walleij@linaro.org> writes:
-> >> gpiochip0 - 32 lines:
-> >>         line   0:   "ethernet"       unused   input  active-high
-> >>         line   1:   "ethernet"       unused   input  active-high
-> >
-> > Why are the ethernet lines not tagged with respective signal name
-> > when right below the SPI lines are explicitly tagged with
-> > sclk, cs0 etc?
-> >
-> > Ethernet is usually RGMII and has signal names like
-> > tx_clk, tx_d0, tx_en etc.
-> >
-> > Also some lines seem to be tagged with the pin number
-> > like P9_22, P2_21 below, it seems a bit inconsistent
-> > to have much information on some pins and very sketchy
-> > information on some.
+Anastassios Nanos <ananos@nubificus.co.uk> writes:
+> To spawn KVM-enabled Virtual Machines on Linux systems, one has to use
+> QEMU, or some other kind of VM monitor in user-space to host the vCPU
+> threads, I/O threads and various other book-keeping/management mechanisms.
+> This is perfectly fine for a large number of reasons and use cases: for
+> instance, running generic VMs, running general purpose Operating systems
+> that need some kind of emulation for legacy boot/hardware etc.
 >
-> the pin names match the beagle bone documentation and would help users
-> figure out which pins on the expansion headers match to a gpio signal.
+> What if we wanted to execute a small piece of code as a guest instance,
+> without the involvement of user-space? The KVM functions are already doing
+> what they should: VM and vCPU setup is already part of the kernel, the only
+> missing piece is memory handling.
+>
+> With these series, (a) we expose to the Linux Kernel the bare minimum KVM
+> API functions in order to spawn a guest instance without the intervention
+> of user-space; and (b) we tweak the memory handling code of KVM-related
+> functions to account for another kind of guest, spawned in kernel-space.
+>
+> PATCH #1 exposes the needed stub functions, whereas PATCH #2 introduces the
+> changes in the KVM memory handling code for x86_64 and aarch64.
+>
+> An example of use is provided based on kvmtest.c
+> [https://lwn.net/Articles/658512/] at
 
-OK if it is how it looks in the documentation I agree that is what
-users need, maybe the documentation is confusing but there is not
-much to do about that.
+And this shows clearly how simple the user space is which is required to
+do that. So why on earth would we want to have all of that in the
+kernel?
 
-Yours,
-Linus Walleij
+Thanks,
+
+        tglx
