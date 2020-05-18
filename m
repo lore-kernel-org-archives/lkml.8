@@ -2,84 +2,98 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5009AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E79F2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3452720671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 12:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgERMPa (ORCPT
+        id S1727869AbgERMQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 08:15:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58858 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgERMP3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 08:15:29 -0400
-Received: from mail-ej1-f71.google.com ([209.85.218.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1jaeg3-0002Sl-OE
-        for linux-kernel@vger.kernel.org; Mon, 18 May 2020 12:15:27 +0000
-Received: by mail-ej1-f71.google.com with SMTP id 7so5131930ejy.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 05:15:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wSKPyI+z3/ghuKiiEStd7yz61AaHIt29YcTLEMnoHhI=;
-        b=iimwJRkchuktEIHGHmNlFw+OBVKtGVkDGwJBpDN84TeyoU7yNIbHfdNtvrS9GfLaWH
-         RHH/5LgUyvecq2D9S8w9erIsDU3cJ8ajvXeloq6FMGBd8jFXRzXFzJlDlo6D+7VBWaEI
-         0UOZMYvpN5b/Dnvz/cUGOoB4jmafm2TwE9J1/nJubqMKSup/J/U2fXe/ehB2boBpaNM6
-         Ylh/ROQSOFk0wT0sH44mept1RoB79YT3dgH1YMdGT37H50N2j7H0nZdHnX1YhY1H+7SV
-         ffqzGWsx1t7jc8Ulw+BN9pfUo2hQMNbQ21U2gI6f+J/aNylQWRDA11J9aVfDkOgCO36r
-         sjJA==
-X-Gm-Message-State: AOAM531ZdPvXCwoRQnUrmbxjMplBrdVnSv7BgFL1tzxBMDDQRkmz3puY
-        XNn9FOB3fsda0e2fdD5cgpJpqGYJS7BOjN1k6BBQK1muNbB8IbztpdalapB3sTHU8elkZXNeGDF
-        wXgdMQswCtaMRCCHIv5hhdYbh1OpJ+ePdZfbJCXLhRq58PaFF10y7NwNd7A==
-X-Received: by 2002:a17:906:6a43:: with SMTP id n3mr1847781ejs.33.1589804127431;
-        Mon, 18 May 2020 05:15:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyx92b8+cJv+vIkG6WlGqCQiI3XfGvfpzW4RZyHWBrMioHzcq9k6+bFhU+3dVoZWZJfIhb/0GfPnVM2t/ZkDik=
-X-Received: by 2002:a17:906:6a43:: with SMTP id n3mr1847757ejs.33.1589804127148;
- Mon, 18 May 2020 05:15:27 -0700 (PDT)
+        Mon, 18 May 2020 08:16:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:39374 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726709AbgERMQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 08:16:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C67C3106F;
+        Mon, 18 May 2020 05:16:03 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39DE73F305;
+        Mon, 18 May 2020 05:16:01 -0700 (PDT)
+Date:   Mon, 18 May 2020 13:15:58 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@am.com>,
+        Jann Horn <jannh@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, kernel-team@android.com
+Subject: Re: [PATCH 5/6] scs: Remove references to asm/scs.h from core code
+Message-ID: <20200518121558.GF1957@C02TD0UTHF1T.local>
+References: <20200515172756.27185-1-will@kernel.org>
+ <20200515172756.27185-6-will@kernel.org>
 MIME-Version: 1.0
-References: <20200507215946.22589-1-gpiccoli@canonical.com>
- <20200507160438.ed336a1e00c23c6863d75ae5@linux-foundation.org>
- <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com>
- <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
- <CAHD1Q_wF6Mzf5JipXGZKvn2YDR+FQ6ePuKOe-1W-t_VapxMCxg@mail.gmail.com>
- <alpine.DEB.2.22.394.2005101821160.172131@chino.kir.corp.google.com>
- <CAHD1Q_zrQmUTRpdW3bZ0CRKuu2dKgueXUjqCNtC5oyZ67CGp2A@mail.gmail.com> <6bf5e178-f2c8-f453-9035-93e31995bb53@sony.com>
-In-Reply-To: <6bf5e178-f2c8-f453-9035-93e31995bb53@sony.com>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Mon, 18 May 2020 09:14:51 -0300
-Message-ID: <CAHD1Q_yk4GhUgTMc5KcvpaW-oMNEfvSj7vxOCOQGALs4qe8VUQ@mail.gmail.com>
-Subject: Re: [PATCH] mm, compaction: Indicate when compaction is manually
- triggered by sysctl
-To:     peter enderborg <peter.enderborg@sony.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Gavin Guo <gavin.guo@canonical.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515172756.27185-6-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter, thanks for the feedback. What do you mean by "trace
-notification" ? We seem to have a trace event in that function you
-mentioned. Also, accounting for that function is enough to
-differentiate when the compaction is triggered by the kernel itself or
-by the user (which is our use case here) ?
+On Fri, May 15, 2020 at 06:27:55PM +0100, Will Deacon wrote:
+> asm/scs.h is no longer needed by the core code, so remove a redundant
+> header inclusion and update the stale Kconfig text.
+> 
+> Signed-off-by: Will Deacon <will@kernel.org>
 
-Cheers,
+With the corruption checks moved out of arch code this looks sound to
+me, so modulo my comments on the prior patch, assuming we factor that
+out:
 
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 
-Guilherme
+Mark.
+
+> ---
+>  arch/Kconfig | 4 ++--
+>  kernel/scs.c | 1 -
+>  2 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 45dfca9a98d3..2e6f843d87c4 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -537,8 +537,8 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
+>  	bool
+>  	help
+>  	  An architecture should select this if it supports Clang's Shadow
+> -	  Call Stack, has asm/scs.h, and implements runtime support for shadow
+> -	  stack switching.
+> +	  Call Stack and implements runtime support for shadow stack
+> +	  switching.
+>  
+>  config SHADOW_CALL_STACK
+>  	bool "Clang Shadow Call Stack"
+> diff --git a/kernel/scs.c b/kernel/scs.c
+> index faf0ecd7b893..222a7a9ad543 100644
+> --- a/kernel/scs.c
+> +++ b/kernel/scs.c
+> @@ -10,7 +10,6 @@
+>  #include <linux/scs.h>
+>  #include <linux/slab.h>
+>  #include <linux/vmstat.h>
+> -#include <asm/scs.h>
+>  
+>  static struct kmem_cache *scs_cache;
+>  
+> -- 
+> 2.26.2.761.g0e0b3e54be-goog
+> 
