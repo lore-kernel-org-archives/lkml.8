@@ -2,150 +2,113 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 863D520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:47:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="avL6pZkU"
+	by mail.kernel.org (Postfix) with ESMTP id 52C4E2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 04:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgERErr (ORCPT
+        id S1726428AbgEREuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 00:47:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgERErr (ORCPT
+        Mon, 18 May 2020 00:50:09 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:49405 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbgEREuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 00:47:47 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C898C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 21:47:46 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x2so4382745pfx.7
-        for <linux-kernel@vger.kernel.org>; Sun, 17 May 2020 21:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=X/lhy2lqdLYOlnTnlwuNEX14NtdAXY44agjxDbsMHek=;
-        b=avL6pZkUlCn+t3YkdiJMlLLxbozudebElBmHL2Tw6SfB9qnfnHabcBO154nR7cq50E
-         nyJh5pPe9UlSBBXP2RjzipcR34z0Chi/1QkLlSg+oujwfALZuxmQbaWSHWomveBF/nPJ
-         xM1LKug4z3C9em40JlstY1lONBmER/sBp3iFk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=X/lhy2lqdLYOlnTnlwuNEX14NtdAXY44agjxDbsMHek=;
-        b=GUCqJH/cKPB5ovYEkM2aWlII/XEyUbonyQW3QceU0rVdiLzFU2j86UR+nN4eRHFZjq
-         C25jN2ai8qnPDcQmkUIF2zpMZieNPLPDjJP9fBaZZeSNTRIBzWIqteORc6Dzln702YGJ
-         Q25T4RRSClzYi6+DL3HheSWh96JP1MG9vbeCh9e2WQGA66ft8ZrZGxZiAB+BgkIw93Hl
-         ipDNQWh6sNie/N7bDPk2QUUJKOJJdS+PBHbvSkbczj030P9qnXdAdJA7aMeuQECzsU9l
-         +q6i648h1+FOjIP+dYRD8UAPadF3kJd63hUxABN7WaA5zIpBuJb9rldYaj4LHftTMb/s
-         lUFg==
-X-Gm-Message-State: AOAM5326X2GtvCIX2Ei1JKGBAtPwXFUgnVyNuQN8tL7jr3Yde9wbT+T+
-        XGHnhUccWF+DhBJs8Ud1aDOqZA==
-X-Google-Smtp-Source: ABdhPJyC+IQcZZeglGPmJ9VEQKllWJvgBjA2CQs/cdQJaDsi3Z/YHvSXoNagRTwXLs2GUZqe6cjPeA==
-X-Received: by 2002:a63:df4f:: with SMTP id h15mr13604951pgj.30.1589777265568;
-        Sun, 17 May 2020 21:47:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g6sm7259713pjx.48.2020.05.17.21.47.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 21:47:44 -0700 (PDT)
-Date:   Sun, 17 May 2020 21:47:43 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kselftest@vger.kernel.org
-Cc:     Shuah Khan <shuah@kernel.org>,
-        David Drysdale <drysdale@google.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests/exec: Verify execve of non-regular files fail
-Message-ID: <202005172143.D25AC29@keescook>
+        Mon, 18 May 2020 00:50:09 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id ABE22100C0585;
+        Mon, 18 May 2020 06:50:06 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 39BDC31442D; Mon, 18 May 2020 06:50:06 +0200 (CEST)
+Date:   Mon, 18 May 2020 06:50:06 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        andriy.shevchenko@linux.intel.com, matwey.kornilov@gmail.com,
+        giulio.benetti@micronovasrl.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v3 3/5] serial: 8250: Support separate rs485 rx-enable
+ GPIO
+Message-ID: <20200518045006.s6e5aedgqwreqgd7@wunner.de>
+References: <20200517215610.2131618-1-heiko@sntech.de>
+ <20200517215610.2131618-4-heiko@sntech.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200517215610.2131618-4-heiko@sntech.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a named pipe as an exec target to make sure that non-regular
-files are rejected by execve() with EACCES. This can help verify
-commit 73601ea5b7b1 ("fs/open.c: allow opening only regular files
-during execve()").
+On Sun, May 17, 2020 at 11:56:08PM +0200, Heiko Stuebner wrote:
+> @@ -1457,6 +1458,7 @@ void serial8250_em485_stop_tx(struct uart_8250_port *p)
+>  	 * Enable previously disabled RX interrupts.
+>  	 */
+>  	if (!(p->port.rs485.flags & SER_RS485_RX_DURING_TX)) {
+> +		gpiod_set_value(port->rs485_re_gpio, 1);
+>  		serial8250_clear_and_reinit_fifos(p);
+>  
+>  		p->ier |= UART_IER_RLSI | UART_IER_RDI;
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- tools/testing/selftests/exec/.gitignore | 1 +
- tools/testing/selftests/exec/Makefile   | 2 +-
- tools/testing/selftests/exec/execveat.c | 8 ++++++++
- 3 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/exec/.gitignore b/tools/testing/selftests/exec/.gitignore
-index c078ece12ff0..94b02a18f230 100644
---- a/tools/testing/selftests/exec/.gitignore
-+++ b/tools/testing/selftests/exec/.gitignore
-@@ -9,3 +9,4 @@ execveat.ephemeral
- execveat.denatured
- /recursion-depth
- xxxxxxxx*
-+pipe
-diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
-index 33339e31e365..cfafa1f8a2fa 100644
---- a/tools/testing/selftests/exec/Makefile
-+++ b/tools/testing/selftests/exec/Makefile
-@@ -4,7 +4,7 @@ CFLAGS += -Wno-nonnull
- CFLAGS += -D_GNU_SOURCE
- 
- TEST_GEN_PROGS := execveat
--TEST_GEN_FILES := execveat.symlink execveat.denatured script subdir
-+TEST_GEN_FILES := execveat.symlink execveat.denatured script subdir pipe
- # Makefile is a run-time dependency, since it's accessed by the execveat test
- TEST_FILES := Makefile
- 
-diff --git a/tools/testing/selftests/exec/execveat.c b/tools/testing/selftests/exec/execveat.c
-index cbb6efbdb786..67bf7254a48f 100644
---- a/tools/testing/selftests/exec/execveat.c
-+++ b/tools/testing/selftests/exec/execveat.c
-@@ -5,7 +5,9 @@
-  * Selftests for execveat(2).
-  */
- 
-+#ifndef _GNU_SOURCE
- #define _GNU_SOURCE  /* to get O_PATH, AT_EMPTY_PATH */
-+#endif
- #include <sys/sendfile.h>
- #include <sys/stat.h>
- #include <sys/syscall.h>
-@@ -311,6 +313,10 @@ static int run_tests(void)
- 	fail += check_execveat_fail(AT_FDCWD, fullname_symlink,
- 				    AT_SYMLINK_NOFOLLOW, ELOOP);
- 
-+	/*  Non-regular file failure */
-+	fail += check_execveat_fail(dot_dfd, "pipe", 0, EACCES);
-+	unlink("pipe");
-+
- 	/* Shell script wrapping executable file: */
- 	/*   dfd + path */
- 	fail += check_execveat(subdir_dfd, "../script", 0);
-@@ -384,6 +390,8 @@ static void prerequisites(void)
- 	fd = open("subdir.ephemeral/script", O_RDWR|O_CREAT|O_TRUNC, 0755);
- 	write(fd, script, strlen(script));
- 	close(fd);
-+
-+	mkfifo("pipe", 0755);
- }
- 
- int main(int argc, char **argv)
--- 
-2.20.1
+The added line needs to be conditional on if (port->rs485_re_gpio)
+because the gpiod could be NULL and gpiod_set_value() doesn't check
+for that.
 
 
--- 
-Kees Cook
+> @@ -1597,9 +1599,12 @@ static inline void __start_tx(struct uart_port *port)
+>  void serial8250_em485_start_tx(struct uart_8250_port *up)
+>  {
+>  	unsigned char mcr = serial8250_in_MCR(up);
+> +	struct uart_port *port = &up->port;
+>  
+> -	if (!(up->port.rs485.flags & SER_RS485_RX_DURING_TX))
+> +	if (!(up->port.rs485.flags & SER_RS485_RX_DURING_TX)) {
+> +		gpiod_set_value(port->rs485_re_gpio, 0);
+>  		serial8250_stop_rx(&up->port);
+> +	}
+
+Same here.
+
+
+> --- a/include/linux/serial_core.h
+> +++ b/include/linux/serial_core.h
+> @@ -253,6 +253,7 @@ struct uart_port {
+>  	const struct attribute_group **tty_groups;	/* all attributes (serial core use only) */
+>  	struct serial_rs485     rs485;
+>  	struct gpio_desc	*rs485_term_gpio;	/* enable RS485 bus termination */
+> +	struct gpio_desc	*rs485_re_gpio;		/* gpio RS485 receive enable */
+
+Nit: I'd probably document this as "enable RS485 receiver" because it's
+already apparent from the variable type and name that it's a gpio,
+making it unnecessary to repeat that in the code comment.  But I guess
+that's a matter of personal preference.
+
+
+There's something else:  You need to amend serial8250_em485_config()
+to toggle the GPIO depending on whether SER_RS485_RX_DURING_TX is
+set.  Right now you enable the receiver by default and then disable
+it when starting to transmit if half-duplex mode is selected and
+likewise re-enable it when stopping to transmit.  But user space
+may write some stuff to the tty while in half-duplex mode, then
+immediately issue a TIOCSRS485 ioctl to switch to full-duplex mode.
+If the ->rs485_config callback is executed while transmitting is
+still ongoing, then you'll not re-enable the receiver when transmitting
+finally stops.  The ->rs485_config callback is invoked under the
+uart port spinlock but the lock may be briefly released and later
+re-acquired by the IRQ handler if the TX FIFO is full.  (Unless
+I'm missing something.)
+
+Thanks,
+
+Lukas
