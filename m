@@ -2,127 +2,115 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A60BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9F520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F325620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 16:23:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCxeUuua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgERQXL (ORCPT
+        id S1728470AbgERQXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 12:23:11 -0400
-Received: from mga14.intel.com ([192.55.52.115]:47722 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728142AbgERQXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 12:23:10 -0400
-IronPort-SDR: Z7W4YlQBFFE4DI79XummCPSBFDz25o8YBcas1kV5zYVG5gJqRe3eTfslXAkLqs/M/TIMKFaWgl
- BjW3KQPrXMdw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:23:10 -0700
-IronPort-SDR: NcCLSKibfjL3S9MPhvc0m+BrCJaY87EWQf6pTcv0us8UHxzBDVV07HGxGFSr9VFjl9XSlhyoyP
- YDHnGXXjQOGg==
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="465635598"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.66.2]) ([10.254.66.2])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:23:09 -0700
-Subject: Re: [PATCH V4 4/4] x86/resctrl: Use appropriate API for strings
- terminated by newline
-From:   Reinette Chatre <reinette.chatre@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
-        tony.luck@intel.com, kuo-lang.tseng@intel.com,
-        ravi.v.shankar@intel.com, mingo@redhat.com, babu.moger@amd.com,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1589652468.git.reinette.chatre@intel.com>
- <0c04b58148f181ba182b9a487465e4853e4eadbb.1589652468.git.reinette.chatre@intel.com>
- <20200518115026.GA1634618@smile.fi.intel.com>
- <060e3cf6-8fcb-6b43-01ef-63ef0a5ff64a@intel.com>
-Message-ID: <962118f4-3b02-2d6c-fd4d-2540d1a03e89@intel.com>
-Date:   Mon, 18 May 2020 09:23:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <060e3cf6-8fcb-6b43-01ef-63ef0a5ff64a@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 18 May 2020 12:23:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbgERQXY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 12:23:24 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCF9C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:23:23 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t40so46199pjb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 09:23:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=K211i4h2u/TxQcxsieD51LxexrJexjO9Rx1FtdNootg=;
+        b=ZCxeUuuaf+obk5I3yVMAoO21FuFn9ZnaajU4+BOQ99SaS5pj2jagOJ/JOGl+8RsUII
+         rvwLVEZZIkzXNr6+b5GK8kBK5CwmCLz1LU0DPBurnFBaDT4RSxCswhVllgphaQG+aZjj
+         p/NUv/ujcSx2sF8dexJN5AdeFuomxgou0IRwg3hXoLKBdK/NS2+wU/KFY8//Q1WbOVzx
+         zSuZB4Bs5Z+jwykwSB4wAhMcLrvVt6iGZlNfPN/l6Rb1XTrVmBKIOUjCY/D2PWfPmFXt
+         /PzfwEXc5tl2MfRF3y+kOyECmkL7fRukDwcF+Ii3mXydS4jRBqnvfcTtirZxzQWmQRCT
+         0uRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=K211i4h2u/TxQcxsieD51LxexrJexjO9Rx1FtdNootg=;
+        b=Z3gfYKlW681vzUMJ78GNMQ9URF/Ltoruk+NtTo6FDFSRTfB06LOQFJD3gQcA2tXlRa
+         XymJEhXUUUf3QnDrdNXtq5SV45Oxe9Vvv5dQ2jLAwy9TP2o1eQNR6VMWnqKftJaj2L0B
+         +DLscpH4+XY7adh+obCbYBbWM4KRs/VtAW3aq5tpY+xTL5w/OZBHRONePLEdJWBQYZvk
+         pDff3enVBM7dH5vihNU8mQkKx3Y0mfZBPK+iuaF/or0DuUTgXtBtJ7hNq974K6sGMzGd
+         a4PEt7/qQJl+Gn3hgcPs15ncd9HJWksaFnfbVlH8e1hYWYh1ipenMORyV5CwIP7Fhdn5
+         EhZA==
+X-Gm-Message-State: AOAM531sjwA1GwSLkXnSKp0JIosldGi1U7S+YFDlw2ddktHxMpGw1pmk
+        tNyGus4J0jOl63hDgWhUSCSbMPYvo94=
+X-Google-Smtp-Source: ABdhPJwGk4vPSvK7vas58uw/Mle4Y1AUjToQolSEGddq1AGgxZx/L/rMqSj8a28neGfe3Hv0XNqxVw==
+X-Received: by 2002:a17:902:7587:: with SMTP id j7mr17207481pll.81.1589819002963;
+        Mon, 18 May 2020 09:23:22 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:418:e389:7149:74ab:b584:ecf8])
+        by smtp.gmail.com with ESMTPSA id s63sm44882pjj.16.2020.05.18.09.23.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 09:23:22 -0700 (PDT)
+From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+To:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     aishwaryarj100@gmail.com
+Subject: [PATCH] drm/amdkfd: Fix boolreturn.cocci warnings
+Date:   Mon, 18 May 2020 21:53:12 +0530
+Message-Id: <20200518162312.18059-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Return statements in functions returning bool should use
+true/false instead of 1/0.
 
-On 5/18/2020 9:06 AM, Reinette Chatre wrote:
-> On 5/18/2020 4:50 AM, Andy Shevchenko wrote:
->> On Sat, May 16, 2020 at 11:28:41AM -0700, Reinette Chatre wrote:
->>> The user input to files in the resctrl filesystem are expected to be
->>> terminated with a newline. Testing the user input includes a test for
->>> the presence of a newline and then replacing the newline with NUL
->>> byte followed by comparison using strcmp().
->>>
->>> sysfs_streq() exists to test if strings are equal, treating both NUL and
->>> newline-then-NUL as equivalent string terminations. Even more,
->>> sysfs_match_string() exists to match a given string in an array using
->>> sysfs_streq().
->>>
->>> Replace existing strcmp() comparisons of strings that are terminated
->>> with a newline with more appropriate sysfs_streq() via the
->>> sysfs_match_string() API that can perform the match across the different
->>> mode strings that are already maintained in an array.
->>
->> Sorry for late comment, but just have noticed...
-> 
-> No problem. I do appreciate your feedback because it helps me to improve
-> the code.
-> 
->>
->>>  	if (mode == RDT_MODE_PSEUDO_LOCKED) {
->>> @@ -1445,14 +1450,14 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
->>>  		goto out;
->>>  	}
->>>  
->>> -	if (!strcmp(buf, "shareable")) {
->>> +	if (user_m == RDT_MODE_SHAREABLE) {
->>>  		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
->>>  			ret = rdtgroup_locksetup_exit(rdtgrp);
->>>  			if (ret)
->>>  				goto out;
->>>  		}
->>
->>>  		rdtgrp->mode = RDT_MODE_SHAREABLE;
->>
->> ...can we simple move this and similar (in other branches) to...
->>
->>
->>> -	} else {
->>> -		rdt_last_cmd_puts("Unknown or unsupported mode\n");
->>> -		ret = -EINVAL;
->>>  	}
->>
->> ...here as
->>
->> 		rdtgrp->mode = user_m;
-> 
-> Will do.
+drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c:40:9-10:
+WARNING: return of 0/1 in function 'event_interrupt_isr_v9' with return type bool
 
-Actually ... now that I take a closer look, this would let an invalid
-mode change (RDT_MODE_PSEUDO_LOCKED) slip through so I plan to keep this
-code as is.
+Generated by: scripts/coccinelle/misc/boolreturn.cocci
 
-> It also looks like the only reason for the "mode" local variable was to
-> make those earlier "strcmp" lines shorter. With those long lines removed
-> in this patch this local variable is no longer needed and I will remove
-> it also.
+Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I will still do this.
-
-Reinette
-
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c b/drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c
+index e05d75ecda21..fce6ccabe38b 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_int_process_v9.c
+@@ -37,7 +37,7 @@ static bool event_interrupt_isr_v9(struct kfd_dev *dev,
+ 	vmid = SOC15_VMID_FROM_IH_ENTRY(ih_ring_entry);
+ 	if (vmid < dev->vm_info.first_vmid_kfd ||
+ 	    vmid > dev->vm_info.last_vmid_kfd)
+-		return 0;
++		return false;
+ 
+ 	source_id = SOC15_SOURCE_ID_FROM_IH_ENTRY(ih_ring_entry);
+ 	client_id = SOC15_CLIENT_ID_FROM_IH_ENTRY(ih_ring_entry);
+@@ -69,7 +69,7 @@ static bool event_interrupt_isr_v9(struct kfd_dev *dev,
+ 
+ 	/* If there is no valid PASID, it's likely a bug */
+ 	if (WARN_ONCE(pasid == 0, "Bug: No PASID in KFD interrupt"))
+-		return 0;
++		return false;
+ 
+ 	/* Interrupt types we care about: various signals and faults.
+ 	 * They will be forwarded to a work queue (see below).
+-- 
+2.17.1
 
