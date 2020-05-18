@@ -2,111 +2,111 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BFBC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A97C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3B7520825
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE07207ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 09:53:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jqk4ArJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgERJx3 (ORCPT
+        id S1726919AbgERJxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 05:53:29 -0400
-Received: from mga07.intel.com ([134.134.136.100]:29861 "EHLO mga07.intel.com"
+        Mon, 18 May 2020 05:53:54 -0400
+Received: from www.zeus03.de ([194.117.254.33]:42284 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgERJx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 05:53:28 -0400
-IronPort-SDR: fOjCcUXM30INFO0ZwLVMQwn3+o3YQtSBOVuGF3mmX3lnNvlIX0vDS3dHB4tjpbW6kaABYLmnlQ
- 2ezaBRLQDbiA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 02:53:28 -0700
-IronPort-SDR: IPxhcZLdyUPpSJDtRywqmENMCEXb8iNw2LOGME7vov3Pi2g/kBh+2kmc4fcyM75/P26UqVcqln
- tzZ03x2Y4dtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,406,1583222400"; 
-   d="scan'208";a="281919241"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.149.12]) ([10.249.149.12])
-  by orsmga002.jf.intel.com with ESMTP; 18 May 2020 02:53:22 -0700
-Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
- setting
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        id S1726797AbgERJxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 05:53:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=tWy351Cz2/z7fXwTCOyDDiSu6hjr
+        980CFFvM0OKGk38=; b=jqk4ArJDRxXqaeJw1Vpf9ulT1kZDMeu4DIzOpjJzCvE2
+        wvB9i/7zTdSeP0How3mts5qapHlXWscy6SIEYk78S4lkkLFCB1CahZGvwbdhXQgF
+        6Tii5CHShIWLXovOWew7WtvUsyjnotdyeOQp24IWs/WhM1WPJxe49hpDG0y7agA=
+Received: (qmail 956985 invoked from network); 18 May 2020 11:53:51 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 May 2020 11:53:51 +0200
+X-UD-Smtp-Session: l3s3148p1@IRbaI+mlWqEgAwDPXwfCAIWBZdj99x2z
+Date:   Mon, 18 May 2020 11:53:50 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, stable@vger.kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-21-Sergey.Semin@baikalelectronics.ru>
- <c5109483-4c14-1a0c-efa9-51edf01c12de@intel.com>
- <20200516125203.et5gkv6ullkerjyd@mobilestation>
- <20200518074142.c6kbofpdlxro2pjz@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <a8dfa493-f858-e35d-7e57-78478be555c4@intel.com>
-Date:   Mon, 18 May 2020 11:53:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-i2c@vger.kernel.org,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 03/17] ARM: dts: r8a7742: Add I2C and IIC support
+Message-ID: <20200518095350.GC3268@ninjato>
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200515171031.GB19423@ninjato>
+ <CA+V-a8t6rPs4s8uMCpBQEAUvwsVn7Cte-vX3z2atWRhy_RFLQw@mail.gmail.com>
+ <20200518092601.GA3268@ninjato>
+ <CA+V-a8sTm8YEP2Upu1t6tb6YMpaANFRnnLVW=1TXP2LpVMvrNw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200518074142.c6kbofpdlxro2pjz@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DIOMP1UsTsWJauNi"
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8sTm8YEP2Upu1t6tb6YMpaANFRnnLVW=1TXP2LpVMvrNw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/2020 9:41 AM, Viresh Kumar wrote:
-> On 16-05-20, 15:52, Serge Semin wrote:
->> On Fri, May 15, 2020 at 05:58:47PM +0200, Rafael J. Wysocki wrote:
->>>> @@ -2554,7 +2554,7 @@ static int cpufreq_boost_set_sw(int state)
->>>>    			break;
->>>>    	}
->>>> -	return ret;
->>>> +	return ret < 0 ? ret : 0;
->>>>    }
->>>>    int cpufreq_boost_trigger_state(int state)
->>> IMO it is better to update the caller of this function to handle the
->>> positive value possibly returned by it correctly.
->> Could you elaborate why? Viresh seems to be ok with this solution.
-> And it is absolutely fine for Rafael to not agree with it :)
->
->> As I see it the caller doesn't expect the positive value returned by the
->> original freq_qos_update_request(). It just doesn't need to know whether the
->> effective policy has been updated or not, it only needs to make sure the
->> operations has been successful. Moreover the positive value is related only
->> to the !last! active policy, which doesn't give the caller a full picture
->> of the policy change anyway. So taking all of these into account I'd leave the
->> fix as is.
-> Rafael: This function is called via a function pointer, which can call
-> this or a platform dependent routine (like in acpi-cpufreq.c), and it
-> would be reasonable IMO for the return of that callback to only look
-> for 0 or negative values, as is generally done in the kernel.
 
-But it only has one caller that can easily check ret < 0 instead of just 
-ret, so the extra branch can be saved.
+--DIOMP1UsTsWJauNi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That said if you really only want it to return 0 on success, you may as 
-well add a ret = 0; statement (with a comment explaining why it is 
-needed) after the last break in the loop.
+Hi Prabhakar,
 
-Cheers!
+> > Leaves us with a seperate compatible entry for it?
+> >
+> Sounds okay to me, how about "renesas,iic-no-dvfs" ? So that this
+> could be used on all the SoC's which don't support DVFS.
+
+Well, the feature missing is used for DVFS, but its name is "automatic
+transmission". So, I'd rather suggest "-no-auto" as suffix. Also, there
+are already quite some IIC variants out there, so plain "iic" won't
+catch them all. My suggestion would be "renesas,rcar-gen2-iic-no-auto".
+
+All the best,
+
+   Wolfram
 
 
+--DIOMP1UsTsWJauNi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7CWy4ACgkQFA3kzBSg
+KbY21A/+LnXTyKG+293IxrWXi/gU0QJTwPG+JnavrPQRzBtcR++VcmR14KtLyt+s
+5b/feT4np2zYFEoZZiIEe9iF3n0jytbbHfoU9lesoAzcZ2wl3w9hz1CFxuQb8w1z
+siHP9wYNG1OIMAU6TP5GNDGCz6MOOXcBGd3+2PfbEyess8uhvYbqnZwS8dVJlQRW
+A10GHfrZnH8n1Imj+QES9uFwFZ2ZAc2zEI/j5gVUXRZQOGMKy3McofQUWd4803eX
+lTxAUPEytqOzqVGED7P3aP0HpEmG49eXcVZfa/7p5I2kSaT56G99Wl5zgBvdTjYn
+pPU+yOV1a1E/O4S3zLIaLQIliOLhoyKCohnYSwWu0J0KqHdsRQHLg8Zh58wadWPu
+GA1mTWlacYbLvzEoSKdc5bO7pjvm4BjiENPC/FClf8dlvvpletAQmLy6jcKDGkNL
+AUqaoR8+leyj3LZgCh1P4IS5SlpcG3U99SEqT/S05ukXQDA19dowNA4KLiVSk9ir
+YqtLlTczGeRALCwe9RVBNVZ/in0V7q5e7vQU1P52/JTqQB7mpnagh9q1tkSDFfHP
+aNAfA08qiu3I7zJM6nJIxCr3pOGxguWgDt8gBia0V2cmnuYYnsxVUDrk0GS9dFZ6
+DKzDRwrElLhKpxx7b1Y7cFI592Q47s6Jd4ggh9Z+NxWRh12e/9c=
+=p+7Y
+-----END PGP SIGNATURE-----
+
+--DIOMP1UsTsWJauNi--
