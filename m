@@ -6,188 +6,101 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C70C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0DC32075F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E37E2075F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 20:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589834745;
-	bh=m0qDc2rqhbYfXzUhdgSURC1JfnDA7BV3Q1x+hiVOdJg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=g8xW2yzdtWQivOT5uAw79RittV20qmP+NLQ9oH0Z7NKJTzRv0r6Pbuu/mqLpHtKKN
-	 R4VtchcsUwiwQDpLIe9QunzYh8ywCHP9RDKarNw6iSTQLt/vV5ffpmKmOFY7AMoPDe
-	 T6cSJXk4XfYCFflbPLHPZAaK1UhXc6JZlv9gkOkg=
+	s=default; t=1589834808;
+	bh=6/VqxVcF/eBMEiGqW5lrFQdbgd19nfTpUOXb5ymbNhM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WsdxB7etlmVEpfEX8+uwkkuc5u/brdJHeUI8ijGlohyinrZ99pdp/dXMuRBRYnSGL
+	 d0TWk12OzMgcDDYhOTDhZTauaUx0TB4sGgFIv+6LOqfV8R4NdGDxQ+lrXsOsNhF2Lg
+	 tGCLcTel7uIFmvQ3LeW3qWlYK8iuzstcO4e1QESE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgERUpp (ORCPT
+        id S1727909AbgERUqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 16:45:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33160 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 16:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgERUpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 16:45:44 -0400
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726763AbgERUqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 16:46:46 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C4A2086A
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D87B420756;
+        Mon, 18 May 2020 20:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589834743;
-        bh=m0qDc2rqhbYfXzUhdgSURC1JfnDA7BV3Q1x+hiVOdJg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bdXQSf2pAvowX+dXYkD1lb7HPOLv/PGjTl0dkf5fUSTOVJXEkCO9AMQXHani8vjaR
-         nVU5XE6shDDRqJb0YbpMoW1+HSwA52Qte+s5flOlZBv4ULrNbed159JOU5MqlZ+L++
-         qMZhvn3Sc/okuegyGXdi3yatOVuPsNFSihG38yAM=
-Received: by mail-wm1-f49.google.com with SMTP id f134so860106wmf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 13:45:43 -0700 (PDT)
-X-Gm-Message-State: AOAM532cXGJTcxgcE8nSbhbi0VYULGW6oiDq+jcDZDQ+4VwEWH3cdBu0
-        NodRwst4nrQOZlJEaKj0n+I++TDMuiEZq+YSZ2G+ow==
-X-Google-Smtp-Source: ABdhPJx74MCALT/pra6bLUZ0ByZ9NJrr/WbfqwQKtkG5VsYQr7lPeTeDLdtzrMRIkUVLWmR0I2kPQpVXvHf7FyLTN/0=
-X-Received: by 2002:a1c:9989:: with SMTP id b131mr1256561wme.176.1589834741453;
- Mon, 18 May 2020 13:45:41 -0700 (PDT)
+        s=default; t=1589834806;
+        bh=6/VqxVcF/eBMEiGqW5lrFQdbgd19nfTpUOXb5ymbNhM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DsmPLLdF8iyoK3doOUyzI8Q/z79p2b5CVpiLKw71ZAflO+M0fF/EpmqH3+/AmZYmN
+         1MOfOMtfx589oKthcSfovPOYhC+VVIY2ur11x1zWmmNKkqZ0C/V5s6cGI4/FZitYmL
+         PGFbnH2QwjtaaHiu/WatJ4eLvtBA+XtC8KCuWcFY=
+Date:   Mon, 18 May 2020 13:46:43 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Steve deRosier <derosier@gmail.com>,
+        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com,
+        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
+        daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+Message-ID: <20200518134643.685fcb0e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <d81601b17065d7dc3b78bf8d68faf0fbfdb8c936.camel@sipsolutions.net>
+References: <20200515212846.1347-1-mcgrof@kernel.org>
+        <20200515212846.1347-13-mcgrof@kernel.org>
+        <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+        <20200518165154.GH11244@42.do-not-panic.com>
+        <4ad0668d-2de9-11d7-c3a1-ad2aedd0c02d@candelatech.com>
+        <20200518170934.GJ11244@42.do-not-panic.com>
+        <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
+        <20200518171801.GL11244@42.do-not-panic.com>
+        <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
+        <20200518190930.GO11244@42.do-not-panic.com>
+        <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
+        <20200518132828.553159d9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <8d7a3bed242ac9d3ec55a4c97e008081230f1f6d.camel@sipsolutions.net>
+        <20200518133521.6052042e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <d81601b17065d7dc3b78bf8d68faf0fbfdb8c936.camel@sipsolutions.net>
 MIME-Version: 1.0
-References: <cover.1589784221.git.ananos@nubificus.co.uk> <c1124c27293769f8e4836fb8fdbd5adf@kernel.org>
- <CALRTab90UyMq2hMxCdCmC3GwPWFn2tK_uKMYQP2YBRcHwzkEUQ@mail.gmail.com>
-In-Reply-To: <CALRTab90UyMq2hMxCdCmC3GwPWFn2tK_uKMYQP2YBRcHwzkEUQ@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 18 May 2020 13:45:29 -0700
-X-Gmail-Original-Message-ID: <CALCETrVKJK43jHhFyDqEeAczVDkNp5QpFFpsy8vE7VAhpAyXDA@mail.gmail.com>
-Message-ID: <CALCETrVKJK43jHhFyDqEeAczVDkNp5QpFFpsy8vE7VAhpAyXDA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Expose KVM API to Linux Kernel
-To:     Anastassios Nanos <ananos@nubificus.co.uk>
-Cc:     Marc Zyngier <maz@kernel.org>, kvm list <kvm@vger.kernel.org>,
-        kvmarm@lists.cs.columbia.edu, LKML <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 1:50 AM Anastassios Nanos
-<ananos@nubificus.co.uk> wrote:
->
-> On Mon, May 18, 2020 at 10:50 AM Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > On 2020-05-18 07:58, Anastassios Nanos wrote:
-> > > To spawn KVM-enabled Virtual Machines on Linux systems, one has to us=
-e
-> > > QEMU, or some other kind of VM monitor in user-space to host the vCPU
-> > > threads, I/O threads and various other book-keeping/management
-> > > mechanisms.
-> > > This is perfectly fine for a large number of reasons and use cases: f=
-or
-> > > instance, running generic VMs, running general purpose Operating
-> > > systems
-> > > that need some kind of emulation for legacy boot/hardware etc.
-> > >
-> > > What if we wanted to execute a small piece of code as a guest instanc=
-e,
-> > > without the involvement of user-space? The KVM functions are already
-> > > doing
-> > > what they should: VM and vCPU setup is already part of the kernel, th=
-e
-> > > only
-> > > missing piece is memory handling.
-> > >
-> > > With these series, (a) we expose to the Linux Kernel the bare minimum
-> > > KVM
-> > > API functions in order to spawn a guest instance without the
-> > > intervention
-> > > of user-space; and (b) we tweak the memory handling code of KVM-relat=
-ed
-> > > functions to account for another kind of guest, spawned in
-> > > kernel-space.
-> > >
-> > > PATCH #1 exposes the needed stub functions, whereas PATCH #2 introduc=
-es
-> > > the
-> > > changes in the KVM memory handling code for x86_64 and aarch64.
-> > >
-> > > An example of use is provided based on kvmtest.c
-> > > [http://email.nubificus.co.uk/c/eJwdzU0LgjAAxvFPo0eZm1t62MEkC0xQScJTu=
-BdfcGrpQuvTN4KHP7_bIygSDQfY7mkUXotbzQJQftIX7NI9EtEYofOW3eMJ6uTxTtIqz2B1LPhl=
--w6nMrc8MNa9ctp_-TzaHWUekxwfSMCRIA3gLvFrQAiGDUNE-MxWtNP6uVootGBsprbJmaQ2Chf=
-dcyVXQ4J97EIDe6G7T8zRIJdJKmde2h_0WTe_] at
-> > > http://email.nubificus.co.uk/c/eJwljdsKgkAYhJ9GL2X9NQ8Xe2GSBSaoJOFVrO=
-t6QFdL17Sevq1gGPhmGKbERllRtFNb7Hvn9EIKF2Wv6AFNtPmlz33juMbXYAAR3pYwypMY8n1KT=
--u7O2SJYiJO2l6rf05HrjbYsCihRUEp2DYCgmyH2TowGeiVCS6oPW6EuM-K4SkQSNWtaJbiu5ZA=
--3EpOzYNrJ8ldk_OBZuFOuHNseTdv9LGqf4Apyg8eg
->
-> Hi Marc,
->
-> thanks for taking the time to check this!
->
-> >
-> > You don't explain *why* we would want this. What is the overhead of
-> > having
-> > a userspace if your guest doesn't need any userspace handling? The
-> > kvmtest
-> > example indeed shows that the KVM userspace API is usable  without any
-> > form
-> > of emulation, hence has almost no cost.
->
-> The rationale behind such an approach is two-fold:
-> (a) we are able to ditch any user-space involvement in the creation and
-> spawning of a KVM guest. This is particularly interesting in use-cases
-> where short-lived tasks are spawned on demand.  Think of a scenario where
-> an ABI compatible binary is loaded in memory.  Spawning it as a guest fro=
-m
-> userspace would incur a number of IOCTLs. Doing the same from the kernel
-> would be the same number of IOCTLs but now these are function calls;
-> additionally, memory handling is kind of simplified.
->
-> (b) I agree that the userspace KVM API is usable without emulation for a
-> simple task, written in bytecode, adding two registers. But what about
-> something more complicated? something that needs I/O? for most use-cases,
-> I/O happens between the guest and some hardware device (network/storage
-> etc.). Being in the kernel saves us from doing unneccessary mode switches=
-.
-> Of course there are optimizations for handling I/O on QEMU/KVM VMs
-> (virtio/vhost), but essentially what happens is removing mode-switches (a=
-nd
-> exits) for I/O operations -- is there a good reason not to address that
-> directly? a guest running in the kernel exits because of an I/O request,
-> which gets processed and forwarded directly to the relevant subsystem *in=
-*
-> the kernel (net/block etc.).
->
-> We work on both directions with a particular focus on (a) -- device I/O c=
-ould
-> be handled with other mechanisms as well (VFs for instance).
->
-> > Without a clear description of the advantages of your solution, as well
-> > as a full featured in-tree use case, I find it pretty hard to support
-> > this.
->
-> Totally understand that -- please keep in mind that this is a first (baby=
-)
-> step for what we call KVMM (kernel virtual machine monitor). We presented
-> the architecture at FOSDEM and some preliminary results regarding I/O. Of
-> course, this is WiP, and far from being upstreamable. Hence the kvmmtest
-> example showcasing the potential use-case.
->
-> To be honest my main question is whether we are interested in such an
-> approach in the first place, and then try to work on any rough edges. As
-> far as I understand, you're not in favor of this approach.
+On Mon, 18 May 2020 22:41:48 +0200 Johannes Berg wrote:
+> On Mon, 2020-05-18 at 13:35 -0700, Jakub Kicinski wrote:
+> > It's intended to be a generic netlink channel for configuring devices.
+> > 
+> > All the firmware-related interfaces have no dependencies on netdevs,
+> > in fact that's one of the reasons we moved to devlink - we don't want
+> > to hold rtnl lock just for talking to device firmware.  
+> 
+> Sounds good :)
+> 
+> So I guess Luis just has to add some way in devlink to hook up devlink
+> health in a simple way to drivers, perhaps? I mean, many drivers won't
+> really want to use devlink for anything else, so I guess it should be as
+> simple as the API that Luis proposed ("firmware crashed for this struct
+> device"), if nothing more interesting is done with devlink?
+> 
+> Dunno. But anyway sounds like it should somehow integrate there rather
+> than the way this patchset proposed?
 
-The usual answer here is that the kernel is not in favor of adding
-in-kernel functionality that is not used in the upstream kernel.  If
-you come up with a real use case, and that use case is GPL and has
-plans for upstreaming, and that use case has a real benefit
-(dramatically faster than user code could likely be, does something
-new and useful, etc), then it may well be mergeable.
+Right, that'd be great. Simple API to register a devlink instance with
+whatever number of reporters the device would need. I'm happy to help.
