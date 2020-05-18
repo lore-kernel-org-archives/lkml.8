@@ -2,165 +2,138 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B479C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F69C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5928620709
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD9D207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 10:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589799088;
-	bh=DJ9gB5M1f5+nOQuo7E6knVa7l5IOq/QKKg7i/B0KMaU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=z4kyNKrgjcNCbNwzsWJ7nwiExiVNWYDqtp5WoJ7cUOI8tOFlJuhFsR6cXeiOIc1HS
-	 whmxwBSsrt2+CfqEvZS5R0paxnHNhjxFPOU3C2v44jbuxbpWvS19brSI6to1jS94qS
-	 k7NWwwdwWh6bCWbgopIw2HVFXi9apqGfmWAyxOtQ=
+	s=default; t=1589799095;
+	bh=i2AfCj4ub0nWHT5gvxlriwr/KZpF7Frnuv84NlUoeIA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iROdQuG8YDeOJW4AiZdKIDO6wB3Nard9RNm/09Q2k7uFPzIALLPxDJZg1I+d8wIJF
+	 xXsdxJQX0JanWGyg8XKsoAtk/qcMiAxxKYgyF6/iEgVhjxahvqj8IyMtq8VTKiJUIa
+	 KpC84SoGW4v40e2ejowQqI6vumHh/MPbwoToxBqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgERKv1 (ORCPT
+        id S1726671AbgERKve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 06:51:27 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:34032 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgERKv1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 06:51:27 -0400
-Received: by mail-oo1-f66.google.com with SMTP id s139so1936141oos.1;
-        Mon, 18 May 2020 03:51:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lNMXSW+sgPzbz8sV3erf+BVgtCmbmji/K/QtFyrknmo=;
-        b=s1CfJ7uhVTqb5RMP+t++4sBVZFwoxJv9g4uee/6P6MjaiyD0euuv17fCPFm1NjsYP/
-         pmARXhuD0Cb4k169afAtx5woREgl1Ow0QcIz221jFyWto5mxFXRtaIefqPeoiRYiuRd4
-         +XH4Um2iGVuBpcXLM+G02trzec0eNTnA3OwQ4112QE7l/+T7pm8Z3AKHpL6yGLV+rTVY
-         t3pBFs9U7/5i2E4R1vzGM4b879BzcDFQ6K0vseg3q3H1dUXvrVl4SGq3Ws+AYNgOCVTW
-         3ttenyx0RHvV4VrgZjSIJZTOye3HrRQdvXBg8fKzkg+psMQq8iz8ETbCezlL/BTCWhWg
-         mgtg==
-X-Gm-Message-State: AOAM532LKdoA/52i+Kp9GUrjqtB/Ei+JEfyE+HMPKXar2tmtPpK6EsBg
-        SHjc44vMSWh+f2yvQIvNjZ7HExnIWoThNu4p9ouqGQ==
-X-Google-Smtp-Source: ABdhPJwXKPHrVc2nshP6py5iOtERo4swV8insgwVVxqAdeRAgg41N/VGvu05gaipdg5BK+WXxE+QcFrnrrWttpBR3Ws=
-X-Received: by 2002:a4a:e0d1:: with SMTP id e17mr12336167oot.1.1589799085973;
- Mon, 18 May 2020 03:51:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200518102415.k4c5qglodij5ac6h@vireshk-i7> <20200518103102.t3a3g4uxeeuwsnix@mobilestation>
- <5284478.EF2IWm2iUs@kreacher> <20200518104602.mjh2p5iltf2x4wmq@mobilestation>
-In-Reply-To: <20200518104602.mjh2p5iltf2x4wmq@mobilestation>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 18 May 2020 12:51:15 +0200
-Message-ID: <CAJZ5v0imYcL3M80S1snJAqXQ=GsqbChij-6aWx=4L02TKVvrQg@mail.gmail.com>
-Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw setting
+        Mon, 18 May 2020 06:51:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgERKvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 06:51:33 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58FDD20709;
+        Mon, 18 May 2020 10:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589799092;
+        bh=i2AfCj4ub0nWHT5gvxlriwr/KZpF7Frnuv84NlUoeIA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mKMJa/Hx0SNrxKGqgTQ+Z9yf/QSzQjzYKzJN6tuA0sNMQnphFHnjikn4i5L9UfHZF
+         7vlBITv1hxqfiEfgiBzei9qanx1g+j0AjtIRUvbQE+qDI7r4bkBuYAfb6FGDfXUskm
+         R1PKD1ecMSRxeO25BvVq5/Q43gEvpe6VC/jxTDSA=
+Date:   Mon, 18 May 2020 11:51:30 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
         Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/19] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200518105130.GC8699@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-1-Sergey.Semin@baikalelectronics.ru>
+ <20200515104758.6934-3-Sergey.Semin@baikalelectronics.ru>
+ <20200515120111.GV185537@smile.fi.intel.com>
+ <20200515121815.GB5066@sirena.org.uk>
+ <20200515123702.GA185537@smile.fi.intel.com>
+ <20200515124131.GE5066@sirena.org.uk>
+ <20200515200250.zjsv5uaftwqcnwud@mobilestation>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dkEUBIird37B8yKS"
+Content-Disposition: inline
+In-Reply-To: <20200515200250.zjsv5uaftwqcnwud@mobilestation>
+X-Cookie: If in doubt, mumble.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:46 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> On Mon, May 18, 2020 at 12:41:19PM +0200, Rafael J. Wysocki wrote:
-> > On Monday, May 18, 2020 12:31:02 PM CEST Serge Semin wrote:
-> > > On Mon, May 18, 2020 at 03:54:15PM +0530, Viresh Kumar wrote:
-> > > > On 18-05-20, 12:22, Rafael J. Wysocki wrote:
-> > > > > On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
-> > > > > > On 18-05-20, 11:53, Rafael J. Wysocki wrote:
-> > > > > > > That said if you really only want it to return 0 on success, you may as well
-> > > > > > > add a ret = 0; statement (with a comment explaining why it is needed) after
-> > > > > > > the last break in the loop.
-> > > > > >
-> > > > > > That can be done as well, but will be a bit less efficient as the loop
-> > > > > > will execute once for each policy, and so the statement will run
-> > > > > > multiple times. Though it isn't going to add any significant latency
-> > > > > > in the code.
-> > > > >
-> > > > > Right.
-> > > > >
-> > > > > However, the logic in this entire function looks somewhat less than
-> > > > > straightforward to me, because it looks like it should return an
-> > > > > error on the first policy without a frequency table (having a frequency
-> > > > > table depends on the driver and that is the same for all policies, so it
-> > > > > is pointless to iterate any further in that case).
-> > > > >
-> > > > > Also, the error should not be -EINVAL, because that means "invalid
-> > > > > argument" which would be the state value.
-> > > > >
-> > > > > So I would do something like this:
-> > > > >
-> > > > > ---
-> > > > >  drivers/cpufreq/cpufreq.c |   11 ++++++-----
-> > > > >  1 file changed, 6 insertions(+), 5 deletions(-)
-> > > > >
-> > > > > Index: linux-pm/drivers/cpufreq/cpufreq.c
-> > > > > ===================================================================
-> > > > > --- linux-pm.orig/drivers/cpufreq/cpufreq.c
-> > > > > +++ linux-pm/drivers/cpufreq/cpufreq.c
-> > > > > @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
-> > > > >  static int cpufreq_boost_set_sw(int state)
-> > > > >  {
-> > > > >         struct cpufreq_policy *policy;
-> > > > > -       int ret = -EINVAL;
-> > > > >
-> > > > >         for_each_active_policy(policy) {
-> > > > > +               int ret;
-> > > > > +
-> > > > >                 if (!policy->freq_table)
-> > > > > -                       continue;
-> > > > > +                       return -ENXIO;
-> > > > >
-> > > > >                 ret = cpufreq_frequency_table_cpuinfo(policy,
-> > > > >                                                       policy->freq_table);
-> > > > >                 if (ret) {
-> > > > >                         pr_err("%s: Policy frequency update failed\n",
-> > > > >                                __func__);
-> > > > > -                       break;
-> > > > > +                       return ret;
-> > > > >                 }
-> > > > >
-> > > > >                 ret = freq_qos_update_request(policy->max_freq_req, policy->max);
-> > > > >                 if (ret < 0)
-> > > > > -                       break;
-> > > > > +                       return ret;
-> > > > >         }
-> > > > >
-> > > > > -       return ret;
-> > > > > +       return 0;
-> > > > >  }
-> > > > >
-> > > > >  int cpufreq_boost_trigger_state(int state)
-> > > >
-> > > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > >
-> > > Ok. Thanks for the comments. Shall I resend the patch with update Rafael
-> > > suggests or you'll merge the Rafael's fix in yourself?
-> >
-> > I'll apply the fix directly, thanks!
->
-> Great. Is it going to be available in the repo:
-> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/
-> ?
 
-Yes, it is.  Please see the bleeding-edge branch in there, thanks!
+--dkEUBIird37B8yKS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, May 15, 2020 at 11:02:50PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 01:41:31PM +0100, Mark Brown wrote:
+
+> > I guess we could, though it's really there because for historical
+> > reasons we've got a bunch of different ways of specifying delays from
+> > client drivers rather than for the executing a delay where you've
+> > already got a good idea of the length of the delay.
+
+> A beauty of spi_delay_exec() is that it provides a selective delay. I mean it
+> checks the delay value and selects an appropriate delay method like ndelay,
+> udelay and so on. That's the only reason I'd use it here. But It has got a few
+> drawbacks:
+
+Right, usually you'd have a good ideal how long the delay is and
+therefore just be able to go directly for an appropraite delay function.
+
+> - timeout value has type u16. It's too small to keep nanoseconds.
+
+That could be increased, though obviously if you have a bigger delay you
+can specify it in usecs instead.
+
+> - semantically the xfer argument isn't optional and we can't fetch it that easy
+>   in the dmaengine completion callbacks.
+
+Not sure I follow this.
+
+> So if there were an alternative method like _spi_transfer_delay_ns() I'd use it.
+> Otherwise we'd need to locally implement the selective delay. Unless you know
+> another alternative, which does it. If you don't and there isn't one then in
+> order to not over-complicate a simple delay-loop code I'd simply leave the
+> ndelay() here.
+
+Not that I'm aware of.
+
+--dkEUBIird37B8yKS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7CaLEACgkQJNaLcl1U
+h9B7Rwf/fqp1qjsvXr4x+k4pnHTXLydq+YVuk7I9jH54/CjiUyAFORKPQPBqaALA
+o6T8iks8/NsBl2RwCYddysTdSVb4H5vYD2GBjlvSWZgyLlnANzuES+mq6Ux8ZX/W
+FFlNgWpZY+bCBolXL53+0/j2wiVxYqRXsMPF05P3a8wphYDZE565WWTbTA9IQ5pX
+aLUW05PQcGuvQdgVF9SM89ftk/3YLnQJCmtUMwdpkuUzDLhlMVhw7FR9l2iClAXF
+GH9175wDMI2UIB4XnuAj2IvniurtxU0RevqsBsQmTvOiT1sPmGRLiuLCacJOjDzf
+vkOwB9Ol0wriQ8KeFaGhKbSu0rFZew==
+=E8fH
+-----END PGP SIGNATURE-----
+
+--dkEUBIird37B8yKS--
