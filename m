@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A21DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8AD20671
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7545720671
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 18:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589825410;
-	bh=z2CwPlf7bz18Akb6Y2vLQl3VvY12zCFv4kN7QHx18fs=;
+	s=default; t=1589825416;
+	bh=fF+tq1WMwk5QChB77xDXUcCef0aahUEPUstfiNI40nI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dGOUG90b35gBX/xUrA7v8tVxZcpSLTybGi/WWpR3qNhAJiS+PXPmKI4US+JOc9oQf
-	 r+5uonW6VPeIbgTwQOsoooPSULnwatyy2jTsAclE2NMLi5DDSNWLBz/cTr1Vc8JYZ2
-	 s3WdmenMGcw7DKF8Ii4ed0oyP5hjEHKJyoVf74fo=
+	b=eoe3/L6uoP0WO3UU5+zGcRjAO0gVCUvz0IvulTiAW8xy3NTXBjbfBATOLeGdrgcY+
+	 LdXrzZeD5J6oqPHpQ92Ti9euYH092g2lKgHwvOJ7IZOVrOAq2aZLpDmWQydSoymy2k
+	 mJM6wvDQ8XfjHVYVkSLDTWW1ESJCnWr9RJatfWNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387550AbgERSKJ (ORCPT
+        id S1733038AbgERSKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 14:10:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53542 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 14:10:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733052AbgERSFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 14:05:48 -0400
+        id S1729773AbgERSFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 14:05:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C9D6207D3;
-        Mon, 18 May 2020 18:05:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58F0220671;
+        Mon, 18 May 2020 18:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589825147;
-        bh=z2CwPlf7bz18Akb6Y2vLQl3VvY12zCFv4kN7QHx18fs=;
+        s=default; t=1589825142;
+        bh=fF+tq1WMwk5QChB77xDXUcCef0aahUEPUstfiNI40nI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HeAGg3nQpACZG+3lcQg9s+A8bmtdWqhZLK4/s69Jvsr2rlkneBSffqk6n8aB8AXil
-         cpLmqdDX62x3r42mgj9DwR0Gw7FAGbAuUsaS8bbNkfpwOlT05V8PfWjjKRf6QEsDB2
-         s7F1E7LeWl2STmzX5M/VnJbsnScNUGD/23vnrFFk=
+        b=czUTYUGEhewOd4JU0qI7IBB2Qf/FXCSJdZsmCsXvtBxPxSBVUoeijviNx4cEKbIz7
+         RowhKUwwJIBo+nSSM5J1vHlgReLK/yQLl9uXyqn9IE7h3Y+x3L11KhREivEthAYftr
+         rqvEWmeZV/t4GaqCxnd7ZOosheKjktRf4zE2+5N4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.6 148/194] ARM: dts: dra7: Fix bus_dma_limit for PCIe
-Date:   Mon, 18 May 2020 19:37:18 +0200
-Message-Id: <20200518173543.585798075@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.6 146/194] usb: xhci: Fix NULL pointer dereference when enqueuing trbs from urb sg list
+Date:   Mon, 18 May 2020 19:37:16 +0200
+Message-Id: <20200518173543.420247826@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
 References: <20200518173531.455604187@linuxfoundation.org>
@@ -60,59 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Sriharsha Allenki <sallenki@codeaurora.org>
 
-commit 90d4d3f4ea45370d482fa609dbae4d2281b4074f upstream.
+commit 3c6f8cb92c9178fc0c66b580ea3df1fa3ac1155a upstream.
 
-Even though commit cfb5d65f2595 ("ARM: dts: dra7: Add bus_dma_limit
-for L3 bus") added bus_dma_limit for L3 bus, the PCIe controller
-gets incorrect value of bus_dma_limit.
+On platforms with IOMMU enabled, multiple SGs can be coalesced into one
+by the IOMMU driver. In that case the SG list processing as part of the
+completion of a urb on a bulk endpoint can result into a NULL pointer
+dereference with the below stack dump.
 
-Fix it by adding empty dma-ranges property to axi@0 and axi@1
-(parent device tree node of PCIe controller).
+<6> Unable to handle kernel NULL pointer dereference at virtual address 0000000c
+<6> pgd = c0004000
+<6> [0000000c] *pgd=00000000
+<6> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+<2> PC is at xhci_queue_bulk_tx+0x454/0x80c
+<2> LR is at xhci_queue_bulk_tx+0x44c/0x80c
+<2> pc : [<c08907c4>]    lr : [<c08907bc>]    psr: 000000d3
+<2> sp : ca337c80  ip : 00000000  fp : ffffffff
+<2> r10: 00000000  r9 : 50037000  r8 : 00004000
+<2> r7 : 00000000  r6 : 00004000  r5 : 00000000  r4 : 00000000
+<2> r3 : 00000000  r2 : 00000082  r1 : c2c1a200  r0 : 00000000
+<2> Flags: nzcv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
+<2> Control: 10c0383d  Table: b412c06a  DAC: 00000051
+<6> Process usb-storage (pid: 5961, stack limit = 0xca336210)
+<snip>
+<2> [<c08907c4>] (xhci_queue_bulk_tx)
+<2> [<c0881b3c>] (xhci_urb_enqueue)
+<2> [<c0831068>] (usb_hcd_submit_urb)
+<2> [<c08350b4>] (usb_sg_wait)
+<2> [<c089f384>] (usb_stor_bulk_transfer_sglist)
+<2> [<c089f2c0>] (usb_stor_bulk_srb)
+<2> [<c089fe38>] (usb_stor_Bulk_transport)
+<2> [<c089f468>] (usb_stor_invoke_transport)
+<2> [<c08a11b4>] (usb_stor_control_thread)
+<2> [<c014a534>] (kthread)
 
-Cc: stable@kernel.org
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+The above NULL pointer dereference is the result of block_len and the
+sent_len set to zero after the first SG of the list when IOMMU driver
+is enabled. Because of this the loop of processing the SGs has run
+more than num_sgs which resulted in a sg_next on the last SG of the
+list which has SG_END set.
+
+Fix this by check for the sg before any attributes of the sg are
+accessed.
+
+[modified reason for null pointer dereference in commit message subject -Mathias]
+Fixes: f9c589e142d04 ("xhci: TD-fragment, align the unsplittable case with a bounce buffer")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200514110432.25564-2-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/dra7.dtsi |    4 ++--
+ drivers/usb/host/xhci-ring.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -172,6 +172,7 @@
- 			#address-cells = <1>;
- 			ranges = <0x51000000 0x51000000 0x3000
- 				  0x0	     0x20000000 0x10000000>;
-+			dma-ranges;
- 			/**
- 			 * To enable PCI endpoint mode, disable the pcie1_rc
- 			 * node and enable pcie1_ep mode.
-@@ -185,7 +186,6 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
--				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
-@@ -230,6 +230,7 @@
- 			#address-cells = <1>;
- 			ranges = <0x51800000 0x51800000 0x3000
- 				  0x0	     0x30000000 0x10000000>;
-+			dma-ranges;
- 			status = "disabled";
- 			pcie2_rc: pcie@51800000 {
- 				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
-@@ -240,7 +241,6 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
--				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -3425,8 +3425,8 @@ int xhci_queue_bulk_tx(struct xhci_hcd *
+ 			/* New sg entry */
+ 			--num_sgs;
+ 			sent_len -= block_len;
+-			if (num_sgs != 0) {
+-				sg = sg_next(sg);
++			sg = sg_next(sg);
++			if (num_sgs != 0 && sg) {
+ 				block_len = sg_dma_len(sg);
+ 				addr = (u64) sg_dma_address(sg);
+ 				addr += sent_len;
 
 
