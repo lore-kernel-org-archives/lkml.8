@@ -2,76 +2,67 @@ Return-Path: <SRS0=RE5T=7A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E99BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF381C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4142081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09B420829
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 May 2020 22:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589840211;
-	bh=llfoXoDbUl/zjbezMoNa+XpAXA1AlgWEQ8r/kkE3h8I=;
+	s=default; t=1589840311;
+	bh=GAsP72OzLRqNeGGIYQczDNH78GgALiPWljn3TChp7vo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=z6SdI4ZP755zF3tWC7f+1avKWf5K0aBWe3sAOqotzzZPnUHE2Pkpgbm06il1jhPVu
-	 J8p+A+XhcdseyuKn4MnSsen+vOYT2+hXsMMnp43u31E7pimDultJjd6GIIMg/H1LR7
-	 N3DoulPkHkVVPqKHbY5gvOvP20urJMy22y/HXc+Q=
+	b=HEMYO2hu1GgLbaB2O/llAECwnAuzdN1Gwlxz0Cly5Cx+lIHOf+i7KotlZlbGeOMFY
+	 wyU1v4g9pncxPPU0AuGqWH7lMpnA4vBiZC73gdrc6sLYso8fdIFB3ON39IKK0nVMXX
+	 Hg2yPldsKeTDc65VUvuXqIaqhopjcnCAj94abxBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgERWQu (ORCPT
+        id S1728474AbgERWSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 18:16:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33480 "EHLO mail.kernel.org"
+        Mon, 18 May 2020 18:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgERWQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 18:16:49 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        id S1726640AbgERWSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 18:18:30 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DE7920657;
-        Mon, 18 May 2020 22:16:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7BC62081A;
+        Mon, 18 May 2020 22:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589840209;
-        bh=llfoXoDbUl/zjbezMoNa+XpAXA1AlgWEQ8r/kkE3h8I=;
+        s=default; t=1589840309;
+        bh=GAsP72OzLRqNeGGIYQczDNH78GgALiPWljn3TChp7vo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fT61f7mzfm0m3Lue047kumZqLTm7/F4faZnDWN1uTHo4KF1ylu3cNS6l37Ux2pkVs
-         WqISsIThqmyDfpUyAxKl1tPns4HyZ/yJj9XOGNkSN4K/ORRL3UYlicHtM6m16R5Bdr
-         IYOw1z50Xlbq/Ho9/HGc4JqDO87NlzZd7zynX3SQ=
-Date:   Mon, 18 May 2020 15:16:45 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Steve deRosier <derosier@gmail.com>,
-        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com,
-        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        ath10k@lists.infradead.org
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-Message-ID: <20200518151645.4693cf30@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200518212202.GR11244@42.do-not-panic.com>
-References: <abf22ef3-93cb-61a4-0af2-43feac6d7930@candelatech.com>
-        <20200518171801.GL11244@42.do-not-panic.com>
-        <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
-        <20200518190930.GO11244@42.do-not-panic.com>
-        <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
-        <20200518132828.553159d9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <8d7a3bed242ac9d3ec55a4c97e008081230f1f6d.camel@sipsolutions.net>
-        <20200518133521.6052042e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <d81601b17065d7dc3b78bf8d68faf0fbfdb8c936.camel@sipsolutions.net>
-        <20200518134643.685fcb0e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200518212202.GR11244@42.do-not-panic.com>
-MIME-Version: 1.0
+        b=zZ+klVAaZtV27MGlVb0LzirdC6IcRNdxtR8vdL8+p1v703lmi5J9HVBsa59wZfYS2
+         rcHhIFOwmI6Yc/w9iEWdmxMN/U7GWNm4qd9W6owTNY+8aCiuJZFmriA8jGFyro1lnf
+         B2QLoucZDhxzU0xGGj8zNn76nXG71emZmJGgdURs=
+Date:   Mon, 18 May 2020 15:18:28 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v3 2/7] mm/vmalloc: Track which page-table levels were
+ modified
+Message-Id: <20200518151828.ad3c714a29209b359e326ec4@linux-foundation.org>
+In-Reply-To: <20200516125641.GK8135@suse.de>
+References: <20200515140023.25469-1-joro@8bytes.org>
+        <20200515140023.25469-3-joro@8bytes.org>
+        <20200515130142.4ca90ee590e9d8ab88497676@linux-foundation.org>
+        <20200516125641.GK8135@suse.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,15 +70,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 21:22:02 +0000 Luis Chamberlain wrote:
-> Indeed my issue with devlink is that it did not seem generic enough for
-> all devices which use firmware and for which firmware can crash. Support
-> should not have to be "add devlink support" + "now use this new hook",
-> but rather a very lighweight devlink_crash(device) call we can sprinkly
-> with only the device as a functional requirement.
+On Sat, 16 May 2020 14:56:41 +0200 Joerg Roedel <jroedel@suse.de> wrote:
 
-We can provide a lightweight devlink_crash(device) which only generates
-the notification, without the need to register the health reporter or a
-devlink instance upfront. But then we loose the ability to control the
-recovery, count errors, etc. So I'd think that's not the direction we
-want to go in.
+> Hi Andrew,
+> 
+> On Fri, May 15, 2020 at 01:01:42PM -0700, Andrew Morton wrote:
+> > On Fri, 15 May 2020 16:00:18 +0200 Joerg Roedel <joro@8bytes.org> wrote:
+> > Lots of collisions here with Christoph's "decruft the vmalloc API" series
+> > (http://lkml.kernel.org/r/20200414131348.444715-1-hch@lst.de).
+> > 
+> > I attempted to fix things up.
+> > 
+> > unmap_kernel_range_noflush() needed to be redone.
+> > 
+> > map_kernel_range_noflush() might need the arch_sync_kernel_mappings() call?
+> 
+> Yes, map_kernel_range_noflush() needs the arch_sync_kernel_mappings()
+> call as well.
+> 
+
+This?
+
+--- a/mm/vmalloc.c~mm-vmalloc-track-which-page-table-levels-were-modified-fix
++++ a/mm/vmalloc.c
+@@ -309,6 +309,9 @@ int map_kernel_range_noflush(unsigned lo
+ 			return err;
+ 	} while (pgd++, addr = next, addr != end);
+ 
++	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
++		arch_sync_kernel_mappings(start, end);
++
+ 	return 0;
+ }
+ 
+
+It would be nice to get all this (ie, linux-next) retested before we
+send it upstream, please.  
