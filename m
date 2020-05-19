@@ -2,302 +2,81 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28424C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0ECA206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18D4206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589859280;
+	bh=Ew9WSbxHlG1e79O/eF3sP7/t7fsVShQrjZ3HmpHj6ok=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Onc9nkjQdCGopWijWZ+QlfDrIcNK2hU1gZBfyNKMouZ+yvS6BkdC7YpX2m9fDRdcI
+	 E7KgTS90WIM7kTyZ3JphzO1DrZuQeJkp8MvFyvNipuJYx9eXlf9DqInrbp396Vk06G
+	 DyPSwK/zWpxvNpn+aEHQ/ummgImomYFEWLF9vs5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgESDbf (ORCPT
+        id S1726957AbgESDej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:31:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40648 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728299AbgESDbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:31:32 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CB664B447241A3B14722;
-        Tue, 19 May 2020 11:31:24 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 19 May 2020 11:31:14 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
-        <adobriyan@gmail.com>, <mingo@kernel.org>, <nixiaoming@huawei.com>,
-        <gpiccoli@canonical.com>, <rdna@fb.com>, <patrick.bellasi@arm.com>,
-        <sfr@canb.auug.org.au>, <akpm@linux-foundation.org>,
-        <mhocko@suse.com>, <penguin-kernel@i-love.sakura.ne.jp>,
-        <vbabka@suse.cz>, <tglx@linutronix.de>, <peterz@infradead.org>,
-        <Jisheng.Zhang@synaptics.com>, <khlebnikov@yandex-team.ru>,
-        <bigeasy@linutronix.de>, <pmladek@suse.com>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-CC:     <wangle6@huawei.com>, <alex.huangjianhui@huawei.com>
-Subject: [PATCH v4 4/4] watchdog: move watchdog sysctl interface to watchdog.c
-Date:   Tue, 19 May 2020 11:31:11 +0800
-Message-ID: <1589859071-25898-5-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-In-Reply-To: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
-References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+        Mon, 18 May 2020 23:34:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgESDej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 23:34:39 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF35A204EF;
+        Tue, 19 May 2020 03:34:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589859278;
+        bh=Ew9WSbxHlG1e79O/eF3sP7/t7fsVShQrjZ3HmpHj6ok=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SsCtl4mGJEwEUe96KkQtYVbR6BtoJw9xmwETC1EYCBWMDzbB/++8GmNwn3j1cvk5t
+         X8luuK69SAjTDOCt+gPTTsdC1qKWhGgn2bVNbSaSNhTFX14ge+8stbbJPRZDZFxtFH
+         lX+rd+rTSO4S2FGggM2Us207qBwpDkR0QigcD4+U=
+Date:   Mon, 18 May 2020 20:34:37 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     maobibo <maobibo@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3 3/3] mm/memory.c: Add memory read privilege before
+ filling PTE entry
+Message-Id: <20200518203437.8b2df678261d756a8c477f40@linux-foundation.org>
+In-Reply-To: <d1646320-51ec-4b5f-bcad-41eba85b78cf@loongson.cn>
+References: <1589778529-25627-1-git-send-email-maobibo@loongson.cn>
+        <1589778529-25627-3-git-send-email-maobibo@loongson.cn>
+        <20200518135747.d8837ba6742b2d193e14fbb0@linux-foundation.org>
+        <d1646320-51ec-4b5f-bcad-41eba85b78cf@loongson.cn>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move watchdog syscl interface to watchdog.c.
-Use register_sysctl() to register the sysctl interface to avoid
-merge conflicts when different features modify sysctl.c at the same time.
+On Tue, 19 May 2020 11:22:49 +0800 maobibo <maobibo@loongson.cn> wrote:
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- kernel/sysctl.c   |  96 ---------------------------------------------------
- kernel/watchdog.c | 101 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 101 insertions(+), 96 deletions(-)
+> how about adding pte_sw_mkyoung alike function which is a noop on all but mips?
+> this function is used to set PAGE_ACCESS bit and PAGE_VALID bit on mips platform.
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index b7fd4e6..88235fa 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -100,16 +100,10 @@
- #ifdef CONFIG_STACKLEAK_RUNTIME_DISABLE
- #include <linux/stackleak.h>
- #endif
--#ifdef CONFIG_LOCKUP_DETECTOR
--#include <linux/nmi.h>
--#endif
- 
- #if defined(CONFIG_SYSCTL)
- 
- /* Constants used for minimum and  maximum */
--#ifdef CONFIG_LOCKUP_DETECTOR
--static int sixty = 60;
--#endif
- 
- static unsigned long zero_ul;
- static unsigned long one_ul = 1;
-@@ -2231,96 +2225,6 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0444,
- 		.proc_handler	= proc_dointvec,
- 	},
--#if defined(CONFIG_LOCKUP_DETECTOR)
--	{
--		.procname       = "watchdog",
--		.data		= &watchdog_user_enabled,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler   = proc_watchdog,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--	{
--		.procname	= "watchdog_thresh",
--		.data		= &watchdog_thresh,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_watchdog_thresh,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= &sixty,
--	},
--	{
--		.procname       = "nmi_watchdog",
--		.data		= &nmi_watchdog_user_enabled,
--		.maxlen		= sizeof(int),
--		.mode		= NMI_WATCHDOG_SYSCTL_PERM,
--		.proc_handler   = proc_nmi_watchdog,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--	{
--		.procname	= "watchdog_cpumask",
--		.data		= &watchdog_cpumask_bits,
--		.maxlen		= NR_CPUS,
--		.mode		= 0644,
--		.proc_handler	= proc_watchdog_cpumask,
--	},
--#ifdef CONFIG_SOFTLOCKUP_DETECTOR
--	{
--		.procname       = "soft_watchdog",
--		.data		= &soft_watchdog_user_enabled,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler   = proc_soft_watchdog,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--	{
--		.procname	= "softlockup_panic",
--		.data		= &softlockup_panic,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--#ifdef CONFIG_SMP
--	{
--		.procname	= "softlockup_all_cpu_backtrace",
--		.data		= &sysctl_softlockup_all_cpu_backtrace,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--#endif /* CONFIG_SMP */
--#endif
--#ifdef CONFIG_HARDLOCKUP_DETECTOR
--	{
--		.procname	= "hardlockup_panic",
--		.data		= &hardlockup_panic,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--#ifdef CONFIG_SMP
--	{
--		.procname	= "hardlockup_all_cpu_backtrace",
--		.data		= &sysctl_hardlockup_all_cpu_backtrace,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--#endif /* CONFIG_SMP */
--#endif
--#endif
--
- #if defined(CONFIG_X86_LOCAL_APIC) && defined(CONFIG_X86)
- 	{
- 		.procname       = "unknown_nmi_panic",
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 1b93953..b000326 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -758,6 +758,106 @@ int proc_watchdog_cpumask(struct ctl_table *table, int write,
- 	mutex_unlock(&watchdog_mutex);
- 	return err;
- }
-+
-+static const int sixty = 60;
-+
-+static struct ctl_table watchdog_sysctls[] = {
-+	{
-+		.procname       = "watchdog",
-+		.data		= &watchdog_user_enabled,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler   = proc_watchdog,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+	{
-+		.procname	= "watchdog_thresh",
-+		.data		= &watchdog_thresh,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_watchdog_thresh,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= (void *)&sixty,
-+	},
-+	{
-+		.procname       = "nmi_watchdog",
-+		.data		= &nmi_watchdog_user_enabled,
-+		.maxlen		= sizeof(int),
-+		.mode		= NMI_WATCHDOG_SYSCTL_PERM,
-+		.proc_handler   = proc_nmi_watchdog,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+	{
-+		.procname	= "watchdog_cpumask",
-+		.data		= &watchdog_cpumask_bits,
-+		.maxlen		= NR_CPUS,
-+		.mode		= 0644,
-+		.proc_handler	= proc_watchdog_cpumask,
-+	},
-+#ifdef CONFIG_SOFTLOCKUP_DETECTOR
-+	{
-+		.procname       = "soft_watchdog",
-+		.data		= &soft_watchdog_user_enabled,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler   = proc_soft_watchdog,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+	{
-+		.procname	= "softlockup_panic",
-+		.data		= &softlockup_panic,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+#ifdef CONFIG_SMP
-+	{
-+		.procname	= "softlockup_all_cpu_backtrace",
-+		.data		= &sysctl_softlockup_all_cpu_backtrace,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+#endif /* CONFIG_SMP */
-+#endif
-+#ifdef CONFIG_HARDLOCKUP_DETECTOR
-+	{
-+		.procname	= "hardlockup_panic",
-+		.data		= &hardlockup_panic,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+#ifdef CONFIG_SMP
-+	{
-+		.procname	= "hardlockup_all_cpu_backtrace",
-+		.data		= &sysctl_hardlockup_all_cpu_backtrace,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+#endif /* CONFIG_SMP */
-+#endif
-+	{}
-+};
-+
-+static void __init watchdog_sysctl_init(void)
-+{
-+	register_sysctl_init("kernel", watchdog_sysctls, "watchdog_sysctls");
-+}
-+#else
-+#define watchdog_sysctl_init() do { } while (0)
- #endif /* CONFIG_SYSCTL */
- 
- void __init lockup_detector_init(void)
-@@ -771,4 +871,5 @@ void __init lockup_detector_init(void)
- 	if (!watchdog_nmi_probe())
- 		nmi_watchdog_available = true;
- 	lockup_detector_setup();
-+	watchdog_sysctl_init();
- }
--- 
-1.8.5.6
+Sounds good.  Please ensure that the interface (roles and
+responsibilities, etc) is well documented in code comments.
 
