@@ -2,125 +2,215 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB8E9207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:57:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N+43DCJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5C877207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgEST5t (ORCPT
+        id S1727027AbgEST6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51794 "EHLO
+        Tue, 19 May 2020 15:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgEST5s (ORCPT
+        with ESMTP id S1726348AbgEST6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:57:48 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C11C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:57:46 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id c187so235841ooc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8iNeQP5ee6psuw10GRS3UP54RfEa+IGu/iBWGhrLxKw=;
-        b=N+43DCJQN8eRl4QR709SgnvQJDPivxRNw908Qr+hkSugZJHzk/eCoGdncp5dkhCKM2
-         iSFGue4ic/IGMTuIaptNEzw8jROo2A6izzos64C+mUufZLyjPQDW1mIEHj71ky5+QwyA
-         oAfI+5edsFHUxJfdmN9shXYeKyYNPMwdvmFfnu4g3TwVm2URiBp6DQetqEffDHPmACQu
-         G8NlrDXE0/gWk7R+nYgf4bpC+Hzb2MtCWaQdCAJzZ11mxtqRFTZg9ZNs2v950dYR7NoC
-         8D1Rfg/+C23GfTOnQAaz7cD08zjRs68dmKrkfJ4sa9YzLiV5gvghZNNVLHATF4s/oB/o
-         RszQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8iNeQP5ee6psuw10GRS3UP54RfEa+IGu/iBWGhrLxKw=;
-        b=e/ca7qrBQaRd+WGR6otSbFc9Fh73XV7fFY1Kt3xOYMhigE1gSo+ji+1Dvnbar+5M2E
-         ArRuJgTsJ9XHkgsxAFoJDBBtmioEBNG/aKIZ9AfU9ZlXckD/R/ZAv34kaXAiK8mJHIkj
-         aWIufe7YApDyXL/nKH7Z9HO81VCIfSQL/f9x9zpRULHI31nNoOCl8GHEsk8upq25tbOK
-         uj5zqFCM/sx+kH81aPaMJVlBsj6jRXn95cBm4OY+KYDuqVtaaDyl9ppYQ+Xp5JN9t6qk
-         Wc+hqRynL8wXDdkCd+3KjkKAHkbrrAIg2xbwOA7aOftmMg3/L+jXrs/C2I95lGeaTO0T
-         X8NA==
-X-Gm-Message-State: AOAM531Ar8HNQIeFTyAr4aV3g53JFGgIN1LUjzb4Pr8q8KbUUJf0UDdV
-        0OavVFhlNA69k/FNJqrpVwFnnL9NUYCB3ifaS2bQ+g==
-X-Google-Smtp-Source: ABdhPJzjHSQQr1SlJ5IQ6LUFgUIMFmZsvjjUAG5WFib50tVK5ijRaPJrWzmIkn2S4Imd7hxzqW7QZ0STrMI3Ehc5DLQ=
-X-Received: by 2002:a4a:615d:: with SMTP id u29mr668618ooe.15.1589918265798;
- Tue, 19 May 2020 12:57:45 -0700 (PDT)
+        Tue, 19 May 2020 15:58:23 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D9C4C08C5C1;
+        Tue, 19 May 2020 12:58:23 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jb8NW-00087w-Bm; Tue, 19 May 2020 21:58:18 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E78941C047E;
+        Tue, 19 May 2020 21:58:17 +0200 (CEST)
+Date:   Tue, 19 May 2020 19:58:17 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/idtentry: Provide IDTENTRY_DF
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200505135315.583415264@linutronix.de>
+References: <20200505135315.583415264@linutronix.de>
 MIME-Version: 1.0
-References: <20200512125327.1868-1-georgi.djakov@linaro.org>
- <20200512125327.1868-10-georgi.djakov@linaro.org> <20200519185836.GA469006@bogus>
-In-Reply-To: <20200519185836.GA469006@bogus>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 19 May 2020 12:57:09 -0700
-Message-ID: <CAGETcx8+NZYT863ySLf6XvgLBm8PM_4euue2=zbDscgmDFh+7g@mail.gmail.com>
-Subject: Re: [PATCH v8 09/10] dt-bindings: interconnect: Add interconnect-tags bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158991829784.17951.5084767126120807951.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 11:58 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, May 12, 2020 at 03:53:26PM +0300, Georgi Djakov wrote:
-> > From: Sibi Sankar <sibis@codeaurora.org>
-> >
-> > Add interconnect-tags bindings to enable passing of optional
-> > tag information to the interconnect framework.
-> >
-> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> > ---
-> > v8:
-> > * New patch, picked from here:
-> >   https://lore.kernel.org/r/20200504202243.5476-10-sibis@codeaurora.org
-> >
-> >  .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > index 6f5d23a605b7..c1a226a934e5 100644
-> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > @@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
-> >                        * dma-mem: Path from the device to the main memory of
-> >                                   the system
-> >
-> > +interconnect-tags : List of interconnect path tags sorted in the same order as the
-> > +                 interconnects property. Consumers can append a specific tag to
-> > +                 the path and pass this information to the interconnect framework
-> > +                 to do aggregation based on the attached tag.
->
-> Why isn't this information in the 'interconnect' arg cells?
->
-> We have 'interconnect-names' because strings don't mix with cells. An
-> expanding list of 'interconnect-.*' is not a good pattern IMO.
+The following commit has been merged into the x86/entry branch of tip:
 
-Also, is there an example for interconnect-tags that I missed? Is it a
-list of strings, numbers, etc?
+Commit-ID:     9bf779984c19883354f55a54283292b927939b6a
+Gitweb:        https://git.kernel.org/tip/9bf779984c19883354f55a54283292b927939b6a
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Tue, 25 Feb 2020 23:33:30 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 19 May 2020 16:04:14 +02:00
 
--Saravana
+x86/idtentry: Provide IDTENTRY_DF
+
+Provide a separate macro for #DF as this needs to emit paranoid only code
+and has also a special ASM stub in 32bit.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20200505135315.583415264@linutronix.de
+
+
+
+---
+ arch/x86/include/asm/idtentry.h | 87 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 87 insertions(+)
+
+diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+index 060f9e3..9521f32 100644
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -132,6 +132,35 @@ static __always_inline void __##func(struct pt_regs *regs,		\
+ #define DEFINE_IDTENTRY_RAW(func)					\
+ __visible noinstr void func(struct pt_regs *regs)
+ 
++/**
++ * DECLARE_IDTENTRY_RAW_ERRORCODE - Declare functions for raw IDT entry points
++ *				    Error code pushed by hardware
++ * @vector:	Vector number (ignored for C)
++ * @func:	Function name of the entry point
++ *
++ * Maps to DECLARE_IDTENTRY_ERRORCODE()
++ */
++#define DECLARE_IDTENTRY_RAW_ERRORCODE(vector, func)			\
++	DECLARE_IDTENTRY_ERRORCODE(vector, func)
++
++/**
++ * DEFINE_IDTENTRY_RAW_ERRORCODE - Emit code for raw IDT entry points
++ * @func:	Function name of the entry point
++ *
++ * @func is called from ASM entry code with interrupts disabled.
++ *
++ * The macro is written so it acts as function definition. Append the
++ * body with a pair of curly brackets.
++ *
++ * Contrary to DEFINE_IDTENTRY_ERRORCODE() this does not invoke the
++ * idtentry_enter/exit() helpers before and after the body invocation. This
++ * needs to be done in the body itself if applicable. Use if extra work
++ * is required before the enter/exit() helpers are invoked.
++ */
++#define DEFINE_IDTENTRY_RAW_ERRORCODE(func)				\
++__visible noinstr void func(struct pt_regs *regs, unsigned long error_code)
++
++
+ #ifdef CONFIG_X86_64
+ /**
+  * DECLARE_IDTENTRY_IST - Declare functions for IST handling IDT entry points
+@@ -165,10 +194,58 @@ __visible noinstr void func(struct pt_regs *regs)
+ #define DEFINE_IDTENTRY_NOIST(func)					\
+ 	DEFINE_IDTENTRY_RAW(noist_##func)
+ 
++/**
++ * DECLARE_IDTENTRY_DF - Declare functions for double fault
++ * @vector:	Vector number (ignored for C)
++ * @func:	Function name of the entry point
++ *
++ * Maps to DECLARE_IDTENTRY_RAW_ERRORCODE
++ */
++#define DECLARE_IDTENTRY_DF(vector, func)				\
++	DECLARE_IDTENTRY_RAW_ERRORCODE(vector, func)
++
++/**
++ * DEFINE_IDTENTRY_DF - Emit code for double fault
++ * @func:	Function name of the entry point
++ *
++ * Maps to DEFINE_IDTENTRY_RAW_ERRORCODE
++ */
++#define DEFINE_IDTENTRY_DF(func)					\
++	DEFINE_IDTENTRY_RAW_ERRORCODE(func)
++
+ #else	/* CONFIG_X86_64 */
++
+ /* Maps to a regular IDTENTRY on 32bit for now */
+ # define DECLARE_IDTENTRY_IST		DECLARE_IDTENTRY
+ # define DEFINE_IDTENTRY_IST		DEFINE_IDTENTRY
++
++/**
++ * DECLARE_IDTENTRY_DF - Declare functions for double fault 32bit variant
++ * @vector:	Vector number (ignored for C)
++ * @func:	Function name of the entry point
++ *
++ * Declares two functions:
++ * - The ASM entry point: asm_##func
++ * - The C handler called from the C shim
++ */
++#define DECLARE_IDTENTRY_DF(vector, func)				\
++	asmlinkage void asm_##func(void);				\
++	__visible void func(struct pt_regs *regs,			\
++			    unsigned long error_code,			\
++			    unsigned long address)
++
++/**
++ * DEFINE_IDTENTRY_DF - Emit code for double fault on 32bit
++ * @func:	Function name of the entry point
++ *
++ * This is called through the doublefault shim which already provides
++ * cr2 in the address argument.
++ */
++#define DEFINE_IDTENTRY_DF(func)					\
++__visible noinstr void func(struct pt_regs *regs,			\
++			    unsigned long error_code,			\
++			    unsigned long address)
++
+ #endif	/* !CONFIG_X86_64 */
+ 
+ /* C-Code mapping */
+@@ -212,6 +289,9 @@ __visible noinstr void func(struct pt_regs *regs)
+ #define DECLARE_IDTENTRY_RAW(vector, func)				\
+ 	DECLARE_IDTENTRY(vector, func)
+ 
++#define DECLARE_IDTENTRY_RAW_ERRORCODE(vector, func)			\
++	DECLARE_IDTENTRY_ERRORCODE(vector, func)
++
+ #ifdef CONFIG_X86_64
+ # define DECLARE_IDTENTRY_MCE(vector, func)				\
+ 	idtentry_mce_db vector asm_##func func
+@@ -219,12 +299,19 @@ __visible noinstr void func(struct pt_regs *regs)
+ # define DECLARE_IDTENTRY_DEBUG(vector, func)				\
+ 	idtentry_mce_db vector asm_##func func
+ 
++# define DECLARE_IDTENTRY_DF(vector, func)				\
++	idtentry_df vector asm_##func func
++
+ #else
+ # define DECLARE_IDTENTRY_MCE(vector, func)				\
+ 	DECLARE_IDTENTRY(vector, func)
+ 
+ # define DECLARE_IDTENTRY_DEBUG(vector, func)				\
+ 	DECLARE_IDTENTRY(vector, func)
++
++/* No ASM emitted for DF as this goes through a C shim */
++# define DECLARE_IDTENTRY_DF(vector, func)
++
+ #endif
+ 
+ /* No ASM code emitted for NMI */
