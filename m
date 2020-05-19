@@ -2,120 +2,275 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D866EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3BC207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589909607;
-	bh=RbUlIvE4LT0SUt6DmGmYa7lxdWF2Wy9aH9szc8JNaGM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ELm228ZiXWEnYHxJ4eoU8e5mB1vZpywvFvrg8AVImL3Tf00K26VrU7eCX41Re0g7q
-	 qPrROiQ5WC1heE7pDkA5QwLJ4X2oi0xm1MlAZS4WNCdQY6tsK6ByA1PQRw0U3E57Yw
-	 GaTa3ObuL4sg9ImtqGEJLnr+B4KyRU9gKwCuZzVk=
+	by mail.kernel.org (Postfix) with ESMTP id A6D08206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:36:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="EP+82QhN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgESRd0 (ORCPT
+        id S1729365AbgESRgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:33:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57922 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 13:36:12 -0400
+Received: from mout.gmx.net ([212.227.17.21]:44431 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgESRd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:33:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FCB4207D3;
-        Tue, 19 May 2020 17:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589909605;
-        bh=RbUlIvE4LT0SUt6DmGmYa7lxdWF2Wy9aH9szc8JNaGM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VDgmFIJAzKKktnniXeaBnmhzP17wlvliuYaaV9Ry3Y67tMakXT2pIKGmll+EOsO7j
-         3KsWdb+dYvNTb0MxgnDtpV1Tz/uItHsg6dwU7pqNx1RnV5DbAsnC3atg+zqwTOfDaF
-         o7LRVU2FD/AyURy0P1NnIa77sqCfXwIc25JCr4WM=
-Date:   Tue, 19 May 2020 19:33:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>,
-        manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
-Message-ID: <20200519173323.GB1158284@kroah.com>
-References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
- <CAPM=9txXskVu_yD3DNuR0HgSUsE2v1Pv98dm=AHGvv_z2XKTAQ@mail.gmail.com>
+        id S1729001AbgESRgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:36:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1589909694;
+        bh=DgbBuBEeKKy1VO87kSEW0EfBt/LUFOXV9iYEYjJW4vA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=EP+82QhNJACUlQvurDeOJTMEwaPWg+3xbfgIBLZ3/mdGTOuGjGT7oJAk9qQuNHuuO
+         SOUyYBkIbIBUXbQRDK+asRCbGaDHI+mSzmIfA+CSAf9SiO8tUJ1bO5MA9qMt0PV/hB
+         a8inNDO23VnAr+Ldzola26chTigT6zDTv2hkeq+c=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MHXFx-1joael00sT-00DYwM; Tue, 19 May 2020 19:34:54 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     kernel-hardening@lists.openwall.com,
+        linux1394-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        alsa-devel@alsa-project.org, Oscar Carter <oscar.carter@gmx.com>,
+        "Lev R . Oshvang ." <levonshe@gmail.com>
+Subject: [PATCH v2] firewire: Remove function callback casts
+Date:   Tue, 19 May 2020 19:34:25 +0200
+Message-Id: <20200519173425.4724-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPM=9txXskVu_yD3DNuR0HgSUsE2v1Pv98dm=AHGvv_z2XKTAQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JERmYwVR/+/X41rnFajkmiC9+7JlbZf76Grrn9CSDh2nu36nSrt
+ QsYyRBaK8uHHcyvNDxMnmApVIJ8rQLCx0jmwBpBNk3u/IEwjZ4DejN0Il9GsxPU+7oRX63I
+ LGZVMXiKfG+Vly80USax8iHCxaZ6mOz1ARWvdlYYldbsBqbthmSdHBjK2UPnCHkCg5YX85B
+ Mj+Tx+041242IvqNHFwPw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1bE5D8caT6A=:KuncZfHcp0wPHvJPAREd1+
+ eS5TwfOzwtbWlraCGyAQbvu5S+8ab8J0PJfdXHgId3dWreEoyAyCrwRJ889cx4Sjz9uC4NpcK
+ dKqOcG+Ncy0E9sdnnF8W9F7Mn1bFvIuiGFTmaNS0uzHbzqgzPBGnPdMCkhOvIWABwOj4PyJ2n
+ QdUt7whypGsZPVFUY9TjsgIaR5wYJO9ZpI+v/J/A06CshyTSBMZUxJD6BeCBUHZfBYXtG1bCs
+ EGDW5upNRdYLz+JsR6CjbfVNtSuIm+ATzZ19NS5Z2M6rMFfn/JLgiZ+Jd2enb5qneu1sC95mC
+ LSGrI72VpRIFAya1j6WL/2P+Vvw+1CzWAV6iLcyvcR6+r37jWVN1Pu0KaY6Vz2/abr9oC9HAY
+ CO/8s4PByS8w47V+7ImpAcUi0xW+rDQUwU67kPTftlqirffH1TCiKnSdx/cgW8hajQWO8/bRY
+ W3KiAzBF4cvd6QXxVEMkJYxessY/8RgcvrPNa4ALwWm4cnCJ9k9byWpYEfajV0KIYJIvGHude
+ OT2mY1hrNboOBk6TiFDW1NTXRf912WMIZ+F702JAedMPeA/RqDMvT5XF36f8gcNZ/eJE0IshW
+ URsY/I27dOUmFyBOP+FwY9D1t/vD9ZYH+8AeOdDksAI+Jc18Z0cXejhCi9I6AiWr+GT4dPP2m
+ fEsKnSgTCk16NvhTwxFMiX32DtpOZPlKTc3FfNuPqvVWTxQaLg6cEEjKdDgeinMnfhFWkztpl
+ s5ng/jhG7p3AaDpSjYBn8D/8Otxl8K99x9oQjdVkTm0rzrHJ8HyUT6BfDywNYrWWaQ8AGTzwM
+ oWrgNpsIW2zV+mBKpwAXdtk1ZXlCEHpDH29CC3X3nfcB37NaHfrKtUpOBVJoJgi+YKwgNZL/F
+ bia+PF1ZZ7kSWv/YLRjHg96l4AnPIeivv4Bhobf5WpD5+lRHpC5pE4c8kbze6wx2pqUn/X7Ib
+ ydqxMiHiNDawDfMdrmjv8jmTzdifJl/nuxEWTo4DIp+FgTW1gwZ0Xa6stbkEJpcxXVnpD61ZL
+ P4wNiUL6OeoQMFold+5gvKhtNK1w8q5fzO27sonijkVqXpG6pMK0wPOZxsWyCJhtkHNmYXZfd
+ uJa02I0zg6C9NpavS1sWdT5rllsguA5+xyghmUsnv3knOgROvSkAIcs1tK2oslIGv7JD8hfHR
+ pth7ndb1TdYuYLFnZTKNnJdHu2EfDZmQi9vRVjYXn9Z/zzKJ0mwxqbh5p1hOy1VURihi4gPvY
+ B9ntdw3zY1aZYwy/3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 03:08:42PM +1000, Dave Airlie wrote:
-> On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
-> >
-> > Introduction:
-> > Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
-> > SoC ASIC for the purpose of efficently running Deep Learning inference
-> > workloads in a data center environment.
-> >
-> > The offical press release can be found at -
-> > https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
-> >
-> > The offical product website is -
-> > https://www.qualcomm.com/products/datacenter-artificial-intelligence
-> >
-> > At the time of the offical press release, numerious technology news sites
-> > also covered the product.  Doing a search of your favorite site is likely
-> > to find their coverage of it.
-> >
-> > It is our goal to have the kernel driver for the product fully upstream.
-> > The purpose of this RFC is to start that process.  We are still doing
-> > development (see below), and thus not quite looking to gain acceptance quite
-> > yet, but now that we have a working driver we beleive we are at the stage
-> > where meaningful conversation with the community can occur.
-> 
-> 
-> Hi Jeffery,
-> 
-> Just wondering what the userspace/testing plans for this driver.
-> 
-> This introduces a new user facing API for a device without pointers to
-> users or tests for that API.
-> 
-> Although this isn't a graphics driver, and Greg will likely merge
-> anything to the kernel you throw at him, I do wonder how to validate
-> the uapi from a security perspective. It's always interesting when
-> someone wraps a DMA engine with user ioctls, and without enough
-> information to decide if the DMA engine is secure against userspace
-> misprogramming it.
+In an effort to enable -Wcast-function-type in the top-level Makefile to
+support Control Flow Integrity builds, remove all the function callback
+casts.
 
-Hey, I'll not merge just anything!
+To do this, modify the "fw_iso_context_create" function prototype adding
+a new parameter for the multichannel callback. Also, fix all the
+function calls accordingly.
 
-Oh, well, maybe, if it's in staging :)
+In the "fw_iso_context_create" function return an error code if both
+callback parameters are NULL and also set the "ctx->callback.sc"
+explicity to NULL in this case. It is not necessary set to NULL the
+"ctx->callback.mc" variable because this and "ctx->callback.sc" are an
+union and setting one implies setting the other one to the same value.
 
-> Also if we don't understand the programming API on board the device,
-> we can't tell if the "core" on the device are able to reprogram the
-> device engines either.
-> 
-> Figuring this out is difficult at the best of times, it helps if there
-> is access to the complete device documentation or user space side
-> drivers in order to faciliate this.
-> 
-> The other area I mention is testing the uAPI, how do you envisage
-> regression testing and long term sustainability of the uAPI?
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+Changelog v1->v2
+-Set explicity to NULL the "ctx->callback.sc" variable and return an error
+ code in "fw_iso_context_create" function if both callback parameters are
+ NULL as Lev R. Oshvang suggested.
+-Modify the commit changelog accordingly.
 
-I agree with this request, we should have some code that we can run in
-order to test that things work properly.
+ drivers/firewire/core-cdev.c        | 12 +++++++-----
+ drivers/firewire/core-iso.c         | 14 ++++++++++++--
+ drivers/firewire/net.c              |  2 +-
+ drivers/media/firewire/firedtv-fw.c |  3 ++-
+ include/linux/firewire.h            |  3 ++-
+ sound/firewire/amdtp-stream.c       |  2 +-
+ sound/firewire/isight.c             |  4 ++--
+ 7 files changed, 27 insertions(+), 13 deletions(-)
 
-thanks,
+diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
+index 6e291d8f3a27..cc368b35be2e 100644
+=2D-- a/drivers/firewire/core-cdev.c
++++ b/drivers/firewire/core-cdev.c
+@@ -957,7 +957,8 @@ static int ioctl_create_iso_context(struct client *cli=
+ent, union ioctl_arg *arg)
+ {
+ 	struct fw_cdev_create_iso_context *a =3D &arg->create_iso_context;
+ 	struct fw_iso_context *context;
+-	fw_iso_callback_t cb;
++	fw_iso_callback_t cb_sc =3D NULL;
++	fw_iso_mc_callback_t cb_mc =3D NULL;
+ 	int ret;
 
-greg k-h
+ 	BUILD_BUG_ON(FW_CDEV_ISO_CONTEXT_TRANSMIT !=3D FW_ISO_CONTEXT_TRANSMIT |=
+|
+@@ -970,7 +971,7 @@ static int ioctl_create_iso_context(struct client *cli=
+ent, union ioctl_arg *arg)
+ 		if (a->speed > SCODE_3200 || a->channel > 63)
+ 			return -EINVAL;
+
+-		cb =3D iso_callback;
++		cb_sc =3D iso_callback;
+ 		break;
+
+ 	case FW_ISO_CONTEXT_RECEIVE:
+@@ -978,11 +979,11 @@ static int ioctl_create_iso_context(struct client *c=
+lient, union ioctl_arg *arg)
+ 		    a->channel > 63)
+ 			return -EINVAL;
+
+-		cb =3D iso_callback;
++		cb_sc =3D iso_callback;
+ 		break;
+
+ 	case FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL:
+-		cb =3D (fw_iso_callback_t)iso_mc_callback;
++		cb_mc =3D iso_mc_callback;
+ 		break;
+
+ 	default:
+@@ -990,7 +991,8 @@ static int ioctl_create_iso_context(struct client *cli=
+ent, union ioctl_arg *arg)
+ 	}
+
+ 	context =3D fw_iso_context_create(client->device->card, a->type,
+-			a->channel, a->speed, a->header_size, cb, client);
++			a->channel, a->speed, a->header_size, cb_sc, cb_mc,
++			client);
+ 	if (IS_ERR(context))
+ 		return PTR_ERR(context);
+ 	if (client->version < FW_CDEV_VERSION_AUTO_FLUSH_ISO_OVERFLOW)
+diff --git a/drivers/firewire/core-iso.c b/drivers/firewire/core-iso.c
+index 185b0b78b3d6..1d28a98c08b2 100644
+=2D-- a/drivers/firewire/core-iso.c
++++ b/drivers/firewire/core-iso.c
+@@ -131,7 +131,8 @@ size_t fw_iso_buffer_lookup(struct fw_iso_buffer *buff=
+er, dma_addr_t completed)
+
+ struct fw_iso_context *fw_iso_context_create(struct fw_card *card,
+ 		int type, int channel, int speed, size_t header_size,
+-		fw_iso_callback_t callback, void *callback_data)
++		fw_iso_callback_t cb_sc, fw_iso_mc_callback_t cb_mc,
++		void *callback_data)
+ {
+ 	struct fw_iso_context *ctx;
+
+@@ -145,7 +146,16 @@ struct fw_iso_context *fw_iso_context_create(struct f=
+w_card *card,
+ 	ctx->channel =3D channel;
+ 	ctx->speed =3D speed;
+ 	ctx->header_size =3D header_size;
+-	ctx->callback.sc =3D callback;
++
++	if (cb_sc) {
++		ctx->callback.sc =3D cb_sc;
++	} else if (cb_mc) {
++		ctx->callback.mc =3D cb_mc;
++	} else {
++		ctx->callback.sc =3D NULL;
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	ctx->callback_data =3D callback_data;
+
+ 	return ctx;
+diff --git a/drivers/firewire/net.c b/drivers/firewire/net.c
+index 715e491dfbc3..c5cc0a311aa0 100644
+=2D-- a/drivers/firewire/net.c
++++ b/drivers/firewire/net.c
+@@ -1136,7 +1136,7 @@ static int fwnet_broadcast_start(struct fwnet_device=
+ *dev)
+ 	context =3D fw_iso_context_create(dev->card, FW_ISO_CONTEXT_RECEIVE,
+ 					IEEE1394_BROADCAST_CHANNEL,
+ 					dev->card->link_speed, 8,
+-					fwnet_receive_broadcast, dev);
++					fwnet_receive_broadcast, NULL, dev);
+ 	if (IS_ERR(context)) {
+ 		retval =3D PTR_ERR(context);
+ 		goto failed;
+diff --git a/drivers/media/firewire/firedtv-fw.c b/drivers/media/firewire/=
+firedtv-fw.c
+index 97144734eb05..d2940adefd8c 100644
+=2D-- a/drivers/media/firewire/firedtv-fw.c
++++ b/drivers/media/firewire/firedtv-fw.c
+@@ -141,7 +141,8 @@ int fdtv_start_iso(struct firedtv *fdtv)
+
+ 	ctx->context =3D fw_iso_context_create(device->card,
+ 			FW_ISO_CONTEXT_RECEIVE, fdtv->isochannel,
+-			device->max_speed, ISO_HEADER_SIZE, handle_iso, fdtv);
++			device->max_speed, ISO_HEADER_SIZE,
++			handle_iso, NULL, fdtv);
+ 	if (IS_ERR(ctx->context)) {
+ 		err =3D PTR_ERR(ctx->context);
+ 		goto fail_free;
+diff --git a/include/linux/firewire.h b/include/linux/firewire.h
+index aec8f30ab200..3a0b5e18e140 100644
+=2D-- a/include/linux/firewire.h
++++ b/include/linux/firewire.h
+@@ -452,7 +452,8 @@ struct fw_iso_context {
+
+ struct fw_iso_context *fw_iso_context_create(struct fw_card *card,
+ 		int type, int channel, int speed, size_t header_size,
+-		fw_iso_callback_t callback, void *callback_data);
++		fw_iso_callback_t cb_sc, fw_iso_mc_callback_t cb_mc,
++		void *callback_data);
+ int fw_iso_context_set_channels(struct fw_iso_context *ctx, u64 *channels=
+);
+ int fw_iso_context_queue(struct fw_iso_context *ctx,
+ 			 struct fw_iso_packet *packet,
+diff --git a/sound/firewire/amdtp-stream.c b/sound/firewire/amdtp-stream.c
+index 37d38efb4c87..8629ab3e2c64 100644
+=2D-- a/sound/firewire/amdtp-stream.c
++++ b/sound/firewire/amdtp-stream.c
+@@ -1093,7 +1093,7 @@ static int amdtp_stream_start(struct amdtp_stream *s=
+, int channel, int speed,
+
+ 	s->context =3D fw_iso_context_create(fw_parent_device(s->unit)->card,
+ 					  type, channel, speed, ctx_header_size,
+-					  ctx_cb, ctx_data);
++					  ctx_cb, NULL, ctx_data);
+ 	if (IS_ERR(s->context)) {
+ 		err =3D PTR_ERR(s->context);
+ 		if (err =3D=3D -EBUSY)
+diff --git a/sound/firewire/isight.c b/sound/firewire/isight.c
+index 6655af53b367..51cc37fca736 100644
+=2D-- a/sound/firewire/isight.c
++++ b/sound/firewire/isight.c
+@@ -361,8 +361,8 @@ static int isight_start_streaming(struct isight *isigh=
+t)
+ 	isight->context =3D fw_iso_context_create(isight->device->card,
+ 						FW_ISO_CONTEXT_RECEIVE,
+ 						isight->resources.channel,
+-						isight->device->max_speed,
+-						4, isight_packet, isight);
++						isight->device->max_speed, 4,
++						isight_packet, NULL, isight);
+ 	if (IS_ERR(isight->context)) {
+ 		err =3D PTR_ERR(isight->context);
+ 		isight->context =3D NULL;
+=2D-
+2.20.1
+
