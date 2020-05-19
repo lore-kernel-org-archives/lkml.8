@@ -2,177 +2,166 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5505C2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899DE206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FlcR34Mz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SOy40ns3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgESTqW (ORCPT
+        id S1726978AbgESTrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49968 "EHLO
+        Tue, 19 May 2020 15:47:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgESTqV (ORCPT
+        with ESMTP id S1726290AbgESTrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:46:21 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E8F2C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:46:20 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w19so304474ply.11
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:46:20 -0700 (PDT)
+        Tue, 19 May 2020 15:47:32 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13414C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:47:32 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p30so295799pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:47:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q3Ivtwo+9O98WnhcJnwaFt95/Hwxgd+0h4XCSucwWQ0=;
-        b=FlcR34MzrEghbl3vy0OL8MTgoR2QS5ql+EgOS6TLT9J/mjNPWyw1q/1x/GPc6spBVR
-         zIBXeYd140wKdDH6I1j0BK7rPSzWRoIAU5pL+ymoblh8j7HDhXPXdrRuwb4KU4RHbbCX
-         IkV25J7JchNWKWg80zDSG2ZDnZvColidCwd38=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZGuRRRcbTaW8FWPggeFKscV8bVAevR+TD4KidxOAffU=;
+        b=SOy40ns36oc3zn7ljfpnUaBI+qiGaKfHLn/p2KvVh6KGCqg988xKzHeav8r4ADi+al
+         JMlzcpyMm2iAV0qQjdoFwlstcvzlPkZz7a4Ed62ly991kPw9qR3soQzvxgRHMXy11Mkt
+         T5bOiSqk0MEI2lITGszqvjSMp1pDCIvfAIWSMd/2KiQMiZUszZh7AKf51496oMFhqDE8
+         el2E+G1EIlVrf1LUymCs1SMnRoV299YkVmgi+QiZS6fTpG46AoJ0ipU0OuY9YEIWHOUM
+         z5+t0fv/T0hrhw0bs82HPobojLUycNl7mP/2RPVf0aGmaeCzOEorMevm0S9AxXHdqhCa
+         iCRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q3Ivtwo+9O98WnhcJnwaFt95/Hwxgd+0h4XCSucwWQ0=;
-        b=Ua4ynFoap0KSUSpgxipXTl7yJxf/pC/6Tzvr12yn0FAhKVi9b+u/LUeD6tjewAbZQ/
-         J6yObqPeQV7xcv7iWgEewLeCKdeJrm++pwH3bhDjDh+b1SMADN7/OvZKBwFooGeOClEZ
-         gCJQn2eSpx+ZfvwyhGOtQy/7K6B3z0DzrqsQzghtFtBIeOP3//6U59ALkIxDVqz5SBdc
-         pVua94WKFUCWGuP5JFexDTaPuh2fiWTAsOBTOjVvvspAwR32CwpzmvJNF1C81wW73UhZ
-         dSlUysAZum14WY5uIl9pF3tqur4pB6Pf3mEI/+cu7UFS5zwxoN4vhwRYVC5FBU/GVhAu
-         yzPA==
-X-Gm-Message-State: AOAM533v/K5Ni5NdQtzYTT+6wZDKrzm25Xo/U0z0PEj3RghJv+7zA4ht
-        mDRmKikdOVD38lLPp/jHlZlmog==
-X-Google-Smtp-Source: ABdhPJzdXNjb2gwJKNeMLT5AEIU9DnLXEYFye7s+DenXWUh8I4fQdMy4wmHogqrZPX7U/5jAByEZOA==
-X-Received: by 2002:a17:90a:2ac2:: with SMTP id i2mr1186297pjg.80.1589917579552;
-        Tue, 19 May 2020 12:46:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id fw4sm288758pjb.31.2020.05.19.12.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 12:46:18 -0700 (PDT)
-Date:   Tue, 19 May 2020 12:46:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 7/8] exec: Generic execfd support
-Message-ID: <202005191220.2DB7B7C7@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZGuRRRcbTaW8FWPggeFKscV8bVAevR+TD4KidxOAffU=;
+        b=YFrnd6acgH1pS7bY+YvQ5BbEWGIV/VN1y4XnmlWgZEdAV5K8js9E979NWU32BiHvnH
+         BlJJYMNG2UULZcnBtu0CK1r01iEO9DzmeDAy2BharmREqBW82GAp+plafcHu2mWWjbZ2
+         rDe4ghOtLpi2/XBDm0BgJR+QmXfK3YDloYENCmj0PZj+GuvR0DJZDX27GiWNHlOlZqpI
+         zmwZxglIrkNC86gElmBfgUv8OljcFHj1ocL1JtSwpsEu+6/RDb2X+XKEnxqjc30kCQq7
+         hbTmTK30WqnQo6hK2R4LezabYPbb/e+IH3P1c4auH5ARa9NPeFz0/U2m0rpLAaOR1XyQ
+         /UhA==
+X-Gm-Message-State: AOAM530pPiF3mO+FiCcfZTZzViUZVdCBlf2UbbqcdOSrO6VudhJk52/7
+        aHyqHGPFM7RMc5gy/bNtzQQ=
+X-Google-Smtp-Source: ABdhPJxGFs2gbJfJf03BO6VSSxo3ZeuxRoEcyfB/gfuOvP36kzgTf0L+EcK96MQIwQyh25HevsllAA==
+X-Received: by 2002:a63:3e46:: with SMTP id l67mr761106pga.430.1589917651467;
+        Tue, 19 May 2020 12:47:31 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id e18sm251091pfh.75.2020.05.19.12.47.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 12:47:30 -0700 (PDT)
+Subject: Re: [PATCH 01/11] genirq: Add fasteoi IPI flow
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Sumit Garg <sumit.garg@linaro.org>, kernel-team@android.com,
+        Russell King <linux@arm.linux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+References: <20200519161755.209565-1-maz@kernel.org>
+ <20200519161755.209565-2-maz@kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <b691a46e-7461-89c8-c760-a1ef9769091f@gmail.com>
+Date:   Tue, 19 May 2020 12:47:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <20200519161755.209565-2-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 07:33:46PM -0500, Eric W. Biederman wrote:
-> 
-> Most of the support for passing the file descriptor of an executable
-> to an interpreter already lives in the generic code and in binfmt_elf.
-> Rework the fields in binfmt_elf that deal with executable file
-> descriptor passing to make executable file descriptor passing a first
-> class concept.
-> 
-> Move the fd_install from binfmt_misc into begin_new_exec after the new
-> creds have been installed.  This means that accessing the file through
-> /proc/<pid>/fd/N is able to see the creds for the new executable
-> before allowing access to the new executables files.
-> 
-> Performing the install of the executables file descriptor after
-> the point of no return also means that nothing special needs to
-> be done on error.  The exiting of the process will close all
-> of it's open files.
-> 
-> Move the would_dump from binfmt_misc into begin_new_exec right
-> after would_dump is called on the bprm->file.  This makes it
-> obvious this case exists and that no nesting of bprm->file is
-> currently supported.
-> 
-> In binfmt_misc the movement of fd_install into generic code means
-> that it's special error exit path is no longer needed.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Yes, this is so much nicer. :) My head did spin a little between changing
-the management of bprm->executable between this patch and the next,
-but I'm okay now. ;)
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-nits/thoughts below...
-
-> [...]
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index 8c7779d6bf19..653508b25815 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> [...]
-> @@ -48,6 +51,7 @@ struct linux_binprm {
->  	unsigned int taso:1;
->  #endif
->  	unsigned int recursion_depth; /* only for search_binary_handler() */
-> +	struct file * executable; /* Executable to pass to the interpreter */
->  	struct file * file;
->  	struct cred *cred;	/* new credentials */
-
-nit: can we fix the "* " stuff here? This should be *file and *executable.
-
-> [...]
-> @@ -69,10 +73,6 @@ struct linux_binprm {
->  #define BINPRM_FLAGS_ENFORCE_NONDUMP_BIT 0
->  #define BINPRM_FLAGS_ENFORCE_NONDUMP (1 << BINPRM_FLAGS_ENFORCE_NONDUMP_BIT)
+On 5/19/2020 9:17 AM, Marc Zyngier wrote:
+> For irqchips using the fasteoi flow, IPIs are a bit special.
+> 
+> They need to be EOId early (before calling the handler), as
+> funny things may happen in the handler (they do not necessarily
+> behave like a normal interrupt), and that the arch code is
+> already handling the stats.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  include/linux/irq.h |  1 +
+>  kernel/irq/chip.c   | 26 ++++++++++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/include/linux/irq.h b/include/linux/irq.h
+> index 8d5bc2c237d7..726f94d8b8cc 100644
+> --- a/include/linux/irq.h
+> +++ b/include/linux/irq.h
+> @@ -621,6 +621,7 @@ static inline int irq_set_parent(int irq, int parent_irq)
+>   */
+>  extern void handle_level_irq(struct irq_desc *desc);
+>  extern void handle_fasteoi_irq(struct irq_desc *desc);
+> +extern void handle_percpu_devid_fasteoi_ipi(struct irq_desc *desc);
+>  extern void handle_edge_irq(struct irq_desc *desc);
+>  extern void handle_edge_eoi_irq(struct irq_desc *desc);
+>  extern void handle_simple_irq(struct irq_desc *desc);
+> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+> index 41e7e37a0928..7b0b789cfed4 100644
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -955,6 +955,32 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
+>  		chip->irq_eoi(&desc->irq_data);
+>  }
 >  
-> -/* fd of the binary should be passed to the interpreter */
-> -#define BINPRM_FLAGS_EXECFD_BIT 1
-> -#define BINPRM_FLAGS_EXECFD (1 << BINPRM_FLAGS_EXECFD_BIT)
-> -
->  /* filename of the binary will be inaccessible after exec */
->  #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
->  #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
+> +/**
+> + * handle_percpu_devid_fasteoi_ipi - Per CPU local IPI handler with per cpu
+> + *				     dev ids
+> + * @desc:	the interrupt description structure for this irq
+> + *
+> + * The biggest differences with the IRQ version are that:
+> + * - the interrupt is EOIed early, as the IPI could result in a context
+> + *   switch, and we need to make sure the IPI can fire again
+> + * - Stats are usually handled at the architecture level, so we ignore them
+> + *   here
+> + */
+> +void handle_percpu_devid_fasteoi_ipi(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct irqaction *action = desc->action;
+> +	unsigned int irq = irq_desc_get_irq(desc);
+> +	irqreturn_t res;
 
-nit: may as well renumber BINPRM_FLAGS_PATH_INACCESSIBLE_BIT to 1,
-they're not UAPI. And, actually, nothing uses the *_BIT defines, so
-probably the entire chunk of code could just be reduced to:
+Should not this have a:
 
-/* either interpreter or executable was unreadable */
-#define BINPRM_FLAGS_ENFORCE_NONDUMP    BIT(0)
-/* filename of the binary will be inaccessible after exec */
-#define BINPRM_FLAGS_PATH_INACCESSIBLE  BIT(1)
+	if (!irq_settings_is_no_accounting(desc))
+		__kstat_incr_irqs_this_cpu(desc);
 
-Though frankly, I wonder if interp_flags could just be removed in favor
-of two new bit members, especially since interp_data is gone:
+here in case you are using that handler with a SGI interrupt which is
+not used as an IPI?
 
-+               /* Either interpreter or executable was unreadable. */
-+               nondumpable:1;
-+               /* Filename of the binary will be inaccessible after exec. */
-+               path_inaccessible:1;
-...
--       unsigned interp_flags;
-...etc
+> +
+> +	if (chip->irq_eoi)
+> +		chip->irq_eoi(&desc->irq_data);
+> +
+> +	trace_irq_handler_entry(irq, action);
+> +	res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
+> +	trace_irq_handler_exit(irq, action, res);
+> +}
+> +
+>  /**
+>   * handle_percpu_devid_fasteoi_nmi - Per CPU local NMI handler with per cpu
+>   *				     dev ids
+> 
 
 -- 
-Kees Cook
+Florian
