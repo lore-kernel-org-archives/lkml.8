@@ -5,48 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F061C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 605E3207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055BD207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgESSoh (ORCPT
+        id S1728133AbgESSok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:44:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40202 "EHLO
+        Tue, 19 May 2020 14:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgESSoY (ORCPT
+        with ESMTP id S1727939AbgESSo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:44:24 -0400
+        Tue, 19 May 2020 14:44:27 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50301C08C5C0;
-        Tue, 19 May 2020 11:44:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC15C08C5C1;
+        Tue, 19 May 2020 11:44:27 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb7Do-0006am-9M; Tue, 19 May 2020 20:44:12 +0200
+        id 1jb7Do-0006bB-JY; Tue, 19 May 2020 20:44:12 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CE2001C0178;
-        Tue, 19 May 2020 20:44:11 +0200 (CEST)
-Date:   Tue, 19 May 2020 18:44:11 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 38D0B1C047E;
+        Tue, 19 May 2020 20:44:12 +0200 (CEST)
+Date:   Tue, 19 May 2020 18:44:12 -0000
 From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel: Add more available bits for
- OFFCORE_RESPONSE of Intel Tremont
+Subject: [tip: perf/core] perf/x86/rapl: Add Ice Lake RAPL support
 Cc:     Stephane Eranian <eranian@google.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        stable@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200501125442.7030-1-kan.liang@linux.intel.com>
-References: <20200501125442.7030-1-kan.liang@linux.intel.com>
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1588857258-38213-1-git-send-email-kan.liang@linux.intel.com>
+References: <1588857258-38213-1-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <158991385175.17951.3596220331125126731.tip-bot2@tip-bot2>
+Message-ID: <158991385214.17951.16120378125524104856.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,42 +60,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     0813c40556fce1eeefb996e020cc5339e0b84137
-Gitweb:        https://git.kernel.org/tip/0813c40556fce1eeefb996e020cc5339e0b84137
+Commit-ID:     f649fc2eefdef7a67698a3c584222c5c8c5a6785
+Gitweb:        https://git.kernel.org/tip/f649fc2eefdef7a67698a3c584222c5c8c5a6785
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Fri, 01 May 2020 05:54:42 -07:00
+AuthorDate:    Thu, 07 May 2020 06:14:18 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Tue, 19 May 2020 20:34:16 +02:00
 
-perf/x86/intel: Add more available bits for OFFCORE_RESPONSE of Intel Tremont
+perf/x86/rapl: Add Ice Lake RAPL support
 
-The mask in the extra_regs for Intel Tremont need to be extended to
-allow more defined bits.
+Enable RAPL support for Intel Ice Lake X and Ice Lake D.
 
-"Outstanding Requests" (bit 63) is only available on MSR_OFFCORE_RSP0;
+For RAPL support, it is identical to Sky Lake X.
 
-Fixes: 6daeb8737f8a ("perf/x86/intel: Add Tremont core PMU support")
 Reported-by: Stephane Eranian <eranian@google.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200501125442.7030-1-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/1588857258-38213-1-git-send-email-kan.liang@linux.intel.com
 ---
- arch/x86/events/intel/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/rapl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 332954c..ca35c8b 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -1892,8 +1892,8 @@ static __initconst const u64 tnt_hw_cache_extra_regs
- 
- static struct extra_reg intel_tnt_extra_regs[] __read_mostly = {
- 	/* must define OFFCORE_RSP_X first, see intel_fixup_er() */
--	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0xffffff9fffull, RSP_0),
--	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xffffff9fffull, RSP_1),
-+	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x800ff0ffffff9fffull, RSP_0),
-+	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xff0ffffff9fffull, RSP_1),
- 	EVENT_EXTRA_END
- };
- 
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+index a5dbd25..9e1e141 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -738,6 +738,8 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&model_hsw),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&model_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&model_skl),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		&model_hsx),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&model_hsx),
+ 	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&model_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&model_skl),
+ 	{},
