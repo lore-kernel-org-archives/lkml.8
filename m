@@ -2,107 +2,96 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A94C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2A520758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD8020758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="DFu/enkf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OaEUKTP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgESGzu (ORCPT
+        id S1728388AbgESG4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 02:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgESGzt (ORCPT
+        Tue, 19 May 2020 02:56:13 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:19593 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727087AbgESG4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 02:55:49 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB25BC05BD0A
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:55:47 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id v12so14478470wrp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TANWEOqfTxV9xotVFJrbgUmpK/BcquydUVLVqIzATJw=;
-        b=DFu/enkffHVSAltF3ls3sxCDN6A5lKhqggJ1s6HCTXKZzdgcaVMnYYGgQvoe0Lzr1I
-         upnnHFOWshBVZDYO/h+mYUAcigT40QMb0+mZqiquUwyY1bJny81btQxlN6YaTgzQi85c
-         mBDv4uwqoDBBQDkY1nMvsuvsZ9aQyBTi/piaHdxTUkEotPsdwiXHHn0Bzs166wYgB+vs
-         dRqBpkFHa4q0dxXFCO8AR6glcmEAaAT23BWQ1P0yrvD7sfxrdMUEkfGsNMNUK4cmfnMe
-         o/12cLMZIuUVsYBjuZEHBUubwSAcYBlmuCAjrfPzJ2PBbdb7InSnw2IhRFAJxFIINlmQ
-         e2Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TANWEOqfTxV9xotVFJrbgUmpK/BcquydUVLVqIzATJw=;
-        b=h/J+mfH0MifEGFX+mR4XcUsmTHhcutIn701lMSRf5NU4guFgS85L1v6djS8Cj40RRk
-         eTvS89hCZFcX+YxehL85G/ZBjeveANmPNARyBO73MbqMfBdIEWk465JPFC3L6LshvrOP
-         kEepzcb8CQ3M2H2lVBkCeVZkYrxjURsC4rPze387H7Bq2V65SOMTTRFimTTJdg3+Lchk
-         feKHTP3UCWd/mn7HzTNFdf3qFaAEWc5881A5RO3tWf4Beb2N5e6vv/Q92FztmlJnJis3
-         ymyjX/0s2H/+4Zk9FEEO08GAnAmaeurr2Vp2SlNfMeXrGNKzY8jd4AtTYDXWszVoDWNk
-         VZMw==
-X-Gm-Message-State: AOAM531VEa5rlTH6RBV6jnl0/zr8MYpSS2xsPe10SYZjlzS4rdxrzwv9
-        9AqcEIhU7Pdc2f1DVE3bSwLmojJcAyfbmYEaBDA3
-X-Google-Smtp-Source: ABdhPJyQWt5z4SzG/sMVYcC8+mS4N1nabJfc9BlW0x7OsKiZAW/PYP3ibpa34gAe3DBDIbC+UDNWbjyHXXLOPaYNCE0=
-X-Received: by 2002:adf:82c3:: with SMTP id 61mr25175979wrc.326.1589871346192;
- Mon, 18 May 2020 23:55:46 -0700 (PDT)
+        Tue, 19 May 2020 02:56:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589871369; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=0qIm7vciFqshx69ineP5uqBYK6jDShcXu+uD5JF18EY=;
+ b=OaEUKTP5tfSfBaMAjW4t4H4xPsK1eB7yDfB7oFAddzEfwMZz5vyAEUlLiQr0Ud4WpBuiiHrT
+ 0ze9mKSKT4MqfY0k0+qCuJv9YniSfbmmLL5mQAYVMRMRa9tJ+ZKiRuZ5K97z7zqfwePjzmfi
+ LDkJZYbH+1E1mtTGTknOvdcZPH4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ec383018ebbf95ecbd0682e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 19 May 2020 06:56:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C7ADBC44788; Tue, 19 May 2020 06:56:00 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00283C432C2;
+        Tue, 19 May 2020 06:55:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00283C432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200518205725.72eb3148@canb.auug.org.au> <e132ee19-ff55-c017-732c-284a3b20daf7@infradead.org>
-In-Reply-To: <e132ee19-ff55-c017-732c-284a3b20daf7@infradead.org>
-From:   Danil Kipnis <danil.kipnis@cloud.ionos.com>
-Date:   Tue, 19 May 2020 08:55:35 +0200
-Message-ID: <CAHg0Huy7JKttHs9aEJEaRgwZAM3jcZH-Wb0p8Vy6KBVv9bW0Zg@mail.gmail.com>
-Subject: Re: linux-next: Tree for May 18 (drivers/infiniband/ulp/rtrs/rtrs-clt.c)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath11k: Fix some resource leaks in error path in
+ 'ath11k_thermal_register()'
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200513201454.258111-1-christophe.jaillet@wanadoo.fr>
+References: <20200513201454.258111-1-christophe.jaillet@wanadoo.fr>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     davem@davemloft.net, pradeepc@codeaurora.org,
+        ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200519065600.C7ADBC44788@smtp.codeaurora.org>
+Date:   Tue, 19 May 2020 06:56:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-On Mon, May 18, 2020 at 5:01 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 5/18/20 3:57 AM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20200515:
-> >
->
-> on i386:
->
-> ../drivers/infiniband/ulp/rtrs/rtrs-clt.c: In function =E2=80=98alloc_ses=
-s=E2=80=99:
-> ../drivers/infiniband/ulp/rtrs/rtrs-clt.c:1447:42: error: =E2=80=98BLK_MA=
-X_SEGMENT_SIZE=E2=80=99 undeclared (first use in this function); did you me=
-an =E2=80=98UDP_MAX_SEGMENTS=E2=80=99?
->   sess->max_pages_per_mr =3D max_segments * BLK_MAX_SEGMENT_SIZE >> 12;
->                                           ^~~~~~~~~~~~~~~~~~~~
->                                           UDP_MAX_SEGMENTS
->
->
-> Full randconfig file is attached.
-Thanks a lot for the mail. Didn't try to compile this with block layer
-disabled :/ Will send a fix for this today.
-Best,
-Danil
+> If 'thermal_cooling_device_register()' fails, we must undo what has been
+> allocated so far. So we must go to 'err_thermal_destroy' instead of
+> returning directly
+> 
+> In case of error in 'ath11k_thermal_register()', the previous
+> 'thermal_cooling_device_register()' call must also be undone. Move the
+> 'ar->thermal.cdev = cdev' a few lines above in order for this to be done
+> in 'ath11k_thermal_unregister()' which is called in the error handling
+> path.
+> 
+> Fixes: 2a63bbca06b2 ("ath11k: add thermal cooling device support")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
->
-> --
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Patch applied to ath-next branch of ath.git, thanks.
+
+25ca180ad380 ath11k: Fix some resource leaks in error path in 'ath11k_thermal_register()'
+
+-- 
+https://patchwork.kernel.org/patch/11547195/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
