@@ -2,193 +2,145 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8139206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86BA206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:17:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhrBnwjJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvrwjTjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgESKQT (ORCPT
+        id S1728432AbgESKRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45358 "EHLO
+        Tue, 19 May 2020 06:17:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgESKQT (ORCPT
+        with ESMTP id S1726412AbgESKRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:16:19 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44707C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:16:18 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id l6so5945554oic.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:16:18 -0700 (PDT)
+        Tue, 19 May 2020 06:17:48 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1070C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:17:47 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id v12so15178796wrp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:17:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eSUUGwovgEAFUWOh5GaQ33PRSsYhOgKLOqbhYaUm0d4=;
-        b=qhrBnwjJVX9dBXOPM1D9+nU0CnUI/by5fhsZCAO6GPKiNghFF1vVAWTBq644FNndX+
-         DNi3bcnDrK9CdTWEhLxtpxLp6OdcvhswXcHs4DZ3WhEtkrb5Rz+F4R3WpMXAQ0IxkjG3
-         iGv8cFzRF8gAwqCOXikn69HmdbUFeKKc5CUWH+9/Ls2igN0jZOGpTExPVKuehSwdVoEz
-         buSDA7lBKdhRwcgIfPF0z1AiSYXCnoIs/lrzRxlyMJTpITiPhy/9uIrAWgx7EnRwzY2b
-         gHSVuwuTBl5/wB2qGSpGICSGFZEyuqEDHeSt9Y7hx0BtorAfesn3WVKyPy1GcZPg0kgM
-         I1vg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qnbBjKj/NVa4wsBr3rCK+T4/dJSnYWUMxL1sU5PiC/g=;
+        b=EvrwjTjF/BGHMVobO0tpRUf2ZpEKg6hGmQ/IcgX2d79GnmVZUDTaIYGDukheGrbvWB
+         TrtS85wHC+rZljtk8Cnayaw56mKcjhG8YGAk4SouMV6XYvCZbPb4LrhPwlOYUWzq7uPx
+         tLZlJQ4NamzPDzISx6zguesGy9PvmMPyQt2HugANL9XzNAqPomfO5oR84y58yRkmRTI1
+         yScF8/VuthFByM/LiO6Kl4hi+JVaJpDdsb9C0iLke7K9+XY7afOMD5czUyb3grSMOzPj
+         xbvR8fHJsiZ+RlvBG5jJZ+vDpRaYqm3X1fLuvixT66K9SVBE7mLe+BjOCcgm6Y1rDAna
+         lf5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eSUUGwovgEAFUWOh5GaQ33PRSsYhOgKLOqbhYaUm0d4=;
-        b=IFSl3fTKfbTLWCTGckdovkwDeCbdJxJc6+CK6DQpU4gOyN0vYp/B3ak71AZPXG52oA
-         0OOBiSBh+2fHMbRw3Z3wVKvv+9cxQ3gTQYCZEZreeGu7l20NN2g7REzkuK/WIN1bayn8
-         SscLK7cbWvxt30dlaBOWO0bBzdcE2xFkXpsJ6czdnWYlFcZ+oANiqPbKh1bYkXmAUwm6
-         MmNw3ySA4g9uVCOxhOq24qTvt1cbDOvAC9cV1ab2jV4rwv+qmWH802inVjFlepOvI1Cy
-         2YivCcxpySDwDALl3yh0QOkKNGG56bDwS2gULBFXqouv9Vvg6+ahRN3PQXcnqnUMFa6I
-         VUew==
-X-Gm-Message-State: AOAM531XfTOP+37Ml2hCytp+YN22c2Mf8zSARaNFgeaqmPvj4Y2nETaQ
-        sN19KtLcNlo5H+ubB/TViFcjhZJ0n2o2NiLGCpUh5VmQAwk=
-X-Google-Smtp-Source: ABdhPJwiv7BWrhIVVzgVwf9oMUYpSiviwvKiPqgJMRCwV5kLIsLXWRR6zVDuXZlDj3NG7MCh8ZpZTqo6r7sXXPeCqEg=
-X-Received: by 2002:aca:3254:: with SMTP id y81mr2617327oiy.172.1589883377228;
- Tue, 19 May 2020 03:16:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200517011732.GE24705@shao2-debian> <20200517034739.GO2869@paulmck-ThinkPad-P72>
- <CANpmjNNj37=mgrZpzX7joAwnYk-GsuiE8oOm13r48FYAK0gSQw@mail.gmail.com>
- <CANpmjNMx0+=Cac=WvHuzKb2zJvgNVvVxjo_W1wYWztywxDKeCQ@mail.gmail.com>
- <CANpmjNPcOHAE5d=gaD327HqxTBegf75qeN_pjoszahdk6_i5=Q@mail.gmail.com>
- <CAKwvOd=Gi2z_NjRfpTigCCcV5kUWU7Bm7h1eHLeQ6DZCmrsR8w@mail.gmail.com> <20200518180513.GA114619@google.com>
-In-Reply-To: <20200518180513.GA114619@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 19 May 2020 12:16:05 +0200
-Message-ID: <CANpmjNMTRO0TxxTQxFt8EaRLggcPXKLJL2+G2WFL+vakgd2OUg@mail.gmail.com>
-Subject: Re: [rcu] 2f08469563: BUG:kernel_reboot-without-warning_in_boot_stage
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        george.burgess.iv@gmail.com
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@lists.01.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qnbBjKj/NVa4wsBr3rCK+T4/dJSnYWUMxL1sU5PiC/g=;
+        b=UgdYrjXvlrtDzs3Xd1Lo0Ss3v6tmTiCAc57U+03/JOtd0daIjG6mR2znNJ0shXOyo0
+         WRauCOUhtM5O4US134+Iis80x91ny43HyDa2WpqhRAWHWCKs0J8xBYXURgSqHpWEjSfp
+         iTcw7sUf0t1YoZshSjMX+NR08QWmhTmVQ4nolCinpMNe3F2SD4j5uNGWHtmLaHjnGNlP
+         Q/OLqLPItaEfHSeK0tNM50p3LTK4EeiAFeK2zqngt3+c04tup2YAUDwDBNCKCFzQgDNq
+         ZnF5yJCnRWU6/KG9q1rBbzly6eUDLX3QeLv4X0N7FriOhKwZBtsWXCwDN8uhMPeADa5b
+         awzg==
+X-Gm-Message-State: AOAM532i5XKuwBqYorn1yG8Rb8sQbkm6CvODOrhkeJWsZstvJqylZ856
+        FTrePb+lqleF8YV/PcbZo/E=
+X-Google-Smtp-Source: ABdhPJxMEXN1zUwvOOirYrC1fsioxeXESihxh3pcn4zzW1WZ1djtfL8WeqgS1tKvaDuhQ+vwmCS8gg==
+X-Received: by 2002:adf:f344:: with SMTP id e4mr24906434wrp.395.1589883466663;
+        Tue, 19 May 2020 03:17:46 -0700 (PDT)
+Received: from ubuntu-G3.micron.com ([165.225.86.140])
+        by smtp.gmail.com with ESMTPSA id w15sm3062488wmi.35.2020.05.19.03.17.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 03:17:46 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        s.hauer@pengutronix.de, boris.brezillon@collabora.com,
+        derosier@gmail.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        huobean@gmail.com, Bean Huo <beanhuo@micron.com>
+Subject: [RESET PATCH v5 0/5] Micron SLC NAND filling block
+Date:   Tue, 19 May 2020 12:17:29 +0200
+Message-Id: <20200519101734.19927-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 at 20:05, Marco Elver <elver@google.com> wrote:
->
-> On Mon, 18 May 2020, 'Nick Desaulniers' via kasan-dev wrote:
->
-> > On Mon, May 18, 2020 at 7:34 AM Marco Elver <elver@google.com> wrote:
-> > >
-> > > On Mon, 18 May 2020 at 14:44, Marco Elver <elver@google.com> wrote:
-> > > >
-> > > > [+Cc clang-built-linux FYI]
-> > > >
-> > > > On Mon, 18 May 2020 at 12:11, Marco Elver <elver@google.com> wrote:
-> > > > >
-> > > > > On Sun, 17 May 2020 at 05:47, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > > > >
-> > > > > > On Sun, May 17, 2020 at 09:17:32AM +0800, kernel test robot wrote:
-> > > > > > > Greeting,
-> > > > > > >
-> > > > > > > FYI, we noticed the following commit (built with clang-11):
-> > > > > > >
-> > > > > > > commit: 2f08469563550d15cb08a60898d3549720600eee ("rcu: Mark rcu_state.ncpus to detect concurrent writes")
-> > > > > > > https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git dev.2020.05.14c
-> > > > > > >
-> > > > > > > in testcase: boot
-> > > > > > >
-> > > > > > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> > > > > > >
-> > > > > > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > > If you fix the issue, kindly add following tag
-> > > > > > > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > > > > > >
-> > > > > > >
-> > > > > > > [    0.054943] BRK [0x05204000, 0x05204fff] PGTABLE
-> > > > > > > [    0.061181] BRK [0x05205000, 0x05205fff] PGTABLE
-> > > > > > > [    0.062403] BRK [0x05206000, 0x05206fff] PGTABLE
-> > > > > > > [    0.065200] RAMDISK: [mem 0x7a247000-0x7fffffff]
-> > > > > > > [    0.067344] ACPI: Early table checksum verification disabled
-> > > > > > > BUG: kernel reboot-without-warning in boot stage
-> > > > > >
-> > > > > > I am having some difficulty believing that this commit is at fault given
-> > > > > > that the .config does not list CONFIG_KCSAN=y, but CCing Marco Elver
-> > > > > > for his thoughts.  Especially given that I have never built with clang-11.
-> > > > > >
-> > > > > > But this does invoke ASSERT_EXCLUSIVE_WRITER() in early boot from
-> > > > > > rcu_init().  Might clang-11 have objections to early use of this macro?
-> > > > >
-> > > > > The macro is a noop without KCSAN. I think the bisection went wrong.
-> > > > >
-> > > > > I am able to reproduce a reboot-without-warning when building with
-> > > > > Clang 11 and the provided config. I did a bisect, starting with v5.6
-> > > > > (good), and found this:
-> > > > > - Since v5.6, first bad commit is
-> > > > > 20e2aa812620439d010a3f78ba4e05bc0b3e2861 (Merge tag
-> > > > > 'perf-urgent-2020-04-12' of
-> > > > > git://git.kernel.org/pub/scm/linux/kernel//git/tip/tip)
-> > > > > - The actual commit that introduced the problem is
-> > > > > 2b3b76b5ec67568da4bb475d3ce8a92ef494b5de (perf/x86/intel/uncore: Add
-> > > > > Ice Lake server uncore support) -- reverting it fixes the problem.
-> > >
-> > > Some more clues:
-> > >
-> > > 1. I should have noticed that this uses CONFIG_KASAN=y.
-> >
-> > Thanks for the report, testing, and bisection.  I don't see any
-> > smoking gun in the code.
-> > https://godbolt.org/z/qbK26r
->
-> My guess is data layout and maybe some interaction with KASAN. I also
-> played around with leaving icx_mmio_uncores empty, meaning none of the
-> data it refers to end up in the data section (presumably because
-> optimized out), which resulted in making the bug disappear as well.
->
-> > >
-> > > 2. Something about function icx_uncore_mmio_init(). Making it a noop
-> > > also makes the issue go away.
-> > >
-> > > 3. Leaving icx_uncore_mmio_init() a noop but removing the 'static'
-> > > from icx_mmio_uncores also presents the issue. So this seems to be
-> > > something about how/where icx_mmio_uncores is allocated.
-> >
-> > Can you share the disassembly of icx_uncore_mmio_init() in the given
-> > configuration?
->
-> ffffffff8102c097 <icx_uncore_mmio_init>:
-> ffffffff8102c097:       e8 b4 52 bd 01          callq  ffffffff82c01350 <__fentry__>
-> ffffffff8102c09c:       48 c7 c7 e0 55 c3 83    mov    $0xffffffff83c355e0,%rdi
-> ffffffff8102c0a3:       e8 69 9a 3b 00          callq  ffffffff813e5b11 <__asan_store8>
-> ffffffff8102c0a8:       48 c7 05 2d 95 c0 02    movq   $0xffffffff83c388e0,0x2c0952d(%rip)        # ffffffff83c355e0 <uncore_mmio_uncores>
-> ffffffff8102c0af:       e0 88 c3 83
-> ffffffff8102c0b3:       c3                      retq
->
-> The problem still happens if we add a __no_sanitize_address (or even
-> KASAN_SANITIZE := n) here. I think this function is a red herring: you
-> can make this function be empty, but as long as icx_mmio_uncores and its
-> dependencies are added to the data section somewhere, does the bug
-> appear.
+From: Bean Huo <beanhuo@micron.com>
 
-I also tried to bisect Clang/LLVM, and found that
-https://reviews.llvm.org/D78162 introduced the breaking change to
-Clang/LLVM. Reverting that change results in a bootable kernel *with*
-"perf/x86/intel/uncore: Add Ice Lake server uncore support" still
-applied.
+Resent this patset since there is typo in the cover-letter.
 
-Thanks,
--- Marco
+Hi,
+On planar 2D Micron NAND devices when a block erase command is issued,
+occasionally even though a block erase operation completes and returns a pass
+status, the flash block may not be completely erased. Subsequent operations to
+this block on very rare cases can result in subtle failures or corruption. These
+extremely rare cases should nevertheless be considered. This patchset is to
+address this potential issue.
+
+After submission of patch V1 [1] and V2 [2], we stopped its update since we get
+stuck in the solution on how to avoid the power-loss issue in case power-cut
+hits the block filling. In the v1 and v2, to avoid this issue, we always damaged
+page0, page1, this's based on the hypothesis that NAND FS is UBIFS. This
+FS-specifical code is unacceptable in the MTD layer. Also, it cannot cover all
+NAND based file system. Based on the current discussion, seems that re-write all
+first 15 page from page0 is a satisfactory solution.
+
+Meanwhile, I borrowed one idea from Miquel Raynal patchset [3], in which keeps
+a recode of programmed pages, base on it, for most of the cases, we don't need
+to read every page to see if current erasing block is a partially programmed
+block.
+
+hangelog:
+v4 - v5:
+    1. Add Miquel Raynal Authorship and SoB in 4/5 and 5/5 (Miquel Raynal)
+    2. Change  commit message in 5/5. (Steve deRosier)
+    3. delete unused variable max_bitflips in 4/5
+
+v3 - v4:
+    1. In the patch 4/5, change to directly use ecc.strength to judge the page
+       is a empty page or not, rather than max_bitflips < mtd->bitflip_threshold
+    2. In the patch 5/5, for the powerloss case, from the next time boot up,
+       lots of page will be programmed from >page15 address, if still using
+       first_p as GENMASK() bitmask starting position, writtenp will be always 0.
+       fix it by changing its bitmask starting at bit position 0.
+v2 - v3:
+    1. Rebase patch to the latest MTD git tree
+    2. Add a record that keeps tracking the programmed pages in the first 16 pages
+    3. Change from program odd pages, damage page 0 and page 1, to program all
+       first 15 pages
+    4. Address issues which exist in the V2.
+
+v1 - v2:
+    1. Rebased V1 to latest Linux kernel.
+    2. Add erase preparation function pointer in nand_manufacturer_ops.
+
+[1] https://www.spinics.net/lists/linux-mtd/msg04112.html
+[2] https://www.spinics.net/lists/linux-mtd/msg04450.html
+[3] https://www.spinics.net/lists/linux-mtd/msg13083.html
+
+Bean Huo (3):
+  mtd: rawnand: group all NAND specific ops into new nand_chip_ops
+  mtd: rawnand: Add {pre,post}_erase hooks in nand_chip_ops
+  mtd: rawnand: Introduce a new function nand_check_is_erased_page()
+Miquel Raynal (2):
+  mtd: rawnand: Add write_oob hook in nand_chip_ops
+  mtd: rawnand: micron: Micron SLC NAND filling block
+
+ drivers/mtd/nand/raw/internals.h     |   3 +-
+ drivers/mtd/nand/raw/nand_base.c     |  87 ++++++++++++++++++----
+ drivers/mtd/nand/raw/nand_hynix.c    |   2 +-
+ drivers/mtd/nand/raw/nand_macronix.c |  10 +--
+ drivers/mtd/nand/raw/nand_micron.c   | 104 ++++++++++++++++++++++++++-
+ include/linux/mtd/rawnand.h          |  40 +++++++----
+ 6 files changed, 211 insertions(+), 35 deletions(-)
+
+-- 
+2.17.1
+
