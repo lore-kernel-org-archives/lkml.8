@@ -2,120 +2,143 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E90C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B940E20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:05:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNM5HwwQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2CF3320829
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589897176;
+	bh=virwAIdLbLEajI0gSP1GCDMEsxsYgKyP41qGyLBhdao=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0+hEV6Grh8vkLte7oCY3edXBy0xMFTjxz25vAEoNd0MHI+jyTsx6LJ9h3SPJ62tX/
+	 cnVjoHpdPkQ/1q0vsUkmH54uUGQmUlXNWtXU1v5S0cnBdW0qydzMOxcy2eOUG/ITMW
+	 abKUNdOWJYL244sAYIRyXR1T0bIguKqzF6jIjB+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgESOFe (ORCPT
+        id S1729107AbgESOGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgESOFc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:05:32 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE78BC08C5C0;
-        Tue, 19 May 2020 07:05:31 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id w15so3988578lfe.11;
-        Tue, 19 May 2020 07:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3ngWGohqyk1bY0kV0++kwnpeD3y2ZE5Nt8l5LSZ6FRQ=;
-        b=JNM5HwwQ0gQ6nuCM6Kwij9v2fd9iRgUdc+MT4Op08k7J6Ulu1qQVyXeFLvk7ehAi8K
-         +EnpUcbc4KK4ErikoxL4837JsZFfJMcoh84iWKWNRzVzXjZ3XIG6NVQUa2XVeWrq25d2
-         V+UdACbBZga9RlPT36llf67I9pQrLn+zXRj6i2YjZOWNjdlLzI2cV4vuVtzqUlp3NvXH
-         Xrnj8h6hFoKRUMc+ejo1L08QIDjmdyERbsLAqcmyc67t1TPEFbBmc1JE3Al9M9lw9Izt
-         3QnnpQRuriGz91mMQ8rFOxR8bHQDEtW4+Xes5BCx5wARSFHjdNioYpTlgqJiJcPj5rl8
-         VRzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3ngWGohqyk1bY0kV0++kwnpeD3y2ZE5Nt8l5LSZ6FRQ=;
-        b=lUGHUGAWx44nLseswMnQXMVm+h1ToXFRKJ7YL3gp2bTOkXFFpGrQ3cNx6ReSUJ5IGu
-         Ut7/21Rnfbv7kAoS26kfpsmQQqzEphvJda4BOqY4Z8Ax8gzfC9xM6pfLxMPO6bEnn25O
-         jOnLir1rXwPLWWNVuAZvd1Qvvuf4Cb9cEmB+mgwtDS8QO2PFJefqqQ9PAKWyZ+ZTRY1w
-         FGTfS5eNhl8Bhic18ijsABOg6lFaG9Q4BMKGu5xp2oC233cs9PUVjXgi/DQ1SzT8PbUJ
-         0s2Q0bZylQZp6HDvDLROVXLCd80S33pQJWUxoyvUOq93PmaebAd58UnztztVBAytnYLL
-         Ou3Q==
-X-Gm-Message-State: AOAM530uvaFHxBxrAGSQsCX4/DrK7951SFU6uSGeL8x9vkBatDq2wRN0
-        wLh4XtwUD1uTfmNzixHjeBd2A8kZ
-X-Google-Smtp-Source: ABdhPJwWBveEsnFnC70i5Th3zmI8qQ90kscFZox1OYGMh21oaSbVDP3KHvAzjOQRvnunWXdFREr1Dg==
-X-Received: by 2002:ac2:5f69:: with SMTP id c9mr8778817lfc.2.1589897130069;
-        Tue, 19 May 2020 07:05:30 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id v28sm3041273lfd.35.2020.05.19.07.05.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 07:05:28 -0700 (PDT)
-Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
- device-tree properties
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200516154314.14769-1-digetx@gmail.com>
- <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b634e7a5-9a30-3bd1-126d-be62e4dd73e1@gmail.com>
-Date:   Tue, 19 May 2020 17:05:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 10:06:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727910AbgESOGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 10:06:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A428D20823;
+        Tue, 19 May 2020 14:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589897174;
+        bh=virwAIdLbLEajI0gSP1GCDMEsxsYgKyP41qGyLBhdao=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hozkobn+i0JT+9evBYfyDvFFM8Lqn6WQcTg46946E9lb/FW7RbBGHZAS9J8iOOfTg
+         HlGttRqZ4Aily2R9ZQLaEi+WdpJm38MtR8RI4SerwR8tbQLNzNkDOI5CNcXWeblF/O
+         ZgRMYD7W/lBfA69U4l/s4xvf60cGepWqn/EfhXWU=
+Date:   Tue, 19 May 2020 16:06:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stefano Brivio <sbrivio@redhat.com>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>, Phil Sutter <phil@nwl.cc>
+Subject: Re: [PATCH 4.19 41/80] netfilter: nft_set_rbtree: Introduce and use
+ nft_rbtree_interval_start()
+Message-ID: <20200519140611.GA521153@kroah.com>
+References: <20200518173450.097837707@linuxfoundation.org>
+ <20200518173458.612903024@linuxfoundation.org>
+ <20200519120625.GA8342@amd>
+ <20200519121356.GA354164@kroah.com>
+ <20200519121907.GA9158@amd>
+ <20200519125113.GA376546@kroah.com>
+ <20200519155300.3560394f@elisabeth>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519155300.3560394f@elisabeth>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.05.2020 10:28, Ulf Hansson пишет:
-> On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> Several people asked me about the MMC warnings in the KMSG log and
->> I had to tell to ignore them because these warning are irrelevant to
->> pre-Tegra210 SoCs.
+On Tue, May 19, 2020 at 03:53:00PM +0200, Stefano Brivio wrote:
+> On Tue, 19 May 2020 14:51:13 +0200
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 > 
-> Why are the warnings irrelevant?
-
-That's what the DT binding doc says [1].
-
-[1]
-https://www.kernel.org/doc/Documentation/devicetree/bindings/mmc/nvidia%2Ctegra20-sdhci.txt
-
-Although, looking at the driver's code and TRM docs, it seems that all
-those properties are really irrelevant only to the older Terga20 SoC. So
-the binding doc is a bit misleading.
-
-Nevertheless, the binding explicitly says that the properties are
-optional, which is correct.
-
->> It should be up to a board's device-tree writer to
->> properly describe all the necessary properties. Secondly, eventually all
->> device-tree bindings will be converted to YAML, which allows to validate
->> board DT files, giving a warning about missing properties. Hence let's
->> remove the noisy warnings to stop the confusion.
+> > On Tue, May 19, 2020 at 02:19:07PM +0200, Pavel Machek wrote:
+> > > On Tue 2020-05-19 14:13:56, Greg Kroah-Hartman wrote:  
+> > > > On Tue, May 19, 2020 at 02:06:25PM +0200, Pavel Machek wrote:  
+> > > > > Hi!
+> > > > >   
+> > > > > > [ Upstream commit 6f7c9caf017be8ab0fe3b99509580d0793bf0833 ]
+> > > > > > 
+> > > > > > Replace negations of nft_rbtree_interval_end() with a new helper,
+> > > > > > nft_rbtree_interval_start(), wherever this helps to visualise the
+> > > > > > problem at hand, that is, for all the occurrences except for the
+> > > > > > comparison against given flags in __nft_rbtree_get().
+> > > > > > 
+> > > > > > This gets especially useful in the next patch.  
+> > > > > 
+> > > > > This looks like cleanup in preparation for the next patch. Next patch
+> > > > > is there for some series, but not for 4.19.124. Should this be in
+> > > > > 4.19, then?  
+> > > > 
+> > > > What is the "next patch" in this situation?  
+> > > 
+> > > In 5.4 you have:
+> > > 
+> > > 9956 O   Greg Kroah ├─>[PATCH 5.4 082/147] netfilter: nft_set_rbtree: Introduce and use nft
+> > > 9957     Greg Kroah ├─>[PATCH 5.4 083/147] netfilter: nft_set_rbtree: Add missing expired c
+> > > 
+> > > In 4.19 you have:
+> > > 
+> > > 10373 r   Greg Kroah ├─>[PATCH 4.19 41/80] netfilter: nft_set_rbtree: Introduce and use nft
+> > > 10376 O   Greg Kroah ├─>[PATCH 4.19 42/80] IB/mlx4: Test return value of calls to ib_get_ca
+> > > 
+> > > I believe 41/80 can be dropped from 4.19 series, as it is just a
+> > > preparation for 083/147... which is not queued for 4.19.  
+> > 
+> > I've queued it up for 4.19 now, thanks.
 > 
-> Yep, makes sense. However, perhaps we should do this conversion then,
-> rather than first drop the warnings?
+> Wait, wait, sorry. I thought you were queuing this up as a missing
+> dependency or something, but I see it's not the case. That patch is
+> *not* the preparation for:
+> 
+>   340eaff65116 netfilter: nft_set_rbtree: Add missing expired checks
+> 
+> ...but rather preparation for:
+> 
+>   7c84d41416d8 netfilter: nft_set_rbtree: Detect partial overlaps on insertion
+> 
+> whose fix-up:
+> 
+>   72239f2795fa netfilter: nft_set_rbtree: Drop spurious condition for overlap detection on insertion
+> 
+> was queued for 5.6.x (see <20200421131431.GA793882@kroah.com>).
+> 
+> Now, if you want to backport "Add missing expired checks", it *might* be
+> more convenient to also backport:
+> 
+>   6f7c9caf017b netfilter: nft_set_rbtree: Introduce and use nft_rbtree_interval_start()
+> 
+> and, perhaps (I haven't tried to actually cherry-pick) also:
+> 
+>   7c84d41416d8 netfilter: nft_set_rbtree: Detect partial overlaps on insertion
+>   72239f2795fa netfilter: nft_set_rbtree: Drop spurious condition for overlap detection on insertion
+> 
+> and it's safe to either:
+> 
+> - backport only 6f7c9caf017b
+> - backport the three of them
+> 
+> but other than avoiding conflicts, there should be no reason to do that.
+> Sasha had already queued them up for 4.19 and 5.4, then dropped them as
+> they weren't needed, see <20200413163900.GO27528@sasha-vm>.
 
-I don't mind to postpone this patch. But again, IIUC, all these
-properties are optional, and thus, there is no critical need to verify
-them in DT right now, it could be done later on.
+Ok, I'll go drop the patch I just added, thanks for clearing this up.
+
+
+greg k-h
