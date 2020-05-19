@@ -2,134 +2,122 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3560C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4337E204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:55:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Y7dwlmoe"
+	by mail.kernel.org (Postfix) with ESMTP id 7EBD12075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgESUzP (ORCPT
+        id S1726723AbgESUzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:55:15 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54352 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgESUzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:55:15 -0400
-Received: from zn.tnic (p200300ec2f0b87001461a870af27ee92.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8700:1461:a870:af27:ee92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E5F51EC0116;
-        Tue, 19 May 2020 22:55:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589921712;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X2V7bouPUzsQ8Xr8SCd7667H/T1ORcUDQXiU9kyEDw0=;
-        b=Y7dwlmoeYDqUqS9pSvmhEmAWP/Of7Yt8jInJi2EqQmfr5PxcJlUI4Ts17ngeoN14YQMaIY
-        gmp00L8xwPbsaDLE7GQdRH+aJOzJhlIcD1gxyLL+V9+mQKk2buHeEKDNf54tLKz2jlW01f
-        WaRLYFwx5eC0bFasjnMhO1HZc4YcONk=
-Date:   Tue, 19 May 2020 22:55:05 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>, kbuild-all@lists.01.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Benjamin Thiel <b.thiel@posteo.de>
-Subject: Re: [tip:x86/mm 1/23] arch/x86/mm/init.c:75:6: warning: no previous
- prototype for function 'x86_has_pat_wp'
-Message-ID: <20200519205505.GD444@zn.tnic>
-References: <202005200123.gFjGzJEH%lkp@intel.com>
+        Tue, 19 May 2020 16:55:55 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:40869 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725998AbgESUzz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 16:55:55 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 19 May 2020 13:55:52 -0700
+Received: from sc9-mailhost2.vmware.com (unknown [10.200.192.41])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 6EE55404B7;
+        Tue, 19 May 2020 13:55:54 -0700 (PDT)
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: [PATCH 0/3] Enable objtool multiarch build
+Date:   Tue, 19 May 2020 13:55:30 -0700
+Message-ID: <cover.1589913349.git.mhelsley@vmware.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202005200123.gFjGzJEH%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 01:51:25AM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/mm
-> head:   bd1de2a7aace4d1d312fb1be264b8fafdb706208
-> commit: 1f6f655e01adebf5bd5e6c3da2e843c104ded051 [1/23] x86/mm: Add a x86_has_pat_wp() helper
-> config: x86_64-randconfig-r012-20200519 (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 135b877874fae96b4372c8a3fbfaa8ff44ff86e3)
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install x86_64 cross compiling tool for clang build
->         # apt-get install binutils-x86-64-linux-gnu
->         git checkout 1f6f655e01adebf5bd5e6c3da2e843c104ded051
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> >> arch/x86/mm/init.c:75:6: warning: no previous prototype for function 'x86_has_pat_wp' [-Wmissing-prototypes]
-> bool x86_has_pat_wp(void)
-> ^
+As a necessary first step to adding new architecture and subcommand
+support to objtool enabling building of objtool for more than the x86
+architecture.
 
-Triggers with gcc too:
+Some folks have been working on enabling objtool checking functionality
+for arm64. Rather than repeat that work here this minimal set does not
+port the existing commands but replaces them with weak, not-implemented
+versions which exit with status 127. On x86 the check and orc
+subcommands will still build and operate correctly while on other
+architectures the commands will exit with status 127. This allows future
+changes to port the check command to arm64 or add new subcommands
+such as mcount to replace the separate recordmcount tool.
 
-make W=1 arch/x86/mm/init.o
+Since the series does not add support for stack validation or checking
+to any new architectures there's no reason to make KConfig or Makefile
+changes which would normally be used to test this. So I've been forcing
+builds of objtool with:
 
-...
+make O=build-foo ARCH=foo CROSS_COMPILE=foo-linux-gnu- defconfig
+make O=build-foo ARCH=foo CROSS_COMPILE=foo-linux-gnu- tools/objtool
 
-arch/x86/mm/init.c:81:6: warning: no previous prototype for ‘x86_has_pat_wp’ [-Wmissing-prototypes]
-   81 | bool x86_has_pat_wp(void)
-      |      ^~~~~~~~~~~~~~
+And running the resulting binary to verify that it shows all objtoo
+subcommands are supported on x86 and unsupported on other archs.
+
+Changes since RFC[1]:
+ - Removed the arch/missing pattern and put everything in weak.c
+	(Julien Thierry and Josh Poimboeuf)
+ - Kept arch.h, special, etc. in the top level objtool dir (Julien)
+ - Dropped the patch reporting which subcommands are missing in --help
+	output
+ - Postponed the rela patch
+	Josh asked to rename a bunch of these variables and suggested
+	an untested improvement. Since they're necessary for
+	recordmcount but not the current arch built support we can drop
+	them from this set.
+ - Misc: Removed else (Josh) and updated the commit messages (Julien)
+ - Cleaned up includes
+	Moved the prototypes for the command entry functions and other
+	functions that weak symbols need to be consistent with into
+	objtool.h. (Josh)
+
+Tested with cross-compilation for sparc, arm64, s390, and powerpc
+
+[1] https://lore.kernel.org/lkml/cover.1588888003.git.mhelsley@vmware.com/
+
+Matt Helsley (3):
+  objtool: Exit successfully when requesting help
+  objtool: Move struct objtool_file into arch-independent header
+  objtool: Enable compilation of objtool for all architectures
+
+ tools/objtool/Build           | 13 +++++++++----
+ tools/objtool/Makefile        | 11 ++++++++++-
+ tools/objtool/arch.h          |  4 +++-
+ tools/objtool/builtin-check.c |  2 +-
+ tools/objtool/builtin-orc.c   |  3 +--
+ tools/objtool/check.c         |  4 ++--
+ tools/objtool/check.h         | 12 ------------
+ tools/objtool/objtool.c       |  4 +++-
+ tools/objtool/objtool.h       | 34 ++++++++++++++++++++++++++++++++++
+ tools/objtool/orc.h           | 18 ------------------
+ tools/objtool/orc_dump.c      |  3 ++-
+ tools/objtool/orc_gen.c       |  1 -
+ tools/objtool/weak.c          | 35 +++++++++++++++++++++++++++++++++++
+ 13 files changed, 100 insertions(+), 44 deletions(-)
+ create mode 100644 tools/objtool/objtool.h
+ delete mode 100644 tools/objtool/orc.h
+ create mode 100644 tools/objtool/weak.c
 
 
--Wmissing-prototypes is default off, though, dunno why clang 11 has it
-on.
-
-Anyway, something for Benni to fix. CCed and leaving the rest for him as
-reference.
-
-> arch/x86/mm/init.c:75:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-> bool x86_has_pat_wp(void)
-> ^
-> static
-> arch/x86/mm/init.c:866:13: warning: no previous prototype for function 'mem_encrypt_free_decrypted_mem' [-Wmissing-prototypes]
-> void __weak mem_encrypt_free_decrypted_mem(void) { }
-> ^
-> arch/x86/mm/init.c:866:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-> void __weak mem_encrypt_free_decrypted_mem(void) { }
-> ^
-> static
-> 2 warnings generated.
-> 
-> vim +/x86_has_pat_wp +75 arch/x86/mm/init.c
-> 
->     73	
->     74	/* Check that the write-protect PAT entry is set for write-protect */
->   > 75	bool x86_has_pat_wp(void)
->     76	{
->     77		return __pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] == _PAGE_CACHE_MODE_WP;
->     78	}
->     79	
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
-
-
+base-commit: bba413deb1065f1291cb1f366247513f11215520
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
