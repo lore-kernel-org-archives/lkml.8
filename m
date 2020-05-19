@@ -2,225 +2,160 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F28C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60956C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70DB720708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FEFA207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:50:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsvMz+El"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgESRuG (ORCPT
+        id S1729465AbgESRuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:50:06 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2225 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726059AbgESRuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:50:05 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 51E0D1E21315E27A0224;
-        Tue, 19 May 2020 18:50:01 +0100 (IST)
-Received: from localhost (10.47.86.149) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 19 May
- 2020 18:50:00 +0100
-Date:   Tue, 19 May 2020 18:49:33 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt
- format to yaml
-Message-ID: <20200519184933.00003f00@Huawei.com>
-In-Reply-To: <20200519075111.6356-2-jonathan.albrieux@gmail.com>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
-        <20200519075111.6356-2-jonathan.albrieux@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 19 May 2020 13:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESRuu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:50:50 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81EE3C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 10:50:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e16so357368wra.7
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 10:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PbPg6e3tpwQoLhlHES85OSbrJPFtIH1dskfrL5pZa0g=;
+        b=gsvMz+El9W8nBMj9LNZ/yIaRn8k5v2h8C5y2xVUx9mublrH6HS607efXt4E7hz8wai
+         votGfGXIhb9XxP5R6+fE6v1My39B9J4Gggj+sLOtpd8dHzK6ybh98IHWDDKNRrYv2Rb1
+         j5+5o6h9+HeTYT+dR7g5xHrxrM1MlBHfI1hKBZi8T2FIh5v1fcfbJLBJ9dff8EQcKIMq
+         BCHzcAGioBkgnxJJt1ABHlhCE7SgUb27IXqsl1vKnMQUdWAoqllDJtdD1agDT7vG4dJk
+         KNjQXKsXWfCWepZnrFby/mOfz6Qv9D2kJz2r4t9QSEJ+gJ+kwwDL6+by7WqQ5+/NfaKA
+         K1FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PbPg6e3tpwQoLhlHES85OSbrJPFtIH1dskfrL5pZa0g=;
+        b=JF+pO2KpWIE+Guk6dzMCnpOpwVOt0Qd8qyxLQXh7HPioKI7Oy55+rB0ZsobwHqZpRk
+         Y40HMBHhv96htDW5cPhFKyfj0DkSYMDM+zDfFP96pe8MPGAx/FZ9hUSVd97XoAPHYDmt
+         EjeoZy/miOSan1LZdgrPiOBqxs34CNN26YhpA6SxGloCSgUQf1jFc4EYIC7+KF+vWRuR
+         8qUmdJSivsnAig7wWqnO267ZZHVm3eAdbhpVRMaBlLHqWYB/D4hsfneF4sUZEvxabXr6
+         KS3vhkA9HY2SBE6+JZP05EhUvctf6tlv/4SHdxiTFIotSVXQDTZQ7yvMc9puMh0W4Icz
+         GfKA==
+X-Gm-Message-State: AOAM532xGA8aYNCvidHP5p45uISkC+n/PsHBvlolLWjAw86HUyC+Zi3I
+        MzLIHcCiwoKhS/BubAK1IeE=
+X-Google-Smtp-Source: ABdhPJyrG40EGugT2m+AdghxNUP6ys8Qt7gvRmotVcHZ5t309c/cAyW4dYJt81ruzXFmcLhCIv0XkQ==
+X-Received: by 2002:a5d:5588:: with SMTP id i8mr41638wrv.223.1589910649108;
+        Tue, 19 May 2020 10:50:49 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z132sm519806wmc.29.2020.05.19.10.50.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 10:50:48 -0700 (PDT)
+Subject: Re: [PATCH 00/11] arm/arm64: Turning IPIs into normal interrupts
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Sumit Garg <sumit.garg@linaro.org>, kernel-team@android.com,
+        Russell King <linux@arm.linux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+References: <20200519161755.209565-1-maz@kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <d1ac7873-0f02-dbe0-dd3c-4fd14a87cf03@gmail.com>
+Date:   Tue, 19 May 2020 10:50:46 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20200519161755.209565-1-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.86.149]
-X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 09:50:57 +0200
-Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
 
-> Converts documentation from txt format to yaml 
+
+On 5/19/2020 9:17 AM, Marc Zyngier wrote:
+> For as long as SMP ARM has existed, IPIs have been handled as
+> something special. The arch code and the interrupt controller exchange
+> a couple of hooks (one to generate an IPI, another to handle it).
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
->  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 --------
->  .../devicetree/bindings/iio/imu/bmi160.yaml   | 84 +++++++++++++++++++
->  2 files changed, 84 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> Although this is perfectly manageable, it prevents the use of features
+> that we could use if IPIs were Linux IRQs (such as pseudo-NMIs). It
+> also means that each interrupt controller driver has to follow an
+> architecture-specific interface instead of just implementing the base
+> irqchip functionnalities. The arch code also duplicates a number of
+> things that the core irq code already does (such as calling
+> set_irq_regs(), irq_enter()...).
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
-> deleted file mode 100644
-> index 900c169de00f..000000000000
-> --- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -Bosch BMI160 - Inertial Measurement Unit with Accelerometer, Gyroscope
-> -and externally connectable Magnetometer
-> -
-> -https://www.bosch-sensortec.com/bst/products/all_products/bmi160
-> -
-> -Required properties:
-> - - compatible : should be "bosch,bmi160"
-> - - reg : the I2C address or SPI chip select number of the sensor
-> - - spi-max-frequency : set maximum clock frequency (only for SPI)
-> -
-> -Optional properties:
-> - - interrupts : interrupt mapping for IRQ
-> - - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
-> -   input, set to "INT2" if INT2 pin should be used instead
-> - - drive-open-drain : set if the specified interrupt pin should be configured as
-> -   open drain. If not set, defaults to push-pull.
-> -
-> -Examples:
-> -
-> -bmi160@68 {
-> -	compatible = "bosch,bmi160";
-> -	reg = <0x68>;
-> -
-> -	interrupt-parent = <&gpio4>;
-> -	interrupts = <12 IRQ_TYPE_EDGE_RISING>;
-> -	interrupt-names = "INT1";
-> -};
-> -
-> -bmi160@0 {
-> -	compatible = "bosch,bmi160";
-> -	reg = <0>;
-> -	spi-max-frequency = <10000000>;
-> -
-> -	interrupt-parent = <&gpio2>;
-> -	interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-> -	interrupt-names = "INT2";
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
-> new file mode 100644
-> index 000000000000..6b464ce5ed0b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
-> @@ -0,0 +1,84 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/imu/bmi160.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bosch BMI160
-> +
-> +maintainers:
-> +  - can't find a mantainer, author is Daniel Baluta <daniel.baluta@intel.com>
+> This series tries to remedy this on arm/arm64 by offering a new
+> registration interface where the irqchip gives the arch code a range
+> of interrupts to use for IPIs. The arch code requests these as normal
+> interrupts.
+> 
+> The bulk of the work is at the interrupt controller level, where all 3
+> irqchips used on arm64 get converted.
+> 
+> Finally, the arm64 code drops the legacy registration interface. The
+> same thing could be done on 32bit as well once the two remaining
+> irqchips using that interface get converted.
+> 
+> There is probably more that could be done: statistics are still
+> architecture-private code, for example, and no attempt is made to
+> solve that (apart from hidding the IRQs from /proc/interrupt).
+> 
+> This has been tested on a bunch of 32 and 64bit guests.
 
-Daniel is still active in the kernel, just not at Intel any more. +CC
+Does this patch series change your position on this patch series
 
-> +
-> +description: |
-> +  Inertial Measurement Unit with Accelerometer, Gyroscope and externally
-> +  connectable Magnetometer
-> +  https://www.bosch-sensortec.com/bst/products/all_products/bmi160
-> +
-> +properties:
-> +  compatible:
-> +    const: bosch,bmi160
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: the I2C address or SPI chip select number of the sensor
+https://lore.kernel.org/linux-arm-kernel/20191023000547.7831-3-f.fainelli@gmail.com/T/
 
-As standard for i2c and spi, usually no need to have a description line for
-this element.
+or is this still a no-no?
 
-> +
-> +  spi-max-frequency:
-> +    maxItems: 1
-> +    description: set maximum clock frequency (required only for SPI)
+> 
+> Marc Zyngier (11):
+>   genirq: Add fasteoi IPI flow
+>   genirq: Allow interrupts to be excluded from /proc/interrupts
+>   arm64: Allow IPIs to be handled as normal interrupts
+>   ARM: Allow IPIs to be handled as normal interrupts
+>   irqchip/gic-v3: Describe the SGI range
+>   irqchip/gic-v3: Configure SGIs as standard interrupts
+>   irqchip/gic: Refactor SMP configuration
+>   irqchip/gic: Configure SGIs as standard interrupts
+>   irqchip/gic-common: Don't enable SGIs by default
+>   irqchip/bcm2836: Configure mailbox interrupts as standard interrupts
+>   arm64: Kill __smp_cross_call and co
+> 
+>  arch/arm/Kconfig                  |   1 +
+>  arch/arm/include/asm/smp.h        |   5 +
+>  arch/arm/kernel/smp.c             |  97 +++++++++++---
+>  arch/arm64/Kconfig                |   1 +
+>  arch/arm64/include/asm/irq_work.h |   4 +-
+>  arch/arm64/include/asm/smp.h      |   6 +-
+>  arch/arm64/kernel/smp.c           |  98 +++++++++++----
+>  drivers/irqchip/irq-bcm2836.c     | 151 ++++++++++++++++++----
+>  drivers/irqchip/irq-gic-common.c  |   3 -
+>  drivers/irqchip/irq-gic-v3.c      | 109 ++++++++++------
+>  drivers/irqchip/irq-gic.c         | 203 ++++++++++++++++++------------
+>  include/linux/irq.h               |   4 +-
+>  kernel/irq/chip.c                 |  26 ++++
+>  kernel/irq/debugfs.c              |   1 +
+>  kernel/irq/proc.c                 |   2 +-
+>  kernel/irq/settings.h             |   7 ++
+>  16 files changed, 515 insertions(+), 203 deletions(-)
+> 
 
-Standard spi binding.  Probably doesn't need to be included here.
-
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: interrupt mapping for IRQ
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 1
-> +    items:
-> +      enum:
-> +        - INT1
-> +        - INT2
-> +    description: |
-> +      set to "INT1" if INT1 pin should be used as interrupt input, set
-> +      to "INT2" if INT2 pin should be used instead
-> +
-> +  drive-open-drain:
-> +    description: |
-> +      set if the specified interrupt pin should be configured as
-> +      open drain. If not set, defaults to push-pull.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    // Example for I2C
-> +    i2c@78b7000 {
-> +        reg = <0x78b6000 0x600>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-
-Take a look at some of the other binding examples.  We normally
-just focus on the driver so don't supply details for the bus.
-
-e.g. https://elixir.bootlin.com/linux/v5.7-rc6/source/Documentation/devicetree/bindings/iio/adc/maxim,max1363.yaml#L39
-
-> +
-> +        bmi160@68 {
-> +                compatible = "bosch,bmi160";
-> +                reg = <0x68>;
-> +                interrupt-parent = <&gpio4>;
-> +                interrupts = <12 1>;
-> +                interrupt-names = "INT1";
-> +        };
-> +  - |
-> +    // Example for SPI
-> +    spi@78b7000 {
-> +        reg = <0x78b7000 0x600>,
-> +              <0x7884000 0x23000>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        bmi160@0 {
-> +                compatible = "bosch,bmi160";
-> +                reg = <0>;
-> +                spi-max-frequency = <10000000>;
-> +                interrupt-parent = <&gpio2>;
-> +                interrupts = <12 1>;
-> +                interrupt-names = "INT2";
-> +        };
-> +    };
-
-
+-- 
+Florian
