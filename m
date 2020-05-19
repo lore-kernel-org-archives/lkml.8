@@ -6,141 +6,227 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75322C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5ADC2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6D82075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgESFtX (ORCPT
+        id S1728713AbgESFt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:49:23 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:24581 "EHLO pegase1.c-s.fr"
+        Tue, 19 May 2020 01:49:27 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:61897 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728591AbgESFtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:49:12 -0400
+        id S1728501AbgESFtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:49:17 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49R4h56rFNz9txm1;
-        Tue, 19 May 2020 07:49:09 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49R4hB1177z9txm0;
+        Tue, 19 May 2020 07:49:14 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 5OffE8Fu2zAV; Tue, 19 May 2020 07:49:09 +0200 (CEST)
+        with ESMTP id IHLo3eE-kpTY; Tue, 19 May 2020 07:49:14 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4h564xjz9txlx;
-        Tue, 19 May 2020 07:49:09 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4hB08ZHz9txlx;
+        Tue, 19 May 2020 07:49:14 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EB60C8B7A7;
-        Tue, 19 May 2020 07:49:10 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 22CB28B7A7;
+        Tue, 19 May 2020 07:49:15 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Iojc-ZrXVi0o; Tue, 19 May 2020 07:49:10 +0200 (CEST)
+        with ESMTP id pfuUbpNAUf7d; Tue, 19 May 2020 07:49:15 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A9DEC8B767;
-        Tue, 19 May 2020 07:49:10 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C15508B767;
+        Tue, 19 May 2020 07:49:14 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 86CDC65A4A; Tue, 19 May 2020 05:49:10 +0000 (UTC)
-Message-Id: <2c6135d57fb76eebf70673fbac3dc9e740767879.1589866984.git.christophe.leroy@csgroup.eu>
+        id 9EF5565A4A; Tue, 19 May 2020 05:49:14 +0000 (UTC)
+Message-Id: <13c1e8539fdf363d3146f4884e5c3c76c6c308b5.1589866984.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 References: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v4 27/45] powerpc/8xx: Only 8M pages are hugepte pages now
+Subject: [PATCH v4 31/45] powerpc/8xx: Don't set IMMR map anymore at boot
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 19 May 2020 05:49:10 +0000 (UTC)
+Date:   Tue, 19 May 2020 05:49:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-512k pages are now standard pages, so only 8M pages
-are hugepte.
+Only early debug requires IMMR to be mapped early.
 
-No more handling of normal page tables through hugepd allocation
-and freeing, and hugepte helpers can also be simplified.
+No need to set it up and pin it in assembly. Map it
+through page tables at udbg init when necessary.
+
+If CONFIG_PIN_TLB_IMMR is selected, pin it once we
+don't need the 32 Mb pinned RAM anymore.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h |  7 +++----
- arch/powerpc/mm/hugetlbpage.c                    | 16 +++-------------
- 2 files changed, 6 insertions(+), 17 deletions(-)
+v2: Disable TLB reservation to modify entry 31
+---
+ arch/powerpc/kernel/head_8xx.S     | 39 +++++++++++++-----------------
+ arch/powerpc/mm/mmu_decl.h         |  4 +++
+ arch/powerpc/mm/nohash/8xx.c       | 15 +++++++++---
+ arch/powerpc/platforms/8xx/Kconfig |  2 +-
+ arch/powerpc/sysdev/cpm_common.c   |  2 ++
+ 5 files changed, 35 insertions(+), 27 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-index 785437323576..1c7d4693a78e 100644
---- a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-@@ -13,13 +13,13 @@ static inline pte_t *hugepd_page(hugepd_t hpd)
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index c9e3d54e6a6f..d607f4b53e0f 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -749,6 +749,23 @@ start_here:
+ 	rfi
+ /* Load up the kernel context */
+ 2:
++#ifdef CONFIG_PIN_TLB_IMMR
++	lis	r0, MD_TWAM@h
++	oris	r0, r0, 0x1f00
++	mtspr	SPRN_MD_CTR, r0
++	LOAD_REG_IMMEDIATE(r0, VIRT_IMMR_BASE | MD_EVALID)
++	tlbie	r0
++	mtspr	SPRN_MD_EPN, r0
++	LOAD_REG_IMMEDIATE(r0, MD_SVALID | MD_PS512K | MD_GUARDED)
++	mtspr	SPRN_MD_TWC, r0
++	mfspr   r0, SPRN_IMMR
++	rlwinm	r0, r0, 0, 0xfff80000
++	ori	r0, r0, 0xf0 | _PAGE_DIRTY | _PAGE_SPS | _PAGE_SH | \
++			_PAGE_NO_CACHE | _PAGE_PRESENT
++	mtspr	SPRN_MD_RPN, r0
++	lis	r0, (MD_TWAM | MD_RSV4I)@h
++	mtspr	SPRN_MD_CTR, r0
++#endif
+ 	tlbia			/* Clear all TLB entries */
+ 	sync			/* wait for tlbia/tlbie to finish */
  
- static inline unsigned int hugepd_shift(hugepd_t hpd)
- {
--	return ((hpd_val(hpd) & _PMD_PAGE_MASK) >> 1) + 17;
-+	return PAGE_SHIFT_8M;
+@@ -797,28 +814,6 @@ initial_mmu:
+ 	ori	r8, r8, MD_APG_INIT@l
+ 	mtspr	SPRN_MD_AP, r8
+ 
+-	/* Map a 512k page for the IMMR to get the processor
+-	 * internal registers (among other things).
+-	 */
+-#ifdef CONFIG_PIN_TLB_IMMR
+-	oris	r10, r10, MD_RSV4I@h
+-	ori	r10, r10, 0x1c00
+-	mtspr	SPRN_MD_CTR, r10
+-
+-	mfspr	r9, 638			/* Get current IMMR */
+-	andis.	r9, r9, 0xfff8		/* Get 512 kbytes boundary */
+-
+-	lis	r8, VIRT_IMMR_BASE@h	/* Create vaddr for TLB */
+-	ori	r8, r8, MD_EVALID	/* Mark it valid */
+-	mtspr	SPRN_MD_EPN, r8
+-	li	r8, MD_PS512K | MD_GUARDED	/* Set 512k byte page */
+-	ori	r8, r8, MD_SVALID	/* Make it valid */
+-	mtspr	SPRN_MD_TWC, r8
+-	mr	r8, r9			/* Create paddr for TLB */
+-	ori	r8, r8, MI_BOOTINIT|0x2 /* Inhibit cache -- Cort */
+-	mtspr	SPRN_MD_RPN, r8
+-#endif
+-
+ 	/* Now map the lower RAM (up to 32 Mbytes) into the ITLB. */
+ #ifdef CONFIG_PIN_TLB_TEXT
+ 	lis	r8, MI_RSV4I@h
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index 7097e07a209a..1b6d39e9baed 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -182,6 +182,10 @@ static inline void mmu_mark_initmem_nx(void) { }
+ static inline void mmu_mark_rodata_ro(void) { }
+ #endif
+ 
++#ifdef CONFIG_PPC_8xx
++void __init mmu_mapin_immr(void);
++#endif
++
+ #ifdef CONFIG_PPC_DEBUG_WX
+ void ptdump_check_wx(void);
+ #else
+diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
+index bda5290af751..a9313aa6f1cd 100644
+--- a/arch/powerpc/mm/nohash/8xx.c
++++ b/arch/powerpc/mm/nohash/8xx.c
+@@ -66,7 +66,7 @@ void __init MMU_init_hw(void)
+ 	if (IS_ENABLED(CONFIG_PIN_TLB_DATA)) {
+ 		unsigned long ctr = mfspr(SPRN_MD_CTR) & 0xfe000000;
+ 		unsigned long flags = 0xf0 | MD_SPS16K | _PAGE_SH | _PAGE_DIRTY;
+-		int i = IS_ENABLED(CONFIG_PIN_TLB_IMMR) ? 29 : 28;
++		int i = 28;
+ 		unsigned long addr = 0;
+ 		unsigned long mem = total_lowmem;
+ 
+@@ -81,12 +81,19 @@ void __init MMU_init_hw(void)
+ 	}
  }
  
- static inline pte_t *hugepte_offset(hugepd_t hpd, unsigned long addr,
- 				    unsigned int pdshift)
+-static void __init mmu_mapin_immr(void)
++static bool immr_is_mapped __initdata;
++
++void __init mmu_mapin_immr(void)
  {
--	unsigned long idx = (addr & ((1UL << pdshift) - 1)) >> PAGE_SHIFT;
-+	unsigned long idx = (addr & (SZ_4M - 1)) >> PAGE_SHIFT;
+ 	unsigned long p = PHYS_IMMR_BASE;
+ 	unsigned long v = VIRT_IMMR_BASE;
+ 	int offset;
  
- 	return hugepd_page(hpd) + idx;
++	if (immr_is_mapped)
++		return;
++
++	immr_is_mapped = true;
++
+ 	for (offset = 0; offset < IMMR_SIZE; offset += PAGE_SIZE)
+ 		map_kernel_page(v + offset, p + offset, PAGE_KERNEL_NCG);
  }
-@@ -32,8 +32,7 @@ static inline void flush_hugetlb_page(struct vm_area_struct *vma,
- 
- static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
+@@ -122,9 +129,10 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
  {
--	*hpdp = __hugepd(__pa(new) | _PMD_USER | _PMD_PRESENT |
--			 (pshift == PAGE_SHIFT_8M ? _PMD_PAGE_8M : _PMD_PAGE_512K));
-+	*hpdp = __hugepd(__pa(new) | _PMD_USER | _PMD_PRESENT | _PMD_PAGE_8M);
- }
+ 	unsigned long mapped;
  
- static inline int check_and_get_huge_psize(int shift)
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 38bad839e608..cfacd364c7aa 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -54,24 +54,17 @@ static int __hugepte_alloc(struct mm_struct *mm, hugepd_t *hpdp,
- 	if (pshift >= pdshift) {
- 		cachep = PGT_CACHE(PTE_T_ORDER);
- 		num_hugepd = 1 << (pshift - pdshift);
--		new = NULL;
--	} else if (IS_ENABLED(CONFIG_PPC_8xx)) {
--		cachep = NULL;
--		num_hugepd = 1;
--		new = pte_alloc_one(mm);
- 	} else {
- 		cachep = PGT_CACHE(pdshift - pshift);
- 		num_hugepd = 1;
--		new = NULL;
++	mmu_mapin_immr();
++
+ 	if (__map_without_ltlbs) {
+ 		mapped = 0;
+-		mmu_mapin_immr();
+ 		if (!IS_ENABLED(CONFIG_PIN_TLB_IMMR))
+ 			patch_instruction_site(&patch__dtlbmiss_immr_jmp, ppc_inst(PPC_INST_NOP));
+ 		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
+@@ -143,7 +151,6 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		 */
+ 		mmu_mapin_ram_chunk(0, einittext8, PAGE_KERNEL_X);
+ 		mmu_mapin_ram_chunk(einittext8, mapped, PAGE_KERNEL);
+-		mmu_mapin_immr();
  	}
  
--	if (!cachep && !new) {
-+	if (!cachep) {
- 		WARN_ONCE(1, "No page table cache created for hugetlb tables");
- 		return -ENOMEM;
- 	}
+ 	mmu_patch_cmp_limit(&patch__dtlbmiss_linmem_top, mapped);
+diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
+index 0d036cd868ef..04ea1a8a0bdc 100644
+--- a/arch/powerpc/platforms/8xx/Kconfig
++++ b/arch/powerpc/platforms/8xx/Kconfig
+@@ -187,7 +187,7 @@ config PIN_TLB_DATA
  
--	if (cachep)
--		new = kmem_cache_alloc(cachep, pgtable_gfp_flags(mm, GFP_KERNEL));
-+	new = kmem_cache_alloc(cachep, pgtable_gfp_flags(mm, GFP_KERNEL));
- 
- 	BUG_ON(pshift > HUGEPD_SHIFT_MASK);
- 	BUG_ON((unsigned long)new & HUGEPD_SHIFT_MASK);
-@@ -102,10 +95,7 @@ static int __hugepte_alloc(struct mm_struct *mm, hugepd_t *hpdp,
- 	if (i < num_hugepd) {
- 		for (i = i - 1 ; i >= 0; i--, hpdp--)
- 			*hpdp = __hugepd(0);
--		if (cachep)
--			kmem_cache_free(cachep, new);
--		else
--			pte_free(mm, new);
-+		kmem_cache_free(cachep, new);
- 	} else {
- 		kmemleak_ignore(new);
- 	}
+ config PIN_TLB_IMMR
+ 	bool "Pinned TLB for IMMR"
+-	depends on PIN_TLB || PPC_EARLY_DEBUG_CPM
++	depends on PIN_TLB
+ 	default y
+ 	help
+ 	  This pins the IMMR area with a 512kbytes page. In case
+diff --git a/arch/powerpc/sysdev/cpm_common.c b/arch/powerpc/sysdev/cpm_common.c
+index 71660bacb264..7dc1960f8bdb 100644
+--- a/arch/powerpc/sysdev/cpm_common.c
++++ b/arch/powerpc/sysdev/cpm_common.c
+@@ -68,6 +68,8 @@ static void udbg_putc_cpm(char c)
+ void __init udbg_init_cpm(void)
+ {
+ #ifdef CONFIG_PPC_8xx
++	mmu_mapin_immr();
++
+ 	cpm_udbg_txdesc = (u32 __iomem __force *)
+ 			  (CONFIG_PPC_EARLY_DEBUG_CPM_ADDR - PHYS_IMMR_BASE +
+ 			   VIRT_IMMR_BASE);
 -- 
 2.25.0
 
