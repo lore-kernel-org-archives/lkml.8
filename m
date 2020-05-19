@@ -2,140 +2,133 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D54C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32181C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7960420578
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5752075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="AXuLfz4Z"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k5wm3j0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbgESS1P (ORCPT
+        id S1729493AbgESS12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37488 "EHLO
+        Tue, 19 May 2020 14:27:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgESS1P (ORCPT
+        with ESMTP id S1727066AbgESS12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:27:15 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A0AC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:14 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id l3so342843edq.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:14 -0700 (PDT)
+        Tue, 19 May 2020 14:27:28 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4467C08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:27 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id n15so309335pfd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EE4DNOBMavO7IZ4rNX59iIePh4zF+lvNEi66QnnKnCE=;
-        b=AXuLfz4ZzY37jAmrhDap2PxzbyMy8lDBdhunupa7OTJ4aw9/+o7d4HMJKIP1EIRV0G
-         GI0Yai6wZFyMg61X4/Qc+Wwft+wSUaCbhSFuk8mNd0o1eS/a+lwlO4bq+f8oav+Fux2G
-         Bwvp82AMeEb3p4PmACGeu8iwsBpNROchx23Z8xFrpbBs+pFVjCxJBVRSj99NSI76VMTP
-         fS0Fj5lRs5MVOF7S3ahejgm61hkffvMvqskDc68lfqdfnha6eyFzI8bENQ8fAyYxGWvG
-         wQ+9mvKwU/BpJSM7+5nueLTgKeXn3O7sTqwBsKVXOXcZol1iY3W38x0EUTU47S0p560Q
-         qSfg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=X+EjBfM39k69WBHN4/ekIWimO/d9vuhDt/Vo5vtGtAE=;
+        b=k5wm3j0ZFUD/z29kzyzWM3Ts6RzjmHfYKcvUqUD9IACZssyAf8JKWmEbFUkn1OrPKf
+         pmVYFVlyr+dS+hfCae3pARec9ZCRZUODOa9jm2cfESVBmVjP7xV6lP6DmtlCnPUWY0PB
+         JgYQESHA/aXh2EEkWDGlvcKEmdovXGAJygOBA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EE4DNOBMavO7IZ4rNX59iIePh4zF+lvNEi66QnnKnCE=;
-        b=p9MgxAvm2t7XE6meTWF4eWvbFDYdCy7H3wH+UAJ+GJvNteg76yQakRrGeXLN5FrizP
-         b9h7WC9aKh8gL6/pyzhmQ6mbcmIts4QZIml1meklejrOxAgsu4NjoJD84MuFBe2TUCMr
-         75Z5z/Mv3/v/kPWPE7Da2ZiIOMKPvuk+MJcvNSr2JhvMn3OOXGRiwwmqoIJbBZr+V4wm
-         gBgkq2NJ0AmhYG9TsGLPnmtELQCxCkqb3lgd5eg5Wvstj2R5nEON14/qqf0Jv43tNTnM
-         CN9osqUKtFXR+7G3ra4sWIvZJ6iJvt12JMtm9lqQofiiypMR4amygJfAlQQTRXi1/qGD
-         tYnw==
-X-Gm-Message-State: AOAM532/4PHhVLrxslr8pnU3zWonBcYdsRK0266lIb1ds1tlzxKmZv87
-        EYMumcAtkX7LG+GMwiHxlQ8gfaDIiy5pXJ/tdtYHmA==
-X-Google-Smtp-Source: ABdhPJxH4swItD3dIgSTnKIJ51ANtghX84k0sbelvVaXdBdX7PXJvEUUsea7iWlT+xv92Mkd6Iz00oKGUp1l8IdYQSg=
-X-Received: by 2002:a50:c2d9:: with SMTP id u25mr215498edf.123.1589912833400;
- Tue, 19 May 2020 11:27:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <158987153989.4000084.17143582803685077783.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200519121115.GC332015@kroah.com>
-In-Reply-To: <20200519121115.GC332015@kroah.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 19 May 2020 11:27:02 -0700
-Message-ID: <CAPcyv4gTkWx_q4sDXVyS+ybh0Nj7ybPUXGC4HCHQCO4eGxXwiQ@mail.gmail.com>
-Subject: Re: [PATCH v2] /dev/mem: Revoke mappings when a driver claims the region
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Russell King <linux@arm.linux.org.uk>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=X+EjBfM39k69WBHN4/ekIWimO/d9vuhDt/Vo5vtGtAE=;
+        b=GAamdKrnK1b/pmApLaWo7myi2wwjAjuzK1iSzTCCI9cYNOQViON6gTcPBkSYW5fv0M
+         tihBzKrd8AWERtpAO3BK0GmHkNgyeAP56RR5QhtM5/MHyFgOhIGDGMTp6Qn+jY4ZEEj+
+         R13mg5BAaSqXmlgbRXXvvMa/KK1LG5sR2IKzenahvzVJMjj7XaHKeWqmKeaCac2zGQFF
+         tUbmYQ0a0dv/Co4clVFLlnXfaO8eDhEFShQyKYj7r2H5ew1BoWRQhxxcpMs07aXXKLq+
+         MSGRBCS2TLu2CB1HRy5mHYUXjDjG4Qd0HNTgLDf82rrxgVE3HD8Wfmw/6JTv31iTk8e5
+         Slvg==
+X-Gm-Message-State: AOAM532cYmSjDkFyziRmAAqnXXvH59KhIZFAZkjGDx74hqQjCPiOSGGZ
+        hZEJWjJWn68S1JEvEk5QpXfqWw==
+X-Google-Smtp-Source: ABdhPJxLV+9+iUF7RnugjFhTaU3WzPCcGgGLXrt1uU4iwA1cLBlFFTFDMUPFBE84tI2+OdJIcTyc+w==
+X-Received: by 2002:a62:76cc:: with SMTP id r195mr401180pfc.116.1589912847368;
+        Tue, 19 May 2020 11:27:27 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l3sm217492pju.38.2020.05.19.11.27.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 11:27:26 -0700 (PDT)
+Date:   Tue, 19 May 2020 11:27:25 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v2 4/8] exec: Allow load_misc_binary to call
+ prepare_binfmt unconditionally
+Message-ID: <202005191122.0A1FD07@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+ <877dx822er.fsf_-_@x220.int.ebiederm.org>
+ <87imgszrwo.fsf_-_@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imgszrwo.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 5:11 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, May 19, 2020 at 12:03:06AM -0700, Dan Williams wrote:
-> > Close the hole of holding a mapping over kernel driver takeover event of
-> > a given address range.
-> >
-> > Commit 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-> > introduced CONFIG_IO_STRICT_DEVMEM with the goal of protecting the
-> > kernel against scenarios where a /dev/mem user tramples memory that a
-> > kernel driver owns. However, this protection only prevents *new* read(),
-> > write() and mmap() requests. Established mappings prior to the driver
-> > calling request_mem_region() are left alone.
-> >
-> > Especially with persistent memory, and the core kernel metadata that is
-> > stored there, there are plentiful scenarios for a /dev/mem user to
-> > violate the expectations of the driver and cause amplified damage.
-> >
-> > Teach request_mem_region() to find and shoot down active /dev/mem
-> > mappings that it believes it has successfully claimed for the exclusive
-> > use of the driver. Effectively a driver call to request_mem_region()
-> > becomes a hole-punch on the /dev/mem device.
-> >
-> > The typical usage of unmap_mapping_range() is part of
-> > truncate_pagecache() to punch a hole in a file, but in this case the
-> > implementation is only doing the "first half" of a hole punch. Namely it
-> > is just evacuating current established mappings of the "hole", and it
-> > relies on the fact that /dev/mem establishes mappings in terms of
-> > absolute physical address offsets. Once existing mmap users are
-> > invalidated they can attempt to re-establish the mapping, or attempt to
-> > continue issuing read(2) / write(2) to the invalidated extent, but they
-> > will then be subject to the CONFIG_IO_STRICT_DEVMEM checking that can
-> > block those subsequent accesses.
-> >
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Russell King <linux@arm.linux.org.uk>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Fixes: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> > Changes since v1 [1]:
-> >
-> > - updated the changelog to describe the usage of unmap_mapping_range().
-> >   No other logic changes:
-> >
-> > [1]: http://lore.kernel.org/r/158662721802.1893045.12301414116114602646.stgit@dwillia2-desk3.amr.corp.intel.com
-> >
-> > Greg, Andrew,
-> >
-> > I have a regression test for this case now. This was found by an
-> > intermittent data corruption scenario on pmem from a test tool using
-> > /dev/mem.
->
-> Ick, why are test tools messing around in /dev/mem :)
+On Mon, May 18, 2020 at 07:31:51PM -0500, Eric W. Biederman wrote:
+> 
+> Add a flag preserve_creds that binfmt_misc can set to prevent
+> credentials from being updated.  This allows binfmt_misc to always
+> call prepare_binfmt.  Allowing the credential computation logic to be
 
-Yeah, I'm all for useful tools, just not at the expense of kernel integrity.
+typo: prepare_binprm()
 
-> Anyway, this seems sane to me, want me to take it through my tree?
+> consolidated.
+> 
+> Not replacing the credentials with the interpreters credentials is
+> safe because because an open file descriptor to the executable is
+> passed to the interpreter.   As the interpreter does not need to
+> reopen the executable it is guaranteed to see the same file that
+> exec sees.
 
-Yes please, seems to belong with the driver core.
+Yup, looks good. Note below on comment.
 
-Thanks!
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+> [...]
+> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+> index 8605ab4a0f89..dbb5614d62a2 100644
+> --- a/include/linux/binfmts.h
+> +++ b/include/linux/binfmts.h
+> @@ -26,6 +26,8 @@ struct linux_binprm {
+>  	unsigned long p; /* current top of mem */
+>  	unsigned long argmin; /* rlimit marker for copy_strings() */
+>  	unsigned int
+> +		/* It is safe to use the creds of a script (see binfmt_misc) */
+> +		preserve_creds:1,
+
+How about:
+
+		/*
+		 * A binfmt handler will set this to True before calling
+		 * prepare_binprm() if it is safe to reuse the previous
+		 * credentials, based on bprm->file (see binfmt_misc).
+		 */
+
+-- 
+Kees Cook
