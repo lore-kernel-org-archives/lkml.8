@@ -2,150 +2,107 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0218EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E799C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAE942075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20182207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Eab3V0ae"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vWSz0BBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgESSVi (ORCPT
+        id S1729488AbgESSVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:21:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36578 "EHLO
+        Tue, 19 May 2020 14:21:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgESSVh (ORCPT
+        with ESMTP id S1727007AbgESSVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:21:37 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75AAAC08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:21:37 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id n18so298301pfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:21:37 -0700 (PDT)
+        Tue, 19 May 2020 14:21:42 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC402C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:21:41 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ci21so47293pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q5UHC553rY05IEMbXCgL1ZU4LhfKGIJXOMI9F65WCM0=;
-        b=Eab3V0aeJWywuatvac89Xj4XfyMtuFx+KgHTWt/TJ0ol7YVVNUJR29bRRwtmUXTfNv
-         TJanh8oN4Dslf95TZKpQ7qOUzyj/NLKttxV/yLvC5qRMUVUm1q23QwzohNMEBsTQIMPe
-         5G/981yXHcsvGBAwRdLh/CFiEL2sWB7oDcJDc=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=b52A7vD+RR088Jsg7MbGhWVJbszSlF+rCVUgMjj+kMs=;
+        b=vWSz0BBOdzlZR3rjV4RVeNr/tSysik77xL++h89DZQuWbl/uK/LiTCvupqnojGgoWG
+         523FmT5ugUWk8LxKFBale9tvHpL4kaz1mVkqFZR+szr6J0G7mrp5sIdFJryzMEzR/N7U
+         ZOmTlh89BqpPuJ9CqdMtJvPp/E3ba5BcZrFJNUfR6/jE3j1bXQzaJ+I8YLU0WVBT8OZA
+         Yl1wNF1GShuriWr4x4bc8AL54sAVUvnJ2QCiWwpXgPi/25+uJMYYnnXkJR+wtBbC9ISE
+         Oqak0vA7BCVLpaoczJyD9bLmYI4bdtlPP8BBNuhIdOrSs2MTROi0pj9p+63HBpNLOTOo
+         74aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q5UHC553rY05IEMbXCgL1ZU4LhfKGIJXOMI9F65WCM0=;
-        b=WkEJ9wzusdr/YML6oNYn+5rkS2GeGDatDDinuqdhbP8oGQuJ3fPNz542uvyfaBDi71
-         6iTpprJTTMJt+tVn+sBgmrnOyy6nmMiuVWRBdh6cM9V4n/s2Rds9+/nEOWj6YYQZZ2I2
-         6nLofkknCN/9UUCHkIVJdykCpIpX4S9QFV4dVfUa34Vj+pMj0pWuxJFO9KRCdVMCvwJL
-         qEkBJk8I4BI7GSbk0Ic8zPWEMi006Iku8AcCddjFslLKZ1sP8TNmuEEUAdFYVZlv6xEq
-         YassfoYXTlObG9S18DvHEkRhHYIDB1BDhNuzh0YjZE9zhhv+KA3Urr0slOaWBbEGQUCh
-         vo3Q==
-X-Gm-Message-State: AOAM532ZFTJZ2xnR88jrTHO5kLTkGDQJrdQq9fT1KAIo/mYk9a+51Vc/
-        O8bhzSf0OSoynVhRsA12kc3RfmcF2h2Wjg==
-X-Google-Smtp-Source: ABdhPJzynbql9pKULdgukQFTy4Z4t7DJQ/sjiUfpzwdYxlnUTNW41tR9eCeNK8c47FummadelJ5jQw==
-X-Received: by 2002:a63:1451:: with SMTP id 17mr472860pgu.242.1589912496698;
-        Tue, 19 May 2020 11:21:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d184sm147336pfc.130.2020.05.19.11.21.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:21:35 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:21:34 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 3/8] exec: Convert security_bprm_set_creds into
- security_bprm_repopulate_creds
-Message-ID: <202005191111.9B389D33@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87o8qkzrxp.fsf_-_@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8qkzrxp.fsf_-_@x220.int.ebiederm.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=b52A7vD+RR088Jsg7MbGhWVJbszSlF+rCVUgMjj+kMs=;
+        b=VwmLxkCa95sUUCc+GoK4pz4Sf/X6yDvTsnraKNp6j+KIp64IRfbZFbnebuFeWD0xGI
+         1NcUcS/SztaOWlivB2fKHzaipbeiPzT2fcH7eIsW+Oiw24DDASnzPZmTPulatvblc5Hj
+         bjgDFq5G7TdVghd/RIo+kBW5yEoMWdyQk3/9MBF3+hwSYNQnuP3B0Meh5k/WZYCxpvHj
+         RHw9T4B5qmHRzT0+a5YjkIy1htOUx36jjN9HvK+fvlK9URfQaKqf3NGxS+1T0+65wVNX
+         2dhvZnULAkiUpQuVUrAO4qwiWYDAybldiVi/kRIvSJ6OjRw3coNdinuej+hkH7KRfDEI
+         mSHQ==
+X-Gm-Message-State: AOAM531NRpcsWtt+ps6yna9LQ+Fhy/cLeVI5SamEVivZpsSOzuR4RJb5
+        q41h+eTuLmJkg483dH1Pl8s=
+X-Google-Smtp-Source: ABdhPJws2U/VxXLXMna/NvEGpbIbjledu6ue4XKhF7XHouk2PIjlxarxjV0y9Pn0hcVd8HOR0tuCPw==
+X-Received: by 2002:a17:902:a584:: with SMTP id az4mr707797plb.201.1589912501372;
+        Tue, 19 May 2020 11:21:41 -0700 (PDT)
+Received: from localhost.localdomain ([223.235.145.232])
+        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.21.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 11:21:40 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, sboyd@kernel.org
+Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v2 03/10] clk: actions: Add MMC clock-register reset bits
+Date:   Tue, 19 May 2020 23:49:21 +0530
+Message-Id: <1589912368-480-4-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
+References: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 07:31:14PM -0500, Eric W. Biederman wrote:
-> 
-> Rename bprm->cap_elevated to bprm->active_secureexec and initialize it
-> in prepare_binprm instead of in cap_bprm_set_creds.  Initializing
-> bprm->active_secureexec in prepare_binprm allows multiple
-> implementations of security_bprm_repopulate_creds to play nicely with
-> each other.
-> 
-> Rename security_bprm_set_creds to security_bprm_reopulate_creds to
-> emphasize that this path recomputes part of bprm->cred.  This
-> recomputation avoids the time of check vs time of use problems that
-> are inherent in unix #! interpreters.
-> 
-> In short two renames and a move in the location of initializing
-> bprm->active_secureexec.
+This commit adds reset bits needed for MMC clock registers present
+on Actions S700 SoC.
 
-I like this much better than the direct call to the capabilities hook.
-Thanks!
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes from v1:
+        * No change.
+Changes from RFC:
+        * No change.
+---
+ drivers/clk/actions/owl-s700.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-One nit is a bikeshed on the name "active_secureexec", since
-the word "active" isn't really associated with any other part of the
-binfmt logic. It's supposed to be "latest state from the binfmt loop",
-so instead of "active", I considered these words that I also didn't
-like: "current", "this", "recent", and "now". Is "latest" better than
-"active"? Probably not.
-
-> [...]
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index d1217fcdedea..8605ab4a0f89 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -27,10 +27,10 @@ struct linux_binprm {
->  	unsigned long argmin; /* rlimit marker for copy_strings() */
->  	unsigned int
->  		/*
-> -		 * True if most recent call to cap_bprm_set_creds
-> +		 * True if most recent call to security_bprm_set_creds
->  		 * resulted in elevated privileges.
->  		 */
-> -		cap_elevated:1,
-> +		active_secureexec:1,
-
-Also, I'd like it if this comment could be made more verbose as well, for
-anyone trying to understand the binfmt execution flow for the first time.
-Perhaps:
-
-		/*
-		 * Must be set True during the any call to
-		 * bprm_set_creds hook where the execution would
-		 * reuslt in elevated privileges. (The hook can be
-		 * called multiple times during nested interpreter
-		 * resolution across binfmt_script, binfmt_misc, etc).
-		 */
-
-
+diff --git a/drivers/clk/actions/owl-s700.c b/drivers/clk/actions/owl-s700.c
+index a2f34d13fb54..cd60eca7727d 100644
+--- a/drivers/clk/actions/owl-s700.c
++++ b/drivers/clk/actions/owl-s700.c
+@@ -577,6 +577,9 @@ static const struct owl_reset_map s700_resets[] = {
+ 	[RESET_DSI]	= { CMU_DEVRST0, BIT(2) },
+ 	[RESET_CSI]	= { CMU_DEVRST0, BIT(13) },
+ 	[RESET_SI]	= { CMU_DEVRST0, BIT(14) },
++	[RESET_SD0]     = { CMU_DEVRST0, BIT(22) },
++	[RESET_SD1]     = { CMU_DEVRST0, BIT(23) },
++	[RESET_SD2]     = { CMU_DEVRST0, BIT(24) },
+ 	[RESET_I2C0]	= { CMU_DEVRST1, BIT(0) },
+ 	[RESET_I2C1]	= { CMU_DEVRST1, BIT(1) },
+ 	[RESET_I2C2]	= { CMU_DEVRST1, BIT(2) },
 -- 
-Kees Cook
+2.7.4
+
