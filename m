@@ -2,167 +2,112 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C035C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ED0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C194206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8227C207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:09:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589879340;
+	bh=y2cp5hy3+T9Sj199CbqABbPzXotefdEyBwr3tr47dKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dAmoWJ7HsayCVgbPQ8UtWg9DIbmIpsW8lzwY1/F1h5qvfxqMXNJ6eKGS/4cUZ882c
+	 W1HUFegqwqnBbHeHjQ/sRvlPFbRo6bJQf8mWLTQLr8mZmIuZDhZqenWgO/JvJpc7ua
+	 COv2GlVm5rTtMnvzwOvAanRJYbWrjoql5+D7INW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgESJIq convert rfc822-to-8bit (ORCPT
+        id S1728502AbgESJJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:08:46 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:53185 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgESJIq (ORCPT
+        Tue, 19 May 2020 05:09:00 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35590 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgESJI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:08:46 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id D2EBA20005;
-        Tue, 19 May 2020 09:08:41 +0000 (UTC)
-Date:   Tue, 19 May 2020 11:08:40 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Bean Huo <huobean@gmail.com>
-Cc:     richard@nod.at, vigneshr@ti.com, s.hauer@pengutronix.de,
-        boris.brezillon@collabora.com, derosier@gmail.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bean Huo <beanhuo@micron.com>
-Subject: Re: [PATCH v4 0/5] Micron SLC NAND filling block
-Message-ID: <20200519110840.2302987f@xps13>
-In-Reply-To: <8de0911281b4c03671841027ec165422789b63f2.camel@gmail.com>
-References: <20200518135943.11749-1-huobean@gmail.com>
-        <20200518172253.1c3b9d32@xps13>
-        <8de0911281b4c03671841027ec165422789b63f2.camel@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 19 May 2020 05:08:59 -0400
+Received: by mail-lj1-f196.google.com with SMTP id g4so12891011ljl.2;
+        Tue, 19 May 2020 02:08:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xiI/2QpELAfEPK4120aiFmsf0pOoqkdkwGMn109PtZw=;
+        b=q0WDAAtfr3kMy73LyGGBqna+41VW2WsZRnZdqjeUJMPvYmP+nx6YVLGpWm7feoNLUV
+         qj6j+p5QA+fjKriSW/yV/daQi0EiL7U2uOkfJX6UVPBHmEVC5eMu1ajJHW6XTwKC4g0+
+         U7rjNvLjuY2uyU1IwA3GqbrOzW2Uy5o29Y0e2jNZoUzkeRXmWu605L5It8p4PUiAmJg1
+         SonASmPvEUBJlnc/iEyBn2kojnqJutzm7EYlw0kiDoYWPMJ1i+fv9nJQc7cLNFar4cOs
+         d4yDd8pnSFH201DK0voh3LXCqV6tYqR44rxP5AzpAslo9WSEgmXV5cC4yx1lQIssJrai
+         nzMA==
+X-Gm-Message-State: AOAM532g7WkUQ4+hcC2zRiW3nyrsfhXvwZs72VuA93RRY7oVQNFAaQjk
+        T6u4JdJgO7KQfnZxpDLPuCo=
+X-Google-Smtp-Source: ABdhPJwIWR87RmvE2kNnZTkMBYdqnjzdIFQ6tkWYoYvaRJxpkDhoqsLt/Tgz+1V4uCm6Dz+BF3axmQ==
+X-Received: by 2002:a05:651c:549:: with SMTP id q9mr13334606ljp.236.1589879335470;
+        Tue, 19 May 2020 02:08:55 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id v126sm6236616lfa.50.2020.05.19.02.08.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 02:08:54 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jayF3-0001Yb-H8; Tue, 19 May 2020 11:08:53 +0200
+Date:   Tue, 19 May 2020 11:08:53 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     gregkh@linuxfoundation.org, johan@kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patong.mxl@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
+Message-ID: <20200519090853.GC27787@localhost>
+References: <20200428195651.6793-1-mani@kernel.org>
+ <20200428195651.6793-3-mani@kernel.org>
+ <20200429174727.GF6443@Mani-XPS-13-9360>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429174727.GF6443@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bean,
+On Wed, Apr 29, 2020 at 11:17:27PM +0530, Manivannan Sadhasivam wrote:
 
-Bean Huo <huobean@gmail.com> wrote on Tue, 19 May 2020 11:04:15 +0200:
-
-> hi,  Miquel
-> 
-> On Mon, 2020-05-18 at 17:22 +0200, Miquel Raynal wrote:
-> > Hi Bean,
+> On Wed, Apr 29, 2020 at 01:26:51AM +0530, mani@kernel.org wrote:
+> > From: Manivannan Sadhasivam <mani@kernel.org>
 > > 
-> > Bean Huo <huobean@gmail.com> wrote on Mon, 18 May 2020 15:59:38
-> > +0200:
-> >   
-> > > From: Bean Huo <beanhuo@micron.com>
-> > > 
-> > > After submission of patch V1 [1] and V2 [2], we stopped its update
-> > > since we get
-> > > stuck in the solution on how to avoid the power-loss issue in case
-> > > power-cut
-> > > hits the block filling. In the v1 and v2, to avoid this issue, we
-> > > always damaged
-> > > page0, page1, this's based on the hypothesis that NAND FS is UBIFS.
-> > > This
-> > > FS-specifical code is unacceptable in the MTD layer. Also, it
-> > > cannot cover all
-> > > NAND based file system. Based on the current discussion, seems that
-> > > re-write all
-> > > first 15 page from page0 is a satisfactory solution.  
+> > Add gpiochip support for Maxlinear/Exar USB to serial converter
+> > for controlling the available gpios.
 > > 
-> > We have a layering problem now. Maybe we should just have an MTD
-> > internal variable like min_written_pages_before_erase that the Micron
-> > driver could set to a !0 value.
-> > 
-> > Then, the handling could be done by the user (UBI/UBIFS, JFFS2, MTD
-> > user if exported).
-> >   
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: linux-gpio@vger.kernel.org
+> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+
+> >  static int xr_port_probe(struct usb_serial_port *port)
+> >  {
+> >  	struct usb_serial *serial = port->serial;
+> > @@ -495,13 +678,14 @@ static int xr_port_probe(struct usb_serial_port *port)
+> >  
+> >  	usb_set_serial_port_data(port, port_priv);
+> >  
+> > -	return 0;
+> > +	return xr_gpio_init(port);
 > 
-> This is NAND its own problem, if no significant adantage, I don't think
-> it's a good solution to extend the problem to the upper FS layer.
-> also, in the FS erase path, doesn't have the programmed pages counter.
-> we should repeat the same approach as we did in MTD layer.
-
-The problem is that if the filesystem is not aware, it breaks the
-"power cut safe" assertion.
-
-There is a problem with JFFS2 and a problem with UBIFS because of that.
-We can certainly keep a default implementation like this one for other
-users though.
-
+> Just realised that the gpiochip is registered for 2 interfaces exposed by
+> this chip. This is due to the fact that this chip presents CDC-ACM model,
+> so there are 2 interfaces (interrupt and bulk IN/OUT).
 > 
-> > > 
-> > > Meanwhile, I borrowed one idea from Miquel Raynal patchset [3], in
-> > > which keeps
-> > > a recode of programmed pages, base on it, for most of the cases, we
-> > > don't need
-> > > to read every page to see if current erasing block is a partially
-> > > programmed
-> > > block.
-> > > 
-> > > Changelog:
-> > > 
-> > > v3 - v4:
-> > >     1. In the patch 4/5, change to directly use ecc.strength to
-> > > judge the page
-> > >        is a empty page or not, rather than max_bitflips < mtd-  
-> > > >bitflip_threshold  
-> > >     2. In the patch 5/5, for the powerloss case, from the next time
-> > > boot up,
-> > >        lots of page will be programmed from >page15 address, if
-> > > still using
-> > >        first_p as GENMASK() bitmask starting position, writtenp
-> > > will be always 0,
-> > >        fix it by changing its bitmask starting at bit position 0.
-> > > 
-> > > v2 - v3:
-> > >     1. Rebase patch to the latest MTD git tree
-> > >     2. Add a record that keeps tracking the programmed pages in the
-> > > first 16
-> > >        pages
-> > >     3. Change from program odd pages, damage page 0 and page 1, to
-> > > program all
-> > >        first 15 pages
-> > >     4. Address issues which exist in the V2.
-> > > 
-> > > v1 - v2:
-> > >     1. Rebased V1 to latest Linux kernel.
-> > >     2. Add erase preparation function pointer in
-> > > nand_manufacturer_ops.
-> > > 
-> > > 
-> > > [1] https://www.spinics.net/lists/linux-mtd/msg04112.html
-> > > [2] https://www.spinics.net/lists/linux-mtd/msg04450.html
-> > > [3] https://www.spinics.net/lists/linux-mtd/msg13083.html
-> > > 
-> > > 
-> > > Bean Huo (5):
-> > >   mtd: rawnand: group all NAND specific ops into new nand_chip_ops
-> > >   mtd: rawnand: Add {pre,post}_erase hooks in nand_chip_ops
-> > >   mtd: rawnand: Add write_oob hook in nand_chip_ops
-> > >   mtd: rawnand: Introduce a new function
-> > > nand_check_is_erased_page()
-> > >   mtd: rawnand: micron: Micron SLC NAND filling block  
-> > 
-> > When you take my patches in your series, especially when not touching
-> > them at all, you should keep my Authorship and SoB first, then add
-> > your
-> > SoB.
-> >   
-> 
-> sorry for my fault, I thought adding your Signed-off-by in 3/5 is
-> suffient. you mean I should add your signed-off-by in 5/5 as well?
-> I will do that in next version.
+> We shouldn't need gpiochip for interface 0. So what is the recommended way
+> to filter that?
 
-You should keep my Authorship and SoB for both patches + add your SoB
-after mine.
+Your driver should only bind to the data interface, but also claim the
+control interface (i.e. the reverse of what cdc-acm is doing).
 
+This CDC model doesn't really fit the assumptions of usb-serial core,
+but it might be doable. Try returning 1 from the attach callback for the
+control interface so that core claims it but doesn't register a tty
+device.
 
-Thanks,
-Miquèl
+Johan
