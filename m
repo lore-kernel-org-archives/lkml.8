@@ -2,114 +2,157 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2367C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46189C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C48F420709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB5320709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H8Q4t53M"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mb3OaNFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgESFSC (ORCPT
+        id S1728159AbgESFSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:18:02 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39422 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgESFSB (ORCPT
+        Tue, 19 May 2020 01:18:54 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1575 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgESFSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:18:01 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hu3w128117;
-        Tue, 19 May 2020 00:17:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589865476;
-        bh=d/XYFqVdSGUT+50/eTEWr58MI/LZrlOnTqNemlIfRzk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=H8Q4t53Mkf3ONinqGeBDmIA3DgyyKj+4kwch9eqJotd8cnRfMjo1smdtpWEIFJLAv
-         sDFEoppkxzEZDP9fo3gFsP9Ob85EmJHkBMQRqVmtxchh7zGQTIBHEuAumkA9YJiG2V
-         5zkvQHgzDSYI6KMVlGFr9I+WTjsAlslhK7YTgTzs=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hu7F049091;
-        Tue, 19 May 2020 00:17:56 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 00:17:55 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 00:17:55 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hql3092372;
-        Tue, 19 May 2020 00:17:53 -0500
-Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
-To:     Dilip Kota <eswara.kota@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh@kernel.org>, <andriy.shevchenko@intel.com>,
-        <cheol.yong.kim@intel.com>, <chuanhua.lei@linux.intel.com>,
-        <qi-ming.wu@intel.com>, <yixin.zhu@intel.com>
-References: <cover.1589530082.git.eswara.kota@linux.intel.com>
- <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
- <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <18a8da3f-4fdf-3da6-2023-c5c66176475d@ti.com>
-Date:   Tue, 19 May 2020 10:47:52 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 01:18:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec36bef0000>; Mon, 18 May 2020 22:17:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 18 May 2020 22:18:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 18 May 2020 22:18:53 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
+ 2020 05:18:53 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 19 May 2020 05:18:53 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.55.90]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ec36c3d0002>; Mon, 18 May 2020 22:18:53 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     John Hubbard <jhubbard@nvidia.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        <tee-dev@lists.linaro.org>, <linux-media@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>
+Subject: [PATCH] tee: convert convert get_user_pages() --> pin_user_pages()
+Date:   Mon, 18 May 2020 22:18:50 -0700
+Message-ID: <20200519051850.2845561-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589865455; bh=HOuCeH00Hb2OOmtkXh64pdeD2QbQHkyVvjYj2E3uEb0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=mb3OaNFQ10WkB15WwAhedhrO8Cgn+eMbUGC71oOyJQQXRvPYSnq9gXNLB1ikmE8bz
+         1mE5oay3UAzRAgWTVrQ1i992uuXlZTpE3UQBDBJ0vpEymxONKvuK/TC3Rqz4xcyggs
+         iBxOA4w7qcMZieTQxzG7CPELd/ht3j8JcfF1BfVup3xxZVvem4q7JXUynr5MNRQp1F
+         UIMTmBPigzGmw0nL490aNS8MZSIgotf3eoLqW2FtBGGYrMlTG66weF8FwIeobdZehk
+         2WSppxHXytUZkdQu1VMcdSGY030X6vV4qN0fUWSbFPTyDLnYLo2truFc5w7EeqHv2Q
+         iG6MlgGNrcg1g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dilip,
+This code was using get_user_pages*(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages*() + put_page() calls to
+pin_user_pages*() + unpin_user_pages() calls.
 
-On 5/19/2020 9:26 AM, Dilip Kota wrote:
-> 
-> On 5/18/2020 9:49 PM, Kishon Vijay Abraham I wrote:
->> Dilip,
->>
->> On 5/15/2020 1:43 PM, Dilip Kota wrote:
->>> This patch series adds Intel ComboPhy driver, respective yaml schemas
->>>
->>> Changes on v8:
->>>    As per PHY Maintainer's request add description in comments for doing
->>>    register access through register map framework.
->>>
->>> Changes on v7:
->>>    As per System control driver maintainer's inputs remove
->>>      fwnode_to_regmap() definition and use device_node_get_regmap()
->> Can you fix this warning and resend the patch?
->> drivers/phy/intel/phy-intel-combo.c:229:6: warning: ‘cb_mode’ may be used
->> uninitialized in this function [-Wmaybe-uninitialized]
->>    ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
->>    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/phy/intel/phy-intel-combo.c:204:24: note: ‘cb_mode’ was declared here
->>    enum intel_combo_mode cb_mode;
->>                          ^~~~~~~
-> I noticed this warning while preparing the patch.
-> It sounds like false warning because:
-> 1.) "cb_mode" is initialized in the switch case based on the "mode =
-> cbphy->phy_mode;"
-> 2.) cbphy->phy_mode is initialized during the probe in
-> "intel_cbphy_fwnode_parse()" with one of the 3 values.
-> PHY_PCIE_MODE, PHY_SATA_MODE, PHY_XPCS_MODE.
-> 3.) There is no chance of "cbphy->phy_mode" having different value.
-> 4.) And "cb_mode" will be initialized according to the "mode = cbphy->phy_mode;"
-> 5.) Hence, there is no chance of "cb_mode" getting accessed uninitialized.
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
-Let's try to keep the compiler happy. Please fix this warning.
+[1] Documentation/core-api/pin_user_pages.rst
 
-Thanks
-Kishon
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
+
+Cc: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: tee-dev@lists.linaro.org
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+
+Note that I have only compile-tested this patch, although that does
+also include cross-compiling for a few other arches.
+
+thanks,
+John Hubbard
+NVIDIA
+
+ drivers/tee/tee_shm.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+index bd679b72bd05..7dffc42d8d5a 100644
+--- a/drivers/tee/tee_shm.c
++++ b/drivers/tee/tee_shm.c
+@@ -31,16 +31,13 @@ static void tee_shm_release(struct tee_shm *shm)
+=20
+ 		poolm->ops->free(poolm, shm);
+ 	} else if (shm->flags & TEE_SHM_REGISTER) {
+-		size_t n;
+ 		int rc =3D teedev->desc->ops->shm_unregister(shm->ctx, shm);
+=20
+ 		if (rc)
+ 			dev_err(teedev->dev.parent,
+ 				"unregister shm %p failed: %d", shm, rc);
+=20
+-		for (n =3D 0; n < shm->num_pages; n++)
+-			put_page(shm->pages[n]);
+-
++		unpin_user_pages(shm->pages, shm->num_pages);
+ 		kfree(shm->pages);
+ 	}
+=20
+@@ -226,7 +223,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ct=
+x, unsigned long addr,
+ 		goto err;
+ 	}
+=20
+-	rc =3D get_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
++	rc =3D pin_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
+ 	if (rc > 0)
+ 		shm->num_pages =3D rc;
+ 	if (rc !=3D num_pages) {
+@@ -271,16 +268,13 @@ struct tee_shm *tee_shm_register(struct tee_context *=
+ctx, unsigned long addr,
+ 	return shm;
+ err:
+ 	if (shm) {
+-		size_t n;
+-
+ 		if (shm->id >=3D 0) {
+ 			mutex_lock(&teedev->mutex);
+ 			idr_remove(&teedev->idr, shm->id);
+ 			mutex_unlock(&teedev->mutex);
+ 		}
+ 		if (shm->pages) {
+-			for (n =3D 0; n < shm->num_pages; n++)
+-				put_page(shm->pages[n]);
++			unpin_user_pages(shm->pages, shm->num_pages);
+ 			kfree(shm->pages);
+ 		}
+ 	}
+--=20
+2.26.2
+
