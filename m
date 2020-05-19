@@ -2,109 +2,114 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63086C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9FB20715
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589859858;
-	bh=S5y0IyDpVW3EYw//xQGmNpU37sUGpiHPq5/R1PtuFK0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=x5ArLz6JxB50GG34kZYo/f06zEFXU+ISZ1gvxMOvgW529ibj+69Kv9xyLNT9PdKaF
-	 qOUWXVqpDP46yfokwQkKOV1voD1wtVgVrsbEommfbSxo7E5CkCPBCXlrpAB36+PXsb
-	 TRve5uyXyjCtoBeR30RtdQazOo4kHc1Pk9auraLo=
+	by mail.kernel.org (Postfix) with ESMTP id B0C3D20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:46:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8OwWyyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgESDoR (ORCPT
+        id S1728198AbgESDqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:44:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgESDoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:44:16 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEF5420708;
-        Tue, 19 May 2020 03:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589859856;
-        bh=S5y0IyDpVW3EYw//xQGmNpU37sUGpiHPq5/R1PtuFK0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=x9MFc7RfaziLEN4aadMIoei7QP+yH3Yci+wyG0G7HnkNkA0/hyEOyl+dRKe349/Lx
-         D+tjsXx+k9zzzcPjApD7XRkXc2rvE5xUXG1iLXo/Ja09HC1IUkkefbftirsgtjdk0r
-         R+/E6hoWtWAwdgh8d4g9xelTS+hqe+qmfB26J+c0=
-Date:   Mon, 18 May 2020 20:44:15 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     =?UTF-8?B?546L56iL5Yia?= <wangchenggang@vivo.com>
-Cc:     "'Masami Hiramatsu'" <mhiramat@kernel.org>,
-        "'Steven Rostedt \(VMware'" <rostedt@goodmis.org>,
-        "'Kees Cook'" <keescook@chromium.org>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Dominik Brodowski'" <linux@dominikbrodowski.net>,
-        "'Arvind Sankar'" <nivedita@alum.mit.edu>,
-        "'Mike Rapoport'" <rppt@linux.ibm.com>,
-        "'Alexander Potapenko'" <glider@google.com>,
-        <linux-kernel@vger.kernel.org>, <kernel@vivo.com>
-Subject: Re: [PATCH] init/main.c: Print all command line when boot
-Message-Id: <20200518204415.d1a3adaba597ce5b232b4b2a@linux-foundation.org>
-In-Reply-To: <010201d62d8d$bf7605f0$3e6211d0$@vivo.com>
-References: <010201d62d8d$bf7605f0$3e6211d0$@vivo.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 18 May 2020 23:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgESDqJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 23:46:09 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2435BC061A0C;
+        Mon, 18 May 2020 20:46:08 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id w25so12995444iol.12;
+        Mon, 18 May 2020 20:46:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pB5eYPJLJBR6N2fYd++wU5TdLcEDIrnF2XNr7sUNkTw=;
+        b=E8OwWyyLIOTmpsl8LvrhTMM35ZAfx2jxsGmzgH3vS6DnMgSpGxdqA4BcEQks4L/5OP
+         DBHIReuMpmskeIBqhIVauf+Wmd/wf15dSehtd1UjTKR9iNWf+NZd8H6JCFmjyQ1vCUlx
+         WgZf777cViDmhyyf4BqKtGmNR/+LEkPo8WW2Zq5UvifY07od49jvGdsZ7O267PiYT6JC
+         H9Ld6as8rxzwJyT2mmnYAYQyhYXWbLT7z41CC+WVhrc1IIp1ryJhjCzYFpEdGN20vUTx
+         RZDE0Ku2WI9/V3mYTkRjF/JWIGQMaoOp/TZr0S0vT5zVmnkpHSSuL2Cf/IsEQnkgIbcu
+         6VLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pB5eYPJLJBR6N2fYd++wU5TdLcEDIrnF2XNr7sUNkTw=;
+        b=bNyZXMYDbcLT+Bzhx8tBN1oVWnw3MpojxpvG9UFdA6gV9lFNMMi0cF6StgcnSrudEA
+         3vkZ4mHMLMzX5WVKX5/nJARkCmGHNcNEbcjjLkkt7jGMxqD87brB2/mwiZouTp7MiUez
+         Vb3c/zeR15cDy4nJmfTBWEozA1yNtCwSVgTMi397/UL6GqpDWe3IOU5NPRvYgwcZlETi
+         iRWVEqutrqrQRojaLMb3kLBvcTfzPvcxtdoJHTV1IUjej+1Sm5KcRYn9KHzD+7syMsoS
+         /erTlTI8n6akuwNNX5XPiz9hqTQeIUM6e4zj9WbXdtvLy6mpHeXDe1VxV9FzasvsWP8T
+         9orw==
+X-Gm-Message-State: AOAM533CHSExuDYnzpHiOvi4o9i/QDN8jC+TciUkGk+HUyPZ8F1UVVfF
+        MzHDAnxJdOMkAqKgSfslvrN7RLP4pFWgnFPu/us=
+X-Google-Smtp-Source: ABdhPJxas7maaiheBB/b0/RpDkbUbU+YF+zwxERv/9GuLZdORQ1gy/D5mKzIDx+0o32dT7F053hf8bzNpdiB9iXFxas=
+X-Received: by 2002:a02:b149:: with SMTP id s9mr17261179jah.81.1589859967396;
+ Mon, 18 May 2020 20:46:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200518174726.GA84496@suse.com>
+In-Reply-To: <20200518174726.GA84496@suse.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 19 May 2020 06:45:56 +0300
+Message-ID: <CAOQ4uxi21N0O17Z_-Hf-BynKbs7xpOea0JrMF_rvZJ=bUi59_Q@mail.gmail.com>
+Subject: Re: [PATCH v2] ceph: don't return -ESTALE if there's still an open file
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 11:29:46 +0800 王程刚 <wangchenggang@vivo.com> wrote:
-
-> Function pr_notice print max length maybe less than the command line length,
-> need more times to print all.
-> For example, arm64 has 2048 bytes command line length, but printk maximum
-> length is only 1024 bytes.
-
-I can see why that might be a problem!
-
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -825,6 +825,16 @@ void __init __weak arch_call_rest_init(void)
->  	rest_init();
->  }
->  
-> +static void __init print_cmdline(void)
-> +{
-> +	const char *prefix = "Kernel command line: ";
-
-const char prefix[] = "...";
-
-might generate slightly more efficient code.
-
-> +	int len = -strlen(prefix);
-
-hm, tricky.  What the heck does printk() actually return to the caller?
-Seems that we forgot to document this, and there are so many different
-paths which a printk call can take internally that I'm not confident
-that they all got it right!
-
-> +	len += pr_notice("%s%s\n", prefix, boot_command_line);
-> +	while (boot_command_line[len])
-> +		len += pr_notice("%s\n", &boot_command_line[len]);
-> +}
-
-Did you really intend to insert a \n into the output every 1024'th
-character?
-
-And what effect does this additional \n have upon the code logic? 
-Doesn't this cause the printk() return value to be one greater than
-expected each time it is called?
-
+On Mon, May 18, 2020 at 8:47 PM Luis Henriques <lhenriques@suse.com> wrote:
 >
-> ...
+> Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+> a file handle to dentry"), this fixes another corner case with
+> name_to_handle_at/open_by_handle_at.  The issue has been detected by
+> xfstest generic/467, when doing:
 >
+>  - name_to_handle_at("/cephfs/myfile")
+>  - open("/cephfs/myfile")
+>  - unlink("/cephfs/myfile")
+>  - sync; sync;
+>  - drop caches
+>  - open_by_handle_at()
+>
+> The call to open_by_handle_at should not fail because the file hasn't been
+> deleted yet (only unlinked) and we do have a valid handle to it.  -ESTALE
+> shall be returned only if i_nlink is 0 *and* i_count is 1.
+>
+> This patch also makes sure we have LINK caps before checking i_nlink.
+>
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+> Hi!
+>
+> (and sorry for the delay in my reply!)
+>
+> So, from the discussion thread and some IRC chat with Jeff, I'm sending
+> v2.  What changed?  Everything! :-)
+>
+> - Use i_count instead of __ceph_is_file_opened to check for open files
+> - Add call to ceph_do_getattr to make sure we have LINK caps before
+>   accessing i_nlink
+>
+> Cheers,
+> --
+> Luis
+
+Acked-by: Amir Goldstein <amir73il@gmail.com>
+
+Thanks,
+Amir.
