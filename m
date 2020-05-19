@@ -2,106 +2,111 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11153C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB3EF20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7005620708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgESMTe (ORCPT
+        id S1728918AbgESMUV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:19:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36945 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728705AbgESMTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:19:33 -0400
-IronPort-SDR: Gxym/W1Kj+m/3DJV9cA6o5QyEx9bnyGn2rC9Vs2sVszqBTHHZfVIIRNyXY1kritd/2gNpSLcJC
- TkIP2rlmtzxg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 05:19:26 -0700
-IronPort-SDR: QfB7argupf+FUWa+bhIJr6fsy7smat1tPhaRmXGFHm1AobVRirjPuKwY/YuamwcgvFBPwIZNT5
- vFVSZI/1Ppqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="288939620"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.171.98]) ([10.249.171.98])
-  by fmsmga004.fm.intel.com with ESMTP; 19 May 2020 05:19:22 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH v11 07/11] KVM: x86: Expose MSR_IA32_PERF_CAPABILITIES for
- LBR record format
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
-        wei.w.wang@intel.com
-References: <20200514083054.62538-1-like.xu@linux.intel.com>
- <20200514083054.62538-8-like.xu@linux.intel.com>
- <20200519105335.GF279861@hirez.programming.kicks-ass.net>
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <07806259-d9dd-53ec-1b63-84d8e081a296@intel.com>
-Date:   Tue, 19 May 2020 20:19:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200519105335.GF279861@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 19 May 2020 08:20:21 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:37604 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728772AbgESMUV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 08:20:21 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-29-jY0heaD8NKa0eBvVES2eBg-1; Tue, 19 May 2020 13:20:17 +0100
+X-MC-Unique: jY0heaD8NKa0eBvVES2eBg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 19 May 2020 13:20:16 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 19 May 2020 13:20:16 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sasha Levin' <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>, "luto@kernel.org" <luto@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "ravi.v.shankar@intel.com" <ravi.v.shankar@intel.com>,
+        "chang.seok.bae@intel.com" <chang.seok.bae@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v12 10/18] x86/fsgsbase/64: Enable FSGSBASE instructions
+ in helper functions
+Thread-Topic: [PATCH v12 10/18] x86/fsgsbase/64: Enable FSGSBASE instructions
+ in helper functions
+Thread-Index: AQHWLVJcG1AiHrfpmEaP5P6pVvKjjqivU+Wg
+Date:   Tue, 19 May 2020 12:20:16 +0000
+Message-ID: <238a6e2609eb4e0497b13fbe5f531917@AcuMS.aculab.com>
+References: <20200511045311.4785-11-sashal@kernel.org>
+ <87v9ktw1ev.fsf@nanos.tec.linutronix.de> <20200518202435.GD33628@sasha-vm>
+In-Reply-To: <20200518202435.GD33628@sasha-vm>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/19 18:53, Peter Zijlstra wrote:
-> On Thu, May 14, 2020 at 04:30:50PM +0800, Like Xu wrote:
->> @@ -203,6 +206,12 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
->>   		msr_info->data = pmu->global_ovf_ctrl;
->>   		return 0;
->> +	case MSR_IA32_PERF_CAPABILITIES:
->> +		if (!msr_info->host_initiated &&
->> +			!guest_cpuid_has(vcpu, X86_FEATURE_PDCM))
->> +			return 1;
-> I know this is KVM code, so maybe they feel differently, but I find the
-> above indentation massively confusing. Consider using: "set cino=:0(0"
-> if you're a vim user.
-Nice tip and I'll apply it. Thanks.
->
->> +		msr_info->data = vcpu->arch.perf_capabilities;
->> +		return 0;
->>   	default:
->>   		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
->>   			u64 val = pmc_read_counter(pmc);
->> @@ -261,6 +270,16 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   			return 0;
->>   		}
->>   		break;
->> +	case MSR_IA32_PERF_CAPABILITIES:
->> +		if (!msr_info->host_initiated ||
->> +			!guest_cpuid_has(vcpu, X86_FEATURE_PDCM))
->> +			return 1;
-> Idem.
->
->> +		if (!(data & ~vmx_get_perf_capabilities()))
->> +			return 1;
->> +		if ((data ^ vmx_get_perf_capabilities()) & PERF_CAP_LBR_FMT)
->> +			return 1;
->> +		vcpu->arch.perf_capabilities = data;
->> +		return 0;
->>   	default:
->>   		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
->>   			if (!msr_info->host_initiated)
+From: Sasha Levin
+> Sent: 18 May 2020 21:25
+> Thank you for taking the time to review this.
+> 
+> On Mon, May 18, 2020 at 08:20:08PM +0200, Thomas Gleixner wrote:
+> >Sasha Levin <sashal@kernel.org> writes:
+> >> +unsigned long x86_gsbase_read_cpu_inactive(void)
+> >> +{
+> >> +	unsigned long gsbase;
+> >> +
+> >> +	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
+> >> +		bool need_restore = false;
+> >> +		unsigned long flags;
+> >> +
+> >> +		/*
+> >> +		 * We read the inactive GS base value by swapping
+> >> +		 * to make it the active one. But we cannot allow
+> >> +		 * an interrupt while we switch to and from.
+> >> +		 */
+> >> +		if (!irqs_disabled()) {
+> >> +			local_irq_save(flags);
+> >> +			need_restore = true;
+> >> +		}
+> >> +
+> >> +		native_swapgs();
+> >> +		gsbase = rdgsbase();
+> >> +		native_swapgs();
+
+Does local_irq_save() even do anything useful here.
+You need to actually execute CLI, not just set a
+flag that indicates interrupts shouldn't happen.
+(Which is what I think local_irq_save() might do.)
+
+You also (probably) need to disable NMIs.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
