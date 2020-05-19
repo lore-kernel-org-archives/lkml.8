@@ -2,206 +2,155 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08476C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D84BA20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B35920825
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:26:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="K46XGdq+"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="gYkf9VsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgESX0j (ORCPT
+        id S1728420AbgESX0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:26:39 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:64802 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgESX0i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:26:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589930798; x=1621466798;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=+5sqW/9tRYGzDifQrxQJ7j+i6WgVO1jvWkTIJZXYHhc=;
-  b=K46XGdq+bQjjsBSF58nOLshjyQJUeGKZesZ9jXdJfsN/covNZ3BRqVU/
-   tGtr/k9ujNTkUHmXPTzVco+WvZo0/HKbfy54uVrjU49o5CA54bJ8MVNWP
-   rwysXkR544eRybIl/BESTHj2ng4qsUgqFYGKKqACW/qPKEdfAMH2a6b71
-   Q=;
-IronPort-SDR: mWw8AR8ej5ULAmO2NWPA9U3fjvDcfrEySiPbnKH0hbJ0nS6cPVOD41yjXFXqxCxYYtwfKRalTW
- k2MS/P3b7VvQ==
-X-IronPort-AV: E=Sophos;i="5.73,411,1583193600"; 
-   d="scan'208";a="31243916"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 19 May 2020 23:26:23 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id CA0F8A1EEC;
-        Tue, 19 May 2020 23:26:20 +0000 (UTC)
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 19 May 2020 23:26:15 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13d01UWB002.ant.amazon.com (10.43.161.136) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 19 May 2020 23:26:15 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 23:26:15 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 5012E40712; Tue, 19 May 2020 23:26:15 +0000 (UTC)
-Date:   Tue, 19 May 2020 23:26:15 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
-        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>
-Subject: [PATCH 04/12] x86/xen: add system core suspend and resume callbacks
-Message-ID: <79cf02631dc00e62ebf90410bfbbdb52fe7024cb.1589926004.git.anchalag@amazon.com>
-References: <cover.1589926004.git.anchalag@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 19 May 2020 19:26:46 -0400
+Received: from mail-am6eur05on2047.outbound.protection.outlook.com ([40.107.22.47]:6028
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726178AbgESX0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 19:26:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PuF9ygxDkSvzgwixLZ00oT9AykrzJWzXOJFYJJ1fWWCxlkQLANBlyEvNwHgjpv+fupuFY4OH2CC/VuCGHsO2V9A2NNV8IxEcjf9QFdaYi25Kcm632YTSUPXnUtphkn3X2N15T8DhnYBF7yuiONQAwt1LUJcngQaEYjs5lfvdmRCLByrwnRO4w6sooU1UhFhKQVuWTDNR+3nAB6VDM4HCJDvqK0N+iVD9jYP49395MdGYaOyW9HUtrMlnTOr3ovGOaqJvcMGURvnRYcq2bp8l6l6RE7vrLBsYK9f3rEX8J5ysbxzB2Wz7gmTM8dChHEEPk6baffghufQL1TTgXOfJ7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3out6jrln7PxKdCWAHNqerkDXxM/y0YwkyhcP1vS2nU=;
+ b=n6w6UxWhc6giMAPOIx0sbFTcVf5RbWMZ8MaEE9XVEiGImr/V/68cCDIGbW6XOIYz/RI6sqMjrIzuezYgkv0OkFDfeAuyr+rB6anQK1RgIS7ARo/mrbc0mBqFWsuco9wi6zuTh29CIC9tl1L2bdzFMuI8IvgesDtjbVmoFSfVe0IOMmQe82Yh6z1Ou0wgXeyP6Ik//CFvtZ9nptH8n+3uQMg0SSAXVBSZskx12/ol/8udmUKI6dT6YR1eO6nQ5yCnYg0dsRx4z2sIT8QVy2sDzdt2NXqu49Vcf3g4Ge8AAH/YuFEEITazVq7wlX7+xxwzCqAKCabj/P6HYUMlOZC7dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3out6jrln7PxKdCWAHNqerkDXxM/y0YwkyhcP1vS2nU=;
+ b=gYkf9VsFBNPcRj3HyTf8PE/g4EqNG+7pB66uIb8+aDO13k0AIjswBpmgPGFtzbZtcofNMa6pSQM916McPQ8AGus7Y0avGfuESu8rtJk34L6+5dMv1BnDzXl8LA/TSRe2suRDIkqilb1ZiQW9277udDaZGfDEz9G6p5+Z2dldCO8=
+Authentication-Results: ffwll.ch; dkim=none (message not signed)
+ header.d=none;ffwll.ch; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB5533.eurprd05.prod.outlook.com (2603:10a6:803:96::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Tue, 19 May
+ 2020 23:26:41 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3000.034; Tue, 19 May 2020
+ 23:26:41 +0000
+Date:   Tue, 19 May 2020 20:26:36 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Olof Johansson <olof.johansson@gmail.com>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        wufan@codeaurora.org, pratanan@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
+Message-ID: <20200519232636.GA24561@mellanox.com>
+References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1589926004.git.anchalag@amazon.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR11CA0024.namprd11.prod.outlook.com
+ (2603:10b6:208:23b::29) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR11CA0024.namprd11.prod.outlook.com (2603:10b6:208:23b::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24 via Frontend Transport; Tue, 19 May 2020 23:26:40 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jbBd6-00037I-5O; Tue, 19 May 2020 20:26:36 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3e0c6265-8af2-4196-789b-08d7fc4c1559
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5533:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB5533A7AD7EC2297299F8CBE7CFB90@VI1PR05MB5533.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 040866B734
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZJDZs4rETzrF9QviuUN8FPsVKL1NqJDBmWlHo1xeRlkLD5+ZlQ+ghO2j8D/D/X5wsrU23h/C3Hbq3ZsHn0JUTZa9AX7ZdNjfCY7weVnPRV6tRF1fy/G90MVoztede8gQqkO7MkMgN+YUQogZQr0yOIOZB6KCLenIiNrF0LuhkZCeUbFWlgAnAW00+rpNGJjYstvyyb2iVePtic8DjONWjXMzq3fNKTh0MUMTJ445IZ9Oz0BynRp8DNNo6aDdLg63s016cGD1h14N13N/Y+CV2CeFx14Gfo9co39vuTctrNR0fGDThwnATU93xgst9paQIe7EIBIpaaQQQke/WsZZrwrtv1tAYUHqidQ66AsFwh5AU93MsNVlQWpTvPWu/dvJMqngmZCvIp3t9FLENRt4OUVyfK8eIBQGDbuFLBAuEIUj4fZex+a/fDW49DSU9O8bFZKZAI4kZIcuotRwBRnA2LFTirz5yCjaggStmGGJz1rdLhTklBvza7ajoXhhGXwu
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(26005)(4326008)(9786002)(52116002)(33656002)(9746002)(2616005)(186003)(66476007)(66946007)(66556008)(2906002)(478600001)(316002)(36756003)(8676002)(6916009)(54906003)(86362001)(5660300002)(7416002)(8936002)(1076003)(24400500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: sjfbhFGgYpXl1eyHC0WgZrRACwq/2ZQ5YEde8RJVqXZc3Rgk2ncgPjNXxFcBeo76oKrU6jFfAgJYfCCv7yBVMQVBL5C8GE3L+dEQitB1SaOIz/BM9CTvDBcPox0Tzi9eDWuNZoTOKlfv6Q72jCB2WEh1UUhE0NS/uWk0/WaRc+DOhwDN3U2GuJa6A2HmpfcQy4+SROFiWr1R//TUwS0mQtXxlRdrS3MJ+Ap5AGZlxDGXB1MgeE3Hev7OK2ZyQrXv1NLLpM2tdSGtDWFqeUeCMnl97LTnWmUUdcRcYpj5Zg6A7hAznv4EvxPcpvm1ubr2QrPUcjhRC2+qbT+w69c3vDyCUrh6sISmLjgip+Fsy7HjW1t6gN0RMzzNeY/pXbpOxIk7VPmH0g3vGyoNPuddGxXrWw2MzFBFAs3WT8R1wa6eYqJHKpZ8CRff4OwhidD/l1WkYVq1mgmwTjEUjhvq4KBdvMgV0OVPgvB8aMsiEVQ=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e0c6265-8af2-4196-789b-08d7fc4c1559
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 23:26:40.9829
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cDWI9cIlSLy4pc7Gjtg6Kpg8IigaDSMeul28xIUBHbmDuaLBz21cn6yqLk/rdljw0S2aHpySVEZhHfFI8HAWlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5533
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Munehisa Kamata <kamatam@amazon.com>
+On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
 
-Add Xen PVHVM specific system core callbacks for PM suspend and
-hibernation support. The callbacks suspend and resume Xen
-primitives,like shared_info, pvclock and grant table. Note that
-Xen suspend can handle them in a different manner, but system
-core callbacks are called from the context. So if the callbacks
-are called from Xen suspend context, return immediately.
+> Get some consistency into your decision making as maintainer. And don't
+> tell me or anyone else that this is complicated, gpu and rdma driver folks
+> very much told you and Olof last year that this is what you're getting
+> yourself into.
 
-Signed-off-by: Agarwal Anchal <anchalag@amazon.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
----
- arch/x86/xen/enlighten_hvm.c |  1 +
- arch/x86/xen/suspend.c       | 53 ++++++++++++++++++++++++++++++++++++
- include/xen/xen-ops.h        |  3 ++
- 3 files changed, 57 insertions(+)
+It is complicated!
 
-diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-index 75b1ec7a0fcd..138e71786e03 100644
---- a/arch/x86/xen/enlighten_hvm.c
-+++ b/arch/x86/xen/enlighten_hvm.c
-@@ -204,6 +204,7 @@ static void __init xen_hvm_guest_init(void)
- 	if (xen_feature(XENFEAT_hvm_callback_vector))
- 		xen_have_vector_callback = 1;
- 
-+	xen_setup_syscore_ops();
- 	xen_hvm_smp_init();
- 	WARN_ON(xen_cpuhp_setup(xen_cpu_up_prepare_hvm, xen_cpu_dead_hvm));
- 	xen_unplug_emulated_devices();
-diff --git a/arch/x86/xen/suspend.c b/arch/x86/xen/suspend.c
-index 1d83152c761b..784c4484100b 100644
---- a/arch/x86/xen/suspend.c
-+++ b/arch/x86/xen/suspend.c
-@@ -2,17 +2,22 @@
- #include <linux/types.h>
- #include <linux/tick.h>
- #include <linux/percpu-defs.h>
-+#include <linux/syscore_ops.h>
-+#include <linux/kernel_stat.h>
- 
- #include <xen/xen.h>
- #include <xen/interface/xen.h>
-+#include <xen/interface/memory.h>
- #include <xen/grant_table.h>
- #include <xen/events.h>
-+#include <xen/xen-ops.h>
- 
- #include <asm/cpufeatures.h>
- #include <asm/msr-index.h>
- #include <asm/xen/hypercall.h>
- #include <asm/xen/page.h>
- #include <asm/fixmap.h>
-+#include <asm/pvclock.h>
- 
- #include "xen-ops.h"
- #include "mmu.h"
-@@ -82,3 +87,51 @@ void xen_arch_suspend(void)
- 
- 	on_each_cpu(xen_vcpu_notify_suspend, NULL, 1);
- }
-+
-+static int xen_syscore_suspend(void)
-+{
-+	struct xen_remove_from_physmap xrfp;
-+	int ret;
-+
-+	/* Xen suspend does similar stuffs in its own logic */
-+	if (xen_suspend_mode_is_xen_suspend())
-+		return 0;
-+
-+	xrfp.domid = DOMID_SELF;
-+	xrfp.gpfn = __pa(HYPERVISOR_shared_info) >> PAGE_SHIFT;
-+
-+	ret = HYPERVISOR_memory_op(XENMEM_remove_from_physmap, &xrfp);
-+	if (!ret)
-+		HYPERVISOR_shared_info = &xen_dummy_shared_info;
-+
-+	return ret;
-+}
-+
-+static void xen_syscore_resume(void)
-+{
-+	/* Xen suspend does similar stuffs in its own logic */
-+	if (xen_suspend_mode_is_xen_suspend())
-+		return;
-+
-+	/* No need to setup vcpu_info as it's already moved off */
-+	xen_hvm_map_shared_info();
-+
-+	pvclock_resume();
-+
-+	gnttab_resume();
-+}
-+
-+/*
-+ * These callbacks will be called with interrupts disabled and when having only
-+ * one CPU online.
-+ */
-+static struct syscore_ops xen_hvm_syscore_ops = {
-+	.suspend = xen_syscore_suspend,
-+	.resume = xen_syscore_resume
-+};
-+
-+void __init xen_setup_syscore_ops(void)
-+{
-+	if (xen_hvm_domain())
-+		register_syscore_ops(&xen_hvm_syscore_ops);
-+}
-diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
-index 4ffe031adfc7..89b1e88712d6 100644
---- a/include/xen/xen-ops.h
-+++ b/include/xen/xen-ops.h
-@@ -43,6 +43,9 @@ int xen_setup_shutdown_event(void);
- bool xen_suspend_mode_is_xen_suspend(void);
- bool xen_suspend_mode_is_pm_suspend(void);
- bool xen_suspend_mode_is_pm_hibernation(void);
-+
-+void xen_setup_syscore_ops(void);
-+
- extern unsigned long *xen_contiguous_bitmap;
- 
- #if defined(CONFIG_XEN_PV) || defined(CONFIG_ARM) || defined(CONFIG_ARM64)
--- 
-2.24.1.AMZN
+One of the big mistakes we learned from in RDMA is that we must have a
+cannonical open userspace, that is at least the user side of the uABI
+from the kernel. It doesn't have to do a lot but it does have to be
+there and everyone must use it.
 
+Some time ago it was all a fragmented mess where every HW had its own
+library project with no community and that spilled into the kernel
+where it became impossible to be sure everyone was playing nicely and
+keeping their parts up to date. We are still digging out where I find
+stuff in the kernel that just never seemed to make it into any
+userspace..
+
+I feel this is an essential ingredient, and I think I gave this advice
+at LPC as well - it is important to start as a proper subsystem with a
+proper standard user space. IMHO a random collection of opaque misc
+drivers for incredibly complex HW is not going to magically gel into a
+subsystem.
+
+Given the state of the industry the userspace doesn't have to do
+alot, and maybe that library exposes unique APIs for each HW, but it
+is at least a rallying point to handle all these questions like: 'is
+the proposed userspace enough?', give some consistency, and be ready
+to add in those things that are common (like, say IOMMU PASID setup)
+
+The uacce stuff is sort of interesting here as it does seem to take
+some of that approach, it is really simplistic, but the basic idea of
+creating a generic DMA work ring is in there, and probably applies
+just as well to several of these 'totally-not-a-GPU' drivers.
+
+The other key is that the uABI from the kernel does need to be very
+flexible as really any new HW can appear with any new strange need all
+the time, and there will not be detailed commonality between HWs. RDMA
+has made this mistake a lot in the past too.
+
+The newer RDMA netlink like API is actually turning out not bad for
+this purpose.. (again something a subsystem could provide)
+
+Also the approach in this driver to directly connect the device to
+userspace for control commands has worked for RDMA in the past few
+years.
+
+Jason
