@@ -2,111 +2,86 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6080C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D979C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6FC207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:36:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nchV7XJF"
+	by mail.kernel.org (Postfix) with ESMTP id 180F42087D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589913424;
+	bh=tC+hTHz0LxYEoACfJFkeD/YDC2wuPZZcjRBqcqOnLhE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=neJFqgadpMEy7PKSOpC7KY4i01ww6UTTCcmzmI8HdmgD/uZgykKNqzfsu7l6L88YM
+	 IO36U3wz8JFLeIkhvsaXN7G/zbNNZ6H03rt4OuGpMYbpF47UXP5FoRquWBYE4PCGtw
+	 Axi4nL9pW0laslF7TNJi+fuDabtBl4fqmTdWMKnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgESSgf (ORCPT
+        id S1727046AbgESShD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESSge (ORCPT
+        Tue, 19 May 2020 14:37:03 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36941 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESShC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:36:34 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E001C08C5C0;
-        Tue, 19 May 2020 11:36:34 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49RPjX0pyjz9sTH;
-        Wed, 20 May 2020 04:36:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589913393;
-        bh=uHf/n/3lhq80d/20JbDIKvnFDtOjqWPxZBs/eern4Tc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nchV7XJFXHz/dOTOpSi/rBos5yGTV09NBskEw0f3KCv61/NCpPGVL0/OC6GRGPNta
-         zcRGVBs/sq6LjR0LsLra8DmcqXOLawjInD6R7lMssWwUz5OKICVbOrgovVeEnYeuai
-         AtZjFc3uhTaaVUoKPZLr4O1sLdPM5OK3VdsPxp3bFpubDPIAt6wg7jTQT8YgPSFOMK
-         fb3fa25NpJrAM6fXIbuZG7ihcKDtU7F2/vmDPx+qHEbblINgx90K1P9Jv68SwvsIYU
-         1bnTZivcJ+dwJLMsrvzWzlOu1XVmld6fnabFdVk2p95N9+uzoP9QVrtkwiz+6O8REM
-         wAToACIaqONWA==
-Date:   Wed, 20 May 2020 04:36:31 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: linux-next: Fixes tag needs some work in the iommu tree
-Message-ID: <20200520043631.41a150d2@canb.auug.org.au>
+        Tue, 19 May 2020 14:37:02 -0400
+Received: by mail-io1-f66.google.com with SMTP id t15so266539ios.4;
+        Tue, 19 May 2020 11:37:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9gkfGJ7KJs1nebEF+m2qI6r0Zpzd4/7HhycMiWKPpMw=;
+        b=Opub0kShFShF8UDNFVKjrW6AN/4qxFYf0IQuXZGdqv5gqfY5ipjtB9IELyQmGXNavr
+         ZvtF70xvppZQhcZH50zn6ujyjtbcQwVb3DRmxr6+R2P5Vd9DCfcyXiW+0gukBSAGCKQB
+         t9ddVBvB5MCzBIYoDXKaI3I8AyvLxsRj2MDXyEPuNteWRsknaE9yEHWX8oIgyusshXGh
+         fnBWCKb5WJxTBIr8b7hmWBdycjRZLz2loxpp4WGAngMfhS552ZoEn+WU3/6TLpYi06qE
+         Hr4kChnaSRxL0TKV/RV4IJ1NOe+W0XGmzITwNFO84qgwmxHQhwj+3e8fLipf8tVlxoDt
+         V/kQ==
+X-Gm-Message-State: AOAM531/jF7ricChrUHkmUKqo4yTGzYvRHovaf+Ap9Z0GIgWAMw+G2ZY
+        msZ49gmR14DKvhxmE82zjmluRuY=
+X-Google-Smtp-Source: ABdhPJyl4q7PFUuNkIc0fWw+vhM8J2A7oPKEXlt3TrTeH8BFs3YwXt5tc+5BYWSxSBiI1ACKn3OxAg==
+X-Received: by 2002:a02:a895:: with SMTP id l21mr1005625jam.82.1589913422004;
+        Tue, 19 May 2020 11:37:02 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j16sm128705ild.8.2020.05.19.11.37.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 11:37:01 -0700 (PDT)
+Received: (nullmailer pid 441282 invoked by uid 1000);
+        Tue, 19 May 2020 18:37:00 -0000
+Date:   Tue, 19 May 2020 12:37:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 10/11] dt-bindings: sound: Add Marvell MMP SSPA binding
+Message-ID: <20200519183700.GA441251@bogus>
+References: <20200511210134.1224532-1-lkundrak@v3.sk>
+ <20200511210134.1224532-11-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/QZtWuWWQjElsZXikxlRXNfy";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511210134.1224532-11-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/QZtWuWWQjElsZXikxlRXNfy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 11 May 2020 23:01:33 +0200, Lubomir Rintel wrote:
+> Add binding documentation for the audio serial port interface (I2S) on
+> Marvell MMP SoCs.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../bindings/sound/marvell,mmp-sspa.yaml      | 122 ++++++++++++++++++
+>  1 file changed, 122 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/marvell,mmp-sspa.yaml
+> 
 
-Hi all,
-
-In commit
-
-  ef0865631ae3 ("iommu/vt-d: Fix pointer cast warnings on 32 bit")
-
-Fixes tag
-
-  Fixes: d64d47f4f5678 ("iommu/vt-d: Add nested translation helper function=
-")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Fixes tag
-
-  Fixes: a3bea1a35c083 ("iommu/vt-d: Add bind guest PASID support")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: b0d1f8741b81 ("iommu/vt-d: Add nested translation helper function")
-Fixes: 56722a4398a3 ("iommu/vt-d: Add bind guest PASID support")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/QZtWuWWQjElsZXikxlRXNfy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7EJy8ACgkQAVBC80lX
-0GyfpAf8D2Cq6o0ggkCuC3xkUXuOF2h3mbMy0b72PY/Wvls23FJGiQVRjUQ2d0Xu
-Xea683UQqLvpSwgOdmIWnUVQKzp4I28o6fO9vXmYuZv9BM1d24j5yonhm8MsDnQn
-Uu1gYTI20Z1hy0qmYut1X3GBCKOdQtShVCEf0Tq//LIy0DJPRgYmHsiFN9nqCKZL
-0FNskQZUMY9jAqtmyzP+qx5x3bhIajK+hcyBw+e+ePGqMGSoW13zhko1/yMm8Yze
-WE1qHu8CQGb9fupZnKDLQs8/CmY8I0BLRjz7GFC3WJMwtx0c40aqUKGJzNbqk0jj
-S1CPjc8Kb6JyzuvC18RNmePstVmShA==
-=qyWc
------END PGP SIGNATURE-----
-
---Sig_/QZtWuWWQjElsZXikxlRXNfy--
+Reviewed-by: Rob Herring <robh@kernel.org>
