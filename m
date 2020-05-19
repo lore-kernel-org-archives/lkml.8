@@ -2,132 +2,145 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F425C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A85C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF8FE207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC64A207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VYUcP0s8"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="mTAEJSov";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="F1d/qQgQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgESJ6Z (ORCPT
+        id S1728432AbgESJ6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:58:25 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19587 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726121AbgESJ6Y (ORCPT
+        Tue, 19 May 2020 05:58:34 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:9734 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726121AbgESJ6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:58:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589882304; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=s+AdGI5XfKXn2vhFE20uM+6hS+slzQYyrhXIMBez0oU=; b=VYUcP0s8yo9V+q1JDpKj04mAJHaD55f+DySWMwZJyfC4Pdg64lHS5aDy6WW41mItzQ+pn7+a
- dx+6KVUa6pkFbrZEzdsb+hd3SXEPURI0vVt1uNOcGlOICoL2sQa4RPmgu0oSq+9FlXHwHtML
- yCKIvL1cmuePZ/g7b5RprWIAExc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ec3adb775dd50406e273d83 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 19 May 2020 09:58:15
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2C626C43636; Tue, 19 May 2020 09:58:15 +0000 (UTC)
-Received: from charante-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86DDDC433D2;
-        Tue, 19 May 2020 09:58:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86DDDC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-From:   Charan Teja Reddy <charante@codeaurora.org>
-To:     akpm@linux-foundation.org, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
-        Charan Teja Reddy <charante@codeaurora.org>
-Subject: [PATCH] mm, page_alloc: skip ->waternark_boost for atomic order-0 allocations
-Date:   Tue, 19 May 2020 15:28:04 +0530
-Message-Id: <1589882284-21010-1-git-send-email-charante@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 19 May 2020 05:58:33 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04J9utvd028582;
+        Tue, 19 May 2020 02:58:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=xEuXNmkaR8vYoI2kBUAUczw/cfhxPhmP7mLR00GVaSk=;
+ b=mTAEJSov7hgXPSFZmOi5ePVMhP3Uc/uJlcn/M7PYTUsqwIT9ASRcSmvBVK6uNXrkY39K
+ OSgXW7s7IxOWBMYODYxIvid0wazP9mcgD83N7+Is9NAbwJi9PAWll5iwJrMKKioPDqmc
+ OoJY8ZMubl6ntkm5wBLvQPccr/WSjP96nZfKjL64idaOTx6gxO0VM/9Qmjr5P+0IVNp3
+ ZQFr/JOHdd9r56IzWcZh1YwNteECw8yZZZbDn9nBLxZXQd7NDHQ9riNg0keuvQx9Ts/2
+ Fq/6/Ho4tDX73oZnPelNnbK2dL/ga1zqxvI0eHWzbTwAtc0DY7tq8z8UqQYEU3q2LJlh 9g== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 312fpp2tjf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 19 May 2020 02:58:20 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 19 May
+ 2020 02:58:18 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 02:58:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XG1CfqMMh74oDuReBI+/i72usJE5//1uApp3Orr7aX3aspHGxs5/6fIgmnMqQu5SFF38qAEfg8LHvCCanq6v8litesCiTQZTolEDJhGcA7V1kkJG24EvDqXMQh9XFp4Le7IWRXrnNqArYWizCPgmzVCbgNeeRYWW23WM2QVKpMT1g2SIcLO46fMEzatmdsAIVVxutYJ6VtshAjXm9+4csEJqHcd5a31D3Dvi3LqhcbqV7Y4imDjhlQLXhNMYz6DCJso01fsTD4NyK2lxL1krx3D4VTgODBmVy0WN8Vo3FAbr0+lEsjgl7pHgVCTxvQdSkOYJWAGkiVyurR/GBdWfXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xEuXNmkaR8vYoI2kBUAUczw/cfhxPhmP7mLR00GVaSk=;
+ b=YzQZJetCq+g2ZdFYu80SAGmNWHmZ3BijHnt3xATXFGDY7r1Qan/URrI28vtA5s88rxptu2gT5+ymkvxXrurSNSRIKMVuMsNmv8oscpFOK1rXrt8tLrsCXfVGFmAnlMC47OrANf7CaNY5CE8dTJvoDGE4vwQRMn9OEgVRRWHEYDwGFZFXvNBPUP3XWVKmEG/+ifa9ZWzwXT03uucqBwKo2BN+ZFm0u+zxyaXUlt7m7etYdUhXwC13dYShcAQcUVjKwskTkoLrpcRSaGNM8e6PwCJ5jbXhs3EFvODzrkV9iTaLKN9gDMdu3OQV4HPxoUqoEAurBny/BQhc1CSlVMHTkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xEuXNmkaR8vYoI2kBUAUczw/cfhxPhmP7mLR00GVaSk=;
+ b=F1d/qQgQCBMB3JPKjTCTHGRHdCd1BbVzM+lNMHa6XDlFrPhOr2jV+gROwjdODcIJLqdirzFyKC3913rYxTne4BcNKSl5i5HYqOG2bqOTDGb+Yn+rSJXB5I59Rw4TEa4OZ7FwvSdqIWPbVjzhrTmiaT7padQ2olMQQeCt/s6Py+E=
+Authentication-Results: alien8.de; dkim=none (message not signed)
+ header.d=none;alien8.de; dmarc=none action=none header.from=marvell.com;
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
+ by BYAPR18MB2487.namprd18.prod.outlook.com (2603:10b6:a03:139::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Tue, 19 May
+ 2020 09:58:16 +0000
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::a165:ffa5:f3eb:d62d]) by BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::a165:ffa5:f3eb:d62d%7]) with mapi id 15.20.3021.020; Tue, 19 May 2020
+ 09:58:15 +0000
+Date:   Tue, 19 May 2020 11:57:59 +0200
+From:   Robert Richter <rrichter@marvell.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 08/10] EDAC/ghes: Carve out MC device handling into
+ separate functions
+Message-ID: <20200519095759.ghg7if6cijdlvjm3@rric.localdomain>
+References: <20200422115814.22205-1-rrichter@marvell.com>
+ <20200422115814.22205-9-rrichter@marvell.com>
+ <20200427163856.GG11036@zn.tnic>
+ <20200506084558.tcayd2fuzoe6rsfm@rric.localdomain>
+ <20200511133203.GB25861@zn.tnic>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511133203.GB25861@zn.tnic>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR0902CA0002.eurprd09.prod.outlook.com
+ (2603:10a6:3:e5::12) To BYAPR18MB2661.namprd18.prod.outlook.com
+ (2603:10b6:a03:136::26)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR0902CA0002.eurprd09.prod.outlook.com (2603:10a6:3:e5::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Tue, 19 May 2020 09:58:13 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b23bb9d6-a767-4bd0-17be-08d7fbdb263c
+X-MS-TrafficTypeDiagnostic: BYAPR18MB2487:
+X-Microsoft-Antispam-PRVS: <BYAPR18MB2487C78C403B16D5239FDB6DD9B90@BYAPR18MB2487.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 040866B734
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cWUxsUfQvRWsQdQ9pQfirgoac6MTUrw8fAcxpctmvyfw7tb1iNw+Arouj704iGCYqf+q6tIkD+1voeSLH5u4+zyslrYSynkcIGKg22p58VTFMtFFNObXsQwID4WNpcpOlsFpYoqTnazZeMcylxAumoQDSz9KNCWEmRefitqDXYCYTe4SPsbnBoyuL+YcXzU0q3XKJpvxmYkziosBOsTYER9WHdcuvNemknWDckoUQ58Gn/LIwdh+L9NMI7GXvsHnBR3hYsihrYpmPZpdQtaZwwdkMj3LvLz4CYrW1JHnZ4SWRSHmCB9Bgi+z0+4qib5gYMRiOyCRSS+bGsX4NrgfRC3vfzi3kCjvBt55E1EWKUX1qaovzuYpFkoLO97+ZpbNkV0a2i02Db15Ap00zvhC1RirYT98yQD8Z+PI8hmXbbQfWcEo5wXggGOGbOkYf51o
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(66556008)(5660300002)(6916009)(478600001)(4744005)(86362001)(26005)(6666004)(54906003)(8676002)(66946007)(55016002)(66476007)(6506007)(16526019)(4326008)(53546011)(8936002)(9686003)(186003)(1076003)(2906002)(316002)(7696005)(52116002)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 42h+ZjuNVri+syhrNDCxDTznnOx3QPcblGUOjj8t1nOFAK2jsLfSjwee27gdF3gmZjLEaR/D1zs3wR26GVC+PA+Xj4KM+B7KgGHPBZ5KBDinjLGJ4SfAI0kT5DZIalmFXCNtBhoT+oGhP20RHDPVB5mDw+ccAuIBL2foodNcX/BR2IokXLb/GXInvPZ0gOn1kfJJt0IXW8s0GbCXmD3bgp3SXKZHPTzGOAcHBsndKrg6GEokLfrX3zmvYp0jAjaqI/5GqH1eQNz/dnSv1Phkaj7HAdDnsfO57J7lbeEl6DumfHms0n/lm1xTM1pO1TZIQRbFqIbPiVe21sYpvt54QKXFY6oGDOBtMmwEUagEhNHgOd2UWrsp+nbysLc/nPtHo2G5waJTgRV6DxYzEWKD53LdIosYoh2ujP2j8pkqapw8cqGfb8LLJHX3dU+/IMzmdchNbRxKkCSnGRU50LMLnVE2pRzTcg7nEA00xCU2lgI=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b23bb9d6-a767-4bd0-17be-08d7fbdb263c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 09:58:15.7394
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a4Tsg8kjLumSK7EaZbn/0NG6r7ST1n7gu9x4WuateJPbdQLpIlr8jD/CZl5IdEExN3T80HGONP9EYAKJDI7EpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2487
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-19_03:2020-05-19,2020-05-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When boosting is enabled, it is observed that rate of atomic order-0
-allocation failures are high due to the fact that free levels in the
-system are checked with ->watermark_boost offset. This is not a problem
-for sleepable allocations but for atomic allocations which looks like
-regression.
+On 11.05.20 15:32:03, Borislav Petkov wrote:
+> see below. It probably doesn't work but this is what it should do -
+> straightforward and simple.
+> 
+> And now that I've looked at this in more detail, this whole DIMM
+> counting is still not doing what it should do.
+> 
+> So lemme try again:
 
-This problem is seen frequently on system setup of Android kernel
-running on Snapdragon hardware with 4GB RAM size. When no extfrag event
-occurred in the system, ->watermark_boost factor is zero, thus the
-watermark configurations in the system are:
-   _watermark = (
-          [WMARK_MIN] = 1272, --> ~5MB
-          [WMARK_LOW] = 9067, --> ~36MB
-          [WMARK_HIGH] = 9385), --> ~38MB
-   watermark_boost = 0
+As you have major concerns with my code that deals with ghes private
+dimm data, let's just keep smbios_handle in struct dimm_info.  ATM I
+do not see any alternative solution suggested how this could be
+implemented. So I am going to drop patch '[PATCH v2 04/10] EDAC/ghes:
+Make SMBIOS handle private data to ghes' from this series.
 
-After launching some memory hungry applications in Android which can
-cause extfrag events in the system to an extent that ->watermark_boost
-can be set to max i.e. default boost factor makes it to 150% of high
-watermark.
-   _watermark = (
-          [WMARK_MIN] = 1272, --> ~5MB
-          [WMARK_LOW] = 9067, --> ~36MB
-          [WMARK_HIGH] = 9385), --> ~38MB
-   watermark_boost = 14077, -->~57MB
+Thanks,
 
-With default system configuration, for an atomic order-0 allocation to
-succeed, having free memory of ~2MB will suffice. But boosting makes
-the min_wmark to ~61MB thus for an atomic order-0 allocation to be
-successful system should have minimum of ~23MB of free memory(from
-calculations of zone_watermark_ok(), min = 3/4(min/2)). But failures are
-observed despite system is having ~20MB of free memory. In the testing,
-this is reproducible as early as first 300secs since boot and with
-furtherlowram configurations(<2GB) it is observed as early as first
-150secs since boot.
-
-These failures can be avoided by excluding the ->watermark_boost in
-watermark caluculations for atomic order-0 allocations.
-
-Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
----
- mm/page_alloc.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d001d61..5193d7e 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3709,6 +3709,18 @@ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
- 		}
- 
- 		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
-+		/*
-+		 * Allow GFP_ATOMIC order-0 allocations to exclude the
-+		 * zone->watermark_boost in its watermark calculations.
-+		 * We rely on the ALLOC_ flags set for GFP_ATOMIC
-+		 * requests in gfp_to_alloc_flags() for this. Reason not to
-+		 * use the GFP_ATOMIC directly is that we want to fall back
-+		 * to slow path thus wake up kswapd.
-+		 */
-+		if (unlikely(!order && !(alloc_flags & ALLOC_WMARK_MASK) &&
-+		     (alloc_flags & (ALLOC_HARDER | ALLOC_HIGH)))) {
-+			mark = zone->_watermark[WMARK_MIN];
-+		}
- 		if (!zone_watermark_fast(zone, order, mark,
- 				       ac->highest_zoneidx, alloc_flags)) {
- 			int ret;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
-
+-Robert
