@@ -2,293 +2,217 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB98DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA15C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4CA0206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC5420756
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WLNGyhE5"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="OYCe8E2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgESKGD (ORCPT
+        id S1728483AbgESKHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:06:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29553 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728632AbgESKGC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:06:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589882759;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=i7Pb0OijTA+irttwxC+dxELBnYCuz9NJOuNYknbTw1Q=;
-        b=WLNGyhE59TAn+NOIB3tfIp1NHP6D6qhXpXRogSNh2raDSZe+ImnAtCoZf5Wb0PyScLdoV8
-        E5oM/Jfx84pRPBj+O1G6XbsN2uqYMw5Oo+gO3RetgIZlOUcCpgblV3r0uteTyE2HEkb00j
-        JwJKnE5t/XfRwUCAYAzFHaNnlc3yRnA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-131-hjiB7Y2jM-2xfzB52wTqnw-1; Tue, 19 May 2020 06:05:58 -0400
-X-MC-Unique: hjiB7Y2jM-2xfzB52wTqnw-1
-Received: by mail-ej1-f72.google.com with SMTP id h6so1829159ejb.17
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:05:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i7Pb0OijTA+irttwxC+dxELBnYCuz9NJOuNYknbTw1Q=;
-        b=tppXz77sBxDGi6mC4l00BtvkToru9aEtsLIOb5g1YqQlg0oRWpHu0rG10hrG6SCqHV
-         1dyY8W++CGb2xWIjhtEuo6+k+KCbbTsbxGQKOFGuix8ThgV4edU419qmz94EFlNpWRKo
-         qZ4a5BlEPszjIudlbzXhFx5bb+XjYjFgtfdKyWOR17VW7XWCWD+U2r7hj+0Pks25gdAY
-         eJExOQGIclFXBZqJDqcab/GYqeW7c2dY2EyUKUxm7eRXXsZrO0DhE2ESHGRLgYLggUg9
-         JWUD0cM/76U80fR8Q51LaF3Vh09qfWjJfU7U3Ze8bO7QKsBZtFQEtTSzW+BeMzN+WEyB
-         vbsw==
-X-Gm-Message-State: AOAM531tdO9t+S4UxUncWiFTjYA8VEAJq0FNABGPESYKU71ITG0Wr4VD
-        fr4hF+yx5E/Z+osxFMrSruLPUOELGnGW3cF4bPok7z9kdMQiO2IQJzmrDOBbgWMUQx46I8G2+M8
-        SkkkbXonHbm7F9yEPYS1aRi8ySFZYBblkpOPWc8Rk
-X-Received: by 2002:a17:906:2503:: with SMTP id i3mr17354033ejb.293.1589882756924;
-        Tue, 19 May 2020 03:05:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxJ1McJxtcCmjVmosQ2avZ2PtCSSDCXz2Om0hD2da3gdN7fS7o6Mf8E32HG29p7gwidi7B2T3qwUaeoW85+L6Q=
-X-Received: by 2002:a17:906:2503:: with SMTP id i3mr17354012ejb.293.1589882756498;
- Tue, 19 May 2020 03:05:56 -0700 (PDT)
+        Tue, 19 May 2020 06:07:30 -0400
+Received: from mout.gmx.net ([212.227.17.21]:40815 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgESKH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 06:07:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1589882788;
+        bh=+UZpikoCSDiNYkpOkgtAFZkoPVCVL9V39mTTHmo5RnU=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=OYCe8E2lNau8mXcdkFBTDa50UmWb6PEPnr2owHjqOlS8BZw2UzeFUJ8r3WH2NFKhf
+         cnw+PkUf3dkRcuehv4sW29J+qtObVlQHUCcJqSbsZCuXZnjX2+V4GVyauaRG6Sq6w1
+         nI+vmAar6fAwMLZLTh6+MM6oZj4Z+sx9M79Xbt8g=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from hsiangkao-HP-ZHAN-66-Pro-G1 ([120.242.72.127]) by mail.gmx.com
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MbzyJ-1j46lY1mO7-00dZSO; Tue, 19 May 2020 12:06:28 +0200
+Date:   Tue, 19 May 2020 18:06:19 +0800
+From:   Gao Xiang <hsiangkao@gmx.com>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        david@fromorbit.com, hch@infradead.org, willy@infradead.org
+Subject: Re: [PATCH 10/10] mm/migrate.c: call detach_page_private to cleanup
+ code
+Message-ID: <20200519100612.GA3687@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
+ <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
+ <20200518221235.1fa32c38e5766113f78e3f0d@linux-foundation.org>
+ <aade5d75-c9e9-4021-6eb7-174a921a7958@cloud.ionos.com>
 MIME-Version: 1.0
-References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
- <20190524100554.8606-4-maxime.chevallier@bootlin.com> <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
- <20200423170003.GT25745@shell.armlinux.org.uk> <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
- <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
- <20200509114518.GB1551@shell.armlinux.org.uk> <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
- <20200509195246.GJ1551@shell.armlinux.org.uk> <20200509202050.GK1551@shell.armlinux.org.uk>
- <20200519095330.GA1551@shell.armlinux.org.uk>
-In-Reply-To: <20200519095330.GA1551@shell.armlinux.org.uk>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Tue, 19 May 2020 12:05:20 +0200
-Message-ID: <CAGnkfhzuyxJDo-DXPHPiNtP4RbRpry+3M9eoiTknGR0zvgPuoA@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
- to handle RSS tables
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev <netdev@vger.kernel.org>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8\""
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aade5d75-c9e9-4021-6eb7-174a921a7958@cloud.ionos.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:LTsOTq1mPEelHR2l4o0rGDmComg0jxTf99Vkf8suxa+YY03ofnM
+ kUeZeFjDAmpCwnFsBHf3kmSRCIsSEbcvK3Ap6q8pTGMp30JZpDNca/GF/ADZnxTUAVU6TNB
+ oJaMiBZlDOe98Kdbx1vhprmzieIrq5i0li7tskswUcm7v+bwi32+8/Z66AMvAY+nE1yW+xV
+ BrCzgrlUqli1rAVIZ+5Xw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jXscTq9KYn4=:W3BMIpbm0zHl72sFflO65j
+ x3PEswh9uw6Mx9ZTLhyx0/qJsa5wkWWIzmP5mR96adqo6J4j7TS5ZM5W5h/lyusKgxrjADCZu
+ XsYqp8+7yNRa/pG+fnERjolHIxLrkBt0ZAtKz+XCylXUtUruO7IIJtxTsj3NC3CXygy7NBtCL
+ Crk5tzj7/CGhKHOLKdNKQrHywokGmCiPK4XcN++izNCPfDo5kY9KHPUvv5pV05Dd7+9nrfKak
+ LEWCdTp669qgGzcIeO8dRMvTWqduTTfoI3p6xJ4XRa8yH8GsdGWh6RL2YhRxX1kEz8UZnXcCh
+ 2/fvGFn5SDUNuzI/AlHO0pVr9HJLMH9QCgedJEy25TZenkiwgP4n+qep3fJAlWDL620aYvOGV
+ A7sv9XTy8EF6uJ0Y1JE+dKjrUFcXykWe/H2m5Zd8OvQlE6m3y//sOTOP7M8aMpqPc0lOQ/1Rf
+ Y43bpwHXdCSaPIHAm/nmarEtXVPQliJc3eY46D6GDE06o7jURQsnqZBEW34SDHCJBBuUFXxcG
+ ovm0R0qp3EVBx2TqD2/HCoFStimBw8NWyhfRHTyrmKGL9FVOif6D0Ei+6VXi1cjwNZEHcKjSz
+ c35AAaEkig+lD6+hHF3Wi5toHrwzDveIbVHJtahwSVuxnAbHx31lGnRQaoMtimIJRS0RrKosp
+ dI5oLhd6lqYefYC/3/+uL3h2iYvlfimWS6KGwDX0PAqqRN7Zdnnn3i8witGQJjMlmYvSwrkNQ
+ PQBtoqlv1gObbNMnIDEJxDhsyeuq6vO1U6jEBavLVWJpGEH6RJ3L8MUoUYkODimPE0xNq/Za0
+ d+MSPFBf+6e5j/vaDaYqKn6Nvc7LThgMdpMjUmEXnX9MHXcY9D4przCLI8ExMxpEoBpKOGx4w
+ okdjuqz/Kh0UJYykiwSewoZuCq6bzrsmxcYY6Q/X314pFLjt746UGRIS55mPKUXXbyISoH1ZA
+ 5glTm2d9braOFn4gmuWo8JV4XUfpZwBaxW2Eg4Qc9eksLHObgggnbsFwUk32rBniSjKEBViFP
+ goRI594CZDZzOkPWlZHdtOaCEPMS/upEwOp1RE04Jv80ZQw5CyapzsuFyK0rnbmtkYm0Hr14A
+ /ZGuCnkHfPuWjaN1Bmpq5Ksevq2BGPcP/5RuX0jdSBK5aQM2kTCi+sUlSkEES817LUWRJEUlM
+ mg5giDlq8JnUHQ9G197JDZCLZ+YzBhJrnUCGEjyUbLG8QMadWiIdXpEN7Eym2waT6GsmnOBge
+ O7npqi7ha43LyhfsQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 11:54 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Sat, May 09, 2020 at 09:20:50PM +0100, Russell King - ARM Linux admin wrote:
-> > On Sat, May 09, 2020 at 08:52:46PM +0100, Russell King - ARM Linux admin wrote:
-> > > It is highly likely that 895586d5dc32 is responsible for this breakage.
-> > > I've been investigating this afternoon, and what I've found, comparing
-> > > a kernel without 895586d5dc32 and with 895586d5dc32 applied is:
-> > >
-> > > - The table programmed into the hardware via mvpp22_rss_fill_table()
-> > >   appears to be identical with or without the commit.
-> > >
-> > > - When rxhash is enabled on eth2, mvpp2_rss_port_c2_enable() reports
-> > >   that c2.attr[0] and c2.attr[2] are written back containing:
-> > >
-> > >    - with 895586d5dc32, failing:    00200000 40000000
-> > >    - without 895586d5dc32, working: 04000000 40000000
-> > >
-> > > - When disabling rxhash, c2.attr[0] and c2.attr[2] are written back as:
-> > >
-> > >    04000000 00000000
-> > >
-> > > The second value represents the MVPP22_CLS_C2_ATTR2_RSS_EN bit, the
-> > > first value is the queue number, which comprises two fields.  The high
-> > > 5 bits are 24:29 and the low three are 21:23 inclusive.  This comes
-> > > from:
-> > >
-> > >        c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
-> > >                      MVPP22_CLS_C2_ATTR0_QLOW(ql);
-> > > #define     MVPP22_CLS_C2_ATTR0_QHIGH(qh)       (((qh) & 0x1f) << 24)
-> > > #define     MVPP22_CLS_C2_ATTR0_QLOW(ql)        (((ql) & 0x7) << 21)
-> > >
-> > > So, the working case gives eth2 a queue id of 4.0, or 32 as per
-> > > port->first_rxq, and the non-working case a queue id of 0.1, or 1.
-> > >
-> > > The allocation of queue IDs seems to be in mvpp2_port_probe():
-> > >
-> > >         if (priv->hw_version == MVPP21)
-> > >                 port->first_rxq = port->id * port->nrxqs;
-> > >         else
-> > >                 port->first_rxq = port->id * priv->max_port_rxqs;
-> > >
-> > > Where:
-> > >
-> > >         if (priv->hw_version == MVPP21)
-> > >                 priv->max_port_rxqs = 8;
-> > >         else
-> > >                 priv->max_port_rxqs = 32;
-> > >
-> > > Making the port 0 (eth0 / eth1) have port->first_rxq = 0, and port 1
-> > > (eth2) be 32.  It seems the idea is that the first 32 queues belong to
-> > > port 0, the second 32 queues belong to port 1, etc.
-> > >
-> > > mvpp2_rss_port_c2_enable() gets the queue number from it's parameter,
-> > > 'ctx', which comes from mvpp22_rss_ctx(port, 0).  This returns
-> > > port->rss_ctx[0].
-> > >
-> > > mvpp22_rss_context_create() is responsible for allocating that, which
-> > > it does by looking for an unallocated priv->rss_tables[] pointer.  This
-> > > table is shared amongst all ports on the CP silicon.
-> > >
-> > > When we write the tables in mvpp22_rss_fill_table(), the RSS table
-> > > entry is defined by:
-> > >
-> > >             u32 sel = MVPP22_RSS_INDEX_TABLE(rss_ctx) |
-> > >                           MVPP22_RSS_INDEX_TABLE_ENTRY(i);
-> > >
-> > > where rss_ctx is the context ID (queue number) and i is the index in
-> > > the table.
-> > >
-> > > #define     MVPP22_RSS_INDEX_TABLE_ENTRY(idx)   (idx)
-> > > #define     MVPP22_RSS_INDEX_TABLE(idx)         ((idx) << 8)
-> > > #define     MVPP22_RSS_INDEX_QUEUE(idx)         ((idx) << 16)
-> > >
-> > > If we look at what is written:
-> > >
-> > > - The first table to be written has "sel" values of 00000000..0000001f,
-> > >   containing values 0..3. This appears to be for eth1.  This is table 0,
-> > >   RX queue number 0.
-> > > - The second table has "sel" values of 00000100..0000011f, and appears
-> > >   to be for eth2.  These contain values 0x20..0x23.  This is table 1,
-> > >   RX queue number 0.
-> > > - The third table has "sel" values of 00000200..0000021f, and appears
-> > >   to be for eth3.  These contain values 0x40..0x43.  This is table 2,
-> > >   RX queue number 0.
-> > >
-> > > Okay, so how do queue numbers translate to the RSS table?  There is
-> > > another table - the RXQ2RSS table, indexed by the MVPP22_RSS_INDEX_QUEUE
-> > > field of MVPP22_RSS_INDEX and accessed through the MVPP22_RXQ2RSS_TABLE
-> > > register.  Before 895586d5dc32, it was:
-> > >
-> > >        mvpp2_write(priv, MVPP22_RSS_INDEX,
-> > >                    MVPP22_RSS_INDEX_QUEUE(port->first_rxq));
-> > >        mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE,
-> > >                    MVPP22_RSS_TABLE_POINTER(port->id));
-> > >
-> > > and after:
-> > >
-> > >        mvpp2_write(priv, MVPP22_RSS_INDEX, MVPP22_RSS_INDEX_QUEUE(ctx));
-> > >        mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE, MVPP22_RSS_TABLE_POINTER(ctx));
-> > >
-> > > So, before the commit, for eth2, that would've contained '32' for the
-> > > index and '1' for the table pointer - mapping queue 32 to table 1.
-> > > Remember that this is queue-high.queue-low of 4.0.
-> > >
-> > > After the commit, we appear to map queue 1 to table 1.  That again
-> > > looks fine on the face of it.
-> > >
-> > > Section 9.3.1 of the A8040 manual seems indicate the reason that the
-> > > queue number is separated.  queue-low seems to always come from the
-> > > classifier, whereas queue-high can be from the ingress physical port
-> > > number or the classifier depending on the MVPP2_CLS_SWFWD_PCTRL_REG.
-> > >
-> > > We set the port bit in MVPP2_CLS_SWFWD_PCTRL_REG, meaning that queue-high
-> > > comes from the MVPP2_CLS_SWFWD_P2HQ_REG() register... and this seems to
-> > > be where our bug comes from.
-> > >
-> > > mvpp2_cls_oversize_rxq_set() sets this up as:
-> > >
-> > >         mvpp2_write(port->priv, MVPP2_CLS_SWFWD_P2HQ_REG(port->id),
-> > >                     (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
-> > >
-> > >         val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
-> > >         val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
-> > >         mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
-> > >
-> > > so, the queue-high for eth2 is _always_ 4, meaning that only queues
-> > > 32 through 39 inclusive are available to eth2.  Yet, we're trying to
-> > > tell the classifier to set queue-high, which will be ignored, to zero.
-> > >
-> > > So we end up directing traffic from eth2 not to queue 1, but to queue
-> > > 33, and then we tell it to look up queue 33 in the RSS table.  However,
-> > > RSS table has not been programmed for queue 33, and so it ends up
-> > > (presumably) dropping the packets.
-> > >
-> > > It seems that mvpp22_rss_context_create() doesn't take account of the
-> > > fact that the upper 5 bits of the queue ID can't actually be changed
-> > > due to the settings in mvpp2_cls_oversize_rxq_set(), _or_ it seems
-> > > that mvpp2_cls_oversize_rxq_set() has been missed in this commit.
-> > > Either way, these two functions mutually disagree with what queue
-> > > number should be used.
-> > >
-> > > So, 895586d5dc32 is indeed the cause of this problem.
+On Tue, May 19, 2020 at 09:35:59AM +0200, Guoqing Jiang wrote:
+> On 5/19/20 7:12 AM, Andrew Morton wrote:
+> > On Sun, 17 May 2020 23:47:18 +0200 Guoqing Jiang <guoqing.jiang@cloud.=
+ionos.com> wrote:
 > >
-> > Looking deeper into what mvpp2_cls_oversize_rxq_set() and the MTU
-> > validation is doing, it seems that MVPP2_CLS_SWFWD_P2HQ_REG() is
-> > used for at least a couple of things.
+> > > We can cleanup code a little by call detach_page_private here.
+> > >
+> > > ...
+> > >
+> > > --- a/mm/migrate.c
+> > > +++ b/mm/migrate.c
+> > > @@ -804,10 +804,7 @@ static int __buffer_migrate_page(struct address=
+_space *mapping,
+> > >   	if (rc !=3D MIGRATEPAGE_SUCCESS)
+> > >   		goto unlock_buffers;
+> > > -	ClearPagePrivate(page);
+> > > -	set_page_private(newpage, page_private(page));
+> > > -	set_page_private(page, 0);
+> > > -	put_page(page);
+> > > +	set_page_private(newpage, detach_page_private(page));
+> > >   	get_page(newpage);
+> > >   	bh =3D head;
+> > mm/migrate.c: In function '__buffer_migrate_page':
+> > ./include/linux/mm_types.h:243:52: warning: assignment makes integer f=
+rom pointer without a cast [-Wint-conversion]
+> >   #define set_page_private(page, v) ((page)->private =3D (v))
+> >                                                      ^
+> > mm/migrate.c:800:2: note: in expansion of macro 'set_page_private'
+> >    set_page_private(newpage, detach_page_private(page));
+> >    ^~~~~~~~~~~~~~~~
 > >
-> > So, with the classifier having had RSS enabled and directing eth2
-> > traffic to queue 1, we can not ignore the fact that we may have
-> > packets appearing on queue 32 for this port.
+> > The fact that set_page_private(detach_page_private()) generates a type
+> > mismatch warning seems deeply wrong, surely.
 > >
-> > One of the things that queue 32 will be used for is if an over-sized
-> > packet attempts to egress through eth2 - it seems that the A8040 has
-> > the ability to forward frames between its ports.  However, afaik we
-> > don't support that feature, and the kernel restricts the packet size,
-> > so we should never violate the MTU validator and end up with such a
-> > packet.  In any case, _if_ we were to attempt to transmit an oversized
-> > packet, we have no support in the kernel to deal with that appearing
-> > in the port's receive queue.
-> >
-> > Maybe it would be safe to clear the MVPP2_CLS_SWFWD_PCTRL_MASK() bit?
-> >
-> > My testing seems to confirm my findings above - clearing this bit
-> > means that if I enable rxhash on eth2, the interface can then pass
-> > traffic, as we are now directing traffic to RX queue 1 rather than
-> > queue 33.  Traffic still seems to work with rxhash off as well.
-> >
-> > So, I think it's clear where the problem lies, but not what the correct
-> > solution is; someone with more experience of packet classifiers (this
-> > one?) needs to look at this - this is my first venture into these
-> > things, and certainly the first time I've traced through how this is
-> > trying to work (or not)...
+> > Please let's get the types sorted out - either unsigned long or void *=
+,
+> > not half-one and half-the other.  Whatever needs the least typecasting
+> > at callsites, I suggest.
 >
-> This is what I was using here to work around the problem, and what I
-> mentioned above.
+> Sorry about that, I should notice the warning before. I will double chec=
+k if
+> other
+> places need the typecast or not, then send a new version.
 >
-> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-> index fd221d88811e..0dd3b65822dd 100644
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-> @@ -1058,7 +1058,7 @@ void mvpp2_cls_oversize_rxq_set(struct mvpp2_port *port)
->                     (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
+> > And can we please implement set_page_private() and page_private() with
+> > inlined C code?  There is no need for these to be macros.
 >
->         val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
-> -       val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
-> +       val &= ~MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
->         mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
->  }
+> Just did a quick change.
 >
+> -#define page_private(page)=C3=82 =C3=82 =C3=82 =C3=82 =C3=82 =C3=82 =C3=
+=82 =C3=82 =C3=82 =C3=82 =C3=82 =C3=82  ((page)->private)
+> -#define set_page_private(page, v)=C3=82 =C3=82 =C3=82 =C3=82 =C3=82  ((=
+page)->private =3D (v))
+> +static inline unsigned long page_private(struct page *page)
+> +{
+> +=C3=82 =C3=82 =C3=82 =C3=82 =C3=82 =C3=82  return page->private;
+> +}
+> +
+> +static inline void set_page_private(struct page *page, unsigned long
+> priv_data)
+> +{
+> +=C3=82 =C3=82 =C3=82 =C3=82 =C3=82 =C3=82  page->private =3D priv_data;
+> +}
 >
+> Then I get error like.
+>
+> fs/erofs/zdata.h: In function =C3=A2=E2=82=AC=CB=9Cz_erofs_onlinepage_in=
+dex=C3=A2=E2=82=AC=E2=84=A2:
+> fs/erofs/zdata.h:126:8: error: lvalue required as unary =C3=A2=E2=82=AC=
+=CB=9C&=C3=A2=E2=82=AC=E2=84=A2 operand
+> =C3=82  u.v =3D &page_private(page);
+> =C3=82 =C3=82 =C3=82 =C3=82 =C3=82 =C3=82 =C3=82  ^
+>
+> I guess it is better to keep page_private as macro, please correct me in
+> case I
+> missed something.
 
-Hi,
+I guess that you could Cc me in the reply.
 
-I will try this change and let you know if it works.
+In that case, EROFS uses page->private as an atomic integer to
+trace 2 partial subpages in one page.
 
-Thanks
+I think that you could also use &page->private instead directly to
+replace &page_private(page) here since I didn't find some hint to
+pick &page_private(page) or &page->private.
 
--- 
-Matteo Croce
-per aspera ad upstream
 
+In addition, I found some limitation of new {attach,detach}_page_private
+helper (that is why I was interested in this series at that time [1] [2],
+but I gave up finally) since many patterns (not all) in EROFS are
+
+io_submit (origin, page locked):
+attach_page_private(page);
+...
+put_page(page);
+
+end_io (page locked):
+SetPageUptodate(page);
+unlock_page(page);
+
+since the page is always locked, so io_submit could be simplified as
+set_page_private(page, ...);
+SetPagePrivate(page);
+, which can save both one temporary get_page(page) and one
+put_page(page) since it could be regarded as safe with page locked.
+
+
+btw, I noticed the patchset versions are PATCH [3], RFC PATCH [4],
+RFC PATCH v2 [5], RFC PATCH v3 [6], PATCH [7]. Although I also
+noticed the patchset title was once changed, but it could be some
+harder to trace the whole history discussion.
+
+[1] https://lore.kernel.org/linux-fsdevel/20200419051404.GA30986@hsiangkao=
+-HP-ZHAN-66-Pro-G1/
+[2] https://lore.kernel.org/linux-fsdevel/20200427025752.GA3979@hsiangkao-=
+HP-ZHAN-66-Pro-G1/
+[3] https://lore.kernel.org/linux-fsdevel/20200418225123.31850-1-guoqing.j=
+iang@cloud.ionos.com/
+[4] https://lore.kernel.org/linux-fsdevel/20200426214925.10970-1-guoqing.j=
+iang@cloud.ionos.com/
+[5] https://lore.kernel.org/linux-fsdevel/20200430214450.10662-1-guoqing.j=
+iang@cloud.ionos.com/
+[6] https://lore.kernel.org/linux-fsdevel/20200507214400.15785-1-guoqing.j=
+iang@cloud.ionos.com/
+[7] https://lore.kernel.org/linux-fsdevel/20200517214718.468-1-guoqing.jia=
+ng@cloud.ionos.com/
+
+Thanks,
+Gao Xiang
+
+>
+> Thanks,
+> Guoqing
+>
+>
+>
