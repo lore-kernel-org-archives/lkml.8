@@ -2,156 +2,107 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A94C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC0A620758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2A520758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="L+oC/Jmj"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="DFu/enkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgESGxQ (ORCPT
+        id S1728326AbgESGzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 02:53:16 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:58061 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726841AbgESGxP (ORCPT
+        Tue, 19 May 2020 02:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgESGzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 02:53:15 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id aw7hj0Ey2tKAsaw7kjOvD7; Tue, 19 May 2020 08:53:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1589871193; bh=Ua/Rh1jOjXzr3/TuekSvHN/AoVWwSnLpt91fLWvkvRQ=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=L+oC/Jmjh2cFpViFqxKFurLG7iiTd+9gLDUXeMbolCH4lXYIiL4ALwmyqG5EZLCnd
-         8mhpwp+PG3Y360zqPOMhNNm/Gc/sKxe5TKNbmwvNArCMiALAFKxNt5nVqC2Edu3gJN
-         k4VCN1C6RoMeySee8kjvUHPA4RO2ho+cJXt5HflxHdAqof/RGTUi69aEbqncNsSd/k
-         rqYk8diCyTv4GdgtSjHOsxAUu8AonrXXVveOhn3k/f91gDTG3jiF3daQJQ+uv42xRj
-         UZb+gpEZpscL2SFm9um+jCYKy5GwAVeVi/zeLZk40OCZhxXx+B6fRrPyt76Yss2dS6
-         DdpPeaOPvW5aA==
-Subject: Re: [PATCH] media: v4l2-ctrls: add encoder skip frames control
-To:     Maheshwar Ajja <majja@codeaurora.org>, mchehab@kernel.org,
-        ezequiel@collabora.com, p.zabel@pengutronix.de,
-        paul.kocialkowski@bootlin.com, jonas@kwiboo.se,
-        posciak@chromium.org, boris.brezillon@collabora.com,
-        ribalda@kernel.org, tglx@linutronix.de, sumitg@nvidia.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1589853951-27948-1-git-send-email-majja@codeaurora.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <ba650d43-2d1d-bba7-383a-db55e9ce4f8a@xs4all.nl>
-Date:   Tue, 19 May 2020 08:53:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 19 May 2020 02:55:49 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB25BC05BD0A
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:55:47 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id v12so14478470wrp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:55:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TANWEOqfTxV9xotVFJrbgUmpK/BcquydUVLVqIzATJw=;
+        b=DFu/enkffHVSAltF3ls3sxCDN6A5lKhqggJ1s6HCTXKZzdgcaVMnYYGgQvoe0Lzr1I
+         upnnHFOWshBVZDYO/h+mYUAcigT40QMb0+mZqiquUwyY1bJny81btQxlN6YaTgzQi85c
+         mBDv4uwqoDBBQDkY1nMvsuvsZ9aQyBTi/piaHdxTUkEotPsdwiXHHn0Bzs166wYgB+vs
+         dRqBpkFHa4q0dxXFCO8AR6glcmEAaAT23BWQ1P0yrvD7sfxrdMUEkfGsNMNUK4cmfnMe
+         o/12cLMZIuUVsYBjuZEHBUubwSAcYBlmuCAjrfPzJ2PBbdb7InSnw2IhRFAJxFIINlmQ
+         e2Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TANWEOqfTxV9xotVFJrbgUmpK/BcquydUVLVqIzATJw=;
+        b=h/J+mfH0MifEGFX+mR4XcUsmTHhcutIn701lMSRf5NU4guFgS85L1v6djS8Cj40RRk
+         eTvS89hCZFcX+YxehL85G/ZBjeveANmPNARyBO73MbqMfBdIEWk465JPFC3L6LshvrOP
+         kEepzcb8CQ3M2H2lVBkCeVZkYrxjURsC4rPze387H7Bq2V65SOMTTRFimTTJdg3+Lchk
+         feKHTP3UCWd/mn7HzTNFdf3qFaAEWc5881A5RO3tWf4Beb2N5e6vv/Q92FztmlJnJis3
+         ymyjX/0s2H/+4Zk9FEEO08GAnAmaeurr2Vp2SlNfMeXrGNKzY8jd4AtTYDXWszVoDWNk
+         VZMw==
+X-Gm-Message-State: AOAM531VEa5rlTH6RBV6jnl0/zr8MYpSS2xsPe10SYZjlzS4rdxrzwv9
+        9AqcEIhU7Pdc2f1DVE3bSwLmojJcAyfbmYEaBDA3
+X-Google-Smtp-Source: ABdhPJyQWt5z4SzG/sMVYcC8+mS4N1nabJfc9BlW0x7OsKiZAW/PYP3ibpa34gAe3DBDIbC+UDNWbjyHXXLOPaYNCE0=
+X-Received: by 2002:adf:82c3:: with SMTP id 61mr25175979wrc.326.1589871346192;
+ Mon, 18 May 2020 23:55:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1589853951-27948-1-git-send-email-majja@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBdGLGyDxqJBDhS4e1zv0v3mcuFZ3y4Tg1jyH0FDCqJs3x5d04ojQqEHC1xdyvODYpHRanzoCnfo6paJpmIeNZANOqQxM4a3CnU89qHsyoQcXYdPJyNt
- Bl+1zahgUy6nYGflF2HRpW1ZAzWclHG42GZD6BpD0MZ7Ytfzb9RmvBLbUt9NRNjvrG7aOmajIhRt9WVIzehFp2zCpZh+m3/Sp6q35+oTFdpO/ym5uc+VGkk5
- z/svh8k3hj/xIzLgwOeROGqqMBkS9JK+5e0CvyC1s5THeJ9zT0ytRm6GPjTEMBZv1fbjCWr85XQcTxHLgvd4DFz8dooMvkRVhekw9DbA7TXixNn5hueez/Fe
- EKZAA38iBr7QrcdCpsSnOubQkRLgWNqU3QnhDOTzVmre3yMqxyd/p0Hwvgf6hc5sfZi9aOu+BSeXy9KYl8VSn8zIK1raV67KTNQRHfS4vHepglyI901jy3rG
- l6uG1HtZPeE1ez+Ua/0NdubrXpXXh4uEU8QPa5I5oEuggfjB8p6ycVrE34bOIWsBfWjCVcvPhwPtsSkL4zKo0Phz8tGc/1zJa7TSEn3xF/a0XMhZ2tYOCQOS
- LdQ=
+References: <20200518205725.72eb3148@canb.auug.org.au> <e132ee19-ff55-c017-732c-284a3b20daf7@infradead.org>
+In-Reply-To: <e132ee19-ff55-c017-732c-284a3b20daf7@infradead.org>
+From:   Danil Kipnis <danil.kipnis@cloud.ionos.com>
+Date:   Tue, 19 May 2020 08:55:35 +0200
+Message-ID: <CAHg0Huy7JKttHs9aEJEaRgwZAM3jcZH-Wb0p8Vy6KBVv9bW0Zg@mail.gmail.com>
+Subject: Re: linux-next: Tree for May 18 (drivers/infiniband/ulp/rtrs/rtrs-clt.c)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/05/2020 04:05, Maheshwar Ajja wrote:
-> If V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES control is enabled
-> encoder can drop frames, if required, to achieve target bitrate
-> instead of modifying the quantization parameter which lowers
-> the encoded frame quality.
-> 
-> Reference: 4.3.8.1 OMX_Video_ControlRateConstantSkipFrames
-> https://www.khronos.org/registry/OpenMAX-IL/specs/OpenMAX_IL_1_1_2_Specification.pdf
-> 
-> Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
-> ---
->  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 7 +++++++
->  drivers/media/v4l2-core/v4l2-ctrls.c                      | 2 ++
->  include/uapi/linux/v4l2-controls.h                        | 1 +
->  3 files changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index d0d506a..bc9265d 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1081,6 +1081,13 @@ enum v4l2_mpeg_video_h264_entropy_mode -
->      Macroblock level rate control enable. Applicable to the MPEG4 and
->      H264 encoders.
->  
-> +``V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES (boolean)``
-> +    Encoder skip frames enable. This control is applicable only if
-> +    ``V4L2_CID_MPEG_VIDEO_BITRATE_MODE`` control is set. If this control
-> +    is enabled encoder can drop frames, if required, to achieve target
-> +    bitrate instead of modifying the quantization parameter which lowers
-> +    the encoded frame quality.
+Hi Randy,
 
-It's a bit unclear for which bitrate modes this control is valid: only for
-MODE_CBR, or also for the constant quality bitrate mode? Or both?
+On Mon, May 18, 2020 at 5:01 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 5/18/20 3:57 AM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Changes since 20200515:
+> >
+>
+> on i386:
+>
+> ../drivers/infiniband/ulp/rtrs/rtrs-clt.c: In function =E2=80=98alloc_ses=
+s=E2=80=99:
+> ../drivers/infiniband/ulp/rtrs/rtrs-clt.c:1447:42: error: =E2=80=98BLK_MA=
+X_SEGMENT_SIZE=E2=80=99 undeclared (first use in this function); did you me=
+an =E2=80=98UDP_MAX_SEGMENTS=E2=80=99?
+>   sess->max_pages_per_mr =3D max_segments * BLK_MAX_SEGMENT_SIZE >> 12;
+>                                           ^~~~~~~~~~~~~~~~~~~~
+>                                           UDP_MAX_SEGMENTS
+>
+>
+> Full randconfig file is attached.
+Thanks a lot for the mail. Didn't try to compile this with block layer
+disabled :/ Will send a fix for this today.
+Best,
+Danil
 
-The phrase 'control is set' is meaningless for a menu control: it really is
-always 'set'. So that needs to be reworked so it is more explicit.
-
-Also note that there is an Exynos MFC control that appears to do something
-similar: V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE.
-
-To what extent does that overlap with the functionality proposed here?
-
-It looks like this proposed control is basically the equivalent of setting
-V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE to V4L2_MPEG_MFC51_FRAME_SKIP_MODE_LEVEL_LIMIT.
-
-So perhaps this MFC control should be promoted to a standard MPEG control instead
-of inventing a new control?
-
-Regards,
-
-	Hans
-
-> +
->  ``V4L2_CID_MPEG_VIDEO_MPEG4_QPEL (boolean)``
->      Quarter pixel motion estimation for MPEG4. Applicable to the MPEG4
->      encoder.
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 1c617b4..d2cb766 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -914,6 +914,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:			return "FWHT Stateless Parameters";
->  	case V4L2_CID_FWHT_I_FRAME_QP:				return "FWHT I-Frame QP Value";
->  	case V4L2_CID_FWHT_P_FRAME_QP:				return "FWHT P-Frame QP Value";
-> +	case V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES:		return "Encoder Skip Frames";
->  
->  	/* VPX controls */
->  	case V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS:		return "VPX Number of Partitions";
-> @@ -1180,6 +1181,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  	case V4L2_CID_MPEG_VIDEO_DECODER_SLICE_INTERFACE:
->  	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
->  	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:
-> +	case V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES:
->  	case V4L2_CID_MPEG_VIDEO_H264_8X8_TRANSFORM:
->  	case V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE:
->  	case V4L2_CID_MPEG_VIDEO_MPEG4_QPEL:
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 0ba1005..d3bc015 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -742,6 +742,7 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
->  #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
->  #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
->  #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
-> +#define V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES		(V4L2_CID_MPEG_BASE + 645)
->  
->  /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
->  #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
-> 
-
+>
+> --
+> ~Randy
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
