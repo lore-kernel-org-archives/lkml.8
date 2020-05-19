@@ -2,178 +2,236 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A278C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB26AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A796207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vHq0swLh"
+	by mail.kernel.org (Postfix) with ESMTP id D105F20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589912433;
+	bh=FMbkHHa+mICkdVdgDDcFfNBj1iV4kInxdudSOyP83lk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HG9KTGhKcbzn6VAiN4PbdbML1HYzjY5oL6drOFB2AOjy2hwjYVCgyeuKV1L4encTt
+	 sudy8W+lTCyVkuPPzVwHVX2K+ye0sn/0OCl1nHCcjk74BCNqnU/SHFAkJBZWyXOADN
+	 czacKQ49r/LbxSN+EGW+OOmU7xZ/8kVBzBG89iUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgESSUP (ORCPT
+        id S1728133AbgESSUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:20:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESSUO (ORCPT
+        Tue, 19 May 2020 14:20:33 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32857 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESSUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:20:14 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE6BC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:20:14 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k19so223934pll.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:20:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=tweaTiRjNAlBbJQOd2LW81zPO4VwEBmw+s1bm5RU2eU=;
-        b=vHq0swLh3ABD8frFY+Q+x4NSOGVByP2eneaj1MaHs/gOWHnrtLDjDI+f1gQefr0YLK
-         H8UsD5ubiyEhndkgLM10NpfpZCtap+ir7DE5Osjs+0VCavZ2LjY1ycsHaBrtXeX4EwQg
-         F8pEEDFuQmgKsdwhv7zaaQ1adwxVcEIeYilLCSMXNvXViMXtdQefRbLNEzyRZOj/6rip
-         u0/U54xMJ6D/yFYQP0IBCcfi8VwjOkr02wk29LfUC+SwPTImJ/jEwAv5anGiXZ+prS6V
-         6jTX0/KlcimopFZncKG1q9rs8bq2ec9T3UryTZ6MxUHXoK1MTjuqxhSQEeFBDAVaepLx
-         S66Q==
+        Tue, 19 May 2020 14:20:32 -0400
+Received: by mail-io1-f65.google.com with SMTP id k18so233767ion.0;
+        Tue, 19 May 2020 11:20:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tweaTiRjNAlBbJQOd2LW81zPO4VwEBmw+s1bm5RU2eU=;
-        b=GdbD8wnZ0gD4j9SIQAL/5BkAskZuIlN7nkGEXsv1dIlN2kI32/K6/6HvUJRIuwYDPy
-         RtwXs7kEbV085uTnpQ267PlQmwgLyqzJm5hT+C9PEB/OrfK/VeZrQ9YkXX9F1y+Bp1b2
-         JwQ2IdiHBzc+7WfqMgyo4qGe02k9x5SnaQJtlDZQ/L+srkI0LxrWZdJqv3M2YO1CeeNv
-         4hdT8CktP5zzCZ/9cVtG4A8qzuLzo/Cz3YnEOVVheLNh2QZ3La/X7s5PhlKVTUo96qPz
-         ei4PeOq8eBRrWwzC00R2ALA46faAUmqBiyejNpb388iHrziBPU8xvRKfS/KnL5luvxad
-         UMrA==
-X-Gm-Message-State: AOAM533fyZm9akZBct1iLd2vUuGJ+j5o6f2D5vf0iIlBJ3+PBThCKE/f
-        da/Em4dEGTmjm60kEoZ4Atg=
-X-Google-Smtp-Source: ABdhPJyx5zytVaBkGF0VlwfL0XvKFiqFmUUAxNpAKbtFa5W/8VkVNNuk72lYjfO4ELheovvj/LX0jA==
-X-Received: by 2002:a17:902:8b88:: with SMTP id ay8mr697128plb.235.1589912413949;
-        Tue, 19 May 2020 11:20:13 -0700 (PDT)
-Received: from localhost.localdomain ([223.235.145.232])
-        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.19.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 May 2020 11:20:13 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, vkoul@kernel.org,
-        sboyd@kernel.org, robh+dt@kernel.org
-Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: [PATCH v2 00/10] Add MMC and DMA support for Actions S700
-Date:   Tue, 19 May 2020 23:49:18 +0530
-Message-Id: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C/+WbZpW6fzoYD8VkS+1aw3FrtrjaYr1YvJ99Voi0R4=;
+        b=kO8SdHtPYtx4WlNekh///W47p5bLJ3HKmJnWO+tJLCb2e8IemaCxZIUTU0AgS80aFH
+         fzLJ2z2YhyeUchBnZVu7KdTC0eUgBGTYZ3Umt3dfU6yTORf6xKHCl6mIlKicXsA9fQbG
+         dx+N2pUM81o2XnPF7khQPlp7KZJ7TWLyEhF8GxRGR/zeXtp5peuFqLQACjDJzHn3VsPX
+         C/YvdGRX8AEwlTBYT1VkxZrzkhAD5rdV/J7JDfdfg2DJes/A+F9XL3rcMKbDu+FMoNNl
+         IGRIiaxjWsqPz6uNn5kLWT5eAqQZ8xO+xBWuOEmRnKX6DZbmEG7twp4KKnkKZyUM1jgA
+         zxyw==
+X-Gm-Message-State: AOAM531fA22VaGrZ6elvjc01gS+9XcjLleJRmoQAnVRCXaKHU2yeL2qb
+        tln5M1Ktts/gkW7f29+C+g==
+X-Google-Smtp-Source: ABdhPJy915OuehRkdPhEfoQo98D64T4fLNa9nG2JB08WidQt3qwfV8ozXd5uAN5DAlsvXCG3xjpzPg==
+X-Received: by 2002:a6b:b685:: with SMTP id g127mr214847iof.192.1589912431059;
+        Tue, 19 May 2020 11:20:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j15sm101169ilk.0.2020.05.19.11.20.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 11:20:29 -0700 (PDT)
+Received: (nullmailer pid 409338 invoked by uid 1000);
+        Tue, 19 May 2020 18:20:28 -0000
+Date:   Tue, 19 May 2020 12:20:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
+ to yaml
+Message-ID: <20200519182028.GB342367@bogus>
+References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
+ <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519075111.6356-2-jonathan.albrieux@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series(v2) addressed the review comments provided by Andre, and
-there are changes in patch 1/10, 2/10, 5/10 and 9/10.
+On Tue, May 19, 2020 at 09:50:57AM +0200, Jonathan Albrieux wrote:
+> Converts documentation from txt format to yaml 
+> 
+> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> ---
+>  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 --------
+>  .../devicetree/bindings/iio/imu/bmi160.yaml   | 84 +++++++++++++++++++
+>  2 files changed, 84 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.yaml
 
-* Accessor function (to get the frame lenght) has moved from
-  patch 2/9 to patch 1/9 with inline removed.
-* Removed the unnecessary line break.
-* Added comments about the way DMA descriptor differs between S700
-  and S900.
-* Added a macro to define fcnt value.
-* Updated dma DT bindings.
-* Used SoC secific compatible string for MMC.
+Use compatible string for filename: bosch,bmi160.yaml
 
-Apart from it, a new patch 8/10 is added in this series to
-update mmc DT bindings.
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> deleted file mode 100644
+> index 900c169de00f..000000000000
+> --- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> +++ /dev/null
+> @@ -1,37 +0,0 @@
+> -Bosch BMI160 - Inertial Measurement Unit with Accelerometer, Gyroscope
+> -and externally connectable Magnetometer
+> -
+> -https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> -
+> -Required properties:
+> - - compatible : should be "bosch,bmi160"
+> - - reg : the I2C address or SPI chip select number of the sensor
+> - - spi-max-frequency : set maximum clock frequency (only for SPI)
+> -
+> -Optional properties:
+> - - interrupts : interrupt mapping for IRQ
+> - - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
+> -   input, set to "INT2" if INT2 pin should be used instead
+> - - drive-open-drain : set if the specified interrupt pin should be configured as
+> -   open drain. If not set, defaults to push-pull.
+> -
+> -Examples:
+> -
+> -bmi160@68 {
+> -	compatible = "bosch,bmi160";
+> -	reg = <0x68>;
+> -
+> -	interrupt-parent = <&gpio4>;
+> -	interrupts = <12 IRQ_TYPE_EDGE_RISING>;
+> -	interrupt-names = "INT1";
+> -};
+> -
+> -bmi160@0 {
+> -	compatible = "bosch,bmi160";
+> -	reg = <0>;
+> -	spi-max-frequency = <10000000>;
+> -
+> -	interrupt-parent = <&gpio2>;
+> -	interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
+> -	interrupt-names = "INT2";
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> new file mode 100644
+> index 000000000000..6b464ce5ed0b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/imu/bmi160.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bosch BMI160
+> +
+> +maintainers:
+> +  - can't find a mantainer, author is Daniel Baluta <daniel.baluta@intel.com>
 
-Series is rebased on 5.7.0-rc6.
+Would help to Cc him perhaps.
 
-----------------------------------------------------------------------
+> +
+> +description: |
+> +  Inertial Measurement Unit with Accelerometer, Gyroscope and externally
+> +  connectable Magnetometer
+> +  https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> +
+> +properties:
+> +  compatible:
+> +    const: bosch,bmi160
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: the I2C address or SPI chip select number of the sensor
+> +
+> +  spi-max-frequency:
+> +    maxItems: 1
+> +    description: set maximum clock frequency (required only for SPI)
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: interrupt mapping for IRQ
 
-Series(v1) have following changes from the previous series.
+No need for description if not adding anything unique for this device.
 
-New patch(5/8) has been introduced that converts dma dt-binding
-for Actions OWL SoC from text format to yaml file.
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 1
+> +    items:
+> +      enum:
+> +        - INT1
+> +        - INT2
 
-For patch(2/8) new accessor function is added to get the frame
-lenght which is common to both S900 and S700. Apart from it
-SoC check is removed from irq routine as it is not needed.
+Just the enum is enough.
 
-Patch(4/8) which is an hack to prove our DMA and MMC works
-for S700 is now sent as *do not merge* patch.
- 
-DMA is tested using dmatest with follwoing result:
-
-root@ubuntu:~# echo dma0chan1 > /sys/module/dmatest/parameters/channel
-root@ubuntu:~# echo 2000 > /sys/module/dmatest/parameters/timeout
-root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/iterations
-root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/run
-
-root@ubuntu:~# dmesg | tail
-[  303.362586] dmatest: Added 1 threads using dma0chan1
-[  317.258658] dmatest: Started 1 threads using dma0chan1
-[  317.259397] dmatest: dma0chan1-copy0: summary 1 tests, 0 failures 16129.03 iops 32258 KB/s (0)
-
--------------------------------------------------------------------------------
-
-The intention of RFC series is to enable uSD and DMA support for
-Cubieboard7 based on Actions S700 SoC, and on the way we found that
-it requires changes in dmaengine present on S700 as its different
-from what is present on S900.
-
-Patch(1/8) does provide a new way to describe DMA descriptor, idea is
-to remove the bit-fields as its less maintainable. It is only build
-tested and it would be great if this can be tested on S900 based
-hardware.
-
-Patch(2/8) adds S700 DMA engine support, there is new compatible
-string added for it, which means a changed bindings needed to submitted
-for this. I would plan to send it later the converted "owl-dma.yaml".
-
-Patch(4/8) disables the sps node as its memory range is conflicting
-pinctrl node and results in pinctrl proble failure.
-
-Rest of patches in the series adds DMA/MMC nodes for S700
-alone with binding constants and enables the uSD for Cubieboard7.
-
-This whole series is tested, by building/compiling Kernel on
-Cubieboard7-lite which was *almost* successful (OOM kicked in,
-while Linking due to less RAM present on hardware).
-
-Following is the mmc speed :
-
-ubuntu@ubuntu:~$ sudo hdparm -tT /dev/mmcblk0
-
-/dev/mmcblk0:
- Timing cached reads:   1310 MB in  2.00 seconds = 655.15 MB/sec
- Timing buffered disk reads:  62 MB in  3.05 seconds =  20.30 MB/sec
-
-Amit Singh Tomar (10):
-  dmaengine: Actions: get rid of bit fields from dma descriptor
-  dmaengine: Actions: Add support for S700 DMA engine
-  clk: actions: Add MMC clock-register reset bits
-  arm64: dts: actions: do not merge disable sps node from S700
-  dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
-  arm64: dts: actions: Add DMA Controller for S700
-  dt-bindings: reset: s700: Add binding constants for mmc
-  dt-bindings: mmc: owl: add compatible string actions,s700-mmc
-  arm64: dts: actions: Add MMC controller support for S700
-  arm64: dts: actions: Add uSD support for Cubieboard7
-
- Documentation/devicetree/bindings/dma/owl-dma.txt  |  47 --------
- Documentation/devicetree/bindings/dma/owl-dma.yaml |  76 +++++++++++++
- Documentation/devicetree/bindings/mmc/owl-mmc.yaml |   6 +-
- arch/arm64/boot/dts/actions/s700-cubieboard7.dts   |  41 +++++++
- arch/arm64/boot/dts/actions/s700.dtsi              |  48 ++++++++
- drivers/clk/actions/owl-s700.c                     |   3 +
- drivers/dma/owl-dma.c                              | 126 ++++++++++++---------
- include/dt-bindings/reset/actions,s700-reset.h     |   3 +
- 8 files changed, 251 insertions(+), 99 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
- create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
-
--- 
-2.7.4
-
+> +    description: |
+> +      set to "INT1" if INT1 pin should be used as interrupt input, set
+> +      to "INT2" if INT2 pin should be used instead
+> +
+> +  drive-open-drain:
+> +    description: |
+> +      set if the specified interrupt pin should be configured as
+> +      open drain. If not set, defaults to push-pull.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    // Example for I2C
+> +    i2c@78b7000 {
+> +        reg = <0x78b6000 0x600>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        bmi160@68 {
+> +                compatible = "bosch,bmi160";
+> +                reg = <0x68>;
+> +                interrupt-parent = <&gpio4>;
+> +                interrupts = <12 1>;
+> +                interrupt-names = "INT1";
+> +        };
+> +  - |
+> +    // Example for SPI
+> +    spi@78b7000 {
+> +        reg = <0x78b7000 0x600>,
+> +              <0x7884000 0x23000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        bmi160@0 {
+> +                compatible = "bosch,bmi160";
+> +                reg = <0>;
+> +                spi-max-frequency = <10000000>;
+> +                interrupt-parent = <&gpio2>;
+> +                interrupts = <12 1>;
+> +                interrupt-names = "INT2";
+> +        };
+> +    };
+> -- 
+> 2.17.1
+> 
