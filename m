@@ -2,253 +2,87 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F70C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44B69206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E758B2081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589894347;
+	bh=/W235ZXLquPgLiHQpzwUCkiv/Zauu8a7ukvyN8H+274=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=V9MFIvq6xfjg0tJjPZVTUDrt4qznpN1gtI2pG3UEx9FuC6vJ0PXO123vs2B8GEyxi
+	 3SMRMpQxzwtXNKoBA54yXq2SEoWtj2qbYiOTzwfAGmfZOUWU/LI2z2GeE4+OfupfKz
+	 rWnvA+sKsyjOp7ZnGLhzn6nl3DYjQAb2NOXO1Rnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgESNOt (ORCPT
+        id S1728821AbgESNTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgESNOs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:14:48 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52414C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:14:48 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jb24v-0007Jx-Kj; Tue, 19 May 2020 15:14:41 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jb24p-00017A-U6; Tue, 19 May 2020 15:14:35 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: [PATCH net-next v2 1/2] ethtool: provide UAPI for PHY Signal Quality Index (SQI)
-Date:   Tue, 19 May 2020 15:14:32 +0200
-Message-Id: <20200519131433.4224-2-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200519131433.4224-1-o.rempel@pengutronix.de>
-References: <20200519131433.4224-1-o.rempel@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 19 May 2020 09:19:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727057AbgESNTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 09:19:05 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E08F7206D4;
+        Tue, 19 May 2020 13:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589894345;
+        bh=/W235ZXLquPgLiHQpzwUCkiv/Zauu8a7ukvyN8H+274=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=ck1yJZW0nqJb1mw3mpDx4TAIjSEtLcBIHmMGPOjPkhQYLwt1k+IWvkA8C3fLsP3gq
+         IbCRWzOuSC7JK4uuA1JuwDf1sI3iLj9BIIczAous/rzTcgjr/PsXgZMShWkqrvgZDH
+         gSlrGv4Tvnvms8z7Hal67vJbV0aAe8Q09JTF//J8=
+Date:   Tue, 19 May 2020 14:19:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>, timur@kernel.org,
+        nicoleotsuka@gmail.com, lgirdwood@gmail.com, Xiubo.Lee@gmail.com,
+        tiwai@suse.com, perex@perex.cz, festevam@gmail.com,
+        alsa-devel@alsa-project.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1589278979-31008-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1589278979-31008-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH] ASoC: fsl_asrc: Set ASR76K and ASR56K based on processing clock
+Message-Id: <158989434292.51282.3388450779255544189.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signal Quality Index is a mandatory value required by "OPEN Alliance
-SIG" for the 100Base-T1 PHYs [1]. This indicator can be used for cable
-integrity diagnostic and investigating other noise sources and
-implement by at least two vendors: NXP[2] and TI[3].
+On Tue, 12 May 2020 18:22:59 +0800, Shengjiu Wang wrote:
+> The processing clock is different for platforms, so it is better
+> to set ASR76K and ASR56K based on processing clock, rather than
+> hard coding the value for them.
 
-[1] http://www.opensig.org/download/document/218/Advanced_PHY_features_for_automotive_Ethernet_V1.0.pdf
-[2] https://www.nxp.com/docs/en/data-sheet/TJA1100.pdf
-[3] https://www.ti.com/product/DP83TC811R-Q1
+Applied to
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- Documentation/networking/ethtool-netlink.rst |  6 ++--
- include/linux/phy.h                          |  2 ++
- include/uapi/linux/ethtool_netlink.h         |  2 ++
- net/ethtool/common.c                         | 20 +++++++++++
- net/ethtool/common.h                         |  2 ++
- net/ethtool/linkstate.c                      | 38 +++++++++++++++++++-
- 6 files changed, 67 insertions(+), 3 deletions(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
 
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index eed46b6aa07df..7e651ea33eabb 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -454,10 +454,12 @@ Request contents:
- 
- Kernel response contents:
- 
--  ====================================  ======  ==========================
-+  ====================================  ======  ============================
-   ``ETHTOOL_A_LINKSTATE_HEADER``        nested  reply header
-   ``ETHTOOL_A_LINKSTATE_LINK``          bool    link state (up/down)
--  ====================================  ======  ==========================
-+  ``ETHTOOL_A_LINKSTATE_SQI``           u32     Current Signal Quality Index
-+  ``ETHTOOL_A_LINKSTATE_SQI_MAX``       u32     Max support SQI value
-+  ====================================  ======  ============================
- 
- For most NIC drivers, the value of ``ETHTOOL_A_LINKSTATE_LINK`` returns
- carrier flag provided by ``netif_carrier_ok()`` but there are drivers which
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 59344db43fcb1..950ba479754bd 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -706,6 +706,8 @@ struct phy_driver {
- 			    struct ethtool_tunable *tuna,
- 			    const void *data);
- 	int (*set_loopback)(struct phy_device *dev, bool enable);
-+	int (*get_sqi)(struct phy_device *dev);
-+	int (*get_sqi_max)(struct phy_device *dev);
- };
- #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
- 				      struct phy_driver, mdiodrv)
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index 2881af411f761..e6f109b76c9aa 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -232,6 +232,8 @@ enum {
- 	ETHTOOL_A_LINKSTATE_UNSPEC,
- 	ETHTOOL_A_LINKSTATE_HEADER,		/* nest - _A_HEADER_* */
- 	ETHTOOL_A_LINKSTATE_LINK,		/* u8 */
-+	ETHTOOL_A_LINKSTATE_SQI,		/* u32 */
-+	ETHTOOL_A_LINKSTATE_SQI_MAX,		/* u32 */
- 
- 	/* add new constants above here */
- 	__ETHTOOL_A_LINKSTATE_CNT,
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 423e640e3876d..f7572723a07b7 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -310,6 +310,26 @@ int __ethtool_get_link(struct net_device *dev)
- 	return netif_running(dev) && dev->ethtool_ops->get_link(dev);
- }
- 
-+int __ethtool_get_sqi(struct net_device *dev)
-+{
-+	struct phy_device *phydev = dev->phydev;
-+
-+	if (!phydev || !phydev->drv->get_sqi)
-+		return -EOPNOTSUPP;
-+
-+	return phydev->drv->get_sqi(phydev);
-+}
-+
-+int __ethtool_get_sqi_max(struct net_device *dev)
-+{
-+	struct phy_device *phydev = dev->phydev;
-+
-+	if (!phydev || !phydev->drv->get_sqi_max)
-+		return -EOPNOTSUPP;
-+
-+	return phydev->drv->get_sqi_max(phydev);
-+}
-+
- int ethtool_get_max_rxfh_channel(struct net_device *dev, u32 *max)
- {
- 	u32 dev_size, current_max = 0;
-diff --git a/net/ethtool/common.h b/net/ethtool/common.h
-index a62f68ccc43ab..24c8d7f10d1d4 100644
---- a/net/ethtool/common.h
-+++ b/net/ethtool/common.h
-@@ -30,6 +30,8 @@ extern const char ts_tx_type_names[][ETH_GSTRING_LEN];
- extern const char ts_rx_filter_names[][ETH_GSTRING_LEN];
- 
- int __ethtool_get_link(struct net_device *dev);
-+int __ethtool_get_sqi(struct net_device *dev);
-+int __ethtool_get_sqi_max(struct net_device *dev);
- 
- bool convert_legacy_settings_to_link_ksettings(
- 	struct ethtool_link_ksettings *link_ksettings,
-diff --git a/net/ethtool/linkstate.c b/net/ethtool/linkstate.c
-index 2740cde0a182b..dc8bb4fff3bf5 100644
---- a/net/ethtool/linkstate.c
-+++ b/net/ethtool/linkstate.c
-@@ -10,6 +10,8 @@ struct linkstate_req_info {
- struct linkstate_reply_data {
- 	struct ethnl_reply_data		base;
- 	int				link;
-+	int				sqi;
-+	int				sqi_max;
- };
- 
- #define LINKSTATE_REPDATA(__reply_base) \
-@@ -20,6 +22,8 @@ linkstate_get_policy[ETHTOOL_A_LINKSTATE_MAX + 1] = {
- 	[ETHTOOL_A_LINKSTATE_UNSPEC]		= { .type = NLA_REJECT },
- 	[ETHTOOL_A_LINKSTATE_HEADER]		= { .type = NLA_NESTED },
- 	[ETHTOOL_A_LINKSTATE_LINK]		= { .type = NLA_REJECT },
-+	[ETHTOOL_A_LINKSTATE_SQI]		= { .type = NLA_REJECT },
-+	[ETHTOOL_A_LINKSTATE_SQI_MAX]		= { .type = NLA_REJECT },
- };
- 
- static int linkstate_prepare_data(const struct ethnl_req_info *req_base,
-@@ -34,6 +38,19 @@ static int linkstate_prepare_data(const struct ethnl_req_info *req_base,
- 	if (ret < 0)
- 		return ret;
- 	data->link = __ethtool_get_link(dev);
-+
-+	ret = __ethtool_get_sqi(dev);
-+	if (ret < 0 && ret != -EOPNOTSUPP)
-+		return ret;
-+
-+	data->sqi = ret;
-+
-+	ret = __ethtool_get_sqi_max(dev);
-+	if (ret < 0 && ret != -EOPNOTSUPP)
-+		return ret;
-+
-+	data->sqi_max = ret;
-+
- 	ethnl_ops_complete(dev);
- 
- 	return 0;
-@@ -42,8 +59,19 @@ static int linkstate_prepare_data(const struct ethnl_req_info *req_base,
- static int linkstate_reply_size(const struct ethnl_req_info *req_base,
- 				const struct ethnl_reply_data *reply_base)
- {
--	return nla_total_size(sizeof(u8)) /* LINKSTATE_LINK */
-+	struct linkstate_reply_data *data = LINKSTATE_REPDATA(reply_base);
-+	int len;
-+
-+	len = nla_total_size(sizeof(u8)) /* LINKSTATE_LINK */
- 		+ 0;
-+
-+	if (data->sqi != -EOPNOTSUPP)
-+		len += nla_total_size(sizeof(u32));
-+
-+	if (data->sqi_max != -EOPNOTSUPP)
-+		len += nla_total_size(sizeof(u32));
-+
-+	return len;
- }
- 
- static int linkstate_fill_reply(struct sk_buff *skb,
-@@ -56,6 +84,14 @@ static int linkstate_fill_reply(struct sk_buff *skb,
- 	    nla_put_u8(skb, ETHTOOL_A_LINKSTATE_LINK, !!data->link))
- 		return -EMSGSIZE;
- 
-+	if (data->sqi != -EOPNOTSUPP &&
-+	    nla_put_u32(skb, ETHTOOL_A_LINKSTATE_SQI, data->sqi))
-+		return -EMSGSIZE;
-+
-+	if (data->sqi_max != -EOPNOTSUPP &&
-+	    nla_put_u32(skb, ETHTOOL_A_LINKSTATE_SQI_MAX, data->sqi_max))
-+		return -EMSGSIZE;
-+
- 	return 0;
- }
- 
--- 
-2.26.2
+Thanks!
 
+[1/1] ASoC: fsl_asrc: Set ASR76K and ASR56K based on processing clock
+      commit: f8953043e6e24f9425249464605a541d00950709
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
