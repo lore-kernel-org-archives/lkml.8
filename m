@@ -2,143 +2,230 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3719C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AC5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3DEC20829
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:32:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="wdbszZvB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="4MiZn6qI"
+	by mail.kernel.org (Postfix) with ESMTP id AABA720842
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589898735;
+	bh=1XXHRqjtt+WSYWwOg1XwbutxmoWaeM/OCUneB2tBKtc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=h0b2wbmptktvUtEQSUFr9Gv+3KMlRnnMwW5Qnv9eU7TBnRzSFCXHnrfg09cPOhp5d
+	 hIXjMZC24m6/Q5NQU2bdhfAROiDmaEoHAtUsS9vxxo6GO+iQq5ijM0TjHFAnGpGo6W
+	 OYDYnCBl1DraHN5tzUlhbsaEEetYIDgEYxg1v+W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgESOcK (ORCPT
+        id S1729099AbgESOcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:32:10 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:34727 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbgESOcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:32:09 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 7D7E52A9;
-        Tue, 19 May 2020 10:32:08 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 19 May 2020 10:32:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=Rlk4qrJ6yWazVdgX1ne5EXVV/T
-        v1KNqa9KLIo1m4QFs=; b=wdbszZvBkVf/nGSHTzPyqOPN9vPvKgqox6+6Tx8Q8Q
-        vldSNqDpSAy8AguSyRpGRAwnETiPMR/HJTM6FhVJ047t1XPYNlJWCnuVNgMMncJp
-        9uI946ogGknuw2J9KzuSTSTZgBQKZXM9Jr3IOftMKrxS7bgcek5PSaYyUH8CUsci
-        aBVLaJv698vNiGw7y6v0gVdNZZctKw5ctQsUJaiWG8WF9lJtFAr/HegUKA6mIZcB
-        E0akyQx4xNj+JyvXT4fu/vuXPuul/4X9CMZjn3CxvpvPAFUsdI/aXTUVklUjJe+B
-        wjhIQq8TZ59M+YqaxB4Bu+bkuA4IZ15unSVvzQN/FtKg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Rlk4qrJ6yWazVdgX1
-        ne5EXVV/Tv1KNqa9KLIo1m4QFs=; b=4MiZn6qI92hnePjRBoF1j7N/HJM+eV94u
-        CnkYFrQDzmlB38HcO8//yxFPSFz/dYrXxb1DeEl4jORXYBjXC65tCuQIBf2PXTdc
-        UriYVntEtQbAvQTVSVibrBNI8UiMmYuF6iiAWkNc0Bu19YxF59OmNNYMc057OKoT
-        IJKW+ncflE9A28DQIv+/8B0aRyT6AWVSvFRu7qw5ukATgKXsjg0E+RXnb7Id0t5M
-        JnvqGIChl8Ya9/OCiFKpp7p53bHEOWC2bEVuq5G4vthB8+NXD62KsoNlASvm/ZAr
-        GTIT9oW0P4y5/ejWbBnJmAaa7Zfh+Co8jG6eB8MfWnIdhkVveriNw==
-X-ME-Sender: <xms:5-3DXiBLgKyNe5_lu6ngsxiJSP4vimnCE-gS8hTHS5VPXlIIVqD2WQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddtjedgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
-    ihgurdgruheqnecuggftrfgrthhtvghrnhepkefhieffjeevfeevhedtieeihfefvdejle
-    dvvddthefftedujeethfeuueelfedtnecukfhppedugedrvddrieeirdduvddvnecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifse
-    grjhdrihgurdgruh
-X-ME-Proxy: <xmx:5-3DXsjYlP8YJP36rhRrS2Chf4Wqc-hBzF35zbCl2ZQ3wujt9aI2Ig>
-    <xmx:5-3DXllV5Mw7NxNxKyDalbWkne9Jk4rRhLEQsV6u2ersB8ixy-HV0Q>
-    <xmx:5-3DXgy51YK8TfpAUu3zEWn-OmMyxs-jfzsMCnS_9bZ-Fh3mj1KDvQ>
-    <xmx:6O3DXo5km_-KEyHYywfw-7wrsYmQOVB-Uh8YOMaMVmnMP0ULTxoB7A>
-Received: from localhost.localdomain (ppp14-2-66-122.adl-apt-pir-bras31.tpg.internode.on.net [14.2.66.122])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 218AD3066429;
-        Tue, 19 May 2020 10:32:05 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux@armlinux.org.uk, oleg@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: Implement functions for HAVE_FUNCTION_ARG_ACCESS_API
-Date:   Wed, 20 May 2020 00:01:32 +0930
-Message-Id: <20200519143132.603579-1-andrew@aj.id.au>
-X-Mailer: git-send-email 2.25.1
+        Tue, 19 May 2020 10:32:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728994AbgESOcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 10:32:14 -0400
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F155420874;
+        Tue, 19 May 2020 14:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589898733;
+        bh=1XXHRqjtt+WSYWwOg1XwbutxmoWaeM/OCUneB2tBKtc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tG/WI7qQXvcO60JsLcmZL5mhQU5vPQ0IHLJS4jcjTvZENfGM+Yvq4lzkb9/1+kaB2
+         boc74Yf1/+FDphKy4BZbh1UpmI2oYLclKJ0DLY3pUBKKMzVY8sF5M70UUe+gmRCTVZ
+         kREZZxHkz8TNNNsJCb35V4HGVab/CIMbYgd8Pzn0=
+Received: by mail-io1-f54.google.com with SMTP id f4so14698585iov.11;
+        Tue, 19 May 2020 07:32:12 -0700 (PDT)
+X-Gm-Message-State: AOAM530UPsdNbfLq8hh9rbIiWhxxhh8p/HI3H75idb7VX9uIJXi3716l
+        SWN1+DI1YEm0CNdGjeTUhrDCJ531/QQVJNvfd3E=
+X-Google-Smtp-Source: ABdhPJxjyA1i44V17SV1ppXFEe39BzP/hHzIXIE8WLdS8tIhuMM1cTHG9CMqQhTXIWplXBdei1EfUxsbrT+5qpVkWgc=
+X-Received: by 2002:a5d:898a:: with SMTP id m10mr18219593iol.203.1589898732296;
+ Tue, 19 May 2020 07:32:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20200429082134eucas1p2415c5269202529e6b019f2d70c1b5572@eucas1p2.samsung.com>
+ <20200429082120.16259-1-geert+renesas@glider.be> <dleftjmu645mqn.fsf%l.stelmach@samsung.com>
+ <CAMuHMdXxq6m6gebQbWvxDynDcZ7dLyZzKC_QroK63L8FGeac1Q@mail.gmail.com>
+ <20200519094637.GZ1551@shell.armlinux.org.uk> <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+ <CAMj1kXH_s4qjDfTO03PkGNaiwfjmfkrZ-FE8vTm74QSrgoVt0A@mail.gmail.com> <20200519142854.GF1551@shell.armlinux.org.uk>
+In-Reply-To: <20200519142854.GF1551@shell.armlinux.org.uk>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 19 May 2020 16:32:01 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEk3Tkj2HQOhxPP3m7gMX7nAViJ7ZBU7XB0wUy2ceNuWw@mail.gmail.com>
+Message-ID: <CAMj1kXEk3Tkj2HQOhxPP3m7gMX7nAViJ7ZBU7XB0wUy2ceNuWw@mail.gmail.com>
+Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lukasz Stelmach <l.stelmach@samsung.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Grant Likely <grant.likely@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows extraction of kernel function arguments via kprobes on ARM.
-Based on the arm64 implementation and adapted for the 32-bit AAPCS.
+On Tue, 19 May 2020 at 16:29, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, May 19, 2020 at 03:56:59PM +0200, Ard Biesheuvel wrote:
+> > On Tue, 19 May 2020 at 13:21, Geert Uytterhoeven <geert@linux-m68k.org>=
+ wrote:
+> > >
+> > > Hi Russell,
+> > >
+> > > CC devicetree
+> > >
+> > > On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > > > On Tue, May 19, 2020 at 11:44:17AM +0200, Geert Uytterhoeven wrote:
+> > > > > On Tue, May 19, 2020 at 10:54 AM Lukasz Stelmach <l.stelmach@sams=
+ung.com> wrote:
+> > > > > > It was <2020-04-29 =C5=9Bro 10:21>, when Geert Uytterhoeven wro=
+te:
+> > > > > > > Currently, the start address of physical memory is obtained b=
+y masking
+> > > > > > > the program counter with a fixed mask of 0xf8000000.  This ma=
+sk value
+> > > > > > > was chosen as a balance between the requirements of different=
+ platforms.
+> > > > > > > However, this does require that the start address of physical=
+ memory is
+> > > > > > > a multiple of 128 MiB, precluding booting Linux on platforms =
+where this
+> > > > > > > requirement is not fulfilled.
+> > > > > > >
+> > > > > > > Fix this limitation by obtaining the start address from the D=
+TB instead,
+> > > > > > > if available (either explicitly passed, or appended to the ke=
+rnel).
+> > > > > > > Fall back to the traditional method when needed.
+> > > > > > >
+> > > > > > > This allows to boot Linux on r7s9210/rza2mevb using the 64 Mi=
+B of SDRAM
+> > > > > > > on the RZA2MEVB sub board, which is located at 0x0C000000 (CS=
+3 space),
+> > > > > > > i.e. not at a multiple of 128 MiB.
+> > > > > > >
+> > > > > > > Suggested-by: Nicolas Pitre <nico@fluxnic.net>
+> > > > > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > > > > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+> > > > > > > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> > > > > > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > > > > Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> > > > > > > ---
+> > > > > >
+> > > > > > [...]
+> > > > > >
+> > > > > > Apparently reading physical memory layout from DTB breaks crash=
+dump
+> > > > > > kernels. A crashdump kernel is loaded into a region of memory, =
+that is
+> > > > > > reserved in the original (i.e. to be crashed) kernel. The reser=
+ved
+> > > > > > region is large enough for the crashdump kernel to run complete=
+ly inside
+> > > > > > it and don't modify anything outside it, just read and dump the=
+ remains
+> > > > > > of the crashed kernel. Using the information from DTB makes the
+> > > > > > decompressor place the kernel outside of the dedicated region.
+> > > > > >
+> > > > > > The log below shows that a zImage and DTB are loaded at 0x18eb8=
+000 and
+> > > > > > 0x193f6000 (physical). The kernel is expected to run at 0x18008=
+000, but
+> > > > > > it is decompressed to 0x00008000 (see r4 reported before jumpin=
+g from
+> > > > > > within __enter_kernel). If I were to suggest something, there n=
+eed to be
+> > > > > > one more bit of information passed in the DTB telling the decom=
+pressor
+> > > > > > to use the old masking technique to determain kernel address. I=
+t would
+> > > > > > be set in the DTB loaded along with the crashdump kernel.
+> > > > >
+> > > > > Shouldn't the DTB passed to the crashkernel describe which region=
+ of
+> > > > > memory is to be used instead?
+> > > >
+> > > > Definitely not.  The crashkernel needs to know where the RAM in the
+> > > > machine is, so that it can create a coredump of the crashed kernel.
+> > >
+> > > So the DTB should describe both ;-)
+> > >
+> > > > > Describing "to use the old masking technique" sounds a bit hackis=
+h to me.
+> > > > > I guess it cannot just restrict the /memory node to the reserved =
+region,
+> > > > > as the crashkernel needs to be able to dump the remains of the cr=
+ashed
+> > > > > kernel, which lie outside this region.
+> > > >
+> > > > Correct.
+> > > >
+> > > > > However, something under /chosen should work.
+> > > >
+> > > > Yet another sticky plaster...
+> > >
+> > > IMHO the old masking technique is the hacky solution covered by
+> > > plasters.
+> > >
+> >
+> > I think debating which solution is the hacky one will not get us anywhe=
+re.
+> >
+> > The simple reality is that the existing solution works fine for
+> > existing platforms, and so any changes in the logic will have to be
+> > opt-in in one way or the other.
+> >
+> > Since U-boot supports EFI boot these days, one potential option is to
+> > rely on that. I have some changes implementing this that go on top of
+> > this patch, but they don't actually rely on it - it was just to
+> > prevent lexical conflicts.
+> >
+> > The only remaining options imo are a kernel command line option, or a
+> > DT property that tells the decompressor to look at the memory nodes.
+> > But using the DT memory nodes on all platforms like this patch does is
+> > obviously just too risky.
+> >
+> > On another note, I do think the usable-memory-region property should
+> > be implemented for ARM as well - relying on this rounding to ensure
+> > that the decompressor does the right thing is too fragile.
+>
+> What is "too fragile" is trying to change this and expecting everything
+> to continue working as it did before.
+>
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
-The description for HAVE_FUNCTION_ARG_ACCESS_API was pretty vague on what was
-required. I've implemented enough to enable argument extraction for kprobes; is
-there anything else needed to satisfy HAVE_FUNCTION_ARG_ACCESS_API?
+That is my point.
 
- arch/arm/Kconfig              |  1 +
- arch/arm/include/asm/ptrace.h | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+> How will switching to EFI help?  Won't the crashdump kernel detect EFI
+> and try to get the memory map from EFI, whereby it runs into exactly
+> the same issue that the DT approach does?
+>
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index c77c93c485a0..d82f80845e03 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -82,6 +82,7 @@ config ARM
- 	select HAVE_EXIT_THREAD
- 	select HAVE_FAST_GUP if ARM_LPAE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-+	select HAVE_FUNCTION_ARG_ACCESS_API
- 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
- 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
- 	select HAVE_GCC_PLUGINS
-diff --git a/arch/arm/include/asm/ptrace.h b/arch/arm/include/asm/ptrace.h
-index 91d6b7856be4..71e7649deac9 100644
---- a/arch/arm/include/asm/ptrace.h
-+++ b/arch/arm/include/asm/ptrace.h
-@@ -149,6 +149,30 @@ static inline unsigned long regs_get_register(struct pt_regs *regs,
- 	return *(unsigned long *)((unsigned long)regs + offset);
- }
- 
-+/*
-+ * Read a register given an architectural register index r.
-+ */
-+static inline unsigned long pt_regs_read_reg(const struct pt_regs *regs, int r)
-+{
-+	return regs->uregs[r];
-+}
-+
-+/**
-+ * regs_get_kernel_argument() - get Nth function argument in kernel
-+ * @regs:	pt_regs of that context
-+ * @n:		function argument number (start from 0)
-+ *
-+ * regs_get_argument() returns @n th argument of the function call.
-+ */
-+static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
-+						     unsigned int n)
-+{
-+#define NR_REG_ARGUMENTS 4
-+	if (n < NR_REG_ARGUMENTS)
-+		return pt_regs_read_reg(regs, n);
-+	return 0;
-+}
-+
- /* Valid only for Kernel mode traps. */
- static inline unsigned long kernel_stack_pointer(struct pt_regs *regs)
- {
--- 
-2.25.1
+No. If you boot from kexec, then the EFI stub is completely
+circumvented, and things work as before.
 
+> The current crashkernel situation works precisely because of the 128M
+> masking that is being done.
+>
+
+Indeed. That is precisely my point.
