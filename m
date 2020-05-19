@@ -2,87 +2,107 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC66C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2898C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B08120835
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589899544;
-	bh=/dgqySkNnw+UK5kssnhg5AYKnoQk02tynr9C8SngIMw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=vW0U10swsWG2bWGyYVdxQoknqAHUJTlzdutaejXvYed6CIYjfv6knP6vaDV0AcAKU
-	 8y5Gx8LenDe0v5mGeTcvVnFzoNG+FFbpsdBL1R0ZO26xRz2mH3gzr9dqymH2oa6rYm
-	 /XKVLgc0r6vzBGmw8MUCcViR58gTfbc1J+97Vess=
+	by mail.kernel.org (Postfix) with ESMTP id CEA992072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M2cIOnKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgESOpn (ORCPT
+        id S1729182AbgESOpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727904AbgESOpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:45:43 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0124207FB;
-        Tue, 19 May 2020 14:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589899543;
-        bh=/dgqySkNnw+UK5kssnhg5AYKnoQk02tynr9C8SngIMw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KfwNFTCXBfZCdibht0nlEElq287INyWzpWXwpzkjdCDLoq04PnGMc1mBD44iG+zej
-         9KqGVp/ypVDpaRfKv2tl3aYHLNuwf+WxVNX3yn0BHcnVW5eswkSrV35xq7rgAaE4QH
-         hGv19Y0PDFOfZNYwhd0rSouNewH7WhTXmbrejQUI=
-Subject: Re: [PATCH 5.4 000/147] 5.4.42-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200518173513.009514388@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <8787b77d-8b8d-a4ff-c4c7-3b87f325cc80@kernel.org>
-Date:   Tue, 19 May 2020 08:45:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 10:45:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727904AbgESOpq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 10:45:46 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580BFC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 07:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Vijp3ax4bbjLHEFlE42c26bubWJnhGdQUG2gMFm2ejw=; b=M2cIOnKvgkqLTWJviXN1qmeGtM
+        cprLvfZfhPOYZpY6DlRTq6c0xIjDYZRw6zPRKyBFgAvz20y+nnGChRlXI2Cd7EKbWA5bLg6Px79ub
+        8XdcE6369nFacmAMHhNtGy5TGR5dmhhnW8ia81dNNtonjeKHdkJ2WfAv+I1lF/40AELGXSwzOdBEV
+        TEITT7eQ2rHnYRMbXrIUa+ha0q3pYrxYAkbrBtGmTWjCLlTEmY8QR+d26hYi2Zg8rN1ZAEZ5lCUMu
+        F3ACE/m2NRB/mdLQ7AnzllhUlneVGLqmbaDaV24vf0Ifq0w6PFFbXWtOtiSnN2xcHuCKzBimUG/w/
+        f26zElHQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jb3Uz-0006IJ-0Y; Tue, 19 May 2020 14:45:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4245230067C;
+        Tue, 19 May 2020 16:45:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 28DBC20C24271; Tue, 19 May 2020 16:45:39 +0200 (CEST)
+Date:   Tue, 19 May 2020 16:45:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: lockdep tracing and using of printk return value ?
+Message-ID: <20200519144539.GB317569@hirez.programming.kicks-ass.net>
+References: <335067f871a85db5f24650a3dff96f19727bed50.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <335067f871a85db5f24650a3dff96f19727bed50.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/20 11:35 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.42 release.
-> There are 147 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.42-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Tue, May 19, 2020 at 05:41:47AM -0700, Joe Perches wrote:
+> Except for some ancient code in drivers/scsi, this code
+> may be the only kernel use of the printk return value.
 
-Compiled and booted on my test system. No dmesg regressions.
+Is using the printk() return value a problem?
 
-thanks,
--- Shuah
+> Code that uses the printk return value in
+> kernel/locking/lockdep.c is odd because the printk
+> return length includes both the length of a KERN_<LEVEL>
+> prefix and the newline.  depth also seems double counted.
+
+Yeah, it seems dodgy. OTOH printk() really ought to discard the
+KERN_<level> crud from the return size.
+
+> Perhaps there's a better way to calculate this?
+> 
+> Maybe:
+> ---
+>  kernel/locking/lockdep.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 2fadc2635946..265227edc550 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -1960,11 +1960,9 @@ static void print_lock_class_header(struct lock_class *class, int depth)
+>  
+>  	for (bit = 0; bit < LOCK_USAGE_STATES; bit++) {
+>  		if (class->usage_mask & (1 << bit)) {
+> -			int len = depth;
+> -
+> -			len += printk("%*s   %s", depth, "", usage_str[bit]);
+> -			len += printk(KERN_CONT " at:\n");
+> -			print_lock_trace(class->usage_traces[bit], len);
+> +			printk("%*s   %s at:\n", depth, "", usage_str[bit]);
+> +			print_lock_trace(class->usage_traces[bit],
+> +					 depth + 3 + strlen(usage_str[bit]);
+>  		}
+>  	}
+>  	printk("%*s }\n", depth, "");
+
+Doesn't seem crazy...
