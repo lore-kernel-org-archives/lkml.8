@@ -2,127 +2,213 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17901C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9E420708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E584C20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F+AEHxuC"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="UaafkKkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgESDlB (ORCPT
+        id S1728139AbgESDmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40358 "EHLO
+        Mon, 18 May 2020 23:42:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgESDlA (ORCPT
+        with ESMTP id S1726492AbgESDmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:41:00 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCE1C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:41:00 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id s69so734566pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:41:00 -0700 (PDT)
+        Mon, 18 May 2020 23:42:07 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671C2C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:42:07 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id z15so689824pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:42:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CjNWuQJ9v0nVBb91ffdU0D6mxktZAQ032o7BcB0bNE4=;
-        b=F+AEHxuCaRGPIloYgy1mhW3Lfe9dOfLHKUZU9PfFM6Q0ED6ra92Z9qv0lsSJKjefzL
-         /G445Rt2MS+je7xFwaI3GdAaNppQpjtT9DZtZL1M+OFv4qHAM7NbdDZvrZQpYy476bzA
-         qFgVBP+l5L3NYSHQLLu/Kv4IkKI1BZeeHoCwRx11PEdPNVemStjkzdTRV4MbtpajRJQH
-         KY/4gQBQfdGL07373QE/k5YwyLOPIzVyqgueoA6pnQwXx8wUe0QKKoI3d8wNLCT+oYQP
-         MEDCH36FGnkOJNXu58mqL3PjD+FQbyE+D2IL6UiNHtKkxvzRDycr43draHRKBAdCtxgx
-         vfvw==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hz7q0UBXblJmlQ0Hl2W6faDSP3NssHAPx2k9KjAeicQ=;
+        b=UaafkKkHB3bn3XLmoTmBUZU5KegPGb7yPErquAgEVbCgBiU8D0JlUwxA9Am5kigVvK
+         uBTdGmdTtfbsCVP+wq0fCu1+wLTzqGFKO6Rh2UeoZ90q6suAEKpdWGrXbTeqnVFK6lQB
+         FQRmAFHVGjQ3yn5ASlot6syu4Ptyt0CjwwWTb3SKvRh6kd82uHPIjd++kgMcaD56bIdl
+         RxY6u4dLxCtoK6Db3tcqvaqcmer5Nyt63Km/jayiGjOxGe2CVMPQ1BveHUtBKunf7n0h
+         fGAAQI85he6V5bURxKkDgJAqM8kmkKtAGoiu0S3V6e3BRzBGE0jiJoCL/UxBRbmKdyKi
+         1u2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CjNWuQJ9v0nVBb91ffdU0D6mxktZAQ032o7BcB0bNE4=;
-        b=hilaw+22Po2vzwgaKvQCu3XP+TiaYSPcJdsKVoNgnNThCOm2lj0sBdjhUxXEfISIg/
-         qkpDnogBgcpcaWQEGVck52WkeTDMlZ8jBG5+j9bP1CJeikotbMWDb6OIyW9rmRQsKB4r
-         Dwmdk2npKwstLcQ6kcT6693nWF0QFDlxOn1TBL8yE41ZU+jAc0AWRDWf2lmeIRRbI/lY
-         MOcOvOZuK8yNqy/uRgrRax3RxWCFR1oYEcb60XYItzbpxJiMZKSQzuSXpWIjB/YAL4+0
-         EQvUzopQILn+90XdEZR2YD8LC/LR21kTFpoHBuNWPh8ickb671m9rZycIimDuak47Dsc
-         8IjQ==
-X-Gm-Message-State: AOAM532bGrUialcOjwmnt/hNgPle4fjk80W7Q7uX2YkZrAdFP66jUFPV
-        AfYkYDGkdIAOO1s/MyYvFQtCnQ==
-X-Google-Smtp-Source: ABdhPJy30m1f36llwQe2czJwRgWZ2WYib3wh9j43NkV9xeaRb2PBycPJMqqn/lVk860NFOK6XhPyZQ==
-X-Received: by 2002:a17:90a:1b6c:: with SMTP id q99mr2824172pjq.214.1589859659084;
-        Mon, 18 May 2020 20:40:59 -0700 (PDT)
-Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id g1sm9573943pfo.142.2020.05.18.20.40.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 20:40:57 -0700 (PDT)
-Date:   Tue, 19 May 2020 09:10:55 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200519034055.hfvifqz442yfduhg@vireshk-i7>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200519012927.GT2165@builder.lan>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hz7q0UBXblJmlQ0Hl2W6faDSP3NssHAPx2k9KjAeicQ=;
+        b=FxQBFPFe4kbQy18qDLXMpuKiFE/lwgcxFyE+t24Syj5YutZAhk5R39RE0A28WkYQfw
+         Jgnlt7KixvuRiqZo+N5BW8Ri/PFdZr1h9KYXvwHufNo5GzbKK0s920p+vyexbkAGamf6
+         YsnrXEwvluZUgRFmnreLkQHMzX7hHu5/g138zi4SVZsUhgKH1jV0Wiy8V0bXtex3v9zB
+         lESfDEcAuGlrm9p4YP6prUmXNWNxBKdyTlfxP0pMHouenp/Div1df/nAs54rePXBPv2J
+         MCWIUg+Jz1ZtlwfOntPBA2qMc04v7Cs7MJ+MPmpKHyydAIFrg5Czavr8f8ZGQkCjY4TQ
+         D9OQ==
+X-Gm-Message-State: AOAM532L5v6o/ceNRRB9iG96F0TolgOyguQzaiy6XPMKVSTG0I9qMuOf
+        FonMefw2i2A7SguwFHt0NvzRANzljJvttg==
+X-Google-Smtp-Source: ABdhPJz0IdEJZwszdGYcpyvCUZEq/Vy7gmVpIPeErXvXC9hONhg5CBbhkxozisfGyPcrnbQxxSLWuQ==
+X-Received: by 2002:a17:90a:fb96:: with SMTP id cp22mr2816190pjb.201.1589859726950;
+        Mon, 18 May 2020 20:42:06 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id 188sm9832256pfg.218.2020.05.18.20.42.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 20:42:06 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH 1/1] riscv: sort select statements alphanumerically
+Date:   Tue, 19 May 2020 11:42:04 +0800
+Message-Id: <0609f8f0c0c7182fda08fc395161ec11309c63fb.1589859647.git.zong.li@sifive.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519012927.GT2165@builder.lan>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-05-20, 18:29, Bjorn Andersson wrote:
-> On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
-> > This stuff has been doing rounds on the mailing list since several years
-> > now with no agreed conclusion by all the parties. And here is another
-> > attempt to get some feedback from everyone involved to close this once
-> > and for ever. Your comments will very much be appreciated.
-> > 
-> > The ARM MHU is defined here in the TRM [1] for your reference, which
-> > states following:
-> > 
-> > 	"The MHU drives the signal using a 32-bit register, with all 32
-> > 	bits logically ORed together. The MHU provides a set of
-> > 	registers to enable software to set, clear, and check the status
-> > 	of each of the bits of this register independently.  The use of
-> > 	32 bits for each interrupt line enables software to provide more
-> > 	information about the source of the interrupt. For example, each
-> > 	bit of the register can be associated with a type of event that
-> > 	can contribute to raising the interrupt."
-> > 
-> 
-> Does this mean that there are 32 different signals and they are all ORed
-> into the same interrupt line to trigger software action when something
-> happens?
-> 
-> Or does it mean that this register is used to pass multi-bit information
-> and when any such information is passed an interrupt will be triggered?
-> If so, what does that information mean? How is it tied into other Linux
-> drivers/subsystems?
+Like patch b1b3f49 ("ARM: config: sort select statements alphanumerically")
+, we sort all our select statements alphanumerically by using the perl
+script in patch b1b3f49 as above.
 
-I have started to believe the hardware is written badly at this point
-:)
+As suggested by Andrew Morton:
 
-The thing is that the register can be used to send a 32 bit data
-(which the driver already provides), or it can be used by writing
-different bits to the SET register concurrently, without corrupting
-the other bits as writing 0 to a bit has no effect, we have a separate
-CLEAR register for that. And so it says that all the bits are ORed
-together to generate the interrupt, i.e. any bit set will generate an
-interrupt. Which also means that you can't send data 0 with the
-register.
+  This is a pet peeve of mine.  Any time there's a long list of items
+  (header file inclusions, kconfig entries, array initalisers, etc) and
+  someone wants to add a new item, they *always* go and stick it at the
+  end of the list.
 
+  Guys, don't do this.  Either put the new item into a randomly-chosen
+  position or, probably better, alphanumerically sort the list.
+
+Signed-off-by: Zong Li <zong.li@sifive.com>
+---
+ arch/riscv/Kconfig | 70 +++++++++++++++++++++++-----------------------
+ 1 file changed, 35 insertions(+), 35 deletions(-)
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 74ce5c5249e9..8244b8f7e7c3 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -12,64 +12,64 @@ config 32BIT
+ 
+ config RISCV
+ 	def_bool y
+-	select OF
+-	select OF_EARLY_FLATTREE
+-	select OF_IRQ
+ 	select ARCH_HAS_BINFMT_FLAT
++	select ARCH_HAS_DEBUG_VIRTUAL if MMU
++	select ARCH_HAS_DEBUG_WX
++	select ARCH_HAS_GCOV_PROFILE_ALL
++	select ARCH_HAS_GIGANTIC_PAGE
++	select ARCH_HAS_MMIOWB
++	select ARCH_HAS_PTE_SPECIAL
++	select ARCH_HAS_SET_DIRECT_MAP
++	select ARCH_HAS_SET_MEMORY
++	select ARCH_HAS_STRICT_KERNEL_RWX if MMU
++	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+ 	select ARCH_WANT_FRAME_POINTERS
++	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+ 	select CLONE_BACKWARDS
+ 	select COMMON_CLK
++	select EDAC_SUPPORT
++	select GENERIC_ARCH_TOPOLOGY if SMP
++	select GENERIC_ATOMIC64 if !64BIT
+ 	select GENERIC_CLOCKEVENTS
++	select GENERIC_IOREMAP
++	select GENERIC_IRQ_MULTI_HANDLER
+ 	select GENERIC_IRQ_SHOW
+ 	select GENERIC_PCI_IOMAP
++	select GENERIC_PTDUMP if MMU
+ 	select GENERIC_SCHED_CLOCK
++	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_STRNCPY_FROM_USER if MMU
+ 	select GENERIC_STRNLEN_USER if MMU
+-	select GENERIC_SMP_IDLE_THREAD
+-	select GENERIC_ATOMIC64 if !64BIT
+-	select GENERIC_IOREMAP
+-	select GENERIC_PTDUMP if MMU
+ 	select HAVE_ARCH_AUDITSYSCALL
++	select HAVE_ARCH_KASAN if MMU && 64BIT
++	select HAVE_ARCH_KGDB
++	select HAVE_ARCH_KGDB_QXFER_PKT
++	select HAVE_ARCH_MMAP_RND_BITS if MMU
+ 	select HAVE_ARCH_SECCOMP_FILTER
++	select HAVE_ARCH_TRACEHOOK
+ 	select HAVE_ASM_MODVERSIONS
++	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_DMA_CONTIGUOUS if MMU
++	select HAVE_EBPF_JIT if MMU
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
++	select HAVE_PCI
+ 	select HAVE_PERF_EVENTS
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select IRQ_DOMAIN
+-	select SPARSE_IRQ
+-	select SYSCTL_EXCEPTION_TRACE
+-	select HAVE_ARCH_TRACEHOOK
+-	select HAVE_PCI
+ 	select MODULES_USE_ELF_RELA if MODULES
+ 	select MODULE_SECTIONS if MODULES
+-	select THREAD_INFO_IN_TASK
++	select OF
++	select OF_EARLY_FLATTREE
++	select OF_IRQ
+ 	select PCI_DOMAINS_GENERIC if PCI
+ 	select PCI_MSI if PCI
+ 	select RISCV_TIMER
+-	select GENERIC_IRQ_MULTI_HANDLER
+-	select GENERIC_ARCH_TOPOLOGY if SMP
+-	select ARCH_HAS_PTE_SPECIAL
+-	select ARCH_HAS_MMIOWB
+-	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+-	select HAVE_EBPF_JIT if MMU
+-	select EDAC_SUPPORT
+-	select ARCH_HAS_GIGANTIC_PAGE
+-	select ARCH_HAS_SET_DIRECT_MAP
+-	select ARCH_HAS_SET_MEMORY
+-	select ARCH_HAS_STRICT_KERNEL_RWX if MMU
+-	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+ 	select SPARSEMEM_STATIC if 32BIT
+-	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+-	select HAVE_ARCH_MMAP_RND_BITS if MMU
+-	select ARCH_HAS_GCOV_PROFILE_ALL
+-	select HAVE_COPY_THREAD_TLS
+-	select HAVE_ARCH_KASAN if MMU && 64BIT
+-	select HAVE_ARCH_KGDB
+-	select HAVE_ARCH_KGDB_QXFER_PKT
+-	select ARCH_HAS_DEBUG_WX
++	select SPARSE_IRQ
++	select SYSCTL_EXCEPTION_TRACE
++	select THREAD_INFO_IN_TASK
+ 
+ config ARCH_MMAP_RND_BITS_MIN
+ 	default 18 if 64BIT
+@@ -196,11 +196,11 @@ config ARCH_RV64I
+ 	bool "RV64I"
+ 	select 64BIT
+ 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && GCC_VERSION >= 50000
+-	select HAVE_FUNCTION_TRACER
+-	select HAVE_FUNCTION_GRAPH_TRACER
+-	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_DYNAMIC_FTRACE if MMU
+ 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
++	select HAVE_FTRACE_MCOUNT_RECORD
++	select HAVE_FUNCTION_GRAPH_TRACER
++	select HAVE_FUNCTION_TRACER
+ 	select SWIOTLB if MMU
+ 
+ endchoice
 -- 
-viresh
+2.26.2
+
