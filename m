@@ -2,109 +2,125 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17203C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11042C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E06D520708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D3A20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:10:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="F98P3paC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="QUP/yW8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgESMIZ (ORCPT
+        id S1728795AbgESMKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:08:25 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:54250 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726196AbgESMIY (ORCPT
+        Tue, 19 May 2020 08:10:10 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:42150 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgESMKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:08:24 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 923684050C;
-        Tue, 19 May 2020 12:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1589890104; bh=5U+7CPG84Fx9MSC1QbUrTwvZo58qbTd3QcFm6yKsI9w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=F98P3paCBmltrL9S1Ef3yazrOSEjbRdI26DYsfv2I2yxHmGNMcUsqop8Y7FREVDc3
-         Wg/vfiP+OdUO7px0l6hJYguCZuz7vHcWf7j8UzRXi3kBpefueDrNVeOnc3tTIsagbh
-         BgZxwOcFZp5+Ydrk7B/h7yPkZzHf4zRWCm44ILp+MLX1u8oJ+rsIzXiVdj7Jm6jOzH
-         M0atw6L9jbRYj1i1S/lBuKHrASrNSuNKhe8y3G1RAs5Nwc2fqQwg+Sv+Aw18Rf7DmI
-         IUqX7hymMrvVkOXUIZLcGKMRHhpHvdgqiTRADRjVlCv4U6MePR5lfEzTUi5q7soC+6
-         Cfzrei8hUv9bQ==
-Received: from ru20arcgnu1.internal.synopsys.com (ru20arcgnu1.internal.synopsys.com [10.121.9.48])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 716F7A005C;
-        Tue, 19 May 2020 12:08:20 +0000 (UTC)
-From:   Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-To:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        Joey Pabalinas <joeypabalinas@gmail.com>,
-        Petr Vorel <petr.vorel@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-snps-arc@lists.infradead.org,
-        Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-Subject: [PATCH v2] Kernel selftests: Add check if tpm devices are supported
-Date:   Tue, 19 May 2020 15:07:43 +0300
-Message-Id: <20200519120743.41358-1-Nikita.Sobolev@synopsys.com>
-X-Mailer: git-send-email 2.16.2
+        Tue, 19 May 2020 08:10:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589890209; x=1621426209;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7IyHvUdQbREBPZmSOudCaFMVAbLn7+9tZaDPBI7D298=;
+  b=QUP/yW8TnbzVof2dW3biuzedw6r69w/yKPLeYoAIeVwTdY3SB5igCmXr
+   RzBg4g+lr1X8Pn6cupp29KiveUWGTHjH/t0ga1kO25nF6Bkp6/n2sywpU
+   264FmUJmskZild3OdKhRQusQ/0iUx7W1koc7BXn5xtwYvJD7OOzGYTUPt
+   MVUgwfa4WR3Dhh7dkWEfjTOJ9JXmpJdv2Tg6ZsoHsobtK0Tkm0pWICwMx
+   PFTRfj/TKtq9j6TpumQUgtGri/nCg6ywgrpWBGqUbCmQcTZOrpuRR+Ag6
+   5YwA54C4c40kD2nYFr5blWLn0Ruitx7rvbwzA7h5uz1bhBxl0J9bDsvX2
+   w==;
+IronPort-SDR: 0PCZkTRMC2IQaaNZBy9q/R4cO5PFlRUjdc1l8stRhXgVbkdVk4vhPqBhy0PwEVJGbRqqrW6rLM
+ 9c06mq9YQchNhFqJ8nYip7fMjCzNS2AIr/ZKhL+PEB6RHWdU85Om+ySRXenJb98wLQj4i9PvGF
+ wkGRU9Dia4gndlXv2HJS/0iE2l3ldoWmXDmf1bRZtrE+3RSKdVkwU5I06QlVVsXxFBWSVSV6cA
+ Yt/kC7Sy549fdEMG474NUZ9dtOtD96OhTyUIvvW/sWUdyUbkB8i5UUiiKvfVJpEXwd+b7Gbzwk
+ WeE=
+X-IronPort-AV: E=Sophos;i="5.73,410,1583218800"; 
+   d="scan'208";a="73869304"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 May 2020 05:10:07 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 19 May 2020 05:10:08 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 19 May 2020 05:10:06 -0700
+Date:   Tue, 19 May 2020 14:10:01 +0200
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Mark Brown <broonie@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>
+Subject: Re: [PATCH 04/10] dt-bindings: spi: Add bindings for spi-dw-mchp
+Message-ID: <20200519121001.GA26056@soft-dev15.microsemi.net>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-5-lars.povlsen@microchip.com>
+ <20200513145213.GJ4803@sirena.org.uk>
+ <20200519114739.GD24801@soft-dev15.microsemi.net>
+ <20200519115829.GI4611@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200519115829.GI4611@sirena.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tpm2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
-are available. In case, when these devices are not available test
-fails, but expected behaviour is skipped test.
+On 19/05/20 12:58, Mark Brown wrote:
+> Date: Tue, 19 May 2020 12:58:29 +0100
+> From: Mark Brown <broonie@kernel.org>
+> To: Lars Povlsen <lars.povlsen@microchip.com>
+> Cc: SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>, Microchip
+>  Linux Driver Support <UNGLinuxDriver@microchip.com>,
+>  linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+>  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+>  Alexandre Belloni <alexandre.belloni@bootlin.com>, Serge Semin
+>  <Sergey.Semin@baikalelectronics.ru>, Serge Semin
+>  <fancer.lancer@gmail.com>, Andy Shevchenko
+>  <andriy.shevchenko@linux.intel.com>, Wan Ahmad Zainie
+>  <wan.ahmad.zainie.wan.mohamad@intel.com>
+> Subject: Re: [PATCH 04/10] dt-bindings: spi: Add bindings for spi-dw-mchp
+> User-Agent: Mutt/1.10.1 (2018-07-13)
+> 
+> On Tue, May 19, 2020 at 01:47:39PM +0200, Lars Povlsen wrote:
+> > On 13/05/20 15:52, Mark Brown wrote:
+> 
+> > > On Wed, May 13, 2020 at 04:00:25PM +0200, Lars Povlsen wrote:
+> > > > This add DT bindings for the Microsemi/Microchip SPI controller used
+> > > > in various SoC's. It describes the "mscc,ocelot-spi" and
+> > > > "mscc,jaguar2-spi" bindings.
+> 
+> > > That's not what this change does.  It is removing the existing binding
+> > > for Ocelot and Jaguar2 from the free format binding documentation and
+> 
+> > The reason for doing this was due to the fact that I felt adding
+> > Sparx5 support only cluttered the original driver even more.
+> 
+> That's not the issue I'm pointing out there.  The issue is that your
+> changelog claims that the change does one thing and the change itself
+> does something substantially different.
 
-Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
----
-Changes for v2:
-    - Coding Style cleanup
+Ok, got it. I'll reword the changelog to be more precise.
 
- tools/testing/selftests/tpm2/test_smoke.sh | 5 +++++
- tools/testing/selftests/tpm2/test_space.sh | 5 +++++
- 2 files changed, 10 insertions(+)
+Thanks again,
 
-diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
-index 8155c2ea7ccb..663062701d5a 100755
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -1,6 +1,11 @@
- #!/bin/bash
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+
-+[ -f /dev/tpm0 ] || exit $ksft_skip
-+
- python -m unittest -v tpm2_tests.SmokeTest
- python -m unittest -v tpm2_tests.AsyncTest
- 
-diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
-index a6f5e346635e..36c9d030a1c6 100755
---- a/tools/testing/selftests/tpm2/test_space.sh
-+++ b/tools/testing/selftests/tpm2/test_space.sh
-@@ -1,4 +1,9 @@
- #!/bin/bash
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+
-+[ -f /dev/tpmrm0 ] || exit $ksft_skip
-+
- python -m unittest -v tpm2_tests.SpaceTest
--- 
-2.16.2
+---Lars
+
 
