@@ -2,90 +2,271 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0416C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CFB7207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589919308;
-	bh=My6svUo2kNhHd0PeK985QXponpPvUA8f6n4aRh+On+U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ScdLp0U+ZMkG+c0RS/ysGHdnA6gC2yEDq0XjZa8Cu1SKFshwyFOhl42pLC6zCvNm1
-	 p4e1RoOf2UMNt23wQJkScj1cWm/hsnQyt1JObsD1sylfxfz5A6VANmcGtKHeOmZtce
-	 EfV5YTw54GgC4GTCuFmOzMZdtIvpth71VgHQg/lY=
+	by mail.kernel.org (Postfix) with ESMTP id A98852075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tFpDa+SI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgESUPH (ORCPT
+        id S1727788AbgESUPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:15:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgESUPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:15:07 -0400
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6E1920885
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589919307;
-        bh=My6svUo2kNhHd0PeK985QXponpPvUA8f6n4aRh+On+U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CrNMGi/tQoXg8/dbvKj/8/Y+l3/GOWJilF6d5vatNbme/D3NotSvdM5XHeG0iV5sg
-         tv1/Ml3ZuH4rQbfPEmNYkwe7K63NQgkul+5Fo5aMZtAoWqI2lk6fyf2PMDMwjiHRNX
-         rKYkO8z1BjfrWnlr/gUYDIxyCUKp+Fs5opjaO41I=
-Received: by mail-wr1-f42.google.com with SMTP id e1so813715wrt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:15:06 -0700 (PDT)
-X-Gm-Message-State: AOAM533GfcHijptQ2JgSMKp38AJaQmg1mifa0aqsxD4l0M4au6PKMr3+
-        +ig7XZk3IXP42IVyvzLnwjPjPAr4FU2WdC5/6yIfWA==
-X-Google-Smtp-Source: ABdhPJxdJ3S07frZMUz3YtceATmXgjQNeRAf2fNN82ryR4V4QXF93CyCGpNS7enh/bnRrjC2cbTzkaopnfg1N126C4k=
-X-Received: by 2002:adf:eccf:: with SMTP id s15mr632076wro.70.1589919305380;
- Tue, 19 May 2020 13:15:05 -0700 (PDT)
+        Tue, 19 May 2020 16:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgESUPz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 16:15:55 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCF2AC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:15:54 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id f13so1144160qkh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TO5dMGuoi1kCRRb/+6qO1E4s7zpB8nWv0o7765YzP7M=;
+        b=tFpDa+SIF8J9hbLHG5GILLdJuWlP+vg72DAqF3ts8lf8v3hE4zugMieXVzFQflly/V
+         TQAbRleTds+7OpbV0WPkI5sAWD9OKkAdjXJj7KakwQwWxf5dYRGRooPRl58kdcFySBKS
+         Wx1lNQN604Mr6KzIv+ObErS6SOS6mpzTkW2TQ8g1D/sk6B62pLByagTT9UCqaE/rUd53
+         RXEyBeLTNqIPBFPJRWmocmSu92fWIWMMUY4aEdywN+mnjw7+HiDv6045xix+LFM4wvk2
+         ggFvva9bzwu20lIl+F+Exs+l5PyeF01FayycjxF5hfXLMIHBg2+/OU7tzpW6wxPLPLXN
+         VbiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TO5dMGuoi1kCRRb/+6qO1E4s7zpB8nWv0o7765YzP7M=;
+        b=Gkkj+dunyzNIQjlCeqGteaAMUCxWLzKjNCDgm1WC1vvjt7xH7wkLycFczE3c07cSeA
+         WhotBLr6n0Zlm36LnKanilLvJWhu/V9+jcz1F5gSZ9u7U41bKCGQJJuBLg4UMhCVjubN
+         wLCE73v2PDq+i1MQNOFY+y+jG6s3fKzTAZgXXarIY9cfkujPi4FaCy88zYqiWrwRfSpl
+         8HqBdM3ie2yNmK4KdjFSwhjaQheXQOPS6a+S5ijwMhOXIxzqdVIJ6RivblqD3otOkRgO
+         CyPVdPw981mgRChKBtoRcGZuQUdip7AsrjTCfmJQZa09FDHv4/BKXW8nVED/ZQ319GTx
+         Ta0g==
+X-Gm-Message-State: AOAM533b9pe40JTMVzSudThauryQC4JDWsNUn8S4+iWUhZeX2mcT8z4H
+        kH3eWUkmWuKmVV1YvEfJS1ScONxt3VBHhZdPM8Tu5g==
+X-Google-Smtp-Source: ABdhPJyn2v4e6S+RNRBx13hLKpD3vGX1DVudWBoUdwMBu5NoaK5swkGvyds93T0lv3JKzDVZMnnKMw8fCOiZm3FUDow=
+X-Received: by 2002:a25:be81:: with SMTP id i1mr1771591ybk.184.1589919353706;
+ Tue, 19 May 2020 13:15:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200515234547.710474468@linutronix.de> <20200515235126.128592439@linutronix.de>
-In-Reply-To: <20200515235126.128592439@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 19 May 2020 13:14:54 -0700
-X-Gmail-Original-Message-ID: <CALCETrX7G2MSLgPjkvC2Ybc+UMBAb_G6T5Or0mvEetGM14xpnQ@mail.gmail.com>
-Message-ID: <CALCETrX7G2MSLgPjkvC2Ybc+UMBAb_G6T5Or0mvEetGM14xpnQ@mail.gmail.com>
-Subject: Re: [patch V6 17/37] x86/entry/32: Remove common_exception
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <20200515221732.44078-1-irogers@google.com> <20200515221732.44078-7-irogers@google.com>
+ <20200519190602.GB28228@kernel.org>
+In-Reply-To: <20200519190602.GB28228@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 19 May 2020 13:15:41 -0700
+Message-ID: <CAP-5=fVdDjazSdzfTXeuWwqCSh0zURp3M8QZpYK=qd92GeyrRw@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] perf test: Improve pmu event metric testing
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Tue, May 19, 2020 at 12:06 PM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
+> Em Fri, May 15, 2020 at 03:17:31PM -0700, Ian Rogers escreveu:
+> > Break pmu-events test into 2 and add a test to verify that all pmu
+> > metric expressions simply parse. Try to parse all metric ids/events,
+> > skip/warn if metrics for the current architecture fail to parse. To
+> > support warning for a skip, and an ability for a subtest to describe why
+> > it skips.
+> >
+> > Tested on power9, skylakex, haswell, broadwell, westmere, sandybridge and
+> > ivybridge.
+> >
+> > May skip/warn on other architectures if metrics are invalid. In
+> > particular s390 is untested, but its expressions are trivial. The
+> > untested architectures with expressions are power8, cascadelakex,
+> > tremontx, skylake, jaketown, ivytown and variants of haswell and
+> > broadwell.
+> >
+> > v3. addresses review comments from John Garry <john.garry@huawei.com>,
+> > Jiri Olsa <jolsa@redhat.com> and Arnaldo Carvalho de Melo
+> > <acme@kernel.org>.
+> > v2. changes the commit message as event parsing errors no longer cause
+> > the test to fail.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Andi Kleen <ak@linux.intel.com>
+> > Cc: Jin Yao <yao.jin@linux.intel.com>
+> > Cc: Jiri Olsa <jolsa@redhat.com>
+> > Cc: John Garry <john.garry@huawei.com>
+> > Cc: Kajol Jain <kjain@linux.ibm.com>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Leo Yan <leo.yan@linaro.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Paul Clarke <pc@us.ibm.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Stephane Eranian <eranian@google.com>
+> > Link: http://lore.kernel.org/lkml/20200513212933.41273-1-irogers@google.com
+> > [ split from a larger patch ]
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/tests/builtin-test.c |   7 ++
+> >  tools/perf/tests/pmu-events.c   | 168 ++++++++++++++++++++++++++++++--
+> >  tools/perf/tests/tests.h        |   3 +
+> >  3 files changed, 172 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> > index baee735e6aa5..9553f8061772 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -75,6 +75,13 @@ static struct test generic_tests[] = {
+> >       {
+> >               .desc = "PMU events",
+> >               .func = test__pmu_events,
+> > +             .subtest = {
+> > +                     .skip_if_fail   = false,
+> > +                     .get_nr         = test__pmu_events_subtest_get_nr,
+> > +                     .get_desc       = test__pmu_events_subtest_get_desc,
+> > +                     .skip_reason    = test__pmu_events_subtest_skip_reason,
+> > +             },
+> > +
+> >       },
+> >       {
+> >               .desc = "DSO data read",
+> > diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> > index d64261da8bf7..e21f0addcfbb 100644
+> > --- a/tools/perf/tests/pmu-events.c
+> > +++ b/tools/perf/tests/pmu-events.c
+> > @@ -8,6 +8,9 @@
+> >  #include <linux/zalloc.h>
+> >  #include "debug.h"
+> >  #include "../pmu-events/pmu-events.h"
+> > +#include "util/evlist.h"
+> > +#include "util/expr.h"
+> > +#include "util/parse-events.h"
+> >
+> >  struct perf_pmu_test_event {
+> >       struct pmu_event event;
+> > @@ -144,7 +147,7 @@ static struct pmu_events_map *__test_pmu_get_events_map(void)
+> >  }
+> >
+> >  /* Verify generated events from pmu-events.c is as expected */
+> > -static int __test_pmu_event_table(void)
+> > +static int test_pmu_event_table(void)
+> >  {
+> >       struct pmu_events_map *map = __test_pmu_get_events_map();
+> >       struct pmu_event *table;
+> > @@ -347,14 +350,11 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+> >       return res;
+> >  }
+> >
+> > -int test__pmu_events(struct test *test __maybe_unused,
+> > -                  int subtest __maybe_unused)
+> > +
+> > +static int test_aliases(void)
+> >  {
+> >       struct perf_pmu *pmu = NULL;
+> >
+> > -     if (__test_pmu_event_table())
+> > -             return -1;
+> > -
+> >       while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+> >               int count = 0;
+> >
+> > @@ -377,3 +377,159 @@ int test__pmu_events(struct test *test __maybe_unused,
+> >
+> >       return 0;
+> >  }
+> > +
+> > +static bool is_number(const char *str)
+> > +{
+> > +     char *end_ptr;
+> > +
+> > +     strtod(str, &end_ptr);
+> > +     return end_ptr != str;
+> > +}
 >
-> No more users.
+> So, this breaks in some systems:
+>
+> cc1: warnings being treated as errors
+> tests/pmu-events.c: In function 'is_number':
+> tests/pmu-events.c:385: error: ignoring return value of 'strtod', declared with attribute warn_unused_result
+> mv: cannot stat `/tmp/build/perf/tests/.pmu-events.o.tmp': No such file or director
+>
+> So I'm changing it to verify the result of strtod() which is, humm,
+> interesting, please check:
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Thanks Arnaldo and sorry for the difficulty. This looks like a good fix.
+
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index 3de59564deb0..6c58c3a89e6b 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -1,4 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#include "math.h"
+>  #include "parse-events.h"
+>  #include "pmu.h"
+>  #include "tests.h"
+> @@ -381,8 +382,12 @@ static int test_aliases(void)
+>  static bool is_number(const char *str)
+>  {
+>         char *end_ptr;
+> +       double v;
+>
+> -       strtod(str, &end_ptr);
+> +       errno = 0;
+> +       v = strtod(str, &end_ptr);
+> +       if ((errno == ERANGE && (v == HUGE_VAL || v == -HUGE_VAL)) || (errno != 0 && v == 0.0))
+
+errno can either be 0 or ERANGE here, but we test both. Perhaps use
+errno != 0 for both cases as the man page notes suggest doing this.
+The tests using v are necessary to avoid the unused result, but
+presumably any errno case should return false here? I guess testing
+that is redundant as the return below will catch it. Perhaps this
+should be:
+
+errno = 0;
+v = strtod(str, &end_ptr);
+(void)v;  /* We don't care for the value of the double, just that it
+converts. Avoid unused result warnings. */
+return errno == 0 && end_ptr != str;
+
+Thanks,
+Ian
+
+> +               return false;
+>         return end_ptr != str;
+>  }
+>
