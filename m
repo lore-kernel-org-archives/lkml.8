@@ -2,116 +2,170 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93025C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEF720715
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:23:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Jke5t/vu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eH1davhv"
+	by mail.kernel.org (Postfix) with ESMTP id 6FC4920756
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589847821;
+	bh=yXFIXoaaIhCB0WBUDuO8+foBCMcSuBqnKo4TZIde9+s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OJcssxM0aiKFRA/LBwwIpiqWvAkFd4guCaUINhgCdGYhCxYAry0bMh1aC46vCGbQn
+	 23lvTml+bGGItVG+cvt6rmWCszKAxdIUXIODWg7u5JzU/uK0kIHf6Ug4t3HoLwtZ4Q
+	 0AOfmdhhUgWLbGLtLA2NzmU58dCbwvZw0QH2kIiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgESAXL (ORCPT
+        id S1727867AbgESAXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 20:23:11 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:55409 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726302AbgESAXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 20:23:11 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 19F265C0073;
-        Mon, 18 May 2020 20:23:10 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Mon, 18 May 2020 20:23:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=6dez2inLO9ku1pNNSEEQg2wUTyCCTFZ
-        fY7XJVnTZ6zo=; b=Jke5t/vu8yu6lIojT3aomUQNi4Fakt3uHDflIlLQnEuw67N
-        nl1dezDfNQvJOgTEkrBZvoW5MOBynt+0ypcxoPrjSiPuVAYL+2aa1MgzMfINgL34
-        01bVmRbF5u0YT6loEp8zJ3HDl9R7FFH2a7Jw9RebEZOu9hMKIzzRyDHZjOJAayVO
-        +znMhvU1Bu+DthWqE+Fvih4+w8E+hg47lo/OaMzj9kIZnpVXO6TvJQf8RMa2ub10
-        5H/4QTrxXBPK3gXPZpQWDiDQm0VoB4VQxPgWU8FVOaFHWUFke6YBfVrlgtx0OcN8
-        2dPJm9zAGwNOH5VxtwoctQQ7zh69gc9+6rKJfvQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=6dez2i
-        nLO9ku1pNNSEEQg2wUTyCCTFZfY7XJVnTZ6zo=; b=eH1davhvjbSqau6PYdxA6Z
-        MLKj8NDL7V/T7TQ1WggrseuNjWCy/Sqwh1BSevutAAJsSGeSo+Kx7YIAVdyrgP4J
-        YnHWk+/BnIKedl7lQEATSOfoX3tFL+/3hbzS8qMbINKkflDX65AfFBYdJZocUPgm
-        9UpjNb2mDmwPU64SAjWSL3L9xH0lKhmdJwtBwAmpEApD9cX42iUMr7lpKUy+kZ2K
-        7+0YpoyGl587b0MRquTIm3KZku1UGMf9VQFlUpXdEjbUX/J9RG9ANnZl1ZG6o8DK
-        umcChQ7n4nqrIoDe87BuAusR4AZHoMVBSRFyjt7bKI2MFSceaigSf8WYwRmzh8GA
-        ==
-X-ME-Sender: <xms:7SbDXtOnI0j2-kgGwjGTkU4HOfWtB_F2fi1uHnbUNxQk9jPaQNZNKw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddtiedgfeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
-    grthhtvghrnhepuddttdekueeggedvtddtueekiedutdfguedutdefieeuteefieelteet
-    vddthfeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:7SbDXv8icLiT4lM1bSEA0pNGSzsKFa22FnYhuv7frg64GMewXMmlzQ>
-    <xmx:7SbDXsRYpKNoaMee211aGR9FNV4MU8DYUrxgJjoKcIZ2GGMhVsjY2A>
-    <xmx:7SbDXptPTWYr0BEwh4whoI3PElvFsQEWJyLbQzM20xj2bI1xGZI1RQ>
-    <xmx:7ibDXp5uEtBy5jID-x8ZNuiygRH1WvtrTk3mPttALrjLWGhwFcdj1A>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 3B312E0109; Mon, 18 May 2020 20:23:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-dev0-464-g810d66a-fmstable-20200518v1
-Mime-Version: 1.0
-Message-Id: <eab147a6-4bc6-491d-aaaf-61526c4df5ff@www.fastmail.com>
-In-Reply-To: <20200518112059.c19899ffb17a4843bf4f74ab@kernel.org>
-References: <20200517153959.293224-1-andrew@aj.id.au>
- <202005171447.00CFE0C@keescook>
- <20200518112059.c19899ffb17a4843bf4f74ab@kernel.org>
-Date:   Tue, 19 May 2020 09:52:48 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Kees Cook" <keescook@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        "Russell King" <linux@armlinux.org.uk>, labbott@redhat.com,
-        mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
-Subject: =?UTF-8?Q?Re:_[PATCH]_ARM:_kprobes:_Avoid_fortify=5Fpanic()_when_copying?=
- =?UTF-8?Q?_optprobe_template?=
-Content-Type: text/plain
+        Mon, 18 May 2020 20:23:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbgESAXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 20:23:40 -0400
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EC52207E8;
+        Tue, 19 May 2020 00:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589847819;
+        bh=yXFIXoaaIhCB0WBUDuO8+foBCMcSuBqnKo4TZIde9+s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VYkk+hfQEWe2QCIlDVTrL0JzYcHPFEh2pQdt0SJC4kVCkK3WALYEsbyaJdgWQcF6F
+         ZQ1Ir+MKj5YNMBlpRtBD5GfHYyxoMlFJREA29gDzJMhBnSfjLFBttiypFO4VGrQPht
+         bot2fl/Y2FZV3XsyOX+jXE6j5v20TbVwRNA45tOM=
+Received: by mail-ed1-f46.google.com with SMTP id l25so5458677edj.4;
+        Mon, 18 May 2020 17:23:39 -0700 (PDT)
+X-Gm-Message-State: AOAM531LAZZpOK1nXxecnbMHeoZt2CbO2nn48XqLWa43kHQNyBCmd8kX
+        ZhGSlYYW1UFb+6juxFbmh4v9DhxA9QwaYHox+A==
+X-Google-Smtp-Source: ABdhPJyrGc6vsnr+WmOKuIm4SqDP52pR/PCq2FPaelMHb8IdDO8nVnID9dGFbWG/aRvWQ0W2/TOp4xkr7PE1zmaiNLM=
+X-Received: by 2002:aa7:d84b:: with SMTP id f11mr13610097eds.288.1589847817907;
+ Mon, 18 May 2020 17:23:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200518113156.25009-1-matthias.bgg@kernel.org> <20200518113156.25009-2-matthias.bgg@kernel.org>
+In-Reply-To: <20200518113156.25009-2-matthias.bgg@kernel.org>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 19 May 2020 08:23:24 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-jo3sjsYPD7MPtuyOxN6XZuGJ1Vd_xUrUoBK94maU5ew@mail.gmail.com>
+Message-ID: <CAAOTY_-jo3sjsYPD7MPtuyOxN6XZuGJ1Vd_xUrUoBK94maU5ew@mail.gmail.com>
+Subject: Re: [PATCH 2/4] clk/soc: mediatek: mt6797: Bind clock driver from
+ platform device
+To:     matthias.bgg@kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-clk@vger.kernel.org, Allison Randal <allison@lohutok.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Matthias:
 
+<matthias.bgg@kernel.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=8818=E6=97=A5 =E9=
+=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:32=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> From: Matthias Brugger <matthias.bgg@gmail.com>
+>
+> The mmsys driver is now the top level entry point for the multimedia
+> system (mmsys), we bind the clock driver by creating a platform device.
+> We also bind the MediaTek DRM driver which is not yet implement and
+> therefor will errror out for now.
+>
 
-On Mon, 18 May 2020, at 11:50, Masami Hiramatsu wrote:
-> On Sun, 17 May 2020 14:48:52 -0700
-> Kees Cook <keescook@chromium.org> wrote:
-> 
-> > On Mon, May 18, 2020 at 01:09:59AM +0930, Andrew Jeffery wrote:
-> > > As mentioned, a couple of attempts have been made to address the issue
-> > > by casting a pointer to optprobe_template_entry before providing it to
-> > > memcpy(), however gccs such as Ubuntu 20.04's arm-linux-gnueabi-gcc
-> > > 9.3.0 (Ubuntu 9.3.0-10ubuntu1) see through these efforts.
-> > 
-> > Ah, dang. :P
-> > 
-> > How about converting them all to unsized arrays, which would also allow
-> > the code to drop the "&" everywhere, I think. This is untested:
-> > 
-> 
-> This looks good to me since it uses same technique in sections.h.
-> 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> 
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-Kees,
-
-Were you planning to send resend this, or were you looking for me to polish it
-up?
-
-Andrew
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> ---
+>
+>  drivers/clk/mediatek/clk-mt6797-mm.c | 9 ++-------
+>  drivers/soc/mediatek/mtk-mmsys.c     | 8 ++++++++
+>  2 files changed, 10 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/clk/mediatek/clk-mt6797-mm.c b/drivers/clk/mediatek/=
+clk-mt6797-mm.c
+> index 8f05653b387d..01fdce287247 100644
+> --- a/drivers/clk/mediatek/clk-mt6797-mm.c
+> +++ b/drivers/clk/mediatek/clk-mt6797-mm.c
+> @@ -92,16 +92,12 @@ static const struct mtk_gate mm_clks[] =3D {
+>                  "clk26m", 3),
+>  };
+>
+> -static const struct of_device_id of_match_clk_mt6797_mm[] =3D {
+> -       { .compatible =3D "mediatek,mt6797-mmsys", },
+> -       {}
+> -};
+> -
+>  static int clk_mt6797_mm_probe(struct platform_device *pdev)
+>  {
+> +       struct device *dev =3D &pdev->dev;
+> +       struct device_node *node =3D dev->parent->of_node;
+>         struct clk_onecell_data *clk_data;
+>         int r;
+> -       struct device_node *node =3D pdev->dev.of_node;
+>
+>         clk_data =3D mtk_alloc_clk_data(CLK_MM_NR);
+>
+> @@ -121,7 +117,6 @@ static struct platform_driver clk_mt6797_mm_drv =3D {
+>         .probe =3D clk_mt6797_mm_probe,
+>         .driver =3D {
+>                 .name =3D "clk-mt6797-mm",
+> -               .of_match_table =3D of_match_clk_mt6797_mm,
+>         },
+>  };
+>
+> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-=
+mmsys.c
+> index 783c3dd008b2..fee64c8d3020 100644
+> --- a/drivers/soc/mediatek/mtk-mmsys.c
+> +++ b/drivers/soc/mediatek/mtk-mmsys.c
+> @@ -88,6 +88,10 @@ static const struct mtk_mmsys_driver_data mt2712_mmsys=
+_driver_data =3D {
+>         .clk_driver =3D "clk-mt2712-mm",
+>  };
+>
+> +static const struct mtk_mmsys_driver_data mt6797_mmsys_driver_data =3D {
+> +       .clk_driver =3D "clk-mt6797-mm",
+> +};
+> +
+>  static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data =3D {
+>         .clk_driver =3D "clk-mt8173-mm",
+>  };
+> @@ -339,6 +343,10 @@ static const struct of_device_id of_match_mtk_mmsys[=
+] =3D {
+>                 .compatible =3D "mediatek,mt2712-mmsys",
+>                 .data =3D &mt2712_mmsys_driver_data,
+>         },
+> +       {
+> +               .compatible =3D "mediatek,mt6797-mmsys",
+> +               .data =3D &mt6797_mmsys_driver_data,
+> +       },
+>         {
+>                 .compatible =3D "mediatek,mt8173-mmsys",
+>                 .data =3D &mt8173_mmsys_driver_data,
+> --
+> 2.26.2
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
