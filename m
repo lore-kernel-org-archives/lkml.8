@@ -2,88 +2,122 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C77BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02652070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD42B2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BGCCEXGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgESUeZ (ORCPT
+        id S1726821AbgESUeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgESUeY (ORCPT
+        Tue, 19 May 2020 16:34:46 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:34958 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725885AbgESUep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:34:24 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE1DC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:34:24 -0700 (PDT)
-Received: from localhost ([127.0.0.1] helo=vostro)
-        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1jb8wP-0001Ip-0I; Tue, 19 May 2020 22:34:21 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH v2 2/3] printk: add lockless buffer
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
-        <20200501094010.17694-3-john.ogness@linutronix.de>
-        <87v9ktcs3q.fsf@vostro.fn.ogness.net>
-        <CAHk-=whSLRiNxehLiuX+ZfHsu8Kpj7R1Sdr3zA7==SMW0zh3ug@mail.gmail.com>
-Date:   Tue, 19 May 2020 22:34:19 +0200
-In-Reply-To: <CAHk-=whSLRiNxehLiuX+ZfHsu8Kpj7R1Sdr3zA7==SMW0zh3ug@mail.gmail.com>
-        (Linus Torvalds's message of "Mon, 18 May 2020 10:22:30 -0700")
-Message-ID: <87tv0bhdf8.fsf@vostro.fn.ogness.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 19 May 2020 16:34:45 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 02B4730D7BF;
+        Tue, 19 May 2020 13:33:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 02B4730D7BF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1589920402;
+        bh=yuPEfulO+iRK9pTGrG+3vEVTPxwnaY2RYoFKfJNpl/4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BGCCEXGcLPBUG5WcSDFpUnH7X6Scj2cn6JSilSFImuyVpUvNUEbcGLaTqCiJFjL3K
+         RC/aTNSU30qAdciwtiidWHRIF/dypocgc+fxv9lyMCer+wWJgYag7fmkpvdu32QtpX
+         rTr1Zk1rKZs1p0VraKIQ5wSOx8XgHzb84gj4JsY0=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 4463514008B;
+        Tue, 19 May 2020 13:34:42 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     james.quinlan@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        Dan Williams <dan.j.williams@intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE), Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        iommu@lists.linux-foundation.org (open list:DMA MAPPING HELPERS),
+        Julien Grall <julien.grall@arm.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
+        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
+        ENDPOINT DRIVERS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 00/15] PCI: brcmstb: enable PCIe for STB chips
+Date:   Tue, 19 May 2020 16:33:58 -0400
+Message-Id: <20200519203419.12369-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-18, Linus Torvalds <torvalds@linux-foundation.org> wrote:
->>                 smp_mb(); /* LMM(data_push_tail:C) */
->>
->> +               if (atomic_long_try_cmpxchg_relaxed(&data_ring->tail_lpos,
->> +                               &tail_lpos,
->> +                               next_lpos)) { /* LMM(data_push_tail:D) */
->> +                       break;
->> +               }
->
-> Doing an "smp_mb()" followed by a "cmpxchg_relaxed" seems all kinds of
-> odd and pointless, and is very much non-optimal on x86 for example.,
->
-> Just remove the smp_mb(), and use the non-relaxed form of cmpxchg.
-> It's defined to be fully ordered if it succeeds (and if the cmpxchg
-> doesn't succeed, it's a no-op and the memory barrier shouldn't make
-> any difference).
->
-> Otherwise you'll do two memory ordering operations on x86 (and
-> probably some other architectures), since the cmpxchg is always
-> ordered on x86 and there exists no "relaxed" form of it.
+This patchset expands the usefulness of the Broadcom Settop Box PCIe
+controller by building upon the PCIe driver used currently by the
+Raspbery Pi.  Other forms of this patchset were submitted by me years
+ago and not accepted; the major sticking point was the code required
+for the DMA remapping needed for the PCIe driver to work [1].
 
-ACK.
+There have been many changes to the DMA and OF subsystems since that
+time, making a cleaner and less intrusive patchset possible.  This
+patchset implements a generalization of "dev->dma_pfn_offset", except
+that instead of a single scalar offset it provides for multiple
+offsets via a function which depends upon the "dma-ranges" property of
+the PCIe host controller.  This is required for proper functionality
+of the BrcmSTB PCIe controller and possibly some other devices.
 
-All three smp_mb()'s and both smp_wmb()'s sit directly next to
-cmpxchg_relaxed() calls. Having explicit memory barriers was helpful for
-identifying, proving, and testing a minimal set of pairs (on arm64), but
-all will be folded into full cmpxchg()'s for the next version.
+[1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
 
-John Ogness
+Jim Quinlan (15):
+  PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+  ahci_brcm: fix use of BCM7216 reset controller
+  dt-bindings: PCI: Add bindings for more Brcmstb chips
+  PCI: brcmstb: Add compatibily of other chips
+  PCI: brcmstb: Add suspend and resume pm_ops
+  PCI: brcmstb: Asserting PERST is different for 7278
+  PCI: brcmstb: Add control of rescal reset
+  of: Include a dev param in of_dma_get_range()
+  device core: Add ability to handle multiple dma offsets
+  dma-direct: Invoke dma offset func if needed
+  arm: dma-mapping: Invoke dma offset func if needed
+  PCI: brcmstb: Set internal memory viewport sizes
+  PCI: brcmstb: Accommodate MSI for older chips
+  PCI: brcmstb: Set bus max burst side by chip type
+  PCI: brcmstb: add compatilbe chips to match list
+
+ .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
+ arch/arm/include/asm/dma-mapping.h            |  17 +-
+ drivers/ata/ahci_brcm.c                       |  14 +-
+ drivers/of/address.c                          |  54 ++-
+ drivers/of/device.c                           |   2 +-
+ drivers/of/of_private.h                       |   8 +-
+ drivers/pci/controller/Kconfig                |   4 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 403 +++++++++++++++---
+ include/linux/device.h                        |   9 +-
+ include/linux/dma-direct.h                    |  16 +
+ include/linux/dma-mapping.h                   |  44 ++
+ kernel/dma/Kconfig                            |  12 +
+ 12 files changed, 542 insertions(+), 81 deletions(-)
+
+-- 
+2.17.1
+
