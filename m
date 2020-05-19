@@ -2,128 +2,106 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42465C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC10FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32442207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77BE2072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589910356;
+	bh=cHlc8fE1J62ViyaQ+0PZQXd4ySJzfbVUiBcqPeFMo6c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z2qW+wKNpaDW+K0VTzFOV/D6BmUWSL+MFzFAzhQ2cndJ436Qe4Tt714cZ+lWDkvOa
+	 bedZ3cfBAYzz/Rw4CCzRioSrMfFW6JupJZg9SP2QThnKy9vmT9r3OEXCD1EdtczATy
+	 MNy8rdkjSZUbUPD4/pjHV/8u2gNO7Z4NMdWT1oLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgESRpL (ORCPT
+        id S1729477AbgESRpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:45:11 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:44348 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESRpL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:45:11 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jb6Ie-0003RI-Nx; Tue, 19 May 2020 11:45:08 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jb6Id-0004jU-PA; Tue, 19 May 2020 11:45:08 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200518055457.12302-1-keescook@chromium.org>
-        <87a724t153.fsf@x220.int.ebiederm.org>
-        <202005190918.D2BD83F7C@keescook>
-Date:   Tue, 19 May 2020 12:41:27 -0500
-In-Reply-To: <202005190918.D2BD83F7C@keescook> (Kees Cook's message of "Tue,
-        19 May 2020 09:26:04 -0700")
-Message-ID: <87o8qjstyw.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 19 May 2020 13:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbgESRpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:45:55 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C369520708;
+        Tue, 19 May 2020 17:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589910355;
+        bh=cHlc8fE1J62ViyaQ+0PZQXd4ySJzfbVUiBcqPeFMo6c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E8lJ59iYq5qN9g5SNw929Bk2LZarSUCjLpKOR+STiiUp8RF00nDK7Y5Ewf8aKQAIp
+         Qltp2vtjGOsydiVEmPGVYu+17orYXbehXtf6ah6q/pKagaGJXz7Bh8aU4UExvnuRzx
+         hb/Blb8y4lfO7fm8oSFjaH2IsJMRqjF1Yj9bEudw=
+Date:   Tue, 19 May 2020 13:45:53 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     alexander.deucher@amd.com, chris@chris-wilson.co.uk,
+        ville.syrjala@linux.intel.com, Hawking.Zhang@amd.com,
+        tvrtko.ursulin@intel.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        spronovo@microsoft.com, iourit@microsoft.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [RFC PATCH 1/4] gpu: dxgkrnl: core code
+Message-ID: <20200519174553.GF33628@sasha-vm>
+References: <20200519163234.226513-1-sashal@kernel.org>
+ <20200519163234.226513-2-sashal@kernel.org>
+ <20200519172105.GB1101627@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jb6Id-0004jU-PA;;;mid=<87o8qjstyw.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/BewoOodAlU9s75IVSjo2e3P/HkeoZRsY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 0/4] Relocate execve() sanity checks
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200519172105.GB1101627@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-
-> On Tue, May 19, 2020 at 10:06:32AM -0500, Eric W. Biederman wrote:
->> Kees Cook <keescook@chromium.org> writes:
->> 
->> > Hi,
->> >
->> > While looking at the code paths for the proposed O_MAYEXEC flag, I saw
->> > some things that looked like they should be fixed up.
->> >
->> >   exec: Change uselib(2) IS_SREG() failure to EACCES
->> > 	This just regularizes the return code on uselib(2).
->> >
->> >   exec: Relocate S_ISREG() check
->> > 	This moves the S_ISREG() check even earlier than it was already.
->> >
->> >   exec: Relocate path_noexec() check
->> > 	This adds the path_noexec() check to the same place as the
->> > 	S_ISREG() check.
->> >
->> >   fs: Include FMODE_EXEC when converting flags to f_mode
->> > 	This seemed like an oversight, but I suspect there is some
->> > 	reason I couldn't find for why FMODE_EXEC doesn't get set in
->> > 	f_mode and just stays in f_flags.
->> 
->> So I took a look at this series.
->> 
->> I think the belt and suspenders approach of adding code in open and then
->> keeping it in exec and uselib is probably wrong.  My sense of the
->> situation is a belt and suspenders approach is more likely to be
->> confusing and result in people making mistakes when maintaining the code
->> than to actually be helpful.
+On Tue, May 19, 2020 at 07:21:05PM +0200, Greg KH wrote:
+>On Tue, May 19, 2020 at 12:32:31PM -0400, Sasha Levin wrote:
+>> +
+>> +#define DXGK_MAX_LOCK_DEPTH	64
+>> +#define W_MAX_PATH		260
 >
-> This is why I added the comments in fs/exec.c's redundant checks. When I
-> was originally testing this series, I had entirely removed the checks in
-> fs/exec.c, but then had nightmares about some kind of future VFS paths
-> that would somehow bypass do_open() and result in execve() working on
-> noexec mounts, there by allowing for the introduction of a really nasty
-> security bug.
+>We already have a max path number, why use a different one?
+
+It's max path for Windows, not Linux (thus the "W_" prefix) :)
+
+Maybe changing it to WIN_MAX_PATH or such will make it better?
+
+>> +#define d3dkmt_handle		u32
+>> +#define d3dgpu_virtual_address	u64
+>> +#define winwchar		u16
+>> +#define winhandle		u64
+>> +#define ntstatus		int
+>> +#define winbool			u32
+>> +#define d3dgpu_size_t		u64
 >
-> The S_ISREG test is demonstrably too late (as referenced in the series),
+>These are all ripe for a simple search/replace in your editor before you
+>do your next version :)
 
-Yes.  The open of a pipe very much happens when it should not.
+I've actually attempted that, and reverted that change, mostly because
+the whole 'handle' thing became very confusing.
 
-The deadlock looks like part of the cred_guard_mutex mess.  I think I
-introduced an alternate solution for the specific code paths in the
-backtrace when I introduced exec_update_mutex.
+Note that we have a few 'handles', each with a different size, and thus
+calling get_something_something_handle() type of functions becase very
+confusing since it's not clear what handle we're working with in that
+case.
 
-The fact that cred_guard_mutex is held over open, while at the same time
-cred_guard_mutex is grabbed on open files is very questionable.  Until
-my most recent patchset feeding exec /proc/self/maps would also deadlock
-this way.
+With regards to the rest, I wanted to leave stuff like 'winbool' to
+document the expected ABI between the Windows and Linux side of things.
+Ideally it would be 'bool' or 'u8', but as you see we had to use 'u32'
+here which I feel lessens our ability to have the code document itself.
 
-> and given the LSM hooks, I think the noexec check is too late as well.
-> (This is especially true for the coming O_MAYEXEC series, which will
-> absolutely need those tests earlier as well[1] -- the permission checking
-> is then in the correct place: during open, not exec.) I think the only
-> question is about leaving the redundant checks in fs/exec.c, which I
-> think are a cheap way to retain a sense of robustness.
+I don't feel too strongly against doing the conversion, and I won't
+object to doing it if you do, but just be aware that I've tried it and
+preferred to go back (even though our coding style doesn't like this) :)
 
-The trouble is when someone passes through changes one of the permission
-checks for whatever reason (misses that they are duplicated in another
-location) and things then fail in some very unexpected way.
-
-Eric
+-- 
+Thanks,
+Sasha
