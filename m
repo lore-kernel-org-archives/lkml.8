@@ -2,279 +2,134 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E21C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA87207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589905113;
-	bh=P3AYQdye00VIKh457NC82DZbnF4oXfY4J5rG6D5pq5I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEzwtC/tWSL/Gpis0qcM2aoAWGQwX7bOLPJMBuYI+qiKEW7pcMqjPKy514r5+Zc4u
-	 GSUjN8xlPhi6iCfcinNv5dVwyEKNwrO7Ku49tw/6Pbzop1LDCPzjeptvFKsiUybKqd
-	 ky5S15TJk1szc5Ex3kZuHFWhyBo1z03wbezPXgtA=
+	by mail.kernel.org (Postfix) with ESMTP id 49B052075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:18:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MwYYxHKU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbgESQSc (ORCPT
+        id S1729411AbgESQSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:18:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbgESQS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 12:18:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728689AbgESQS1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 May 2020 12:18:27 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54ACFC08C5C0;
+        Tue, 19 May 2020 09:18:27 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A81120873;
-        Tue, 19 May 2020 16:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589905106;
-        bh=P3AYQdye00VIKh457NC82DZbnF4oXfY4J5rG6D5pq5I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UytPSidIUrglmIf0mwsgKoIFKMY+GcXjRa6s7mzQQlr81pyM8f9UM26FhPVvj2+Qf
-         C1XcTEXIZiE4gXt+3qfsqs5La9J68d3zhtAFlGrJ3/NA0sgp9k2tzwKyOMbF+XKiC0
-         I5cpdH0wVGk5K73SXagCdruatt2uZ9/6MDA8mgv4=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jb4wi-00Decy-Ny; Tue, 19 May 2020 17:18:24 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@arm.linux.org.uk>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49RLf63nH3z9sT4;
+        Wed, 20 May 2020 02:18:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589905104;
+        bh=CY3Av0XXjcojShvon3BQ5YHl8W2k49JZVZyswAnM1TY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MwYYxHKUuDnHSBZhxtgLFHNLtfxLGmhlgcKg+fta6KY/OpEL93/QUPyzboVbv11Z0
+         hixZ8wNYulPuZ658qXmbC4cggt4b00FKeNC7F4uj15rpPyhAqHxvvYmfv2aMlfLLFC
+         eLQlRkFitT/joROgwGKmZzJktuQwqXbJnSJOQl39oYbCwLH9BFfMzToNvqjbxxNQnG
+         zbdJPtM3S82cZXF6LMn7Hzdx5En518H7sU6Cyf0nWMkngfc73JpS3HQABC7IJvVOQr
+         3YT907gVilqH45TCc7xz6/Uz051Zy3z5K15LfaLV2NASItaTzxstEF/xBnjjA6UgbA
+         gMGZmlNNnZMdw==
+Date:   Wed, 20 May 2020 02:18:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sumit Garg <sumit.garg@linaro.org>, kernel-team@android.com
-Subject: [PATCH 08/11] irqchip/gic: Configure SGIs as standard interrupts
-Date:   Tue, 19 May 2020 17:17:52 +0100
-Message-Id: <20200519161755.209565-9-maz@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200519161755.209565-1-maz@kernel.org>
-References: <20200519161755.209565-1-maz@kernel.org>
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20200520021820.618f2080@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; boundary="Sig_/Wapk7Tq2pmfAxxXMbCct2kj";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the way we deal with GIC SGIs by turning them into proper
-IRQs, and calling into the arch code to register the interrupt range
-instead of a callback.
+--Sig_/Wapk7Tq2pmfAxxXMbCct2kj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic.c | 113 +++++++++++++++++++++++++-------------
- 1 file changed, 74 insertions(+), 39 deletions(-)
+Hi all,
 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index e289810e794c..8d146ac28c74 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -47,6 +47,8 @@
- 
- #include "irq-gic-common.h"
- 
-+#define GIC_IRQ_TYPE_SGI	0x561
-+
- #ifdef CONFIG_ARM64
- #include <asm/cpufeature.h>
- 
-@@ -335,31 +337,22 @@ static void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
- 		irqstat = readl_relaxed(cpu_base + GIC_CPU_INTACK);
- 		irqnr = irqstat & GICC_IAR_INT_ID_MASK;
- 
--		if (likely(irqnr > 15 && irqnr < 1020)) {
--			if (static_branch_likely(&supports_deactivate_key))
--				writel_relaxed(irqstat, cpu_base + GIC_CPU_EOI);
--			isb();
--			handle_domain_irq(gic->domain, irqnr, regs);
--			continue;
--		}
--		if (irqnr < 16) {
-+		if (unlikely(irqnr >= 1020))
-+			break;
-+
-+		if (static_branch_likely(&supports_deactivate_key))
- 			writel_relaxed(irqstat, cpu_base + GIC_CPU_EOI);
--			if (static_branch_likely(&supports_deactivate_key))
--				writel_relaxed(irqstat, cpu_base + GIC_CPU_DEACTIVATE);
--#ifdef CONFIG_SMP
--			/*
--			 * Ensure any shared data written by the CPU sending
--			 * the IPI is read after we've read the ACK register
--			 * on the GIC.
--			 *
--			 * Pairs with the write barrier in gic_raise_softirq
--			 */
-+		isb();
-+
-+		/*
-+		 * Ensure any shared data written by the CPU sending the IPI
-+		 * is read after we've read the ACK register on the GIC.
-+		 *
-+		 * Pairs with the write barrier in gic_ipi_send_mask
-+		 */
-+		if (irqnr <= 15)
- 			smp_rmb();
--			handle_IPI(irqnr, regs);
--#endif
--			continue;
--		}
--		break;
-+		handle_domain_irq(gic->domain, irqnr, regs);
- 	} while (1);
- }
- 
-@@ -801,14 +794,14 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 	return IRQ_SET_MASK_OK_DONE;
- }
- 
--static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
-+static void gic_ipi_send_mask(struct irq_data *d, const struct cpumask *mask)
- {
- 	int cpu;
- 	unsigned long flags, map = 0;
- 
- 	if (unlikely(nr_cpu_ids == 1)) {
- 		/* Only one CPU? let's do a self-IPI... */
--		writel_relaxed(2 << 24 | irq,
-+		writel_relaxed(2 << 24 | d->hwirq,
- 			       gic_data_dist_base(&gic_data[0]) + GIC_DIST_SOFTINT);
- 		return;
- 	}
-@@ -826,7 +819,7 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 	dmb(ishst);
- 
- 	/* this always happens on GIC0 */
--	writel_relaxed(map << 16 | irq, gic_data_dist_base(&gic_data[0]) + GIC_DIST_SOFTINT);
-+	writel_relaxed(map << 16 | d->hwirq, gic_data_dist_base(&gic_data[0]) + GIC_DIST_SOFTINT);
- 
- 	gic_unlock_irqrestore(flags);
- }
-@@ -839,14 +832,40 @@ static int gic_starting_cpu(unsigned int cpu)
- 
- static __init void gic_smp_init(void)
- {
--	set_smp_cross_call(gic_raise_softirq);
-+	struct irq_fwspec sgi_fwspec = {
-+		.fwnode		= gic_data[0].domain->fwnode,
-+	};
-+	int base_sgi;
-+
- 	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
- 				  "irqchip/arm/gic:starting",
- 				  gic_starting_cpu, NULL);
-+
-+	if (is_of_node(gic_data[0].domain->fwnode)) {
-+		/* DT */
-+		sgi_fwspec.param_count = 3;
-+		sgi_fwspec.param[0] = GIC_IRQ_TYPE_SGI;
-+		sgi_fwspec.param[1] = 0;
-+		sgi_fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
-+	} else {
-+		/* ACPI */
-+		sgi_fwspec.param_count = 2;
-+		sgi_fwspec.param[0] = 0;
-+		sgi_fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-+	}
-+
-+	base_sgi = __irq_domain_alloc_irqs(gic_data[0].domain, -1, 8,
-+					   NUMA_NO_NODE, &sgi_fwspec,
-+					   false, NULL);
-+	if (WARN_ON(base_sgi <= 0))
-+		return;
-+
-+	set_smp_ipi_range(base_sgi, 8);
- }
- #else
- #define gic_smp_init()		do { } while(0)
- #define gic_set_affinity	NULL
-+#define gic_ipi_send_mask	NULL
- #endif
- 
- #ifdef CONFIG_BL_SWITCHER
-@@ -993,16 +1012,26 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- {
- 	struct gic_chip_data *gic = d->host_data;
- 
--	if (hw < 32) {
-+	switch (hw) {
-+	case 0 ... 15:
-+		irq_set_percpu_devid(irq);
-+		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
-+				    handle_percpu_devid_fasteoi_ipi,
-+				    NULL, NULL);
-+		irq_set_status_flags(irq, IRQ_NOAUTOEN);
-+		break;
-+	case 16 ... 31:
- 		irq_set_percpu_devid(irq);
- 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
- 				    handle_percpu_devid_irq, NULL, NULL);
- 		irq_set_status_flags(irq, IRQ_NOAUTOEN);
--	} else {
-+		break;
-+	default:
- 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
- 				    handle_fasteoi_irq, NULL, NULL);
- 		irq_set_probe(irq);
- 		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(irq)));
-+		break;
- 	}
- 	return 0;
- }
-@@ -1020,15 +1049,19 @@ static int gic_irq_domain_translate(struct irq_domain *d,
- 		if (fwspec->param_count < 3)
- 			return -EINVAL;
- 
--		/* Get the interrupt number and add 16 to skip over SGIs */
--		*hwirq = fwspec->param[1] + 16;
--
--		/*
--		 * For SPIs, we need to add 16 more to get the GIC irq
--		 * ID number
--		 */
--		if (!fwspec->param[0])
--			*hwirq += 16;
-+		switch (fwspec->param[0]) {
-+		case 0:			/* SPI */
-+			*hwirq = fwspec->param[1] + 32;
-+			break;
-+		case 1:			/* PPI */
-+			*hwirq = fwspec->param[1] + 16;
-+			break;
-+		case GIC_IRQ_TYPE_SGI:	/* SGI, can't be set via DT */
-+			*hwirq = fwspec->param[1];
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
- 
- 		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
- 
-@@ -1097,8 +1130,10 @@ static void gic_init_chip(struct gic_chip_data *gic, struct device *dev,
- 		gic->chip.irq_set_vcpu_affinity = gic_irq_set_vcpu_affinity;
- 	}
- 
--	if (gic == &gic_data[0])
-+	if (gic == &gic_data[0]) {
- 		gic->chip.irq_set_affinity = gic_set_affinity;
-+		gic->chip.ipi_send_mask = gic_ipi_send_mask;
-+	}
- }
- 
- static int gic_init_bases(struct gic_chip_data *gic,
--- 
-2.26.2
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
+  kernel/kprobes.c
+
+between commit:
+
+  4fdd88877e52 ("kprobes: Lock kprobe_mutex while showing kprobe_blacklist")
+
+from the tip tree and commit:
+
+  71294f4f8167 ("kernel/kprobes.c: convert to use DEFINE_SEQ_ATTRIBUTE macr=
+o")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc kernel/kprobes.c
+index 9622ee05f5fa,9146e1a8373b..000000000000
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@@ -2506,15 -2436,10 +2496,15 @@@ static int kprobe_blacklist_seq_show(st
+  	return 0;
+  }
+ =20
+ +static void kprobe_blacklist_seq_stop(struct seq_file *f, void *v)
+ +{
+ +	mutex_unlock(&kprobe_mutex);
+ +}
+ +
+- static const struct seq_operations kprobe_blacklist_seq_ops =3D {
++ static const struct seq_operations kprobe_blacklist_sops =3D {
+  	.start =3D kprobe_blacklist_seq_start,
+  	.next  =3D kprobe_blacklist_seq_next,
+ -	.stop  =3D kprobe_seq_stop,	/* Reuse void function */
+ +	.stop  =3D kprobe_blacklist_seq_stop,
+  	.show  =3D kprobe_blacklist_seq_show,
+  };
+ =20
+
+--Sig_/Wapk7Tq2pmfAxxXMbCct2kj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7EBswACgkQAVBC80lX
+0GwmTwf/eg4rIUVcZScw6TzYzeuHYuaQitGNnan43iMaAbASnwmmGN4/e71YUz7B
+mx/XAxhL4+kFw4TQZ1ZTSdj2q5Abxorv/yhDT6esl1ZW1CLLC/vFxCqP2OeERQPs
+7zvoCfIwqv4o/nb7pDUy8p2AAqe+u0zPr5rV8q6GNy7Y2VUxZfqt7YOjCN2boFsC
+Tg92sHLOGqUIZkU1o4x6ZTqF6i5H4rPHwsTrWABb2YvsWmiqGL8OXAPEpJgqNOcW
+Vsfq4XPhVMdwnDw29XIsXx2AgFU3sawuUioEpYlRpUhLOpzLls3QstMNa7RZ4wZH
+ldxZu1lMP1xSJL8wbKvR8JWzaqzdVA==
+=MdSE
+-----END PGP SIGNATURE-----
+
+--Sig_/Wapk7Tq2pmfAxxXMbCct2kj--
