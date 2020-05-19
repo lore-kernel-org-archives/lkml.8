@@ -2,120 +2,120 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE32C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5501720835
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B940E20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:05:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pLl5Ux7o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNM5HwwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgESOFb (ORCPT
+        id S1729142AbgESOFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52954 "EHLO
+        Tue, 19 May 2020 10:05:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgESOFa (ORCPT
+        with ESMTP id S1727910AbgESOFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:05:30 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A67C08C5C0;
+        Tue, 19 May 2020 10:05:32 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE78BC08C5C0;
+        Tue, 19 May 2020 07:05:31 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id w15so3988578lfe.11;
+        Tue, 19 May 2020 07:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3ngWGohqyk1bY0kV0++kwnpeD3y2ZE5Nt8l5LSZ6FRQ=;
+        b=JNM5HwwQ0gQ6nuCM6Kwij9v2fd9iRgUdc+MT4Op08k7J6Ulu1qQVyXeFLvk7ehAi8K
+         +EnpUcbc4KK4ErikoxL4837JsZFfJMcoh84iWKWNRzVzXjZ3XIG6NVQUa2XVeWrq25d2
+         V+UdACbBZga9RlPT36llf67I9pQrLn+zXRj6i2YjZOWNjdlLzI2cV4vuVtzqUlp3NvXH
+         Xrnj8h6hFoKRUMc+ejo1L08QIDjmdyERbsLAqcmyc67t1TPEFbBmc1JE3Al9M9lw9Izt
+         3QnnpQRuriGz91mMQ8rFOxR8bHQDEtW4+Xes5BCx5wARSFHjdNioYpTlgqJiJcPj5rl8
+         VRzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3ngWGohqyk1bY0kV0++kwnpeD3y2ZE5Nt8l5LSZ6FRQ=;
+        b=lUGHUGAWx44nLseswMnQXMVm+h1ToXFRKJ7YL3gp2bTOkXFFpGrQ3cNx6ReSUJ5IGu
+         Ut7/21Rnfbv7kAoS26kfpsmQQqzEphvJda4BOqY4Z8Ax8gzfC9xM6pfLxMPO6bEnn25O
+         jOnLir1rXwPLWWNVuAZvd1Qvvuf4Cb9cEmB+mgwtDS8QO2PFJefqqQ9PAKWyZ+ZTRY1w
+         FGTfS5eNhl8Bhic18ijsABOg6lFaG9Q4BMKGu5xp2oC233cs9PUVjXgi/DQ1SzT8PbUJ
+         0s2Q0bZylQZp6HDvDLROVXLCd80S33pQJWUxoyvUOq93PmaebAd58UnztztVBAytnYLL
+         Ou3Q==
+X-Gm-Message-State: AOAM530uvaFHxBxrAGSQsCX4/DrK7951SFU6uSGeL8x9vkBatDq2wRN0
+        wLh4XtwUD1uTfmNzixHjeBd2A8kZ
+X-Google-Smtp-Source: ABdhPJwWBveEsnFnC70i5Th3zmI8qQ90kscFZox1OYGMh21oaSbVDP3KHvAzjOQRvnunWXdFREr1Dg==
+X-Received: by 2002:ac2:5f69:: with SMTP id c9mr8778817lfc.2.1589897130069;
         Tue, 19 May 2020 07:05:30 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49RHhk1Rm1z9sTd;
-        Wed, 20 May 2020 00:05:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589897126;
-        bh=gd7ByV6aHDlFX73FDNTZQfneNBpwpSGtYtHfxszLkI4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=pLl5Ux7o0sSjUQpsK31vPGk5n1A8uTU08erERo7vM0K+5bgHgJZ/ikPrS+gTYzlWz
-         0K39Zbi9xFhGeIeTBQW5iX/twTfYAx3Ov6NEpH4h2zT8AhyR/u5rXgpBDCvyfkUjA3
-         atcOPp6J9kaGsAn7D9jKlShNh7CzOelpTbwjMdCIe5AI2Vivdds3GTIM0+gb7FnK8n
-         zWh18pq7yMJbtPTzuZ675FHPfFbwM30u/fAnjKArLalKA9z0wFWNV3kSRJsGN0U2wV
-         dRYHtaQXpkLWhGb0/xpmuLJSfhvYWHw7K8xfps25JOiq+PzwvzTRqLfvb5tnjG/wiM
-         KQQ9poghhCKWA==
-Date:   Wed, 20 May 2020 00:05:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: linux-next: build failure after merge of the kgdb tree
-Message-ID: <20200520000524.69af8a86@canb.auug.org.au>
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id v28sm3041273lfd.35.2020.05.19.07.05.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 07:05:28 -0700 (PDT)
+Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
+ device-tree properties
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200516154314.14769-1-digetx@gmail.com>
+ <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b634e7a5-9a30-3bd1-126d-be62e4dd73e1@gmail.com>
+Date:   Tue, 19 May 2020 17:05:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3/7nNt/HW9l6xjKDYNjG/32";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3/7nNt/HW9l6xjKDYNjG/32
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+19.05.2020 10:28, Ulf Hansson пишет:
+> On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> Several people asked me about the MMC warnings in the KMSG log and
+>> I had to tell to ignore them because these warning are irrelevant to
+>> pre-Tegra210 SoCs.
+> 
+> Why are the warnings irrelevant?
 
-Hi all,
+That's what the DT binding doc says [1].
 
-After merging the kgdb tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+[1]
+https://www.kernel.org/doc/Documentation/devicetree/bindings/mmc/nvidia%2Ctegra20-sdhci.txt
 
-drivers/tty/serial/kgdboc.c:418:13: error: expected declaration specifiers =
-or '...' before string constant
-  418 | early_param("ekgdboc", kgdboc_early_init);
-      |             ^~~~~~~~~
-drivers/tty/serial/kgdboc.c:418:24: error: expected declaration specifiers =
-or '...' before 'kgdboc_early_init'
-  418 | early_param("ekgdboc", kgdboc_early_init);
-      |                        ^~~~~~~~~~~~~~~~~
-drivers/tty/serial/kgdboc.c:546:13: error: expected declaration specifiers =
-or '...' before string constant
-  546 | early_param("kgdboc_earlycon", kgdboc_earlycon_init);
-      |             ^~~~~~~~~~~~~~~~~
-drivers/tty/serial/kgdboc.c:546:32: error: expected declaration specifiers =
-or '...' before 'kgdboc_earlycon_init'
-  546 | early_param("kgdboc_earlycon", kgdboc_earlycon_init);
-      |                                ^~~~~~~~~~~~~~~~~~~~
-drivers/tty/serial/kgdboc.c:505:19: warning: 'kgdboc_earlycon_init' defined=
- but not used [-Wunused-function]
-  505 | static int __init kgdboc_earlycon_init(char *opt)
-      |                   ^~~~~~~~~~~~~~~~~~~~
-drivers/tty/serial/kgdboc.c:411:19: warning: 'kgdboc_early_init' defined bu=
-t not used [-Wunused-function]
-  411 | static int __init kgdboc_early_init(char *opt)
-      |                   ^~~~~~~~~~~~~~~~~
+Although, looking at the driver's code and TRM docs, it seems that all
+those properties are really irrelevant only to the older Terga20 SoC. So
+the binding doc is a bit misleading.
 
-Caused by commit
+Nevertheless, the binding explicitly says that the properties are
+optional, which is correct.
 
-  220995622da5 ("kgdboc: Add kgdboc_earlycon to support early kgdb using bo=
-ot consoles")
+>> It should be up to a board's device-tree writer to
+>> properly describe all the necessary properties. Secondly, eventually all
+>> device-tree bindings will be converted to YAML, which allows to validate
+>> board DT files, giving a warning about missing properties. Hence let's
+>> remove the noisy warnings to stop the confusion.
+> 
+> Yep, makes sense. However, perhaps we should do this conversion then,
+> rather than first drop the warnings?
 
-I have used the kgdb tree from next-20200518 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/3/7nNt/HW9l6xjKDYNjG/32
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7D56QACgkQAVBC80lX
-0GxfBAf/TKf1zO+S+d4005Wd8niJDcTION0P3bXtqmcaNP3/dt0K6QD7u5DtoxAB
-QG/hAaglbVfj0fdv0WF0RSQwyXm7TUe+fNH2AW+BN37QBC2jhys5Zl0k7N/5Cult
-qpgwIIrz/pYlEwXSxtTBTFPkG8nytp9dEaKbPP6dwxvWLchJUHKithlptGk1Q8OF
-SHcsGWWLyVyQE7hzbXWaaSgLb+SVKrgDznb+T/kzwcHSgChVOi3nnEQVabId31hm
-+BKHwrHsBxGiRlLRBuxtpNGB/eBXRydhBoUL0Yv6naVMV5wuSBlLV0iAl71L7AzD
-lFTWhxICyanUK8jYhMOsueESPcoTHQ==
-=G6e/
------END PGP SIGNATURE-----
-
---Sig_/3/7nNt/HW9l6xjKDYNjG/32--
+I don't mind to postpone this patch. But again, IIUC, all these
+properties are optional, and thus, there is no critical need to verify
+them in DT right now, it could be done later on.
