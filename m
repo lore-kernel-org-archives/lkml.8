@@ -2,158 +2,124 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8198C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21EBC20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5DE20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:41:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XaLwzUCp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PMA9Tx9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgESBjh (ORCPT
+        id S1727958AbgESBlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 21:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgESBjh (ORCPT
+        Mon, 18 May 2020 21:41:20 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59318 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgESBlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 21:39:37 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A584C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:39:37 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q24so656029pjd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ou+cOtGNMtILAT0oAVla8LZd+D096WK5Uyod38Jow0Q=;
-        b=XaLwzUCpVVPq3h/MtUoor5fOFcBbUIoffaVg3SAhD/lEVjGHNGfD8bK3/M4lJRcdaB
-         hVHsHQEGB+TYoC063q1j59PJ5ACJOgD/XX1eO/yPVPV878bc9KL6yFXQosCE9mw8OwGP
-         +IjDoQ625uyw+M/EuKGBUvyn4CMknJkXr6baq/jnAwwQc0Zny6gEah5Fx5Z7JTML6fAu
-         m2YbO6KnotqzZqi1YvpdXgsNKYHGtPQL6nYec858WDnZErkLvYHLyljuCyuRS5hq8AYL
-         nyIh8keGviwFFqPfB3arVtfDoG1+r/eAChyvfkLTyqmSlBSmLGWdvaSCVloZUYrkrLFJ
-         Ztdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ou+cOtGNMtILAT0oAVla8LZd+D096WK5Uyod38Jow0Q=;
-        b=lY4hjEcI9cuwV9iqfe5cNgtDYJBb5K7b7SkBHTHJIkqaqbjOk60nsoASytc5iA5ZdL
-         SUQkEsCV5GiORJCr/lLaZRJXDMG76v/VEFCXaprE5foE/k6eyipziumoBel82+i3CkD7
-         B1TEPh8odVx5yV9KY/qNn2fLZNfvjpfwQsA7fScme1j5sc6u+IJaEGRWhLmutGBybSzS
-         zYnC7vqkT1VUWhrdzJO3iwJVe2UMaCwMueEXwlUb81d2t5CSrvHXB9MLo6i/mzTe+1es
-         GaLOn+DwUglPAIV0g5+2CjmgSqvgvN1SZHbU0QwibCdKymrLKXf/HxFGtdfggwZZUXsq
-         Q3pA==
-X-Gm-Message-State: AOAM531G2UeWSze9h3rTMjnJhNYtjlViz1kQcnZe843f4ZRUL1dmriFU
-        0OtIcGsk3Tur3QU8nFR0d9tM0w==
-X-Google-Smtp-Source: ABdhPJynx5QKthzT98DmDd7nzVGpIH2mSq44cH42/3HOEhkiRPI693lExc+p7dp3L9pSkxIS4TiuHg==
-X-Received: by 2002:a17:90b:887:: with SMTP id bj7mr2208850pjb.186.1589852376670;
-        Mon, 18 May 2020 18:39:36 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 7sm7090318pfc.203.2020.05.18.18.39.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 18:39:36 -0700 (PDT)
-Date:   Mon, 18 May 2020 18:38:13 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mayank Grover <groverm@codeaurora.org>, linus.walleij@linaro.org
-Cc:     agross@kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        neeraju@codeaurora.org
-Subject: Re: [PATCH] pinctrl: msm: Add check for pinctrl group is valid
-Message-ID: <20200519013813.GU2165@builder.lan>
-References: <1589817025-21886-1-git-send-email-groverm@codeaurora.org>
+        Mon, 18 May 2020 21:41:20 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04J1b4i9034179;
+        Tue, 19 May 2020 01:41:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=jDTS7w/xwyzUFP6HaV5XTmjtQADYCYpRZiMlLiAahBw=;
+ b=PMA9Tx9cG94UVxWndPtEg8PAYpSxLH2k2EFCpgLWmeQRQWJNBun3LKBnoD/lhuOlLSDn
+ h1iuRi1a8U+5tvzo0PXeCFicxkinng7aJSeQSQNVpEKyvSbH+yHxxSRTnauR25ufnZmG
+ ZB40fiUhDLAqA1gCoA+enMnDWrJ4X9p1i+OG2A20rLwZdjO1wVb21UwAZxoV+r8TpI/w
+ xz4CjEKlCMDKe4DR53ak8CjuJOhIDskOB7RYcPaS814tSvmYFKJcwix4XnGwb+vPhUXm
+ ABUnrAKDcBevi9/xQJXIebe6dEQIP1dpNoB/9Qn+v2j8QIGmuTHv2nH1EXGeil1ViUN8 xg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 3127kr2a33-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 May 2020 01:41:09 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04J1cM7i056366;
+        Tue, 19 May 2020 01:39:09 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 312t3wtqtf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 May 2020 01:39:09 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04J1d740026790;
+        Tue, 19 May 2020 01:39:07 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 May 2020 18:39:07 -0700
+Date:   Mon, 18 May 2020 21:39:30 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH] swap: Add percpu cluster_next to reduce lock contention
+ on swap cache
+Message-ID: <20200519013930.zofr6iv6p5rk7kxm@ca-dmjordan1.us.oracle.com>
+References: <20200514070424.16017-1-ying.huang@intel.com>
+ <20200515235140.xkznql332xmqvuf2@ca-dmjordan1.us.oracle.com>
+ <87zha5kauc.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589817025-21886-1-git-send-email-groverm@codeaurora.org>
+In-Reply-To: <87zha5kauc.fsf@yhuang-dev.intel.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ phishscore=0 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005190013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005190013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18 May 08:50 PDT 2020, Mayank Grover wrote:
-
-> The list of reserved gpio pins for platform are populated
-> in gpiochip valid_mask.
+On Mon, May 18, 2020 at 02:37:15PM +0800, Huang, Ying wrote:
+> Daniel Jordan <daniel.m.jordan@oracle.com> writes:
+> > On Thu, May 14, 2020 at 03:04:24PM +0800, Huang Ying wrote:
+> >> And the pmbench score increases 15.9%.
+> >
+> > What metric is that, and how long did you run the benchmark for?
 > 
-> Here on MSM common driver introduce ability to check if
-> pingroup is valid, by parsing pins in pingroup against
-> reserved pins for gpios. This does not handle non-gpio
-> pingroups.
+> I run the benchmark for 1800s.  The metric comes from the following
+> output of the pmbench,
 > 
-
-Thanks Mayank, I can confirm that this is a problem, but don't we need
-this on some of the pinmux_ops as well?
-
-@Linus, we started off with something similar for GPIOs and ended up
-with the logic in the core code. Should we somehow try to do the same
-for pinctrl?
-
-Regards,
-Bjorn
-
-> Signed-off-by: Mayank Grover <groverm@codeaurora.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+> [1] Benchmark done - took 1800.088 sec for 122910000 page access
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 85858c1..b6ebe26 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -261,6 +261,24 @@ static unsigned msm_regval_to_drive(u32 val)
->  	return (val + 1) * 2;
->  }
->  
-> +static bool msm_pingroup_is_valid(struct msm_pinctrl *pctrl,
-> +				  const struct msm_pingroup *g)
-> +{
-> +	const unsigned int *pins = g->pins;
-> +	unsigned int num_pins = g->npins;
-> +	struct gpio_chip *chip = &pctrl->chip;
-> +	unsigned int max_gpios = chip->ngpio;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < num_pins; i++) {
-> +		/* Doesn't handle non-gpio pingroups */
-> +		if (pins[i] < max_gpios &&
-> +		    !gpiochip_line_is_valid(chip, pins[i]))
-> +			return false;
-> +	}
-> +	return true;
-> +}
-> +
->  static int msm_config_group_get(struct pinctrl_dev *pctldev,
->  				unsigned int group,
->  				unsigned long *config)
-> @@ -276,6 +294,10 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
->  
->  	g = &pctrl->soc->groups[group];
->  
-> +	/* Check if group has all valid pins */
-> +	if (!msm_pingroup_is_valid(pctrl, g))
-> +		return -EINVAL;
-> +
->  	ret = msm_config_reg(pctrl, g, param, &mask, &bit);
->  	if (ret < 0)
->  		return ret;
-> @@ -355,6 +377,10 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
->  
->  	g = &pctrl->soc->groups[group];
->  
-> +	/* Check if group has all valid pins */
-> +	if (!msm_pingroup_is_valid(pctrl, g))
-> +		return -EINVAL;
-> +
->  	for (i = 0; i < num_configs; i++) {
->  		param = pinconf_to_config_param(configs[i]);
->  		arg = pinconf_to_config_argument(configs[i]);
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member of the Code Aurora Forum, hosted by The Linux Foundation
+> That is, the throughput is 122910000 / 1800.088 = 68280.0 (accesses/s).
+> Then we sum the values from the different processes.
+
+Ok.
+
+> > It's just a nit but SWP_SOLIDSTATE and 'if (si->cluster_info)' are two ways to
+> > check the same thing and I'd stick with the one that's already there.
+> 
+> Yes.  In effect, (si->flags & SWP_SOLIDSTATE) and (si->cluster_info)
+> always has same value at least for now.  But I don't think they are
+> exactly same in semantics.  So I would rather to use their exact
+> semantics.
+
+Oh, but I thought the swap clusters were for scaling the locking for fast
+devices, so that both checks have the same semantics now, and presumably would
+in the future.
+
+It's a minor point, I'm fine either way.
+
+> The first swap slot is the swap partition header, you cand find the
+> corresponding code in syscall swapon function, below comments "Read the
+
+Aha, thanks.
