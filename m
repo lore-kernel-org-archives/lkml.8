@@ -2,90 +2,134 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F5B207D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4337E204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Y7dwlmoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgESUy4 (ORCPT
+        id S1726651AbgESUzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51490 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 16:55:15 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:54352 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgESUy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:54:56 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1725998AbgESUzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 16:55:15 -0400
+Received: from zn.tnic (p200300ec2f0b87001461a870af27ee92.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8700:1461:a870:af27:ee92])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEFF62075F;
-        Tue, 19 May 2020 20:54:54 +0000 (UTC)
-Date:   Tue, 19 May 2020 16:54:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/8] radix-tree: Use local_lock for protection
-Message-ID: <20200519165453.0a795ca1@gandalf.local.home>
-In-Reply-To: <20200519204545.GA16070@bombadil.infradead.org>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
-        <20200519201912.1564477-3-bigeasy@linutronix.de>
-        <20200519204545.GA16070@bombadil.infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E5F51EC0116;
+        Tue, 19 May 2020 22:55:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589921712;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X2V7bouPUzsQ8Xr8SCd7667H/T1ORcUDQXiU9kyEDw0=;
+        b=Y7dwlmoeYDqUqS9pSvmhEmAWP/Of7Yt8jInJi2EqQmfr5PxcJlUI4Ts17ngeoN14YQMaIY
+        gmp00L8xwPbsaDLE7GQdRH+aJOzJhlIcD1gxyLL+V9+mQKk2buHeEKDNf54tLKz2jlW01f
+        WaRLYFwx5eC0bFasjnMhO1HZc4YcONk=
+Date:   Tue, 19 May 2020 22:55:05 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, kbuild-all@lists.01.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Benjamin Thiel <b.thiel@posteo.de>
+Subject: Re: [tip:x86/mm 1/23] arch/x86/mm/init.c:75:6: warning: no previous
+ prototype for function 'x86_has_pat_wp'
+Message-ID: <20200519205505.GD444@zn.tnic>
+References: <202005200123.gFjGzJEH%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202005200123.gFjGzJEH%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 13:45:45 -0700
-Matthew Wilcox <willy@infradead.org> wrote:
-
-> On Tue, May 19, 2020 at 10:19:06PM +0200, Sebastian Andrzej Siewior wrote:
-> > The radix-tree and idr preload mechanisms use preempt_disable() to protect
-> > the complete operation between xxx_preload() and xxx_preload_end().
-> > 
-> > As the code inside the preempt disabled section acquires regular spinlocks,
-> > which are converted to 'sleeping' spinlocks on a PREEMPT_RT kernel and
-> > eventually calls into a memory allocator, this conflicts with the RT
-> > semantics.
-> > 
-> > Convert it to a local_lock which allows RT kernels to substitute them with
-> > a real per CPU lock. On non RT kernels this maps to preempt_disable() as
-> > before, but provides also lockdep coverage of the critical region.
-> > No functional change.  
+On Wed, May 20, 2020 at 01:51:25AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/mm
+> head:   bd1de2a7aace4d1d312fb1be264b8fafdb706208
+> commit: 1f6f655e01adebf5bd5e6c3da2e843c104ded051 [1/23] x86/mm: Add a x86_has_pat_wp() helper
+> config: x86_64-randconfig-r012-20200519 (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 135b877874fae96b4372c8a3fbfaa8ff44ff86e3)
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install x86_64 cross compiling tool for clang build
+>         # apt-get install binutils-x86-64-linux-gnu
+>         git checkout 1f6f655e01adebf5bd5e6c3da2e843c104ded051
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
 > 
-> I don't seem to have a locallock.h in my tree.  Where can I find more
-> information about it?
-
-PATCH 1 ;-)
-
- https://lore.kernel.org/r/20200519201912.1564477-1-bigeasy@linutronix.de
-
-With lore and b4, it should now be easy to get full patch series.
-
--- Steve
-
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
 > 
-> > +++ b/lib/radix-tree.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/kmemleak.h>
-> >  #include <linux/percpu.h>
-> > +#include <linux/locallock.h>
-> >  #include <linux/preempt.h>		/* in_interrupt() */
-> >  #include <linux/radix-tree.h>
-> >  #include <linux/rcupdate.h>  
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+> 
+> >> arch/x86/mm/init.c:75:6: warning: no previous prototype for function 'x86_has_pat_wp' [-Wmissing-prototypes]
+> bool x86_has_pat_wp(void)
+> ^
 
+Triggers with gcc too:
+
+make W=1 arch/x86/mm/init.o
+
+...
+
+arch/x86/mm/init.c:81:6: warning: no previous prototype for ‘x86_has_pat_wp’ [-Wmissing-prototypes]
+   81 | bool x86_has_pat_wp(void)
+      |      ^~~~~~~~~~~~~~
+
+
+-Wmissing-prototypes is default off, though, dunno why clang 11 has it
+on.
+
+Anyway, something for Benni to fix. CCed and leaving the rest for him as
+reference.
+
+> arch/x86/mm/init.c:75:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+> bool x86_has_pat_wp(void)
+> ^
+> static
+> arch/x86/mm/init.c:866:13: warning: no previous prototype for function 'mem_encrypt_free_decrypted_mem' [-Wmissing-prototypes]
+> void __weak mem_encrypt_free_decrypted_mem(void) { }
+> ^
+> arch/x86/mm/init.c:866:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+> void __weak mem_encrypt_free_decrypted_mem(void) { }
+> ^
+> static
+> 2 warnings generated.
+> 
+> vim +/x86_has_pat_wp +75 arch/x86/mm/init.c
+> 
+>     73	
+>     74	/* Check that the write-protect PAT entry is set for write-protect */
+>   > 75	bool x86_has_pat_wp(void)
+>     76	{
+>     77		return __pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] == _PAGE_CACHE_MODE_WP;
+>     78	}
+>     79	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
