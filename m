@@ -2,193 +2,242 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7282FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D65C207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9758620835
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AMwWip3w"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="E/2LWijB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgESXbv (ORCPT
+        id S1728012AbgESXfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:31:51 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59360 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgESXbv (ORCPT
+        Tue, 19 May 2020 19:35:03 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:1590 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgESXfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:31:51 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04JNVlph177955;
-        Tue, 19 May 2020 23:31:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=UBY/k2OVYhF0QuJq9wx8qy4hPY57/Gp9Fme/ic3zlJs=;
- b=AMwWip3wD3/NeiH6u7Qsc62pZB/6dvqQW0ZDgMK36mcbPbU2mcNEGfEzIxEJrJ1vEirn
- qpXIWeTDJEy5XYuZLsTZoWLHe6ve/qIGqZ0vPHBHgEOHLcCliRouVuLuJLqkf50WkiMz
- 9vPCb+aa3x8Ub4wseAmVuDvEyom5ZSy8M2nba5C3P5p2qRUZvJegcsVbNtQAF/CTEz1i
- 1c2uAkeDNSeWjh/jkQJ22YjCoFyoQpmMAT2SxiIGloC6vj9dWn8gH7AgkW8t2rxoiBvR
- +YpUXEh6W3Qof5+LkkMt5vuzGyOpXbM1i0YVvibOMTwC8pKJMIuwsiXrzAkrnbcr1VMQ 5g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 31284m08mt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 23:31:47 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04JNMgWv170092;
-        Tue, 19 May 2020 23:31:47 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 313gj2fj5a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 May 2020 23:31:47 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04JNVjvh004260;
-        Tue, 19 May 2020 23:31:45 GMT
-Received: from dhcp-10-159-149-244.vpn.oracle.com (/10.159.149.244)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 May 2020 16:31:45 -0700
-Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
-From:   Divya Indi <divya.indi@oracle.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Kaike Wan <kaike.wan@intel.com>,
-        Gerd Rausch <gerd.rausch@oracle.com>,
-        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>
-References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
- <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
- <20200508000809.GM26002@ziepe.ca>
- <33fc99e2-e9fc-3c8c-e47f-41535f514c2d@oracle.com>
- <20200513150021.GD29989@ziepe.ca>
- <c761da30-3663-4932-dd72-3501f15c0197@oracle.com>
-Message-ID: <272dbe83-a72b-d38b-6993-d3bbda50a7d1@oracle.com>
-Date:   Tue, 19 May 2020 16:30:52 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Tue, 19 May 2020 19:35:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589931301; x=1621467301;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=8UFUtTeRpjYPvMFrw037W1OadSP0YXrEVVUVgG1wRzY=;
+  b=E/2LWijB4b2A0aKW1XVM79IKadw9EpRav99LgKTtTDYhAvtZ1poUw2yK
+   j7fN1jgwrfbd+TNz/WZ0U4Zl/0h1Rk0iyYNtUaM14kqSnqRMwdKX5t6+S
+   UqwL1xnYMb5tsFh2L97x5BpuyrcABEOkfnzQxsEpkB+Oz9EAJL50vBtzc
+   U=;
+IronPort-SDR: PstKWIwiKXwlx7AwfI2MpbFwnnvbl4PRGOucOXTFL8WICxveEsjrTgaNNQtydlcjq5vYiBt8hp
+ NCHu/6FrICEg==
+X-IronPort-AV: E=Sophos;i="5.73,411,1583193600"; 
+   d="scan'208";a="31244955"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 19 May 2020 23:34:58 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id E4F73A2003;
+        Tue, 19 May 2020 23:34:55 +0000 (UTC)
+Received: from EX13D08UEE002.ant.amazon.com (10.43.62.92) by
+ EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 19 May 2020 23:34:46 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D08UEE002.ant.amazon.com (10.43.62.92) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 19 May 2020 23:34:45 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 23:34:45 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 12AFA40712; Tue, 19 May 2020 23:34:45 +0000 (UTC)
+Date:   Tue, 19 May 2020 23:34:45 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>
+Subject: [PATCH 05/12] genirq: Shutdown irq chips in suspend/resume during
+ hibernation
+Message-ID: <fce013fc1348f02b8e4ec61e7a631093c72f993c.1589926004.git.anchalag@amazon.com>
+References: <cover.1589926004.git.anchalag@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <c761da30-3663-4932-dd72-3501f15c0197@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 adultscore=0 bulkscore=0 suspectscore=11 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005190199
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 mlxscore=0
- cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005190200
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1589926004.git.anchalag@amazon.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200519233445.npiYMJQUQ9Zk0vxUYzN3KPERCPAWsTqPdUc49O8UEIU@z>
 
-Hi Jason,
+Resending with fixed Signed-off-by.
 
-I wanted to follow up to see if you got a chance to review the following reply?
+Many legacy device drivers do not implement power management (PM)
+functions which means that interrupts requested by these drivers stay
+in active state when the kernel is hibernated.
 
-Let me know if it addresses your concern and if you have any questions!
+This does not matter on bare metal and on most hypervisors because the
+interrupt is restored on resume without any noticable side effects as
+it stays connected to the same physical or virtual interrupt line.
 
-Thanks,
-Divya
+The XEN interrupt mechanism is different as it maintains a mapping
+between the Linux interrupt number and a XEN event channel. If the
+interrupt stays active on hibernation this mapping is preserved but
+there is unfortunately no guarantee that on resume the same event
+channels are reassigned to these devices. This can result in event
+channel conflicts which prevent the affected devices from being
+restored correctly.
 
-On 5/13/20 2:02 PM, Divya Indi wrote:
-> Hi Jason,
->
-> Please find my comments inline - 
->
-> On 5/13/20 8:00 AM, Jason Gunthorpe wrote:
->> On Mon, May 11, 2020 at 02:26:30PM -0700, Divya Indi wrote:
->>>>> @@ -1123,6 +1156,18 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
->>>>>  
->>>>>  	send_buf = query->mad_buf;
->>>>>  
->>>>> +	/*
->>>>> +	 * Make sure the IB_SA_NL_QUERY_SENT flag is set before
->>>>> +	 * processing this query. If flag is not set, query can be accessed in
->>>>> +	 * another context while setting the flag and processing the query will
->>>>> +	 * eventually release it causing a possible use-after-free.
->>>>> +	 */
->>>> This comment doesn't really make sense, flags insige the memory being
->>>> freed inherently can't prevent use after free.
->>> I can definitely re-phrase here to make things clearer. But, the idea here is
->>> in the unlikely/rare case where a response for a query comes in before the flag has been
->>> set in ib_nl_make_request, we want to wait for the flag to be sent before proceeding. 
->>> The response handler will eventually release the query so this wait avoids that if the flag has not been set
->>> else 
->>> 	"query->flags |= IB_SA_NL_QUERY_SENT;" 
->>> will be accessing a query which was freed due to the above mentioned race.
->>>
->>> It is unlikely since getting a response => We have actually sent out the query to ibacm.
->>>
->>> How about this -
->>>
->>> "Getting a response is indicative of having sent out the query, but in an unlikely race when 
->>> the response comes in before setting IB_SA_NL_QUERY_SENT, we need to wait till the flag is set to
->>> avoid accessing a query that has been released."
->> It still makes no sense, a flag that is set before freeing the memory
->> is fundamentally useless to prevent races.
-> Here the race is -
->
-> 1. ib_nl_send_msg()
-> 2. query->flags |= IB_SA_NL_QUERY_SENT
-> 3. return;
->
-> -------------
->
-> response_handler() {
-> wait till flag is set.
-> ....
-> kfree(query);
->
-> }
->
-> Here, if the response handler was called => Query was sent
-> and flag should have been set. However if response handler kicks in
-> before line 2, we want to wait and make sure the flag is set and
-> then free the query.
->
-> Ideally after ib_nl_send_msg, we should not be accessing the query
-> because we can be getting a response/timeout asynchronously and cant be
-> sure when. 
->
-> The only places we access a query after it is successfully sent [response handler getting called
-> => sending was successful] -
-> 1. ib_nl_request_timeout
-> 2. While setting the flag.
->
-> 1. is taken care of because the request list access is protected by a lock
-> and whoever gets the lock first deletes it from the request list and
-> hence we can only have the response handler OR the timeout handler operate on the
-> query.
->
-> 2. To handle this is why we wait in the response handler. Once the flag is
-> set we are no longer accessing the query and hence safe to release it.
->
-> I have modified the comment for v2 as follows -
->
->       /*
-> +        * In case of a quick response ie when a response comes in before
-> +        * setting IB_SA_NL_QUERY_SENT, we can have an unlikely race where the
-> +        * response handler will release the query, but we can still access the
-> +        * freed query while setting the flag.
-> +        * Hence, before proceeding and eventually releasing the query -
-> +        * wait till the flag is set. The flag should be set soon since getting
-> +        * a response is indicative of having successfully sent the query.
-> +        */
->
->
-> Thanks,
-> Divya
->
->> Jason
+One way to solve this would be to add the necessary power management
+functions to all affected legacy device drivers, but that's a
+questionable effort which does not provide any benefits on non-XEN
+environments.
+
+The least intrusive and most efficient solution is to provide a
+mechanism which allows the core interrupt code to tear down these
+interrupts on hibernation and bring them back up again on resume. This
+allows the XEN event channel mechanism to assign an arbitrary event
+channel on resume without affecting the functionality of these
+devices.
+
+Fortunately all these device interrupts are handled by a dedicated XEN
+interrupt chip so the chip can be marked that all interrupts connected
+to it are handled this way. This is pretty much in line with the other
+interrupt chip specific quirks, e.g. IRQCHIP_MASK_ON_SUSPEND.
+
+Add a new quirk flag IRQCHIP_SHUTDOWN_ON_SUSPEND and add support for
+it the core interrupt suspend/resume paths.
+
+Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ drivers/xen/events/events_base.c |  1 +
+ include/linux/irq.h              |  2 ++
+ kernel/irq/chip.c                |  2 +-
+ kernel/irq/internals.h           |  1 +
+ kernel/irq/pm.c                  | 31 ++++++++++++++++++++++---------
+ 5 files changed, 27 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index 3a791c8485d0..decf65bd3451 100644
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -1613,6 +1613,7 @@ static struct irq_chip xen_pirq_chip __read_mostly = {
+ 	.irq_set_affinity	= set_affinity_irq,
+ 
+ 	.irq_retrigger		= retrigger_dynirq,
++	.flags                  = IRQCHIP_SHUTDOWN_ON_SUSPEND,
+ };
+ 
+ static struct irq_chip xen_percpu_chip __read_mostly = {
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 8d5bc2c237d7..94cb8c994d06 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -542,6 +542,7 @@ struct irq_chip {
+  * IRQCHIP_EOI_THREADED:	Chip requires eoi() on unmask in threaded mode
+  * IRQCHIP_SUPPORTS_LEVEL_MSI	Chip can provide two doorbells for Level MSIs
+  * IRQCHIP_SUPPORTS_NMI:	Chip can deliver NMIs, only for root irqchips
++ * IRQCHIP_SHUTDOWN_ON_SUSPEND: Shutdown non wake irqs in the suspend path
+  */
+ enum {
+ 	IRQCHIP_SET_TYPE_MASKED		= (1 <<  0),
+@@ -553,6 +554,7 @@ enum {
+ 	IRQCHIP_EOI_THREADED		= (1 <<  6),
+ 	IRQCHIP_SUPPORTS_LEVEL_MSI	= (1 <<  7),
+ 	IRQCHIP_SUPPORTS_NMI		= (1 <<  8),
++	IRQCHIP_SHUTDOWN_ON_SUSPEND     = (1 <<  9),
+ };
+ 
+ #include <linux/irqdesc.h>
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 41e7e37a0928..fd59489ff14b 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -233,7 +233,7 @@ __irq_startup_managed(struct irq_desc *desc, struct cpumask *aff, bool force)
+ }
+ #endif
+ 
+-static int __irq_startup(struct irq_desc *desc)
++int __irq_startup(struct irq_desc *desc)
+ {
+ 	struct irq_data *d = irq_desc_get_irq_data(desc);
+ 	int ret = 0;
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 7db284b10ac9..b6fca5eacff7 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -80,6 +80,7 @@ extern void __enable_irq(struct irq_desc *desc);
+ extern int irq_activate(struct irq_desc *desc);
+ extern int irq_activate_and_startup(struct irq_desc *desc, bool resend);
+ extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
++extern int __irq_startup(struct irq_desc *desc);
+ 
+ extern void irq_shutdown(struct irq_desc *desc);
+ extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
+diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+index 8f557fa1f4fe..dc48a25f1756 100644
+--- a/kernel/irq/pm.c
++++ b/kernel/irq/pm.c
+@@ -85,16 +85,25 @@ static bool suspend_device_irq(struct irq_desc *desc)
+ 	}
+ 
+ 	desc->istate |= IRQS_SUSPENDED;
+-	__disable_irq(desc);
+-
+ 	/*
+-	 * Hardware which has no wakeup source configuration facility
+-	 * requires that the non wakeup interrupts are masked at the
+-	 * chip level. The chip implementation indicates that with
+-	 * IRQCHIP_MASK_ON_SUSPEND.
++	 * Some irq chips (e.g. XEN PIRQ) require a full shutdown on suspend
++	 * as some of the legacy drivers(e.g. floppy) do nothing during the
++	 * suspend path
+ 	 */
+-	if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
+-		mask_irq(desc);
++	if (irq_desc_get_chip(desc)->flags & IRQCHIP_SHUTDOWN_ON_SUSPEND) {
++		irq_shutdown(desc);
++	} else {
++		__disable_irq(desc);
++
++	       /*
++		* Hardware which has no wakeup source configuration facility
++		* requires that the non wakeup interrupts are masked at the
++		* chip level. The chip implementation indicates that with
++		* IRQCHIP_MASK_ON_SUSPEND.
++		*/
++		if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
++			mask_irq(desc);
++	}
+ 	return true;
+ }
+ 
+@@ -152,7 +161,11 @@ static void resume_irq(struct irq_desc *desc)
+ 	irq_state_set_masked(desc);
+ resume:
+ 	desc->istate &= ~IRQS_SUSPENDED;
+-	__enable_irq(desc);
++
++	if (irq_desc_get_chip(desc)->flags & IRQCHIP_SHUTDOWN_ON_SUSPEND)
++		__irq_startup(desc);
++	else
++		__enable_irq(desc);
+ }
+ 
+ static void resume_irqs(bool want_early)
+-- 
+2.24.1.AMZN
+
