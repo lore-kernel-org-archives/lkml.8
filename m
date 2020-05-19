@@ -2,103 +2,174 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F58C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33B7C20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:12:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTb4sPQV"
+	by mail.kernel.org (Postfix) with ESMTP id 4E2272070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgESHMZ (ORCPT
+        id S1728463AbgESHOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 03:12:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgESHMZ (ORCPT
+        Tue, 19 May 2020 03:14:38 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40736 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgESHOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 03:12:25 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10971C061A0C;
-        Tue, 19 May 2020 00:12:25 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b6so13591567qkh.11;
-        Tue, 19 May 2020 00:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cNg7FN/W8JWKP6MBzG6p7+LD65E1TOSXjw0rNIPuOe8=;
-        b=GTb4sPQVySd4XgTcyxRqRDbI+K4LAcU8Z4+YOdwSWnGXtfL3o6Agfws1fVuLzQJwtE
-         FWEqPY2JN0drr+TtN8ApXS2UC1xmvApjbNdQzKbWd31QFltaLF6SSbsQ+FZGYsQzYDwG
-         pM7QcCdIQ9O4Gw0donfjj8RZd1rkhywPzQ3v4Uh8iWryfTraFfUsIgjZ39pjtGgheSkO
-         nalby7lkfUSx/pX9N53MY2ugN4ZH8wRnzelK0jVteaa+B2OqQzMZDks51cAurn1ASgTJ
-         d54ot/qXR2WRgcrwKcuohuGoezU214unHFQagtwB8mZYKV57FVc8nNEcqsl37A2Vz+Am
-         I/+w==
+        Tue, 19 May 2020 03:14:38 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v128so11445571oia.7;
+        Tue, 19 May 2020 00:14:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cNg7FN/W8JWKP6MBzG6p7+LD65E1TOSXjw0rNIPuOe8=;
-        b=g0qQpF4K2TjJSyC5KJ71xtUmDDlaTAx5tfcRvzv99d5npApOUQc5ti5sPyMVTM04wK
-         2+8bXt4At3us64yXSMaEJaRKIikKeCH9sKFaae6We2DiQ+hu7Dx/l9Qpp3OU2zQfI95R
-         oL9IoFzm+1A0fsm/JJ3+1oWE3Lw27WLeYMdOUBOFDLLq5gJ1T+8A7wT36TPxJXS9gA3s
-         i0YUJppMr5fkQtt5K9PoKpFkFQ/4bk/C+yJJpfLsTGK+CinlnX70bCjl6WeYRxLjPsI0
-         5GcFZz/gyFvkvKzBt8D7IOYZmwloHfD9E71o6x6DKB3SoEfcHljxes5X7cxnhil/BENd
-         Qy9A==
-X-Gm-Message-State: AOAM531Hp+ohGO6T+teHa6QtXhM4Jdw5624Puu9reA8KMrwuPpxVi1uH
-        XMJfdjiD8xtZRERAfJRrNv0IqlCsaeban0DQszI=
-X-Google-Smtp-Source: ABdhPJxy0gBLGYz61uFe84q3wd6VCQ+Xtu00K2i0SemHsMVIpEPa9M+NwDkony3NPTMutPA3Q5Dq0i9oZY9HGxXpRvI=
-X-Received: by 2002:a25:c644:: with SMTP id k65mr31328453ybf.183.1589872344238;
- Tue, 19 May 2020 00:12:24 -0700 (PDT)
+        bh=TwCQPIVjOeXgiPme8eAiiVzkt9402jNeI90NBkXCFv8=;
+        b=tOnHjT9NQrw/4DHYntFE6y14DLiPoN2eVzn6tqfUjt6kLan7sO0xjVoUzxWhfKQhVX
+         6nDu73RqJc/JncKZJxWXfPVqhWI0H48wUlTCdUm4W8UJtzq9KR9aujjGeD6ItX1KpV37
+         rngM0njlUc8DYxcf7VqXzgpL9tvwDdSFOX1V1mCW/YbB3NC1Cw20195WLU8kukMhuJyN
+         eZsej2a99ytc1emCweqbm8WUijlTlfPs9wVBaOxnZabKoVBz+p8U6bjvOiQ9rpmvgWTa
+         CtkUA3794EaRuMRZwCRlFLwrbnND5NAASB3/4c0MOSPgSJqks+t8LpOYwkUKTXBlCP0D
+         g5AQ==
+X-Gm-Message-State: AOAM532CgRKFM37dRiRhoY2FGqvHLRC3/1/sLnDDvXeXqEyiduFHdQaE
+        MJhb3dNkFVwT8U4pQ4W6iV8xLB5F3ynw8p2hK0Q=
+X-Google-Smtp-Source: ABdhPJzEx85PiYVtErTopPhUEJtAuIq0qK2XpMHBFrrin1JGOJsWb/O3ZzhWo+FahHzulYroimH7reXMovFJNlrID2Q=
+X-Received: by 2002:aca:895:: with SMTP id 143mr2104387oii.153.1589872477377;
+ Tue, 19 May 2020 00:14:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200519165734.79d0c3a3@canb.auug.org.au>
-In-Reply-To: <20200519165734.79d0c3a3@canb.auug.org.au>
-From:   Steve French <smfrench@gmail.com>
-Date:   Tue, 19 May 2020 02:12:13 -0500
-Message-ID: <CAH2r5mviK7_=o1Q0FAbqNMTs3=-gCc7Lf9GuJ_ASrxEvXgAUuA@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the tip tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+References: <1589461844-15614-1-git-send-email-qii.wang@mediatek.com>
+ <1589461844-15614-3-git-send-email-qii.wang@mediatek.com> <CAMuHMdXjLakWDDEy=02prC7XjAs_xBnt2mArPFNwyHgUoWw6-g@mail.gmail.com>
+ <1589857073.25512.34.camel@mhfsdcap03>
+In-Reply-To: <1589857073.25512.34.camel@mhfsdcap03>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 19 May 2020 09:14:25 +0200
+Message-ID: <CAMuHMdXgp85PVteunxrHYcMTqFgQWHmXXCVJM_KX76xkCADMpw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c ac-timing adjust support
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     Joe Perches <joe@perches.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, srv_heupstream@mediatek.com,
+        Wolfram Sang <wsa@the-dreams.de>, leilk.liu@mediatek.com,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        ronnie sahlberg <ronniesahlberg@gmail.com>
+        linux-mediatek@lists.infradead.org,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ronnie mentioned that he will take a look ...
+Hi Qii,
 
-On Tue, May 19, 2020 at 1:57 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Tue, May 19, 2020 at 4:59 AM Qii Wang <qii.wang@mediatek.com> wrote:
+> On Mon, 2020-05-18 at 17:44 +0200, Geert Uytterhoeven wrote:
+> > On Thu, May 14, 2020 at 3:13 PM Qii Wang <qii.wang@mediatek.com> wrote:
+> > > This patch adds a algorithm to calculate some ac-timing parameters
+> > > which can fully meet I2C Spec.
+> > >
+> > > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> > > ---
+> > >  drivers/i2c/busses/i2c-mt65xx.c | 328 +++++++++++++++++++++++++++++++++-------
+> > >  1 file changed, 277 insertions(+), 51 deletions(-)
+> > >
+> > > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> > > index 0ca6c38a..7020618 100644
+> > > --- a/drivers/i2c/busses/i2c-mt65xx.c
+> > > +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> >
+> > > +/*
+> > > + * Check and Calculate i2c ac-timing
+> > > + *
+> > > + * Hardware design:
+> > > + * sample_ns = (1000000000 * (sample_cnt + 1)) / clk_src
+> > > + * xxx_cnt_div =  spec->min_xxx_ns / sample_ns
+> > > + *
+> > > + * Sample_ns is rounded down for xxx_cnt_div would be greater
+> > > + * than the smallest spec.
+> > > + * The sda_timing is chosen as the middle value between
+> > > + * the largest and smallest.
+> > > + */
+> > > +static int mtk_i2c_check_ac_timing(struct mtk_i2c *i2c,
+> > > +                                  unsigned int clk_src,
+> > > +                                  unsigned int check_speed,
+> > > +                                  unsigned int step_cnt,
+> > > +                                  unsigned int sample_cnt)
+> > > +{
+> > > +       const struct i2c_spec_values *spec;
+> > > +       unsigned int su_sta_cnt, low_cnt, high_cnt, max_step_cnt;
+> > > +       unsigned int sda_max, sda_min, clk_ns, max_sta_cnt = 0x3f;
+> > > +       long long sample_ns = (1000000000 * (sample_cnt + 1)) / clk_src;
+> >
+> > So sample_ns is a 64-bit value. Is that really needed?
+> >
 >
-> Hi all,
->
-> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
-> produced this warning:
->
-> fs/cifs/smb2inode.c: In function 'smb2_compound_op':
-> fs/cifs/smb2inode.c:424:1: warning: the frame size of 2736 bytes is larger than 2048 bytes [-Wframe-larger-than=]
->   424 | }
->       | ^
->
-> I have no idea what caused this.
->
-> --
-> Cheers,
-> Stephen Rothwell
+> (1000000000 * (sample_cnt + 1)) / clk_src value is a 32-bit, (1000000000
+> * (sample_cnt + 1)) will over 32-bit if sample_cnt is 7.
 
+The intermediate value will indeed not fit in 32-bit.
+But that doesn't mean the end result won't fit in 32-bit.
+As you divide spec->min_low_ns and spec->min_su_dat_ns (which I assume
+are small numbers) by sample_ns below, sample_ns cannot be very large,
+or the quotient will be zero anyway.
+So just doing the multiplication in 64-bit, followed by a 64-by-32
+division is probably fine:
 
+    unsigned int sample_ns = div_u64(1000000000ULL * (sample_cnt + 1), clk_src);
+
+You may want to take precautions for the case where the passed value of
+clk_src is a small number (can that happen?).
+
+BTW, clk_get_rate() returns "unsigned long", while mtk_i2c_set_speed()
+takes an "unsigned int" parent_clk, which may cause future issues.
+You may want to change that to "unsigned long", along the whole
+propagation path, and use div64_ul() instead of div_u64() above.
+
+> I think 1000000000 and clk_src is too big, maybe I can reduce then with
+> be divided all by 1000.
+> example:
+>
+> unsigned int sample_ns;
+> unsigned int clk_src_khz = clk_src / 1000;
+
+That may cause too much loss of precision.
+
+>
+> if(clk_src_khz)
+>         sample_ns = (1000000 * (sample_cnt + 1)) / clk_src_khz;
+> else
+>         return -EINVAL;
+>
+> > > +       if (!i2c->dev_comp->timing_adjust)
+> > > +               return 0;
+> > > +
+> > > +       if (i2c->dev_comp->ltiming_adjust)
+> > > +               max_sta_cnt = 0x100;
+> > > +
+> > > +       spec = mtk_i2c_get_spec(check_speed);
+> > > +
+> > > +       if (i2c->dev_comp->ltiming_adjust)
+> > > +               clk_ns = 1000000000 / clk_src;
+> > > +       else
+> > > +               clk_ns = sample_ns / 2;
+> > > +
+> > > +       su_sta_cnt = DIV_ROUND_UP(spec->min_su_sta_ns, clk_ns);
+> > > +       if (su_sta_cnt > max_sta_cnt)
+> > > +               return -1;
+> > > +
+> > > +       low_cnt = DIV_ROUND_UP(spec->min_low_ns, sample_ns);
+> >
+> > So this is a 32-bit by 64-bit division (indeed, not 64-by-32!)
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Thanks,
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Steve
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
