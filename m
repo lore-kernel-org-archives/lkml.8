@@ -2,126 +2,223 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A193C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B063207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2E420829
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MZHUB2ZX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TYgG8EpJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgESLkM (ORCPT
+        id S1728725AbgESLoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58470 "EHLO
+        Tue, 19 May 2020 07:44:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgESLkM (ORCPT
+        with ESMTP id S1726880AbgESLoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:40:12 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082C7C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 04:40:12 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f13so2691599wmc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 04:40:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cTKYH+mp/bhcR85XQxkJ8OwwsY1zKVWgOX9zGZznoL0=;
-        b=MZHUB2ZXTdwLAmgOpCVyQjfyasKoo+pyNdYM9+FPR+5DIBal6yroxOGSNKZH6XWnWH
-         c6Ms4Byxq3yTfxeqNJ3eAG0k0EraIU/71QMv0I60UuvNYIhmMGIwOlie06z/m2jAkp1s
-         E0zXBbjFMSmJeKWFWdTYTRkL+NYJVwBQnfV0j+tSmNee3UxX65pAQ1T7BXERUCAo31or
-         povr55CG1IJBMb+wfWoNt1VgsdfOJSGB18eLoEl98yykvN46WfwqX9PLEDyXc1TdcyUk
-         Gt/jX2G23Vkir+HGDDstNmbBBBRVoRvTzclBwBacRPYxdobkL4RY5CQCSftE9g/R9/Fq
-         vtfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cTKYH+mp/bhcR85XQxkJ8OwwsY1zKVWgOX9zGZznoL0=;
-        b=gSiN4K3APp5rg8R4o79uyUtTcmVONEutmUeg9Yz85jysgvy1Rq554vDuTYCUgYpaKu
-         05FpWVfp882KS9rjQrH4vQ+3oMgi1BsLg+MrNwsFFB0pTLOakqli8yhEfMJHy14sLh7m
-         UgONyyaJwVO3W/EWIUQkAJ3vbdyMKDYibsXWbX0A8AZh5STaPHitrFBjnXyN0lBFFbM6
-         Fpj+Y/y5rSvB9z1uYIH+XYGja1rF/EhFs+PqRaoRZZXhI7csoxNwlZrKoZspB9mR2FMf
-         L5gfpWG8fEqGE2ZFXA4YoPpeUORefU94LiYny4sACQzHnGeUBw09VU2Ka+HI/ActvNoW
-         Rq+w==
-X-Gm-Message-State: AOAM530nSk+9GGxl+/zr3FtenLchlCAsbxCK0dgoJ+O4smD7xnX5BiaZ
-        VjKlM0/wt2jmknvJskpzal4McLBBjWU=
-X-Google-Smtp-Source: ABdhPJxkzXzSGi0I3tTgZ6x7A+f5Zr0659258Yl+tQWXZmWMobtDKKKEHVlFcps7BOvzvTpauYfFuA==
-X-Received: by 2002:a7b:c939:: with SMTP id h25mr5036964wml.9.1589888410760;
-        Tue, 19 May 2020 04:40:10 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 89sm21569339wrj.37.2020.05.19.04.40.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 04:40:10 -0700 (PDT)
-Date:   Tue, 19 May 2020 12:40:08 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Wei Li <liwei391@huawei.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] kdb: Make the internal env 'KDBFLAGS' undefinable
-Message-ID: <20200519114008.lmdf44zmgcmnf27c@holly.lan>
-References: <20200516092606.41576-1-liwei391@huawei.com>
+        Tue, 19 May 2020 07:44:05 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CFB5C08C5C0;
+        Tue, 19 May 2020 04:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=i/jtSTSQlToCGqMg1V6jGHW2xzHSbUDOgdHVIrB8dzY=; b=TYgG8EpJqFSmsxPMOIGUuUVYi
+        4qhSxnegror40ySupeBudw0I8hLpyWZdTXJbD6EWZaB+gpDmpTqGm9SNIYA6ktyjoevOyBZJRkAVb
+        vUjUKytksSEhivQ8Mk2GmB5GMxW5fwDPFhd6QAv+rHccKbgBDLrpYf5B5f3L8fUtnhCOkwwPGQXuM
+        meG+3tQpAGwLsrJpOc0qwN6oZKhWm2JSI75DshabhMfeK7aDGP5ljAFGxTaNVI3n/4wtMksDixuaV
+        ShIgEPfU97Z0lNrqKfFrF7rzwUaUHn5By24AlmYQSvpRWNrxSXy0m3kzvGJynsrt+Wn6JLrLPFrjo
+        TmhOqb73Q==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42220)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jb0el-00056N-K6; Tue, 19 May 2020 12:43:35 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jb0ef-0005hE-Ts; Tue, 19 May 2020 12:43:29 +0100
+Date:   Tue, 19 May 2020 12:43:29 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lukasz Stelmach <l.stelmach@samsung.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Grant Likely <grant.likely@arm.com>
+Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
+Message-ID: <20200519114329.GB1551@shell.armlinux.org.uk>
+References: <CGME20200429082134eucas1p2415c5269202529e6b019f2d70c1b5572@eucas1p2.samsung.com>
+ <20200429082120.16259-1-geert+renesas@glider.be>
+ <dleftjmu645mqn.fsf%l.stelmach@samsung.com>
+ <CAMuHMdXxq6m6gebQbWvxDynDcZ7dLyZzKC_QroK63L8FGeac1Q@mail.gmail.com>
+ <20200519094637.GZ1551@shell.armlinux.org.uk>
+ <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200516092606.41576-1-liwei391@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 05:26:06PM +0800, Wei Li wrote:
-> 'KDBFLAGS' is an internal variable of kdb, it is combined by 'KDBDEBUG'
-> and state flags. But the user can define an environment variable named
-> 'KDBFLAGS' too, so let's make it undefinable to avoid confusion.
+On Tue, May 19, 2020 at 01:21:09PM +0200, Geert Uytterhoeven wrote:
+> Hi Russell,
 > 
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-I took a quick look at this and find myself thinking of KDBFLAGS as
-something of a misfeature.
-
-I think I'd rather get kdb_env to show the value we wrote into
-KDBDEBUG.
-
-Sure this means we cannot use KDBDEBUG to look at the least significant
-16-bits but I think anyone who is debugging kdb itself should know
-enough to use `md4c1 kdb_flags` to read those anyway.
-
-
-Daniel.
-
-
-
-> ---
-> v1 -> v2:
->  - Fix lack of braces.
+> CC devicetree
 > 
->  kernel/debug/kdb/kdb_main.c | 2 ++
->  1 file changed, 2 insertions(+)
+> On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Tue, May 19, 2020 at 11:44:17AM +0200, Geert Uytterhoeven wrote:
+> > > On Tue, May 19, 2020 at 10:54 AM Lukasz Stelmach <l.stelmach@samsung.com> wrote:
+> > > > It was <2020-04-29 śro 10:21>, when Geert Uytterhoeven wrote:
+> > > > > Currently, the start address of physical memory is obtained by masking
+> > > > > the program counter with a fixed mask of 0xf8000000.  This mask value
+> > > > > was chosen as a balance between the requirements of different platforms.
+> > > > > However, this does require that the start address of physical memory is
+> > > > > a multiple of 128 MiB, precluding booting Linux on platforms where this
+> > > > > requirement is not fulfilled.
+> > > > >
+> > > > > Fix this limitation by obtaining the start address from the DTB instead,
+> > > > > if available (either explicitly passed, or appended to the kernel).
+> > > > > Fall back to the traditional method when needed.
+> > > > >
+> > > > > This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDRAM
+> > > > > on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
+> > > > > i.e. not at a multiple of 128 MiB.
+> > > > >
+> > > > > Suggested-by: Nicolas Pitre <nico@fluxnic.net>
+> > > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+> > > > > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> > > > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > > Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> > > > > ---
+> > > >
+> > > > [...]
+> > > >
+> > > > Apparently reading physical memory layout from DTB breaks crashdump
+> > > > kernels. A crashdump kernel is loaded into a region of memory, that is
+> > > > reserved in the original (i.e. to be crashed) kernel. The reserved
+> > > > region is large enough for the crashdump kernel to run completely inside
+> > > > it and don't modify anything outside it, just read and dump the remains
+> > > > of the crashed kernel. Using the information from DTB makes the
+> > > > decompressor place the kernel outside of the dedicated region.
+> > > >
+> > > > The log below shows that a zImage and DTB are loaded at 0x18eb8000 and
+> > > > 0x193f6000 (physical). The kernel is expected to run at 0x18008000, but
+> > > > it is decompressed to 0x00008000 (see r4 reported before jumping from
+> > > > within __enter_kernel). If I were to suggest something, there need to be
+> > > > one more bit of information passed in the DTB telling the decompressor
+> > > > to use the old masking technique to determain kernel address. It would
+> > > > be set in the DTB loaded along with the crashdump kernel.
+> > >
+> > > Shouldn't the DTB passed to the crashkernel describe which region of
+> > > memory is to be used instead?
+> >
+> > Definitely not.  The crashkernel needs to know where the RAM in the
+> > machine is, so that it can create a coredump of the crashed kernel.
 > 
-> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> index 4fc43fb17127..75b798340300 100644
-> --- a/kernel/debug/kdb/kdb_main.c
-> +++ b/kernel/debug/kdb/kdb_main.c
-> @@ -423,6 +423,8 @@ int kdb_set(int argc, const char **argv)
->  			| (debugflags << KDB_DEBUG_FLAG_SHIFT);
->  
->  		return 0;
-> +	} else if (strcmp(argv[1], "KDBFLAGS") == 0) {
-> +		return KDB_NOPERM;
->  	}
->  
->  	/*
-> -- 
-> 2.17.1
+> So the DTB should describe both ;-)
 > 
+> > > Describing "to use the old masking technique" sounds a bit hackish to me.
+> > > I guess it cannot just restrict the /memory node to the reserved region,
+> > > as the crashkernel needs to be able to dump the remains of the crashed
+> > > kernel, which lie outside this region.
+> >
+> > Correct.
+> >
+> > > However, something under /chosen should work.
+> >
+> > Yet another sticky plaster...
+> 
+> IMHO the old masking technique is the hacky solution covered by
+> plasters.
+
+One line of code is not "covered by plasters".  There are no plasters.
+It's a solution that works for 99.99% of people, unlike your approach
+that has had a stream of issues over the last four months, and has
+required many reworks of the code to fix each one.  That in itself
+speaks volumes about the suitability of the approach.
+
+> DT describes the hardware.
+
+Right, so DT is correct.
+
+> In general, where to put the kernel is a
+> software policy, and thus doesn't belong in DT, except perhaps under
+> /chosen.  But that would open another can of worms, as people usually
+> have no business in specifying where the kernel should be located.
+> In the crashkernel case, there is a clear separation between memory to
+> be used by the crashkernel, and memory to be solely inspected by the
+> crashkernel.
+> 
+> Devicetree Specification, Release v0.3, Section 3.4 "/memory node" says:
+> 
+>     "The client program may access memory not covered by any memory
+>      reservations (see section 5.3)"
+> 
+> (Section 5.3 "Memory Reservation Block" only talks about structures in
+> the FDT, not about DTS)
+> 
+> Hence according to the above, the crashkernel is rightfully allowed to
+> do whatever it wants with all memory under the /memory node.
+> However, there is also
+> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
+> This suggests the crashkernel should be passed a DTB that contains a
+> /reserved-memory node, describing which memory cannot be used freely.
+> Then the decompressor needs to take this into account when deciding
+> where the put the kernel.
+
+So you want to throw yet more complexity at this solution to try and
+make it work...
+
+> Yes, the above requires changing code. But at least it provides a
+> path forward, getting rid of the fragile old masking technique.
+
+It's hardly fragile when it's worked fine for the last 20+ years,
+whereas your solution can't work without some regression being reported
+within a couple of weeks of it being applied.  Again, that speaks
+volumes about which one is better than the other.
+
+Continually patching this approach to workaround one issue after another
+shows that it is _this_ solution that is the fragile implementation.
+
+A fragile implementation is by definition one that keeps breaking.
+That's yours.  The masking approach hasn't "broken" for anyone, and
+hasn't been the cause of one single regression anywhere.  Yes, there
+are some platforms that it doesn't work for (because they choose to
+reserve the first chunk of RAM for something) but that is not a
+regression.
+
+So, I'm not going to apply the next revision of this patch for at least
+one whole kernel cycle - that means scheduling it for 5.10-rc at the
+earliest.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
