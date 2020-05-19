@@ -2,116 +2,117 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4E5207D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0CDA2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kl4pD4LM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NtoxywpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgESDKc (ORCPT
+        id S1727930AbgESDM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35628 "EHLO
+        Mon, 18 May 2020 23:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgESDKc (ORCPT
+        with ESMTP id S1726302AbgESDMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:10:32 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED30C05BD0A
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:10:31 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r10so5747986pgv.8
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:10:31 -0700 (PDT)
+        Mon, 18 May 2020 23:12:55 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E340C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:12:55 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id m7so5045295plt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=AJxG9LIE63AA33BzMkyehOfcgbB6kvICbFoJNIUf4Tw=;
-        b=Kl4pD4LMdzo9os2+abZgtSkZC7fcWbzdYwu4Fm7c+1F4IQcZtEx9AntsNG+EimbU9S
-         eOGnGp4ftBlWjUPXRKaO6I+1et3f+ph2LWlWnRhnJqyTk2r7BsI1ufE7Tk8SrGFxrC/u
-         eDvyJ4yyYaoCZX/q/LL1zLU2VfDcExQUc9ABO4okrxFoOz4BflJa5w25O6Hf3bsgCOtC
-         DXXkYPw9AXqChdqW/U1W244ROvX5lPfx0ERxYl5E0eu8uoiz7py/EFb3pwu48dC/3XCJ
-         KkvyDUw60z7Ebxqh93Nq3Lp2EtyLs3scBigOay+8AVDDIthPr6kS8hsNlTtFS4T46JVC
-         eVVg==
+        bh=3v3MiZlo1XQ0uF7dScBuWcXQ31132PApMmyTjCRh1s4=;
+        b=NtoxywpPq7v7prXF2XTo8wUph0rWq/S0lIXWZeyoP43Lz4+yRabPduDEKiiiKnCLIl
+         WuYV0IIA0xz1CZogBvWda/rdWNdn5TK70Ldx5aemk+SAUvI2x4S7MBGg1FUZAfwHoeYx
+         PE+kexXeLDnU+6qmmyohuEHNOea0C4k+sgy9zedhCcpGswf+MAgbVB4E8xroKBr5qy16
+         dTJJVZVcge8ZmyQ1AauEHTUYMrSibW0FPixF9PVjII96J1KPiPfuH48rwNS1xyJ6gmkZ
+         IMIfLYJuG7Fzc8LSWiP4JIx/AOEo56JjY+XMRwOOCaYTXuHmidNHMvw/9WL0/Yy/ttpk
+         N7lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=AJxG9LIE63AA33BzMkyehOfcgbB6kvICbFoJNIUf4Tw=;
-        b=Kzlq/Axk3RAscgGRnMhhN3bRKuwVBlGAnE9nWGFeHqMHT4rPLrzcxy8fN3UJa6522L
-         Tl8IeNX734HWF8QR6WHdMG2X1oT3nZ2bBz0sCr4fta/Jk9Ahx1rpq7OVciJe2s+fIX3v
-         1axFZ395pDgpp0zbMYuQSRT2MRSTC9s9Mfyes6ppoK4MsM3O/O0WfkeD2xQtJuDwGSLy
-         ucNw8ilNY1vwjVrpcsGW4TOcMyPEMhPgVuf3UZffrOnJIm4ij0aA/ePU6Q8Gz9keGxUM
-         lc7vgvTMMxzurQqVO+2CvY8NWMN0hwGuX4No0MfUNcjoqwgYng/JcTTGGLepAnyQXR9q
-         UblA==
-X-Gm-Message-State: AOAM532CiHNpdtu5kDX56SXdgY63znYcLnUP/d0lJtrFzPspd2pLlbbb
-        Lil/0IaySfbqwuskyUY1ZKLx0A==
-X-Google-Smtp-Source: ABdhPJzYhnuTz/HQUgu7y0Y6OzdvrkIUvjfOQflASZSrZpZ3z/W1HtJirR07oMROAXIZpgpgY5IVHA==
-X-Received: by 2002:a63:f925:: with SMTP id h37mr18652292pgi.112.1589857831106;
-        Mon, 18 May 2020 20:10:31 -0700 (PDT)
+        bh=3v3MiZlo1XQ0uF7dScBuWcXQ31132PApMmyTjCRh1s4=;
+        b=iAz8ZoBX2Tg2VPsR5Qafhw8GTjmbrg0VNJMKREzoqM9jZJSMbGUm+1CkOMlUDOzS1S
+         WEjGMxJ/ppXr+QJOhMF0rFgsNoGDn6BffIDOVzJ1/yjf7+vJSi8NhVxIU0+fUqFqW4ia
+         KOK/doaMGAxKlAqRx1Kw1uMkVfbIbxwlgK895N/1zOAX1t4y8zvDH3TC9y3pk6q7xVJT
+         yqkSFp9EguQvlH68nOMuY+waraNuOzmvKyc+K30rlfc7j4rg91fj/CFQpjeEl+5AqCKy
+         UeWmR3nqxMLliCbWdL5028K6UpJpHOcn+SChh5VybK6gNL+I5++H7S6H0ZTwhWpldOEr
+         RiDQ==
+X-Gm-Message-State: AOAM531rfGYIWsVCH8alnhXesdIWI/iVgmTJmdsY1H/VQRgpZA47FACG
+        woafn69ghBOPamR/SaWL4dm5cA==
+X-Google-Smtp-Source: ABdhPJwKax2oSjJnW36S7DMBKX2GCg1zj4Ul3O3ZQYqwsX5LcqUGPqt0MaNI/w1mWD7R19zaWEGFsg==
+X-Received: by 2002:a17:902:8e8c:: with SMTP id bg12mr19656340plb.279.1589857974810;
+        Mon, 18 May 2020 20:12:54 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n23sm742545pjq.18.2020.05.18.20.10.29
+        by smtp.gmail.com with ESMTPSA id t20sm746677pjo.13.2020.05.18.20.12.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 20:10:30 -0700 (PDT)
-Date:   Mon, 18 May 2020 20:09:08 -0700
+        Mon, 18 May 2020 20:12:53 -0700 (PDT)
+Date:   Mon, 18 May 2020 20:11:31 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org, mka@chromium.org,
-        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Correct the pdc interrupt
- ranges
-Message-ID: <20200519030908.GW2165@builder.lan>
-References: <1589804402-27130-1-git-send-email-mkshah@codeaurora.org>
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH V1 2/3] mmc: sdhci-msm: Use internal voltage control
+Message-ID: <20200519031131.GH279327@builder.lan>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1589541535-8523-3-git-send-email-vbadigan@codeaurora.org>
+ <20200518195711.GH2165@builder.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589804402-27130-1-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <20200518195711.GH2165@builder.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18 May 05:20 PDT 2020, Maulik Shah wrote:
-
-> Few PDC interrupts do not map to respective parent GIC interrupt.
-> Fix this by correcting the pdc interrupt map.
+On Mon 18 May 12:57 PDT 2020, Bjorn Andersson wrote:
+> On Fri 15 May 04:18 PDT 2020, Veerabhadrarao Badiganti wrote:
+> > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+[..]
+> > +static int sdhci_msm_register_vreg(struct sdhci_msm_host *msm_host)
+> > +{
+> > +	int ret = 0;
 > 
-> Fixes: 22f185ee81d2 ("arm64: dts: qcom: sc7180: Add pdc interrupt controller")
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> No need to initialize ret, first use is an assignment.
+> 
+> > +	struct mmc_host *mmc = msm_host->mmc;
+> > +
+> > +	ret = mmc_regulator_get_supply(msm_host->mmc);
+> > +	if (ret)
+> > +		return ret;
+> > +	device_property_read_u32(&msm_host->pdev->dev,
+> > +			"vmmc-max-load-microamp",
+> > +			&msm_host->vmmc_load);
+> > +	device_property_read_u32(&msm_host->pdev->dev,
+> > +			"vqmmc-max-load-microamp",
+> > +			&msm_host->vqmmc_load);
+> 
+> These properties are not documented. Do they vary enough to mandate
+> being read from DT or could they simply be approximated by a define
+> instead?
+> 
 
-Applied
+Disregard my comment about them not being documented, I wasn't Cc'ed on
+the binding patch and missed it.
+
+My question about just defining them statically still stands.
 
 Thanks,
 Bjorn
-
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index f1280e0..f6b4ee8 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -2308,8 +2308,7 @@
->  		pdc: interrupt-controller@b220000 {
->  			compatible = "qcom,sc7180-pdc", "qcom,pdc";
->  			reg = <0 0x0b220000 0 0x30000>;
-> -			qcom,pdc-ranges = <0 480 15>, <17 497 98>,
-> -					  <119 634 4>, <124 639 1>;
-> +			qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
->  			#interrupt-cells = <2>;
->  			interrupt-parent = <&intc>;
->  			interrupt-controller;
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
