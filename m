@@ -2,83 +2,109 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3948CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C3DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06398204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3479207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f7hDNXYi"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LlDcY3ci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgESIqa (ORCPT
+        id S1728475AbgESItK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:46:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgESIq3 (ORCPT
+        Tue, 19 May 2020 04:49:10 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13505 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgESItK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:46:29 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B02C05BD09
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:46:29 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id z6so1830682ljm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:46:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OIpPfUzeki7t2/xOW8D2TwuLm3eUY3xhyGDnwk5Lnu0=;
-        b=f7hDNXYiQHSskMCyc0/RCEDU8VzLQOtUQCEKK7X4yLljolNXESh06CRtaosmdsJjMg
-         MX89bhm05w2IP6iDp8Zhv8JhB8YKTb2VBgQ26mmkDdbz25KK/PcLzAUkyOWJ4OIiVMbI
-         wazGJoU829h1latSrEwsf8EIeuiqqKJBtRhdrg2UEsd97YZjJX3UhtZXNge0uZUx+SrJ
-         H1PKlbx5h2OO01B3VProIiBId5oEJxzc+/55C+FxnGVPVAG5VcWu1n3AhCmOjazV4uea
-         tnMICKUeCPRVLIQPDFf83zy9+N90igGBK8sZFg0xxlR+yKWVg8FI2bSQHs6P+Dw691Dn
-         lqXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OIpPfUzeki7t2/xOW8D2TwuLm3eUY3xhyGDnwk5Lnu0=;
-        b=XkCk3VPK34s3VeiIPWPYhXbomh2qbjPN/y4btJfiiChf4/E7Sj0PX+jhsnW/CP8mjy
-         UBrb+Au61M2ouYVF5iydXwDzAhWbnGeZhAiOYwho/rlqZFAZTm0U03opqP/eFJp+wj7e
-         EPCA1n01NSzM7eAmZSoDpOpUhF4Z5FU6ZcGWUYha8Ggyj8web6ufFhbXGZbKKlbQ7l9Q
-         JAdTg20ir7yxRwTBumGk+pz6FW+D2JFBGBaUFTz0zYlSB68Wk/4NBIByx/XPpmmfpQX0
-         5rT4PDPJXwId3WBWftAGqssUx7rizSaErvb/Jk0WjtXPIIvxx0lwkve5q+qqqcZ1W0OA
-         Afhg==
-X-Gm-Message-State: AOAM530ZBnXLO/azok6kBAgua8kLwuvPQPdXDXhihqStaXcKmx026wKL
-        hmt+HofInHxgzKNyqjTZgosmY5dQaqqNW52/hdaANw==
-X-Google-Smtp-Source: ABdhPJxxg7dkus/MHWS76IxVh06BJP+0gA2DbuK9i0BMpSDLRuZWDES9DGHBKjU9LMmAdUCXSmLUQqB3/XS9Szv1tXs=
-X-Received: by 2002:a2e:b609:: with SMTP id r9mr12750772ljn.125.1589877987494;
- Tue, 19 May 2020 01:46:27 -0700 (PDT)
+        Tue, 19 May 2020 04:49:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec39d790001>; Tue, 19 May 2020 01:48:57 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 May 2020 01:49:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 01:49:09 -0700
+Received: from [10.26.74.144] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
+ 2020 08:49:07 +0000
+Subject: Re: [PATCH 4.4 00/86] 4.4.224-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200518173450.254571947@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <20c46455-d403-89f2-9f5b-82a8f679d97c@nvidia.com>
+Date:   Tue, 19 May 2020 09:49:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200519070240.6510-1-krzk@kernel.org>
-In-Reply-To: <20200519070240.6510-1-krzk@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 May 2020 10:46:16 +0200
-Message-ID: <CACRpkdZbD2BAAs7RgGC4sqaj=wgtNe0td1JCCSyb_Ld11qSSWg@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: samsung: Stuff for v5.8
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589878137; bh=aUrtNfycJMaM6JFZ6gtmXfhoRBylsDCxXvp0ZFVVrtk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=LlDcY3ciXipMyDozkc42kS3mygWMIzHbDBT/BFODjWgLmmE42BehRLcQdWYcyyWWt
+         We+KjH9vR2Ef8YWxyAM8jvZXTBZN9P9Rt6ErSGWkZMw7a56GIv02tgIo0ZFT9jDcbM
+         XG7mxZzX9DnPMsFXjcGjdPxBoftOXkeVGkqmCbj99RT7p4z6GuDpuUA12lXMLUyZOj
+         uHhs3O+85HqfKBWOQR63DtgRjNfcxQdUh3jTes5v24UWJnPzq1JYwIAsSWwa6OLNnI
+         BqA93Vh2kzSUKKAXcwJcd3h1v0B4c3H2Or9ap9PN24zkwNcDOdB6l7BCixdti/LxME
+         O8HkJKXn1y81A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 9:02 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> Minor updates for Samsung pinctrl drivers.
+On 18/05/2020 18:35, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.224 release.
+> There are 86 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.224-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Pulled into my "devel" branch, thanks!
 
-Yours,
-Linus Walleij
+All tests are passing for Tegra ...
+
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
+
+Linux version:	4.4.224-rc1-g4935dd6adfe2
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
