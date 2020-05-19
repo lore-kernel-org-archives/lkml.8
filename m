@@ -2,127 +2,144 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAFBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF45C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50785207D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170F92075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589864025;
+	bh=EFZI8aHD4horrMDegve7hawQWaX8uESqvuhZbCN5SJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fH8+gZKlOYX3zC4JwCelOtIHmQ2HHj7VW72he7A9UEh7zdbLIiD9nvZ4SMI55aA2j
+	 94hoV0NM6C1m/96DBp6yJ830iD1zT93CrA2AIgQ+Dk/2TW6xAJI66FzcGe6SaJKEwL
+	 pCBkcqjlJObaBDklWMKAX+T5T5MM2dWbfIoMPjZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgESEva (ORCPT
+        id S1726881AbgESExo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 00:51:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37406 "EHLO mga14.intel.com"
+        Tue, 19 May 2020 00:53:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgESEva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 00:51:30 -0400
-IronPort-SDR: T3vl6pmU4SsMxwHPCtYuo7UlzeHJlnX0avAIwBBjFHUbG6erKfMh9Sv7duxT9TUCR0+ZE8L/+x
- xBxsxVjcpj6Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 21:51:30 -0700
-IronPort-SDR: sDHDPLv0Zq2i/WryGB8ccV16p9q6KiAsv59U/AzhorfKCPdIZhdApcc3OowqzcDABrgj7mbV8E
- MD2I0g/K96kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,409,1583222400"; 
-   d="scan'208";a="282205960"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 18 May 2020 21:51:28 -0700
-Received: from [10.213.130.44] (vramuthx-mobl1.gar.corp.intel.com [10.213.130.44])
-        by linux.intel.com (Postfix) with ESMTP id C523E580613;
-        Mon, 18 May 2020 21:51:23 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v6 1/2] dt-bindings: mtd: Add Nand Flash Controller
- support for Intel LGM SoC
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mason Yang <masonccyang@mxic.com.tw>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
-        Vignesh R <vigneshr@ti.com>,
-        "hauke.mehrtens" <hauke.mehrtens@intel.com>,
-        devicetree@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        cheol.yong.kim@intel.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        qi-ming.wu@intel.com
-References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200513104615.7905-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200514125709.GA8436@bogus>
- <dc51e6af-bda8-d8b9-1782-f5c4d5d3fed7@linux.intel.com>
- <CAL_JsqJxqdi2MmyHZteMOpx5yy_o+ZxaqGHMUV7aCknWWQ0ptg@mail.gmail.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <bed51658-68a7-605b-ebdb-f471690e226f@linux.intel.com>
-Date:   Tue, 19 May 2020 12:51:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726307AbgESExo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 00:53:44 -0400
+Received: from localhost (unknown [122.182.207.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2890C206D4;
+        Tue, 19 May 2020 04:53:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589864023;
+        bh=EFZI8aHD4horrMDegve7hawQWaX8uESqvuhZbCN5SJc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uhDTlhwIHpzFn+ofiON9l5HIrcik8GFenOeHk0Gy9BX1R7e3BU4k5jNYiDMAQEMYC
+         9iszc4vJAYPY41Rntq0KVO14DwLZ3spyXkoYUKQYBqSyqDaQg8fnbA79I5HKA9Q2Oz
+         AxpmsPkdfL8ns6Wnws/NK+fARyhLLNSEhxGvlojw=
+Date:   Tue, 19 May 2020 10:23:36 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v13 3/5] usb: xhci: Add support for Renesas controller
+ with memory
+Message-ID: <20200519045336.GH374218@vkoul-mobl.Dlink>
+References: <20200506060025.1535960-1-vkoul@kernel.org>
+ <20200506060025.1535960-4-vkoul@kernel.org>
+ <CADYN=9JLeWHODRWDEcTE_6iZ3TX-E4yyx3OwqzK-H-ytLAmQUg@mail.gmail.com>
+ <20200518195719.GG374218@vkoul-mobl.Dlink>
+ <CADYN=9+VuTwVk32hQXAAeDyErMn7D4Y+Gzdehy_=c8fBeU23jA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJxqdi2MmyHZteMOpx5yy_o+ZxaqGHMUV7aCknWWQ0ptg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADYN=9+VuTwVk32hQXAAeDyErMn7D4Y+Gzdehy_=c8fBeU23jA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 19-05-20, 00:37, Anders Roxell wrote:
+> On Mon, 18 May 2020 at 21:57, Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > Hi Anders,
+> 
+> Hi Vinod,
+> 
+> >
+> > On 18-05-20, 19:53, Anders Roxell wrote:
+> > > On Wed, 6 May 2020 at 08:01, Vinod Koul <vkoul@kernel.org> wrote:
+> > > >
+> > > > Some rensas controller like uPD720201 and uPD720202 need firmware to be
+> > > > loaded. Add these devices in pci table and invoke renesas firmware loader
+> > > > functions to check and load the firmware into device memory when
+> > > > required.
+> > > >
+> > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > >
+> > > Hi, I got a build error when I built an arm64 allmodconfig kernel.
+> >
+> > Thanks for this. This is happening as we have default y for USB_XHCI_PCI
+> > and then we make USB_XHCI_PCI_RENESAS=m. That should be not allowed as
+> > we export as symbol so both can be inbuilt or modules but USB_XHCI_PCI=y
+> > and USB_XHCI_PCI_RENESAS=m cant. While it is valid that USB_XHCI_PCI=y|m
+> > and USB_XHCI_PCI_RENESAS=n
+> >
+> > So this seems to get fixed by below for me. I have tested with
+> >  - both y and m (easy)
+> >  - make USB_XHCI_PCI_RENESAS=n, USB_XHCI_PCI=y|m works
+> >  - try making USB_XHCI_PCI=y and USB_XHCI_PCI_RENESAS=m, then
+> >    USB_XHCI_PCI=m by kbuild :)
+> >  - try making USB_XHCI_PCI=m and USB_XHCI_PCI_RENESAS=y, kbuild gives
+> >    error prompt that it will be m due to depends
+> >
+> > Thanks to all the fixes done by Arnd which pointed me to this. Pls
+> > verify
+> 
+> I was able to build an arm64 allmodconfig kernel with this change.
 
-On 19/5/2020 2:27 am, Rob Herring wrote:
-> On Thu, May 14, 2020 at 8:08 PM Ramuthevar, Vadivel MuruganX
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>
->> Hi Rob,
->>
->> On 14/5/2020 8:57 pm, Rob Herring wrote:
->>> On Wed, 13 May 2020 18:46:14 +0800, Ramuthevar,Vadivel MuruganX wrote:
->>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>>
->>>> Add YAML file for dt-bindings to support NAND Flash Controller
->>>> on Intel's Lightning Mountain SoC.
->>>>
->>>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>> ---
->>>>    .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 83 ++++++++++++++++++++++
->>>>    1 file changed, 83 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
->>>>
->>>
->>>
->>> My bot found errors running 'make dt_binding_check' on your patch:
->>>
->>> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: 'dmas' is a dependency of 'dma-names'
->>>
->>> See https://patchwork.ozlabs.org/patch/1289160
->>>
->>> If you already ran 'make dt_binding_check' and didn't see the above
->>> error(s), then make sure dt-schema is up to date:
->>>
->>> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
->>>
->>> Please check and re-submit.
->> Thank you very much for review comments...
->> I didn't find build errors, successfully built.
-> 
-> You need to build without DT_SCHEMA_FILES set or be on 5.7-rc (you
-> should be on a current -rcX at least for any patch submission). This
-> comes from the core schema.
-Yes, reproduced the issue as above mentioned and fixed it. Thanks!
+I will send the formal patch and add your name in reported and
+tested. Thanks for the quick verification
 
-Regards
-Vadivel
 > 
-> Rob
+> Cheers,
+> Anders
 > 
+> > and I will send the fix with you as reported :)
+> >
+> > ---- >8 ----
+> >
+> > diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> > index b5c542d6a1c5..92783d175b3f 100644
+> > --- a/drivers/usb/host/Kconfig
+> > +++ b/drivers/usb/host/Kconfig
+> > @@ -40,11 +40,11 @@ config USB_XHCI_DBGCAP
+> >  config USB_XHCI_PCI
+> >         tristate
+> >         depends on USB_PCI
+> > +       depends on USB_XHCI_PCI_RENESAS || !USB_XHCI_PCI_RENESAS
+> >         default y
+> >
+> >  config USB_XHCI_PCI_RENESAS
+> >         tristate "Support for additional Renesas xHCI controller with firwmare"
+> > -       depends on USB_XHCI_PCI
+> >         ---help---
+> >           Say 'Y' to enable the support for the Renesas xHCI controller with
+> >           firwmare. Make sure you have the firwmare for the device and
+> >
+> > --
+> > ~Vinod
+
+-- 
+~Vinod
