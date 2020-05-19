@@ -2,118 +2,267 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3091C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90B70206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467EF206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgESWYL (ORCPT
+        id S1728137AbgESWYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgESWYL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:24:11 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 241C6C061A0F;
-        Tue, 19 May 2020 15:24:11 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbAeL-0003PM-CF; Wed, 20 May 2020 00:23:49 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id B8CC0100606; Wed, 20 May 2020 00:23:48 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Stephen Hemminger <stephen@networkplumber.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of a seqcount
-In-Reply-To: <20200519150159.4d91af93@hermes.lan>
-References: <20200519214547.352050-1-a.darwish@linutronix.de> <20200519214547.352050-2-a.darwish@linutronix.de> <20200519150159.4d91af93@hermes.lan>
-Date:   Wed, 20 May 2020 00:23:48 +0200
-Message-ID: <87v9kr5zt7.fsf@nanos.tec.linutronix.de>
+        Tue, 19 May 2020 18:24:18 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42452 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbgESWYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 18:24:18 -0400
+IronPort-SDR: RIfNjsOfcPsSLwkCSRI4de/0L0lcPhOrLik5JIX0X04UO2gtLDAScrNoRKeH1wWl2oMNVUrbE7
+ y0Q8mjByu5HA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 15:24:17 -0700
+IronPort-SDR: 9YF91DCMCfFjY04/9KGJQVzcKg1T+nBIAbCQsJLpsFFHsLamk4gCOMlTF92iMKPetCmg4h94MU
+ mIX+And93LNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,411,1583222400"; 
+   d="scan'208";a="268044060"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.212.83.131])
+  by orsmga006.jf.intel.com with ESMTP; 19 May 2020 15:24:16 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     rjw@rjwysocki.net, lenb@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] ACPI / DPTF: Add additional attributes to power participant driver
+Date:   Tue, 19 May 2020 15:24:09 -0700
+Message-Id: <20200519222409.616078-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Hemminger <stephen@networkplumber.org> writes:
-> On Tue, 19 May 2020 23:45:23 +0200
-> "Ahmed S. Darwish" <a.darwish@linutronix.de> wrote:
->
->> Sequence counters write paths are critical sections that must never be
->> preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
->> 
->> Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
->> netdev name retrieval.") handled a deadlock, observed with
->> CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
->> infinitely spinning: it got scheduled after the seqcount write side
->> blocked inside its own critical section.
->> 
->> To fix that deadlock, among other issues, the commit added a
->> cond_resched() inside the read side section. While this will get the
->> non-preemptible kernel eventually unstuck, the seqcount reader is fully
->> exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
->> 
->> The fix is also still broken: if the seqcount reader belongs to a
->> real-time scheduling policy, it can spin forever and the kernel will
->> livelock.
->> 
->> Disabling preemption over the seqcount write side critical section will
->> not work: inside it are a number of GFP_KERNEL allocations and mutex
->> locking through the drivers/base/ :: device_rename() call chain.
->> 
->> From all the above, replace the seqcount with a rwsem.
->> 
->> Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
->> Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
->> Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
->> Cc: <stable@vger.kernel.org>
->> Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
->> Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->
-> Have your performance tested this with 1000's of network devices?
+Add two additional attributes to the existing power participant driver:
+rest_of_platform_power_mw: (RO) Shows the rest of worst case platform
+power in mW.
+prochot_confirm: (WO) Confirm EC about a prochot notification.
 
-No. We did not. -ENOTESTCASE
+Also userspace is notified via sysfs_notify(), whenever power source or
+rest of the platform power is changed. So user space can use poll()
+system call on those attributes.
 
-> The reason seqcount logic is was done here was to achieve scaleablity
-> and a semaphore does not scale as well.
+The ACPI methods used in this patch are as follows:
 
-That still does not make the livelock magically going away. Just make a
-reader with real-time priority preempt the writer and the system stops
-dead. The net result is perfomance <= 0.
+PROP
+This object evaluates to the rest of worst case platform power in mW.
+Bits:
+23:0 Worst case rest of platform power in mW.
 
-This was observed on RT kernels without a special 1000's of network
-devices test case.
+PBOK
+PBOK is a method designed to provide a mechanism for OSPM to change power
+setting before EC can de-assert a PROCHOT from a device. The EC may
+receive several PROCHOTs, so it has a sequence number attached to PSRC
+(read via existing attribute "platform_power_source"). Once OSPM takes
+action for a PSRC change notification, it can call PBOK method to confirm
+with the sequence number.
+Bits:
+3:0 Power Delivery State Change Sequence number
+30  Reserved
+31  0 – Not OK to de-assert PROCHOT
+    1 – OK to de-assert PROCHOT
 
-Just for the record: This is not a RT specific problem. You can
-reproduce that w/o an RT kernel as well. Just run the reader with
-real-time scheduling policy.
+PSRC (Platform Power Source): Not new in this patch but for
+documentation for new bits
+This object evaluates to an integer that represents the system power
+source as well as the power delivery state change sequence number.
+Bits:
+3:0 The current power source as an integer for AC, DC, USB, Wireless.
+0 = DC, 1 = AC, 2 = USB, 3 = Wireless Charging
+7:4 Power Delivery State Change Sequence Number. Default value is 0
 
-As much as you hate it from a performance POV the only sane rule of
-programming is: Correctness first.
+Notifications:
+0x81: (Power State Change) Used to notify when the power source has
+changed.
+0x84: (PROP change) Used to notify when the platform rest of power has
+changed.
 
-And this code clearly violates that rule.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ Documentation/ABI/testing/sysfs-platform-dptf | 24 +++++--
+ drivers/acpi/dptf/dptf_power.c                | 69 ++++++++++++++++++-
+ 2 files changed, 88 insertions(+), 5 deletions(-)
 
-Thanks,
+diff --git a/Documentation/ABI/testing/sysfs-platform-dptf b/Documentation/ABI/testing/sysfs-platform-dptf
+index 325dc0667dbb..cf4eb5d676de 100644
+--- a/Documentation/ABI/testing/sysfs-platform-dptf
++++ b/Documentation/ABI/testing/sysfs-platform-dptf
+@@ -27,10 +27,12 @@ KernelVersion:	v4.10
+ Contact:	linux-acpi@vger.kernel.org
+ Description:
+ 		(RO) Display the platform power source
+-		0x00 = DC
+-		0x01 = AC
+-		0x02 = USB
+-		0x03 = Wireless Charger
++		bits[3:0] Current power source
++			0x00 = DC
++			0x01 = AC
++			0x02 = USB
++			0x03 = Wireless Charger
++		bits[7:4] Power source sequence number
+ 
+ What:		/sys/bus/platform/devices/INT3407:00/dptf_power/battery_steady_power
+ Date:		Jul, 2016
+@@ -38,3 +40,17 @@ KernelVersion:	v4.10
+ Contact:	linux-acpi@vger.kernel.org
+ Description:
+ 		(RO) The maximum sustained power for battery in milliwatts.
++
++What:		/sys/bus/platform/devices/INT3407:00/dptf_power/rest_of_platform_power_mw
++Date:		June, 2020
++KernelVersion:	v5.8
++Contact:	linux-acpi@vger.kernel.org
++Description:
++		(RO) Shows the rest of worst case platform power in mW.
++
++What:		/sys/bus/platform/devices/INT3407:00/dptf_power/prochot_confirm
++Date:		June, 2020
++KernelVersion:	v5.8
++Contact:	linux-acpi@vger.kernel.org
++Description:
++		(WO) Confirm embedded controller about a prochot notification.
+diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
+index e4e8b75d39f0..abe99039af74 100644
+--- a/drivers/acpi/dptf/dptf_power.c
++++ b/drivers/acpi/dptf/dptf_power.c
+@@ -16,6 +16,7 @@
+  * ARTG : Adapter rating
+  * CTYP : Charger type
+  * PBSS : Battery steady power
++ * PROP : Rest of worst case platform Power
+  */
+ #define DPTF_POWER_SHOW(name, object) \
+ static ssize_t name##_show(struct device *dev,\
+@@ -39,12 +40,34 @@ DPTF_POWER_SHOW(platform_power_source, PSRC)
+ DPTF_POWER_SHOW(adapter_rating_mw, ARTG)
+ DPTF_POWER_SHOW(battery_steady_power_mw, PBSS)
+ DPTF_POWER_SHOW(charger_type, CTYP)
++DPTF_POWER_SHOW(rest_of_platform_power_mw, PROP)
+ 
+ static DEVICE_ATTR_RO(max_platform_power_mw);
+ static DEVICE_ATTR_RO(platform_power_source);
+ static DEVICE_ATTR_RO(adapter_rating_mw);
+ static DEVICE_ATTR_RO(battery_steady_power_mw);
+ static DEVICE_ATTR_RO(charger_type);
++static DEVICE_ATTR_RO(rest_of_platform_power_mw);
++
++static ssize_t prochot_confirm_store(struct device *dev,
++				     struct device_attribute *attr,
++				     const char *buf, size_t count)
++{
++	struct acpi_device *acpi_dev = dev_get_drvdata(dev);
++	acpi_status status;
++	int seq_no;
++
++	if (kstrtouint(buf, 0, &seq_no) < 0)
++		return -EINVAL;
++
++	status = acpi_execute_simple_method(acpi_dev->handle, "PBOK", seq_no);
++	if (ACPI_SUCCESS(status))
++		return count;
++
++	return -EINVAL;
++}
++
++static DEVICE_ATTR_WO(prochot_confirm);
+ 
+ static struct attribute *dptf_power_attrs[] = {
+ 	&dev_attr_max_platform_power_mw.attr,
+@@ -52,6 +75,8 @@ static struct attribute *dptf_power_attrs[] = {
+ 	&dev_attr_adapter_rating_mw.attr,
+ 	&dev_attr_battery_steady_power_mw.attr,
+ 	&dev_attr_charger_type.attr,
++	&dev_attr_rest_of_platform_power_mw.attr,
++	&dev_attr_prochot_confirm.attr,
+ 	NULL
+ };
+ 
+@@ -60,6 +85,33 @@ static const struct attribute_group dptf_power_attribute_group = {
+ 	.name = "dptf_power"
+ };
+ 
++#define POWER_STATE_CHANGED		0x81
++#define POWER_PROP_CHANGE_EVENT	0x84
++
++static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
++{
++	struct platform_device *pdev = data;
++	char *attr;
++
++	switch (event) {
++	case POWER_STATE_CHANGED:
++		attr = "platform_power_source";
++		break;
++	case POWER_PROP_CHANGE_EVENT:
++		attr = "rest_of_platform_power_mw";
++		break;
++	default:
++		dev_err(&pdev->dev, "Unsupported event [0x%x]\n", event);
++		return;
++	}
++
++	/*
++	 * Notify that an attribute is changed, so that user space can read
++	 * again.
++	 */
++	sysfs_notify(&pdev->dev.kobj, "dptf_power", attr);
++}
++
+ static int dptf_power_add(struct platform_device *pdev)
+ {
+ 	struct acpi_device *acpi_dev;
+@@ -78,10 +130,21 @@ static int dptf_power_add(struct platform_device *pdev)
+ 	if (ptype != 0x11)
+ 		return -ENODEV;
+ 
++	result = acpi_install_notify_handler(acpi_dev->handle,
++					     ACPI_DEVICE_NOTIFY,
++					     dptf_power_notify,
++					     (void *)pdev);
++	if (result)
++		return result;
++
+ 	result = sysfs_create_group(&pdev->dev.kobj,
+ 				    &dptf_power_attribute_group);
+-	if (result)
++	if (result) {
++		acpi_remove_notify_handler(acpi_dev->handle,
++					   ACPI_DEVICE_NOTIFY,
++					   dptf_power_notify);
+ 		return result;
++	}
+ 
+ 	platform_set_drvdata(pdev, acpi_dev);
+ 
+@@ -90,7 +153,11 @@ static int dptf_power_add(struct platform_device *pdev)
+ 
+ static int dptf_power_remove(struct platform_device *pdev)
+ {
++	struct acpi_device *acpi_dev = platform_get_drvdata(pdev);
+ 
++	acpi_remove_notify_handler(acpi_dev->handle,
++				   ACPI_DEVICE_NOTIFY,
++				   dptf_power_notify);
+ 	sysfs_remove_group(&pdev->dev.kobj, &dptf_power_attribute_group);
+ 
+ 	return 0;
+-- 
+2.25.4
 
-        tglx
