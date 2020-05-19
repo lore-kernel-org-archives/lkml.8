@@ -2,90 +2,109 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E90C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B296207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B9B207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589889696;
+	bh=Qlm8SoqsLDcOC9wi24RYefzJ1mZnCn+8vEkJi2KRVJ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U1hnV00GFAUuTUnsmEa45yqBvpiKhZPrFRsz4vK8T3hgiQtC5kC+sE5qy3ljQlEQt
+	 5NnW8IqRVnrNT4C2cN8qpn8V3ogzHpH/tHEF0Uq0kJMJSTrruHdZv5jJOm3E4EYeQi
+	 sqwYWR9xNHOLKD9yBXNrENwaiicLQseuIuE6GXdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgESMA3 (ORCPT
+        id S1728818AbgESMBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:00:29 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:55794 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgESMA2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:00:28 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jb0v1-00053s-PB; Tue, 19 May 2020 06:00:23 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jb0uu-0004Bg-MP; Tue, 19 May 2020 06:00:23 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Andreas Schwab <schwab@linux-m68k.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-References: <20200518055457.12302-1-keescook@chromium.org>
-        <20200518055457.12302-2-keescook@chromium.org>
-        <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
-        <CAG48ez1FspvvypJSO6badG7Vb84KtudqjRk1D7VyHRm06AiEbQ@mail.gmail.com>
-        <20200518144627.sv5nesysvtgxwkp7@wittgenstein>
-        <87blmk3ig4.fsf@x220.int.ebiederm.org> <87mu64uxq1.fsf@igel.home>
-Date:   Tue, 19 May 2020 06:56:36 -0500
-In-Reply-To: <87mu64uxq1.fsf@igel.home> (Andreas Schwab's message of "Tue, 19
-        May 2020 10:37:26 +0200")
-Message-ID: <87sgfwuoi3.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 19 May 2020 08:01:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726949AbgESMBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 08:01:35 -0400
+Received: from localhost (unknown [122.182.207.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 460282072C;
+        Tue, 19 May 2020 12:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589889695;
+        bh=Qlm8SoqsLDcOC9wi24RYefzJ1mZnCn+8vEkJi2KRVJ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nM4goJouEui7NhAAqUybi6Dgp2NItjFAX393D8tDrZGHsOge9pU7Eb9NlDbyFhrwT
+         guh8qt79oLB7ah0c5WVTHzkxg/F52vbImhbrA76pRpOL3auSd4/yZ3VURrZ9i+Ghhi
+         ioyTpQa8BHmqfRX4hd3DJxhv1by/8AH7q2LpL/+k=
+Date:   Tue, 19 May 2020 17:31:30 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Christian Lamparter <chunkeey@googlemail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 2/5] usb: renesas-xhci: Add the renesas xhci driver
+Message-ID: <20200519120130.GN374218@vkoul-mobl.Dlink>
+References: <20200506060025.1535960-1-vkoul@kernel.org>
+ <20200506060025.1535960-3-vkoul@kernel.org>
+ <20200519114528.GC1298122@kuha.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jb0uu-0004Bg-MP;;;mid=<87sgfwuoi3.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18KHCvzrkAL+KkT291e5MaUNnZX1ztiKf4=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519114528.GC1298122@kuha.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andreas Schwab <schwab@linux-m68k.org> writes:
+Hi Heikki
 
-> On Mai 18 2020, Eric W. Biederman wrote:
->
->> If it was only libc4 and libc5 that used the uselib system call then it
->> can probably be removed after enough time.
->
-> Only libc4 used it, libc5 was already ELF.
+On 19-05-20, 14:45, Heikki Krogerus wrote:
+> Hi guys,
+> 
+> On Wed, May 06, 2020 at 11:30:22AM +0530, Vinod Koul wrote:
+> > From: Christian Lamparter <chunkeey@googlemail.com>
+> > 
+> > This add a new driver for renesas xhci which is basically a firmware
+> > loader for uPD720201 and uPD720202 w/o ROM. The xhci-pci driver will
+> > invoke this driver for loading/unloading on relevant devices.
+> > 
+> > This patch adds a firmware loader for the uPD720201K8-711-BAC-A
+> > and uPD720202K8-711-BAA-A variant. Both of these chips are listed
+> > in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
+> > devices which need the firmware loader on page 2 in order to
+> > work as they "do not support the External ROM".
+> > 
+> > The "Firmware Download Sequence" is describe in chapter
+> > "7.1 FW Download Interface" R19UH0078EJ0500 Rev.5.00 page 131.
+> > 
+> > The firmware "K2013080.mem" is available from a USB3.0 Host to
+> > PCIe Adapter (PP2U-E card) "Firmware download" archive. An
+> > alternative version can be sourced from Netgear's WNDR4700 GPL
+> > archives.
+> > 
+> > The release notes of the PP2U-E's "Firmware Download" ver 2.0.1.3
+> > (2012-06-15) state that the firmware is for the following devices:
+> >  - uPD720201 ES 2.0 sample whose revision ID is 2.
+> >  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
+> >  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
+> 
+> You wouldn't happen to have access to the documentation of the
+> "original" uPD720200 USB 3.0 controller?
+> 
+> It would be cool if we could support that too with this driver.
 
-binfmt_elf.c supports uselib.  In a very a.out ish way.  Do you know if
-that support was ever used?
+Not me. does it also require firmware? If so you can try with this
+driver and see if it works for you?
 
-If we are truly talking a.out only we should be able to make uselib
-conditional on a.out support in the kernel which is strongly mostly
-disabled at this point.
-
-I am wondering if there are source trees for libc4 or libc5 around
-anywhere that we can look at to see how usage of uselib evolved.
-
-Eric
+Thanks
+-- 
+~Vinod
