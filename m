@@ -2,117 +2,171 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 467602086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABA95207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="doPr+tGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbgESJmd (ORCPT
+        id S1728374AbgESJo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:42:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:57616 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728818AbgESJmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:42:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AD4A11D4;
-        Tue, 19 May 2020 02:42:30 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.75.102])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D98563F305;
-        Tue, 19 May 2020 02:42:27 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
-        mark.rutland@arm.com, suzuki.poulose@arm.com,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V4 17/17] arm64/cpuinfo: Add ID_MMFR4_EL1 into the cpuinfo_arm64 context
-Date:   Tue, 19 May 2020 15:10:54 +0530
-Message-Id: <1589881254-10082-18-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589881254-10082-1-git-send-email-anshuman.khandual@arm.com>
-References: <1589881254-10082-1-git-send-email-anshuman.khandual@arm.com>
+        Tue, 19 May 2020 05:44:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgESJo1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 05:44:27 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74333C061A0C;
+        Tue, 19 May 2020 02:44:27 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id n5so2749775wmd.0;
+        Tue, 19 May 2020 02:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cjmj1xzQu18Ru/uezNZCCqloNoHKEc4t1hO8iLb+89w=;
+        b=doPr+tGmmoXrEIV8pAXbYbWtSk35ohyC2eHhh7hjPB8PJNH1kytiu/kGI37eRDhvMA
+         BprWAATG708q5Or9loDVNLkQxAEhwiPNlAuETX3y9b/zlN9I60lC3Y/XCLYVtuflkZed
+         BR/lgrHjNdq+mSvH1CSrYFCrUgHZykgh7JD8DfpllMxRtT+1awR8kN8pp5q2YwpBw/ub
+         d0WSgQcjAJ4hW/1n+d5550Gpn/LV/2QMbzF0lJTvoE51Pr7XS6mtJ2IF7HRFR326+ujD
+         QkAep131uFWOO8DodV2+jVuALtctIzxnzt2PvjL1+5hHDoOV3LkPFQx+r8x/BTZoIZZ0
+         P+Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cjmj1xzQu18Ru/uezNZCCqloNoHKEc4t1hO8iLb+89w=;
+        b=ny56LZ1ElDLcKW4/3LVh/zc2K6k3d81Acdrh3rLiwaHhsU1imDwug+SVvcl3btP7lY
+         HHjQxmeAvfBWVzqL7uKvh9n9AqKt2e2a8LN76mOZQiSOBA6nzo1p2r8kYHdmZS2vszul
+         NpT3Kb6lhnLeEpW3UUfhO8y76CdNVIcBirmeFtYEaNVnWVO9ZdjzS2bxSBaxzIKw4rZm
+         02tYqY/Jsmh6BVxYDpofFvw4NV4jyGPnc5Zc0bSJB6yIf3s//ZLbeVR+qWakneimCB9m
+         XprMLKCo23LnBUvPnedbBbpareuz2UUyqgr5nxlI8fwH2WmJjj78Y3iON3oI+EZ/owyc
+         bQvA==
+X-Gm-Message-State: AOAM530CU5W29hNBARfz4fVDh8d/ssE548ZQgP3WTQh3RVHC8S2l0yMm
+        jq2gZsdusDK/ofUaFASaDyo=
+X-Google-Smtp-Source: ABdhPJxbdnRd+quHI/sSSncj5FZ+P/varJ6tdGMUZVPI0wYUfNhu7a6vWVjZXgZUOCkwj4xtkPsGPw==
+X-Received: by 2002:a1c:b141:: with SMTP id a62mr4319303wmf.7.1589881466008;
+        Tue, 19 May 2020 02:44:26 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id z11sm20132484wro.48.2020.05.19.02.44.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 02:44:24 -0700 (PDT)
+Date:   Tue, 19 May 2020 11:44:18 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>
+Subject: Re: [PATCH v2 3/3] iio: magnetometer: ak8975: Add gpio reset support
+Message-ID: <20200519094418.GA10391@ict14-OptiPlex-980>
+References: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
+ <20200519065749.4624-4-jonathan.albrieux@gmail.com>
+ <20200519092127.GS1634618@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519092127.GS1634618@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ID_MMFR4_EL1 has been missing in the CPU context (i.e cpuinfo_arm64). This
-just adds the register along with other required changes.
+On Tue, May 19, 2020 at 12:21:27PM +0300, Andy Shevchenko wrote:
+> On Tue, May 19, 2020 at 08:57:43AM +0200, Jonathan Albrieux wrote:
+> 
+> Thanks for an update, my comments below.
+> 
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+Thanks to you for taking time to review the code!
 
-Suggested-by: Will Deacon <will@kernel.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/include/asm/cpu.h   | 1 +
- arch/arm64/kernel/cpufeature.c | 4 ++++
- arch/arm64/kernel/cpuinfo.c    | 1 +
- 3 files changed, 6 insertions(+)
+> > According to AK09911 datasheet, if reset gpio is provided then 
+> 
+> Trailing whitespace.
+> 
+> > deassert reset on ak8975_power_on and assert reset on ak8975_power_off.
+> > 
+> > Without reset's deassertion during ak8975_power_on, driver's probe fails on
+> > ak8975_who_i_am while checking for device identity for AK09911 chip
+> > 
+> > AK09911 has an active low reset gpio to handle register's reset.
+> > AK09911 datasheed says that, if not used, reset pin should be connected
+> > to VID. This patch emulates this situation
+> 
+> Please, put periods at the end of the phrases.
+> 
+> >  	/*
+> > -	 * According to the datasheet the power supply rise time i 200us
+> > +	 * According to the datasheet the power supply rise time is 200us
+> >  	 * and the minimum wait time before mode setting is 100us, in
+> > -	 * total 300 us. Add some margin and say minimum 500us here.
+> > +	 * total 300us. Add some margin and say minimum 500us here.
+> >  	 */
+> 
+> This is not related change (perhaps, you may do in separate patch), but I'm not
+> against it. Up to maintainer.
+> 
 
-diff --git a/arch/arm64/include/asm/cpu.h b/arch/arm64/include/asm/cpu.h
-index e1f5ef437671..7faae6ff3ab4 100644
---- a/arch/arm64/include/asm/cpu.h
-+++ b/arch/arm64/include/asm/cpu.h
-@@ -45,6 +45,7 @@ struct cpuinfo_arm64 {
- 	u32		reg_id_mmfr1;
- 	u32		reg_id_mmfr2;
- 	u32		reg_id_mmfr3;
-+	u32		reg_id_mmfr4;
- 	u32		reg_id_mmfr5;
- 	u32		reg_id_pfr0;
- 	u32		reg_id_pfr1;
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 70c3b49aac11..42990188fb6c 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -785,6 +785,7 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
- 		init_cpu_ftr_reg(SYS_ID_MMFR1_EL1, info->reg_id_mmfr1);
- 		init_cpu_ftr_reg(SYS_ID_MMFR2_EL1, info->reg_id_mmfr2);
- 		init_cpu_ftr_reg(SYS_ID_MMFR3_EL1, info->reg_id_mmfr3);
-+		init_cpu_ftr_reg(SYS_ID_MMFR4_EL1, info->reg_id_mmfr4);
- 		init_cpu_ftr_reg(SYS_ID_MMFR5_EL1, info->reg_id_mmfr5);
- 		init_cpu_ftr_reg(SYS_ID_PFR0_EL1, info->reg_id_pfr0);
- 		init_cpu_ftr_reg(SYS_ID_PFR1_EL1, info->reg_id_pfr1);
-@@ -920,6 +921,8 @@ static int update_32bit_cpu_features(int cpu, struct cpuinfo_arm64 *info,
- 				      info->reg_id_mmfr2, boot->reg_id_mmfr2);
- 	taint |= check_update_ftr_reg(SYS_ID_MMFR3_EL1, cpu,
- 				      info->reg_id_mmfr3, boot->reg_id_mmfr3);
-+	taint |= check_update_ftr_reg(SYS_ID_MMFR4_EL1, cpu,
-+				      info->reg_id_mmfr4, boot->reg_id_mmfr4);
- 	taint |= check_update_ftr_reg(SYS_ID_MMFR5_EL1, cpu,
- 				      info->reg_id_mmfr5, boot->reg_id_mmfr5);
- 	taint |= check_update_ftr_reg(SYS_ID_PFR0_EL1, cpu,
-@@ -1062,6 +1065,7 @@ static u64 __read_sysreg_by_encoding(u32 sys_id)
- 	read_sysreg_case(SYS_ID_MMFR1_EL1);
- 	read_sysreg_case(SYS_ID_MMFR2_EL1);
- 	read_sysreg_case(SYS_ID_MMFR3_EL1);
-+	read_sysreg_case(SYS_ID_MMFR4_EL1);
- 	read_sysreg_case(SYS_ID_MMFR5_EL1);
- 	read_sysreg_case(SYS_ID_ISAR0_EL1);
- 	read_sysreg_case(SYS_ID_ISAR1_EL1);
-diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-index 54579bf08f74..465ef72f061a 100644
---- a/arch/arm64/kernel/cpuinfo.c
-+++ b/arch/arm64/kernel/cpuinfo.c
-@@ -374,6 +374,7 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
- 		info->reg_id_mmfr1 = read_cpuid(ID_MMFR1_EL1);
- 		info->reg_id_mmfr2 = read_cpuid(ID_MMFR2_EL1);
- 		info->reg_id_mmfr3 = read_cpuid(ID_MMFR3_EL1);
-+		info->reg_id_mmfr4 = read_cpuid(ID_MMFR4_EL1);
- 		info->reg_id_mmfr5 = read_cpuid(ID_MMFR5_EL1);
- 		info->reg_id_pfr0 = read_cpuid(ID_PFR0_EL1);
- 		info->reg_id_pfr1 = read_cpuid(ID_PFR1_EL1);
--- 
-2.20.1
+Ok I will separate the patch
 
+> > +	/*
+> > +	 * According to AK09911 datasheet, if reset gpio is provided then
+> > +	 * deassert reset on ak8975_power_on and assert reset on
+> > +	 * ak8975_power_off.
+> 
+> We try to refer to the code accordingly to the kernel doc recommendations (even
+> for non-kdoc comments). So, here, 'function' as 'function()' (without quotes)
+> and so on.
+> 
+
+Will fix this as like as the other changes you pointed out about periods and
+trailing spaces as soon as possible
+
+> > +	 */
+> > +	reset_gpiod = devm_gpiod_get_optional(&client->dev,
+> > +					      "reset", GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(reset_gpiod))
+> > +		return PTR_ERR(reset_gpiod);
+> > +
+> >  	/* Register with IIO */
+> >  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> >  	if (indio_dev == NULL)
+> > @@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
+> >  
+> >  	data->client = client;
+> >  	data->eoc_gpiod = eoc_gpiod;
+> > +	data->reset_gpiod = reset_gpiod;
+> >  	data->eoc_irq = 0;
+> >  
+> >  	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+
+Again, thank you,
+Best regards,
+Jonathan Albrieux
