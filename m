@@ -2,92 +2,88 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35345C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15D5A207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA540207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgESWRh (ORCPT
+        id S1727063AbgESWSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:17:37 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:51048 "EHLO inva020.nxp.com"
+        Tue, 19 May 2020 18:18:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgESWRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:17:36 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8BC8E1A011F;
-        Wed, 20 May 2020 00:17:34 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7CCC11A021B;
-        Wed, 20 May 2020 00:17:34 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C76B320564;
-        Wed, 20 May 2020 00:17:33 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Horia Geanta <horia.geanta@nxp.com>
-Cc:     Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH] crypto: engine - do not requeue in case of fatal error
-Date:   Wed, 20 May 2020 01:17:25 +0300
-Message-Id: <1589926645-32686-1-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
+        id S1725998AbgESWSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 18:18:06 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 015DE2075F;
+        Tue, 19 May 2020 22:18:03 +0000 (UTC)
+Date:   Tue, 19 May 2020 18:18:02 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Subject: Re: [patch V6 01/37] tracing/hwlat: Use ktime_get_mono_fast_ns()
+Message-ID: <20200519181802.5c88c557@gandalf.local.home>
+In-Reply-To: <871rnf7g61.fsf@nanos.tec.linutronix.de>
+References: <20200515234547.710474468@linutronix.de>
+        <20200515235124.466962628@linutronix.de>
+        <20200519172627.7e65669e@gandalf.local.home>
+        <871rnf7g61.fsf@nanos.tec.linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now, in crypto-engine, if hardware queue is full (-ENOSPC),
-requeue request regardless of MAY_BACKLOG flag.
-If hardware throws any other error code (like -EIO, -EINVAL,
--ENOMEM, etc.) only MAY_BACKLOG requests are enqueued back into
-crypto-engine's queue, since the others can be dropped.
-The latter case can be fatal error, so those cannot be recovered from.
-For example, in CAAM driver, -EIO is returned in case the job descriptor
-is broken, so there is no possibility to fix the job descriptor.
-Therefore, these errors might be fatal error, so we shouldn’t
-requeue the request. This will just be pass back and forth between
-crypto-engine and hardware.
+On Tue, 19 May 2020 23:45:10 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Fixes: 6a89f492f8e5 ("crypto: engine - support for parallel requests based on retry mechanism")
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
- crypto/crypto_engine.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+> >> @@ -165,20 +155,22 @@ void trace_hwlat_callback(bool enter)
+> >>   * Used to repeatedly capture the CPU TSC (or similar), looking for potential
+> >>   * hardware-induced latency. Called with interrupts disabled and with
+> >>   * hwlat_data.lock held.
+> >> + *
+> >> + * Use ktime_get_mono_fast() here as well because it does not wait on the
+> >> + * timekeeping seqcount like ktime_get_mono().  
+> >
+> > When doing a "git grep ktime_get_mono" I only find
+> > ktime_get_mono_fast_ns() (and this comment), so I don't know what to compare
+> > that to. Did you mean another function?  
+> 
+> Yeah. I fatfingered the comment. The code uses ktime_get_mono_fast_ns().
 
-diff --git a/crypto/crypto_engine.c b/crypto/crypto_engine.c
-index 412149e..3655d9d 100644
---- a/crypto/crypto_engine.c
-+++ b/crypto/crypto_engine.c
-@@ -169,13 +169,10 @@ static void crypto_pump_requests(struct crypto_engine *engine,
- 		/*
- 		 * If hardware queue is full (-ENOSPC), requeue request
- 		 * regardless of backlog flag.
--		 * If hardware throws any other error code,
--		 * requeue only backlog requests.
- 		 * Otherwise, unprepare and complete the request.
- 		 */
- 		if (!engine->retry_support ||
--		    ((ret != -ENOSPC) &&
--		    !(async_req->flags & CRYPTO_TFM_REQ_MAY_BACKLOG))) {
-+		    (ret != -ENOSPC)) {
- 			dev_err(engine->dev,
- 				"Failed to do one request from queue: %d\n",
- 				ret);
--- 
-2.1.0
+Well, I assumed that's what you meant with "ktime_get_mono_fast()" but I
+don't know what function you are comparing it to that waits on the seqcount
+like "ktime_get_mono()" as there is no such function.
 
+-- Steve
