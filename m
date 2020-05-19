@@ -2,104 +2,128 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF998C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42465C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C29320708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589910296;
-	bh=LH/18jKdD4+8dj8U6OaV6ZmON9IfifCHP6whVy4u2dg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AXKfxi+6+Pt6rFh6pL4l9/i+aZ61nOsrbmTIBiS8pKFDK8muZLuFtO6282CsTbR8P
-	 kxPMW3SA/RMHuqW1IPzTRDF5R4EgsH5jiEX3Quoq1XbVOYZYE+75gQVO70tljpiUGl
-	 ZXCtej9XOGCQtn6Rvk5CQPUqXSv7AVLx4hMHMnMI=
+	by mail.kernel.org (Postfix) with ESMTP id 32442207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgESRo4 (ORCPT
+        id S1729472AbgESRpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:44:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgESRoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:44:55 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D95E20708;
-        Tue, 19 May 2020 17:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589910295;
-        bh=LH/18jKdD4+8dj8U6OaV6ZmON9IfifCHP6whVy4u2dg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UfsCw1/B8B8h3JBZYFQESYsQ8akmx/QQ2q3CHrM7/b4e01E5TLYBNt1Dq2e4NL3OI
-         cEnKRiv+vCb4M5sfSx4u4Ys08MJvjKEqI/0W/SvST2RRykoWTkhMwifOi87Zlgvpzu
-         SegQgDxxHDi1PVNyiyrVwFheVr95oQ+VylbvIGnE=
-Date:   Tue, 19 May 2020 18:44:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 3/3] selftests: vdso: Add a selftest for vDSO getcpu()
-Message-ID: <20200519174452.GR4611@sirena.org.uk>
-References: <20200505174728.46594-1-broonie@kernel.org>
- <20200505174728.46594-4-broonie@kernel.org>
- <dff4dfbd-f3f1-d683-5dac-4404e9023b2e@kernel.org>
+        Tue, 19 May 2020 13:45:11 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:44348 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESRpL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:45:11 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb6Ie-0003RI-Nx; Tue, 19 May 2020 11:45:08 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb6Id-0004jU-PA; Tue, 19 May 2020 11:45:08 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200518055457.12302-1-keescook@chromium.org>
+        <87a724t153.fsf@x220.int.ebiederm.org>
+        <202005190918.D2BD83F7C@keescook>
+Date:   Tue, 19 May 2020 12:41:27 -0500
+In-Reply-To: <202005190918.D2BD83F7C@keescook> (Kees Cook's message of "Tue,
+        19 May 2020 09:26:04 -0700")
+Message-ID: <87o8qjstyw.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zj18g9eElA7rRQh+"
-Content-Disposition: inline
-In-Reply-To: <dff4dfbd-f3f1-d683-5dac-4404e9023b2e@kernel.org>
-X-Cookie: Do not write below this line.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1jb6Id-0004jU-PA;;;mid=<87o8qjstyw.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/BewoOodAlU9s75IVSjo2e3P/HkeoZRsY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 0/4] Relocate execve() sanity checks
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Kees Cook <keescook@chromium.org> writes:
 
---zj18g9eElA7rRQh+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, May 19, 2020 at 10:06:32AM -0500, Eric W. Biederman wrote:
+>> Kees Cook <keescook@chromium.org> writes:
+>> 
+>> > Hi,
+>> >
+>> > While looking at the code paths for the proposed O_MAYEXEC flag, I saw
+>> > some things that looked like they should be fixed up.
+>> >
+>> >   exec: Change uselib(2) IS_SREG() failure to EACCES
+>> > 	This just regularizes the return code on uselib(2).
+>> >
+>> >   exec: Relocate S_ISREG() check
+>> > 	This moves the S_ISREG() check even earlier than it was already.
+>> >
+>> >   exec: Relocate path_noexec() check
+>> > 	This adds the path_noexec() check to the same place as the
+>> > 	S_ISREG() check.
+>> >
+>> >   fs: Include FMODE_EXEC when converting flags to f_mode
+>> > 	This seemed like an oversight, but I suspect there is some
+>> > 	reason I couldn't find for why FMODE_EXEC doesn't get set in
+>> > 	f_mode and just stays in f_flags.
+>> 
+>> So I took a look at this series.
+>> 
+>> I think the belt and suspenders approach of adding code in open and then
+>> keeping it in exec and uselib is probably wrong.  My sense of the
+>> situation is a belt and suspenders approach is more likely to be
+>> confusing and result in people making mistakes when maintaining the code
+>> than to actually be helpful.
+>
+> This is why I added the comments in fs/exec.c's redundant checks. When I
+> was originally testing this series, I had entirely removed the checks in
+> fs/exec.c, but then had nightmares about some kind of future VFS paths
+> that would somehow bypass do_open() and result in execve() working on
+> noexec mounts, there by allowing for the introduction of a really nasty
+> security bug.
+>
+> The S_ISREG test is demonstrably too late (as referenced in the series),
 
-On Tue, May 19, 2020 at 11:11:28AM -0600, shuah wrote:
-> On 5/5/20 11:47 AM, Mark Brown wrote:
+Yes.  The open of a pipe very much happens when it should not.
 
-> > +int main(int argc, char **argv)
-> > +{
-> > +	unsigned long sysinfo_ehdr =3D getauxval(AT_SYSINFO_EHDR);
->=20
-> WARNING: Missing a blank line after declarations
-> WARNING: Missing a blank line after declarations
-> #135: FILE: tools/testing/selftests/vDSO/vdso_test_getcpu.c:27:
-> +	unsigned long sysinfo_ehdr =3D getauxval(AT_SYSINFO_EHDR);
-> +	if (!sysinfo_ehdr) {
+The deadlock looks like part of the cred_guard_mutex mess.  I think I
+introduced an alternate solution for the specific code paths in the
+backtrace when I introduced exec_update_mutex.
 
-This is the idiom in use by the existing gettimeofday test:
+The fact that cred_guard_mutex is held over open, while at the same time
+cred_guard_mutex is grabbed on open files is very questionable.  Until
+my most recent patchset feeding exec /proc/self/maps would also deadlock
+this way.
 
-WARNING: Missing a blank line after declarations
-#38: FILE: tools/testing/selftests/vDSO/vdso_test_gettimeofday.c:38:
-+	unsigned long sysinfo_ehdr =3D getauxval(AT_SYSINFO_EHDR);
-+	if (!sysinfo_ehdr) {
+> and given the LSM hooks, I think the noexec check is too late as well.
+> (This is especially true for the coming O_MAYEXEC series, which will
+> absolutely need those tests earlier as well[1] -- the permission checking
+> is then in the correct place: during open, not exec.) I think the only
+> question is about leaving the redundant checks in fs/exec.c, which I
+> think are a cheap way to retain a sense of robustness.
 
-so I don't know how you want the code to look here?
+The trouble is when someone passes through changes one of the permission
+checks for whatever reason (misses that they are duplicated in another
+location) and things then fail in some very unexpected way.
 
---zj18g9eElA7rRQh+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7EGxMACgkQJNaLcl1U
-h9Dtrgf9EvPl6k4mQxLhof/GI9tdCjeQvG/Mnv+3PVimZt6YlWwQj/GFbMTzhRKS
-TnWRtySrFArKtJJZT+cmsWR97PIH84sdlc6CJrxnsWUltZhuqxqocTMrDAQB9blU
-0qjMzXi6cfIIDeF8NC9LSvQoZOM7PznXZ28meiv0cqqX1hPegI7ihg1woGRlRkPn
-FXw6awO+1qKNTjPJsSwTjrqUTX5r4Jsf1r9ccrAVJuh/D+T5+Szjyqy/OLCuHJEp
-soHSdEfFRrfh6NE0pl57MiYpB0mXRnQcKnBQNsgnirF4QXr7dMFQEvEiLIdvkTnD
-llBPb6z1WnlinXHtHkNE/qBaDNMFOw==
-=OVk4
------END PGP SIGNATURE-----
-
---zj18g9eElA7rRQh+--
+Eric
