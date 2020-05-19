@@ -2,134 +2,74 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECDAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE898C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D820204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:45:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jHzqznXH"
+	by mail.kernel.org (Postfix) with ESMTP id C720B204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgESNpe (ORCPT
+        id S1729248AbgESNpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
+        Tue, 19 May 2020 09:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729086AbgESNp2 (ORCPT
+        with ESMTP id S1729213AbgESNpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:45:28 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE1F7C08C5C0;
-        Tue, 19 May 2020 06:45:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=V3sFdWlGraEdlC3I/bIfjhE1S8jpT74WDIoCxf3hPhY=; b=jHzqznXHYdRDB0VLSKCt0SUwzG
-        UmKxhuMXGVdcbGOIenVuGx307/ZX7eXLsy2TExdO+aFSnaP/EsMCLJYKBpcMk4/djs4vSc7HcybWQ
-        Px//q5oXBg53dzr7hUei1hG5+/rUWyUPTXuK7hWc4NSBllqrL8ct3uIjSQAQaR+MdRQA6HJwY/0EL
-        M9zdOM0weX0f3dmKxeu7mXAHyV2wXD1CT+PBrihUpU+7fa835bhjl0EqvrrVRk37t2fjdAkJum9sg
-        y9GagWUZwTBHzIeBBuDGqliLA3w73gnYGtuyOQKcrvKHWrrZyM/wcjosrZdilCGEqxuVal8b6b6Ny
-        +0wnHaDg==;
-Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jb2Yg-0003iN-Qa; Tue, 19 May 2020 13:45:27 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 11/20] bpf: factor out a bpf_trace_copy_string helper
-Date:   Tue, 19 May 2020 15:44:40 +0200
-Message-Id: <20200519134449.1466624-12-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200519134449.1466624-1-hch@lst.de>
-References: <20200519134449.1466624-1-hch@lst.de>
+        Tue, 19 May 2020 09:45:34 -0400
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBFFC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:45:33 -0700 (PDT)
+Received: from [2a02:fe0:c700:2:984c:ac0d:3200:67f3] (port=63315)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <Ywe.C4rlyn@I-T-Shed-Studio.eu>)
+        id 1jb2Yl-00085M-Be
+        for linux-kernel@vger.kernel.org; Tue, 19 May 2020 15:45:31 +0200
+To:     linux-kernel@vger.kernel.org
+From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <Ywe.C4rlyn@I-T-Shed-Studio.eu>
+Subject: 0.33 ms latency performance bottlenecks
+Message-ID: <138dae9d-a90f-7e67-959d-eaacc9f02699@I-T-Shed-Studio.eu>
+Date:   Tue, 19 May 2020 15:45:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split out a helper to do the fault free access to the string pointer
-to get it out of a crazy indentation level.
+I tried Renoise, a good tracker app with 0.33 ms latency. It was really 
+good. Tech Trance in the 90s was all about tracking.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- kernel/trace/bpf_trace.c | 42 +++++++++++++++++++++++-----------------
- 1 file changed, 24 insertions(+), 18 deletions(-)
+( a little playlist here for interested 
+https://www.youtube.com/playlist?list=PLpA7__w8yeJ0g6cF0m_y_h-HWjzCNTuWm )
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index f5231ffea85b9..9d4080590f711 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -321,6 +321,28 @@ static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
- 	return &bpf_probe_write_user_proto;
- }
- 
-+static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
-+		size_t bufsz)
-+{
-+	void __user *user_ptr = (__force void __user *)unsafe_ptr;
-+
-+	buf[0] = 0;
-+
-+	switch (fmt_ptype) {
-+	case 's':
-+#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-+		strncpy_from_unsafe(buf, unsafe_ptr, bufsz);
-+		break;
-+#endif
-+	case 'k':
-+		strncpy_from_kernel_nofault(buf, unsafe_ptr, bufsz);
-+		break;
-+	case 'u':
-+		strncpy_from_user_nofault(buf, user_ptr, bufsz);
-+		break;
-+	}
-+}
-+
- /*
-  * Only limited trace_printk() conversion specifiers allowed:
-  * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pks %pus %s
-@@ -403,24 +425,8 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
- 				break;
- 			}
- 
--			buf[0] = 0;
--			switch (fmt_ptype) {
--			case 's':
--#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
--				strncpy_from_unsafe(buf, unsafe_ptr,
--						    sizeof(buf));
--				break;
--#endif
--			case 'k':
--				strncpy_from_kernel_nofault(buf, unsafe_ptr,
--							   sizeof(buf));
--				break;
--			case 'u':
--				strncpy_from_user_nofault(buf,
--					(__force void __user *)unsafe_ptr,
--							 sizeof(buf));
--				break;
--			}
-+			bpf_trace_copy_string(buf, unsafe_ptr, fmt_ptype,
-+					sizeof(buf));
- 			goto fmt_next;
- 		}
- 
--- 
-2.26.2
+Latency on the amiga at that time was very low. More like 0.33 ms 
+latency, or even 0.2.
+
+We want this kind of latency again. Also having in mind a few samples 
+for clocking the D/A well if necessary.
+
+D/A could be a 1bit converter with few analogue components on the 
+output, maybe simply a 1 pole diode filter, if possible. This could work 
+well on a bitstream shifted up in frequency.
+
+It seems to use almost a whole cpu just at this latency. It works well 
+though.
+
+One might want to look into performance bottlenecks here, hardware aid, 
+or cpu instruction set enhancements. Inner loop optimization beyond HZ 
+timer etc, which is at 91 here.
+
+Serene Greetings,
+Ywe Cærlyn
+I-T Shed Studio.
+
+
 
