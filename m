@@ -2,125 +2,125 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14009C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C341C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC79420825
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C5A207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIB4BbVz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NbgTtT7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgESN6b (ORCPT
+        id S1728953AbgESOAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbgESN6a (ORCPT
+        Tue, 19 May 2020 10:00:23 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:47948 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728682AbgESOAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:58:30 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84CC5C08C5C0;
-        Tue, 19 May 2020 06:58:30 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id j3so13430458ilk.11;
-        Tue, 19 May 2020 06:58:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n/gSlFWBQ3WxUydL0AG8RE+72oWOYudYm1JYvsV0Jus=;
-        b=fIB4BbVzW7vbkqKGKgmfgtVqfdtPo/YxHVrbHEHcSalctsC8Z1P/ZiMcrHG884CH/T
-         afZBfItuIrHPolRnpDDBn4+sdZVpYdBP5S8xbLo8cNmXYVc3M3DKaokQsaNWUl5Eee1q
-         ohpVvVCyMv3GJPSnXR2UI5aTBr1vw6bJFKDym5a0inaHP2eR4oVmhV2+MmFLuWT7+8oA
-         D6utLisJgmRj2Sw/p3vERjIrCk/Z+7QU6dsaBHzi6SVKJ0Ka+J/P8e2p3L9mlquNKTpN
-         fOzkHLkJefEIFpPUiQ8deUjtHUVX0E6KZqO2L9VevMlZVippSZ+9Y+HHF0Wrewa+mmPP
-         Qp9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n/gSlFWBQ3WxUydL0AG8RE+72oWOYudYm1JYvsV0Jus=;
-        b=NAdPHPbRDwIlRe/KEE3/LzXWResaB/btLIcnYduWg7Om0Aozn48qZD2UqY10fkW6Qc
-         +eiLtM0XRA+kqyj2hKSxTLsF2GuwiHLogP+EA2SWt6tDFQROkwuYirLFQUriHdXqI2rl
-         2nyJHMiDptTkb2sRa45ANLIVBaO9shUwd+YMEYLcx8WqNp2mwP6LpGJZ3ZoW8EBTzkmT
-         PqDAWJnISnVg2p+b8xtECB1366En336JtkBNGw4p9PdpXHFb2a/hdhF9t6yMf6kuJF6R
-         RKu0UuGaRJOMIbyQBO7JUWRQl7LSIcG7xZ9FvRqx+RgJls8FaSATnlrCSdagZJEfTrjT
-         x5ug==
-X-Gm-Message-State: AOAM530OZJwlosqh/rQvG9fx/zBmi0z1yhbqpQneRO6xGUUSNdfqPZUT
-        T4vtl7qSx5GLo7xDzfjrLzazpbZCAwAU6m1clg==
-X-Google-Smtp-Source: ABdhPJyzDk5ro9RaDhHf25IEza5E1ffJM8beDQGW8MgdSO58MbiCno3wYKG45cNLis7uZ+kYFAz0+QOPkms+WREOc3I=
-X-Received: by 2002:a92:8c4c:: with SMTP id o73mr21114094ild.172.1589896709896;
- Tue, 19 May 2020 06:58:29 -0700 (PDT)
+        Tue, 19 May 2020 10:00:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589896822; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=eLQlBtr65E965ED8VgWttrf28Jic4su3n2v7Vzwtums=;
+ b=NbgTtT7FgJ7rSuGOh5T4SzWyhZsuOvGO3odiItmDy1CS5G96yIt/WHPOG3knhkIPrxJENs90
+ hEMmv4d87avFnClJn/HBImuUr1/EkbNUR46GQherxtM09TEGELBdL6Iy10jEfahixnDsHXS/
+ h1YAmwXHVXhlXpMvUEhxIRCSLlw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ec3e662a2156719d9057571 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 19 May 2020 14:00:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D5BCCC433D2; Tue, 19 May 2020 14:00:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sartgarg)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6D651C433F2;
+        Tue, 19 May 2020 14:00:01 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200428151725.31091-1-joro@8bytes.org> <20200428151725.31091-36-joro@8bytes.org>
-In-Reply-To: <20200428151725.31091-36-joro@8bytes.org>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Tue, 19 May 2020 09:58:18 -0400
-Message-ID: <CAMzpN2gfiBAeCV_1+9ogh42bMMuDW=qdwd7dYp49-=zY3kzBaA@mail.gmail.com>
-Subject: Re: [PATCH v3 35/75] x86/head/64: Build k/head64.c with -fno-stack-protector
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 May 2020 19:30:01 +0530
+From:   sartgarg@codeaurora.org
+To:     Rob Herring <robh@kernel.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, stummala@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-mmc-owner@vger.kernel.org
+Subject: Re: [PATCH V1 1/7] dt-bindings: mmc: Add information for DLL register
+ properties
+In-Reply-To: <20200515025047.GA27895@bogus>
+References: <1588838535-6050-1-git-send-email-sartgarg@codeaurora.org>
+ <1588838535-6050-2-git-send-email-sartgarg@codeaurora.org>
+ <20200515025047.GA27895@bogus>
+Message-ID: <754eb06777c76dcfaedf42083ad13bb5@codeaurora.org>
+X-Sender: sartgarg@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:28 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> From: Joerg Roedel <jroedel@suse.de>
->
-> The code inserted by the stack protector does not work in the early
-> boot environment because it uses the GS segment, at least with memory
-> encryption enabled. Make sure the early code is compiled without this
-> feature enabled.
->
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/kernel/Makefile | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index ba89cabe5fcf..1192de38fa56 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -35,6 +35,10 @@ ifdef CONFIG_FRAME_POINTER
->  OBJECT_FILES_NON_STANDARD_ftrace_$(BITS).o             := y
->  endif
->
-> +# make sure head64.c is built without stack protector
-> +nostackp := $(call cc-option, -fno-stack-protector)
-> +CFLAGS_head64.o                := $(nostackp)
-> +
->  # If instrumentation of this dir is enabled, boot hangs during first second.
->  # Probably could be more selective here, but note that files related to irqs,
->  # boot, dumpstack/stacktrace, etc are either non-interesting or can lead to
+On 2020-05-15 08:20, Rob Herring wrote:
+> On Thu, May 07, 2020 at 01:32:08PM +0530, Sarthak Garg wrote:
+>> Add information regarding DLL register properties for getting target
+>> specific configurations. These DLL register settings may vary from
+>> target to target.
+>> 
+>> Also new compatible string value for sm8250 target.
+>> 
+>> Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 14 
+>> ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt 
+>> b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> index 5445931..b8e1d2b 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> @@ -17,6 +17,7 @@ Required properties:
+>>  		"qcom,msm8916-sdhci", "qcom,sdhci-msm-v4"
+>>  		"qcom,msm8992-sdhci", "qcom,sdhci-msm-v4"
+>>  		"qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
+>> +		"qcom,sm8250-sdhci", "qcom,sdhci-msm-v5"
+>>  		"qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
+>>  		"qcom,qcs404-sdhci", "qcom,sdhci-msm-v5"
+>>  		"qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+>> @@ -46,6 +47,13 @@ Required properties:
+>>  	"cal"	- reference clock for RCLK delay calibration (optional)
+>>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>> 
+>> +- qcom,ddr-config: Certain chipsets and platforms require particular 
+>> settings
+>> +	for the DDR_CONFIG register. Use this field to specify the register
+>> +	value as per the Hardware Programming Guide.
+>> +
+>> +- qcom,dll-config: Chipset and Platform specific value. Use this 
+>> field to
+>> +	specify the DLL_CONFIG register value as per Hardware Programming 
+>> Guide.
+> 
+> Board specific or SoC specific? If the latter, imply this from the
+> compatible string.
 
-The proper fix would be to initialize MSR_GS_BASE earlier.
-
---
-Brian Gerst
+Reposting again as can't find my comment on the 
+https://patchwork.kernel.org/ page.
+Whatever DLL settings are SOC specific are being taken care with the 
+compatible string.
+That is the reason we introduced qcom,sm8250-sdhci string.
+The above listed two configuration can change from board to board 
+as-well.
