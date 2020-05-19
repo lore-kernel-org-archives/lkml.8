@@ -2,175 +2,91 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E45AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 949D1207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:58:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O59a8tWI"
+	by mail.kernel.org (Postfix) with ESMTP id 751212075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589871767;
+	bh=e6I5AOn+MQNsuOpreKE6NJenPK7FVfv6kOvYka10ELY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=X/+T2rka9/GNDckaiBIiBWVT1p08If6paXpl8MasmKVYomeJD0nrkLL6d42oLxWXh
+	 tNSbrtqB1n+Jh/NTVGcYofdlcxd3MqGTWdCe5bl9Yathv/odG/yjRer6EHlaF3Pamk
+	 u6ixpu5PL/kvFdjf1GDlrEhYFRixUmutNlZtCHKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgESG6m (ORCPT
+        id S1728353AbgESHCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 02:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgESG6l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 02:58:41 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF962C061A0C;
-        Mon, 18 May 2020 23:58:40 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e16so14534134wra.7;
-        Mon, 18 May 2020 23:58:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VDmyzrySD4Ps31eGi/jgnHCXsN6EThrf0g6khOYg/JA=;
-        b=O59a8tWIvaWSO7HtdqtunTf7+/K5LaFq+VdCrxMS6b53oKh0BLDN5J59TBRs/d8Kdf
-         JCLzm73uJz38sMPsWJP7eZSlaGPV9b7Q0OvjdUloCD/y0Ezt3lAhMJADf3jYvoea2ENx
-         ctzn791eqzvOIXTuPVy1JSRsj25fuoJK9DMms6zJ9cwC2J2U+HLlCrntW66DvOB5HJfv
-         fEwZSQcRskrh0AD1TAk1H3bcP5vwKyySbD5zromoFzBHKj/ZUosrvpZnDDTHujWi+OQR
-         2ag6R4CAWOMNM93cUOx+zyRS5JdMDrFrhf0liWG0uJOpoWvKXGS3Ml7VjBARRqaTlvvg
-         GIOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VDmyzrySD4Ps31eGi/jgnHCXsN6EThrf0g6khOYg/JA=;
-        b=aWvVTj5vxXfW9EKigobvzOehmJUfhB1o+B/mTaRtemcFu3v1QXdI1xCiLsZtP/K1Ny
-         OmLrCpg/czj+vO1V3los4W9QtCzutJ97HpEWcYQ3Bx3lqT5BdD0f92jkuDNYvfrRG1rZ
-         zNptYypWkSfsUnBUgkpihARG88eAlxPQfpuY+WU5Ie+EMOuhYs9nlo7HdR0hx3Q9QkS8
-         aLDxGs/SWzwdOlZaocQp5bFL16X2cuhMQZyx4vvBu8F2mPs9kLUs6hDBlyUVIMr3SZV9
-         LFf+Z9Vr4w9ml3i/IhS1CxFMptWwlV9hoaPIWAEOfEof8xxg1dG1Bz/X7lubL1QMlKUf
-         Tu6w==
-X-Gm-Message-State: AOAM532GCR4xuWGzxGsYW2SCRmj3HIXcZaL4DDIunM52QQTe2AVIG4Tr
-        SyZdTh25yhl6RuYJ1xqafLAnY6TayvsGGg==
-X-Google-Smtp-Source: ABdhPJwwRa+ZKzjAn8nODGSc7yyEzdFyLKC/+Nuye0maZqgeufwZYQnzOfJck2YEm1F2QAz/G5bdDQ==
-X-Received: by 2002:adf:f783:: with SMTP id q3mr23694885wrp.348.1589871519170;
-        Mon, 18 May 2020 23:58:39 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id p7sm2597550wmc.24.2020.05.18.23.58.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 23:58:38 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>
-Subject: [PATCH v2 3/3] iio: magnetometer: ak8975: Add gpio reset support
-Date:   Tue, 19 May 2020 08:57:43 +0200
-Message-Id: <20200519065749.4624-4-jonathan.albrieux@gmail.com>
+        Tue, 19 May 2020 03:02:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgESHCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 03:02:46 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.188])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B9D820758;
+        Tue, 19 May 2020 07:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589871766;
+        bh=e6I5AOn+MQNsuOpreKE6NJenPK7FVfv6kOvYka10ELY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=awQZp2nd6CFA2Y0PZyd0ULpBlUuqnu7eK33JFfn9BtF78mF9rD+k32PIIcnwjmdsW
+         t5QPJW4DEdCz2nIHkLQGAkmM0Ek6zPYdBZBWk3RY+KlTwOQqYewjMD8Rlkdvn+7O2H
+         i3Ehoe90lgSpEMQLKm6mYgrTKpL06AX3n75V10Cg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [GIT PULL] pinctrl: samsung: Stuff for v5.8
+Date:   Tue, 19 May 2020 09:02:40 +0200
+Message-Id: <20200519070240.6510-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
-References: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to AK09911 datasheet, if reset gpio is provided then 
-deassert reset on ak8975_power_on and assert reset on ak8975_power_off.
+Hi Linus,
 
-Without reset's deassertion during ak8975_power_on, driver's probe fails on
-ak8975_who_i_am while checking for device identity for AK09911 chip
+Minor updates for Samsung pinctrl drivers.
 
-AK09911 has an active low reset gpio to handle register's reset.
-AK09911 datasheed says that, if not used, reset pin should be connected
-to VID. This patch emulates this situation
+Best regards,
+Krzysztof
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
----
- drivers/iio/magnetometer/ak8975.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-index 3c881541ae72..84dea520db02 100644
---- a/drivers/iio/magnetometer/ak8975.c
-+++ b/drivers/iio/magnetometer/ak8975.c
-@@ -358,6 +358,7 @@ struct ak8975_data {
- 	u8			asa[3];
- 	long			raw_to_gauss[3];
- 	struct gpio_desc	*eoc_gpiod;
-+	struct gpio_desc	*reset_gpiod;
- 	int			eoc_irq;
- 	wait_queue_head_t	data_ready_queue;
- 	unsigned long		flags;
-@@ -384,10 +385,13 @@ static int ak8975_power_on(const struct ak8975_data *data)
- 			 "Failed to enable specified Vid supply\n");
- 		return ret;
- 	}
-+
-+	gpiod_set_value_cansleep(data->reset_gpiod, 0);
-+
- 	/*
--	 * According to the datasheet the power supply rise time i 200us
-+	 * According to the datasheet the power supply rise time is 200us
- 	 * and the minimum wait time before mode setting is 100us, in
--	 * total 300 us. Add some margin and say minimum 500us here.
-+	 * total 300us. Add some margin and say minimum 500us here.
- 	 */
- 	usleep_range(500, 1000);
- 	return 0;
-@@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
- /* Disable attached power regulator if any. */
- static void ak8975_power_off(const struct ak8975_data *data)
- {
-+	gpiod_set_value_cansleep(data->reset_gpiod, 1);
-+
- 	regulator_disable(data->vid);
- 	regulator_disable(data->vdd);
- }
-@@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
- 	struct ak8975_data *data;
- 	struct iio_dev *indio_dev;
- 	struct gpio_desc *eoc_gpiod;
-+	struct gpio_desc *reset_gpiod;
- 	const void *match;
- 	unsigned int i;
- 	int err;
-@@ -856,6 +863,16 @@ static int ak8975_probe(struct i2c_client *client,
- 	if (eoc_gpiod)
- 		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
- 
-+	/*
-+	 * According to AK09911 datasheet, if reset gpio is provided then
-+	 * deassert reset on ak8975_power_on and assert reset on
-+	 * ak8975_power_off.
-+	 */
-+	reset_gpiod = devm_gpiod_get_optional(&client->dev,
-+					      "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset_gpiod))
-+		return PTR_ERR(reset_gpiod);
-+
- 	/* Register with IIO */
- 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
- 	if (indio_dev == NULL)
-@@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
- 
- 	data->client = client;
- 	data->eoc_gpiod = eoc_gpiod;
-+	data->reset_gpiod = reset_gpiod;
- 	data->eoc_irq = 0;
- 
- 	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
--- 
-2.17.1
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-5.8
+
+for you to fetch changes up to f354157a7d184db430c1a564c506434e33b1bec5:
+
+  pinctrl: samsung: Save/restore eint_mask over suspend for EINT_TYPE GPIOs (2020-04-28 11:38:11 +0200)
+
+----------------------------------------------------------------
+Samsung pinctrl drivers changes for v5.8
+
+Two fixes for S5Pv210 pinctrl driver: setting proper external interrupt
+wakeup mask and restoring external interrupt mask value after system
+suspend.
+
+----------------------------------------------------------------
+Jonathan Bakker (2):
+      pinctrl: samsung: Correct setting of eint wakeup mask on s5pv210
+      pinctrl: samsung: Save/restore eint_mask over suspend for EINT_TYPE GPIOs
+
+ drivers/pinctrl/samsung/pinctrl-exynos.c | 82 ++++++++++++++++++++++----------
+ 1 file changed, 58 insertions(+), 24 deletions(-)
