@@ -2,124 +2,180 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8198C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A703FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA5DE20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:41:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PMA9Tx9c"
+	by mail.kernel.org (Postfix) with ESMTP id 8BB3D206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgESBlU (ORCPT
+        id S1726979AbgESBuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 21:41:20 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59318 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgESBlU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 21:41:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04J1b4i9034179;
-        Tue, 19 May 2020 01:41:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=jDTS7w/xwyzUFP6HaV5XTmjtQADYCYpRZiMlLiAahBw=;
- b=PMA9Tx9cG94UVxWndPtEg8PAYpSxLH2k2EFCpgLWmeQRQWJNBun3LKBnoD/lhuOlLSDn
- h1iuRi1a8U+5tvzo0PXeCFicxkinng7aJSeQSQNVpEKyvSbH+yHxxSRTnauR25ufnZmG
- ZB40fiUhDLAqA1gCoA+enMnDWrJ4X9p1i+OG2A20rLwZdjO1wVb21UwAZxoV+r8TpI/w
- xz4CjEKlCMDKe4DR53ak8CjuJOhIDskOB7RYcPaS814tSvmYFKJcwix4XnGwb+vPhUXm
- ABUnrAKDcBevi9/xQJXIebe6dEQIP1dpNoB/9Qn+v2j8QIGmuTHv2nH1EXGeil1ViUN8 xg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3127kr2a33-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 01:41:09 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04J1cM7i056366;
-        Tue, 19 May 2020 01:39:09 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 312t3wtqtf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 May 2020 01:39:09 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04J1d740026790;
-        Tue, 19 May 2020 01:39:07 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 May 2020 18:39:07 -0700
-Date:   Mon, 18 May 2020 21:39:30 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH] swap: Add percpu cluster_next to reduce lock contention
- on swap cache
-Message-ID: <20200519013930.zofr6iv6p5rk7kxm@ca-dmjordan1.us.oracle.com>
-References: <20200514070424.16017-1-ying.huang@intel.com>
- <20200515235140.xkznql332xmqvuf2@ca-dmjordan1.us.oracle.com>
- <87zha5kauc.fsf@yhuang-dev.intel.com>
+        Mon, 18 May 2020 21:50:12 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49988 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726285AbgESBuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 21:50:11 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8ECD523AA1AC6E274294;
+        Tue, 19 May 2020 09:50:08 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.101) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 19 May 2020
+ 09:50:04 +0800
+Subject: Re: [PATCH v2 20/20] cpufreq: Return zero on success in boost sw
+ setting
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Matthias Kaehlcke" <mka@chromium.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rob Herring" <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Ingo Molnar" <mingo@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200518102415.k4c5qglodij5ac6h@vireshk-i7>
+ <20200518103102.t3a3g4uxeeuwsnix@mobilestation> <5284478.EF2IWm2iUs@kreacher>
+ <20200518104602.mjh2p5iltf2x4wmq@mobilestation>
+ <CAJZ5v0imYcL3M80S1snJAqXQ=GsqbChij-6aWx=4L02TKVvrQg@mail.gmail.com>
+ <20200518105649.gcv22l253lsuje7y@mobilestation>
+ <CAJZ5v0juP6bsB9TRcned4nTQ=yFEOU5J2M7tt2bokYSYgoPPEg@mail.gmail.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <ecd64955-6d76-d50e-f589-45ab51d10e4b@huawei.com>
+Date:   Tue, 19 May 2020 09:50:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zha5kauc.fsf@yhuang-dev.intel.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
- phishscore=0 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005190013
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9625 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005190013
+In-Reply-To: <CAJZ5v0juP6bsB9TRcned4nTQ=yFEOU5J2M7tt2bokYSYgoPPEg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.101]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 02:37:15PM +0800, Huang, Ying wrote:
-> Daniel Jordan <daniel.m.jordan@oracle.com> writes:
-> > On Thu, May 14, 2020 at 03:04:24PM +0800, Huang Ying wrote:
-> >> And the pmbench score increases 15.9%.
-> >
-> > What metric is that, and how long did you run the benchmark for?
+Hi Rafael,
+
+On 2020/5/18 19:05, Rafael J. Wysocki wrote:
+> On Mon, May 18, 2020 at 12:56 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+>>
+>> On Mon, May 18, 2020 at 12:51:15PM +0200, Rafael J. Wysocki wrote:
+>>> On Mon, May 18, 2020 at 12:46 PM Serge Semin
+>>> <Sergey.Semin@baikalelectronics.ru> wrote:
+>>>>
+>>>> On Mon, May 18, 2020 at 12:41:19PM +0200, Rafael J. Wysocki wrote:
+>>>>> On Monday, May 18, 2020 12:31:02 PM CEST Serge Semin wrote:
+>>>>>> On Mon, May 18, 2020 at 03:54:15PM +0530, Viresh Kumar wrote:
+>>>>>>> On 18-05-20, 12:22, Rafael J. Wysocki wrote:
+>>>>>>>> On Monday, May 18, 2020 12:11:09 PM CEST Viresh Kumar wrote:
+>>>>>>>>> On 18-05-20, 11:53, Rafael J. Wysocki wrote:
+>>>>>>>>>> That said if you really only want it to return 0 on success, you may as well
+>>>>>>>>>> add a ret = 0; statement (with a comment explaining why it is needed) after
+>>>>>>>>>> the last break in the loop.
+>>>>>>>>>
+>>>>>>>>> That can be done as well, but will be a bit less efficient as the loop
+>>>>>>>>> will execute once for each policy, and so the statement will run
+>>>>>>>>> multiple times. Though it isn't going to add any significant latency
+>>>>>>>>> in the code.
+>>>>>>>>
+>>>>>>>> Right.
+>>>>>>>>
+>>>>>>>> However, the logic in this entire function looks somewhat less than
+>>>>>>>> straightforward to me, because it looks like it should return an
+>>>>>>>> error on the first policy without a frequency table (having a frequency
+>>>>>>>> table depends on the driver and that is the same for all policies, so it
+>>>>>>>> is pointless to iterate any further in that case).
+>>>>>>>>
+>>>>>>>> Also, the error should not be -EINVAL, because that means "invalid
+>>>>>>>> argument" which would be the state value.
+>>>>>>>>
+>>>>>>>> So I would do something like this:
+>>>>>>>>
+>>>>>>>> ---
+>>>>>>>>  drivers/cpufreq/cpufreq.c |   11 ++++++-----
+>>>>>>>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>>>>>>>
+>>>>>>>> Index: linux-pm/drivers/cpufreq/cpufreq.c
+>>>>>>>> ===================================================================
+>>>>>>>> --- linux-pm.orig/drivers/cpufreq/cpufreq.c
+>>>>>>>> +++ linux-pm/drivers/cpufreq/cpufreq.c
+>>>>>>>> @@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
+>>>>>>>>  static int cpufreq_boost_set_sw(int state)
+>>>>>>>>  {
+>>>>>>>>         struct cpufreq_policy *policy;
+>>>>>>>> -       int ret = -EINVAL;
+>>>>>>>>
+>>>>>>>>         for_each_active_policy(policy) {
+>>>>>>>> +               int ret;
+>>>>>>>> +
+>>>>>>>>                 if (!policy->freq_table)
+>>>>>>>> -                       continue;
+>>>>>>>> +                       return -ENXIO;
+>>>>>>>>
+>>>>>>>>                 ret = cpufreq_frequency_table_cpuinfo(policy,
+>>>>>>>>                                                       policy->freq_table);
+>>>>>>>>                 if (ret) {
+>>>>>>>>                         pr_err("%s: Policy frequency update failed\n",
+>>>>>>>>                                __func__);
+>>>>>>>> -                       break;
+>>>>>>>> +                       return ret;
+>>>>>>>>                 }
+>>>>>>>>
+>>>>>>>>                 ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+>>>>>>>>                 if (ret < 0)
+>>>>>>>> -                       break;
+>>>>>>>> +                       return ret;
+>>>>>>>>         }
+>>>>>>>>
+>>>>>>>> -       return ret;
+>>>>>>>> +       return 0;
+>>>>>>>>  }
+>>>>>>>>
+>>>>>>>>  int cpufreq_boost_trigger_state(int state)
+>>>>>>>
+>>>>>>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>>>>>>
+>>>>>> Ok. Thanks for the comments. Shall I resend the patch with update Rafael
+>>>>>> suggests or you'll merge the Rafael's fix in yourself?
+>>>>>
+>>>>> I'll apply the fix directly, thanks!
+>>>>
+>>>> Great. Is it going to be available in the repo:
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/
+>>>> ?
+>>>
+>>> Yes, it is.  Please see the bleeding-edge branch in there, thanks!
+
+Thanks for CCing me. I will write my next version based on this branch.
+
+Thanks,
+Xiongfeng
+
+>>
+>> No credits with at least Reported-by tag? That's sad.(
 > 
-> I run the benchmark for 1800s.  The metric comes from the following
-> output of the pmbench,
+> OK, done now, but you are not the only reported of it, so I've added
+> the other reporter too.
 > 
-> [1] Benchmark done - took 1800.088 sec for 122910000 page access
+> Thanks!
 > 
-> That is, the throughput is 122910000 / 1800.088 = 68280.0 (accesses/s).
-> Then we sum the values from the different processes.
-
-Ok.
-
-> > It's just a nit but SWP_SOLIDSTATE and 'if (si->cluster_info)' are two ways to
-> > check the same thing and I'd stick with the one that's already there.
+> .
 > 
-> Yes.  In effect, (si->flags & SWP_SOLIDSTATE) and (si->cluster_info)
-> always has same value at least for now.  But I don't think they are
-> exactly same in semantics.  So I would rather to use their exact
-> semantics.
 
-Oh, but I thought the swap clusters were for scaling the locking for fast
-devices, so that both checks have the same semantics now, and presumably would
-in the future.
-
-It's a minor point, I'm fine either way.
-
-> The first swap slot is the swap partition header, you cand find the
-> corresponding code in syscall swapon function, below comments "Read the
-
-Aha, thanks.
