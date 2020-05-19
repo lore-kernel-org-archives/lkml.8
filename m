@@ -2,213 +2,111 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17901C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E584C20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA122075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="UaafkKkH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a8wAg21X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgESDmI (ORCPT
+        id S1728198AbgESDmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:42:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40526 "EHLO
+        Mon, 18 May 2020 23:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgESDmH (ORCPT
+        with ESMTP id S1726532AbgESDmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:42:07 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671C2C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:42:07 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id z15so689824pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:42:07 -0700 (PDT)
+        Mon, 18 May 2020 23:42:18 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0BA7C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:42:18 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id m7so5068307plt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hz7q0UBXblJmlQ0Hl2W6faDSP3NssHAPx2k9KjAeicQ=;
-        b=UaafkKkHB3bn3XLmoTmBUZU5KegPGb7yPErquAgEVbCgBiU8D0JlUwxA9Am5kigVvK
-         uBTdGmdTtfbsCVP+wq0fCu1+wLTzqGFKO6Rh2UeoZ90q6suAEKpdWGrXbTeqnVFK6lQB
-         FQRmAFHVGjQ3yn5ASlot6syu4Ptyt0CjwwWTb3SKvRh6kd82uHPIjd++kgMcaD56bIdl
-         RxY6u4dLxCtoK6Db3tcqvaqcmer5Nyt63Km/jayiGjOxGe2CVMPQ1BveHUtBKunf7n0h
-         fGAAQI85he6V5bURxKkDgJAqM8kmkKtAGoiu0S3V6e3BRzBGE0jiJoCL/UxBRbmKdyKi
-         1u2A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4/BjPGQWQmiJ9ENgCFkWCpYAZ2ZRvlC05U7wmeNA1ao=;
+        b=a8wAg21X8NCDhYNS/otY351xeR+5EHERz5A1QQV+Y7Ypl2ERVeF248y/SiArtHRjr2
+         H/P89hcSwePhQAdmEt1SkBWRbl+K3UcfL+Po1sgtCSBN4y/tMU06zJb5hED6nwWPy6ux
+         WWQeswadJiLmzE+BkPQJf/JTBfFDs5PcV/QGvQ1/IxFA+xa+WHfVj2cePEkKbZKqQEPu
+         6nwZV97ZFVqikdwmG3HKjYDHvtGG/9qWHHovZDwyf3UTv3tRdol7DxzvcxyifdIUuCIZ
+         HqBNGnb1+W3qbYdGeO1SAYUxvybcNDqTpf/PZsEoHn0nrv+UcK3g5QSBXf250lrjQ9Ee
+         ACNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hz7q0UBXblJmlQ0Hl2W6faDSP3NssHAPx2k9KjAeicQ=;
-        b=FxQBFPFe4kbQy18qDLXMpuKiFE/lwgcxFyE+t24Syj5YutZAhk5R39RE0A28WkYQfw
-         Jgnlt7KixvuRiqZo+N5BW8Ri/PFdZr1h9KYXvwHufNo5GzbKK0s920p+vyexbkAGamf6
-         YsnrXEwvluZUgRFmnreLkQHMzX7hHu5/g138zi4SVZsUhgKH1jV0Wiy8V0bXtex3v9zB
-         lESfDEcAuGlrm9p4YP6prUmXNWNxBKdyTlfxP0pMHouenp/Div1df/nAs54rePXBPv2J
-         MCWIUg+Jz1ZtlwfOntPBA2qMc04v7Cs7MJ+MPmpKHyydAIFrg5Czavr8f8ZGQkCjY4TQ
-         D9OQ==
-X-Gm-Message-State: AOAM532L5v6o/ceNRRB9iG96F0TolgOyguQzaiy6XPMKVSTG0I9qMuOf
-        FonMefw2i2A7SguwFHt0NvzRANzljJvttg==
-X-Google-Smtp-Source: ABdhPJz0IdEJZwszdGYcpyvCUZEq/Vy7gmVpIPeErXvXC9hONhg5CBbhkxozisfGyPcrnbQxxSLWuQ==
-X-Received: by 2002:a17:90a:fb96:: with SMTP id cp22mr2816190pjb.201.1589859726950;
-        Mon, 18 May 2020 20:42:06 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id 188sm9832256pfg.218.2020.05.18.20.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 20:42:06 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH 1/1] riscv: sort select statements alphanumerically
-Date:   Tue, 19 May 2020 11:42:04 +0800
-Message-Id: <0609f8f0c0c7182fda08fc395161ec11309c63fb.1589859647.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4/BjPGQWQmiJ9ENgCFkWCpYAZ2ZRvlC05U7wmeNA1ao=;
+        b=qeMB3+vrHiZr5qmpSmi1gN0q2oguOjvxDQlXFUoeyUzR9ck3cGUusv2PfomM81xJWR
+         PSp+ePrVWBekZvZn6yZ7BawKYjhfAtkpxCyH/WZu2fIxdtaJ1x2553vjeMWpmhwZIwkV
+         50aTk+tca+l0xLamt1trCWpXegoi6KXPIjzrCqS7NHIr6I8PzO8tkBEOy71Ur2H2OVu3
+         Ptmc0CSFufAGEfsyoREhr00N7Nu4hIz/KGhTCMsGYOg72MFtJdsViptspXGvdkvwlAvy
+         Q8Xvt3tp1p1Ns5iucPP1D3529JOdUrL96V0c5iMxilntcZ83IUg1eoXXYp6SRjUrENWX
+         pYGw==
+X-Gm-Message-State: AOAM533rFrgf6fVuQVZuF3CAo/CUDJ+NxiOqMbUxd5lg7od3mXATV8LO
+        Tv9mSjxd7kEGogI4CGKUaIeegQ==
+X-Google-Smtp-Source: ABdhPJxQvr/vGk96BcQAIlKBPRTaAWbkdoqMBIawp8ZTutAuzE7F1lZMEO0quqnXBxyiSkx6DWM3mg==
+X-Received: by 2002:a17:902:c254:: with SMTP id 20mr6018967plg.287.1589859738182;
+        Mon, 18 May 2020 20:42:18 -0700 (PDT)
+Received: from localhost ([122.167.130.103])
+        by smtp.gmail.com with ESMTPSA id j124sm4337974pfd.116.2020.05.18.20.42.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 May 2020 20:42:17 -0700 (PDT)
+Date:   Tue, 19 May 2020 09:12:15 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH] interconnect: Disallow interconnect core to be built as
+ a module
+Message-ID: <20200519034215.zr3gvrsokstxh2bs@vireshk-i7>
+References: <b789cce388dd1f2906492f307dea6780c398bc6a.1567065991.git.viresh.kumar@linaro.org>
+ <CAOCOHw4ri6ikRpkJWtAdaPQiMhdKMrdNciqQ8YNaXR+ApSnAew@mail.gmail.com>
+ <66c3d470-48e2-619a-dd95-6064a85161e0@linaro.org>
+ <20200515071152.GA1274556@kroah.com>
+ <20200518184010.GF2165@builder.lan>
+ <20200519033101.fi6oa4xjchdzafi3@vireshk-i7>
+ <20200519033703.GX2165@builder.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519033703.GX2165@builder.lan>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like patch b1b3f49 ("ARM: config: sort select statements alphanumerically")
-, we sort all our select statements alphanumerically by using the perl
-script in patch b1b3f49 as above.
+On 18-05-20, 20:37, Bjorn Andersson wrote:
+> On Mon 18 May 20:31 PDT 2020, Viresh Kumar wrote:
+> 
+> > On 18-05-20, 11:40, Bjorn Andersson wrote:
+> > > It most certainly does.
+> > > 
+> > > With INTERCONNECT as a bool we can handle its absence with stub
+> > > functions - like every other framework does. But as a tristate then
+> > > every driver with a call to the interconnect api needs an entry in
+> > > Kconfig to ensure the client driver must be a module if the interconnect
+> > > framework is.
+> > 
+> > This patch has been pushed to linux-next a few days back.
+> > 
+> 
+> Thanks Viresh, I had missed that.
 
-As suggested by Andrew Morton:
+Not your fault, we didn't resend it but simply applied the old version
+itself :)
 
-  This is a pet peeve of mine.  Any time there's a long list of items
-  (header file inclusions, kconfig entries, array initalisers, etc) and
-  someone wants to add a new item, they *always* go and stick it at the
-  end of the list.
-
-  Guys, don't do this.  Either put the new item into a randomly-chosen
-  position or, probably better, alphanumerically sort the list.
-
-Signed-off-by: Zong Li <zong.li@sifive.com>
----
- arch/riscv/Kconfig | 70 +++++++++++++++++++++++-----------------------
- 1 file changed, 35 insertions(+), 35 deletions(-)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 74ce5c5249e9..8244b8f7e7c3 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -12,64 +12,64 @@ config 32BIT
- 
- config RISCV
- 	def_bool y
--	select OF
--	select OF_EARLY_FLATTREE
--	select OF_IRQ
- 	select ARCH_HAS_BINFMT_FLAT
-+	select ARCH_HAS_DEBUG_VIRTUAL if MMU
-+	select ARCH_HAS_DEBUG_WX
-+	select ARCH_HAS_GCOV_PROFILE_ALL
-+	select ARCH_HAS_GIGANTIC_PAGE
-+	select ARCH_HAS_MMIOWB
-+	select ARCH_HAS_PTE_SPECIAL
-+	select ARCH_HAS_SET_DIRECT_MAP
-+	select ARCH_HAS_SET_MEMORY
-+	select ARCH_HAS_STRICT_KERNEL_RWX if MMU
-+	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
- 	select ARCH_WANT_FRAME_POINTERS
-+	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
- 	select CLONE_BACKWARDS
- 	select COMMON_CLK
-+	select EDAC_SUPPORT
-+	select GENERIC_ARCH_TOPOLOGY if SMP
-+	select GENERIC_ATOMIC64 if !64BIT
- 	select GENERIC_CLOCKEVENTS
-+	select GENERIC_IOREMAP
-+	select GENERIC_IRQ_MULTI_HANDLER
- 	select GENERIC_IRQ_SHOW
- 	select GENERIC_PCI_IOMAP
-+	select GENERIC_PTDUMP if MMU
- 	select GENERIC_SCHED_CLOCK
-+	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_STRNCPY_FROM_USER if MMU
- 	select GENERIC_STRNLEN_USER if MMU
--	select GENERIC_SMP_IDLE_THREAD
--	select GENERIC_ATOMIC64 if !64BIT
--	select GENERIC_IOREMAP
--	select GENERIC_PTDUMP if MMU
- 	select HAVE_ARCH_AUDITSYSCALL
-+	select HAVE_ARCH_KASAN if MMU && 64BIT
-+	select HAVE_ARCH_KGDB
-+	select HAVE_ARCH_KGDB_QXFER_PKT
-+	select HAVE_ARCH_MMAP_RND_BITS if MMU
- 	select HAVE_ARCH_SECCOMP_FILTER
-+	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_ASM_MODVERSIONS
-+	select HAVE_COPY_THREAD_TLS
- 	select HAVE_DMA_CONTIGUOUS if MMU
-+	select HAVE_EBPF_JIT if MMU
- 	select HAVE_FUTEX_CMPXCHG if FUTEX
-+	select HAVE_PCI
- 	select HAVE_PERF_EVENTS
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select IRQ_DOMAIN
--	select SPARSE_IRQ
--	select SYSCTL_EXCEPTION_TRACE
--	select HAVE_ARCH_TRACEHOOK
--	select HAVE_PCI
- 	select MODULES_USE_ELF_RELA if MODULES
- 	select MODULE_SECTIONS if MODULES
--	select THREAD_INFO_IN_TASK
-+	select OF
-+	select OF_EARLY_FLATTREE
-+	select OF_IRQ
- 	select PCI_DOMAINS_GENERIC if PCI
- 	select PCI_MSI if PCI
- 	select RISCV_TIMER
--	select GENERIC_IRQ_MULTI_HANDLER
--	select GENERIC_ARCH_TOPOLOGY if SMP
--	select ARCH_HAS_PTE_SPECIAL
--	select ARCH_HAS_MMIOWB
--	select ARCH_HAS_DEBUG_VIRTUAL if MMU
--	select HAVE_EBPF_JIT if MMU
--	select EDAC_SUPPORT
--	select ARCH_HAS_GIGANTIC_PAGE
--	select ARCH_HAS_SET_DIRECT_MAP
--	select ARCH_HAS_SET_MEMORY
--	select ARCH_HAS_STRICT_KERNEL_RWX if MMU
--	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
- 	select SPARSEMEM_STATIC if 32BIT
--	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
--	select HAVE_ARCH_MMAP_RND_BITS if MMU
--	select ARCH_HAS_GCOV_PROFILE_ALL
--	select HAVE_COPY_THREAD_TLS
--	select HAVE_ARCH_KASAN if MMU && 64BIT
--	select HAVE_ARCH_KGDB
--	select HAVE_ARCH_KGDB_QXFER_PKT
--	select ARCH_HAS_DEBUG_WX
-+	select SPARSE_IRQ
-+	select SYSCTL_EXCEPTION_TRACE
-+	select THREAD_INFO_IN_TASK
- 
- config ARCH_MMAP_RND_BITS_MIN
- 	default 18 if 64BIT
-@@ -196,11 +196,11 @@ config ARCH_RV64I
- 	bool "RV64I"
- 	select 64BIT
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && GCC_VERSION >= 50000
--	select HAVE_FUNCTION_TRACER
--	select HAVE_FUNCTION_GRAPH_TRACER
--	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_DYNAMIC_FTRACE if MMU
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
-+	select HAVE_FTRACE_MCOUNT_RECORD
-+	select HAVE_FUNCTION_GRAPH_TRACER
-+	select HAVE_FUNCTION_TRACER
- 	select SWIOTLB if MMU
- 
- endchoice
 -- 
-2.26.2
-
+viresh
