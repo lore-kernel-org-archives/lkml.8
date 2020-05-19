@@ -2,123 +2,150 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE962C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8804C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 882A7207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YYwqJC50"
+	by mail.kernel.org (Postfix) with ESMTP id C056D207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgESHna (ORCPT
+        id S1728493AbgESHog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 03:43:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48124 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725996AbgESHna (ORCPT
+        Tue, 19 May 2020 03:44:36 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:59159 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgESHof (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 03:43:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589874208;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aSV85razz1Rc4JqqUlLx4UQgTj6rcAUYgNELv+Wensw=;
-        b=YYwqJC504kOMfGSoQdCxpuzK4FOJdEAHrSghnUsiwu5gzZwSKu4xJj0qjYPXkfDa94LB94
-        hD9uF0seqZmWsRLA7yPMt7tDQNQrdeYE10mL4R8u1YXJrSe+jTKD3JCk5o4767GFW+6YHn
-        h3f2BeF460By9zbz94f5XiTUtMpKJBk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-7ykAGuTqP_S9i88RA2Y9Pw-1; Tue, 19 May 2020 03:43:24 -0400
-X-MC-Unique: 7ykAGuTqP_S9i88RA2Y9Pw-1
-Received: by mail-wr1-f72.google.com with SMTP id r7so6860722wrc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:43:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aSV85razz1Rc4JqqUlLx4UQgTj6rcAUYgNELv+Wensw=;
-        b=odkgbBJzpNP62rDUkigOLhHtFxUV4K791jEqaAZBPwrfrDQlMnkSf3hwtb0o2XVm+/
-         /708W+vkABjwRBByPUe6m/0zFq7BZncwsun7BFO8x+CwDOGNq4ZnMBP+JqNOP4LfNQ1d
-         ri+GtG09H0/J4A1yu7druUL+J/hMSKIf7omD0dBIcgJBJ0ueK0fafmPde6zbML4zXg5d
-         1MXXyxK+pNZi2rooJOCWnFE3hQtExexGQP0SzdIyACNLF8KgqrmKXVn5uFfOjuSgk+1w
-         0V9f8OcLXUTL7wEpTkjHeWTNMqlYoohi4s1uxIIah/b3+BeHASKqSjaQrbOxpEhW6zEI
-         XTSg==
-X-Gm-Message-State: AOAM531XB+0diBLwdoq5m3JSB3MTogIITIqYrI7faz+2rxVLvAVTqPR6
-        +AQqV+Y+YJiZPViIBFN0WF6gFzD/d7YZ7YbGMSNT6TKnba74ejEmvhpHnaf7CVWHbCzmMSpYUGY
-        avXFjBaPqzibGCT+lNz04fAm8
-X-Received: by 2002:a1c:7212:: with SMTP id n18mr4098581wmc.129.1589874203202;
-        Tue, 19 May 2020 00:43:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx8GRjgb3f8R3kAm3Heb975rE9BxAKC8bK/LvdYYJYtF6FtCJi2JJlcLHOiftg/zz7TPwK3Gw==
-X-Received: by 2002:a1c:7212:: with SMTP id n18mr4098544wmc.129.1589874202866;
-        Tue, 19 May 2020 00:43:22 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:80b4:c788:c2c5:81c2? ([2001:b07:6468:f312:80b4:c788:c2c5:81c2])
-        by smtp.gmail.com with ESMTPSA id b12sm2845053wmj.0.2020.05.19.00.43.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 00:43:22 -0700 (PDT)
-Subject: Re: [PATCH] KVM: x86: emulate reserved nops from 0f/18 to 0f/1f
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20200515161919.29249-1-pbonzini@redhat.com>
- <20200518160720.GB3632@linux.intel.com>
- <57d9da9b-00ec-3fe0-c69a-f7f00c68a90d@redhat.com>
- <20200519060156.GB4387@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <60c2c33c-a316-86d2-118a-96b9f4770559@redhat.com>
-Date:   Tue, 19 May 2020 09:43:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 19 May 2020 03:44:35 -0400
+Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MxUfn-1iqQ1I28BV-00xpvI; Tue, 19 May 2020 09:44:33 +0200
+Received: by mail-qv1-f49.google.com with SMTP id ee19so6026496qvb.11;
+        Tue, 19 May 2020 00:44:33 -0700 (PDT)
+X-Gm-Message-State: AOAM5305roy0Im1kbKAcS3unXyHZyJjp2IEZtTDOA+JJId05teJPiZMH
+        8FCzBJLnkMeimGWzbpT+fnMiwvFqPzXygRa+QE8=
+X-Google-Smtp-Source: ABdhPJyz5mXdtib6QAE28t5pFaGbx82ytbNPSngTpPa/9FO90GbqJW3zKmrtW+AkEiHWKR5n9g/tllAzh+eT59Lestw=
+X-Received: by 2002:a05:6214:905:: with SMTP id dj5mr19849870qvb.222.1589874272193;
+ Tue, 19 May 2020 00:44:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200519060156.GB4387@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200506060025.1535960-1-vkoul@kernel.org> <20200506060025.1535960-4-vkoul@kernel.org>
+ <CADYN=9JLeWHODRWDEcTE_6iZ3TX-E4yyx3OwqzK-H-ytLAmQUg@mail.gmail.com>
+ <20200518195719.GG374218@vkoul-mobl.Dlink> <CADYN=9+VuTwVk32hQXAAeDyErMn7D4Y+Gzdehy_=c8fBeU23jA@mail.gmail.com>
+ <20200519045336.GH374218@vkoul-mobl.Dlink>
+In-Reply-To: <20200519045336.GH374218@vkoul-mobl.Dlink>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 19 May 2020 09:44:15 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2CCwfXz8_p6zscuq21tCRZ_aHRZUa_9ov1b4sSqvL_aw@mail.gmail.com>
+Message-ID: <CAK8P3a2CCwfXz8_p6zscuq21tCRZ_aHRZUa_9ov1b4sSqvL_aw@mail.gmail.com>
+Subject: Re: [PATCH v13 3/5] usb: xhci: Add support for Renesas controller
+ with memory
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?Q?Andreas_B=C3=B6hler?= <dev@aboehler.at>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:zg0WXCVgxaVauGkuk7NHqfGuaMZjVr8VtN21yfQvU6wlcgxAYoU
+ IrDb3X/O+40U3VdeTv3sh7aqhR/5eWFkq2zhVJ4NSQubgHOU76OW+J5SV/CNu/YozRYh5/y
+ 3XFgY019wLB8saSTq91MFpaaFcdUvm6658zHcNkJ9MxNszyv9yQj8EKm2xmUlc5ZOO1Ul33
+ f+/FGSLwOZPT1ikA50j3g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gGlDoxcaACU=:hlVk4p4DmAe196w/U7j8KH
+ yks9CwDyLD9LbQpwylQYN3/whOLiuI5lvXI1DphTcuSFrxYcRVxcdOpnFUCxT/6sgxVazQiI+
+ YraDuYxXyc8Dsd0dsp3SBNsOkGM/tjpuvRsNjbRCQZHyfo5snf+P5Jp/6lcJsu5+jQy9/9v9x
+ DX4c5UV/YIN1SgoymEid8FT9SZ62ibc9jfeaBh9LguqXhgeUVToxxGH6dXMwnAm7OwtwcS7Wf
+ GitnTL9yNlluAlDCUktIUbIyEQfYO2sggqj6YOhtDUpK0/I1F06BO6piSn7IJXm+NCxrSegmE
+ oOmebHMlLpJ0anf8vflLehi8zriBTrcpzchxUjItULzZeeRcIVZb/BV/m3VQmpX8CmQ2TfNxN
+ Z8GS30iCbwk5c3VjMKZlPSH1nSaHug7Vk+X88ce3UL1A7jKNZJJFWDQJwc6atvxf6W5SUN0Ee
+ EiBTriOYGWPhJN1lLCt6qJRR3DXxoANu2r/WUVwjIp887GcKyBHAVLkk2V75CDfofFC/OTUgS
+ cUGgRTkpGXdiX6yeN83nu1lRsNGQLyQRihDFjglaes3Fw159feulBWO77+xDTQqmEKlZTvNw+
+ 5lJ/FA4bhQT/hJ1gS5/sy+W1KCnOTJU/kweEDGvmdsmrWxkT901R7D1+rxLs9KB5yBD3MGY3h
+ QTMWjg4+6q/nxD0cbP0N9RL5ZQ80CZ3YXITeuoWDr+IVpQnIw/fVimagkfw93xEpsUL/V3MKV
+ 5yTt2k/qZwAfVNwVR37u1fiP2Dv49hI7DfHuOLUZUrt/L/3nAsYV7rHnysHTmX8I0/8tVm9zq
+ ahxGreNWNEmY13jCSA5V5KSy001DCw4xx23EAQKnF1C6PuZSwU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/05/20 08:02, Sean Christopherson wrote:
-> On Mon, May 18, 2020 at 07:37:08PM +0200, Paolo Bonzini wrote:
->> On 18/05/20 18:07, Sean Christopherson wrote:
->>> On Fri, May 15, 2020 at 12:19:19PM -0400, Paolo Bonzini wrote:
->>>> Instructions starting with 0f18 up to 0f1f are reserved nops, except those
->>>> that were assigned to MPX.
->>> Well, they're probably reserved NOPs again :-D.
->>
->> So are you suggesting adding them back to the list as well?
-> 
-> Doesn't KVM still support MPX?
-> 
->>>> These include the endbr markers used by CET.
->>> And RDSPP.  Wouldn't it make sense to treat RDSPP as a #UD even though it's
->>> a NOP if CET is disabled?  The logic being that a sane guest will execute
->>> RDSSP iff CET is enabled, and in that case it'd be better to inject a #UD
->>> than to silently break the guest.
->>
->> We cannot assume that guests will bother checking CPUID before invoking
->> RDSPP.  This is especially true userspace, which needs to check if CET
->> is enable for itself and can only use RDSPP to do so.
-> 
-> Ugh, yeah, just read through the CET enabling thread that showed code snippets
-> that do exactly this.
-> 
-> I assume it would be best to make SHSTK dependent on unrestricted guest?
-> Emulating RDSPP by reading vmcs.GUEST_SSP seems pointless as it will become
-> statle apart on the first emulated CALL/RET.
+On Tue, May 19, 2020 at 6:53 AM Vinod Koul <vkoul@kernel.org> wrote:
+> On 19-05-20, 00:37, Anders Roxell wrote:
+> > On Mon, 18 May 2020 at 21:57, Vinod Koul <vkoul@kernel.org> wrote:
+> > > On 18-05-20, 19:53, Anders Roxell wrote:
+> > > > On Wed, 6 May 2020 at 08:01, Vinod Koul <vkoul@kernel.org> wrote:
+> > > > >
+> > > > > Some rensas controller like uPD720201 and uPD720202 need firmware to be
+> > > > > loaded. Add these devices in pci table and invoke renesas firmware loader
+> > > > > functions to check and load the firmware into device memory when
+> > > > > required.
+> > > > >
+> > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > >
+> > > > Hi, I got a build error when I built an arm64 allmodconfig kernel.
+> > >
+> > > Thanks for this. This is happening as we have default y for USB_XHCI_PCI
+> > > and then we make USB_XHCI_PCI_RENESAS=m. That should be not allowed as
+> > > we export as symbol so both can be inbuilt or modules but USB_XHCI_PCI=y
+> > > and USB_XHCI_PCI_RENESAS=m cant. While it is valid that USB_XHCI_PCI=y|m
+> > > and USB_XHCI_PCI_RENESAS=n
+> > >
+> > > So this seems to get fixed by below for me. I have tested with
+> > >  - both y and m (easy)
+> > >  - make USB_XHCI_PCI_RENESAS=n, USB_XHCI_PCI=y|m works
+> > >  - try making USB_XHCI_PCI=y and USB_XHCI_PCI_RENESAS=m, then
+> > >    USB_XHCI_PCI=m by kbuild :)
+> > >  - try making USB_XHCI_PCI=m and USB_XHCI_PCI_RENESAS=y, kbuild gives
+> > >    error prompt that it will be m due to depends
+> > >
+> > > Thanks to all the fixes done by Arnd which pointed me to this. Pls
+> > > verify
+> >
+> > I was able to build an arm64 allmodconfig kernel with this change.
+>
+> I will send the formal patch and add your name in reported and
+> tested. Thanks for the quick verification
 
-Running arbitrary code under the emulator is problematic anyway with
-CET, since you won't be checking ENDBR markers or updating the state
-machine.  So perhaps in addition to what you say we should have a mode
-where, unless unrestricted guest is disabled, the emulator only accepts
-I/O, MOV and ALU instructions.
+I just checked the patch and I think this will work correctly in all cases,
+but it still seems a bit backwards:
 
-Paolo
+> > > diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> > > index b5c542d6a1c5..92783d175b3f 100644
+> > > --- a/drivers/usb/host/Kconfig
+> > > +++ b/drivers/usb/host/Kconfig
+> > > @@ -40,11 +40,11 @@ config USB_XHCI_DBGCAP
+> > >  config USB_XHCI_PCI
+> > >         tristate
+> > >         depends on USB_PCI
+> > > +       depends on USB_XHCI_PCI_RENESAS || !USB_XHCI_PCI_RENESAS
+> > >         default y
+> > >
+> > >  config USB_XHCI_PCI_RENESAS
+> > >         tristate "Support for additional Renesas xHCI controller with firwmare"
+> > > -       depends on USB_XHCI_PCI
+> > >         ---help---
+> > >           Say 'Y' to enable the support for the Renesas xHCI controller with
+> > >           firwmare. Make sure you have the firwmare for the device and
+> > >
 
+I think it would have been better to follow the normal driver abstraction here
+and make the renesas xhci a specialized version of the xhci driver with
+its own platform_driver instance that calls into the generic xhci_pci module,
+rather than having the generic code treat it as a quirk.
+
+That would be more like how we handle all the ehci and ohci variants, though
+I'm not sure how exactly it would work with two drivers having pci_device_id
+tables with non-exclusive members. Presumably the generic driver would
+still have to know that it needs to fail its probe() function on devices that
+need the firmware.
+
+        Arnd
