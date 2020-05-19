@@ -2,109 +2,156 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E90C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B9B207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:01:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589889696;
-	bh=Qlm8SoqsLDcOC9wi24RYefzJ1mZnCn+8vEkJi2KRVJ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U1hnV00GFAUuTUnsmEa45yqBvpiKhZPrFRsz4vK8T3hgiQtC5kC+sE5qy3ljQlEQt
-	 5NnW8IqRVnrNT4C2cN8qpn8V3ogzHpH/tHEF0Uq0kJMJSTrruHdZv5jJOm3E4EYeQi
-	 sqwYWR9xNHOLKD9yBXNrENwaiicLQseuIuE6GXdc=
+	by mail.kernel.org (Postfix) with ESMTP id 99F8920825
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:05:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mS3x+eR5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgESMBg (ORCPT
+        id S1728785AbgESMF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:01:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbgESMBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:01:35 -0400
-Received: from localhost (unknown [122.182.207.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 460282072C;
-        Tue, 19 May 2020 12:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589889695;
-        bh=Qlm8SoqsLDcOC9wi24RYefzJ1mZnCn+8vEkJi2KRVJ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nM4goJouEui7NhAAqUybi6Dgp2NItjFAX393D8tDrZGHsOge9pU7Eb9NlDbyFhrwT
-         guh8qt79oLB7ah0c5WVTHzkxg/F52vbImhbrA76pRpOL3auSd4/yZ3VURrZ9i+Ghhi
-         ioyTpQa8BHmqfRX4hd3DJxhv1by/8AH7q2LpL/+k=
-Date:   Tue, 19 May 2020 17:31:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Christian Lamparter <chunkeey@googlemail.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 2/5] usb: renesas-xhci: Add the renesas xhci driver
-Message-ID: <20200519120130.GN374218@vkoul-mobl.Dlink>
-References: <20200506060025.1535960-1-vkoul@kernel.org>
- <20200506060025.1535960-3-vkoul@kernel.org>
- <20200519114528.GC1298122@kuha.fi.intel.com>
+        Tue, 19 May 2020 08:05:27 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:41807 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726949AbgESMF0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 08:05:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589889926; x=1621425926;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q+uMgkWii/Rp8nZstyK9Xz4jIR2voQK7J5e60BEVm4E=;
+  b=mS3x+eR5+4se2eSukVoJcXFJAhtcWMmjcBugA9jKg+sXkktXFHjaxgj1
+   xKJKxxi6+S+tAqpzEEeQDxQc48vTanf9PY6R+bp6ovArAjDdJYxQd30Qx
+   W/fNGh9SKSh6YOyFEDgms1jE7qbN0q5e3uxShOSUIIypu9PaUZrzMRvUm
+   JX7jcMJL7OJ4IyENCpnV0pm1iAJh0eneEdSwRsQAGbfC6eky4U15I+ikq
+   nQ/d9KXbfgbJ7IyNndzIDG0faRwnSmRKIeHd3npZ56FrXNekYs0PrGHZv
+   9+5H4drRWRaXK4UUgzAeVltbhPRy7Z4u/EbfQW0bS6HO4aPcZ7knjIz2t
+   w==;
+IronPort-SDR: RnaVAjoz7qlXYMO1U7Qf00Q1j9MjlGTJ5imBEoeQvtjHIpfDMXUeF8auplwCmIZVc3Kf61ZPrW
+ 7194go2GC/2b3tc8QV/pd+xedtcmeIiyBHKZcmiZ9lZ34WrUNApXEb4J2dEB1UWSCeiKMLjTS9
+ sFLtmAFWo9CiK+BITa8mB7Ka7lCPxPG50pqHKEUar6yR5l6L2VF2UWL1gGPUjhoDslBxMWqIho
+ EWs9ppZc7Yi+8JLhoT1SiMcuSSWFpdraxWoyDXOMjqCUQzaz/Sz+Es4OOBFoTrLAgnyEmQKbFl
+ o9s=
+X-IronPort-AV: E=Sophos;i="5.73,410,1583218800"; 
+   d="scan'208";a="73868962"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 May 2020 05:05:25 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 19 May 2020 05:05:26 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 19 May 2020 05:05:25 -0700
+Date:   Tue, 19 May 2020 14:05:19 +0200
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Mark Brown <broonie@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     SoC Team <soc@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>
+Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into
+ spi-dw-mchp
+Message-ID: <20200519120519.GE24801@soft-dev15.microsemi.net>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-6-lars.povlsen@microchip.com>
+ <20200513151811.GL4803@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200519114528.GC1298122@kuha.fi.intel.com>
+In-Reply-To: <20200513151811.GL4803@sirena.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heikki
-
-On 19-05-20, 14:45, Heikki Krogerus wrote:
-> Hi guys,
+On 13/05/20 16:18, Mark Brown wrote:
+> Date: Wed, 13 May 2020 16:18:11 +0100
+> From: Mark Brown <broonie@kernel.org>
+> To: Lars Povlsen <lars.povlsen@microchip.com>
+> Cc: SoC Team <soc@kernel.org>, Microchip Linux Driver Support
+>  <UNGLinuxDriver@microchip.com>, linux-spi@vger.kernel.org,
+>  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+>  linux-arm-kernel@lists.infradead.org, Alexandre Belloni
+>  <alexandre.belloni@bootlin.com>
+> Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into
+>  spi-dw-mchp
+> User-Agent: Mutt/1.10.1 (2018-07-13)
 > 
-> On Wed, May 06, 2020 at 11:30:22AM +0530, Vinod Koul wrote:
-> > From: Christian Lamparter <chunkeey@googlemail.com>
-> > 
-> > This add a new driver for renesas xhci which is basically a firmware
-> > loader for uPD720201 and uPD720202 w/o ROM. The xhci-pci driver will
-> > invoke this driver for loading/unloading on relevant devices.
-> > 
-> > This patch adds a firmware loader for the uPD720201K8-711-BAC-A
-> > and uPD720202K8-711-BAA-A variant. Both of these chips are listed
-> > in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
-> > devices which need the firmware loader on page 2 in order to
-> > work as they "do not support the External ROM".
-> > 
-> > The "Firmware Download Sequence" is describe in chapter
-> > "7.1 FW Download Interface" R19UH0078EJ0500 Rev.5.00 page 131.
-> > 
-> > The firmware "K2013080.mem" is available from a USB3.0 Host to
-> > PCIe Adapter (PP2U-E card) "Firmware download" archive. An
-> > alternative version can be sourced from Netgear's WNDR4700 GPL
-> > archives.
-> > 
-> > The release notes of the PP2U-E's "Firmware Download" ver 2.0.1.3
-> > (2012-06-15) state that the firmware is for the following devices:
-> >  - uPD720201 ES 2.0 sample whose revision ID is 2.
-> >  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
-> >  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
+> On Wed, May 13, 2020 at 04:00:26PM +0200, Lars Povlsen wrote:
 > 
-> You wouldn't happen to have access to the documentation of the
-> "original" uPD720200 USB 3.0 controller?
+> > +config SPI_DW_MCHP
+> > +	tristate "Memory-mapped io interface driver using DW SPI core of MSCC SoCs"
+> > +	default y if ARCH_SPARX5
+> > +	default y if SOC_VCOREIII
 > 
-> It would be cool if we could support that too with this driver.
+> Why the default ys?
 
-Not me. does it also require firmware? If so you can try with this
-driver and see if it works for you?
+The SoC will typically boot from SPI... But its not a requirement per
+se. I will remove it.
 
-Thanks
--- 
-~Vinod
+> 
+> > +++ b/drivers/spi/Makefile
+> > @@ -37,6 +37,7 @@ obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
+> >  obj-$(CONFIG_SPI_DLN2)			+= spi-dln2.o
+> >  obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
+> >  obj-$(CONFIG_SPI_DW_MMIO)		+= spi-dw-mmio.o
+> > +obj-$(CONFIG_SPI_DW_MCHP)		+= spi-dw-mchp.o
+> >  obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-midpci.o
+> >  spi-dw-midpci-objs			:= spi-dw-pci.o spi-dw-mid.o
+> >  obj-$(CONFIG_SPI_EFM32)			+= spi-efm32.o
+> 
+> Please keep the file alphabetically sorted.
+> 
+
+Noted.
+
+> > +++ b/drivers/spi/spi-dw-mchp.c
+> > @@ -0,0 +1,232 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Memory-mapped interface driver for MSCC SoCs
+> > + *
+> 
+> Please make the entire comment a C++ one so things look more
+> intentional.
+
+Sure, I can do that. The presented form matches that of the other
+spi-dw-* drivers, but I can see other using // blocks. Ack.
+
+> 
+> > +#define MAX_CS		4
+> 
+> This should be namespaced.
+
+Ack.
+
+> 
+> > +	rx_sample_dly = 0;
+> > +	device_property_read_u32(&pdev->dev, "spi-rx-delay-us", &rx_sample_dly);
+> > +	dws->rx_sample_dly = DIV_ROUND_UP(rx_sample_dly,
+> > +					  (dws->max_freq / 1000000));
+> 
+> If this is a standard feature of the DesignWare IP why parse it here and
+> not in the generic code?
+
+This is a standard feature of the DesignWare IP, so good suggestion. I
+will arrange with Serge.
+
+Thank you for your comments!
+
+---Lars
+
