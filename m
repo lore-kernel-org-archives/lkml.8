@@ -2,216 +2,203 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEDA20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39DF20643
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgESCFU (ORCPT
+        id S1727958AbgESCGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 22:05:20 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:42182 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726302AbgESCFU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 22:05:20 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Tz-DaY8_1589853886;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tz-DaY8_1589853886)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 19 May 2020 10:04:48 +0800
-Subject: Re: [RFC linux-next PATCH] mm: khugepaged: remove error message when
- checking external pins
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     kirill.shutemov@linux.intel.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1589317383-9595-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200518101956.z6wwjyhv2oxfsqf6@box>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <27847895-92de-062f-8021-b1140e4421cb@linux.alibaba.com>
-Date:   Mon, 18 May 2020 19:04:40 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 18 May 2020 22:06:15 -0400
+Received: from mga07.intel.com ([134.134.136.100]:35941 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726525AbgESCGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 22:06:14 -0400
+IronPort-SDR: H03rVvYym6DVGCu3BurasZS85kMkAB036JFNhRNl13+kB43eG9jFCY+EIQoDdkzp6esyAp38SC
+ jxHer6ufjG2A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 19:06:13 -0700
+IronPort-SDR: +ehNVNOjJZquRZsp+oO8BlVBeeDro1NHIO8NuMC2i/eFScXPVzRESjTgNg/vxtOgyDcXpQluJQ
+ jFzPDa6K1HBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,408,1583222400"; 
+   d="scan'208";a="439443229"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 18 May 2020 19:06:12 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jardz-0003V2-EF; Tue, 19 May 2020 10:06:11 +0800
+Date:   Tue, 19 May 2020 10:05:59 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ 3d81b3d1e55a518837c3d1f722c6d93abe34aa85
+Message-ID: <5ec33f07.b4wJuoPNNmSlrlHY%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200518101956.z6wwjyhv2oxfsqf6@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
+branch HEAD: 3d81b3d1e55a518837c3d1f722c6d93abe34aa85  x86/cpu: Use RDRAND and RDSEED mnemonics in archrandom.h
 
+i386-tinyconfig vmlinux size:
 
-On 5/18/20 3:19 AM, Kirill A. Shutemov wrote:
-> On Wed, May 13, 2020 at 05:03:03AM +0800, Yang Shi wrote:
->> When running khugepaged with higher frequency (for example, set
->> scan_sleep_millisecs to 0), the below error message was reported:
->>
->> khugepaged: expected_refcount (1024) > refcount (512)
->> page:ffffd75784258000 count:511 mapcount:1 mapping:ffff968de06c7421 index:0x7fa288600
->>   compound_mapcount: 0
->>   flags: 0x17fffc00009003c(uptodate|dirty|lru|active|head|swapbacked)
->>   raw: 017fffc00009003c ffffd7578ba70788 ffffd7578bdb5148 ffff968de06c7421
->>   raw: 00000007fa288600 0000000000000000 000001ff00000000 ffff968e5e7d6000
->>   page dumped because: Unexpected refcount
->>   page->mem_cgroup:ffff968e5e7d6000
->>
->> This is introduced by allowing collapsing fork shared and PTE-mapped
->> THPs.  The check may run into the below race:
->>
->> Assuming parent process forked child process, then they do
->>
->> 	CPU A		CPU B			CPU C
->> 	-----		-----			-----
->> Parent			Child			khugepaged
->>
->> MADV_DONTNEED
->>    split huge pmd
->>    Double mapped
->> 			MADV_DONTNEED
->> 			  zap_huge_pmd
->> 			    remove_page_rmap
->> 			      Clear double map
->> 						khugepaged_scan_pmd(parent)
->> 						  check mapcount and refcount
->> 						  --> total_mapcount > refcount
->> 			      dec mapcount
->>
->> The issue can be reproduced by the below test program.
-> Good catch! Thanks. And the fix looks reasnable.
->
-> We might want to have a similar debug check in near !is_refcount_suitable()
-> case in __collapse_huge_page_isolate(). The function is called with
-> anon_vma lock taken on write and it should prevent the false-positive.
++-------+------------------------------------+-----------------------------------------------------------------------+
+| DELTA |               SYMBOL               |                                COMMIT                                 |
++-------+------------------------------------+-----------------------------------------------------------------------+
+|  +284 | TOTAL                              | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|  +203 | TOTAL                              | e9d7144597b1 x86/cpu: Add a steppings field to struct x86_cpu_id      |
+|  +252 | TEXT                               | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|  +172 | TEXT                               | e9d7144597b1 x86/cpu: Add a steppings field to struct x86_cpu_id      |
+| +1355 | balance_dirty_pages()              | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|  +615 | __setup_rt_frame()                 | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|  +160 | init.data                          | e9d7144597b1 x86/cpu: Add a steppings field to struct x86_cpu_id      |
+|  +124 | cpu_vuln_whitelist()               | e9d7144597b1 x86/cpu: Add a steppings field to struct x86_cpu_id      |
+|  +113 | klist_release()                    | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|   +93 | change_clocksource()               | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|   +86 | release_bdi()                      | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|   +84 | kobject_release()                  | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|   -68 | bdi_put()                          | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|   -77 | kobject_put()                      | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|   -79 | timekeeping_notify()               | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|   -99 | klist_dec_and_del()                | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+|  -136 | arch/x86/events/zhaoxin/built-in.* | 3d81b3d1e55a x86/cpu: Use RDRAND and RDSEED mnemonics in archrandom.h |
+|  -555 | do_signal()                        | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
+| -1383 | balance_dirty_pages_ratelimited()  | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
++-------+------------------------------------+-----------------------------------------------------------------------+
 
-However it seems MADV_DONTNEED path doesn't take anon_vma lock.
+elapsed time: 482m
 
->
-> Anyway:
->
-> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+configs tested: 110
+configs skipped: 3
 
-Thanks.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->
->> ---8<---
->> void main()
->> {
->>          void *addr;
->>          int ret;
->>          pid_t pid;
->>
->>          addr = memalign(ALIGN, 2 * 1024 * 1024);
->>          if (!addr) {
->>                  printf("malloc failed\n");
->>                  return;
->>          }
->>
->>          ret = madvise(addr, 2 * 1024 * 1024, MADV_HUGEPAGE);
->>          if (ret < 0) {
->>                  printf("madvise failed\n");
->>                  return;
->>          }
->>
->>          memset(addr, 0xdeadbeef, 2 * 1024 * 1024);
->>
->>          pid = fork();
->>
->>          if (pid == 0) {
->>                  /* Child process */
->>                  ret = madvise(addr + (2 * 1024 * 1024) - 4096, 4096, MADV_DONTNEED);
->>                  if (ret < 0) {
->>                          printf("madvise failed in child\n");
->>                          return;
->>                  }
->>                  sleep(120);
->>          } else if (pid > 0) {
->>                  sleep(5);
->>                  /* Parent process */
->>                  ret = madvise(addr, 2 * 1024 * 1024, MADV_DONTNEED);
->>                  if (ret < 0) {
->>                          printf("madvise failed in parent\n");
->>                          return;
->>                  }
->>          } else {
->>                  printf("fork failed\n");
->>                  return;
->>          }
->>
->>          sleep(120);
->> }
->> ---8<---
->>
->> So, total_mapcount > refcount seems not unexpected due to the inherent
->> race.  Removed the error message even though it is protected by
->> CONFIG_VM_DEBUG since we have to live with the race and AFAIK some
->> distros may have CONFIG_VM_DEBUG enabled dy default.
->>
->> Since such case is ephemeral we could always try collapse the area again
->> later, so it sounds not harmful.  But, it might report false positive if
->> the page has excessive GUP pins (i.e. 512), however it might be not that
->> bad since the same check will be done later.  I didn't figure out a
->> simple way to prevent the false positive.
->>
->> Added some notes to elaborate the race and the consequence as well.
->>
->> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> ---
->>   mm/khugepaged.c | 24 +++++++++++++++++-------
->>   1 file changed, 17 insertions(+), 7 deletions(-)
->>
->> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->> index 1fdd677..048f5d4 100644
->> --- a/mm/khugepaged.c
->> +++ b/mm/khugepaged.c
->> @@ -602,12 +602,6 @@ static bool is_refcount_suitable(struct page *page)
->>   	if (PageSwapCache(page))
->>   		expected_refcount += compound_nr(page);
->>   
->> -	if (IS_ENABLED(CONFIG_DEBUG_VM) && expected_refcount > refcount) {
->> -		pr_err("expected_refcount (%d) > refcount (%d)\n",
->> -				expected_refcount, refcount);
->> -		dump_page(page, "Unexpected refcount");
->> -	}
->> -
->>   	return page_count(page) == expected_refcount;
->>   }
->>   
->> @@ -1341,7 +1335,23 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->>   			goto out_unmap;
->>   		}
->>   
->> -		/* Check if the page has any GUP (or other external) pins */
->> +		/*
->> +		 * Check if the page has any GUP (or other external) pins.
->> +		 *
->> +		 * Here the check is racy it may see totmal_mapcount > refcount
->> +		 * in some cases.
->> +		 * For example, one process with one forked child process.
->> +		 * The parent has the PMD split due to MADV_DONTNEED, then
->> +		 * the child is trying unmap the whole PMD, but khugepaged
->> +		 * may be scanning the parent between the child has
->> +		 * PageDoubleMap flag cleared and dec the mapcount.  So
->> +		 * khugepaged may see total_mapcount > refcount.
->> +		 *
->> +		 * But such case is ephemeral we could always retry collapse
->> +		 * later.  However it may report false positive if the page
->> +		 * has excessive GUP pins (i.e. 512).  Anyway the same check
->> +		 * will be done again later the risk seems low.
->> +		 */
->>   		if (!is_refcount_suitable(page)) {
->>   			result = SCAN_PAGE_COUNT;
->>   			goto out_unmap;
->> -- 
->> 1.8.3.1
->>
->>
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+mips                             allyesconfig
+m68k                             allyesconfig
+mips                         tb0219_defconfig
+mips                 pnx8335_stb225_defconfig
+powerpc                       holly_defconfig
+m68k                       bvme6000_defconfig
+arm                       multi_v4t_defconfig
+sh                  sh7785lcr_32bit_defconfig
+arm                       imx_v6_v7_defconfig
+mips                        maltaup_defconfig
+m68k                            mac_defconfig
+um                               alldefconfig
+um                                  defconfig
+mips                         rt305x_defconfig
+sh                            hp6xx_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200518
+i386                 randconfig-a005-20200518
+i386                 randconfig-a001-20200518
+i386                 randconfig-a003-20200518
+i386                 randconfig-a004-20200518
+i386                 randconfig-a002-20200518
+x86_64               randconfig-a016-20200518
+x86_64               randconfig-a012-20200518
+x86_64               randconfig-a015-20200518
+x86_64               randconfig-a013-20200518
+x86_64               randconfig-a011-20200518
+x86_64               randconfig-a014-20200518
+i386                 randconfig-a012-20200518
+i386                 randconfig-a014-20200518
+i386                 randconfig-a016-20200518
+i386                 randconfig-a011-20200518
+i386                 randconfig-a015-20200518
+i386                 randconfig-a013-20200518
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
