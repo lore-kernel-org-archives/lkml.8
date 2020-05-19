@@ -2,92 +2,119 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20108C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C41C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE751207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:12:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dCVmoykd"
+	by mail.kernel.org (Postfix) with ESMTP id 1B82020849
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589919171;
+	bh=dm7c/PyhRA6o/NhWdeeaUTaSSreTvd7rk1Haxi9PuAY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BaeLt84jeIfXn+CKVfDEBW2ODB2XTiRRQXy9bUgRuzyKJHarRZRu4/VbsgGM4k+DP
+	 89rb/5Kyc2lapsTVPicN7cn1ylVsBEINtWxvetEgDObwK6xkFu2v1/LakBj1fR9Aib
+	 SduH4tqrHnvfW8DrzpVrelsCDYXnHn+TYcU7Ea3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgESUMN (ORCPT
+        id S1726893AbgESUMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:12:13 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8004 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbgESUMM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:12:12 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec43d900000>; Tue, 19 May 2020 13:12:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 19 May 2020 13:12:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 13:12:12 -0700
-Received: from [10.2.90.179] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
- 2020 20:12:12 +0000
-Subject: Re: [PATCH] scsi: st: convert convert get_user_pages() -->
- pin_user_pages()
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     =?UTF-8?Q?Kai_M=c3=a4kisara?= <Kai.Makisara@kolumbus.fi>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>
-References: <20200519045525.2446851-1-jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <7440e420-009b-20cc-e1e6-7e2a212f65fa@nvidia.com>
-Date:   Tue, 19 May 2020 13:12:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 16:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726348AbgESUMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 16:12:49 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D62D220849
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589919169;
+        bh=dm7c/PyhRA6o/NhWdeeaUTaSSreTvd7rk1Haxi9PuAY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Qgobloz2hoqtUhX21QrByAcwSZxXc0hs8LQiA538i0qnV8HKGPry7Al6JMLJCyFhQ
+         bQUHqqUnw5PRG4YXJ0UUhssmY4WmTeepxwW3kd4aLnNXk1+R2uWJrBN3JbjFdCNRxL
+         Cwh8E7yWcZZkRoY/iniIJhiVNLiM9GxdzINDNE5I=
+Received: by mail-wr1-f54.google.com with SMTP id h17so782261wrc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:12:48 -0700 (PDT)
+X-Gm-Message-State: AOAM5301kkeP+UIBF4y2cgpRW3jk0rmbNSWWBLfmy1XoLqDP1IPat4yE
+        3fmjtNq1AyJZV4hzH9NAWlOSYm9jECIPgyxsmvYZ+Q==
+X-Google-Smtp-Source: ABdhPJzOVtt5Rxab/C2Bm6gUm9YpjP+XGSVEmE/akdzY0RAS3xHV+e5jW0iBi4n8cvPFIdoVsLUhVxtfk2PEObmUdHE=
+X-Received: by 2002:adf:a298:: with SMTP id s24mr616360wra.184.1589919167261;
+ Tue, 19 May 2020 13:12:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200519045525.2446851-1-jhubbard@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589919120; bh=h4cufiww8/w8HkD/l4w692Ys6fjo7TCvsNPHCpacNHI=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=dCVmoykdYEnMO/LJ4vZPj/vPDQ4DQTIkm8c8f7q9TgapeB1ly3TqfXiI2PdmWPdXG
-         r+eSaXqSLlaX/O+dHMYBK3yDuxZRb6lAS30wyI5HPfNIBkI7FU4DrH5QooJGmExPgL
-         RYS81XBSdciLDqJeg/MXIRrg8HEdbM+0FnFHzW24+sahiMy97WwAsY6OtnSyfPIy32
-         jD31T73s0zpQ33lR1vst0NDmybjgRPUu3nOXGi2JIJN2FLnjD4CDnvjlBxOWyBZ++T
-         6sLApM7R8geu3Nh+gOTnqu9Z/bwR126u8jWCLba2u6cERO4bVPLQ4qo8nSzpZgwpXp
-         7MpHhj+lTX6bQ==
+References: <20200515234547.710474468@linutronix.de> <20200515235125.720736582@linutronix.de>
+In-Reply-To: <20200515235125.720736582@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 19 May 2020 13:12:35 -0700
+X-Gmail-Original-Message-ID: <CALCETrUv0N5Lc2-JVpmw1pXKg0QmZO0yziVZXCVopuCHpzUzug@mail.gmail.com>
+Message-ID: <CALCETrUv0N5Lc2-JVpmw1pXKg0QmZO0yziVZXCVopuCHpzUzug@mail.gmail.com>
+Subject: Re: [patch V6 13/37] x86/entry: Switch page fault exception to IDTENTRY_RAW
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-18 21:55, John Hubbard wrote:
-> This code was using get_user_pages*(), in a "Case 2" scenario
-> (DMA/RDMA), using the categorization from [1]. That means that it's
-> time to convert the get_user_pages*() + put_page() calls to
-> pin_user_pages*() + unpin_user_pages() calls.
-> 
+On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>
+> Convert page fault exceptions to IDTENTRY_RAW:
+>   - Implement the C entry point with DEFINE_IDTENTRY_RAW
+>   - Add the CR2 read into the exception handler
+>   - Add the idtentry_enter/exit_cond_rcu() invocations in
+>     in the regular page fault handler and use the regular
+>     idtentry_enter/exit() for the async PF part.
+>   - Emit the ASM stub with DECLARE_IDTENTRY_RAW
+>   - Remove the ASM idtentry in 64bit
+>   - Remove the CR2 read from 64bit
+>   - Remove the open coded ASM entry code in 32bit
+>   - Fixup the XEN/PV code
+>   - Remove the old prototypes
+>
 
-Looks like I accidentally doubled a word on the subject line:
-"convert convert".
+Acked-by: Andy Lutomirski <luto@kernel.org>
 
-I'd appreciate it a maintainer could remove one of those for
-me, while applying the patch, assuming that we don't need a
-v2 for other reasons.
+although if you make the irq_enter_cond_rcu() mode unconditional, then
+this comment can go away too:
 
+> +       /*
+> +        * Entry handling for valid #PF from kernel mode is slightly
+> +        * different: RCU is already watching and rcu_irq_enter() must not
+> +        * be invoked because a kernel fault on a user space address might
+> +        * sleep.
+> +        *
+> +        * In case the fault hit a RCU idle region the conditional entry
+> +        * code reenabled RCU to avoid subsequent wreckage which helps
+> +        * debugability.
+> +        */
+> +       rcu_exit = idtentry_enter_cond_rcu(regs);
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+--Andy
