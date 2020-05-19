@@ -6,180 +6,232 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5284CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B830C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4952075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F141B207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgESFtc (ORCPT
+        id S1728759AbgESFth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:49:32 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:58079 "EHLO pegase1.c-s.fr"
+        Tue, 19 May 2020 01:49:37 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:40341 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728634AbgESFtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:49:18 -0400
+        id S1728671AbgESFtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:49:23 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49R4hC1fr6z9txm1;
-        Tue, 19 May 2020 07:49:15 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49R4hK3xjnz9txm1;
+        Tue, 19 May 2020 07:49:21 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cFAs5u6pZCkM; Tue, 19 May 2020 07:49:15 +0200 (CEST)
+        with ESMTP id 7-ZNjaHc3k5I; Tue, 19 May 2020 07:49:21 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4hC0Spvz9txlx;
-        Tue, 19 May 2020 07:49:15 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4hK3Byrz9txlx;
+        Tue, 19 May 2020 07:49:21 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 252488B7A7;
-        Tue, 19 May 2020 07:49:16 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8D4768B7A7;
+        Tue, 19 May 2020 07:49:22 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id JTGUI8JKwfUQ; Tue, 19 May 2020 07:49:16 +0200 (CEST)
+        with ESMTP id rVpTIa5eVIux; Tue, 19 May 2020 07:49:22 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C90188B767;
-        Tue, 19 May 2020 07:49:15 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4B9F08B767;
+        Tue, 19 May 2020 07:49:22 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id A5A7C65A4A; Tue, 19 May 2020 05:49:15 +0000 (UTC)
-Message-Id: <b27c5767d18053b59f7eefddc189fcc3acf7b9c2.1589866984.git.christophe.leroy@csgroup.eu>
+        id 283E465A4A; Tue, 19 May 2020 05:49:22 +0000 (UTC)
+Message-Id: <68325bcd3b6f93127f7810418a2352c3519066d6.1589866984.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 References: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v4 32/45] powerpc/8xx: Always pin TLBs at startup.
+Subject: [PATCH v4 38/45] powerpc/8xx: Add a function to early map kernel via
+ huge pages
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 19 May 2020 05:49:15 +0000 (UTC)
+Date:   Tue, 19 May 2020 05:49:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At startup, map 32 Mbytes of memory through 4 pages of 8M,
-and PIN them inconditionnaly. They need to be pinned because
-KASAN is using page tables early and the TLBs might be
-dynamically replaced otherwise.
+Add a function to early map kernel memory using huge pages.
 
-Remove RSV4I flag after installing mappings unless
-CONFIG_PIN_TLB_XXXX is selected.
+For 512k pages, just use standard page table and map in using 512k
+pages.
+
+For 8M pages, create a hugepd table and populate the two PGD
+entries with it.
+
+This function can only be used to create page tables at startup. Once
+the regular SLAB allocation functions replace memblock functions,
+this function cannot allocate new pages anymore. However it can still
+update existing mappings with new protections.
+
+hugepd_none() macro is moved into asm/hugetlb.h to be usable outside
+of mm/hugetlbpage.c
+
+early_pte_alloc_kernel() is made visible.
+
+_PAGE_HUGE flag is now displayed by ptdump.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/head_8xx.S | 31 +++++++++++++++++--------------
- arch/powerpc/mm/nohash/8xx.c   | 19 +------------------
- 2 files changed, 18 insertions(+), 32 deletions(-)
+v2: Select CONFIG_HUGETLBFS instead of CONFIG_HUGETLB_PAGE which leads to linktime failure
+---
+ .../include/asm/nohash/32/hugetlb-8xx.h       |  5 ++
+ arch/powerpc/include/asm/pgtable.h            |  2 +
+ arch/powerpc/mm/nohash/8xx.c                  | 52 +++++++++++++++++++
+ arch/powerpc/mm/pgtable_32.c                  |  2 +-
+ arch/powerpc/mm/ptdump/8xx.c                  |  5 ++
+ arch/powerpc/platforms/Kconfig.cputype        |  1 +
+ 6 files changed, 66 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index d607f4b53e0f..b0cceee6405c 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -765,6 +765,14 @@ start_here:
- 	mtspr	SPRN_MD_RPN, r0
- 	lis	r0, (MD_TWAM | MD_RSV4I)@h
- 	mtspr	SPRN_MD_CTR, r0
-+#endif
-+#ifndef CONFIG_PIN_TLB_TEXT
-+	li	r0, 0
-+	mtspr	SPRN_MI_CTR, r0
-+#endif
-+#if !defined(CONFIG_PIN_TLB_DATA) && !defined(CONFIG_PIN_TLB_IMMR)
-+	lis	r0, MD_TWAM@h
-+	mtspr	SPRN_MD_CTR, r0
- #endif
- 	tlbia			/* Clear all TLB entries */
- 	sync			/* wait for tlbia/tlbie to finish */
-@@ -802,10 +810,6 @@ initial_mmu:
- 	mtspr	SPRN_MD_CTR, r10	/* remove PINNED DTLB entries */
+diff --git a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
+index 1c7d4693a78e..e752a5807a59 100644
+--- a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
+@@ -35,6 +35,11 @@ static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshi
+ 	*hpdp = __hugepd(__pa(new) | _PMD_USER | _PMD_PRESENT | _PMD_PAGE_8M);
+ }
  
- 	tlbia			/* Invalidate all TLB entries */
--#ifdef CONFIG_PIN_TLB_DATA
--	oris	r10, r10, MD_RSV4I@h
--	mtspr	SPRN_MD_CTR, r10	/* Set data TLB control */
--#endif
++static inline void hugepd_populate_kernel(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
++{
++	*hpdp = __hugepd(__pa(new) | _PMD_PRESENT | _PMD_PAGE_8M);
++}
++
+ static inline int check_and_get_huge_psize(int shift)
+ {
+ 	return shift_to_mmu_psize(shift);
+diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
+index b1f1d5339735..961895be932a 100644
+--- a/arch/powerpc/include/asm/pgtable.h
++++ b/arch/powerpc/include/asm/pgtable.h
+@@ -107,6 +107,8 @@ unsigned long vmalloc_to_phys(void *vmalloc_addr);
  
- 	lis	r8, MI_APG_INIT@h	/* Set protection modes */
- 	ori	r8, r8, MI_APG_INIT@l
-@@ -814,33 +818,32 @@ initial_mmu:
- 	ori	r8, r8, MD_APG_INIT@l
- 	mtspr	SPRN_MD_AP, r8
+ void pgtable_cache_add(unsigned int shift);
  
--	/* Now map the lower RAM (up to 32 Mbytes) into the ITLB. */
--#ifdef CONFIG_PIN_TLB_TEXT
-+	/* Map the lower RAM (up to 32 Mbytes) into the ITLB and DTLB */
- 	lis	r8, MI_RSV4I@h
- 	ori	r8, r8, 0x1c00
--#endif
-+	oris	r12, r10, MD_RSV4I@h
-+	ori	r12, r12, 0x1c00
- 	li	r9, 4				/* up to 4 pages of 8M */
- 	mtctr	r9
- 	lis	r9, KERNELBASE@h		/* Create vaddr for TLB */
- 	li	r10, MI_PS8MEG | MI_SVALID	/* Set 8M byte page */
- 	li	r11, MI_BOOTINIT		/* Create RPN for address 0 */
--	lis	r12, _einittext@h
--	ori	r12, r12, _einittext@l
- 1:
--#ifdef CONFIG_PIN_TLB_TEXT
- 	mtspr	SPRN_MI_CTR, r8	/* Set instruction MMU control */
- 	addi	r8, r8, 0x100
--#endif
--
- 	ori	r0, r9, MI_EVALID		/* Mark it valid */
- 	mtspr	SPRN_MI_EPN, r0
- 	mtspr	SPRN_MI_TWC, r10
- 	mtspr	SPRN_MI_RPN, r11		/* Store TLB entry */
-+	mtspr	SPRN_MD_CTR, r12
-+	addi	r12, r12, 0x100
-+	mtspr	SPRN_MD_EPN, r0
-+	mtspr	SPRN_MD_TWC, r10
-+	mtspr	SPRN_MD_RPN, r11
- 	addis	r9, r9, 0x80
- 	addis	r11, r11, 0x80
- 
--	cmpl	cr0, r9, r12
--	bdnzf	gt, 1b
-+	bdnz	1b
- 
- 	/* Since the cache is enabled according to the information we
- 	 * just loaded into the TLB, invalidate and enable the caches here.
++pte_t *early_pte_alloc_kernel(pmd_t *pmdp, unsigned long va);
++
+ #if defined(CONFIG_STRICT_KERNEL_RWX) || defined(CONFIG_PPC32)
+ void mark_initmem_nx(void);
+ #else
 diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index a9313aa6f1cd..2c480e35b426 100644
+index b735482e1529..72fb75f2a5f1 100644
 --- a/arch/powerpc/mm/nohash/8xx.c
 +++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -62,23 +62,6 @@ unsigned long p_block_mapped(phys_addr_t pa)
-  */
- void __init MMU_init_hw(void)
- {
--	/* PIN up to the 3 first 8Mb after IMMR in DTLB table */
--	if (IS_ENABLED(CONFIG_PIN_TLB_DATA)) {
--		unsigned long ctr = mfspr(SPRN_MD_CTR) & 0xfe000000;
--		unsigned long flags = 0xf0 | MD_SPS16K | _PAGE_SH | _PAGE_DIRTY;
--		int i = 28;
--		unsigned long addr = 0;
--		unsigned long mem = total_lowmem;
--
--		for (; i < 32 && mem >= LARGE_PAGE_SIZE_8M; i++) {
--			mtspr(SPRN_MD_CTR, ctr | (i << 8));
--			mtspr(SPRN_MD_EPN, (unsigned long)__va(addr) | MD_EVALID);
--			mtspr(SPRN_MD_TWC, MD_PS8MEG | MD_SVALID);
--			mtspr(SPRN_MD_RPN, addr | flags | _PAGE_PRESENT);
--			addr += LARGE_PAGE_SIZE_8M;
--			mem -= LARGE_PAGE_SIZE_8M;
--		}
--	}
+@@ -9,9 +9,11 @@
+ 
+ #include <linux/memblock.h>
+ #include <linux/mmu_context.h>
++#include <linux/hugetlb.h>
+ #include <asm/fixmap.h>
+ #include <asm/code-patching.h>
+ #include <asm/inst.h>
++#include <asm/pgalloc.h>
+ 
+ #include <mm/mmu_decl.h>
+ 
+@@ -55,6 +57,56 @@ unsigned long p_block_mapped(phys_addr_t pa)
+ 	return 0;
  }
  
- static bool immr_is_mapped __initdata;
-@@ -226,7 +209,7 @@ void __init setup_initial_memory_limit(phys_addr_t first_memblock_base,
- 	BUG_ON(first_memblock_base != 0);
- 
- 	/* 8xx can only access 32MB at the moment */
--	memblock_set_current_limit(min_t(u64, first_memblock_size, 0x02000000));
-+	memblock_set_current_limit(min_t(u64, first_memblock_size, SZ_32M));
- }
- 
++static pte_t __init *early_hugepd_alloc_kernel(hugepd_t *pmdp, unsigned long va)
++{
++	if (hpd_val(*pmdp) == 0) {
++		pte_t *ptep = memblock_alloc(sizeof(pte_basic_t), SZ_4K);
++
++		if (!ptep)
++			return NULL;
++
++		hugepd_populate_kernel((hugepd_t *)pmdp, ptep, PAGE_SHIFT_8M);
++		hugepd_populate_kernel((hugepd_t *)pmdp + 1, ptep, PAGE_SHIFT_8M);
++	}
++	return hugepte_offset(*(hugepd_t *)pmdp, va, PGDIR_SHIFT);
++}
++
++static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr_t pa,
++					     pgprot_t prot, int psize, bool new)
++{
++	pmd_t *pmdp = pmd_ptr_k(va);
++	pte_t *ptep;
++
++	if (WARN_ON(psize != MMU_PAGE_512K && psize != MMU_PAGE_8M))
++		return -EINVAL;
++
++	if (new) {
++		if (WARN_ON(slab_is_available()))
++			return -EINVAL;
++
++		if (psize == MMU_PAGE_512K)
++			ptep = early_pte_alloc_kernel(pmdp, va);
++		else
++			ptep = early_hugepd_alloc_kernel((hugepd_t *)pmdp, va);
++	} else {
++		if (psize == MMU_PAGE_512K)
++			ptep = pte_offset_kernel(pmdp, va);
++		else
++			ptep = hugepte_offset(*(hugepd_t *)pmdp, va, PGDIR_SHIFT);
++	}
++
++	if (WARN_ON(!ptep))
++		return -ENOMEM;
++
++	/* The PTE should never be already present */
++	if (new && WARN_ON(pte_present(*ptep) && pgprot_val(prot)))
++		return -EINVAL;
++
++	set_huge_pte_at(&init_mm, va, ptep, pte_mkhuge(pfn_pte(pa >> PAGE_SHIFT, prot)));
++
++	return 0;
++}
++
  /*
+  * MMU_init_hw does the chip-specific initialization of the MMU hardware.
+  */
+diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
+index bd0cb6e3573e..05902bbff8d6 100644
+--- a/arch/powerpc/mm/pgtable_32.c
++++ b/arch/powerpc/mm/pgtable_32.c
+@@ -61,7 +61,7 @@ static void __init *early_alloc_pgtable(unsigned long size)
+ 	return ptr;
+ }
+ 
+-static pte_t __init *early_pte_alloc_kernel(pmd_t *pmdp, unsigned long va)
++pte_t __init *early_pte_alloc_kernel(pmd_t *pmdp, unsigned long va)
+ {
+ 	if (pmd_none(*pmdp)) {
+ 		pte_t *ptep = early_alloc_pgtable(PTE_FRAG_SIZE);
+diff --git a/arch/powerpc/mm/ptdump/8xx.c b/arch/powerpc/mm/ptdump/8xx.c
+index a3169677dced..b3185b32793d 100644
+--- a/arch/powerpc/mm/ptdump/8xx.c
++++ b/arch/powerpc/mm/ptdump/8xx.c
+@@ -11,6 +11,11 @@
+ 
+ static const struct flag_info flag_array[] = {
+ 	{
++		.mask	= _PAGE_HUGE,
++		.val	= _PAGE_HUGE,
++		.set	= "h",
++		.clear	= " ",
++	}, {
+ 		.mask	= _PAGE_RO | _PAGE_NA,
+ 		.val	= 0,
+ 		.set	= "rw",
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 5774a55a9c58..e3fb0ef5129f 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -56,6 +56,7 @@ config PPC_8xx
+ 	select PPC_HAVE_KUEP
+ 	select PPC_HAVE_KUAP
+ 	select HAVE_ARCH_VMAP_STACK
++	select HUGETLBFS
+ 
+ config 40x
+ 	bool "AMCC 40x"
 -- 
 2.25.0
 
