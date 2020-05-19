@@ -2,117 +2,136 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F26C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C44020809
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9B020578
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gP5wxnBJ"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="c+jIAV2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgESXL0 (ORCPT
+        id S1728159AbgESXLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:11:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54152 "EHLO
+        Tue, 19 May 2020 19:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgESXLY (ORCPT
+        with ESMTP id S1726318AbgESXLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:11:24 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4DC2C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:11:24 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id q16so543239plr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:11:24 -0700 (PDT)
+        Tue, 19 May 2020 19:11:51 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5186FC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:11:51 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q9so387637pjm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L+7QJAXBjfTJ+AlH8byb/3GiDycgpsRF9Sq5WXCPucY=;
-        b=gP5wxnBJxBWcrtjyMluDLMiPyewrNncS64EHHgPp+B5M8VlvjmUGx3plaFVco31aMq
-         RpFy1n//+8JzRGeWcxluhSfKMAb4bNWo7nwYZzBfU8POB1X1AmxCynz0skXCltH2HQEc
-         7rTCq5vn0/i63H17WVk0pZRzPfQDeXMnCyl8akbVKV0twSLso7DvVGxJ39T5EpPoWFIg
-         +CO+9Vv9YQe4Y6IR1i0xtrt/IiYjROFyjYoaUwA7Fzh/h9FK36M7fWdKjXoJANNSQ1Og
-         hATkgP4m864O55Qhe5bEq83CnP7uAAZ2b4wekCdoeL/zGL4u1qJUi/9loHAQGjjg/B+e
-         303Q==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qurn0n4Y6IbvY2sEfXURphuvrrh6gfojPnRjnDn7wmQ=;
+        b=c+jIAV2c/bV5qZGOszyYayikwXcF7DKN3e/82k14r0BVVXHmikat7+pOCFJrOAu0zL
+         RNozuDILbgOwEW8AnXvWsuyfVUC1nwEEm84RLu68+rJNE8HVJ8VeI52CpVPsxMIN8fot
+         56y8qb5VURVIT2vodgUGu9JLnt0CQkMLxsmJxbPz5uexuZpBDUeBDO7DD9BXrCV8sZoj
+         K50nbJp286ZdjHh8Edcdxj0luEWiIM8eQigudlmQhuXr2mJMocfPP0xGyZiYKa+F6Otv
+         YrlS6mwOxFluyF88sYqPJZNC3cOhs+vOGTMQ85HGnoMc4JfIXipn7ql3hYMaNvCgf1KH
+         kwOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L+7QJAXBjfTJ+AlH8byb/3GiDycgpsRF9Sq5WXCPucY=;
-        b=niytpwofxEBUJ+jYO2IBk88oGI7Bj+N0VDK2D9Ifg2Aabhd2IS0CSi5Yz1hjvZ4edd
-         GcHAUU9GolZ7GWma7/oA5sR4wUY4vc+/snCshc4fMvYy6+iRHDwzpN0CjH998O095Ltc
-         S7TB0fIukvZ1Yy9JlNG1rFYzvCqqzu8H6fgeIJrhJBuGkDnbPFIA7QpyBbADxhC79hb1
-         h6tonq6tLVAv1wV+voK4KWrb5k7o4bwu0x8b0uNpHYH0r6sROdTe8yOWh9dUkSZicGez
-         jfCjUPN7xxavBEVx7yEWkzxGkfAY6AtE/aT21hT5f3h/rgK7OqYvzjQ5MjCK0V2ja880
-         4SxA==
-X-Gm-Message-State: AOAM533shAfuDOBB1UdP9zICq8TpBT5hz4GjoAfUHmGqA5VbO9Qds0Vz
-        Pqt1Q6CrlWwvd4bsaKA4Hue9vA==
-X-Google-Smtp-Source: ABdhPJys9s8J9INgrU+CaIvU8ZNjpSsags3R398v5suCHgwKjLcqI84WmnxzgQHtjdRMxu8rJp4+Dw==
-X-Received: by 2002:a17:90a:21cf:: with SMTP id q73mr1953058pjc.230.1589929884107;
-        Tue, 19 May 2020 16:11:24 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s2sm473945pjs.9.2020.05.19.16.11.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qurn0n4Y6IbvY2sEfXURphuvrrh6gfojPnRjnDn7wmQ=;
+        b=MzuUy0WoIP2FmRtVCUOKFIjuBSu3/q1qCjB0lXN7wf4rJmhz4Ke8DnYJMg4ynMCPRl
+         atKrnm5Zb/iUSThyIKqHeNxCUszdc3OXPd61xA7c04zLDskwU09cNgNBK5CQ9b6iRSY7
+         ua3F3Ijklbwe5NQvvcRmhXlVthVPI1sNFgni9PIWxoNGTZCWFTLWJOF7ZqmCjNTWXdZE
+         ddvTsh+8s5VqqbUO1ZEx1JWhm2Odkg5+X2IRLtKSTLGw96FmU1vamx5GunA5tMum2lyB
+         4Vo5J+Y3QY1MUl3cCt/oQW9NxUOnZyYho/XeSqjkE4rG49lyiKOLiFLHYiBNoANWrDFD
+         q5lA==
+X-Gm-Message-State: AOAM531sQzXdRUpPdWHVh7YnhMzP5CZnrLbPebTS7C+HBgC7LqfxXFSS
+        W1D2vssZxmHPnJJzfuRQnfZVZQ==
+X-Google-Smtp-Source: ABdhPJwWcerbxfvi9Ui7U/h1FcFOUmMVeLA1WEqPpaQ3yyNdQW6PjE8iKL+kelCC2wV+F+ZeFViENw==
+X-Received: by 2002:a17:90b:ed2:: with SMTP id gz18mr2004324pjb.22.1589929910813;
+        Tue, 19 May 2020 16:11:50 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id 131sm397060pgf.49.2020.05.19.16.11.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 16:11:23 -0700 (PDT)
-Date:   Tue, 19 May 2020 16:10:02 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] net: qrtr: Fix passing invalid reference to
- qrtr_local_enqueue()
-Message-ID: <20200519231002.GD2165@builder.lan>
-References: <20200519181416.4235-1-manivannan.sadhasivam@linaro.org>
+        Tue, 19 May 2020 16:11:50 -0700 (PDT)
+Date:   Tue, 19 May 2020 16:11:41 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of
+ a seqcount
+Message-ID: <20200519161141.5fbab730@hermes.lan>
+In-Reply-To: <87v9kr5zt7.fsf@nanos.tec.linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+        <20200519214547.352050-2-a.darwish@linutronix.de>
+        <20200519150159.4d91af93@hermes.lan>
+        <87v9kr5zt7.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519181416.4235-1-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 19 May 11:14 PDT 2020, Manivannan Sadhasivam wrote:
+On Wed, 20 May 2020 00:23:48 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-> Once the traversal of the list is completed with list_for_each_entry(),
-> the iterator (node) will point to an invalid object. So passing this to
-> qrtr_local_enqueue() which is outside of the iterator block is erroneous
-> eventhough the object is not used.
+> Stephen Hemminger <stephen@networkplumber.org> writes:
+> > On Tue, 19 May 2020 23:45:23 +0200
+> > "Ahmed S. Darwish" <a.darwish@linutronix.de> wrote:
+> >  
+> >> Sequence counters write paths are critical sections that must never be
+> >> preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
+> >> 
+> >> Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
+> >> netdev name retrieval.") handled a deadlock, observed with
+> >> CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
+> >> infinitely spinning: it got scheduled after the seqcount write side
+> >> blocked inside its own critical section.
+> >> 
+> >> To fix that deadlock, among other issues, the commit added a
+> >> cond_resched() inside the read side section. While this will get the
+> >> non-preemptible kernel eventually unstuck, the seqcount reader is fully
+> >> exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
+> >> 
+> >> The fix is also still broken: if the seqcount reader belongs to a
+> >> real-time scheduling policy, it can spin forever and the kernel will
+> >> livelock.
+> >> 
+> >> Disabling preemption over the seqcount write side critical section will
+> >> not work: inside it are a number of GFP_KERNEL allocations and mutex
+> >> locking through the drivers/base/ :: device_rename() call chain.
+> >> 
+> >> From all the above, replace the seqcount with a rwsem.
+> >> 
+> >> Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
+> >> Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
+> >> Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
+> >> Cc: <stable@vger.kernel.org>
+> >> Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+> >> Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>  
+> >
+> > Have your performance tested this with 1000's of network devices?  
 > 
-> So fix this by passing NULL to qrtr_local_enqueue().
-> 
-> Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+> No. We did not. -ENOTESTCASE
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Please try, it isn't that hard..
 
-Regards,
-Bjorn
+# time for ((i=0;i<1000;i++)); do ip li add dev dummy$i type dummy; done
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  net/qrtr/qrtr.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-> index 7ed31b5e77e4..2d8d6131bc5f 100644
-> --- a/net/qrtr/qrtr.c
-> +++ b/net/qrtr/qrtr.c
-> @@ -854,7 +854,7 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
->  	}
->  	mutex_unlock(&qrtr_node_lock);
->  
-> -	qrtr_local_enqueue(node, skb, type, from, to);
-> +	qrtr_local_enqueue(NULL, skb, type, from, to);
->  
->  	return 0;
->  }
-> -- 
-> 2.17.1
-> 
+real	0m17.002s
+user	0m1.064s
+sys	0m0.375s
