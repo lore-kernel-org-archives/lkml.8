@@ -2,420 +2,187 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5BEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65446C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBED20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38989205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:47:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bazibPMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgESVrD (ORCPT
+        id S1728324AbgESVrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:47:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40868 "EHLO
+        Tue, 19 May 2020 17:47:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728219AbgESVrB (ORCPT
+        with ESMTP id S1728250AbgESVqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:47:01 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294A0C08C5C0;
-        Tue, 19 May 2020 14:47:01 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jbA4I-0002gY-Ay; Tue, 19 May 2020 23:46:34 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [PATCH v1 09/25] Documentation: locking: Describe seqlock design and usage
-Date:   Tue, 19 May 2020 23:45:31 +0200
-Message-Id: <20200519214547.352050-10-a.darwish@linutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
+        Tue, 19 May 2020 17:46:55 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F302DC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:46:54 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d10so438895pgn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Qesi/iapCeL81abTWSknFcADHHNz/GjwcctDzvBe+pM=;
+        b=bazibPMzI6USEfuV1VFPXiUOb/M/tOR2dXABcWMSo5t3Khkjc2196Z2Emfe7+qkVd7
+         cxbKccfvUoXxLoxudL9No/cpfn/7vqOqA1uuilax+SZ9E8gor8M1S1/K7ynKTVfiwd6i
+         Qfnp4RyncTT1PZQjtg4w+2H7p7vIayJrN2Iww=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Qesi/iapCeL81abTWSknFcADHHNz/GjwcctDzvBe+pM=;
+        b=rGWL+yplhyEqPt5TuQ73ZV++K7WX7426q2MdQvHvia1mC4mfbD38Rkxm6ko4J1V4Eu
+         ggwdVQHopzVZnC70+ys0EjBzHRbwYCnMZExfGsuUgXyQIgALDS8xllwGJmWMGrfq3GBI
+         IdcvWh/AfE2SSGKrbJxRkZax3yj0vUfENYhZqrRnfXLu1chAwzl7WxYa4BRJH72+zdSw
+         w8qb5SeL7ydLT+27gPY+2X1hE5mga4ehBULEI0RHGSgaNhnXu5y2TRf4TY0u+BfzozWG
+         fv1K2agiuPL+tOYVqZvOpbYaO4jv5UG50kU7FWx68bcS/wojR6JgWx9DiRg9V6ER8X2Q
+         2yhw==
+X-Gm-Message-State: AOAM5301mYNU7h94OcNlMVS7CZbDjOCjstUbIY+7euTmHRlmJ3Bh5VKR
+        Zhb7ty3XuxwqKTPBLs0QprIMJbJug40=
+X-Google-Smtp-Source: ABdhPJzjZsXLf/lBFThq5mgbKp/LSSbl4Rl7Hi7MR9R3uYwD+us9fjyyxT0gcryKKjIxuOEoFI8rFA==
+X-Received: by 2002:a62:7f11:: with SMTP id a17mr1179971pfd.36.1589924814184;
+        Tue, 19 May 2020 14:46:54 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id w1sm323779pgh.53.2020.05.19.14.46.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 14:46:53 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Prashant Malani <pmalani@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH v3 2/2] platform/chrome: typec: Register Type C switches
+Date:   Tue, 19 May 2020 14:46:04 -0700
+Message-Id: <20200519214604.180036-2-pmalani@chromium.org>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+In-Reply-To: <20200519214604.180036-1-pmalani@chromium.org>
+References: <20200519214604.180036-1-pmalani@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Proper documentation for the design and usage of sequence counters and
-sequential locks does not exist. Complete the seqlock.h documentation as
-follows:
+Register Type C mux and switch handles, when provided via firmware
+bindings. These will allow the cros-ec-typec driver, and also alternate
+mode drivers to configure connected Muxes correctly, according to PD
+information retrieved from the Chrome OS EC.
 
-  - Divide all documentation on a seqcount_t vs. seqlock_t basis. The
-    description for both mechanisms was intermingled, which is incorrect
-    since the usage constrains for each type are vastly different.
-
-  - Add an introductory paragraph describing the internal design of, and
-    rationale for, sequence counters.
-
-  - Document seqcount_t writer non-preemptibility requirement, which was
-    not previously documented anywhere, and provide a clear rationale.
-
-  - Provide template code for seqcount_t and seqlock_t initialization
-    and reader/writer critical sections.
-
-  - Recommend using seqlock_t by default. It implicitly handles the
-    serialization and non-preemptibility requirements of writers.
-
-At seqlock.h:
-
-  - Remove references to brlocks as they've long been removed from the
-    kernel.
-
-  - Remove references to gcc-3.x since the kernel's minimum supported
-    gcc version is 4.6.
-
-  - Remove the severely lacking top comment and reference the newly
-    introduced Documentation/locking/seqlock.rst file instead.
-
-References: 0f6ed63b1707 ("no need to keep brlock macros anymore...")
-References: cafa0010cd51 ("Raise the minimum required gcc version to 4.6")
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
- Documentation/locking/index.rst   |   1 +
- Documentation/locking/seqlock.rst | 181 ++++++++++++++++++++++++++++++
- include/linux/seqlock.h           |  73 +++++-------
- 3 files changed, 213 insertions(+), 42 deletions(-)
- create mode 100644 Documentation/locking/seqlock.rst
 
-diff --git a/Documentation/locking/index.rst b/Documentation/locking/index.rst
-index 5d6800a723dc..aad15fc81ccd 100644
---- a/Documentation/locking/index.rst
-+++ b/Documentation/locking/index.rst
-@@ -14,6 +14,7 @@ locking
-     mutex-design
-     rt-mutex-design
-     rt-mutex
-+    seqlock
-     spinlocks
-     ww-mutex-design
+Changes in v3:
+- Added Acked-by tag.
+- Fixed Heikki's email address in Reviewed-by tag.
+
+Changes in v2:
+- Changed dev_info prints to dev_dbg.
+
+ drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index 66b8d21092af..6e79f917314b 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -14,6 +14,8 @@
+ #include <linux/platform_data/cros_usbpd_notify.h>
+ #include <linux/platform_device.h>
+ #include <linux/usb/typec.h>
++#include <linux/usb/typec_mux.h>
++#include <linux/usb/role.h>
  
-diff --git a/Documentation/locking/seqlock.rst b/Documentation/locking/seqlock.rst
-new file mode 100644
-index 000000000000..2242ae00e7bf
---- /dev/null
-+++ b/Documentation/locking/seqlock.rst
-@@ -0,0 +1,181 @@
-+======================================
-+Sequence counters and sequential locks
-+======================================
-+
-+Introduction
-+============
-+
-+Sequence counters are a reader-writer consistency mechanism with
-+lockless readers (read-only retry loops), and no writer starvation. They
-+are used for data that's rarely written to (e.g. system time), where the
-+reader wants a consistent set of information and is willing to retry if
-+that information changes.
-+
-+A data set is consistent when the sequence count at the beginning of the
-+read side critical section is even and the same sequence count value is
-+read again at the end of the critical section. The data in the set must
-+be copied out inside the read side critical section. If the sequence
-+count has changed between the start and the end of the critical section,
-+the reader must retry.
-+
-+Writers increment the sequence count at the start and the end of their
-+critical section. After starting the critical section the sequence count
-+is odd and indicates to the readers that an update is in progress. At
-+the end of the write side critical section the sequence count becomes
-+even again which lets readers make progress.
-+
-+A sequence counter write side critical section must never be preempted
-+or interrupted by read side sections. Otherwise the reader will spin for
-+the entire scheduler tick due to the odd sequence count value and the
-+interrupted writer. If that reader belongs to a real-time scheduling
-+class, it can spin forever and the kernel will livelock.
-+
-+.. _seqcount_t:
-+
-+Sequence counters (:c:type:`seqcount_t`)
-+========================================
-+
-+This is the the raw counting mechanism, which does not protect against
-+multiple writers.  Write side critical sections must thus be serialized
-+by an external lock.
-+
-+If the write serialization primitive is not implicitly disabling
-+preemption, preemption must be explicitly disabled before entering the
-+write side section. If the sequence counter read section can be invoked
-+from hardirq or softirq contexts, interrupts or bottom halves must be
-+respectively disabled before entering the write side section.
-+
-+If it's desired to automatically handle the sequence counter
-+requirements of writer serialization and non-preemptibility, use a
-+:ref:`sequential lock <seqlock_t>` instead.
-+
-+Initialization:
-+
-+.. code-block:: c
-+
-+	/* dynamic */
-+	seqcount_t foo_seqcount;
-+	seqcount_init(&foo_seqcount);
-+
-+	/* static */
-+	static seqcount_t foo_seqcount = SEQCNT_ZERO(foo_seqcount);
-+
-+	/* C99 struct init */
-+	struct {
-+		.seq   = SEQCNT_ZERO(foo.seq),
-+	} foo;
-+
-+Write path:
-+
-+.. code-block:: c
-+
-+	/* Serialized context with disabled preemption */
-+
-+	write_seqcount_begin(&foo_seqcount);
-+
-+	/* ... [[write-side critical section]] ... */
-+
-+	write_seqcount_end(&foo_seqcount);
-+
-+Read path:
-+
-+.. code-block:: c
-+
-+	do {
-+		seq = read_seqcount_begin(&foo_seqcount);
-+
-+		/* ... [[read-side critical section]] ... */
-+
-+	} while (read_seqcount_retry(&foo_seqcount, seq));
-+
-+.. _seqlock_t:
-+
-+Sequential locks (:c:type:`seqlock_t`)
-+======================================
-+
-+This contains the :ref:`sequence counting mechanism <seqcount_t>`
-+earlier discussed, plus an embedded spinlock for writer serialization
-+and non-preemptibility.
-+
-+If the read side section can be invoked from hardirq or softirq context,
-+use the write side function variants which respectively disable
-+interrupts or bottom halves.
-+
-+Initialization:
-+
-+.. code-block:: c
-+
-+	/* dynamic */
-+	seqlock_t foo_seqlock;
-+	seqlock_init(&foo_seqlock);
-+
-+	/* static */
-+	static DEFINE_SEQLOCK(foo_seqlock);
-+
-+	/* C99 struct init */
-+	struct {
-+		.seql   = __SEQLOCK_UNLOCKED(foo.seql)
-+	} foo;
-+
-+Write path:
-+
-+.. code-block:: c
-+
-+	write_seqlock(&foo_seqlock);
-+
-+	/* ... [[write-side critical section]] ... */
-+
-+	write_sequnlock(&foo_seqlock);
-+
-+Read path, three categories:
-+
-+1. Normal Sequence readers which never block a writer but they must
-+   retry if a writer is in progress by detecting change in the sequence
-+   number.  Writers do not wait for a sequence reader.
-+
-+   .. code-block:: c
-+
-+	do {
-+		seq = read_seqbegin(&foo_seqlock);
-+
-+		/* ... [[read-side critical section]] ... */
-+
-+	} while (read_seqretry(&foo_seqlock, seq));
-+
-+2. Locking readers which will wait if a writer or another locking reader
-+   is in progress. A locking reader in progress will also block a writer
-+   from entering its critical section. This read lock is
-+   exclusive. Unlike rwlock_t, only one locking reader can acquire it.
-+
-+   .. code-block:: c
-+
-+	read_seqlock_excl(&foo_seqlock);
-+
-+	/* ... [[read-side critical section]] ... */
-+
-+	read_sequnlock_excl(&foo_seqlock);
-+
-+3. Conditional lockless reader (as in 1), or locking reader (as in 2),
-+   according to a passed marker. This is used to avoid lockless readers
-+   starvation (too much retry loops) in case of a sharp spike in write
-+   activity. First, a lockless read is tried (even marker passed). If
-+   that trial fails (odd sequence counter is returned, which is used as
-+   the next iteration marker), the lockless read is transformed to a
-+   full locking read and no retry loop is necessary.
-+
-+   .. code-block:: c
-+
-+	/* marker; even initialization */
-+	int seq = 0;
-+	do {
-+		read_seqbegin_or_lock(&foo_seqlock, &seq);
-+
-+		/* ... [[read-side critical section]] ... */
-+
-+	} while (need_seqretry(&foo_seqlock, seq));
-+	done_seqretry(&foo_seqlock, seq);
-+
-+API documentation
-+=================
-+
-+.. kernel-doc:: include/linux/seqlock.h
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index d35be7709403..2a4af746b1da 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -1,36 +1,15 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __LINUX_SEQLOCK_H
- #define __LINUX_SEQLOCK_H
-+
- /*
-- * Reader/writer consistent mechanism without starving writers. This type of
-- * lock for data where the reader wants a consistent set of information
-- * and is willing to retry if the information changes. There are two types
-- * of readers:
-- * 1. Sequence readers which never block a writer but they may have to retry
-- *    if a writer is in progress by detecting change in sequence number.
-- *    Writers do not wait for a sequence reader.
-- * 2. Locking readers which will wait if a writer or another locking reader
-- *    is in progress. A locking reader in progress will also block a writer
-- *    from going forward. Unlike the regular rwlock, the read lock here is
-- *    exclusive so that only one locking reader can get it.
-+ * seqcount_t / seqlock_t - a reader-writer consistency mechanism with
-+ * lockless readers (read-only retry loops), and no writer starvation.
-  *
-- * This is not as cache friendly as brlock. Also, this may not work well
-- * for data that contains pointers, because any writer could
-- * invalidate a pointer that a reader was following.
-+ * See Documentation/locking/seqlock.rst for full description.
-  *
-- * Expected non-blocking reader usage:
-- * 	do {
-- *	    seq = read_seqbegin(&foo);
-- * 	...
-- *      } while (read_seqretry(&foo, seq));
-- *
-- *
-- * On non-SMP the spin locks disappear but the writer still needs
-- * to increment the sequence variables because an interrupt routine could
-- * change the state of the data.
-- *
-- * Based on x86_64 vsyscall gettimeofday 
-- * by Keith Owens and Andrea Arcangeli
-+ * Copyrights:
-+ * - Based on x86_64 vsyscall gettimeofday: Keith Owens, Andrea Arcangeli
-  */
+ #define DRV_NAME "cros-ec-typec"
  
- #include <linux/spinlock.h>
-@@ -40,11 +19,23 @@
- #include <asm/processor.h>
+@@ -25,6 +27,9 @@ struct cros_typec_port {
+ 	struct typec_partner *partner;
+ 	/* Port partner PD identity info. */
+ 	struct usb_pd_identity p_identity;
++	struct typec_switch *ori_sw;
++	struct typec_mux *mux;
++	struct usb_role_switch *role_sw;
+ };
  
- /*
-- * Version using sequence counter only.
-- * This can be used when code has its own mutex protecting the
-- * updating starting before the write_seqcountbeqin() and ending
-- * after the write_seqcount_end().
-+ * Sequence counters (seqcount_t)
-+ *
-+ * The raw counting mechanism without any writer protection. Write side
-+ * critical sections must be serialized and readers on the same CPU
-+ * (e.g. through preemption or interrupts) must be excluded.
-+ *
-+ * If the write serialization mechanism is one of the common kernel
-+ * locking primitives, use a sequence counter with associated lock
-+ * (seqcount_LOCKTYPE_t) instead.
-+ *
-+ * If it's desired to automatically handle the sequence counter writer
-+ * serialization and non-preemptibility requirements, use a sequential
-+ * lock (seqlock_t) instead.
-+ *
-+ * See Documentation/locking/seqlock.rst
-  */
-+
- typedef struct seqcount {
- 	unsigned sequence;
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
-@@ -221,8 +212,6 @@ static inline int read_seqcount_retry(const seqcount_t *s, unsigned start)
- 	return __read_seqcount_retry(s, start);
+ /* Platform-specific data for the Chrome OS EC Type C controller. */
+@@ -84,6 +89,40 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
+ 	return 0;
  }
  
--
--
- static inline void raw_write_seqcount_begin(seqcount_t *s)
++static int cros_typec_get_switch_handles(struct cros_typec_port *port,
++					 struct fwnode_handle *fwnode,
++					 struct device *dev)
++{
++	port->mux = fwnode_typec_mux_get(fwnode, NULL);
++	if (IS_ERR(port->mux)) {
++		dev_dbg(dev, "Mux handle not found.\n");
++		goto mux_err;
++	}
++
++	port->ori_sw = fwnode_typec_switch_get(fwnode);
++	if (IS_ERR(port->ori_sw)) {
++		dev_dbg(dev, "Orientation switch handle not found.\n");
++		goto ori_sw_err;
++	}
++
++	port->role_sw = fwnode_usb_role_switch_get(fwnode);
++	if (IS_ERR(port->role_sw)) {
++		dev_dbg(dev, "USB role switch handle not found.\n");
++		goto role_sw_err;
++	}
++
++	return 0;
++
++role_sw_err:
++	usb_role_switch_put(port->role_sw);
++ori_sw_err:
++	typec_switch_put(port->ori_sw);
++mux_err:
++	typec_mux_put(port->mux);
++
++	return -ENODEV;
++}
++
+ static void cros_unregister_ports(struct cros_typec_data *typec)
  {
- 	s->sequence++;
-@@ -367,11 +356,6 @@ static inline void raw_write_seqcount_latch(seqcount_t *s)
-        smp_wmb();      /* increment "sequence" before following stores */
+ 	int i;
+@@ -91,6 +130,9 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
+ 	for (i = 0; i < typec->num_ports; i++) {
+ 		if (!typec->ports[i])
+ 			continue;
++		usb_role_switch_put(typec->ports[i]->role_sw);
++		typec_switch_put(typec->ports[i]->ori_sw);
++		typec_mux_put(typec->ports[i]->mux);
+ 		typec_unregister_port(typec->ports[i]->port);
+ 	}
  }
- 
--/*
-- * Sequence counter only version assumes that callers are using their
-- * own locking and preemption is disabled.
-- */
--
- static inline void __write_seqcount_begin_nested(seqcount_t *s, int subclass)
- {
- 	raw_write_seqcount_begin(s);
-@@ -419,15 +403,20 @@ static inline void write_seqcount_invalidate(seqcount_t *s)
- 	s->sequence+=2;
- }
- 
-+/*
-+ * Sequential locks (seqlock_t)
-+ *
-+ * Sequence counters with an embedded spinlock for writer serialization
-+ * and non-preemptibility.
-+ *
-+ * See Documentation/locking/seqlock.rst
-+ */
+@@ -153,6 +195,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+ 			ret = PTR_ERR(cros_port->port);
+ 			goto unregister_ports;
+ 		}
 +
- typedef struct {
- 	struct seqcount seqcount;
- 	spinlock_t lock;
- } seqlock_t;
++		ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
++		if (ret)
++			dev_dbg(dev, "No switch control for port %d\n",
++				port_num);
+ 	}
  
--/*
-- * These macros triggered gcc-3.x compile-time problems.  We think these are
-- * OK now.  Be cautious.
-- */
- #define __SEQLOCK_UNLOCKED(lockname)			\
- 	{						\
- 		.seqcount = SEQCNT_ZERO(lockname),	\
+ 	return 0;
 -- 
-2.20.1
+2.26.2.761.g0e0b3e54be-goog
 
