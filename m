@@ -2,192 +2,84 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22571C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D70C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B07D207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E802072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbgESL52 (ORCPT
+        id S1728805AbgESL5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:57:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4815 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726949AbgESL52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:57:28 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B53B34391CBB79186702;
-        Tue, 19 May 2020 19:57:25 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.101) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 19 May 2020
- 19:57:17 +0800
-Subject: Re: [RFC PATCH v3 1/2] cpufreq: change '.set_boost' to act on only
- one policy
-To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <Souvik.Chakravarty@arm.com>, <Thanu.Rangarajan@arm.com>
-CC:     <Sudeep.Holla@arm.com>, <guohanjun@huawei.com>,
-        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1589888489-13828-1-git-send-email-wangxiongfeng2@huawei.com>
- <1589888489-13828-2-git-send-email-wangxiongfeng2@huawei.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <060a79bb-00d0-982a-4e4b-1cf4511ccce2@huawei.com>
-Date:   Tue, 19 May 2020 19:57:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 19 May 2020 07:57:42 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18100 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726949AbgESL5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 07:57:42 -0400
+IronPort-SDR: F5YMKoU+qMHz1kUB8YfHDcjFhoLUYYLyGBP/VUD3srrqJfDKukutqK2Es39oaWn9Gi0u18cHo0
+ wOx2S9xuUhgA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 04:57:42 -0700
+IronPort-SDR: YBmlirqP1mfDY2/shxRL2nz01uQVfsC6fFTTtPR/n2bkG/ZnhNOR6vu9dTc262VIJWmiUccltJ
+ OFYuh7X3uZnQ==
+X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
+   d="scan'208";a="439594040"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 04:57:37 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id BBB2920CEF; Tue, 19 May 2020 14:57:35 +0300 (EEST)
+Date:   Tue, 19 May 2020 14:57:35 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Luis Oliveira <lolivei@synopsys.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>
+Subject: Re: [PATCH v2 4/6] media: ov5647: Use gpiod_set_value_cansleep
+Message-ID: <20200519115735.GL20066@paasikivi.fi.intel.com>
+References: <cover.1589850165.git.roman.kovalivskyi@globallogic.com>
+ <ff9d9fe93a50efdeced9efab7b38d72c7dabc08f.1589850165.git.roman.kovalivskyi@globallogic.com>
 MIME-Version: 1.0
-In-Reply-To: <1589888489-13828-2-git-send-email-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.101]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff9d9fe93a50efdeced9efab7b38d72c7dabc08f.1589850165.git.roman.kovalivskyi@globallogic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/5/19 19:41, Xiongfeng Wang wrote:
-> Macro 'for_each_active_policy()' is defined internally. To avoid some
-> cpufreq driver needing this macro to iterate over all the policies in
-> '.set_boost' callback, we redefine '.set_boost' to act on only one
-> policy and pass the policy as an argument.
-> 'cpufreq_boost_trigger_state()' iterate over all the policies to set
-> boost for the system. This is preparation for adding SW BOOST support
-> for CPPC.
+On Tue, May 19, 2020 at 04:16:19AM +0300, Roman Kovalivskyi wrote:
+> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
 > 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->  drivers/cpufreq/acpi-cpufreq.c |  4 ++--
->  drivers/cpufreq/cpufreq.c      | 53 +++++++++++++++++++++---------------------
->  include/linux/cpufreq.h        |  2 +-
->  3 files changed, 30 insertions(+), 29 deletions(-)
+> All calls to the gpio library are in contexts that can sleep,
+> therefore there is no issue with having those GPIOs controlled
+> by controllers which require sleeping (eg I2C GPIO expanders).
 > 
-> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-> index 289e8ce..b0a9eb5 100644
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -126,7 +126,7 @@ static void boost_set_msr_each(void *p_en)
->  	boost_set_msr(enable);
->  }
->  
-> -static int set_boost(int val)
-> +static int set_boost(struct cpufreq_policy *policy, int val)
->  {
->  	get_online_cpus();
->  	on_each_cpu(boost_set_msr_each, (void *)(long)val, 1);
-> @@ -162,7 +162,7 @@ static ssize_t store_cpb(struct cpufreq_policy *policy, const char *buf,
->  	if (ret || val > 1)
->  		return -EINVAL;
->  
-> -	set_boost(val);
-> +	set_boost(policy, val);
->  
->  	return count;
->  }
-
-My original thought is as below. Since '/sys/devices/system/cpu/cpufreq/boost'
-can be used to set boost for the system. The file 'cpb' below each policy can be
-used to set boost for the policy. But this will change the existing logic.
-
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@ -126,12 +126,14 @@ static void boost_set_msr_each(void *p_en)
-        boost_set_msr(enable);
- }
-
--static int set_boost(int val)
-+static int set_boost(struct cpufreq_policy *policy, int val)
- {
-        get_online_cpus();
--   on_each_cpu(boost_set_msr_each, (void *)(long)val, 1);
-+ on_each_cpu_mask(policy->cpus, boost_set_msr_each,
-+                  (void *)(long)val, 1);
-        put_online_cpus();
--   pr_debug("Core Boosting %sabled.\n", val ? "en" : "dis");
-+ pr_debug("CPU %*pbl: Core Boosting %sabled.\n",
-+          cpumask_pr_args(policy->cpus), val ? "en" : "dis");
-
-        return 0;
- }
-@@ -162,7 +164,7 @@ static ssize_t store_cpb(struct cpufreq_policy *policy,
-const char *buf,
-        if (ret || val > 1)
-                return -EINVAL;
-
--   set_boost(val);
-+ set_boost(policy, val);
-
-        return count;
- }
-
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index d03f250..d0d86b1 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
->
->  int cpufreq_boost_trigger_state(int state)
->  {
-> +	struct cpufreq_policy *policy;
->  	unsigned long flags;
->  	int ret = 0;
->  
-> @@ -2570,16 +2565,22 @@ int cpufreq_boost_trigger_state(int state)
->  	cpufreq_driver->boost_enabled = state;
->  	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
->  
-> -	ret = cpufreq_driver->set_boost(state);
-> -	if (ret) {
-> -		write_lock_irqsave(&cpufreq_driver_lock, flags);
-> -		cpufreq_driver->boost_enabled = !state;
-> -		write_unlock_irqrestore(&cpufreq_driver_lock, flags);
-> -
-> -		pr_err("%s: Cannot %s BOOST\n",
-> -		       __func__, state ? "enable" : "disable");
-> +	for_each_active_policy(policy) {
-> +		ret = cpufreq_driver->set_boost(policy, state);
-> +		if (ret)
-> +			goto err_reset_state;
->  	}
->  
-> +	return 0;
-> +
-> +err_reset_state:
-> +	write_lock_irqsave(&cpufreq_driver_lock, flags);
-> +	cpufreq_driver->boost_enabled = !state;
-> +	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
-> +
-> +	pr_err("%s: Cannot %s BOOST\n",
-> +	       __func__, state ? "enable" : "disable");
-> +
->  	return ret;
->  }
-
-Is it better to set 'boost_enabled' after set boost successfully rather than
-setting it in the begining and resetting it if setting boost failed.
-
-Thanks,
-Xiongfeng
-
->  
-> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> index 67d5950..3494f67 100644
-> --- a/include/linux/cpufreq.h
-> +++ b/include/linux/cpufreq.h
-> @@ -367,7 +367,7 @@ struct cpufreq_driver {
->  
->  	/* platform specific boost support code */
->  	bool		boost_enabled;
-> -	int		(*set_boost)(int state);
-> +	int		(*set_boost)(struct cpufreq_policy *policy, int state);
->  };
->  
->  /* flags */
+> Switch to using gpiod_set_value_cansleep instead of gpiod_set_value
+> to avoid triggering the warning in gpiolib should the GPIO
+> controller need to sleep.
 > 
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
 
+This needs to be merged with the 2nd patch.
+
+-- 
+Sakari Ailus
