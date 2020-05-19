@@ -3,221 +3,288 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5532CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1404B20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3338F207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgESFtT (ORCPT
+        id S1728886AbgESFuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:49:19 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:42746 "EHLO pegase1.c-s.fr"
+        Tue, 19 May 2020 01:50:32 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:9879 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728509AbgESFtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:49:07 -0400
+        id S1728637AbgESFtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:49:19 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49R4gz5ZT4z9txm2;
-        Tue, 19 May 2020 07:49:03 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49R4hD0snqz9txm4;
+        Tue, 19 May 2020 07:49:16 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id g8I4-W-i0NT1; Tue, 19 May 2020 07:49:03 +0200 (CEST)
+        with ESMTP id Qg4LW-gqs4Ck; Tue, 19 May 2020 07:49:16 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4gz4q85z9txlx;
-        Tue, 19 May 2020 07:49:03 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4hD07nSz9txlx;
+        Tue, 19 May 2020 07:49:16 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C45FD8B7A7;
-        Tue, 19 May 2020 07:49:04 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 28FA48B7A7;
+        Tue, 19 May 2020 07:49:17 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id N2N2qQ9Slsy0; Tue, 19 May 2020 07:49:04 +0200 (CEST)
+        with ESMTP id pR9XnFpyxVVP; Tue, 19 May 2020 07:49:17 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FFBE8B767;
-        Tue, 19 May 2020 07:49:04 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D0C928B767;
+        Tue, 19 May 2020 07:49:16 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 5F7F865A4A; Tue, 19 May 2020 05:49:04 +0000 (UTC)
-Message-Id: <38111acf6841047a8addde37c63e92d611ee38c2.1589866984.git.christophe.leroy@csgroup.eu>
+        id AE0A265A4A; Tue, 19 May 2020 05:49:16 +0000 (UTC)
+Message-Id: <221b7e3ead80a5969629938c023f8cfe45fdd2fb.1589866984.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 References: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v4 21/45] powerpc/mm: Standardise pte_update() prototype
- between PPC32 and PPC64
+Subject: [PATCH v4 33/45] powerpc/8xx: Drop special handling of Linear and
+ IMMR mappings in I/D TLB handlers
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 19 May 2020 05:49:04 +0000 (UTC)
+Date:   Tue, 19 May 2020 05:49:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PPC64 takes 3 additional parameters compared to PPC32:
-- mm
-- address
-- huge
+Up to now, linear and IMMR mappings are managed via huge TLB entries
+through specific code directly in TLB miss handlers. This implies
+some patching of the TLB miss handlers at startup, and a lot of
+dedicated code.
 
-These 3 parameters will be needed in order to perform different
-action depending on the page size on the 8xx.
+Remove all this specific dedicated code.
 
-Make pte_update() prototype identical for PPC32 and PPC64.
-
-This allows dropping an #ifdef in huge_ptep_get_and_clear().
+For now we are back to normal handling via standard 4k pages. In the
+next patches, linear memory mapping and IMMR mapping will be managed
+through huge pages.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/book3s/32/pgtable.h | 15 ++++++++-------
- arch/powerpc/include/asm/hugetlb.h           |  4 ----
- arch/powerpc/include/asm/nohash/32/pgtable.h | 13 +++++++------
- 3 files changed, 15 insertions(+), 17 deletions(-)
+ arch/powerpc/kernel/head_8xx.S |  29 +--------
+ arch/powerpc/mm/nohash/8xx.c   | 106 +--------------------------------
+ 2 files changed, 3 insertions(+), 132 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
-index 25c59511fcab..8a091d125f2d 100644
---- a/arch/powerpc/include/asm/book3s/32/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
-@@ -218,7 +218,7 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
-  */
- 
- #define pte_clear(mm, addr, ptep) \
--	do { pte_update(ptep, ~_PAGE_HASHPTE, 0); } while (0)
-+	do { pte_update(mm, addr, ptep, ~_PAGE_HASHPTE, 0, 0); } while (0)
- 
- #define pmd_none(pmd)		(!pmd_val(pmd))
- #define	pmd_bad(pmd)		(pmd_val(pmd) & _PMD_BAD)
-@@ -254,7 +254,8 @@ extern void flush_hash_entry(struct mm_struct *mm, pte_t *ptep,
-  * when using atomic updates, only the low part of the PTE is
-  * accessed atomically.
-  */
--static inline pte_basic_t pte_update(pte_t *p, unsigned long clr, unsigned long set)
-+static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, pte_t *p,
-+				     unsigned long clr, unsigned long set, int huge)
- {
- 	pte_basic_t old;
- 	unsigned long tmp;
-@@ -292,7 +293,7 @@ static inline int __ptep_test_and_clear_young(struct mm_struct *mm,
- 					      unsigned long addr, pte_t *ptep)
- {
- 	unsigned long old;
--	old = pte_update(ptep, _PAGE_ACCESSED, 0);
-+	old = pte_update(mm, addr, ptep, _PAGE_ACCESSED, 0, 0);
- 	if (old & _PAGE_HASHPTE) {
- 		unsigned long ptephys = __pa(ptep) & PAGE_MASK;
- 		flush_hash_pages(mm->context.id, addr, ptephys, 1);
-@@ -306,14 +307,14 @@ static inline int __ptep_test_and_clear_young(struct mm_struct *mm,
- static inline pte_t ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
- 				       pte_t *ptep)
- {
--	return __pte(pte_update(ptep, ~_PAGE_HASHPTE, 0));
-+	return __pte(pte_update(mm, addr, ptep, ~_PAGE_HASHPTE, 0, 0));
- }
- 
- #define __HAVE_ARCH_PTEP_SET_WRPROTECT
- static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addr,
- 				      pte_t *ptep)
- {
--	pte_update(ptep, _PAGE_RW, 0);
-+	pte_update(mm, addr, ptep, _PAGE_RW, 0, 0);
- }
- 
- static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
-@@ -324,7 +325,7 @@ static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
- 	unsigned long set = pte_val(entry) &
- 		(_PAGE_DIRTY | _PAGE_ACCESSED | _PAGE_RW | _PAGE_EXEC);
- 
--	pte_update(ptep, 0, set);
-+	pte_update(vma->vm_mm, address, ptep, 0, set, 0);
- 
- 	flush_tlb_page(vma, address);
- }
-@@ -522,7 +523,7 @@ static inline void __set_pte_at(struct mm_struct *mm, unsigned long addr,
- 		*ptep = __pte((pte_val(*ptep) & _PAGE_HASHPTE)
- 			      | (pte_val(pte) & ~_PAGE_HASHPTE));
- 	else
--		pte_update(ptep, ~_PAGE_HASHPTE, pte_val(pte));
-+		pte_update(mm, addr, ptep, ~_PAGE_HASHPTE, pte_val(pte), 0);
- 
- #elif defined(CONFIG_PTE_64BIT)
- 	/* Second case is 32-bit with 64-bit PTE.  In this case, we
-diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
-index bd6504c28c2f..e4276af034e9 100644
---- a/arch/powerpc/include/asm/hugetlb.h
-+++ b/arch/powerpc/include/asm/hugetlb.h
-@@ -40,11 +40,7 @@ void hugetlb_free_pgd_range(struct mmu_gather *tlb, unsigned long addr,
- static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
- 					    unsigned long addr, pte_t *ptep)
- {
--#ifdef CONFIG_PPC64
- 	return __pte(pte_update(mm, addr, ptep, ~0UL, 0, 1));
--#else
--	return __pte(pte_update(ptep, ~0UL, 0));
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index b0cceee6405c..d1546f379757 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -207,31 +207,21 @@ InstructionTLBMiss:
+ 	mfspr	r10, SPRN_SRR0	/* Get effective address of fault */
+ 	INVALIDATE_ADJACENT_PAGES_CPU15(r10)
+ 	mtspr	SPRN_MD_EPN, r10
+-	/* Only modules will cause ITLB Misses as we always
+-	 * pin the first 8MB of kernel memory */
+ #ifdef ITLB_MISS_KERNEL
+ 	mfcr	r11
+-#if defined(SIMPLE_KERNEL_ADDRESS) && defined(CONFIG_PIN_TLB_TEXT)
++#if defined(SIMPLE_KERNEL_ADDRESS)
+ 	cmpi	cr0, r10, 0	/* Address >= 0x80000000 */
+ #else
+ 	rlwinm	r10, r10, 16, 0xfff8
+ 	cmpli	cr0, r10, PAGE_OFFSET@h
+-#ifndef CONFIG_PIN_TLB_TEXT
+-	/* It is assumed that kernel code fits into the first 32M */
+-0:	cmpli	cr7, r10, (PAGE_OFFSET + 0x2000000)@h
+-	patch_site	0b, patch__itlbmiss_linmem_top
 -#endif
+ #endif
+ #endif
+ 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
+ #ifdef ITLB_MISS_KERNEL
+-#if defined(SIMPLE_KERNEL_ADDRESS) && defined(CONFIG_PIN_TLB_TEXT)
++#if defined(SIMPLE_KERNEL_ADDRESS)
+ 	bge+	3f
+ #else
+ 	blt+	3f
+-#endif
+-#ifndef CONFIG_PIN_TLB_TEXT
+-	blt	cr7, ITLBMissLinear
+ #endif
+ 	rlwinm	r10, r10, 0, 20, 31
+ 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
+@@ -327,19 +317,9 @@ DataStoreTLBMiss:
+ 	mfspr	r10, SPRN_MD_EPN
+ 	rlwinm	r10, r10, 16, 0xfff8
+ 	cmpli	cr0, r10, PAGE_OFFSET@h
+-#ifndef CONFIG_PIN_TLB_IMMR
+-	cmpli	cr6, r10, VIRT_IMMR_BASE@h
+-#endif
+-0:	cmpli	cr7, r10, (PAGE_OFFSET + 0x2000000)@h
+-	patch_site	0b, patch__dtlbmiss_linmem_top
+ 
+ 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
+ 	blt+	3f
+-#ifndef CONFIG_PIN_TLB_IMMR
+-0:	beq-	cr6, DTLBMissIMMR
+-	patch_site	0b, patch__dtlbmiss_immr_jmp
+-#endif
+-	blt	cr7, DTLBMissLinear
+ 	rlwinm	r10, r10, 0, 20, 31
+ 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
+ 3:
+@@ -571,14 +551,9 @@ FixupDAR:/* Entry point for dcbx workaround. */
+ 	cmpli	cr1, r11, PAGE_OFFSET@h
+ 	mfspr	r11, SPRN_M_TWB	/* Get level 1 table */
+ 	blt+	cr1, 3f
+-	rlwinm	r11, r10, 16, 0xfff8
+-
+-0:	cmpli	cr7, r11, (PAGE_OFFSET + 0x1800000)@h
+-	patch_site	0b, patch__fixupdar_linmem_top
+ 
+ 	/* create physical page address from effective address */
+ 	tophys(r11, r10)
+-	blt-	cr7, 201f
+ 	mfspr	r11, SPRN_M_TWB	/* Get level 1 table */
+ 	rlwinm	r11, r11, 0, 20, 31
+ 	oris	r11, r11, (swapper_pg_dir - PAGE_OFFSET)@ha
+diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
+index 2c480e35b426..b735482e1529 100644
+--- a/arch/powerpc/mm/nohash/8xx.c
++++ b/arch/powerpc/mm/nohash/8xx.c
+@@ -55,8 +55,6 @@ unsigned long p_block_mapped(phys_addr_t pa)
+ 	return 0;
  }
  
- #define __HAVE_ARCH_HUGE_PTEP_CLEAR_FLUSH
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index e963e6880d7c..474dd1db065f 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -166,7 +166,7 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
- #ifndef __ASSEMBLY__
- 
- #define pte_clear(mm, addr, ptep) \
--	do { pte_update(ptep, ~0, 0); } while (0)
-+	do { pte_update(mm, addr, ptep, ~0, 0, 0); } while (0)
- 
- #ifndef pte_mkwrite
- static inline pte_t pte_mkwrite(pte_t pte)
-@@ -222,7 +222,8 @@ static inline void pmd_clear(pmd_t *pmdp)
-  * to properly flush the virtually tagged instruction cache of
-  * those implementations.
+-#define LARGE_PAGE_SIZE_8M	(1<<23)
+-
+ /*
+  * MMU_init_hw does the chip-specific initialization of the MMU hardware.
   */
--static inline pte_basic_t pte_update(pte_t *p, unsigned long clr, unsigned long set)
-+static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, pte_t *p,
-+				     unsigned long clr, unsigned long set, int huge)
+@@ -81,122 +79,20 @@ void __init mmu_mapin_immr(void)
+ 		map_kernel_page(v + offset, p + offset, PAGE_KERNEL_NCG);
+ }
+ 
+-static void mmu_patch_cmp_limit(s32 *site, unsigned long mapped)
+-{
+-	modify_instruction_site(site, 0xffff, (unsigned long)__va(mapped) >> 16);
+-}
+-
+-static void mmu_patch_addis(s32 *site, long simm)
+-{
+-	unsigned int instr = *(unsigned int *)patch_site_addr(site);
+-
+-	instr &= 0xffff0000;
+-	instr |= ((unsigned long)simm) >> 16;
+-	patch_instruction_site(site, ppc_inst(instr));
+-}
+-
+-static void mmu_mapin_ram_chunk(unsigned long offset, unsigned long top, pgprot_t prot)
+-{
+-	unsigned long s = offset;
+-	unsigned long v = PAGE_OFFSET + s;
+-	phys_addr_t p = memstart_addr + s;
+-
+-	for (; s < top; s += PAGE_SIZE) {
+-		map_kernel_page(v, p, prot);
+-		v += PAGE_SIZE;
+-		p += PAGE_SIZE;
+-	}
+-}
+-
+ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
  {
- #if defined(PTE_ATOMIC_UPDATES) && !defined(CONFIG_PTE_64BIT)
- 	unsigned long old, tmp;
-@@ -260,7 +261,7 @@ static inline int __ptep_test_and_clear_young(struct mm_struct *mm,
- 					      unsigned long addr, pte_t *ptep)
+-	unsigned long mapped;
+-
+ 	mmu_mapin_immr();
+ 
+-	if (__map_without_ltlbs) {
+-		mapped = 0;
+-		if (!IS_ENABLED(CONFIG_PIN_TLB_IMMR))
+-			patch_instruction_site(&patch__dtlbmiss_immr_jmp, ppc_inst(PPC_INST_NOP));
+-		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
+-			mmu_patch_cmp_limit(&patch__itlbmiss_linmem_top, 0);
+-	} else {
+-		unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
+-
+-		mapped = top & ~(LARGE_PAGE_SIZE_8M - 1);
+-		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
+-			mmu_patch_cmp_limit(&patch__itlbmiss_linmem_top, einittext8);
+-
+-		/*
+-		 * Populate page tables to:
+-		 * - have them appear in /sys/kernel/debug/kernel_page_tables
+-		 * - allow the BDI to find the pages when they are not PINNED
+-		 */
+-		mmu_mapin_ram_chunk(0, einittext8, PAGE_KERNEL_X);
+-		mmu_mapin_ram_chunk(einittext8, mapped, PAGE_KERNEL);
+-	}
+-
+-	mmu_patch_cmp_limit(&patch__dtlbmiss_linmem_top, mapped);
+-	mmu_patch_cmp_limit(&patch__fixupdar_linmem_top, mapped);
+-
+-	/* If the size of RAM is not an exact power of two, we may not
+-	 * have covered RAM in its entirety with 8 MiB
+-	 * pages. Consequently, restrict the top end of RAM currently
+-	 * allocable so that calls to the MEMBLOCK to allocate PTEs for "tail"
+-	 * coverage with normal-sized pages (or other reasons) do not
+-	 * attempt to allocate outside the allowed range.
+-	 */
+-	if (mapped)
+-		memblock_set_current_limit(mapped);
+-
+-	block_mapped_ram = mapped;
+-
+-	return mapped;
++	return 0;
+ }
+ 
+ void mmu_mark_initmem_nx(void)
  {
- 	unsigned long old;
--	old = pte_update(ptep, _PAGE_ACCESSED, 0);
-+	old = pte_update(mm, addr, ptep, _PAGE_ACCESSED, 0, 0);
- 	return (old & _PAGE_ACCESSED) != 0;
+-	if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) && CONFIG_ETEXT_SHIFT < 23)
+-		mmu_patch_addis(&patch__itlbmiss_linmem_top8,
+-				-((long)_etext & ~(LARGE_PAGE_SIZE_8M - 1)));
+-	if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT)) {
+-		unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
+-		unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
+-		unsigned long etext = __pa(_etext);
+-
+-		mmu_patch_cmp_limit(&patch__itlbmiss_linmem_top, __pa(_etext));
+-
+-		/* Update page tables for PTDUMP and BDI */
+-		mmu_mapin_ram_chunk(0, einittext8, __pgprot(0));
+-		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX)) {
+-			mmu_mapin_ram_chunk(0, etext, PAGE_KERNEL_TEXT);
+-			mmu_mapin_ram_chunk(etext, einittext8, PAGE_KERNEL);
+-		} else {
+-			mmu_mapin_ram_chunk(0, etext8, PAGE_KERNEL_TEXT);
+-			mmu_mapin_ram_chunk(etext8, einittext8, PAGE_KERNEL);
+-		}
+-	}
+-	_tlbil_all();
  }
- #define ptep_test_and_clear_young(__vma, __addr, __ptep) \
-@@ -270,7 +271,7 @@ static inline int __ptep_test_and_clear_young(struct mm_struct *mm,
- static inline pte_t ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
- 				       pte_t *ptep)
+ 
+ #ifdef CONFIG_STRICT_KERNEL_RWX
+ void mmu_mark_rodata_ro(void)
  {
--	return __pte(pte_update(ptep, ~0, 0));
-+	return __pte(pte_update(mm, addr, ptep, ~0, 0, 0));
+-	unsigned long sinittext = __pa(_sinittext);
+-	unsigned long etext = __pa(_etext);
+-
+-	if (CONFIG_DATA_SHIFT < 23)
+-		mmu_patch_addis(&patch__dtlbmiss_romem_top8,
+-				-__pa(((unsigned long)_sinittext) &
+-				      ~(LARGE_PAGE_SIZE_8M - 1)));
+-	mmu_patch_addis(&patch__dtlbmiss_romem_top, -__pa(_sinittext));
+-
+-	_tlbil_all();
+-
+-	/* Update page tables for PTDUMP and BDI */
+-	mmu_mapin_ram_chunk(0, sinittext, __pgprot(0));
+-	mmu_mapin_ram_chunk(0, etext, PAGE_KERNEL_ROX);
+-	mmu_mapin_ram_chunk(etext, sinittext, PAGE_KERNEL_RO);
  }
+ #endif
  
- #define __HAVE_ARCH_PTEP_SET_WRPROTECT
-@@ -280,7 +281,7 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addr,
- 	unsigned long clr = ~pte_val(pte_wrprotect(__pte(~0)));
- 	unsigned long set = pte_val(pte_wrprotect(__pte(0)));
- 
--	pte_update(ptep, clr, set);
-+	pte_update(mm, addr, ptep, clr, set, 0);
- }
- 
- static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
-@@ -293,7 +294,7 @@ static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
- 	unsigned long set = pte_val(entry) & pte_val(pte_set);
- 	unsigned long clr = ~pte_val(entry) & ~pte_val(pte_clr);
- 
--	pte_update(ptep, clr, set);
-+	pte_update(vma->vm_mm, address, ptep, clr, set, 0);
- 
- 	flush_tlb_page(vma, address);
- }
 -- 
 2.25.0
 
