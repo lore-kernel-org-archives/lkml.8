@@ -2,313 +2,358 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E110C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE184C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65BC62065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:20:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fsh2DrJu"
+	by mail.kernel.org (Postfix) with ESMTP id A7C6C20826
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589926896;
+	bh=Ahw8srE0nbbe3jb4xG7Lotaxsk6bz/JlQZOCw8dzLf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wkUOVqa476Bf4RKFgWfflxmgJWhebBczsZ35BtaTm8vep8lEPUFxVzKzFVWpNu7YB
+	 7y1mXJyEn7/vxzvPUbUfeL9igo5/S95Zc1ncB0tegweL4vGiuypl4Wl41nIF4D94O5
+	 +/FzUc7DcmWHy366yr3+H7cCLVZL3WrT7d//rDvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgESWUj (ORCPT
+        id S1727941AbgESWVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:20:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgESWUj (ORCPT
+        Tue, 19 May 2020 18:21:36 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:32784 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgESWVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:20:39 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0734FC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 15:20:39 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id f15so462523plr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 15:20:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qqjzSh1ztmtDYwc/MYnPY/dYSfE16wab49lYkM1PfBQ=;
-        b=Fsh2DrJuOBDMLbA4apQRID0KeanRhQiSAbTpdakI/ENJh94XscmLkvjLVV6+XZOkW3
-         eucUVxtVvrsavK61NAUg8AzSih+MeDqP2lDhozqB/PsV3iU7jq4IVUPvAnXx/WYB1AEu
-         rCvWOaUxyLDiXamwU/LAWr+51cWsMbudGo/hqlk7XmEi5gIQli+lynuVkVgMAYARLkxi
-         dj5VS7LHFE3sAYoY0FhUG5QqivxzJamv7Fvb2w2QqKPIUtuC5iUCxSzz4iwr5EtDW0cO
-         hI8W9R5cvtjBzJOjHU2iWFxrI30srcJL+vNlj076HVH/Iy78HnA3CZhU//XRojnIn9Ni
-         cjaA==
+        Tue, 19 May 2020 18:21:35 -0400
+Received: by mail-il1-f193.google.com with SMTP id o67so1119793ila.0;
+        Tue, 19 May 2020 15:21:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qqjzSh1ztmtDYwc/MYnPY/dYSfE16wab49lYkM1PfBQ=;
-        b=Vl3PDeM2mHJ09ZqTZ5fH+an3hqTkEKvNanH7Gvt2D2ZkGb+rggBNpNcqVdbMveFvGE
-         6/FmgoM5/LvvKmW8wltBgFpYY/qHRorby/Ux6UtnFolnUjFB1kOUs3CXMFAio2bNqaDx
-         OxRna/fKi9EQ+d3qR+imXQBXIzPsCAlxZFfFNDEw0nPLI++RPfkI1EwkmHD4yM+Tki7h
-         rJvgmDxZoEfVBSrWi/ap25Xj10ZCvB790MACIdX8kXg85IVB6D4senA2mI0O1qscYJUn
-         ma8RCvvT7Dsa361S5OYlI/AP4wwYGNWlISMMkXVRZXAjiVVwFqN3W57YyrIsk0kuuDWP
-         o/fA==
-X-Gm-Message-State: AOAM531IVZTVCBoDPrJ3P7Gtw079wTjZ5xImIy4zrWcorZyG4F7NhrVM
-        JX15S7wg2q1BPOQsqkwmNhJukJ9x8R8=
-X-Google-Smtp-Source: ABdhPJy2qeKYVGFiaiYmSSm3TzYMf3o3nRHsvHjU3Vrs44XNoMU4nBKRIIfLUZrvaNoGCn4Gi6Emlw==
-X-Received: by 2002:a17:90b:503:: with SMTP id r3mr1752652pjz.69.1589926838459;
-        Tue, 19 May 2020 15:20:38 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id w19sm393729pfc.95.2020.05.19.15.20.37
+         :mime-version:content-disposition:in-reply-to;
+        bh=BEN+tw7z4mCkQ24uiqe88N26f3zgm2QQ47/AnQ840b8=;
+        b=BPluzFLppr57v+Bmew/wypLFdx7g2o4ohBt+lWZ41Jdqu7mZFtUzJSI6xCfDSnAKJx
+         L+/fxWFe9NM0oidK+84QdfZiGe+p5uaOJOkdKGgofNZpG/U6IUQwIQffTbLRkWDLyzJ3
+         gWO32UryU2RXYVzvz3f2dPsojN/l5y8BWKAX/jKQGKQ6kyr6nBH+6gUrs5BzHrNv6Rni
+         SahqgbnG8LIwUjzgSlU0c+dCdRdAUwgryjI67oorIUvYTzT28FpjRXseLeTkJpyr9fzs
+         0v7nLfGohW4aKfHby2wQlaUz56VaR9cOnerfJhM32GWh1o3ExQCQfND73Eg7xf9BZxGo
+         S3QA==
+X-Gm-Message-State: AOAM532HvGjQU3iwmWVoXiIGr7S47mPWA7T3Kt0qeq4c6A17A1QKp4ML
+        vNRa2Z9WrpPsSJTaQr1vyw==
+X-Google-Smtp-Source: ABdhPJx/FMKP9R0H7RKVQpRSG+nSgWCZKRAGXE9/bSi+QvQyjbN8nfD5MxhgfzOgsFYY8McNgXX2Tg==
+X-Received: by 2002:a92:5c06:: with SMTP id q6mr1309504ilb.236.1589926893566;
+        Tue, 19 May 2020 15:21:33 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id o15sm341350ilg.46.2020.05.19.15.21.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 15:20:37 -0700 (PDT)
-Date:   Tue, 19 May 2020 16:20:35 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arun Kumar Neelakantam <aneela@codeaurora.org>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
-        sricharan@codeaurora.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH V4 2/4] rpmsg: glink: Add support to handle signals
- command
-Message-ID: <20200519222035.GB26832@xps15>
-References: <1589346671-15226-1-git-send-email-aneela@codeaurora.org>
- <1589346671-15226-3-git-send-email-aneela@codeaurora.org>
+        Tue, 19 May 2020 15:21:32 -0700 (PDT)
+Received: (nullmailer pid 791975 invoked by uid 1000);
+        Tue, 19 May 2020 22:21:32 -0000
+Date:   Tue, 19 May 2020 16:21:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     broonie@kernel.org, lgirdwood@gmail.com,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] bindings: sound: Add documentation for TI j721e
+ EVM (CPB and IVI)
+Message-ID: <20200519222132.GA488519@bogus>
+References: <20200512131633.32668-1-peter.ujfalusi@ti.com>
+ <20200512131633.32668-3-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589346671-15226-3-git-send-email-aneela@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512131633.32668-3-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 10:41:09AM +0530, Arun Kumar Neelakantam wrote:
-> Remote peripherals send signal notifications over glink with commandID 15.
+On Tue, May 12, 2020 at 04:16:32PM +0300, Peter Ujfalusi wrote:
+> The audio support on the Common Processor Board board is using
+> pcm3168a codec connected to McASP10 serializers in parallel setup.
 > 
-> Add support to send and receive the signal command and convert the signals
-> from NATIVE to TIOCM while receiving and vice versa while sending.
+> The Infotainment board plugs into the Common Processor Board, the support
+> of the extension board is extending the CPB audio support by adding
+> the two codecs on the expansion board.
 > 
-> Signed-off-by: Chris Lew <clew@codeaurora.org>
-> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+> The audio support on the Infotainment Expansion Board consists of McASP0
+> connected to two pcm3168a codecs with dedicated set of serializers to each.
+> The SCKI for pcm3168a is sourced from j721e AUDIO_REFCLK0 pin.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->  drivers/rpmsg/qcom_glink_native.c | 126 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 126 insertions(+)
+>  .../bindings/sound/ti,j721e-cpb-audio.yaml    |  93 ++++++++++++
+>  .../sound/ti,j721e-cpb-ivi-audio.yaml         | 142 ++++++++++++++++++
+>  2 files changed, 235 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
+>  create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
 > 
-> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-> index fc8ef66..68e039a 100644
-> --- a/drivers/rpmsg/qcom_glink_native.c
-> +++ b/drivers/rpmsg/qcom_glink_native.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> + * Copyright (c) 2018, The Linux Foundation.
+> diff --git a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
+> new file mode 100644
+> index 000000000000..0355ffc2b01b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
+> @@ -0,0 +1,93 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/ti,j721e-cpb-audio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments J721e Common Processor Board Audio Support
+> +
+> +maintainers:
+> +  - Peter Ujfalusi <peter.ujfalusi@ti.com>
+> +
+> +description: |
+> +  The audio support on the board is using pcm3168a codec connected to McASP10
+> +  serializers in parallel setup.
+> +  The pcm3168a SCKI clock is sourced from j721e AUDIO_REFCLK2 pin.
+> +  In order to support 48KHz and 44.1KHz family of sampling rates the parent
+> +  clock for AUDIO_REFCLK2 needs to be changed between PLL4 (for 48KHz) and
+> +  PLL15 (for 44.1KHz). The same PLLs are used for McASP10's AUXCLK clock via
+> +  different HSDIVIDER.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: ti,j721e-cpb-audio
+> +
+> +  model:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    description: User specified audio sound card name
+> +
+> +  ti,cpb-mcasp:
+> +    description: phandle to McASP10
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  ti,cpb-codec:
+> +    description: phandle to the pcm3168a codec used on the CPB
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  clocks:
+> +    items:
+> +      - description: PLL4 clock
+> +      - description: PLL15 clock
+> +      - description: McASP10 auxclk clock
+> +      - description: PLL4_HSDIV0 parent for McASP10 auxclk (for 48KHz)
+> +      - description: PLL15_HSDIV0 parent for McASP10 auxclk (for 44.1KHz)
+> +      - description: AUDIO_REFCLK2 clock
+> +      - description: PLL4_HSDIV2 parent for AUDIO_REFCLK2 clock (for 48KHz)
+> +      - description: PLL15_HSDIV2 parent for AUDIO_REFCLK2 clock (for 44.1KHz)
 
-Again, not sure what this is for.
+What h/w are these connected to? You have no control interface here, so 
+how do you have clocks?
 
->   * Copyright (c) 2016-2017, Linaro Ltd
->   */
->  
-> @@ -17,6 +18,7 @@
->  #include <linux/rpmsg.h>
->  #include <linux/sizes.h>
->  #include <linux/slab.h>
-> +#include <linux/termios.h>
->  #include <linux/workqueue.h>
->  #include <linux/mailbox_client.h>
->  
-> @@ -150,6 +152,8 @@ enum {
->   * @intent_req_lock: Synchronises multiple intent requests
->   * @intent_req_result: Result of intent request
->   * @intent_req_comp: Completion for intent_req signalling
-> + * @lsigs:	local side signals
-> + * @rsigs:	remote side signals
->   */
->  struct glink_channel {
->  	struct rpmsg_endpoint ept;
-> @@ -181,6 +185,10 @@ struct glink_channel {
->  	struct mutex intent_req_lock;
->  	bool intent_req_result;
->  	struct completion intent_req_comp;
-> +
-> +	unsigned int lsigs;
-> +	unsigned int rsigs;
-> +
->  };
->  
->  #define to_glink_channel(_ept) container_of(_ept, struct glink_channel, ept)
-> @@ -201,9 +209,15 @@ static const struct rpmsg_endpoint_ops glink_endpoint_ops;
->  #define RPM_CMD_TX_DATA_CONT		12
->  #define RPM_CMD_READ_NOTIF		13
->  #define RPM_CMD_RX_DONE_W_REUSE		14
-> +#define RPM_CMD_SIGNALS			15
->  
->  #define GLINK_FEATURE_INTENTLESS	BIT(1)
->  
-> +#define NATIVE_DTR_SIG	BIT(31)
-> +#define NATIVE_CTS_SIG	BIT(30)
-> +#define NATIVE_CD_SIG	BIT(29)
-> +#define NATIVE_RI_SIG	BIT(28)
-
-Please align theres with the BIT(1) of _INTENTLESS.
+Defining parent clocks seems wrong, too. This seems to just be a 
+collection of clocks a driver happens to need. Really, you should be 
+able query possible parents and select one with the right frequency 
+multiple.
 
 > +
->  static void qcom_glink_rx_done_work(struct work_struct *work);
->  
->  static struct glink_channel *qcom_glink_alloc_channel(struct qcom_glink *glink,
-> @@ -975,6 +989,76 @@ static int qcom_glink_rx_open_ack(struct qcom_glink *glink, unsigned int lcid)
->  	return 0;
->  }
->  
-> +/**
-> + * qcom_glink_send_signals() - convert a signal  cmd to wire format and transmit
+> +  clock-names:
+> +    items:
+> +      - const: pll4
+> +      - const: pll15
+> +      - const: cpb-mcasp
+> +      - const: cpb-mcasp-48000
+> +      - const: cpb-mcasp-44100
+> +      - const: audio-refclk2
+> +      - const: audio-refclk2-48000
+> +      - const: audio-refclk2-44100
+> +
+> +required:
+> +  - compatible
+> +  - model
+> +  - ti,cpb-mcasp
+> +  - ti,cpb-codec
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |+
+> +    sound {
+> +        compatible = "ti,j721e-cpb-audio";
+> +        model = "j721e-cpb";
+> +
+> +        status = "okay";
 
-s/signal  cmd/signal cmd
+Don't show status in examples.
 
-> + * @glink:	The transport to transmit on.
-> + * @channel:	The glink channel
-> + * @sigs:	The signals to encode.
-> + *
-> + * Return: 0 on success or standard Linux error code.
-> + */
-> +static int qcom_glink_send_signals(struct qcom_glink *glink,
-> +				   struct glink_channel *channel,
-> +				   u32 sigs)
-> +{
-> +	struct glink_msg msg;
 > +
-> +	/* convert signals from TIOCM to NATIVE */
-> +	sigs &= 0x0fff;
-> +	if (sigs & TIOCM_DTR)
-> +		sigs |= NATIVE_DTR_SIG;
-> +	if (sigs & TIOCM_RTS)
-> +		sigs |= NATIVE_CTS_SIG;
-> +	if (sigs & TIOCM_CD)
-> +		sigs |= NATIVE_CD_SIG;
-> +	if (sigs & TIOCM_RI)
-> +		sigs |= NATIVE_RI_SIG;
+> +        ti,cpb-mcasp = <&mcasp10>;
+> +        ti,cpb-codec = <&pcm3168a_1>;
 > +
-> +	msg.cmd = cpu_to_le16(RPM_CMD_SIGNALS);
-> +	msg.param1 = cpu_to_le16(channel->lcid);
-> +	msg.param2 = cpu_to_le32(sigs);
+> +        clocks = <&pll4>, <&pll15>,
+> +                 <&k3_clks 184 1>,
+> +                 <&k3_clks 184 2>, <&k3_clks 184 4>,
+> +                 <&k3_clks 157 371>,
+> +                 <&k3_clks 157 400>, <&k3_clks 157 401>;
+> +        clock-names = "pll4", "pll15",
+> +                      "cpb-mcasp",
+> +                      "cpb-mcasp-48000", "cpb-mcasp-44100",
+> +                      "audio-refclk2",
+> +                      "audio-refclk2-48000", "audio-refclk2-44100";
+> +    };
+> diff --git a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
+> new file mode 100644
+> index 000000000000..3951c1320fae
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
+> @@ -0,0 +1,142 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/ti,j721e-cpb-ivi-audio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	return qcom_glink_tx(glink, &msg, sizeof(msg), NULL, 0, true);
-> +}
+> +title: Texas Instruments J721e Common Processor Board Audio Support
 > +
-> +static int qcom_glink_handle_signals(struct qcom_glink *glink,
-> +				     unsigned int rcid, unsigned int signals)
-> +{
-> +	struct glink_channel *channel;
-> +	unsigned long flags;
-> +	u32 old;
+> +maintainers:
+> +  - Peter Ujfalusi <peter.ujfalusi@ti.com>
 > +
-> +	spin_lock_irqsave(&glink->idr_lock, flags);
-> +	channel = idr_find(&glink->rcids, rcid);
-> +	spin_unlock_irqrestore(&glink->idr_lock, flags);
-> +	if (!channel) {
-> +		dev_err(glink->dev, "signal for non-existing channel\n");
-> +		return -EINVAL;
-> +	}
+> +description: |
+> +  The Infotainment board plugs into the Common Processor Board, the support of the
+> +  extension board is extending the CPB audio support, decribed in:
+> +  sound/ti,j721e-cpb-audio.txt
 > +
-> +	old = channel->rsigs;
+> +  The audio support on the Infotainment Expansion Board consists of McASP0
+> +  connected to two pcm3168a codecs with dedicated set of serializers to each.
+> +  The SCKI for pcm3168a is sourced from j721e AUDIO_REFCLK0 pin.
 > +
-> +	/* convert signals from NATIVE to TIOCM */
-> +	if (signals & NATIVE_DTR_SIG)
-> +		signals |= TIOCM_DSR;
-
-In qcom_glink_send_signals(), TIOCM_DTR (and not TIOCM_DSR) converts to
-NATIVE_DTR_SIG.  
-
-> +	if (signals & NATIVE_CTS_SIG)
-> +		signals |= TIOCM_CTS;
-
-Similarly, NATIVE_CTS_SIG converts to TIOCM_RTS.  I would have expected to have
-a match between what gets sent and what comes back up.  If this is intentional
-please at some comments to justify your choices.
-
-> +	if (signals & NATIVE_CD_SIG)
-> +		signals |= TIOCM_CD;
-> +	if (signals & NATIVE_RI_SIG)
-> +		signals |= TIOCM_RI;
-> +	signals &= 0x0fff;
+> +  In order to support 48KHz and 44.1KHz family of sampling rates the parent clock
+> +  for AUDIO_REFCLK0 needs to be changed between PLL4 (for 48KHz) and PLL15 (for
+> +  44.1KHz). The same PLLs are used for McASP0's AUXCLK clock via different
+> +  HSDIVIDER.
 > +
-> +	channel->rsigs = signals;
+> +  Note: the same PLL4 and PLL15 is used by the audio support on the CPB!
 > +
-> +	if (channel->ept.sig_cb) {
-> +		channel->ept.sig_cb(channel->ept.rpdev, channel->ept.priv,
-> +				    old, channel->rsigs);
-
-What is the relevance of old and channel->rsigs?  They are certainly not used in
-patch 4.
-
-> +	}
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: ti,j721e-cpb-ivi-audio
 > +
-> +	return 0;
-> +}
+> +  model:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    description: User specified audio sound card name
 > +
->  static irqreturn_t qcom_glink_native_intr(int irq, void *data)
->  {
->  	struct qcom_glink *glink = data;
-> @@ -1036,6 +1120,10 @@ static irqreturn_t qcom_glink_native_intr(int irq, void *data)
->  			qcom_glink_handle_intent_req_ack(glink, param1, param2);
->  			qcom_glink_rx_advance(glink, ALIGN(sizeof(msg), 8));
->  			break;
-> +		case RPM_CMD_SIGNALS:
-> +			qcom_glink_handle_signals(glink, param1, param2);
-> +			qcom_glink_rx_advance(glink, ALIGN(sizeof(msg), 8));
-> +			break;
->  		default:
->  			dev_err(glink->dev, "unhandled rx cmd: %d\n", cmd);
->  			ret = -EINVAL;
-> @@ -1340,6 +1428,42 @@ static int qcom_glink_trysend(struct rpmsg_endpoint *ept, void *data, int len)
->  	return __qcom_glink_send(channel, data, len, false);
->  }
->  
-> +static int qcom_glink_get_sigs(struct rpmsg_endpoint *ept)
-> +{
-> +	struct glink_channel *channel = to_glink_channel(ept);
+> +  ti,cpb-mcasp:
+> +    description: phandle to McASP10
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
 > +
-> +	return channel->rsigs;
-> +}
+> +  ti,cpb-codec:
+> +    description: phandle to the pcm3168a codec used on the CPB
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
 > +
-> +static int qcom_glink_set_sigs(struct rpmsg_endpoint *ept, u32 set, u32 clear)
-> +{
-> +	struct glink_channel *channel = to_glink_channel(ept);
-> +	struct qcom_glink *glink = channel->glink;
-> +	u32 sigs = channel->lsigs;
+> +  ti,ivi-mcasp:
+> +    description: phandle to McASP9
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
 > +
-> +	if (set & TIOCM_DTR)
-> +		sigs |= TIOCM_DTR;
-> +	if (set & TIOCM_RTS)
-> +		sigs |= TIOCM_RTS;
-> +	if (set & TIOCM_CD)
-> +		sigs |= TIOCM_CD;
-> +	if (set & TIOCM_RI)
-> +		sigs |= TIOCM_RI;
+> +  ti,ivi-codec-a:
+> +    description: phandle to the pcm3168a-A codec on the expansion board
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
 > +
-> +	if (clear & TIOCM_DTR)
-> +		sigs &= ~TIOCM_DTR;
-> +	if (clear & TIOCM_RTS)
-> +		sigs &= ~TIOCM_RTS;
-> +	if (clear & TIOCM_CD)
-> +		sigs &= ~TIOCM_CD;
-> +	if (clear & TIOCM_RI)
-> +		sigs &= ~TIOCM_RI;
+> +  ti,ivi-codec-b:
+> +    description: phandle to the pcm3168a-B codec on the expansion board
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
 > +
-> +	channel->lsigs = sigs;
+> +  clocks:
+> +    items:
+> +      - description: PLL4 clock
+> +      - description: PLL15 clock
+> +      - description: McASP10 auxclk clock
+> +      - description: PLL4_HSDIV0 parent for McASP10 auxclk (for 48KHz)
+> +      - description: PLL15_HSDIV0 parent for McASP10 auxclk (for 44.1KHz)
+> +      - description: AUDIO_REFCLK2 clock
+> +      - description: PLL4_HSDIV2 parent for AUDIO_REFCLK2 clock (for 48KHz)
+> +      - description: PLL15_HSDIV2 parent for AUDIO_REFCLK2 clock (for 44.1KHz)
+> +      - description: McASP0 auxclk clock
+> +      - description: PLL4_HSDIV0 parent for McASP0 auxclk (for 48KHz)
+> +      - description: PLL15_HSDIV0 parent for McASP0 auxclk (for 44.1KHz)
+> +      - description: AUDIO_REFCLK0 clock
+> +      - description: PLL4_HSDIV2 parent for AUDIO_REFCLK0 clock (for 48KHz)
+> +      - description: PLL15_HSDIV2 parent for AUDIO_REFCLK0 clock (for 44.1KHz)
 > +
-> +	return qcom_glink_send_signals(glink, channel, sigs);
-> +}
+> +  clock-names:
+> +    items:
+> +      - const: pll4
+> +      - const: pll15
+> +      - const: cpb-mcasp
+> +      - const: cpb-mcasp-48000
+> +      - const: cpb-mcasp-44100
+> +      - const: audio-refclk2
+> +      - const: audio-refclk2-48000
+> +      - const: audio-refclk2-44100
+> +      - const: ivi-mcasp
+> +      - const: ivi-mcasp-48000
+> +      - const: ivi-mcasp-44100
+> +      - const: audio-refclk0
+> +      - const: audio-refclk0-48000
+> +      - const: audio-refclk0-44100
 > +
->  /*
->   * Finds the device_node for the glink child interested in this channel.
->   */
-> @@ -1373,6 +1497,8 @@ static const struct rpmsg_endpoint_ops glink_endpoint_ops = {
->  	.destroy_ept = qcom_glink_destroy_ept,
->  	.send = qcom_glink_send,
->  	.trysend = qcom_glink_trysend,
-> +	.get_signals = qcom_glink_get_sigs,
-> +	.set_signals = qcom_glink_set_sigs,
->  };
->  
->  static void qcom_glink_rpdev_release(struct device *dev)
+> +required:
+> +  - compatible
+> +  - model
+> +  - ti,cpb-mcasp
+> +  - ti,cpb-codec
+> +  - ti,ivi-mcasp
+> +  - ti,ivi-codec-a
+> +  - ti,ivi-codec-b
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |+
+> +    sound {
+> +        compatible = "ti,j721e-cpb-ivi-audio";
+> +        model = "j721e-cpb-ivi";
+> +
+> +        status = "okay";
+> +
+> +        ti,cpb-mcasp = <&mcasp10>;
+> +        ti,cpb-codec = <&pcm3168a_1>;
+> +
+> +        ti,ivi-mcasp = <&mcasp0>;
+> +        ti,ivi-codec-a = <&pcm3168a_a>;
+> +        ti,ivi-codec-b = <&pcm3168a_b>;
+> +
+> +        clocks = <&pll4>, <&pll15>,
+> +                 <&k3_clks 184 1>,
+> +                 <&k3_clks 184 2>, <&k3_clks 184 4>,
+> +                 <&k3_clks 157 371>,
+> +                 <&k3_clks 157 400>, <&k3_clks 157 401>,
+> +                 <&k3_clks 174 1>,
+> +                 <&k3_clks 174 2>, <&k3_clks 174 4>,
+> +                 <&k3_clks 157 301>,
+> +                 <&k3_clks 157 330>, <&k3_clks 157 331>;
+> +        clock-names = "pll4", "pll15",
+> +                      "cpb-mcasp",
+> +                      "cpb-mcasp-48000", "cpb-mcasp-44100",
+> +                      "audio-refclk2",
+> +                      "audio-refclk2-48000", "audio-refclk2-44100",
+> +                      "ivi-mcasp",
+> +                      "ivi-mcasp-48000", "ivi-mcasp-44100",
+> +                      "audio-refclk0",
+> +                      "audio-refclk0-48000", "audio-refclk0-44100";
+> +    };
 > -- 
-> 2.7.4
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
