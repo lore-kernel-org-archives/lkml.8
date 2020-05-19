@@ -2,160 +2,129 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D32AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 629BC2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E670A206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:36:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmfmIBE2"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="IvE2SWfN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgESTaK (ORCPT
+        id S1726545AbgESTg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47406 "EHLO
+        Tue, 19 May 2020 15:36:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESTaK (ORCPT
+        with ESMTP id S1726059AbgESTg2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:30:10 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F096CC08C5C0;
-        Tue, 19 May 2020 12:30:09 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id n22so567438qtv.12;
-        Tue, 19 May 2020 12:30:09 -0700 (PDT)
+        Tue, 19 May 2020 15:36:28 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42D8AC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:36:28 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id l21so370666eji.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JLNTKuWXG5RL22GiqkJEO67M5+yDAhwqj8vxR1pC9Pc=;
-        b=EmfmIBE2lvjkW0+zUQudmRZciASPLFo2EKpqAG/Tz9Uw9YulJE1h0sVQPNn7eIjH77
-         MDYOvZ07qpNts20VQPNDx5dMX8cIesvElbn4ICM80h0kR3yoRXXicI0fvj52xGv4c/Bv
-         kJeyVmKHuLsYCP0DW6c+HxtMqXPzR1Vf1SnDsamSEsbaVgtgo7BG4oi525yT8Hxadx/z
-         BmIaFhw+MSqgffVhBNiEC8EYkAPM7RYwDcn1fBiPxV7zwCuTSnAlEHRqPqC82grv3dR+
-         UjA/whjYPkottaONimBQxVeLe9tdFMww8nDqdEWSUck7RHwmVxQd2WHmQFchcStMpzBP
-         jHmg==
+        bh=3X3ieRi81fp1iWOzH1htJLq7a4gE8XcQKzYdnELS3Rg=;
+        b=IvE2SWfNyc1HEWm849hzLIMS27zVegpHfrML4bRM8JYlxyx8dpPRhSI1u7KT25QOfZ
+         0cMS4gkm4PDLyry0RnUBcQOzKKn6nCIahXtSV1VGrB9gJSsRoN5wxZilUI/lg8LkkNbx
+         rR34iurepjdrl4AU2NcaZh4P42lBri8KaaQShNexJBPe0UrX1mqDuf2ndDlVVjczb+VL
+         OGh4T3sWxiQHcG7ZsnFsfr7Qnb+DUO9J5Uamb1+FgigyPhvAOQzsTYD7BF/4kbOdV4AA
+         x7f33EiRO/23h/DSLENU5khjyBb0uQHa1tKnwDVQC+LHa02e2D5VJOHDNW0KcNClsrKf
+         Bk2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JLNTKuWXG5RL22GiqkJEO67M5+yDAhwqj8vxR1pC9Pc=;
-        b=pcC1EWUABJd0XXMEM+8Z06lQLbluilNgeHW6RJus2o3Ws0H0mhv64XJRuXjaZgbu3V
-         5LRnv4d8HWu9dXCc/py89O+7S4kyJVFPh5pATl6qilWp6fQyVhX6B+hFwHw/7Rdt7c06
-         JeoAVbgjPAiWSfvhGyDzhbSosY1Q5SQ8u174F3OtyW73uhSu+Fj0V/wbrLqOUP2eZXft
-         oxmVb6li3w2Wj2svtrG+CnRDpybqZ2bUoQPpuE6QjybAQOrwb3LXJPDRMJC0haWrpGcf
-         xvGTjz5Pm9J02DDR0Onx4/qkUHauRwjjZteZkSzyyJvmjFk+vfZhwBhtQ2tbDAXedjWL
-         PtAA==
-X-Gm-Message-State: AOAM531t3VJ6V3lY0tguXuQZjFZucDFMrcDesT0I6woqoop+3EzkjUrA
-        u6hgbKINrw4UNu7vcBv55T8Vs9ez/hyVbo75e3M=
-X-Google-Smtp-Source: ABdhPJwRaU0akqgR7ea2OCOB05lC2WOR2l+OUAjjbltd9BouYVuxmZ60MdRKIvD/l1Eiowo03a/JD2Gk3HRI6dpjqyA=
-X-Received: by 2002:ac8:1ae7:: with SMTP id h36mr1504281qtk.59.1589916609195;
- Tue, 19 May 2020 12:30:09 -0700 (PDT)
+        bh=3X3ieRi81fp1iWOzH1htJLq7a4gE8XcQKzYdnELS3Rg=;
+        b=qyx0+yShcLKIxYXAyx+R5l2g2vid5tWUndndjTjOYS09+9oXie7PPNTVNvkypTWF+b
+         g0DvEKk0CXzSsOqrze922F5PuqMgJsQyisM5rbaShX4wzcrfr7vaT4DJ53qJRuaO/glQ
+         ClkmaU93Ole0T6rS+DS6lAEqCzn7rFOJeVySramc6k/sqOpxkMjyty0EKi3CmxoYLhIE
+         KcdC7t8xG3h4ALSUHHGMayXxagYx+vmJ3sYFokJohyBFGiMUOZ3BOqmIus94hSS5xK10
+         6i3n4xwyAB8h/jiyUZALmR47KEffH30KLukkYd4PGuJvE6f3786JIVJa49gFJuNXvJfb
+         t/Fg==
+X-Gm-Message-State: AOAM531onZyLy1n1Ca1sW3ulYR1kF/n26QxIwSObta3RJ5yPF16Mddoa
+        2Yl4caAcN73mnnf/ZwLsu3Vtqo8DTvtCGOg0oXogLQ==
+X-Google-Smtp-Source: ABdhPJzVXCcjEzanIYQFTBgeXCnzx374fZZtsMpCor7WLQqXWHf7+pUq3xFxoTLKhSlp3iAkff0MpR/K14RfFbGsVUA=
+X-Received: by 2002:a17:906:a3d1:: with SMTP id ca17mr760410ejb.174.1589916986746;
+ Tue, 19 May 2020 12:36:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAG=TAF6mfrwxF1-xEJJ9dL675uMUa7RZrOa_eL2mJizZJ-U7iQ@mail.gmail.com>
- <CAEf4BzazvGOoJbm+zNMqTjhTPJAnVLVv9V=rXkdXZELJ4FPtiA@mail.gmail.com>
- <CAG=TAF6aqo-sT2YE30riqp7f47KyXH_uhNJ=M9L12QU6EEEfqQ@mail.gmail.com>
- <CAEf4BzaBfnDL=WpRP-7rYFhocOsCQyFuZaLvM0+k9sv2t_=rVw@mail.gmail.com> <CAG=TAF5rYmMXBcxno0pPxVZdcyz=ik-enh03E-V8wupjDS0K5g@mail.gmail.com>
-In-Reply-To: <CAG=TAF5rYmMXBcxno0pPxVZdcyz=ik-enh03E-V8wupjDS0K5g@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 19 May 2020 12:29:58 -0700
-Message-ID: <CAEf4BzYZ9LkYtmiukToJDw1-V-AFbwfB2jysMU9mM3ie9=qWHw@mail.gmail.com>
-Subject: Re: UBSAN: array-index-out-of-bounds in kernel/bpf/arraymap.c:177
-To:     Qian Cai <cai@lca.pw>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
+References: <158987153989.4000084.17143582803685077783.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200519184634.GZ16070@bombadil.infradead.org>
+In-Reply-To: <20200519184634.GZ16070@bombadil.infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 19 May 2020 12:36:15 -0700
+Message-ID: <CAPcyv4jgjoLqsV+aHGJwGXbCSwbTnWLmog5-rxD2i31vZ2rDNQ@mail.gmail.com>
+Subject: Re: [PATCH v2] /dev/mem: Revoke mappings when a driver claims the region
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>
+        Linux MM <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 8:00 AM Qian Cai <cai@lca.pw> wrote:
+On Tue, May 19, 2020 at 11:46 AM Matthew Wilcox <willy@infradead.org> wrote:
 >
-> On Mon, May 18, 2020 at 8:25 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Mon, May 18, 2020 at 5:09 PM Qian Cai <cai@lca.pw> wrote:
-> > >
-> > > On Mon, May 18, 2020 at 7:55 PM Andrii Nakryiko
-> > > <andrii.nakryiko@gmail.com> wrote:
-> > > >
-> > > > On Sun, May 17, 2020 at 7:45 PM Qian Cai <cai@lca.pw> wrote:
-> > > > >
-> > > > > With Clang 9.0.1,
-> > > > >
-> > > > > return array->value + array->elem_size * (index & array->index_mask);
-> > > > >
-> > > > > but array->value is,
-> > > > >
-> > > > > char value[0] __aligned(8);
-> > > >
-> > > > This, and ptrs and pptrs, should be flexible arrays. But they are in a
-> > > > union, and unions don't support flexible arrays. Putting each of them
-> > > > into anonymous struct field also doesn't work:
-> > > >
-> > > > /data/users/andriin/linux/include/linux/bpf.h:820:18: error: flexible
-> > > > array member in a struct with no named members
-> > > >    struct { void *ptrs[] __aligned(8); };
-> > > >
-> > > > So it probably has to stay this way. Is there a way to silence UBSAN
-> > > > for this particular case?
-> > >
-> > > I am not aware of any way to disable a particular function in UBSAN
-> > > except for the whole file in kernel/bpf/Makefile,
-> > >
-> > > UBSAN_SANITIZE_arraymap.o := n
-> > >
-> > > If there is no better way to do it, I'll send a patch for it.
-> >
-> >
-> > That's probably going to be too drastic, we still would want to
-> > validate the rest of arraymap.c code, probably. Not sure, maybe
-> > someone else has better ideas.
+> On Tue, May 19, 2020 at 12:03:06AM -0700, Dan Williams wrote:
+> > +void revoke_devmem(struct resource *res)
+> > +{
+> > +     struct inode *inode = READ_ONCE(devmem_inode);
+> > +
+> > +     /*
+> > +      * Check that the initialization has completed. Losing the race
+> > +      * is ok because it means drivers are claiming resources before
+> > +      * the fs_initcall level of init and prevent /dev/mem from
+> > +      * establishing mappings.
+> > +      */
+> > +     smp_rmb();
+> > +     if (!inode)
+> > +             return;
 >
-> This works although it might makes sense to create a pair of
-> ubsan_disable_current()/ubsan_enable_current() for it.
+> Which wmb() is this pairing with?
 >
-> diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-> index 11584618e861..6415b089725e 100644
-> --- a/kernel/bpf/arraymap.c
-> +++ b/kernel/bpf/arraymap.c
-> @@ -170,11 +170,16 @@ static void *array_map_lookup_elem(struct
-> bpf_map *map, void *key)
->  {
->         struct bpf_array *array = container_of(map, struct bpf_array, map);
->         u32 index = *(u32 *)key;
-> +       void *elem;
+> > +static int devmem_init_inode(void)
+> > +{
+> > +     static struct vfsmount *devmem_vfs_mount;
+> > +     static int devmem_fs_cnt;
+> > +     struct inode *inode;
+> > +     int rc;
+> > +
+> > +     rc = simple_pin_fs(&devmem_fs_type, &devmem_vfs_mount, &devmem_fs_cnt);
+> > +     if (rc < 0) {
+> > +             pr_err("Cannot mount /dev/mem pseudo filesystem: %d\n", rc);
+> > +             return rc;
+> > +     }
+> > +
+> > +     inode = alloc_anon_inode(devmem_vfs_mount->mnt_sb);
+> > +     if (IS_ERR(inode)) {
+> > +             rc = PTR_ERR(inode);
+> > +             pr_err("Cannot allocate inode for /dev/mem: %d\n", rc);
+> > +             simple_release_fs(&devmem_vfs_mount, &devmem_fs_cnt);
+> > +             return rc;
+> > +     }
+> > +
+> > +     /* publish /dev/mem initialized */
+> > +     WRITE_ONCE(devmem_inode, inode);
+> > +     smp_wmb();
+> > +
+> > +     return 0;
 >
->         if (unlikely(index >= array->map.max_entries))
->                 return NULL;
->
-> -       return array->value + array->elem_size * (index & array->index_mask);
-> +       current->in_ubsan++;
-> +       elem = array->value + array->elem_size * (index & array->index_mask);
-> +       current->in_ubsan--;
+> ... is that this one?  I don't see what it's guarding against.  Surely if
+> it's needed to ensure that the writes to 'inode' have happened before
+> the write of the inode pointer, the smp_wmb() needs to be before the
+> WRITE_ONCE, not after it?
 
-This is an unnecessary performance hit for silencing what is clearly a
-false positive. I'm not sure that's the right solution here. It seems
-like something that's lacking on the tooling side instead. C language
-doesn't allow to express the intent here using flexible array
-approach. That doesn't mean that what we are doing here is wrong or
-undefined.
-
-> +
-> +       return elem;
->  }
+Whoops, yes. Thanks for the catch.
