@@ -2,301 +2,183 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F32C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4547FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7714A20758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2092A2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:49:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nYb2JpgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgESCtE (ORCPT
+        id S1727788AbgESCt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 22:49:04 -0400
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:15742 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgESCtE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 22:49:04 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 49R0hF1DtNzKmcC;
-        Tue, 19 May 2020 04:49:01 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id z1luPqXY7fuj; Tue, 19 May 2020 04:48:55 +0200 (CEST)
-Date:   Tue, 19 May 2020 12:48:46 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: seccomp feature development
-Message-ID: <20200519024846.b6dr5cjojnuetuyb@yavin.dot.cyphar.com>
-References: <202005181120.971232B7B@keescook>
- <CAG48ez1LrQvR2RHD5-ZCEihL4YT1tVgoAJfGYo+M3QukumX=OQ@mail.gmail.com>
+        Mon, 18 May 2020 22:49:57 -0400
+Received: from mail-eopbgr10068.outbound.protection.outlook.com ([40.107.1.68]:47287
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726292AbgESCt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 22:49:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kTF4p+6hibFv6oHrFULdsvuNgxf5Z12PVUytnOoiIReayqzvXmOW93dRSBl6tKHKkg5IE8WbDA6ureSVv+60bmEDkfPONEsyqtpJy8/cDrZetT42TWEnlcS/vsTEriJ9ol6e3Xzfzq1IJvL52EJ1QoQConi4XZAMraRr++/P7l/XuJhirmZeO0PzUX1bP9PWsfGMEJpQHgfvhcgOiXSzrVS/6eqjeY0JfZeDxO8zq4hm1YfHTzeOFhCJL9lLSfa/PnoZKrEvppYR5Tl/50mC3M6vAOGnf3kF9DXUYi+IkIeDOlRokvDyvzvJJ+qQaf0elD6pGeV20oqqPGRGU4zNIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sGPcUiRJ0CW6YzTZqDrxG55/AfOzeV8hebde2afFCJE=;
+ b=bswwKqQPm0cjWUsQnctO4V6fu64S25NeZsVUJ9T+PL/mZH24oWInonFy8TaliAkr/Ah6Jx4vFJqX+Ces6WHj3BGxwndIrE1Vdwnw+szIVPCjlKaKnGkQsFKOGEqEQJ5cMTgkTf1AdmDxOTLAvQOrf0sV71NKjL5rPzwbv8s2q0VyFXEdr3NLnwkGyVieduLrftsWQvJCqYRaGKunEtQx1qyZI/5ftz+AUBZVGfRX1xbkn6UZnCdR6kumIERB6Q5YFIb0dsW9/neitf+OeornS1V3q6cQ6ctx+bxdPto5rEzCe944WyUm8Wda7288WeBhrrE1wkqWEDomDLtrg6Z9rA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sGPcUiRJ0CW6YzTZqDrxG55/AfOzeV8hebde2afFCJE=;
+ b=nYb2JpgPG0nFsj9yqi+Jfi8err0UaPcEETbzHEe73UMWatudAlzfoIXisgzNVLWFI0j/DnosM/gkd4AefQ0eroNSl2vO68J+yM14jgXkHD/kviN6LApHl/PNSt12vCh4CU6XcJSj2+VHTa4FChkuYnc0BkZeUa8Ikk8wXDfN3aA=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB4150.eurprd04.prod.outlook.com (2603:10a6:209:43::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Tue, 19 May
+ 2020 02:49:51 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.034; Tue, 19 May 2020
+ 02:49:51 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 2/3] dt-bindings: timer: Convert i.MX TPM to json-schema
+Thread-Topic: [PATCH 2/3] dt-bindings: timer: Convert i.MX TPM to json-schema
+Thread-Index: AQHWLSSm2/1WAPgK0U6sOtqNceGFLKiutSNw
+Date:   Tue, 19 May 2020 02:49:51 +0000
+Message-ID: <AM6PR04MB49661ACB965C762C30E39AF680B90@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1589813260-20036-1-git-send-email-Anson.Huang@nxp.com>
+ <1589813260-20036-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1589813260-20036-3-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b88891f4-4c89-4cf9-dfe5-08d7fb9f4d7a
+x-ms-traffictypediagnostic: AM6PR04MB4150:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB4150294BE7DED975CDDE358580B90@AM6PR04MB4150.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 040866B734
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 89f/1xmP6O9Jh7KIR+4XMYPSMo0jN6YnPIElHXRAM46anK1yMgNZUpI6ZpQXjbrY2Ja3SvR/7y1lWq4JEoDw5CBaBVOkgYfF7nOyxtLmMCyWsZYAmw3RQ1L53ssCgEUeMd53W9xBFIhfmrrQDdBrKHzkH71gHY+HdtsPGAOu0jw5Aa5J4ERdHRHXZBlSsKB+HiDzGRDJJjdm1LFvErD7uGxIg+g+Udl9ozzbPpEuY28mrStenhewH8MWwfgGZx6CHisrMYYIP24EMAb+1WoQG9Iddxme9qLP+RmNeIkUhKnTHBzVN1jgtdv/Y+5QJIXjrMkj2pNnp6m7A/Zz7gHvwGUt+SknZ3D0iQgcwBUP2G9I8Pg8d5PsmyDvFyWuL+Rhq/T2bjsee+W/CdTAX8Di5zpC7IXgNWb72XvLzkVb/N4QynKiqn7iMdiDDzGthEZJ9iAnPsYwUsD+vrh4HRu7kly1beFQ05yvCrikNvE59zw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(5660300002)(26005)(71200400001)(186003)(7696005)(8936002)(44832011)(55016002)(33656002)(76116006)(66556008)(66476007)(66946007)(2906002)(52536014)(7416002)(86362001)(316002)(66446008)(110136005)(4326008)(6506007)(478600001)(8676002)(64756008)(9686003)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: NoVWvZHtUvRY7Y29COiIdGOTAQJPwKO0WlY0407/wFITZdf5LJdr5kTx33cpxhWw1h0e/ZAfhrV4eK1Z0t+cYB5LqJC1a2//0lHcL/pZ1xEOHXDPSPrDASC6Fhl5rf5ANWE+gzVmmk6IA9iEBYyyz7itV+nqFZxUO0I8HYWBJykvfGH6DhJZJBiSzTHR+KrPpnJPGYJ02yNEcdLaqX3naa5h/ToUyJorNpSLZSszpfLp+xG8WXnnkA5xhQtdTm4E5O+27FCCUBI4LA2OJsdFud7nMKY1FRbJU5WAIl7r0Fx4YTIuP+uop+UbI2ntGFKqzpGi2VgsqifsZt96jkO/8I6KYQ9G53UvkfZRBLXQoNe9MKvAHmUZwquOr6P+K7PAdE3gdOwrQUgIjqzBMAxh/A9irGqWZ2CNCy9OuIO62INT/g5+didUCF5OYH8nxv9V3Jui8ag9fDUvjyv5hsn8YrfRJih8Qv5dxhHebfCujwYOnHFGjpR0T9IKBXGpU0wW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cisf46ndtv3jnog6"
-Content-Disposition: inline
-In-Reply-To: <CAG48ez1LrQvR2RHD5-ZCEihL4YT1tVgoAJfGYo+M3QukumX=OQ@mail.gmail.com>
-X-Rspamd-Queue-Id: E19B5168A
-X-Rspamd-Score: -9.51 / 15.00 / 15.00
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b88891f4-4c89-4cf9-dfe5-08d7fb9f4d7a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2020 02:49:51.2935
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ukTilocx3wR/E2PTV/3M9gRjsyuIZz6BwHnWLqsqF4uqdhGuyTloe3oqomxMNbR3IYVeQMrpkz9P+GZsMEntEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---cisf46ndtv3jnog6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2020-05-19, Jann Horn <jannh@google.com> wrote:
-> On Mon, May 18, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
-> > ## deep argument inspection
-> >
-> > Background: seccomp users would like to write filters that traverse
-> > the user pointers passed into many syscalls, but seccomp can't do this
-> > dereference for a variety of reasons (mostly involving race conditions =
-and
-> > rearchitecting the entire kernel syscall and copy_from_user() code flow=
-s).
->=20
-> Also, other than for syscall entry, it might be worth thinking about
-> whether we want to have a special hook into seccomp for io_uring.
-> io_uring is growing support for more and more syscalls, including
-> things like openat2, connect, sendmsg, splice and so on, and that list
-> is probably just going to grow in the future. If people start wanting
-> to use io_uring in software with seccomp filters, it might be
-> necessary to come up with some mechanism to prevent io_uring from
-> permitting access to almost everything else...
->=20
-> Probably not a big priority for now, but something to keep in mind for
-> the future.
-
-Indeed. Quite a few people have raised concerns about io_uring and its
-debug-ability, but I agree that another less-commonly-mentioned concern
-should be how you restrict io_uring(2) from doing operations you've
-disallowed through seccomp. Though obviously user_notif shouldn't be
-allowed. :D
-
-> > The argument caching bit is, I think, rather mechanical in nature since
-> > it's all "just" internal to the kernel: seccomp can likely adjust how it
-> > allocates seccomp_data (maybe going so far as to have it split across t=
-wo
-> > pages with the syscall argument struct always starting on the 2nd page
-> > boundary), and copying the EA struct into that page, which will be both
-> > used by the filter and by the syscall.
->=20
-> We could also do the same kind of thing the eBPF verifier does in
-> convert_ctx_accesses(), and rewrite the context accesses to actually
-> go through two different pointers depending on the (constant) offset
-> into seccomp_data.
-
-My main worry with this is that we'll need to figure out what kind of
-offset mathematics are necessary to deal with pointers inside the
-extensible struct. As a very ugly proposal, you could make it so that
-you multiply the offset by PAGE_SIZE each time you want to dereference
-the pointer at that offset (unless we want to add new opcodes to cBPF to
-allow us to represent this).
-
-This might even be needed for seccomp user_notif -- given one of the
-recent proposals was basically to just add two (extensible) struct
-pointers inside the main user_notif struct.
-
-> > I imagine state tracking ("is
-> > there a cached EA?", "what is the address of seccomp_data?", "what is
-> > the address of the EA?") can be associated with the thread struct.
->=20
-> You probably mean the task struct?
->=20
-> > The growing size of the EA struct will need some API design. For filters
-> > to operate on the contiguous seccomp_data+EA struct, the filter will
-> > need to know how large seccomp_data is (more on this later), and how
-> > large the EA struct is. When the filter is written in userspace, it can
-> > do the math, point into the expected offsets, and get what it needs. For
-> > this to work correctly in the kernel, though, the seccomp BPF verifier
-> > needs to know the size of the EA struct as well, so it can correctly
-> > perform the offset checking (as it currently does for just the
-> > seccomp_data struct size).
-> >
-> > Since there is not really any caller-based "seccomp state" associated
-> > across seccomp(2) calls, I don't think we can add a new command to tell
-> > the kernel "I'm expecting the EA struct size to be $foo bytes", since
-> > the kernel doesn't track who "I" is besides just being "current", which
-> > doesn't take into account the thread lifetime -- if a process launcher
-> > knows about one size and the child knows about another, things will get
-> > confused. The sizes really are just associated with individual filters,
-> > based on the syscalls they're examining. So, I have thoughts on possible
-> > solutions:
-> >
-> > - create a new seccomp command SECCOMP_SET_MODE_FILTER2 which uses the
-> >   EA style so we can pass in more than a filter and include also an
-> >   array of syscall to size mappings. (I don't like this...)
-> > - create a new filter flag, SECCOMP_FILTER_FLAG_EXTENSIBLE, which chang=
-es
-> >   the meaning of the uarg from "filter" to a EA-style structure with
-> >   sizes and pointers to the filter and an array of syscall to size
-> >   mappings. (I like this slightly better, but I still don't like it.)
-> > - leverage the EA design and just accept anything <=3D PAGE_SIZE, record
-> >   the "max offset" value seen during filter verification, and zero-fill
-> >   the EA struct with zeros to that size when constructing the
-> >   seccomp_data + EA struct that the filter will examine. Then the secco=
-mp
-> >   filter doesn't care what any of the sizes are, and userspace doesn't
-> >   care what any of the sizes are. (I like this as it makes the problems
-> >   to solve contained entirely by the seccomp infrastructure and does not
-> >   touch user API, but I worry I'm missing some gotcha I haven't
-> >   considered.)
->=20
-> We don't need to actually zero-fill memory for this beyond what the
-> kernel supports - AFAIK the existing APIs already say that passing a
-> short length is equivalent to passing zeroes, so we can just replace
-> all out-of-bounds loads with zeroing registers in the filter.
-> The tricky case is what should happen if the userspace program passes
-> in fields that the filter doesn't know about. The filter can see the
-> length field passed in by userspace, and then just reject anything
-> where the length field is bigger than the structure size the filter
-> knows about. But maybe it'd be slightly nicer if there was an
-> operation for "tell me whether everything starting at offset X is
-> zeroes", so that if someone compiles with newer kernel headers where
-> the struct is bigger, and leaves the new fields zeroed, the syscalls
-> still go through an outdated filter properly.
-
-I think the best way of handling this (without breaking programs
-senselessly) is to have filters essentially emulate
-copy_struct_from_user() semantics -- which is along the lines of what
-you've suggested.
-
-That means in addition to treating all offsets past the end of usize as
-being zeroed, we also get filters to only reject programs with usize >
-fsize (the size the filter knows) if the trailing (fsize - usize) bytes
-are non-zero. Having an opcode for that (a-la bpf_check_uarg_tail_zero)
-would be a good idea.
-
-> > And then, my age-old concern, that maybe doesn't need a solution... I
-> > remain plagued by the lack of pathname inspection. But I think the
-> > ToCToU nature of it means we just cannot do it from seccomp. It does
-> > make filtering openat2()'s EA struct a bit funny... a filter has no idea
-> > what path it applies to... but that doesn't matter because the object
-> > the path points to might change[6] during the syscall. Argh.
->=20
-> I don't think seccomp needs to care about paths. Instead, you can use
-> one of these three approaches:
->=20
-> 1) You can make openat2() the only syscall that is allowed to take
-> non-empty path arguments, and restrict it to
-> RESOLVE_BENEATH|RESOLVE_IN_ROOT. (For APIs that use AT_EMPTY_PATH, we
-> can probably come up with some way to say "this part must be an empty
-> string" - e.g. by defining a new bogus placeholder pointer that you
-> can use as "empty path", or something like that.) This is basically
-> like the old capsicum O_BENEATH stuff, except with seccomp doing the
-> enforcement that you're not using absolute paths or things like that.
-
-The only concern I'd have with this is the dfd argument (would you only
-permit AT_FDCWD?). If you want to let programs run inside a
-pre-configured jail directory then you'd need to white-list only *that*
-fd and then block all other syscalls which would let you overwrite that
-fd with something else...
-
-> 2) You can create a new mount namespace, then use open_tree() with
-> OPEN_TREE_CLONE to create file descriptors to ephemeral bind mounts,
-> then sandbox yourself with pivot_root().
-> 3) You can use Mickael's landlock, once that's landed.
-
-Or (4), just use LSMs to achieve this goal (which is basically 3, but
-applies to all LSMs).
-
-> > ## changing structure sizes
-> >
-> > Background: there have been regular needs to add things to various
-> > seccomp structures. Each come with their own unique pains, and solving
-> > this as completely as possible in a future-proof way would be very nice.
-> >
-> > As noted in "fd passing" above, there is a desire to add some useful
-> > things to the user_notif struct (e.g. thread group pid). Similarly,
-> > there have been requests in the past (though I can't find any good
-> > references right now, just my indirect comments[3]) to grow seccomp_dat=
-a.
->=20
-> This thing (which hasn't landed so far, but would be a really awesome
-> feature) needed to add stuff to seccomp_data:
-> <https://lore.kernel.org/linux-api/20181029112343.27454-1-msammler@mpi-sw=
-s.org/>
->=20
-> > Combined with the EA struct work above, there's a clear need for seccomp
-> > to reexamine how it deals with its API structures (and how this
-> > interacts with filters).
-> >
-> > First, let's consider seccomp_data. If we grow it, the EA struct offset
-> > will move, based on the deep arg inspection design above. Alternatively,
-> > we could instead put seccomp_data offset 0, and EA struct at offset
-> > PAGE_SIZE, and treat seccomp_data itself as an EA struct where we let
-> > the filter access whatever it thinks is there, with it being zero-filled
-> > by the kernel. For any values where 0 is valid, there will just need to
-> > be a "is that field valid?" bit before it:
-> >
-> >         unsigned long feature_bits;
-> >         unsigned long interesting_thing_1;
-> >         unsigned long interesting_thing_2;
-> >         unsigned long interesting_thing_3;
-> >         ...
-> >
-> > and the filter would check feature_bits...
->=20
-> (Apart from the user_notif stuff, those feature bits would not
-> actually have to exist in memory; they could be inlined while loading
-> the program. Actually, not even the registers would have to exist in a
-> seccomp_data struct in memory, we could just replace the loads with
-> reads from the pt_regs, too.)
->=20
-> > (However, this needs to be carefully considered given that seccomp_data
-> > is embedded in user_notif... should the EA struct from userspace also be
-> > copied into user_notif? More thoughts on this below...)
-> >
-> > For user_notif, I think we need something in and around these options:
-> >
-> > - make a new API that explicitly follows EA struct design
-> >   (and while read()/write() might be easier[4], I tend to agree with
-> >   Jann and we need to stick to ioctl(): as Tycho noted, "read/write is
-> >   for data". Though I wonder if read() could be used for the notificati=
-ons,
-> >   which ARE data, and use ioctl() for the responses?)
->=20
-> Just as a note: If we use read() there, we'll never be able to
-> transfer things like FDs through that API.
-
-And we run into the age-old "read() for management can be a bit hairy"
-problem.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---cisf46ndtv3jnog6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXsNJCgAKCRCdlLljIbnQ
-Ehu8AP982wzZyHbdAM6I7gx48pcJa7+8hVC7DBkHdx8mhHufmwD/YVHuF81GLO02
-Kzj35J3Hl3xy9RKp9t5e3wd5R3IosQM=
-=PqJn
------END PGP SIGNATURE-----
-
---cisf46ndtv3jnog6--
+PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogTW9uZGF5
+LCBNYXkgMTgsIDIwMjAgMTA6NDggUE0NCj4gDQo+IENvbnZlcnQgdGhlIGkuTVggVFBNIGJpbmRp
+bmcgdG8gRFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29uLXNjaGVtYS4NCj4gDQo+IFNpZ25lZC1v
+ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiAtLS0NCj4gIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL254cCx0cG0tdGltZXIudHh0ICAgIHwgMjggLS0tLS0t
+LS0tLQ0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhwLHRwbS10aW1lci55YW1s
+ICAgfCA2Mw0KPiArKysrKysrKysrKysrKysrKysrKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDYz
+IGluc2VydGlvbnMoKyksIDI4IGRlbGV0aW9ucygtKSAgZGVsZXRlIG1vZGUgMTAwNjQ0DQo+IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9ueHAsdHBtLXRpbWVyLnR4dA0K
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy90aW1lci9ueHAsdHBtLXRpbWVyLnlhbWwNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhwLHRwbS10aW1lci50eHQNCj4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhwLHRwbS10aW1lci50eHQNCj4g
+ZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IGY4MjA4N2IuLjAwMDAwMDANCj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL254cCx0cG0tdGltZXIu
+dHh0DQo+ICsrKyAvZGV2L251bGwNCj4gQEAgLTEsMjggKzAsMCBAQA0KPiAtTlhQIExvdyBQb3dl
+ciBUaW1lci9QdWxzZSBXaWR0aCBNb2R1bGF0aW9uIE1vZHVsZSAoVFBNKQ0KPiAtDQo+IC1UaGUg
+VGltZXIvUFdNIE1vZHVsZSAoVFBNKSBzdXBwb3J0cyBpbnB1dCBjYXB0dXJlLCBvdXRwdXQgY29t
+cGFyZSwgLWFuZA0KPiB0aGUgZ2VuZXJhdGlvbiBvZiBQV00gc2lnbmFscyB0byBjb250cm9sIGVs
+ZWN0cmljIG1vdG9yIGFuZCBwb3dlcg0KPiAtbWFuYWdlbWVudCBhcHBsaWNhdGlvbnMuIFRoZSBj
+b3VudGVyLCBjb21wYXJlIGFuZCBjYXB0dXJlIHJlZ2lzdGVycyAtYXJlDQo+IGNsb2NrZWQgYnkg
+YW4gYXN5bmNocm9ub3VzIGNsb2NrIHRoYXQgY2FuIHJlbWFpbiBlbmFibGVkIGluIGxvdyAtcG93
+ZXIgbW9kZXMuDQo+IFRQTSBjYW4gc3VwcG9ydCBnbG9iYWwgY291bnRlciBidXMgd2hlcmUgb25l
+IFRQTSBkcml2ZXMgLXRoZSBjb3VudGVyIGJ1cyBmb3INCj4gdGhlIG90aGVycywgcHJvdmlkZWQg
+Yml0IHdpZHRoIGlzIHRoZSBzYW1lLg0KPiAtDQo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAt
+DQo+IC0tIGNvbXBhdGlibGUgOglzaG91bGQgYmUgImZzbCxpbXg3dWxwLXRwbSINCj4gLS0gcmVn
+IDoJCVNwZWNpZmllcyBiYXNlIHBoeXNpY2FsIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIHJlZ2lz
+dGVyIHNldHMNCj4gLQkJZm9yIHRoZSBjbG9jayBldmVudCBkZXZpY2UgYW5kIGNsb2NrIHNvdXJj
+ZSBkZXZpY2UuDQo+IC0tIGludGVycnVwdHMgOglTaG91bGQgYmUgdGhlIGNsb2NrIGV2ZW50IGRl
+dmljZSBpbnRlcnJ1cHQuDQo+IC0tIGNsb2NrcyA6CVRoZSBjbG9ja3MgcHJvdmlkZWQgYnkgdGhl
+IFNvQyB0byBkcml2ZSB0aGUgdGltZXIsIG11c3QgY29udGFpbg0KPiAtCQlhbiBlbnRyeSBmb3Ig
+ZWFjaCBlbnRyeSBpbiBjbG9jay1uYW1lcy4NCj4gLS0gY2xvY2stbmFtZXMgOiBNdXN0IGluY2x1
+ZGUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOiAiaXBnIiBhbmQgInBlciIuDQo+IC0NCj4gLUV4YW1w
+bGU6DQo+IC10cG01OiB0cG1ANDAyNjAwMDAgew0KPiAtCWNvbXBhdGlibGUgPSAiZnNsLGlteDd1
+bHAtdHBtIjsNCj4gLQlyZWcgPSA8MHg0MDI2MDAwMCAweDEwMDA+Ow0KPiAtCWludGVycnVwdHMg
+PSA8R0lDX1NQSSAyMiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gLQljbG9ja3MgPSA8JmNsa3Mg
+SU1YN1VMUF9DTEtfTklDMV9CVVNfRElWPiwNCj4gLQkJIDwmY2xrcyBJTVg3VUxQX0NMS19MUFRQ
+TTU+Ow0KPiAtCWNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIiOw0KPiAtfTsNCj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9ueHAsdHBtLXRpbWVy
+LnlhbWwNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhwLHRw
+bS10aW1lci55YW1sDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAuLjBk
+MzQ2MTANCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdGltZXIvbnhwLHRwbS10aW1lci55YW1sDQo+IEBAIC0wLDAgKzEsNjMgQEANCj4g
+KyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNl
+KSAlWUFNTCAxLjINCg0KWy4uLl0NCg0KPiArDQo+ICt0aXRsZTogTlhQIExvdyBQb3dlciBUaW1l
+ci9QdWxzZSBXaWR0aCBNb2R1bGF0aW9uIE1vZHVsZSAoVFBNKQ0KPiArDQo+ICttYWludGFpbmVy
+czoNCj4gKyAgLSBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiArDQo+ICtk
+ZXNjcmlwdGlvbjogfA0KPiArICBUaGUgVGltZXIvUFdNIE1vZHVsZSAoVFBNKSBzdXBwb3J0cyBp
+bnB1dCBjYXB0dXJlLCBvdXRwdXQgY29tcGFyZSwNCj4gKyAgYW5kIHRoZSBnZW5lcmF0aW9uIG9m
+IFBXTSBzaWduYWxzIHRvIGNvbnRyb2wgZWxlY3RyaWMgbW90b3IgYW5kIHBvd2VyDQo+ICsgIG1h
+bmFnZW1lbnQgYXBwbGljYXRpb25zLiBUaGUgY291bnRlciwgY29tcGFyZSBhbmQgY2FwdHVyZSBy
+ZWdpc3RlcnMNCj4gKyAgYXJlIGNsb2NrZWQgYnkgYW4gYXN5bmNocm9ub3VzIGNsb2NrIHRoYXQg
+Y2FuIHJlbWFpbiBlbmFibGVkIGluIGxvdw0KPiArICBwb3dlciBtb2Rlcy4gVFBNIGNhbiBzdXBw
+b3J0IGdsb2JhbCBjb3VudGVyIGJ1cyB3aGVyZSBvbmUgVFBNIGRyaXZlcw0KPiArICB0aGUgY291
+bnRlciBidXMgZm9yIHRoZSBvdGhlcnMsIHByb3ZpZGVkIGJpdCB3aWR0aCBpcyB0aGUgc2FtZS4N
+Cj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAgY29tcGF0aWJsZToNCj4gKyAgICBjb25zdDogZnNs
+LGlteDd1bHAtdHBtDQo+ICsNCj4gKyAgcmVnOg0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4g
+KyAgaW50ZXJydXB0czoNCj4gKyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICsgIGNsb2NrczoNCj4g
+KyAgICBpdGVtczoNCj4gKyAgICAgIC0gZGVzY3JpcHRpb246IFNvQyBUUE0gaXBnIGNsb2NrDQo+
+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBTb0MgVFBNIHBlciBjbG9jaw0KDQo+ICsgICAgbWF4SXRl
+bXM6IDINCg0KVW5uZWVkZWQgbGluZQ0KDQo+ICsNCj4gKyAgY2xvY2stbmFtZXM6DQo+ICsgICAg
+aXRlbXM6DQo+ICsgICAgICAtIGNvbnN0OiBpcGcNCj4gKyAgICAgIC0gY29uc3Q6IHBlcg0KDQo+
+ICsgICAgbWF4SXRlbXM6IDINCg0KRGl0dG8NCg0KT3RoZXJ3aXNlOg0KDQpSZXZpZXdlZC1ieTog
+RG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVnYXJkcw0KQWlzaGVuZw0K
+DQo+ICsNCj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGlibGUNCj4gKyAgLSByZWcNCj4gKyAg
+LSBpbnRlcnJ1cHRzDQo+ICsgIC0gY2xvY2tzDQo+ICsgIC0gY2xvY2stbmFtZXMNCj4gKw0KPiAr
+YWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ICsNCj4gK2V4YW1wbGVzOg0KPiArICAtIHwN
+Cj4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svaW14N3VscC1jbG9jay5oPg0KPiAr
+ICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+
+DQo+ICsNCj4gKyAgICB0aW1lckA0MDI2MDAwMCB7DQo+ICsgICAgICAgIGNvbXBhdGlibGUgPSAi
+ZnNsLGlteDd1bHAtdHBtIjsNCj4gKyAgICAgICAgcmVnID0gPDB4NDAyNjAwMDAgMHgxMDAwPjsN
+Cj4gKyAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyIElSUV9UWVBFX0xFVkVMX0hJR0g+
+Ow0KPiArICAgICAgICBjbG9ja3MgPSA8JnNjZzEgSU1YN1VMUF9DTEtfTklDMV9CVVNfRElWPiwN
+Cj4gKyAgICAgICAgICAgICAgICAgPCZwY2MyIElNWDdVTFBfQ0xLX0xQVFBNNT47DQo+ICsgICAg
+ICAgIGNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIiOw0KPiArICAgIH07DQo+IC0tDQo+IDIuNy40
+DQoNCg==
