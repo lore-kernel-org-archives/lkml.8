@@ -5,57 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EAFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A87C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD4862072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F414E2072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fNeA1N7L"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="V93UrU4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgESUfe (ORCPT
+        id S1728228AbgESUfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:35:34 -0400
+        Tue, 19 May 2020 16:35:39 -0400
 Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:34988 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727052AbgESUey (ORCPT
+        by vger.kernel.org with ESMTP id S1725885AbgESUes (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:34:54 -0400
+        Tue, 19 May 2020 16:34:48 -0400
 Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 50DA030D82A;
-        Tue, 19 May 2020 13:33:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 50DA030D82A
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 5FB7A30D7F7;
+        Tue, 19 May 2020 13:33:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 5FB7A30D7F7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1589920410;
-        bh=lwSYSg6Lj14jJA0ozLsI/KyMSKU3sQ8koxapBJvtKAc=;
+        s=dkimrelay; t=1589920404;
+        bh=IsUUhtwsD/oh2f/SMvEH2GyEwKF93YifRW5ZmP5F42Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fNeA1N7LVxySwiukjVSP3EK7EMn+OP17ng72LQeA9yQVUIaqEp7491ew3DR+8Sg+b
-         EgiXqSXQVaW3aUJcvA1QULOLMvEVO+7uUHwDK9Cf3vIhaefbVWfc7aB1dnta6ibvLF
-         9pXYPb3Yr3OjkiigXVzaKUHcSurVazM6X64M1Qo0=
+        b=V93UrU4MAVkDGfqd3yGeIFRvw45/OMaRMYSj7RrXDWz9fhSo0txRe0c37BBwsBpRT
+         bTNyKe5FMvFYEaJuCUXNQxN0mJXe4Yi6Ok60s9sOEuG3qEvHn/J+eL0ooyG9Lp55BP
+         LKpP06QS+z6ojuxmjHpsdWH1LTOEwK1rSEx8HSsE=
 Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id A5E08140092;
-        Tue, 19 May 2020 13:34:51 -0700 (PDT)
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id CFFB414008B;
+        Tue, 19 May 2020 13:34:45 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     james.quinlan@broadcom.com,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
-        ENDPOINT DRIVERS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 06/15] PCI: brcmstb: Asserting PERST is different for 7278
-Date:   Tue, 19 May 2020 16:34:04 -0400
-Message-Id: <20200519203419.12369-7-james.quinlan@broadcom.com>
+        Jens Axboe <axboe@kernel.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 02/15] ahci_brcm: fix use of BCM7216 reset controller
+Date:   Tue, 19 May 2020 16:34:00 -0400
+Message-Id: <20200519203419.12369-3-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200519203419.12369-1-james.quinlan@broadcom.com>
 References: <20200519203419.12369-1-james.quinlan@broadcom.com>
@@ -66,51 +58,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jim Quinlan <jquinlan@broadcom.com>
 
-The PERST bit was moved to a different register in 7278-type
-STB chips.  In addition, the polarity of the bit was also
-changed; for other chips writing a 1 specified assert; for
-7278-type chips, writing a 0 specifies assert.
-
-Signal-wise, PERST is an asserted-low signal.
+A reset controller "rescal" is shared between the AHCI driver
+and the PCIe driver for the BrcmSTB 7216 chip.  The code is
+modified to allow this sharing and to deassert() properly.
 
 Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/ata/ahci_brcm.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 39993203b991..2c470104ba38 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -81,6 +81,7 @@
- 
- #define PCIE_MISC_PCIE_CTRL				0x4064
- #define  PCIE_MISC_PCIE_CTRL_PCIE_L23_REQUEST_MASK	0x1
-+#define PCIE_MISC_PCIE_CTRL_PCIE_PERSTB_MASK		0x4
- 
- #define PCIE_MISC_PCIE_STATUS				0x4068
- #define  PCIE_MISC_PCIE_STATUS_PCIE_PORT_MASK		0x80
-@@ -679,9 +680,17 @@ static inline void brcm_pcie_perst_set(struct brcm_pcie *pcie, u32 val)
+diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
+index 6853dbb4131d..a3c32fc29e9c 100644
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
  {
- 	u32 tmp;
+ 	const struct of_device_id *of_id;
+ 	struct device *dev = &pdev->dev;
+-	const char *reset_name = NULL;
+ 	struct brcm_ahci_priv *priv;
+ 	struct ahci_host_priv *hpriv;
+ 	struct resource *res;
+@@ -452,11 +451,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
  
--	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
--	u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_PERST_MASK);
--	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-+	if (pcie->type == BCM7278) {
-+		/* Perst bit has moved and assert value is 0 */
-+		tmp = readl(pcie->base + PCIE_MISC_PCIE_CTRL);
-+		u32p_replace_bits(&tmp,
-+				  !val, PCIE_MISC_PCIE_CTRL_PCIE_PERSTB_MASK);
-+		writel(tmp, pcie->base +  PCIE_MISC_PCIE_CTRL);
-+	} else {
-+		tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-+		u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_PERST_MASK);
-+		writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-+	}
- }
+ 	/* Reset is optional depending on platform and named differently */
+ 	if (priv->version == BRCM_SATA_BCM7216)
+-		reset_name = "rescal";
++		priv->rcdev = devm_reset_control_get_shared(&pdev->dev,
++							    "rescal");
+ 	else
+-		reset_name = "ahci";
+-
+-	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
++		priv->rcdev = devm_reset_control_get_optional(&pdev->dev,
++							      "ahci");
+ 	if (IS_ERR(priv->rcdev))
+ 		return PTR_ERR(priv->rcdev);
  
- static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+@@ -479,10 +478,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 		break;
+ 	}
+ 
+-	if (priv->version == BRCM_SATA_BCM7216)
+-		ret = reset_control_reset(priv->rcdev);
+-	else
+-		ret = reset_control_deassert(priv->rcdev);
++	ret = reset_control_deassert(priv->rcdev);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.17.1
 
