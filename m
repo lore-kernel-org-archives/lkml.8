@@ -2,176 +2,104 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0223C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F525C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF1A120674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520C720674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:56:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Hky+N80H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgESR4E (ORCPT
+        id S1729424AbgESR4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:56:04 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2227 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726059AbgESR4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:56:04 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id D3A42D0D0FE715D87CBA;
-        Tue, 19 May 2020 18:56:02 +0100 (IST)
-Received: from localhost (10.47.86.149) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 19 May
- 2020 18:56:02 +0100
-Date:   Tue, 19 May 2020 18:55:35 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 3/4] iio: imu: bmi160: added regulator support
-Message-ID: <20200519185535.00003cb7@Huawei.com>
-In-Reply-To: <20200519075111.6356-4-jonathan.albrieux@gmail.com>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
-        <20200519075111.6356-4-jonathan.albrieux@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 19 May 2020 13:56:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbgESR4L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:56:11 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECADC08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 10:56:10 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id y18so249764pfl.9
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 10:56:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bvPQ8PG+BL5wX2TZOP1m7rPVaLoET/IH7Hd3kojoQ1E=;
+        b=Hky+N80HoOFgfGKHD5Eup/gUyJFTK88WweMFonjdT9tSUPmNG72SgnOZF3mV6VetX+
+         kpJJGqHfyMQcwxAGOa3cXhLR1cEB0br0jZFXk0GhvwW+yBElVfXnEvEV4ogPkfSMFY1L
+         YXu3Xu0EQhc4J3CHqb2xuMenLGSQGnocx3VdM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bvPQ8PG+BL5wX2TZOP1m7rPVaLoET/IH7Hd3kojoQ1E=;
+        b=HCjHkwXIKUQ0V8l2k7HyaqVOBvHYMpM3cJ/6FLQYdlcjAklQDoFFYYfLnplZBMfO0i
+         uCJIHxZWo5RaUONvFPfxWNucCWsMOzE/f+XlqHUIT2Nlmk4viovfc4hU/FPdG/fcoHMz
+         6lTaAkAetmpwRPXcaAbIwTPXUeAn3hPymbW2be7SK/du3I+Onuyb3E7u1GJoJucffAPC
+         HJhYRCV5uNF1346j38PSCmXvvjupOuQVklgJ8lR5yJIL+hLdFnrlQ06L2GjCNL40d3tC
+         7nVWBBK7k6IBln+l8YmcBLwqjoaorKXmf04BffUr54rn6PApf7v/ZJSixo8fxp/kftGm
+         DM8g==
+X-Gm-Message-State: AOAM53031tBhjRQrAW3l8GNVQQ1QOu+359+syeGLnMJep7cQO5LkZtwQ
+        K1j1j2Zq0oXcnlrp3f43xzxjCg==
+X-Google-Smtp-Source: ABdhPJw8wB1OuO4CBC5eeyAgZiGGsmQzCblUtTfTF7mycU6U4/dgYRE0e9vM9WK6gUSzh8ALn6RwzQ==
+X-Received: by 2002:a05:6a00:d2:: with SMTP id e18mr288632pfj.252.1589910970277;
+        Tue, 19 May 2020 10:56:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x132sm113693pfd.214.2020.05.19.10.56.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 10:56:09 -0700 (PDT)
+Date:   Tue, 19 May 2020 10:56:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] Relocate execve() sanity checks
+Message-ID: <202005191052.0A6B1D5843@keescook>
+References: <20200518055457.12302-1-keescook@chromium.org>
+ <87a724t153.fsf@x220.int.ebiederm.org>
+ <202005190918.D2BD83F7C@keescook>
+ <87o8qjstyw.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.86.149]
-X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8qjstyw.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 09:50:59 +0200
-Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
-
-> v2: fixed missing description
-
-Don't put change log here....
+On Tue, May 19, 2020 at 12:41:27PM -0500, Eric W. Biederman wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> > and given the LSM hooks, I think the noexec check is too late as well.
+> > (This is especially true for the coming O_MAYEXEC series, which will
+> > absolutely need those tests earlier as well[1] -- the permission checking
+> > is then in the correct place: during open, not exec.) I think the only
+> > question is about leaving the redundant checks in fs/exec.c, which I
+> > think are a cheap way to retain a sense of robustness.
 > 
-> Add vdd-supply and vddio-supply support. Without this support vdd and vddio
-> should be set to always-on in device tree
+> The trouble is when someone passes through changes one of the permission
+> checks for whatever reason (misses that they are duplicated in another
+> location) and things then fail in some very unexpected way.
 
-Kind of the opposite.  If they are always on we don't have to provide them
-in the device tree.
+Do you think this series should drop the "late" checks in fs/exec.c?
+Honestly, the largest motivation for me to move the checks earlier as
+I've done is so that other things besides execve() can use FMODE_EXEC
+during open() and receive the same sanity-checking as execve() (i.e the
+O_MAYEXEC series -- the details are still under discussion but this
+cleanup will be needed regardless).
 
-A few trivial things inline.
-
-> 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
-
-Change log goes here so we don't end up keeping it in the git log.
-
->  drivers/iio/imu/bmi160/bmi160.h      |  2 ++
->  drivers/iio/imu/bmi160/bmi160_core.c | 27 ++++++++++++++++++++++++++-
->  2 files changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-> index 621f5309d735..923c3b274fde 100644
-> --- a/drivers/iio/imu/bmi160/bmi160.h
-> +++ b/drivers/iio/imu/bmi160/bmi160.h
-> @@ -3,10 +3,12 @@
->  #define BMI160_H_
->  
->  #include <linux/iio/iio.h>
-> +#include <linux/regulator/consumer.h>
->  
->  struct bmi160_data {
->  	struct regmap *regmap;
->  	struct iio_trigger *trig;
-> +	struct regulator_bulk_data supplies[2];
->  };
->  
->  extern const struct regmap_config bmi160_regmap_config;
-> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-> index 6af65d6f1d28..9bbe0d8e6720 100644
-> --- a/drivers/iio/imu/bmi160/bmi160_core.c
-> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
-> @@ -15,6 +15,7 @@
->  #include <linux/delay.h>
->  #include <linux/irq.h>
->  #include <linux/of_irq.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #include <linux/iio/iio.h>
->  #include <linux/iio/triggered_buffer.h>
-> @@ -709,6 +710,12 @@ static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
->  	unsigned int val;
->  	struct device *dev = regmap_get_device(data->regmap);
->  
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = regmap_write(data->regmap, BMI160_REG_CMD, BMI160_CMD_SOFTRESET);
->  	if (ret)
->  		return ret;
-> @@ -793,9 +800,17 @@ int bmi160_probe_trigger(struct iio_dev *indio_dev, int irq, u32 irq_type)
->  static void bmi160_chip_uninit(void *data)
->  {
->  	struct bmi160_data *bmi_data = data;
-> +	struct device *dev = regmap_get_device(bmi_data->regmap);
-> +	int ret;
->  
->  	bmi160_set_mode(bmi_data, BMI160_GYRO, false);
->  	bmi160_set_mode(bmi_data, BMI160_ACCEL, false);
-> +
-> +	ret = regulator_bulk_disable(ARRAY_SIZE(bmi_data->supplies),
-> +				     bmi_data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to disable regulators: %d\n", ret);
-> +	}
-No need for brackets around a 1 line if block
-
-	if (ret)
-		dev_err(dev, "failed to disable regulators: %d\n", ret);
-
->  }
->  
->  int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> @@ -815,6 +830,16 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
->  	dev_set_drvdata(dev, indio_dev);
->  	data->regmap = regmap;
->  
-> +	data->supplies[0].supply = "vdd";
-> +	data->supplies[1].supply = "vddio";
-> +	ret = devm_regulator_bulk_get(dev,
-> +				      ARRAY_SIZE(data->supplies),
-> +				      data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to get regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = bmi160_chip_init(data, use_spi);
->  	if (ret)
->  		return ret;
-> @@ -853,6 +878,6 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
->  }
->  EXPORT_SYMBOL_GPL(bmi160_core_probe);
->  
-> -MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com");
-> +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com>");
-
-Good fix but shouldn't be in this patch.   Put it a separate patch on it's own.
-
->  MODULE_DESCRIPTION("Bosch BMI160 driver");
->  MODULE_LICENSE("GPL v2");
-
-
+-- 
+Kees Cook
