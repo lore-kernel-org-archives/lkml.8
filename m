@@ -2,138 +2,111 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF09C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77F0D2065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F2E2065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YMdHV7z6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CLcZ236j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgESKhb (ORCPT
+        id S1728703AbgESKhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:37:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48698 "EHLO
+        Tue, 19 May 2020 06:37:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgESKha (ORCPT
+        with ESMTP id S1726494AbgESKhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:37:30 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD61C05BD0A
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:37:29 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id w64so2905420wmg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:37:29 -0700 (PDT)
+        Tue, 19 May 2020 06:37:46 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E9F6C05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:37:45 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u188so2939919wmu.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nJqGHCLYRoZ39Y3LPONsDokd1MQBpWuhJuodhCCoySM=;
-        b=YMdHV7z6BExIROOjIpfvHwSUNwtHyJyHxewUmgQ58pFt2DCJ+Uq3LE6nN5u01qIsPB
-         rTnMHvOJ4foaIZQznr6Ev5x+fowQs8Joohvex2NOX8e3CLiyut/6ZWwYdeVM/Lpn+uJg
-         PuZjzzrw1kE6Klbf6tp/7LgGBpx+RxVYgAqJ89o4oQgPzP3JodvHnPd1rK6Uid0Y1CS1
-         BSRg+2wxS7OWx3hF4QjrYSYrrMdaEWoA68ZfdaWbMNbSyMgwx4PDx1Ism+F2DODBpig5
-         zZiibs5LM8fN32E7W8maiyUmM7xI44L6S6gQCO8h07GklbCW+XXxkrZ7CLC5GYdp0UmA
-         19Eg==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=aXsJU44GCIYk2OgRQy7d759a/u1ue6myLJURyVBYd8A=;
+        b=CLcZ236jj0tlYpqLtFL3ioPxwkbu37Ip4CxCdOnYn9axGgoRWAgEiXb7medhtvS0aw
+         S8hfrC0JE0DYi3y30LTInIHDQfUDxzoII2CXXieMTgbi1b1gYcMUOpdhRR6fT2H3Bd4z
+         9InwXKX+yA6Pgj5Mu5UVPY+nzaBFzQxntiWBtIW28S/h+WQAOi/KVfliYPqW+QiZru7P
+         HHnBRRp0qgbgl0dABgTBbXxni+72y9ObnZH/ZW9Zh7bbV116bT8hmzG+Ml3Za9DbLzQS
+         hZy8scnazhAh3wj7771MVayMozXxjHz47wvkYN+o+NoxKlD3sZ0x8v65BmuKr5/OAPPH
+         n2bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nJqGHCLYRoZ39Y3LPONsDokd1MQBpWuhJuodhCCoySM=;
-        b=lNeEDfuHvp5EgtCxm1YWTt8AWhUCrZBWrujqOpaK/nT2xjcYfIZkRsfkt1SpqZrXnI
-         wkJ7ht0CiesUcBfdEzFBf6B0ARKzXkuNsM4irCvGDo8rIPgqICitcNd6r6ubBGmpRDyc
-         TTiLzxTNQfPC8cNh8o38tgTARJiehWUqTTM5wuvvG34ENFXXcU9Zk41kMEQ1/SKRa3T8
-         C16yGejXSIV4tEHrt7X4UQDX+2wvEd+vXNNnAtMBbNsfVRYqoPnPos98gNmdbtHHvAd4
-         UMnyu+j8iVS3kHSDRvWnV7HZyY2IdEHUrTm6Ln8lq9u1XmLo4mG8O2EEnQwrQbZ1VfMb
-         S/LA==
-X-Gm-Message-State: AOAM5306y3LR+IGdzemSgl0wgLUTdQIgWdO5DsaDllHx1l54E0LlYBDz
-        DItiLhTs+ARAeaCfoF5dRPLEXg==
-X-Google-Smtp-Source: ABdhPJxj5fMEywwcRHjfOT2c3qwvdLgOyHayzX2tbuWzyAy4O/+p5lMYXda/U5svbychHMOWNGk9Ww==
-X-Received: by 2002:a05:600c:1403:: with SMTP id g3mr4962732wmi.51.1589884647744;
-        Tue, 19 May 2020 03:37:27 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id x24sm21634435wrd.51.2020.05.19.03.37.26
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=aXsJU44GCIYk2OgRQy7d759a/u1ue6myLJURyVBYd8A=;
+        b=UioURIwNjTOYCGOW9ewtFcTlBkKrMNCgNPRr4qy5QIrqJUgy2yPDmg3rlgE/ZZ2X+v
+         1wU5Lg8SNV1ex9tGO8Xa7CdSROZQTqEfztKQjHH1UFy5eTIdKIJOVM3YCZUBmphS0nT5
+         30Y2QU7I4eC9mzaDfzn9r9Uv2ppZwiS+kaR2SOSvB3xgHLMvF3l5avpfrmg7hsyoqonU
+         hP5tPIV+z39dSb+efQ2f7gDiPFD5ojv/vCi0RH0shRjTYhFwNpZIVE5r/zI7bjWOlOfX
+         51k5jGvaaDuZTx+iyJByR4B7+xW02ZK2xksZ7cPmRhFHNRXy6umyg4P6xHMfmUFn/Ks+
+         T5HQ==
+X-Gm-Message-State: AOAM5318e+3CYqXOeEKvxCXurXNvnEjDuedNdLQ38AvoI/URz8dEpa0k
+        PqR8f9wZUa6T9jq/1TxRrTbteg==
+X-Google-Smtp-Source: ABdhPJxiAzyUerOuMTk5FRcIW0Jcjoj2ZL7CECmIr6mC4isdh9wLpToG+AphXu0YHNWUccUjNP0TCw==
+X-Received: by 2002:a1c:8094:: with SMTP id b142mr4859380wmd.61.1589884664183;
+        Tue, 19 May 2020 03:37:44 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id q2sm3433181wmq.23.2020.05.19.03.37.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 03:37:27 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:37:24 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-serial@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Slaby <jslaby@suse.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Gross <agross@kernel.org>, bp@alien8.de,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Enrico Weigelt <info@metux.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        James Morse <james.morse@arm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        jinho lim <jordan.lim@samsung.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        x86@kernel.org
-Subject: Re: [PATCH v4 00/12] kgdb: Support late serial drivers; enable early
- debug w/ boot consoles
-Message-ID: <20200519103724.eyabo2n4uzms25bp@holly.lan>
-References: <20200507200850.60646-1-dianders@chromium.org>
- <20200514162109.6qt5drd27hpilijh@holly.lan>
- <CAD=FV=X+t_Wg5KadZBTGHMSEXY3c-t6DZAtdaLXys31QJJpGGA@mail.gmail.com>
- <20200514163633.GA3154055@kroah.com>
+        Tue, 19 May 2020 03:37:43 -0700 (PDT)
+Date:   Tue, 19 May 2020 11:37:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v11 2/6] mfd: mp2629: Add support for mps battery charger
+Message-ID: <20200519103741.GW271301@dell>
+References: <20200430155810.21383-1-sravanhome@gmail.com>
+ <20200430155810.21383-3-sravanhome@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200514163633.GA3154055@kroah.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200430155810.21383-3-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 06:36:33PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 14, 2020 at 09:34:26AM -0700, Doug Anderson wrote:
-> > > (though we must keep
-> > > changes to drivers/tty/serial/kgdboc alongside the kgdb changes).
-> > >
-> > > I can hoover them up but I'd need a solid set of acks and
-> > > I don't think we've got that yet.
-> > 
-> > It would be nice for it to be explicit, but "get_maintainer" says that
-> > Greg KH is the maintainer of serial drivers.  Git log confirms that he
-> > also has been the one landing changes to these files.  Early-on he
-> > provided his Reviewed-by for the series as a whole, so he's aware of
-> > it and maybe would be fine w/ the serial changes landing through the
-> > kgdb tree?
-> > 
-> > Greg: is that correct?
+On Thu, 30 Apr 2020, Saravanan Sekar wrote:
+
+> mp2629 is a highly-integrated switching-mode battery charge management
+> device for single-cell Li-ion or Li-polymer battery.
 > 
-> I have no objection for all of these to go through any other tree that
-> wants to take them :)
+> Add MFD core enables chip access for ADC driver for battery readings,
+> and a power supply battery-charger driver
 > 
-> But if you want me to take them in the serial tree, to make it easier
-> for you or any other serial driver issues, I will be glad to do that,
-> just send them my way.  It's your call.
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/mfd/Kconfig        |  9 +++++
+>  drivers/mfd/Makefile       |  2 +
+>  drivers/mfd/mp2629.c       | 79 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mp2629.h | 17 ++++++++
+>  4 files changed, 107 insertions(+)
+>  create mode 100644 drivers/mfd/mp2629.c
+>  create mode 100644 include/linux/mfd/mp2629.h
 
-Thanks. I've taken then via my tree.
+For my own reference (apply this as-is to your sign-off block):
 
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Daniel.
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
