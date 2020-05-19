@@ -2,116 +2,113 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C657C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22322C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07EAD207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589874744;
-	bh=8oFtGVvPtwvLeXVT+tYrnzpgE338OIeGbsSr9YBrZYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=koF9PwGAx5O0FpHmP/Y4TTMcVNNV1RN4YD/A41t9Qsdt3pfuYqHiXeIktivAsUOH6
-	 CAV2MleG//HmBcapclGmngJctpl5BiVddkCV7KdCobj4SDCve5JdUaaReYrTnB/v34
-	 1+k61ycIEkvvmo6i3X9zE76DBIlG9hdrmlCp3QR8=
+	by mail.kernel.org (Postfix) with ESMTP id EA2D02075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZO8oZyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgESHwW (ORCPT
+        id S1728683AbgESHx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 03:52:22 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39573 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbgESHwT (ORCPT
+        Tue, 19 May 2020 03:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726943AbgESHx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 03:52:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id w64so2277900wmg.4;
-        Tue, 19 May 2020 00:52:17 -0700 (PDT)
+        Tue, 19 May 2020 03:53:56 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7E0C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:53:56 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id n15so2916467pfd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=90JtBfQaO8CnvkM0ghj/tqXgttRAyyfAqTnngOdG3VI=;
+        b=QZO8oZykFmocOOl7aFZ5ZbeTmoRkpjI18Td4wZGWrZ/LXrDrQpu266ulbaz9sRnBBh
+         vwwADHvaUzikHT6Wla/j3q6OMfJpjv+OUkbs/Sk8R4r/bMNZJ0MGxdGMQFsPq3xbjf9p
+         ZiVE6fug3h4OnadEuedJpLkeDkU3wUBJKKP+kQif3MbbOfixbBpfbVFhlyhrnA6255Xl
+         xHNMQRMbBX8zdkzwBtsAR0mmoG8c8r4hviMLnjSemk0ByePhYHr7UWoh4VPaHwaQrDLg
+         bqsYj2TV1NnfCu8v+CARZCLzBbN+hD2tUIuTT88HnqtSQElGwld4hBhTh0W1dpwr0wh/
+         Dedw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=q9ehllzv4GXD6PHjLq8rxZ0NEvwuAG+BryL3jyLoW3I=;
-        b=chvmaXWeCwO9URC7bdzrRLP5/Vu52UyX28eW8PAQ8pbRq1UGeAotyEqrbEJ5HKJluP
-         JQbPbdGkf7gj+aNSJb89lfoo4XXHAdWXYTvNUSuNatsg+BIEF50WECDfNHY6xDQXv5H1
-         ieS1Zf/uYr+pcYxnf6d9Np+y6t5sLVxZo+xs9rJkZ1k4ehaBCjotIfBeyU0os1J4I9Ku
-         fAorVWvtyMLjsFaE0QB3OkKkL0yWjBPA1Gy1BPO11yMi1vAH7Y9F3DyQ1EedO7+9Jzme
-         ixvhXBvAD+Ofj1QHAGhI6dHtPmbcnuhpvQdsVdJcHLldBX1jvjAOKDyc2MYjVmYp5Zkz
-         clWQ==
-X-Gm-Message-State: AOAM532PkB5sFKSGodo0LPZuB6od53JDXNPlJYpj8Ss22JzSvlyD+tvL
-        3nZQOhYgiIu2A0YpThE8mHY=
-X-Google-Smtp-Source: ABdhPJzhMPJJ+bOTnb0XzxprTwcOOTMoZpRkuCsUFILfWTJFhfoKhfdBOE3Io5xf2x700pgQq1fN2w==
-X-Received: by 2002:a1c:1902:: with SMTP id 2mr3881648wmz.178.1589874736792;
-        Tue, 19 May 2020 00:52:16 -0700 (PDT)
-Received: from localhost (ip-37-188-176-234.eurotel.cz. [37.188.176.234])
-        by smtp.gmail.com with ESMTPSA id q2sm19274851wrx.60.2020.05.19.00.52.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 00:52:15 -0700 (PDT)
-Date:   Tue, 19 May 2020 09:52:13 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200519075213.GF32497@dhcp22.suse.cz>
-References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
- <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
- <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=90JtBfQaO8CnvkM0ghj/tqXgttRAyyfAqTnngOdG3VI=;
+        b=REJF2BkoesrJhWm5Qo0fGUcYxuzPrcApJvGxpqVFgbduYLMpj6NntDaG50imwtqDoG
+         0vMjDR9oLMCmijTP7F3AdBHh74jPFrO6uQlbjFyayYo7BG2F0awA5OD/JdqmNSUf8UnM
+         IB4QBYcACJjKonj5lp3bFCcohdTx3AaZFjq+RHY4aAA9HEiDlLXKYxI4CvG2w6mxefuI
+         6OhMznIBaoDKX1ScG09jW+vD4uGJBc69Jisz+34yG4ofOGk+bl1EKcxNVn1jKeJnGvIT
+         dfjTv6X/kFrDXuxG1o7tGLld/YFWfO2aurRFh3fDus5GAK4S+BUmDa3cBpbOEXjJMNop
+         e1gA==
+X-Gm-Message-State: AOAM530D/yTTPhdjJwncPJGRCRhO5oX98TWZltg7jvw0t9n3FObF14CK
+        wjGNzcm0k9tncfDTksCbXFO+YieM5ss6qgWJ
+X-Google-Smtp-Source: ABdhPJxMXA/j3m1VvlI5LVe0U7oVHJU9KIkdRwb3MBlxteaI8UdHaYhfylaqH+Ww2/HL4gxrdhjs4g==
+X-Received: by 2002:a62:3006:: with SMTP id w6mr20807466pfw.29.1589874835786;
+        Tue, 19 May 2020 00:53:55 -0700 (PDT)
+Received: from gmail.com ([192.55.54.40])
+        by smtp.gmail.com with ESMTPSA id mn19sm1432158pjb.8.2020.05.19.00.53.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 00:53:55 -0700 (PDT)
+Date:   Tue, 19 May 2020 13:23:49 +0530
+From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V1 5/6] staging: greybus: audio: Add helper APIs for
+ dynamic audio modules
+Message-ID: <20200519075347.GA18002@gmail.com>
+References: <cover.1589734179.git.vaibhav.sr@gmail.com>
+ <c1339e4d57c8b39bd25197d4514fabd868b829b1.1589734179.git.vaibhav.sr@gmail.com>
+ <20200517173706.GB34497@piout.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
+In-Reply-To: <20200517173706.GB34497@piout.net>
+User-Agent: Mutt/1.10.1+3 (f9293d646485) (2018-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18-05-20 19:40:55, Naresh Kamboju wrote:
-> Thanks for looking into this problem.
+On Sun, May 17, 2020 at 07:37:06PM +0200, Alexandre Belloni wrote:
+> Hi,
 > 
-> On Sat, 2 May 2020 at 02:28, Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > On Fri, 1 May 2020 18:08:28 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > > mkfs -t ext4 invoked oom-killer on i386 kernel running on x86_64 device
-> > > and started happening on linux -next master branch kernel tag next-20200430
-> > > and next-20200501. We did not bisect this problem.
-[...]
-> Creating journal (131072 blocks): [   31.251333] mkfs.ext4 invoked
-> oom-killer: gfp_mask=0x101cc0(GFP_USER|__GFP_WRITE), order=0,
-> oom_score_adj=0
-[...]
-> [   31.500943] DMA free:187396kB min:22528kB low:28160kB high:33792kB
-> reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-> active_file:4736kB inactive_file:431688kB unevictable:0kB
-> writepending:62020kB present:783360kB managed:668264kB mlocked:0kB
-> kernel_stack:888kB pagetables:0kB bounce:0kB free_pcp:880kB
-> local_pcp:216kB free_cma:163840kB
+> On 17/05/2020 22:47:20+0530, Vaibhav Agarwal wrote:
+> > Greybus Codec driver allows modules to be dynamically added and removed,
+> > which further requires updating the DAPM configurations as well.
+> > 
+> > With current snd_soc architecture, dynamic audio modules is not yet
+> > supported. This patch provides helper APIs to update DAPM configurations
+> > in response to modules which are dynamically added or removed. The
+> > source is primarily based on snd_dapm.c
+> > 
+> 
+> I really think you should send this patch series to the ASoC
+> maintainers, especially this patch. The main goal shouldn't be to simply
+> fix compilation issues but to try to get the driver out of staging else,
+> the current situation will happen again.
 
-This is really unexpected. You are saying this is a regular i386 and DMA
-should be bottom 16MB while yours is 780MB and the rest of the low mem
-is in the Normal zone which is completely missing here. How have you got
-to that configuration? I have to say I haven't seen anything like that
-on i386.
+Agree Alexandre. I'll share this with ASoC maintainers as well.
 
-The failing request is GFP_USER so highmem is not really allowed but
-free pages are way above watermarks so the allocation should have just
-succeeded.
+Also, I'm seeking opinion regarding the scope of pushing GB Audio out of 
+staging tree. I'm keen to make the relevant changes and work actively 
+for the same. However, I don't have a real device to test the latest 
+code and thus not sure if the changes can be pushed to sound soc tree.
+GB maintainers, kindly share your opinion.
 
--- 
-Michal Hocko
-SUSE Labs
+--
+Regards,
+Vaibhav
