@@ -2,98 +2,101 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8236CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F68207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E67020708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgESRrG (ORCPT
+        id S1729417AbgESRsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:47:06 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39429 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESRrF (ORCPT
+        Tue, 19 May 2020 13:48:18 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:35950 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726059AbgESRsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:47:05 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u35so175916pgk.6;
-        Tue, 19 May 2020 10:47:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=4s+D7uXo64x5bPgFnHyM5djSl5hgZ8Bh8N4Mq4iYj5Y=;
-        b=KHDnBqFgYAKLvypgf5M+vv59jdH7jOW12qs2UVOf4i2Obmm5xCXesWQgfqMGeZTQSY
-         4i3g8MWxcyRJaESaDWJKEWQp4IIjKBcwtTuiOeyfBCSdw18gRrCpu7eV7QhToZtS8jxG
-         q5O3f0HeCnnbUo/6RSYUPMWf4eNWCiE//7M6KBj8b8ZHvwLMC+JlN/qkYx7XaeF+JnWh
-         3lIaMjL4ZlDMa6fZvSoLCwCmfnpogYsTJ8QBnkv/6QT3buI9WTrmeunCf1eqwHaOagXd
-         RJgDJw8k1nacwnn8MJO8TV6aoAVcOovwWppkgoo6ZGr34Wgk8X2ZYB85OdahLQFmRkId
-         ysZA==
-X-Gm-Message-State: AOAM533pYIHDjI7rcNP4EC9NdPLH1FOFowO+Pdskiox+Pt6GZEu21IV+
-        H4cYKJ8UcAaCaRqpyWVCaBw=
-X-Google-Smtp-Source: ABdhPJyjxNyEvaWspm5HdpSza/NH+XaiPNLPq6/NmJt65fHgKgq3qOtVTcIeJKdMA1/9tdLmKz7ing==
-X-Received: by 2002:a62:4e88:: with SMTP id c130mr259853pfb.122.1589910424698;
-        Tue, 19 May 2020 10:47:04 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:51be:e4c2:6c63:36da? ([2601:647:4000:d7:51be:e4c2:6c63:36da])
-        by smtp.gmail.com with ESMTPSA id ay15sm181806pjb.18.2020.05.19.10.47.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 10:47:03 -0700 (PDT)
-Subject: Re: [PATCH v2] RDMA/rtrs: client: Fix function return on success
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-References: <20200519163612.GA6043@embeddedor>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <0f42902d-0b8c-08ac-0d6e-b819205ce24d@acm.org>
-Date:   Tue, 19 May 2020 10:47:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 13:48:18 -0400
+Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 19 May 2020 10:48:15 -0700
+Received: from localhost (unknown [10.200.192.41])
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 912B1B2906;
+        Tue, 19 May 2020 13:48:17 -0400 (EDT)
+Date:   Tue, 19 May 2020 10:48:17 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH 4/5] objtool: Enable compilation of objtool for all
+ architectures
+Message-ID: <20200519174817.GR9040@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <cover.1588888003.git.mhelsley@vmware.com>
+ <9f709ea2ae66cc03b3ff3329baa8f670ccd0e368.1588888003.git.mhelsley@vmware.com>
+ <20200515205610.fmdimt7wbafypuqc@treble>
+ <20200518195045.GQ9040@rlwimi.vmware.com>
+ <20200518222754.cp7vh2qp76khfy4r@treble>
 MIME-Version: 1.0
-In-Reply-To: <20200519163612.GA6043@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200518222754.cp7vh2qp76khfy4r@treble>
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-19 09:36, Gustavo A. R. Silva wrote:
-> Remove the if-statement and return the value contained in _err_,
-> unconditionally.
+On Mon, May 18, 2020 at 05:27:54PM -0500, Josh Poimboeuf wrote:
+> On Mon, May 18, 2020 at 12:50:45PM -0700, Matt Helsley wrote:
+> > > Why were these moved to arch.h?  They're not necessarily arch-specific,
+> > > but rather "check"-specific, so I think they still belong in check.h, if
+> > > possible.
+> > 
+> > Ah, found it. They are arch specific due to struct orc_entry, which is
+> > presently not defined for any archs besides x86.
+> > 
+> > Prior to the patch (-> means "includes"):
+> > 	check.h -> asm/orc_types.h (defines struct orc_entry)
+> > 	orc_gen.c -> check,h
+> > 
+> > After patch:
+> > 	check.c -> asm/orc_types.h
+> > 	orc_gen.c -> asm/orc_types.h
+> > 	orc_gen.c -> check.h
+> > 	orc_gen.c -> arch.h
+> > 	{ now weak.c } -> check.h
+> > 
+> > So this prevents the headers, which help us keep the weak definitions
+> > consistent with the strong definitions, from breaking compiles on archs
+> > that lack struct orc_entry.
+> > 
+> > I'm not sure what the best way to remove this dependency is without
+> > a nasty void * for the orc entry, or some #ifdef games related to
+> > checking for cpp defines from asm/orc_types.h. This approach neatly
+> > avoids conditional preprocessor games and type casting though I do
+> > agree it's surprising.
+> > 
+> > Do you have any advice here?
+> 
+> Would it work if we just move the check() and orc_dump() prototypes to
+> objtool.h?  Then weak.c can just include objtool.h.  And check.h and
+> orc.h would only need to be included for arches which implement them.
 
-Thanks Gustavo!
+OK, I tested that and it works well. In fact it simplifies the includes
+a bit so I think it might be the right move.
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Cheers,
+	-Matt Helsley
