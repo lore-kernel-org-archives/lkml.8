@@ -2,145 +2,307 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A85C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4319EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC64A207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="mTAEJSov";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="F1d/qQgQ"
+	by mail.kernel.org (Postfix) with ESMTP id 196922065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgESJ6e (ORCPT
+        id S1726938AbgESKCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:58:34 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:9734 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726121AbgESJ6d (ORCPT
+        Tue, 19 May 2020 06:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgESKCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:58:33 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04J9utvd028582;
-        Tue, 19 May 2020 02:58:20 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pfpt0818; bh=xEuXNmkaR8vYoI2kBUAUczw/cfhxPhmP7mLR00GVaSk=;
- b=mTAEJSov7hgXPSFZmOi5ePVMhP3Uc/uJlcn/M7PYTUsqwIT9ASRcSmvBVK6uNXrkY39K
- OSgXW7s7IxOWBMYODYxIvid0wazP9mcgD83N7+Is9NAbwJi9PAWll5iwJrMKKioPDqmc
- OoJY8ZMubl6ntkm5wBLvQPccr/WSjP96nZfKjL64idaOTx6gxO0VM/9Qmjr5P+0IVNp3
- ZQFr/JOHdd9r56IzWcZh1YwNteECw8yZZZbDn9nBLxZXQd7NDHQ9riNg0keuvQx9Ts/2
- Fq/6/Ho4tDX73oZnPelNnbK2dL/ga1zqxvI0eHWzbTwAtc0DY7tq8z8UqQYEU3q2LJlh 9g== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 312fpp2tjf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 19 May 2020 02:58:20 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 19 May
- 2020 02:58:18 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 02:58:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XG1CfqMMh74oDuReBI+/i72usJE5//1uApp3Orr7aX3aspHGxs5/6fIgmnMqQu5SFF38qAEfg8LHvCCanq6v8litesCiTQZTolEDJhGcA7V1kkJG24EvDqXMQh9XFp4Le7IWRXrnNqArYWizCPgmzVCbgNeeRYWW23WM2QVKpMT1g2SIcLO46fMEzatmdsAIVVxutYJ6VtshAjXm9+4csEJqHcd5a31D3Dvi3LqhcbqV7Y4imDjhlQLXhNMYz6DCJso01fsTD4NyK2lxL1krx3D4VTgODBmVy0WN8Vo3FAbr0+lEsjgl7pHgVCTxvQdSkOYJWAGkiVyurR/GBdWfXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xEuXNmkaR8vYoI2kBUAUczw/cfhxPhmP7mLR00GVaSk=;
- b=YzQZJetCq+g2ZdFYu80SAGmNWHmZ3BijHnt3xATXFGDY7r1Qan/URrI28vtA5s88rxptu2gT5+ymkvxXrurSNSRIKMVuMsNmv8oscpFOK1rXrt8tLrsCXfVGFmAnlMC47OrANf7CaNY5CE8dTJvoDGE4vwQRMn9OEgVRRWHEYDwGFZFXvNBPUP3XWVKmEG/+ifa9ZWzwXT03uucqBwKo2BN+ZFm0u+zxyaXUlt7m7etYdUhXwC13dYShcAQcUVjKwskTkoLrpcRSaGNM8e6PwCJ5jbXhs3EFvODzrkV9iTaLKN9gDMdu3OQV4HPxoUqoEAurBny/BQhc1CSlVMHTkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xEuXNmkaR8vYoI2kBUAUczw/cfhxPhmP7mLR00GVaSk=;
- b=F1d/qQgQCBMB3JPKjTCTHGRHdCd1BbVzM+lNMHa6XDlFrPhOr2jV+gROwjdODcIJLqdirzFyKC3913rYxTne4BcNKSl5i5HYqOG2bqOTDGb+Yn+rSJXB5I59Rw4TEa4OZ7FwvSdqIWPbVjzhrTmiaT7padQ2olMQQeCt/s6Py+E=
-Authentication-Results: alien8.de; dkim=none (message not signed)
- header.d=none;alien8.de; dmarc=none action=none header.from=marvell.com;
-Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
- by BYAPR18MB2487.namprd18.prod.outlook.com (2603:10b6:a03:139::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Tue, 19 May
- 2020 09:58:16 +0000
-Received: from BYAPR18MB2661.namprd18.prod.outlook.com
- ([fe80::a165:ffa5:f3eb:d62d]) by BYAPR18MB2661.namprd18.prod.outlook.com
- ([fe80::a165:ffa5:f3eb:d62d%7]) with mapi id 15.20.3021.020; Tue, 19 May 2020
- 09:58:15 +0000
-Date:   Tue, 19 May 2020 11:57:59 +0200
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 08/10] EDAC/ghes: Carve out MC device handling into
- separate functions
-Message-ID: <20200519095759.ghg7if6cijdlvjm3@rric.localdomain>
-References: <20200422115814.22205-1-rrichter@marvell.com>
- <20200422115814.22205-9-rrichter@marvell.com>
- <20200427163856.GG11036@zn.tnic>
- <20200506084558.tcayd2fuzoe6rsfm@rric.localdomain>
- <20200511133203.GB25861@zn.tnic>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511133203.GB25861@zn.tnic>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: HE1PR0902CA0002.eurprd09.prod.outlook.com
- (2603:10a6:3:e5::12) To BYAPR18MB2661.namprd18.prod.outlook.com
- (2603:10b6:a03:136::26)
+        Tue, 19 May 2020 06:02:48 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5BF1C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:02:48 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jaz4V-0000x4-QB; Tue, 19 May 2020 12:02:03 +0200
+Message-ID: <0866cd8cdb0c22f0b2a6814c4dafa29202aad5f3.camel@pengutronix.de>
+Subject: Re: [PATCH] ASoC: fsl: imx-pcm-dma: Don't request dma channel in
+ probe
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>, timur@kernel.org,
+        nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, linux-imx@nxp.com, sumit.semwal@linaro.org,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org
+Date:   Tue, 19 May 2020 12:01:59 +0200
+In-Reply-To: <1589881301-4143-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1589881301-4143-1-git-send-email-shengjiu.wang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from rric.localdomain (31.208.96.227) by HE1PR0902CA0002.eurprd09.prod.outlook.com (2603:10a6:3:e5::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Tue, 19 May 2020 09:58:13 +0000
-X-Originating-IP: [31.208.96.227]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b23bb9d6-a767-4bd0-17be-08d7fbdb263c
-X-MS-TrafficTypeDiagnostic: BYAPR18MB2487:
-X-Microsoft-Antispam-PRVS: <BYAPR18MB2487C78C403B16D5239FDB6DD9B90@BYAPR18MB2487.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 040866B734
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cWUxsUfQvRWsQdQ9pQfirgoac6MTUrw8fAcxpctmvyfw7tb1iNw+Arouj704iGCYqf+q6tIkD+1voeSLH5u4+zyslrYSynkcIGKg22p58VTFMtFFNObXsQwID4WNpcpOlsFpYoqTnazZeMcylxAumoQDSz9KNCWEmRefitqDXYCYTe4SPsbnBoyuL+YcXzU0q3XKJpvxmYkziosBOsTYER9WHdcuvNemknWDckoUQ58Gn/LIwdh+L9NMI7GXvsHnBR3hYsihrYpmPZpdQtaZwwdkMj3LvLz4CYrW1JHnZ4SWRSHmCB9Bgi+z0+4qib5gYMRiOyCRSS+bGsX4NrgfRC3vfzi3kCjvBt55E1EWKUX1qaovzuYpFkoLO97+ZpbNkV0a2i02Db15Ap00zvhC1RirYT98yQD8Z+PI8hmXbbQfWcEo5wXggGOGbOkYf51o
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(66556008)(5660300002)(6916009)(478600001)(4744005)(86362001)(26005)(6666004)(54906003)(8676002)(66946007)(55016002)(66476007)(6506007)(16526019)(4326008)(53546011)(8936002)(9686003)(186003)(1076003)(2906002)(316002)(7696005)(52116002)(956004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 42h+ZjuNVri+syhrNDCxDTznnOx3QPcblGUOjj8t1nOFAK2jsLfSjwee27gdF3gmZjLEaR/D1zs3wR26GVC+PA+Xj4KM+B7KgGHPBZ5KBDinjLGJ4SfAI0kT5DZIalmFXCNtBhoT+oGhP20RHDPVB5mDw+ccAuIBL2foodNcX/BR2IokXLb/GXInvPZ0gOn1kfJJt0IXW8s0GbCXmD3bgp3SXKZHPTzGOAcHBsndKrg6GEokLfrX3zmvYp0jAjaqI/5GqH1eQNz/dnSv1Phkaj7HAdDnsfO57J7lbeEl6DumfHms0n/lm1xTM1pO1TZIQRbFqIbPiVe21sYpvt54QKXFY6oGDOBtMmwEUagEhNHgOd2UWrsp+nbysLc/nPtHo2G5waJTgRV6DxYzEWKD53LdIosYoh2ujP2j8pkqapw8cqGfb8LLJHX3dU+/IMzmdchNbRxKkCSnGRU50LMLnVE2pRzTcg7nEA00xCU2lgI=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b23bb9d6-a767-4bd0-17be-08d7fbdb263c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 09:58:15.7394
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: a4Tsg8kjLumSK7EaZbn/0NG6r7ST1n7gu9x4WuateJPbdQLpIlr8jD/CZl5IdEExN3T80HGONP9EYAKJDI7EpA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2487
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-19_03:2020-05-19,2020-05-19 signatures=0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.05.20 15:32:03, Borislav Petkov wrote:
-> see below. It probably doesn't work but this is what it should do -
-> straightforward and simple.
+Am Dienstag, den 19.05.2020, 17:41 +0800 schrieb Shengjiu Wang:
+> There are two requirements that we need to move the request
+> of dma channel from probe to open.
+
+How do you handle -EPROBE_DEFER return code from the channel request if
+you don't do it in probe?
+
+> - When dma device binds with power-domains, the power will
+> be enabled when we request dma channel. If the request of dma
+> channel happen on probe, then the power-domains will be always
+> enabled after kernel boot up,  which is not good for power
+> saving,  so we need to move the request of dma channel to .open();
+
+This is certainly something which could be fixed in the dmaengine
+driver.
+
+> - With FE-BE case, if the dma channel is requested in probe,
+> then there will be below issue, which is caused by that the
+> dma channel will be requested duplicately
+
+Why is this requested a second time? Is this just some missing cleanup
+on a deferred probe path?
+
+Regards,
+Lucas
+
+> [  638.906268] sysfs: cannot create duplicate filename '/devices/soc0/soc/2000000.bus/2000000.spba-bus/2024000.esai/dma:tx'
+> [  638.919061] CPU: 1 PID: 673 Comm: aplay Not tainted 5.7.0-rc1-12956-gfc64b2585593 #287
+> [  638.927113] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+> [  638.933690] [<c0110dd8>] (unwind_backtrace) from [<c010b8ec>] (show_stack+0x10/0x14)
+> [  638.941464] [<c010b8ec>] (show_stack) from [<c0557fc0>] (dump_stack+0xe4/0x118)
+> [  638.948808] [<c0557fc0>] (dump_stack) from [<c032aeb4>] (sysfs_warn_dup+0x50/0x64)
+> [  638.956406] [<c032aeb4>] (sysfs_warn_dup) from [<c032b1a8>] (sysfs_do_create_link_sd+0xc8/0xd4)
+> [  638.965134] [<c032b1a8>] (sysfs_do_create_link_sd) from [<c05dc668>] (dma_request_chan+0xb0/0x210)
+> [  638.974120] [<c05dc668>] (dma_request_chan) from [<c05dc7d0>] (dma_request_slave_channel+0x8/0x14)
+> [  638.983111] [<c05dc7d0>] (dma_request_slave_channel) from [<c09d5548>] (fsl_asrc_dma_hw_params+0x1e0/0x438)
+> [  638.992881] [<c09d5548>] (fsl_asrc_dma_hw_params) from [<c09c1654>] (soc_pcm_hw_params+0x4a0/0x6a8)
+> [  639.001952] [<c09c1654>] (soc_pcm_hw_params) from [<c09c39d4>] (dpcm_fe_dai_hw_params+0x70/0xe4)
+> [  639.010765] [<c09c39d4>] (dpcm_fe_dai_hw_params) from [<c099b274>] (snd_pcm_hw_params+0x158/0x418)
+> [  639.019750] [<c099b274>] (snd_pcm_hw_params) from [<c099c5a0>] (snd_pcm_ioctl+0x734/0x183c)
+> [  639.028129] [<c099c5a0>] (snd_pcm_ioctl) from [<c029ff94>] (ksys_ioctl+0x2ac/0xb98)
+> [  639.035812] [<c029ff94>] (ksys_ioctl) from [<c0100080>] (ret_fast_syscall+0x0/0x28)
+> [  639.043490] Exception stack(0xec529fa8 to 0xec529ff0)
+> [  639.048565] 9fa0:                   bee84650 01321870 00000004 c25c4111 bee84650 0002000f
+> [  639.056766] 9fc0: bee84650 01321870 01321820 00000036 00001f40 00000000 0002c2f8 00000003
+> [  639.064964] 9fe0: b6f483fc bee8451c b6ee2655 b6e1dcf8
+> [  639.070339] fsl-esai-dai 2024000.esai: Cannot create DMA dma:tx symlink
 > 
-> And now that I've looked at this in more detail, this whole DIMM
-> counting is still not doing what it should do.
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  sound/soc/fsl/imx-pcm-dma.c | 173 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 159 insertions(+), 14 deletions(-)
 > 
-> So lemme try again:
+> diff --git a/sound/soc/fsl/imx-pcm-dma.c b/sound/soc/fsl/imx-pcm-dma.c
+> index 04a9bc749016..dae53b384df4 100644
+> --- a/sound/soc/fsl/imx-pcm-dma.c
+> +++ b/sound/soc/fsl/imx-pcm-dma.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/dmaengine.h>
+>  #include <linux/types.h>
+>  #include <linux/module.h>
+> +#include <linux/dma-mapping.h>
+>  
+>  #include <sound/core.h>
+>  #include <sound/pcm.h>
+> @@ -29,24 +30,168 @@ static bool filter(struct dma_chan *chan, void *param)
+>  	return true;
+>  }
+>  
+> -static const struct snd_dmaengine_pcm_config imx_dmaengine_pcm_config = {
+> -	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
+> -	.compat_filter_fn = filter,
+> -};
+> +static int imx_pcm_hw_params(struct snd_soc_component *component,
+> +			     struct snd_pcm_substream *substream,
+> +			     struct snd_pcm_hw_params *params)
+> +{
+> +	struct snd_pcm_runtime *runtime = substream->runtime;
+> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+> +	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
+> +	struct snd_dmaengine_dai_dma_data *dma_data;
+> +	struct dma_slave_config config;
+> +	struct dma_chan *chan;
+> +	int ret = 0;
+>  
+> -int imx_pcm_dma_init(struct platform_device *pdev, size_t size)
+> +	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
+> +	runtime->dma_bytes = params_buffer_bytes(params);
+> +
+> +	chan = snd_dmaengine_pcm_get_chan(substream);
+> +	if (!chan)
+> +		return -EINVAL;
+> +
+> +	ret = snd_hwparams_to_dma_slave_config(substream, params, &config);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dma_data = snd_soc_dai_get_dma_data(cpu_dai, substream);
+> +	if (!dma_data)
+> +		return -EINVAL;
+> +
+> +	snd_dmaengine_pcm_set_config_from_dai_data(substream,
+> +						   dma_data,
+> +						   &config);
+> +	return dmaengine_slave_config(chan, &config);
+> +}
+> +
+> +static int imx_pcm_hw_free(struct snd_soc_component *component,
+> +			   struct snd_pcm_substream *substream)
+>  {
+> -	struct snd_dmaengine_pcm_config *config;
+> +	snd_pcm_set_runtime_buffer(substream, NULL);
+> +	return 0;
+> +}
+> +
+> +static snd_pcm_uframes_t imx_pcm_pointer(struct snd_soc_component *component,
+> +					 struct snd_pcm_substream *substream)
+> +{
+> +	return snd_dmaengine_pcm_pointer(substream);
+> +}
+> +
+> +static int imx_pcm_trigger(struct snd_soc_component *component,
+> +			   struct snd_pcm_substream *substream, int cmd)
+> +{
+> +	return snd_dmaengine_pcm_trigger(substream, cmd);
+> +}
+> +
+> +static int imx_pcm_open(struct snd_soc_component *component,
+> +			struct snd_pcm_substream *substream)
+> +{
+> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+> +	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+> +	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
+> +	struct snd_dmaengine_dai_dma_data *dma_data;
+> +	struct device *dev = component->dev;
+> +	struct snd_pcm_hardware hw;
+> +	struct dma_chan *chan;
+> +	int ret;
+> +
+> +	ret = snd_pcm_hw_constraint_integer(substream->runtime,
+> +					    SNDRV_PCM_HW_PARAM_PERIODS);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to set pcm hw params periods\n");
+> +		return ret;
+> +	}
+> +
+> +	dma_data = snd_soc_dai_get_dma_data(cpu_dai, substream);
+> +	if (!dma_data)
+> +		return -EINVAL;
+> +
+> +	chan = dma_request_slave_channel(cpu_dai->dev, tx ? "tx" : "rx");
+> +	if (!chan) {
+> +		/* Try to request channel using compat_filter_fn */
+> +		chan = snd_dmaengine_pcm_request_channel(filter,
+> +							 dma_data->filter_data);
+> +		if (!chan)
+> +			return -ENXIO;
+> +	}
+>  
+> -	config = devm_kzalloc(&pdev->dev,
+> -			sizeof(struct snd_dmaengine_pcm_config), GFP_KERNEL);
+> -	if (!config)
+> -		return -ENOMEM;
+> -	*config = imx_dmaengine_pcm_config;
+> +	ret = snd_dmaengine_pcm_open(substream, chan);
+> +	if (ret)
+> +		goto pcm_open_fail;
+>  
+> -	return devm_snd_dmaengine_pcm_register(&pdev->dev,
+> -		config,
+> -		SND_DMAENGINE_PCM_FLAG_COMPAT);
+> +	memset(&hw, 0, sizeof(hw));
+> +	hw.info = SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_MMAP_VALID |
+> +			SNDRV_PCM_INFO_INTERLEAVED;
+> +	hw.periods_min = 2;
+> +	hw.periods_max = UINT_MAX;
+> +	hw.period_bytes_min = 256;
+> +	hw.period_bytes_max = dma_get_max_seg_size(chan->device->dev);
+> +	hw.buffer_bytes_max = IMX_DEFAULT_DMABUF_SIZE;
+> +	hw.fifo_size = dma_data->fifo_size;
+> +
+> +	/* Refine the hw according to caps of DMA. */
+> +	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
+> +							dma_data,
+> +							&hw,
+> +							chan);
+> +	if (ret < 0)
+> +		goto refine_runtime_hwparams_fail;
+> +
+> +	snd_soc_set_runtime_hwparams(substream, &hw);
+> +
+> +	/* Support allocate memory from IRAM */
+> +	ret = snd_dma_alloc_pages(SNDRV_DMA_TYPE_DEV_IRAM,
+> +				  chan->device->dev,
+> +				  hw.buffer_bytes_max,
+> +				  &substream->dma_buffer);
+> +	if (ret < 0)
+> +		goto alloc_pagas_fail;
+> +
+> +	return 0;
+> +
+> +alloc_pagas_fail:
+> +refine_runtime_hwparams_fail:
+> +	snd_dmaengine_pcm_close(substream);
+> +pcm_open_fail:
+> +	dma_release_channel(chan);
+> +
+> +	return ret;
+> +}
+> +
+> +static int imx_pcm_close(struct snd_soc_component *component,
+> +			 struct snd_pcm_substream *substream)
+> +{
+> +	if (substream) {
+> +		snd_dma_free_pages(&substream->dma_buffer);
+> +		substream->dma_buffer.area = NULL;
+> +		substream->dma_buffer.addr = 0;
+> +	}
+> +
+> +	return snd_dmaengine_pcm_close_release_chan(substream);
+> +}
+> +
+> +static int imx_pcm_new(struct snd_soc_component *component,
+> +		       struct snd_soc_pcm_runtime *rtd)
+> +{
+> +	struct snd_card *card = rtd->card->snd_card;
+> +
+> +	return dma_coerce_mask_and_coherent(card->dev, DMA_BIT_MASK(32));
+> +}
+> +
+> +static const struct snd_soc_component_driver imx_pcm_component = {
+> +	.name           = "imx-pcm-dma",
+> +	.pcm_construct	= imx_pcm_new,
+> +	.open		= imx_pcm_open,
+> +	.close		= imx_pcm_close,
+> +	.hw_params	= imx_pcm_hw_params,
+> +	.hw_free	= imx_pcm_hw_free,
+> +	.trigger	= imx_pcm_trigger,
+> +	.pointer	= imx_pcm_pointer,
+> +};
+> +
+> +int imx_pcm_dma_init(struct platform_device *pdev, size_t size)
+> +{
+> +	return devm_snd_soc_register_component(&pdev->dev,
+> +					       &imx_pcm_component, NULL, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(imx_pcm_dma_init);
+>  
 
-As you have major concerns with my code that deals with ghes private
-dimm data, let's just keep smbios_handle in struct dimm_info.  ATM I
-do not see any alternative solution suggested how this could be
-implemented. So I am going to drop patch '[PATCH v2 04/10] EDAC/ghes:
-Make SMBIOS handle private data to ghes' from this series.
-
-Thanks,
-
--Robert
