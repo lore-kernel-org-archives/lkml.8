@@ -2,88 +2,89 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6013C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A62207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589899491;
-	bh=f2m/vpKesJuAgpJWphNK74mGGeooA6hNDsxNNkyr/7A=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=hqg82GxQq1clIy8rxC54lEX8s66zSMThdcQ0SxwzdRzELv/gniqRv3mRQaYjvRC0Y
-	 0oPPiJTaxdq+IiaOSvmtsJilX2Ac7OgAFSVgrMw7Z3zSeahQNTJrjbLQFsk2eAyiqY
-	 /YUOGqI7KWjYF3jAAWvOuhpnLgrui8vwrqgMwi9g=
+	by mail.kernel.org (Postfix) with ESMTP id 83CB820825
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=notmuch.email header.i=@notmuch.email header.b="vtoz3V1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgESOov (ORCPT
+        id S1729152AbgESOpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:44:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43858 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 10:45:34 -0400
+Received: from mx.h4ck.space ([159.69.146.50]:37726 "EHLO mx.h4ck.space"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbgESOou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:44:50 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC5FD2072C;
-        Tue, 19 May 2020 14:44:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589899490;
-        bh=f2m/vpKesJuAgpJWphNK74mGGeooA6hNDsxNNkyr/7A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=MAX4uQGJcs47DiTwe1+vbMtz89JP86KaEl3LPFGLgzHIl5B0eMgFjApLLN9+U5y2O
-         dfcTwt0C9vty4h88iZAOlUx1BPqJesj6lq/NVu6M5ktJfuq3oiASuL1YgJFr0fErj9
-         rsL9rxQ2n3XADd5GODp4vmxOaUK7IUIAYFa+/w2Y=
-Subject: Re: [PATCH 5.6 000/194] 5.6.14-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S1727904AbgESOpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 10:45:31 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 May 2020 10:45:31 EDT
+Date:   Tue, 19 May 2020 16:38:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=notmuch.email;
+        s=mail; t=1589899096;
+        bh=Y9XZYNt+/7HUPB/P7WIrgOb1ARcvi6Rd5XCUCLuyNs0=;
+        h=Date:From:To:Subject;
+        b=vtoz3V1hUuSRbULf8tZ0J8tGKjJrqwfYb70ZRrxExO+2kdpZa+7qRUUSY45v+/0Eg
+         cFMXEB46yGiFATylC/1F7x1vS+gS0VJzbce3RfImbkp7rcB2TYzFa50Z5WCt5eGQT7
+         yF2KjHu1yQNoGHjGbRVVRagYDr4rjAuzJ00mpylk=
+From:   Andreas Rammhold <andi@notmuch.email>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Babu Moger <Babu.Moger@amd.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Brendan Shanks <bshanks@codeweavers.com>,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200518173531.455604187@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <09b1c244-6db3-f35c-7853-7ebafd443424@kernel.org>
-Date:   Tue, 19 May 2020 08:44:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Subject: umip: AMD Ryzen 3900X, pagefault after emulate SLDT/SIDT instruction
+Message-ID: <20200519143815.cpsd2xfx2kl3khsq@wrt>
 MIME-Version: 1.0
-In-Reply-To: <20200518173531.455604187@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/20 11:34 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.14 release.
-> There are 194 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.14-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi,
 
-Compiled and booted on my test system. No dmesg regressions.
-I see rc2, I will test that and let you know the results.
+I've been running into a weird problem with UMIP on a current Ryzen
+3900x with kernel 5.6.11 where a process receives a page fault after the
+kernel handled the SLDT (or SIDT) instruction (emulation).
 
-thanks,
--- Shuah
+The program I am running is run through WINE in 32bit mode and tries to
+figure out if it is running in a VMWare machine by comparing the results
+of SLDT against well known constants (basically as shown in the
+[example] linked below).
+
+In dmesg I see the following log lines:
+> [99970.004756] umip: Program.exe[3080] ip:4373fb sp:32f3e0: SIDT instruction cannot be used by applications.
+> [99970.004757] umip: Program.exe[3080] ip:4373fb sp:32f3e0: For now, expensive software emulation returns the result.
+> [99970.004758] umip: Program.exe[3080] ip:437415 sp:32f3e0: SLDT instruction cannot be used by applications.
+
+Following that the process terminates with a page fault:
+> Unhandled exception: page fault on read access to 0xffffffff in 32-bit code (0x0000000000437415).
+
+Assembly at that address:
+> 0x0000000000437415: sldt    0xffffffe8(%ebp)
+
+Running the same executable on the exact same kernel (and userland) but
+on a Intel i7-8565U doesn't crash at this point. I am guessing the
+emulation is supposed to do something different on AMD CPUs?
+
+On the Ryzen the code executes successfully after setting CONFIG_X86_UMIP=n.
+
+I'd love to contriubte a patch but I have no knowledge of the inner
+workings of how UMIP actually works.
+
+Is there anything else I can provide to help debugging/fixing this? Very
+happy to test patches as well.
+
+
+[example] https://www.aldeid.com/wiki/X86-assembly/Instructions/sldt
