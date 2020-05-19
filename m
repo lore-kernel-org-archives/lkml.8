@@ -2,101 +2,126 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9AAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF402C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF8BD20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2375207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benboeckel.net header.i=@benboeckel.net header.b="c1zsJqiW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fZkGF6+s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuOCfHiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbgESQZA (ORCPT
+        id S1729385AbgESQZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:25:00 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51041 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728689AbgESQZA (ORCPT
+        Tue, 19 May 2020 12:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729041AbgESQZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:25:00 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7CBCF5C00D1;
-        Tue, 19 May 2020 12:24:58 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Tue, 19 May 2020 12:24:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=benboeckel.net;
-         h=date:from:to:cc:subject:message-id:reply-to:references
-        :mime-version:content-type:in-reply-to; s=fm1; bh=7/52dq5GxyiFcd
-        dCLps86QCxmzKufuJnLl7OH1657qI=; b=c1zsJqiWBgruzDh/25LryFc4I/tJS+
-        KejzuOJ1efDWpsQMaT/iI4KAnDS8jXkboxzHQy4d076P8VZSYja7C1lqXzJAxwOU
-        /hHqX9Vh52Pk30pdFhFxBvtUvWJnCkP/6ZXnwYHBHf/wv8gK+uHbv3hQusJ8DlUB
-        tJgDY6o2zq2Rqj2G0aw14HNItLTKTgwuZCvTalwVu09DNN+r39xi3yiS0Fu4am2u
-        TfYm1o6nbLAxFMsajd7qy/8HN6kEkoapPVwE2rrpHeNfQntfA85cDt453wuUY2nc
-        4QmbMa00jCapZPZ8WeUbwAMb1HZBpHhCVqxFjQuXmt/PfKVCz/8cjO0A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:reply-to:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=7/52dq5GxyiFcddCLps86QCxmzKufuJnLl7OH1657qI=; b=fZkGF6+s
-        2NFay7YhJ+tKBb+twAe0shLDdn1FlFIJBQuxiomMjsGpQ/K8Vfjw7b8lrfWLGyAl
-        ASpfsxFhO1xrM3d/4JB2/9oQl7GK0irtWZY4mvvQFOGTKR3qLeATNUztzFFkG9hj
-        mJ3vXnWYEyhcD1gj+PJ/ijWHDqJpjpC7du7daw3nn+lGpeREw/9mjYfHF5MJMevQ
-        W9+49sDoDe2ddx0oK72Pr/S30OX5LWMdFSoN+pM6Ge8CFhZoQIp1gtAr2Y+zWUY3
-        gDuv/2jlCR3X3zZXxA3jj2W0qMeJMvTo2VfhJnb++3fCWmWkExulf7TzjItqUtM0
-        MufBtLPvlovf7A==
-X-ME-Sender: <xms:VQjEXlRLzugsFLKbHpleHm2R5P4Xz3dzQH6kstjIiDtNAwXKpJnfTQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddtjedgleelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhrfhggtggujggfsehttdertddtreejnecuhfhrohhmpeeuvghn
-    uceuohgvtghkvghluceomhgvsegsvghnsghovggtkhgvlhdrnhgvtheqnecuggftrfgrth
-    htvghrnhepjedtvdffheetgfektdehvefgieelgeefheejvdehtdduieetgedtfedtleev
-    vdffnecukfhppeeiledrvddtgedrudeikedrvdeffeenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgessggvnhgsohgvtghkvghlrdhnvght
-X-ME-Proxy: <xmx:VQjEXuym6QgehtMSmMpoV9E7TnaLg9GXaX3mTvL85qC7i3EAwGH9uQ>
-    <xmx:VQjEXq1yZDifEBgM-BnSBJ_sg8hMsS0yLWT_4Yka9-rkqVDOO7U70w>
-    <xmx:VQjEXtCtK0SpOh7vIKzJBJRtA5Rsv4RchA3niV5yLgsDwRm_jqcpyw>
-    <xmx:WgjEXga2rAiJlnRndipxaz5S5Xibw8t-qKafQBRhmbZN_wm9Ok0GLw>
-Received: from localhost (cpe-69-204-168-233.nycap.res.rr.com [69.204.168.233])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 63B91306643B;
-        Tue, 19 May 2020 12:24:53 -0400 (EDT)
-Date:   Tue, 19 May 2020 12:24:52 -0400
-From:   Ben Boeckel <me@benboeckel.net>
-To:     David Howells <dhowells@redhat.com>
-Cc:     fweimer@redhat.com, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dns: Apply a default TTL to records obtained from
- getaddrinfo()
-Message-ID: <20200519162452.GA3010828@erythro.dev.benboeckel.internal>
-Reply-To: me@benboeckel.net
-References: <20200519141432.GA2949457@erythro.dev.benboeckel.internal>
- <20200518155148.GA2595638@erythro.dev.benboeckel.internal>
- <158981176590.872823.11683683537698750702.stgit@warthog.procyon.org.uk>
- <1080378.1589895580@warthog.procyon.org.uk>
- <1512927.1589904409@warthog.procyon.org.uk>
+        Tue, 19 May 2020 12:25:23 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21BA6C08C5C0;
+        Tue, 19 May 2020 09:25:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l18so76658wrn.6;
+        Tue, 19 May 2020 09:25:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nM06eYScX+XNokoAV7+9FvMc5yktmL9LEFe0oZB9L9Y=;
+        b=KuOCfHiLtLqcY80YA+zJqExocYmA8ZcpYRP7snwL65qx/hbvURsliycG9heOxO/fV9
+         3Fy8c4PR03P7tJFeX6QBgSkJqs9Ox3G8ZiJorzGDmj/Fm28CAqn80qZMPVt6IRhK5NnR
+         XIz5wtA8TfBPLSt0N8XTk3m851XhAsb7wmGNNDnzxVgBLuv+uWSVQeCb4cFcPQmReL0o
+         R4LqUkztD9SW7JXk6ISHBZnchT+LNFVEeoY62cVM18Yh08LQM52fQ8Amxaky1vH5WZgj
+         kUgXE3/gIcS28w2cvagnv5hQjpJskXkFxORXhdE63CaThtyKjsF4N6l8RTMBv8P2LOmA
+         ss4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nM06eYScX+XNokoAV7+9FvMc5yktmL9LEFe0oZB9L9Y=;
+        b=qaGsh9aTlJbs21Dhzvzyg3LkSC9QHZszaOvZpYcOWM88laBfxBkR++crbVaa188DmI
+         7qvmncPxpINhfqCqAnIN6/bCfZmwZ9KkslsZ7pQTr4XWO3theqpWpLTW6rQ/mG9A55+c
+         139mLREEsCJoLZdMuyC3DtfENahMOkwlMOnr9ysp2wp0d03m0Ntny30kj1U7uId8SiGl
+         XFEC4ARCxFSujDO91hF96l3+KYy2nKp7LbogZ2HodpyCvq01/vyOkU3kc572yFq5v+vQ
+         ueHaPInQEGa3XWkc7EY9Fkl1avntFn66J+xYFhBgizKzN03O4AweEoLd/I7c4HzfHJt9
+         /6xw==
+X-Gm-Message-State: AOAM532mt5X0llN6pIzlKw6dGbdPRshdyB81sBh6ONfc+C0JTmj6SEek
+        kf/7Td09/9wgbwtwVenh/RU=
+X-Google-Smtp-Source: ABdhPJxag+JM0bTEClmR4Am4vtfn8gaUpVvbku+9BQ3YhxQkbmBNaa4vnCEDKCbL5TbA35D/8bJsOw==
+X-Received: by 2002:adf:dcc6:: with SMTP id x6mr26271344wrm.126.1589905521923;
+        Tue, 19 May 2020 09:25:21 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id l18sm206371wmj.22.2020.05.19.09.25.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 09:25:20 -0700 (PDT)
+Date:   Tue, 19 May 2020 18:25:19 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     ldewangan@nvidia.com, jonathanh@nvidia.com,
+        dan.j.williams@intel.com, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: tegra210-adma: Fix an error handling path in
+ 'tegra_adma_probe()'
+Message-ID: <20200519162519.GE2113674@ulmo>
+References: <20200516214205.276266-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5xSkJheCpeK0RUEJ"
 Content-Disposition: inline
-In-Reply-To: <1512927.1589904409@warthog.procyon.org.uk>
-User-Agent: Mutt/1.13.3 (2020-01-12)
+In-Reply-To: <20200516214205.276266-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 17:06:49 +0100, David Howells wrote:
-> Okay, how about this incremental change, then?  If fixes the typo, only prints
-> the "READ CONFIG" line in verbose mode, filters escape chars in the config
-> file and reduces the expiration time to 5s.
 
-Thanks! Looks good to me.
+--5xSkJheCpeK0RUEJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Ben Boeckel <me@benboeckel.net>
+On Sat, May 16, 2020 at 11:42:05PM +0200, Christophe JAILLET wrote:
+> Commit b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
+> has moved some code in the probe function and reordered the error handling
+> path accordingly.
+> However, a goto has been missed.
+>=20
+> Fix it and goto the right label if 'dma_async_device_register()' fails, so
+> that all resources are released.
+>=20
+> Fixes: b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  drivers/dma/tegra210-adma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
---Ben
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--5xSkJheCpeK0RUEJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7ECG8ACgkQ3SOs138+
+s6HyGBAAtqw2Y28Sav7FpIgNdlgPeJGBIZ8WuLD4zojjs15UzXAuuHndZNzOR1xL
+dJSZvlK1T2GFmmtHmzjJJUtng+A9GDFJD8J6UeKOdpy6eLlmvtRT6hCueljrJGOb
+aKdGNRnFBoDZ/DqBArUILTkTgCdqHY66gacajY7p42DHGr7RxovPr/RNjzblE4Ae
+7uA1CEY9Hqs3Xu7P5Aty3UhFh0cubPGCtMRnW9Y9hvyv6XSWIVnzAUwMiPJGBNLg
+pn3D9WeK970Ef/QEvkRCWNW4mpM1dfiHmIjbjcFRwn1NvuTI4A1MukWzS3/Qbs9u
+SrLIquFBkk+AtGNF5pPW/RmKOFTq+6eDaMEArLVuN6G6MNrS2xCE2mN2hb1arBAH
+rV/7Sc+H/FfEWjXtRSnf0JwZmSKB/rObzOyPTAzERwKDNTVU1XDuCWSjlAv9A8e/
+7TLFcFueYmMZO48jvdw1NL4u+v2kf0rWWzcyNBVeukTSHrlNvT+jI50fJ9omb0Bp
+RqM5CktLjENleIelSb25TSFRjMB27w703QJdRb7Njr/iDw65wrasz+q8dqGCJLJQ
+AFqb5peekfnhyQcHiYqd9cU+FYXnk+UJNUv3uh1T+JWZM+ec8NbDJe7v1JpTtWIY
+2Yw4rtrkVHfL/mqnKkFzPLziFy72mrh7IQ1bHHx9CyTibg9B0dU=
+=TqZK
+-----END PGP SIGNATURE-----
+
+--5xSkJheCpeK0RUEJ--
