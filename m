@@ -2,197 +2,69 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFE6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25385207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:36:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589920572;
-	bh=BLUycVs4uy2gq9SvV18LOkcki98gdsniYEsuiEbHhRM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i1BgDzcyEV+gjXrrn6Nu/qTIZD5z+0302RA+ak4x74qMH1/S0XEHUFgbuuOkQPFiI
-	 DlyYYxLaz1pbNB5KE2HLE6L33IhnyamgoTJEDX5pvtfsG7Cu+X9WGnO1BillDknGwI
-	 aavQZySCig6TQFIEBvf1VvfcmaOOfc6XoKKVL7Ts=
+	by mail.kernel.org (Postfix) with ESMTP id 222BB207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgESUgL (ORCPT
+        id S1727029AbgESUhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:36:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgESUgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:36:10 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A288A2072C;
-        Tue, 19 May 2020 20:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589920569;
-        bh=BLUycVs4uy2gq9SvV18LOkcki98gdsniYEsuiEbHhRM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sI+8DSdU6A/6DbMheBNPfOjeSHhlQ6GCVXC1LS6tq9WmyG0oSK7GCMyuyGYGN3MBN
-         /awAzEd4rACJNVuWjlm/w1COcEZEP+7z5TVDpqkGpCViuPiDqDGsceE2YRBOdzRlgy
-         8ChGcC4v9NbXSmu6/tgArVegHgjhiO6mJRW4tf7w=
-Date:   Tue, 19 May 2020 16:36:08 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Olof Johansson <olof.johansson@gmail.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "Wilson, Chris" <chris@chris-wilson.co.uk>,
-        "Syrjala, Ville" <ville.syrjala@linux.intel.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        spronovo@microsoft.com, Wei Liu <wei.liu@kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        iourit@microsoft.com, "K. Y. Srinivasan" <kys@microsoft.com>
-Subject: Re: [RFC PATCH 0/4] DirectX on Linux
-Message-ID: <20200519203608.GG33628@sasha-vm>
-References: <20200519163234.226513-1-sashal@kernel.org>
- <CAKMK7uGnSDHdZha-=dZN5ns0sJ2CEnK2693uix4tzqyZb9MXCQ@mail.gmail.com>
+        Tue, 19 May 2020 16:37:05 -0400
+Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:52815 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgESUhF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 16:37:05 -0400
+Received: from localhost.localdomain ([93.22.37.87])
+        by mwinf5d40 with ME
+        id gkcw220091sokYV03kcxsH; Tue, 19 May 2020 22:37:01 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 19 May 2020 22:37:01 +0200
+X-ME-IP: 93.22.37.87
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        jsrikanth@marvell.com, phemadri@marvell.com,
+        gustavo@embeddedor.com, tglx@linutronix.de
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] crypto: cavium/nitrox - Fix a typo in a comment
+Date:   Tue, 19 May 2020 22:36:54 +0200
+Message-Id: <20200519203654.281351-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uGnSDHdZha-=dZN5ns0sJ2CEnK2693uix4tzqyZb9MXCQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+s/NITORX/NITROX/
 
-On Tue, May 19, 2020 at 09:21:15PM +0200, Daniel Vetter wrote:
->Hi Sasha
->
->So obviously great that Microsoft is trying to upstream all this, and
->very much welcome and all that.
->
->But I guess there's a bunch of rather fundamental issues before we
->look into any kind of code details. And that might make this quite a
->hard sell for upstream to drivers/gpu subsystem:
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/crypto/cavium/nitrox/nitrox_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Let me preface my answers by saying that speaking personally I very much
-dislike that the userspace is closed and wish I could do something about
-it.
-
->- From the blog it sounds like the userspace is all closed. That
->includes the hw specific part and compiler chunks, all stuff we've
->generally expected to be able to look in the past for any kind of
->other driver. It's event documented here:
->
->https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#open-source-userspace-requirements
->
->What's your plan here?
-
-Let me answer with a (genuine) question: does this driver have anything
-to do with DRM even after we enable graphics on it? I'm still trying to
-figure it out.
-
-There is an open source DX12 Galluim driver (that lives here:
-https://gitlab.freedesktop.org/kusma/mesa/-/tree/msclc-d3d12) with open
-source compiler and so on.
-
-The plan is for Microsoft to provide shims to allow the existing Linux
-userspace interact with DX12; I'll explain below why we had to pipe DX12
-all the way into the Linux guest, but this is *not* to introduce DX12
-into the Linux world as competition. There is no intent for anyone in
-the Linux world to start coding for the DX12 API.
-
-This is why I'm not sure whether this touches DRM on the Linux side of
-things. Nothing is actually rendered on Linux but rather piped to
-Windows to be done there.
-
->btw since the main goal here (at least at first) seems to be get
->compute and ML going the official work-around here is to relabel your
->driver as an accelerator driver (just sed -e s/vGPU/vaccel/ over the
->entire thing or so) and then Olof and Greg will take it into
->drivers/accel ...
-
-This submission is not a case of "we want it upstream NOW" but rather
-"let's work together to figure out how to do it right" :)
-
-I thought about placing this driver in drivers/hyper-v/ given that it's
-basically just a pipe between the host and the guest. There is no fancy
-logic in this drivers. Maybe the right place is indeed drivers/accel or
-drivers/hyper-v but I'd love if we agree on that rather than doing that
-as a workaround and 6 months down the road enabling graphics.
-
->- Next up (but that's not really a surprise for a fresh vendor driver)
->at a more technical level, this seems to reinvent the world, from
->device enumeration (why is this not exposed as /dev/dri/card0 so it
->better integrates with existing linux desktop stuff, in case that
->becomes a goal ever) down to reinvented kref_put_mutex (and please
->look at drm_device->struct_mutex for an example of how bad of a
->nightmare that locking pattern is and how many years it took us to
->untangle that one.
-
-I'd maybe note that neither of us here at Microsoft is an expert in the
-Linux DRM world. Stuff might have been done in a certain way because we
-didn't know better.
-
->- Why DX12 on linux? Looking at this feels like classic divide and
-
-There is a single usecase for this: WSL2 developer who wants to run
-machine learning on his GPU. The developer is working on his laptop,
-which is running Windows and that laptop has a single GPU that Windows
-is using.
-
-Since the GPU is being used by Windows, we can't assign it directly to
-the Linux guest, but instead we can use GPU Partitioning to give the
-guest access to the GPU. This means that the guest needs to be able to
-"speak" DX12, which is why we pulled DX12 into Linux.
-
->conquer (or well triple E from the 90s), we have vk, we have
->drm_syncobj, we have an entire ecosystem of winsys layers that work
->across vendors. Is the plan here that we get a dx12 driver for other
->hw mesa drivers from you guys, so this is all consistent and we have a
->nice linux platform? How does this integrate everywhere else with
->linux winsys standards, like dma-buf for passing stuff around,
->dma-fence/sync_file/drm_syncobj for syncing, drm_fourcc/modifiers for
->some idea how it all meshes together?
-
-Let me point you to this blog post that has more information about the
-graphics side of things:
-https://www.collabora.com/news-and-blog/news-and-events/introducing-opencl-and-opengl-on-directx.html
-.
-
-The intent is to wrap DX12 with shims to work with the existing
-ecosystem; DX12 isn't a new player on it's own and thus isn't trying to
-divide/conquer anything.
-
->- There's been a pile of hallway track/private discussions about
->moving on from the buffer-based memory managed model to something more
->modern. That relates to your DXLOCK2 question, but there's a lot more
->to userspace managed gpu memory residency than just that. monitored
->fences are another part. Also, to avoid a platform split we need to
->figure out how to tie this back into the dma-buf and dma-fence
->(including various uapi flavours) or it'll be made of fail. dx12 has
->all that in some form, except 0 integration with the linux stuff we
->have (no surprise, since linux isn't windows). Finally if we go to the
->trouble of a completely revamped I think ioctls aren't a great idea,
->something like iouring (the gossip name is drm_uring) would be a lot
->better. Also for easier paravirt we'd need 0 cpu pointers in any such
->new interface. Adding a few people who've been involved in these
->discussions thus far, mostly under a drm/hmm.ko heading iirc.
->
->I think the above are the really big ticket items around what's the
->plan here and are we solving even the right problem.
-
-Part of the reason behind this implementation is simplicity. Again, no
-objections around moving to uring and doing other improvements.
-
+diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
+index e91be9b8b083..788c6607078b 100644
+--- a/drivers/crypto/cavium/nitrox/nitrox_main.c
++++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
+@@ -346,7 +346,7 @@ static void nitrox_pf_sw_cleanup(struct nitrox_device *ndev)
+ }
+ 
+ /**
+- * nitrox_bist_check - Check NITORX BIST registers status
++ * nitrox_bist_check - Check NITROX BIST registers status
+  * @ndev: NITROX device
+  */
+ static int nitrox_bist_check(struct nitrox_device *ndev)
 -- 
-Thanks,
-Sasha
+2.25.1
+
