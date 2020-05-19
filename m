@@ -2,117 +2,110 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AADC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23B2B20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:16:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eedoNQJ/"
+	by mail.kernel.org (Postfix) with ESMTP id 00C66207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589908750;
+	bh=XTf3GXvvKPis3qS60syTZxccwFz7ZD9sbAXlJXifamY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SgBkor67fYLumdf+42by1T0N4XDiDX5CdyZzoyfnJY+VhGJUSM13/HyNjEF7GjAbD
+	 mKllz8SPR97rqJrw+e6ctdjyUjBcvls5EcC8+6d4NaGHgimeSoxS204jYDa3SW1r5y
+	 N9tHwcwN8LgELldNKpb4nGDBuAAgKW7ojs8g1W24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgESRQA (ORCPT
+        id S1729306AbgESRTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:16:00 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50204 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbgESRP7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:15:59 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JHFvlQ117977;
-        Tue, 19 May 2020 12:15:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589908557;
-        bh=u9MuVS5Z4dEpCImA8CLdh3VAMXKG5b1PtenlLbgYx2g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eedoNQJ/IZO+PCGyrR4V9EMeFcv//9WuIGa85xRrnU2sywB5fwYjoanqbE5bJv9Fe
-         5ZkVbdjqr0PV5NCl0+TopWps5TvTyuSEigO338o2blSOnKsEFfQFmSTCmOh/NsyPiv
-         Qg+oPTrZJsRufSQz8Jj/lFqeLByzVAL3HwnmBglM=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JHFv5C028049
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 12:15:57 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 12:15:57 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 12:15:57 -0500
-Received: from [10.250.43.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JHFujx097330;
-        Tue, 19 May 2020 12:15:57 -0500
-Subject: Re: [PATCH v7 3/3] power: supply: bq25150 introduce the bq25150
-To:     "Andrew F. Davis" <afd@ti.com>, Dan Murphy <dmurphy@ti.com>,
-        <sre@kernel.org>
-CC:     <sspatil@android.com>, <linux-pm@vger.kernel.org>,
-        <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200519141916.28282-1-dmurphy@ti.com>
- <20200519141916.28282-4-dmurphy@ti.com>
- <50b9ca3f-36e8-d13b-672c-5e72b6158869@ti.com>
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Message-ID: <1eaa381f-0c05-8bcf-ce30-96104ddd9080@ti.com>
-Date:   Tue, 19 May 2020 12:15:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 19 May 2020 13:19:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729001AbgESRTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:19:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA80B20709;
+        Tue, 19 May 2020 17:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589908748;
+        bh=XTf3GXvvKPis3qS60syTZxccwFz7ZD9sbAXlJXifamY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=chicMmrTiHVMnEkCiI/ijQjxwAyxygx1vrTAchl8JGL98z30Y6KgeXCPEr17gcM1A
+         9A4Qt1W2gZTbAgbRLtlDdrZtL6HsbsnoJ+uVUQmcG6rf7elaJ5smVFOwjQudXNDecd
+         iG80B2sOSKcYwgBCE8R9y6ZInrU7uBSuZTNRGhLM=
+Date:   Tue, 19 May 2020 19:19:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     alexander.deucher@amd.com, chris@chris-wilson.co.uk,
+        ville.syrjala@linux.intel.com, Hawking.Zhang@amd.com,
+        tvrtko.ursulin@intel.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        spronovo@microsoft.com, iourit@microsoft.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [RFC PATCH 1/4] gpu: dxgkrnl: core code
+Message-ID: <20200519171906.GA1101627@kroah.com>
+References: <20200519163234.226513-1-sashal@kernel.org>
+ <20200519163234.226513-2-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <50b9ca3f-36e8-d13b-672c-5e72b6158869@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519163234.226513-2-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 19, 2020 at 12:32:31PM -0400, Sasha Levin wrote:
+> +/*
+> + * Dxgkrnl Graphics Port Driver ioctl definitions
+> + *
+> + */
+> +
+> +#define LX_IOCTL_DIR_WRITE 0x1
+> +#define LX_IOCTL_DIR_READ  0x2
+> +
+> +#define LX_IOCTL_DIR(_ioctl)	(((_ioctl) >> 30) & 0x3)
+> +#define LX_IOCTL_SIZE(_ioctl)	(((_ioctl) >> 16) & 0x3FFF)
+> +#define LX_IOCTL_TYPE(_ioctl)	(((_ioctl) >> 8) & 0xFF)
+> +#define LX_IOCTL_CODE(_ioctl)	(((_ioctl) >> 0) & 0xFF)
 
-On 5/19/20 9:46 AM, Andrew F. Davis wrote:
-> On 5/19/20 10:19 AM, Dan Murphy wrote:
->> +static int bq2515x_set_ilim_lvl(struct bq2515x_device *bq2515x, int val)
->> +{
->> +	int i;
->> +
->> +	if (val > BQ2515X_ILIM_MAX || val < BQ2515X_ILIM_MIN)
->> +		return -EINVAL;
-> Clamp to these limits, not reject. Or better, modify the below loop so
-> it clamps to the highest or lowest value in bq2515x_ilim_lvl_values[],
-> then drop these #defines.
->
->> +
->> +	for (i = 0; i < ARRAY_SIZE(bq2515x_ilim_lvl_values); i++) {
->> +		if (val == bq2515x_ilim_lvl_values[i])
->> +			break;
->> +
->> +		if (val > bq2515x_ilim_lvl_values[i - 1] &&
-> Index out of bounds for the i = 0 case.
->
->> +		    val < bq2515x_ilim_lvl_values[i]) {
->> +			if (val - bq2515x_ilim_lvl_values[i - 1] <
->> +			    bq2515x_ilim_lvl_values[i] - val) {
-> You are still missing the case where the value is closer to the [i]
-> element, you check that it is between [i-1] and [i], but only chose
-> [i-1] when it is closer to that than [i] but equal and greater case is
-> missing.
->
-> Given this sets input current limits, would instead always rounding down
-> be the safer option?
->
-> Andrew
-ACK. I am going to rewrite that altogether.
->
->> +				i = i - 1;
->> +				break;
->> +			}
->> +		}
->> +	}
->> +
->> +	return regmap_write(bq2515x->regmap, BQ2515X_ILIMCTRL, i);
->> +}
+Why create new ioctl macros, can't the "normal" kernel macros work
+properly?
+
+> +#define LX_IOCTL(_dir, _size, _type, _code) (	\
+> +	(((uint)(_dir) & 0x3) << 30) |		\
+> +	(((uint)(_size) & 0x3FFF) << 16) |	\
+> +	(((uint)(_type) & 0xFF) << 8) |		\
+> +	(((uint)(_code) & 0xFF) << 0))
+> +
+> +#define LX_IO(_type, _code) LX_IOCTL(0, 0, (_type), (_code))
+> +#define LX_IOR(_type, _code, _size)	\
+> +	LX_IOCTL(LX_IOCTL_DIR_READ, (_size), (_type), (_code))
+> +#define LX_IOW(_type, _code, _size)	\
+> +	LX_IOCTL(LX_IOCTL_DIR_WRITE, (_size), (_type), (_code))
+> +#define LX_IOWR(_type, _code, _size)	\
+> +	LX_IOCTL(LX_IOCTL_DIR_WRITE |	\
+> +	LX_IOCTL_DIR_READ, (_size), (_type), (_code))
+> +
+> +#define LX_DXOPENADAPTERFROMLUID	\
+> +	LX_IOWR(0x47, 0x01, sizeof(struct d3dkmt_openadapterfromluid))
+
+<snip>
+
+These structures do not seem to be all using the correct types for a
+"real" ioctl in the kernel, so you will have to fix them all up before
+this will work properly.
+
+> +void ioctl_desc_init(void);
+
+Very odd global name you are using here :)
+
+Anyway, neat stuff, glad to see it posted, great work!
+
+greg k-h
