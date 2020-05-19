@@ -4,34 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86298C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E946C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAAF205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34252205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgESWmm (ORCPT
+        id S1728402AbgESWmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:42:42 -0400
-Received: from v6.sk ([167.172.42.174]:58676 "EHLO v6.sk"
+        Tue, 19 May 2020 18:42:40 -0400
+Received: from v6.sk ([167.172.42.174]:58664 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728191AbgESWmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:42:36 -0400
+        id S1728347AbgESWmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 18:42:33 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 18704610DD;
-        Tue, 19 May 2020 22:42:05 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id C95D7610D9;
+        Tue, 19 May 2020 22:42:01 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 06/13] clk: mmp2: Rename mmp2_pll_init() to mmp2_main_clk_init()
-Date:   Wed, 20 May 2020 00:41:44 +0200
-Message-Id: <20200519224151.2074597-7-lkundrak@v3.sk>
+        Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 04/13] dt-bindings: marvell,mmp2: Add clock id for the Audio clock
+Date:   Wed, 20 May 2020 00:41:42 +0200
+Message-Id: <20200519224151.2074597-5-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519224151.2074597-1-lkundrak@v3.sk>
 References: <20200519224151.2074597-1-lkundrak@v3.sk>
@@ -42,36 +43,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a trivial rename for a routine that registers more clock sources
-than the PLLs -- there's also a XO.
+This clocks the Audio block.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/clk/mmp/clk-of-mmp2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
-index 524574187c17..ac88ea99b7c6 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -139,7 +139,7 @@ static struct mmp_clk_factor_tbl uart_factor_tbl[] = {
- 	{.num = 3521, .den = 689},	/*19.23MHZ */
- };
+---
+Changes since v1:
+- Rob's ack
+
+ include/dt-bindings/clock/marvell,mmp2.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/dt-bindings/clock/marvell,mmp2.h b/include/dt-bindings/clock/marvell,mmp2.h
+index 5b083f42811e..87f5ad5df72f 100644
+--- a/include/dt-bindings/clock/marvell,mmp2.h
++++ b/include/dt-bindings/clock/marvell,mmp2.h
+@@ -89,6 +89,7 @@
+ #define MMP3_CLK_GPU_3D			MMP2_CLK_GPU_3D
+ #define MMP3_CLK_GPU_2D			125
+ #define MMP3_CLK_SDH4			126
++#define MMP2_CLK_AUDIO			127
  
--static void mmp2_pll_init(struct mmp2_clk_unit *pxa_unit)
-+static void mmp2_main_clk_init(struct mmp2_clk_unit *pxa_unit)
- {
- 	struct clk *clk;
- 	struct mmp_clk_unit *unit = &pxa_unit->unit;
-@@ -456,7 +456,7 @@ static void __init mmp2_clk_init(struct device_node *np)
- 
- 	mmp_clk_init(np, &pxa_unit->unit, MMP2_NR_CLKS);
- 
--	mmp2_pll_init(pxa_unit);
-+	mmp2_main_clk_init(pxa_unit);
- 
- 	mmp2_apb_periph_clk_init(pxa_unit);
- 
+ #define MMP2_NR_CLKS			200
+ #endif
 -- 
 2.26.2
 
