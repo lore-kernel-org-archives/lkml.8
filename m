@@ -2,99 +2,132 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B52C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C19C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 417512075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589865158;
-	bh=qrHKafA0ZTttPnEqF3hkLOvbCl6Fprw9RuG7qytReC8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ly9I0IyDmBoaVeChcu4jB+dfgyB4H2LWKeVtTSMennyQ+PtWfuJ0nXCc9DFFJG9hL
-	 z7737W+DkoZyOuyrbLJ5dWJSiuTMI90FZiWT1DksQxmlvPbaznJQHnXevv7klQHAWl
-	 SVBTq1YOjTJZV/lIGAx0eKFvYwzKAGdbm7PStEgc=
+	by mail.kernel.org (Postfix) with ESMTP id 10235204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:17:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VG11DQ32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgESFMh (ORCPT
+        id S1727041AbgESFR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:12:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgESFMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:12:37 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B93020758;
-        Tue, 19 May 2020 05:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589865156;
-        bh=qrHKafA0ZTttPnEqF3hkLOvbCl6Fprw9RuG7qytReC8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nlbIrf8Fy8HDlKACQi91AHg9NqzN0RQ0bvP2OUb2TFrW0wClvkadR8udy9FhxT6j0
-         QUNapjpdTE6IrfWtYzBdLzBnAHKQj3h7a4JlCowDPcDkGEKeDdsS/iNy8dk528O4qg
-         nbm9Y07gMePXo5wP9r4/4P2ShQhKEdTZ2+DDbmOc=
-Date:   Mon, 18 May 2020 22:12:35 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, david@fromorbit.com,
-        hch@infradead.org, willy@infradead.org
-Subject: Re: [PATCH 10/10] mm/migrate.c: call detach_page_private to cleanup
- code
-Message-Id: <20200518221235.1fa32c38e5766113f78e3f0d@linux-foundation.org>
-In-Reply-To: <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
-References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
-        <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 19 May 2020 01:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgESFR1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:17:27 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17ADEC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 22:17:26 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 145so5982525pfw.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 22:17:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wyZN/R6qpcX7fc4AdyQ10EM48vce1r3i4Gy4ZEWGZyo=;
+        b=VG11DQ32nYPFoMQMwo0hmRhLveHx94x4UB3EV11E279byHVSl+SwEDY3t6lYUdIBqb
+         tSqc0GtMXZszHzQ9mmVMShWmPSH/k97kXZotCai/uoBwW3dEtIvSJM+Op7EQrwWWnCtD
+         Az9VmmRwkQGt+3ZS/vBB+5tKdzAJv497Qz80D8SxlcNJ4fHCdMHpPNBW6OfnlDqHAEQ8
+         JttQ/5qUcjnoeDK9mN+e4lcqvIZHNTGicdEJeAV47NgwHIBmQKXmO9MaigTmZXPyKeSn
+         xwkwD5YHHMVzTsXnEs74G8HAEDDqUlnKrT295laldHRhhVwBaxYPsF6MgvuM7jJ2cBDT
+         B+/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wyZN/R6qpcX7fc4AdyQ10EM48vce1r3i4Gy4ZEWGZyo=;
+        b=pBhkz5jrk9UCPh+gUPMbEyk2PH/EsRK70IUqGFsKASJdej24S7MHb1ICVhNB/YcDeT
+         X2uwsmhLSQ/MkPrqSq2HVLBR68CJJk7tz2GuinY2CqEhjgQZDPN4YX0R1nsjwt8Js5E8
+         QHWe4hq1gqoQk+7RGDthw1IOF62LQ4BeZBbwDMyUKJQVdyvjxkdlPJR45f4pjQ6WFpNp
+         6FeCeATXcqSOqAH/yJ9lXsAPdJhfjTc2tnRhq5GfxtMH5yadnL0xjcBQrf1ZfRyel19R
+         flXw3lmRJcdbuUwrplL0FoiewzR6ee/p+xMJqwdr/3lOLeKaqgNlufYxLbyTZkeAxine
+         jTPA==
+X-Gm-Message-State: AOAM532jvy19CZhPhyEbVlz3DdCxzm3LXOgFWOV5De9f9y6klTPYoi8W
+        w3GKyiQnk4ESjjEcBXCghXDDQUcGg34=
+X-Google-Smtp-Source: ABdhPJxnR3xVyoVXFCEFVT/fGHPOoUzzPxhKZnInZ4LxZVIfny/f/6lMiBq0X4YT2pattoSJDrNXAg==
+X-Received: by 2002:a63:e70b:: with SMTP id b11mr5062941pgi.88.1589865444874;
+        Mon, 18 May 2020 22:17:24 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id gv4sm1027617pjb.6.2020.05.18.22.17.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 22:17:24 -0700 (PDT)
+Date:   Mon, 18 May 2020 22:16:02 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] usb: xhci: fix USB_XHCI_PCI depends
+Message-ID: <20200519051602.GY2165@builder.lan>
+References: <20200519050622.994908-1-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519050622.994908-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 May 2020 23:47:18 +0200 Guoqing Jiang <guoqing.jiang@cloud.ionos.com> wrote:
+On Mon 18 May 22:06 PDT 2020, Vinod Koul wrote:
 
-> We can cleanup code a little by call detach_page_private here.
+> The xhci-pci-renesas module exports symbols for xhci-pci to load the
+> RAM/ROM on renesas xhci controllers. We had dependency which works
+> when both the modules are builtin or modules.
 > 
-> ...
->
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -804,10 +804,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
->  	if (rc != MIGRATEPAGE_SUCCESS)
->  		goto unlock_buffers;
+> But if xhci-pci is inbuilt and xhci-pci-renesas in module, we get below
+> linker error:
+> drivers/usb/host/xhci-pci.o: In function `xhci_pci_remove':
+> drivers/usb/host/xhci-pci.c:411: undefined reference to `renesas_xhci_pci_exit'
+> drivers/usb/host/xhci-pci.o: In function `xhci_pci_probe':
+> drivers/usb/host/xhci-pci.c:345: undefined reference to `renesas_xhci_check_request_fw'
+> 
+> Fix this by adding USB_XHCI_PCI having depends on USB_XHCI_PCI_RENESAS
+> || !USB_XHCI_PCI_RENESAS so that both can be either inbuilt or modules.
+> 
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+> Fixes: a66d21d7dba8 ("usb: xhci: Add support for Renesas controller with memory")
+> Tested-by: Anders Roxell <anders.roxell@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  drivers/usb/host/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index b5c542d6a1c5..92783d175b3f 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -40,11 +40,11 @@ config USB_XHCI_DBGCAP
+>  config USB_XHCI_PCI
+>  	tristate
+>  	depends on USB_PCI
+> +	depends on USB_XHCI_PCI_RENESAS || !USB_XHCI_PCI_RENESAS
+>  	default y
 >  
-> -	ClearPagePrivate(page);
-> -	set_page_private(newpage, page_private(page));
-> -	set_page_private(page, 0);
-> -	put_page(page);
-> +	set_page_private(newpage, detach_page_private(page));
->  	get_page(newpage);
->  
->  	bh = head;
-
-mm/migrate.c: In function '__buffer_migrate_page':
-./include/linux/mm_types.h:243:52: warning: assignment makes integer from pointer without a cast [-Wint-conversion]
- #define set_page_private(page, v) ((page)->private = (v))
-                                                    ^
-mm/migrate.c:800:2: note: in expansion of macro 'set_page_private'
-  set_page_private(newpage, detach_page_private(page));
-  ^~~~~~~~~~~~~~~~
-
-The fact that set_page_private(detach_page_private()) generates a type
-mismatch warning seems deeply wrong, surely.
-
-Please let's get the types sorted out - either unsigned long or void *,
-not half-one and half-the other.  Whatever needs the least typecasting
-at callsites, I suggest.
-
-And can we please implement set_page_private() and page_private() with
-inlined C code?  There is no need for these to be macros.
-
+>  config USB_XHCI_PCI_RENESAS
+>  	tristate "Support for additional Renesas xHCI controller with firwmare"
+> -	depends on USB_XHCI_PCI
+>  	---help---
+>  	  Say 'Y' to enable the support for the Renesas xHCI controller with
+>  	  firwmare. Make sure you have the firwmare for the device and
+> -- 
+> 2.25.4
+> 
