@@ -2,140 +2,198 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD93620709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE6E206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:45:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Omln4iNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgESGkj (ORCPT
+        id S1728319AbgESGpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 02:40:39 -0400
-Received: from sauhun.de ([88.99.104.3]:50524 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbgESGki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 02:40:38 -0400
-Received: from localhost (p5486ceca.dip0.t-ipconnect.de [84.134.206.202])
-        by pokefinder.org (Postfix) with ESMTPSA id C09252C1FA8;
-        Tue, 19 May 2020 08:40:36 +0200 (CEST)
-Date:   Tue, 19 May 2020 08:40:36 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PULL REQUEST] i2c for v5.8
-Message-ID: <20200519064036.GA1094@ninjato>
-References: <20200519063609.GA2141@ninjato>
+        Tue, 19 May 2020 02:45:53 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:36105 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726881AbgESGpw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 02:45:52 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id aw0Vj0CAPtKAsaw0YjOtUV; Tue, 19 May 2020 08:45:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1589870750; bh=/VOpZ6S5UVapFcGjI/tkSgoLzsnF7u2DxT+PCaSgZAs=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Omln4iNvDCkowrmBrxoFuZxauf8hoieAv2zaw+S8GdfJIUy2C+0tlABUzxF9laSJG
+         4wRjYCEdhtDVornz0427DFDil2/WMpqTydc5WEfToflqmbt2ajRuL/DM16Awy2FN84
+         KipzlqLRrdHacmmUQ+gaHjLFSo+9hs+d/fMSUQSDn32yU2ikdo6GYm5DfNJfdGDhP/
+         l0Tf8KQMsLGXQztWknpwVriPc3DgaOD3pQJOLNslfFjSUOwDqD5YQDyCMAZlths/Cx
+         Ol2s9shMeQkUAd7J9KidLkqUi1Mn6JSurnX43tMOgRkRuRGGx4T5mdpyVEOPgpCAZy
+         G8Xal0LUClUlg==
+Subject: Re: [PATCH] media: v4l2-ctrls: Add encoded frame quality controls
+To:     majja@codeaurora.org, mchehab@kernel.org,
+        paul.kocialkowski@bootlin.com, p.zabel@pengutronix.de,
+        ezequiel@collabora.com, jonas@kwiboo.se,
+        boris.brezillon@collabora.com, posciak@chromium.org,
+        ribalda@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, sumitg@nvidia.com
+References: <1589836035-16579-1-git-send-email-majja@codeaurora.org>
+ <11481ef8fcee02aba17ef527c56c78d2@codeaurora.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <b35cca3a-6444-1124-41da-2982a7711cff@xs4all.nl>
+Date:   Tue, 19 May 2020 08:45:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-In-Reply-To: <20200519063609.GA2141@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <11481ef8fcee02aba17ef527c56c78d2@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFPrzoysGY0oSfo+El4WQoJo3tBRZCLZ0GdVi8air8jUHFd1lc1VGdDWiT/GNQWK1JV9Q+rOMSnttJj94G771ar6kdUVL5jGw3LEqQ2oXeLCl2UqkYic
+ du14aqbJ5syQRAdhtJJD3dbEYeYRyYO7PApgfnTg8SohnqeVsFAkP4NrKyuhMKTgnyAkCNg6WIGVIYOqRVlEdVqQ8hOzcfXy34wb8CHy1BaWGeH7BY9AgCPB
+ kTaKImKdj1uvmvzMGx1kNOVwYhe+CbnkP/pf1bGQDR3/TDLNOZk3g7RuT91xqJBJPbkrW/4H2j4KL2w62Ar5JvNbgzwANp6QqlQY+P23rG6hiktb6lrXAe28
+ ATiXgpbIecTJnP7wl+zjvj3c21DblozzuKt3MpGOWhIjrMmsXos4qBJjrVpkvDU9L1P29d3PrA3stsOF2dVIzFSiyvtHEkm/U1C3ACiijiW9c4SfMuz9OX8G
+ X08RxACuQ+7E33kcYGSfybdV7h+J83xM6McMFycQZTrPfn716UMbnkvur7vCTLmFGwrt1oDvkbqkEajphaVB0w4hlKbQ4iSMfgM+FKdxACEG3Uh67DZEmv0j
+ lco=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Maheshwar,
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 18/05/2020 23:09, majja@codeaurora.org wrote:
+> Hi,
+> 
+> Regarding below patch -
+> 
+> HEIF/HEIC image encoding uses HEVC/AVC encoders and client can set image 
+> quality level using
+> V4L2_CID_MPEG_VIDEO_FRAME_QUALITY control.
+> 
+> Reference BITRATE_MODE_CQ at
+> https://developer.android.com/reference/android/media/MediaCodecInfo.EncoderCapabilities#BITRATE_MODE_CQ
 
-On Tue, May 19, 2020 at 08:36:13AM +0200, Wolfram Sang wrote:
-> Linus,
->=20
-> here is the pull request which I missed last week. It contains a set of
-> driver and core fixes as well as MAINTAINER updates.
+So what you are really introducing here is a new enum v4l2_mpeg_video_bitrate_mode
+mode: V4L2_MPEG_VIDEO_BITRATE_MODE_CQ.
 
-Sorry, kernel version in $subject should have been v5.7!
+Why not just add that new mode, then add V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY
+which is only used if the bitrate mode is MODE_CQ.
 
->=20
-> Please pull.
->=20
-> Thanks,
->=20
->    Wolfram
->=20
->=20
-> The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314=
-fd:
->=20
->   Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
->=20
-> are available in the Git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-cur=
-rent-fixed
->=20
-> for you to fetch changes up to efa7fb4c6c8e4171fd29a5935a9dc7a28e363278:
->=20
->   MAINTAINERS: add maintainer for mediatek i2c controller driver (2020-05=
--15 11:40:54 +0200)
->=20
-> ----------------------------------------------------------------
-> Alain Volmat (1):
->       i2c: fix missing pm_runtime_put_sync in i2c_device_probe
->=20
-> Atsushi Nemoto (1):
->       i2c: altera: Fix race between xfer_msg and isr thread
->=20
-> Christophe JAILLET (1):
->       i2c: mux: demux-pinctrl: Fix an error handling path in 'i2c_demux_p=
-inctrl_probe()'
->=20
-> Codrin Ciubotariu (1):
->       i2c: at91: Fix pinmux after devm_gpiod_get() for bus recovery
->=20
-> Gustavo A. R. Silva (1):
->       i2c: mux: Replace zero-length array with flexible-array
->=20
-> Qii Wang (1):
->       MAINTAINERS: add maintainer for mediatek i2c controller driver
->=20
-> Wolfram Sang (2):
->       i2c: use my kernel.org address from now on
->       i2c: algo-pca: update contact email
->=20
->  .mailmap                              |  2 ++
->  MAINTAINERS                           |  9 ++++++++-
->  drivers/i2c/algos/i2c-algo-pca.c      |  2 +-
->  drivers/i2c/busses/i2c-altera.c       | 10 +++++++++-
->  drivers/i2c/busses/i2c-at91-master.c  | 20 +++++++++++++++++---
->  drivers/i2c/i2c-core-base.c           | 24 +++++++++++++++++-------
->  drivers/i2c/i2c-core-of.c             |  2 +-
->  drivers/i2c/muxes/i2c-demux-pinctrl.c |  1 +
->  include/linux/i2c-mux.h               |  2 +-
->  include/linux/i2c.h                   |  2 +-
->  10 files changed, 58 insertions(+), 16 deletions(-)
+That builds nicely on top of the already existing V4L2_CID_MPEG_VIDEO_BITRATE_MODE
+control.
 
+Regards,
 
+	Hans
 
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Regards,
+>      Maheshwar.
+> 
+> 
+> On 2020-05-18 14:07, Maheshwar Ajja wrote:
+>> When frame quality control is enabled encoder will choose
+>> the appropriate quantization parameter and bitrate to
+>> produce the client requested frame quality level.
+>> When frame quality control is disabled then frame quality
+>> is decided based on appropriate controls (i.e.
+>> V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE and/or
+>> V4L2_CID_MPEG_VIDEO_BITRATE_MODE)
+>>
+>> Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
+>> ---
+>>  .../userspace-api/media/v4l/ext-ctrls-codec.rst          | 16 
+>> ++++++++++++++++
+>>  drivers/media/v4l2-core/v4l2-ctrls.c                     |  3 +++
+>>  include/uapi/linux/v4l2-controls.h                       |  2 ++
+>>  3 files changed, 21 insertions(+)
+>>
+>> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>> b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>> index d0d506a..495b39b 100644
+>> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>> @@ -1081,6 +1081,22 @@ enum v4l2_mpeg_video_h264_entropy_mode -
+>>      Macroblock level rate control enable. Applicable to the MPEG4 and
+>>      H264 encoders.
+>>
+>> +``V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE (boolean)``
+>> +    Encoded frame quality control enable. If this control is enabled 
+>> then
+>> +    the quality level of the encoded frame is set with control
+>> +    ``V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY``. If this control is 
+>> disabled
+>> +    then the quality level of encoded frame is adjusted with 
+>> appropriate
+>> +    controls (e.g. ``V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE`` or
+>> +    ``V4L2_CID_MPEG_VIDEO_BITRATE_MODE``). Applicable to encoders.
+>> +
+>> +``V4L2_CID_MPEG_VIDEO_FRAME_QUALITY (integer)``
+>> +    Encoded frame quality control. If the control
+>> +    ``V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE`` is enabled then the
+>> +    quality of encoded frame is set with this control. Valid range is 
+>> 1 to
+>> +    100 where 1 indicates lowest quality and 100 indicates highest 
+>> quality.
+>> +    Encoder will decide the appropriate quantization parameter and 
+>> bitrate
+>> +    to produce requested frame quality. Applicable to encoders.
+>> +
+>>  ``V4L2_CID_MPEG_VIDEO_MPEG4_QPEL (boolean)``
+>>      Quarter pixel motion estimation for MPEG4. Applicable to the MPEG4
+>>      encoder.
+>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c
+>> b/drivers/media/v4l2-core/v4l2-ctrls.c
+>> index 1c617b4..1477198 100644
+>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+>> @@ -982,6 +982,8 @@ const char *v4l2_ctrl_get_name(u32 id)
+>>  	case V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS:		return "HEVC Slice 
+>> Parameters";
+>>  	case V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE:		return "HEVC Decode 
+>> Mode";
+>>  	case V4L2_CID_MPEG_VIDEO_HEVC_START_CODE:		return "HEVC Start Code";
+>> +	case V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE:		return "Frame Quality 
+>> Enable";
+>> +	case V4L2_CID_MPEG_VIDEO_FRAME_QUALITY:			return "Frame Quality";
+>>
+>>  	/* CAMERA controls */
+>>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+>> @@ -1178,6 +1180,7 @@ void v4l2_ctrl_fill(u32 id, const char **name,
+>> enum v4l2_ctrl_type *type,
+>>  	case V4L2_CID_FLASH_READY:
+>>  	case V4L2_CID_MPEG_VIDEO_DECODER_MPEG4_DEBLOCK_FILTER:
+>>  	case V4L2_CID_MPEG_VIDEO_DECODER_SLICE_INTERFACE:
+>> +	case V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE:
+>>  	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
+>>  	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:
+>>  	case V4L2_CID_MPEG_VIDEO_H264_8X8_TRANSFORM:
+>> diff --git a/include/uapi/linux/v4l2-controls.h
+>> b/include/uapi/linux/v4l2-controls.h
+>> index 0ba1005..d97a934 100644
+>> --- a/include/uapi/linux/v4l2-controls.h
+>> +++ b/include/uapi/linux/v4l2-controls.h
+>> @@ -742,6 +742,8 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field 
+>> {
+>>  #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE 
+>> + 642)
+>>  #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE 
+>> + 643)
+>>  #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE 
+>> + 644)
+>> +#define V4L2_CID_MPEG_VIDEO_FRAME_QUALITY_ENABLE	(V4L2_CID_MPEG_BASE + 
+>> 645)
+>> +#define V4L2_CID_MPEG_VIDEO_FRAME_QUALITY		(V4L2_CID_MPEG_BASE + 646)
+>>
+>>  /*  MPEG-class control IDs specific to the CX2341x driver as defined 
+>> by V4L2 */
+>>  #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7Df2MACgkQFA3kzBSg
-Kbargg/+ODFcw24lJoiRjjCzZSTeFGfWpxr8lCBLwWNM/M+X8mUYNXV9Udd1AbjD
-L70RCG9zsFkLsWqdMjYy8RHp+T0FmEllC0j0eqeheuDxCIo3meuaE0Axdv1psfK4
-j7ZcLhq+leJE5VCpGb61wzyfXGq3gc7hZ6Q9q6u45CIA4g2NktEO7SjzT00gYutp
-iVE2lB61YoQTxjhcAjzF60gh9rJyPF0rse6E359I0A2pDuQzwHurEOSalObxrVDg
-4EnIHVJ9Q7jZo4rqPIhOsBXXqr2ZNcULdudYWYxGkXzDZODq1+BF8yaJwT41rds2
-ow4xFUG1UI1LgTGRRdp1CWBUkm1yxPseN1xZ2yTWI+qWUWUNy/ebynM7KFY2GoHJ
-Qh2XCtZLc4jqjJ2r6e6vl42HmsjQqb44ayAw0RuXV2z7wIMTUVypZWpB1o6p8D67
-ae/7vQ37SuNeJS46bRsa6O66C9xvW6708xuPTVKNtdqPu2TETuycxeb7Z6wuKnpK
-4PMf3xl0/FvoU9SQ7jTOg8Bsbk9juIJWStFurYGdocjYZ4l3Os7zJnHfTip88nWV
-qcsIfAN5BcMUS25osZgwfLuf8FZHVudm4flOn+gnHjAiYTBbVO/BG6wZybjz8FjA
-Gvi52IgMdVVicFYvvJz3PLwm7cZgZyV9HIlDGeTvjgEI9EY4sAM=
-=sFEm
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
