@@ -2,133 +2,367 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB08206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:06:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f34fIThx"
+	by mail.kernel.org (Postfix) with ESMTP id 8FB592081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589893668;
+	bh=x6eksJ+3Cs/YpjP0yWsQvW+f9xVvrxYRjRpqV8qt+2k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LgxGLbG6mFIRAfCDkP3i+nEauL/6+f30tStp/uXtax9D4cNr8BzWXtPI+JD6ZZvhL
+	 2UfBYgE7OpAis59Hmotn7bX9H/oCTaXrmmmfy8JEuGtA+IpBC275wTLfGiArEVVJaP
+	 9RgIxA3QbOYok0HFDb9c/NYyNdqcmy47/Bik7iHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgESNGW (ORCPT
+        id S1728887AbgESNHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgESNGV (ORCPT
+        Tue, 19 May 2020 09:07:48 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34100 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728052AbgESNHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:06:21 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7CA5C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:06:21 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ci21so1320066pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Owd8w23sKJnYwtdRMz/02Wxs/sCgJAtWumyomSw5smk=;
-        b=f34fIThxjnHezKXAhGE705YOQqEfgg1Pe3wOaxMR7RCVj0cthZk+EC9jbpdJBqpHSo
-         BozTDJLjNlnBdlKWY1BZjKOWiw82owIdVTl5jVmUpqNI6fTZyo6tCDGjWrpsNe9YFolo
-         14XJF43noJ4TIg8NTOF4Itg4tBO/jfTcHcfLTXDOzhCioofQZjvU5ONpXPtm3s0MOIX/
-         Q5ReYVWd8hcdne6wJh5Hzao2x7BCeU3MSuuSJiRyaD1fiputX0duEOZh5Uo6MiS6HKrm
-         y3UGZr8J79W/SXE5M+/ieptijy+2ZA9IgRcwXezDvVTz7RaMDoRWyxY7887XahUpKWS1
-         AOqQ==
+        Tue, 19 May 2020 09:07:47 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b6so13655858ljj.1;
+        Tue, 19 May 2020 06:07:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Owd8w23sKJnYwtdRMz/02Wxs/sCgJAtWumyomSw5smk=;
-        b=J3cAZNPbhUi8D9StX3Zkmm0hCFfqTPuHjWzR3e8VlwB0XM8X6hdSfq1yi2bzU3ym6a
-         eQhMpWfHjX8tFqQjM71rTYGF98qd3eARQfr0pPTx1n6OPFO/AUaLeNsHzHgAuDB9cYfn
-         On4kOVzsj0B4ti//aQvbKhoK+1XrKkzaJQePiK8NUqdEA553Re3H6WY/oXKhUphkj3ak
-         ixqAcrF39SG1o71lfSmQmmPflLtZeW+nMLYJjvYi2UmOVP7TvL10Rgtdz7Tk+oikSt9K
-         jQmCV2E6pwIgX32yu6lzvLq2m4XOyxpK5evEfO0Ae/4BsPUey6T98A6pXyQlSS+IlfAN
-         g6TA==
-X-Gm-Message-State: AOAM532ByJ7dtir1EW4gnR46Jx+jK862dLHJ1Otkf+mfoFL/PAZhF7cn
-        UhIfgtIH9OVaP8+2/b7R+TKDDQ==
-X-Google-Smtp-Source: ABdhPJzIKPmzADaWHU0zrotDwyfCHRD13T4qawSgU6JudknRCihCje1NeeNyGKpFMY62tMS/fbNdiQ==
-X-Received: by 2002:a17:90a:fa95:: with SMTP id cu21mr4884258pjb.106.1589893581072;
-        Tue, 19 May 2020 06:06:21 -0700 (PDT)
-Received: from google.com ([2620:15c:2cd:202:2523:d194:de3b:636f])
-        by smtp.gmail.com with ESMTPSA id gd1sm2299753pjb.14.2020.05.19.06.06.16
+        bh=fFW0yU7PTSC3s/LgZ1vagPs95+BYYWWy0AK3MQOTufQ=;
+        b=hY7YPWMmDiB205O5UaTMXSjF0V/uccgJiXGfnHSMQCHPrxsejZ3eDTeZR3hoOYISc6
+         pLl5rQPywwNTmcep1Pus5dGo5Ow/r9z0mpJFQxm54k05Cu0+Ppqc6hrYc7xPQ/lmGOMB
+         u3nwrkwaC8gNxZOTLcYOZs2eXv/fmo83FVesL2GRw0QWt02+MBND008i0+n2vuDmHSuP
+         LinlcTE4nGgDVmcpCO3mjnAJZntsmBJ+mejvC91Qa4JJIM0xt3xp1Dkd54k4x7vT7HiY
+         itjXmmfUPA+SoLGe7cEjs13//RGpvPNp4wCohUdtn/A9khdSgHA3LHm7KoAOm95vxZ9X
+         iUdw==
+X-Gm-Message-State: AOAM531dSfXMK982ofTVkx/R9Mh4LqhWMY31w7CS5Xzd035RKdG8nShH
+        PjEYiAyLUKWUOxDY0AQV484=
+X-Google-Smtp-Source: ABdhPJwRXdsFuiTrwUVT+G6emDGlpWAIC/qKyiYj+Qi6fJz9Bh+wKQInEQqY83u5QgmUMJ+NVtrygA==
+X-Received: by 2002:a2e:920f:: with SMTP id k15mr12641342ljg.131.1589893662352;
+        Tue, 19 May 2020 06:07:42 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id 4sm7362533ljc.65.2020.05.19.06.07.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 06:06:17 -0700 (PDT)
-Date:   Tue, 19 May 2020 06:06:14 -0700
-From:   Michel Lespinasse <walken@google.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: Re: [PATCH v5.5 09/10] mmap locking API: add mmap_assert_locked()
- and mmap_assert_write_locked()
-Message-ID: <20200519130614.GC189720@google.com>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-11-walken@google.com>
- <20200422015829.GR5820@bombadil.infradead.org>
- <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
- <20200423015917.GA13910@bombadil.infradead.org>
- <20200424012612.GA158937@google.com>
- <20200424013858.GB158937@google.com>
- <fcf53ca7-d3a0-93e2-47af-7dd9b32b081a@suse.cz>
+        Tue, 19 May 2020 06:07:41 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jb1y8-0002cL-Q3; Tue, 19 May 2020 15:07:40 +0200
+Date:   Tue, 19 May 2020 15:07:40 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     mani@kernel.org
+Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patong.mxl@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] usb: serial: xr_serial: Add gpiochip support
+Message-ID: <20200519130740.GE27787@localhost>
+References: <20200430184924.31690-1-mani@kernel.org>
+ <20200430184924.31690-3-mani@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fcf53ca7-d3a0-93e2-47af-7dd9b32b081a@suse.cz>
+In-Reply-To: <20200430184924.31690-3-mani@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 01:01:33PM +0200, Vlastimil Babka wrote:
-> On 4/24/20 3:38 AM, Michel Lespinasse wrote:
-> > +static inline void mmap_assert_locked(struct mm_struct *mm)
-> > +{
-> > +	VM_BUG_ON_MM(!lockdep_is_held_type(&mm->mmap_sem, -1), mm);
-> > +	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-> > +}
-> > +
-> > +static inline void mmap_assert_write_locked(struct mm_struct *mm)
-> > +{
-> > +	VM_BUG_ON_MM(!lockdep_is_held_type(&mm->mmap_sem, 0), mm);
-> > +	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-> > +}
+On Fri, May 01, 2020 at 12:19:24AM +0530, mani@kernel.org wrote:
+> From: Manivannan Sadhasivam <mani@kernel.org>
 > 
-> I would remove VM_BUG_ON_MM() from the lockdep part. If kernel has lockdep
-> enabled, it's already in heavy debugging mode enough so let's just use it and
-> not depend on DEBUG_VM. Many sites you convert don't require DEBUG_VM for the
-> lockdep checks.
-> 
-> With that you can also use the standard lockdep_assert_held() and
-> lockdep_assert_held_write() wrappers.
-> 
-> If user has both lockdep and DEBUG_VM enabled, should we run both variants?
-> Perhaps lockdep is enough as it's more comprehensive? Your initial v5 version
-> was doing that.
+> Add gpiochip support for Maxlinear/Exar USB to serial converter
+> for controlling the available gpios.
 
-Thanks, changed these to lockdep_assert_held() /
-lockdep_assert_held_write() as suggested. This misses dumping out the
-mm, but I think there is only limited value in that. I did keep the
-rwsem_is_locked fallback as people had commented earlier about
-getting assertions in the non-lockdep case. If both are enabled...
-then we'll get somewhat redundant assertions, but I think that is fine
-(better to keep the code simple than try to work around that).
+You should mention that you've based this implementation on the other
+usb-serial gpio-chip implementations (e.g. cp210x).
 
--- 
-Michel "Walken" Lespinasse
-A program is never fully debugged until the last user dies.
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>  drivers/usb/serial/xr_serial.c | 199 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 198 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/serial/xr_serial.c b/drivers/usb/serial/xr_serial.c
+> index fdb9ddf8bd95..255a30540b52 100644
+> --- a/drivers/usb/serial/xr_serial.c
+> +++ b/drivers/usb/serial/xr_serial.c
+> @@ -7,6 +7,7 @@
+>   * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
+>   */
+>  
+> +#include <linux/gpio/driver.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+> @@ -32,6 +33,11 @@ struct xr_uart_regs {
+>  };
+>  
+>  struct xr_port_private {
+> +#ifdef CONFIG_GPIOLIB
+> +	struct gpio_chip gc;
+> +	bool gpio_registered;
+> +	u8 gpio_altfunc;
+> +#endif
+>  	const struct xr_uart_regs *regs;
+>  };
+>  
+> @@ -562,6 +568,196 @@ static void xr_break_ctl(struct tty_struct *tty, int break_state)
+>  		   state);
+>  }
+>  
+> +#ifdef CONFIG_GPIOLIB
+> +
+> +static int xr_gpio_request(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	struct usb_serial_port *port = gpiochip_get_data(gc);
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +
+> +	/* Check if the requested GPIO is occupied */
+> +	if (port_priv->gpio_altfunc & BIT(offset))
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +
+> +static int xr_gpio_get(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +	struct usb_serial_port *port = gpiochip_get_data(gc);
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +	int ret;
+> +	u8 gpio_status;
+> +
+> +	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
+> +			 port_priv->regs->gpio_status, &gpio_status);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return !!(gpio_status & BIT(gpio));
+> +}
+> +
+> +static void xr_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+> +{
+> +	struct usb_serial_port *port = gpiochip_get_data(gc);
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +
+> +	if (val)
+> +		xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
+> +			   port_priv->regs->gpio_set, BIT(gpio));
+> +	else
+> +		xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
+> +			   port_priv->regs->gpio_clr, BIT(gpio));
+
+I see no coordination with the serial driver which may toggle the DTR
+and RTS pins.
+
+> +}
+> +
+> +static int xr_gpio_direction_get(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +	struct usb_serial_port *port = gpiochip_get_data(gc);
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +	int ret;
+> +	u8 gpio_dir;
+> +
+> +	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
+> +			 port_priv->regs->gpio_dir, &gpio_dir);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Logic 0 = input and Logic 1 = output */
+> +	return !(gpio_dir & BIT(gpio));
+> +}
+> +
+> +static int xr_gpio_direction_input(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +	struct usb_serial_port *port = gpiochip_get_data(gc);
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +	int ret;
+> +	u8 gpio_dir;
+> +
+> +	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
+> +			 port_priv->regs->gpio_dir, &gpio_dir);
+> +	if (ret)
+> +		return ret;
+> +
+> +	gpio_dir &= ~BIT(gpio);
+> +
+> +	return xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
+> +			  port_priv->regs->gpio_dir, gpio_dir);
+> +}
+> +
+> +static int xr_gpio_direction_output(struct gpio_chip *gc, unsigned int gpio,
+> +				    int val)
+> +{
+> +	struct usb_serial_port *port = gpiochip_get_data(gc);
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +	int ret;
+> +	u8 gpio_dir;
+> +
+> +	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
+> +			 port_priv->regs->gpio_dir, &gpio_dir);
+> +	if (ret)
+> +		return ret;
+> +
+> +	gpio_dir |= BIT(gpio);
+> +
+> +	ret = xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
+> +			 port_priv->regs->gpio_dir, gpio_dir);
+> +	if (ret)
+> +		return ret;
+> +
+> +	xr_gpio_set(gc, gpio, val);
+
+If it's possible to set the value before changing direction then that
+may be preferable.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int xr21v141x_gpio_init(struct usb_serial_port *port)
+> +{
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +	int ret;
+> +	u8 gpio_mode;
+> +
+> +	port_priv->gc.ngpio = 6;
+> +
+> +	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
+> +			 port_priv->regs->gpio_mode, &gpio_mode);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Mark all pins which are not in GPIO mode */
+> +	if (gpio_mode & UART_MODE_RTS_CTS)
+> +		port_priv->gpio_altfunc |= (BIT(4) | BIT(5));
+> +	else if (gpio_mode & UART_MODE_DTR_DSR)
+> +		port_priv->gpio_altfunc |= (BIT(2) | BIT(3));
+> +	else if (gpio_mode & UART_MODE_RS485)
+> +		port_priv->gpio_altfunc |= BIT(5);
+> +	else if (gpio_mode & UART_MODE_RS485_ADDR)
+> +		port_priv->gpio_altfunc |= BIT(5);
+> +	else
+> +		port_priv->gpio_altfunc = 0; /* All GPIOs are available */
+
+So this clearly isn't sufficient as the serial driver updates the
+gpio-mode settings at runtime, which means you may have the two drivers
+interfering with each other.
+
+You probably need to reserve at least CTS/RTS (gpio 4 and 5) for use
+by the serial driver. But suddenly driving the DSR, RI and CD inputs
+probably isn't a good idea either.
+
+How would you even what know what these pins are used for generally?
+
+Perhaps refusing all gpio requests while the port is open and making
+sure that the serial driver never touches a requested pin could work
+(including indirectly through hardware flow control, etc).
+
+> +
+> +	return ret;
+> +}
+> +
+> +static int xr_gpio_init(struct usb_serial_port *port)
+> +{
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +	struct usb_serial *serial = port->serial;
+> +	int ret = 0;
+> +	u16 pid;
+> +
+> +	/* Don't register gpiochip for interface 0 */
+> +	if (port->minor == 0)
+> +		return ret;
+
+Heh. Nice hack. Unfortunately entirely broken as it only works if this
+happens to be the first usb-serial device that is probed (port->minor is
+the usb-serial port minor number, not the interface number).
+
+> +
+> +	pid = le16_to_cpu(serial->dev->descriptor.idProduct);
+> +
+> +	ret = xr21v141x_gpio_init(port);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	port_priv->gc.label = devm_kasprintf(&port->dev, GFP_KERNEL, "XR%04x",
+> +					     pid);
+
+No point in adding PID here.
+
+> +	port_priv->gc.request = xr_gpio_request;
+> +	port_priv->gc.get_direction = xr_gpio_direction_get;
+> +	port_priv->gc.direction_input = xr_gpio_direction_input;
+> +	port_priv->gc.direction_output = xr_gpio_direction_output;
+> +	port_priv->gc.get = xr_gpio_get;
+> +	port_priv->gc.set = xr_gpio_set;
+> +	port_priv->gc.owner = THIS_MODULE;
+> +	port_priv->gc.parent = &port->dev;
+> +	port_priv->gc.base = -1;
+> +	port_priv->gc.can_sleep = true;
+> +
+> +	ret = gpiochip_add_data(&port_priv->gc, port);
+> +	if (!ret)
+> +		port_priv->gpio_registered = true;
+> +
+> +	return ret;
+> +}
+> +
+> +static void xr_gpio_remove(struct usb_serial_port *port)
+> +{
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +
+> +	if (port_priv->gpio_registered) {
+> +		gpiochip_remove(&port_priv->gc);
+> +		port_priv->gpio_registered = false;
+> +	}
+> +}
+> +
+> +#else
+> +
+> +static int xr_gpio_init(struct usb_serial_port *port)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void xr_gpio_remove(struct usb_serial_port *port)
+> +{
+> +	/* Nothing to do */
+
+Comment not needed.
+
+> +}
+> +
+> +#endif
+> +
+>  static int xr_port_probe(struct usb_serial_port *port)
+>  {
+>  	struct xr_port_private *port_priv;
+> @@ -575,13 +771,14 @@ static int xr_port_probe(struct usb_serial_port *port)
+>  
+>  	usb_set_serial_port_data(port, port_priv);
+>  
+> -	return 0;
+> +	return xr_gpio_init(port);
+
+This is broken; you'll leak the port data on errors.
+
+>  }
+>  
+>  static int xr_port_remove(struct usb_serial_port *port)
+>  {
+>  	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+>  
+> +	xr_gpio_remove(port);
+>  	kfree(port_priv);
+>  
+>  	return 0;
+
+Johan
