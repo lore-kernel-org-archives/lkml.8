@@ -2,239 +2,161 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2793BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28621C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 080A620888
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:23:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="nnj0J0Uf"
+	by mail.kernel.org (Postfix) with ESMTP id 05063204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgESNXc (ORCPT
+        id S1728847AbgESNZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:23:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbgESNXc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:23:32 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C44C08C5C0;
-        Tue, 19 May 2020 06:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589894608;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ICGCVm2uLS51x4Eyn+JU2NynH5F5RrXUuBeWf2MLNAs=;
-        b=nnj0J0UfG5aTSOZx3SaksqiVAO8mbmMkp6aoQ2OC8Zw7zedAVga2ytZsJfxVIEEwLF
-        nuiBvGur2VWmMXLzOMJ0JCL8dBZ2QpwlKCI7nELyjI13B8hWH7E7asF6XbmLYysH+mMx
-        h9D1sIfQ/PLBQuWvoZ0ZkzSpZkaUxli6FcCA7KvzfvvQPGEhb47QUTKPXNC+EAOWpqZX
-        SlzZDUwgXf15WPIbC5PjR3906cMddXGc987HCZv21M6pzvK02ZZnGb3p6bAb6omWlY4T
-        KvzBZnQCCEleYD1OwiG9bIOFIQ7xEooSMrOdf1ucXWRSwObmnL3EaO8BrP9wRWyFdpXa
-        11Ew==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j9IczFaoo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id 60b02dw4JDMDl0g
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 19 May 2020 15:22:13 +0200 (CEST)
-Date:   Tue, 19 May 2020 15:22:07 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
- txt format to yaml
-Message-ID: <20200519132207.GA4623@gerhold.net>
-References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
- <20200519124402.26076-2-jonathan.albrieux@gmail.com>
+        Tue, 19 May 2020 09:25:24 -0400
+Received: from mga02.intel.com ([134.134.136.20]:11209 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbgESNZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 09:25:23 -0400
+IronPort-SDR: 5Q8tIsJJzmBNuIVVVTrtGDrHwfVrP9x/D78gpwU5FEwAHi/NwJS8kl3u2MxxEj9CBwd/JdquYa
+ 3/TwnT7L2fSA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 06:25:23 -0700
+IronPort-SDR: ygC8FheXCko5FrqcyaE3hSIgTJ7LBEHVRVYW0GvyhhXvfIB4PI6oWD0B+XrVlGuDlTSidP3CYb
+ EHYu+zCKFJZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
+   d="scan'208";a="288955373"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.171.98]) ([10.249.171.98])
+  by fmsmga004.fm.intel.com with ESMTP; 19 May 2020 06:25:20 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH v11 05/11] perf/x86: Keep LBR stack unchanged in host
+ context for guest LBR event
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
+        wei.w.wang@intel.com
+References: <20200514083054.62538-1-like.xu@linux.intel.com>
+ <20200514083054.62538-6-like.xu@linux.intel.com>
+ <20200518120205.GF277222@hirez.programming.kicks-ass.net>
+ <dd6b0ab0-0209-e1e5-550c-24e2ad101b15@linux.intel.com>
+ <20200519104520.GE279861@hirez.programming.kicks-ass.net>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <71d38733-bb96-99b0-5484-f7110410a8c5@intel.com>
+Date:   Tue, 19 May 2020 21:25:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519124402.26076-2-jonathan.albrieux@gmail.com>
+In-Reply-To: <20200519104520.GE279861@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:
-> Converts documentation from txt format to yaml.
-> 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
->  .../bindings/iio/magnetometer/ak8975.txt      | 30 ---------
->  .../bindings/iio/magnetometer/ak8975.yaml     | 66 +++++++++++++++++++
->  2 files changed, 66 insertions(+), 30 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> deleted file mode 100644
-> index aa67ceb0d4e0..000000000000
-> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> +++ /dev/null
-> @@ -1,30 +0,0 @@
-> -* AsahiKASEI AK8975 magnetometer sensor
-> -
-> -Required properties:
-> -
-> -  - compatible : should be "asahi-kasei,ak8975"
-> -  - reg : the I2C address of the magnetometer
-> -
-> -Optional properties:
-> -
-> -  - gpios : should be device tree identifier of the magnetometer DRDY pin
-> -  - vdd-supply: an optional regulator that needs to be on to provide VDD
-> -  - mount-matrix: an optional 3x3 mounting rotation matrix
-> -
-> -Example:
-> -
-> -ak8975@c {
-> -        compatible = "asahi-kasei,ak8975";
-> -        reg = <0x0c>;
-> -        gpios = <&gpj0 7 0>;
-> -        vdd-supply = <&ldo_3v3_gnss>;
-> -        mount-matrix = "-0.984807753012208",  /* x0 */
-> -                       "0",                   /* y0 */
-> -                       "-0.173648177666930",  /* z0 */
-> -                       "0",                   /* x1 */
-> -                       "-1",                  /* y1 */
-> -                       "0",                   /* z1 */
-> -                       "-0.173648177666930",  /* x2 */
-> -                       "0",                   /* y2 */
-> -                       "0.984807753012208";   /* z2 */
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
-> new file mode 100644
-> index 000000000000..86e3efa693a8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/magnetometer/ak8975.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AsahiKASEI AK8975 magnetometer sensor
-> +
-> +maintainers:
-> +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>
+Hi Peter,
 
-Should probably add someone here, although I'm not sure who either.
+On 2020/5/19 18:45, Peter Zijlstra wrote:
+> On Tue, May 19, 2020 at 11:08:41AM +0800, Like Xu wrote:
+>
+>> Sure, I could reuse cpuc->intel_ctrl_guest_mask to rewrite this part:
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index d788edb7c1f9..f1243e8211ca 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -2189,7 +2189,8 @@ static void intel_pmu_disable_event(struct perf_event
+>> *event)
+>>          } else if (idx == INTEL_PMC_IDX_FIXED_BTS) {
+>>                  intel_pmu_disable_bts();
+>>                  intel_pmu_drain_bts_buffer();
+>> -       }
+>> +       } else if (idx == INTEL_PMC_IDX_FIXED_VLBR)
+>> +               intel_clear_masks(event, idx);
+>>
+>>          /*
+>>           * Needs to be called after x86_pmu_disable_event,
+>> @@ -2271,7 +2272,8 @@ static void intel_pmu_enable_event(struct perf_event
+>> *event)
+>>                  if (!__this_cpu_read(cpu_hw_events.enabled))
+>>                          return;
+>>                  intel_pmu_enable_bts(hwc->config);
+>> -       }
+>> +       } else if (idx == INTEL_PMC_IDX_FIXED_VLBR)
+>> +               intel_set_masks(event, idx);
+>>   }
+> This makes me wonder if we can pull intel_{set,clear}_masks() out of
+> that if()-forest, but that's something for later...
+>
+>>   static void intel_pmu_add_event(struct perf_event *event)
+>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+>> index b8dabf1698d6..1b30c76815dd 100644
+>> --- a/arch/x86/events/intel/lbr.c
+>> +++ b/arch/x86/events/intel/lbr.c
+>> @@ -552,11 +552,19 @@ void intel_pmu_lbr_del(struct perf_event *event)
+>>          perf_sched_cb_dec(event->ctx->pmu);
+>>   }
+>>
+>> +static inline bool vlbr_is_enabled(void)
+>> +{
+>> +       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>> +
+>> +       return test_bit(INTEL_PMC_IDX_FIXED_VLBR,
+>> +               (unsigned long *)&cpuc->intel_ctrl_guest_mask);
+>> +}
+> Maybe call this: vlbr_exclude_host() ?
+Sure, I'll apply it.
+>
+>> +
+>>   void intel_pmu_lbr_enable_all(bool pmi)
+>>   {
+>>          struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>>
+>> -       if (cpuc->lbr_users)
+>> +       if (cpuc->lbr_users && !vlbr_is_enabled())
+>>                  __intel_pmu_lbr_enable(pmi);
+>>   }
+>>
+>> @@ -564,7 +572,7 @@ void intel_pmu_lbr_disable_all(void)
+>>   {
+>>          struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>>
+>> -       if (cpuc->lbr_users)
+>> +       if (cpuc->lbr_users && !vlbr_is_enabled())
+>>                  __intel_pmu_lbr_disable();
+>>   }
+>>
+>> @@ -706,7 +714,8 @@ void intel_pmu_lbr_read(void)
+>>           * This could be smarter and actually check the event,
+>>           * but this simple approach seems to work for now.
+>>           */
+>> -       if (!cpuc->lbr_users || cpuc->lbr_users == cpuc->lbr_pebs_users)
+>> +       if (!cpuc->lbr_users || vlbr_is_enabled() ||
+>> +               cpuc->lbr_users == cpuc->lbr_pebs_users)
+>>                  return;
+>>
+>>          if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_32)
+>>
+>> Is this acceptable to you ?
+> Yeah, looks about right. Let me stare at the rest.
+Uh, thanks for your warmly comments on the rest KVM part.
 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - "asahi-kasei,ak8975"
-> +      - "ak8975"
-> +      - "asahi-kasei,ak8963"
-> +      - "ak8963"
-> +      - "asahi-kasei,ak09911"
-> +      - "ak09911"
-> +      - "asahi-kasei,ak09912"
-> +      - "ak09912"
-> +
+Let me assume we do not have any blocking issues
+on the host perf changes to enable LBR feature for guests.
 
-I wonder if the ones without vendor prefix (asahi-kasei,) should be
-marked as deprecated somehow?
+Thanks,
+Like Xu
 
-Looking at some other schemas I see either a "# deprecated" comment, or:
-
-properties:
-  compatible:
-    oneOf:
-      - const: asahi-kasei,ak8975
-      - const: asahi-kasei,ak8963
-      - const: asahi-kasei,ak09911
-      - const: asahi-kasei,ak09912
-      - const: ak8975
-        deprecated: true
-      - const: ak8963
-        deprecated: true
-      - const: ak09911
-        deprecated: true
-      - const: ak09912
-        deprecated: true
-
-(e.g. in Documentation/devicetree/bindings/sound/samsung,odroid.yaml)
-I guess this one is preferred since it allows parsing those
-compatibles as deprecated?
-
-> +  reg:
-> +    maxItems: 1
-> +    description: the I2C address of the magnetometer
-> +
-> +  gpios:
-> +    description: should be device tree identifier of the magnetometer DRDY pin
-> +
-> +  vdd-supply:
-> +    maxItems: 1
-> +    description: |
-> +      an optional regulator that needs to be on to provide VDD power to
-> +      the sensor.
-> +
-> +  mount-matrix:
-> +    description: an optional 3x3 mounting rotation matrix
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c@78b7000 {
-> +        reg = <0x78b6000 0x600>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        ak8975@c {
-
-Per device tree specification this should preferably use a generic name
-describing the function of the device, i.e. magnetometer@c.
-
-> +            compatible = "asahi-kasei,ak8975";
-> +            reg = <0x0c>;
-> +            gpios = <&gpj0 7 0>;
-
-I think using the dt-bindings constants for the GPIO flags is preferred
-now, i.e. gpios = <&gpj0 7 GPIO_ACTIVE_HIGH>.
-
-> +            vdd-supply = <&ldo_3v3_gnss>;
-> +            mount-matrix = "-0.984807753012208",  /* x0 */
-> +                           "0",                   /* y0 */
-> +                           "-0.173648177666930",  /* z0 */
-> +                           "0",                   /* x1 */
-> +                           "-1",                  /* y1 */
-> +                           "0",                   /* z1 */
-> +                           "-0.173648177666930",  /* x2 */
-> +                           "0",                   /* y2 */
-> +                           "0.984807753012208";   /* z2 */
-> +        };
-> +    };
-> -- 
-> 2.17.1
