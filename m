@@ -2,107 +2,109 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86091C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17203C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E45C20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06D520708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:08:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="F98P3paC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgESMHb (ORCPT
+        id S1728877AbgESMIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:07:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:59944 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbgESMHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:07:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4CB230E;
-        Tue, 19 May 2020 05:07:30 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CD1F3F52E;
-        Tue, 19 May 2020 05:07:29 -0700 (PDT)
-Date:   Tue, 19 May 2020 13:07:27 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Keno Fischer <keno@juliacomputing.com>,
-        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
-        sudeep.holla@arm.com, oleg@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: Fix PTRACE_SYSEMU semantics
-Message-ID: <20200519120725.GA20313@gaia>
-References: <20200515222253.GA38408@juliacomputing.com>
- <20200518114119.GB32394@willie-the-truck>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518114119.GB32394@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 19 May 2020 08:08:25 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:54250 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726196AbgESMIY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 08:08:24 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 923684050C;
+        Tue, 19 May 2020 12:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1589890104; bh=5U+7CPG84Fx9MSC1QbUrTwvZo58qbTd3QcFm6yKsI9w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=F98P3paCBmltrL9S1Ef3yazrOSEjbRdI26DYsfv2I2yxHmGNMcUsqop8Y7FREVDc3
+         Wg/vfiP+OdUO7px0l6hJYguCZuz7vHcWf7j8UzRXi3kBpefueDrNVeOnc3tTIsagbh
+         BgZxwOcFZp5+Ydrk7B/h7yPkZzHf4zRWCm44ILp+MLX1u8oJ+rsIzXiVdj7Jm6jOzH
+         M0atw6L9jbRYj1i1S/lBuKHrASrNSuNKhe8y3G1RAs5Nwc2fqQwg+Sv+Aw18Rf7DmI
+         IUqX7hymMrvVkOXUIZLcGKMRHhpHvdgqiTRADRjVlCv4U6MePR5lfEzTUi5q7soC+6
+         Cfzrei8hUv9bQ==
+Received: from ru20arcgnu1.internal.synopsys.com (ru20arcgnu1.internal.synopsys.com [10.121.9.48])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 716F7A005C;
+        Tue, 19 May 2020 12:08:20 +0000 (UTC)
+From:   Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+To:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        Petr Vorel <petr.vorel@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        linux-snps-arc@lists.infradead.org,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Subject: [PATCH v2] Kernel selftests: Add check if tpm devices are supported
+Date:   Tue, 19 May 2020 15:07:43 +0300
+Message-Id: <20200519120743.41358-1-Nikita.Sobolev@synopsys.com>
+X-Mailer: git-send-email 2.16.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 12:41:20PM +0100, Will Deacon wrote:
-> On Fri, May 15, 2020 at 06:22:53PM -0400, Keno Fischer wrote:
-> > Quoth the man page:
-> > ```
-> >        If the tracee was restarted by PTRACE_SYSCALL or PTRACE_SYSEMU, the
-> >        tracee enters syscall-enter-stop just prior to entering any system
-> >        call (which will not be executed if the restart was using
-> >        PTRACE_SYSEMU, regardless of any change made to registers at this
-> >        point or how the tracee is restarted after this stop).
-> > ```
-> > 
-> > The parenthetical comment is currently true on x86 and powerpc,
-> > but not currently true on arm64. arm64 re-checks the _TIF_SYSCALL_EMU
-> > flag after the syscall entry ptrace stop. However, at this point,
-> > it reflects which method was used to re-start the syscall
-> > at the entry stop, rather than the method that was used to reach it.
-> > Fix that by recording the original flag before performing the ptrace
-> > stop, bringing the behavior in line with documentation and x86/powerpc.
-> > 
-> > Signed-off-by: Keno Fischer <keno@juliacomputing.com>
-> > ---
-> >  arch/arm64/kernel/ptrace.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> > index b3d3005d9515..b67b4d14aa17 100644
-> > --- a/arch/arm64/kernel/ptrace.c
-> > +++ b/arch/arm64/kernel/ptrace.c
-> > @@ -1829,10 +1829,12 @@ static void tracehook_report_syscall(struct pt_regs *regs,
-> >  
-> >  int syscall_trace_enter(struct pt_regs *regs)
-> >  {
-> > -	if (test_thread_flag(TIF_SYSCALL_TRACE) ||
-> > -		test_thread_flag(TIF_SYSCALL_EMU)) {
-> > +	u32 flags = READ_ONCE(current_thread_info()->flags) &
-> > +		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
-> > +
-> > +	if (flags) {
-> 
-> nit: but I'd rather the '&' operation was in the conditional so that the
-> 'flags' variable holds all of the flags.
-> 
-> With that:
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-> 
-> Also needs:
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: f086f67485c5 ("arm64: ptrace: add support for syscall emulation")
-> 
-> Catalin -- can you pick this up for 5.7 please, with my 'nit' addressed?
+tpm2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
+are available. In case, when these devices are not available test
+fails, but expected behaviour is skipped test.
 
-I'll queue it with the above addressed. I think flags also needs to be
-unsigned long rather than u32.
+Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+---
+Changes for v2:
+    - Coding Style cleanup
 
-However, before sending the pull request, I'd like Sudeep to confirm
-that it doesn't break his original use-case for this feature.
+ tools/testing/selftests/tpm2/test_smoke.sh | 5 +++++
+ tools/testing/selftests/tpm2/test_space.sh | 5 +++++
+ 2 files changed, 10 insertions(+)
 
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 8155c2ea7ccb..663062701d5a 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -1,6 +1,11 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++
++[ -f /dev/tpm0 ] || exit $ksft_skip
++
+ python -m unittest -v tpm2_tests.SmokeTest
+ python -m unittest -v tpm2_tests.AsyncTest
+ 
+diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+index a6f5e346635e..36c9d030a1c6 100755
+--- a/tools/testing/selftests/tpm2/test_space.sh
++++ b/tools/testing/selftests/tpm2/test_space.sh
+@@ -1,4 +1,9 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++
++[ -f /dev/tpmrm0 ] || exit $ksft_skip
++
+ python -m unittest -v tpm2_tests.SpaceTest
 -- 
-Catalin
+2.16.2
+
