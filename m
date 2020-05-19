@@ -2,114 +2,114 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37565C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0C3D20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09ECD206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8OwWyyL"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AQ5KOkV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgESDqK (ORCPT
+        id S1728139AbgESDuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41158 "EHLO
+        Mon, 18 May 2020 23:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgESDqJ (ORCPT
+        with ESMTP id S1726605AbgESDuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:46:09 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2435BC061A0C;
-        Mon, 18 May 2020 20:46:08 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id w25so12995444iol.12;
-        Mon, 18 May 2020 20:46:08 -0700 (PDT)
+        Mon, 18 May 2020 23:50:17 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5EFC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:50:17 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id l5so3965341edn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:50:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=lca.pw; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pB5eYPJLJBR6N2fYd++wU5TdLcEDIrnF2XNr7sUNkTw=;
-        b=E8OwWyyLIOTmpsl8LvrhTMM35ZAfx2jxsGmzgH3vS6DnMgSpGxdqA4BcEQks4L/5OP
-         DBHIReuMpmskeIBqhIVauf+Wmd/wf15dSehtd1UjTKR9iNWf+NZd8H6JCFmjyQ1vCUlx
-         WgZf777cViDmhyyf4BqKtGmNR/+LEkPo8WW2Zq5UvifY07od49jvGdsZ7O267PiYT6JC
-         H9Ld6as8rxzwJyT2mmnYAYQyhYXWbLT7z41CC+WVhrc1IIp1ryJhjCzYFpEdGN20vUTx
-         RZDE0Ku2WI9/V3mYTkRjF/JWIGQMaoOp/TZr0S0vT5zVmnkpHSSuL2Cf/IsEQnkgIbcu
-         6VLQ==
+        bh=nEQ9qTm1gqgdFjPFW3OQAVDn5qaony6GoNhcdizYj6g=;
+        b=AQ5KOkV3NvNX5xxC0VyBzJ78fqzvuA3q+oXuH0H+EoqUa+nF2KrjyYK4dwcsXL9yFO
+         LrZybd3jK6WUuRqFJAudihfOSqoHYnWIsWl9JgALjgK0fg/EGLfV5IzWtHIaYjEYOjkE
+         7Y1OsQevLv0p3IvRjPDG8Gyq0XmsIhAHONIgzjFSXhlvPPP8BFUt+VWgKhVtGe2Z95tN
+         kIm14MwMdnY9F218ByZrNlR/NtSSe7nczGDbY1RBeeH6yf+RFCvDxVpc/hJbcV4k6+KH
+         SQSxoFQp19OUUqj2bJX0JrD98enMtTL4uIenElBtWLN3vDRrpMOKTwagooblCZeiff28
+         SWnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pB5eYPJLJBR6N2fYd++wU5TdLcEDIrnF2XNr7sUNkTw=;
-        b=bNyZXMYDbcLT+Bzhx8tBN1oVWnw3MpojxpvG9UFdA6gV9lFNMMi0cF6StgcnSrudEA
-         3vkZ4mHMLMzX5WVKX5/nJARkCmGHNcNEbcjjLkkt7jGMxqD87brB2/mwiZouTp7MiUez
-         Vb3c/zeR15cDy4nJmfTBWEozA1yNtCwSVgTMi397/UL6GqpDWe3IOU5NPRvYgwcZlETi
-         iRWVEqutrqrQRojaLMb3kLBvcTfzPvcxtdoJHTV1IUjej+1Sm5KcRYn9KHzD+7syMsoS
-         /erTlTI8n6akuwNNX5XPiz9hqTQeIUM6e4zj9WbXdtvLy6mpHeXDe1VxV9FzasvsWP8T
-         9orw==
-X-Gm-Message-State: AOAM533CHSExuDYnzpHiOvi4o9i/QDN8jC+TciUkGk+HUyPZ8F1UVVfF
-        MzHDAnxJdOMkAqKgSfslvrN7RLP4pFWgnFPu/us=
-X-Google-Smtp-Source: ABdhPJxas7maaiheBB/b0/RpDkbUbU+YF+zwxERv/9GuLZdORQ1gy/D5mKzIDx+0o32dT7F053hf8bzNpdiB9iXFxas=
-X-Received: by 2002:a02:b149:: with SMTP id s9mr17261179jah.81.1589859967396;
- Mon, 18 May 2020 20:46:07 -0700 (PDT)
+        bh=nEQ9qTm1gqgdFjPFW3OQAVDn5qaony6GoNhcdizYj6g=;
+        b=bOpid0+z9FR403qnsGo/B0YoONMm0O0Dql93R6g9YLcLcyex4pnxD+2ptXkcCjOh8i
+         WxogAe4oXjJlKowXzPQLejoJTl4RVOimzCYppsADrdDWnyN7T8PyS7lRKzLES9vvbRU0
+         lMOjbDdIm3X+Bjx0KeAUpMLlhldB5tUjaeEFDP0wtbDSuq/8H83nnTfWxgoDMJPXptiz
+         QOEz3hZTsKpwUltrAd/4yuXyBvjUgsnO6RCiDnOylVb6aAnMiyK5oXtZN1fbuPhNxl7X
+         jRf+PXHot7y9boSlZwyJS0b855FfurERX7cpX9bKf1vFfDHk0/qptjKQJu/tfKCR9mPl
+         xQ0w==
+X-Gm-Message-State: AOAM530DSWldYgdDqLMg6EHQxoBS0EJxG6eBrG7LT434hnHbl2EbVJT1
+        9aZ3HsLKkYvVHGh9B8KjK6S1aK6D2r5KfidA3r/EhQ==
+X-Google-Smtp-Source: ABdhPJw4jR6m0fMVDO2FB+R6zYwNqrdt5nWWX9i23iqjClsTlQ7f6HqZi7cwlwRgKDySqKqRLOiocJK3S8cMCJ24Uco=
+X-Received: by 2002:a50:ee1a:: with SMTP id g26mr16103774eds.18.1589860216078;
+ Mon, 18 May 2020 20:50:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200518174726.GA84496@suse.com>
-In-Reply-To: <20200518174726.GA84496@suse.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 19 May 2020 06:45:56 +0300
-Message-ID: <CAOQ4uxi21N0O17Z_-Hf-BynKbs7xpOea0JrMF_rvZJ=bUi59_Q@mail.gmail.com>
-Subject: Re: [PATCH v2] ceph: don't return -ESTALE if there's still an open file
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <D90B73BA-22EC-407E-838F-2BA646C60DE0@lca.pw> <CAM4kBBKkOGOjT5fddQ_vongNx_cXmv0tCQzD9ZtrGgkuPTKfTg@mail.gmail.com>
+In-Reply-To: <CAM4kBBKkOGOjT5fddQ_vongNx_cXmv0tCQzD9ZtrGgkuPTKfTg@mail.gmail.com>
+From:   Qian Cai <cai@lca.pw>
+Date:   Mon, 18 May 2020 23:50:05 -0400
+Message-ID: <CAG=TAF65nmW2m9-5z5xvLmfRAD0LZAxgARJOEAqvzA3GdN-iJA@mail.gmail.com>
+Subject: Re: zswap z3fold + memory offline = infinite loop
+To:     Vitaly Wool <vitaly.wool@konsulko.com>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 8:47 PM Luis Henriques <lhenriques@suse.com> wrote:
+On Wed, May 13, 2020 at 4:28 AM Vitaly Wool <vitaly.wool@konsulko.com> wrote:
 >
-> Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
-> a file handle to dentry"), this fixes another corner case with
-> name_to_handle_at/open_by_handle_at.  The issue has been detected by
-> xfstest generic/467, when doing:
 >
->  - name_to_handle_at("/cephfs/myfile")
->  - open("/cephfs/myfile")
->  - unlink("/cephfs/myfile")
->  - sync; sync;
->  - drop caches
->  - open_by_handle_at()
 >
-> The call to open_by_handle_at should not fail because the file hasn't been
-> deleted yet (only unlinked) and we do have a valid handle to it.  -ESTALE
-> shall be returned only if i_nlink is 0 *and* i_count is 1.
+> On Wed, May 13, 2020, 2:36 AM Qian Cai <cai@lca.pw> wrote:
+>>
+>> Put zswap z3fold pages into the memory and then offline those memory would trigger an infinite loop here in
+>>
+>> __offline_pages() --> do_migrate_range() because there is no error handling,
+>>
+>>                         if (pfn) {
+>>                                 /*
+>>                                  * TODO: fatal migration failures should bail
+>>                                  * out
+>>                                  */
+>>                                 do_migrate_range(pfn, end_pfn);
+>>
+>> There, isolate_movable_page() will always return -EBUSY  because,
+>>
+>>         if (!mapping->a_ops->isolate_page(page, mode))
+>>                 goto out_no_isolated;
+>>
+>> i.e., z3fold_page_isolate() will always return false because,
+>>
+>> zhdr->mapped_count == 2
 >
-> This patch also makes sure we have LINK caps before checking i_nlink.
 >
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
-> Hi!
->
-> (and sorry for the delay in my reply!)
->
-> So, from the discussion thread and some IRC chat with Jeff, I'm sending
-> v2.  What changed?  Everything! :-)
->
-> - Use i_count instead of __ceph_is_file_opened to check for open files
-> - Add call to ceph_do_getattr to make sure we have LINK caps before
->   accessing i_nlink
->
-> Cheers,
-> --
-> Luis
+> So who mapped these pages? The whole zswap operation presumes that objects are mapped for a short while to run some I/O and so, most of the time zhdr->mapped_count would be 0.
 
-Acked-by: Amir Goldstein <amir73il@gmail.com>
+I have no clue why those pages have been mapped for so long, but it is
+trivial to reproduce using the above reproducer. Also, zbud has no
+such issue. Alternatively, if you could send me some debug patches to
+narrow it down, I'll be happy to run for you.
 
-Thanks,
-Amir.
+>
+> Removing that check in ->isolate() is not a big deal, but ->migratepage() shall not allow actual migration anyway if there are mapped objects.
+
+Is that worse than an endless loop here?
