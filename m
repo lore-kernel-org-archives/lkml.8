@@ -2,126 +2,79 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D08C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8910320709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:47:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vaTGPRDy"
+	by mail.kernel.org (Postfix) with ESMTP id 20B44207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbgESLrm (ORCPT
+        id S1728851AbgESLr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:47:42 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:9643 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgESLrl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:47:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589888860; x=1621424860;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+3WpN5wjU7vPXasZ7bMW3p7RrpJuTGFZkKzGqd78wTU=;
-  b=vaTGPRDyfyzUeVHwCEAWhQ/JiOaN+YjoAOXkYPaa0iJl0cTa06A05u3l
-   961k00rzhZN0NxVk8tB7UaziNvONXEmNvoBDOjnAZnjAQ/OBHRaizeeVA
-   E/LmOshFKMLravZbZsc0k+zk3i61rCvFAZ12oeC2pb8+biGdNsbPrGUN2
-   4LQHi6zULd5YK1JzN5TUE8Hqsstaikl38JsjMO+CcCfMkEn08FMvRpdoQ
-   hc/g/6/ILW4+zHCY65rXn8py4+glBbynIriRCuXWaxTNgeZGy5GKjspOY
-   4YSel8yIwhfKWQeaw2ozdUw1d/msa9CRLVnhSdTxePKPuaO5eYHzuYH0c
-   A==;
-IronPort-SDR: CXyWK6XjctxXloaSFb4QoNtDA6Ry52CMtVFwMWGs+0DsQUOSGUMc6G6B38mC5Es2J/SwA9BvfJ
- u2JGPnUnZlU1uhKCvY/i3hMw2dhY46AVqa3O0DaJyS1gj+DNK1eUoNoWXeNcXmFyZPfF1dlxwn
- cpxOIpB5rzwtywt157EitkEBohV4bwaDje/G7gEQzmpRy/Tqt/JjgMsaEHcBEZvD8q3/miLKAW
- oYUGUXzphVQVVBASFzBdtONiFD9Ojr/BOrWdJ9PRRxnYDB2dVNBnBuTrgtt2NGdPeEkwhhHuup
- ZXg=
-X-IronPort-AV: E=Sophos;i="5.73,410,1583218800"; 
-   d="scan'208";a="12828132"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 May 2020 04:47:40 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 19 May 2020 04:47:40 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 19 May 2020 04:47:40 -0700
-Date:   Tue, 19 May 2020 13:47:39 +0200
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>
-Subject: Re: [PATCH 04/10] dt-bindings: spi: Add bindings for spi-dw-mchp
-Message-ID: <20200519114739.GD24801@soft-dev15.microsemi.net>
-References: <20200513140031.25633-1-lars.povlsen@microchip.com>
- <20200513140031.25633-5-lars.povlsen@microchip.com>
- <20200513145213.GJ4803@sirena.org.uk>
+        Tue, 19 May 2020 07:47:57 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4866 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726880AbgESLr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 07:47:57 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B16082A384A26CA1F027;
+        Tue, 19 May 2020 19:47:54 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 19 May 2020 19:47:46 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <Souvik.Chakravarty@arm.com>, <Thanu.Rangarajan@arm.com>
+CC:     <Sudeep.Holla@arm.com>, <guohanjun@huawei.com>,
+        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wangxiongfeng2@huawei.com>
+Subject: [RFC PATCH v3 0/2] add SW BOOST support for CPPC
+Date:   Tue, 19 May 2020 19:41:27 +0800
+Message-ID: <1589888489-13828-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200513145213.GJ4803@sirena.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/05/20 15:52, Mark Brown wrote:
-> Date: Wed, 13 May 2020 15:52:13 +0100
-> From: Mark Brown <broonie@kernel.org>
-> To: Lars Povlsen <lars.povlsen@microchip.com>
-> Cc: SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>, Microchip
->  Linux Driver Support <UNGLinuxDriver@microchip.com>,
->  linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
->  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
->  Alexandre Belloni <alexandre.belloni@bootlin.com>, Serge Semin
->  <Sergey.Semin@baikalelectronics.ru>, Serge Semin
->  <fancer.lancer@gmail.com>, Andy Shevchenko
->  <andriy.shevchenko@linux.intel.com>, Wan Ahmad Zainie
->  <wan.ahmad.zainie.wan.mohamad@intel.com>
-> Subject: Re: [PATCH 04/10] dt-bindings: spi: Add bindings for spi-dw-mchp
-> User-Agent: Mutt/1.10.1 (2018-07-13)
-> 
-> On Wed, May 13, 2020 at 04:00:25PM +0200, Lars Povlsen wrote:
-> > This add DT bindings for the Microsemi/Microchip SPI controller used
-> > in various SoC's. It describes the "mscc,ocelot-spi" and
-> > "mscc,jaguar2-spi" bindings.
-> 
-> > Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> > ---
-> >  .../bindings/spi/mscc,ocelot-spi.yaml         | 60 +++++++++++++++++++
-> >  .../bindings/spi/snps,dw-apb-ssi.txt          |  7 +--
-> 
-> That's not what this change does.  It is removing the existing binding
-> for Ocelot and Jaguar2 from the free format binding documentation and
-> adds some entirely separate YAML bindings for them.  This conflicts with
-> competing YAML conversions that both Serge Semin and Wan Ahmad Zainie
-> (CCed) have in flight at the minute.  It also doesn't strike me as a
-> good idea to fork the bindings, what's the motivation for doing that?
+ACPI spec 6.2 section 8.4.7.1 provide the following two CPC registers.
 
-The reason for doing this was due to the fact that I felt adding
-Sparx5 support only cluttered the original driver even more.
+"Highest performance is the absolute maximum performance an individual
+processor may reach, assuming ideal conditions. This performance level
+may not be sustainable for long durations, and may only be achievable if
+other platform components are in a specific state; for example, it may
+require other processors be in an idle state.
 
-And since I was adding a new driver, I needed to add bindings for it -
-and (re)move the old ones.
+Nominal Performance is the maximum sustained performance level of the
+processor, assuming ideal operating conditions. In absence of an
+external constraint (power, thermal, etc.) this is the performance level
+the platform is expected to be able to maintain continuously. All
+processors are expected to be able to sustain their nominal performance
+state simultaneously."
 
-I have become aware of Serge and Wan Ahmad's work, and will work out
-something on top of that.
+We can use Highest Performance as the max performance in boost mode and
+Nomial Performance as the max performance in non-boost mode. If the
+Highest Performance is greater than the Nominal Performance, we assume
+SW BOOST is supported.
+
+Xiongfeng Wang (2):
+  cpufreq: change '.set_boost' to act on only one policy
+  CPPC: add support for SW BOOST
+
+ drivers/cpufreq/acpi-cpufreq.c |  4 ++--
+ drivers/cpufreq/cppc_cpufreq.c | 39 +++++++++++++++++++++++++++++--
+ drivers/cpufreq/cpufreq.c      | 53 +++++++++++++++++++++---------------------
+ include/linux/cpufreq.h        |  2 +-
+ 4 files changed, 67 insertions(+), 31 deletions(-)
+
+-- 
+1.7.12.4
 
