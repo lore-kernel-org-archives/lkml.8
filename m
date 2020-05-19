@@ -2,107 +2,117 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E55C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5704FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC85320674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F3F207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:22:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qfwac1tR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BcjxOhbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgESIUg (ORCPT
+        id S1726959AbgESIWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:20:36 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54826 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgESIUf (ORCPT
+        Tue, 19 May 2020 04:22:31 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47128 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgESIWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:20:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J8KVUw104110;
-        Tue, 19 May 2020 03:20:31 -0500
+        Tue, 19 May 2020 04:22:31 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J8MRrE114448;
+        Tue, 19 May 2020 03:22:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589876431;
-        bh=99xg+f+DsihApuSq8GEWJaX4IKZmwEVE27Km+1QV/ZQ=;
-        h=From:To:CC:Subject:Date;
-        b=qfwac1tRvCz+5L3MJ0XtyWmLq7zlTLebllBuBPNX+Z7fLGrphH/HrwZXdsT7se6Dk
-         IwVuJQXIE1HDLPCVZcH7ODiW+uKMuw6gUy0uT+GKgI5Lm0QD4rSvqGfoFleNmKsGTC
-         kQQPN2BLbmbjGnZ3P6VIQnsUKSJPCVExTGPbyqC8=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04J8KVAZ078580
+        s=ti-com-17Q1; t=1589876547;
+        bh=0IW1CINnzDCPy46zXwT1kRP9nRJw5/Ixb4bt+1ipkao=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=BcjxOhbuYDUwXr+E3p1KnVpYrSP6OydIIt42my7tZad2+EhCISYIMbQFT4PWkguvK
+         vJRcay/eq7wtbj5au0hohRIplZVveFQuKJLz6dtM64/hFbx4CikRkK0FXaZoDBOtOn
+         Ht+bw8DuMzj4MtSSvd0cArWQgkAQTNuowtjDKM/k=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04J8MRXq047160
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 03:20:31 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 19 May 2020 03:22:27 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 03:20:31 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 03:22:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 03:20:31 -0500
-Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J8KSv3095476;
-        Tue, 19 May 2020 03:20:28 -0500
+ Frontend Transport; Tue, 19 May 2020 03:22:27 -0500
+Received: from [10.250.232.87] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J8MOEG021758;
+        Tue, 19 May 2020 03:22:25 -0500
+Subject: Re: [PATCH v2] arm: dts: Move am33xx and am43xx mmc nodes to
+ sdhci-omap driver
 From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <robh+dt@kernel.org>, <t-kristo@ti.com>, <faiz_abbas@ti.com>,
-        <nm@ti.com>
-Subject: [PATCH v3] arm64: dts: ti: k3-am654-main: Update otap-del-sel values
-Date:   Tue, 19 May 2020 13:50:27 +0530
-Message-ID: <20200519082027.5726-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.17.1
+To:     Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <robh+dt@kernel.org>,
+        <bcousson@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+References: <20200512203804.9340-1-faiz_abbas@ti.com>
+ <20200513162327.GM37466@atomide.com>
+ <94025425-95e2-e53d-cfac-a1e73e6c011a@ti.com>
+Message-ID: <53c815db-dd7d-e6e1-f81a-cf05ef340c71@ti.com>
+Date:   Tue, 19 May 2020 13:52:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <94025425-95e2-e53d-cfac-a1e73e6c011a@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the latest AM65x Data Manual[1], a different output tap
-delay value is optimum for a given speed mode. Update these values.
+Tony,
 
-[1] http://www.ti.com/lit/gpn/am6526
+On 15/05/20 3:04 pm, Faiz Abbas wrote:
+> Hi Tony,
+> 
+> On 13/05/20 9:53 pm, Tony Lindgren wrote:
+>> * Faiz Abbas <faiz_abbas@ti.com> [200512 13:39]:
+>>> Move mmc nodes to be compatible with the sdhci-omap driver. The following
+>>> modifications are required for omap_hsmmc specific properties:
+>>>
+>>> ti,non-removable: convert to the generic mmc non-removable
+>>> ti,needs-special-reset:  co-opted into the sdhci-omap driver
+>>> ti,dual-volt: removed. Legacy property not used in am335x or am43xx
+>>> ti,needs-special-hs-handling: removed. Legacy property not used in am335x
+>>> or am43xx
+>>>
+>>> Also since the sdhci-omap driver does not support runtime PM, explicitly
+>>> disable the mmc3 instance in the dtsi.
+>>>
+>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>> ---
+>>>
+>>> v2: Rebased to latest mainline where all kernel dependancies have been merged.
+>>>
+>>> Suspend/Resume is now supported in the sdhci-omap driver.
+>>
+>> Great, thanks for updating it.
+>>
+>> Keerthy, care to test for am3 and am4?
+>>
+> 
+> Suspend/resume on am43xx-gpevm is broken right now in mainline and the regression looks
+> like it is caused by the display subsystem. I have reported this to Tomi and
+> its being investigated.
+> 
+> Meanwhile I have tested this patch with display configs disabled and Keerthy's
+> suspend/resume tests pass on both am3 and am4.
+> 
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
+Can this patch be picked up? I would really like this to be merged by v5.8
 
-v3: Updated values to the latest data manual revision
-
-v2: Updated to the latest mainline kernel
-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 11887c72f23a..056130a126f9 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -244,7 +244,17 @@
- 		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
- 		mmc-ddr-1_8v;
- 		mmc-hs200-1_8v;
--		ti,otap-del-sel = <0x2>;
-+		ti,otap-del-sel-legacy = <0x0>;
-+		ti,otap-del-sel-mmc-hs = <0x0>;
-+		ti,otap-del-sel-sd-hs = <0x0>;
-+		ti,otap-del-sel-sdr12 = <0x0>;
-+		ti,otap-del-sel-sdr25 = <0x0>;
-+		ti,otap-del-sel-sdr50 = <0x8>;
-+		ti,otap-del-sel-sdr104 = <0x7>;
-+		ti,otap-del-sel-ddr50 = <0x5>;
-+		ti,otap-del-sel-ddr52 = <0x5>;
-+		ti,otap-del-sel-hs200 = <0x5>;
-+		ti,otap-del-sel-hs400 = <0x0>;
- 		ti,trm-icp = <0x8>;
- 		dma-coherent;
- 	};
--- 
-2.17.1
-
+Thanks,
+Faiz
