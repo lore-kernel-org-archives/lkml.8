@@ -2,111 +2,69 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F2E2065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:37:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CLcZ236j"
+	by mail.kernel.org (Postfix) with ESMTP id 05671207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgESKhs (ORCPT
+        id S1727057AbgESKju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgESKhq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:37:46 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E9F6C05BD09
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:37:45 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u188so2939919wmu.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=aXsJU44GCIYk2OgRQy7d759a/u1ue6myLJURyVBYd8A=;
-        b=CLcZ236jj0tlYpqLtFL3ioPxwkbu37Ip4CxCdOnYn9axGgoRWAgEiXb7medhtvS0aw
-         S8hfrC0JE0DYi3y30LTInIHDQfUDxzoII2CXXieMTgbi1b1gYcMUOpdhRR6fT2H3Bd4z
-         9InwXKX+yA6Pgj5Mu5UVPY+nzaBFzQxntiWBtIW28S/h+WQAOi/KVfliYPqW+QiZru7P
-         HHnBRRp0qgbgl0dABgTBbXxni+72y9ObnZH/ZW9Zh7bbV116bT8hmzG+Ml3Za9DbLzQS
-         hZy8scnazhAh3wj7771MVayMozXxjHz47wvkYN+o+NoxKlD3sZ0x8v65BmuKr5/OAPPH
-         n2bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=aXsJU44GCIYk2OgRQy7d759a/u1ue6myLJURyVBYd8A=;
-        b=UioURIwNjTOYCGOW9ewtFcTlBkKrMNCgNPRr4qy5QIrqJUgy2yPDmg3rlgE/ZZ2X+v
-         1wU5Lg8SNV1ex9tGO8Xa7CdSROZQTqEfztKQjHH1UFy5eTIdKIJOVM3YCZUBmphS0nT5
-         30Y2QU7I4eC9mzaDfzn9r9Uv2ppZwiS+kaR2SOSvB3xgHLMvF3l5avpfrmg7hsyoqonU
-         hP5tPIV+z39dSb+efQ2f7gDiPFD5ojv/vCi0RH0shRjTYhFwNpZIVE5r/zI7bjWOlOfX
-         51k5jGvaaDuZTx+iyJByR4B7+xW02ZK2xksZ7cPmRhFHNRXy6umyg4P6xHMfmUFn/Ks+
-         T5HQ==
-X-Gm-Message-State: AOAM5318e+3CYqXOeEKvxCXurXNvnEjDuedNdLQ38AvoI/URz8dEpa0k
-        PqR8f9wZUa6T9jq/1TxRrTbteg==
-X-Google-Smtp-Source: ABdhPJxiAzyUerOuMTk5FRcIW0Jcjoj2ZL7CECmIr6mC4isdh9wLpToG+AphXu0YHNWUccUjNP0TCw==
-X-Received: by 2002:a1c:8094:: with SMTP id b142mr4859380wmd.61.1589884664183;
-        Tue, 19 May 2020 03:37:44 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id q2sm3433181wmq.23.2020.05.19.03.37.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 03:37:43 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:37:41 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v11 2/6] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200519103741.GW271301@dell>
-References: <20200430155810.21383-1-sravanhome@gmail.com>
- <20200430155810.21383-3-sravanhome@gmail.com>
+        Tue, 19 May 2020 06:39:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:58618 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgESKju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 06:39:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6134A101E;
+        Tue, 19 May 2020 03:39:49 -0700 (PDT)
+Received: from [10.37.8.206] (unknown [10.37.8.206])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B534A3F305;
+        Tue, 19 May 2020 03:39:47 -0700 (PDT)
+Subject: Re: [PATCH V4 03/17] arm64/cpufeature: Make doublelock a signed
+ feature in ID_AA64DFR0
+To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org
+References: <1589881254-10082-1-git-send-email-anshuman.khandual@arm.com>
+ <1589881254-10082-4-git-send-email-anshuman.khandual@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <6bbdb3e5-d6bd-db8f-4de9-a964f19c9ac4@arm.com>
+Date:   Tue, 19 May 2020 11:44:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430155810.21383-3-sravanhome@gmail.com>
+In-Reply-To: <1589881254-10082-4-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020, Saravanan Sekar wrote:
-
-> mp2629 is a highly-integrated switching-mode battery charge management
-> device for single-cell Li-ion or Li-polymer battery.
+On 05/19/2020 10:40 AM, Anshuman Khandual wrote:
+> Double lock feature can have the following possible values.
 > 
-> Add MFD core enables chip access for ADC driver for battery readings,
-> and a power supply battery-charger driver
+> 0b0000 - Double lock implemented
+> 0b1111 - Double lock not implemented
 > 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/mfd/Kconfig        |  9 +++++
->  drivers/mfd/Makefile       |  2 +
->  drivers/mfd/mp2629.c       | 79 ++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mp2629.h | 17 ++++++++
->  4 files changed, 107 insertions(+)
->  create mode 100644 drivers/mfd/mp2629.c
->  create mode 100644 include/linux/mfd/mp2629.h
+> But in case of a conflict the safe value should be 0b1111. Hence this must
+> be a signed feature instead. Also change FTR_EXACT to FTR_LOWER_SAFE. While
+> here, fix the erroneous bit width value from 28 to 4.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-For my own reference (apply this as-is to your sign-off block):
-
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
