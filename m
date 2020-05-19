@@ -2,144 +2,246 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0775C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF344C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE828207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCA6207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:07:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qvZKjOCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgESTHJ (ORCPT
+        id S1726985AbgESTHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:07:09 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:37846 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESTHI (ORCPT
+        Tue, 19 May 2020 15:07:32 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3409 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESTHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:07:08 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jb7Zx-0007pH-RU; Tue, 19 May 2020 13:07:05 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jb7Zw-0008Ly-Mw; Tue, 19 May 2020 13:07:05 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <877dx822er.fsf_-_@x220.int.ebiederm.org>
-        <87o8qkzrxp.fsf_-_@x220.int.ebiederm.org>
-        <202005191111.9B389D33@keescook>
-Date:   Tue, 19 May 2020 14:03:23 -0500
-In-Reply-To: <202005191111.9B389D33@keescook> (Kees Cook's message of "Tue, 19
-        May 2020 11:21:34 -0700")
-Message-ID: <875zcrpx1g.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 19 May 2020 15:07:31 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec42e670000>; Tue, 19 May 2020 12:07:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 May 2020 12:07:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 12:07:31 -0700
+Received: from [10.2.164.184] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
+ 2020 19:07:30 +0000
+Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
+ device-tree properties
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200516154314.14769-1-digetx@gmail.com>
+ <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
+ <b634e7a5-9a30-3bd1-126d-be62e4dd73e1@gmail.com>
+ <20200519162444.GD2113674@ulmo>
+ <b4eb368e-adc2-7b77-3ae9-fefdcfddaf3d@gmail.com>
+ <11c93dac-f5ba-2193-6f44-63af27fdce09@nvidia.com>
+ <aed72c87-0e16-6dea-a4e2-7fc6a97cd313@nvidia.com>
+Message-ID: <c7469c16-f6f1-f9c0-566f-3b1d3774f130@nvidia.com>
+Date:   Tue, 19 May 2020 12:07:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jb7Zw-0008Ly-Mw;;;mid=<875zcrpx1g.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19uLsQEsrbyURG9a1RrgL6bJSOQRT5dyK8=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 3/8] exec: Convert security_bprm_set_creds into security_bprm_repopulate_creds
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <aed72c87-0e16-6dea-a4e2-7fc6a97cd313@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589915239; bh=s6uam05ArM6BiI5b00L7hD1ybeok2Wgo9Vnh25tsBjM=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=qvZKjOCiZVe0c1lxZxtvzU8OQFU8m9bPfOb325PbIRH/WOZxSygAS61Rw23ZCM2Uk
+         f2O4vgzWe5Dt82fS2qx6+DmV+jHKxd9IkMf75U2eXOKLE6+Kiy8fwHhJZrMu328LmN
+         h508L3CC0IS4KmCFV1rD/stVZTyfNeafTa7mJXUy5U0U8jQNVuPhV5UoAQKRqOOv1f
+         /yIH4QVNzI+7CnZy9WlGIZ8doptV/Qfyo6ZKaR4gNGudqhw/Hfa5Kx0uUHnmAmhYV4
+         ysirI+fHK3Kuo/ESILzbxBTqeRoptlEghRLOec8ulWdMg1WYT+HJOX9aKx5D/UL91c
+         T2o/jte13E0tQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
 
-> On Mon, May 18, 2020 at 07:31:14PM -0500, Eric W. Biederman wrote:
->> 
->> Rename bprm->cap_elevated to bprm->active_secureexec and initialize it
->> in prepare_binprm instead of in cap_bprm_set_creds.  Initializing
->> bprm->active_secureexec in prepare_binprm allows multiple
->> implementations of security_bprm_repopulate_creds to play nicely with
->> each other.
->> 
->> Rename security_bprm_set_creds to security_bprm_reopulate_creds to
->> emphasize that this path recomputes part of bprm->cred.  This
->> recomputation avoids the time of check vs time of use problems that
->> are inherent in unix #! interpreters.
->> 
->> In short two renames and a move in the location of initializing
->> bprm->active_secureexec.
+On 5/19/20 11:41 AM, Sowjanya Komatineni wrote:
 >
-> I like this much better than the direct call to the capabilities hook.
-> Thanks!
+> On 5/19/20 11:34 AM, Sowjanya Komatineni wrote:
+>>
+>> On 5/19/20 9:33 AM, Dmitry Osipenko wrote:
+>>> 19.05.2020 19:24, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On Tue, May 19, 2020 at 05:05:27PM +0300, Dmitry Osipenko wrote:
+>>>>> 19.05.2020 10:28, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx@gmail.com>=20
+>>>>>> wrote:
+>>>>>>> Several people asked me about the MMC warnings in the KMSG log and
+>>>>>>> I had to tell to ignore them because these warning are=20
+>>>>>>> irrelevant to
+>>>>>>> pre-Tegra210 SoCs.
+>>>>>> Why are the warnings irrelevant?
+>>>>> That's what the DT binding doc says [1].
+>>>>>
+>>>>> [1]
+>>>>> https://www.kernel.org/doc/Documentation/devicetree/bindings/mmc/nvid=
+ia%2Ctegra20-sdhci.txt=20
+>>>>>
+>>>>>
+>>>>> Although, looking at the driver's code and TRM docs, it seems that=20
+>>>>> all
+>>>>> those properties are really irrelevant only to the older Terga20=20
+>>>>> SoC. So
+>>>>> the binding doc is a bit misleading.
+>>>>>
+>>>>> Nevertheless, the binding explicitly says that the properties are
+>>>>> optional, which is correct.
+>>>> Optional only means that drivers must not fail if these properties
+>>>> aren't found, it doesn't mean that the driver can't warn that they
+>>>> are missing.
+>>>>
+>>>> Quite possibly the only reason why they were made optional is because
+>>>> they weren't part of the bindings since the beginning. Anything added
+>>>> to a binding after the first public release has to be optional by
+>>>> definition, otherwise DT ABI wouldn't be stable.
+>>>>
+>>>> I think these warnings were added on purpose, though I also see that
+>>>> there are only values for these in device tree for Tegra186 and=20
+>>>> Tegra194
+>>>> but not Tegra210 where these should also be necessary.
+>>
+>> dt binding doc we have is common for MMC, SD and SDIO of all Tegras.=20
+>> Its not mandatory to have both 3v3 and 1v8 in device tree as based on=20
+>> signal mode.
+>>
+>> As these driver strengths are SoC specific, they are part of Tegra=20
+>> SoC specific device tree where same values will be applicable to all=20
+>> Tegra SoC specific platforms.
+>>
+>> Based on interface usage on platform, we use one or both of them like=20
+>> sdcard supports dual voltage and we use both 3V3 and 1V8 but if same=20
+>> interface is used for WIFI SD we use 1V8 only.
+>>
+>> So made these dt properties as optional.
+>>
+>> Other reason they are optional is, Tegra210 and prior has drive=20
+>> strength settings part of apb_misc and Tegra186 and later has driver=20
+>> strengths part of SDMMC controller. So,
+>>
+>> - Pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" for driver strengths=20
+>> are applicable for Tegra210 and prior.
+>> - dt properties pad-autocal-pull-up/down-offset-1v8/3v3-timeout are=20
+>> for T186 onwards for driver strengths
+>>
+>> Looks like dt binding doc need fix to clearly document these based on=20
+>> SoC or agree with Yaml we can conditionally specify pinctrl or dt=20
+>> properties based on SoC dependent.
+>>
+>>
+>>>> Adding Sowjanya who wrote this code. Perhaps she can clarify why the
+>>>> warnings were added. If these values /should/ be there on a subset of
+>>>> Tegra, then I think we should keep them, or add them again, but=20
+>>>> perhaps
+>>>> add a better way of identifying when they are necessary and when it is
+>>>> safe to work without them.
+>>>>
+>>>> That said, looking at those checks I wonder if they are perhaps just
+>>>> wrong. Or at the very least they seem redundant. It looks to me like
+>>>> they can just be:
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0if (tegra_host->pinctrl_state_XYZ =3D=3D NULL)=
+ {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0}
+>>>>
+>>>> That !IS_ERR(...) doesn't seem to do anything. But in that case, it's
+>>>> also obvious why we're warning about them on platforms where these
+>>>> properties don't exist in DT.
+>>
+>> As drive strengths are through dt properties for T186 and later and=20
+>> thru pinctrl for T210 and prior, driver first checks for dt autocal=20
+>> timeout pull-up/down properties and if they are not found, it then=20
+>> checks for presence of pinctrl_state_xyx_drv only when valid=20
+>> pinctrl_state_xyz is present.
+>>
+>> Driver expects either pinctrl or dt properties and shows warning when=20
+>> neither of them are present as its mandatory to use fixed driver=20
+>> strengths when auto calibration fails.
+>>
+>> =C2=A0=C2=A0=C2=A0 err =3D device_property_read_u32(host->mmc->parent,
+>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 "nvidia,pad-aut=
+ocal-pull-down-offset-3v3-timeout",
+>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 &autocal->pull_=
+down_3v3_timeout);
+>> =C2=A0=C2=A0=C2=A0 if (err) {
+>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (!IS_ERR(tegra_host->pinctrl_st=
+ate_3v3) &&
+>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 (tegra_host->pi=
+nctrl_state_3v3_drv =3D=3D NULL))
+>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 pr_warn("%s: Mi=
+ssing autocal timeout 3v3-pad drvs\n",
+>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
+=A0 mmc_hostname(host->mmc));
+>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 autocal->pull_down_3v3_timeout =3D=
+ 0;
+>> =C2=A0=C2=A0=C2=A0 }
+>>
+>>>>
+>>>> So I think we either need to add those values where appropriate so=20
+>>>> that
+>>>> the warning doesn't show, or we need to narrow down where they are
+>>>> really needed and add a corresponding condition.
+>>>>
+>>>> But again, perhaps Sowjanya can help clarify if these really are only
+>>>> needed on Tegra210 and later or if these also apply to older chips.
+>>> Either way will be cleaner to convert the DT binding to YAML rather=20
+>>> than
+>>> clutter the driver, IMO.
+>>>
+>>
+>>
+>>
+> Auto calibration is present from Tegra30 onward and looking into=20
+> change where autocalibration was added to sdhci driver somehow it was=20
+> enabled only for T30/T210/T186/T194.
 >
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> tegra_sdhci_parse_pad_autocal_dt() was added when auto-calibration was=20
+> added to driver and I see this dt parse is being done irrespective of=20
+> NVQUIRK_HAS_PADCALIB quirk so even on platforms without auto cal=20
+> enabled in driver, these messages shows up.
 >
-> One nit is a bikeshed on the name "active_secureexec", since
-> the word "active" isn't really associated with any other part of the
-> binfmt logic. It's supposed to be "latest state from the binfmt loop",
-> so instead of "active", I considered these words that I also didn't
-> like: "current", "this", "recent", and "now". Is "latest" better than
-> "active"? Probably not.
+> This should be fixed in driver to allow=20
+> tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCALIB is=20
+> set to avoid dt parsing to happen on platforms that don't have auto=20
+> cal enabled.
 
-I had pretty much the same problem.  Active at least conveys that it
-is still malleable and might change.
+Warning on missing drive strengths when auto cal is enabled should be=20
+present as we should switch to fixed recommended drive strengths when=20
+auto cal fails.
 
->> [...]
->> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
->> index d1217fcdedea..8605ab4a0f89 100644
->> --- a/include/linux/binfmts.h
->> +++ b/include/linux/binfmts.h
->> @@ -27,10 +27,10 @@ struct linux_binprm {
->>  	unsigned long argmin; /* rlimit marker for copy_strings() */
->>  	unsigned int
->>  		/*
->> -		 * True if most recent call to cap_bprm_set_creds
->> +		 * True if most recent call to security_bprm_set_creds
->>  		 * resulted in elevated privileges.
->>  		 */
->> -		cap_elevated:1,
->> +		active_secureexec:1,
->
-> Also, I'd like it if this comment could be made more verbose as well, for
-> anyone trying to understand the binfmt execution flow for the first time.
-> Perhaps:
->
-> 		/*
-> 		 * Must be set True during the any call to
-> 		 * bprm_set_creds hook where the execution would
-> 		 * reuslt in elevated privileges. (The hook can be
-> 		 * called multiple times during nested interpreter
-> 		 * resolution across binfmt_script, binfmt_misc, etc).
-> 		 */
-Well it is not during but after the call that it becomes true.
-I think most recent covers the case of multiple calls.
+So probably proper fix should be
 
-I think having the loop explicitly in the code a few patches
-later makes it clear that there is a loop dealing with interpreters.
+- allow tegra_sdhci_parse_pad_autocal_dt() only when=20
+NVQUIRK_HAS_PADCALIB is set
 
-Conciseness has a virtue in that it is easy to absorb.  Seeing
-active says most recent and secureexec does not is enough to ask
-questions and look at the code.
+- current driver sets NVQUIRK_HAS_PADCALIB for T30 as well so need to=20
+add pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" to Tegra30 device tree.
 
-Eric
+- Keep warning message of missing auto cal timeouts as its mandatory to=20
+use fixed recommended driver strengths when auto cal fails.
 
