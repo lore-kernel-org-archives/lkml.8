@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF51C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D959C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42A68206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36BF92075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgESUUN (ORCPT
+        id S1727987AbgESUUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55464 "EHLO
+        Tue, 19 May 2020 16:20:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgESUUN (ORCPT
+        with ESMTP id S1727956AbgESUUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:20:13 -0400
+        Tue, 19 May 2020 16:20:14 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 213DFC08C5C0
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED1EC08C5C0
         for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:20:13 -0700 (PDT)
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1jb8ig-00012c-HJ; Tue, 19 May 2020 22:20:10 +0200
+        id 1jb8ih-00012c-Cv; Tue, 19 May 2020 22:20:11 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -36,13 +36,14 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Julia Cartwright <julia@ni.com>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Alexander Stein <alexander.stein@systec-electronic.com>,
+        Mike Galbraith <umgwanakikbuti@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 5/8] squashfs: make use of local lock in multi_cpu decompressor
-Date:   Tue, 19 May 2020 22:19:09 +0200
-Message-Id: <20200519201912.1564477-6-bigeasy@linutronix.de>
+Subject: [PATCH 7/8] zram: Use local lock to protect per-CPU data
+Date:   Tue, 19 May 2020 22:19:11 +0200
+Message-Id: <20200519201912.1564477-8-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519201912.1564477-1-bigeasy@linutronix.de>
 References: <20200519201912.1564477-1-bigeasy@linutronix.de>
@@ -53,16 +54,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Cartwright <julia@ni.com>
+From: Mike Galbraith <umgwanakikbuti@gmail.com>
 
-The squashfs multi CPU decompressor makes use of get_cpu_ptr() to
-acquire a pointer to per-CPU data. get_cpu_ptr() implicitly disables
-preemption which serializes the access to the per-CPU data.
-
-But decompression can take quite some time depending on the size. The
-observed preempt disabled times in real world scenarios went up to 8ms,
-causing massive wakeup latencies. This happens on all CPUs as the
-decompression is fully parallelized.
+The zcomp driver uses per-CPU compression. The per-CPU data pointer is
+acquired with get_cpu_ptr() which implicitly disables preemption.
+It allocates memory inside the preempt disabled region which conflicts
+with the PREEMPT_RT semantics.
 
 Replace the implicit preemption control with an explicit local lock.
 This allows RT kernels to substitute it with a real per CPU lock, which
@@ -70,64 +67,50 @@ serializes the access but keeps the code section preemptible. On non RT
 kernels this maps to preempt_disable() as before, i.e. no functional
 change.
 
-[ bigeasy: Use local_lock(), patch description]
+[bigeasy: Use local_lock(), description, drop reordering]
 
-Cc: Phillip Lougher <phillip@squashfs.org.uk>
-Reported-by: Alexander Stein <alexander.stein@systec-electronic.com>
-Signed-off-by: Julia Cartwright <julia@ni.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Nitin Gupta <ngupta@vflare.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Signed-off-by: Mike Galbraith <umgwanakikbuti@gmail.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Tested-by: Alexander Stein <alexander.stein@systec-electronic.com>
 ---
- fs/squashfs/decompressor_multi_percpu.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/block/zram/zcomp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/squashfs/decompressor_multi_percpu.c b/fs/squashfs/decompre=
-ssor_multi_percpu.c
-index 2a2a2d106440e..8a77a2741c176 100644
---- a/fs/squashfs/decompressor_multi_percpu.c
-+++ b/fs/squashfs/decompressor_multi_percpu.c
-@@ -8,6 +8,7 @@
- #include <linux/slab.h>
- #include <linux/percpu.h>
- #include <linux/buffer_head.h>
+diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
+index 1a8564a79d8dc..32854d460b299 100644
+--- a/drivers/block/zram/zcomp.c
++++ b/drivers/block/zram/zcomp.c
+@@ -11,6 +11,7 @@
+ #include <linux/sched.h>
+ #include <linux/cpu.h>
+ #include <linux/crypto.h>
 +#include <linux/locallock.h>
 =20
- #include "squashfs_fs.h"
- #include "squashfs_fs_sb.h"
-@@ -23,6 +24,8 @@ struct squashfs_stream {
- 	void		*stream;
- };
+ #include "zcomp.h"
 =20
-+static DEFINE_LOCAL_LOCK(stream_lock);
-+
- void *squashfs_decompressor_create(struct squashfs_sb_info *msblk,
- 						void *comp_opts)
- {
-@@ -75,12 +78,16 @@ void squashfs_decompressor_destroy(struct squashfs_sb_i=
-nfo *msblk)
- int squashfs_decompress(struct squashfs_sb_info *msblk, struct buffer_head=
- **bh,
- 	int b, int offset, int length, struct squashfs_page_actor *output)
- {
--	struct squashfs_stream __percpu *percpu =3D
--			(struct squashfs_stream __percpu *) msblk->stream;
--	struct squashfs_stream *stream =3D get_cpu_ptr(percpu);
--	int res =3D msblk->decompressor->decompress(msblk, stream->stream, bh, b,
--		offset, length, output);
--	put_cpu_ptr(stream);
-+	struct squashfs_stream *stream;
-+	int res;
-+
-+	local_lock(stream_lock);
-+	stream =3D this_cpu_ptr(msblk->stream);
-+
-+	res =3D msblk->decompressor->decompress(msblk, stream->stream, bh, b,
-+			offset, length, output);
-+
-+	local_unlock(stream_lock);
+@@ -111,14 +112,17 @@ ssize_t zcomp_available_show(const char *comp, char *=
+buf)
+ 	return sz;
+ }
 =20
- 	if (res < 0)
- 		ERROR("%s decompression failed, data probably corrupt\n",
++static DEFINE_LOCAL_LOCK(zcomp_lock);
++
+ struct zcomp_strm *zcomp_stream_get(struct zcomp *comp)
+ {
+-	return *get_cpu_ptr(comp->stream);
++	local_lock(zcomp_lock);
++	return *this_cpu_ptr(comp->stream);
+ }
+=20
+ void zcomp_stream_put(struct zcomp *comp)
+ {
+-	put_cpu_ptr(comp->stream);
++	local_unlock(zcomp_lock);
+ }
+=20
+ int zcomp_compress(struct zcomp_strm *zstrm,
 --=20
 2.26.2
 
