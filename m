@@ -2,137 +2,110 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D755C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCCF20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:25:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Jrs74L0j"
+	by mail.kernel.org (Postfix) with ESMTP id B694F20829
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589920078;
+	bh=JnJNNgYcMhrKz88UBpA/6enF19eGRatiGjSZo+KP/aU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=swKzD3jjuEzsFj98W9JAsYB+1NWLRgUs88CldbQtypb+BYgxasdrN8kxbumM90whj
+	 FiEjTT1hrllH9yAbtsJvES+g7Z+R109trcR1S6ZqBlRQvxlnqUVZKz1MXTiJQ3nsBW
+	 vFHOql8hSYDWwtMsr1OlJYHLn9dVE/6ESirpDcd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgESUZo (ORCPT
+        id S1726283AbgESU15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:25:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgESUZn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:25:43 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C8EC08C5C0;
-        Tue, 19 May 2020 13:25:43 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0b87001461a870af27ee92.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8700:1461:a870:af27:ee92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 19 May 2020 16:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725885AbgESU15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 16:27:57 -0400
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7C7E61EC02A7;
-        Tue, 19 May 2020 22:25:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589919941;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0KQyk6eHRwREL78mJ6GkGFFWFdrtxrD703khoZRYXS8=;
-        b=Jrs74L0jyryYiOWqzSGi+NpM7qxfVX2uWG3+US/KKWLVeV+2W1/gipMtwlAgsEHhaAmaPI
-        c74gjETApzBnmXYJSYN9ZhJ1HwSYsIENOf6iIHMdYdmahX6eYhGsjTRUn382XO7cB/ctdt
-        wqE6Wd7LmqQ6SCdGBvhe5+vvQ+E7z10=
-Date:   Tue, 19 May 2020 22:25:35 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] EDAC/ghes: Setup DIMM label from DMI and use it in
- error reports
-Message-ID: <20200519202535.GC444@zn.tnic>
-References: <20200518095852.28010-1-rrichter@marvell.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DCDF20842
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589920076;
+        bh=JnJNNgYcMhrKz88UBpA/6enF19eGRatiGjSZo+KP/aU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KtKXURiqlf9KNqpSwo/grNL3vSyk7L/h5fq//A0hLNv9Ab0PzA9paYSlcvQVVDJyB
+         3WeZW5s+/qbtCXuhoZ5L9U3RirfKvSwnHAzHritxoCwqt5Lbn3hVpGDHBEZ/NDS7KM
+         2fV76TIh/MMXIpB4/qqo7g4JIKIvzeoP9wBC9aO8=
+Received: by mail-wm1-f42.google.com with SMTP id m185so632233wme.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:27:56 -0700 (PDT)
+X-Gm-Message-State: AOAM532GKahq58luqIyAXRT+XXee/IcLQM3MrL09TKC79O0ZYoSk9Fcm
+        BUdBNWyCuS6Zg/nkQhZUynHZs1KQJIw0hxnwmwqQcQ==
+X-Google-Smtp-Source: ABdhPJx2KqyKhU0NRQeaUdnyxxhuHiBHdYFrHXGfD1F6LD5nouaESKzvUxVSfxYQ/5AwaARfeG+1Qevz7ezuEHwInS4=
+X-Received: by 2002:a1c:2bc2:: with SMTP id r185mr1199978wmr.49.1589920074921;
+ Tue, 19 May 2020 13:27:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200518095852.28010-1-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200515234547.710474468@linutronix.de> <20200515235126.522540101@linutronix.de>
+In-Reply-To: <20200515235126.522540101@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 19 May 2020 13:27:43 -0700
+X-Gmail-Original-Message-ID: <CALCETrWNBNCuNv==ZTBom5+X-Wyp+4_tsy=C_at-orv=0H3kuA@mail.gmail.com>
+Message-ID: <CALCETrWNBNCuNv==ZTBom5+X-Wyp+4_tsy=C_at-orv=0H3kuA@mail.gmail.com>
+Subject: Re: [patch V6 21/37] x86/entry: Add IRQENTRY_IRQ macro
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 11:58:52AM +0200, Robert Richter wrote:
-> +static void dimm_setup_label(struct dimm_info *dimm, u16 handle)
-> +{
-> +	const char *bank = NULL, *device = NULL;
-> +
-> +	dmi_memdev_name(handle, &bank, &device);
-> +
-> +	/* both strings must be non-zero */
-> +	if (bank && *bank && device && *device)
-> +		snprintf(dimm->label, sizeof(dimm->label),
-> +			"%s %s", bank, device);
-> +	else
-> +		snprintf(dimm->label, sizeof(dimm->label),
-> +			"unknown memory (handle: 0x%.4x)", handle);
+On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>
+> Provide a seperate IDTENTRY macro for device interrupts. Similar to
+> IDTENTRY_ERRORCODE with the addition of invoking irq_enter/exit_rcu() and
+> providing the errorcode as a 'u8' argument to the C function, which
+> truncates the sign extended vector number.
 
-This changes the sysfs strings on my test box like this. 00-ghes.before
-and 01-ghes.after are created by doing:
+Acked-by: Andy Lutomirski <luto@kernel.org>
 
-grep -EriIn . /sys/devices/system/edac/ 2>/dev/null > [filename]
+with a minor minor optimization suggestion:
 
-edac_mc_alloc_dimms() already sets the dimm->label to "mc#%dmemory#%d"
-but I'm guessing that dmi_memdev_name() doesn't give on my machine what
-it gives on yours.
+> +.macro idtentry_irq vector cfunc
+> +       .p2align CONFIG_X86_L1_CACHE_SHIFT
+> +SYM_CODE_START_LOCAL(asm_\cfunc)
+> +       ASM_CLAC
+> +       SAVE_ALL switch_stacks=1
+> +       ENCODE_FRAME_POINTER
+> +       movl    %esp, %eax
+> +       movl    PT_ORIG_EAX(%esp), %edx         /* get the vector from stack */
 
-Welcome to the wonderful world of consistently implemented firmware!
+You could save somewhere between 0 and 1 cycles by using movzbl here...
 
---- 00-ghes.before      2020-05-19 17:55:50.821220239 +0200
-+++ 01-ghes.after       2020-05-19 22:09:28.808492701 +0200
-@@ -17,7 +17,7 @@
- /sys/devices/system/edac/mc/mc0/ce_count:1:0
- /sys/devices/system/edac/mc/mc0/mc_name:1:ghes_edac
- /sys/devices/system/edac/mc/mc0/csrow15/ce_count:1:0
--/sys/devices/system/edac/mc/mc0/csrow15/ch0_dimm_label:1:mc#0memory#15
-+/sys/devices/system/edac/mc/mc0/csrow15/ch0_dimm_label:1:unknown memory (handle: 0x0030)
- /sys/devices/system/edac/mc/mc0/csrow15/power/runtime_active_time:1:0
- /sys/devices/system/edac/mc/mc0/csrow15/power/runtime_active_kids:1:0
- /sys/devices/system/edac/mc/mc0/csrow15/power/runtime_usage:1:0
-@@ -42,7 +42,7 @@
- /sys/devices/system/edac/mc/mc0/power/runtime_enabled:1:disabled & forbidden
- /sys/devices/system/edac/mc/mc0/power/control:1:on
- /sys/devices/system/edac/mc/mc0/csrow31/ce_count:1:0
--/sys/devices/system/edac/mc/mc0/csrow31/ch0_dimm_label:1:mc#0memory#31
-+/sys/devices/system/edac/mc/mc0/csrow31/ch0_dimm_label:1:unknown memory (handle: 0x0040)
- /sys/devices/system/edac/mc/mc0/csrow31/power/runtime_active_time:1:0
- /sys/devices/system/edac/mc/mc0/csrow31/power/runtime_active_kids:1:0
- /sys/devices/system/edac/mc/mc0/csrow31/power/runtime_usage:1:0
-@@ -73,10 +73,10 @@
- /sys/devices/system/edac/mc/mc0/dimm15/dimm_dev_type:1:Unknown
- /sys/devices/system/edac/mc/mc0/dimm15/size:1:32768
- /sys/devices/system/edac/mc/mc0/dimm15/dimm_ce_count:1:0
--/sys/devices/system/edac/mc/mc0/dimm15/dimm_label:1:mc#0memory#15
-+/sys/devices/system/edac/mc/mc0/dimm15/dimm_label:1:unknown memory (handle: 0x0030)
- /sys/devices/system/edac/mc/mc0/dimm15/dimm_location:1:memory 15 
- /sys/devices/system/edac/mc/mc0/dimm15/dimm_edac_mode:1:SECDED
--/sys/devices/system/edac/mc/mc0/seconds_since_reset:1:354
-+/sys/devices/system/edac/mc/mc0/seconds_since_reset:1:979
- /sys/devices/system/edac/mc/mc0/dimm31/dimm_ue_count:1:0
- /sys/devices/system/edac/mc/mc0/dimm31/dimm_mem_type:1:Registered-DDR4
- /sys/devices/system/edac/mc/mc0/dimm31/power/runtime_active_time:1:0
-@@ -90,7 +90,7 @@
- /sys/devices/system/edac/mc/mc0/dimm31/dimm_dev_type:1:Unknown
- /sys/devices/system/edac/mc/mc0/dimm31/size:1:32768
- /sys/devices/system/edac/mc/mc0/dimm31/dimm_ce_count:1:0
--/sys/devices/system/edac/mc/mc0/dimm31/dimm_label:1:mc#0memory#31
-+/sys/devices/system/edac/mc/mc0/dimm31/dimm_label:1:unknown memory (handle: 0x0040)
- /sys/devices/system/edac/mc/mc0/dimm31/dimm_location:1:memory 31 
- /sys/devices/system/edac/mc/mc0/dimm31/dimm_edac_mode:1:SECDED
- /sys/devices/system/edac/mc/mc0/max_location:1:memory 31
+> +       __##func (regs, (u8)error_code);                                \
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+And eliminating this cast.  Totally worth it, right?
