@@ -2,167 +2,84 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FB8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5643207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589928372;
-	bh=a9pqT8KJ66g+xF2tnOt7wMSRGCEp8vB8fOPKZwpRaVs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vIt8YQtibgQFKiwj4QxKJtuT2s9Nr5yO/zbcjxgxo1Mn6RgMNgjODvk+IXHbAIrz4
-	 87w/g50OqsAe9j+TpAoMHCHwEvLTB2u5fDgT0MU82OpKsWp+MGMvAn/t/oZNdT54zd
-	 k4mVtYAH3yJXsoYHAhR74dB3Luv0DwAFe0gcKjq4=
+	by mail.kernel.org (Postfix) with ESMTP id 11288207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgESWqM (ORCPT
+        id S1728144AbgESWsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbgESWqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:46:12 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85816205CB;
-        Tue, 19 May 2020 22:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589928371;
-        bh=a9pqT8KJ66g+xF2tnOt7wMSRGCEp8vB8fOPKZwpRaVs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EPG/ZSzfIp2yIfDN90ZfsHWqbGYNwNiCwwVJwXmKzd8ZLcklpx5SQX/YHT08t3zl9
-         ZZrv1TACOd92zdHPKrFhl4qr4WQF0qLV7HMuqr1rFqORmBSwdaMVCF6taJMwujkUTX
-         q+rSss0/3OaOda+I9cIcvTWl2DDFBpJmXupbzlqM=
-Date:   Tue, 19 May 2020 17:50:58 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] ACPICA: Replace one-element array and use struct_size()
- helper
-Message-ID: <20200519225058.GA14138@embeddedor>
-References: <20200518222722.GA7791@embeddedor>
- <CAJZ5v0goZpvRQ6du214FqvFNQnqZHR9-kz=WhEgRsMJ3Zx0WiQ@mail.gmail.com>
+        Tue, 19 May 2020 18:48:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37571 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgESWsc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 18:48:32 -0400
+Received: from [82.43.126.140] (helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jbB24-0000fU-F4; Tue, 19 May 2020 22:48:20 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mt76: mt7915: fix a handful of spelling mistakes
+Date:   Tue, 19 May 2020 23:48:20 +0100
+Message-Id: <20200519224820.6391-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0goZpvRQ6du214FqvFNQnqZHR9-kz=WhEgRsMJ3Zx0WiQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:25:13PM +0200, Rafael J. Wysocki wrote:
-> On Tue, May 19, 2020 at 12:22 AM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> >
-> > The current codebase makes use of one-element arrays in the following
-> > form:
-> >
-> > struct something {
-> >     int length;
-> >     u8 data[1];
-> > };
-> >
-> > struct something *instance;
-> >
-> > instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> > instance->length = size;
-> > memcpy(instance->data, source, size);
-> >
-> > but the preferred mechanism to declare variable-length types such as
-> > these ones is a flexible array member[1][2], introduced in C99:
-> >
-> > struct foo {
-> >         int stuff;
-> >         struct boo array[];
-> > };
-> >
-> > By making use of the mechanism above, we will get a compiler warning
-> > in case the flexible array does not occur last in the structure, which
-> > will help us prevent some kind of undefined behavior bugs from being
-> > inadvertently introduced[3] to the codebase from now on.
-> 
-> However, the ACPICA code in the kernel comes from an external project
-> and changes of this type are generally not applicable to it unless
-> accepted upstream.
+From: Colin Ian King <colin.king@canonical.com>
 
-Hi Rafael,
+There are some spelling mistakes in some literal strings. Fix these.
 
-By _accepted upstream_, in this case, you mean the adoption of the
-flexible-arrays in the whole codebase, first?  If this is the case
-notice that there are hundreds of these flexible-array conversions
-in mainline, already:
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=flexible-array
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c b/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
+index ee0066fedd04..5278bee812f1 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
+@@ -173,14 +173,14 @@ mt7915_txbf_stat_read_phy(struct mt7915_phy *phy, struct seq_file *s)
+ 
+ 	/* Tx Beamformee Rx NDPA & Tx feedback report */
+ 	cnt = mt76_rr(dev, MT_ETBF_TX_NDP_BFRP(ext_phy));
+-	seq_printf(s, "Tx Beamformee sucessful feedback frames: %ld\n",
++	seq_printf(s, "Tx Beamformee successful feedback frames: %ld\n",
+ 		   FIELD_GET(MT_ETBF_TX_FB_CPL, cnt));
+-	seq_printf(s, "Tx Beamformee feedback triggerd counts: %ld\n",
++	seq_printf(s, "Tx Beamformee feedback triggered counts: %ld\n",
+ 		   FIELD_GET(MT_ETBF_TX_FB_TRI, cnt));
+ 
+ 	/* Tx SU counters */
+ 	cnt = mt76_rr(dev, MT_MIB_DR11(ext_phy));
+-	seq_printf(s, "Tx single-user sucessful MPDU counts: %d\n", cnt);
++	seq_printf(s, "Tx single-user successful MPDU counts: %d\n", cnt);
+ 
+ 	seq_puts(s, "\n");
+ }
+-- 
+2.25.1
 
-Is this what you mean?
-
-Thanks
---
-Gustavo
-
-> 
-> I'll let Erik and Bob take over.
-> 
-> > Also, make use of the new struct_size() helper to properly calculate the
-> > size of struct acpi_pnp_device_id_list.
-> >
-> > This issue was found with the help of Coccinellea and, audited and
-> > fixed _manually_.
-> >
-> > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > [2] https://github.com/KSPP/linux/issues/21
-> > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> >
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/acpi/acpica/utids.c | 4 +---
-> >  include/acpi/actypes.h      | 2 +-
-> >  2 files changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/acpi/acpica/utids.c b/drivers/acpi/acpica/utids.c
-> > index 3bb06935a2ad3..c2f819a39424a 100644
-> > --- a/drivers/acpi/acpica/utids.c
-> > +++ b/drivers/acpi/acpica/utids.c
-> > @@ -262,9 +262,7 @@ acpi_ut_execute_CID(struct acpi_namespace_node *device_node,
-> >          * 2) Size of the CID PNP_DEVICE_ID array +
-> >          * 3) Size of the actual CID strings
-> >          */
-> > -       cid_list_size = sizeof(struct acpi_pnp_device_id_list) +
-> > -           ((count - 1) * sizeof(struct acpi_pnp_device_id)) +
-> > -           string_area_size;
-> > +       cid_list_size = struct_size(cid_list, ids, count) + string_area_size;
-> >
-> >         cid_list = ACPI_ALLOCATE_ZEROED(cid_list_size);
-> >         if (!cid_list) {
-> > diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-> > index 4defed58ea338..c7bcda0ad366a 100644
-> > --- a/include/acpi/actypes.h
-> > +++ b/include/acpi/actypes.h
-> > @@ -1145,7 +1145,7 @@ struct acpi_pnp_device_id {
-> >  struct acpi_pnp_device_id_list {
-> >         u32 count;              /* Number of IDs in Ids array */
-> >         u32 list_size;          /* Size of list, including ID strings */
-> > -       struct acpi_pnp_device_id ids[1];       /* ID array */
-> > +       struct acpi_pnp_device_id ids[];        /* ID array */
-> >  };
-> >
-> >  /*
-> > --
-> > 2.26.2
-> >
