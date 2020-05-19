@@ -2,138 +2,103 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D635C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D4B20715
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:26:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fp5I1zLj"
+	by mail.kernel.org (Postfix) with ESMTP id 2FE592075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589848176;
+	bh=6z+i1jzY/lLmOEITZGgIJJVXgSxypwZdOj1IQH4nlUA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fbTx6ORFo+JsymphBk4PGrO5qKYtRva802OiFXl0YHppQhFbI4Q3WmmPAGxzBpqfE
+	 +N3xTIs32iNyT7zTJU677k/QKyb3ApHQgHGnA1PQi6f8f7m7cr3Rrb01y2tiHCeGLX
+	 n/hq/t1O4rGGlTvcGBCnc9SchHe6EHZJ9s6Ht6tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgESA0Z (ORCPT
+        id S1726920AbgESA3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 20:26:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38278 "EHLO
+        Mon, 18 May 2020 20:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbgESA0Y (ORCPT
+        with ESMTP id S1726355AbgESA3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 20:26:24 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7C8C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:26:24 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id m11so12659265qka.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:26:24 -0700 (PDT)
+        Mon, 18 May 2020 20:29:34 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA6DC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:29:33 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 202so9663654lfe.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:29:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vSJnwcwzJ6JQ8cOkRgXkpxTwGHhwzzMaFtdAARFsxXA=;
-        b=Fp5I1zLjyad2CUSFmsDYAcObjn71acu20n11AnJLUVFXrJo5RMDOe5M2EqavYD23Ws
-         G8wGk/jMQywcMZRmiaM6f2QXt7OE1tvnkE0Z4KCP9J/NyJzodUsQKAOG+W5Z9hL6YmVA
-         ztf6oeTYJrRfQGG4DWolxcRm6ABmRqBeIVx2kjHP+c6VzOvOFkCxm+bm0ggvEf0TitGQ
-         4nK/Vws5/yPko9TF4FzkCNe7pu4rsS/NHwJdLDM/nGV+FOT99ho8mep++0upq61Zwk0t
-         jVCzkLfDAYPaVZx1hvttS+U4oaEEQfVgEc3dpX7Ulw33WWVQ0a3FAWv61TT99P1jTX26
-         n98A==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lp5YS4wnqdBmdbNdBQYAqe4C1skHr56PklzUDuGNt/o=;
+        b=HhfO0c/8Afa39iKCJTB/VymbLZle1h5CJm8AufmRSEUwBn1RFOp146dtIZ9YMMYJwD
+         RIsrpTUNyS/4zSVsfHF+DajZ2AXyTU0XqO0JvcLfWy5PnMEXZeMdzN+/JsfVpklg/2It
+         hYaSG+aYP1iUn/RWWyuBF1JUePeDCVxxVxWUw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vSJnwcwzJ6JQ8cOkRgXkpxTwGHhwzzMaFtdAARFsxXA=;
-        b=P49S8MGgClWapOEmRVhCrGTPwzKFpQg2Jz5+1ovesdXMrlqdw6BeV1pqkEMseqCbtV
-         j//REOhq4Qicj/vzfgzwWnACIBErLZRyXePCRUY0ez2PLjZssaG4eaYxzG3tHsNMT+ic
-         g8U5uJMmZtQJ7nHlZy7PE+/hSU/635Mcc3lEUeiV6Gt6AFBor+/l3c+BkT0uUKnNuOgj
-         +YEvWCl3ZV2AsqujBoiAHcgIjWvh9YouddO25Od2O1oCsY5CZwJA35THBAReGAl/6VvE
-         snwEryhRwv1r2KDwk8xTb7IXcV4DOF9YOjqY7buOT8tvmQsTd91p8G9omNAJFWeyO60q
-         QOCw==
-X-Gm-Message-State: AOAM533qkJ4m9bKTyiL+W5KAcnSgjLvzsksLErrb8YL2vA2erTI9gcsX
-        Vxg3RVS0KlLcT4pEb7UY5RY=
-X-Google-Smtp-Source: ABdhPJxc6ks256v3X/1qy6T5tU1qAbCGp8bsiXZlDzOdzp8HLmooSIIpu97YX77sV39D4Ma6oHkFFA==
-X-Received: by 2002:a37:b5c3:: with SMTP id e186mr17102893qkf.158.1589847983534;
-        Mon, 18 May 2020 17:26:23 -0700 (PDT)
-Received: from LeoBras.aus.stglabs.ibm.com (177-131-65-239.dynamic.desktop.com.br. [177.131.65.239])
-        by smtp.gmail.com with ESMTPSA id e34sm2284048qtb.21.2020.05.18.17.26.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 17:26:22 -0700 (PDT)
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Allison Randal <allison@lohutok.net>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/1] powerpc/crash: Use NMI context for printk when starting to crash
-Date:   Mon, 18 May 2020 21:25:58 -0300
-Message-Id: <20200519002558.202929-1-leobras.c@gmail.com>
-X-Mailer: git-send-email 2.25.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lp5YS4wnqdBmdbNdBQYAqe4C1skHr56PklzUDuGNt/o=;
+        b=k8QqDp8+QTZuz0bqQ4USM6cQbTFydNjBo8PDIpYJBQuJA2xqD6CBXamg4sA4FP/Jjv
+         rGqqEz1HJU6Vp+GPgqasGD0yoWNs7uTxjF1CbypqBEe4aFbv/8JjPX45eyzUKr6B3eWl
+         cC1lEjeUk9vdVd7Jvi2CSS6iYJtsvb1LIAAcZimJDczepEyziooby4wns3rfmfvgyAqH
+         n8ylYZIW6mEzgU43eUgS0jQfG7H4XwVcjeOnN6d4/tC1E+ylh0InBtb9x3JN2Z8sCIJj
+         p5YtusK+jExON8nhFVoMUOCiJfCHAu1AVG0fKqBQjMtlAFE+YxfF/kNj3G33T01GO38p
+         AreA==
+X-Gm-Message-State: AOAM533ZO++w8Sd8hW1z3IzTrntskTLT+5h1rFb3IZt8QvexO15vtUO/
+        MTbsDe9cplPj/CJ8lFlLnd5OQVa8Q1s=
+X-Google-Smtp-Source: ABdhPJzBOiDKZPvSWhVax8a/iFsouuf5pNGevrUgIhFnsUExvgmBX71zfIbqhqTYrAB8YE2BBNGyAA==
+X-Received: by 2002:a19:70d:: with SMTP id 13mr13512664lfh.60.1589848171412;
+        Mon, 18 May 2020 17:29:31 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id x11sm6384151ljj.15.2020.05.18.17.29.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 17:29:30 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id b6so11839130ljj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:29:30 -0700 (PDT)
+X-Received: by 2002:a2e:8956:: with SMTP id b22mr5686169ljk.16.1589848169813;
+ Mon, 18 May 2020 17:29:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200408205323.44490-1-natechancellor@gmail.com>
+ <20200518093117.GA719849@ubuntu-s3-xlarge-x86> <CAKwvOdmXgYThHRDpt5dFZy5T1zS6MYQhcBNcq6-rsuc5fjiE6Q@mail.gmail.com>
+ <20200518183513.53b94f11@gandalf.local.home>
+In-Reply-To: <20200518183513.53b94f11@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 18 May 2020 17:29:13 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiwom6EF4DqStcZD0cJwXRMwAmLx2Z-wcn5xTiaJpgEkA@mail.gmail.com>
+Message-ID: <CAHk-=wiwom6EF4DqStcZD0cJwXRMwAmLx2Z-wcn5xTiaJpgEkA@mail.gmail.com>
+Subject: Re: [PATCH] x86: mmiotrace: Use cpumask_available for cpumask_var_t variables
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Karol Herbst <karolherbst@gmail.com>,
+        Pekka Paalanen <ppaalanen@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        nouveau@lists.freedesktop.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, if printk lock (logbuf_lock) is held by other thread during
-crash, there is a chance of deadlocking the crash on next printk, and
-blocking a possibly desired kdump.
+On Mon, May 18, 2020 at 3:35 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> Linus,
+>
+> Are you OK with this patch?
 
-At the start of default_machine_crash_shutdown, make printk enter
-NMI context, as it will use per-cpu buffers to store the message,
-and avoid locking logbuf_lock.
+Yup, I don't care deeply either way, as long as we can get rid of the warning.
 
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
-
----
-Changes since v2:
-- Changes usage of printk_nmi_enter() to nmi_enter()
-  (Suggested by Nick Piggin)
-
-Changes since v1:
-- Added in-code comment explaining the need of context change
-- Function moved to the start of default_machine_crash_shutdown,
-  to avoid locking any printk on crashing routine.
-- Title was 'Use NMI context for printk after crashing other CPUs'
-
----
- arch/powerpc/kexec/crash.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index d488311efab1..53c5cf9b6d3c 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -16,6 +16,7 @@
- #include <linux/delay.h>
- #include <linux/irq.h>
- #include <linux/types.h>
-+#include <linux/hardirq.h>
- 
- #include <asm/processor.h>
- #include <asm/machdep.h>
-@@ -311,6 +312,13 @@ void default_machine_crash_shutdown(struct pt_regs *regs)
- 	unsigned int i;
- 	int (*old_handler)(struct pt_regs *regs);
- 
-+	/*
-+	 * Avoid hardlocking with irresponsive CPU holding logbuf_lock,
-+	 * by using printk nmi_context
-+	 */
-+	if (!in_nmi())
-+		nmi_enter();
-+
- 	/*
- 	 * This function is only called after the system
- 	 * has panicked or is otherwise in a critical state.
--- 
-2.25.4
-
+                Linus
