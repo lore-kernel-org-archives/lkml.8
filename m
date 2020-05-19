@@ -2,318 +2,104 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 569AF20884
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:44:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589913861;
-	bh=e9JHpikGI3MbCHFj6CNjiYebYQlJQF/jCufSSU2/thg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZLxM0vVZ4jrSds1FwePXYvRetBdJ7JpGO1k/yKHMvAEEQkVDnrtJv2Yu6SrjnFBif
-	 ytMgYp+Jm6bf0lQfK7HU8GJyRVTf1Y03G7ed+f4+D4SUxTNFuo3kNMyAeRZgmiZLrz
-	 xYzVQeEOtMybQiYgvtugNepqEagya+VlbQsCQUOI=
+	by mail.kernel.org (Postfix) with ESMTP id DAED2207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgESSoU (ORCPT
+        id S1727937AbgESSoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:44:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33351 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgESSoS (ORCPT
+        Tue, 19 May 2020 14:44:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726966AbgESSoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:44:18 -0400
-Received: by mail-io1-f67.google.com with SMTP id k18so325628ion.0;
-        Tue, 19 May 2020 11:44:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oKuBz8CT4YNMj4ZnHpQjCUGYGAJGXHvYzlhr9H8ejRA=;
-        b=VvKApy1g052cmGUkI8jjuHcNVTEiReCnlEQBMOlbxZk3x5ShNDMWJJJ+GLSYd6ixMB
-         JkCwv0buwn4q6rek2ia2urmDVlmTwZ1Wd9YiHXl+RBxf4/v7VfEr+nMg9KdV7OpX5IMJ
-         TsoJi/Txm53DQd4Ab1s/FciAgPMS6AIxccFeqWusfea6Lwz2VoiKD68wNHo+v4fshnFA
-         ixG9t20OODD6so9N4byYE9+Canj3pTQd1tF/Ci2Qv6xn6hNhsfVfjC/meC7SQQGdEQDz
-         lTQQO19D94kz5bCEVhZDsbRmyG4ESg9Do07+GFMG7lNzv/b2aJe2DV4EUb2rkPCFFj0C
-         rujQ==
-X-Gm-Message-State: AOAM533yQl4vCTbOX6aVJPZ4WPHDepnwW8nc2gbJwhCex0TMCau3wtwm
-        E2PAU8/ZbFBxOvhEExnsgQ==
-X-Google-Smtp-Source: ABdhPJw2lGHq+eIu05e783dq35VMFsu2OhQXKoEWACYt2JqvIlpVB8GFIMm53lfTjTenTunwatMR+A==
-X-Received: by 2002:a05:6638:44e:: with SMTP id r14mr1046656jap.53.1589913857137;
-        Tue, 19 May 2020 11:44:17 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k16sm182001iog.14.2020.05.19.11.44.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:44:16 -0700 (PDT)
-Received: (nullmailer pid 452653 invoked by uid 1000);
-        Tue, 19 May 2020 18:44:15 -0000
-Date:   Tue, 19 May 2020 12:44:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        vigneshr@ti.com, broonie@kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v1] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-Message-ID: <20200519184415.GA441457@bogus>
-References: <20200512004919.40685-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Tue, 19 May 2020 14:44:19 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17AF5C08C5C1;
+        Tue, 19 May 2020 11:44:19 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jb7Dr-0006cn-2Q; Tue, 19 May 2020 20:44:15 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AC86C1C0178;
+        Tue, 19 May 2020 20:44:14 +0200 (CEST)
+Date:   Tue, 19 May 2020 18:44:14 -0000
+From:   "tip-bot2 for Muchun Song" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/cpuacct: Fix charge cpuacct.usage_sys
+Cc:     Muchun Song <songmuchun@bytedance.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200420070453.76815-1-songmuchun@bytedance.com>
+References: <20200420070453.76815-1-songmuchun@bytedance.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512004919.40685-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <158991385462.17951.12607883978950306262.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 08:49:19AM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add dt-bindings documentation for Cadence-QSPI controller to support
-> spi based flash memories.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
->  .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 +++++++++++++++++++++
->  2 files changed, 127 insertions(+), 67 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> deleted file mode 100644
-> index 945be7d5b236..000000000000
-> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> +++ /dev/null
-> @@ -1,67 +0,0 @@
-> -* Cadence Quad SPI controller
-> -
-> -Required properties:
-> -- compatible : should be one of the following:
-> -	Generic default - "cdns,qspi-nor".
-> -	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
-> -	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
-> -- reg : Contains two entries, each of which is a tuple consisting of a
-> -	physical address and length. The first entry is the address and
-> -	length of the controller register set. The second entry is the
-> -	address and length of the QSPI Controller data area.
-> -- interrupts : Unit interrupt specifier for the controller interrupt.
-> -- clocks : phandle to the Quad SPI clock.
-> -- cdns,fifo-depth : Size of the data FIFO in words.
-> -- cdns,fifo-width : Bus width of the data FIFO in bytes.
-> -- cdns,trigger-address : 32-bit indirect AHB trigger address.
-> -
-> -Optional properties:
-> -- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
-> -- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
-> -  the read data rather than the QSPI clock. Make sure that QSPI return
-> -  clock is populated on the board before using this property.
-> -
-> -Optional subnodes:
-> -Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
-> -custom properties:
-> -- cdns,read-delay : Delay for read capture logic, in clock cycles
-> -- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
-> -                  mode chip select outputs are de-asserted between
-> -		  transactions.
-> -- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
-> -                  de-activated and the activation of another.
-> -- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
-> -                  transaction and deasserting the device chip select
-> -		  (qspi_n_ss_out).
-> -- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
-> -                  and first bit transfer.
-> -- resets	: Must contain an entry for each entry in reset-names.
-> -		  See ../reset/reset.txt for details.
-> -- reset-names	: Must include either "qspi" and/or "qspi-ocp".
-> -
-> -Example:
-> -
-> -	qspi: spi@ff705000 {
-> -		compatible = "cdns,qspi-nor";
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		reg = <0xff705000 0x1000>,
-> -		      <0xffa00000 0x1000>;
-> -		interrupts = <0 151 4>;
-> -		clocks = <&qspi_clk>;
-> -		cdns,is-decoded-cs;
-> -		cdns,fifo-depth = <128>;
-> -		cdns,fifo-width = <4>;
-> -		cdns,trigger-address = <0x00000000>;
-> -		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
-> -		reset-names = "qspi", "qspi-ocp";
-> -
-> -		flash0: n25q00@0 {
-> -			...
-> -			cdns,read-delay = <4>;
-> -			cdns,tshsl-ns = <50>;
-> -			cdns,tsd2d-ns = <50>;
-> -			cdns,tchsh-ns = <4>;
-> -			cdns,tslch-ns = <4>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> new file mode 100644
-> index 000000000000..28112b38e6a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence QSPI Flash Controller support
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +
-> +description: |
-> +  Binding Documentation for Cadence QSPI controller,This controller is
-> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
-> +  has been tested On Intel's LGM SoC.
-> +
-> +properties:
-> +  compatible:
-> +     enum:
-> +       - cdns,qspi-nor
-> +       - ti,k2g-qspi
-> +       - ti,am654-ospi
-> +       - intel,lgm-qspi
-> +
-> +  reg:
-> +    maxItems: 2
+The following commit has been merged into the sched/core branch of tip:
 
-Need to define what each entry is.
+Commit-ID:     dbe9337109c2705f08e6a00392f991eb2d2570a5
+Gitweb:        https://git.kernel.org/tip/dbe9337109c2705f08e6a00392f991eb2d2570a5
+Author:        Muchun Song <songmuchun@bytedance.com>
+AuthorDate:    Mon, 20 Apr 2020 15:04:53 +08:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Tue, 19 May 2020 20:34:14 +02:00
 
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  cdns,fifo-depth:
-> +    description:
-> +     Depth of hardware FIFOs.
+sched/cpuacct: Fix charge cpuacct.usage_sys
 
-...FIFO in words.
+The user_mode(task_pt_regs(tsk)) always return true for
+user thread, and false for kernel thread. So it means that
+the cpuacct.usage_sys is the time that kernel thread uses
+not the time that thread uses in the kernel mode. We can
+try get_irq_regs() first, if it is NULL, then we can fall
+back to task_pt_regs().
 
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +      - enum: [ 128, 256 ]
-> +      - default: 128
-> +
-> +  cdns,fifo-width:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      4 byte bus width of the data FIFO in bytes.
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200420070453.76815-1-songmuchun@bytedance.com
+---
+ kernel/sched/cpuacct.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Constraints? Perhaps:
-
-multipleOf: 4
-
-if an enum doesn't work here.
-
-> +
-> +  cdns,trigger-address:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      32-bit indirect AHB trigger address.
-> +
-> +  cdns,rclk-en:
-> +    type: boolean
-> +    description: |
-> +      Flag to indicate that QSPI return clock is used to latch the read data
-> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
-> +      on the board before using this property.
-> +
-> +# subnode's properties
-> +patternProperties:
-> +  "^.*@[0-9a-fa-f]+$":
-
-'a-f' is twice. What's the max number of chip selects? If less than 10, 
-then '@[0-9]$' is enough. '^.*' can be dropped too.
-
-> +    type: object
-> +    description:
-> +      flash device uses the subnodes below defined properties.
-> +
-> +  cdns,read-delay:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Delay for read capture logic, in clock cycles.
-> +
-> +  cdns,tshsl-ns:
-> +    description: |
-> +      Delay in nanoseconds for the length that the master mode chip select
-> +      outputs are de-asserted between transactions.
-> +
-> +  cdns,tsd2d-ns:
-> +    description: |
-> +      Delay in nanoseconds between one chip select being de-activated
-> +      and the activation of another.
-> +
-> +  cdns,tchsh-ns:
-> +    description: |
-> +      Delay in nanoseconds between last bit of current transaction and
-> +      deasserting the device chip select (qspi_n_ss_out).
-> +
-> +  cdns,tslch-ns:
-> +    description: |
-> +      Delay in nanoseconds between setting qspi_n_ss_out low and
-> +      first bit transfer.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - cdns,fifo-depth
-> +  - cdns,fifo-width
-> +  - cdns,trigger-address
-> +
-> +examples:
-> +  - |
-> +    spi@ff705000 {
-> +          compatible = "cdns,qspi-nor";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          reg = <0xff705000 0x1000>,
-> +                <0xffa00000 0x1000>;
-
-Seems kind of small for a data area if this is like most SPI flash 
-controllers.
-
-> +          interrupts = <0 151 4>;
-> +          clocks = <&qspi_clk>;
-> +          cdns,fifo-depth = <128>;
-> +          cdns,fifo-width = <4>;
-> +          cdns,trigger-address = <0x00000000>;
-> +
-> +          flash@0 {
-> +              compatible = "jedec,spi-nor";
-> +              reg = <0x0>;
-> +              cdns,read-delay = <4>;
-> +              cdns,tshsl-ns = <50>;
-> +              cdns,tsd2d-ns = <50>;
-> +              cdns,tchsh-ns = <4>;
-> +              cdns,tslch-ns = <4>;
-> +          };
-> +    };
-> +
-> -- 
-> 2.11.0
-> 
+diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
+index 6448b04..941c28c 100644
+--- a/kernel/sched/cpuacct.c
++++ b/kernel/sched/cpuacct.c
+@@ -5,6 +5,7 @@
+  * Based on the work by Paul Menage (menage@google.com) and Balbir Singh
+  * (balbir@in.ibm.com).
+  */
++#include <asm/irq_regs.h>
+ #include "sched.h"
+ 
+ /* Time spent by the tasks of the CPU accounting group executing in ... */
+@@ -339,7 +340,7 @@ void cpuacct_charge(struct task_struct *tsk, u64 cputime)
+ {
+ 	struct cpuacct *ca;
+ 	int index = CPUACCT_STAT_SYSTEM;
+-	struct pt_regs *regs = task_pt_regs(tsk);
++	struct pt_regs *regs = get_irq_regs() ? : task_pt_regs(tsk);
+ 
+ 	if (regs && user_mode(regs))
+ 		index = CPUACCT_STAT_USER;
