@@ -2,141 +2,123 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D733C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8128B2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1E02075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:00:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="gg2IMSyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgESFzU (ORCPT
+        id S1727041AbgESGAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:55:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57396 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgESFzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:55:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9E321B040;
-        Tue, 19 May 2020 05:55:19 +0000 (UTC)
-Subject: Re: [PATCH v10 3/3] tty: samsung_tty: 32-bit access for TX/RX hold
- registers
-To:     Hyunki Koo <hyunki00.koo@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200506080242.18623-1-hyunki00.koo@samsung.com>
- <CGME20200506080258epcas2p4f242fb66a2145f76b0e108014ee351fb@epcas2p4.samsung.com>
- <20200506080242.18623-3-hyunki00.koo@samsung.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1d84cbc4-7935-a7b6-aec2-2ce351f203cd@suse.cz>
-Date:   Tue, 19 May 2020 07:55:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 02:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgESGAo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 02:00:44 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62056C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:00:42 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c21so10141682lfb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unikie-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6KzCFnBysx4f+SYXFrhJOfuSGyFAARDihLujrLqLhHI=;
+        b=gg2IMSyUwj+ggi0vwse5+yIqvCKIt5mNtYP74zuvPh+TMb+1c3FQPwG1HRN2fkoHRA
+         OmELKqyTaPghxxwwe5VHtsR26GGKMgBvalifw1O+GSSNkvw+a8dFVqZFbboS9tG+Gqau
+         HvSCuyr0NszUhJGcZTTchqiWrpEU/bau4zKxl5SOYuNgiMbEKtb0IxifXWkycvIeqzL8
+         UebwQR8f3C+TCvh3rtQKD5+VZVLinVWOef95AZ3b6ANNbkuDTKN8WOyWJk949ftNms2K
+         uZRdj0zwUtOx2Bva0jvbK8mnEpUSh+oyX2UQo7je6BmAJSRsawolCdOl7cteqy0aIFQL
+         kRQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6KzCFnBysx4f+SYXFrhJOfuSGyFAARDihLujrLqLhHI=;
+        b=tUhcSbeOzkPn3XfvPPOwBtAAvhMiidrizoE1DGF7X4W7lA65XjPjHYH9Z+e1MLFm4R
+         ix6Ap/vVWDtleiPkxpExwIwnhZsiDihGD7eE+SwPXsoN6UpjoGetIX+FaaJW5MYDdP3F
+         YRkdUb4haQslSvKirLNDSSMyErSZ4iILgPioUMEV/IUg6PSkolOqAk1e37Y6wGv1TWz9
+         je0VG3dq6gNeyMvYOdv7+yFVCmO0PZN93E93nkkt8YDrQCau5jyXwlbeGH48BUlKcEto
+         WOuhhg8Pi5gaYpVpsYVsExOB1sHQIyxj9O47tI3SIheLwK5Z9tirTN2s4FayaacUewD0
+         gDkQ==
+X-Gm-Message-State: AOAM530cYXr3AbqNf1ZMSKLcjJdnCjlXTyhl/veH3DvExfCGV3CMkrFj
+        RgSnh6l1s72oo3sx/Dci4gu11w==
+X-Google-Smtp-Source: ABdhPJyyLpBOcLYYQNPI6jD+RvQfGKDpqKyzETt2AanQcX4wtGv5uyEi6P6SkWtOAuQ/aqziNW4A8w==
+X-Received: by 2002:a19:4b12:: with SMTP id y18mr13978660lfa.169.1589868040431;
+        Mon, 18 May 2020 23:00:40 -0700 (PDT)
+Received: from buimax ([109.204.208.150])
+        by smtp.gmail.com with ESMTPSA id m13sm8329898lfk.12.2020.05.18.23.00.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 May 2020 23:00:40 -0700 (PDT)
+Date:   Tue, 19 May 2020 09:00:38 +0300
+From:   Henri Rosten <henri.rosten@unikie.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Giuliano Procida <gprocida@google.com>, lukas.bulwahn@gmail.com
+Subject: Re: [PATCH 4.4 63/86] block: defer timeouts to a workqueue
+Message-ID: <20200519060036.GA28441@buimax>
+References: <20200518173450.254571947@linuxfoundation.org>
+ <20200518173503.131794977@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200506080242.18623-3-hyunki00.koo@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518173503.131794977@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06. 05. 20, 10:02, Hyunki Koo wrote:
-> Support 32-bit access for the TX/RX hold registers UTXH and URXH.
+On Mon, May 18, 2020 at 07:36:34PM +0200, Greg Kroah-Hartman wrote:
+> From: Christoph Hellwig <hch@lst.de>
 > 
-> This is required for some newer SoCs.
-> 
-> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Tested on Odroid HC1 (Exynos5422):
-> Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/tty/serial/samsung_tty.c | 62 ++++++++++++++++++++++++++++++++++++----
->  1 file changed, 57 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-> index 326b0164609c..6ef614d8648c 100644
-> --- a/drivers/tty/serial/samsung_tty.c
-> +++ b/drivers/tty/serial/samsung_tty.c
-...
-> @@ -2000,10 +2023,27 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
->  			dev_get_platdata(&pdev->dev) :
->  			ourport->drv_data->def_cfg;
->  
-> -	if (np)
-> +	if (np) {
->  		of_property_read_u32(np,
->  			"samsung,uart-fifosize", &ourport->port.fifosize);
->  
-> +		if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
-> +			switch (prop) {
-> +			case 1:
-> +				ourport->port.iotype = UPIO_MEM;
-> +				break;
-> +			case 4:
-> +				ourport->port.iotype = UPIO_MEM32;
-> +				break;
-> +			default:
-> +				dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
-> +						prop);
-> +				ret = -EINVAL;
-> +				break;
+> commit 287922eb0b186e2a5bf54fdd04b734c25c90035c upstream.
 
-This ret value is unused. Did you intend to return here?
+I notice 287922eb0b18 has been referenced in Fixes-tag in mainline 
+commit 5480e299b5ae ("scsi: iscsi: Fix a potential deadlock in the 
+timeout handler"). Consider if backporting 5480e299b5ae together with 
+this 4.4 version of 287922eb0b18 is also relevant.
 
-thanks,
--- 
-js
-suse labs
+Thanks,
+-- Henri
+
+
+> 
+> Timer context is not very useful for drivers to perform any meaningful abort
+> action from.  So instead of calling the driver from this useless context
+> defer it to a workqueue as soon as possible.
+> 
+> Note that while a delayed_work item would seem the right thing here I didn't
+> dare to use it due to the magic in blk_add_timer that pokes deep into timer
+> internals.  But maybe this encourages Tejun to add a sensible API for that to
+> the workqueue API and we'll all be fine in the end :)
+> 
+> Contains a major update from Keith Bush:
+> 
+> "This patch removes synchronizing the timeout work so that the timer can
+>  start a freeze on its own queue. The timer enters the queue, so timer
+>  context can only start a freeze, but not wait for frozen."
+> 
+> -------------
+> NOTE: Back-ported to 4.4.y.
+> 
+> The only parts of the upstream commit that have been kept are various
+> locking changes, none of which were mentioned in the original commit
+> message which therefore describes this change not at all.
+> 
+> Timeout callbacks continue to be run via a timer. Both blk_mq_rq_timer
+> and blk_rq_timed_out_timer will return without without doing any work
+> if they cannot acquire the queue (without waiting).
+> -------------
+> 
+ 
