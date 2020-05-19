@@ -2,186 +2,136 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02358C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C035EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E02642088E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A053E2088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:04:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t+kUlADo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgESJEP (ORCPT
+        id S1728590AbgESJET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:04:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgESJEO (ORCPT
+        Tue, 19 May 2020 05:04:19 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:61008 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726333AbgESJEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:04:14 -0400
-X-Greylist: delayed 3026 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 19 May 2020 02:04:14 PDT
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB65C061A0C;
-        Tue, 19 May 2020 02:04:14 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 19 May 2020 05:04:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589879056; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=krynLA3PVnStDQ90BA4lcITyrT/iSvbyv+EPo/hP2Ao=;
+ b=t+kUlADoFqk2nX/65Phd+o0hNVTBRhvuKfAjtjTLfuNRsmtq7Rk14fak0LV6VlMFP5X0/b0M
+ ULTW9WGl2W53kfWpSWo310omNVmNOUKn7foXmQsJnua2JpRkevcxUYDhZmEJCl52/B2+4hxL
+ 1puGTvX3AW7wbWwE+2mHqPXKb9E=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec3a104.7f793d152148-smtp-out-n03;
+ Tue, 19 May 2020 09:04:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BBFCAC433F2; Tue, 19 May 2020 09:04:04 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 31B02634C87;
-        Tue, 19 May 2020 12:03:57 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jayAH-00016V-7Z; Tue, 19 May 2020 12:03:57 +0300
-Date:   Tue, 19 May 2020 12:03:57 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
-Message-ID: <20200519090357.GD3877@valkosipuli.retiisi.org.uk>
-References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
- <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
- <20200516215103.GA857@valkosipuli.retiisi.org.uk>
- <930009cd-d887-752a-4f1f-567c795101ee@ideasonboard.com>
- <20200519081019.GB3877@valkosipuli.retiisi.org.uk>
- <8932699a-b321-2308-8903-31268af774cb@ideasonboard.com>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14B85C433D2;
+        Tue, 19 May 2020 09:04:03 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8932699a-b321-2308-8903-31268af774cb@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 May 2020 14:34:03 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
+ connections
+In-Reply-To: <4bd741e342f8e2743197ed6105dacffa@codeaurora.org>
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+ <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+ <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
+ <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
+ <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
+ <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
+ <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
+ <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
+ <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
+ <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
+ <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
+ <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
+ <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
+ <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
+ <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org>
+ <37b3749e-2363-0877-c318-9c334a5d1881@arm.com>
+ <d47271ee6a2a6f0f30da7e140b6f196c@codeaurora.org>
+ <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
+ <364049a30dc9d242ec611bf27a16a6c9@codeaurora.org>
+ <CAJ9a7VjAoUmMG9pLEzE_rMSpOjwVOi-ZCinF87n9H0JgfMDsiQ@mail.gmail.com>
+ <5a76926a6532d3f91cca169d474ba98e@codeaurora.org>
+ <4bd741e342f8e2743197ed6105dacffa@codeaurora.org>
+Message-ID: <825b922dab9821fa46f321d600648e10@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
+Hi Mike, Suzuki,
 
-On Tue, May 19, 2020 at 09:55:24AM +0100, Kieran Bingham wrote:
-> Hi Sakari,
+On 2020-05-16 15:34, Sai Prakash Ranjan wrote:
+> Hi Mike, Suzuki
 > 
-> On 19/05/2020 09:10, Sakari Ailus wrote:
-> > Hi Kieran,
-> > 
-> > On Mon, May 18, 2020 at 12:45:18PM +0100, Kieran Bingham wrote:
-> >> Hi Sakari,
-> >>
-> >> There are only fairly minor comments here, fix ups will be included in a
-> >> v10.
-> >>
-> >> Is there anything major blocking integration?
-> > 
-> > Not that I can see. But please see my comments below.
+> [...]
 > 
-> Thanks,
+>>> 
+>>> Please look at the CoreSight components specification 3.0 (ARM IHI
+>>> 0029E) Section B2.1.2 which describes the Unique Component Identifier
+>>> (UCI).
+>>> As mentioned above this consists of a combination of bits from
+>>> multiple registers, including PIDR4.
+>>> 
+>> 
+>> Ok got it now, thanks for clearing the doubt. I will go ahead with
+>> this method to identify QCOM impl and post a patch.
+>> 
 > 
-> We might have some more work tidying up the DT validation anyway which
-> has come too late, and perhaps is going to bump this to v5.9 now anyway.
+> Looking some more into this, since we have this limitation only on
+> specific replicator on very few QCOM SoCs, rather than having a blanket
+> workaround for all QCOM, we were thinking it would be better to have
+> this workaround based on a firmware property something like
+> "qcom,replicator-loses-context" for those replicators with this
+> limitation and then set the drvdata->check_idfilter_val based on
+> this property.
 > 
-> I can still try but ... ;-S
-> 
-> At least hopefully now we /can/ see a path to integration though.
-> 
-> I probably don't care if it's 5.8 or 5.9 as long as it's not 8.5 ;-)
-> 
-> >>
-> >> Regards
-> >>
-> >> Kieran
-> >>
-> >>
-> >>
-> >> On 16/05/2020 22:51, Sakari Ailus wrote:
-> >>> Hi Kieran,
-> >>>
-> >>> Thanks for the update.
-> >>>
-> >>> On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
-> >>>
-> >>> ...
-> >>>
-> >>>> +static int max9286_enum_mbus_code(struct v4l2_subdev *sd,
-> >>>> +				  struct v4l2_subdev_pad_config *cfg,
-> >>>> +				  struct v4l2_subdev_mbus_code_enum *code)
-> >>>> +{
-> >>>> +	if (code->pad || code->index > 0)
-> >>>> +		return -EINVAL;
-> >>>> +
-> >>>> +	code->code = MEDIA_BUS_FMT_UYVY8_2X8;
-> >>>
-> >>> Why UYVY8_2X8 and not UYVY8_1X16? In general, the single sample / pixel
-> >>> variant of the format is generally used on the serial busses. This choice
-> >>> was made when serial busses were introduced.
-> >>
-> >> Ok - I presume this doesn't really have much effect anyway, they just
-> >> have to match for the transmitter/receiver?
-> > 
-> > In this case, yes. But it's harder to change later, so let's indeed do that
-> > now.
-> 
-> Yes indeed, I have to change my test scripts for the new configuration
-> (or we should update the scripts to get the configuration from the
-> device ;D)
-> 
-> 
-> >> But it makes sense to me, so I'll update to the 1x16 variant.
-> > 
-> > ...
-> 
-> done anyway ;-)
-> 
-> I see the ADV748x is using the 2x8 variants though ... (all the more
-> reason for our scripts to /get/ the correct version when propagating
-> formats).
-> 
-> Perhaps I should/could add the 1x16 formats to the ADV748x too. (later)
 
-It's a driver bug, yes.
+Sorry for going back and forth on this one, but I think having a 
+firmware
+property will clearly help us identify the issue on specific SoCs rather 
+than
+wholesale workaround for all QCOM SoCs. For now, I will post a patch 
+based on
+the property "qcom,replicator-loses-context", please feel free to yell 
+at me
+if this is completely wrong and we can discuss it further in that patch.
 
-> 
-> 
-> >>> And as you don't, you also won't know which frequencies are known to be
-> >>> safe to use. That said, perhaps where this device is used having a random
-> >>> frequency on that bus could not be an issue. Perhaps.
-> >>
-> >> Does this generate a range? or a list of static supported frequencies?
-> >>
-> >> We configure the pixel clock based upon the number of cameras connected,
-> >> and their pixel rates etc ...
-> >>
-> >> Are you saying that the frequency of this clock should be validated to
-> >> be a specific range? or are you talking about a different frequency?
-> > 
-> > It depends on the system. In general, only frequencies known to be safe
-> > should be used. If this one has enough shielding to guarantee there won't
-> > be problems in using a random frequency in the entire range, is there a
-> > guarantee that will be the case for all systems with this chip?
-> 
-> I have no idea here... Maybe Niklas knows more having dealt more with
-> the RCar-VIN/CSI parts.
-> 
-> It seems like this is something we can add later if necessary, by
-> extending the descriptions in the DT?
-
-Works for me.
-
-Niklas, any idea?
+Thanks,
+Sai
 
 -- 
-Regards,
-
-Sakari Ailus
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
