@@ -2,130 +2,185 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E83FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88186C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBF0C2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522E62070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:18:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ncT46C2C"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZByOxcWZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgESUQf (ORCPT
+        id S1726680AbgESUSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:16:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54886 "EHLO
+        Tue, 19 May 2020 16:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgESUQe (ORCPT
+        with ESMTP id S1726333AbgESUSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:16:34 -0400
+        Tue, 19 May 2020 16:18:44 -0400
 Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 551FBC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:16:34 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id l21so517234eji.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:16:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 367AFC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:18:44 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n24so552116ejd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:18:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=lca.pw; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=INNWQgEJELQngwwhy6eg/obm2/GktGgLWdTQhfY0CV8=;
-        b=ncT46C2CCIlRlD9oKb8qTENHsiQHsETpfNsQLv3RtXvjIeAxdCk6CIwanXVgLvhVmf
-         UbVJf4QTPRtDtsmr2ZYJZJVNwLbCZcoTE2ClRKeA4XYAL0Hbldy1Yk0ULHGy4f7bJqdU
-         8JJtusgbljBVrJcYdWHr3ESGTfWMQmLTg+BgRD4JJD/AuA9Oh0ZLGvTvscikn0DPU7Lf
-         aYTDD9W/c/APP3NolF4BguFu66frbEpVuXzJiOZIqi6qpfhVkV5Vs8RUDHj26OvRn6Ul
-         +x8FfcjNTObfBXwUT1IdvmqReLcBeSXrgATCdlTc7AmlfmVEOxBe9SG3VzcRBMh7+pC+
-         gzEw==
+        bh=lL4ozjO7sIu89/0ZdtpZ+grNZO7La5memrjZAz9fUk0=;
+        b=ZByOxcWZEGVSx0wUUQIKY6Lw/heX5sMkMCAxTHHPK+6ioi6FiW5Ivw4Z7T0/Nsu58c
+         KBdpFSMR5DZ9/Fan6TguF2CqRqBB1RiOHXF7adO0G8p+vAKeUpTqfShVLpqLUMDmSLi1
+         EQ9HfNNyPLSZop4afoNbYFWcjitqlo7fgxaKoCCTWTuiFmdSvBW7XY0iiFNWqgGj7KRs
+         TC/MqL75oZY1jUN8E7jzoZ3x0UqfnmePmTE/KV1JCoRkX+RpHBWDUXURu+joTefkXso/
+         Zzj2NcqozV3LUz+vL8gbiGipZCgL0mKs7ynTlmNA5D2yFrKQ+OioPOkKCO8FSJo0vylo
+         /yNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=INNWQgEJELQngwwhy6eg/obm2/GktGgLWdTQhfY0CV8=;
-        b=fupZ46+XZ8xdBqJwGqEf7veUvaDq8DkS4RgjZeGY/fpo4sIE0lYO7OFys6B8BDTb07
-         3gBz/mccORwRTng99nQw4qTjqynU5WTHiDH38eicmAtiWk9lvJi5652sll5asMhzusSC
-         eqruyB/iBBkRYXseJVVqM/rS8LUhths63IjQfanoB6RBc5kNt5oV4YAO88ZiCUfu5kjn
-         woVV/L3pU4nS8xPD4T0o/Kz8AL6J0Hq6pcJFq3CXbipHDTp30CklB6bMUtKZZnM2Slp8
-         NeI2f4wYJaJ0zz4Bzxz14w884uaeFFgXiCCk3V9tIJ5mX9m/JCmB5uV0uCXA4UJ4OeWl
-         oIJw==
-X-Gm-Message-State: AOAM531bu6Qb4ExFtVJ9V46DWjJwCFsFkcPOlLKSV2+CrgQ5OZk9awSR
-        kl58daaPmZh2yUX5T/IgIscFMtVlvuM8P+JdgTs=
-X-Google-Smtp-Source: ABdhPJxZXd9ovEa8xgwJjYQOv7+XsSSRfqBIU4qYRoVhJZNVHVMvhjVRaYW/U9OaxX/2bdpiVxlfy6B7W6op/ci8VNQ=
-X-Received: by 2002:a17:906:ece4:: with SMTP id qt4mr870528ejb.162.1589919392959;
- Tue, 19 May 2020 13:16:32 -0700 (PDT)
+        bh=lL4ozjO7sIu89/0ZdtpZ+grNZO7La5memrjZAz9fUk0=;
+        b=k8FbKPFd74FrCE8XM0GtxUse1Bn5xWpd6ESdB19x1CG59Ef9mlnBOADobOMBYA/UXC
+         SmIrO2awl/O/2HfU/ledadus4JR3dGAUTkskv0qP+4QUQ5HhQRe/P/lwP8KADapeGCxl
+         7dAZSFLMSQIkxMatKy11BWRzWoTVxD2LVh3F6CY/uMLcf1pp90TG3M4cHuLD37GhFrhF
+         ART58YhVfOq8ykLfp8nEau999Tu7vE8Ov94iJc0FNYNmkugH0rxGQgm/8YVWsPSmvZuj
+         z3c5eTjFuvO1y18WSYWlRdUDQj8wet8vq1v8dFxsSOCuuPXephXZS/5jEjhzRCFdH3O1
+         4GPg==
+X-Gm-Message-State: AOAM530KfBZIw9o6EmqWae6hR75TB52fqIirJ8daVWQYbwQeoApego3b
+        ipQ9ieJcCYT36MNERoILqStk4OfGW75/6pFrF+j60g==
+X-Google-Smtp-Source: ABdhPJzmLJ2VE1XY5jhp3oLT94K798EgEIL11S0+1hP87wWAtRinPfX07mNjAjt65tc4uEKH4OGuafZh3NS7Q2bYA/g=
+X-Received: by 2002:a17:906:934d:: with SMTP id p13mr869611ejw.452.1589919522687;
+ Tue, 19 May 2020 13:18:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <bcefba5b-107c-716b-bb60-5b4b2476894b@o2online.de>
- <CAFBinCD8-tr97GCVhBi5R1nzxLhy=_6VuLY8ubUO1SDTFjiELw@mail.gmail.com>
- <22af498b-44a0-ced3-86f3-114427a73910@o2online.de> <CAFBinCCGAkhPCwOW=mAvsV2qdixq8Gf8yQw1gYErHpz7KmuAZg@mail.gmail.com>
- <5de6db87-a71f-d14c-390d-b0caeab5d650@o2online.de> <CAFBinCDB9c2uMRXO9DKSX4hC7EBgnRfBa+BM5-VdEPZeieKn_w@mail.gmail.com>
- <813dfc08-f13a-dcac-0bd9-821d188bba08@o2online.de> <CAFBinCCgZF5Pu944q-_+V0yQ-nc6q82xDjJHjsnj6=uOQL+DEw@mail.gmail.com>
- <8cbbf90c-54ba-8fa3-3386-022c9c997a20@o2online.de> <CAFBinCBukGbzgO-Y1dCRYXZHhX2PcSEQQ_XvhHqLcnw0fGDP8w@mail.gmail.com>
- <a95f5fe1-4376-f872-961a-c2237c36811c@o2online.de> <CAFBinCCgFtv=u4ZKW3rdoDPZ_jh3jU03MDxHoDk=pbi+4pxB_w@mail.gmail.com>
- <c244b34f-8958-0cbd-38e6-a786aef56e7c@o2online.de>
-In-Reply-To: <c244b34f-8958-0cbd-38e6-a786aef56e7c@o2online.de>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 19 May 2020 22:16:22 +0200
-Message-ID: <CAFBinCDvwy7xCYdJzRHV0ACJ=CF+A5efD-WpPvyE62gfUribUw@mail.gmail.com>
-Subject: Re: RTL8723BS driver doesn't work for,me but I can help testing
-To:     Tobias Baumann <017623705678@o2online.de>
-Cc:     hdegoede@redhat.com, Larry.Finger@lwfinger.net,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
+References: <CAG=TAF6mfrwxF1-xEJJ9dL675uMUa7RZrOa_eL2mJizZJ-U7iQ@mail.gmail.com>
+ <CAEf4BzazvGOoJbm+zNMqTjhTPJAnVLVv9V=rXkdXZELJ4FPtiA@mail.gmail.com>
+ <CAG=TAF6aqo-sT2YE30riqp7f47KyXH_uhNJ=M9L12QU6EEEfqQ@mail.gmail.com>
+ <CAEf4BzaBfnDL=WpRP-7rYFhocOsCQyFuZaLvM0+k9sv2t_=rVw@mail.gmail.com>
+ <CAG=TAF5rYmMXBcxno0pPxVZdcyz=ik-enh03E-V8wupjDS0K5g@mail.gmail.com> <CAEf4BzYZ9LkYtmiukToJDw1-V-AFbwfB2jysMU9mM3ie9=qWHw@mail.gmail.com>
+In-Reply-To: <CAEf4BzYZ9LkYtmiukToJDw1-V-AFbwfB2jysMU9mM3ie9=qWHw@mail.gmail.com>
+From:   Qian Cai <cai@lca.pw>
+Date:   Tue, 19 May 2020 16:18:31 -0400
+Message-ID: <CAG=TAF45T4pKew6U2kPNBK0qSAjgoECAX81obmKmFnv0cjE-oA@mail.gmail.com>
+Subject: Re: UBSAN: array-index-out-of-bounds in kernel/bpf/arraymap.c:177
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tobias,
-
-On Tue, May 19, 2020 at 8:21 AM Tobias Baumann <017623705678@o2online.de> wrote:
+On Tue, May 19, 2020 at 3:30 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> good morning
+> On Tue, May 19, 2020 at 8:00 AM Qian Cai <cai@lca.pw> wrote:
+> >
+> > On Mon, May 18, 2020 at 8:25 PM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > On Mon, May 18, 2020 at 5:09 PM Qian Cai <cai@lca.pw> wrote:
+> > > >
+> > > > On Mon, May 18, 2020 at 7:55 PM Andrii Nakryiko
+> > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > >
+> > > > > On Sun, May 17, 2020 at 7:45 PM Qian Cai <cai@lca.pw> wrote:
+> > > > > >
+> > > > > > With Clang 9.0.1,
+> > > > > >
+> > > > > > return array->value + array->elem_size * (index & array->index_mask);
+> > > > > >
+> > > > > > but array->value is,
+> > > > > >
+> > > > > > char value[0] __aligned(8);
+> > > > >
+> > > > > This, and ptrs and pptrs, should be flexible arrays. But they are in a
+> > > > > union, and unions don't support flexible arrays. Putting each of them
+> > > > > into anonymous struct field also doesn't work:
+> > > > >
+> > > > > /data/users/andriin/linux/include/linux/bpf.h:820:18: error: flexible
+> > > > > array member in a struct with no named members
+> > > > >    struct { void *ptrs[] __aligned(8); };
+> > > > >
+> > > > > So it probably has to stay this way. Is there a way to silence UBSAN
+> > > > > for this particular case?
+> > > >
+> > > > I am not aware of any way to disable a particular function in UBSAN
+> > > > except for the whole file in kernel/bpf/Makefile,
+> > > >
+> > > > UBSAN_SANITIZE_arraymap.o := n
+> > > >
+> > > > If there is no better way to do it, I'll send a patch for it.
+> > >
+> > >
+> > > That's probably going to be too drastic, we still would want to
+> > > validate the rest of arraymap.c code, probably. Not sure, maybe
+> > > someone else has better ideas.
+> >
+> > This works although it might makes sense to create a pair of
+> > ubsan_disable_current()/ubsan_enable_current() for it.
+> >
+> > diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+> > index 11584618e861..6415b089725e 100644
+> > --- a/kernel/bpf/arraymap.c
+> > +++ b/kernel/bpf/arraymap.c
+> > @@ -170,11 +170,16 @@ static void *array_map_lookup_elem(struct
+> > bpf_map *map, void *key)
+> >  {
+> >         struct bpf_array *array = container_of(map, struct bpf_array, map);
+> >         u32 index = *(u32 *)key;
+> > +       void *elem;
+> >
+> >         if (unlikely(index >= array->map.max_entries))
+> >                 return NULL;
+> >
+> > -       return array->value + array->elem_size * (index & array->index_mask);
+> > +       current->in_ubsan++;
+> > +       elem = array->value + array->elem_size * (index & array->index_mask);
+> > +       current->in_ubsan--;
 >
-> i got the new image from oleg(balbes150) 20200518 RC5  and some more
-> feedback
->
-> with my patch and oleg RC5 hotstart(shutdown now)  do not work with my
-> box ( wlan goes back to sleep mode always)
-I'm not sure what you mean here.
-if you run "shutdown now" then the system does not shut down and only
-wifi goes to sleep mode?
+> This is an unnecessary performance hit for silencing what is clearly a
+> false positive. I'm not sure that's the right solution here. It seems
+> like something that's lacking on the tooling side instead. C language
+> doesn't allow to express the intent here using flexible array
+> approach. That doesn't mean that what we are doing here is wrong or
+> undefined.
 
-> with my patch chance  1 of 5 till 1 of 3 that my wlan is up and not
-> sleep from cold start
->
-> with oleg chance 1 of 2 till 1of 3 from cold start that wlan is up  .
-> (maybe because of phandle order?)
->
-> i thing there is maybe a timming problem between  wlan dis , sdio  data
-> and  host wake up wlan .
-the power sequence driver supports the following two properties, see [0]:
-- post-power-on-delay-ms
-- power-off-delay-us
+Oh, so you worry about this ++ and -- hurt the performance? If so, how
+about this?
 
-Those are not set, meaning no delay is applied.
-For reference, these are the delays which are used on the Endless Mini
-(which also has a RTL8723BS module): [1]
-Do you know more about these delays (whether they are needed and how
-long they are supposed to be)?
+ubsan_disable_current();
+elem = array->value + array->elem_size * (index & array->index_mask);
+ubsan_enable_current();
 
-> it could be that GPIOAO_6 is the host wake up wlan ? is it possible to
-> change the activation order for the gpio pins by change it in dts ?
-please check my previous mails. I think that GPIOX_21 is the wifi host
-wakeup pin because it is marked as "input" on the 3.10 kernel.
-you can change the order of the GPIOs inside the sdio_pwrseq node, but
-all GPIOs are managed together (meaning there's virtually no delay
-between enabling the first and the second one).
-I am not sure if using an MMC power sequence is the right thing to do,
-because the card is detected for me regardless of whether GPIOX_11 is
-HIGH or LOW. The RTL8723BS driver currently does not manage any GPIOs.
+#ifdef UBSAN
+ubsan_disable_current()
+{
+      current->in_ubsan++;
+}
+#else
+ubsan_disable_current() {}
+#endif
 
+etc
 
-Martin
+Production kernel would normally have UBSAN=n, so it is an noop.
 
-
-[0] https://github.com/torvalds/linux/blob/c477ebe21fabe0010a2ed324ce3a1762c757d867/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-[1] https://github.com/endlessm/linux-meson/blob/4c76999c5c707fba9c390466efca093c3befa908/drivers/amlogic/wifi/wifi_dt.c#L153
+Leaving this false positive unsilenced may also waste many people's
+time over and over again, and increase the noisy level. Especially, it
+seems this is one-off (not seen other parts of kernel doing like this)
+and rather expensive to silence it in the UBSAN or/and compilers.
