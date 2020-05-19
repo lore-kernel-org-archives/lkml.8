@@ -2,157 +2,196 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AACC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7861520758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589884994;
-	bh=L/14AxOpD03Run3O+IBY+gN9A7FJED5ePKYXqAc56ws=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=PMRxQ9RK7yWAR1gvl2MAZVOW6Knk7QOTUJcUH6h1j4J/TySGP8t6/2q5FMkBohlQ/
-	 UP2GRSUJU4oPI/f4FMyCdVIOIybUuO+l5TrenKE5hNiCvo93zUpGfUswke+WB0BqY0
-	 XIesmYwPRofbbgs8n1F+pr8ixw+z549NSTU7XVl4=
+	by mail.kernel.org (Postfix) with ESMTP id B33E620758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:45:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="LDygkSvn";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="uX1uM6go"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbgESKnO (ORCPT
+        id S1728647AbgESKpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgESKnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:43:13 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D16F20674;
-        Tue, 19 May 2020 10:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589884992;
-        bh=L/14AxOpD03Run3O+IBY+gN9A7FJED5ePKYXqAc56ws=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=yu54AhMcabq+AvDj6KUaIZzm3VsU3sxprdYjdyBn4/dTgi6hv+V+fb5zg98nfd0c7
-         S4KRXKLI2BF7HS9+UnY87jbiO+9sb5WkqjNckH6HhvEHhOsL4iBfllNifxeTl4GyFq
-         m9nsqEJDYV8sFa4C82IJh/xWQU8YATQrG1pz8cqM=
-Message-ID: <cc459ce1b7314919eaa506a82b9c28df6f41a169.camel@kernel.org>
-Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Amir Goldstein <amir73il@gmail.com>,
-        Gregory Farnum <gfarnum@redhat.com>
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 19 May 2020 06:43:10 -0400
-In-Reply-To: <CAOQ4uxjdu7=wXNBHZBQmtNexcG3qfu=XQov9HsRNi=os+QHAUg@mail.gmail.com>
-References: <20200514111453.GA99187@suse.com>
-         <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
-         <20200514124845.GA12559@suse.com>
-         <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
-         <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
-         <20200515111548.GA54598@suse.com>
-         <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
-         <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com>
-         <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org>
-         <CAJ4mKGbahd8CbkEauBHBX6o93jipkCVoYe9O-1rAJQJFZkqDsQ@mail.gmail.com>
-         <CAOQ4uxjdu7=wXNBHZBQmtNexcG3qfu=XQov9HsRNi=os+QHAUg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Tue, 19 May 2020 06:45:36 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:58320 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726494AbgESKpf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 06:45:35 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04JAedaq031351;
+        Tue, 19 May 2020 03:45:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references :
+ content-transfer-encoding : content-type : mime-version; s=pfpt0818;
+ bh=lLCAHuSobwIEK/Wiic+M3Y+HJjZXSuwrKpFZxVRimaE=;
+ b=LDygkSvnzxnbL3fR6KkYsQPEWye/3U8ebeXWRiCcwrMHgkCDyx3UFnrqUOePr91Zgk9l
+ z8QytF+XoQmEgEwZTDrl3EM/nWT25RvTWiYGXQYW6zFLq7XtXW3oqwfwOVh1/qQdvxe+
+ jdmZ3wkaAuZiGnGWSErNWWUNLsLBvydezBMGCZvjPfzlG7aPhaETPDh24IDw5Lrn1SZq
+ 5TUYqsg0sLLlufKXh6I8ysoBf7aKjXF2NaU1nbF9q+rgKH3NsUSxTyanycl58ofycILx
+ KvZzumcr3qdNl+Yjqn81Xvc4i2fEM+3lptz/J9a6lu6cSPOrGOHTVwHL6K8BD0XD5ib7 qQ== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 312dhqkgnb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 19 May 2020 03:45:21 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 19 May
+ 2020 03:45:20 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
+ by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 03:45:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gFryiegkaEq3t2S0bQGheKmwMqFJDnIv1QKbF5/jZcMokt9eHqFYkGOGz3mgNW5jwtXUwmoc7mgMrJyG9Lp0a4k052uXAvlmaRPQd5vI1ECKIabRF9DDBUiAqgQ2Y5grDkNdrROIWhrT+JMt9IlN671a2WMMuRJsi2gUosBrlIR7A0lQR2flD8pVy62Uv5sSeDiuG2d4yVnn02gQe82XrHdpnG4WZn5kTvIle5CGc9bQNRQtnOPqP/RF1meGW5gEjdiCDzHqKY33Hbf8LqltHX1tzgrhnd5IaW4CVIAR1jPTHC4t5oMIjkX3SOULV/OmHdaACjhnUW7qFv4zkC/EvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lLCAHuSobwIEK/Wiic+M3Y+HJjZXSuwrKpFZxVRimaE=;
+ b=hnMP/ErzaXQY6AzqUXooEZShdWA+N92W4hdSsCL0Y5NPzPWlOcl7kmyI+l96qZrfhwbbnyDEzan2V1p7xIbIy4033lNafLDpVubE5/aW/ADW1mo69zGMqNpln1poerNPuCdIO+1USIlAlbDHrs2qA0ELK9ULzCH5J/TUsn16z3hc0hFZF19e2lAw6gJrOkKufbiEo53g5BfmldgwjbxhEJcfmPoU9SHfkocymltZcaDgjn84D8eMmTCq/6SAbAM4ivQA6k1gmbq4Al9uP4NOgOn1T8ek0yDBil5af1d1RjtVrQHHTNgPf6No11CE7adNkmE1uzjTdG4VYVXgKEuUXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lLCAHuSobwIEK/Wiic+M3Y+HJjZXSuwrKpFZxVRimaE=;
+ b=uX1uM6goISqhS+B7JzAmXuHVtOXJ0np/jHkb8tyLmJw7GJaJytAyOoD55ix3NphodRBdix/1vA7Fysy8iq1xrWCnAJz4VbgLiiL3OXrbZHE3y9ifSv6wnuF4UFtelgvxWlbZU673lseCvuR4l5kv3FucuzRT0nlg+UK+cqyFYds=
+Authentication-Results: alien8.de; dkim=none (message not signed)
+ header.d=none;alien8.de; dmarc=none action=none header.from=marvell.com;
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
+ by BYAPR18MB2455.namprd18.prod.outlook.com (2603:10b6:a03:132::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Tue, 19 May
+ 2020 10:45:19 +0000
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::a165:ffa5:f3eb:d62d]) by BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::a165:ffa5:f3eb:d62d%7]) with mapi id 15.20.3021.020; Tue, 19 May 2020
+ 10:45:19 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>
+CC:     James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 1/5] EDAC/ghes: Remove unused members of struct ghes_edac_pvt, rename it to ghes_pvt
+Date:   Tue, 19 May 2020 12:44:39 +0200
+Message-ID: <20200519104443.15673-2-rrichter@marvell.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200519104443.15673-1-rrichter@marvell.com>
+References: <20200519104443.15673-1-rrichter@marvell.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: HE1P189CA0023.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::36)
+ To BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1P189CA0023.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24 via Frontend Transport; Tue, 19 May 2020 10:45:17 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 40020fce-f882-4471-76ad-08d7fbe1b954
+X-MS-TrafficTypeDiagnostic: BYAPR18MB2455:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR18MB2455DBACF90BF7378892036DD9B90@BYAPR18MB2455.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1107;
+X-Forefront-PRVS: 040866B734
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7FJVj1WTU2JGafnQUuJBgVtcxI7lUsu+rsDt09qH7mvO/1If+nDzhkfJaASlNYNBaOna/owo69z+TF9fYVXEWHmgctAoSTWFurfnVWvwXu5l0K9DsP10ikYRRH35Kbrd7SSrnE9W9DzA3tdhZt0lXXhOr/RwmD9kl7Coa8AMGUr6/JLpqqNlhLeTaNksLMVOEv7CCtx9L+tcd8pe0jimzxTdSBWj02asG/EZGRuLdw0vJpc5vfLf4ECXvnmiPo88c+IWSL1ceSVQMER8rg4+wA+UCgClfEvDwrNHyCfItxMPUFIkaE0mAIFQRyVm2DMRBCSSddv2+z5jpUIu4UQtaYMefWkksv2n4CT9t+tGn55oXj3HUv15AxgQZy3ts56CfNvUId+HjFRjK9SwKt+s+bSddjx7caak+8XCaMe9+uckBQRwxGdEgHPK8bUXJkA3
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(186003)(316002)(16526019)(6666004)(956004)(2616005)(36756003)(8936002)(110136005)(86362001)(66946007)(6486002)(54906003)(26005)(5660300002)(6506007)(66556008)(6512007)(66476007)(52116002)(478600001)(8676002)(1076003)(4326008)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: MfySS82USyBrU5vlpT4c+0jGSVW+1a7PH4JCz9ZOPg5LXDaVM9CI182GVhwPHY+9ymU40ltiFadlcsopb4jANBRneBWTMrG6VF0Iebbb4T465Ln8ZrffO7P883GZxM77mLlFNr3dFI7IvB0P1fB7S1tQQD1xzNDL5UJ/6YNa0/ndpqr/BTlZSlSpNwQBU6TLG0vOBVqUpkjZFa0ac9YRkvcbPYwKoSFz2jlkHkB1SQ3e3llXkURnftGdmz48+M78/Vgzv77S70Hw5ZBuCaGhAlzFLBwuUDsnemz8PWiwS9UCborjmUdgAI9dYo+7BMGO8lcBwzt1c3mJVgsow9Gk61mAKrEGldtN/KKbLzE/YqgRNbh26UUniwOjwX2GK7Ds2cqtHHMWUgCKl9jZzU13PQ02CzlKRnI60V5YFjQzB+X8fPcO0SEsdhGf+mhfvy1CxUCmW5jDojyfJGMb/Fml+n1HJn3ui82FVFaj3luqk30=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40020fce-f882-4471-76ad-08d7fbe1b954
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 10:45:19.5086
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uHdkdjq8zFxBGAx0qmT6PXhmpogdx1FcbRucYIkBBTFhkJXBbAuP2QnbOo37DhtUneI1gJdbKVoKzf4fHnCyNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2455
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-19_03:2020-05-19,2020-05-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-19 at 07:00 +0300, Amir Goldstein wrote:
-> On Tue, May 19, 2020 at 1:30 AM Gregory Farnum <gfarnum@redhat.com> wrote:
-> > Maybe we resolved this conversation; I can't quite tell...
-> 
-> I think v2 patch wraps it up...
-> 
-> [...]
-> 
+The struct members list and ghes of struct ghes_edac_pvt are unused,
+remove them. On that occasion, rename it to the shorter name struct
+ghes_pvt.
 
-Agreed.
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+---
+ drivers/edac/ghes_edac.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-> > > > Questions:
-> > > > 1. Does sync() result in fully purging inodes on MDS?
-> > > 
-> > > I don't think so, but again, that code is not trivial to follow. I do
-> > > know that the MDS keeps around a "strays directory" which contains
-> > > unlinked inodes that are lazily cleaned up. My suspicion is that it's
-> > > satisfying lookups out of this cache as well.
-> > > 
-> > > Which may be fine...the MDS is not required to be POSIX compliant after
-> > > all. Only the fs drivers are.
-> > 
-> > I don't think this is quite that simple. Yes, the MDS is certainly
-> > giving back stray inodes in response to a lookup-by-ino request. But
-> > that's for a specific purpose: we need to be able to give back caps on
-> > unlinked-but-open files. For NFS specifically, I don't know what the
-> > rules are on NFS file handles and unlinked files, but the Ceph MDS
-> > won't know when files are closed everywhere, and it translates from
-> > NFS fh to Ceph inode using that lookup-by-ino functionality.
-> > 
-> 
-> There is no protocol rule that NFS server MUST return ESTALE
-> for file handle of a deleted file, but there is a rule that it MAY return
-> ESTALE for deleted file. For example, on server restart and traditional
-> block filesystem, there is not much choice.
-> 
-> So returning ESTALE when file is deleted but opened on another ceph
-> client is definitely allowed by the protocol standard, the question is
-> whether changing the behavior will break any existing workloads...
-> 
-
-Right -- that was sort of the point of my original question about the
-xfstest. The fact that ceph wasn't returning ESTALE in this situation
-didn't seem to be technically _wrong_ to me, but the xfstest treated
-that as a failure. It's probably best to return ESTALE since that's the
-conventional behavior, but I don't think it's necessarily required for
-correct operation in general.
-
-FWIW, if we ever implement O_TMPFILE in ceph, then we may need to
-revisit this code. With that, you can do a 0->1 transition on i_nlink,
-which blows some of the assumptions we're making here out of the water.
-
-> > > > 2. Is i_nlink synchronized among nodes on deferred delete?
-> > > > IWO, can inode come back from the dead on client if another node
-> > > > has linked it before i_nlink 0 was observed?
-> > > 
-> > > No, that shouldn't happen. The caps mechanism should ensure that it
-> > > can't be observed by other clients until after the change.
-> > > 
-> > > That said, Luis' current patch doesn't ensure we have the correct caps
-> > > to check the i_nlink. We may need to add that in before we can roll with
-> > > this.
-> > > 
-> > > > 3. Can an NFS client be "migrated" from one ceph node to another
-> > > > with an open but unlinked file?
-> > > > 
-> > > 
-> > > No. Open files in ceph are generally per-client. You can't pass around a
-> > > fd (or equivalent).
-> > 
-> > But the NFS file handles I think do work across clients, right?
-> > 
-> 
-> Maybe they can, but that would be like NFS server restart, so
-> all bets are off w.r.t open but deleted files.
-> 
-
-They do work across clients, but a file handle is just an identifier for
-an inode. That's completely orthogonal to whether the file is open.
-
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index c7d404629863..2ed48a5d48d6 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -15,9 +15,7 @@
+ #include "edac_module.h"
+ #include <ras/ras_event.h>
+ 
+-struct ghes_edac_pvt {
+-	struct list_head list;
+-	struct ghes *ghes;
++struct ghes_pvt {
+ 	struct mem_ctl_info *mci;
+ 
+ 	/* Buffers for the error handling routine */
+@@ -32,7 +30,7 @@ static refcount_t ghes_refcount = REFCOUNT_INIT(0);
+  * also provides the necessary (implicit) memory barrier for the SMP
+  * case to make the pointer visible on another CPU.
+  */
+-static struct ghes_edac_pvt *ghes_pvt;
++static struct ghes_pvt *ghes_pvt;
+ 
+ /* GHES registration mutex */
+ static DEFINE_MUTEX(ghes_reg_mutex);
+@@ -216,7 +214,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+ {
+ 	struct edac_raw_error_desc *e;
+ 	struct mem_ctl_info *mci;
+-	struct ghes_edac_pvt *pvt;
++	struct ghes_pvt *pvt;
+ 	unsigned long flags;
+ 	char *p;
+ 
+@@ -468,7 +466,7 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
+ 	bool fake = false;
+ 	int rc = 0, num_dimm = 0;
+ 	struct mem_ctl_info *mci;
+-	struct ghes_edac_pvt *pvt;
++	struct ghes_pvt *pvt;
+ 	struct edac_mc_layer layers[1];
+ 	struct ghes_edac_dimm_fill dimm_fill;
+ 	unsigned long flags;
+@@ -505,7 +503,7 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
+ 	layers[0].size = num_dimm;
+ 	layers[0].is_virt_csrow = true;
+ 
+-	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(struct ghes_edac_pvt));
++	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(struct ghes_pvt));
+ 	if (!mci) {
+ 		pr_info("Can't allocate memory for EDAC data\n");
+ 		rc = -ENOMEM;
+@@ -513,7 +511,6 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
+ 	}
+ 
+ 	pvt		= mci->pvt_info;
+-	pvt->ghes	= ghes;
+ 	pvt->mci	= mci;
+ 
+ 	mci->pdev = dev;
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.20.1
 
