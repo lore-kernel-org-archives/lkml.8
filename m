@@ -2,139 +2,313 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0902FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E110C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5CCF2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BC62065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EVzxb79a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fsh2DrJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgESWTF (ORCPT
+        id S1727890AbgESWUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:19:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52924 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgESWTE (ORCPT
+        Tue, 19 May 2020 18:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgESWUj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:19:04 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JMIqOf057744;
-        Tue, 19 May 2020 17:18:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589926732;
-        bh=c1gNUTsHB3gfgkX/gTaB62tQSNuCVzXqjEsmpqFZNow=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=EVzxb79ac+E5BSzuU90j/JF6T/OBf/3ArGRe7NoRfuaOqdbtZHPjFEE8wun3fZ20t
-         ZmU5QtpMoV31HWGLoXF6GGexouZIT56jAJMqz0O6fdspUPRQq9y/PEzzJgoKJqhCQi
-         o+6JZyuZa5dCqiLH9kGS5LvrQu+l3EiyN5BRTg14=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JMIqFx072467
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 17:18:52 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 17:18:51 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 17:18:51 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JMIpPZ086866;
-        Tue, 19 May 2020 17:18:51 -0500
-Date:   Tue, 19 May 2020 17:18:51 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-CC:     Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <russell@personaltelco.net>,
-        <fercerpav@gmail.com>
-Subject: Re: [PATCH v1] usb: musb: dsps: set MUSB_DA8XX quirk for AM335x
-Message-ID: <20200519221851.GA15845@iaqt7>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, russell@personaltelco.net,
-        fercerpav@gmail.com
-References: <20200327053849.5348-1-o.rempel@pengutronix.de>
+        Tue, 19 May 2020 18:20:39 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0734FC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 15:20:39 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id f15so462523plr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 15:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qqjzSh1ztmtDYwc/MYnPY/dYSfE16wab49lYkM1PfBQ=;
+        b=Fsh2DrJuOBDMLbA4apQRID0KeanRhQiSAbTpdakI/ENJh94XscmLkvjLVV6+XZOkW3
+         eucUVxtVvrsavK61NAUg8AzSih+MeDqP2lDhozqB/PsV3iU7jq4IVUPvAnXx/WYB1AEu
+         rCvWOaUxyLDiXamwU/LAWr+51cWsMbudGo/hqlk7XmEi5gIQli+lynuVkVgMAYARLkxi
+         dj5VS7LHFE3sAYoY0FhUG5QqivxzJamv7Fvb2w2QqKPIUtuC5iUCxSzz4iwr5EtDW0cO
+         hI8W9R5cvtjBzJOjHU2iWFxrI30srcJL+vNlj076HVH/Iy78HnA3CZhU//XRojnIn9Ni
+         cjaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qqjzSh1ztmtDYwc/MYnPY/dYSfE16wab49lYkM1PfBQ=;
+        b=Vl3PDeM2mHJ09ZqTZ5fH+an3hqTkEKvNanH7Gvt2D2ZkGb+rggBNpNcqVdbMveFvGE
+         6/FmgoM5/LvvKmW8wltBgFpYY/qHRorby/Ux6UtnFolnUjFB1kOUs3CXMFAio2bNqaDx
+         OxRna/fKi9EQ+d3qR+imXQBXIzPsCAlxZFfFNDEw0nPLI++RPfkI1EwkmHD4yM+Tki7h
+         rJvgmDxZoEfVBSrWi/ap25Xj10ZCvB790MACIdX8kXg85IVB6D4senA2mI0O1qscYJUn
+         ma8RCvvT7Dsa361S5OYlI/AP4wwYGNWlISMMkXVRZXAjiVVwFqN3W57YyrIsk0kuuDWP
+         o/fA==
+X-Gm-Message-State: AOAM531IVZTVCBoDPrJ3P7Gtw079wTjZ5xImIy4zrWcorZyG4F7NhrVM
+        JX15S7wg2q1BPOQsqkwmNhJukJ9x8R8=
+X-Google-Smtp-Source: ABdhPJy2qeKYVGFiaiYmSSm3TzYMf3o3nRHsvHjU3Vrs44XNoMU4nBKRIIfLUZrvaNoGCn4Gi6Emlw==
+X-Received: by 2002:a17:90b:503:: with SMTP id r3mr1752652pjz.69.1589926838459;
+        Tue, 19 May 2020 15:20:38 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id w19sm393729pfc.95.2020.05.19.15.20.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 15:20:37 -0700 (PDT)
+Date:   Tue, 19 May 2020 16:20:35 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Arun Kumar Neelakantam <aneela@codeaurora.org>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
+        sricharan@codeaurora.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH V4 2/4] rpmsg: glink: Add support to handle signals
+ command
+Message-ID: <20200519222035.GB26832@xps15>
+References: <1589346671-15226-1-git-send-email-aneela@codeaurora.org>
+ <1589346671-15226-3-git-send-email-aneela@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200327053849.5348-1-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <1589346671-15226-3-git-send-email-aneela@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Mar 27, 2020 at 06:38:49AM +0100, Oleksij Rempel wrote:
-> Beagle Bone Black has different memory corruptions if kernel is
-> configured with USB_TI_CPPI41_DMA=y. This issue is reproducible with
-> ath9k-htc driver (ar9271 based wifi usb controller):
+On Wed, May 13, 2020 at 10:41:09AM +0530, Arun Kumar Neelakantam wrote:
+> Remote peripherals send signal notifications over glink with commandID 15.
 > 
-> root@AccessBox:~ iw dev wlan0 set monitor  fcsfail otherbss
-> root@AccessBox:~ ip l s dev wlan0 up
-> kmemleak: Cannot insert 0xda577e40 into the object search tree (overlaps existing)
-> CPU: 0 PID: 176 Comm: ip Not tainted 5.5.0 #7
-> Hardware name: Generic AM33XX (Flattened Device Tree)
-> [<c0112c14>] (unwind_backtrace) from [<c010dc98>] (show_stack+0x18/0x1c)
-> [<c010dc98>] (show_stack) from [<c08c7c2c>] (dump_stack+0x84/0x98)
-> [<c08c7c2c>] (dump_stack) from [<c02c75a8>] (create_object+0x2f8/0x324)
-> [<c02c75a8>] (create_object) from [<c02b8928>] (kmem_cache_alloc+0x1a8/0x39c)
-> [<c02b8928>] (kmem_cache_alloc) from [<c072fb68>] (__alloc_skb+0x60/0x174)
-> [<c072fb68>] (__alloc_skb) from [<bf0c5c58>] (ath9k_wmi_cmd+0x50/0x184 [ath9k_htc])
-> [<bf0c5c58>] (ath9k_wmi_cmd [ath9k_htc]) from [<bf0cb410>] (ath9k_regwrite_multi+0x54/0x84 [ath9k_htc])
-> [<bf0cb410>] (ath9k_regwrite_multi [ath9k_htc]) from [<bf0cb7fc>] (ath9k_regwrite+0xf0/0xfc [ath9k_htc])
-> [<bf0cb7fc>] (ath9k_regwrite [ath9k_htc]) from [<bf1aca78>] (ar5008_hw_process_ini+0x280/0x6c0 [ath9k_hw])
-> [<bf1aca78>] (ar5008_hw_process_ini [ath9k_hw]) from [<bf1a66ac>] (ath9k_hw_reset+0x270/0x1458 [ath9k_hw])
-> [<bf1a66ac>] (ath9k_hw_reset [ath9k_hw]) from [<bf0c9588>] (ath9k_htc_start+0xb0/0x22c [ath9k_htc])
-> [<bf0c9588>] (ath9k_htc_start [ath9k_htc]) from [<bf0eb3c0>] (drv_start+0x4c/0x1e8 [mac80211])
-> [<bf0eb3c0>] (drv_start [mac80211]) from [<bf104a84>] (ieee80211_do_open+0x480/0x954 [mac80211])
-> [<bf104a84>] (ieee80211_do_open [mac80211]) from [<c075127c>] (__dev_open+0xdc/0x160)
-> [<c075127c>] (__dev_open) from [<c07516a8>] (__dev_change_flags+0x1a4/0x204)
-> [<c07516a8>] (__dev_change_flags) from [<c0751728>] (dev_change_flags+0x20/0x50)
-> [<c0751728>] (dev_change_flags) from [<c076971c>] (do_setlink+0x2ac/0x978)
+> Add support to send and receive the signal command and convert the signals
+> from NATIVE to TIOCM while receiving and vice versa while sending.
 > 
-> After applying this patch, the system is running in monitor mode without
-> noticeable issues.
-> 
-> Suggested-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Signed-off-by: Chris Lew <clew@codeaurora.org>
+> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
 > ---
->  drivers/usb/musb/musb_dsps.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/rpmsg/qcom_glink_native.c | 126 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 126 insertions(+)
 > 
-> diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
-> index 88923175f71e..c01f9e9e69f5 100644
-> --- a/drivers/usb/musb/musb_dsps.c
-> +++ b/drivers/usb/musb/musb_dsps.c
-> @@ -690,7 +690,7 @@ static void dsps_dma_controller_resume(struct dsps_glue *glue) {}
->  #endif /* CONFIG_USB_TI_CPPI41_DMA */
+> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+> index fc8ef66..68e039a 100644
+> --- a/drivers/rpmsg/qcom_glink_native.c
+> +++ b/drivers/rpmsg/qcom_glink_native.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> + * Copyright (c) 2018, The Linux Foundation.
+
+Again, not sure what this is for.
+
+>   * Copyright (c) 2016-2017, Linaro Ltd
+>   */
 >  
->  static struct musb_platform_ops dsps_ops = {
-> -	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP,
-> +	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP | MUSB_DA8XX,
+> @@ -17,6 +18,7 @@
+>  #include <linux/rpmsg.h>
+>  #include <linux/sizes.h>
+>  #include <linux/slab.h>
+> +#include <linux/termios.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/mailbox_client.h>
+>  
+> @@ -150,6 +152,8 @@ enum {
+>   * @intent_req_lock: Synchronises multiple intent requests
+>   * @intent_req_result: Result of intent request
+>   * @intent_req_comp: Completion for intent_req signalling
+> + * @lsigs:	local side signals
+> + * @rsigs:	remote side signals
+>   */
+>  struct glink_channel {
+>  	struct rpmsg_endpoint ept;
+> @@ -181,6 +185,10 @@ struct glink_channel {
+>  	struct mutex intent_req_lock;
+>  	bool intent_req_result;
+>  	struct completion intent_req_comp;
+> +
+> +	unsigned int lsigs;
+> +	unsigned int rsigs;
+> +
+>  };
+>  
+>  #define to_glink_channel(_ept) container_of(_ept, struct glink_channel, ept)
+> @@ -201,9 +209,15 @@ static const struct rpmsg_endpoint_ops glink_endpoint_ops;
+>  #define RPM_CMD_TX_DATA_CONT		12
+>  #define RPM_CMD_READ_NOTIF		13
+>  #define RPM_CMD_RX_DONE_W_REUSE		14
+> +#define RPM_CMD_SIGNALS			15
+>  
+>  #define GLINK_FEATURE_INTENTLESS	BIT(1)
+>  
+> +#define NATIVE_DTR_SIG	BIT(31)
+> +#define NATIVE_CTS_SIG	BIT(30)
+> +#define NATIVE_CD_SIG	BIT(29)
+> +#define NATIVE_RI_SIG	BIT(28)
 
-The MUSB_DA8XX flag cannot be simply applied to MUSB_DSPS, at least the
-teardown and autoreq register offsets are different as show in
-cppi41_dma_controller_create().
+Please align theres with the BIT(1) of _INTENTLESS.
 
-Do you understand what exactly caused the issue? The kernel trace above
-doesn't provide enuough information.
+> +
+>  static void qcom_glink_rx_done_work(struct work_struct *work);
+>  
+>  static struct glink_channel *qcom_glink_alloc_channel(struct qcom_glink *glink,
+> @@ -975,6 +989,76 @@ static int qcom_glink_rx_open_ack(struct qcom_glink *glink, unsigned int lcid)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * qcom_glink_send_signals() - convert a signal  cmd to wire format and transmit
 
--Bin.
+s/signal  cmd/signal cmd
+
+> + * @glink:	The transport to transmit on.
+> + * @channel:	The glink channel
+> + * @sigs:	The signals to encode.
+> + *
+> + * Return: 0 on success or standard Linux error code.
+> + */
+> +static int qcom_glink_send_signals(struct qcom_glink *glink,
+> +				   struct glink_channel *channel,
+> +				   u32 sigs)
+> +{
+> +	struct glink_msg msg;
+> +
+> +	/* convert signals from TIOCM to NATIVE */
+> +	sigs &= 0x0fff;
+> +	if (sigs & TIOCM_DTR)
+> +		sigs |= NATIVE_DTR_SIG;
+> +	if (sigs & TIOCM_RTS)
+> +		sigs |= NATIVE_CTS_SIG;
+> +	if (sigs & TIOCM_CD)
+> +		sigs |= NATIVE_CD_SIG;
+> +	if (sigs & TIOCM_RI)
+> +		sigs |= NATIVE_RI_SIG;
+> +
+> +	msg.cmd = cpu_to_le16(RPM_CMD_SIGNALS);
+> +	msg.param1 = cpu_to_le16(channel->lcid);
+> +	msg.param2 = cpu_to_le32(sigs);
+> +
+> +	return qcom_glink_tx(glink, &msg, sizeof(msg), NULL, 0, true);
+> +}
+> +
+> +static int qcom_glink_handle_signals(struct qcom_glink *glink,
+> +				     unsigned int rcid, unsigned int signals)
+> +{
+> +	struct glink_channel *channel;
+> +	unsigned long flags;
+> +	u32 old;
+> +
+> +	spin_lock_irqsave(&glink->idr_lock, flags);
+> +	channel = idr_find(&glink->rcids, rcid);
+> +	spin_unlock_irqrestore(&glink->idr_lock, flags);
+> +	if (!channel) {
+> +		dev_err(glink->dev, "signal for non-existing channel\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	old = channel->rsigs;
+> +
+> +	/* convert signals from NATIVE to TIOCM */
+> +	if (signals & NATIVE_DTR_SIG)
+> +		signals |= TIOCM_DSR;
+
+In qcom_glink_send_signals(), TIOCM_DTR (and not TIOCM_DSR) converts to
+NATIVE_DTR_SIG.  
+
+> +	if (signals & NATIVE_CTS_SIG)
+> +		signals |= TIOCM_CTS;
+
+Similarly, NATIVE_CTS_SIG converts to TIOCM_RTS.  I would have expected to have
+a match between what gets sent and what comes back up.  If this is intentional
+please at some comments to justify your choices.
+
+> +	if (signals & NATIVE_CD_SIG)
+> +		signals |= TIOCM_CD;
+> +	if (signals & NATIVE_RI_SIG)
+> +		signals |= TIOCM_RI;
+> +	signals &= 0x0fff;
+> +
+> +	channel->rsigs = signals;
+> +
+> +	if (channel->ept.sig_cb) {
+> +		channel->ept.sig_cb(channel->ept.rpdev, channel->ept.priv,
+> +				    old, channel->rsigs);
+
+What is the relevance of old and channel->rsigs?  They are certainly not used in
+patch 4.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static irqreturn_t qcom_glink_native_intr(int irq, void *data)
+>  {
+>  	struct qcom_glink *glink = data;
+> @@ -1036,6 +1120,10 @@ static irqreturn_t qcom_glink_native_intr(int irq, void *data)
+>  			qcom_glink_handle_intent_req_ack(glink, param1, param2);
+>  			qcom_glink_rx_advance(glink, ALIGN(sizeof(msg), 8));
+>  			break;
+> +		case RPM_CMD_SIGNALS:
+> +			qcom_glink_handle_signals(glink, param1, param2);
+> +			qcom_glink_rx_advance(glink, ALIGN(sizeof(msg), 8));
+> +			break;
+>  		default:
+>  			dev_err(glink->dev, "unhandled rx cmd: %d\n", cmd);
+>  			ret = -EINVAL;
+> @@ -1340,6 +1428,42 @@ static int qcom_glink_trysend(struct rpmsg_endpoint *ept, void *data, int len)
+>  	return __qcom_glink_send(channel, data, len, false);
+>  }
+>  
+> +static int qcom_glink_get_sigs(struct rpmsg_endpoint *ept)
+> +{
+> +	struct glink_channel *channel = to_glink_channel(ept);
+> +
+> +	return channel->rsigs;
+> +}
+> +
+> +static int qcom_glink_set_sigs(struct rpmsg_endpoint *ept, u32 set, u32 clear)
+> +{
+> +	struct glink_channel *channel = to_glink_channel(ept);
+> +	struct qcom_glink *glink = channel->glink;
+> +	u32 sigs = channel->lsigs;
+> +
+> +	if (set & TIOCM_DTR)
+> +		sigs |= TIOCM_DTR;
+> +	if (set & TIOCM_RTS)
+> +		sigs |= TIOCM_RTS;
+> +	if (set & TIOCM_CD)
+> +		sigs |= TIOCM_CD;
+> +	if (set & TIOCM_RI)
+> +		sigs |= TIOCM_RI;
+> +
+> +	if (clear & TIOCM_DTR)
+> +		sigs &= ~TIOCM_DTR;
+> +	if (clear & TIOCM_RTS)
+> +		sigs &= ~TIOCM_RTS;
+> +	if (clear & TIOCM_CD)
+> +		sigs &= ~TIOCM_CD;
+> +	if (clear & TIOCM_RI)
+> +		sigs &= ~TIOCM_RI;
+> +
+> +	channel->lsigs = sigs;
+> +
+> +	return qcom_glink_send_signals(glink, channel, sigs);
+> +}
+> +
+>  /*
+>   * Finds the device_node for the glink child interested in this channel.
+>   */
+> @@ -1373,6 +1497,8 @@ static const struct rpmsg_endpoint_ops glink_endpoint_ops = {
+>  	.destroy_ept = qcom_glink_destroy_ept,
+>  	.send = qcom_glink_send,
+>  	.trysend = qcom_glink_trysend,
+> +	.get_signals = qcom_glink_get_sigs,
+> +	.set_signals = qcom_glink_set_sigs,
+>  };
+>  
+>  static void qcom_glink_rpdev_release(struct device *dev)
+> -- 
+> 2.7.4
