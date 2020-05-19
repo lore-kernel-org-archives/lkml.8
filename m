@@ -4,147 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA818C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BADFD20715
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5ACC204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8esUJBa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZ2PdY14"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgESEAn (ORCPT
+        id S1726381AbgESEFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 00:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
+        Tue, 19 May 2020 00:05:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgESEAn (ORCPT
+        with ESMTP id S1725791AbgESEFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 00:00:43 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39AEC061A0C;
-        Mon, 18 May 2020 21:00:42 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id c20so9924282ilk.6;
-        Mon, 18 May 2020 21:00:42 -0700 (PDT)
+        Tue, 19 May 2020 00:05:16 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754B3C061A0C;
+        Mon, 18 May 2020 21:05:16 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id a14so6733141ilk.2;
+        Mon, 18 May 2020 21:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YMISo78hL6Pp1LYoLknIURuBMh7SpGTi20rRpTAn94g=;
-        b=B8esUJBa6fAkrFrLfM4cuWFkuP0LC1On+oDVYNt1UfHOSu+8+ucq7iH2Iw2DyT6bRJ
-         aoby3Pok+cG0JUCh/fFekS+fompz5VivbO0VbAv7bnCLxsow4BmlwlrwJ83q0Tc1RFwg
-         F0pZPDKiuMIvAUpulSYJA916RL8f+LPozWN7u1E/xsA1rFtKprPFY0gTlu0qRdQ1ccjh
-         pp1mVvAP73KzNeDTSq3ktwVdegHNTbDIuBdRW1g3SOSGSMSDWMRlsKXqkHlhKXbdqUkR
-         99YAre5ZwH2V5EZAs2Yu6rfrAh/ROGlDufH9JJ4zzofTwl99dDQAvfoeISPcfO53x2hS
-         0dow==
+        bh=3tOm8zzhCxaJy3Xz/20xYyI/RssQ51tXhkdhSGs8XvM=;
+        b=PZ2PdY14xr+Ro5d+ddOFHl4D+ksurvlmAHT//qsqdw6SDeJ+Njtcdx18griVnejEdH
+         RyRkSXIYdKX/QnNCX73NqkQSMFny0/TLKJVmtHCqogKergXIYgNPnC+sWShWwHid6DgO
+         rZChs500Frt8l+dJeR9HN/bKB6DMTCd43fpRBI1StRoTu2ypdjcromQ1EdKQGaF7jUL2
+         k1Mo4tt2cZ/sfBEpHouIAjKpsEHx2ZvW/f3+q1ym8GsM6In6VWrj0ykApbU5WXFbKW7n
+         XTBb6Te9L3nMOrMTEcdrlWbdIKxPWpZW8GAUT+UEjPomvSFpmSDC9JtXZ3rsk5ZiVxU/
+         WhyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YMISo78hL6Pp1LYoLknIURuBMh7SpGTi20rRpTAn94g=;
-        b=ENjsf2So1dcwE4gjbIwD/B69quP5nSOPy77vjNKj2LLKgLCGvl0lqYrnvlE5Xrlu4T
-         JBSYDskJWEw1qjeqlAvTHikTF4nadzPTc1PwIi/5Z2zkTKqGH1VpVWOeRn2o610r+Z8m
-         nb3Bzxk66WVtf1+CJKRoh6YVHO8hX23XSMFtyCChHfems2Yprii3OYiJXoVrLXHwFcE8
-         U54SHeU+he5qmaGGKgu3tchsRAeCqvAXKTLPC+2hiXXELq1AtRFXqvmjlMflhLu8s6Sk
-         vXy3mqThOhQiGfusl/j9STVgpmZR1kEHOf1vDDUxCHBGl+BwrRZL+05Q9gENchO72CKz
-         FHNg==
-X-Gm-Message-State: AOAM533lMS9ehTTfMrYfyZud8eTcKXXdn+JdvHtoTgi8y7tHalJwNtX6
-        NDkmevFduwjqFjS6JnndQtJeeArCjGxF1NS/KuA=
-X-Google-Smtp-Source: ABdhPJyQJgR5yTS4N+0JWiF2JGKG283HyP0dTsU4nr0LD+H9udNV7mju1EsjNpxFKEm1nXD/gLi9uncR2XtK80xJUGk=
-X-Received: by 2002:a92:9e11:: with SMTP id q17mr20295545ili.137.1589860842312;
- Mon, 18 May 2020 21:00:42 -0700 (PDT)
+        bh=3tOm8zzhCxaJy3Xz/20xYyI/RssQ51tXhkdhSGs8XvM=;
+        b=T7hS6eiX9hjyx5uu9VCuWXApHIhBBc0i/O+qN4lA99Jp8DCjqFOltpsmW5Cd0SQ9hF
+         nadUTLMoXxurxckuqPhakmaxFlwfvRggmqxT6Wn5tUEoaVNo4paXLIcnUp8ora3NrUAr
+         4Zf1Gdph5MiBZV5MJMMrP6MKY8xu5mv1My/20okDHygFKMlgyzEXzSAlPWfhAe2SO1qe
+         x0wM+nk+RaKhnJLevJpIUfW1fufK6AWvAfqby/X+N+kPasliDzzE+Mo3tItNtJFDHgiU
+         6Y4TPjSkavpO3omAdPnFlaYaHjFCD7JJ+FtPkdfRqkmUGTfZEQ4/HMdpz3N3O9qoE6ZK
+         mXMw==
+X-Gm-Message-State: AOAM533lBqsfE7e9rNmRB817eN/GIOocKXrEkB8musNRkURf1R3BlJu+
+        vTikTDHxiB64bKjIA2mc+AlpTSTBuIkaogY3zSs=
+X-Google-Smtp-Source: ABdhPJxNZWuYH/8A7JmkXsS57791uw/AMFZzdoXTYEeXfyUEtNq49rXkuAD3c9lok1aG2vmSkwVYra8Cz/oOSTZ1rpU=
+X-Received: by 2002:a92:d40a:: with SMTP id q10mr20463435ilm.87.1589861114283;
+ Mon, 18 May 2020 21:05:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200514111453.GA99187@suse.com> <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
- <20200514124845.GA12559@suse.com> <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
- <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
- <20200515111548.GA54598@suse.com> <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
- <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com>
- <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org> <CAJ4mKGbahd8CbkEauBHBX6o93jipkCVoYe9O-1rAJQJFZkqDsQ@mail.gmail.com>
-In-Reply-To: <CAJ4mKGbahd8CbkEauBHBX6o93jipkCVoYe9O-1rAJQJFZkqDsQ@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 19 May 2020 07:00:31 +0300
-Message-ID: <CAOQ4uxjdu7=wXNBHZBQmtNexcG3qfu=XQov9HsRNi=os+QHAUg@mail.gmail.com>
-Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
-To:     Gregory Farnum <gfarnum@redhat.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Luis Henriques <lhenriques@suse.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Miklos Szeredi <miklos@szeredi.hu>
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <20200519012927.GT2165@builder.lan> <20200519034055.hfvifqz442yfduhg@vireshk-i7>
+In-Reply-To: <20200519034055.hfvifqz442yfduhg@vireshk-i7>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Mon, 18 May 2020 23:05:03 -0500
+Message-ID: <CABb+yY30nmbBUzYG62xGEbrr7107h_Edyq3jKPheZAQ0Cvr9Yg@mail.gmail.com>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 1:30 AM Gregory Farnum <gfarnum@redhat.com> wrote:
+On Mon, May 18, 2020 at 10:40 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> Maybe we resolved this conversation; I can't quite tell...
-
-I think v2 patch wraps it up...
-
-[...]
-
+> On 18-05-20, 18:29, Bjorn Andersson wrote:
+> > On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
+> > > This stuff has been doing rounds on the mailing list since several years
+> > > now with no agreed conclusion by all the parties. And here is another
+> > > attempt to get some feedback from everyone involved to close this once
+> > > and for ever. Your comments will very much be appreciated.
 > > >
-> > > Questions:
-> > > 1. Does sync() result in fully purging inodes on MDS?
-> >
-> > I don't think so, but again, that code is not trivial to follow. I do
-> > know that the MDS keeps around a "strays directory" which contains
-> > unlinked inodes that are lazily cleaned up. My suspicion is that it's
-> > satisfying lookups out of this cache as well.
-> >
-> > Which may be fine...the MDS is not required to be POSIX compliant after
-> > all. Only the fs drivers are.
->
-> I don't think this is quite that simple. Yes, the MDS is certainly
-> giving back stray inodes in response to a lookup-by-ino request. But
-> that's for a specific purpose: we need to be able to give back caps on
-> unlinked-but-open files. For NFS specifically, I don't know what the
-> rules are on NFS file handles and unlinked files, but the Ceph MDS
-> won't know when files are closed everywhere, and it translates from
-> NFS fh to Ceph inode using that lookup-by-ino functionality.
->
-
-There is no protocol rule that NFS server MUST return ESTALE
-for file handle of a deleted file, but there is a rule that it MAY return
-ESTALE for deleted file. For example, on server restart and traditional
-block filesystem, there is not much choice.
-
-So returning ESTALE when file is deleted but opened on another ceph
-client is definitely allowed by the protocol standard, the question is
-whether changing the behavior will break any existing workloads...
-
-> >
-> > > 2. Is i_nlink synchronized among nodes on deferred delete?
-> > > IWO, can inode come back from the dead on client if another node
-> > > has linked it before i_nlink 0 was observed?
-> >
-> > No, that shouldn't happen. The caps mechanism should ensure that it
-> > can't be observed by other clients until after the change.
-> >
-> > That said, Luis' current patch doesn't ensure we have the correct caps
-> > to check the i_nlink. We may need to add that in before we can roll with
-> > this.
-> >
-> > > 3. Can an NFS client be "migrated" from one ceph node to another
-> > > with an open but unlinked file?
+> > > The ARM MHU is defined here in the TRM [1] for your reference, which
+> > > states following:
+> > >
+> > >     "The MHU drives the signal using a 32-bit register, with all 32
+> > >     bits logically ORed together. The MHU provides a set of
+> > >     registers to enable software to set, clear, and check the status
+> > >     of each of the bits of this register independently.  The use of
+> > >     32 bits for each interrupt line enables software to provide more
+> > >     information about the source of the interrupt. For example, each
+> > >     bit of the register can be associated with a type of event that
+> > >     can contribute to raising the interrupt."
 > > >
 > >
-> > No. Open files in ceph are generally per-client. You can't pass around a
-> > fd (or equivalent).
+> > Does this mean that there are 32 different signals and they are all ORed
+> > into the same interrupt line to trigger software action when something
+> > happens?
+> >
+> > Or does it mean that this register is used to pass multi-bit information
+> > and when any such information is passed an interrupt will be triggered?
+> > If so, what does that information mean? How is it tied into other Linux
+> > drivers/subsystems?
 >
-> But the NFS file handles I think do work across clients, right?
+> I have started to believe the hardware is written badly at this point
+> :)
 >
-
-Maybe they can, but that would be like NFS server restart, so
-all bets are off w.r.t open but deleted files.
-
-Thanks,
-Amir.
+H/W is actually fine :)   Its just that the driver is written to
+_also_ support a platform (my original) that doesn't have shmem and
+need to pass data via 32bit registers.
+Frankly, I am not against the doorbell mode, I am against implementing
+two modes in a driver. If it really helped (note the past tense) the
+SCMI, we could implement the driver only in doorbell mode but
+unfortunately SCMI would still be _broken_ for non-doorbell
+controllers.
