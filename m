@@ -2,196 +2,193 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB11820715
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E54A20715
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="huLSRbgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgESCXq (ORCPT
+        id S1728012AbgESCYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 22:23:46 -0400
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:12746 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgESCXp (ORCPT
+        Mon, 18 May 2020 22:24:08 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:37871 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726302AbgESCYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 22:23:45 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 49R0714S3fzQlJp;
-        Tue, 19 May 2020 04:23:41 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id DZqWh7er1wSe; Tue, 19 May 2020 04:23:34 +0200 (CEST)
-Date:   Tue, 19 May 2020 12:23:07 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Christian Heimes <christian@python.org>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        John Johansen <john.johansen@canonical.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        "Lev R. Oshvang ." <levonshe@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: How about just O_EXEC? (was Re: [PATCH v5 3/6] fs: Enable to
- enforce noexec mounts or file exec through O_MAYEXEC)
-Message-ID: <20200519022307.oqpdb4vzghs3coyi@yavin.dot.cyphar.com>
-References: <202005132002.91B8B63@keescook>
- <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
- <202005140830.2475344F86@keescook>
- <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
- <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
- <202005142343.D580850@keescook>
- <87a729wpu1.fsf@oldenburg2.str.redhat.com>
- <202005150732.17C5EE0@keescook>
- <87r1vluuli.fsf@oldenburg2.str.redhat.com>
- <202005150847.2B1ED8F81@keescook>
+        Mon, 18 May 2020 22:24:08 -0400
+X-UUID: cef27ef7a3ae4a26904200c6bd5d0a8e-20200519
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=lZEdQ8ioW1/xHKs8HqXHOWda86nayj2lVNOArdxGEpk=;
+        b=huLSRbgggQ0Bd9l4jgVu9IMLl4vFiuklNfeLbsi7hRJPMqHUeuwfb1RSG5SctZ1ZXlm44QHF/QpP0UHKI+FBeL0flxvb+qWZlMjanCzioGpwsNKMJxFDtmTp2A2TRU5vUwpsrJNR9dz5r654mIfXlRL8a5ILkkpohDb6omKAqIk=;
+X-UUID: cef27ef7a3ae4a26904200c6bd5d0a8e-20200519
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 550651254; Tue, 19 May 2020 10:24:02 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 19 May 2020 10:24:00 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 19 May 2020 10:23:59 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v4 1/4] rcu/kasan: record and print call_rcu() call stack
+Date:   Tue, 19 May 2020 10:23:59 +0800
+Message-ID: <20200519022359.24115-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nmvvtdsznpppdmip"
-Content-Disposition: inline
-In-Reply-To: <202005150847.2B1ED8F81@keescook>
-X-Rspamd-Queue-Id: 7E02D177E
-X-Rspamd-Score: -7.06 / 15.00 / 15.00
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+VGhpcyBmZWF0dXJlIHdpbGwgcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3JjdSgpIGNhbGwgc3Rh
+Y2tzIGFuZA0KcHJpbnRzIHVwIHRvIDIgY2FsbF9yY3UoKSBjYWxsIHN0YWNrcyBpbiBLQVNBTiBy
+ZXBvcnQuDQoNCldoZW4gY2FsbF9yY3UoKSBpcyBjYWxsZWQsIHdlIHN0b3JlIHRoZSBjYWxsX3Jj
+dSgpIGNhbGwgc3RhY2sgaW50bw0Kc2x1YiBhbGxvYyBtZXRhLWRhdGEsIHNvIHRoYXQgdGhlIEtB
+U0FOIHJlcG9ydCBjYW4gcHJpbnQgcmN1IHN0YWNrLg0KDQpbMV1odHRwczovL2J1Z3ppbGxhLmtl
+cm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTE5ODQzNw0KWzJdaHR0cHM6Ly9ncm91cHMuZ29vZ2xl
+LmNvbS9mb3J1bS8jIXNlYXJjaGluL2thc2FuLWRldi9iZXR0ZXIkMjBzdGFjayQyMHRyYWNlcyQy
+MGZvciQyMHJjdSU3Q3NvcnQ6ZGF0ZS9rYXNhbi1kZXYvS1FzalRfODhoREUvN3JOVVpwclJCZ0FK
+DQoNClNpZ25lZC1vZmYtYnk6IFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1lZGlhdGVrLmNvbT4N
+ClN1Z2dlc3RlZC1ieTogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KQ2M6IEFu
+ZHJleSBSeWFiaW5pbiA8YXJ5YWJpbmluQHZpcnR1b3p6by5jb20+DQpDYzogRG1pdHJ5IFZ5dWtv
+diA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBn
+b29nbGUuY29tPg0KQ2M6IEFuZHJldyBNb3J0b24gPGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc+
+DQpDYzogUGF1bCBFLiBNY0tlbm5leSA8cGF1bG1ja0BrZXJuZWwub3JnPg0KQ2M6IEpvc2ggVHJp
+cGxldHQgPGpvc2hAam9zaHRyaXBsZXR0Lm9yZz4NCkNjOiBNYXRoaWV1IERlc25veWVycyA8bWF0
+aGlldS5kZXNub3llcnNAZWZmaWNpb3MuY29tPg0KQ2M6IExhaSBKaWFuZ3NoYW4gPGppYW5nc2hh
+bmxhaUBnbWFpbC5jb20+DQpDYzogSm9lbCBGZXJuYW5kZXMgPGpvZWxAam9lbGZlcm5hbmRlcy5v
+cmc+DQotLS0NCiBpbmNsdWRlL2xpbnV4L2thc2FuLmggfCAgMiArKw0KIGtlcm5lbC9yY3UvdHJl
+ZS5jICAgICB8ICAyICsrDQogbGliL0tjb25maWcua2FzYW4gICAgIHwgIDIgKysNCiBtbS9rYXNh
+bi9jb21tb24uYyAgICAgfCAgNCArKy0tDQogbW0va2FzYW4vZ2VuZXJpYy5jICAgIHwgMTkgKysr
+KysrKysrKysrKysrKysrKw0KIG1tL2thc2FuL2thc2FuLmggICAgICB8IDEwICsrKysrKysrKysN
+CiBtbS9rYXNhbi9yZXBvcnQuYyAgICAgfCAyNCArKysrKysrKysrKysrKysrKysrKysrKysNCiA3
+IGZpbGVzIGNoYW5nZWQsIDYxIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYg
+LS1naXQgYS9pbmNsdWRlL2xpbnV4L2thc2FuLmggYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCmlu
+ZGV4IDMxMzE0Y2E3YzYzNS4uMjNiN2VlMDA1NzJkIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51
+eC9rYXNhbi5oDQorKysgYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCkBAIC0xNzQsMTEgKzE3NCwx
+MyBAQCBzdGF0aWMgaW5saW5lIHNpemVfdCBrYXNhbl9tZXRhZGF0YV9zaXplKHN0cnVjdCBrbWVt
+X2NhY2hlICpjYWNoZSkgeyByZXR1cm4gMDsgfQ0KIA0KIHZvaWQga2FzYW5fY2FjaGVfc2hyaW5r
+KHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSk7DQogdm9pZCBrYXNhbl9jYWNoZV9zaHV0ZG93bihz
+dHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUpOw0KK3ZvaWQga2FzYW5fcmVjb3JkX2F1eF9zdGFjayh2
+b2lkICpwdHIpOw0KIA0KICNlbHNlIC8qIENPTkZJR19LQVNBTl9HRU5FUklDICovDQogDQogc3Rh
+dGljIGlubGluZSB2b2lkIGthc2FuX2NhY2hlX3NocmluayhzdHJ1Y3Qga21lbV9jYWNoZSAqY2Fj
+aGUpIHt9DQogc3RhdGljIGlubGluZSB2b2lkIGthc2FuX2NhY2hlX3NodXRkb3duKHN0cnVjdCBr
+bWVtX2NhY2hlICpjYWNoZSkge30NCitzdGF0aWMgaW5saW5lIHZvaWQga2FzYW5fcmVjb3JkX2F1
+eF9zdGFjayh2b2lkICpwdHIpIHt9DQogDQogI2VuZGlmIC8qIENPTkZJR19LQVNBTl9HRU5FUklD
+ICovDQogDQpkaWZmIC0tZ2l0IGEva2VybmVsL3JjdS90cmVlLmMgYi9rZXJuZWwvcmN1L3RyZWUu
+Yw0KaW5kZXggMDY1NDhlMmViYjcyLi4zNmE0ZmY3ZjMyMGIgMTAwNjQ0DQotLS0gYS9rZXJuZWwv
+cmN1L3RyZWUuYw0KKysrIGIva2VybmVsL3JjdS90cmVlLmMNCkBAIC01Nyw2ICs1Nyw3IEBADQog
+I2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCiAjaW5jbHVkZSA8bGludXgvc2NoZWQvaXNvbGF0aW9u
+Lmg+DQogI2luY2x1ZGUgPGxpbnV4L3NjaGVkL2Nsb2NrLmg+DQorI2luY2x1ZGUgPGxpbnV4L2th
+c2FuLmg+DQogI2luY2x1ZGUgIi4uL3RpbWUvdGljay1pbnRlcm5hbC5oIg0KIA0KICNpbmNsdWRl
+ICJ0cmVlLmgiDQpAQCAtMjY2OCw2ICsyNjY5LDcgQEAgX19jYWxsX3JjdShzdHJ1Y3QgcmN1X2hl
+YWQgKmhlYWQsIHJjdV9jYWxsYmFja190IGZ1bmMpDQogCWhlYWQtPmZ1bmMgPSBmdW5jOw0KIAlo
+ZWFkLT5uZXh0ID0gTlVMTDsNCiAJbG9jYWxfaXJxX3NhdmUoZmxhZ3MpOw0KKwlrYXNhbl9yZWNv
+cmRfYXV4X3N0YWNrKGhlYWQpOw0KIAlyZHAgPSB0aGlzX2NwdV9wdHIoJnJjdV9kYXRhKTsNCiAN
+CiAJLyogQWRkIHRoZSBjYWxsYmFjayB0byBvdXIgbGlzdC4gKi8NCmRpZmYgLS1naXQgYS9saWIv
+S2NvbmZpZy5rYXNhbiBiL2xpYi9LY29uZmlnLmthc2FuDQppbmRleCA4MWY1NDY0ZWE5ZTEuLjRl
+ODNjZjZlM2NhYSAxMDA2NDQNCi0tLSBhL2xpYi9LY29uZmlnLmthc2FuDQorKysgYi9saWIvS2Nv
+bmZpZy5rYXNhbg0KQEAgLTU4LDYgKzU4LDggQEAgY29uZmlnIEtBU0FOX0dFTkVSSUMNCiAJICBG
+b3IgYmV0dGVyIGVycm9yIGRldGVjdGlvbiBlbmFibGUgQ09ORklHX1NUQUNLVFJBQ0UuDQogCSAg
+Q3VycmVudGx5IENPTkZJR19LQVNBTl9HRU5FUklDIGRvZXNuJ3Qgd29yayB3aXRoIENPTkZJR19E
+RUJVR19TTEFCDQogCSAgKHRoZSByZXN1bHRpbmcga2VybmVsIGRvZXMgbm90IGJvb3QpLg0KKwkg
+IEluIGdlbmVyaWMgbW9kZSBLQVNBTiBwcmludHMgdGhlIGxhc3QgdHdvIGNhbGxfcmN1KCkgY2Fs
+bCBzdGFja3MgaW4NCisJICByZXBvcnRzLg0KIA0KIGNvbmZpZyBLQVNBTl9TV19UQUdTDQogCWJv
+b2wgIlNvZnR3YXJlIHRhZy1iYXNlZCBtb2RlIg0KZGlmZiAtLWdpdCBhL21tL2thc2FuL2NvbW1v
+bi5jIGIvbW0va2FzYW4vY29tbW9uLmMNCmluZGV4IDI5MDYzNThlNDJmMC4uOGJjNjE4Mjg5YmIx
+IDEwMDY0NA0KLS0tIGEvbW0va2FzYW4vY29tbW9uLmMNCisrKyBiL21tL2thc2FuL2NvbW1vbi5j
+DQpAQCAtNDEsNyArNDEsNyBAQA0KICNpbmNsdWRlICJrYXNhbi5oIg0KICNpbmNsdWRlICIuLi9z
+bGFiLmgiDQogDQotc3RhdGljIGlubGluZSBkZXBvdF9zdGFja19oYW5kbGVfdCBzYXZlX3N0YWNr
+KGdmcF90IGZsYWdzKQ0KK2RlcG90X3N0YWNrX2hhbmRsZV90IGthc2FuX3NhdmVfc3RhY2soZ2Zw
+X3QgZmxhZ3MpDQogew0KIAl1bnNpZ25lZCBsb25nIGVudHJpZXNbS0FTQU5fU1RBQ0tfREVQVEhd
+Ow0KIAl1bnNpZ25lZCBpbnQgbnJfZW50cmllczsNCkBAIC01NCw3ICs1NCw3IEBAIHN0YXRpYyBp
+bmxpbmUgZGVwb3Rfc3RhY2tfaGFuZGxlX3Qgc2F2ZV9zdGFjayhnZnBfdCBmbGFncykNCiBzdGF0
+aWMgaW5saW5lIHZvaWQgc2V0X3RyYWNrKHN0cnVjdCBrYXNhbl90cmFjayAqdHJhY2ssIGdmcF90
+IGZsYWdzKQ0KIHsNCiAJdHJhY2stPnBpZCA9IGN1cnJlbnQtPnBpZDsNCi0JdHJhY2stPnN0YWNr
+ID0gc2F2ZV9zdGFjayhmbGFncyk7DQorCXRyYWNrLT5zdGFjayA9IGthc2FuX3NhdmVfc3RhY2so
+ZmxhZ3MpOw0KIH0NCiANCiB2b2lkIGthc2FuX2VuYWJsZV9jdXJyZW50KHZvaWQpDQpkaWZmIC0t
+Z2l0IGEvbW0va2FzYW4vZ2VuZXJpYy5jIGIvbW0va2FzYW4vZ2VuZXJpYy5jDQppbmRleCA1NmZm
+ODg4NWZlMmUuLjMzNzJiZGNhZjkyYSAxMDA2NDQNCi0tLSBhL21tL2thc2FuL2dlbmVyaWMuYw0K
+KysrIGIvbW0va2FzYW4vZ2VuZXJpYy5jDQpAQCAtMzI1LDMgKzMyNSwyMiBAQCBERUZJTkVfQVNB
+Tl9TRVRfU0hBRE9XKGYyKTsNCiBERUZJTkVfQVNBTl9TRVRfU0hBRE9XKGYzKTsNCiBERUZJTkVf
+QVNBTl9TRVRfU0hBRE9XKGY1KTsNCiBERUZJTkVfQVNBTl9TRVRfU0hBRE9XKGY4KTsNCisNCit2
+b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2sodm9pZCAqYWRkcikNCit7DQorCXN0cnVjdCBwYWdl
+ICpwYWdlID0ga2FzYW5fYWRkcl90b19wYWdlKGFkZHIpOw0KKwlzdHJ1Y3Qga21lbV9jYWNoZSAq
+Y2FjaGU7DQorCXN0cnVjdCBrYXNhbl9hbGxvY19tZXRhICphbGxvY19pbmZvOw0KKwl2b2lkICpv
+YmplY3Q7DQorDQorCWlmICghKHBhZ2UgJiYgUGFnZVNsYWIocGFnZSkpKQ0KKwkJcmV0dXJuOw0K
+Kw0KKwljYWNoZSA9IHBhZ2UtPnNsYWJfY2FjaGU7DQorCW9iamVjdCA9IG5lYXJlc3Rfb2JqKGNh
+Y2hlLCBwYWdlLCBhZGRyKTsNCisJYWxsb2NfaW5mbyA9IGdldF9hbGxvY19pbmZvKGNhY2hlLCBv
+YmplY3QpOw0KKw0KKwkvKiByZWNvcmQgdGhlIGxhc3QgdHdvIGNhbGxfcmN1KCkgY2FsbCBzdGFj
+a3MgKi8NCisJYWxsb2NfaW5mby0+YXV4X3N0YWNrWzFdID0gYWxsb2NfaW5mby0+YXV4X3N0YWNr
+WzBdOw0KKwlhbGxvY19pbmZvLT5hdXhfc3RhY2tbMF0gPSBrYXNhbl9zYXZlX3N0YWNrKEdGUF9O
+T1dBSVQpOw0KK30NCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9rYXNhbi5oIGIvbW0va2FzYW4va2Fz
+YW4uaA0KaW5kZXggZThmMzcxOTlkODg1Li5hNzM5MWJjODMwNzAgMTAwNjQ0DQotLS0gYS9tbS9r
+YXNhbi9rYXNhbi5oDQorKysgYi9tbS9rYXNhbi9rYXNhbi5oDQpAQCAtMTA0LDcgKzEwNCwxNSBA
+QCBzdHJ1Y3Qga2FzYW5fdHJhY2sgew0KIA0KIHN0cnVjdCBrYXNhbl9hbGxvY19tZXRhIHsNCiAJ
+c3RydWN0IGthc2FuX3RyYWNrIGFsbG9jX3RyYWNrOw0KKyNpZmRlZiBDT05GSUdfS0FTQU5fR0VO
+RVJJQw0KKwkvKg0KKwkgKiBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgaXMgc3RvcmVkIGludG8gc3Ry
+dWN0IGthc2FuX2FsbG9jX21ldGEuDQorCSAqIFRoZSBmcmVlIHN0YWNrIGlzIHN0b3JlZCBpbnRv
+IHN0cnVjdCBrYXNhbl9mcmVlX21ldGEuDQorCSAqLw0KKwlkZXBvdF9zdGFja19oYW5kbGVfdCBh
+dXhfc3RhY2tbMl07DQorI2Vsc2UNCiAJc3RydWN0IGthc2FuX3RyYWNrIGZyZWVfdHJhY2tbS0FT
+QU5fTlJfRlJFRV9TVEFDS1NdOw0KKyNlbmRpZg0KICNpZmRlZiBDT05GSUdfS0FTQU5fU1dfVEFH
+U19JREVOVElGWQ0KIAl1OCBmcmVlX3BvaW50ZXJfdGFnW0tBU0FOX05SX0ZSRUVfU1RBQ0tTXTsN
+CiAJdTggZnJlZV90cmFja19pZHg7DQpAQCAtMTU5LDYgKzE2Nyw4IEBAIHZvaWQga2FzYW5fcmVw
+b3J0X2ludmFsaWRfZnJlZSh2b2lkICpvYmplY3QsIHVuc2lnbmVkIGxvbmcgaXApOw0KIA0KIHN0
+cnVjdCBwYWdlICprYXNhbl9hZGRyX3RvX3BhZ2UoY29uc3Qgdm9pZCAqYWRkcik7DQogDQorZGVw
+b3Rfc3RhY2tfaGFuZGxlX3Qga2FzYW5fc2F2ZV9zdGFjayhnZnBfdCBmbGFncyk7DQorDQogI2lm
+IGRlZmluZWQoQ09ORklHX0tBU0FOX0dFTkVSSUMpICYmIFwNCiAJKGRlZmluZWQoQ09ORklHX1NM
+QUIpIHx8IGRlZmluZWQoQ09ORklHX1NMVUIpKQ0KIHZvaWQgcXVhcmFudGluZV9wdXQoc3RydWN0
+IGthc2FuX2ZyZWVfbWV0YSAqaW5mbywgc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCmRpZmYg
+LS1naXQgYS9tbS9rYXNhbi9yZXBvcnQuYyBiL21tL2thc2FuL3JlcG9ydC5jDQppbmRleCA4MGYy
+M2M5ZGE2YjAuLjZmOGYyYmY4ZjUzYiAxMDA2NDQNCi0tLSBhL21tL2thc2FuL3JlcG9ydC5jDQor
+KysgYi9tbS9rYXNhbi9yZXBvcnQuYw0KQEAgLTE3OSw2ICsxNzksMTcgQEAgc3RhdGljIHN0cnVj
+dCBrYXNhbl90cmFjayAqa2FzYW5fZ2V0X2ZyZWVfdHJhY2soc3RydWN0IGttZW1fY2FjaGUgKmNh
+Y2hlLA0KIAlyZXR1cm4gJmFsbG9jX21ldGEtPmZyZWVfdHJhY2tbaV07DQogfQ0KIA0KKyNpZmRl
+ZiBDT05GSUdfS0FTQU5fR0VORVJJQw0KK3N0YXRpYyB2b2lkIHByaW50X3N0YWNrKGRlcG90X3N0
+YWNrX2hhbmRsZV90IHN0YWNrKQ0KK3sNCisJdW5zaWduZWQgbG9uZyAqZW50cmllczsNCisJdW5z
+aWduZWQgaW50IG5yX2VudHJpZXM7DQorDQorCW5yX2VudHJpZXMgPSBzdGFja19kZXBvdF9mZXRj
+aChzdGFjaywgJmVudHJpZXMpOw0KKwlzdGFja190cmFjZV9wcmludChlbnRyaWVzLCBucl9lbnRy
+aWVzLCAwKTsNCit9DQorI2VuZGlmDQorDQogc3RhdGljIHZvaWQgZGVzY3JpYmVfb2JqZWN0KHN0
+cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwgdm9pZCAqb2JqZWN0LA0KIAkJCQljb25zdCB2b2lkICph
+ZGRyLCB1OCB0YWcpDQogew0KQEAgLTE5Miw2ICsyMDMsMTkgQEAgc3RhdGljIHZvaWQgZGVzY3Jp
+YmVfb2JqZWN0KHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwgdm9pZCAqb2JqZWN0LA0KIAkJZnJl
+ZV90cmFjayA9IGthc2FuX2dldF9mcmVlX3RyYWNrKGNhY2hlLCBvYmplY3QsIHRhZyk7DQogCQlw
+cmludF90cmFjayhmcmVlX3RyYWNrLCAiRnJlZWQiKTsNCiAJCXByX2VycigiXG4iKTsNCisNCisj
+aWZkZWYgQ09ORklHX0tBU0FOX0dFTkVSSUMNCisJCWlmIChhbGxvY19pbmZvLT5hdXhfc3RhY2tb
+MF0pIHsNCisJCQlwcl9lcnIoIkxhc3Qgb25lIGNhbGxfcmN1KCkgY2FsbCBzdGFjazpcbiIpOw0K
+KwkJCXByaW50X3N0YWNrKGFsbG9jX2luZm8tPmF1eF9zdGFja1swXSk7DQorCQkJcHJfZXJyKCJc
+biIpOw0KKwkJfQ0KKwkJaWYgKGFsbG9jX2luZm8tPmF1eF9zdGFja1sxXSkgew0KKwkJCXByX2Vy
+cigiU2Vjb25kIHRvIGxhc3QgY2FsbF9yY3UoKSBjYWxsIHN0YWNrOlxuIik7DQorCQkJcHJpbnRf
+c3RhY2soYWxsb2NfaW5mby0+YXV4X3N0YWNrWzFdKTsNCisJCQlwcl9lcnIoIlxuIik7DQorCQl9
+DQorI2VuZGlmDQogCX0NCiANCiAJZGVzY3JpYmVfb2JqZWN0X2FkZHIoY2FjaGUsIG9iamVjdCwg
+YWRkcik7DQotLSANCjIuMTguMA0K
 
---nmvvtdsznpppdmip
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2020-05-15, Kees Cook <keescook@chromium.org> wrote:
-> On Fri, May 15, 2020 at 04:43:37PM +0200, Florian Weimer wrote:
-> > * Kees Cook:
-> >=20
-> > > On Fri, May 15, 2020 at 10:43:34AM +0200, Florian Weimer wrote:
-> > >> * Kees Cook:
-> > >>=20
-> > >> > Maybe I've missed some earlier discussion that ruled this out, but=
- I
-> > >> > couldn't find it: let's just add O_EXEC and be done with it. It ac=
-tually
-> > >> > makes the execve() path more like openat2() and is much cleaner af=
-ter
-> > >> > a little refactoring. Here are the results, though I haven't email=
-ed it
-> > >> > yet since I still want to do some more testing:
-> > >> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log=
-/?h=3Dkspp/o_exec/v1
-> > >>=20
-> > >> I think POSIX specifies O_EXEC in such a way that it does not confer
-> > >> read permissions.  This seems incompatible with what we are trying to
-> > >> achieve here.
-> > >
-> > > I was trying to retain this behavior, since we already make this
-> > > distinction between execve() and uselib() with the MAY_* flags:
-> > >
-> > > execve():
-> > >         struct open_flags open_exec_flags =3D {
-> > >                 .open_flag =3D O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-> > >                 .acc_mode =3D MAY_EXEC,
-> > >
-> > > uselib():
-> > >         static const struct open_flags uselib_flags =3D {
-> > >                 .open_flag =3D O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-> > >                 .acc_mode =3D MAY_READ | MAY_EXEC,
-> > >
-> > > I tried to retain this in my proposal, in the O_EXEC does not imply
-> > > MAY_READ:
-> >=20
-> > That doesn't quite parse for me, sorry.
-> >=20
-> > The point is that the script interpreter actually needs to *read* those
-> > files in order to execute them.
->=20
-> I think I misunderstood what you meant (Micka=EBl got me sorted out
-> now). If O_EXEC is already meant to be "EXEC and _not_ READ nor WRITE",
-> then yes, this new flag can't be O_EXEC. I was reading the glibc
-> documentation (which treats it as a permission bit flag, not POSIX,
-> which treats it as a complete mode description).
-
-On the other hand, if we had O_EXEC (or O_EXONLY a-la O_RDONLY) then the
-interpreter could re-open the file descriptor as O_RDONLY after O_EXEC
-succeeds. Not ideal, but I don't think it's a deal-breaker.
-
-Regarding O_MAYEXEC, I do feel a little conflicted.
-
-I do understand that its goal is not to be what O_EXEC was supposed to
-be (which is loosely what O_PATH has effectively become), so I think
-that this is not really a huge problem -- especially since you could
-just do O_MAYEXEC|O_PATH if you wanted to disallow reading explicitly.
-It would be nice to have an O_EXONLY concept, but it's several decades
-too late to make it mandatory (and making it optional has questionable
-utility IMHO).
-
-However, the thing I still feel mildly conflicted about is the sysctl. I
-do understand the argument for it (ultimately, whether O_MAYEXEC is
-usable on a system depends on the distribution) but it means that any
-program which uses O_MAYEXEC cannot rely on it to provide the security
-guarantees they expect. Even if the program goes and reads the sysctl
-value, it could change underneath them. If this is just meant to be a
-best-effort protection then this doesn't matter too much, but I just
-feel uneasy about these kinds of best-effort protections.
-
-I do wonder if we could require that fexecve(3) can only be done with
-file descriptors that have been opened with O_MAYEXEC (obviously this
-would also need to be a sysctl -- *sigh*). This would tie in to some of
-the magic-link changes I wanted to push (namely, upgrade_mask).
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---nmvvtdsznpppdmip
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXsNDCAAKCRCdlLljIbnQ
-Ep1qAQCjFv2VG5NQz8tGYkrTeOm2XgvCB0zQ3mmGYhFYEMKpYgD+J4hGIJA2Uqq8
-NSOE5oY1uvmG7wnuYY2/cbJlZVeF/Ao=
-=GDei
------END PGP SIGNATURE-----
-
---nmvvtdsznpppdmip--
