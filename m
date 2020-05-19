@@ -2,110 +2,85 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C53BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2678CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E334F207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02748207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589904543;
+	bh=u3+jsia5NAW/8Ph5G2JpnG6etn7OX8oeTKdDlKnd0Sc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=o3INXaRHPsu88KUwpOyeka+u7b46n7hbnBEI4Y9CmtM5NSobRhIx5rm1qEkvB4ovZ
+	 gaIzRJqJl9CRx54GxXWrvsz8u8YPwtntQNKnWKKj5qPm852Xpb8NIZpCT6HXV6KASi
+	 /YuciCUPDnn3JFIMTep/TXTQAow0PMqDYLWA4+us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgESQI6 (ORCPT
+        id S1729362AbgESQJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:08:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:10688 "EHLO mga14.intel.com"
+        Tue, 19 May 2020 12:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729055AbgESQI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:08:57 -0400
-IronPort-SDR: ffiIhO6rtS8dacovgxJpm7/KnpMucyg8tkxEpRyFMIRkmOjLFSPK3QQ+C5va1j+k/Ci8Yg9L19
- Rrj5jeZc8A/w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 09:08:47 -0700
-IronPort-SDR: y7eDh5PvvqyaF5gMVZbrF648sMaseofKEtk+zX50MtQQp11DtIx3fOzRwL2e2gp2tFQueVvF7J
- 6xkk73sQttEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="289007917"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 19 May 2020 09:08:44 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jb4nO-007g84-Ux; Tue, 19 May 2020 19:08:46 +0300
-Date:   Tue, 19 May 2020 19:08:46 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>, kuo-lang.tseng@intel.com,
-        ravi.v.shankar@intel.com, Ingo Molnar <mingo@redhat.com>,
-        Babu Moger <babu.moger@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V5 4/4] x86/resctrl: Use appropriate API for strings
- terminated by newline
-Message-ID: <20200519160846.GL1634618@smile.fi.intel.com>
-References: <cover.1589844108.git.reinette.chatre@intel.com>
- <a953992d99a1930703cba1362a3005d517c4cb33.1589844108.git.reinette.chatre@intel.com>
- <CAHp75Vc_VA-2UNJh7epe+oQEiU3WBedomLbAVTD_L4_ocvt8Dw@mail.gmail.com>
- <4a9603b8-32fb-024a-e2f5-14e95b4e3763@intel.com>
- <20200519160710.GK1634618@smile.fi.intel.com>
+        id S1729055AbgESQI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 12:08:59 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4302075F;
+        Tue, 19 May 2020 16:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589904539;
+        bh=u3+jsia5NAW/8Ph5G2JpnG6etn7OX8oeTKdDlKnd0Sc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NV4cKwwuBLLyXVatnObrm47KAEk5WfJ8UQC8c3xRc7mAEJpUQF7O+uI0gdsdZq381
+         f7BJ3B3WbVujfd3EA2AW0zQN2qdrSxoQ8Yi8dE9iCneCp41e8b4sxb8DwOCwLqgU+L
+         6lmnZZOTUAc/Qm7XxCtWaOWhQIzS9A/fzMTzJPEk=
+Date:   Tue, 19 May 2020 11:13:45 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] RDMA/rtrs: client: Fix function return on success
+Message-ID: <20200519161345.GA3910@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519160710.GK1634618@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 07:07:10PM +0300, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 08:50:22AM -0700, Reinette Chatre wrote:
-> > On 5/19/2020 1:28 AM, Andy Shevchenko wrote:
-> > > On Tue, May 19, 2020 at 2:50 AM Reinette Chatre
-> > > <reinette.chatre@intel.com> wrote:
+The function should return 0 on success, instead of err.
 
-...
+Addresses-Coverity-ID: 1493753 ("Identical code for different branches")
+Fixes: 6a98d71daea1 ("RDMA/rtrs: client: main functionality")
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/infiniband/ulp/rtrs/rtrs-clt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > > Can't we unify latter with a former like ...
-> 
-> > This would have been ideal if done from the start but currently "0" is
-> > returned if the current mode is pseudo-locked and user attempts to
-> > change the mode to pseudo-locked. Thus, to maintain the current user
-> > interface the check if user wants to set pseudo-locked mode is moved
-> > after the check if new mode is same as existing mode and thus not
-> > unified because that will result in an error returned always when user
-> > requests pseudo-locked mode.
-> 
-> Ah, I see now.
-> 
-> But we can then drop the check from sysfs_match_string() returned value, like
-> 
-> 	user_m = sysfs_match_string();
-
-Yes, here some additional checks like
-
-	if (user_m == mode)
-		goto out;
-
-> 	if (...) {
-> 		...
-> 	} else { // w/o even checking for the PSEUDO_LOCKED
-> 		...
-> 		goto out;
-> 	}
-> 
-> Can we?
-
+diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt.c b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+index 468fdd0d8713c..465515e46bb1a 100644
+--- a/drivers/infiniband/ulp/rtrs/rtrs-clt.c
++++ b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+@@ -1594,7 +1594,8 @@ static int create_con_cq_qp(struct rtrs_clt_con *con)
+ 
+ 	if (err)
+ 		return err;
+-	return err;
++
++	return 0;
+ }
+ 
+ static void destroy_con_cq_qp(struct rtrs_clt_con *con)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.26.2
 
