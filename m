@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066CAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBCF820825
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D3820825
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n0uMSJWz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YB87mYSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgESOSf (ORCPT
+        id S1729242AbgESOSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:18:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52860 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729237AbgESOSZ (ORCPT
+        Tue, 19 May 2020 10:18:24 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42454 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729178AbgESOSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:18:25 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JEIKPg120851;
-        Tue, 19 May 2020 09:18:20 -0500
+        Tue, 19 May 2020 10:18:22 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JEIHGx002657;
+        Tue, 19 May 2020 09:18:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589897900;
-        bh=sz1d30oTTh8vMYDylpY9tVGBzny00+8RzK0fIiSFu8Q=;
+        s=ti-com-17Q1; t=1589897897;
+        bh=MZrjMwwBACnlEh0VPVJlinuPYM86wKfIfyCEBI63ZJI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=n0uMSJWz5fyt5LwBAOTax8WapYYuiXLZwiRwP3Tmx0TnsKJ0xaUZDhMpnkfQr+pVH
-         hL3OvEWOWA8bYonJU0acCxv+Z9EIpchmxDIT8YoD5QypSiaMMg9R7ReKEN+5JexOT6
-         z7V8wzQzEqbFoi7ePNo036NpCVacKkGVsouw9w/M=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JEIJVP034347
+        b=YB87mYSDTFQwN9dN8/kxrU/JX7G6cM8Kz7bRBaGCdqcZZp/EDlRoL2vcKjPVKBgXs
+         J71RuA37EM85otLXu9/LM/rF72VAyW4F3UA6t1OudDcO2ccJMB/ak2kJi/4Yoxvbos
+         FijePEsOJjDPLm5VLMAFrTxr8tdJT4n0dT1P4Xdo=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JEIH0J057212
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 09:18:20 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 19 May 2020 09:18:17 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 09:18:19 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ May 2020 09:18:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
  (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 09:18:19 -0500
+ Frontend Transport; Tue, 19 May 2020 09:18:16 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEIISx058746;
-        Tue, 19 May 2020 09:18:19 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEIFEL124796;
+        Tue, 19 May 2020 09:18:16 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next 3/4] dt-bindings: net: Add RGMII internal delay for DP83869
-Date:   Tue, 19 May 2020 09:18:12 -0500
-Message-ID: <20200519141813.28167-4-dmurphy@ti.com>
+Subject: [PATCH net-next 1/4] net: phy: dp83869: Update port-mirroring to read straps
+Date:   Tue, 19 May 2020 09:18:10 -0500
+Message-ID: <20200519141813.28167-2-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519141813.28167-1-dmurphy@ti.com>
 References: <20200519141813.28167-1-dmurphy@ti.com>
@@ -68,77 +68,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the internal delay values into the header and update the binding
-with the internal delay properties.
+The device tree may not have the property set for port mirroring
+because the hardware may have it strapped. If the property is not in the
+DT then check the straps and set the port mirroring bit appropriately.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- .../devicetree/bindings/net/ti,dp83869.yaml    | 16 ++++++++++++++++
- include/dt-bindings/net/ti-dp83869.h           | 18 ++++++++++++++++++
- 2 files changed, 34 insertions(+)
+ drivers/net/phy/dp83869.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-index 5b69ef03bbf7..344015ab9081 100644
---- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-@@ -64,6 +64,20 @@ properties:
-        Operational mode for the PHY.  If this is not set then the operational
-        mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index 7996a4aea8d2..073a0f7754a5 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -66,6 +66,7 @@
  
-+  ti,rx-internal-delay:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+      RGMII Receive Clock Delay - see dt-bindings/net/ti-dp83869.h
-+      for applicable values. Required only if interface type is
-+      PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_RXID.
-+
-+  ti,tx-internal-delay:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description: |
-+      RGMII Transmit Clock Delay - see dt-bindings/net/ti-dp83869.h
-+      for applicable values. Required only if interface type is
-+      PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_TXID.
-+
- required:
-   - reg
+ /* STRAP_STS1 bits */
+ #define DP83869_STRAP_STS1_RESERVED		BIT(11)
++#define DP83869_STRAP_MIRROR_ENABLED           BIT(12)
  
-@@ -80,5 +94,7 @@ examples:
-         ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
-         ti,max-output-impedance = "true";
-         ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
-+        ti,rx-internal-delay = <DP83869_RGMIIDCTL_2_25_NS>;
-+        ti,tx-internal-delay = <DP83869_RGMIIDCTL_2_75_NS>;
-       };
-     };
-diff --git a/include/dt-bindings/net/ti-dp83869.h b/include/dt-bindings/net/ti-dp83869.h
-index 218b1a64e975..77d104a40f1f 100644
---- a/include/dt-bindings/net/ti-dp83869.h
-+++ b/include/dt-bindings/net/ti-dp83869.h
-@@ -16,6 +16,24 @@
- #define DP83869_PHYCR_FIFO_DEPTH_6_B_NIB	0x02
- #define DP83869_PHYCR_FIFO_DEPTH_8_B_NIB	0x03
+ /* PHYCTRL bits */
+ #define DP83869_RX_FIFO_SHIFT	12
+@@ -191,10 +192,18 @@ static int dp83869_of_init(struct phy_device *phydev)
+ 	else if (of_property_read_bool(of_node, "ti,min-output-impedance"))
+ 		dp83869->io_impedance = DP83869_IO_MUX_CFG_IO_IMPEDANCE_MIN;
  
-+/* RGMIIDCTL internal delay for rx and tx */
-+#define	DP83869_RGMIIDCTL_250_PS	0x0
-+#define	DP83869_RGMIIDCTL_500_PS	0x1
-+#define	DP83869_RGMIIDCTL_750_PS	0x2
-+#define	DP83869_RGMIIDCTL_1_NS		0x3
-+#define	DP83869_RGMIIDCTL_1_25_NS	0x4
-+#define	DP83869_RGMIIDCTL_1_50_NS	0x5
-+#define	DP83869_RGMIIDCTL_1_75_NS	0x6
-+#define	DP83869_RGMIIDCTL_2_00_NS	0x7
-+#define	DP83869_RGMIIDCTL_2_25_NS	0x8
-+#define	DP83869_RGMIIDCTL_2_50_NS	0x9
-+#define	DP83869_RGMIIDCTL_2_75_NS	0xa
-+#define	DP83869_RGMIIDCTL_3_00_NS	0xb
-+#define	DP83869_RGMIIDCTL_3_25_NS	0xc
-+#define	DP83869_RGMIIDCTL_3_50_NS	0xd
-+#define	DP83869_RGMIIDCTL_3_75_NS	0xe
-+#define	DP83869_RGMIIDCTL_4_00_NS	0xf
-+
- /* IO_MUX_CFG - Clock output selection */
- #define DP83869_CLK_O_SEL_CHN_A_RCLK		0x0
- #define DP83869_CLK_O_SEL_CHN_B_RCLK		0x1
+-	if (of_property_read_bool(of_node, "enet-phy-lane-swap"))
++	if (of_property_read_bool(of_node, "enet-phy-lane-swap")) {
+ 		dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
+-	else
+-		dp83869->port_mirroring = DP83869_PORT_MIRRORING_DIS;
++	} else {
++		/* If the lane swap is not in the DT then check the straps */
++		ret = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_STRAP_STS1);
++		if (ret < 0)
++			return ret;
++		if (ret & DP83869_STRAP_MIRROR_ENABLED)
++			dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
++		else
++			dp83869->port_mirroring = DP83869_PORT_MIRRORING_DIS;
++	}
+ 
+ 	if (of_property_read_u32(of_node, "rx-fifo-depth",
+ 				 &dp83869->rx_fifo_depth))
 -- 
 2.26.2
 
