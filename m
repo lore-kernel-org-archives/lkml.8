@@ -5,49 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A87C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F414E2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38172072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="V93UrU4M"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cTZ2etu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgESUfj (ORCPT
+        id S1728209AbgESUfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:35:39 -0400
+        Tue, 19 May 2020 16:35:37 -0400
 Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:34988 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725885AbgESUes (ORCPT
+        by vger.kernel.org with ESMTP id S1726783AbgESUev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:34:48 -0400
+        Tue, 19 May 2020 16:34:51 -0400
 Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 5FB7A30D7F7;
-        Tue, 19 May 2020 13:33:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 5FB7A30D7F7
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 7F78F30D3F7;
+        Tue, 19 May 2020 13:33:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 7F78F30D3F7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1589920404;
-        bh=IsUUhtwsD/oh2f/SMvEH2GyEwKF93YifRW5ZmP5F42Q=;
+        s=dkimrelay; t=1589920407;
+        bh=6jiHR37FraAIviJsY2NplPeNCzZpnug6DsMAoiO6v9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V93UrU4MAVkDGfqd3yGeIFRvw45/OMaRMYSj7RrXDWz9fhSo0txRe0c37BBwsBpRT
-         bTNyKe5FMvFYEaJuCUXNQxN0mJXe4Yi6Ok60s9sOEuG3qEvHn/J+eL0ooyG9Lp55BP
-         LKpP06QS+z6ojuxmjHpsdWH1LTOEwK1rSEx8HSsE=
+        b=cTZ2etu9iYZrPCcOLmqT6V93KU/fhXvaM+5Vy5NgsnZVps6VKer4m1xi0l0gZXJ1g
+         oCTkiS4lCdngux4rrPalvL5N332CovqUbwX0yj1Q45c6sekJcC40SyY7/poHqNJzoi
+         M+Omd4DtmkqF6vjfNy3Ht3yC5a8HqtXEH2AXpdg4=
 Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id CFFB414008B;
-        Tue, 19 May 2020 13:34:45 -0700 (PDT)
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 89C1D14008B;
+        Tue, 19 May 2020 13:34:48 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     james.quinlan@broadcom.com,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 02/15] ahci_brcm: fix use of BCM7216 reset controller
-Date:   Tue, 19 May 2020 16:34:00 -0400
-Message-Id: <20200519203419.12369-3-james.quinlan@broadcom.com>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
+        ENDPOINT DRIVERS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 04/15] PCI: brcmstb: Add compatibily of other chips
+Date:   Tue, 19 May 2020 16:34:02 -0400
+Message-Id: <20200519203419.12369-5-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200519203419.12369-1-james.quinlan@broadcom.com>
 References: <20200519203419.12369-1-james.quinlan@broadcom.com>
@@ -58,55 +66,197 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jim Quinlan <jquinlan@broadcom.com>
 
-A reset controller "rescal" is shared between the AHCI driver
-and the PCIe driver for the BrcmSTB 7216 chip.  The code is
-modified to allow this sharing and to deassert() properly.
+Add in compatibility strings and code for three Broadcom STB chips.
+Some of the register locations, shifts, and masks are different
+for certain chips, requiring the use of different constants based
+on of_id.
+
+We would like to add the following at this time to the match list
+but we need to wait until the end of this patchset so that
+everything works.
+
+    { .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
+    { .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
+    { .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
+    { .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
 
 Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 ---
- drivers/ata/ahci_brcm.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 103 +++++++++++++++++++++++---
+ 1 file changed, 91 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 6853dbb4131d..a3c32fc29e9c 100644
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 73020b4ff090..c1cf4ea7d3d9 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -120,9 +120,8 @@
+ #define  PCIE_EXT_SLOT_SHIFT				15
+ #define  PCIE_EXT_FUNC_SHIFT				12
+ 
+-#define PCIE_RGR1_SW_INIT_1				0x9210
+ #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
+-#define  PCIE_RGR1_SW_INIT_1_INIT_MASK			0x2
++#define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
+ 
+ /* PCIe parameters */
+ #define BRCM_NUM_PCIE_OUT_WINS		0x4
+@@ -152,6 +151,69 @@
+ #define SSC_STATUS_SSC_MASK		0x400
+ #define SSC_STATUS_PLL_LOCK_MASK	0x800
+ 
++#define IDX_ADDR(pcie)	\
++	(pcie->reg_offsets[EXT_CFG_INDEX])
++#define DATA_ADDR(pcie)	\
++	(pcie->reg_offsets[EXT_CFG_DATA])
++#define PCIE_RGR1_SW_INIT_1(pcie) \
++	(pcie->reg_offsets[RGR1_SW_INIT_1])
++
++enum {
++	RGR1_SW_INIT_1,
++	EXT_CFG_INDEX,
++	EXT_CFG_DATA,
++};
++
++enum {
++	RGR1_SW_INIT_1_INIT_MASK,
++	RGR1_SW_INIT_1_INIT_SHIFT,
++};
++
++enum pcie_type {
++	GENERIC,
++	BCM7278,
++};
++
++struct pcie_cfg_data {
++	const int *reg_field_info;
++	const int *offsets;
++	const enum pcie_type type;
++};
++
++static const int pcie_reg_field_info[] = {
++	[RGR1_SW_INIT_1_INIT_MASK] = 0x2,
++	[RGR1_SW_INIT_1_INIT_SHIFT] = 0x1,
++};
++
++static const int pcie_reg_field_info_bcm7278[] = {
++	[RGR1_SW_INIT_1_INIT_MASK] = 0x1,
++	[RGR1_SW_INIT_1_INIT_SHIFT] = 0x0,
++};
++
++static const int pcie_offsets[] = {
++	[RGR1_SW_INIT_1] = 0x9210,
++	[EXT_CFG_INDEX]  = 0x9000,
++	[EXT_CFG_DATA]   = 0x9004,
++};
++
++static const struct pcie_cfg_data generic_cfg = {
++	.reg_field_info	= pcie_reg_field_info,
++	.offsets	= pcie_offsets,
++	.type		= GENERIC,
++};
++
++static const int pcie_offset_bcm7278[] = {
++	[RGR1_SW_INIT_1] = 0xc010,
++	[EXT_CFG_INDEX] = 0x9000,
++	[EXT_CFG_DATA] = 0x9004,
++};
++
++static const struct pcie_cfg_data bcm7278_cfg = {
++	.reg_field_info = pcie_reg_field_info_bcm7278,
++	.offsets	= pcie_offset_bcm7278,
++	.type		= BCM7278,
++};
++
+ struct brcm_msi {
+ 	struct device		*dev;
+ 	void __iomem		*base;
+@@ -176,6 +238,9 @@ struct brcm_pcie {
+ 	int			gen;
+ 	u64			msi_target_addr;
+ 	struct brcm_msi		*msi;
++	const int		*reg_offsets;
++	const int		*reg_field_info;
++	enum pcie_type		type;
+ };
+ 
+ /*
+@@ -602,20 +667,21 @@ static struct pci_ops brcm_pcie_ops = {
+ 
+ static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie, u32 val)
  {
- 	const struct of_device_id *of_id;
- 	struct device *dev = &pdev->dev;
--	const char *reset_name = NULL;
- 	struct brcm_ahci_priv *priv;
- 	struct ahci_host_priv *hpriv;
+-	u32 tmp;
++	u32 tmp, mask =  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
++	u32 shift = pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
+ 
+-	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
+-	u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_INIT_MASK);
+-	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
++	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
++	tmp = (tmp & ~mask) | ((val << shift) & mask);
++	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+ }
+ 
+ static inline void brcm_pcie_perst_set(struct brcm_pcie *pcie, u32 val)
+ {
+ 	u32 tmp;
+ 
+-	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
++	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+ 	u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_PERST_MASK);
+-	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
++	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+ }
+ 
+ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+@@ -924,10 +990,17 @@ static int brcm_pcie_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id brcm_pcie_match[] = {
++	{ .compatible = "brcm,bcm2711-pcie", .data = &generic_cfg },
++	{},
++};
++
+ static int brcm_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node, *msi_np;
+ 	struct pci_host_bridge *bridge;
++	const struct pcie_cfg_data *data;
++	const struct of_device_id *of_id;
+ 	struct brcm_pcie *pcie;
+ 	struct pci_bus *child;
  	struct resource *res;
-@@ -452,11 +451,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+@@ -937,9 +1010,19 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	if (!bridge)
+ 		return -ENOMEM;
  
- 	/* Reset is optional depending on platform and named differently */
- 	if (priv->version == BRCM_SATA_BCM7216)
--		reset_name = "rescal";
-+		priv->rcdev = devm_reset_control_get_shared(&pdev->dev,
-+							    "rescal");
- 	else
--		reset_name = "ahci";
--
--	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
-+		priv->rcdev = devm_reset_control_get_optional(&pdev->dev,
-+							      "ahci");
- 	if (IS_ERR(priv->rcdev))
- 		return PTR_ERR(priv->rcdev);
++	of_id = of_match_node(brcm_pcie_match, np);
++	if (!of_id) {
++		pr_err("failed to look up compatible string\n");
++		return -EINVAL;
++	}
++	data = of_id->data;
++
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->dev = &pdev->dev;
+ 	pcie->np = np;
++	pcie->reg_offsets = data->offsets;
++	pcie->reg_field_info = data->reg_field_info;
++	pcie->type = data->type;
  
-@@ -479,10 +478,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- 		break;
- 	}
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	pcie->base = devm_ioremap_resource(&pdev->dev, res);
+@@ -1005,10 +1088,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	return ret;
+ }
  
--	if (priv->version == BRCM_SATA_BCM7216)
--		ret = reset_control_reset(priv->rcdev);
--	else
--		ret = reset_control_deassert(priv->rcdev);
-+	ret = reset_control_deassert(priv->rcdev);
- 	if (ret)
- 		return ret;
+-static const struct of_device_id brcm_pcie_match[] = {
+-	{ .compatible = "brcm,bcm2711-pcie" },
+-	{},
+-};
+ MODULE_DEVICE_TABLE(of, brcm_pcie_match);
  
+ static struct platform_driver brcm_pcie_driver = {
 -- 
 2.17.1
 
