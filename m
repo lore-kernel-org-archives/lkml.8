@@ -2,75 +2,114 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687C6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56762207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256C9206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgESTAp (ORCPT
+        id S1726861AbgESTA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:00:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:62691 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbgESTAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:00:45 -0400
-IronPort-SDR: vwky50IiyfCMFHsyjHNDpyQF6ffQBzJJo3cGzp8HGLJAQqSg8h/cNVvxzd85wObH2EjGclJMeB
- Y/XGOHHkqB+g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 12:00:44 -0700
-IronPort-SDR: DPcoO8JWQyzvNdTE+i+NjsSRehFDDEuS8LYC9YUWq1IQeAtof4lmJM2bG07+MnU58PZIh1qInD
- p/nEVByMNVFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="264407484"
-Received: from joelin3-mobl.gar.corp.intel.com (HELO localhost) ([10.249.42.57])
-  by orsmga003.jf.intel.com with ESMTP; 19 May 2020 12:00:40 -0700
-Date:   Tue, 19 May 2020 22:00:36 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        Joey Pabalinas <joeypabalinas@gmail.com>,
-        Petr Vorel <petr.vorel@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-snps-arc@lists.infradead.org
-Subject: Re: [PATCH v2] Kernel selftests: Add check if tpm devices are
- supported
-Message-ID: <20200519190023.GA22852@linux.intel.com>
-References: <20200519120743.41358-1-Nikita.Sobolev@synopsys.com>
+        Tue, 19 May 2020 15:00:56 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:60704 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbgESTA4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 15:00:56 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb7Tu-00039F-E2; Tue, 19 May 2020 13:00:50 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb7Tt-0007tH-FD; Tue, 19 May 2020 13:00:50 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <871rng22dm.fsf_-_@x220.int.ebiederm.org>
+        <202005191101.1D420E03@keescook>
+        <CAHk-=wjeoeh-F-PJmpYRpR_HoiB4r4qYgd3U6igtrUD6q5d_cg@mail.gmail.com>
+Date:   Tue, 19 May 2020 13:57:07 -0500
+In-Reply-To: <CAHk-=wjeoeh-F-PJmpYRpR_HoiB4r4qYgd3U6igtrUD6q5d_cg@mail.gmail.com>
+        (Linus Torvalds's message of "Tue, 19 May 2020 11:28:14 -0700")
+Message-ID: <87k117pxbw.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519120743.41358-1-Nikita.Sobolev@synopsys.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-XM-SPF: eid=1jb7Tt-0007tH-FD;;;mid=<87k117pxbw.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19MrUcNnkuFTMNeQJe1Nc0NOcGbTYorMS0=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 1/8] exec: Teach prepare_exec_creds how exec treats uids & gids
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 03:07:43PM +0300, Nikita Sobolev wrote:
-> tpm2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
-> are available. In case, when these devices are not available test
-> fails, but expected behaviour is skipped test.
-> 
-> Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-See
+> On Tue, May 19, 2020 at 11:03 AM Kees Cook <keescook@chromium.org> wrote:
+>>
+>> One question, though: why add this, since the repeat calling of the caps
+>> LSM hook will do this?
+>
+> I assume it's for the "preserve_creds" case where we don't even end up
+> setting creds at all.
+>
+> Yeah, at some point we'll hit a bprm handler that doesn't set
+> 'preserve_creds', and it all does get set in the end, but that's not
+> statically all that obvious.
+>
+> I think it makes sense to initialize as much as possible from the
+> generic code, and rely as little as possible on what the binfmt
+> handlers end up actually doing.
 
-https://lore.kernel.org/linux-kselftest/20200519134838.GA17129@linux.intel.com/T/#mf762512a67f0b23db5663d6d67746cb94b812931
+Where this initially came from was I was looking at how to clean up the
+case of no_new_privs/ptrace of a suid executable when we don't have
+enough permissions.   Just being able to create creds that kept
+everything as they were looked very useful and there was just this one
+little bit missing.
 
-The comments about the fixes tag and acronym spelling were not
-addressed. The code change looks great tho now, thanks.
+I included the change to prepare_exec_creds in this patchset to
+emphasize that neither security_bprm_creds_for_exec nor
+security_bprm_repopulate_creds need to do anything if there is nothing
+special going on.
 
-/Jarkko
+At the very least that helps me think through what the LSMs are required
+to do, and what those hooks are for.  AKA privilege changing execs.
+
+So I was thinking rely on the LSMs as little as possible rather than
+rely on the binfmt handlers as little as possible.  But it is the same
+idea.
+
+And yes it makes everything easier to analyze if everything starts off
+in a known good state.
+
+Eric
