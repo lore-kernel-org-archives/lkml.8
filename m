@@ -2,116 +2,149 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A991CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA818C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 934DB206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADFD20715
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 04:00:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8esUJBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgESD4q (ORCPT
+        id S1726436AbgESEAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:56:46 -0400
-Received: from mga18.intel.com ([134.134.136.126]:1478 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgESD4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:56:45 -0400
-IronPort-SDR: 3flFwuEZPmHp1nw+j2k3UBerhlRwCdUjKU6YlEL5SIOL8hQKSFRNk7YF1f0mVC2tr0tOPReENC
- gOo2ThwUFZmg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 20:56:44 -0700
-IronPort-SDR: QFxRRniFx2tfaqKTiqe2/A9xXbhaFfZ1jvxhEj2bJAnqaKK53FIltX99ThRNHxjpRnNEdjPdPQ
- ieiRoQO9fuhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,408,1583222400"; 
-   d="scan'208";a="264172224"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 18 May 2020 20:56:44 -0700
-Received: from [10.213.130.67] (ekotax-mobl.gar.corp.intel.com [10.213.130.67])
-        by linux.intel.com (Postfix) with ESMTP id 43E8F5802C9;
-        Mon, 18 May 2020 20:56:42 -0700 (PDT)
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel@vger.kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org
-Cc:     robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
-References: <cover.1589530082.git.eswara.kota@linux.intel.com>
- <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
-Message-ID: <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
-Date:   Tue, 19 May 2020 11:56:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 00:00:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgESEAn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 00:00:43 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39AEC061A0C;
+        Mon, 18 May 2020 21:00:42 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id c20so9924282ilk.6;
+        Mon, 18 May 2020 21:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YMISo78hL6Pp1LYoLknIURuBMh7SpGTi20rRpTAn94g=;
+        b=B8esUJBa6fAkrFrLfM4cuWFkuP0LC1On+oDVYNt1UfHOSu+8+ucq7iH2Iw2DyT6bRJ
+         aoby3Pok+cG0JUCh/fFekS+fompz5VivbO0VbAv7bnCLxsow4BmlwlrwJ83q0Tc1RFwg
+         F0pZPDKiuMIvAUpulSYJA916RL8f+LPozWN7u1E/xsA1rFtKprPFY0gTlu0qRdQ1ccjh
+         pp1mVvAP73KzNeDTSq3ktwVdegHNTbDIuBdRW1g3SOSGSMSDWMRlsKXqkHlhKXbdqUkR
+         99YAre5ZwH2V5EZAs2Yu6rfrAh/ROGlDufH9JJ4zzofTwl99dDQAvfoeISPcfO53x2hS
+         0dow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YMISo78hL6Pp1LYoLknIURuBMh7SpGTi20rRpTAn94g=;
+        b=ENjsf2So1dcwE4gjbIwD/B69quP5nSOPy77vjNKj2LLKgLCGvl0lqYrnvlE5Xrlu4T
+         JBSYDskJWEw1qjeqlAvTHikTF4nadzPTc1PwIi/5Z2zkTKqGH1VpVWOeRn2o610r+Z8m
+         nb3Bzxk66WVtf1+CJKRoh6YVHO8hX23XSMFtyCChHfems2Yprii3OYiJXoVrLXHwFcE8
+         U54SHeU+he5qmaGGKgu3tchsRAeCqvAXKTLPC+2hiXXELq1AtRFXqvmjlMflhLu8s6Sk
+         vXy3mqThOhQiGfusl/j9STVgpmZR1kEHOf1vDDUxCHBGl+BwrRZL+05Q9gENchO72CKz
+         FHNg==
+X-Gm-Message-State: AOAM533lMS9ehTTfMrYfyZud8eTcKXXdn+JdvHtoTgi8y7tHalJwNtX6
+        NDkmevFduwjqFjS6JnndQtJeeArCjGxF1NS/KuA=
+X-Google-Smtp-Source: ABdhPJyQJgR5yTS4N+0JWiF2JGKG283HyP0dTsU4nr0LD+H9udNV7mju1EsjNpxFKEm1nXD/gLi9uncR2XtK80xJUGk=
+X-Received: by 2002:a92:9e11:: with SMTP id q17mr20295545ili.137.1589860842312;
+ Mon, 18 May 2020 21:00:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200514111453.GA99187@suse.com> <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+ <20200514124845.GA12559@suse.com> <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+ <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
+ <20200515111548.GA54598@suse.com> <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
+ <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com>
+ <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org> <CAJ4mKGbahd8CbkEauBHBX6o93jipkCVoYe9O-1rAJQJFZkqDsQ@mail.gmail.com>
+In-Reply-To: <CAJ4mKGbahd8CbkEauBHBX6o93jipkCVoYe9O-1rAJQJFZkqDsQ@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 19 May 2020 07:00:31 +0300
+Message-ID: <CAOQ4uxjdu7=wXNBHZBQmtNexcG3qfu=XQov9HsRNi=os+QHAUg@mail.gmail.com>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+To:     Gregory Farnum <gfarnum@redhat.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 5/18/2020 9:49 PM, Kishon Vijay Abraham I wrote:
-> Dilip,
+On Tue, May 19, 2020 at 1:30 AM Gregory Farnum <gfarnum@redhat.com> wrote:
 >
-> On 5/15/2020 1:43 PM, Dilip Kota wrote:
->> This patch series adds Intel ComboPhy driver, respective yaml schemas
->>
->> Changes on v8:
->>    As per PHY Maintainer's request add description in comments for doing
->>    register access through register map framework.
->>
->> Changes on v7:
->>    As per System control driver maintainer's inputs remove
->>      fwnode_to_regmap() definition and use device_node_get_regmap()
-> Can you fix this warning and resend the patch?
-> drivers/phy/intel/phy-intel-combo.c:229:6: warning: ‘cb_mode’ may be used
-> uninitialized in this function [-Wmaybe-uninitialized]
->    ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
->    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/phy/intel/phy-intel-combo.c:204:24: note: ‘cb_mode’ was declared here
->    enum intel_combo_mode cb_mode;
->                          ^~~~~~~
-I noticed this warning while preparing the patch.
-It sounds like false warning because:
-1.) "cb_mode" is initialized in the switch case based on the "mode = 
-cbphy->phy_mode;"
-2.) cbphy->phy_mode is initialized during the probe in 
-"intel_cbphy_fwnode_parse()" with one of the 3 values.
-PHY_PCIE_MODE, PHY_SATA_MODE, PHY_XPCS_MODE.
-3.) There is no chance of "cbphy->phy_mode" having different value.
-4.) And "cb_mode" will be initialized according to the "mode = 
-cbphy->phy_mode;"
-5.) Hence, there is no chance of "cb_mode" getting accessed uninitialized.
+> Maybe we resolved this conversation; I can't quite tell...
 
-Regards,
-Dilip
-> Thanks
-> Kishon
->>      
->> Changes on v6:
->>    Rebase patches on the latest maintainer's branch
->>    https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
->> Dilip Kota (3):
->>    dt-bindings: phy: Add PHY_TYPE_XPCS definition
->>    dt-bindings: phy: Add YAML schemas for Intel ComboPhy
->>    phy: intel: Add driver support for ComboPhy
->>
->>   .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
->>   drivers/phy/intel/Kconfig                          |  14 +
->>   drivers/phy/intel/Makefile                         |   1 +
->>   drivers/phy/intel/phy-intel-combo.c                | 632 +++++++++++++++++++++
->>   include/dt-bindings/phy/phy.h                      |   1 +
->>   5 files changed, 749 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
->>   create mode 100644 drivers/phy/intel/phy-intel-combo.c
->>
+I think v2 patch wraps it up...
+
+[...]
+
+> > >
+> > > Questions:
+> > > 1. Does sync() result in fully purging inodes on MDS?
+> >
+> > I don't think so, but again, that code is not trivial to follow. I do
+> > know that the MDS keeps around a "strays directory" which contains
+> > unlinked inodes that are lazily cleaned up. My suspicion is that it's
+> > satisfying lookups out of this cache as well.
+> >
+> > Which may be fine...the MDS is not required to be POSIX compliant after
+> > all. Only the fs drivers are.
+>
+> I don't think this is quite that simple. Yes, the MDS is certainly
+> giving back stray inodes in response to a lookup-by-ino request. But
+> that's for a specific purpose: we need to be able to give back caps on
+> unlinked-but-open files. For NFS specifically, I don't know what the
+> rules are on NFS file handles and unlinked files, but the Ceph MDS
+> won't know when files are closed everywhere, and it translates from
+> NFS fh to Ceph inode using that lookup-by-ino functionality.
+>
+
+There is no protocol rule that NFS server MUST return ESTALE
+for file handle of a deleted file, but there is a rule that it MAY return
+ESTALE for deleted file. For example, on server restart and traditional
+block filesystem, there is not much choice.
+
+So returning ESTALE when file is deleted but opened on another ceph
+client is definitely allowed by the protocol standard, the question is
+whether changing the behavior will break any existing workloads...
+
+> >
+> > > 2. Is i_nlink synchronized among nodes on deferred delete?
+> > > IWO, can inode come back from the dead on client if another node
+> > > has linked it before i_nlink 0 was observed?
+> >
+> > No, that shouldn't happen. The caps mechanism should ensure that it
+> > can't be observed by other clients until after the change.
+> >
+> > That said, Luis' current patch doesn't ensure we have the correct caps
+> > to check the i_nlink. We may need to add that in before we can roll with
+> > this.
+> >
+> > > 3. Can an NFS client be "migrated" from one ceph node to another
+> > > with an open but unlinked file?
+> > >
+> >
+> > No. Open files in ceph are generally per-client. You can't pass around a
+> > fd (or equivalent).
+>
+> But the NFS file handles I think do work across clients, right?
+>
+
+Maybe they can, but that would be like NFS server restart, so
+all bets are off w.r.t open but deleted files.
+
+Thanks,
+Amir.
