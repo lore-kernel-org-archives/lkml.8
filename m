@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0760C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73383C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D14CE207D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB082075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+KdDcW7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONRt9F1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgESDAp (ORCPT
+        id S1728182AbgESDAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:00:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
+        Mon, 18 May 2020 23:00:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgESDAo (ORCPT
+        with ESMTP id S1726270AbgESDAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:00:44 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92886C061A0C;
-        Mon, 18 May 2020 20:00:44 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id n15so720242pjt.4;
-        Mon, 18 May 2020 20:00:44 -0700 (PDT)
+        Mon, 18 May 2020 23:00:48 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F31C6C061A0C;
+        Mon, 18 May 2020 20:00:47 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id w19so3245833ply.11;
+        Mon, 18 May 2020 20:00:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UnJKuJGVYF6fA5k6yoVG80q3S/n8nZyC72NBiLOx2Tg=;
-        b=s+KdDcW74Qx7WsQOS2WsQ5NCi7nor1ZWq4ORQvQb46SiW4wvGrRblUmtuTYvg9tkqA
-         r+iTJj7fZtCJw/YY778GrTZx0lfgOXzv1rids1lYZvPn11XUfyxhJjrXQLJiaPtUwK53
-         Fe2+UAE4pt4iHWddjSKXknhKacIS2FTJuvp/bBJlMk7ZYBwyZT0EvrzfGAPF/5Uq2YMl
-         hyDAEXF4dzP/mAI92nB1kL1lHx7K5JBmCdR7YtgrDgn4zo/OzTUBIC6KD88KHAA2D8qk
-         rKmSnU9AuqVsfYoMZ22iFCtvLFUlLfQheCznvApT1L8z2zKT+X9cpiGojNr+Rd+rmwVE
-         55Sg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eozjto79cDaaYBRhhL0JqfzI0jgkFXP1vwEZQbjMQKU=;
+        b=ONRt9F1E+eDwlkaAvdGC2p2pUX2Ert93Yot8UDXGJkjbURtIhWH/qiAAYF5xhBREQn
+         bVA/B059BU/o/w+AQBqFCK+RysA49IMCsiiWexwlF80xLUDD4/SASijPnXIvFpB2U7zT
+         Lz9gtXDthPvH7ol5HqdDaPi12+7HM4GJiBd+YEuWVglKynijbCap8gaGzKj2DLgT4yB2
+         kbzOPQZZhybuLXYolQ+vm1gWAcO5u4Op/nOYSjGQQv9553SVkU2a8ms7EFtishNvDQCn
+         rkTsVCUCcqpzcg9BWrm32xW1QnCgDngyUvb15NyOtRpCJejmLbjAj0vAekRUVZaQXQBE
+         biSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UnJKuJGVYF6fA5k6yoVG80q3S/n8nZyC72NBiLOx2Tg=;
-        b=hojnA4Zs4bLdF/dTx8+i3sD+Iq4XNlsbUeaOJN62JuOtL5CLV8zY7jKikUQsR29UsH
-         f9ooK2dkIObagDkrlpKLjPITfW00LhHK+dQmgXf/NQb0IZRtBEvm4c3M95t3TRXyUmfH
-         iZp6OyXstX1O9UGnfwuDYa+Fngc4EiABb2fNbChuE0holYB1ICGbfOXLllqiYiyVaTFu
-         Xpxp6PTh3rOFbxgkwbH5ite1FXQm6wVwmtCyxpe7pYQnQ/mqk8qQDfL0cB44V4pXTSCZ
-         RK+RdFCjgahvNg6THBkNUrjkLngfYA8tL/QbXB3sOKeLXjLEyk/EzRczukq1jZFgX4fK
-         bPxw==
-X-Gm-Message-State: AOAM531VIJlDmx2mXfMFzbgwX2LQmLSfz+uXPJthgW0g6YIhjLUHvDAw
-        bmesH3kRlSrvegUw8icVIwg=
-X-Google-Smtp-Source: ABdhPJy1t4rt9mTDBn6rNEdUra4+iLmjwqhnVTRDsQ7ivFkmrkzFRlSrX1T0iPpZs7VyJLOqEWn1NQ==
-X-Received: by 2002:a17:90a:3201:: with SMTP id k1mr2595156pjb.202.1589857244161;
-        Mon, 18 May 2020 20:00:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eozjto79cDaaYBRhhL0JqfzI0jgkFXP1vwEZQbjMQKU=;
+        b=sgATCaPxrnIrCtPn3qKTE3GIPdj4T7ZL8WWjRX7CW6DxPwfSr2pcfEjkxhwDG6Ksh0
+         F50Urp+Bg+S5CXHkLpDae/19BqHBAOJBipBxi0SZnE0Sn+kvM0cyLjmTpBfAXeufwsZA
+         /WWh2ckOHEJKAm8SBmQWHfBlBD/8su9JmvN0j0zwcS4nKC1SeQDdNYToydnmAdKL+zhF
+         Ql9FJrmNqQu+LH6NWT2Y/a2OBTwT4oFmpjVf5CXre4mkMXMdr4AMp8KETxnL8mv41fzx
+         /eiAC49DmZuVf8LH3ngMw4eVF0Nivf2ekTHAAc2+0V2ZHaaMTTD5xtIGBBu/jblShhGU
+         k/2g==
+X-Gm-Message-State: AOAM532AQJVJOSwKtc0URZVqigx1kDdiDPnLp5ZI9u1fKQE+ylG0YILS
+        BCLtCRAVrJB+zy8lT07gM+s=
+X-Google-Smtp-Source: ABdhPJz8QN5RT4ze2AENM1VjOY7uZWHZOObN8Ab2QuFZV98/1OxTfYA9AzMYQYq3wGEB4JkCnJhraA==
+X-Received: by 2002:a17:90a:141:: with SMTP id z1mr2613706pje.33.1589857247615;
+        Mon, 18 May 2020 20:00:47 -0700 (PDT)
 Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id k24sm9809494pfk.134.2020.05.18.20.00.40
+        by smtp.gmail.com with ESMTPSA id k24sm9809494pfk.134.2020.05.18.20.00.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 20:00:43 -0700 (PDT)
+        Mon, 18 May 2020 20:00:46 -0700 (PDT)
 From:   Chunyan Zhang <zhang.lyra@gmail.com>
 To:     Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>
@@ -68,10 +68,12 @@ Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         Baolin Wang <baolin.wang7@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH 1/2] clk: sprd: mark the local clock symbols static
-Date:   Tue, 19 May 2020 11:00:35 +0800
-Message-Id: <20200519030036.1785-1-zhang.lyra@gmail.com>
+Subject: [PATCH 2/2] clk: sprd: return correct type of value for _sprd_pll_recalc_rate
+Date:   Tue, 19 May 2020 11:00:36 +0800
+Message-Id: <20200519030036.1785-2-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200519030036.1785-1-zhang.lyra@gmail.com>
+References: <20200519030036.1785-1-zhang.lyra@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,59 +83,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-There's a few pll gate clocks which were not marked with static, and
-those clock are used only in the current file, so add static key word
-for them.
+The function _sprd_pll_recalc_rate() defines return value to unsigned
+long, but it would return a negative value when malloc fail, changing
+to return its parent_rate makes more sense, since if the callback
+.recalc_rate() is not set, the framework returns the parent_rate as
+well.
 
-Fixes: 0e4b8a2349f3 ("clk: sprd: add clocks support for SC9863A")
+Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
 Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 ---
- drivers/clk/sprd/sc9863a-clk.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ drivers/clk/sprd/pll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sprd/sc9863a-clk.c b/drivers/clk/sprd/sc9863a-clk.c
-index 9568ec956ee4..ad2e0f9f8563 100644
---- a/drivers/clk/sprd/sc9863a-clk.c
-+++ b/drivers/clk/sprd/sc9863a-clk.c
-@@ -23,22 +23,22 @@
- #include "pll.h"
+diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
+index 15791484388f..13a322b2535a 100644
+--- a/drivers/clk/sprd/pll.c
++++ b/drivers/clk/sprd/pll.c
+@@ -106,7 +106,7 @@ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
  
- /* mpll*_gate clocks control cpu cores, they were enabled by default */
--SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll0_gate, "mpll0-gate", "ext-26m", 0x94,
--			     0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
--SPRD_PLL_SC_GATE_CLK_FW_NAME(dpll0_gate, "dpll0-gate", "ext-26m", 0x98,
--			     0x1000, BIT(0), 0, 0, 240);
--SPRD_PLL_SC_GATE_CLK_FW_NAME(lpll_gate, "lpll-gate", "ext-26m", 0x9c,
--			     0x1000, BIT(0), 0, 0, 240);
--SPRD_PLL_SC_GATE_CLK_FW_NAME(gpll_gate, "gpll-gate", "ext-26m", 0xa8,
--			     0x1000, BIT(0), 0, 0, 240);
--SPRD_PLL_SC_GATE_CLK_FW_NAME(dpll1_gate, "dpll1-gate", "ext-26m", 0x1dc,
--			     0x1000, BIT(0), 0, 0, 240);
--SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll1_gate, "mpll1-gate", "ext-26m", 0x1e0,
--			     0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
--SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll2_gate, "mpll2-gate", "ext-26m", 0x1e4,
--			     0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
--SPRD_PLL_SC_GATE_CLK_FW_NAME(isppll_gate, "isppll-gate", "ext-26m", 0x1e8,
--			     0x1000, BIT(0), 0, 0, 240);
-+static SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll0_gate, "mpll0-gate", "ext-26m", 0x94,
-+				    0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
-+static SPRD_PLL_SC_GATE_CLK_FW_NAME(dpll0_gate, "dpll0-gate", "ext-26m", 0x98,
-+				    0x1000, BIT(0), 0, 0, 240);
-+static SPRD_PLL_SC_GATE_CLK_FW_NAME(lpll_gate, "lpll-gate", "ext-26m", 0x9c,
-+				    0x1000, BIT(0), 0, 0, 240);
-+static SPRD_PLL_SC_GATE_CLK_FW_NAME(gpll_gate, "gpll-gate", "ext-26m", 0xa8,
-+				    0x1000, BIT(0), 0, 0, 240);
-+static SPRD_PLL_SC_GATE_CLK_FW_NAME(dpll1_gate, "dpll1-gate", "ext-26m", 0x1dc,
-+				    0x1000, BIT(0), 0, 0, 240);
-+static SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll1_gate, "mpll1-gate", "ext-26m", 0x1e0,
-+				    0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
-+static SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll2_gate, "mpll2-gate", "ext-26m", 0x1e4,
-+				    0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
-+static SPRD_PLL_SC_GATE_CLK_FW_NAME(isppll_gate, "isppll-gate", "ext-26m",
-+				    0x1e8, 0x1000, BIT(0), 0, 0, 240);
+ 	cfg = kcalloc(regs_num, sizeof(*cfg), GFP_KERNEL);
+ 	if (!cfg)
+-		return -ENOMEM;
++		return parent_rate;
  
- static struct sprd_clk_common *sc9863a_pmu_gate_clks[] = {
- 	/* address base is 0x402b0000 */
+ 	for (i = 0; i < regs_num; i++)
+ 		cfg[i] = sprd_pll_read(pll, i);
 -- 
 2.20.1
 
