@@ -2,84 +2,161 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFBF207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7514120709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589908291;
+	bh=AhoIJIhI20EELQu2FCFvcJtbYqUj+WKPqBjlG6rzH7g=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Zb3UDPo5U28lwqh3PhLl2leIHbvQt2tcG0DY1SCs8SpEnTNphDBGGMKWXZai6yYlv
+	 9jvlKYGTN3jJpAdDpplQZ4A90y9nRQDGevjh6Qi0mk1ue4irSuKF9dZGyCjqWoeVWk
+	 qp6UZjuVD6iLTurF4Zzw5GOvLAutgxwkQL2/kezc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgESRLC (ORCPT
+        id S1729437AbgESRLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:11:02 -0400
-Received: from mailrelay4.webfaction.com ([185.20.51.6]:57804 "EHLO
-        mailrelay4.webfaction.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbgESRLB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:11:01 -0400
-Received: from mailrelay3.webfaction.com (mailrelay3.webfaction.com [207.38.93.110])
-        by mailrelay4.webfaction.com (Postfix) with ESMTPS id AA711A6D79;
-        Tue, 19 May 2020 17:10:54 +0000 (UTC)
-Received: from mailrelay1.webfaction.com (mailrelay1.webfaction.com [207.38.86.46])
-        by mailrelay3.webfaction.com (Postfix) with ESMTPS id DEEE32A5088;
-        Tue, 19 May 2020 17:10:52 +0000 (UTC)
-Received: from smtp.webfaction.com (mail6.webfaction.com [31.170.123.134])
-        by mailrelay1.webfaction.com (Postfix) with ESMTPS id EA76E1A0E3D;
-        Tue, 19 May 2020 17:10:51 +0000 (UTC)
-Received: from jeremy.localnet (host-37-191-188-128.lynet.no [37.191.188.128])
-        by smtp.webfaction.com (Postfix) with ESMTPSA id 810DA60038E8E;
-        Tue, 19 May 2020 17:11:01 +0000 (UTC)
-From:   Paul Boddie <paul@boddie.org.uk>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>, od@zcrc.me,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 11/12] gpu/drm: Ingenic: Add support for the IPU
-Date:   Tue, 19 May 2020 19:10:32 +0200
-Message-ID: <3220152.ycyENPvHUQ@jeremy>
-User-Agent: KMail/4.14.1 (Linux/3.16.0-10-586; KDE/4.14.2; i686; ; )
-In-Reply-To: <YGYIAQ.7N9YGTBML0143@crapouillou.net>
-References: <20200516215057.392609-1-paul@crapouillou.net> <CACvgo50q=qJXk3nFSCm+S6JHBMxpY0C_HwH8KGB2EAcKwgL0oQ@mail.gmail.com> <YGYIAQ.7N9YGTBML0143@crapouillou.net>
+        Tue, 19 May 2020 13:11:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729001AbgESRLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:11:30 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6286920709;
+        Tue, 19 May 2020 17:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589908289;
+        bh=AhoIJIhI20EELQu2FCFvcJtbYqUj+WKPqBjlG6rzH7g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Kl2YChZrd4IHZJAYhBvYynKdRg25g1P+rI7Sh3kRvohAKji2xq+9bGiAanen+lDCt
+         dcrRMw8SdCLmiVWhGCDCZ67nAtZSe7mP+4rZXdFacBeMoZR5cooYe4rMAqtQ7Ywm3V
+         Rfach0W5hfPC4Pnuy+Ion7DOZ2vubJbupTji6a1k=
+Subject: Re: [PATCH 3/3] selftests: vdso: Add a selftest for vDSO getcpu()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20200505174728.46594-1-broonie@kernel.org>
+ <20200505174728.46594-4-broonie@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <dff4dfbd-f3f1-d683-5dac-4404e9023b2e@kernel.org>
+Date:   Tue, 19 May 2020 11:11:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200505174728.46594-4-broonie@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 18. May 2020 13.26.58 Paul Cercueil wrote:
-> >>  
-> >>  @@ -186,13 +186,16 @@ static void
-> >> 
-> >> ingenic_drm_crtc_update_timings(struct ingenic_drm *priv,
-> >> 
-> >>          regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
-> >>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16,
-> >>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16);
-> >>  
-> >>  +
-> >>  +       regmap_write(priv->map, JZ_REG_LCD_IPUR, JZ_LCD_IPUR_IPUREN
-> >>  +                    (ht * vpe / 3) << JZ_LCD_IPUR_IPUR_LSB);
-> > 
-> > This hunk also indicates that it may be better to merge the IPU within
-> > the existing driver.
+Hi Mark,
+
+On 5/5/20 11:47 AM, Mark Brown wrote:
+> Provide a very basic selftest for getcpu() which similarly to our existing
+> test for gettimeofday() looks up the function in the vDSO and prints the
+> results it gets if the function exists and succeeds.
 > 
-> This writes the IPUR register of the CRTC, nothing wrong here.
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>   tools/testing/selftests/vDSO/.gitignore       |  1 +
+>   tools/testing/selftests/vDSO/Makefile         |  3 +-
+>   .../testing/selftests/vDSO/vdso_test_getcpu.c | 50 +++++++++++++++++++
+>   3 files changed, 53 insertions(+), 1 deletion(-)
+>   create mode 100644 tools/testing/selftests/vDSO/vdso_test_getcpu.c
+> 
+> diff --git a/tools/testing/selftests/vDSO/.gitignore b/tools/testing/selftests/vDSO/.gitignore
+> index 74f49bd5f6dd..5eb64d41e541 100644
+> --- a/tools/testing/selftests/vDSO/.gitignore
+> +++ b/tools/testing/selftests/vDSO/.gitignore
+> @@ -1,4 +1,5 @@
+>   # SPDX-License-Identifier: GPL-2.0-only
+>   vdso_test
+>   vdso_test_gettimeofday
+> +vdso_test_getcpu
+>   vdso_standalone_test_x86
+> diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
+> index ae15d700b62e..0069f2f83f86 100644
+> --- a/tools/testing/selftests/vDSO/Makefile
+> +++ b/tools/testing/selftests/vDSO/Makefile
+> @@ -4,7 +4,7 @@ include ../lib.mk
+>   uname_M := $(shell uname -m 2>/dev/null || echo not)
+>   ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
+>   
+> -TEST_GEN_PROGS := $(OUTPUT)/vdso_test_gettimeofday
+> +TEST_GEN_PROGS := $(OUTPUT)/vdso_test_gettimeofday $(OUTPUT)/vdso_test_getcpu
+>   ifeq ($(ARCH),x86)
+>   TEST_GEN_PROGS += $(OUTPUT)/vdso_standalone_test_x86
+>   endif
+> @@ -18,6 +18,7 @@ endif
+>   
+>   all: $(TEST_GEN_PROGS)
+>   $(OUTPUT)/vdso_test_gettimeofday: parse_vdso.c vdso_test_gettimeofday.c
+> +$(OUTPUT)/vdso_test_getcpu: parse_vdso.c vdso_test_getcpu.c
+>   $(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c
+>   	$(CC) $(CFLAGS) $(CFLAGS_vdso_standalone_test_x86) \
+>   		vdso_standalone_test_x86.c parse_vdso.c \
+> diff --git a/tools/testing/selftests/vDSO/vdso_test_getcpu.c b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
+> new file mode 100644
+> index 000000000000..a9dd3db145f3
+> --- /dev/null
+> +++ b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
+> @@ -0,0 +1,50 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * vdso_test_getcpu.c: Sample code to test parse_vdso.c and vDSO getcpu()
+> + *
+> + * Copyright (c) 2020 Arm Ltd
+> + */
+> +
+> +#include <stdint.h>
+> +#include <elf.h>
+> +#include <stdio.h>
+> +#include <sys/auxv.h>
+> +#include <sys/time.h>
+> +
+> +#include "../kselftest.h"
+> +#include "parse_vdso.h"
+> +
+> +const char *version = "LINUX_2.6";
+> +const char *name = "__vdso_getcpu";
+> +
+> +struct getcpu_cache;
+> +typedef long (*getcpu_t)(unsigned int *, unsigned int *,
+> +			 struct getcpu_cache *);
+> +
+> +int main(int argc, char **argv)
+> +{
+> +	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
 
-Since I noticed it in the above patch details, I think the mask when updating 
-the burst setting in the LCD_CTRL register should - in general - involve 
-multiple bits, since the BST field is 3 bits wide on the JZ4780 and 2 bits 
-wide on earlier products. Just setting BURST_16 (0b10) could potentially 
-enable BURST_32 (0b11) or other field values that are not explicitly defined.
+WARNING: Missing a blank line after declarations
+WARNING: Missing a blank line after declarations
+#135: FILE: tools/testing/selftests/vDSO/vdso_test_getcpu.c:27:
++	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
++	if (!sysinfo_ehdr) {
 
-Hope this is useful!
+WARNING: Missing a blank line after declarations
+#143: FILE: tools/testing/selftests/vDSO/vdso_test_getcpu.c:35:
++	getcpu_t get_cpu = (getcpu_t)vdso_sym(version, name);
++	if (!get_cpu) {
 
-Paul
+WARNING: Missing a blank line after declarations
+#150: FILE: tools/testing/selftests/vDSO/vdso_test_getcpu.c:42:
++	long ret = get_cpu(&cpu, &node, 0);
++	if (ret == 0) {
+
+Please send v2 for this one.
+
+thanks,
+-- Shuah
+
