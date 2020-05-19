@@ -2,123 +2,242 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33433C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE4820709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130BB20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KChMZpAb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EbYPn7i5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgESI2j (ORCPT
+        id S1727987AbgESI3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgESI2j (ORCPT
+        Tue, 19 May 2020 04:29:13 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55896 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgESI3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:28:39 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C4CC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:28:39 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k22so5305092pls.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:28:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1yElP3WZvkNT4A/b0/LN0EmVCUORVyx35/LFAnrqMNg=;
-        b=KChMZpAbq7iBCVNh6mKbP+UTpBtTRi1T88Z2sdPGjDdaCc5AQClgFKUimqlhXrHhRw
-         nlxPxjNNOXRLkrFJjuEIWeNohqrtoMcH7AvL55ahsqwvE9skyWVCdvlB/aZsLNWCDpnL
-         YN0omPPjN0EToOjfEiT/83e8DvkPdd0bK8/Sh9VJ8kmkcn49j+NJkyY/BhylulZfe4du
-         uks13RSmWY0qfz6l55WOYRUghkw0cHvBL/ojc6IRbXuR1pw0WtqRBh/dVP8x3pNY2eIN
-         S77RARGlNzIK8/UAnTMYtuosIMF+E5mHuksEkjju+zvqvUd85C95YuQZHJ4V+TosAEXs
-         Lhnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1yElP3WZvkNT4A/b0/LN0EmVCUORVyx35/LFAnrqMNg=;
-        b=cn95oWlgjG8B/aoTfhyVDsKADGRFVX3ZJeS0QYDB+5/tD4v+hifEbmzESjKt7KoOR1
-         i63Hc0zeJyKZ/vEfX7S9exr7GTpti620NaiJ/TdyIvvIxu30XuCO32t4fsS3l1rE3tYb
-         TETMkEjvDafpJO7emHXs3hPm5aWUNfmldMrqPNp1cKD+UTH3I9VUZoQ0jYu9G3NllOGH
-         h7ThDVHKXr1aSAEM0r4wuKac+gLWPODiTtIqkNxqSBN7U+nYG7BUPpX6HR+Ar/5X7Tt0
-         9tn+effoKsdFxHxyf0xp3U7XQ3WOWwfFqaPvhd7xX5L9sZ0vfQSOPR6bfzohwL7j1FZq
-         TmBA==
-X-Gm-Message-State: AOAM531YF7ACj2JHa9JWasffUP7QXWSklsNSSGrrsAKr1gXVHvQC+oWG
-        NisuiIcYU2K7cNqg9wLkkLQe5UW04osgV11gvqc=
-X-Google-Smtp-Source: ABdhPJw9WxVstlAn8t4YSaKkGjMkAw9yPUJ9x/iGdyAJfZtSPzZ7wnEkH4QWnf8Iv5eV0h67DFsv6qH3TfDC2PhUry4=
-X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr3964026pjb.228.1589876918733;
- Tue, 19 May 2020 01:28:38 -0700 (PDT)
+        Tue, 19 May 2020 04:29:13 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J8T9oa106526;
+        Tue, 19 May 2020 03:29:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589876949;
+        bh=ZiduhVOg5MMMMQdQPVOx0auXP9xGjDBpjLfphpPRrss=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EbYPn7i53B1QGcA2r/+RQRlTWtyxlor4rw10b0cp8uhtGkE8HL93a7eUlZlwNSoFL
+         Fx0guQY6HuTlr638BDdIXyqmFdMtP6gSXLorQBqud0plwxDEcKKkSYdQXypm4YCsZl
+         qh1CZyLHE70MsG/ywJJmNVUORye1yP1pHI9p02FU=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04J8T9sJ091602
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 May 2020 03:29:09 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 03:29:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 03:29:08 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J8T5Vj037768;
+        Tue, 19 May 2020 03:29:06 -0500
+Subject: Re: [PATCH v8 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+ <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <eaeba80e-9082-2eeb-8c66-7ef28b7fb895@ti.com>
+Date:   Tue, 19 May 2020 13:59:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <cover.1589844108.git.reinette.chatre@intel.com> <a953992d99a1930703cba1362a3005d517c4cb33.1589844108.git.reinette.chatre@intel.com>
-In-Reply-To: <a953992d99a1930703cba1362a3005d517c4cb33.1589844108.git.reinette.chatre@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 19 May 2020 11:28:21 +0300
-Message-ID: <CAHp75Vc_VA-2UNJh7epe+oQEiU3WBedomLbAVTD_L4_ocvt8Dw@mail.gmail.com>
-Subject: Re: [PATCH V5 4/4] x86/resctrl: Use appropriate API for strings
- terminated by newline
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>, kuo-lang.tseng@intel.com,
-        ravi.v.shankar@intel.com, Ingo Molnar <mingo@redhat.com>,
-        Babu Moger <babu.moger@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 2:50 AM Reinette Chatre
-<reinette.chatre@intel.com> wrote:
 
-...
 
-> +       ret = sysfs_match_string(rdt_mode_str, buf);
-> +       if (ret < 0) {
-> +               rdt_last_cmd_puts("Unknown or unsupported mode\n");
-> +               ret = -EINVAL;
-> +               goto out;
-> +       }
+On 5/13/2020 10:52 PM, Laurent Pinchart wrote:
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> 
+> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> Processing System Gigabit Transceiver which provides PHY capabilities to
+> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
+> 
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Need RobH Ack for this to be merged.
+
+Thanks
+Kishon
+> ---
+> Changes since v7:
+> 
+> - Switch to GPL-2.0-only OR BSD-2-Clause
+> 
+> Changes since v6:
+> 
+> - Fixed specification of compatible-dependent xlnx,tx-termination-fix
+>   property
+> - Dropped status property from example
+> - Use 4 spaces to indent example
+> 
+> Changes since v5:
+> 
+> - Document clocks and clock-names properties
+> - Document resets and reset-names properties
+> - Replace subnodes with an additional entry in the PHY cells
+> - Drop lane frequency PHY cell, replaced by reference clock phandle
+> - Convert bindings to YAML
+> - Reword the subject line
+> - Drop Rob's R-b as the bindings have significantly changed
+> - Drop resets and reset-names properties
+> ---
+>  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                 |   1 +
+>  2 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> new file mode 100644
+> index 000000000000..09e3cde7ebca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> @@ -0,0 +1,105 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +       user_m = ret;
-
-> +       } else if (user_m == RDT_MODE_PSEUDO_LOCKED) {
->                 rdt_last_cmd_puts("Unknown or unsupported mode\n");
->                 ret = -EINVAL;
-> +               goto out;
->         }
-
-Can't we unify latter with a former like
-
-  if (ret == RDT_MODE_PSEUDO_LOCKED)
-    ret = -EINVAL;
-  if (ret < 0) {
-      rdt_last_cmd_puts("Unknown or unsupported mode\n");
-      goto out;
-  }
-
-?
-
-Or closer to initial like
-
-  if (ret < 0 || ret == RDT_MODE_PSEUDO_LOCKED) {
-    rdt_last_cmd_puts("Unknown or unsupported mode\n");
-    ret = -EINVAL;
-    goto out;
-  }
-
--- 
-With Best Regards,
-Andy Shevchenko
+> +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +description: |
+> +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
+> +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
+> +  Ethernet SGMII controllers.
+> +
+> +properties:
+> +  "#phy-cells":
+> +    const: 4
+> +    description: |
+> +      The cells contain the following arguments.
+> +
+> +      - description: The GTR lane
+> +        minimum: 0
+> +        maximum: 3
+> +      - description: The PHY type
+> +        enum:
+> +          - PHY_TYPE_DP
+> +          - PHY_TYPE_PCIE
+> +          - PHY_TYPE_SATA
+> +          - PHY_TYPE_SGMII
+> +          - PHY_TYPE_USB
+> +      - description: The PHY instance
+> +        minimum: 0
+> +        maximum: 1 # for DP, SATA or USB
+> +        maximum: 3 # for PCIE or SGMII
+> +      - description: The reference clock number
+> +        minimum: 0
+> +        maximum: 3
+> +
+> +  compatible:
+> +    enum:
+> +      - xlnx,zynqmp-psgtr-v1.1
+> +      - xlnx,zynqmp-psgtr
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 4
+> +    description: |
+> +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
+> +      inputs shall not have an entry.
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 4
+> +    items:
+> +      pattern: "^ref[0-3]$"
+> +
+> +  reg:
+> +    items:
+> +      - description: SERDES registers block
+> +      - description: SIOU registers block
+> +
+> +  reg-names:
+> +    items:
+> +      - const: serdes
+> +      - const: siou
+> +
+> +  xlnx,tx-termination-fix:
+> +    description: |
+> +      Include this for fixing functional issue with the TX termination
+> +      resistance in GT, which can be out of spec for the XCZU9EG silicon
+> +      version.
+> +    type: boolean
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      const: xlnx,zynqmp-psgtr-v1.1
+> +
+> +then:
+> +  properties:
+> +    xlnx,tx-termination-fix: false
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    phy: phy@fd400000 {
+> +        compatible = "xlnx,zynqmp-psgtr-v1.1";
+> +        reg = <0x0 0xfd400000 0x0 0x40000>,
+> +              <0x0 0xfd3d0000 0x0 0x1000>;
+> +        reg-names = "serdes", "siou";
+> +        clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
+> +        clock-names = "ref1", "ref2", "ref3";
+> +        #phy-cells = <4>;
+> +    };
+> +
+> +...
+> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+> index 1f3f866fae7b..f6bc83b66ae9 100644
+> --- a/include/dt-bindings/phy/phy.h
+> +++ b/include/dt-bindings/phy/phy.h
+> @@ -17,5 +17,6 @@
+>  #define PHY_TYPE_USB3		4
+>  #define PHY_TYPE_UFS		5
+>  #define PHY_TYPE_DP		6
+> +#define PHY_TYPE_SGMII		7
+>  
+>  #endif /* _DT_BINDINGS_PHY */
+> 
