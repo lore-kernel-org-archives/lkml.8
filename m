@@ -2,71 +2,207 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF11C207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589914127;
-	bh=kK0kqRBISFfw+LMgiQjewsoa2uS1JJxjWknCKnBXyK4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uEZE+HSBXx5HS0Cz2WPenK6OEAJS7TtlCJl9d4W0aBoImY9TvXrWAqNeuaCiusDB3
-	 oadXytrLoWWSbUMNuogu/vhDLDZIan4jUEb1SJgz9vn9XAZMwMzDzaY/D3jfmwmBNx
-	 4ncQnQIxjPe+1KXApWhArfLYmeuVzAQjIrQs2NQY=
+	by mail.kernel.org (Postfix) with ESMTP id F03DE20758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:50:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MLCWguRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgESSsr (ORCPT
+        id S1726729AbgESSus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgESSsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:48:46 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        Tue, 19 May 2020 14:50:48 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:17264 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726059AbgESSus (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 14:50:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589914246; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=i1KDNTEcQpMlZ8oYJUcWWelkymnM8rNqtXNDYGMt8AU=; b=MLCWguRQi/BYpTTDy83RqC2qOBfEcJGDySK+tEmEu54QfZAFwBCpQjXrJzzEDpy69T60oaKV
+ pB1IhUNmH8TbwRE4xAXwKnIbSJx/Ltwcp4U18LHPDukrIs4ogfWuBLreV8qWNoOoB5hK0i1T
+ N3gSoLsIB0/MgpWC48eXoGek4fQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec42a85.7f0271097298-smtp-out-n04;
+ Tue, 19 May 2020 18:50:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C271EC433D2; Tue, 19 May 2020 18:50:44 +0000 (UTC)
+Received: from Pillair (unknown [183.83.68.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F279820758;
-        Tue, 19 May 2020 18:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589914126;
-        bh=kK0kqRBISFfw+LMgiQjewsoa2uS1JJxjWknCKnBXyK4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=riUzHb2BC7TBeldi0x4FutsBzD9QwlWuT+HduP+76h7T8kU+8Df4RtFUYpXuNCQKa
-         lv0g2wgL8da227BEb8yOQ5I2To2hdxgpH6FOiAAJBMbRddPF8y+J30QKDzT8v5SPvF
-         +UPQgevBUbrIcqwjViyBZ6DoSn4DEd7/gomxombM=
-Date:   Tue, 19 May 2020 11:48:43 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
-Message-ID: <20200519114843.34e65bcc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <c45bae32-d26f-cbe5-626b-2afae4a557b3@ti.com>
-References: <20200519141813.28167-1-dmurphy@ti.com>
-        <20200519141813.28167-3-dmurphy@ti.com>
-        <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200519182916.GM624248@lunn.ch>
-        <c45bae32-d26f-cbe5-626b-2afae4a557b3@ti.com>
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A23CC433D2;
+        Tue, 19 May 2020 18:50:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0A23CC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Evan Green'" <evgreen@chromium.org>
+Cc:     "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
+        <devicetree@vger.kernel.org>,
+        "'linux-arm Mailing List'" <linux-arm-kernel@lists.infradead.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>
+References: <1589712411-26718-1-git-send-email-pillair@codeaurora.org> <CAE=gft577zxP5F6OdFXt6taLuLyye+tdRqZa63mPSRtPXO3Lcw@mail.gmail.com>
+In-Reply-To: <CAE=gft577zxP5F6OdFXt6taLuLyye+tdRqZa63mPSRtPXO3Lcw@mail.gmail.com>
+Subject: RE: [PATCH v9] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Wed, 20 May 2020 00:20:36 +0530
+Message-ID: <039201d62e0e$65d16590$317430b0$@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain;
+        charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFK6cBZDXagU4txI1QUeQtvgRsTqwIox4YXqbUCpuA=
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 13:41:40 -0500 Dan Murphy wrote:
-> > Is this now a standard GCC warning? Or have you turned on extra
-> > checking? =20
-> I still was not able to reproduce this warning with gcc-9.2.=C2=A0 I woul=
-d=20
-> like to know the same
+Hi Evan,
 
-W=3D1 + gcc-10 here, also curious to know which one of the two makes=20
-the difference :)
+
+> -----Original Message-----
+> From: Evan Green <evgreen@chromium.org>
+> Sent: Tuesday, May 19, 2020 10:58 PM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> <devicetree@vger.kernel.org>; linux-arm Mailing List <linux-arm-
+> kernel@lists.infradead.org>; LKML <linux-kernel@vger.kernel.org>; =
+linux-
+> arm-msm <linux-arm-msm@vger.kernel.org>
+> Subject: Re: [PATCH v9] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
+>=20
+> On Sun, May 17, 2020 at 3:47 AM Rakesh Pillai <pillair@codeaurora.org>
+> wrote:
+> >
+> > Add device node for the ath10k SNOC platform driver probe
+> > and add resources required for WCN3990 on sc7180 soc.
+> >
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > ---
+> > Changes from v8:
+> > - Removed the qcom,msa-fixed-perm
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27
+> +++++++++++++++++++++++++++
+> >  2 files changed, 34 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 4e9149d..38b102e 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -389,6 +389,13 @@
+> >         };
+> >  };
+> >
+> > +&wifi {
+> > +       status =3D "okay";
+> > +       wifi-firmware {
+> > +               iommus =3D <&apps_smmu 0xc2 0x1>;
+> > +       };
+> > +};
+> > +
+> >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> >
+> >  &qspi_clk {
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index f1280e0..dd4e095 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -63,6 +63,11 @@
+> >                         clock-frequency =3D <32764>;
+> >                         #clock-cells =3D <0>;
+> >                 };
+> > +
+> > +               wlan_fw_mem: memory@94100000 {
+> > +                       reg =3D <0 0x94100000 0 0x200000>;
+> > +                       no-map;
+> > +               };
+>=20
+> This node is not in the right place. Up through v8, this lived inside
+> reserved-memory. Here it seems to apply into the clocks {} node, which
+> is not the right spot.
+
+Thanks for spotting this. This was a rebase problem.
+I will post the next patchset by fixing this.
+
+
+
+>=20
+>=20
+> >         };
+> >
+> >         reserved_memory: reserved-memory {
+> > @@ -944,6 +949,28 @@
+> >                         };
+> >                 };
+> >
+> > +               wifi: wifi@18800000 {
+> > +                       compatible =3D "qcom,wcn3990-wifi";
+> > +                       reg =3D <0 0x18800000 0 0x800000>;
+> > +                       reg-names =3D "membase";
+> > +                       iommus =3D <&apps_smmu 0xc0 0x1>;
+> > +                       interrupts =3D
+> > +                               <GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* =
+CE0 */ >,
+> > +                               <GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* =
+CE1 */ >,
+> > +                               <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* =
+CE2 */ >,
+> > +                               <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* =
+CE3 */ >,
+> > +                               <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* =
+CE4 */ >,
+> > +                               <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* =
+CE5 */ >,
+> > +                               <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* =
+CE6 */ >,
+> > +                               <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* =
+CE7 */ >,
+> > +                               <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* =
+CE8 */ >,
+> > +                               <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* =
+CE9 */ >,
+> > +                               <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* =
+CE10 */>,
+> > +                               <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* =
+CE11 */>;
+> > +                       memory-region =3D <&wlan_fw_mem>;
+>=20
+> Should any of the *-supply regulators be specified? Or are they all
+> board specific? Or just not needed? The example has these:
+> vdd-0.8-cx-mx-supply =3D <&pm8998_l5>;
+> vdd-1.8-xo-supply =3D <&vreg_l7a_1p8>;
+> vdd-1.3-rfa-supply =3D <&vreg_l17a_1p3>;
+> vdd-3.3-ch0-supply =3D <&vreg_l25a_3p3>;
+
+These votes are optional and were required for older targets.
+We do not need these proxy votes in host now.
+
+
+>=20
+>=20
+>=20
+> > +                       status =3D "disabled";
+> > +               };
+> > +
+> >                 config_noc: interconnect@1500000 {
+> >                         compatible =3D "qcom,sc7180-config-noc";
+> >                         reg =3D <0 0x01500000 0 0x28000>;
+> > --
+> > 2.7.4
