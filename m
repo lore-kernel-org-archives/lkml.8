@@ -2,123 +2,177 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F88C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA01206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5505C2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IxGpow3H"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FlcR34Mz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgESTpR (ORCPT
+        id S1727046AbgESTqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:45:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48924 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726333AbgESTpQ (ORCPT
+        Tue, 19 May 2020 15:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgESTqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:45:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589917514;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3ZPhjMhc2ZD+ukMEY/C5pv2YZILivCrJg0ecgtUq++g=;
-        b=IxGpow3HcBKLgSZd1TvPAsozO8ihEukkatMB/viAjVyXQ4WmGIF5PSp0XLIzh+RSWtVKuk
-        pk9Pk65n/hSmY43wogFPy5kmGe++A7hGlBfF0aA9XK1cBv0peUG7iBStudB+fh3imj0U3+
-        tC2SD8wdS1IVOxSAuoXllc4l77wrbFs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-yF7nVU6VMq6xX2AWMNpA2Q-1; Tue, 19 May 2020 15:45:12 -0400
-X-MC-Unique: yF7nVU6VMq6xX2AWMNpA2Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C27219200C0;
-        Tue, 19 May 2020 19:45:11 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E4BD460BEC;
-        Tue, 19 May 2020 19:44:59 +0000 (UTC)
-Date:   Tue, 19 May 2020 15:44:57 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
-        Ondrej Mosnacek <omosnace@redhat.com>, fw@strlen.de,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v5] audit: add subj creds to NETFILTER_CFG record
- to cover async unregister
-Message-ID: <20200519194457.nouzteqv2vpcqnta@madcap2.tricolour.ca>
-References: <2794b22c0b88637a4270b346e52aeb8db7f59457.1589853445.git.rgb@redhat.com>
- <CAHC9VhQYUooJbZ9tcOOwb=48LTjtnfo0g11vQuyLzoxdetaxnw@mail.gmail.com>
+        Tue, 19 May 2020 15:46:21 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E8F2C08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:46:20 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id w19so304474ply.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:46:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q3Ivtwo+9O98WnhcJnwaFt95/Hwxgd+0h4XCSucwWQ0=;
+        b=FlcR34MzrEghbl3vy0OL8MTgoR2QS5ql+EgOS6TLT9J/mjNPWyw1q/1x/GPc6spBVR
+         zIBXeYd140wKdDH6I1j0BK7rPSzWRoIAU5pL+ymoblh8j7HDhXPXdrRuwb4KU4RHbbCX
+         IkV25J7JchNWKWg80zDSG2ZDnZvColidCwd38=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q3Ivtwo+9O98WnhcJnwaFt95/Hwxgd+0h4XCSucwWQ0=;
+        b=Ua4ynFoap0KSUSpgxipXTl7yJxf/pC/6Tzvr12yn0FAhKVi9b+u/LUeD6tjewAbZQ/
+         J6yObqPeQV7xcv7iWgEewLeCKdeJrm++pwH3bhDjDh+b1SMADN7/OvZKBwFooGeOClEZ
+         gCJQn2eSpx+ZfvwyhGOtQy/7K6B3z0DzrqsQzghtFtBIeOP3//6U59ALkIxDVqz5SBdc
+         pVua94WKFUCWGuP5JFexDTaPuh2fiWTAsOBTOjVvvspAwR32CwpzmvJNF1C81wW73UhZ
+         dSlUysAZum14WY5uIl9pF3tqur4pB6Pf3mEI/+cu7UFS5zwxoN4vhwRYVC5FBU/GVhAu
+         yzPA==
+X-Gm-Message-State: AOAM533v/K5Ni5NdQtzYTT+6wZDKrzm25Xo/U0z0PEj3RghJv+7zA4ht
+        mDRmKikdOVD38lLPp/jHlZlmog==
+X-Google-Smtp-Source: ABdhPJzdXNjb2gwJKNeMLT5AEIU9DnLXEYFye7s+DenXWUh8I4fQdMy4wmHogqrZPX7U/5jAByEZOA==
+X-Received: by 2002:a17:90a:2ac2:: with SMTP id i2mr1186297pjg.80.1589917579552;
+        Tue, 19 May 2020 12:46:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id fw4sm288758pjb.31.2020.05.19.12.46.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 12:46:18 -0700 (PDT)
+Date:   Tue, 19 May 2020 12:46:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v2 7/8] exec: Generic execfd support
+Message-ID: <202005191220.2DB7B7C7@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+ <877dx822er.fsf_-_@x220.int.ebiederm.org>
+ <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhQYUooJbZ9tcOOwb=48LTjtnfo0g11vQuyLzoxdetaxnw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-19 15:18, Paul Moore wrote:
-> On Tue, May 19, 2020 at 11:31 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > Some table unregister actions seem to be initiated by the kernel to
-> > garbage collect unused tables that are not initiated by any userspace
-> > actions.  It was found to be necessary to add the subject credentials to
-> > cover this case to reveal the source of these actions.  A sample record:
-> >
-> > The tty, ses and exe fields have not been included since they are in the
-> > SYSCALL record and contain nothing useful in the non-user context.
-> >
-> >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 uid=root auid=unset subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2
+On Mon, May 18, 2020 at 07:33:46PM -0500, Eric W. Biederman wrote:
 > 
-> Based on where things were left in the discussion on the previous
-> draft, I think it would be good if you could explain a bit why the uid
-> and auid fields are useful here.
+> Most of the support for passing the file descriptor of an executable
+> to an interpreter already lives in the generic code and in binfmt_elf.
+> Rework the fields in binfmt_elf that deal with executable file
+> descriptor passing to make executable file descriptor passing a first
+> class concept.
+> 
+> Move the fd_install from binfmt_misc into begin_new_exec after the new
+> creds have been installed.  This means that accessing the file through
+> /proc/<pid>/fd/N is able to see the creds for the new executable
+> before allowing access to the new executables files.
+> 
+> Performing the install of the executables file descriptor after
+> the point of no return also means that nothing special needs to
+> be done on error.  The exiting of the process will close all
+> of it's open files.
+> 
+> Move the would_dump from binfmt_misc into begin_new_exec right
+> after would_dump is called on the bprm->file.  This makes it
+> obvious this case exists and that no nesting of bprm->file is
+> currently supported.
+> 
+> In binfmt_misc the movement of fd_install into generic code means
+> that it's special error exit path is no longer needed.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-They aren't really useful here.  I was hoping to remove them given your
-reasoning, but I was having trouble guessing what you wanted even after
-asking for clarity.  Can you clarify what you would prefer to see in
-this patch?  I was hoping to skip this extra patch revision which took
-longer than hoped due to trying to guess what you wanted while working
-yesterday during a public holiday to get this patch out in time for the
-merge window.
+Yes, this is so much nicer. :) My head did spin a little between changing
+the management of bprm->executable between this patch and the next,
+but I'm okay now. ;)
 
-A UID of 0="root" is really a bit misleading since while it is the most
-trusted user running the most privileged level, the event wasn't
-triggered by a user.  It is the default value of that field.  I did
-think aloud that uid could be set by the kernel to run under a
-particular user's id (like a daemon dropping capabilities and switching
-user after setup to limit abuse), but the kernel is just a tracker for
-these IDs and doesn't really know what they mean other than root.  I saw
-no reply to that idea.  It was set to "root" which isn't unset or
-unexpected, but granted is useless in this case.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-You had offered that keeping auid was a concession to Steve so I kept it
-in since I had the impression that is what you wanted to see.  That
-explanation seems pretty thin to include in a patch description if what
-you are getting at in your sentence above.
+nits/thoughts below...
 
-I am willing to purge both if that is what you would prefer to accept in
-the patch.
+> [...]
+> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+> index 8c7779d6bf19..653508b25815 100644
+> --- a/include/linux/binfmts.h
+> +++ b/include/linux/binfmts.h
+> [...]
+> @@ -48,6 +51,7 @@ struct linux_binprm {
+>  	unsigned int taso:1;
+>  #endif
+>  	unsigned int recursion_depth; /* only for search_binary_handler() */
+> +	struct file * executable; /* Executable to pass to the interpreter */
+>  	struct file * file;
+>  	struct cred *cred;	/* new credentials */
 
-> paul moore
+nit: can we fix the "* " stuff here? This should be *file and *executable.
 
-- RGB
+> [...]
+> @@ -69,10 +73,6 @@ struct linux_binprm {
+>  #define BINPRM_FLAGS_ENFORCE_NONDUMP_BIT 0
+>  #define BINPRM_FLAGS_ENFORCE_NONDUMP (1 << BINPRM_FLAGS_ENFORCE_NONDUMP_BIT)
+>  
+> -/* fd of the binary should be passed to the interpreter */
+> -#define BINPRM_FLAGS_EXECFD_BIT 1
+> -#define BINPRM_FLAGS_EXECFD (1 << BINPRM_FLAGS_EXECFD_BIT)
+> -
+>  /* filename of the binary will be inaccessible after exec */
+>  #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
+>  #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+nit: may as well renumber BINPRM_FLAGS_PATH_INACCESSIBLE_BIT to 1,
+they're not UAPI. And, actually, nothing uses the *_BIT defines, so
+probably the entire chunk of code could just be reduced to:
 
+/* either interpreter or executable was unreadable */
+#define BINPRM_FLAGS_ENFORCE_NONDUMP    BIT(0)
+/* filename of the binary will be inaccessible after exec */
+#define BINPRM_FLAGS_PATH_INACCESSIBLE  BIT(1)
+
+Though frankly, I wonder if interp_flags could just be removed in favor
+of two new bit members, especially since interp_data is gone:
+
++               /* Either interpreter or executable was unreadable. */
++               nondumpable:1;
++               /* Filename of the binary will be inaccessible after exec. */
++               path_inaccessible:1;
+...
+-       unsigned interp_flags;
+...etc
+
+-- 
+Kees Cook
