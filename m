@@ -2,296 +2,185 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16999C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B50C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF1D020758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:14:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589912092;
-	bh=37XFti9Uz7DnQzyUzY16cvmtqCyBKW+P0sMCijbLTiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GL2P3xuw4ftMuopVMFnMezJoTUeuGGs/EiC35FxLsVi3T4LRkAUVUQYMTkb7QeA73
-	 3GgblDI/aMcrnHokKmBdO6XhbizJnN6zy2JSYXtAPn46QjWFypAlXcagQ0BLF7+HvL
-	 eWsUzOyAW+HNRB51Y25gOKQqXM2sh+6KE4USqERc=
+	by mail.kernel.org (Postfix) with ESMTP id 11EBF20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I0oRNXLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbgESSOv (ORCPT
+        id S1729445AbgESSO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:14:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgESSOu (ORCPT
+        Tue, 19 May 2020 14:14:59 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2906 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbgESSO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:14:50 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A4AC08C5C0;
-        Tue, 19 May 2020 11:14:50 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so226829plt.5;
-        Tue, 19 May 2020 11:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=h9siz1ifxNEzV/qBCHo46GlRWY7rdqYU0IVXQ8ULV+0=;
-        b=Vxdb1epaiYwg+hDwLEaNLl/vxXzEEwzPjc7+0NXg/tl3VvgdCuGKz9xQ6q4PvOXFMx
-         P7x5P5CdIwxTuZwtoxixWJOu0JD3l19Nd2/PWYkOrlYmR6Fux441ZCmH9bJ+2CZPfyyN
-         zq0W/lQHiqsLZ7XJXz1v5JwPzUIUjOFN+4V3neojB15XwStV3+td8NvLhme9XQsndkz9
-         Ini8TkKT2domPEZcK3d2Qa17SFZ1k+B+nYy7ipjkayg24SBodUSkHWFwne5nJgwM1Bd8
-         wpzj7y2YB8lTCk1F0Vr7sD3YLUQ1TVg/vN4mzXjQ4YWcPxXgJNvz2LXPGb1APF7+GXU2
-         vgug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=h9siz1ifxNEzV/qBCHo46GlRWY7rdqYU0IVXQ8ULV+0=;
-        b=TDu/u4ynxZEMh4FzsG5isW5akonRqLlkBI9u9h5kKK6YqL99qdeENVEg79lk/Ax51E
-         LZLDsME7Pc++wW6MiamQwD9fdSiaV0foxwGqTxKhX1+ekB2c79/jHhfBTHwBV+lfr5hp
-         L9OyyKxLyZrJZ9r+m2J1FhOI1p+yMtKbuYSpWWl4K9pO+utAMsvLMevD90j5MQw3xA8V
-         CUwvV85cD9TT/GHX21r/vIdwJlRYbnRF/7K92MEpKGY2bz/00+ryYLjbv9R9CFbfzleP
-         eVSFnBDoSoYGJVHcvFCk2f5TdAbbqbvDjAJEgFJMKXu25HFYN2qwtqYwBJ2xW8AaQ3iJ
-         g8qA==
-X-Gm-Message-State: AOAM53117vhRnEsMAL9LImLa/aiSuj2lWdoLHbzDMSWvrAHYl6ANOmFF
-        iMB0InWED9ycPdjpg1+PviM=
-X-Google-Smtp-Source: ABdhPJw1JhLaxi0FMtAyg/GpFDqQAWRCwWNuLTDT6NDVxtGBo9VK4pJznY86Jjhm6UhAK+aSWeiD2Q==
-X-Received: by 2002:a17:90a:248a:: with SMTP id i10mr902125pje.174.1589912090169;
-        Tue, 19 May 2020 11:14:50 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id d124sm147131pfa.98.2020.05.19.11.14.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:14:49 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:14:47 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 19 May 2020 14:14:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec421d30000>; Tue, 19 May 2020 11:13:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 May 2020 11:14:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 11:14:58 -0700
+Received: from [10.2.55.90] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
+ 2020 18:14:57 +0000
+Subject: Re: [PATCH v5.5 10/10] mmap locking API: rename mmap_sem to mmap_lock
+To:     Matthew Wilcox <willy@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>
+CC:     Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com,
-        SeongJae Park <sjpark@amazon.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         David Rientjes <rientjes@google.com>,
-        Arjun Roy <arjunroy@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [PATCH] mm: use only pidfd for process_madvise syscall
-Message-ID: <20200519181447.GA220547@google.com>
-References: <20200516012055.126205-1-minchan@kernel.org>
- <20200519074518.dur6qvfaq5pujtmg@wittgenstein>
- <20200519161956.GA66748@google.com>
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+References: <20200422001422.232330-1-walken@google.com>
+ <20200422001422.232330-11-walken@google.com>
+ <20200422015829.GR5820@bombadil.infradead.org>
+ <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
+ <20200423015917.GA13910@bombadil.infradead.org>
+ <20200424012612.GA158937@google.com> <20200424013958.GC158937@google.com>
+ <f20ab834-cddb-eaa7-c03e-18f0c4897a33@linux.ibm.com>
+ <20200519131009.GD189720@google.com>
+ <7c540ac9-ba44-7187-5dc2-60b4c761e91c@linux.ibm.com>
+ <20200519153251.GY16070@bombadil.infradead.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <10d48b77-5c6e-2e10-84e6-16cdd76a45f1@nvidia.com>
+Date:   Tue, 19 May 2020 11:14:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519161956.GA66748@google.com>
+In-Reply-To: <20200519153251.GY16070@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589912020; bh=qRDhgMJVS65zoSzH6J9UQCG5SwUJjCY8MYMjTPxuvOo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=I0oRNXLBA36oLvTod3vkSKAjMd5mPAKcgCBpu/ir6Q1RzqdGLI8LOvRHO5ynWaWH1
+         9qCmkPOxn138M6pkRbijpa2pcK1R5KnFizEjwCuNwvAn2D+/Upm7LweZSswHK12iC9
+         DrMruKfAD3FSZ2WzcsONkeiOp9e9dv02i3tVh63ufP+68hllQWUgx+ZBsgXq4+smFc
+         a2ijFooZjbFt3jckn4cYt5klqBpVhraW89MHe3shh5sPPFVXvw93ZFCOIWOOWmOizI
+         sNcghrNgYhpG4yBE6ndv2ulv/xti5fTrhBiSuzH3S0jA4AcO4KHG/IdY72qhAzBXII
+         X/WY1CbpkE3Gw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 09:19:56AM -0700, Minchan Kim wrote:
-> Hi Christian,
-> 
-> On Tue, May 19, 2020 at 09:45:18AM +0200, Christian Brauner wrote:
-> > On Fri, May 15, 2020 at 06:20:55PM -0700, Minchan Kim wrote:
-> > > Based on discussion[1], people didn't feel we need to support both
-> > > pid and pidfd for every new coming API[2] so this patch keeps only
-> > > pidfd. This patch also changes flags's type with "unsigned int".
-> > > So finally, the API is as follows,
-> > > 
-> > >       ssize_t process_madvise(int pidfd, const struct iovec *iovec,
-> > >       		unsigned long vlen, int advice, unsigned int flags);
-> > > 
-> > >     DESCRIPTION
-> > >       The process_madvise() system call is used to give advice or directions
-> > >       to the kernel about the address ranges from external process as well as
-> > >       local process. It provides the advice to address ranges of process
-> > >       described by iovec and vlen. The goal of such advice is to improve system
-> > >       or application performance.
-> > > 
-> > >       The pidfd selects the process referred to by the PID file descriptor
-> > >       specified in pidfd. (See pidofd_open(2) for further information)
-> > > 
-> > >       The pointer iovec points to an array of iovec structures, defined in
-> > >       <sys/uio.h> as:
-> > > 
-> > >         struct iovec {
-> > >             void *iov_base;         /* starting address */
-> > >             size_t iov_len;         /* number of bytes to be advised */
-> > >         };
-> > > 
-> > >       The iovec describes address ranges beginning at address(iov_base)
-> > >       and with size length of bytes(iov_len).
-> > > 
-> > >       The vlen represents the number of elements in iovec.
-> > > 
-> > >       The advice is indicated in the advice argument, which is one of the
-> > >       following at this moment if the target process specified by idtype and
-> > >       id is external.
-> > > 
-> > >         MADV_COLD
-> > >         MADV_PAGEOUT
-> > >         MADV_MERGEABLE
-> > >         MADV_UNMERGEABLE
-> > > 
-> > >       Permission to provide a hint to external process is governed by a
-> > >       ptrace access mode PTRACE_MODE_ATTACH_FSCREDS check; see ptrace(2).
-> > > 
-> > >       The process_madvise supports every advice madvise(2) has if target
-> > >       process is in same thread group with calling process so user could
-> > >       use process_madvise(2) to extend existing madvise(2) to support
-> > >       vector address ranges.
-> > > 
-> > >     RETURN VALUE
-> > >       On success, process_madvise() returns the number of bytes advised.
-> > >       This return value may be less than the total number of requested
-> > >       bytes, if an error occurred. The caller should check return value
-> > >       to determine whether a partial advice occurred.
-> > > 
-> > > [1] https://lore.kernel.org/linux-mm/20200509124817.xmrvsrq3mla6b76k@wittgenstein/
-> > > [2] https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
-> > > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > 
-> > Thanks for the ping Minchan, and sorry for not replying earlier to this.
-> > 
-> > Also, sorry that i delayed the patch but this here really seems a way
-> > cleaner api to me and feels less hackish. In general this patch seems
-> > fine to me.
-> 
-> Thanks.
-> 
-> > But two comments below:
-> > 
-> > > ---
-> > >  mm/madvise.c | 42 +++++++++++++-----------------------------
-> > >  1 file changed, 13 insertions(+), 29 deletions(-)
-> > > 
-> > > diff --git a/mm/madvise.c b/mm/madvise.c
-> > > index d3fbbe52d230..35c9b220146a 100644
-> > > --- a/mm/madvise.c
-> > > +++ b/mm/madvise.c
-> > > @@ -1229,8 +1229,8 @@ static int process_madvise_vec(struct task_struct *target_task,
-> > >  	return ret;
-> > >  }
-> > >  
-> > > -static ssize_t do_process_madvise(int which, pid_t upid, struct iov_iter *iter,
-> > > -				       int behavior, unsigned long flags)
-> > > +static ssize_t do_process_madvise(int pidfd, struct iov_iter *iter,
-> > > +				int behavior, unsigned int flags)
-> > >  {
-> > >  	ssize_t ret;
-> > >  	struct pid *pid;
-> > > @@ -1241,26 +1241,12 @@ static ssize_t do_process_madvise(int which, pid_t upid, struct iov_iter *iter,
-> > >  	if (flags != 0)
-> > >  		return -EINVAL;
-> > >  
-> > > -	switch (which) {
-> > > -	case P_PID:
-> > > -		if (upid <= 0)
-> > > -			return -EINVAL;
-> > > -
-> > > -		pid = find_get_pid(upid);
-> > > -		if (!pid)
-> > > -			return -ESRCH;
-> > > -		break;
-> > > -	case P_PIDFD:
-> > > -		if (upid < 0)
-> > > -			return -EINVAL;
-> > > -
-> > > -		pid = pidfd_get_pid(upid);
-> > > -		if (IS_ERR(pid))
-> > > -			return PTR_ERR(pid);
-> > > -		break;
-> > > -	default:
-> > > +	if (pidfd < 0)
-> > >  		return -EINVAL;
-> > 
-> > When garbage file descriptors are passed EBADF needs to be returned, not
-> > EINVAL. That's the case with most apis and also with pidfds, compare:
-> 
-> True. Let me cook a patch for that.
+On 2020-05-19 08:32, Matthew Wilcox wrote:
+> On Tue, May 19, 2020 at 03:20:40PM +0200, Laurent Dufour wrote:
+>> Le 19/05/2020 =C3=A0 15:10, Michel Lespinasse a =C3=A9crit=C2=A0:
+>>> On Mon, May 18, 2020 at 03:45:22PM +0200, Laurent Dufour wrote:
+>>>> Le 24/04/2020 =C3=A0 03:39, Michel Lespinasse a =C3=A9crit=C2=A0:
+>>>>> Rename the mmap_sem field to mmap_lock. Any new uses of this lock
+>>>>> should now go through the new mmap locking api. The mmap_lock is
+>>>>> still implemented as a rwsem, though this could change in the future.
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/=
+etnaviv/etnaviv_gem.c
+>>>>> index dc9ef302f517..701f3995f621 100644
+>>>>> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+>>>>> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+>>>>> @@ -661,7 +661,7 @@ static int etnaviv_gem_userptr_get_pages(struct e=
+tnaviv_gem_object *etnaviv_obj)
+>>>>>     	struct etnaviv_gem_userptr *userptr =3D &etnaviv_obj->userptr;
+>>>>>     	int ret, pinned =3D 0, npages =3D etnaviv_obj->base.size >> PAGE=
+_SHIFT;
+>>>>> -	might_lock_read(&current->mm->mmap_sem);
+>>>>> +	might_lock_read(&current->mm->mmap_lock);
+>>>>
+>>>> Why not a mm_might_lock_read() new API to hide the mmap_lock, and add =
+it to
+>>>> the previous patch?
+>>>
+>>> I'm not sure why this is needed - we may rework the lock to be
+>>> something else than rwsem, but might_lock_read should still apply to
+>>> it and make sense ? I'm not sure what the extra API would bring...
+>>
+>> I guess at one time the API would become might_lock_read_a_range(), isn'=
+t it?
+>> Furthermore this would hiding the lock's name which the goal of this ser=
+ies.
+>=20
+> I think this assertion should be deleted from this driver.  It's there
+> in case get_user_pages_fast() takes the mmap sem.  It would make sense to
+> have this assertion in get_user_pages_fast() in case we take the fast pat=
+h
+> which doesn't acquire the mmap_sem.  Something like this:
+>=20
+> +++ b/mm/gup.c
+> @@ -2754,6 +2754,7 @@ static int internal_get_user_pages_fast(unsigned lo=
+ng start, int nr_pages,
+>                                         FOLL_FORCE | FOLL_PIN | FOLL_GET)=
+))
+>                  return -EINVAL;
+>  =20
+> +       might_lock_read(&current->mm->mmap_lock);
+>          start =3D untagged_addr(start) & PAGE_MASK;
+>          addr =3D start;
+>          len =3D (unsigned long) nr_pages << PAGE_SHIFT;
+>=20
+>=20
 
-Hi Andrew,
+Hi Michel and Matthew and all,
 
-Please fold this patch against on last patch you have for process_madvise.
-Thanks!
+There are a couple of recent developments in this code to keep in mind. I d=
+on't
+*think* either one is a problem here, but just in case:
 
-From 939e4c5b7ca12efc5d5eeb8ff55fc02752f70544 Mon Sep 17 00:00:00 2001
-From: Minchan Kim <minchan@kernel.org>
-Date: Tue, 19 May 2020 11:06:57 -0700
-Subject: [PATCH] mm: return EBADF if pidfd is invalid
+a) The latest version of the above routine [1] is on its way to mmotm as of
+yesterday, and that version more firmly divides the fast and slow parts,
+via a new FOLL_FAST_ONLY flag. The fall-back to slow/regular gup only occur=
+s
+if the caller does not set FOLL_FAST_ONLY. (Note that it's a gup.c internal
+flag, btw.)
 
-This patch makes returning of EBADF when the fd passed as argument is
-invalid. The implementaion relies on pidfd_get_pid's error return.
+That gives you additional options inside internal_get_user_pages_fast(), su=
+ch
+as, approximately:
 
-This patch also fixes syscall declare part since we removed pid support.
+if (!(gup_flags & FOLL_FAST_ONLY))
+	might_lock_read(&current->mm->mmap_lock);
 
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- include/linux/compat.h   | 6 +++---
- include/linux/syscalls.h | 5 ++---
- mm/madvise.c             | 3 ---
- 3 files changed, 5 insertions(+), 9 deletions(-)
+...not that that is necessarily a great idea, seeing as how it merely chang=
+es
+"might lock" into "maybe might lock".  :)
 
-diff --git a/include/linux/compat.h b/include/linux/compat.h
-index 2e2f0a2700ab..86b61e873947 100644
---- a/include/linux/compat.h
-+++ b/include/linux/compat.h
-@@ -827,10 +827,10 @@ asmlinkage long compat_sys_pwritev64v2(unsigned long fd,
- 		unsigned long vlen, loff_t pos, rwf_t flags);
- #endif
- 
--asmlinkage ssize_t compat_sys_process_madvise(compat_int_t which,
--		compat_pid_t upid, const struct compat_iovec __user *vec,
-+asmlinkage ssize_t compat_sys_process_madvise(compat_int_t pidfd,
-+		const struct compat_iovec __user *vec,
- 		compat_ulong_t vlen, compat_int_t behavior,
--		compat_ulong_t flags);
-+		compat_int_t flags);
- 
- /*
-  * Deprecated system calls which are still defined in
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 2cbd3660e8e6..63ffa6dc9da3 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -879,9 +879,8 @@ asmlinkage long sys_munlockall(void);
- asmlinkage long sys_mincore(unsigned long start, size_t len,
- 				unsigned char __user * vec);
- asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
--asmlinkage long sys_process_madvise(int which, pid_t upid,
--		const struct iovec __user *vec, unsigned long vlen,
--		int behavior, unsigned long flags);
-+asmlinkage long sys_process_madvise(int pidfd, const struct iovec __user *vec,
-+		unsigned long vlen, int behavior, unsigned int flags);
- asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
- 			unsigned long prot, unsigned long pgoff,
- 			unsigned long flags);
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 35c9b220146a..3ac1eda1203f 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1241,9 +1241,6 @@ static ssize_t do_process_madvise(int pidfd, struct iov_iter *iter,
- 	if (flags != 0)
- 		return -EINVAL;
- 
--	if (pidfd < 0)
--		return -EINVAL;
--
- 	pid = pidfd_get_pid(pidfd);
- 	if (IS_ERR(pid))
- 		return PTR_ERR(pid);
--- 
-2.26.2.761.g0e0b3e54be-goog
+b) I've posted a small patch to that same etnaviv_gem.c file [2], over the
+weekend, to convert from get_user_pages()/put_page(), to=20
+pin_user_pages()/unpin_user_pages(). It hasn't been merged yet, and it
+shouldn't conflict either, but just one more reason to hope that the
+etnaviv list can do some run time testing on the whole lot.
 
+[1] https://lore.kernel.org/r/20200519002124.2025955-3-jhubbard@nvidia.com
+
+[2] https://lore.kernel.org/r/20200518054315.2407093-1-jhubbard@nvidia.com
+
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
