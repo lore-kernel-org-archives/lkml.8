@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B32C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAF621508
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21BF20897
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgEST7A (ORCPT
+        id S1728344AbgEST7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:59:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52024 "EHLO
+        Tue, 19 May 2020 15:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728199AbgEST6s (ORCPT
+        with ESMTP id S1728228AbgEST6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:58:48 -0400
+        Tue, 19 May 2020 15:58:50 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C44C08C5C0;
-        Tue, 19 May 2020 12:58:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4DDC08C5C0;
+        Tue, 19 May 2020 12:58:50 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb8Nv-0008Rd-8a; Tue, 19 May 2020 21:58:43 +0200
+        id 1jb8Nx-0008Pl-Re; Tue, 19 May 2020 21:58:46 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BC4AB1C0178;
-        Tue, 19 May 2020 21:58:35 +0200 (CEST)
-Date:   Tue, 19 May 2020 19:58:35 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5FC0B1C04D6;
+        Tue, 19 May 2020 21:58:34 +0200 (CEST)
+Date:   Tue, 19 May 2020 19:58:34 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry/common: Provide idtentry_enter/exit()
+Subject: [tip: x86/entry] x86/entry: Convert Overflow exception to IDTENTRY
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505134904.457578656@linutronix.de>
-References: <20200505134904.457578656@linutronix.de>
+In-Reply-To: <20200505134904.771457898@linutronix.de>
+References: <20200505134904.771457898@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158991831562.17951.6216563865898704227.tip-bot2@tip-bot2>
+Message-ID: <158991831423.17951.11841232410562586031.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,148 +61,173 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     eadb831607477ba774b3314bdc956331b41817d6
-Gitweb:        https://git.kernel.org/tip/eadb831607477ba774b3314bdc956331b41817d6
+Commit-ID:     50455f27bae20453b4042423dc5ec1bee9ef89f5
+Gitweb:        https://git.kernel.org/tip/50455f27bae20453b4042423dc5ec1bee9ef89f5
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 26 Mar 2020 16:28:52 +01:00
+AuthorDate:    Tue, 25 Feb 2020 23:16:15 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 19 May 2020 16:03:57 +02:00
+CommitterDate: Tue, 19 May 2020 16:03:58 +02:00
 
-x86/entry/common: Provide idtentry_enter/exit()
+x86/entry: Convert Overflow exception to IDTENTRY
 
-Provide functions which handle the low level entry and exit similar to
-enter/exit from user mode.
+Convert #OF to IDTENTRY:
+  - Implement the C entry point with DEFINE_IDTENTRY
+  - Emit the ASM stub with DECLARE_IDTENTRY
+  - Remove the ASM idtentry in 64bit
+  - Remove the open coded ASM entry code in 32bit
+  - Fixup the XEN/PV code
+  - Remove the old prototypes
+
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
 Acked-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/20200505134904.457578656@linutronix.de
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200505134904.771457898@linutronix.de
+
 
 
 ---
- arch/x86/entry/common.c         |  99 +++++++++++++++++++++++++++++++-
- arch/x86/include/asm/idtentry.h |   3 +-
- 2 files changed, 102 insertions(+)
+ arch/x86/entry/entry_32.S       | 7 -------
+ arch/x86/entry/entry_64.S       | 1 -
+ arch/x86/include/asm/idtentry.h | 1 +
+ arch/x86/include/asm/traps.h    | 3 ---
+ arch/x86/kernel/idt.c           | 2 +-
+ arch/x86/kernel/traps.c         | 6 +++++-
+ arch/x86/xen/enlighten_pv.c     | 2 +-
+ arch/x86/xen/xen-asm_64.S       | 2 +-
+ 8 files changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index e4f9f5f..9ebe334 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -510,3 +510,102 @@ SYSCALL_DEFINE0(ni_syscall)
- {
- 	return -ENOSYS;
- }
-+
-+/**
-+ * idtentry_enter - Handle state tracking on idtentry
-+ * @regs:	Pointer to pt_regs of interrupted context
-+ *
-+ * Invokes:
-+ *  - lockdep irqflag state tracking as low level ASM entry disabled
-+ *    interrupts.
-+ *
-+ *  - Context tracking if the exception hit user mode.
-+ *
-+ *  - RCU notification if the exception hit kernel mode.
-+ *
-+ *  - The hardirq tracer to keep the state consistent as low level ASM
-+ *    entry disabled interrupts.
-+ */
-+void noinstr idtentry_enter(struct pt_regs *regs)
-+{
-+	if (user_mode(regs)) {
-+		enter_from_user_mode();
-+	} else {
-+		lockdep_hardirqs_off(CALLER_ADDR0);
-+		rcu_irq_enter();
-+		instrumentation_begin();
-+		trace_hardirqs_off_prepare();
-+		instrumentation_end();
-+	}
-+}
-+
-+/**
-+ * idtentry_exit - Common code to handle return from exceptions
-+ * @regs:	Pointer to pt_regs (exception entry regs)
-+ *
-+ * Depending on the return target (kernel/user) this runs the necessary
-+ * preemption and work checks if possible and required and returns to
-+ * the caller with interrupts disabled and no further work pending.
-+ *
-+ * This is the last action before returning to the low level ASM code which
-+ * just needs to return to the appropriate context.
-+ *
-+ * Invoked by all exception/interrupt IDTENTRY handlers which are not
-+ * returning through the paranoid exit path (all except NMI, #DF and the IST
-+ * variants of #MC and #DB) and are therefore on the thread stack.
-+ */
-+void noinstr idtentry_exit(struct pt_regs *regs)
-+{
-+	lockdep_assert_irqs_disabled();
-+
-+	/* Check whether this returns to user mode */
-+	if (user_mode(regs)) {
-+		prepare_exit_to_usermode(regs);
-+	} else if (regs->flags & X86_EFLAGS_IF) {
-+		/* Check kernel preemption, if enabled */
-+		if (IS_ENABLED(CONFIG_PREEMPTION)) {
-+			/*
-+			 * This needs to be done very carefully.
-+			 * idtentry_enter() invoked rcu_irq_enter(). This
-+			 * needs to be undone before scheduling.
-+			 *
-+			 * Preemption is disabled inside of RCU idle
-+			 * sections. When the task returns from
-+			 * preempt_schedule_irq(), RCU is still watching.
-+			 *
-+			 * rcu_irq_exit_preempt() has additional state
-+			 * checking if CONFIG_PROVE_RCU=y
-+			 */
-+			if (!preempt_count()) {
-+				if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
-+					WARN_ON_ONCE(!on_thread_stack());
-+				instrumentation_begin();
-+				rcu_irq_exit_preempt();
-+				if (need_resched())
-+					preempt_schedule_irq();
-+				/* Covers both tracing and lockdep */
-+				trace_hardirqs_on();
-+				instrumentation_end();
-+				return;
-+			}
-+		}
-+		/*
-+		 * If preemption is disabled then this needs to be done
-+		 * carefully with respect to RCU. The exception might come
-+		 * from a RCU idle section in the idle task due to the fact
-+		 * that safe_halt() enables interrupts. So this needs the
-+		 * same ordering of lockdep/tracing and RCU as the return
-+		 * to user mode path.
-+		 */
-+		instrumentation_begin();
-+		/* Tell the tracer that IRET will enable interrupts */
-+		trace_hardirqs_on_prepare();
-+		lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-+		instrumentation_end();
-+		rcu_irq_exit();
-+		lockdep_hardirqs_on(CALLER_ADDR0);
-+	} else {
-+		/* IRQ flags state is correct already. Just tell RCU */
-+		rcu_irq_exit();
-+	}
-+}
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 398fd3c..e5d57f6 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1325,13 +1325,6 @@ SYM_CODE_START(native_iret)
+ SYM_CODE_END(native_iret)
+ #endif
+ 
+-SYM_CODE_START(overflow)
+-	ASM_CLAC
+-	pushl	$0
+-	pushl	$do_overflow
+-	jmp	common_exception
+-SYM_CODE_END(overflow)
+-
+ SYM_CODE_START(bounds)
+ 	ASM_CLAC
+ 	pushl	$0
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index e18594d..eb503b0 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1072,7 +1072,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
+  * Exception entry points.
+  */
+ 
+-idtentry	X86_TRAP_OF		overflow		do_overflow			has_error_code=0
+ idtentry	X86_TRAP_BP		int3			do_int3				has_error_code=0
+ idtentry	X86_TRAP_BR		bounds			do_bounds			has_error_code=0
+ idtentry	X86_TRAP_UD		invalid_op		do_invalid_op			has_error_code=0
 diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index bbd81e2..2adfd80 100644
+index e6f6e29..54c41b3 100644
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -7,6 +7,9 @@
+@@ -78,5 +78,6 @@ static __always_inline void __##func(struct pt_regs *regs)
  
- #ifndef __ASSEMBLY__
+ /* Simple exception entry points. No hardware error code */
+ DECLARE_IDTENTRY(X86_TRAP_DE,		exc_divide_error);
++DECLARE_IDTENTRY(X86_TRAP_OF,		exc_overflow);
  
-+void idtentry_enter(struct pt_regs *regs);
-+void idtentry_exit(struct pt_regs *regs);
+ #endif
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index e68cbf8..1b0452c 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -14,7 +14,6 @@
+ asmlinkage void debug(void);
+ asmlinkage void nmi(void);
+ asmlinkage void int3(void);
+-asmlinkage void overflow(void);
+ asmlinkage void bounds(void);
+ asmlinkage void invalid_op(void);
+ asmlinkage void device_not_available(void);
+@@ -40,7 +39,6 @@ asmlinkage void simd_coprocessor_error(void);
+ asmlinkage void xen_xennmi(void);
+ asmlinkage void xen_xendebug(void);
+ asmlinkage void xen_int3(void);
+-asmlinkage void xen_overflow(void);
+ asmlinkage void xen_bounds(void);
+ asmlinkage void xen_invalid_op(void);
+ asmlinkage void xen_device_not_available(void);
+@@ -63,7 +61,6 @@ asmlinkage void xen_simd_coprocessor_error(void);
+ dotraplinkage void do_debug(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_nmi(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_int3(struct pt_regs *regs, long error_code);
+-dotraplinkage void do_overflow(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_invalid_op(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_device_not_available(struct pt_regs *regs, long error_code);
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index f2a751b..f8d7962 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -99,7 +99,7 @@ static const __initconst struct idt_data def_idts[] = {
+ 	INTG(X86_TRAP_MC,		machine_check),
+ #endif
+ 
+-	SYSG(X86_TRAP_OF,		overflow),
++	SYSG(X86_TRAP_OF,		asm_exc_overflow),
+ #if defined(CONFIG_IA32_EMULATION)
+ 	SYSG(IA32_SYSCALL_VECTOR,	entry_INT80_compat),
+ #elif defined(CONFIG_X86_32)
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 37092f7..b522e2a 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -226,6 +226,11 @@ DEFINE_IDTENTRY(exc_divide_error)
+ 		      FPE_INTDIV, error_get_trap_addr(regs));
+ }
+ 
++DEFINE_IDTENTRY(exc_overflow)
++{
++	do_error_trap(regs, 0, "overflow", X86_TRAP_OF, SIGSEGV, 0, NULL);
++}
 +
- /**
-  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
-  *		      No error code pushed by hardware
+ #define IP ((void __user *)uprobe_get_trap_addr(regs))
+ #define DO_ERROR(trapnr, signr, sicode, addr, str, name)		   \
+ dotraplinkage void do_##name(struct pt_regs *regs, long error_code)	   \
+@@ -233,7 +238,6 @@ dotraplinkage void do_##name(struct pt_regs *regs, long error_code)	   \
+ 	do_error_trap(regs, error_code, str, trapnr, signr, sicode, addr); \
+ }
+ 
+-DO_ERROR(X86_TRAP_OF,     SIGSEGV,          0, NULL, "overflow",            overflow)
+ DO_ERROR(X86_TRAP_UD,     SIGILL,  ILL_ILLOPN,   IP, "invalid opcode",      invalid_op)
+ DO_ERROR(X86_TRAP_OLD_MF, SIGFPE,           0, NULL, "coprocessor segment overrun", coprocessor_segment_overrun)
+ DO_ERROR(X86_TRAP_TS,     SIGSEGV,          0, NULL, "invalid TSS",         invalid_TSS)
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index c2fe7b6..f5487e5 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -618,7 +618,7 @@ static struct trap_array_entry trap_array[] = {
+ #endif
+ 	{ nmi,                         xen_xennmi,                      true },
+ 	{ int3,                        xen_int3,                        false },
+-	{ overflow,                    xen_overflow,                    false },
++	TRAP_ENTRY(exc_overflow,			false ),
+ #ifdef CONFIG_IA32_EMULATION
+ 	{ entry_INT80_compat,          xen_entry_INT80_compat,          false },
+ #endif
+diff --git a/arch/x86/xen/xen-asm_64.S b/arch/x86/xen/xen-asm_64.S
+index 48ac67e..c9c86a0 100644
+--- a/arch/x86/xen/xen-asm_64.S
++++ b/arch/x86/xen/xen-asm_64.S
+@@ -33,7 +33,7 @@ xen_pv_trap debug
+ xen_pv_trap xendebug
+ xen_pv_trap int3
+ xen_pv_trap xennmi
+-xen_pv_trap overflow
++xen_pv_trap asm_exc_overflow
+ xen_pv_trap bounds
+ xen_pv_trap invalid_op
+ xen_pv_trap device_not_available
