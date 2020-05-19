@@ -2,125 +2,126 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10572C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D155A20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C85207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1M/E+ow"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O4oyjzzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgESJsk (ORCPT
+        id S1728374AbgESJuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:48:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgESJsj (ORCPT
+        Tue, 19 May 2020 05:50:15 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42545 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726504AbgESJuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:48:39 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0F7C061A0C;
-        Tue, 19 May 2020 02:48:39 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j5so15177330wrq.2;
-        Tue, 19 May 2020 02:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TxO8/IXQNqCh0h2e7bYaTvlD1TxQQB6hOMKor8r5w+M=;
-        b=I1M/E+owJV4EfENz4l65z+14J0ht2BSRPF0lESD68h+3VDvnWexWznPnud07EhbS95
-         phb3Z4dBR3BslzYIE3FhThEHuh/xWKovhaNn+x49F1ysIzyeQPWm2kyAmT5/oHfidMlv
-         xgWjnBPSlh9ib2Z6tprfyDuGR9yHz0kVXkDVOucSpxq+fHDa2X1Pgemv2uq7tY9cvlRp
-         bGnF3dcWbA7Q79wzPJDJPKdO1eCU0CTHbrcA0FQtef336JmmzIU/kAzrm1/GALui9uGb
-         eVHhzrRWgia+Dd7bBbFM6r63YR/kHRIlsLxpEmQAUbqZ1z/PvNyZpuVKERCADPJPRsss
-         rjSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TxO8/IXQNqCh0h2e7bYaTvlD1TxQQB6hOMKor8r5w+M=;
-        b=s+lClDz3nVVizjBH5QiDHh4SEjzdxdBwseGkZnAZgTitUHt5fadBpzwwsIfdY9ShgO
-         X9fn99dthuPR9oPp8Ckr2MeZ67I11ts9GrcRn9R+tonEVyjLkMwAj9CftHbx0sD4or7e
-         gPXyJ3j6jAqn4ZryR6+UqIGJ0osaeNpNRTCX8HXCMKFWvsR1gRYp30roA+sEoRM35gPi
-         AHjRdDq/ji8QnuJuEZY9F7X6M1wCyZ54vTbjDmlMF8QOieKCVzLHcVv6vr8sqHFObj1d
-         jewwb0l6YYPLd16exi/+7/9YeRNkBXIHpmtt3OqxyyMHuk42xDMREwQ7S4JI6ip994Zw
-         bAKA==
-X-Gm-Message-State: AOAM531UKvSKNAyX5fsHxbz6HK6onKMh+tea6gaUwWbuKeVhubPTa3Oi
-        GuPMF5wmZXDVitlZQLaPmz4=
-X-Google-Smtp-Source: ABdhPJxHzin111tuyClhSHahzHhjUR9f6GbkrVxzMT/CakjTJ3o6V77M8IpxpTfe7tKVRZAHiY+TWA==
-X-Received: by 2002:a5d:4702:: with SMTP id y2mr23759324wrq.136.1589881718095;
-        Tue, 19 May 2020 02:48:38 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id w13sm19591852wrm.28.2020.05.19.02.48.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 02:48:37 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:48:35 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 0/3] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200519094835.GB10391@ict14-OptiPlex-980>
-References: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
- <20200519092212.GT1634618@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519092212.GT1634618@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 19 May 2020 05:50:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589881813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=SIVLP0DRrlKxQ6SwkqhvlChjQm02/QELWNEmHf7Q4zw=;
+        b=O4oyjzziHXnwkfER/hTLGOUuDPaPHuV8wR7LSpjwZ962H4qVCdB4mhmpjzcgJES8+U05Q3
+        t3r8VSoqd1JR1ufBf/NnRQSfI2Ragf7c7lRSE2O5LHYZrDN6PJR8CvyFUPGoIvtR6YpQbZ
+        grEDEBNr6QX6ahOLTrcq1LlVE3WZ0bk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-471-CihpbDhtN7SvRQGJ7bl_JA-1; Tue, 19 May 2020 05:50:11 -0400
+X-MC-Unique: CihpbDhtN7SvRQGJ7bl_JA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E966B1800D42;
+        Tue, 19 May 2020 09:50:09 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1775710013D9;
+        Tue, 19 May 2020 09:50:08 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>, stable@vger.kernel.org
+Subject: [PATCH] KVM: x86: only do L1TF workaround on affected processors
+Date:   Tue, 19 May 2020 05:50:08 -0400
+Message-Id: <20200519095008.1212-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:22:12PM +0300, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 08:57:40AM +0200, Jonathan Albrieux wrote:
-> > Convert documentation from txt format to yaml. Add documentation about
-> > reset-gpio. 
-> 
-> Trailing white space (though it doesn't matter here, in cover letter).
-> 
+KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are split
+in two parts, as in "[high 11111 low]", to thwart any attempt to use these bits
+in an L1TF attack.  This works as long as there are 5 free bits between
+MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
+access triggers a reserved-bit-set page fault.
 
-Ok will fix it!
+The bit positions however were computed wrongly for AMD processors that have
+encryption support.  In this case, x86_phys_bits is reduced (for example
+from 48 to 43, to account for the C bit at position 47 and four bits used
+internally to store the SEV ASID and other stuff) while x86_cache_bits in
+would remain set to 48, and _all_ bits between the reduced MAXPHYADDR
+and bit 51 are set.  Then low_phys_bits would also cover some of the
+bits that are set in the shadow_mmio_value, terribly confusing the gfn
+caching mechanism.
 
-> > Deassert reset on ak8975_power_on, assert reset on ak8975_power_off.
-> > 
-> > Without reset's deassertion during ak8975_power_on, driver's probe fails
-> > on ak8975_who_i_am while checking for device identity for AK09911 chip
-> > 
-> > AK09911 has an active low reset gpio to handle register's reset.
-> > AK09911 datasheed says that, if not used, reset pin should be connected
-> > to VID. This patch emulates this situation
-> 
-> I dunno if it's your first submission to Linux kernel project or other OSS,
-> but here you missed a changelog. Rule of thumb is to provide a summary of
-> the changes done in the history of the evolution of a patch series.
-> 
+To fix this, avoid splitting gfns as long as the processor does not have
+the L1TF bug (which includes all AMD processors).  When there is no
+splitting, low_phys_bits can be set to the reduced MAXPHYADDR removing
+the overlap.  This fixes "npt=0" operation on EPYC processors.
 
-Oh thank you and sorry for not having included it. 
+Thanks to Maxim Levitsky for bisecting this bug.
 
-Does the changelog needs to be added to all patch files or just on the ones
-subject of the changes?
+Cc: stable@vger.kernel.org
+Fixes: 52918ed5fcf0 ("KVM: SVM: Override default MMIO mask if memory encryption is enabled")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 8071952e9cf2..86619631ff6a 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -335,6 +335,8 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value, u64 access_mask)
+ {
+ 	BUG_ON((u64)(unsigned)access_mask != access_mask);
+ 	BUG_ON((mmio_mask & mmio_value) != mmio_value);
++	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
++	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
+ 	shadow_mmio_value = mmio_value | SPTE_MMIO_MASK;
+ 	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
+ 	shadow_mmio_access_mask = access_mask;
+@@ -583,16 +585,15 @@ static void kvm_mmu_reset_all_pte_masks(void)
+ 	 * the most significant bits of legal physical address space.
+ 	 */
+ 	shadow_nonpresent_or_rsvd_mask = 0;
+-	low_phys_bits = boot_cpu_data.x86_cache_bits;
+-	if (boot_cpu_data.x86_cache_bits <
+-	    52 - shadow_nonpresent_or_rsvd_mask_len) {
++	low_phys_bits = boot_cpu_data.x86_phys_bits;
++	if (boot_cpu_has_bug(X86_BUG_L1TF) &&
++	    !WARN_ON_ONCE(boot_cpu_data.x86_cache_bits >=
++			  52 - shadow_nonpresent_or_rsvd_mask_len)) {
++		low_phys_bits = boot_cpu_data.x86_cache_bits
++			- shadow_nonpresent_or_rsvd_mask_len;
+ 		shadow_nonpresent_or_rsvd_mask =
+-			rsvd_bits(boot_cpu_data.x86_cache_bits -
+-				  shadow_nonpresent_or_rsvd_mask_len,
+-				  boot_cpu_data.x86_cache_bits - 1);
+-		low_phys_bits -= shadow_nonpresent_or_rsvd_mask_len;
+-	} else
+-		WARN_ON_ONCE(boot_cpu_has_bug(X86_BUG_L1TF));
++			rsvd_bits(low_phys_bits, boot_cpu_data.x86_cache_bits - 1);
++	}
+ 
+ 	shadow_nonpresent_or_rsvd_lower_gfn_mask =
+ 		GENMASK_ULL(low_phys_bits - 1, PAGE_SHIFT);
+-- 
+2.18.2
 
-Best regards,
-Jonathan Albrieux
