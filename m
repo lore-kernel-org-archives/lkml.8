@@ -2,97 +2,117 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C921C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D63620809
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C44020809
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Dr8ZTOpr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gP5wxnBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgESXK2 (ORCPT
+        id S1728129AbgESXL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:10:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54004 "EHLO
+        Tue, 19 May 2020 19:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgESXK2 (ORCPT
+        with ESMTP id S1726536AbgESXLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:10:28 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07525C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:10:27 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t7so546223plr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:10:27 -0700 (PDT)
+        Tue, 19 May 2020 19:11:24 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4DC2C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:11:24 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q16so543239plr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:11:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YIhBgtFrqanZxaoDE99ayOKzut2GbNqr9j2tD0I6nAw=;
-        b=Dr8ZTOprcAXuKEo3lno5QfSoo2JmOs9jR81zKjrpOBd/I/howaMAk9kD88lyo3RsFN
-         GyXXxM8QdWWgKvp3tjNNhr3Ex3z1XDOCy8edrckMCu0yKDK7ZHP/qNSjoVg7f/hWm8Jo
-         0CDbtZCE5WxNTMz50+iquyWVnM7OMwa1HkR+tKZol7nkDsNxubbJVt3EyCWinqPy5+rf
-         40BVralUHrmDhSDDMFErcsxlHLFqsCsAYpJM8dQphqPaaZTXEU3W9+iNta7ATjjlWkYh
-         iIVSUakYD+iG9nX4Ez1PA9K3XDCUAoEpO8Rs8LUWPrdNfXFqyo8IcSEE3C9qusTefyvT
-         cJ8A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L+7QJAXBjfTJ+AlH8byb/3GiDycgpsRF9Sq5WXCPucY=;
+        b=gP5wxnBJxBWcrtjyMluDLMiPyewrNncS64EHHgPp+B5M8VlvjmUGx3plaFVco31aMq
+         RpFy1n//+8JzRGeWcxluhSfKMAb4bNWo7nwYZzBfU8POB1X1AmxCynz0skXCltH2HQEc
+         7rTCq5vn0/i63H17WVk0pZRzPfQDeXMnCyl8akbVKV0twSLso7DvVGxJ39T5EpPoWFIg
+         +CO+9Vv9YQe4Y6IR1i0xtrt/IiYjROFyjYoaUwA7Fzh/h9FK36M7fWdKjXoJANNSQ1Og
+         hATkgP4m864O55Qhe5bEq83CnP7uAAZ2b4wekCdoeL/zGL4u1qJUi/9loHAQGjjg/B+e
+         303Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YIhBgtFrqanZxaoDE99ayOKzut2GbNqr9j2tD0I6nAw=;
-        b=FYG798D/aCQv+B+6zMH6TcQsYg8x9wywlQK6ZEUbzOjbpUaO1GJ6VL3x2Vgh1Dw1ai
-         iPNvCuTGEKVXrMfL6m9xlykxiZYDPQvj2osk6ja9hijRQ19b+e0FbhzqQolp9Jy65wBR
-         WzyMYA6Ne/ESyWJZJ8A2mNCVPjOzQ3cVz5uPFGIunuaNwFMYD/KP3JVp69q5jDDkAZb8
-         qiCv/zojnspexUY1yvxP23jTp5w02nsXxxmIVnwrFmcqEaYfsac+v2P9wzLkUliJ5XGc
-         u5yWDglwN1DhPN2IUD/ABpUomIW2q8b3AXF5jBLYOb1oV+feqshdKB4dkGgNtHlOGhcp
-         jERA==
-X-Gm-Message-State: AOAM531T1dbpRjc3epf9kBA7bXtWj1IgFjHCl/HZ0MT+EBrBDsq7qKHR
-        dl29OpLIKG1rY5K50H9Lmsp9Iw==
-X-Google-Smtp-Source: ABdhPJwBXr1mJnyNqJYn1wuy0/66dvQDSpj0yB5i/10Uf5tQtLlF1F1nIa3TamCG1/p9Wc7yiMkeEw==
-X-Received: by 2002:a17:90a:a43:: with SMTP id o61mr1935891pjo.179.1589929827249;
-        Tue, 19 May 2020 16:10:27 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id kr1sm454125pjb.26.2020.05.19.16.10.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L+7QJAXBjfTJ+AlH8byb/3GiDycgpsRF9Sq5WXCPucY=;
+        b=niytpwofxEBUJ+jYO2IBk88oGI7Bj+N0VDK2D9Ifg2Aabhd2IS0CSi5Yz1hjvZ4edd
+         GcHAUU9GolZ7GWma7/oA5sR4wUY4vc+/snCshc4fMvYy6+iRHDwzpN0CjH998O095Ltc
+         S7TB0fIukvZ1Yy9JlNG1rFYzvCqqzu8H6fgeIJrhJBuGkDnbPFIA7QpyBbADxhC79hb1
+         h6tonq6tLVAv1wV+voK4KWrb5k7o4bwu0x8b0uNpHYH0r6sROdTe8yOWh9dUkSZicGez
+         jfCjUPN7xxavBEVx7yEWkzxGkfAY6AtE/aT21hT5f3h/rgK7OqYvzjQ5MjCK0V2ja880
+         4SxA==
+X-Gm-Message-State: AOAM533shAfuDOBB1UdP9zICq8TpBT5hz4GjoAfUHmGqA5VbO9Qds0Vz
+        Pqt1Q6CrlWwvd4bsaKA4Hue9vA==
+X-Google-Smtp-Source: ABdhPJys9s8J9INgrU+CaIvU8ZNjpSsags3R398v5suCHgwKjLcqI84WmnxzgQHtjdRMxu8rJp4+Dw==
+X-Received: by 2002:a17:90a:21cf:: with SMTP id q73mr1953058pjc.230.1589929884107;
+        Tue, 19 May 2020 16:11:24 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s2sm473945pjs.9.2020.05.19.16.11.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 16:10:26 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 0/2] arm64: dts: meson-sm1: add thermal nodes
-Date:   Tue, 19 May 2020 16:10:25 -0700
-Message-Id: <158992977729.3767.17121497893810166214.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200512093916.19676-1-narmstrong@baylibre.com>
-References: <20200512093916.19676-1-narmstrong@baylibre.com>
+        Tue, 19 May 2020 16:11:23 -0700 (PDT)
+Date:   Tue, 19 May 2020 16:10:02 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] net: qrtr: Fix passing invalid reference to
+ qrtr_local_enqueue()
+Message-ID: <20200519231002.GD2165@builder.lan>
+References: <20200519181416.4235-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519181416.4235-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 11:39:14 +0200, Neil Armstrong wrote:
-> SM1 Thermal is missing and broken since the G12A/G12B thermal enablement,
-> fix this here by moving the g12b thermal nodes to meson-g12b.dtsi
-> and adding the proper sm1 thermal nodes.
+On Tue 19 May 11:14 PDT 2020, Manivannan Sadhasivam wrote:
+
+> Once the traversal of the list is completed with list_for_each_entry(),
+> the iterator (node) will point to an invalid object. So passing this to
+> qrtr_local_enqueue() which is outside of the iterator block is erroneous
+> eventhough the object is not used.
 > 
-> Neil Armstrong (2):
->   arm64: dts: meson-g12b: move G12B thermal nodes to meson-g12b.dtsi
->   arm64: dts: meson-sm1: add cpu thermal nodes
+> So fix this by passing NULL to qrtr_local_enqueue().
 > 
-> [...]
+> Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
 
-Applied, thanks!
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[1/2] arm64: dts: meson-g12b: move G12B thermal nodes to meson-g12b.dtsi
-      commit: fef8ddfeaef8b7c91175e76bda7e4bd207b2d179
-[2/2] arm64: dts: meson-sm1: add cpu thermal nodes
-      commit: 410763ffbf629eee72f0257501dd448f861e3693
+Regards,
+Bjorn
 
-Best regards,
--- 
-Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  net/qrtr/qrtr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+> index 7ed31b5e77e4..2d8d6131bc5f 100644
+> --- a/net/qrtr/qrtr.c
+> +++ b/net/qrtr/qrtr.c
+> @@ -854,7 +854,7 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+>  	}
+>  	mutex_unlock(&qrtr_node_lock);
+>  
+> -	qrtr_local_enqueue(node, skb, type, from, to);
+> +	qrtr_local_enqueue(NULL, skb, type, from, to);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.17.1
+> 
