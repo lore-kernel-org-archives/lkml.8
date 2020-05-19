@@ -2,117 +2,111 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A82C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D25C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82C6220884
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C0A7206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589914721;
+	bh=KHmfH0Dqv1jN/iwb/KLxuZ/N8mBlBL9Mmuv3MdY45Uk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0/WZ3Pwp9r1U/NoTC66Hu/8KPavniGNMMN9CJ7hqlHmMbTH0AisO5Y9ms/rPriCS6
+	 D+/DIEWrpsmnYLb6ZqKWlauezyUIOBskDqFww/jBTei3i03PHjttepb9wCMK/Ll+Sh
+	 TlmEoyOEppABqltr7JE2KOb8bgqCZPyjz5gI62ZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgESS57 (ORCPT
+        id S1726732AbgESS6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:57:59 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:35588 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726567AbgESS56 (ORCPT
+        Tue, 19 May 2020 14:58:40 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37266 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbgESS6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:57:58 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 19 May 2020 11:57:57 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 19 May 2020 11:57:57 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id A91324CCD; Tue, 19 May 2020 11:57:57 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:57:57 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] mfd: Introduce QTI I2C PMIC controller
-Message-ID: <20200519185757.GA13992@codeaurora.org>
-Mail-Followup-To: Lee Jones <lee.jones@linaro.org>,
-        devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-References: <cover.1588115326.git.gurus@codeaurora.org>
- <5644dea146f8b49a5b827c56392ff916bfb343e9.1588115326.git.gurus@codeaurora.org>
- <20200429075010.GX3559@dell>
- <20200501011319.GA28441@codeaurora.org>
- <20200515104520.GK271301@dell>
+        Tue, 19 May 2020 14:58:40 -0400
+Received: by mail-il1-f193.google.com with SMTP id n11so495766ilj.4;
+        Tue, 19 May 2020 11:58:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pz2Hy0uekLRSK4zEbTvfMRi5VWjthw7cjakL1s2c9Wk=;
+        b=BvhmFbdwOYJbirkEeMTRuzrhF3GtVg/S1ewIgZA17hGwft63LLbPV7d4RuvtK1ZXUn
+         eTQbXs3+T/LxOKTf6mr8C30QuWC9DMOUmNT/uqLCgIbvlUC82LdD+zSBh8vzoxBFEuFL
+         Gg8wexxmIscKYUAXL4/8koDNQqmZLn31ZtvIFVmTMaJLLjN6Ru86tA4OSZy5ttC9vlSI
+         mSWvKqEkyxnV/S/kNajX7Qqkb8opEoVe4IyVLb0F+7NkQy8FM48a2770Q8rL0leGX6tc
+         QTqT2k2jFrzIM8ppKFDoQO9mawIRzmf2PWqQCZ57m38H+c5qwldRQRs91U3O8NOSx8t5
+         pLoQ==
+X-Gm-Message-State: AOAM532qr17B4Jhp/andht7IblOG3S4qmyHydWHEhts//+yc61+i2WvB
+        qlYraSVX0kcZfgb8BH5MFQ==
+X-Google-Smtp-Source: ABdhPJzshUXBVmvGEW5Z47e15MtAHv6KiX6o24ZE2GlhumzoLz2ASW/KbjAxaMT3gIiBCoHHAC20TA==
+X-Received: by 2002:a92:8318:: with SMTP id f24mr468586ild.288.1589914717838;
+        Tue, 19 May 2020 11:58:37 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id z11sm191385iow.12.2020.05.19.11.58.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 11:58:37 -0700 (PDT)
+Received: (nullmailer pid 475406 invoked by uid 1000);
+        Tue, 19 May 2020 18:58:36 -0000
+Date:   Tue, 19 May 2020 12:58:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
+        saravanak@google.com, sibis@codeaurora.org, mka@chromium.org,
+        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 09/10] dt-bindings: interconnect: Add
+ interconnect-tags bindings
+Message-ID: <20200519185836.GA469006@bogus>
+References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+ <20200512125327.1868-10-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200515104520.GK271301@dell>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200512125327.1868-10-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 11:45:20AM +0100, Lee Jones wrote:
-> On Thu, 30 Apr 2020, Guru Das Srinagesh wrote:
+On Tue, May 12, 2020 at 03:53:26PM +0300, Georgi Djakov wrote:
+> From: Sibi Sankar <sibis@codeaurora.org>
 > 
-> > On Wed, Apr 29, 2020 at 08:50:10AM +0100, Lee Jones wrote:
-> > > On Tue, 28 Apr 2020, Guru Das Srinagesh wrote:
-> > > 
-> > > > The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
-> > > > multi-function PMIC devices which communicate over the I2C bus.  The
-> > > > controller enumerates all child nodes as platform devices, and
-> > > > instantiates a regmap interface for them to communicate over the I2C
-> > > > bus.
-> > > > 
-> > > > The controller also controls interrupts for all of the children platform
-> > > > devices.  The controller handles the summary interrupt by deciphering
-> > > > which peripheral triggered the interrupt, and which of the peripheral
-> > > > interrupts were triggered.  Finally, it calls the interrupt handlers for
-> > > > each of the virtual interrupts that were registered.
-> > > > 
-> > > > Nicholas Troast is the original author of this driver.
-> > > > 
-> > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > > ---
-> > > >  drivers/mfd/Kconfig         |  11 +
-> > > >  drivers/mfd/Makefile        |   1 +
-> > > >  drivers/mfd/qcom-i2c-pmic.c | 737 ++++++++++++++++++++++++++++++++++++++++++++
-> > > 
-> > > The vast majority of this driver deals with IRQ handling.  Why can't
-> > > this be split out into its own IRQ Chip driver and moved to
-> > > drivers/irqchip?
-> > 
-> > There appear to be quite a few in-tree MFD drivers that register IRQ
-> > controllers, like this driver does:
-> > 
-> > $ grep --exclude-dir=.git -rnE "irq_domain_(add|create).+\(" drivers/mfd | wc -l
-> > 23
-> > 
-> > As a further example, drivers/mfd/stpmic1.c closely resembles this
-> > driver in that it uses both devm_regmap_add_irq_chip() as well as
-> > devm_of_platform_populate().
-> > 
-> > As such, it seems like this driver is in line with some of the
-> > architectural choices that have been accepted in already-merged drivers.
-> > Could you please elaborate on your concerns?
+> Add interconnect-tags bindings to enable passing of optional
+> tag information to the interconnect framework.
 > 
-> It is true that *basic* IRQ domain support has been added to these
-> drivers in the past.  However, IMHO the support added to this driver
-> goes beyond those realms such that it would justify a driver of its
-> own.
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> v8:
+> * New patch, picked from here:
+>   https://lore.kernel.org/r/20200504202243.5476-10-sibis@codeaurora.org
+> 
+>  .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> index 6f5d23a605b7..c1a226a934e5 100644
+> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> @@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
+>  			 * dma-mem: Path from the device to the main memory of
+>  			            the system
+>  
+> +interconnect-tags : List of interconnect path tags sorted in the same order as the
+> +		    interconnects property. Consumers can append a specific tag to
+> +		    the path and pass this information to the interconnect framework
+> +		    to do aggregation based on the attached tag.
 
-I am exploring an option to see if the regmap-irq APIs may be used in
-this driver, similar to stpmic1.c. Just to let you know, it might be a
-few days before I am able to post my next patchset as I'll have to make
-the necessary changes and test them out first.
+Why isn't this information in the 'interconnect' arg cells?
 
-Thank you.
+We have 'interconnect-names' because strings don't mix with cells. An 
+expanding list of 'interconnect-.*' is not a good pattern IMO.
 
-Guru Das.
+Rob
