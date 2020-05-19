@@ -2,126 +2,287 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10572C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1C85207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:50:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O4oyjzzi"
+	by mail.kernel.org (Postfix) with ESMTP id 796BA207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:51:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgESJuP (ORCPT
+        id S1728481AbgESJvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:50:15 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42545 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726504AbgESJuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:50:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589881813;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=SIVLP0DRrlKxQ6SwkqhvlChjQm02/QELWNEmHf7Q4zw=;
-        b=O4oyjzziHXnwkfER/hTLGOUuDPaPHuV8wR7LSpjwZ962H4qVCdB4mhmpjzcgJES8+U05Q3
-        t3r8VSoqd1JR1ufBf/NnRQSfI2Ragf7c7lRSE2O5LHYZrDN6PJR8CvyFUPGoIvtR6YpQbZ
-        grEDEBNr6QX6ahOLTrcq1LlVE3WZ0bk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-471-CihpbDhtN7SvRQGJ7bl_JA-1; Tue, 19 May 2020 05:50:11 -0400
-X-MC-Unique: CihpbDhtN7SvRQGJ7bl_JA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E966B1800D42;
-        Tue, 19 May 2020 09:50:09 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1775710013D9;
-        Tue, 19 May 2020 09:50:08 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>, stable@vger.kernel.org
-Subject: [PATCH] KVM: x86: only do L1TF workaround on affected processors
-Date:   Tue, 19 May 2020 05:50:08 -0400
-Message-Id: <20200519095008.1212-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Tue, 19 May 2020 05:51:48 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:46370 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726333AbgESJvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 05:51:48 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A83D62000E1;
+        Tue, 19 May 2020 11:51:45 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A0AA62000DB;
+        Tue, 19 May 2020 11:51:37 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DF866402B3;
+        Tue, 19 May 2020 17:51:27 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
+        sumit.semwal@linaro.org, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org
+Subject: [PATCH] ASoC: fsl: imx-pcm-dma: Don't request dma channel in probe
+Date:   Tue, 19 May 2020 17:41:41 +0800
+Message-Id: <1589881301-4143-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are split
-in two parts, as in "[high 11111 low]", to thwart any attempt to use these bits
-in an L1TF attack.  This works as long as there are 5 free bits between
-MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
-access triggers a reserved-bit-set page fault.
+There are two requirements that we need to move the request
+of dma channel from probe to open.
 
-The bit positions however were computed wrongly for AMD processors that have
-encryption support.  In this case, x86_phys_bits is reduced (for example
-from 48 to 43, to account for the C bit at position 47 and four bits used
-internally to store the SEV ASID and other stuff) while x86_cache_bits in
-would remain set to 48, and _all_ bits between the reduced MAXPHYADDR
-and bit 51 are set.  Then low_phys_bits would also cover some of the
-bits that are set in the shadow_mmio_value, terribly confusing the gfn
-caching mechanism.
+- When dma device binds with power-domains, the power will
+be enabled when we request dma channel. If the request of dma
+channel happen on probe, then the power-domains will be always
+enabled after kernel boot up,  which is not good for power
+saving,  so we need to move the request of dma channel to .open();
 
-To fix this, avoid splitting gfns as long as the processor does not have
-the L1TF bug (which includes all AMD processors).  When there is no
-splitting, low_phys_bits can be set to the reduced MAXPHYADDR removing
-the overlap.  This fixes "npt=0" operation on EPYC processors.
+- With FE-BE case, if the dma channel is requested in probe,
+then there will be below issue, which is caused by that the
+dma channel will be requested duplicately
 
-Thanks to Maxim Levitsky for bisecting this bug.
+[  638.906268] sysfs: cannot create duplicate filename '/devices/soc0/soc/2000000.bus/2000000.spba-bus/2024000.esai/dma:tx'
+[  638.919061] CPU: 1 PID: 673 Comm: aplay Not tainted 5.7.0-rc1-12956-gfc64b2585593 #287
+[  638.927113] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[  638.933690] [<c0110dd8>] (unwind_backtrace) from [<c010b8ec>] (show_stack+0x10/0x14)
+[  638.941464] [<c010b8ec>] (show_stack) from [<c0557fc0>] (dump_stack+0xe4/0x118)
+[  638.948808] [<c0557fc0>] (dump_stack) from [<c032aeb4>] (sysfs_warn_dup+0x50/0x64)
+[  638.956406] [<c032aeb4>] (sysfs_warn_dup) from [<c032b1a8>] (sysfs_do_create_link_sd+0xc8/0xd4)
+[  638.965134] [<c032b1a8>] (sysfs_do_create_link_sd) from [<c05dc668>] (dma_request_chan+0xb0/0x210)
+[  638.974120] [<c05dc668>] (dma_request_chan) from [<c05dc7d0>] (dma_request_slave_channel+0x8/0x14)
+[  638.983111] [<c05dc7d0>] (dma_request_slave_channel) from [<c09d5548>] (fsl_asrc_dma_hw_params+0x1e0/0x438)
+[  638.992881] [<c09d5548>] (fsl_asrc_dma_hw_params) from [<c09c1654>] (soc_pcm_hw_params+0x4a0/0x6a8)
+[  639.001952] [<c09c1654>] (soc_pcm_hw_params) from [<c09c39d4>] (dpcm_fe_dai_hw_params+0x70/0xe4)
+[  639.010765] [<c09c39d4>] (dpcm_fe_dai_hw_params) from [<c099b274>] (snd_pcm_hw_params+0x158/0x418)
+[  639.019750] [<c099b274>] (snd_pcm_hw_params) from [<c099c5a0>] (snd_pcm_ioctl+0x734/0x183c)
+[  639.028129] [<c099c5a0>] (snd_pcm_ioctl) from [<c029ff94>] (ksys_ioctl+0x2ac/0xb98)
+[  639.035812] [<c029ff94>] (ksys_ioctl) from [<c0100080>] (ret_fast_syscall+0x0/0x28)
+[  639.043490] Exception stack(0xec529fa8 to 0xec529ff0)
+[  639.048565] 9fa0:                   bee84650 01321870 00000004 c25c4111 bee84650 0002000f
+[  639.056766] 9fc0: bee84650 01321870 01321820 00000036 00001f40 00000000 0002c2f8 00000003
+[  639.064964] 9fe0: b6f483fc bee8451c b6ee2655 b6e1dcf8
+[  639.070339] fsl-esai-dai 2024000.esai: Cannot create DMA dma:tx symlink
 
-Cc: stable@vger.kernel.org
-Fixes: 52918ed5fcf0 ("KVM: SVM: Override default MMIO mask if memory encryption is enabled")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ sound/soc/fsl/imx-pcm-dma.c | 173 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 159 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 8071952e9cf2..86619631ff6a 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -335,6 +335,8 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value, u64 access_mask)
+diff --git a/sound/soc/fsl/imx-pcm-dma.c b/sound/soc/fsl/imx-pcm-dma.c
+index 04a9bc749016..dae53b384df4 100644
+--- a/sound/soc/fsl/imx-pcm-dma.c
++++ b/sound/soc/fsl/imx-pcm-dma.c
+@@ -11,6 +11,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/types.h>
+ #include <linux/module.h>
++#include <linux/dma-mapping.h>
+ 
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+@@ -29,24 +30,168 @@ static bool filter(struct dma_chan *chan, void *param)
+ 	return true;
+ }
+ 
+-static const struct snd_dmaengine_pcm_config imx_dmaengine_pcm_config = {
+-	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
+-	.compat_filter_fn = filter,
+-};
++static int imx_pcm_hw_params(struct snd_soc_component *component,
++			     struct snd_pcm_substream *substream,
++			     struct snd_pcm_hw_params *params)
++{
++	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
++	struct snd_dmaengine_dai_dma_data *dma_data;
++	struct dma_slave_config config;
++	struct dma_chan *chan;
++	int ret = 0;
+ 
+-int imx_pcm_dma_init(struct platform_device *pdev, size_t size)
++	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
++	runtime->dma_bytes = params_buffer_bytes(params);
++
++	chan = snd_dmaengine_pcm_get_chan(substream);
++	if (!chan)
++		return -EINVAL;
++
++	ret = snd_hwparams_to_dma_slave_config(substream, params, &config);
++	if (ret)
++		return ret;
++
++	dma_data = snd_soc_dai_get_dma_data(cpu_dai, substream);
++	if (!dma_data)
++		return -EINVAL;
++
++	snd_dmaengine_pcm_set_config_from_dai_data(substream,
++						   dma_data,
++						   &config);
++	return dmaengine_slave_config(chan, &config);
++}
++
++static int imx_pcm_hw_free(struct snd_soc_component *component,
++			   struct snd_pcm_substream *substream)
  {
- 	BUG_ON((u64)(unsigned)access_mask != access_mask);
- 	BUG_ON((mmio_mask & mmio_value) != mmio_value);
-+	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
-+	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
- 	shadow_mmio_value = mmio_value | SPTE_MMIO_MASK;
- 	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
- 	shadow_mmio_access_mask = access_mask;
-@@ -583,16 +585,15 @@ static void kvm_mmu_reset_all_pte_masks(void)
- 	 * the most significant bits of legal physical address space.
- 	 */
- 	shadow_nonpresent_or_rsvd_mask = 0;
--	low_phys_bits = boot_cpu_data.x86_cache_bits;
--	if (boot_cpu_data.x86_cache_bits <
--	    52 - shadow_nonpresent_or_rsvd_mask_len) {
-+	low_phys_bits = boot_cpu_data.x86_phys_bits;
-+	if (boot_cpu_has_bug(X86_BUG_L1TF) &&
-+	    !WARN_ON_ONCE(boot_cpu_data.x86_cache_bits >=
-+			  52 - shadow_nonpresent_or_rsvd_mask_len)) {
-+		low_phys_bits = boot_cpu_data.x86_cache_bits
-+			- shadow_nonpresent_or_rsvd_mask_len;
- 		shadow_nonpresent_or_rsvd_mask =
--			rsvd_bits(boot_cpu_data.x86_cache_bits -
--				  shadow_nonpresent_or_rsvd_mask_len,
--				  boot_cpu_data.x86_cache_bits - 1);
--		low_phys_bits -= shadow_nonpresent_or_rsvd_mask_len;
--	} else
--		WARN_ON_ONCE(boot_cpu_has_bug(X86_BUG_L1TF));
-+			rsvd_bits(low_phys_bits, boot_cpu_data.x86_cache_bits - 1);
+-	struct snd_dmaengine_pcm_config *config;
++	snd_pcm_set_runtime_buffer(substream, NULL);
++	return 0;
++}
++
++static snd_pcm_uframes_t imx_pcm_pointer(struct snd_soc_component *component,
++					 struct snd_pcm_substream *substream)
++{
++	return snd_dmaengine_pcm_pointer(substream);
++}
++
++static int imx_pcm_trigger(struct snd_soc_component *component,
++			   struct snd_pcm_substream *substream, int cmd)
++{
++	return snd_dmaengine_pcm_trigger(substream, cmd);
++}
++
++static int imx_pcm_open(struct snd_soc_component *component,
++			struct snd_pcm_substream *substream)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
++	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
++	struct snd_dmaengine_dai_dma_data *dma_data;
++	struct device *dev = component->dev;
++	struct snd_pcm_hardware hw;
++	struct dma_chan *chan;
++	int ret;
++
++	ret = snd_pcm_hw_constraint_integer(substream->runtime,
++					    SNDRV_PCM_HW_PARAM_PERIODS);
++	if (ret < 0) {
++		dev_err(dev, "failed to set pcm hw params periods\n");
++		return ret;
++	}
++
++	dma_data = snd_soc_dai_get_dma_data(cpu_dai, substream);
++	if (!dma_data)
++		return -EINVAL;
++
++	chan = dma_request_slave_channel(cpu_dai->dev, tx ? "tx" : "rx");
++	if (!chan) {
++		/* Try to request channel using compat_filter_fn */
++		chan = snd_dmaengine_pcm_request_channel(filter,
++							 dma_data->filter_data);
++		if (!chan)
++			return -ENXIO;
 +	}
  
- 	shadow_nonpresent_or_rsvd_lower_gfn_mask =
- 		GENMASK_ULL(low_phys_bits - 1, PAGE_SHIFT);
+-	config = devm_kzalloc(&pdev->dev,
+-			sizeof(struct snd_dmaengine_pcm_config), GFP_KERNEL);
+-	if (!config)
+-		return -ENOMEM;
+-	*config = imx_dmaengine_pcm_config;
++	ret = snd_dmaengine_pcm_open(substream, chan);
++	if (ret)
++		goto pcm_open_fail;
+ 
+-	return devm_snd_dmaengine_pcm_register(&pdev->dev,
+-		config,
+-		SND_DMAENGINE_PCM_FLAG_COMPAT);
++	memset(&hw, 0, sizeof(hw));
++	hw.info = SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_MMAP_VALID |
++			SNDRV_PCM_INFO_INTERLEAVED;
++	hw.periods_min = 2;
++	hw.periods_max = UINT_MAX;
++	hw.period_bytes_min = 256;
++	hw.period_bytes_max = dma_get_max_seg_size(chan->device->dev);
++	hw.buffer_bytes_max = IMX_DEFAULT_DMABUF_SIZE;
++	hw.fifo_size = dma_data->fifo_size;
++
++	/* Refine the hw according to caps of DMA. */
++	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
++							dma_data,
++							&hw,
++							chan);
++	if (ret < 0)
++		goto refine_runtime_hwparams_fail;
++
++	snd_soc_set_runtime_hwparams(substream, &hw);
++
++	/* Support allocate memory from IRAM */
++	ret = snd_dma_alloc_pages(SNDRV_DMA_TYPE_DEV_IRAM,
++				  chan->device->dev,
++				  hw.buffer_bytes_max,
++				  &substream->dma_buffer);
++	if (ret < 0)
++		goto alloc_pagas_fail;
++
++	return 0;
++
++alloc_pagas_fail:
++refine_runtime_hwparams_fail:
++	snd_dmaengine_pcm_close(substream);
++pcm_open_fail:
++	dma_release_channel(chan);
++
++	return ret;
++}
++
++static int imx_pcm_close(struct snd_soc_component *component,
++			 struct snd_pcm_substream *substream)
++{
++	if (substream) {
++		snd_dma_free_pages(&substream->dma_buffer);
++		substream->dma_buffer.area = NULL;
++		substream->dma_buffer.addr = 0;
++	}
++
++	return snd_dmaengine_pcm_close_release_chan(substream);
++}
++
++static int imx_pcm_new(struct snd_soc_component *component,
++		       struct snd_soc_pcm_runtime *rtd)
++{
++	struct snd_card *card = rtd->card->snd_card;
++
++	return dma_coerce_mask_and_coherent(card->dev, DMA_BIT_MASK(32));
++}
++
++static const struct snd_soc_component_driver imx_pcm_component = {
++	.name           = "imx-pcm-dma",
++	.pcm_construct	= imx_pcm_new,
++	.open		= imx_pcm_open,
++	.close		= imx_pcm_close,
++	.hw_params	= imx_pcm_hw_params,
++	.hw_free	= imx_pcm_hw_free,
++	.trigger	= imx_pcm_trigger,
++	.pointer	= imx_pcm_pointer,
++};
++
++int imx_pcm_dma_init(struct platform_device *pdev, size_t size)
++{
++	return devm_snd_soc_register_component(&pdev->dev,
++					       &imx_pcm_component, NULL, 0);
+ }
+ EXPORT_SYMBOL_GPL(imx_pcm_dma_init);
+ 
 -- 
-2.18.2
+2.21.0
 
