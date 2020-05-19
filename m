@@ -2,134 +2,195 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F42C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E91C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1BE2081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F42207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:14:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589901248;
+	bh=ScSGe8jrv3hfKhjCdizhN+Uxf0LNOAIcifPOI6l0k1Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NApIudWRSeB9WGa7IcaVptxqndaPhWTwCEr770qztg3y34/cataHdRWN692V4w4WP
+	 X9tW2sRKBPiwHqNaYX2nuCfmg/5dpyNEV0056QHnE0JSiQx47UR1qhrmll2Z2SncUr
+	 v6r7TPN0Jl85KTpP3W9jrZkZa+zavI+m9WvXkddg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgESPNw (ORCPT
+        id S1729252AbgESPOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 11:13:52 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60703 "EHLO mga17.intel.com"
+        Tue, 19 May 2020 11:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbgESPNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 11:13:51 -0400
-IronPort-SDR: gvdY28cjukvsI+9FlFvyoo9xkiFj5WPYUJ20jjNp+R5LM5RsEqCm440nImlT4z+laqvDzHsf+y
- 136GLBeSXqvg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 08:13:51 -0700
-IronPort-SDR: Vpe3eHKOvhQqH4ewDJZngfreOqTS2mISQf6urRsVZT86gyUjg/WgVxBFm/Xv9rYx5EPlBTBIn9
- DTQn0Vp1TkYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="253269820"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga007.jf.intel.com with ESMTP; 19 May 2020 08:13:49 -0700
-Date:   Tue, 19 May 2020 23:10:37 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Wu Hao <hao.wu@intel.com>,
-        Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org
-Subject: Re: [PATCH] fpga: dfl: afu: convert get_user_pages() -->
- pin_user_pages()
-Message-ID: <20200519151037.GA20726@yilunxu-OptiPlex-7050>
-References: <20200517011837.382189-1-jhubbard@nvidia.com>
+        id S1728925AbgESPOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 11:14:07 -0400
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8349020849
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 15:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589901246;
+        bh=ScSGe8jrv3hfKhjCdizhN+Uxf0LNOAIcifPOI6l0k1Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FKp/kLhhACiUYxTanjepKan9en1fyjUm9fL4lkrMfnS6meFg+txGACCaV1MW6ciFs
+         TL1A1kdD/qDFJVvRZ6lUs05xiyHRTPYkNV0tJF1kY254vAZTmeSO4gXHNE5rqSRxEw
+         8CSoX0Mcj/zyPbInqAEjbZ8AzqM89Sc2bISgLGNY=
+Received: by mail-ej1-f42.google.com with SMTP id x20so12212257ejb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 08:14:06 -0700 (PDT)
+X-Gm-Message-State: AOAM531NoHjTiuMGHVEoaun0ECgRlBNR1rZ2pKUWrJzHNUS2q3+ePpa3
+        pDt21zdOoBIYYVL6Vnur/ShqAuvZsgoEfiUglA==
+X-Google-Smtp-Source: ABdhPJyGEMfHqwCecpXfV9Hb2nOIzkFqW5hk23VzHWZF6LNSHpvLL5cECCEgClHrkDVgI7tUHYITO+v3cLGXVoWSYp8=
+X-Received: by 2002:a17:906:3041:: with SMTP id d1mr13973435ejd.7.1589901244908;
+ Tue, 19 May 2020 08:14:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517011837.382189-1-jhubbard@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200519094115.2448092-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200519094115.2448092-1-enric.balletbo@collabora.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 19 May 2020 23:13:53 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-uyJiBEDNDv8OvGD6MT6jx-jiH1hM4kc6d1v9f2a525g@mail.gmail.com>
+Message-ID: <CAAOTY_-uyJiBEDNDv8OvGD6MT6jx-jiH1hM4kc6d1v9f2a525g@mail.gmail.com>
+Subject: Re: [PATCH] drm/mediatek: mtk_hdmi: Remove debug messages for
+ function calls
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 06:18:37PM -0700, John Hubbard wrote:
-> This code was using get_user_pages_fast(), in a "Case 2" scenario
-> (DMA/RDMA), using the categorization from [1]. That means that it's
-> time to convert the get_user_pages_fast() + put_page() calls to
-> pin_user_pages_fast() + unpin_user_pages() calls.
-> 
-> There is some helpful background in [2]: basically, this is a small
-> part of fixing a long-standing disconnect between pinning pages, and
-> file systems' use of those pages.
-> 
-> [1] Documentation/core-api/pin_user_pages.rst
-> 
-> [2] "Explicit pinning of user-space pages":
->     https://lwn.net/Articles/807108/
-> 
-> Cc: Wu Hao <hao.wu@intel.com>
-> Cc: Moritz Fischer <mdf@kernel.org>
-> Cc: linux-fpga@vger.kernel.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Hi, Enric:
+
+Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
+=B45=E6=9C=8819=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=885:41=E5=AF=AB=
+=E9=81=93=EF=BC=9A
+>
+> Equivalent information can be nowadays obtained using function tracer
+>
+
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
->  drivers/fpga/dfl-afu-dma-region.c | 15 +++------------
->  1 file changed, 3 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
-> index 62f924489db5..84f696d5ba82 100644
-> --- a/drivers/fpga/dfl-afu-dma-region.c
-> +++ b/drivers/fpga/dfl-afu-dma-region.c
-> @@ -16,15 +16,6 @@
->  
->  #include "dfl-afu.h"
->  
-> -static void put_all_pages(struct page **pages, int npages)
-> -{
-> -	int i;
-> -
-> -	for (i = 0; i < npages; i++)
-> -		if (pages[i])
-> -			put_page(pages[i]);
-> -}
-> -
->  void afu_dma_region_init(struct dfl_feature_platform_data *pdata)
+>
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c            | 12 +-----------
+>  drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c |  4 ----
+>  2 files changed, 1 insertion(+), 15 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
+ek/mtk_hdmi.c
+> index b0555a7cb3b4..172d67294435 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> @@ -1634,8 +1634,6 @@ static int mtk_hdmi_audio_startup(struct device *de=
+v, void *data)
 >  {
->  	struct dfl_afu *afu = dfl_fpga_pdata_get_private(pdata);
-> @@ -57,7 +48,7 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
->  		goto unlock_vm;
->  	}
->  
-> -	pinned = get_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
-> +	pinned = pin_user_pages_fast(region->user_addr, npages, FOLL_WRITE,
->  				     region->pages);
->  	if (pinned < 0) {
->  		ret = pinned;
-> @@ -72,7 +63,7 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
->  	return 0;
->  
->  put_pages:
-
-How about we also change the tag to "unpin_pages"?
-
-Others look good to me.
-
-Thanks,
-Yilun.
-
-> -	put_all_pages(region->pages, pinned);
-> +	unpin_user_pages(region->pages, pinned);
->  free_pages:
->  	kfree(region->pages);
->  unlock_vm:
-> @@ -94,7 +85,7 @@ static void afu_dma_unpin_pages(struct dfl_feature_platform_data *pdata,
->  	long npages = region->length >> PAGE_SHIFT;
->  	struct device *dev = &pdata->dev->dev;
->  
-> -	put_all_pages(region->pages, npages);
-> +	unpin_user_pages(region->pages, npages);
->  	kfree(region->pages);
->  	account_locked_vm(current->mm, npages, false);
->  
-> 
-> base-commit: 3d1c1e5931ce45b3a3f309385bbc00c78e9951c6
-> -- 
+>         struct mtk_hdmi *hdmi =3D dev_get_drvdata(dev);
+>
+> -       dev_dbg(dev, "%s\n", __func__);
+> -
+>         mtk_hdmi_audio_enable(hdmi);
+>
+>         return 0;
+> @@ -1645,8 +1643,6 @@ static void mtk_hdmi_audio_shutdown(struct device *=
+dev, void *data)
+>  {
+>         struct mtk_hdmi *hdmi =3D dev_get_drvdata(dev);
+>
+> -       dev_dbg(dev, "%s\n", __func__);
+> -
+>         mtk_hdmi_audio_disable(hdmi);
+>  }
+>
+> @@ -1655,8 +1651,6 @@ mtk_hdmi_audio_digital_mute(struct device *dev, voi=
+d *data, bool enable)
+>  {
+>         struct mtk_hdmi *hdmi =3D dev_get_drvdata(dev);
+>
+> -       dev_dbg(dev, "%s(%d)\n", __func__, enable);
+> -
+>         if (enable)
+>                 mtk_hdmi_hw_aud_mute(hdmi);
+>         else
+> @@ -1669,8 +1663,6 @@ static int mtk_hdmi_audio_get_eld(struct device *de=
+v, void *data, uint8_t *buf,
+>  {
+>         struct mtk_hdmi *hdmi =3D dev_get_drvdata(dev);
+>
+> -       dev_dbg(dev, "%s\n", __func__);
+> -
+>         memcpy(buf, hdmi->conn.eld, min(sizeof(hdmi->conn.eld), len));
+>
+>         return 0;
+> @@ -1770,7 +1762,6 @@ static int mtk_drm_hdmi_probe(struct platform_devic=
+e *pdev)
+>                 goto err_bridge_remove;
+>         }
+>
+> -       dev_dbg(dev, "mediatek hdmi probe success\n");
+>         return 0;
+>
+>  err_bridge_remove:
+> @@ -1793,7 +1784,7 @@ static int mtk_hdmi_suspend(struct device *dev)
+>         struct mtk_hdmi *hdmi =3D dev_get_drvdata(dev);
+>
+>         mtk_hdmi_clk_disable_audio(hdmi);
+> -       dev_dbg(dev, "hdmi suspend success!\n");
+> +
+>         return 0;
+>  }
+>
+> @@ -1808,7 +1799,6 @@ static int mtk_hdmi_resume(struct device *dev)
+>                 return ret;
+>         }
+>
+> -       dev_dbg(dev, "hdmi resume success!\n");
+>         return 0;
+>  }
+>  #endif
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/gpu=
+/drm/mediatek/mtk_mt8173_hdmi_phy.c
+> index b55f51675205..1c3575372230 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+> @@ -159,8 +159,6 @@ static int mtk_hdmi_pll_prepare(struct clk_hw *hw)
+>  {
+>         struct mtk_hdmi_phy *hdmi_phy =3D to_mtk_hdmi_phy(hw);
+>
+> -       dev_dbg(hdmi_phy->dev, "%s\n", __func__);
+> -
+>         mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON1, RG_HDMITX_PLL_AUTOK_EN=
+);
+>         mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_PLL_POSDIV);
+>         mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON3, RG_HDMITX_MHLCK_EN);
+> @@ -178,8 +176,6 @@ static void mtk_hdmi_pll_unprepare(struct clk_hw *hw)
+>  {
+>         struct mtk_hdmi_phy *hdmi_phy =3D to_mtk_hdmi_phy(hw);
+>
+> -       dev_dbg(hdmi_phy->dev, "%s\n", __func__);
+> -
+>         mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON1, RG_HDMITX_PLL_TXDIV_=
+EN);
+>         mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON1, RG_HDMITX_PLL_BIAS_L=
+PF_EN);
+>         usleep_range(100, 150);
+> --
 > 2.26.2
+>
