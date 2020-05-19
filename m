@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8847FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C732C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3B2207D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4332075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgEST61 (ORCPT
+        id S1727966AbgEST6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51902 "EHLO
+        Tue, 19 May 2020 15:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgEST6Z (ORCPT
+        with ESMTP id S1727047AbgEST6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:58:25 -0400
+        Tue, 19 May 2020 15:58:24 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE9CC08C5C3;
-        Tue, 19 May 2020 12:58:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79FA3C08C5C2;
+        Tue, 19 May 2020 12:58:24 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb8NY-00089p-HJ; Tue, 19 May 2020 21:58:20 +0200
+        id 1jb8NW-00088L-OW; Tue, 19 May 2020 21:58:18 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 250731C0480;
-        Tue, 19 May 2020 21:58:20 +0200 (CEST)
-Date:   Tue, 19 May 2020 19:58:20 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5F0B11C0178;
+        Tue, 19 May 2020 21:58:18 +0200 (CEST)
+Date:   Tue, 19 May 2020 19:58:18 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/idtentry: Provide IDTRENTRY_NOIST variants for
- #DB and #MC
+Subject: [tip: x86/entry] x86/mce: Address objtools noinstr complaints
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505135315.084882104@linutronix.de>
-References: <20200505135315.084882104@linutronix.de>
+In-Reply-To: <20200505135315.476734898@linutronix.de>
+References: <20200505135315.476734898@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158991830005.17951.1353363997980016294.tip-bot2@tip-bot2>
+Message-ID: <158991829826.17951.7641601849300262770.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,80 +61,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     97f4e8b75a99efc7376b6c7b5bc2a3124f609bc1
-Gitweb:        https://git.kernel.org/tip/97f4e8b75a99efc7376b6c7b5bc2a3124f609bc1
+Commit-ID:     260ba6c939f6ac42c8a96d2b50750b18706f1663
+Gitweb:        https://git.kernel.org/tip/260ba6c939f6ac42c8a96d2b50750b18706f1663
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 25 Feb 2020 23:33:28 +01:00
+AuthorDate:    Tue, 21 Apr 2020 21:22:36 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 19 May 2020 16:04:12 +02:00
+CommitterDate: Tue, 19 May 2020 16:04:14 +02:00
 
-x86/idtentry: Provide IDTRENTRY_NOIST variants for #DB and #MC
+x86/mce: Address objtools noinstr complaints
 
-Provide NOIST entry point macros which allows to implement NOIST variants
-of the C entry points. These are invoked when #DB or #MC enter from user
-space. This allows explicit handling of the difference between user mode
-and kernel mode entry later.
+Mark the relevant functions noinstr, use the plain non-instrumented MSR
+accessors. The only odd part is the instrumentation_begin()/end() pair around the
+indirect machine_check_vector() call as objtool can't figure that out. The
+possible invoked functions are annotated correctly.
+
+Also use notrace variant of nmi_enter/exit(). If MCEs happen then hardware
+latency tracing is the least of the worries.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
 Acked-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/20200505135315.084882104@linutronix.de
+Link: https://lkml.kernel.org/r/20200505135315.476734898@linutronix.de
 
 
 ---
- arch/x86/include/asm/idtentry.h | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/mce/core.c    | 20 +++++++++++++++-----
+ arch/x86/kernel/cpu/mce/p5.c      |  4 +++-
+ arch/x86/kernel/cpu/mce/winchip.c |  4 +++-
+ kernel/time/timekeeping.c         |  2 +-
+ 4 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index fcd4230..060f9e3 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -138,10 +138,12 @@ __visible noinstr void func(struct pt_regs *regs)
-  * @vector:	Vector number (ignored for C)
-  * @func:	Function name of the entry point
-  *
-- * Maps to DECLARE_IDTENTRY_RAW
-+ * Maps to DECLARE_IDTENTRY_RAW, but declares also the NOIST C handler
-+ * which is called from the ASM entry point on user mode entry
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index a72c013..a32a7e2 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -130,7 +130,7 @@ static void (*quirk_no_way_out)(int bank, struct mce *m, struct pt_regs *regs);
+ BLOCKING_NOTIFIER_HEAD(x86_mce_decoder_chain);
+ 
+ /* Do initial initialization of a struct mce */
+-void mce_setup(struct mce *m)
++noinstr void mce_setup(struct mce *m)
+ {
+ 	memset(m, 0, sizeof(struct mce));
+ 	m->cpu = m->extcpu = smp_processor_id();
+@@ -140,12 +140,12 @@ void mce_setup(struct mce *m)
+ 	m->cpuid = cpuid_eax(1);
+ 	m->socketid = cpu_data(m->extcpu).phys_proc_id;
+ 	m->apicid = cpu_data(m->extcpu).initial_apicid;
+-	rdmsrl(MSR_IA32_MCG_CAP, m->mcgcap);
++	m->mcgcap = __rdmsr(MSR_IA32_MCG_CAP);
+ 
+ 	if (this_cpu_has(X86_FEATURE_INTEL_PPIN))
+-		rdmsrl(MSR_PPIN, m->ppin);
++		m->ppin = __rdmsr(MSR_PPIN);
+ 	else if (this_cpu_has(X86_FEATURE_AMD_PPIN))
+-		rdmsrl(MSR_AMD_PPIN, m->ppin);
++		m->ppin = __rdmsr(MSR_AMD_PPIN);
+ 
+ 	m->microcode = boot_cpu_data.microcode;
+ }
+@@ -1895,10 +1895,12 @@ bool filter_mce(struct mce *m)
+ }
+ 
+ /* Handle unconfigured int18 (should never happen) */
+-static void unexpected_machine_check(struct pt_regs *regs)
++static noinstr void unexpected_machine_check(struct pt_regs *regs)
+ {
++	instrumentation_begin();
+ 	pr_err("CPU#%d: Unexpected int18 (Machine Check)\n",
+ 	       smp_processor_id());
++	instrumentation_end();
+ }
+ 
+ /* Call the installed machine check handler for this CPU setup. */
+@@ -1915,14 +1917,22 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+ 		return;
+ 
+ 	nmi_enter();
++	/*
++	 * The call targets are marked noinstr, but objtool can't figure
++	 * that out because it's an indirect call. Annotate it.
++	 */
++	instrumentation_begin();
+ 	machine_check_vector(regs);
++	instrumentation_end();
+ 	nmi_exit();
+ }
+ 
+ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
+ {
+ 	idtentry_enter(regs);
++	instrumentation_begin();
+ 	machine_check_vector(regs);
++	instrumentation_end();
+ 	idtentry_exit(regs);
+ }
+ 
+diff --git a/arch/x86/kernel/cpu/mce/p5.c b/arch/x86/kernel/cpu/mce/p5.c
+index eaebc4c..19e90ca 100644
+--- a/arch/x86/kernel/cpu/mce/p5.c
++++ b/arch/x86/kernel/cpu/mce/p5.c
+@@ -21,10 +21,11 @@
+ int mce_p5_enabled __read_mostly;
+ 
+ /* Machine check handler for Pentium class Intel CPUs: */
+-static void pentium_machine_check(struct pt_regs *regs)
++static noinstr void pentium_machine_check(struct pt_regs *regs)
+ {
+ 	u32 loaddr, hi, lotype;
+ 
++	instrumentation_begin();
+ 	rdmsr(MSR_IA32_P5_MC_ADDR, loaddr, hi);
+ 	rdmsr(MSR_IA32_P5_MC_TYPE, lotype, hi);
+ 
+@@ -37,6 +38,7 @@ static void pentium_machine_check(struct pt_regs *regs)
+ 	}
+ 
+ 	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_NOW_UNRELIABLE);
++	instrumentation_end();
+ }
+ 
+ /* Set up machine check reporting for processors with Intel style MCE: */
+diff --git a/arch/x86/kernel/cpu/mce/winchip.c b/arch/x86/kernel/cpu/mce/winchip.c
+index 90e3d60..9c9f0ab 100644
+--- a/arch/x86/kernel/cpu/mce/winchip.c
++++ b/arch/x86/kernel/cpu/mce/winchip.c
+@@ -17,10 +17,12 @@
+ #include "internal.h"
+ 
+ /* Machine check handler for WinChip C6: */
+-static void winchip_machine_check(struct pt_regs *regs)
++static noinstr void winchip_machine_check(struct pt_regs *regs)
+ {
++	instrumentation_begin();
+ 	pr_emerg("CPU0: Machine Check Exception.\n");
+ 	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_NOW_UNRELIABLE);
++	instrumentation_end();
+ }
+ 
+ /* Set up machine check reporting on the Winchip C6 series */
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 9ebaab1..d20d489 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -953,7 +953,7 @@ EXPORT_SYMBOL_GPL(ktime_get_real_seconds);
+  * but without the sequence counter protect. This internal function
+  * is called just when timekeeping lock is already held.
   */
- #define DECLARE_IDTENTRY_IST(vector, func)				\
--	DECLARE_IDTENTRY_RAW(vector, func)
-+	DECLARE_IDTENTRY_RAW(vector, func);				\
-+	__visible void noist_##func(struct pt_regs *regs)
+-time64_t __ktime_get_real_seconds(void)
++noinstr time64_t __ktime_get_real_seconds(void)
+ {
+ 	struct timekeeper *tk = &tk_core.timekeeper;
  
- /**
-  * DEFINE_IDTENTRY_IST - Emit code for IST entry points
-@@ -152,6 +154,17 @@ __visible noinstr void func(struct pt_regs *regs)
- #define DEFINE_IDTENTRY_IST(func)					\
- 	DEFINE_IDTENTRY_RAW(func)
- 
-+/**
-+ * DEFINE_IDTENTRY_NOIST - Emit code for NOIST entry points which
-+ *			   belong to a IST entry point (MCE, DB)
-+ * @func:	Function name of the entry point. Must be the same as
-+ *		the function name of the corresponding IST variant
-+ *
-+ * Maps to DEFINE_IDTENTRY_RAW().
-+ */
-+#define DEFINE_IDTENTRY_NOIST(func)					\
-+	DEFINE_IDTENTRY_RAW(noist_##func)
-+
- #else	/* CONFIG_X86_64 */
- /* Maps to a regular IDTENTRY on 32bit for now */
- # define DECLARE_IDTENTRY_IST		DECLARE_IDTENTRY
-@@ -161,12 +174,14 @@ __visible noinstr void func(struct pt_regs *regs)
- /* C-Code mapping */
- #define DECLARE_IDTENTRY_MCE		DECLARE_IDTENTRY_IST
- #define DEFINE_IDTENTRY_MCE		DEFINE_IDTENTRY_IST
-+#define DEFINE_IDTENTRY_MCE_USER	DEFINE_IDTENTRY_NOIST
- 
- #define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_IST
- #define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_IST
- 
- #define DECLARE_IDTENTRY_DEBUG		DECLARE_IDTENTRY_IST
- #define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
-+#define DEFINE_IDTENTRY_DEBUG_USER	DEFINE_IDTENTRY_NOIST
- 
- /**
-  * DECLARE_IDTENTRY_XEN - Declare functions for XEN redirect IDT entry points
