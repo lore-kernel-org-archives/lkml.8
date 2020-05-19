@@ -2,185 +2,135 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88186C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB7FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 522E62070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D080E2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:19:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZByOxcWZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaOTiOYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgESUSp (ORCPT
+        id S1727007AbgESUTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:18:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55226 "EHLO
+        Tue, 19 May 2020 16:19:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgESUSo (ORCPT
+        with ESMTP id S1726203AbgESUTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:18:44 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 367AFC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:18:44 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id n24so552116ejd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:18:44 -0700 (PDT)
+        Tue, 19 May 2020 16:19:16 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE20C08C5C0;
+        Tue, 19 May 2020 13:19:16 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id l6so904670oic.9;
+        Tue, 19 May 2020 13:19:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lL4ozjO7sIu89/0ZdtpZ+grNZO7La5memrjZAz9fUk0=;
-        b=ZByOxcWZEGVSx0wUUQIKY6Lw/heX5sMkMCAxTHHPK+6ioi6FiW5Ivw4Z7T0/Nsu58c
-         KBdpFSMR5DZ9/Fan6TguF2CqRqBB1RiOHXF7adO0G8p+vAKeUpTqfShVLpqLUMDmSLi1
-         EQ9HfNNyPLSZop4afoNbYFWcjitqlo7fgxaKoCCTWTuiFmdSvBW7XY0iiFNWqgGj7KRs
-         TC/MqL75oZY1jUN8E7jzoZ3x0UqfnmePmTE/KV1JCoRkX+RpHBWDUXURu+joTefkXso/
-         Zzj2NcqozV3LUz+vL8gbiGipZCgL0mKs7ynTlmNA5D2yFrKQ+OioPOkKCO8FSJo0vylo
-         /yNA==
+        bh=k9wGkUcX8mpQpH0xT7svm0mysTXkndwHirc7LDkmIVs=;
+        b=eaOTiOYGy7RGzDrE84ODOO4mkvp8w+Ti3n5zOCs2MzLSxzwRD0Mnt4wQ97IkJRivtX
+         zWbO7w8mEpIm0zoGTWMU7LLb515tER+6WW9JJIiGtPO079HzCh8fEgS12Igy/N/5eD8O
+         q1jMT5GGO6KS/gr3PifQQywcPiulG5aykfKC3KMge+rjXJtkbQsKkxCOyYieA3KiSprb
+         BkyqbX1rTF1rysO8HS6x14Ok1R5aRfFJr/sHFfYKVvEW7mn/j3D1Bb9tWwMpiWBEcqWp
+         XNdostXg+QFFN+cykYdZfnvmKR0DXLvMFUb7S51d36qvYUHbPufYd18ejnn0a2RIm2di
+         41rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lL4ozjO7sIu89/0ZdtpZ+grNZO7La5memrjZAz9fUk0=;
-        b=k8FbKPFd74FrCE8XM0GtxUse1Bn5xWpd6ESdB19x1CG59Ef9mlnBOADobOMBYA/UXC
-         SmIrO2awl/O/2HfU/ledadus4JR3dGAUTkskv0qP+4QUQ5HhQRe/P/lwP8KADapeGCxl
-         7dAZSFLMSQIkxMatKy11BWRzWoTVxD2LVh3F6CY/uMLcf1pp90TG3M4cHuLD37GhFrhF
-         ART58YhVfOq8ykLfp8nEau999Tu7vE8Ov94iJc0FNYNmkugH0rxGQgm/8YVWsPSmvZuj
-         z3c5eTjFuvO1y18WSYWlRdUDQj8wet8vq1v8dFxsSOCuuPXephXZS/5jEjhzRCFdH3O1
-         4GPg==
-X-Gm-Message-State: AOAM530KfBZIw9o6EmqWae6hR75TB52fqIirJ8daVWQYbwQeoApego3b
-        ipQ9ieJcCYT36MNERoILqStk4OfGW75/6pFrF+j60g==
-X-Google-Smtp-Source: ABdhPJzmLJ2VE1XY5jhp3oLT94K798EgEIL11S0+1hP87wWAtRinPfX07mNjAjt65tc4uEKH4OGuafZh3NS7Q2bYA/g=
-X-Received: by 2002:a17:906:934d:: with SMTP id p13mr869611ejw.452.1589919522687;
- Tue, 19 May 2020 13:18:42 -0700 (PDT)
+        bh=k9wGkUcX8mpQpH0xT7svm0mysTXkndwHirc7LDkmIVs=;
+        b=sPZCpz/HJ49Tic1lgiAe163lL9roLMOYFjOBhv6ihuMjJzrHD/ee1vCxTQt0l7imPv
+         29l2Fg8v6e6d7FousatyAI+m3rjg7BbnEQD4xnScTcNpirNTRno2kVizCJT6R00Fc0zP
+         //CiR9f5MaRVtuqtZHo4ZMZ4KdejR37MuSVmblmd2HbNgpj01cNfK115JpJiomANaH/O
+         N5ffMraF855MnVg4FYIZb+vqM5Gonzxt5NdW8FgwUxH5JRMHkE8CZR6aBuF+dAhrghnb
+         GlmsSktitwTKdNb5Huqo6gyiuDYQC3ct29HaKj39Lrk5cwteJy3goz7CaO/hBZfe6Hnm
+         fS2w==
+X-Gm-Message-State: AOAM531QlPMAN6pCkZ6OffOBvBZpH2GG2h2GuBe/hUEOa+gGYqeeHP0e
+        UyfD35EvjlnJWzuo7sdzRzJuHOZm6OXP3EueXHc=
+X-Google-Smtp-Source: ABdhPJwpptg0g/2Fuqr75TcXz0TmtAi6ivq8xFaPLg5vusReOtbpkYwZQMxwK3sgeD/rniBZQ0FaeWVLtK50KUScI5w=
+X-Received: by 2002:a05:6808:a1b:: with SMTP id n27mr825430oij.171.1589919555708;
+ Tue, 19 May 2020 13:19:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAG=TAF6mfrwxF1-xEJJ9dL675uMUa7RZrOa_eL2mJizZJ-U7iQ@mail.gmail.com>
- <CAEf4BzazvGOoJbm+zNMqTjhTPJAnVLVv9V=rXkdXZELJ4FPtiA@mail.gmail.com>
- <CAG=TAF6aqo-sT2YE30riqp7f47KyXH_uhNJ=M9L12QU6EEEfqQ@mail.gmail.com>
- <CAEf4BzaBfnDL=WpRP-7rYFhocOsCQyFuZaLvM0+k9sv2t_=rVw@mail.gmail.com>
- <CAG=TAF5rYmMXBcxno0pPxVZdcyz=ik-enh03E-V8wupjDS0K5g@mail.gmail.com> <CAEf4BzYZ9LkYtmiukToJDw1-V-AFbwfB2jysMU9mM3ie9=qWHw@mail.gmail.com>
-In-Reply-To: <CAEf4BzYZ9LkYtmiukToJDw1-V-AFbwfB2jysMU9mM3ie9=qWHw@mail.gmail.com>
-From:   Qian Cai <cai@lca.pw>
-Date:   Tue, 19 May 2020 16:18:31 -0400
-Message-ID: <CAG=TAF45T4pKew6U2kPNBK0qSAjgoECAX81obmKmFnv0cjE-oA@mail.gmail.com>
-Subject: Re: UBSAN: array-index-out-of-bounds in kernel/bpf/arraymap.c:177
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>
+References: <20200506060025.1535960-1-vkoul@kernel.org> <20200506060025.1535960-3-vkoul@kernel.org>
+ <20200519114528.GC1298122@kuha.fi.intel.com>
+In-Reply-To: <20200519114528.GC1298122@kuha.fi.intel.com>
+From:   Christian Lamparter <chunkeey@gmail.com>
+Date:   Tue, 19 May 2020 22:19:03 +0200
+Message-ID: <CAAd0S9AEOsOLrnry4xNRVOi5fXwm3KXYzQsUMCm9tVxHr2sr1w@mail.gmail.com>
+Subject: Re: [PATCH v13 2/5] usb: renesas-xhci: Add the renesas xhci driver
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?Q?Andreas_B=C3=B6hler?= <dev@aboehler.at>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 3:30 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+Hello,
+
+On Tue, May 19, 2020 at 1:45 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+> On Wed, May 06, 2020 at 11:30:22AM +0530, Vinod Koul wrote:
+> > From: Christian Lamparter <chunkeey@googlemail.com>
+> >
+> > This add a new driver for renesas xhci which is basically a firmware
+> > loader for uPD720201 and uPD720202 w/o ROM. The xhci-pci driver will
+> > invoke this driver for loading/unloading on relevant devices.
+> >
+> > This patch adds a firmware loader for the uPD720201K8-711-BAC-A
+> > and uPD720202K8-711-BAA-A variant. Both of these chips are listed
+> > in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
+> > devices which need the firmware loader on page 2 in order to
+> > work as they "do not support the External ROM".
+> >
+> > The "Firmware Download Sequence" is describe in chapter
+> > "7.1 FW Download Interface" R19UH0078EJ0500 Rev.5.00 page 131.
+> >
+> > The firmware "K2013080.mem" is available from a USB3.0 Host to
+> > PCIe Adapter (PP2U-E card) "Firmware download" archive. An
+> > alternative version can be sourced from Netgear's WNDR4700 GPL
+> > archives.
+> >
+> > The release notes of the PP2U-E's "Firmware Download" ver 2.0.1.3
+> > (2012-06-15) state that the firmware is for the following devices:
+> >  - uPD720201 ES 2.0 sample whose revision ID is 2.
+> >  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
+> >  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
 >
-> On Tue, May 19, 2020 at 8:00 AM Qian Cai <cai@lca.pw> wrote:
-> >
-> > On Mon, May 18, 2020 at 8:25 PM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Mon, May 18, 2020 at 5:09 PM Qian Cai <cai@lca.pw> wrote:
-> > > >
-> > > > On Mon, May 18, 2020 at 7:55 PM Andrii Nakryiko
-> > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > >
-> > > > > On Sun, May 17, 2020 at 7:45 PM Qian Cai <cai@lca.pw> wrote:
-> > > > > >
-> > > > > > With Clang 9.0.1,
-> > > > > >
-> > > > > > return array->value + array->elem_size * (index & array->index_mask);
-> > > > > >
-> > > > > > but array->value is,
-> > > > > >
-> > > > > > char value[0] __aligned(8);
-> > > > >
-> > > > > This, and ptrs and pptrs, should be flexible arrays. But they are in a
-> > > > > union, and unions don't support flexible arrays. Putting each of them
-> > > > > into anonymous struct field also doesn't work:
-> > > > >
-> > > > > /data/users/andriin/linux/include/linux/bpf.h:820:18: error: flexible
-> > > > > array member in a struct with no named members
-> > > > >    struct { void *ptrs[] __aligned(8); };
-> > > > >
-> > > > > So it probably has to stay this way. Is there a way to silence UBSAN
-> > > > > for this particular case?
-> > > >
-> > > > I am not aware of any way to disable a particular function in UBSAN
-> > > > except for the whole file in kernel/bpf/Makefile,
-> > > >
-> > > > UBSAN_SANITIZE_arraymap.o := n
-> > > >
-> > > > If there is no better way to do it, I'll send a patch for it.
-> > >
-> > >
-> > > That's probably going to be too drastic, we still would want to
-> > > validate the rest of arraymap.c code, probably. Not sure, maybe
-> > > someone else has better ideas.
-> >
-> > This works although it might makes sense to create a pair of
-> > ubsan_disable_current()/ubsan_enable_current() for it.
-> >
-> > diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-> > index 11584618e861..6415b089725e 100644
-> > --- a/kernel/bpf/arraymap.c
-> > +++ b/kernel/bpf/arraymap.c
-> > @@ -170,11 +170,16 @@ static void *array_map_lookup_elem(struct
-> > bpf_map *map, void *key)
-> >  {
-> >         struct bpf_array *array = container_of(map, struct bpf_array, map);
-> >         u32 index = *(u32 *)key;
-> > +       void *elem;
-> >
-> >         if (unlikely(index >= array->map.max_entries))
-> >                 return NULL;
-> >
-> > -       return array->value + array->elem_size * (index & array->index_mask);
-> > +       current->in_ubsan++;
-> > +       elem = array->value + array->elem_size * (index & array->index_mask);
-> > +       current->in_ubsan--;
+> You wouldn't happen to have access to the documentation of the
+> "original" uPD720200 USB 3.0 controller?
 >
-> This is an unnecessary performance hit for silencing what is clearly a
-> false positive. I'm not sure that's the right solution here. It seems
-> like something that's lacking on the tooling side instead. C language
-> doesn't allow to express the intent here using flexible array
-> approach. That doesn't mean that what we are doing here is wrong or
-> undefined.
+> It would be cool if we could support that too with this driver.
 
-Oh, so you worry about this ++ and -- hurt the performance? If so, how
-about this?
+???. I have one of those "original" uPD720200(A) working "just fine"
+in my Laptop currently.
+It's an really old HP dv6-6003eg from around 2011 that came with two
+USB 3.0 Ports, which
+are driven by a "NEC Corporation uPD720200 USB 3.0 Host Controller"
+1033:0194 (Rev 04).
 
-ubsan_disable_current();
-elem = array->value + array->elem_size * (index & array->index_mask);
-ubsan_enable_current();
+As for supporting the uPD720200 (flasher) with this serises.... There
+are some bad news:
 
-#ifdef UBSAN
-ubsan_disable_current()
-{
-      current->in_ubsan++;
-}
-#else
-ubsan_disable_current() {}
-#endif
+"In addition, the programming interface for the uPD720200 and uPD720200A
+is different from the uPD720202, needs different programming tools, and relies
+on proprietary chip features that cannot be disclosed outside of Renesas."
+<https://mail.coreboot.org/pipermail/flashrom/2013-February/010498.html> :-(
 
-etc
-
-Production kernel would normally have UBSAN=n, so it is an noop.
-
-Leaving this false positive unsilenced may also waste many people's
-time over and over again, and increase the noisy level. Especially, it
-seems this is one-off (not seen other parts of kernel doing like this)
-and rather expensive to silence it in the UBSAN or/and compilers.
+Regards,
+Christian
