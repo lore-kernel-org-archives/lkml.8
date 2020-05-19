@@ -2,157 +2,146 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46189C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8E2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB5320709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839692075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:21:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mb3OaNFQ"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SZpl8IOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgESFSy (ORCPT
+        id S1727065AbgESFVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:18:54 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1575 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgESFSy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:18:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec36bef0000>; Mon, 18 May 2020 22:17:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 18 May 2020 22:18:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 18 May 2020 22:18:53 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
- 2020 05:18:53 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 19 May 2020 05:18:53 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.55.90]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec36c3d0002>; Mon, 18 May 2020 22:18:53 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     John Hubbard <jhubbard@nvidia.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        <tee-dev@lists.linaro.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>
-Subject: [PATCH] tee: convert convert get_user_pages() --> pin_user_pages()
-Date:   Mon, 18 May 2020 22:18:50 -0700
-Message-ID: <20200519051850.2845561-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 19 May 2020 01:21:13 -0400
+Received: from mail-mw2nam10on2083.outbound.protection.outlook.com ([40.107.94.83]:49081
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726323AbgESFVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:21:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DKU94xMTss1wLiZUUYq0P4CeLlSgT0A61IuwTNWLdctzljWDwansS2RhCb7TGqOY+a/eWFG7TmYVaYPV/exnwuRTGxBDIc3C4toP1FurpE1rFvIv51YdaByEWBX27nRoTly3iQpkngVGHnsPLOJmLUpx1xfYbqiyZZrINjskGprPX9hgs9H1Ovt1HlsjMH+vdLuqasYRsTq6e5kbwcqVSHJiOCh9AkoYpUl8qjhRWxQFyrvpyo/wM69LQFNpRsTR6SvYJLI23AwNV2ojwovchzUEJIjvuPwIqo1vfC61SYiSeUAFcHKYHL5fXPDhpQA9Eg9Ov1DPtiVKPEQzFfCEnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=13KVFf5T8nHUwFjStjhv+0mDcO2r13mojEv5YQLRWvs=;
+ b=nuoff2NFtD5aI3tUEDXf7BhBPP3gu7ST7zNVxtgOa0n2qZZQf8//6/q1Akiq2EV5vSQcj8XteOqVaztabWS2ENglggcPimBsDRj955gIN7LqtNG7QwWjNYmn8M9rsQBt9NwmfQLmkATSQvQocbpTHADABE2XkfGZNbO2ta2o4zEAApPONTlo+WAAc23pIniL69uTMQIrLlq3OhiGwUGsZsIYaz0Z9ttZkMCT7TPcvULj46wWj23rugbiWk5pyAyEMCz1/xD7+y97+bnYRnt9jmDnJJeQMl+bhwhw6kM9zf6lID1qDjOWzttBIiuEz9MTEcxa9yF9UoGohTFRPRGdBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=13KVFf5T8nHUwFjStjhv+0mDcO2r13mojEv5YQLRWvs=;
+ b=SZpl8IOaEsP0/I1s8fp9y6mBy782WGGNWxedwW/COpreoqH8VLdZZGhHB8gRc3FuDyMAYk8dIjMgK269XJsGixV+Ll/FJw7s1673IgQBLA/KnNCsDHLAcrBYXsblJFVE/qRGp8oujAnk/xsRQothkvo8s7Lq2kXMgSUlRafb5LI=
+Received: from BL0PR02CA0025.namprd02.prod.outlook.com (2603:10b6:207:3c::38)
+ by SN6PR02MB5133.namprd02.prod.outlook.com (2603:10b6:805:68::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Tue, 19 May
+ 2020 05:21:10 +0000
+Received: from BL2NAM02FT064.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:207:3c:cafe::f0) by BL0PR02CA0025.outlook.office365.com
+ (2603:10b6:207:3c::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend
+ Transport; Tue, 19 May 2020 05:21:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT064.mail.protection.outlook.com (10.152.77.119) with Microsoft SMTP
+ Server id 15.20.3000.19 via Frontend Transport; Tue, 19 May 2020 05:21:09
+ +0000
+Received: from [149.199.38.66] (port=45271 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jaugF-0005TM-Lb; Mon, 18 May 2020 22:20:43 -0700
+Received: from localhost ([127.0.0.1] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jauge-0007gg-Rx; Mon, 18 May 2020 22:21:08 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jauge-0007fZ-A7; Mon, 18 May 2020 22:21:08 -0700
+Subject: Re: [PATCH 3/3] hwmon: (ina2xx) Add support for ina260
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Franz Forstmayr <forstmayr.franz@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20200224232647.29213-1-forstmayr.franz@gmail.com>
+ <20200224232647.29213-3-forstmayr.franz@gmail.com>
+ <a78bbb40-9a0c-8acc-841e-7a51447d4dbc@roeck-us.net>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <bfa786b6-fe62-a5fb-718f-bb9e95b1f051@xilinx.com>
+Date:   Tue, 19 May 2020 07:21:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589865455; bh=HOuCeH00Hb2OOmtkXh64pdeD2QbQHkyVvjYj2E3uEb0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=mb3OaNFQ10WkB15WwAhedhrO8Cgn+eMbUGC71oOyJQQXRvPYSnq9gXNLB1ikmE8bz
-         1mE5oay3UAzRAgWTVrQ1i992uuXlZTpE3UQBDBJ0vpEymxONKvuK/TC3Rqz4xcyggs
-         iBxOA4w7qcMZieTQxzG7CPELd/ht3j8JcfF1BfVup3xxZVvem4q7JXUynr5MNRQp1F
-         UIMTmBPigzGmw0nL490aNS8MZSIgotf3eoLqW2FtBGGYrMlTG66weF8FwIeobdZehk
-         2WSppxHXytUZkdQu1VMcdSGY030X6vV4qN0fUWSbFPTyDLnYLo2truFc5w7EeqHv2Q
-         iG6MlgGNrcg1g==
+In-Reply-To: <a78bbb40-9a0c-8acc-841e-7a51447d4dbc@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(136003)(39860400002)(46966005)(5660300002)(6666004)(26005)(36756003)(82740400003)(47076004)(186003)(2616005)(8936002)(44832011)(31686004)(9786002)(70206006)(70586007)(2906002)(7416002)(356005)(82310400002)(81166007)(316002)(110136005)(54906003)(4326008)(336012)(53546011)(478600001)(8676002)(426003)(31696002)(4744005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3d01f397-ec55-4b62-42e1-08d7fbb47050
+X-MS-TrafficTypeDiagnostic: SN6PR02MB5133:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB51333E47A537DD4645CEEA8BC6B90@SN6PR02MB5133.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 040866B734
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: o8vNgVG5J4Luo6jjcaDgay8MdBDWiCFx6t9KxC70KWR908U5t97ZLyZUhKcPjeJlB0q0jLeSWp17h5e72ZDGM3FwCKGSxihMDq196dQ7N56yr34wrusyxwyu+QWWwWbcjoVD+Zp7fyKnQR3Rx35Fa8M0fLWaLOHsGPsidpmDJwkuFKrvPRtDTb3hFknUHqccRuh0WU6Mk6Z9QmxYQEKFfaFafyEJ7VkY9VpSJw+NCYUguncUowsJDd7JCEIt4C6Zui04vjoNHthMZcg7/mfheAxsNnR9p68viPnW2boH3/T6QA8u/zOCnqEdRcy6903ux+eZXWgwGjsF/uMCJQvPefPySlAngyvtAmO8Q8MUaWXjfVaZq4NLVN2a7IHLdPHGehN7xF/anWzcqMJZ0o4p/AEpeqPoshqL19+phYtNtUfAPQkCT2JIfFmWoDEHMs/2mslRQrEPqeAAFGZROl8Q+QUh1rOFsQo9YSR+YfxMgAc30gNOy65UZI3TucegG+WRT27zDx6EDjUjwwF5JcPhk+HFbqht8p1/OrMoeh8CRBo=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 05:21:09.2967
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d01f397-ec55-4b62-42e1-08d7fbb47050
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages*(), in a "Case 2" scenario
-(DMA/RDMA), using the categorization from [1]. That means that it's
-time to convert the get_user_pages*() + put_page() calls to
-pin_user_pages*() + unpin_user_pages() calls.
+On 26. 02. 20 3:16, Guenter Roeck wrote:
+> On 2/24/20 3:26 PM, Franz Forstmayr wrote:
+>> Add initial support for INA260 power monitor with integrated shunt.
+>> Registers are different from other INA2xx devices, that's why a small
+>> translation table is used.
+>>
+>> Signed-off-by: Franz Forstmayr <forstmayr.franz@gmail.com>
+> 
+> I think the chip is sufficiently different to other chips that a separate
+> driver would make much more sense than adding support to the existing
+> driver.
+> There is no calibration, registers are different, the retry logic is
+> not needed. A new driver could use the with_info API and would be much
+> simpler while at the same time not messing up the existing driver.
 
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
+Isn't it also better to switch to IIO framework?
+As we discussed in past there are two ina226 drivers. One in hwmon and
+second based on IIO framework (more advance one?) and would be good to
+deprecate hwmon one.
+That's why separate driver is necessary.
 
-[1] Documentation/core-api/pin_user_pages.rst
-
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
-
-Cc: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: tee-dev@lists.linaro.org
-Cc: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linaro-mm-sig@lists.linaro.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
-
-Note that I have only compile-tested this patch, although that does
-also include cross-compiling for a few other arches.
-
-thanks,
-John Hubbard
-NVIDIA
-
- drivers/tee/tee_shm.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-index bd679b72bd05..7dffc42d8d5a 100644
---- a/drivers/tee/tee_shm.c
-+++ b/drivers/tee/tee_shm.c
-@@ -31,16 +31,13 @@ static void tee_shm_release(struct tee_shm *shm)
-=20
- 		poolm->ops->free(poolm, shm);
- 	} else if (shm->flags & TEE_SHM_REGISTER) {
--		size_t n;
- 		int rc =3D teedev->desc->ops->shm_unregister(shm->ctx, shm);
-=20
- 		if (rc)
- 			dev_err(teedev->dev.parent,
- 				"unregister shm %p failed: %d", shm, rc);
-=20
--		for (n =3D 0; n < shm->num_pages; n++)
--			put_page(shm->pages[n]);
--
-+		unpin_user_pages(shm->pages, shm->num_pages);
- 		kfree(shm->pages);
- 	}
-=20
-@@ -226,7 +223,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ct=
-x, unsigned long addr,
- 		goto err;
- 	}
-=20
--	rc =3D get_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
-+	rc =3D pin_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
- 	if (rc > 0)
- 		shm->num_pages =3D rc;
- 	if (rc !=3D num_pages) {
-@@ -271,16 +268,13 @@ struct tee_shm *tee_shm_register(struct tee_context *=
-ctx, unsigned long addr,
- 	return shm;
- err:
- 	if (shm) {
--		size_t n;
--
- 		if (shm->id >=3D 0) {
- 			mutex_lock(&teedev->mutex);
- 			idr_remove(&teedev->idr, shm->id);
- 			mutex_unlock(&teedev->mutex);
- 		}
- 		if (shm->pages) {
--			for (n =3D 0; n < shm->num_pages; n++)
--				put_page(shm->pages[n]);
-+			unpin_user_pages(shm->pages, shm->num_pages);
- 			kfree(shm->pages);
- 		}
- 	}
---=20
-2.26.2
+Thanks,
+Michal
 
