@@ -2,360 +2,216 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F879C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 600222070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:21:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Y/RMDymD"
+	by mail.kernel.org (Postfix) with ESMTP id 7B4BA2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgESTV2 (ORCPT
+        id S1726721AbgESTXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:21:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESTV2 (ORCPT
+        Tue, 19 May 2020 15:23:46 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:42842 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESTXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:21:28 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2790C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:21:27 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id c3so425347otr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:21:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SbaEch3BY3ODcnVgLC0hRHtedgFalkSFoQATtp1WcHk=;
-        b=Y/RMDymDON0bwyyZ29+IvRuIAUnJO414fQ9LYamwaJ5kt61JBCF0rFdIU3yuQwDPk2
-         iYNGRk3B2gmUPXaK2kKvabsYjeHTV94ujVw90CdK9WQ2VBtuYvhgSPyeEHQzm6hpO7nS
-         ccnTCje2hk0umRkhgMHpXOY8sRihZT2qnrJ5Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SbaEch3BY3ODcnVgLC0hRHtedgFalkSFoQATtp1WcHk=;
-        b=YTctv60ux27vc93xLAsKlmhPBV9AAYhczZa8QoqAquCW7Wn0bPlPMLRmNUCTiQEJlV
-         wMoTRZR9xBJUQkdjVRLOtOx3LoCvk5v54RsjSumDmgHHkJf6f6sq4kSfiCLjwpw+qsXV
-         6J8N1XFscAoeyke5Um0UK7d9HyqewGl+fjwF78JESTbIbnf7ZhO6YtcmeaBrPOAzkcfC
-         myE6s6ASz7uIGdqH0lKEfo5+Xjm8nkSIsDulqkFZbZz7gE9WrPnh1wz/VH+enbARK1r4
-         w3XyReFgf61zTk0m+NjxXGE1Ic5MS1A3uc07o2DkCKWSKz4PP+rFI8tKnO/owOcEqF4v
-         QRgw==
-X-Gm-Message-State: AOAM530diNr8HNzuOWeUFGvHKYLHMTJD7BT8f5IZ/wkiNrQTX/tr2fb5
-        MHFCWU/h4AYNn1Ye83w8LvS//8HrvLB+abpD7AuUMg==
-X-Google-Smtp-Source: ABdhPJxqdRYzfXDfRYY9zzactC2h4TzlGjsY6K4bWoLgaI8ZY86K9YOQ8yYAu8QtONdcCDKSXu91+/CrZjJN/6Oed1M=
-X-Received: by 2002:a9d:600e:: with SMTP id h14mr470787otj.281.1589916086888;
- Tue, 19 May 2020 12:21:26 -0700 (PDT)
+        Tue, 19 May 2020 15:23:46 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb7py-000156-HH; Tue, 19 May 2020 13:23:38 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb7px-0002fg-EF; Tue, 19 May 2020 13:23:38 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <874ksczru6.fsf_-_@x220.int.ebiederm.org>
+        <202005191144.E3112135@keescook>
+Date:   Tue, 19 May 2020 14:19:56 -0500
+In-Reply-To: <202005191144.E3112135@keescook> (Kees Cook's message of "Tue, 19
+        May 2020 12:08:25 -0700")
+Message-ID: <87zha3n34z.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200519163234.226513-1-sashal@kernel.org>
-In-Reply-To: <20200519163234.226513-1-sashal@kernel.org>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 19 May 2020 21:21:15 +0200
-Message-ID: <CAKMK7uGnSDHdZha-=dZN5ns0sJ2CEnK2693uix4tzqyZb9MXCQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] DirectX on Linux
-To:     Sasha Levin <sashal@kernel.org>,
-        Olof Johansson <olof.johansson@gmail.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jason Ekstrand <jason@jlekstrand.net>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        "Wilson, Chris" <chris@chris-wilson.co.uk>,
-        "Syrjala, Ville" <ville.syrjala@linux.intel.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        spronovo@microsoft.com, Wei Liu <wei.liu@kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        iourit@microsoft.com, "K. Y. Srinivasan" <kys@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jb7px-0002fg-EF;;;mid=<87zha3n34z.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/o3JOqx7Xhio3cLEEFkP2sYm5qyEXZ5Q0=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 6/8] exec/binfmt_script: Don't modify bprm->buf and then return -ENOEXEC
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha
+Kees Cook <keescook@chromium.org> writes:
 
-So obviously great that Microsoft is trying to upstream all this, and
-very much welcome and all that.
+> On Mon, May 18, 2020 at 07:33:21PM -0500, Eric W. Biederman wrote:
+>> 
+>> When replacing loops with next_non_spacetab and next_terminator care
+>> has been take that the logic of the parsing code (short of replacing
+>> characters by '\0') remains the same.
+>
+> Ah, interesting. As in, bprm->buf must not be modified unless the binfmt
+> handler is going to succeed. I think this requirement should be
+> documented in the binfmt struct header file.
 
-But I guess there's a bunch of rather fundamental issues before we
-look into any kind of code details. And that might make this quite a
-hard sell for upstream to drivers/gpu subsystem:
+I think the best way to document this is to modify bprm->buf to be
+"const char buf[BINPRM_BUF_SIZE]" or something like that and not
+allow any modifications by anything except for the code that
+initially reads in contets of the file.
 
-- From the blog it sounds like the userspace is all closed. That
-includes the hw specific part and compiler chunks, all stuff we've
-generally expected to be able to look in the past for any kind of
-other driver. It's event documented here:
+That unfortunately requires copy_strings_kernel which has become
+copy_string_kernel to take a length.  Then I don't need to modify the
+buffer at all here.
 
-https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#open-source-userspace-requirements
+I believe binfmt_scripts is a bit unique in wanting to modify the buffer
+because it is parsing strings.
 
-What's your plan here?
+The requirement is that a binfmt should not modify bprm unless it will
+succeed or fail with an error that is not -ENOEXEC.  The fundamental
+issue is that search_binary_handler will reuse bprm if -ENOEXEC is
+returned.
 
-btw since the main goal here (at least at first) seems to be get
-compute and ML going the official work-around here is to relabel your
-driver as an accelerator driver (just sed -e s/vGPU/vaccel/ over the
-entire thing or so) and then Olof and Greg will take it into
-drivers/accel ...
+Until the next patch there is an escape hatch by clearing and closing
+bprm->file but that goes away.  Which is why I need this patch.
 
-- Next up (but that's not really a surprise for a fresh vendor driver)
-at a more technical level, this seems to reinvent the world, from
-device enumeration (why is this not exposed as /dev/dri/card0 so it
-better integrates with existing linux desktop stuff, in case that
-becomes a goal ever) down to reinvented kref_put_mutex (and please
-look at drm_device->struct_mutex for an example of how bad of a
-nightmare that locking pattern is and how many years it took us to
-untangle that one.
+I guess I can see adding a comment about the general case of not
+changing bprm unless you are doing something other than returning
+-ENOEXEC and letting the search continue.
 
-- Why DX12 on linux? Looking at this feels like classic divide and
-conquer (or well triple E from the 90s), we have vk, we have
-drm_syncobj, we have an entire ecosystem of winsys layers that work
-across vendors. Is the plan here that we get a dx12 driver for other
-hw mesa drivers from you guys, so this is all consistent and we have a
-nice linux platform? How does this integrate everywhere else with
-linux winsys standards, like dma-buf for passing stuff around,
-dma-fence/sync_file/drm_syncobj for syncing, drm_fourcc/modifiers for
-some idea how it all meshes together?
-
-- There's been a pile of hallway track/private discussions about
-moving on from the buffer-based memory managed model to something more
-modern. That relates to your DXLOCK2 question, but there's a lot more
-to userspace managed gpu memory residency than just that. monitored
-fences are another part. Also, to avoid a platform split we need to
-figure out how to tie this back into the dma-buf and dma-fence
-(including various uapi flavours) or it'll be made of fail. dx12 has
-all that in some form, except 0 integration with the linux stuff we
-have (no surprise, since linux isn't windows). Finally if we go to the
-trouble of a completely revamped I think ioctls aren't a great idea,
-something like iouring (the gossip name is drm_uring) would be a lot
-better. Also for easier paravirt we'd need 0 cpu pointers in any such
-new interface. Adding a few people who've been involved in these
-discussions thus far, mostly under a drm/hmm.ko heading iirc.
-
-I think the above are the really big ticket items around what's the
-plan here and are we solving even the right problem.
-
-Cheers, Daniel
+Eric
 
 
-On Tue, May 19, 2020 at 6:33 PM Sasha Levin <sashal@kernel.org> wrote:
+>> [...]
+>> diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
+>> index 8d718d8fd0fe..85e0ef86eb11 100644
+>> --- a/fs/binfmt_script.c
+>> +++ b/fs/binfmt_script.c
+>> @@ -71,39 +56,48 @@ static int load_script(struct linux_binprm *bprm)
+>>  	 * parse them on its own.
+>>  	 */
+>>  	buf_end = bprm->buf + sizeof(bprm->buf) - 1;
+>> -	cp = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
+>> -	if (!cp) {
+>> -		cp = next_non_spacetab(bprm->buf + 2, buf_end);
+>> -		if (!cp)
+>> +	i_end = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
+>> +	if (!i_end) {
+>> +		i_end = next_non_spacetab(bprm->buf + 2, buf_end);
+>> +		if (!i_end)
+>>  			return -ENOEXEC; /* Entire buf is spaces/tabs */
+>>  		/*
+>>  		 * If there is no later space/tab/NUL we must assume the
+>>  		 * interpreter path is truncated.
+>>  		 */
+>> -		if (!next_terminator(cp, buf_end))
+>> +		if (!next_terminator(i_end, buf_end))
+>>  			return -ENOEXEC;
+>> -		cp = buf_end;
+>> +		i_end = buf_end;
+>>  	}
+>> -	/* NUL-terminate the buffer and any trailing spaces/tabs. */
+>> -	*cp = '\0';
+>> -	while (cp > bprm->buf) {
+>> -		cp--;
+>> -		if ((*cp == ' ') || (*cp == '\t'))
+>> -			*cp = '\0';
+>> -		else
+>> -			break;
+>> -	}
+>> -	for (cp = bprm->buf+2; (*cp == ' ') || (*cp == '\t'); cp++);
+>> -	if (*cp == '\0')
+>> +	/* Trim any trailing spaces/tabs from i_end */
+>> +	while (spacetab(i_end[-1]))
+>> +		i_end--;
+>> +
+>> +	/* Skip over leading spaces/tabs */
+>> +	i_name = next_non_spacetab(bprm->buf+2, i_end);
+>> +	if (!i_name || (i_name == i_end))
+>>  		return -ENOEXEC; /* No interpreter name found */
+>> -	i_name = cp;
+>> +
+>> +	/* Is there an optional argument? */
+>>  	i_arg = NULL;
+>> -	for ( ; *cp && (*cp != ' ') && (*cp != '\t'); cp++)
+>> -		/* nothing */ ;
+>> -	while ((*cp == ' ') || (*cp == '\t'))
+>> -		*cp++ = '\0';
+>> -	if (*cp)
+>> -		i_arg = cp;
+>> +	i_sep = next_terminator(i_name, i_end);
+>> +	if (i_sep && (*i_sep != '\0'))
+>> +		i_arg = next_non_spacetab(i_sep, i_end);
+>> +
+>> +	/*
+>> +	 * If the script filename will be inaccessible after exec, typically
+>> +	 * because it is a "/dev/fd/<fd>/.." path against an O_CLOEXEC fd, give
+>> +	 * up now (on the assumption that the interpreter will want to load
+>> +	 * this file).
+>> +	 */
+>> +	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
+>> +		return -ENOENT;
+>> +
+>> +	/* Release since we are not mapping a binary into memory. */
+>> +	allow_write_access(bprm->file);
+>> +	fput(bprm->file);
+>> +	bprm->file = NULL;
+>> +
+>>  	/*
+>>  	 * OK, we've parsed out the interpreter name and
+>>  	 * (optional) argument.
+>> @@ -121,7 +115,9 @@ static int load_script(struct linux_binprm *bprm)
+>>  	if (retval < 0)
+>>  		return retval;
+>>  	bprm->argc++;
+>> +	*((char *)i_end) = '\0';
+>>  	if (i_arg) {
+>> +		*((char *)i_sep) = '\0';
+>>  		retval = copy_strings_kernel(1, &i_arg, bprm);
+>>  		if (retval < 0)
+>>  			return retval;
 >
-> There is a blog post that goes into more detail about the bigger
-> picture, and walks through all the required pieces to make this work. It
-> is available here:
-> https://devblogs.microsoft.com/directx/directx-heart-linux . The rest of
-> this cover letter will focus on the Linux Kernel bits.
+> I think this is all correct, though I'm always suspicious of my visual
+> inspection of string parsers. ;)
 >
-> Overview
-> ========
+> I had a worry the \n was not handled correctly in some case. I.e. before
+> any \n was converted into \0, and so next_terminator() didn't need to
+> consider \n separately. (next_non_spacetab() doesn't care since \n and \0
+> are both not ' ' nor '\t'.) For next_terminator(), though, I was worried
+> there was a case where *i_end == '\n', and next_terminator()
+> will return NULL instead of "last" due to *last being '\n' instead of
+> '\0', causing a problem, but you're using the adjusted i_end so I think
+> it's correct. And you've handled i_name == i_end.
 >
-> This is the first draft of the Microsoft Virtual GPU (vGPU) driver. The
-> driver exposes a paravirtualized GPU to user mode applications running
-> in a virtual machine on a Windows host. This enables hardware
-> acceleration in environment such as WSL (Windows Subsystem for Linux)
-> where the Linux virtual machine is able to share the GPU with the
-> Windows host.
+> I will see if I can find my testing scripts I used when commit
+> b5372fe5dc84 originally landed to double-check... until then:
 >
-> The projection is accomplished by exposing the WDDM (Windows Display
-> Driver Model) interface as a set of IOCTL. This allows APIs and user
-> mode driver written against the WDDM GPU abstraction on Windows to be
-> ported to run within a Linux environment. This enables the port of the
-> D3D12 and DirectML APIs as well as their associated user mode driver to
-> Linux. This also enables third party APIs, such as the popular NVIDIA
-> Cuda compute API, to be hardware accelerated within a WSL environment.
->
-> Only the rendering/compute aspect of the GPU are projected to the
-> virtual machine, no display functionality is exposed. Further, at this
-> time there are no presentation integration. So although the D3D12 API
-> can be use to render graphics offscreen, there is no path (yet) for
-> pixel to flow from the Linux environment back onto the Windows host
-> desktop. This GPU stack is effectively side-by-side with the native
-> Linux graphics stack.
->
-> The driver creates the /dev/dxg device, which can be opened by user mode
-> application and handles their ioctls. The IOCTL interface to the driver
-> is defined in dxgkmthk.h (Dxgkrnl Graphics Port Driver ioctl
-> definitions). The interface matches the D3DKMT interface on Windows.
-> Ioctls are implemented in ioctl.c.
->
-> When a VM starts, hyper-v on the host adds virtual GPU devices to the VM
-> via the hyper-v driver. The host offers several VM bus channels to the
-> VM: the global channel and one channel per virtual GPU, assigned to the
-> VM.
->
-> The driver registers with the hyper-v driver (hv_driver) for the arrival
-> of VM bus channels. dxg_probe_device recognizes the vGPU channels and
-> creates the corresponding objects (dxgadapter for vGPUs and dxgglobal
-> for the global channel).
->
-> The driver uses the hyper-V VM bus interface to communicate with the
-> host. dxgvmbus.c implements the communication interface.
->
-> The global channel has 8GB of IO space assigned by the host. This space
-> is managed by the host and used to give the guest direct CPU access to
-> some allocations. Video memory is allocated on the host except in the
-> case of existing_sysmem allocations. The Windows host allocates memory
-> for the GPU on behalf of the guest. The Linux guest can access that
-> memory by mapping GPU virtual address to allocations and then
-> referencing those GPU virtual address from within GPU command buffers
-> submitted to the GPU. For allocations which require CPU access, the
-> allocation is mapped by the host into a location in the 8GB of IO space
-> reserved in the guest for that purpose. The Windows host uses the nested
-> CPU page table to ensure that this guest IO space always map to the
-> correct location for the allocation as it may migrate between dedicated
-> GPU memory (e.g. VRAM, firmware reserved DDR) and shared system memory
-> (regular DDR) over its lifetime. The Linux guest maps a user mode CPU
-> virtual address to an allocation IO space range for direct access by
-> user mode APIs and drivers.
->
->
->
-> Implementation of LX_DXLOCK2 ioctl
-> ==================================
->
-> We would appreciate your feedback on the implementation of the
-> LX_DXLOCK2 ioctl.
->
-> This ioctl is used to get a CPU address to an allocation, which is
-> resident in video/system memory on the host. The way it works:
->
-> 1. The driver sends the Lock message to the host
->
-> 2. The host allocates space in the VM IO space and maps it to the
-> allocation memory
->
-> 3. The host returns the address in IO space for the mapped allocation
->
-> 4. The driver (in dxg_map_iospace) allocates a user mode virtual address
-> range using vm_mmap and maps it to the IO space using
-> io_remap_ofn_range)
->
-> 5. The VA is returned to the application
->
->
->
-> Internal objects
-> ================
->
-> The following objects are created by the driver (defined in dxgkrnl.h):
->
-> - dxgadapter - represents a virtual GPU
->
-> - dxgprocess - tracks per process state (handle table of created
->   objects, list of objects, etc.)
->
-> - dxgdevice - a container for other objects (contexts, paging queues,
->   allocations, GPU synchronization objects)
->
-> - dxgcontext - represents thread of GPU execution for packet
->   scheduling.
->
-> - dxghwqueue - represents thread of GPU execution of hardware scheduling
->
-> - dxgallocation - represents a GPU accessible allocation
->
-> - dxgsyncobject - represents a GPU synchronization object
->
-> - dxgresource - collection of dxgalloction objects
->
-> - dxgsharedresource, dxgsharedsyncobj - helper objects to share objects
->   between different dxgdevice objects, which can belong to different
-> processes
->
->
->
-> Object handles
-> ==============
->
-> All GPU objects, created by the driver, are accessible by a handle
-> (d3dkmt_handle). Each process has its own handle table, which is
-> implemented in hmgr.c. For each API visible object, created by the
-> driver, there is an object, created on the host. For example, the is a
-> dxgprocess object on the host for each dxgprocess object in the VM, etc.
-> The object handles have the same value in the host and the VM, which is
-> done to avoid translation from the guest handles to the host handles.
->
->
->
-> Signaling CPU events by the host
-> ================================
->
-> The WDDM interface provides a way to signal CPU event objects when
-> execution of a context reached certain point. The way it is implemented:
->
-> - application sends an event_fd via ioctl to the driver
->
-> - eventfd_ctx_get is used to get a pointer to the file object
->   (eventfd_ctx)
->
-> - the pointer to sent the host via a VM bus message
->
-> - when GPU execution reaches a certain point, the host sends a message
->   to the VM with the event pointer
->
-> - signal_guest_event() handles the messages and eventually
->   eventfd_signal() is called.
->
->
-> Sasha Levin (4):
->   gpu: dxgkrnl: core code
->   gpu: dxgkrnl: hook up dxgkrnl
->   Drivers: hv: vmbus: hook up dxgkrnl
->   gpu: dxgkrnl: create a MAINTAINERS entry
->
->  MAINTAINERS                      |    7 +
->  drivers/gpu/Makefile             |    2 +-
->  drivers/gpu/dxgkrnl/Kconfig      |   10 +
->  drivers/gpu/dxgkrnl/Makefile     |   12 +
->  drivers/gpu/dxgkrnl/d3dkmthk.h   | 1635 +++++++++
->  drivers/gpu/dxgkrnl/dxgadapter.c | 1399 ++++++++
->  drivers/gpu/dxgkrnl/dxgkrnl.h    |  913 ++++++
->  drivers/gpu/dxgkrnl/dxgmodule.c  |  692 ++++
->  drivers/gpu/dxgkrnl/dxgprocess.c |  355 ++
->  drivers/gpu/dxgkrnl/dxgvmbus.c   | 2955 +++++++++++++++++
->  drivers/gpu/dxgkrnl/dxgvmbus.h   |  859 +++++
->  drivers/gpu/dxgkrnl/hmgr.c       |  593 ++++
->  drivers/gpu/dxgkrnl/hmgr.h       |  107 +
->  drivers/gpu/dxgkrnl/ioctl.c      | 5269 ++++++++++++++++++++++++++++++
->  drivers/gpu/dxgkrnl/misc.c       |  280 ++
->  drivers/gpu/dxgkrnl/misc.h       |  288 ++
->  drivers/video/Kconfig            |    2 +
->  include/linux/hyperv.h           |   16 +
->  18 files changed, 15393 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/dxgkrnl/Kconfig
->  create mode 100644 drivers/gpu/dxgkrnl/Makefile
->  create mode 100644 drivers/gpu/dxgkrnl/d3dkmthk.h
->  create mode 100644 drivers/gpu/dxgkrnl/dxgadapter.c
->  create mode 100644 drivers/gpu/dxgkrnl/dxgkrnl.h
->  create mode 100644 drivers/gpu/dxgkrnl/dxgmodule.c
->  create mode 100644 drivers/gpu/dxgkrnl/dxgprocess.c
->  create mode 100644 drivers/gpu/dxgkrnl/dxgvmbus.c
->  create mode 100644 drivers/gpu/dxgkrnl/dxgvmbus.h
->  create mode 100644 drivers/gpu/dxgkrnl/hmgr.c
->  create mode 100644 drivers/gpu/dxgkrnl/hmgr.h
->  create mode 100644 drivers/gpu/dxgkrnl/ioctl.c
->  create mode 100644 drivers/gpu/dxgkrnl/misc.c
->  create mode 100644 drivers/gpu/dxgkrnl/misc.h
->
-> --
-> 2.25.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
-
---
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> Reviewed-by: Kees Cook <keescook@chromium.org>
