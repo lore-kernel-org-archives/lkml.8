@@ -2,136 +2,228 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ACDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E24E02075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589922958;
-	bh=BsSOFtmV7u1jPVJuOgFAo1ISyFJ3dm/VGxsNz+31aOU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U59lBEpB5nKvbtRcgCK9+aaK52yZWGsh7Lefk3CnFMFwoLwSTbsK176B0M5QR8b9I
-	 AoT9cTHERKqUlNpuvXuXbp2PaU/7xf0oi00Y0jsEBJKdh7baGc8pQnsgtTmavC2RTq
-	 r5uTa/Smabs056nwvWtkW8V5TaRSgz83s0M0J84U=
+	by mail.kernel.org (Postfix) with ESMTP id 7DD4C20758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:17:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hpwirQ0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgESVP5 (ORCPT
+        id S1726821AbgESVRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbgESVPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:15:55 -0400
-Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FE7F20826;
-        Tue, 19 May 2020 21:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589922954;
-        bh=BsSOFtmV7u1jPVJuOgFAo1ISyFJ3dm/VGxsNz+31aOU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+l/QP7Caz+Vwato0aIZ7fKNtE51zlgpMpSQsd0GfvW0A3K4eg911OVDEr52MNiQ7
-         6JXWtncJ6risFf9z6fpmyvnU89qnHG8acFt1iU8brX8dJGMTxgeKGIevP4JlzcYeJJ
-         RSrcjrxbGiTzzj232j3DIXn45/4eT7ADalrFwdqc=
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     mcgrof@kernel.org
-Cc:     johannes@sipsolutions.net, derosier@gmail.com,
-        greearb@candelatech.com, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org, jiri@resnulli.us,
-        briannorris@chromium.org, Jakub Kicinski <kuba@kernel.org>
-Subject: [RFC 2/2] i2400m: use devlink health reporter
-Date:   Tue, 19 May 2020 14:15:31 -0700
-Message-Id: <20200519211531.3702593-2-kuba@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200519010530.GS11244@42.do-not-panic.com>
-References: <20200519010530.GS11244@42.do-not-panic.com>
+        Tue, 19 May 2020 17:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgESVRZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 17:17:25 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF30C08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:17:25 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z26so473095pfk.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:17:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Cz7ypDwiQcY75biLKEJQMmwCg/gVg2A/D/by2yCpR7U=;
+        b=hpwirQ0Xs1SorucIF2v9uRq9u46loiYGcq4NK3JplwhSqVwyhavNf0YBGEMwX0Bma4
+         0qiabCHNEWCuGkSTjRhFXEwKkHxrDYGRFoHjGzsfnqLEIv9+DK/ZHc5YRuhfY23dKBN2
+         AHQMsFVocsK8Gz4nmxoV8PjJo6Hfj0jub8qS0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Cz7ypDwiQcY75biLKEJQMmwCg/gVg2A/D/by2yCpR7U=;
+        b=mgfQkJy+fwweeXsZjEyaZx6E5zJnmq8Ff0lwzfLUuNQs6m4WQHh3plD7ZVveSPL90l
+         U+aDVVlGBX1d7hOtu95aCxnDHJf1eBRpG29ASimzgXqNSh5pRUHqAWVCJ+2j0p8jVgCY
+         PwDgyClNXnplLloVA6R1h5KzdhmX7wl2ZLyQ1MRJbGstcuR2ABwbgZ70JUrg7ZNTZ23i
+         Dc1NY7YZLoJ5omtU987CCz29SDusVedJVbohBTQozvA3Q4tDZbof6MvWb13bBbtyF6uo
+         uEV0207m0Zre+xzBGpX5DlMPXvS/fQCMoO+jtaQaufmAYp+cgK3OwXso+R1VX9CKvqRl
+         oYWw==
+X-Gm-Message-State: AOAM5338vzJOiusBtC3q7s6VNFyko2DpwxtafqVMcK1Ojw5vl36z8/al
+        HcHIQ0+7hNe4pGXdLQQfuEXyEQ==
+X-Google-Smtp-Source: ABdhPJxbEob6J6f6hJy0GeqN5fD4zEgoeNcFb9XU7fUpXsQJwNl9Ou6crVqMvKvg1aajIHr6QDJ0Ww==
+X-Received: by 2002:a62:7c94:: with SMTP id x142mr1036481pfc.155.1589923044367;
+        Tue, 19 May 2020 14:17:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p62sm334352pfb.93.2020.05.19.14.17.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 14:17:23 -0700 (PDT)
+Date:   Tue, 19 May 2020 14:17:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        John Johansen <john.johansen@canonical.com>
+Subject: Re: [PATCH 0/4] Relocate execve() sanity checks
+Message-ID: <202005191342.97EE972E3@keescook>
+References: <20200518055457.12302-1-keescook@chromium.org>
+ <87a724t153.fsf@x220.int.ebiederm.org>
+ <202005190918.D2BD83F7C@keescook>
+ <87o8qjstyw.fsf@x220.int.ebiederm.org>
+ <202005191052.0A6B1D5843@keescook>
+ <87sgfvrckr.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sgfvrckr.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It builds.
+On Tue, May 19, 2020 at 01:42:28PM -0500, Eric W. Biederman wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> 
+> > On Tue, May 19, 2020 at 12:41:27PM -0500, Eric W. Biederman wrote:
+> >> Kees Cook <keescook@chromium.org> writes:
+> >> > and given the LSM hooks, I think the noexec check is too late as well.
+> >> > (This is especially true for the coming O_MAYEXEC series, which will
+> >> > absolutely need those tests earlier as well[1] -- the permission checking
+> >> > is then in the correct place: during open, not exec.) I think the only
+> >> > question is about leaving the redundant checks in fs/exec.c, which I
+> >> > think are a cheap way to retain a sense of robustness.
+> >> 
+> >> The trouble is when someone passes through changes one of the permission
+> >> checks for whatever reason (misses that they are duplicated in another
+> >> location) and things then fail in some very unexpected way.
+> >
+> > Do you think this series should drop the "late" checks in fs/exec.c?
+> > Honestly, the largest motivation for me to move the checks earlier as
+> > I've done is so that other things besides execve() can use FMODE_EXEC
+> > during open() and receive the same sanity-checking as execve() (i.e the
+> > O_MAYEXEC series -- the details are still under discussion but this
+> > cleanup will be needed regardless).
+> 
+> I think this series should drop the "late" checks in fs/exec.c  It feels
+> less error prone, and it feels like that would transform this into
+> something Linus would be eager to merge because series becomes a cleanup
+> that reduces line count.
 
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
- drivers/net/wimax/i2400m/rx.c  | 2 ++
- drivers/net/wimax/i2400m/usb.c | 5 +++++
- 2 files changed, 7 insertions(+)
+Yeah, that was my initial sense too. I just started to get nervous about
+removing the long-standing exec sanity checks. ;)
 
-diff --git a/drivers/net/wimax/i2400m/rx.c b/drivers/net/wimax/i2400m/rx.c
-index c9fb619a9e01..cc7fe78f2df0 100644
---- a/drivers/net/wimax/i2400m/rx.c
-+++ b/drivers/net/wimax/i2400m/rx.c
-@@ -144,6 +144,7 @@
-  *       i2400m_msg_size_check
-  *       wimax_msg
-  */
-+#include <linux/devlink.h>
- #include <linux/slab.h>
- #include <linux/kernel.h>
- #include <linux/if_arp.h>
-@@ -712,6 +713,7 @@ void __i2400m_roq_queue(struct i2400m *i2400m, struct i2400m_roq *roq,
- 	dev_err(dev, "SW BUG? failed to insert packet\n");
- 	dev_err(dev, "ERX: roq %p [ws %u] skb %p nsn %d sn %u\n",
- 		roq, roq->ws, skb, nsn, roq_data->sn);
-+	devlink_simple_fw_reporter_report_crash(dev);
- 	skb_queue_walk(&roq->queue, skb_itr) {
- 		roq_data_itr = (struct i2400m_roq_data *) &skb_itr->cb;
- 		nsn_itr = __i2400m_roq_nsn(roq, roq_data_itr->sn);
-diff --git a/drivers/net/wimax/i2400m/usb.c b/drivers/net/wimax/i2400m/usb.c
-index 9659f9e1aaa6..5c811dccbf1d 100644
---- a/drivers/net/wimax/i2400m/usb.c
-+++ b/drivers/net/wimax/i2400m/usb.c
-@@ -49,6 +49,7 @@
-  *   usb_reset_device()
-  */
- #include "i2400m-usb.h"
-+#include <linux/devlink.h>
- #include <linux/wimax/i2400m.h>
- #include <linux/debugfs.h>
- #include <linux/slab.h>
-@@ -423,6 +424,8 @@ int i2400mu_probe(struct usb_interface *iface,
- 	if (usb_dev->speed != USB_SPEED_HIGH)
- 		dev_err(dev, "device not connected as high speed\n");
- 
-+	devlink_simple_fw_reporter_prepare(dev);
-+
- 	/* Allocate instance [calls i2400m_netdev_setup() on it]. */
- 	result = -ENOMEM;
- 	net_dev = alloc_netdev(sizeof(*i2400mu), "wmx%d", NET_NAME_UNKNOWN,
-@@ -506,6 +509,7 @@ int i2400mu_probe(struct usb_interface *iface,
- 	usb_put_dev(i2400mu->usb_dev);
- 	free_netdev(net_dev);
- error_alloc_netdev:
-+	devlink_simple_fw_reporter_cleanup(dev);
- 	return result;
- }
- 
-@@ -532,6 +536,7 @@ void i2400mu_disconnect(struct usb_interface *iface)
- 	usb_set_intfdata(iface, NULL);
- 	usb_put_dev(i2400mu->usb_dev);
- 	free_netdev(net_dev);
-+	devlink_simple_fw_reporter_cleanup(dev);
- 	d_fnend(3, dev, "(iface %p i2400m %p) = void\n", iface, i2400m);
- }
- 
+> I haven't been inside of open recently enough to remember if the
+> location you are putting the check fundamentally makes sense.  But the
+> O_MAYEXEC bits make a pretty strong case that something of the sort
+> needs to happen.
+
+Right. I *think* it's correct place for now, based on my understanding
+of the call graph (which is why I included it in the commit logs).
+
+> I took a quick look but I can not see clearly where path_noexec
+> and the regular file tests should go.
+> 
+> I do see that you have code duplication with faccessat which suggests
+> that you haven't put the checks in the right place.
+
+Yeah, I have notes on the similar call sites (which I concluded, perhaps
+wrongly) to ignore:
+
+do_faccessat()
+    user_path_at(dfd, filename, lookup_flags, &path);
+    if (acc_mode & MAY_EXEC .... path_noexec()
+    inode_permission(inode, mode | MAY_ACCESS);
+
+This appears to be strictly advisory, and the path_noexec() test is
+there to, perhaps, avoid surprises when doing access() then fexecve()?
+I would note, however, that that path-based LSMs appear to have no hook
+in this call graph at all. I was expecting a call like:
+
+	security_file_permission(..., mode | MAY_ACCESS)
+
+but I couldn't find one (or anything like it), so only
+inode_permission() is being tested (which means also the existing
+execve() late tests are missed, and the newly added S_ISREG() test from
+do_dentry_open() is missed).
+
+
+prctl_set_mm_exe_file()
+    err = -EACCESS;
+    if (!S_ISREG(inode->i_mode) || path_noexec(&exe.file->f_path))
+        goto exit;
+    err = inode_permission(inode, MAY_EXEC);
+
+This is similar (no path-based LSM hooks present, only inode_permission()
+used for permission checking), but it is at least gated by CAP_SYS_ADMIN.
+
+
+And this bring me to a related question from my review: does
+dentry_open() intentionally bypass security_inode_permission()? I.e. it
+calls vfs_open() not do_open():
+
+openat2(dfd, char * filename, open_how)
+    build_open_flags(open_how, open_flags)
+    do_filp_open(dfd, filename, open_flags)
+        path_openat(nameidata, open_flags, flags)
+            file = alloc_empty_file(open_flags, current_cred());
+            do_open(nameidata, file, open_flags)
+                may_open(path, acc_mode, open_flag)
+                    inode_permission(inode, MAY_OPEN | acc_mode)
+                        security_inode_permission(inode, acc_mode)
+                vfs_open(path, file)
+                    do_dentry_open(file, path->dentry->d_inode, open)
+                        if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) ...
+                        security_file_open(f)
+                                /* path-based LSMs check for open here
+				 * and use FMODE_* flags to determine how a file
+                                 * is being opened. */
+                        open()
+
+vs
+
+dentry_open(path, flags, cred)
+        f = alloc_empty_file(flags, cred);
+        vfs_open(path, f);
+
+I would expect dentry_open() to mostly duplicate a bunch of
+path_openat(), but it lacks the may_open() call, etc.
+
+I really got the feeling that there was some new conceptual split needed
+inside do_open() where the nameidata details have been finished, after
+we've gained the "file" information, but before we've lost the "path"
+information. For example, may_open(path, ...) has no sense of "file",
+though it does do the inode_permission() call.
+
+Note also that may_open() is used in do_tmpfile() too, and has a comment
+implying it needs to be checking only a subset of the path details. So
+I'm not sure how to split things up.
+
+So, that's why I put the new checks just before the may_open() call in
+do_open(): it's the most central, positions itself correctly for dealing
+with O_MAYEXEC, and doesn't appear to make any existing paths worse.
+
+> I am wondering if we need something distinct to request the type of the
+> file being opened versus execute permissions.
+
+Well, this is why I wanted to centralize it -- the knowledge of how a
+file is going to be used needs to be tested both by the core VFS
+(S_ISREG, path_noexec) and the LSMs. Things were inconsistent before.
+
+> All I know is being careful and putting the tests in a good logical
+> place makes the code more maintainable, whereas not being careful
+> results in all kinds of sharp corners that might be exploitable.
+> So I think it is worth digging in and figuring out where those checks
+> should live.  Especially so that code like faccessat does not need
+> to duplicate them.
+
+I think this is the right place with respect to execve(), though I think
+there are other cases that could use to be improved (or at least made
+more consistent).
+
+-Kees
+
 -- 
-2.25.4
-
+Kees Cook
