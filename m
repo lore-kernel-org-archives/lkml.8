@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C06C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D997A20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECA72081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgESQb4 (ORCPT
+        id S1729391AbgESQb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:31:56 -0400
-Received: from elvis.franken.de ([193.175.24.41]:59328 "EHLO elvis.franken.de"
+        Tue, 19 May 2020 12:31:57 -0400
+Received: from elvis.franken.de ([193.175.24.41]:59326 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbgESQbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:31:55 -0400
+        id S1726203AbgESQb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 12:31:56 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jb59m-0001aq-01; Tue, 19 May 2020 18:31:54 +0200
+        id 1jb59m-0001aq-00; Tue, 19 May 2020 18:31:54 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 81EFCC013A; Tue, 19 May 2020 18:04:00 +0200 (CEST)
-Date:   Tue, 19 May 2020 18:04:00 +0200
+        id C7726C0136; Tue, 19 May 2020 18:03:34 +0200 (CEST)
+Date:   Tue, 19 May 2020 18:03:34 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Zhi Li <lizhi01@loongson.cn>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] MIPS: Remove useless parameter of bootcmdline_init()
-Message-ID: <20200519160400.GB16307@alpha.franken.de>
-References: <1589785688-10426-1-git-send-email-lizhi01@loongson.cn>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH] MIPS: SGI-IP27: Remove duplicated include in ip27-timer.c
+Message-ID: <20200519160334.GA16307@alpha.franken.de>
+References: <1589891291-7030-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1589785688-10426-1-git-send-email-lizhi01@loongson.cn>
+In-Reply-To: <1589891291-7030-1-git-send-email-yangtiezhu@loongson.cn>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 03:08:08PM +0800, Zhi Li wrote:
-> The parameter "cmdline_p" is useless in bootcmdline_init()，remove it.
+On Tue, May 19, 2020 at 08:28:11PM +0800, Tiezhu Yang wrote:
+> After commit 9d0aaf98dc24 ("MIPS: SGI-IP27: Move all shared IP27
+> declarations to ip27-common.h"), ip27-common.h is included more
+> than once in ip27-timer.c, remove it.
 > 
-> Signed-off-by: Zhi Li <lizhi01@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-applied to mips-next.
+applied to mips-next. I only removed the second #include. If you
+want to clean this up further the includes and comment about
+ioc3_init() could be removed as well.
 
 Thomas.
 
