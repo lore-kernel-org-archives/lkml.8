@@ -2,93 +2,82 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB71C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D54320708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BAB207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:43:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589867013;
+	bh=i8esXH5Ow6FF3jAidh3vVtwgoEXxUcAaATRRRjhOz+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pJwKl4rg2YqMeA3yjOnvaV6372HcKnnFsoDx7QKfQftCwXUTQcnnx5IVyuN9Lak4N
+	 2Tib7aXDRIPrkQH3/rw0ORFsEP0twwd2PiQ9rWdE9JP4Wt+6MHBaZGbuMCEjz6glWq
+	 ZNitT1xvGT4pF5xiEl7YYzKKfH5u9Pr4YT9Opfts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgESFif (ORCPT
+        id S1727070AbgESFnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:38:35 -0400
-Received: from mga05.intel.com ([192.55.52.43]:18092 "EHLO mga05.intel.com"
+        Tue, 19 May 2020 01:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbgESFie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:38:34 -0400
-IronPort-SDR: xaFxeO+rVgF/y9mMeGPNcdPR0Jgzf9bzhJmsfT2cn6z4OQXAokjaJOsIC0rT6kcBrQ5cCezKQN
- 3qyEvDaIGSTg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 22:38:34 -0700
-IronPort-SDR: rprKud2ASA/3Nc7i0qLhTHu3lEEKQpIJh3WEGfILRP9ubQiQVmzCkXJtlbDjxKz5a5DwoWHZ8V
- AMAaCIhloYXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,409,1583222400"; 
-   d="scan'208";a="288836611"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by fmsmga004.fm.intel.com with ESMTP; 18 May 2020 22:38:30 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-Subject: [PATCH v2 5/5] soundwire: master: add runtime pm support
-Date:   Tue, 19 May 2020 01:43:22 +0800
-Message-Id: <20200518174322.31561-6-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200518174322.31561-1-yung-chuan.liao@linux.intel.com>
-References: <20200518174322.31561-1-yung-chuan.liao@linux.intel.com>
+        id S1726396AbgESFnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:43:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D81920708;
+        Tue, 19 May 2020 05:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589867010;
+        bh=i8esXH5Ow6FF3jAidh3vVtwgoEXxUcAaATRRRjhOz+0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QK2cy88FxwdwIj9vD7darq/n/4zw341JKZ68o98Vj5Eg68jySMHw8zDeL9g2yFCZV
+         75gtNN/HtgvAkImUSg7fnTaw37nQvOWc3Qjk/OVavv64XUCD7Jn2BQ501bgfsr8KWF
+         siDNZnWXY+RrnSWKRar1TEUxvhvpKTX3ewiDIHdA=
+Date:   Tue, 19 May 2020 07:43:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 000/194] 5.6.14-rc1 review
+Message-ID: <20200519054328.GA3791824@kroah.com>
+References: <20200518173531.455604187@linuxfoundation.org>
+ <433eae0c-e84b-5694-a953-11f3843cfa24@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <433eae0c-e84b-5694-a953-11f3843cfa24@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to enable runtime_pm on master device with generic helpers,
-so that a Slave-initiated wake is propagated to the bus parent.
+On Mon, May 18, 2020 at 07:10:45PM -0700, Guenter Roeck wrote:
+> On 5/18/20 10:34 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.14 release.
+> > There are 194 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> Quick feedback:
+> 
+> You also need to pull in commit 92db978f0d68 ("net: ethernet: ti: Remove TI_CPTS_MOD workaround")
+> which fixes commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK").
+> This is necessary to avoid compile errors.
 
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
----
- drivers/soundwire/master.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Sasha has now dropped that original patch, so we should be fine.  I'll
+push out a -rc2 soon with that change.
 
-diff --git a/drivers/soundwire/master.c b/drivers/soundwire/master.c
-index 6be0a027def7..5411791e6aff 100644
---- a/drivers/soundwire/master.c
-+++ b/drivers/soundwire/master.c
-@@ -3,6 +3,7 @@
- 
- #include <linux/device.h>
- #include <linux/acpi.h>
-+#include <linux/pm_runtime.h>
- #include <linux/soundwire/sdw.h>
- #include <linux/soundwire/sdw_type.h>
- #include "bus.h"
-@@ -14,9 +15,15 @@ static void sdw_master_device_release(struct device *dev)
- 	kfree(md);
- }
- 
-+static const struct dev_pm_ops master_dev_pm = {
-+	SET_RUNTIME_PM_OPS(pm_generic_runtime_suspend,
-+			   pm_generic_runtime_resume, NULL)
-+};
-+
- struct device_type sdw_master_type = {
- 	.name =		"soundwire_master",
- 	.release =	sdw_master_device_release,
-+	.pm = &master_dev_pm,
- };
- 
- /**
--- 
-2.17.1
+thanks,
 
+greg k-h
