@@ -6,105 +6,102 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398B8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11153C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1465B2081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3EF20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgESMTL (ORCPT
+        id S1728905AbgESMTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:19:11 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48724 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728705AbgESMTJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:19:09 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9EF7B1C0261; Tue, 19 May 2020 14:19:07 +0200 (CEST)
-Date:   Tue, 19 May 2020 14:19:07 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Stefano Brivio <sbrivio@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 41/80] netfilter: nft_set_rbtree: Introduce and use
- nft_rbtree_interval_start()
-Message-ID: <20200519121907.GA9158@amd>
-References: <20200518173450.097837707@linuxfoundation.org>
- <20200518173458.612903024@linuxfoundation.org>
- <20200519120625.GA8342@amd>
- <20200519121356.GA354164@kroah.com>
+        Tue, 19 May 2020 08:19:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:36945 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728705AbgESMTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 08:19:33 -0400
+IronPort-SDR: Gxym/W1Kj+m/3DJV9cA6o5QyEx9bnyGn2rC9Vs2sVszqBTHHZfVIIRNyXY1kritd/2gNpSLcJC
+ TkIP2rlmtzxg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 05:19:26 -0700
+IronPort-SDR: QfB7argupf+FUWa+bhIJr6fsy7smat1tPhaRmXGFHm1AobVRirjPuKwY/YuamwcgvFBPwIZNT5
+ vFVSZI/1Ppqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
+   d="scan'208";a="288939620"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.171.98]) ([10.249.171.98])
+  by fmsmga004.fm.intel.com with ESMTP; 19 May 2020 05:19:22 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH v11 07/11] KVM: x86: Expose MSR_IA32_PERF_CAPABILITIES for
+ LBR record format
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
+        wei.w.wang@intel.com
+References: <20200514083054.62538-1-like.xu@linux.intel.com>
+ <20200514083054.62538-8-like.xu@linux.intel.com>
+ <20200519105335.GF279861@hirez.programming.kicks-ass.net>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <07806259-d9dd-53ec-1b63-84d8e081a296@intel.com>
+Date:   Tue, 19 May 2020 20:19:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Content-Disposition: inline
-In-Reply-To: <20200519121356.GA354164@kroah.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200519105335.GF279861@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/5/19 18:53, Peter Zijlstra wrote:
+> On Thu, May 14, 2020 at 04:30:50PM +0800, Like Xu wrote:
+>> @@ -203,6 +206,12 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>   	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+>>   		msr_info->data = pmu->global_ovf_ctrl;
+>>   		return 0;
+>> +	case MSR_IA32_PERF_CAPABILITIES:
+>> +		if (!msr_info->host_initiated &&
+>> +			!guest_cpuid_has(vcpu, X86_FEATURE_PDCM))
+>> +			return 1;
+> I know this is KVM code, so maybe they feel differently, but I find the
+> above indentation massively confusing. Consider using: "set cino=:0(0"
+> if you're a vim user.
+Nice tip and I'll apply it. Thanks.
+>
+>> +		msr_info->data = vcpu->arch.perf_capabilities;
+>> +		return 0;
+>>   	default:
+>>   		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+>>   			u64 val = pmc_read_counter(pmc);
+>> @@ -261,6 +270,16 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>   			return 0;
+>>   		}
+>>   		break;
+>> +	case MSR_IA32_PERF_CAPABILITIES:
+>> +		if (!msr_info->host_initiated ||
+>> +			!guest_cpuid_has(vcpu, X86_FEATURE_PDCM))
+>> +			return 1;
+> Idem.
+>
+>> +		if (!(data & ~vmx_get_perf_capabilities()))
+>> +			return 1;
+>> +		if ((data ^ vmx_get_perf_capabilities()) & PERF_CAP_LBR_FMT)
+>> +			return 1;
+>> +		vcpu->arch.perf_capabilities = data;
+>> +		return 0;
+>>   	default:
+>>   		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+>>   			if (!msr_info->host_initiated)
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue 2020-05-19 14:13:56, Greg Kroah-Hartman wrote:
-> On Tue, May 19, 2020 at 02:06:25PM +0200, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > [ Upstream commit 6f7c9caf017be8ab0fe3b99509580d0793bf0833 ]
-> > >=20
-> > > Replace negations of nft_rbtree_interval_end() with a new helper,
-> > > nft_rbtree_interval_start(), wherever this helps to visualise the
-> > > problem at hand, that is, for all the occurrences except for the
-> > > comparison against given flags in __nft_rbtree_get().
-> > >=20
-> > > This gets especially useful in the next patch.
-> >=20
-> > This looks like cleanup in preparation for the next patch. Next patch
-> > is there for some series, but not for 4.19.124. Should this be in
-> > 4.19, then?
->=20
-> What is the "next patch" in this situation?
-
-In 5.4 you have:
-
-9956 O   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 5.4 082/147] netfilter: nft_s=
-et_rbtree: Introduce and use nft
-9957     Greg Kroah =E2=94=9C=E2=94=80>[PATCH 5.4 083/147] netfilter: nft_s=
-et_rbtree: Add missing expired c
-
-In 4.19 you have:
-
-10373 r   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 4.19 41/80] netfilter: nft_s=
-et_rbtree: Introduce and use nft
-10376 O   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 4.19 42/80] IB/mlx4: Test re=
-turn value of calls to ib_get_ca
-
-I believe 41/80 can be dropped from 4.19 series, as it is just a
-preparation for 083/147... which is not queued for 4.19.
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7DzrsACgkQMOfwapXb+vJb2ACglnpWTOFVsrEVvlkVxMWeJZSG
-F5kAoK+QLdn4SjARq123iklM6CKMTQKz
-=cmmv
------END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
