@@ -2,369 +2,95 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8025C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB564C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 811F2207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0EB2083E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSR8N/kA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V5fQgwFM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbgESOTA (ORCPT
+        id S1729107AbgESOTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:19:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728855AbgESOTA (ORCPT
+        Tue, 19 May 2020 10:19:22 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35836 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgESOTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:19:00 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08F2C08C5C0;
-        Tue, 19 May 2020 07:18:59 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id g1so13895903ljk.7;
-        Tue, 19 May 2020 07:18:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2v5cVIMALEZeOCe9AUN80g80L3FNOhF6glvveRpwVFA=;
-        b=iSR8N/kAOeN+6XftZH9tOlczL62NRBF9Wr+lfL+YQluPicNV2tOvnzBbITewqLcSb1
-         SevDYGcylG+pTcM5cwc5pS9s22x/iVnmIflxgvRU4gida3p8h7NNcQAiq16GbVpqCRnS
-         HgQGpxJaOa+638qLgq2RISA3EADTFzXunD1FD0T+yQeoqaVgsXlNTGLUBlOEhj0GqG2x
-         9dGDrO60Ycznp4aUCHwPuYC8I6tzMrOhKL7mMNSIPHSPZboHh0RvfzPMO0aksDbeKA8W
-         dEo6lxh8+LIxFcLUD0iGRoLBJ4D1SKRWaFxEhfoGvWgWdRyf2OG+kdLL6xFE4ACiNBsv
-         Et3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2v5cVIMALEZeOCe9AUN80g80L3FNOhF6glvveRpwVFA=;
-        b=TXJJsqhPeimBZIdc9704bBEdJMqeloB5G6Q65Mk2qWJctKHQYzfbrlt7FjKnrkf8OC
-         dVD/pkJaX8pG3YScZDPjS5GGMD8GcUMF+pLZZbCYLqhfPi8NdEphl3SqJyBgX87qOh1X
-         y9IwjeBaXY/i39vZA1A9OtvJ83uFDHnMdLQOEXqft69pP/PIvx41E5vEplg3F8kjXkjD
-         ugwS0q5dXH/ae1w0z0Cokuk1wsAOX4sUmP81/C2oMAeGvqV1usmjSNFRKzAENutIZrYK
-         hi4279PJpW5wfuWDIWcmTcY5VwVJrqTs4RlCdDlOJBxba3JR09vaNdFIb60zsnXXR365
-         HXhw==
-X-Gm-Message-State: AOAM533e1U+qnWPt8THMMc0Gj8pR/E/rt669biLZMCxn9xXdiPV8IE95
-        JbohmIOyHIsHhB8SjkHVfFXXrJ+NTzKDxNo/aDI=
-X-Google-Smtp-Source: ABdhPJx27ZkhuciouKC7SjdVXrdjgBwhM4OCO7NFDiSiRSYi2n/V6eNVQEGKPSZXCvLB3LQPUFZxfacVSwuXd7ILHzo=
-X-Received: by 2002:a2e:920f:: with SMTP id k15mr12804493ljg.131.1589897938056;
- Tue, 19 May 2020 07:18:58 -0700 (PDT)
+        Tue, 19 May 2020 10:19:21 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JEJJVi060318;
+        Tue, 19 May 2020 09:19:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589897959;
+        bh=+YqheDvBm/tN5emqmsMckKPwgvtTPi+iG5bT6OZ54Bs=;
+        h=From:To:CC:Subject:Date;
+        b=V5fQgwFMer4pIZ7FwOCQPDtefs8ZV/e+BJvefXYLWotkaZAA6jP27YbZsuQ4QbilE
+         CFkd60dJDj6KHKrHItWvGJ5dAo44YYyh09/noyM37YrHRm6aEAITYQtS7/VfUWlNVJ
+         cnXFWcQDThYt3aBoXlu91uxJ7XogYWkLSWTP9cQ8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JEJJ6a035936
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 May 2020 09:19:19 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 09:19:19 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 09:19:19 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEJIHO038542;
+        Tue, 19 May 2020 09:19:19 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>
+CC:     <sspatil@android.com>, <linux-pm@vger.kernel.org>,
+        <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v7 0/3] Add JEITA properties and introduce the bq2515x charger
+Date:   Tue, 19 May 2020 09:19:13 -0500
+Message-ID: <20200519141916.28282-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200515013556.5582-1-kim.andrewsy@gmail.com> <20200517171654.8194-1-kim.andrewsy@gmail.com>
- <alpine.LFD.2.21.2005182027460.4524@ja.home.ssi.bg> <CABc050G-yW-frv0mCmg=hMnC4iOx9Ht2Zv8eoS1cxQ8uKX6NQw@mail.gmail.com>
- <CANHHuCW6i0BjLRMYkfY8eZGZJZTnE-NO9EH+-gfH94cc6yYn1A@mail.gmail.com>
-In-Reply-To: <CANHHuCW6i0BjLRMYkfY8eZGZJZTnE-NO9EH+-gfH94cc6yYn1A@mail.gmail.com>
-From:   Andrew Kim <kim.andrewsy@gmail.com>
-Date:   Tue, 19 May 2020 10:18:45 -0400
-Message-ID: <CABc050Fb_aX1tOqyhcLJyVv_RvBRQ9EH_aBkUHtMV6MKb_+m9Q@mail.gmail.com>
-Subject: Re: [PATCH] netfilter/ipvs: immediately expire UDP connections
- matching unavailable destination if expire_nodest_conn=1
-To:     Marco Angaroni <marcoangaroni@gmail.com>
-Cc:     Julian Anastasov <ja@ssi.bg>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "open list:IPVS" <netdev@vger.kernel.org>,
-        "open list:IPVS" <lvs-devel@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
-        "open list:NETFILTER" <coreteam@netfilter.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
+Hello,
 
-> could you please confirm if/how this patch is changing any of the?
-> following behaviours, which I=E2=80=99m listing below as per my understan=
-ding?
+This patchset adds additional health properties to the power_supply header.
+These additional properties are taken from the JEITA specification. This
+patchset also introduces the bq2515x family of charging ICs.
 
-This patch would optimize b) where the chances of packets being silently
-dropped is lower.
+Dan Murphy (1):
+  power_supply: Add additional health properties to the header
 
-> However I'm confused about the references to OPS mode.
-> And why you need to expire all the connections at once: if you expire
-> on a per connection basis, the client experiences the same behaviour
-> (no more re-transmissions), but you avoid the complexities of a new
-> thread.
+Ricardo Rivera-Matos (2):
+  Add the bindings for the bq25150 and bq25155 500mA charging ICs from
+    Texas Instruments.
+  power: supply: bq25150 introduce the bq25150
 
-I agree for TCP the client would experience the same behavior. This is most=
-ly
-problematic for UDP when there are many entries in the connection hash
-from the same client to 1 destination. If we only expire connections
-on receiving
-packets, there can be many dropped packets before all entries are expired (=
-or
-we reached the UDP timeout). Expiring all UDP packets immediately would
-reduce the number of packets dropped significantly.
+ Documentation/ABI/testing/sysfs-class-power   |    2 +-
+ .../bindings/power/supply/bq2515x.yaml        |  106 ++
+ drivers/power/supply/Kconfig                  |   13 +
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bq2515x_charger.c        | 1167 +++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c     |    2 +-
+ include/linux/power_supply.h                  |    3 +
+ 7 files changed, 1292 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+ create mode 100644 drivers/power/supply/bq2515x_charger.c
 
-Thanks,
+-- 
+2.26.2
 
-Andrew Sy Kim
-
-On Tue, May 19, 2020 at 7:46 AM Marco Angaroni <marcoangaroni@gmail.com> wr=
-ote:
->
-> Hi Andrew, Julian,
->
-> could you please confirm if/how this patch is changing any of the
-> following behaviours, which I=E2=80=99m listing below as per my understan=
-ding
-> ?
->
-> When expire_nodest is set and real-server is unavailable, at the
-> moment the following happens to a packet going through IPVS:
->
-> a) TCP (or other connection-oriented protocols):
->    the packet is silently dropped, then the following retransmission
-> causes the generation of a RST from the load-balancer to the client,
-> which will then re-open a new TCP connection
-> b) UDP:
->    the packet is silently dropped, then the following retransmission
-> is rescheduled to a new real-server
-> c) UDP in OPS mode:
->    the packet is rescheduled to a new real-server, as no previous
-> connection exists in IPVS connection table, and a new OPS connection
-> is created (but it lasts only the time to transmit the packet)
-> d) UDP in OPS mode + persistent-template:
->    the packet is rescheduled to a new real-server, as previous
-> template-connection is invalidated, a new template-connection is
-> created, and a new OPS connection is created (but it lasts only the
-> time to transmit the packet)
->
-> It seems to me that you are trying to optimize case a) and b),
-> avoiding the first step where the packet is silently dropped and
-> consequently avoiding the retransmission.
-> And contextually expire also all the other connections pointing to the
-> unavailable real-sever.
->
-> However I'm confused about the references to OPS mode.
-> And why you need to expire all the connections at once: if you expire
-> on a per connection basis, the client experiences the same behaviour
-> (no more re-transmissions), but you avoid the complexities of a new
-> thread.
->
-> Maybe also the documentation of expire_nodest_conn sysctl should be updat=
-ed.
-> When it's stated:
->
->         If this feature is enabled, the load balancer will expire the
->         connection immediately when a packet arrives and its
->         destination server is not available, then the client program
->         will be notified that the connection is closed
->
-> I think it should be at least "and the client program" instead of
-> "then the client program".
-> Or a more detailed explanation.
->
-> Thanks
-> Marco Angaroni
->
->
-> Il giorno lun 18 mag 2020 alle ore 22:06 Andrew Kim
-> <kim.andrewsy@gmail.com> ha scritto:
-> >
-> > Hi Julian,
-> >
-> > Thank you for getting back to me. I will update the patch based on
-> > your feedback shortly.
-> >
-> > Regards,
-> >
-> > Andrew
-> >
-> > On Mon, May 18, 2020 at 3:10 PM Julian Anastasov <ja@ssi.bg> wrote:
-> > >
-> > >
-> > >         Hello,
-> > >
-> > > On Sun, 17 May 2020, Andrew Sy Kim wrote:
-> > >
-> > > > If expire_nodest_conn=3D1 and a UDP destination is deleted, IPVS sh=
-ould
-> > > > also expire all matching connections immiediately instead of waitin=
-g for
-> > > > the next matching packet. This is particulary useful when there are=
- a
-> > > > lot of packets coming from a few number of clients. Those clients a=
-re
-> > > > likely to match against existing entries if a source port in the
-> > > > connection hash is reused. When the number of entries in the connec=
-tion
-> > > > tracker is large, we can significantly reduce the number of dropped
-> > > > packets by expiring all connections upon deletion.
-> > > >
-> > > > Signed-off-by: Andrew Sy Kim <kim.andrewsy@gmail.com>
-> > > > ---
-> > > >  include/net/ip_vs.h             |  7 ++++++
-> > > >  net/netfilter/ipvs/ip_vs_conn.c | 38 +++++++++++++++++++++++++++++=
-++++
-> > > >  net/netfilter/ipvs/ip_vs_core.c |  5 -----
-> > > >  net/netfilter/ipvs/ip_vs_ctl.c  |  9 ++++++++
-> > > >  4 files changed, 54 insertions(+), 5 deletions(-)
-> > > >
-> > >
-> > > > diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/i=
-p_vs_conn.c
-> > > > index 02f2f636798d..c69dfbbc3416 100644
-> > > > --- a/net/netfilter/ipvs/ip_vs_conn.c
-> > > > +++ b/net/netfilter/ipvs/ip_vs_conn.c
-> > > > @@ -1366,6 +1366,44 @@ static void ip_vs_conn_flush(struct netns_ip=
-vs *ipvs)
-> > > >               goto flush_again;
-> > > >       }
-> > > >  }
-> > > > +
-> > > > +/*   Flush all the connection entries in the ip_vs_conn_tab with a
-> > > > + *   matching destination.
-> > > > + */
-> > > > +void ip_vs_conn_flush_dest(struct netns_ipvs *ipvs, struct ip_vs_d=
-est *dest)
-> > > > +{
-> > > > +     int idx;
-> > > > +     struct ip_vs_conn *cp, *cp_c;
-> > > > +
-> > > > +     rcu_read_lock();
-> > > > +     for (idx =3D 0; idx < ip_vs_conn_tab_size; idx++) {
-> > > > +             hlist_for_each_entry_rcu(cp, &ip_vs_conn_tab[idx], c_=
-list) {
-> > > > +                     if (cp->ipvs !=3D ipvs)
-> > > > +                             continue;
-> > > > +
-> > > > +                     if (cp->dest !=3D dest)
-> > > > +                             continue;
-> > > > +
-> > > > +                     /* As timers are expired in LIFO order, resta=
-rt
-> > > > +                      * the timer of controlling connection first,=
- so
-> > > > +                      * that it is expired after us.
-> > > > +                      */
-> > > > +                     cp_c =3D cp->control;
-> > > > +                     /* cp->control is valid only with reference t=
-o cp */
-> > > > +                     if (cp_c && __ip_vs_conn_get(cp)) {
-> > > > +                             IP_VS_DBG(4, "del controlling connect=
-ion\n");
-> > > > +                             ip_vs_conn_expire_now(cp_c);
-> > > > +                             __ip_vs_conn_put(cp);
-> > > > +                     }
-> > > > +                     IP_VS_DBG(4, "del connection\n");
-> > > > +                     ip_vs_conn_expire_now(cp);
-> > > > +             }
-> > > > +             cond_resched_rcu();
-> > >
-> > >         Such kind of loop is correct if done in another context:
-> > >
-> > > 1. kthread
-> > > or
-> > > 2. delayed work: mod_delayed_work(system_long_wq, ...)
-> > >
-> > >         Otherwise cond_resched_rcu() can schedule() while holding
-> > > __ip_vs_mutex. Also, it will add long delay if many dests are
-> > > removed.
-> > >
-> > >         If such loop analyzes instead all cp->dest for
-> > > IP_VS_DEST_F_AVAILABLE, it should be done after calling
-> > > __ip_vs_conn_get().
-> > >
-> > > >  static int sysctl_snat_reroute(struct netns_ipvs *ipvs) { return 0=
-; }
-> > > > diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip=
-_vs_ctl.c
-> > > > index 8d14a1acbc37..f87c03622874 100644
-> > > > --- a/net/netfilter/ipvs/ip_vs_ctl.c
-> > > > +++ b/net/netfilter/ipvs/ip_vs_ctl.c
-> > > > @@ -1225,6 +1225,15 @@ ip_vs_del_dest(struct ip_vs_service *svc, st=
-ruct ip_vs_dest_user_kern *udest)
-> > > >        */
-> > > >       __ip_vs_del_dest(svc->ipvs, dest, false);
-> > > >
-> > > > +     /*      If expire_nodest_conn is enabled and protocol is UDP,
-> > > > +      *      attempt best effort flush of all connections with thi=
-s
-> > > > +      *      destination.
-> > > > +      */
-> > > > +     if (sysctl_expire_nodest_conn(svc->ipvs) &&
-> > > > +         dest->protocol =3D=3D IPPROTO_UDP) {
-> > > > +             ip_vs_conn_flush_dest(svc->ipvs, dest);
-> > >
-> > >         Above work should be scheduled from __ip_vs_del_dest().
-> > > Check for UDP is not needed, sysctl_expire_nodest_conn() is for
-> > > all protocols.
-> > >
-> > >         If the flushing is complex to implement, we can still allow
-> > > rescheduling for unavailable dests:
-> > >
-> > > - first we should move this block above the ip_vs_try_to_schedule()
-> > > block because:
-> > >
-> > >         1. the scheduling does not return unavailabel dests, even
-> > >         for persistence, so no need to check new connections for
-> > >         the flag
-> > >
-> > >         2. it will allow to create new connection if dest for
-> > >         existing connection is unavailable
-> > >
-> > >         if (cp && cp->dest && !(cp->dest->flags & IP_VS_DEST_F_AVAILA=
-BLE)) {
-> > >                 /* the destination server is not available */
-> > >
-> > >                 if (sysctl_expire_nodest_conn(ipvs)) {
-> > >                         bool uses_ct =3D ip_vs_conn_uses_conntrack(cp=
-, skb);
-> > >
-> > >                         ip_vs_conn_expire_now(cp);
-> > >                         __ip_vs_conn_put(cp);
-> > >                         if (uses_ct)
-> > >                                 return NF_DROP;
-> > >                         cp =3D NULL;
-> > >                 } else {
-> > >                         __ip_vs_conn_put(cp);
-> > >                         return NF_DROP;
-> > >                 }
-> > >         }
-> > >
-> > >         if (unlikely(!cp)) {
-> > >                 int v;
-> > >
-> > >                 if (!ip_vs_try_to_schedule(ipvs, af, skb, pd, &v, &cp=
-, &iph))
-> > >                         return v;
-> > >         }
-> > >
-> > >         Before now, we always waited one jiffie connection to expire,
-> > > now one packet will:
-> > >
-> > > - schedule expiration for existing connection with unavailable dest,
-> > > as before
-> > >
-> > > - create new connection to available destination that will be found
-> > > first in lists. But it can work only when sysctl var "conntrack" is 0=
-,
-> > > we do not want to create two netfilter conntracks to different
-> > > real servers.
-> > >
-> > >         Note that we intentionally removed the timer_pending() check
-> > > because we can not see existing ONE_PACKET connections in table.
-> > >
-> > > Regards
-> > >
-> > > --
-> > > Julian Anastasov <ja@ssi.bg>
