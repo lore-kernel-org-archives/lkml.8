@@ -2,107 +2,116 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2898C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEA992072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507DB20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:46:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M2cIOnKv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="irb8JtwC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgESOpr (ORCPT
+        id S1729110AbgESOqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:45:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727904AbgESOpq (ORCPT
+        Tue, 19 May 2020 10:46:47 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38998 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgESOqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:45:46 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580BFC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 07:45:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Vijp3ax4bbjLHEFlE42c26bubWJnhGdQUG2gMFm2ejw=; b=M2cIOnKvgkqLTWJviXN1qmeGtM
-        cprLvfZfhPOYZpY6DlRTq6c0xIjDYZRw6zPRKyBFgAvz20y+nnGChRlXI2Cd7EKbWA5bLg6Px79ub
-        8XdcE6369nFacmAMHhNtGy5TGR5dmhhnW8ia81dNNtonjeKHdkJ2WfAv+I1lF/40AELGXSwzOdBEV
-        TEITT7eQ2rHnYRMbXrIUa+ha0q3pYrxYAkbrBtGmTWjCLlTEmY8QR+d26hYi2Zg8rN1ZAEZ5lCUMu
-        F3ACE/m2NRB/mdLQ7AnzllhUlneVGLqmbaDaV24vf0Ifq0w6PFFbXWtOtiSnN2xcHuCKzBimUG/w/
-        f26zElHQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jb3Uz-0006IJ-0Y; Tue, 19 May 2020 14:45:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4245230067C;
-        Tue, 19 May 2020 16:45:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 28DBC20C24271; Tue, 19 May 2020 16:45:39 +0200 (CEST)
-Date:   Tue, 19 May 2020 16:45:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: lockdep tracing and using of printk return value ?
-Message-ID: <20200519144539.GB317569@hirez.programming.kicks-ass.net>
-References: <335067f871a85db5f24650a3dff96f19727bed50.camel@perches.com>
+        Tue, 19 May 2020 10:46:47 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JEkj0G067348;
+        Tue, 19 May 2020 09:46:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589899605;
+        bh=Y26DaIi4n8BuhyRCfCi9TYUz/rg/RaO9Ay8FWNenVqU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=irb8JtwCjKFWlQ2PezGVskyGurReb505Tinijlx0BxHuxLxy5bLQKjk6PBaXiARwT
+         c+NRc1DWYuAudvbbceSu8QxhYTkdnHsTUaq/pHQlykQZh/Po0bfiNH98sXKG1YpDU9
+         5CMe7Kf6bGQJWZYDAO/zs8Scdp1MxoH1AxgQV0E0=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JEkjc7109937
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 May 2020 09:46:45 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 09:46:44 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 09:46:44 -0500
+Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEkiXO045835;
+        Tue, 19 May 2020 09:46:44 -0500
+Subject: Re: [PATCH v7 3/3] power: supply: bq25150 introduce the bq25150
+To:     Dan Murphy <dmurphy@ti.com>, <sre@kernel.org>
+CC:     <sspatil@android.com>, <linux-pm@vger.kernel.org>,
+        <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+References: <20200519141916.28282-1-dmurphy@ti.com>
+ <20200519141916.28282-4-dmurphy@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <50b9ca3f-36e8-d13b-672c-5e72b6158869@ti.com>
+Date:   Tue, 19 May 2020 10:46:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <335067f871a85db5f24650a3dff96f19727bed50.camel@perches.com>
+In-Reply-To: <20200519141916.28282-4-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 05:41:47AM -0700, Joe Perches wrote:
-> Except for some ancient code in drivers/scsi, this code
-> may be the only kernel use of the printk return value.
+On 5/19/20 10:19 AM, Dan Murphy wrote:
+> +static int bq2515x_set_ilim_lvl(struct bq2515x_device *bq2515x, int val)
+> +{
+> +	int i;
+> +
+> +	if (val > BQ2515X_ILIM_MAX || val < BQ2515X_ILIM_MIN)
+> +		return -EINVAL;
 
-Is using the printk() return value a problem?
+Clamp to these limits, not reject. Or better, modify the below loop so
+it clamps to the highest or lowest value in bq2515x_ilim_lvl_values[],
+then drop these #defines.
 
-> Code that uses the printk return value in
-> kernel/locking/lockdep.c is odd because the printk
-> return length includes both the length of a KERN_<LEVEL>
-> prefix and the newline.  depth also seems double counted.
+> +
+> +	for (i = 0; i < ARRAY_SIZE(bq2515x_ilim_lvl_values); i++) {
+> +		if (val == bq2515x_ilim_lvl_values[i])
+> +			break;
+> +
+> +		if (val > bq2515x_ilim_lvl_values[i - 1] &&
 
-Yeah, it seems dodgy. OTOH printk() really ought to discard the
-KERN_<level> crud from the return size.
+Index out of bounds for the i = 0 case.
 
-> Perhaps there's a better way to calculate this?
-> 
-> Maybe:
-> ---
->  kernel/locking/lockdep.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 2fadc2635946..265227edc550 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -1960,11 +1960,9 @@ static void print_lock_class_header(struct lock_class *class, int depth)
->  
->  	for (bit = 0; bit < LOCK_USAGE_STATES; bit++) {
->  		if (class->usage_mask & (1 << bit)) {
-> -			int len = depth;
-> -
-> -			len += printk("%*s   %s", depth, "", usage_str[bit]);
-> -			len += printk(KERN_CONT " at:\n");
-> -			print_lock_trace(class->usage_traces[bit], len);
-> +			printk("%*s   %s at:\n", depth, "", usage_str[bit]);
-> +			print_lock_trace(class->usage_traces[bit],
-> +					 depth + 3 + strlen(usage_str[bit]);
->  		}
->  	}
->  	printk("%*s }\n", depth, "");
+> +		    val < bq2515x_ilim_lvl_values[i]) {
+> +			if (val - bq2515x_ilim_lvl_values[i - 1] <
+> +			    bq2515x_ilim_lvl_values[i] - val) {
 
-Doesn't seem crazy...
+You are still missing the case where the value is closer to the [i]
+element, you check that it is between [i-1] and [i], but only chose
+[i-1] when it is closer to that than [i] but equal and greater case is
+missing.
+
+Given this sets input current limits, would instead always rounding down
+be the safer option?
+
+Andrew
+
+> +				i = i - 1;
+> +				break;
+> +			}
+> +		}
+> +	}
+> +
+> +	return regmap_write(bq2515x->regmap, BQ2515X_ILIMCTRL, i);
+> +}
