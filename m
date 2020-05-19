@@ -2,130 +2,119 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33716C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09AE2207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:44:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWyV3xqf"
+	by mail.kernel.org (Postfix) with ESMTP id 555722081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589906787;
+	bh=sM5TWkuZbJDY4NlTw1WOM/771f8ZCEnuLZQAsc0iAdQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ll2sqzVx2XAg+mCVMJmwpt4R3manCkGhAf8z7b7bvZY4e6Ex6DGZ+Tx9AgAqsvloz
+	 lknv8qQhB1Kv9bt/XB3DNK28uNRxGorEW9Z6Gj20NjxV9VXviJ0p4l8WD3ZXgHlZte
+	 9Gl3A70OnrgJu9CXBEjuerd66Ym1MbE0qrxTPDXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbgESQoo (ORCPT
+        id S1729332AbgESQqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49606 "EHLO
+        Tue, 19 May 2020 12:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbgESQom (ORCPT
+        with ESMTP id S1728725AbgESQqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:44:42 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84672C08C5C0;
-        Tue, 19 May 2020 09:44:42 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l18so143679wrn.6;
-        Tue, 19 May 2020 09:44:42 -0700 (PDT)
+        Tue, 19 May 2020 12:46:23 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA28C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:46:22 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q2so423372ljm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:46:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VqC8rxTTkCeV8e6ysDgNotLUcsV868zIffxxJilbTVg=;
-        b=YWyV3xqfslc9r+swGji8dPqRm1Lfbv3kwe/eMh0BbjbO+6H5AF2bcnTJ8UEqFbe6mx
-         EQkaJ8rJYEmXKxSVFIorQsPnIp6mDtoedIxYUCRoglAfoj2wEbyNU3p/I8XOAqnvtOwS
-         LEqIQTJtyKttjObDOojC9GqgiNJksXGQN8dd521h9IZjpueNsCFSbvAwrbVzZ1qD8tpB
-         oTcvLk2IEZ/OW6VpyiOXrGxRflwQeWI9icXheaUSVFWXKEQJ/Ewa9QgIVHw3vKt+ethK
-         FGT/mLWh6jEcab3W2YWKrsmyFjAIuWnHhTNjtwJVU7d+pqMgfJuRSU2E7kzhaHOXSaW9
-         FiAA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TC0qAtFd13O2JOLCB7SFLNnsJ0TrRRfShJMVEYLbwy0=;
+        b=BM7rNRUOZPJu6CqIZoTyNHsH3OhfbJ7v4lyTa1sXCfThZdyIW2MAwpqUoVdCrwYJYJ
+         M+8yUvqSB1mogas+2iJO8jLleH/wb+mxdAsp/6H+RxHZ44GfbLZBQMjsb0UkWlV6SNKA
+         VToCUizM9QTTj9Opl/oBOtfqOQD3JZAH4FWEo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VqC8rxTTkCeV8e6ysDgNotLUcsV868zIffxxJilbTVg=;
-        b=Zx/TVhMvHLSDkci/pVsLjZRv4cx3DwDhWKAl68PvI4cQ9ct6O7CsY0rkDZWZc4OCj2
-         4gbzkv/yhgzjSzVWHqNXaQPkU/U/iyb4/aDdNEdVYma0IdnS44V3skWsoR+BlY3E7Ny4
-         hBXm1gHBg33x0DptWcMoTjkeDfvAC56Mw8t+Nj2tEmHp3xEFQIiCQbrWQw3OSvQ0kwye
-         WSW86EnabzgTAn4e7r85h8GdDPY2rFOTXJVNTc1wjyvBDpUry7OoUXplgK3erhBcH6EE
-         SuXXqYUrny1nuffgOouRB4FUEuYWRnj0RnpCD4J8k50xh7PWiEt736QPodOi0CJ8hX30
-         Rs6w==
-X-Gm-Message-State: AOAM532XYrEBygJc0AyndQLe6Qs0aUqov+eAjvoKpaGx4ZugP5s4Qub3
-        DBVLk6VY8CZvXGkb2YPslTg=
-X-Google-Smtp-Source: ABdhPJwSe6JzoKEGUpPYAynD9BDmuOFYIj6qReIqYmiaR8ffpFG20UDn7uYCl9Ig5eN+Td+tCyjfhw==
-X-Received: by 2002:a5d:6144:: with SMTP id y4mr27357671wrt.185.1589906681081;
-        Tue, 19 May 2020 09:44:41 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id j190sm271138wmb.33.2020.05.19.09.44.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 09:44:39 -0700 (PDT)
-Date:   Tue, 19 May 2020 18:44:33 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
- txt format to yaml
-Message-ID: <20200519164433.GA8726@ict14-OptiPlex-980>
-References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
- <20200519124402.26076-2-jonathan.albrieux@gmail.com>
- <20200519132207.GA4623@gerhold.net>
- <20200519140354.GB30573@ict14-OptiPlex-980>
- <20200519160137.GJ1634618@smile.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TC0qAtFd13O2JOLCB7SFLNnsJ0TrRRfShJMVEYLbwy0=;
+        b=Q2Vyrd/Vyzpc44ymemARrd3PcuqqdSZmPq60Stt6DcM7IQ0UYLc09hLjRr+wsEOU+E
+         ZU/2D2vzMKlPtmkGVbKixtzfKHx3rMWwvJaquAYXxTRilbba4FcF94r3jOoJp9bTUSM7
+         SUpxDBGk8hDjvhjAoGaEHDzgPgPxFfnDrEx3N498TURuG2zBmCHUfomU/v9FK2KoaEJ2
+         WpWvje0CfQIy4YNg2bNRvk2EjgkgYNQOdq+cqv+Xgl4YaHzSaowwu8cUy7+VGKyg9ipZ
+         gw5nZ3hUbkQ5pQMIgTpr2Hl+mukW3CQn8rud49tykcUh68BjYJbGHh1a6Uz6zsCAyySe
+         xAag==
+X-Gm-Message-State: AOAM530JEcdgntiLY61bPNOpfMlU0NCaYTh59zZf+SzMX1qz+yMAV0Mn
+        ZfzrA38ysRPoeKCopeAHfFoy0BJQ+6w=
+X-Google-Smtp-Source: ABdhPJyaU5tVF5FvBuqCGlhhIk9jop08TwPgOhiTfe34bgQ4i59NOAYSEtG/oYGKYCuJEOvL8TyplQ==
+X-Received: by 2002:a2e:9b48:: with SMTP id o8mr201746ljj.130.1589906779983;
+        Tue, 19 May 2020 09:46:19 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id s8sm9287666lfd.61.2020.05.19.09.46.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 09:46:19 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id q2so423235ljm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:46:18 -0700 (PDT)
+X-Received: by 2002:a2e:8956:: with SMTP id b22mr218841ljk.16.1589906778412;
+ Tue, 19 May 2020 09:46:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519160137.GJ1634618@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200519134449.1466624-1-hch@lst.de> <20200519134449.1466624-13-hch@lst.de>
+ <CAHk-=whE_C2JF0ywF09iMBWtquEfMM3aSxCeLrb5S75EdHr1JA@mail.gmail.com> <20200519164146.GA28313@lst.de>
+In-Reply-To: <20200519164146.GA28313@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 19 May 2020 09:46:02 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whVd4evLe-pi7VNrh4Htp1SjogWtEqgot6Ta+kavyqamg@mail.gmail.com>
+Message-ID: <CAHk-=whVd4evLe-pi7VNrh4Htp1SjogWtEqgot6Ta+kavyqamg@mail.gmail.com>
+Subject: Re: [PATCH 12/20] maccess: remove strncpy_from_unsafe
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-parisc@vger.kernel.org,
+        linux-um <linux-um@lists.infradead.org>,
+        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 07:01:37PM +0300, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 04:03:54PM +0200, Jonathan Albrieux wrote:
-> > On Tue, May 19, 2020 at 03:22:07PM +0200, Stephan Gerhold wrote:
-> > > On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:
-> 
-> ...
-> 
-> > > > +maintainers:
-> > > > +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>
-> > > 
-> > > Should probably add someone here, although I'm not sure who either.
-> > > 
-> > 
-> > Yep I couldn't find a maintainer for that driver..what to do in this case?
-> 
-> Volunteer yourself!
-> 
+On Tue, May 19, 2020 at 9:41 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> I had a lot of folks complaining about things like:
+>
+> #ifdef CONFIG_FOO
+>         if (foo)
+>                 do_stuff();
+>         else
+> #endif
+>                 do_something_else();
+>
+> which I personally don't mind at all, so I switched to this style.
 
-While I'd really like to, I have to decline the offer as I currently don't have
-enought knowledge to become a maintainer :-) but thank you! (Who knows, maybe in
-a couple of year!) Now I'll make the final edits and will submit a new
-patchset soon with all the changes
+Well, I don't particularly like that style either, it is _very_ easy
+to get wrong when you edit it later (and various indentation checkers
+tend to be very unhappy about it too).
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+But that's why I like trying to just make simple helper functions instead.
 
-Best regards,
-Jonathan Albrieux
+Yeah, it's often a few more lines of code (if only because of the
+extra function definition etc), but with good naming and sane
+arguments those few extra lines can also help make it much more
+understandable in the process, and it gives you a nice place to add
+commentary for the really odd cases (comments inside code that then
+does other things often make things just harder to see).
+
+             Linus
