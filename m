@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F97C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D45C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED9B205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363DB205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgESVrl (ORCPT
+        id S1728655AbgESVs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40980 "EHLO
+        Tue, 19 May 2020 17:48:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728433AbgESVrg (ORCPT
+        with ESMTP id S1728255AbgESVqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:47:36 -0400
+        Tue, 19 May 2020 17:46:55 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7615DC08C5C1;
-        Tue, 19 May 2020 14:47:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 006D4C08C5C3;
+        Tue, 19 May 2020 14:46:55 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1jbA57-0002rm-M7; Tue, 19 May 2020 23:47:25 +0200
+        id 1jbA42-0002dr-Ph; Tue, 19 May 2020 23:46:18 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -37,11 +37,13 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v1 19/25] vfs: Use sequence counter with associated spinlock
-Date:   Tue, 19 May 2020 23:45:41 +0200
-Message-Id: <20200519214547.352050-20-a.darwish@linutronix.de>
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v1 06/25] dma-buf: Remove custom seqcount lockdep class key
+Date:   Tue, 19 May 2020 23:45:28 +0200
+Message-Id: <20200519214547.352050-7-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -55,87 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+Commit 3c3b177a9369 ("reservation: add support for read-only access
+using rcu") introduced a sequence counter to manage updates to
+reservations. Back then, the reservation object initializer
+reservation_object_init() was always inlined.
 
-Use the new seqcount_spinlock_t data type, which allows to associate a
-spinlock with the sequence counter. This enables lockdep to verify that
-the spinlock used for writer serialization is held when the write side
-critical section is entered.
+Having the sequence counter initialization inlined meant that each of
+the call sites would have a different lockdep class key, which would've
+broken lockdep's deadlock detection. The aforementioned commit thus
+introduced, and exported, a custom seqcount lockdep class key and name.
 
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
+The commit 8735f16803f00 ("dma-buf: cleanup reservation_object_init...")
+transformed the reservation object initializer to a normal non-inlined C
+function. seqcount_init(), which automatically defines the seqcount
+lockdep class key and must be called non-inlined, can now be safely used.
+
+Remove the seqcount custom lockdep class key, name, and export. Use
+seqcount_init() inside the dma reservation object initializer.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- fs/dcache.c               | 2 +-
- fs/fs_struct.c            | 4 ++--
- include/linux/dcache.h    | 2 +-
- include/linux/fs_struct.h | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/dma-buf/dma-resv.c | 9 +--------
+ include/linux/dma-resv.h   | 2 --
+ 2 files changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/fs/dcache.c b/fs/dcache.c
-index b280e07e162b..e5f365d8fd67 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -1727,7 +1727,7 @@ static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
- 	dentry->d_lockref.count = 1;
- 	dentry->d_flags = 0;
- 	spin_lock_init(&dentry->d_lock);
--	seqcount_init(&dentry->d_seq);
-+	seqcount_spinlock_init(&dentry->d_seq, &dentry->d_lock);
- 	dentry->d_inode = NULL;
- 	dentry->d_parent = dentry;
- 	dentry->d_sb = sb;
-diff --git a/fs/fs_struct.c b/fs/fs_struct.c
-index ca639ed967b7..04b3f5b9c629 100644
---- a/fs/fs_struct.c
-+++ b/fs/fs_struct.c
-@@ -117,7 +117,7 @@ struct fs_struct *copy_fs_struct(struct fs_struct *old)
- 		fs->users = 1;
- 		fs->in_exec = 0;
- 		spin_lock_init(&fs->lock);
--		seqcount_init(&fs->seq);
-+		seqcount_spinlock_init(&fs->seq, &fs->lock);
- 		fs->umask = old->umask;
+diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+index 4264e64788c4..590ce7ad60a0 100644
+--- a/drivers/dma-buf/dma-resv.c
++++ b/drivers/dma-buf/dma-resv.c
+@@ -50,12 +50,6 @@
+ DEFINE_WD_CLASS(reservation_ww_class);
+ EXPORT_SYMBOL(reservation_ww_class);
  
- 		spin_lock(&old->lock);
-@@ -163,6 +163,6 @@ EXPORT_SYMBOL(current_umask);
- struct fs_struct init_fs = {
- 	.users		= 1,
- 	.lock		= __SPIN_LOCK_UNLOCKED(init_fs.lock),
--	.seq		= SEQCNT_ZERO(init_fs.seq),
-+	.seq		= SEQCNT_SPINLOCK_ZERO(init_fs.seq, &init_fs.lock),
- 	.umask		= 0022,
- };
-diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index c1488cc84fd9..235563da356d 100644
---- a/include/linux/dcache.h
-+++ b/include/linux/dcache.h
-@@ -89,7 +89,7 @@ extern struct dentry_stat_t dentry_stat;
- struct dentry {
- 	/* RCU lookup touched fields */
- 	unsigned int d_flags;		/* protected by d_lock */
--	seqcount_t d_seq;		/* per dentry seqlock */
-+	seqcount_spinlock_t d_seq;	/* per dentry seqlock */
- 	struct hlist_bl_node d_hash;	/* lookup hash list */
- 	struct dentry *d_parent;	/* parent directory */
- 	struct qstr d_name;
-diff --git a/include/linux/fs_struct.h b/include/linux/fs_struct.h
-index cf1015abfbf2..783b48dedb72 100644
---- a/include/linux/fs_struct.h
-+++ b/include/linux/fs_struct.h
-@@ -9,7 +9,7 @@
- struct fs_struct {
- 	int users;
- 	spinlock_t lock;
--	seqcount_t seq;
-+	seqcount_spinlock_t seq;
- 	int umask;
- 	int in_exec;
- 	struct path root, pwd;
+-struct lock_class_key reservation_seqcount_class;
+-EXPORT_SYMBOL(reservation_seqcount_class);
+-
+-const char reservation_seqcount_string[] = "reservation_seqcount";
+-EXPORT_SYMBOL(reservation_seqcount_string);
+-
+ /**
+  * dma_resv_list_alloc - allocate fence list
+  * @shared_max: number of fences we need space for
+@@ -134,9 +128,8 @@ subsys_initcall(dma_resv_lockdep);
+ void dma_resv_init(struct dma_resv *obj)
+ {
+ 	ww_mutex_init(&obj->lock, &reservation_ww_class);
++	seqcount_init(&obj->seq);
+ 
+-	__seqcount_init(&obj->seq, reservation_seqcount_string,
+-			&reservation_seqcount_class);
+ 	RCU_INIT_POINTER(obj->fence, NULL);
+ 	RCU_INIT_POINTER(obj->fence_excl, NULL);
+ }
+diff --git a/include/linux/dma-resv.h b/include/linux/dma-resv.h
+index ee50d10f052b..a6538ae7d93f 100644
+--- a/include/linux/dma-resv.h
++++ b/include/linux/dma-resv.h
+@@ -46,8 +46,6 @@
+ #include <linux/rcupdate.h>
+ 
+ extern struct ww_class reservation_ww_class;
+-extern struct lock_class_key reservation_seqcount_class;
+-extern const char reservation_seqcount_string[];
+ 
+ /**
+  * struct dma_resv_list - a list of shared fences
 -- 
 2.20.1
 
