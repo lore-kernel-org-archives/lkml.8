@@ -2,203 +2,261 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B42C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C670420835
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nrtXpzxk"
+	by mail.kernel.org (Postfix) with ESMTP id 0D797207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgESNlQ (ORCPT
+        id S1728887AbgESNnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49140 "EHLO
+        Tue, 19 May 2020 09:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729055AbgESNlO (ORCPT
+        with ESMTP id S1726471AbgESNnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:41:14 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3336CC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:41:13 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id s198so12335928oie.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:41:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OJ0/X+KDsYJg8CyaNbUZIzyGPtenDDvVDD3jODmVGao=;
-        b=nrtXpzxkHDE3tsIhjLRKKkG5mSKHuJTK7d5N/OIpvC5/P828VRegB9+9p/HbRq8VNg
-         nFVbBrG0M+aQuE9UKTDblgKxh7al8ExlCx7VaOgm7ZxiaWSLamj3Uy2u+v0sZ51YBgEZ
-         LL88seHJH23uAX2ojB2Wt4Ld2019QBZ8VHX2UcmS+mhCPF9OT+KQlM3giRHTxLdl6D9g
-         3jjtDCbpl36wRw/dAeDG1XPuiuxWfHQZc5RxCkqeFIEJ/yoZ50XodVu2411ICcG/8gO8
-         hW9cfcN3awD1ff0LjmNWnhKGgLGnYdzNAWfhPzXjmL9tUditOufPMokQ0u/1TL83xzDX
-         KhSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OJ0/X+KDsYJg8CyaNbUZIzyGPtenDDvVDD3jODmVGao=;
-        b=sl0EDV14uC+2emzkgKrW2f2nZlsCm7sMbC0zXHXh3EQ/kukyYDUUNx9s7OruSi5T9D
-         3AdddBoVnLaNwMftgi6B5vUYeGpt+3qiEMkwl2reiNFG+o7B+9y1oJ0au2thRVAAuHv7
-         sfCuIpxHatYGJXS0lMuA/TC2gKQdmFaKlA0qaol8zUEKXTyeYxFh/YT5AdH/C5HttLFP
-         w8rWD0c2uT04x3mmM3tIvd2r3zT/FgFiJCA7W8xZWcLRHERXNeIKceqESK14OQSNBFcd
-         X+4c9PUQKgmIVJbouaIo0vxgpf5KOKmdhDBy/c33oA//IQak2PJLcPCqL9ukMtEMZHs8
-         6iIQ==
-X-Gm-Message-State: AOAM532a/jY2J7jQdps7Wkae+hgwqgtDU4C0a//I+ld65VSPin4NuZn4
-        j7ISm5/y/AmV+Oe3yAtr8tjcTKkQ2nII/4GMOHS+vw==
-X-Google-Smtp-Source: ABdhPJyMuziBjjW4lhx6ke4NJO62cbbIQwIRonXAwKOQsmkHq8MltdxzXTeE0Je2oMei47ExoX0ciROlJWHRIbDUAWE=
-X-Received: by 2002:aca:ebc5:: with SMTP id j188mr3278271oih.70.1589895672315;
- Tue, 19 May 2020 06:41:12 -0700 (PDT)
+        Tue, 19 May 2020 09:43:18 -0400
+X-Greylist: delayed 23610 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 19 May 2020 06:43:18 PDT
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6DCC08C5C0;
+        Tue, 19 May 2020 06:43:18 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 49RHC63vqzzQjkp;
+        Tue, 19 May 2020 15:43:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id 0_nGkEAvCIU6; Tue, 19 May 2020 15:43:10 +0200 (CEST)
+Date:   Tue, 19 May 2020 23:42:44 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Kees Cook <keescook@chromium.org>, Tycho Andersen <tycho@tycho.ws>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: seccomp feature development
+Message-ID: <20200519134244.37bhucyram4n6sjk@yavin.dot.cyphar.com>
+References: <202005181120.971232B7B@keescook>
+ <20200519070929.55r3xvybjg6nnbsj@yavin.dot.cyphar.com>
+ <20200519110128.oot4zzxhivtmk7us@wittgenstein>
 MIME-Version: 1.0
-References: <20200517011732.GE24705@shao2-debian> <20200517034739.GO2869@paulmck-ThinkPad-P72>
- <CANpmjNNj37=mgrZpzX7joAwnYk-GsuiE8oOm13r48FYAK0gSQw@mail.gmail.com>
- <CANpmjNMx0+=Cac=WvHuzKb2zJvgNVvVxjo_W1wYWztywxDKeCQ@mail.gmail.com>
- <CANpmjNPcOHAE5d=gaD327HqxTBegf75qeN_pjoszahdk6_i5=Q@mail.gmail.com>
- <CAKwvOd=Gi2z_NjRfpTigCCcV5kUWU7Bm7h1eHLeQ6DZCmrsR8w@mail.gmail.com>
- <20200518180513.GA114619@google.com> <CANpmjNMTRO0TxxTQxFt8EaRLggcPXKLJL2+G2WFL+vakgd2OUg@mail.gmail.com>
-In-Reply-To: <CANpmjNMTRO0TxxTQxFt8EaRLggcPXKLJL2+G2WFL+vakgd2OUg@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 19 May 2020 15:40:59 +0200
-Message-ID: <CANpmjNO0kDVW4uaLcOF95L3FKc8WjawJqXKQtYbCad+W2r=75g@mail.gmail.com>
-Subject: Re: [rcu] 2f08469563: BUG:kernel_reboot-without-warning_in_boot_stage
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        george.burgess.iv@gmail.com
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@lists.01.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bwcyu7f3osyvo2i3"
+Content-Disposition: inline
+In-Reply-To: <20200519110128.oot4zzxhivtmk7us@wittgenstein>
+X-Rspamd-Queue-Id: E911A184D
+X-Rspamd-Score: -8.83 / 15.00 / 15.00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 at 12:16, Marco Elver <elver@google.com> wrote:
->
-> On Mon, 18 May 2020 at 20:05, Marco Elver <elver@google.com> wrote:
-> >
-> > On Mon, 18 May 2020, 'Nick Desaulniers' via kasan-dev wrote:
-> >
-> > > On Mon, May 18, 2020 at 7:34 AM Marco Elver <elver@google.com> wrote:
-> > > >
-> > > > On Mon, 18 May 2020 at 14:44, Marco Elver <elver@google.com> wrote:
-> > > > >
-> > > > > [+Cc clang-built-linux FYI]
-> > > > >
-> > > > > On Mon, 18 May 2020 at 12:11, Marco Elver <elver@google.com> wrote:
-> > > > > >
-> > > > > > On Sun, 17 May 2020 at 05:47, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Sun, May 17, 2020 at 09:17:32AM +0800, kernel test robot wrote:
-> > > > > > > > Greeting,
-> > > > > > > >
-> > > > > > > > FYI, we noticed the following commit (built with clang-11):
-> > > > > > > >
-> > > > > > > > commit: 2f08469563550d15cb08a60898d3549720600eee ("rcu: Mark rcu_state.ncpus to detect concurrent writes")
-> > > > > > > > https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git dev.2020.05.14c
-> > > > > > > >
-> > > > > > > > in testcase: boot
-> > > > > > > >
-> > > > > > > > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> > > > > > > >
-> > > > > > > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > > > > > > >
-> > > > > > > >
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > If you fix the issue, kindly add following tag
-> > > > > > > > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > [    0.054943] BRK [0x05204000, 0x05204fff] PGTABLE
-> > > > > > > > [    0.061181] BRK [0x05205000, 0x05205fff] PGTABLE
-> > > > > > > > [    0.062403] BRK [0x05206000, 0x05206fff] PGTABLE
-> > > > > > > > [    0.065200] RAMDISK: [mem 0x7a247000-0x7fffffff]
-> > > > > > > > [    0.067344] ACPI: Early table checksum verification disabled
-> > > > > > > > BUG: kernel reboot-without-warning in boot stage
-> > > > > > >
-> > > > > > > I am having some difficulty believing that this commit is at fault given
-> > > > > > > that the .config does not list CONFIG_KCSAN=y, but CCing Marco Elver
-> > > > > > > for his thoughts.  Especially given that I have never built with clang-11.
-> > > > > > >
-> > > > > > > But this does invoke ASSERT_EXCLUSIVE_WRITER() in early boot from
-> > > > > > > rcu_init().  Might clang-11 have objections to early use of this macro?
-> > > > > >
-> > > > > > The macro is a noop without KCSAN. I think the bisection went wrong.
-> > > > > >
-> > > > > > I am able to reproduce a reboot-without-warning when building with
-> > > > > > Clang 11 and the provided config. I did a bisect, starting with v5.6
-> > > > > > (good), and found this:
-> > > > > > - Since v5.6, first bad commit is
-> > > > > > 20e2aa812620439d010a3f78ba4e05bc0b3e2861 (Merge tag
-> > > > > > 'perf-urgent-2020-04-12' of
-> > > > > > git://git.kernel.org/pub/scm/linux/kernel//git/tip/tip)
-> > > > > > - The actual commit that introduced the problem is
-> > > > > > 2b3b76b5ec67568da4bb475d3ce8a92ef494b5de (perf/x86/intel/uncore: Add
-> > > > > > Ice Lake server uncore support) -- reverting it fixes the problem.
-> > > >
-> > > > Some more clues:
-> > > >
-> > > > 1. I should have noticed that this uses CONFIG_KASAN=y.
-> > >
-> > > Thanks for the report, testing, and bisection.  I don't see any
-> > > smoking gun in the code.
-> > > https://godbolt.org/z/qbK26r
-> >
-> > My guess is data layout and maybe some interaction with KASAN. I also
-> > played around with leaving icx_mmio_uncores empty, meaning none of the
-> > data it refers to end up in the data section (presumably because
-> > optimized out), which resulted in making the bug disappear as well.
-> >
-> > > >
-> > > > 2. Something about function icx_uncore_mmio_init(). Making it a noop
-> > > > also makes the issue go away.
-> > > >
-> > > > 3. Leaving icx_uncore_mmio_init() a noop but removing the 'static'
-> > > > from icx_mmio_uncores also presents the issue. So this seems to be
-> > > > something about how/where icx_mmio_uncores is allocated.
-> > >
-> > > Can you share the disassembly of icx_uncore_mmio_init() in the given
-> > > configuration?
-> >
-> > ffffffff8102c097 <icx_uncore_mmio_init>:
-> > ffffffff8102c097:       e8 b4 52 bd 01          callq  ffffffff82c01350 <__fentry__>
-> > ffffffff8102c09c:       48 c7 c7 e0 55 c3 83    mov    $0xffffffff83c355e0,%rdi
-> > ffffffff8102c0a3:       e8 69 9a 3b 00          callq  ffffffff813e5b11 <__asan_store8>
-> > ffffffff8102c0a8:       48 c7 05 2d 95 c0 02    movq   $0xffffffff83c388e0,0x2c0952d(%rip)        # ffffffff83c355e0 <uncore_mmio_uncores>
-> > ffffffff8102c0af:       e0 88 c3 83
-> > ffffffff8102c0b3:       c3                      retq
-> >
-> > The problem still happens if we add a __no_sanitize_address (or even
-> > KASAN_SANITIZE := n) here. I think this function is a red herring: you
-> > can make this function be empty, but as long as icx_mmio_uncores and its
-> > dependencies are added to the data section somewhere, does the bug
-> > appear.
->
-> I also tried to bisect Clang/LLVM, and found that
-> https://reviews.llvm.org/D78162 introduced the breaking change to
-> Clang/LLVM. Reverting that change results in a bootable kernel *with*
-> "perf/x86/intel/uncore: Add Ice Lake server uncore support" still
-> applied.
 
-I found that with Clang/LLVM change D78162, a bunch of memcpys are
-optimized into just a bunch of loads/stores. It may turn out that this
-is again a red herring, because the result is that more code is
-generated, affecting layout. So in the end, the Clang/LLVM bisection
-might just point at the first change that causes data layout to change
-in a way that triggers the bug.
+--bwcyu7f3osyvo2i3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
--- Marco
+On 2020-05-19, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> On Tue, May 19, 2020 at 05:09:29PM +1000, Aleksa Sarai wrote:
+> > On 2020-05-18, Kees Cook <keescook@chromium.org> wrote:
+> > > - the sizes of these EA structs are, by design, growable over time.
+> > >   seccomp and its users need to be handle this in a forward and backw=
+ard
+> > >   compatible way, similar to the design of the EA syscall interface
+> > >   itself.
+> > >=20
+> > > The growing size of the EA struct will need some API design. For filt=
+ers
+> > > to operate on the contiguous seccomp_data+EA struct, the filter will
+> > > need to know how large seccomp_data is (more on this later), and how
+> > > large the EA struct is. When the filter is written in userspace, it c=
+an
+> > > do the math, point into the expected offsets, and get what it needs. =
+For
+> > > this to work correctly in the kernel, though, the seccomp BPF verifier
+> > > needs to know the size of the EA struct as well, so it can correctly
+> > > perform the offset checking (as it currently does for just the
+> > > seccomp_data struct size).
+> > >=20
+> > > Since there is not really any caller-based "seccomp state" associated
+> > > across seccomp(2) calls, I don't think we can add a new command to te=
+ll
+> > > the kernel "I'm expecting the EA struct size to be $foo bytes", since
+> > > the kernel doesn't track who "I" is besides just being "current", whi=
+ch
+> > > doesn't take into account the thread lifetime -- if a process launcher
+> > > knows about one size and the child knows about another, things will g=
+et
+> > > confused. The sizes really are just associated with individual filter=
+s,
+> > > based on the syscalls they're examining. So, I have thoughts on possi=
+ble
+> > > solutions:
+> > >=20
+> > > - create a new seccomp command SECCOMP_SET_MODE_FILTER2 which uses the
+> > >   EA style so we can pass in more than a filter and include also an
+> > >   array of syscall to size mappings. (I don't like this...)
+> > > - create a new filter flag, SECCOMP_FILTER_FLAG_EXTENSIBLE, which cha=
+nges
+> > >   the meaning of the uarg from "filter" to a EA-style structure with
+> > >   sizes and pointers to the filter and an array of syscall to size
+> > >   mappings. (I like this slightly better, but I still don't like it.)
+> > > - leverage the EA design and just accept anything <=3D PAGE_SIZE, rec=
+ord
+> > >   the "max offset" value seen during filter verification, and zero-fi=
+ll
+> > >   the EA struct with zeros to that size when constructing the
+> > >   seccomp_data + EA struct that the filter will examine. Then the sec=
+comp
+> > >   filter doesn't care what any of the sizes are, and userspace doesn't
+> > >   care what any of the sizes are. (I like this as it makes the proble=
+ms
+> > >   to solve contained entirely by the seccomp infrastructure and does =
+not
+> > >   touch user API, but I worry I'm missing some gotcha I haven't
+> > >   considered.)
+> >=20
+> > Okay, so here is my view on this. I think that the third option is
+> > closest to what I'd like to see. Based on Jann's email, I think we're on
+> > the same page but I'd just like to elaborate it a bit further:
+> >=20
+> > First of all -- ideally, the backward and forward compatibility that EA
+> > syscalls give us should be reflected with seccomp filters being
+> > similarly compatible. Otherwise we're going to run into issues where all
+> > of the hard work with ensuring EA syscalls behave when extended will be
+> > less valuable if seccomp cannot handle it sufficiently. This means that
+> > I would hope that every combination of {old,new} filter/kernel/program
+> > would work on a best-effort (but fail-safe) basis.
+> >=20
+> > In my view, the simplest way (from the kernel side) would be to simply
+> > do what you outlined in (3) -- make all accesses past usize (and even
+> > ksize) be zeroed.
+> >=20
+> > However in order to make an old filter fail-safe on a new kernel with a
+> > new program, we'd need a new opcode which basically does
+> > bpf_check_uarg_tail_zero() after a given offset into the EA struct. This
+> > would punt the fail-safe problem to userspace (libseccomp would need to
+> > generate a check that any unknown-to-the-filter fields are zero). I
+> > don't think this is a decision we can make in-kernel because it might be
+> > that the filter doesn't care about the last field in a struct (and thus
+> > doesn't access it) but we don't know the difference between a field the
+> > filter doesn't care about and a field it doesn't know about.
+> >=20
+> > Another issue which you haven't mentioned here is how do we deal with
+> > pointers inside an EA struct. clone3() already has this with set_tid,
+>=20
+> It's also passed with a set_tid_size argument so we'd know how large
+> set_tid is.
+
+Right, of course -- that's a given. See below for the point I was
+making.
+
+> > and the thread on user_notif seems to be converging towards having the
+> > user_notif2 struct just contain two pointers to EA structs. We could
+> > punt on this for now, so long as we leave room for us to deal with this
+> > problem in the future. However, I think it would be misguided to enable
+> > deep argument inspection on syscalls which have such entries (such as
+> > clone3) until we've figured out how we want to handle nested pointers --
+>=20
+> We can't really punt on this and should figure this out now. I've
+> pointed to this problem in my other mail as well.
+> Though I currently fail to see why this should be a huge problem to get
+> that working as long as each pointer comes with a known size.
+
+It's not a huge problem necessarily, but we would need to figure out how
+we would represent the "nested pointers" in the flattened version which
+the seccomp filter will actually offset into. Specifically, my point is
+that if we imagine that the proposed new seccomp_data API is:
+
+  [<seccomp_data>][<EA struct contents>]
+
+then any pointers in the EA struct will just be numerical values when
+copied. How would write a filter on clone3() that requires the first
+entry of set_tid to be 34? You couldn't with this simplified setup. And
+unless I'm mistaken, BPF doesn't have pointer dereferences.
+
+So we need to embed the "nested pointers" somehow in the flattened
+version of the EA struct. I don't think we can just append them to the
+main EA struct -- while you might have the length, that'd mean that
+seccomp would generate an array of zeroes whose length is a
+user-specified value? And then what about extensible structs that have
+their size embedded inside them (as you or someone else suggested for
+seccomp user_notif)? How would the eBPF program know the length of the
+struct?
+
+Maybe we could have some kind of jump table which the filter could use
+(and just have there be a jump table for each embedded struct -- so
+multiple embeddings have their own jump tables). So if we imagine some
+user-extensible struct like
+
+	struct open_how {
+		u64 flags, mode, resolve;
+		struct foo *foo;
+		struct bar *bar;
+		struct baz *baz;
+	};
+
+	struct foo {
+		u64 foo;
+	};
+
+	struct bar {
+		u64 bar;
+		struct barbaz *barbaz;
+	};
+
+	struct barbaz {
+		u64 barbaz;
+	};
+
+	struct baz {
+		u64 baz;
+	};
+
+Then we would lay out the seccomp_data as:
+
+	[<seccomp data>][<jump table><open_how>]
+		[<jump table><open_how->foo>]
+		[<jump table><open_how->bar>]
+			[<jump table><open_how->bar->barbaz>]
+		[<jump table><open_how->baz>]
+
+The jump table could be as simple as a list of tuples (relative offset
+of field in this struct from end of jump table, relative offset of the
+copied structure at the end of the jump table). However, it's not
+possible to do for-loops in cBPF -- so maybe we'd need to represent the
+jump table differently (perhaps having it just be the same size as the
+struct).
+
+The above is just a rough sketch, maybe there's a much simpler solution
+I'm not seeing.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--bwcyu7f3osyvo2i3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXsPiUQAKCRCdlLljIbnQ
+Ep50AP9zx9gjZlyA9d0N/dYnqsRhAbviANs1gxakErGFoVjhtQEAkE7xxR7kr/mm
+0z8w3soMNbkm9WxTuM76wyYrwaMYow0=
+=eQNz
+-----END PGP SIGNATURE-----
+
+--bwcyu7f3osyvo2i3--
