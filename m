@@ -2,174 +2,234 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2272070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA0B207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:14:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GQgPmWr/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgESHOi (ORCPT
+        id S1728501AbgESHOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 03:14:38 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40736 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgESHOi (ORCPT
+        Tue, 19 May 2020 03:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728476AbgESHOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 03:14:38 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v128so11445571oia.7;
-        Tue, 19 May 2020 00:14:37 -0700 (PDT)
+        Tue, 19 May 2020 03:14:44 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5ACBC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:14:43 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b6so12565785ljj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FKNlGol6DBFYqZKexL8X9ujk+FaMe6F7pQLwjgxF+/8=;
+        b=GQgPmWr/VcTNDS7mUVGbQUcMpBKNw/lMnnjYi9ttlDvmYJGJZKxt+otmgdUruoIRBb
+         ymCkieHo1aTWQfiCC8hf9W0GK+YYVj1f6GWAhiK0lZ9No2/ErAAvhTdPxh+N8vhsE/7a
+         BbQkVn51SK4OyPO+6IyHgcUj5nJHvaMn5Hz0E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TwCQPIVjOeXgiPme8eAiiVzkt9402jNeI90NBkXCFv8=;
-        b=tOnHjT9NQrw/4DHYntFE6y14DLiPoN2eVzn6tqfUjt6kLan7sO0xjVoUzxWhfKQhVX
-         6nDu73RqJc/JncKZJxWXfPVqhWI0H48wUlTCdUm4W8UJtzq9KR9aujjGeD6ItX1KpV37
-         rngM0njlUc8DYxcf7VqXzgpL9tvwDdSFOX1V1mCW/YbB3NC1Cw20195WLU8kukMhuJyN
-         eZsej2a99ytc1emCweqbm8WUijlTlfPs9wVBaOxnZabKoVBz+p8U6bjvOiQ9rpmvgWTa
-         CtkUA3794EaRuMRZwCRlFLwrbnND5NAASB3/4c0MOSPgSJqks+t8LpOYwkUKTXBlCP0D
-         g5AQ==
-X-Gm-Message-State: AOAM532CgRKFM37dRiRhoY2FGqvHLRC3/1/sLnDDvXeXqEyiduFHdQaE
-        MJhb3dNkFVwT8U4pQ4W6iV8xLB5F3ynw8p2hK0Q=
-X-Google-Smtp-Source: ABdhPJzEx85PiYVtErTopPhUEJtAuIq0qK2XpMHBFrrin1JGOJsWb/O3ZzhWo+FahHzulYroimH7reXMovFJNlrID2Q=
-X-Received: by 2002:aca:895:: with SMTP id 143mr2104387oii.153.1589872477377;
- Tue, 19 May 2020 00:14:37 -0700 (PDT)
+        bh=FKNlGol6DBFYqZKexL8X9ujk+FaMe6F7pQLwjgxF+/8=;
+        b=GVBGOv2a7eK2ZAmyAXv1LJvNV2JRpo/9zivP3TgxFdxLMutBukqDiwMA2ePLoWrwtb
+         RLZ3WI5fXadTAJhxf1mkhr9kb7dPkV/mY2bZddSfTNofqjL/CMfvCiPqJ3WWHGKPAm0F
+         TNUCZZf2avJAC2qp/os5v/O2C1XVM8VbMKk+EXUNwksMXP5JZWohPYdFNhy46Fx7zS3V
+         mBYj7Uqv7l12CvhwovRaAEHDhU6qSzlbggiHBK1Cdshlst1FF9vQc/K3yK2zZlYAsdnc
+         afXRMXlJ9kXPEQI4fMrvJU5rhb2d4sLALXaCYjHYPFxuMlxzVmLBK56mQ4Dzymuvdqcv
+         M2+g==
+X-Gm-Message-State: AOAM53054AMZH00t9hq+8efTMfQrXJ/Z9MACfE43JAEPj3yo2Vg2I8vX
+        +QNyn3eZmTbGQC1L90BBFrq2JC++XU1FPqVQrBWNMQ==
+X-Google-Smtp-Source: ABdhPJyH9c66Y6hSMDygoqz+6QuZ2opi1wEff4BNBwqlNzjjcogQxubGNhquFQHWt3w1liAtvAIWnygVggM4mPA6f54=
+X-Received: by 2002:a2e:8681:: with SMTP id l1mr11966978lji.264.1589872482058;
+ Tue, 19 May 2020 00:14:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589461844-15614-1-git-send-email-qii.wang@mediatek.com>
- <1589461844-15614-3-git-send-email-qii.wang@mediatek.com> <CAMuHMdXjLakWDDEy=02prC7XjAs_xBnt2mArPFNwyHgUoWw6-g@mail.gmail.com>
- <1589857073.25512.34.camel@mhfsdcap03>
-In-Reply-To: <1589857073.25512.34.camel@mhfsdcap03>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 19 May 2020 09:14:25 +0200
-Message-ID: <CAMuHMdXgp85PVteunxrHYcMTqFgQWHmXXCVJM_KX76xkCADMpw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c ac-timing adjust support
-To:     Qii Wang <qii.wang@mediatek.com>
-Cc:     Joe Perches <joe@perches.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, srv_heupstream@mediatek.com,
-        Wolfram Sang <wsa@the-dreams.de>, leilk.liu@mediatek.com,
+References: <20200513173947.10919-1-rayagonda.kokatanur@broadcom.com> <20200519065251.GK374218@vkoul-mobl.Dlink>
+In-Reply-To: <20200519065251.GK374218@vkoul-mobl.Dlink>
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Date:   Tue, 19 May 2020 12:44:30 +0530
+Message-ID: <CAHO=5PG5m3_i+B_=uondJ=6NOqDxJnDCeds1YNTUMYKv5a9tTg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] drivers: phy: sr-usb: do not use internal fsm for
+ USB2 phy init
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Bharat Gooty <bharat.gooty@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qii,
+Hi Vinod,
 
-On Tue, May 19, 2020 at 4:59 AM Qii Wang <qii.wang@mediatek.com> wrote:
-> On Mon, 2020-05-18 at 17:44 +0200, Geert Uytterhoeven wrote:
-> > On Thu, May 14, 2020 at 3:13 PM Qii Wang <qii.wang@mediatek.com> wrote:
-> > > This patch adds a algorithm to calculate some ac-timing parameters
-> > > which can fully meet I2C Spec.
-> > >
-> > > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-> > > ---
-> > >  drivers/i2c/busses/i2c-mt65xx.c | 328 +++++++++++++++++++++++++++++++++-------
-> > >  1 file changed, 277 insertions(+), 51 deletions(-)
-> > >
-> > > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> > > index 0ca6c38a..7020618 100644
-> > > --- a/drivers/i2c/busses/i2c-mt65xx.c
-> > > +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> >
-> > > +/*
-> > > + * Check and Calculate i2c ac-timing
-> > > + *
-> > > + * Hardware design:
-> > > + * sample_ns = (1000000000 * (sample_cnt + 1)) / clk_src
-> > > + * xxx_cnt_div =  spec->min_xxx_ns / sample_ns
-> > > + *
-> > > + * Sample_ns is rounded down for xxx_cnt_div would be greater
-> > > + * than the smallest spec.
-> > > + * The sda_timing is chosen as the middle value between
-> > > + * the largest and smallest.
-> > > + */
-> > > +static int mtk_i2c_check_ac_timing(struct mtk_i2c *i2c,
-> > > +                                  unsigned int clk_src,
-> > > +                                  unsigned int check_speed,
-> > > +                                  unsigned int step_cnt,
-> > > +                                  unsigned int sample_cnt)
-> > > +{
-> > > +       const struct i2c_spec_values *spec;
-> > > +       unsigned int su_sta_cnt, low_cnt, high_cnt, max_step_cnt;
-> > > +       unsigned int sda_max, sda_min, clk_ns, max_sta_cnt = 0x3f;
-> > > +       long long sample_ns = (1000000000 * (sample_cnt + 1)) / clk_src;
-> >
-> > So sample_ns is a 64-bit value. Is that really needed?
-> >
+On Tue, May 19, 2020 at 12:22 PM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> (1000000000 * (sample_cnt + 1)) / clk_src value is a 32-bit, (1000000000
-> * (sample_cnt + 1)) will over 32-bit if sample_cnt is 7.
-
-The intermediate value will indeed not fit in 32-bit.
-But that doesn't mean the end result won't fit in 32-bit.
-As you divide spec->min_low_ns and spec->min_su_dat_ns (which I assume
-are small numbers) by sample_ns below, sample_ns cannot be very large,
-or the quotient will be zero anyway.
-So just doing the multiplication in 64-bit, followed by a 64-by-32
-division is probably fine:
-
-    unsigned int sample_ns = div_u64(1000000000ULL * (sample_cnt + 1), clk_src);
-
-You may want to take precautions for the case where the passed value of
-clk_src is a small number (can that happen?).
-
-BTW, clk_get_rate() returns "unsigned long", while mtk_i2c_set_speed()
-takes an "unsigned int" parent_clk, which may cause future issues.
-You may want to change that to "unsigned long", along the whole
-propagation path, and use div64_ul() instead of div_u64() above.
-
-> I think 1000000000 and clk_src is too big, maybe I can reduce then with
-> be divided all by 1000.
-> example:
->
-> unsigned int sample_ns;
-> unsigned int clk_src_khz = clk_src / 1000;
-
-That may cause too much loss of precision.
-
->
-> if(clk_src_khz)
->         sample_ns = (1000000 * (sample_cnt + 1)) / clk_src_khz;
-> else
->         return -EINVAL;
->
-> > > +       if (!i2c->dev_comp->timing_adjust)
-> > > +               return 0;
-> > > +
-> > > +       if (i2c->dev_comp->ltiming_adjust)
-> > > +               max_sta_cnt = 0x100;
-> > > +
-> > > +       spec = mtk_i2c_get_spec(check_speed);
-> > > +
-> > > +       if (i2c->dev_comp->ltiming_adjust)
-> > > +               clk_ns = 1000000000 / clk_src;
-> > > +       else
-> > > +               clk_ns = sample_ns / 2;
-> > > +
-> > > +       su_sta_cnt = DIV_ROUND_UP(spec->min_su_sta_ns, clk_ns);
-> > > +       if (su_sta_cnt > max_sta_cnt)
-> > > +               return -1;
-> > > +
-> > > +       low_cnt = DIV_ROUND_UP(spec->min_low_ns, sample_ns);
+> On 13-05-20, 23:09, Rayagonda Kokatanur wrote:
+> > From: Bharat Gooty <bharat.gooty@broadcom.com>
 > >
-> > So this is a 32-bit by 64-bit division (indeed, not 64-by-32!)
+> > During different reboot cycles, USB PHY PLL may not always lock
+> > during initialization and therefore can cause USB to be not usable.
+>
+> Ok
+>
+> > Hence do not use internal FSM programming sequence for the USB
+> > PHY initialization.
+>
+> And what is the impact of not using FSM programming sequence? If not
+> impact why was it added in the first place ?
 
-Gr{oetje,eeting}s,
+We have two methods for PHY bring-up. One is the current method and
+the other is the FSM programming sequence. As we have observed PHY pll
+lock is not happening after long reboots, we need to use the other
+method. Using current method we have tested for 500,000 reboot
+iterations and always USB PHY pll lock has happened. Connected USB
+devices are detected and enumerated.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Rayagonda
+>
+> > Fixes: 4dcddbb38b64 ("phy: sr-usb: Add Stingray USB PHY driver")
+> > Signed-off-by: Bharat Gooty <bharat.gooty@broadcom.com>
+> > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > ---
+> >  drivers/phy/broadcom/phy-bcm-sr-usb.c | 55 +--------------------------
+> >  1 file changed, 2 insertions(+), 53 deletions(-)
+> >
+> > diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
+> > index fe6c58910e4c..7c7862b4f41f 100644
+> > --- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
+> > +++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
+> > @@ -16,8 +16,6 @@ enum bcm_usb_phy_version {
+> >  };
+> >
+> >  enum bcm_usb_phy_reg {
+> > -     PLL_NDIV_FRAC,
+> > -     PLL_NDIV_INT,
+> >       PLL_CTRL,
+> >       PHY_CTRL,
+> >       PHY_PLL_CTRL,
+> > @@ -31,18 +29,11 @@ static const u8 bcm_usb_combo_phy_ss[] = {
+> >  };
+> >
+> >  static const u8 bcm_usb_combo_phy_hs[] = {
+> > -     [PLL_NDIV_FRAC] = 0x04,
+> > -     [PLL_NDIV_INT]  = 0x08,
+> >       [PLL_CTRL]      = 0x0c,
+> >       [PHY_CTRL]      = 0x10,
+> >  };
+> >
+> > -#define HSPLL_NDIV_INT_VAL   0x13
+> > -#define HSPLL_NDIV_FRAC_VAL  0x1005
+> > -
+> >  static const u8 bcm_usb_hs_phy[] = {
+> > -     [PLL_NDIV_FRAC] = 0x0,
+> > -     [PLL_NDIV_INT]  = 0x4,
+> >       [PLL_CTRL]      = 0x8,
+> >       [PHY_CTRL]      = 0xc,
+> >  };
+> > @@ -52,7 +43,6 @@ enum pll_ctrl_bits {
+> >       SSPLL_SUSPEND_EN,
+> >       PLL_SEQ_START,
+> >       PLL_LOCK,
+> > -     PLL_PDIV,
+> >  };
+> >
+> >  static const u8 u3pll_ctrl[] = {
+> > @@ -66,29 +56,17 @@ static const u8 u3pll_ctrl[] = {
+> >  #define HSPLL_PDIV_VAL               0x1
+> >
+> >  static const u8 u2pll_ctrl[] = {
+> > -     [PLL_PDIV]      = 1,
+> >       [PLL_RESETB]    = 5,
+> >       [PLL_LOCK]      = 6,
+> >  };
+> >
+> >  enum bcm_usb_phy_ctrl_bits {
+> >       CORERDY,
+> > -     AFE_LDO_PWRDWNB,
+> > -     AFE_PLL_PWRDWNB,
+> > -     AFE_BG_PWRDWNB,
+> > -     PHY_ISO,
+> >       PHY_RESETB,
+> >       PHY_PCTL,
+> >  };
+> >
+> >  #define PHY_PCTL_MASK        0xffff
+> > -/*
+> > - * 0x0806 of PCTL_VAL has below bits set
+> > - * BIT-8 : refclk divider 1
+> > - * BIT-3:2: device mode; mode is not effect
+> > - * BIT-1: soft reset active low
+> > - */
+> > -#define HSPHY_PCTL_VAL       0x0806
+> >  #define SSPHY_PCTL_VAL       0x0006
+> >
+> >  static const u8 u3phy_ctrl[] = {
+> > @@ -98,10 +76,6 @@ static const u8 u3phy_ctrl[] = {
+> >
+> >  static const u8 u2phy_ctrl[] = {
+> >       [CORERDY]               = 0,
+> > -     [AFE_LDO_PWRDWNB]       = 1,
+> > -     [AFE_PLL_PWRDWNB]       = 2,
+> > -     [AFE_BG_PWRDWNB]        = 3,
+> > -     [PHY_ISO]               = 4,
+> >       [PHY_RESETB]            = 5,
+> >       [PHY_PCTL]              = 6,
+> >  };
+> > @@ -186,38 +160,13 @@ static int bcm_usb_hs_phy_init(struct bcm_usb_phy_cfg *phy_cfg)
+> >       int ret = 0;
+> >       void __iomem *regs = phy_cfg->regs;
+> >       const u8 *offset;
+> > -     u32 rd_data;
+> >
+> >       offset = phy_cfg->offset;
+> >
+> > -     writel(HSPLL_NDIV_INT_VAL, regs + offset[PLL_NDIV_INT]);
+> > -     writel(HSPLL_NDIV_FRAC_VAL, regs + offset[PLL_NDIV_FRAC]);
+> > -
+> > -     rd_data = readl(regs + offset[PLL_CTRL]);
+> > -     rd_data &= ~(HSPLL_PDIV_MASK << u2pll_ctrl[PLL_PDIV]);
+> > -     rd_data |= (HSPLL_PDIV_VAL << u2pll_ctrl[PLL_PDIV]);
+> > -     writel(rd_data, regs + offset[PLL_CTRL]);
+> > -
+> > -     /* Set Core Ready high */
+> > -     bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
+> > -                           BIT(u2phy_ctrl[CORERDY]));
+> > -
+> > -     /* Maximum timeout for Core Ready done */
+> > -     msleep(30);
+> > -
+> > +     bcm_usb_reg32_clrbits(regs + offset[PLL_CTRL],
+> > +                           BIT(u2pll_ctrl[PLL_RESETB]));
+> >       bcm_usb_reg32_setbits(regs + offset[PLL_CTRL],
+> >                             BIT(u2pll_ctrl[PLL_RESETB]));
+> > -     bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
+> > -                           BIT(u2phy_ctrl[PHY_RESETB]));
+> > -
+> > -
+> > -     rd_data = readl(regs + offset[PHY_CTRL]);
+> > -     rd_data &= ~(PHY_PCTL_MASK << u2phy_ctrl[PHY_PCTL]);
+> > -     rd_data |= (HSPHY_PCTL_VAL << u2phy_ctrl[PHY_PCTL]);
+> > -     writel(rd_data, regs + offset[PHY_CTRL]);
+> > -
+> > -     /* Maximum timeout for PLL reset done */
+> > -     msleep(30);
+> >
+> >       ret = bcm_usb_pll_lock_check(regs + offset[PLL_CTRL],
+> >                                    BIT(u2pll_ctrl[PLL_LOCK]));
+> > --
+> > 2.17.1
+>
+> --
+> ~Vinod
