@@ -2,180 +2,157 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AFDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF91420674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:41:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JHkOp+M/"
+	by mail.kernel.org (Postfix) with ESMTP id 7861520758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589884994;
+	bh=L/14AxOpD03Run3O+IBY+gN9A7FJED5ePKYXqAc56ws=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=PMRxQ9RK7yWAR1gvl2MAZVOW6Knk7QOTUJcUH6h1j4J/TySGP8t6/2q5FMkBohlQ/
+	 UP2GRSUJU4oPI/f4FMyCdVIOIybUuO+l5TrenKE5hNiCvo93zUpGfUswke+WB0BqY0
+	 XIesmYwPRofbbgs8n1F+pr8ixw+z549NSTU7XVl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgESKl4 (ORCPT
+        id S1728647AbgESKnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:41:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgESKlz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:41:55 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECF2DC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:41:54 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id w7so15265483wre.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GXxkCen/zIzWAVYZRGp0Kup7dkI0f7XaE2jW9ck8KnI=;
-        b=JHkOp+M/CjqaKJTgNHhegxOFjABee6pxv/RQmCGH8DsqeIZPYJ3K4FZKqZulAy0HnL
-         UXdYoQlgHmGcqnMOpwSqMmkMRtdJXNhwNaIjk5/eUJkilqDDu0dGrtbG3l4FZpIfCqxD
-         P+jVEn2HnPKwGjZBTr8ffsIG1sP3UcN9yfyI5vSkFkC8SspwYBv45WxrRWZN42OUkYQM
-         28pqdUQv4bT1JiQnHMd0ceYyvUXYeOZUKAC/w0vNnhsr16prafI0vcIxBREhNB7/PuAw
-         wTLrbpFptATBG3z7qz8tTOCsA7ZySrJE8fqrcpeUaF7WntcARbhTbm8tE/de06BIksGj
-         bjKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GXxkCen/zIzWAVYZRGp0Kup7dkI0f7XaE2jW9ck8KnI=;
-        b=ofF67aaUyTMDXE0YnAKeVU7gPXCjsdCzKqLCgtdVzarg/INSLKYe2hVsBu5brtHCNq
-         ETNwCOLra6gcNPehz2Dzb7+WTo9NrnGdU0OteEMPds3zDCauF4oGnNy0Yy7StYxdxJ3/
-         iRr4Vi+9tra3THwcPJhfSrxcFcn7cpBxWjl24E72KlGsBGmOsxpn9lJzL8wn8qa/9Q/L
-         t7XmUO7BVticn5vnG39P1Am/VHVqFAM6grCx7xph5UoGNifMlxwt9Si2k3FbwEst0lui
-         uvAw+oC+tyBBcDkL9WxIvP4sFXuDOavulhRwHJsHO78PRWze/zb4tjFB1nrFVEnR8+bU
-         Hi5A==
-X-Gm-Message-State: AOAM533FKuyljCX/svj6H0IwXYJ7+K7Y1B4sBD5mt+lXFtABvrFmXzIY
-        8hTMpeLXcsblahbg6aqkAONOlA==
-X-Google-Smtp-Source: ABdhPJxI9hHAtjBprvirEkNxdsK9H7V1Yykq/ZJEdnUyCFW3JFUs2vMu+RhotxOD5DsAjFlPFptI7g==
-X-Received: by 2002:a5d:6803:: with SMTP id w3mr25138459wru.151.1589884913554;
-        Tue, 19 May 2020 03:41:53 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id g187sm3368484wmf.30.2020.05.19.03.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 03:41:52 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:41:51 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>, sumit.garg@linaro.org,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kgdb: Avoid suspicious RCU usage warning
-Message-ID: <20200519104151.6evv3hizm5dbjjq2@holly.lan>
-References: <20200507153444.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid>
+        Tue, 19 May 2020 06:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgESKnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 06:43:13 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D16F20674;
+        Tue, 19 May 2020 10:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589884992;
+        bh=L/14AxOpD03Run3O+IBY+gN9A7FJED5ePKYXqAc56ws=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=yu54AhMcabq+AvDj6KUaIZzm3VsU3sxprdYjdyBn4/dTgi6hv+V+fb5zg98nfd0c7
+         S4KRXKLI2BF7HS9+UnY87jbiO+9sb5WkqjNckH6HhvEHhOsL4iBfllNifxeTl4GyFq
+         m9nsqEJDYV8sFa4C82IJh/xWQU8YATQrG1pz8cqM=
+Message-ID: <cc459ce1b7314919eaa506a82b9c28df6f41a169.camel@kernel.org>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>,
+        Gregory Farnum <gfarnum@redhat.com>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 19 May 2020 06:43:10 -0400
+In-Reply-To: <CAOQ4uxjdu7=wXNBHZBQmtNexcG3qfu=XQov9HsRNi=os+QHAUg@mail.gmail.com>
+References: <20200514111453.GA99187@suse.com>
+         <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+         <20200514124845.GA12559@suse.com>
+         <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+         <CAOQ4uxhireZBRvcPQzTS8yOoO4gQt78M0ktZo-9yQ-zcaLZbow@mail.gmail.com>
+         <20200515111548.GA54598@suse.com>
+         <61b1f19edcc349641b5383c2ac70cbf9a15ba4bd.camel@kernel.org>
+         <CAOQ4uxiWZoSj3Pjwskd_hu-ErV9096hLt13CDcW6nEEvcwDNVA@mail.gmail.com>
+         <e227d42fdc91587e34bc64ac252970d39d9b4eee.camel@kernel.org>
+         <CAJ4mKGbahd8CbkEauBHBX6o93jipkCVoYe9O-1rAJQJFZkqDsQ@mail.gmail.com>
+         <CAOQ4uxjdu7=wXNBHZBQmtNexcG3qfu=XQov9HsRNi=os+QHAUg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507153444.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:53:58PM -0700, Douglas Anderson wrote:
-> At times when I'm using kgdb I see a splat on my console about
-> suspicious RCU usage.  I managed to come up with a case that could
-> reproduce this that looked like this:
+On Tue, 2020-05-19 at 07:00 +0300, Amir Goldstein wrote:
+> On Tue, May 19, 2020 at 1:30 AM Gregory Farnum <gfarnum@redhat.com> wrote:
+> > Maybe we resolved this conversation; I can't quite tell...
 > 
->   WARNING: suspicious RCU usage
->   5.7.0-rc4+ #609 Not tainted
->   -----------------------------
->   kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
+> I think v2 patch wraps it up...
 > 
->   other info that might help us debug this:
+> [...]
 > 
->     rcu_scheduler_active = 2, debug_locks = 1
->   3 locks held by swapper/0/1:
->    #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
->    #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
->    #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
-> 
->   stack backtrace:
->   CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
->   Hardware name: Google Cheza (rev3+) (DT)
->   Call trace:
->    dump_backtrace+0x0/0x1b8
->    show_stack+0x1c/0x24
->    dump_stack+0xd4/0x134
->    lockdep_rcu_suspicious+0xf0/0x100
->    find_task_by_pid_ns+0x5c/0x80
->    getthread+0x8c/0xb0
->    gdb_serial_stub+0x9d4/0xd04
->    kgdb_cpu_enter+0x284/0x7ac
->    kgdb_handle_exception+0x174/0x20c
->    kgdb_brk_fn+0x24/0x30
->    call_break_hook+0x6c/0x7c
->    brk_handler+0x20/0x5c
->    do_debug_exception+0x1c8/0x22c
->    el1_sync_handler+0x3c/0xe4
->    el1_sync+0x7c/0x100
->    rpmh_rsc_probe+0x38/0x420
->    platform_drv_probe+0x94/0xb4
->    really_probe+0x134/0x300
->    driver_probe_device+0x68/0x100
->    __device_attach_driver+0x90/0xa8
->    bus_for_each_drv+0x84/0xcc
->    __device_attach+0xb4/0x13c
->    device_initial_probe+0x18/0x20
->    bus_probe_device+0x38/0x98
->    device_add+0x38c/0x420
-> 
-> If I understand properly we should just be able to blanket kgdb under
-> one big RCU read lock and the problem should go away.  We'll add it to
-> the beast-of-a-function known as kgdb_cpu_enter().
-> 
-> With this I no longer get any splats and things seem to work fine.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-In principle this looks OK but I'm curious why we don't cuddle these
-calls up to the local interrupt locking (and also whether we want to
-keep hold of the lock during stepping). If nothing else that would make
-review easier.
+Agreed.
 
-
-Daniel.
-
-
-> ---
+> > > > Questions:
+> > > > 1. Does sync() result in fully purging inodes on MDS?
+> > > 
+> > > I don't think so, but again, that code is not trivial to follow. I do
+> > > know that the MDS keeps around a "strays directory" which contains
+> > > unlinked inodes that are lazily cleaned up. My suspicion is that it's
+> > > satisfying lookups out of this cache as well.
+> > > 
+> > > Which may be fine...the MDS is not required to be POSIX compliant after
+> > > all. Only the fs drivers are.
+> > 
+> > I don't think this is quite that simple. Yes, the MDS is certainly
+> > giving back stray inodes in response to a lookup-by-ino request. But
+> > that's for a specific purpose: we need to be able to give back caps on
+> > unlinked-but-open files. For NFS specifically, I don't know what the
+> > rules are on NFS file handles and unlinked files, but the Ceph MDS
+> > won't know when files are closed everywhere, and it translates from
+> > NFS fh to Ceph inode using that lookup-by-ino functionality.
+> > 
 > 
->  kernel/debug/debug_core.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> There is no protocol rule that NFS server MUST return ESTALE
+> for file handle of a deleted file, but there is a rule that it MAY return
+> ESTALE for deleted file. For example, on server restart and traditional
+> block filesystem, there is not much choice.
 > 
-> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> index 2b7c9b67931d..5155cf06731b 100644
-> --- a/kernel/debug/debug_core.c
-> +++ b/kernel/debug/debug_core.c
-> @@ -564,6 +564,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
->  	int online_cpus = num_online_cpus();
->  	u64 time_left;
->  
-> +	rcu_read_lock();
-> +
->  	kgdb_info[ks->cpu].enter_kgdb++;
->  	kgdb_info[ks->cpu].exception_state |= exception_state;
->  
-> @@ -635,6 +637,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
->  			atomic_dec(&slaves_in_kgdb);
->  			dbg_touch_watchdogs();
->  			local_irq_restore(flags);
-> +			rcu_read_unlock();
->  			return 0;
->  		}
->  		cpu_relax();
-> @@ -773,6 +776,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
->  	dbg_touch_watchdogs();
->  	local_irq_restore(flags);
->  
-> +	rcu_read_unlock();
-> +
->  	return kgdb_info[cpu].ret_state;
->  }
->  
-> -- 
-> 2.26.2.645.ge9eca65c58-goog
+> So returning ESTALE when file is deleted but opened on another ceph
+> client is definitely allowed by the protocol standard, the question is
+> whether changing the behavior will break any existing workloads...
 > 
+
+Right -- that was sort of the point of my original question about the
+xfstest. The fact that ceph wasn't returning ESTALE in this situation
+didn't seem to be technically _wrong_ to me, but the xfstest treated
+that as a failure. It's probably best to return ESTALE since that's the
+conventional behavior, but I don't think it's necessarily required for
+correct operation in general.
+
+FWIW, if we ever implement O_TMPFILE in ceph, then we may need to
+revisit this code. With that, you can do a 0->1 transition on i_nlink,
+which blows some of the assumptions we're making here out of the water.
+
+> > > > 2. Is i_nlink synchronized among nodes on deferred delete?
+> > > > IWO, can inode come back from the dead on client if another node
+> > > > has linked it before i_nlink 0 was observed?
+> > > 
+> > > No, that shouldn't happen. The caps mechanism should ensure that it
+> > > can't be observed by other clients until after the change.
+> > > 
+> > > That said, Luis' current patch doesn't ensure we have the correct caps
+> > > to check the i_nlink. We may need to add that in before we can roll with
+> > > this.
+> > > 
+> > > > 3. Can an NFS client be "migrated" from one ceph node to another
+> > > > with an open but unlinked file?
+> > > > 
+> > > 
+> > > No. Open files in ceph are generally per-client. You can't pass around a
+> > > fd (or equivalent).
+> > 
+> > But the NFS file handles I think do work across clients, right?
+> > 
+> 
+> Maybe they can, but that would be like NFS server restart, so
+> all bets are off w.r.t open but deleted files.
+> 
+
+They do work across clients, but a file handle is just an identifier for
+an inode. That's completely orthogonal to whether the file is open.
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
