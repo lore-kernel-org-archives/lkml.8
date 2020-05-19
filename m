@@ -2,100 +2,109 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF33C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF34EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44D4207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8719F207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tzXB5NPx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L3hadNUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgESPy4 (ORCPT
+        id S1729252AbgESP5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 11:54:56 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36122 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729042AbgESPyz (ORCPT
+        Tue, 19 May 2020 11:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbgESP5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 11:54:55 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JFsrKF015912;
-        Tue, 19 May 2020 10:54:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589903693;
-        bh=nMmZdAMSTdo+Few//kaA04rUL9QSLPu0ZkbEG5G751I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tzXB5NPxVZgdcuErgH2XhDD2tHP34qrqvHv99i/T/4oduUKxwuaoFQbqo37UddyZd
-         mYHqKV9ZhascTvMhQ9sI3ICFdpHIPDYnzmfOktR7aUynXnrvz4bDnhtxFcCaFOu6cg
-         BqLM+EV/CD2AzURGJaJpIOufKfD+SblxKZjc/VvA=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JFsrwd034965;
-        Tue, 19 May 2020 10:54:53 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 10:54:52 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 10:54:52 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JFsp5M083116;
-        Tue, 19 May 2020 10:54:51 -0500
-Subject: Re: [PATCH v2] arm: dts: Move am33xx and am43xx mmc nodes to
- sdhci-omap driver
-To:     Tony Lindgren <tony@atomide.com>, Faiz Abbas <faiz_abbas@ti.com>
-CC:     Keerthy <j-keerthy@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <bcousson@baylibre.com>
-References: <20200512203804.9340-1-faiz_abbas@ti.com>
- <20200513162327.GM37466@atomide.com>
- <94025425-95e2-e53d-cfac-a1e73e6c011a@ti.com>
- <53c815db-dd7d-e6e1-f81a-cf05ef340c71@ti.com>
- <20200519154807.GT37466@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <e37ed4be-aed5-8051-a9fd-c0704d947d75@ti.com>
-Date:   Tue, 19 May 2020 18:54:50 +0300
+        Tue, 19 May 2020 11:57:09 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F8DC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 08:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=tTkkkLXvat2WWEItubKTjQ334RharZTntB+ctrFhAS4=; b=L3hadNUN5fAZvUhSyfc2xxUrJN
+        CpVVr0Wfeb4WYagBAbi5Wld7S4mR1lnbVLZWbyNgXzLCQaAPGAyQW3VNBAXs0meRuxX4H5SEYUHEh
+        z/87RZi+MpzeHMze+uTxoglfzotJh1oLer67FSFQJntHbphsGjVQPj/G5VRgD2GjNHjEJyMMiIscO
+        jjtEy5cJJEcO4UDQLMVS82o5zPJaIsyTWjv2VyMAT+saNxo2ie+iP+/GONxHWqadRr+p79p9+M1ru
+        ajfzqvdqvu3AIdY77YhjQW/5g/W0VzOyuTIPOg2ZWrvbM5yWe/NyKTufL0CQYmOSNzsAbAqGNze+L
+        NKLxJf2w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jb4c5-00063H-1v; Tue, 19 May 2020 15:57:05 +0000
+Subject: Re: Difference in values of addresses in System.map and
+ /proc/kallsyms
+To:     Ajay Garg <ajaygargnsit@gmail.com>, linux-kernel@vger.kernel.org
+References: <CAHP4M8Vj-BmDXQgF-rkLr5fthey7RVaZ-1o87yTUg=9uh4hEOw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <86ca00b0-576d-9cfe-8841-29df8d773f22@infradead.org>
+Date:   Tue, 19 May 2020 08:57:04 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200519154807.GT37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAHP4M8Vj-BmDXQgF-rkLr5fthey7RVaZ-1o87yTUg=9uh4hEOw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Dropping DT from cc)
+Hi--
 
-On 19/05/2020 18:48, Tony Lindgren wrote:
-
->>> Suspend/resume on am43xx-gpevm is broken right now in mainline and the regression looks
->>> like it is caused by the display subsystem. I have reported this to Tomi and
->>> its being investigated.
->>>
->>> Meanwhile I have tested this patch with display configs disabled and Keerthy's
->>> suspend/resume tests pass on both am3 and am4.
+On 6/22/19 8:28 AM, Ajay Garg wrote:
+> Hi All.
 > 
-> OK great thanks for checking it. Do you have the display subsystem
-> related commit that broke PM? I'm wondering if my recent DSS platform
-> data removal changes might have caused the regression.
+> My system is
+> 
+> ajay@latitude-3480:~$ uname -a
+> Linux latitude-3480 4.13.0-38-generic #43~16.04.1-Ubuntu SMP Wed Mar
+> 14 17:48:43 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+> 
+> 
+> When I see the address for a symbol, say linux_banner, in
+> /boot/System.map-4.13.0-38-generic, it shows
+> ffffffff81e00120 R linux_banner
 
-I spent a bit time looking at this, but unfortunately I wasn't even able to resume my AM4 evm from 
-suspend. I tried with rtcwake and with plain console (with no_console_suspend). I did not have DSS 
-loaded.
+That's a static (build-time) address.
 
-Anyone have quick hints on how to debug why resume doesn't seem to happen?
+> 
+> However, when I see it in /proc/kallsyms, it shows
+> ffffffffa7000120 R linux_banner
+> 
 
-  Tomi
+That's where it actually was loaded to at boot time.
+
+> 
+> Also, I note that /proc/kallsyms addresses vary upon reboots, so I am
+> a little confused as to what the entries in /proc/kallsyms really
+> mean.
+
+You forgot to provide the kernel config file.
+
+Possibly it has this config item:
+CONFIG_RANDOMIZE_BASE=y
+
+You can read the help text for that config option in
+arch/x86/Kconfig.
+
+
+> So, will be grateful for some pointers from the experts :)
+> 
+> 
+> Thanks and Regards,
+> Ajay
+
+If this doesn't explain what you are seeing, then
+I don't know.  Maybe someone else can help.
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+~Randy
+
