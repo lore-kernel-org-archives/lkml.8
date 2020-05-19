@@ -2,103 +2,99 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C72FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A11120708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0C4207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:14:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/M4TmMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgESLIg (ORCPT
+        id S1728633AbgESLOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:08:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:59156 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgESLIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:08:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9841F101E;
-        Tue, 19 May 2020 04:08:35 -0700 (PDT)
-Received: from [10.37.8.206] (unknown [10.37.8.206])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B9D13F52E;
-        Tue, 19 May 2020 04:08:33 -0700 (PDT)
-Subject: Re: [PATCH V4 11/17] arm64/cpufeature: Add remaining feature bits in
- ID_AA64PFR1 register
-To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org
-References: <1589881254-10082-1-git-send-email-anshuman.khandual@arm.com>
- <1589881254-10082-12-git-send-email-anshuman.khandual@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <c3e9a322-6830-c23e-cda6-80632c84442f@arm.com>
-Date:   Tue, 19 May 2020 12:13:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <1589881254-10082-12-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 19 May 2020 07:14:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbgESLOy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 07:14:54 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C498AC061A0C;
+        Tue, 19 May 2020 04:14:53 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i15so15383387wrx.10;
+        Tue, 19 May 2020 04:14:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=of2x5lvAuGZZISiXgz474RwZ3LgUvSAn73pq9BHWecA=;
+        b=Q/M4TmMBVodfFqQhaQkwvo8TiGW6wEClscN8kJRFoE88xxzaYjoB+KuWpIzOKcn1OA
+         Repf7QesvlYP49vKo/ZTR1i4cjgT4a9kthfPm/43mY0Vc26C/WYVn7SlvsqxKFzQ2tWC
+         oBTZ2JHr0yUbVPhgmQRzCyyyM3+Vqr0AfSJwvVqs07mVOJN3sTzsYmOQBMWBaHEX0jfZ
+         1ZEh06YzA9iC9hjkU8k16YT1uWBXmWsLgsRy7InL5kUjWmDXzUDEC72m5yxOarondboH
+         HrGBT2AP0bH82SLcjvjQLQ6wwz0iOICNj+YkvSVSZ/OvYqAoRxMwg/boe0sM9teEv9YA
+         gJEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=of2x5lvAuGZZISiXgz474RwZ3LgUvSAn73pq9BHWecA=;
+        b=kHQ0+uNXh/J9yWZ5iMfwjAnC2VfujjteREyzK9ZLkq6y1HliZ6WADlWmOGebO+7LDC
+         TA28xUZbV0ySjemEPebXgX06fFxuxJmyI9n9HSpo1CiML/9tspf45WnhroBMLkQgeAcu
+         wolSoW0MIMJX3da6MNudw85i7kPMQzQM+p526R/a9ORchdkroTeUzePRTWTWjjBnWLU4
+         tNhshn2r2wuekAbF8UtR98eOAkVqiVSzvpT0YFcFxcKJm4UuNUtfLO6laBy3qZKyHQmC
+         KvSF6HsIwkeOFoIKZ3zMOSp6m15qrsnFc9NYiLlN8e7XXUevFPXUuxq48UMNO+BwS5Zz
+         vVFw==
+X-Gm-Message-State: AOAM530oCT+NitlHNMQFkwlP3hHjQQN82ViWh+SsHUCDZg1E3gjXIRXv
+        pLlTh0X0BVcENhnQA5lAbL4=
+X-Google-Smtp-Source: ABdhPJxE6Oeqg3yyLJk9EPIj3I82abb+VGE7ljtS6QE3RtAJ1qmVRcpNZbbmwVH/HoEcmatYQW2A9Q==
+X-Received: by 2002:adf:f1c3:: with SMTP id z3mr26854773wro.201.1589886892590;
+        Tue, 19 May 2020 04:14:52 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v8sm21041368wrs.45.2020.05.19.04.14.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 04:14:51 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: fix pinctrl-names for gpio-leds node on rk3326-odroid-go2
+Date:   Tue, 19 May 2020 13:14:44 +0200
+Message-Id: <20200519111444.2208-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/19/2020 10:40 AM, Anshuman Khandual wrote:
-> Enable the following features bits in ID_AA64PFR1 register as per ARM DDI
-> 0487F.a specification.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->   arch/arm64/include/asm/sysreg.h | 4 ++++
->   arch/arm64/kernel/cpufeature.c  | 2 ++
->   2 files changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index 638f6108860f..fa9d02ca4b25 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -670,7 +670,11 @@
->   #define ID_AA64PFR0_EL0_32BIT_64BIT	0x2
->   
->   /* id_aa64pfr1 */
-> +#define ID_AA64PFR1_MPAMFRAC_SHIFT	16
-> +#define ID_AA64PFR1_RASFRAC_SHIFT	12
-> +#define ID_AA64PFR1_MTE_SHIFT		8
->   #define ID_AA64PFR1_SSBS_SHIFT		4
-> +#define ID_AA64PFR1_BT_SHIFT		0
+The 'pinctrl-names' property should contain a list of names
+to the assigned states. The value 'led_pins' in the gpio-leds
+node on rk3326-odroid-go2 is not a state that is normally used,
+so change it the common name 'default'.
 
-nit: You may remove this BT_SHIFT if you don't use it.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-
->   
->   #define ID_AA64PFR1_SSBS_PSTATE_NI	0
->   #define ID_AA64PFR1_SSBS_PSTATE_ONLY	1
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 39fd6cc64796..d1433f996710 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -238,6 +238,8 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
->   };
->   
->   static const struct arm64_ftr_bits ftr_id_aa64pfr1[] = {
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_MPAMFRAC_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_RASFRAC_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_SSBS_SHIFT, 4, ID_AA64PFR1_SSBS_PSTATE_NI),
->   	ARM64_FTR_END,
->   };
-> 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
+index 46826b6e2..b3a8f9365 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
+@@ -127,7 +127,7 @@
+ 
+ 	leds: gpio-leds {
+ 		compatible = "gpio-leds";
+-		pinctrl-names = "led_pins";
++		pinctrl-names = "default";
+ 		pinctrl-0 = <&blue_led_pin>;
+ 
+ 		blue_led: led-0 {
+-- 
+2.11.0
 
