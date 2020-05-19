@@ -2,104 +2,105 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A83DB207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8978207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="thnsfHkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgESQmo convert rfc822-to-8bit (ORCPT
+        id S1729306AbgESQok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:42:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49296 "EHLO
+        Tue, 19 May 2020 12:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727904AbgESQml (ORCPT
+        with ESMTP id S1729132AbgESQoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:42:41 -0400
-Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A35C08C5C0;
-        Tue, 19 May 2020 09:42:41 -0700 (PDT)
-Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
-        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jb5K6-00009u-KC; Tue, 19 May 2020 18:42:34 +0200
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] lan743x: Added fixed link support
-From:   Roelof Berg <rberg@berg-solutions.de>
-In-Reply-To: <20200518203447.GF624248@lunn.ch>
-Date:   Tue, 19 May 2020 18:42:33 +0200
-Cc:     Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <F241F806-3A08-4086-9739-361538FD246B@berg-solutions.de>
-References: <20200516192402.4201-1-rberg@berg-solutions.de>
- <20200517183710.GC606317@lunn.ch>
- <6E144634-8E2F-48F7-A0A4-6073164F2B70@berg-solutions.de>
- <20200517235026.GD610998@lunn.ch>
- <EB9FB222-D08A-464F-93C0-5885C010D582@berg-solutions.de>
- <20200518203447.GF624248@lunn.ch>
-To:     Andrew Lunn <andrew@lunn.ch>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1589906561;db22fcd6;
-X-HE-SMSGID: 1jb5K6-00009u-KC
+        Tue, 19 May 2020 12:44:39 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D647C08C5C0;
+        Tue, 19 May 2020 09:44:39 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id a2so2939807ejb.10;
+        Tue, 19 May 2020 09:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=x55y7NheOCYCR/iiqhGsYzOg4DTF/y3LF/qDoYECs4o=;
+        b=thnsfHkv0gxvjmBc79oOPNa2XSk/2n5KFV9FZB7tOa33jiWBZ1goEgBCBwUdrwZ3gj
+         OTCkcHhoWCeQ1W2Nh125unX/RglfetrAr5DQQzJrz76pUhOC9BTlo31qcxY+eal1Z18J
+         G+eb/Kbx8lFloEz4tj66j3zowbRjicyuqKcaX8cJzzKOgA2in0yampzsSdGccRslDYuP
+         dTxIpS0YXYZjzpLBHS3iLdoE6X1YzfUIsLswsmaQdVOIOdl5adc78Sqbe53kVmau7Lmu
+         Y0OCL23mG7KsKA9JSvccCLbb484dJ+fBfTRBO65FVFIQxgopISt+qn+kqokAxh66IZPV
+         /hNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=x55y7NheOCYCR/iiqhGsYzOg4DTF/y3LF/qDoYECs4o=;
+        b=rZ1oL1ZpH7+U0ZiBM8hfzAZG975YQRKGogOZaRueid/gLAdgHJIyKeuj3m6Ha7afuz
+         ErZx2vL8YO8ZdMjfSO9zACfJ0OZKGTA3jXyKXijGrr7Ec90wPnmfm7d+09soFFqjlfqv
+         GX8DHEHkbJQEnShOShd0ASraBrDTCWnOZ63BnTn93P3z5y7uvmF9HudxURoGw6EBRA3n
+         lBPr2Bf5U7dCU26+G4UtFSFPeX6KLFcgd32+5KMKcv2XWsXCPGceQwFyyGr79ivxd+hg
+         ZWWBvI+JmRovv4DMfqJwrW3U5ObgKZYzClp4k5GIgnYujQ8i+u8DtRgMC1lwlYNVsRn4
+         +pmQ==
+X-Gm-Message-State: AOAM532k9cad84dORSzQtDRcrHRDI681IeonnkKBULrbUJAdKJnIMdaG
+        MBhBx9xmxinmPLX95GbOEoeplFbL6TI=
+X-Google-Smtp-Source: ABdhPJzyeykMTQLiecg5AXfa/nUcuDFcwIRER9TYnQXDCL+XVixes/FbSGKEiL37/S3TIG69RrvBIw==
+X-Received: by 2002:a17:906:f1cf:: with SMTP id gx15mr60051ejb.471.1589906677896;
+        Tue, 19 May 2020 09:44:37 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id b3sm49627ejq.52.2020.05.19.09.44.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 09:44:37 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, maxime.ripard@free-electrons.com,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpu: arm,mali-utgard: add additional properties
+Date:   Tue, 19 May 2020 18:44:25 +0200
+Message-Id: <20200519164425.9729-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+In the old txt situation we add/describe only properties that are used
+by the driver/hardware itself. With yaml it also filters things in a
+node that are used by other drivers like 'assigned-clocks' and
+'assigned-clock-rates' for some older Rockchip SoCs in 'gpu' nodes,
+so add them to 'arm,mali-utgard.yaml'.
 
-thank you for the example, your input got me further. Sorry if my e-mails made the impression that the MAC is sending MDIO on its own. It can issue MDIO but I assume it will do this only on request of the MCU.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I read the data sheets again and found what might have confused us. There is:
-a) Auto Negotiation (Phy-Phy)
-b) Automatic Speed Detection, ASD (Mac-Phy)
-c) Automatic Duplex Detection, ADD (Mac-Phy)
-
-My current hypothesis is: When Phy-Phy auto negotiation is done, the ASD and ADD of the MAC will implicitly catch up the new mode of the Phy on a low level (clocks, pins). A dumb silicon would need the MCU to re-configure the MAC after MDIO told the MCU about a change in the Phy mode. But this ultra smart silicon would neither need MDIO, nor an MCU to understand what’s going on on the busses :)
-
-If this hypothesis is correct, I should change in the driver all comments that mention „auto negoriation“ to „ADD, ASD“, and future readers will not be confused anymore.
-
-Conclusion:
-- Maybe I can leave ASD and ADD even active in fixed-link scenarios, when in the device tree an empty fixed-link node is present.
-- And I need to disable ASD and/or ADD only if speed and/or duplex is configured inside the fixed-link mode.
-
-I need to verify this hypothesis.
-
-Thank you for reviewing and sharing topics we need to consider,
-Roelof
-
-> Am 18.05.2020 um 22:34 schrieb Andrew Lunn <andrew@lunn.ch>:
-> 
->> I double checked the vendor documentation and according to the data
->> sheet in this device the MAC detects speed and duplex mode. It uses
->> PINs, traces clocks … Also according to an application note of the
->> vendor duplex and speed detection should be enabled in the MAC
->> registers.
-> 
-> In general, the MAC should not perform MDIO requests on the PHY.  The
-> MAC has no access to the mutex which phylib users. So if the MAC
-> directly accesses registers in the PHY, it could do it at the wrong
-> time, when the PHY driver is active.
-> 
-> This can be particularly bad when Marvell PHYs are used. They have
-> paged registers. One example is the page with the temperature sensor.
-> This can be selected due to a read on the hwmon device. If the MAC
-> tried to read the speed/duplex which the temperature sensor is
-> selected, it would wrongly read the temperature sensor registers, not
-> the link state.
-> 
-> There is no need for the MAC to directly access the PHY. It will get
-> told what the result of auto-neg is. So please turn this off all the
-> time.
-> 
-> 	Andrew
-> 
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+index 4869258da..2fc97c544 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+@@ -95,6 +95,12 @@ properties:
+       - const: bus
+       - const: core
+ 
++  assigned-clocks:
++    maxItems: 1
++
++  assigned-clock-rates:
++    maxItems: 1
++
+   memory-region: true
+ 
+   mali-supply: true
+-- 
+2.11.0
 
