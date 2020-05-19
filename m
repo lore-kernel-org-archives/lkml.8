@@ -2,161 +2,117 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55110C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 371C2207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:13:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589908391;
-	bh=/cbKckJRw+86X99IGfbIbbjn7SPYk0nnauF+64dyhTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QFISdcPG9rzqAfFQre/Le6S9Mvrvj/pjbVZyPOpTGA0cl1xphWQKcOBiCxV0enlcZ
-	 6wsGN2DiAta066KRFWaVtrnK+Goewuij46uP8jzrgLfcLKlQ/PieqH5OMgvHC9TXK/
-	 LfILNenussksgStSVfQl1K87EY/vcWdSzxL/130U=
+	by mail.kernel.org (Postfix) with ESMTP id 23B2B20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:16:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eedoNQJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbgESRNK (ORCPT
+        id S1729288AbgESRQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:13:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbgESRNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:13:10 -0400
-Received: from localhost (unknown [122.182.207.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC9E20709;
-        Tue, 19 May 2020 17:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589908389;
-        bh=/cbKckJRw+86X99IGfbIbbjn7SPYk0nnauF+64dyhTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XnuuUgpPkHbs515YoNx2qtoKgkv8I7D7RRJVK+RvBJaQ1XE1UWkWRDAYiJKgiiJ7w
-         aJRYzToHQcwpgip3O/RXYyzA79TkQQBlAjMsVkzhS1+WycPuRBj+eBfLaL9EZd0GGk
-         hq/ElEZ+REU/EupZp5tbp82/qJ3benVGfBlhS83M=
-Date:   Tue, 19 May 2020 22:43:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200519171304.GU374218@vkoul-mobl.Dlink>
-References: <20200511210138.GN185537@smile.fi.intel.com>
- <20200511213531.wnywlljiulvndx6s@mobilestation>
- <20200512090804.GR185537@smile.fi.intel.com>
- <20200512114946.x777yb6bhe22ccn5@mobilestation>
- <20200512123840.GY185537@smile.fi.intel.com>
- <20200515060911.GF333670@vkoul-mobl>
- <20200515105137.GK185537@smile.fi.intel.com>
- <20200515105658.GR333670@vkoul-mobl>
- <20200515111112.4umynrpgzjnca223@mobilestation>
- <20200517174739.uis3wfievdcmtsxj@mobilestation>
+        Tue, 19 May 2020 13:16:00 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50204 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729001AbgESRP7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:15:59 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JHFvlQ117977;
+        Tue, 19 May 2020 12:15:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589908557;
+        bh=u9MuVS5Z4dEpCImA8CLdh3VAMXKG5b1PtenlLbgYx2g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eedoNQJ/IZO+PCGyrR4V9EMeFcv//9WuIGa85xRrnU2sywB5fwYjoanqbE5bJv9Fe
+         5ZkVbdjqr0PV5NCl0+TopWps5TvTyuSEigO338o2blSOnKsEFfQFmSTCmOh/NsyPiv
+         Qg+oPTrZJsRufSQz8Jj/lFqeLByzVAL3HwnmBglM=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JHFv5C028049
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 May 2020 12:15:57 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 12:15:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 12:15:57 -0500
+Received: from [10.250.43.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JHFujx097330;
+        Tue, 19 May 2020 12:15:57 -0500
+Subject: Re: [PATCH v7 3/3] power: supply: bq25150 introduce the bq25150
+To:     "Andrew F. Davis" <afd@ti.com>, Dan Murphy <dmurphy@ti.com>,
+        <sre@kernel.org>
+CC:     <sspatil@android.com>, <linux-pm@vger.kernel.org>,
+        <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200519141916.28282-1-dmurphy@ti.com>
+ <20200519141916.28282-4-dmurphy@ti.com>
+ <50b9ca3f-36e8-d13b-672c-5e72b6158869@ti.com>
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Message-ID: <1eaa381f-0c05-8bcf-ce30-96104ddd9080@ti.com>
+Date:   Tue, 19 May 2020 12:15:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517174739.uis3wfievdcmtsxj@mobilestation>
+In-Reply-To: <50b9ca3f-36e8-d13b-672c-5e72b6158869@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-05-20, 20:47, Serge Semin wrote:
-> On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
-> > On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
-> > > On 15-05-20, 13:51, Andy Shevchenko wrote:
-> > > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
-> > > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
-> > > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
-> > > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
-> > > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
-> > > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
-> > > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
-> > > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
-> > > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
-> > > > 
-> > > > ...
-> > > > 
-> > > > > > I leave it to Rob and Vinod.
-> > > > > > It won't break our case, so, feel free with your approach.
-> > > > > 
-> > > > > I agree the DT is about describing the hardware and looks like value of
-> > > > > 1 is not allowed. If allowed it should be added..
-> > > > 
-> > > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
-> > > > synthesizing the IP.
-> > > 
-> > > Then it should be added ..
-> > 
-> > Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
-> > other" burst length. It's a constant defined at the IP-core synthesis stage and
-> > according to the Data Book, MAX burst length can't be 1. The allowed values are
-> > exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
-> > defines the upper limit of the run-time burst length. So setting it to 1 isn't
-> > about describing a hardware, but using DT for the software convenience.
-> > 
-> > -Sergey
-> 
-> Vinod, to make this completely clear. According to the DW DMAC data book:
-> - In general, run-time parameter of the DMA transaction burst length (set in
->   the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
->   to the set [1, 4, 8, 16, 32, 64, 128, 256].
 
-so 1 is valid value for msize
-
-> - Actual upper limit of the burst length run-time parameter is limited by a
->   constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
->   and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
->   in this set).
-
-maximum can be 4 onwards, but in my configuration I can choose 1 as
-value for msize
-
-> So the run-time burst length in a case of particular DW DMA controller belongs
-> to the range:
-> 1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
-> and
-> 1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
-> 
-> See. No mater which DW DMA controller we get each of them will at least support
-> the burst length of 1 and 4 transfer words. This is determined by design of the
-> DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
-> 
-> In this patch I suggest to add the max-burst-len property, which specifies
-> the upper limit for the run-time burst length. Since the maximum burst length
-> capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
-> register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
-> by the DW DMA IP design), max-burst-len property as being also responsible for
-> the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
-> thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
-> 
-> So 1 shouldn't be in the enum of the max-burst-len property constraint, because
-> hardware doesn't support such limitation by design, while setting 1 as
-> max-burst-len would mean incorrect description of the DMA controller.
-> 
-> Vinod, could you take a look at the info I provided above and say your final word
-> whether 1 should be really allowed to be in the max-burst-len enum constraints?
-> I'll do as you say in the next version of the patchset.
-
-You are specifying the parameter which will be used to pick, i think
-starting with 4 makes sense as we are specifying maximum allowed values
-for msize. Values lesser than or equal to this would be allowed, I guess
-that should be added to documentation.
-
-thanks
--- 
-~Vinod
+On 5/19/20 9:46 AM, Andrew F. Davis wrote:
+> On 5/19/20 10:19 AM, Dan Murphy wrote:
+>> +static int bq2515x_set_ilim_lvl(struct bq2515x_device *bq2515x, int val)
+>> +{
+>> +	int i;
+>> +
+>> +	if (val > BQ2515X_ILIM_MAX || val < BQ2515X_ILIM_MIN)
+>> +		return -EINVAL;
+> Clamp to these limits, not reject. Or better, modify the below loop so
+> it clamps to the highest or lowest value in bq2515x_ilim_lvl_values[],
+> then drop these #defines.
+>
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(bq2515x_ilim_lvl_values); i++) {
+>> +		if (val == bq2515x_ilim_lvl_values[i])
+>> +			break;
+>> +
+>> +		if (val > bq2515x_ilim_lvl_values[i - 1] &&
+> Index out of bounds for the i = 0 case.
+>
+>> +		    val < bq2515x_ilim_lvl_values[i]) {
+>> +			if (val - bq2515x_ilim_lvl_values[i - 1] <
+>> +			    bq2515x_ilim_lvl_values[i] - val) {
+> You are still missing the case where the value is closer to the [i]
+> element, you check that it is between [i-1] and [i], but only chose
+> [i-1] when it is closer to that than [i] but equal and greater case is
+> missing.
+>
+> Given this sets input current limits, would instead always rounding down
+> be the safer option?
+>
+> Andrew
+ACK. I am going to rewrite that altogether.
+>
+>> +				i = i - 1;
+>> +				break;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	return regmap_write(bq2515x->regmap, BQ2515X_ILIMCTRL, i);
+>> +}
