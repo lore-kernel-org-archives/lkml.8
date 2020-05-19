@@ -2,110 +2,202 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05002C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0F9207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:00:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="lFVFyUue"
+	by mail.kernel.org (Postfix) with ESMTP id E23BE2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:02:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589907773;
+	bh=dojKH/YymNvZhhrFdOuFiYo2JQyFdH5ZcVVx9Js1vek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iX6UHOWFLi0rLSHNce+lu5fBbivF1XLf9VnwAjUQcqu3vWxdjLorYTNvrJFEDZZxg
+	 tpfpy1Sm7V38awhO2XOWMC+t5SvKYhbIfl0iv9w9L1lj9Np4NTnK4Pq9X/QCohYwaK
+	 eKbtuNOIGqrNZXduczbgvXKxFOh+C9TaEXqYrn5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbgESRAr (ORCPT
+        id S1729386AbgESRCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:00:47 -0400
-Received: from mout.gmx.net ([212.227.15.19]:55225 "EHLO mout.gmx.net"
+        Tue, 19 May 2020 13:02:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728725AbgESRAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:00:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1589907565;
-        bh=3kGcF2WlvSw8bGxCId+mveFxPfrt8ZeCxWDEYopxkLg=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=lFVFyUueNYbCYsI0ZHKMplHkSj7COiLcPsjC5WeypZ85z5RuwMJoLXrNagwHjaLt/
-         6pHKCXDP5KNdQTjLIFvtOlekjuJR/4y16giJA0ru822y73F9FxLRK6EOsN7DkPw1u/
-         X02r1LjB+YBY5wDyKGFxulFg8y//f4lPhEePY4Dg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1M7b6l-1jgrPk0ZEj-007zZt; Tue, 19
- May 2020 18:59:25 +0200
-Date:   Tue, 19 May 2020 18:59:11 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     "Lev R. Oshvang ." <levonshe@gmail.com>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH] firewire: Remove function callback casts
-Message-ID: <20200519165910.GA3187@ubuntu>
-References: <20200516173934.31527-1-oscar.carter@gmx.com>
- <CAP22eLF2Q3O+=tnHRKE5q=jn9gw2G1rjAKiewM4qGsf4WYvP0Q@mail.gmail.com>
+        id S1729001AbgESRCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:02:52 -0400
+Received: from localhost (unknown [122.182.207.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D029720708;
+        Tue, 19 May 2020 17:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589907771;
+        bh=dojKH/YymNvZhhrFdOuFiYo2JQyFdH5ZcVVx9Js1vek=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xLOn2sSiWHeYkRj0PX0FYJIIMRsM5bS0psa/DzwJ4PWotpGqqYw1ASYHJNuHW8Lik
+         VNAlbnqJeznxA0R6qr9ix9IzxlfOEpKWRPYJzTg2WojYYOfQctJRM+XpZkEXPOfBl7
+         41HhouWeKDjyQsHMedfuXr6E2PNkNZwDow/wFkh0=
+Date:   Tue, 19 May 2020 22:32:46 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200519170246.GS374218@vkoul-mobl.Dlink>
+References: <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+ <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
+ <20200511210714.GO185537@smile.fi.intel.com>
+ <20200511210800.GP185537@smile.fi.intel.com>
+ <20200512124206.l3uv5hg2zimi24dq@mobilestation>
+ <20200515063039.GH333670@vkoul-mobl>
+ <20200517192347.h3hiibsifwfyyr7z@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP22eLF2Q3O+=tnHRKE5q=jn9gw2G1rjAKiewM4qGsf4WYvP0Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:0J0WtcfxzxFR84Tcrgx30v/9Nawjh8IZRpCrftihGrTqQzOKRSG
- PitIITQ6EIR4P7ZxPWADYT+xpl4GjpOv305jmagTza1M8Smuw8See9+u4kx7K1qZ81u10vx
- XaV4hQ6f6gcisxdp+ifA0bu5KH39ciBB/QtgLw7+JCSSpvr3Nv1T4keImRi+O3dI8l3yqtl
- mNS3zOx8oYUGTJUa7u2+A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eD9m8/+8xhQ=:+q/C9d6cPE4qJiSZKCXvO4
- hWf4bTDr2rlIi6H5bRDj/GDab724U/FkITmQ/UloFTuJOV3Mbz4mzbFsQTskz8772li9wi/Hi
- E4sgR45NS5HBJfRIkcA4JYYVU65xsTQ4ugZLWCOi+vPuGC+v3i9acpkWGIBbMFi1HV/4Gva0a
- p0fD221QzTcOpecD/5MjeQPAaxWp9ICimNaGg5UD2XOQYu6O5zAicpI1OSBCbSf7QJ3w5Ap7j
- mT3zTR8ytagSBDuQG/7u80PhUhcv5g2Kizu0gJ+/X2kt9yPgT1F9jpKeAFPs1imn0uHX3Ip/s
- VWgtCNhP8+LSGBGQsPE0pCry5S7p0XWVqAYDDtRT6gMQvQE1QqXbe2QB6YPqLEJSIj0XqM5vV
- gft2LtAVZJ+Pbd5lzlKXHgYA3TZTsNBrHJHy+xvY5+t7jyP19zpKadRyfWCep2yGfuY/dg7Uz
- sgBQ+sL/kEGzNn6iYf5wok67j0xrYmEncwuDspB6H/AYbgw65md4p/Swqh48p0ddm0CaqfN+U
- edtsUZXYXyBZ367B2DLmtJMQQDk6uZeZ8KuPmKpWL6vKFKmJxV8a0VCXUVgfEXfosV5k0yD85
- AMdv2BDbY72OgD6FRARq/qp1+vbzXfndCRh9LieUeZAzgZy1tC+oPjB/B4xuzSpr3Kca5tR+C
- 5IElLwr4XTb/83IW6f2SZWHakY/7AgBjdxS15audEE+mStXOoOmWW2fg39O2L7QoYuC3M46ky
- 8mUEILgywUyiHFFHokEUiGtajfr3JghGqvISBS3raZX15r76DkNBIt63OpuiQL0wJMBAJE4ue
- eyC+TH8S3AfhZLGxjKyDve9XvVm02agPaJU+hEsKMMPtYpikeNx/QRUTm2wxcFzEl45WpxnYO
- N/ZOmCvEu6ui6i8j8I7PPuxDim2r49HUwbnByQOnikctTz8B4p7rJdKEmXfyfUfTxpQKmNkPx
- 1JMM4Xcqu8rQGswIwaCy4AU8PS2YLng32qVg/+SdCycp2q1TLo/XWJ5VRUa0NulIYVpevya2j
- 3k+26flYB4idzhAzjVrXeRlYRpkqzCGbModPIj0Dx9N1I1NAJ69ED+//SazqHz1HtK8DcHGN0
- F9IK+DXYYbJgD40g2uIL0J+BLNbk2LL+j6zCakssiYjbP6eIAJmJaI3cQqwWlKTRHzPSqqP4U
- 8YntOafyXiCt8Sc4llHHjcMNlkaIB1N0JoQkW9Yk/9j1tc2RiXr4rBv17nCleJ6Br9VQm2n8Q
- 0Q6DtG455oyXZtWN4
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200517192347.h3hiibsifwfyyr7z@mobilestation>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 07:43:21PM +0300, Lev R. Oshvang . wrote:
->
-> Hi Oscar,
-> I would recommend to explicitly set NULL to _cb and use if elif to
-> exclude the case where botm _cb paraneters are passed as NULLs :
-> > +
->   ctx->callback.mc =3DNULL:
->   ctx->callback.sc =3D NULL;
-> > +       if (cb_sc)
-> > +               ctx->callback.sc =3D cb_sc;
->
-> > +       elif (cb_ms)
-> > +               ctx->callback.mc =3D cb_mc;
-> > +         else
->                     return -EINVAL;
+On 17-05-20, 22:23, Serge Semin wrote:
+> On Fri, May 15, 2020 at 12:00:39PM +0530, Vinod Koul wrote:
+> > Hi Serge,
+> > 
+> > On 12-05-20, 15:42, Serge Semin wrote:
+> > > Vinod,
+> > > 
+> > > Could you join the discussion for a little bit?
+> > > 
+> > > In order to properly fix the problem discussed in this topic, we need to
+> > > introduce an additional capability exported by DMA channel handlers on per-channel
+> > > basis. It must be a number, which would indicate an upper limitation of the SG list
+> > > entries amount.
+> > > Something like this would do it:
+> > > struct dma_slave_caps {
+> > > ...
+> > > 	unsigned int max_sg_nents;
+> > > ...
+> > 
+> > Looking at the discussion, I agree we should can this up in the
+> > interface. The max_dma_len suggests the length of a descriptor allowed,
+> > it does not convey the sg_nents supported which in the case of nollp is
+> > one.
+> > 
+> > Btw is this is a real hardware issue, I have found that value of such
+> > hardware is very less and people did fix it up in subsequent revs to add
+> > llp support.
+> 
+> Yes, it is. My DW DMAC doesn't support LLP and there isn't going to be new SoC
+> version produced.(
 
-Ok, I will do the changes you suggested and I will resend a new version.
+Ouch
 
-> Hope you get the point.
-> Lev
+> > Also, another question is why this cannot be handled in driver, I agree
+> > your hardware does not support llp but that does not stop you from
+> > breaking a multi_sg list into N hardware descriptors and keep submitting
+> > them (for this to work submission should be done in isr and not in bh,
+> > unfortunately very few driver take that route).
+> 
+> Current DW DMA driver does that, but this isn't enough. The problem is that
+> in order to fix the issue in the DMA hardware driver we need to introduce
+> an inter-dependent channels abstraction and synchronously feed both Tx and
+> Rx DMA channels with hardware descriptors (LLP entries) one-by-one. This hardly
+> needed by any slave device driver rather than SPI, which Tx and Rx buffers are
+> inter-dependent. So Andy's idea was to move the fix to the SPI driver (feed
+> the DMA engine channels with Tx and Rx data buffers synchronously), but DMA
+> engine would provide an info whether such fix is required. This can be
+> determined by the maximum SG entries capability.
 
-Thanks,
-Oscar Carter
+Okay but having the sw limitation removed would also be a good idea, you
+can handle any user, I will leave it upto you, either way is okay
+
+> 
+> (Note max_sg_ents isn't a limitation on the number of SG entries supported by
+> the DMA driver, but the number of SG entries handled by the DMA engine in a
+> single DMA transaction.)
+> 
+> > TBH the max_sg_nents or
+> > max_dma_len are HW restrictions and SW *can* deal with then :-)
+> 
+> Yes, it can, but it only works for the cases when individual DMA channels are
+> utilized. DMA hardware driver doesn't know that the target and source slave
+> device buffers (SPI Tx and Rx FIFOs) are inter-dependent, that writing to one
+> you will implicitly push data to another. So due to the interrupts handling
+> latency Tx DMA channel is restarted faster than Rx DMA channel is reinitialized.
+> This causes the SPI Rx FIFO overflow and data loss.
+> 
+> > 
+> > In an idea world, you should break the sw descriptor submitted into N hw
+> > descriptors and submit to hardware and let user know when the sw
+> > descriptor is completed. Of course we do not do that :(
+> 
+> Well, the current Dw DMA driver does that. But due to the two slave device
+> buffers inter-dependency this isn't enough to perform safe DMA transactions.
+> Due to the interrupts handling latency Tx DMA channel pushes data to the slave
+> device buffer faster than Rx DMA channel starts to handle incoming data. This
+> causes the SPI Rx FIFO overflow.
+> 
+> > 
+> > > };
+> > > As Andy suggested it's value should be interpreted as:
+> > > 0          - unlimited number of entries,
+> > > 1:MAX_UINT - actual limit to the number of entries.
+> > 
+> 
+> > Hmm why 0, why not MAX_UINT for unlimited?
+> 
+> 0 is much better for many reasons. First of all MAX_UINT is a lot, but it's
+> still a number. On x64 platform this might be actual limit if for instance
+> the block-size register is 32-bits wide. Secondly interpreting 0 as unlimited
+> number of entries would be more suitable since most of the drivers support
+> LLP functionality and we wouldn't need to update their code to set MAX_UINT.
+> Thirdly DMA engines, which don't support LLPs would need to set this parameter
+> as 1. So if we do as you say and interpret unlimited number of LLPs as MAX_UINT,
+> then 0 would left unused.
+> 
+> To sum up I also think that using 0 as unlimited number SG entries supported is
+> much better.
+
+ok
+
+> > > In addition to that seeing the dma_get_slave_caps() method provide the caps only
+> > > by getting them from the DMA device descriptor, while we need to have an info on
+> > > per-channel basis, it would be good to introduce a new DMA-device callback like:
+> > > struct dma_device {
+> > > ...
+> > > 	int (*device_caps)(struct dma_chan *chan,
+> > > 			   struct dma_slave_caps *caps);
+> > 
+> 
+> > Do you have a controller where channel caps are on per-channel basis?
+> 
+> Yes, I do. Our DW DMA controller has got the maximum burst length non-uniformly
+> distributed per DMA channels. There are eight channels our controller supports,
+> among which first two channels can burst up to 32 transfer words, but the rest
+> of the channels support bursting up to 4 transfer words.
+> 
+> So having such device_caps() callback to customize the device capabilities on
+> per-DMA-channel basis would be very useful! What do you think?
+
+Okay looks like per-ch basis is the way forward!
+
+-- 
+~Vinod
