@@ -6,96 +6,63 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ACCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29145C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2D252084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B09520825
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgESMdK (ORCPT
+        id S1728887AbgESMdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:33:10 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:53612 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgESMdI (ORCPT
+        Tue, 19 May 2020 08:33:15 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:57550 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728745AbgESMdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:33:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 68FF9803087C;
-        Tue, 19 May 2020 12:33:05 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KO-6LsdpDdS1; Tue, 19 May 2020 15:33:03 +0300 (MSK)
-Date:   Tue, 19 May 2020 15:33:02 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
-Message-ID: <20200519123302.2lydamjy62ugkjb6@mobilestation>
-References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
- <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
- <20200506222300.30895-2-Sergey.Semin@baikalelectronics.ru>
- <20200514191318.GA10192@bogus>
+        Tue, 19 May 2020 08:33:14 -0400
+Received: from 89-64-84-14.dynamic.chello.pl (89.64.84.14) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id a5a690b566f2bc2b; Tue, 19 May 2020 14:33:11 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] ACPI: EC: PM: s2idle: Extend GPE dispatching debug message
+Date:   Tue, 19 May 2020 14:33:10 +0200
+Message-ID: <9095435.I46LYtAkWL@kreacher>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200514191318.GA10192@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 02:13:18PM -0500, Rob Herring wrote:
-> On Thu, May 07, 2020 at 01:22:57AM +0300, Serge Semin wrote:
-> > Baikal-T1 Clocks Control Unit is responsible for transformation of a
-> > signal coming from an external oscillator into clocks of various
-> > frequencies to propagate them then to the corresponding clocks
-> > consumers (either individual IP-blocks or clock domains). In order
-> > to create a set of high-frequency clocks the external signal is
-> > firstly handled by the embedded into CCU PLLs. So the corresponding
-> > dts-node is just a normal clock-provider node with standard set of
-> > properties. Note as being part of the Baikal-T1 System Controller its
-> > DT node is supposed to be a child the system controller node.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: linux-mips@vger.kernel.org
-> > 
-> > ---
-> > 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[nip]
+Add the "ACPI" string to the "EC GPE dispatched" message as it is
+ACPI-related.
 
-> > +examples:
-> > +  # Clock Control Unit PLL node:
-> > +  - |
-> > +    clock-controller-pll {
-> > +      compatible = "baikal,bt1-ccu-pll";
-> > +      #clock-cells = <1>;
-> > +
-> > +      clocks = <&clk25m>;
-> > +      clock-names = "ref_clk";
-> 
-> If there's a register range within the system controller for the pll, 
-> then add 'reg' even if Linux doesn't use it.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/ec.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rob, are you saying that the reg property should be mandatory or optional?
-I've got a similar issue in several other patches you've already took a look.
-In order to fix it there too could you please clarify this to me?
+Index: linux-pm/drivers/acpi/ec.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/ec.c
++++ linux-pm/drivers/acpi/ec.c
+@@ -2020,7 +2020,7 @@ bool acpi_ec_dispatch_gpe(void)
+ 	 */
+ 	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
+ 	if (ret == ACPI_INTERRUPT_HANDLED) {
+-		pm_pr_dbg("EC GPE dispatched\n");
++		pm_pr_dbg("ACPI EC GPE dispatched\n");
+ 
+ 		/* Flush the event and query workqueues. */
+ 		acpi_ec_flush_work();
 
--Sergey
+
+
