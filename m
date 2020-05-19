@@ -2,132 +2,105 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7152C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21179C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C8A20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:52:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jGdRfWOD"
+	by mail.kernel.org (Postfix) with ESMTP id 02165205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgESXwe (ORCPT
+        id S1728100AbgESXzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727833AbgESXwd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:52:33 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391CBC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:52:33 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id i5so1794893qkl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:52:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0w5Q0s8R2YEA3g1NY8XrirtV4Lvn0PXi0qUKfjx3g8I=;
-        b=jGdRfWODW/6EjBqooVOhtZrJh6yxWrpPId4S+vwSV/ouSCf853YEfbk7nnJEzfRP9D
-         OJYu6vayBWJBkcm1NUWfQMVQDwvSpNUvxcwPnoP3QkpUmF+PSC66htu0+V0HiWLXpWaK
-         SvKJ5L7OSkHzBFtpx75tK8HW68Sq6teAhd9XZRxuVrdeFD/0ii9SBeghVb5WBbt3XHyd
-         rcDWFEVu8E8INPSLr9llyaqc1LUnAsDvY3Q4LpNhYv3pp268dxKKuC6CY8gM6ha0k5J9
-         ivrGgCTKUdreVEsLkKgB5lJSim+9dauzI07OE7lBn6/Zc0WW6ErIHjqVtKDqETcOgaqZ
-         gGNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0w5Q0s8R2YEA3g1NY8XrirtV4Lvn0PXi0qUKfjx3g8I=;
-        b=JadR/gcvaefruwVv/UJMqC/vsJSLLa0fJQ9QqPgRjwktQGYRH6eGb2ULSy0IHRBnle
-         g6FEzzdIdEWJUkmQXLn3H7jgWBbUdyWDDSMdTuJjW1UkKEWXOhlvhb+OiKMvGnQZ1H3E
-         7wJtVzAAov/uaAu3D21bDXCX16OckcR/jA1fZ05bi7rWPl0PMFwoPEez4Pw/zX1usczh
-         MCVJSlAJAAEGYRwbwk5vxtBV0noX8EgWyLwIx8Xzrqucoyetw3DoqyH4cDSOW5PNxJry
-         Nl9tn1O8T5TAHJdXhXTm3hZuaa9i05V4H2S+5XP0CZLdsooEIFbt2X6FHRDHpiDkMkVT
-         /A5w==
-X-Gm-Message-State: AOAM533Gr1/O6jtDp/4WxZFZtmDBC9gNM2cya8CoipJLLs5oVXdrhPnt
-        xk2U1pqmTe/k27HpNWbanT+5Yw==
-X-Google-Smtp-Source: ABdhPJxEnvKvWp4JmgpC+vWG3nvTDPBBagW65uaps4SG5a24Zu4zPDQ8CAbK/+1jU8D7XBxg+INztQ==
-X-Received: by 2002:a37:b144:: with SMTP id a65mr2023826qkf.462.1589932352377;
-        Tue, 19 May 2020 16:52:32 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id y23sm1232277qta.37.2020.05.19.16.52.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 16:52:32 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jbC2B-0008Bd-IO; Tue, 19 May 2020 20:52:31 -0300
-Date:   Tue, 19 May 2020 20:52:31 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] RDMA/siw: Replace one-element array and use
- struct_size() helper
-Message-ID: <20200519235231.GA31402@ziepe.ca>
-References: <20200519233018.GA6105@embeddedor>
+        Tue, 19 May 2020 19:55:54 -0400
+Received: from mga03.intel.com ([134.134.136.65]:19135 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726344AbgESXzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 19:55:54 -0400
+IronPort-SDR: IqkjsPHywSBnv+h0Uin5G36hl/4SQkPUnCT+IdvPdzU3pZz9JQO/hISkm0JfG5a4wgXuoOH28j
+ FBtuQ3TiiIhA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 16:55:53 -0700
+IronPort-SDR: GzwlCj39Ga2wPI06fcJuVDU75P9xZVTurG0jfCHE7L2ajcnohXpQ20xc356V8GgQAFW5uOg2oI
+ WxxTaz5D+1tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,411,1583222400"; 
+   d="scan'208";a="466322470"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
+  by fmsmga006.fm.intel.com with ESMTP; 19 May 2020 16:55:50 -0700
+Date:   Wed, 20 May 2020 07:54:33 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     kbuild test robot <lkp@intel.com>, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        kbuild-all@lists.01.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [kbuild-all] Re: [PATCH net-next 2/4] net: phy: dp83869: Set
+ opmode from straps
+Message-ID: <20200519235433.GA32726@intel.com>
+References: <20200519141813.28167-3-dmurphy@ti.com>
+ <202005200117.iOd1QuA3%lkp@intel.com>
+ <ac286fd2-b77f-9103-d9f2-aa95ad792476@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519233018.GA6105@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <ac286fd2-b77f-9103-d9f2-aa95ad792476@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 06:30:18PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of one-element arrays in the following
-> form:
+On Tue, May 19, 2020 at 12:40:37PM -0500, Dan Murphy wrote:
+> kbuild
 > 
-> struct something {
->     int length;
->     u8 data[1];
-> };
+> On 5/19/20 12:19 PM, kbuild test robot wrote:
+> > Hi Dan,
+> > 
+> > I love your patch! Perhaps something to improve:
+> > 
+> > [auto build test WARNING on net-next/master]
+> > [also build test WARNING on robh/for-next sparc-next/master net/master linus/master v5.7-rc6 next-20200518]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> > 
+> > url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/DP83869-Enhancements/20200519-222047
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git 5cdfe8306631b2224e3f81fc5a1e2721c7a1948b
+> > config: sh-allmodconfig (attached as .config)
+> > compiler: sh4-linux-gcc (GCC) 9.3.0
+> > reproduce:
+> >          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >          chmod +x ~/bin/make.cross
+> >          # save the attached .config to linux build tree
+> >          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=sh
+> > 
+> > If you fix the issue, kindly add following tag as appropriate
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > All warnings (new ones prefixed by >>, old ones prefixed by <<):
+> > 
+> > drivers/net/phy/dp83869.c: In function 'dp83869_set_strapped_mode':
+> > > > drivers/net/phy/dp83869.c:171:10: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+> > 171 |  if (val < 0)
 > 
-> struct something *instance;
+> This looks to be a false positive.
 > 
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
-> 
-> but the preferred mechanism to declare variable-length types such as
-> these ones is a flexible array member[1][2], introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on. So, replace
-> the one-element array with a flexible-array member.
-> 
-> Also, make use of the new struct_size() helper to properly calculate the
-> size of struct siw_pbl.
-> 
-> This issue was found with the help of Coccinelle and, audited and fixed
-> _manually_.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/infiniband/sw/siw/siw.h     | 2 +-
->  drivers/infiniband/sw/siw/siw_mem.c | 5 +----
->  2 files changed, 2 insertions(+), 5 deletions(-)
+> phy_read_mmd will return an errno or a value from 0->15
+thanks, here because val is defined as "u16 val", the comparison
+to < 0 can not work as expected. Any err returned from phy_read_mmd,
+which is int, will be converted to u16.
 
-Applied to for-next, thanks
-
-Jason
+> 
+> So if errno is returned then this will be true.
+> 
+> Unless I have to do IS_ERR.
+> 
+> Dan
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
