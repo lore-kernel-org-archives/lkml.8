@@ -2,282 +2,162 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B05CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6591D20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589903302;
-	bh=7sGpmOemTKou1SkDOKuXUD9OFaVHO0iNug1vnMIT5to=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=LfPHE1YQtk1XX4AeZVJbSEWg2IADcBl0tV8+tC7eRfW+LLDwqmSg3qtITmxIREIyv
-	 J8N0GzJB+aCIT7W+ErN0mDrsIkTODHj3oGx6wvOWdbZpOyNS8NVOfrf0uOOGUi0LG6
-	 Y/dy+2TKUvWeCoQ/RdBSd1+u83F8U1h+luMkFUHo=
+	by mail.kernel.org (Postfix) with ESMTP id 2BE8F20809
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:48:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P0+mae6a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgESPsV (ORCPT
+        id S1729306AbgESPsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 11:48:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729007AbgESPsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 11:48:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C5C920709;
-        Tue, 19 May 2020 15:48:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589903299;
-        bh=7sGpmOemTKou1SkDOKuXUD9OFaVHO0iNug1vnMIT5to=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=bn/NLnfD8LOiAz71tCS0RtryozPQl84Nu0NRP0BGsk1fO1GXShtAuOLDKIgFn1vdY
-         tOeY+ce5lZc0xezqWV/1dnupSBYngrB+um0EVwD1wwEhotgZPeP2+GO8QagrhBzB3F
-         ZkV591g7MAtER5EKyCFrBfL6VTpYNZXN58AfrNbM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 649EE3523462; Tue, 19 May 2020 08:48:19 -0700 (PDT)
-Date:   Tue, 19 May 2020 08:48:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v4 1/4] rcu/kasan: record and print call_rcu() call stack
-Message-ID: <20200519154819.GJ2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200519022359.24115-1-walter-zh.wu@mediatek.com>
+        Tue, 19 May 2020 11:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729007AbgESPsq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 11:48:46 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95EEDC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 08:48:46 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p30so589364pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 08:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=npj6nyuWQ54ZRzukHs7PaMjCvPNDE9Mt94DLOgYmdAM=;
+        b=P0+mae6a84cR5xUqIaEO+Q0bl2fCnvLeySFo+ugO3JyjssDIgkmsmpUbWGMOo30eLp
+         4la4jakE5roQ8jjlKA1FzIi2twmGQr7jNmyR4G/fELC21PiyyV8enb6i9lBDEIrIB2rV
+         AVTHOA5HszSMzkwJ81gPBz5iiLnARXbKwKDDs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=npj6nyuWQ54ZRzukHs7PaMjCvPNDE9Mt94DLOgYmdAM=;
+        b=Pcr/rNsvpHsTQxIvTIfOEPTDoJMSBKZXUH4HAgSsAFogdYQuqIbt3dIbEqoBCpic61
+         rycYWzDkR6GAgm/eAxHInpderbTyeN8xwOqbRTJROnTahFqWnirnmZ1x3x3WiluWVgxH
+         9Bh5q2T7Pyer/E4pwL5129gUWg6RlMsnW0BUL50gLGjxZxGzGtm+RoNWT+OaVLgprR4R
+         7LyYlsJ7LMjElZvSeAAMXjgARH690I6g1IRvrRtBJxYcd5/e69Uq5SNp+8SPXzk8FMBR
+         R50gAiNl/y7GO8a64b6oMQ3ZLdz1IOuUopyhDsswwIrucKPiPR1X/Dth9wPIkxEYsG09
+         AcOw==
+X-Gm-Message-State: AOAM532c/oZ+GrT6qE58i7xpMCch7vIagESdrPB89Ek1N1B+G47P2tuK
+        vc4xtUuVrG0IHKCB3iwuomRrkA==
+X-Google-Smtp-Source: ABdhPJz5avKKNTtvKZvm8lzBMm3rjxfvXiD2QxxVE3dZa7xUCBH4RpcsiIOy1AoeYJ/nBEZkwHHoAw==
+X-Received: by 2002:aa7:9aa8:: with SMTP id x8mr11608662pfi.182.1589903326036;
+        Tue, 19 May 2020 08:48:46 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id c2sm9506pjg.51.2020.05.19.08.48.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 08:48:45 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>
+Cc:     linux-next@vger.kernel.org, sumit.garg@linaro.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH] kgdboc: Disable all the early code when kgdboc is a module
+Date:   Tue, 19 May 2020 08:44:02 -0700
+Message-Id: <20200519084345.1.I91670accc8a5ddabab227eb63bb4ad3e2e9d2b58@changeid>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519022359.24115-1-walter-zh.wu@mediatek.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:23:59AM +0800, Walter Wu wrote:
-> This feature will record the last two call_rcu() call stacks and
-> prints up to 2 call_rcu() call stacks in KASAN report.
-> 
-> When call_rcu() is called, we store the call_rcu() call stack into
-> slub alloc meta-data, so that the KASAN report can print rcu stack.
-> 
-> [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
-> [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
-> 
-> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
+When kgdboc is compiled as a module all of the "ekgdboc" and
+"kgdb_earlycon" code isn't useful and, in fact, breaks compilation.
+This is because early_param() isn't defined for modules and that's how
+this code gets configured.
 
-From an RCU perspective:
+It turns out that this was broken by commit eae3e19ca930 ("kgdboc:
+Remove useless #ifdef CONFIG_KGDB_SERIAL_CONSOLE in kgdboc") and then
+made worse by commit 220995622da5 ("kgdboc: Add kgdboc_earlycon to
+support early kgdb using boot consoles").  I guess the #ifdef wasn't
+so useless, even if it wasn't obvious why it was useful.  When kgdboc
+was compiled as a module only "CONFIG_KGDB_SERIAL_CONSOLE_MODULE" was
+defined, not "CONFIG_KGDB_SERIAL_CONSOLE".  That meant that the old
+module.
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+Let's basically do the same thing that the old code (pre-removal of
+the #ifdef) did but use "IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)" to
+make it more obvious what the point of the check is.  We'll fix
+kgdboc_earlycon in a similar way.
 
-> ---
->  include/linux/kasan.h |  2 ++
->  kernel/rcu/tree.c     |  2 ++
->  lib/Kconfig.kasan     |  2 ++
->  mm/kasan/common.c     |  4 ++--
->  mm/kasan/generic.c    | 19 +++++++++++++++++++
->  mm/kasan/kasan.h      | 10 ++++++++++
->  mm/kasan/report.c     | 24 ++++++++++++++++++++++++
->  7 files changed, 61 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index 31314ca7c635..23b7ee00572d 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -174,11 +174,13 @@ static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
->  
->  void kasan_cache_shrink(struct kmem_cache *cache);
->  void kasan_cache_shutdown(struct kmem_cache *cache);
-> +void kasan_record_aux_stack(void *ptr);
->  
->  #else /* CONFIG_KASAN_GENERIC */
->  
->  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
->  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
-> +static inline void kasan_record_aux_stack(void *ptr) {}
->  
->  #endif /* CONFIG_KASAN_GENERIC */
->  
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 06548e2ebb72..36a4ff7f320b 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -57,6 +57,7 @@
->  #include <linux/slab.h>
->  #include <linux/sched/isolation.h>
->  #include <linux/sched/clock.h>
-> +#include <linux/kasan.h>
->  #include "../time/tick-internal.h"
->  
->  #include "tree.h"
-> @@ -2668,6 +2669,7 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
->  	head->func = func;
->  	head->next = NULL;
->  	local_irq_save(flags);
-> +	kasan_record_aux_stack(head);
->  	rdp = this_cpu_ptr(&rcu_data);
->  
->  	/* Add the callback to our list. */
-> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> index 81f5464ea9e1..4e83cf6e3caa 100644
-> --- a/lib/Kconfig.kasan
-> +++ b/lib/Kconfig.kasan
-> @@ -58,6 +58,8 @@ config KASAN_GENERIC
->  	  For better error detection enable CONFIG_STACKTRACE.
->  	  Currently CONFIG_KASAN_GENERIC doesn't work with CONFIG_DEBUG_SLAB
->  	  (the resulting kernel does not boot).
-> +	  In generic mode KASAN prints the last two call_rcu() call stacks in
-> +	  reports.
->  
->  config KASAN_SW_TAGS
->  	bool "Software tag-based mode"
-> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> index 2906358e42f0..8bc618289bb1 100644
-> --- a/mm/kasan/common.c
-> +++ b/mm/kasan/common.c
-> @@ -41,7 +41,7 @@
->  #include "kasan.h"
->  #include "../slab.h"
->  
-> -static inline depot_stack_handle_t save_stack(gfp_t flags)
-> +depot_stack_handle_t kasan_save_stack(gfp_t flags)
->  {
->  	unsigned long entries[KASAN_STACK_DEPTH];
->  	unsigned int nr_entries;
-> @@ -54,7 +54,7 @@ static inline depot_stack_handle_t save_stack(gfp_t flags)
->  static inline void set_track(struct kasan_track *track, gfp_t flags)
->  {
->  	track->pid = current->pid;
-> -	track->stack = save_stack(flags);
-> +	track->stack = kasan_save_stack(flags);
->  }
->  
->  void kasan_enable_current(void)
-> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> index 56ff8885fe2e..3372bdcaf92a 100644
-> --- a/mm/kasan/generic.c
-> +++ b/mm/kasan/generic.c
-> @@ -325,3 +325,22 @@ DEFINE_ASAN_SET_SHADOW(f2);
->  DEFINE_ASAN_SET_SHADOW(f3);
->  DEFINE_ASAN_SET_SHADOW(f5);
->  DEFINE_ASAN_SET_SHADOW(f8);
-> +
-> +void kasan_record_aux_stack(void *addr)
-> +{
-> +	struct page *page = kasan_addr_to_page(addr);
-> +	struct kmem_cache *cache;
-> +	struct kasan_alloc_meta *alloc_info;
-> +	void *object;
-> +
-> +	if (!(page && PageSlab(page)))
-> +		return;
-> +
-> +	cache = page->slab_cache;
-> +	object = nearest_obj(cache, page, addr);
-> +	alloc_info = get_alloc_info(cache, object);
-> +
-> +	/* record the last two call_rcu() call stacks */
-> +	alloc_info->aux_stack[1] = alloc_info->aux_stack[0];
-> +	alloc_info->aux_stack[0] = kasan_save_stack(GFP_NOWAIT);
-> +}
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index e8f37199d885..a7391bc83070 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -104,7 +104,15 @@ struct kasan_track {
->  
->  struct kasan_alloc_meta {
->  	struct kasan_track alloc_track;
-> +#ifdef CONFIG_KASAN_GENERIC
-> +	/*
-> +	 * call_rcu() call stack is stored into struct kasan_alloc_meta.
-> +	 * The free stack is stored into struct kasan_free_meta.
-> +	 */
-> +	depot_stack_handle_t aux_stack[2];
-> +#else
->  	struct kasan_track free_track[KASAN_NR_FREE_STACKS];
-> +#endif
->  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
->  	u8 free_pointer_tag[KASAN_NR_FREE_STACKS];
->  	u8 free_track_idx;
-> @@ -159,6 +167,8 @@ void kasan_report_invalid_free(void *object, unsigned long ip);
->  
->  struct page *kasan_addr_to_page(const void *addr);
->  
-> +depot_stack_handle_t kasan_save_stack(gfp_t flags);
-> +
->  #if defined(CONFIG_KASAN_GENERIC) && \
->  	(defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
->  void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache);
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 80f23c9da6b0..6f8f2bf8f53b 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -179,6 +179,17 @@ static struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
->  	return &alloc_meta->free_track[i];
->  }
->  
-> +#ifdef CONFIG_KASAN_GENERIC
-> +static void print_stack(depot_stack_handle_t stack)
-> +{
-> +	unsigned long *entries;
-> +	unsigned int nr_entries;
-> +
-> +	nr_entries = stack_depot_fetch(stack, &entries);
-> +	stack_trace_print(entries, nr_entries, 0);
-> +}
-> +#endif
-> +
->  static void describe_object(struct kmem_cache *cache, void *object,
->  				const void *addr, u8 tag)
->  {
-> @@ -192,6 +203,19 @@ static void describe_object(struct kmem_cache *cache, void *object,
->  		free_track = kasan_get_free_track(cache, object, tag);
->  		print_track(free_track, "Freed");
->  		pr_err("\n");
-> +
-> +#ifdef CONFIG_KASAN_GENERIC
-> +		if (alloc_info->aux_stack[0]) {
-> +			pr_err("Last one call_rcu() call stack:\n");
-> +			print_stack(alloc_info->aux_stack[0]);
-> +			pr_err("\n");
-> +		}
-> +		if (alloc_info->aux_stack[1]) {
-> +			pr_err("Second to last call_rcu() call stack:\n");
-> +			print_stack(alloc_info->aux_stack[1]);
-> +			pr_err("\n");
-> +		}
-> +#endif
->  	}
->  
->  	describe_object_addr(cache, object, addr);
-> -- 
-> 2.18.0
+Fixes: 220995622da5 ("kgdboc: Add kgdboc_earlycon to support early kgdb using boot consoles")
+Fixes: eae3e19ca930 ("kgdboc: Remove useless #ifdef CONFIG_KGDB_SERIAL_CONSOLE in kgdboc")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/tty/serial/kgdboc.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
+index 34b5e91dd245..fa6f7a3e73b9 100644
+--- a/drivers/tty/serial/kgdboc.c
++++ b/drivers/tty/serial/kgdboc.c
+@@ -43,9 +43,11 @@ static int			kgdb_tty_line;
+ 
+ static struct platform_device *kgdboc_pdev;
+ 
++#if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
+ static struct kgdb_io		kgdboc_earlycon_io_ops;
+ static struct console		*earlycon;
+ static int                      (*earlycon_orig_exit)(struct console *con);
++#endif /* IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
+ 
+ #ifdef CONFIG_KDB_KEYBOARD
+ static int kgdboc_reset_connect(struct input_handler *handler,
+@@ -140,10 +142,19 @@ static void kgdboc_unregister_kbd(void)
+ #define kgdboc_restore_input()
+ #endif /* ! CONFIG_KDB_KEYBOARD */
+ 
+-static void cleanup_kgdboc(void)
++#if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
++static void cleanup_earlycon(void)
+ {
+ 	if (earlycon)
+ 		kgdb_unregister_io_module(&kgdboc_earlycon_io_ops);
++}
++#else /* !IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
++static inline void cleanup_earlycon(void) { }
++#endif /* !IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
++
++static void cleanup_kgdboc(void)
++{
++	cleanup_earlycon();
+ 
+ 	if (configured != 1)
+ 		return;
+@@ -388,6 +399,7 @@ static struct kgdb_io kgdboc_io_ops = {
+ 	.post_exception		= kgdboc_post_exp_handler,
+ };
+ 
++#if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
+ static int kgdboc_option_setup(char *opt)
+ {
+ 	if (!opt) {
+@@ -544,6 +556,7 @@ static int __init kgdboc_earlycon_init(char *opt)
+ }
+ 
+ early_param("kgdboc_earlycon", kgdboc_earlycon_init);
++#endif /* IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
+ 
+ module_init(init_kgdboc);
+ module_exit(exit_kgdboc);
+-- 
+2.26.2.761.g0e0b3e54be-goog
+
