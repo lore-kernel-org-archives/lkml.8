@@ -2,114 +2,122 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F39C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D682207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:40:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e29EOXRL"
+	by mail.kernel.org (Postfix) with ESMTP id 5377D207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589910084;
+	bh=1HVe7siEHmIAN+nG5L3ZVcF6EMIZBK5TG0f315B0Iq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uOnkSbI8Wy5ykKu6tvzX61ONHu6i8z3vNkbkYhyWlL4T9Y8hvCuZm4bS+DNIlmbwQ
+	 CRonz48o7tTez8udOOqwhRerAS0+mGqERNFRiM4wFQqlNEHurZ2nXCNebMGP3MM2VT
+	 xuxk5gBKZjlCJX5fPPc9fm/wyghVryh1HXcFxieM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgESRkt (ORCPT
+        id S1729456AbgESRlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:40:49 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46226 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESRks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:40:48 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JHebBk040254;
-        Tue, 19 May 2020 12:40:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589910037;
-        bh=TFz3N331lFjPUnBQVApIswhjuR7jDttHzDddCiijuRA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=e29EOXRLkWr3i0S/c8DzqUs8y6brl+DgipZMtzMBN0KpGn6DbhLBODSfniXdJpgGz
-         fMAhnQfBTDd3213iwnWGnDIeDHNF2m/SmJWU4SrylCEHd/baJq68Q/eT6l/X4kvR1y
-         hHqtD/oOkGxSxqe7Pt9uq6FiYn13jljO9SrK6MX4=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JHebm5052020;
-        Tue, 19 May 2020 12:40:37 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 12:40:37 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 12:40:37 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JHebNp036178;
-        Tue, 19 May 2020 12:40:37 -0500
-Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
-To:     kbuild test robot <lkp@intel.com>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>
-CC:     <kbuild-all@lists.01.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200519141813.28167-3-dmurphy@ti.com>
- <202005200117.iOd1QuA3%lkp@intel.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <ac286fd2-b77f-9103-d9f2-aa95ad792476@ti.com>
-Date:   Tue, 19 May 2020 12:40:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 13:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbgESRlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:41:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C12F20708;
+        Tue, 19 May 2020 17:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589910082;
+        bh=1HVe7siEHmIAN+nG5L3ZVcF6EMIZBK5TG0f315B0Iq0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mVCbQ6OFVctLAN+lomKmZpJanPOkjMk4E6w2U96PdwT2t+hvbbSQu61lSoW6o5iqS
+         IT6nYSeXUpz0PeD9Nw2GJugY9LVWj4zW0O27gJLF2BLrVfk6t9I1NKEFvHRy/4Nahm
+         uXOzn0H0kD+oo2ulCkusb3HI1XCnmuW6dAkJ6heQ=
+Date:   Tue, 19 May 2020 19:41:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org,
+        wufan@codeaurora.org, pratanan@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
+Message-ID: <20200519174120.GC1158284@kroah.com>
+References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
+ <CAPM=9txXskVu_yD3DNuR0HgSUsE2v1Pv98dm=AHGvv_z2XKTAQ@mail.gmail.com>
+ <93238096-5861-c140-b94f-6137977c3d65@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <202005200117.iOd1QuA3%lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <93238096-5861-c140-b94f-6137977c3d65@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kbuild
+On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
+> On 5/18/2020 11:08 PM, Dave Airlie wrote:
+> > On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+> > > 
+> > > Introduction:
+> > > Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
+> > > SoC ASIC for the purpose of efficently running Deep Learning inference
+> > > workloads in a data center environment.
+> > > 
+> > > The offical press release can be found at -
+> > > https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
+> > > 
+> > > The offical product website is -
+> > > https://www.qualcomm.com/products/datacenter-artificial-intelligence
+> > > 
+> > > At the time of the offical press release, numerious technology news sites
+> > > also covered the product.  Doing a search of your favorite site is likely
+> > > to find their coverage of it.
+> > > 
+> > > It is our goal to have the kernel driver for the product fully upstream.
+> > > The purpose of this RFC is to start that process.  We are still doing
+> > > development (see below), and thus not quite looking to gain acceptance quite
+> > > yet, but now that we have a working driver we beleive we are at the stage
+> > > where meaningful conversation with the community can occur.
+> > 
+> > 
+> > Hi Jeffery,
+> > 
+> > Just wondering what the userspace/testing plans for this driver.
+> > 
+> > This introduces a new user facing API for a device without pointers to
+> > users or tests for that API.
+> 
+> We have daily internal testing, although I don't expect you to take my word
+> for that.
+> 
+> I would like to get one of these devices into the hands of Linaro, so that
+> it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
+> to convince the powers that be to make this happen.
+> 
+> Regarding what the community could do on its own, everything but the Linux
+> driver is considered proprietary - that includes the on device firmware and
+> the entire userspace stack.  This is a decision above my pay grade.
 
-On 5/19/20 12:19 PM, kbuild test robot wrote:
-> Hi Dan,
->
-> I love your patch! Perhaps something to improve:
->
-> [auto build test WARNING on net-next/master]
-> [also build test WARNING on robh/for-next sparc-next/master net/master linus/master v5.7-rc6 next-20200518]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/DP83869-Enhancements/20200519-222047
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git 5cdfe8306631b2224e3f81fc5a1e2721c7a1948b
-> config: sh-allmodconfig (attached as .config)
-> compiler: sh4-linux-gcc (GCC) 9.3.0
-> reproduce:
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=sh
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
->
-> drivers/net/phy/dp83869.c: In function 'dp83869_set_strapped_mode':
->>> drivers/net/phy/dp83869.c:171:10: warning: comparison is always false due to limited range of data type [-Wtype-limits]
-> 171 |  if (val < 0)
+Ok, that's a decision you are going to have to push upward on, as we
+really can't take this without a working, open, userspace.
 
-This looks to be a false positive.
+Especially given the copyright owner of this code, that would be just
+crazy and foolish to not have open userspace code as well.  Firmware
+would also be wonderful as well, go poke your lawyers about derivative
+work issues and the like for fun conversations :)
 
-phy_read_mmd will return an errno or a value from 0->15
+So without that changed, I'm not going to take this, and push to object
+that anyone else take this.
 
-So if errno is returned then this will be true.
+I'm not going to be able to review any of this code anymore until that
+changes, sorry.
 
-Unless I have to do IS_ERR.
+thanks,
 
-Dan
-
+greg k-h
