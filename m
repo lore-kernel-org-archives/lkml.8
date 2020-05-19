@@ -2,151 +2,83 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AC5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3948CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32DED204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589877941;
-	bh=vxc7D6Zk6ZmGktlWR27RKzhjbNWsFvuijN1fpLUdzJw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V2bXfjh9/xfkPRvUiNtZbaqc/h7M9qjdLmcyjBLSfiZKnt9X/B0Nw/6UAQS24bjjZ
-	 uJlE/HZx5PjXbn/9+C/92+mwTtnz7BcLkGirtZisAr72rQ/MfOB4I0YTxTSgeC/BNI
-	 pU/eIxPvXWnF29l49Sv3chSiIha6KYVBw1kZKv+0=
+	by mail.kernel.org (Postfix) with ESMTP id 06398204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:46:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f7hDNXYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgESIpk (ORCPT
+        id S1728390AbgESIqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:45:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35916 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgESIpk (ORCPT
+        Tue, 19 May 2020 04:46:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgESIq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:45:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k13so12815342wrx.3;
-        Tue, 19 May 2020 01:45:38 -0700 (PDT)
+        Tue, 19 May 2020 04:46:29 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B02C05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:46:29 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id z6so1830682ljm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:46:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OIpPfUzeki7t2/xOW8D2TwuLm3eUY3xhyGDnwk5Lnu0=;
+        b=f7hDNXYiQHSskMCyc0/RCEDU8VzLQOtUQCEKK7X4yLljolNXESh06CRtaosmdsJjMg
+         MX89bhm05w2IP6iDp8Zhv8JhB8YKTb2VBgQ26mmkDdbz25KK/PcLzAUkyOWJ4OIiVMbI
+         wazGJoU829h1latSrEwsf8EIeuiqqKJBtRhdrg2UEsd97YZjJX3UhtZXNge0uZUx+SrJ
+         H1PKlbx5h2OO01B3VProIiBId5oEJxzc+/55C+FxnGVPVAG5VcWu1n3AhCmOjazV4uea
+         tnMICKUeCPRVLIQPDFf83zy9+N90igGBK8sZFg0xxlR+yKWVg8FI2bSQHs6P+Dw691Dn
+         lqXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VLlTscmlbpCKZ4nor9NSeLRkKjW9ch72hYbKNbV2XL8=;
-        b=NfXM7akETbG7URg31ox9h9K/LBeQ+CVi20pudJwQP7mXavEN86P21iihMnby12++/N
-         E2nDKFayhnaDUUQW7DT0ymnYMjuQJlHgFGQ1eaLeRgS3dmm2bQSgN+/KUNfHqQy8aWx6
-         XX+SGglZRC2fu+vNYNYQiLi6EyqiVgcr6BszPP71J1qCGT7EUYEeErChicBrVuaMQoCC
-         I11kLWXWQjXLgkKYBJboxJkeEpRyLIoimKTamuvPPWjzPofeLXTVABDfsuu3HNbMt/Fo
-         KKEy7yMKE2aXHRmdP+ivr7SstvnulZaFw94K3JfSTIMFqSvadC9qXHjC4UttCtWgYZe2
-         xzGw==
-X-Gm-Message-State: AOAM531WUQnf1kbpPc7YUUjYzA8dvorXoavmjg+Ulk4xHZmaBQf3XtVp
-        XQcSRXZ3ziv1jHVZe2K6bFw=
-X-Google-Smtp-Source: ABdhPJwX9uniXfChgB/t9L9lwBsmYEKUSMJMO45yp0yCMYOVHIGMwp7lYEjNDLfh+Oj66I63vmhbKw==
-X-Received: by 2002:adf:ed06:: with SMTP id a6mr23890678wro.8.1589877937465;
-        Tue, 19 May 2020 01:45:37 -0700 (PDT)
-Received: from localhost (ip-37-188-176-234.eurotel.cz. [37.188.176.234])
-        by smtp.gmail.com with ESMTPSA id j2sm19737914wrp.47.2020.05.19.01.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 01:45:36 -0700 (PDT)
-Date:   Tue, 19 May 2020 10:45:35 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200519084535.GG32497@dhcp22.suse.cz>
-References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
- <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
- <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
- <20200519075213.GF32497@dhcp22.suse.cz>
- <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OIpPfUzeki7t2/xOW8D2TwuLm3eUY3xhyGDnwk5Lnu0=;
+        b=XkCk3VPK34s3VeiIPWPYhXbomh2qbjPN/y4btJfiiChf4/E7Sj0PX+jhsnW/CP8mjy
+         UBrb+Au61M2ouYVF5iydXwDzAhWbnGeZhAiOYwho/rlqZFAZTm0U03opqP/eFJp+wj7e
+         EPCA1n01NSzM7eAmZSoDpOpUhF4Z5FU6ZcGWUYha8Ggyj8web6ufFhbXGZbKKlbQ7l9Q
+         JAdTg20ir7yxRwTBumGk+pz6FW+D2JFBGBaUFTz0zYlSB68Wk/4NBIByx/XPpmmfpQX0
+         5rT4PDPJXwId3WBWftAGqssUx7rizSaErvb/Jk0WjtXPIIvxx0lwkve5q+qqqcZ1W0OA
+         Afhg==
+X-Gm-Message-State: AOAM530ZBnXLO/azok6kBAgua8kLwuvPQPdXDXhihqStaXcKmx026wKL
+        hmt+HofInHxgzKNyqjTZgosmY5dQaqqNW52/hdaANw==
+X-Google-Smtp-Source: ABdhPJxxg7dkus/MHWS76IxVh06BJP+0gA2DbuK9i0BMpSDLRuZWDES9DGHBKjU9LMmAdUCXSmLUQqB3/XS9Szv1tXs=
+X-Received: by 2002:a2e:b609:: with SMTP id r9mr12750772ljn.125.1589877987494;
+ Tue, 19 May 2020 01:46:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+References: <20200519070240.6510-1-krzk@kernel.org>
+In-Reply-To: <20200519070240.6510-1-krzk@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 19 May 2020 10:46:16 +0200
+Message-ID: <CACRpkdZbD2BAAs7RgGC4sqaj=wgtNe0td1JCCSyb_Ld11qSSWg@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: samsung: Stuff for v5.8
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 19-05-20 10:11:25, Arnd Bergmann wrote:
-> On Tue, May 19, 2020 at 9:52 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Mon 18-05-20 19:40:55, Naresh Kamboju wrote:
-> > > Thanks for looking into this problem.
-> > >
-> > > On Sat, 2 May 2020 at 02:28, Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > >
-> > > > On Fri, 1 May 2020 18:08:28 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > > >
-> > > > > mkfs -t ext4 invoked oom-killer on i386 kernel running on x86_64 device
-> > > > > and started happening on linux -next master branch kernel tag next-20200430
-> > > > > and next-20200501. We did not bisect this problem.
-> > [...]
-> > > Creating journal (131072 blocks): [   31.251333] mkfs.ext4 invoked
-> > > oom-killer: gfp_mask=0x101cc0(GFP_USER|__GFP_WRITE), order=0,
-> > > oom_score_adj=0
-> > [...]
-> > > [   31.500943] DMA free:187396kB min:22528kB low:28160kB high:33792kB
-> > > reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-> > > active_file:4736kB inactive_file:431688kB unevictable:0kB
-> > > writepending:62020kB present:783360kB managed:668264kB mlocked:0kB
-> > > kernel_stack:888kB pagetables:0kB bounce:0kB free_pcp:880kB
-> > > local_pcp:216kB free_cma:163840kB
-> >
-> > This is really unexpected. You are saying this is a regular i386 and DMA
-> > should be bottom 16MB while yours is 780MB and the rest of the low mem
-> > is in the Normal zone which is completely missing here. How have you got
-> > to that configuration? I have to say I haven't seen anything like that
-> > on i386.
-> 
-> I think that line comes from an ARM32 beaglebone-X15 machine showing
-> the same symptom. The i386 line from the log file that Naresh linked to at
-> https://lkft.validation.linaro.org/scheduler/job/1406110#L1223  is less
-> unusual:
+On Tue, May 19, 2020 at 9:02 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-OK, that makes more sense! At least for the memory layout.
- 
-> [   34.931663] Node 0 active_anon:21464kB inactive_anon:8688kB
-> active_file:16604kB inactive_file:849976kB unevictable:0kB
-> isolated(anon):0kB isolated(file):0kB mapped:25284kB dirty:58952kB
-> writeback:27772kB shmem:8944kB writeback_tmp:0kB unstable:0kB
-> all_unreclaimable? yes
-> [   34.955523] DMA free:3356kB min:68kB low:84kB high:100kB
-> reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-> active_file:0kB inactive_file:11964kB unevictable:0kB
-> writepending:11980kB present:15964kB managed:15876kB mlocked:0kB
-> kernel_stack:0kB pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0kB
-> free_cma:0kB
-> [   34.983385] lowmem_reserve[]: 0 825 1947 825
-> [   34.987678] Normal free:3948kB min:7732kB low:8640kB high:9548kB
-> reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-> active_file:1096kB inactive_file:786400kB unevictable:0kB
-> writepending:65432kB present:884728kB managed:845576kB mlocked:0kB
-> kernel_stack:1112kB pagetables:0kB bounce:0kB free_pcp:2908kB
-> local_pcp:500kB free_cma:0kB
+> Minor updates for Samsung pinctrl drivers.
 
-The lowmem is really low (way below the min watermark so even memory
-reserves for high priority and atomic requests are depleted. There is
-still 786MB of inactive page cache to be reclaimed. It doesn't seem to
-be dirty or under the writeback but it still might be pinned by the
-filesystem. I would suggest watching vmscan reclaim tracepoints and
-check why the reclaim fails to reclaim anything.
--- 
-Michal Hocko
-SUSE Labs
+Pulled into my "devel" branch, thanks!
+
+Yours,
+Linus Walleij
