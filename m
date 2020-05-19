@@ -2,108 +2,178 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67512C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C95C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4312A2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5527204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="SUqHQSv6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UC7WaKDD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgESIiM (ORCPT
+        id S1728476AbgESIjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:38:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58292 "EHLO
+        Tue, 19 May 2020 04:39:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgESIiM (ORCPT
+        with ESMTP id S1726333AbgESIjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:38:12 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18237C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:38:11 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id e18so13634824iog.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:38:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jabd/ejZir+aDGBzqGMPlMd6x0TFls4+w9CeMWu63EY=;
-        b=SUqHQSv6GAjdG2b6FWtocyMNWRVlTcdf7POaW1bc+Lk6ciKmy0MFk88a+d8roSURhR
-         Czj46TJprxBtrMAgCT+gn6NftmSeGDu6oaGL0aQMwCrEUJXHRzc8YkFBgcL11MyDMBXW
-         CMXTWojXrQodz+8wn5k5OktAssHTpD1i12niYv0LC6X4JYduCoAnRf2l83YugXzWf73f
-         6An19MZU6exGDMtyIsmUCNVHJMzHqm2p0RrVr84os8yZ7Iwng4H3PPggKgaG/fYBldak
-         /ShPvBWNOqzxgQqT/TJK0PiP8yJRwWNcK8X0f4V+A/6bWo+oPQcQWKol6pSHdKkCn1jb
-         QlSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jabd/ejZir+aDGBzqGMPlMd6x0TFls4+w9CeMWu63EY=;
-        b=MWO3jMXLZ6HSD16JdOYWN8FGexmSZg4mFjUV4+9wexSO2t0sLssd4sHq/ZIDzhJXw0
-         au0E05z2yWiKizo5Rgsd76bzY4/lPG229ItmRujKZ3EPqC821ZKx6IF4tMWMPkZZFlAJ
-         3VV3x7SgkivieMqv8oL79UDhbprgfzdOdUivX2B2mr2OKY857ToUvZvNzF2LJp2P6IPS
-         WE49tEPuVM1OghsPUfZqhcTwNQldrEUZnrWU8P1e4/TMY9Pub3tgW7t9q/Gqxdokby0k
-         jMOIpzF1Z6gUXMq/uWGGyr2Ar/qV9M/by1nGGDt4eX57lmAWKa37SGI021U63GbBPiOl
-         QRiw==
-X-Gm-Message-State: AOAM532o8S8kP5u6XCIz0omkC59yjCiIwBFSa5K/A3wfOnOPk2seccTF
-        uwZqBtdsODVdsZD1PxJkRJQ4dBnfT8bGmB5MLNDAFQ==
-X-Google-Smtp-Source: ABdhPJyzLSHUR5QX36fqmt2VGwYHOHJCvRjK3pmqZLG5dxy9zLw3DI9Ni+SU8petoBgfV0Dxk3kUN3l/Y+slF3Uy6kA=
-X-Received: by 2002:a6b:902:: with SMTP id t2mr18230256ioi.153.1589877490392;
- Tue, 19 May 2020 01:38:10 -0700 (PDT)
+        Tue, 19 May 2020 04:39:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7A9C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pFkikJXoNytc03Bw/n9lcc4TGxhSfdZavl/JejOAmLk=; b=UC7WaKDDjEIr7TIYnFWbPUQWgo
+        aa/zGvqRFxdWMd7zrh07rAL3bykA9IgujuC+xi6pN5uVdxw625DDlQPT75fwVNFC2mQ49uiyzGLXz
+        MFaJ1Z427lIhiHI11v37AbYnjk9ca0Z4j3lJMtQIWjf6SJV50syqRvZWTq42IQ5+qa31iS/EgudUX
+        mrpJVQ5XA7lngySwuWiwqJkj1d6Wod7hc9mQ6wQXiF1rMlbB+MZK2yIxYLB0FG2F5kRaffSkervxY
+        T8xXwQsUYgCDkko5au/0XTksLDnBNrGUToyUT0r9Q+n0pAQR0xawXQPLHFIY87FO0whrmiruaNJu+
+        BRBDZ2QQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaxle-0000vZ-Ah; Tue, 19 May 2020 08:38:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 28EF73008A8;
+        Tue, 19 May 2020 10:38:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BF2F82105F3AF; Tue, 19 May 2020 10:38:26 +0200 (CEST)
+Date:   Tue, 19 May 2020 10:38:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>
+Subject: Re: [patch V6 00/37] x86/entry: Rework leftovers and merge plan
+Message-ID: <20200519083826.GC279861@hirez.programming.kicks-ass.net>
+References: <20200518160750.GA279861@hirez.programming.kicks-ass.net>
+ <87367xvvmy.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <CABV8kRz0mKSc=u1LeonQSLroKJLOKWOWktCoGji2nvEBc=e7=w@mail.gmail.com>
- <20200519081551.GA9980@willie-the-truck>
-In-Reply-To: <20200519081551.GA9980@willie-the-truck>
-From:   Keno Fischer <keno@juliacomputing.com>
-Date:   Tue, 19 May 2020 04:37:34 -0400
-Message-ID: <CABV8kRzYzBrdzC1_opmmdpW63N2htfOsAUZ+RjiSDsy=SJW6Yg@mail.gmail.com>
-Subject: Re: arm64: Register modification during syscall entry/exit stop
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kyle Huey <khuey@pernos.co>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87367xvvmy.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On Mon, May 18, 2020 at 10:24:53PM +0200, Thomas Gleixner wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
+> > So on top of you entry-v8-full; I had to chase one of those
+> > instrumentation_end() escapes an (extended) basic block chase (again!).
+> >
+> > --- a/arch/x86/include/asm/bug.h
+> > +++ b/arch/x86/include/asm/bug.h
+> > @@ -79,8 +79,8 @@ do {								\
+> >  do {								\
+> >  	instrumentation_begin();				\
+> >  	_BUG_FLAGS(ASM_UD2, BUGFLAG_WARNING|(flags));		\
+> > -	instrumentation_end();					\
+> >  	annotate_reachable();					\
+> > +	instrumentation_end();					\
+> >  } while (0)
+> 
+> I just applied this part and rebuilt:
+> 
+>  vmlinux.o: warning: objtool: rcu_eqs_enter.constprop.77()+0xa9: call to
+>  rcu_preempt_deferred_qs() leaves .noinstr.text section
+> 
+> Did it go away after you disabled DEBUG_ENTRY perhaps?
 
-> Yes, we inherited this from ARM and I think strace relies on it. In
-> hindsight, it is a little odd, although x7 is a parameter register in the
-> PCS and so it won't be live on entry to a system call.
+Hehe, then all complaints would be gone :-)
 
-I'm not familiar with the PCS acronym, but I assume you mean the
-calling convention? You have more faith in userspace than I do ;). For
-example, cursory googling brought up this arm64 syscall definition in musl:
+So tglx/entry-v8-full + below patch:
 
-https://github.com/bminor/musl/blob/593caa456309714402ca4cb77c3770f4c24da9da/arch/aarch64/syscall_arch.h
+$ make O=defconfig-build clean
+...
+$ make CC=gcc-9 O=defconfig-build/ vmlinux -j40 -s
+vmlinux.o: warning: objtool: exc_debug()+0x158: call to trace_hwlat_timestamp() leaves .noinstr.text section
+vmlinux.o: warning: objtool: exc_nmi()+0x190: call to trace_hwlat_timestamp() leaves .noinstr.text section
+vmlinux.o: warning: objtool: do_machine_check()+0x46: call to mce_rdmsrl() leaves .noinstr.text section
+$
 
-The constraints on those asm blocks allow the compiler to assume that
-x7 is preserved across the syscall. If a ptracer accidentally modified it
-(which is easy to do in the situations that I mentioned), it could
-absolutely cause incorrect execution of the userspace program.
+(it really isn't defconfig, but your config-fail + DEBUG_ENTRY)
 
-> Although the examples you've
-> listed above are interesting, I don't see why x7 is important in any of
-> them (and we only support up to 6 system call arguments).
+---
+ arch/x86/include/asm/bug.h |  2 +-
+ include/linux/compiler.h   | 11 ++++++++---
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-It's not so much that x7 is important, it's that lying to the ptracer is
-problematic, because it might remember that lie and act on it later.
-I did run into exactly this problem, where my ptracer accidentally
-changed the value of x7 and caused incorrect execution in the tracee
-(now that incorrect execution happened to be an assertion, because
-my application is paranoid about these kinds of issues, but it was
-incorrect nevertheless)
-
-If it would be helpful, I can code up the syscall entry -> signal trap example
-ptracer to have a concrete example.
-
-Keno
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index f128e5c2ed42..fb34ff641e0a 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -79,8 +79,8 @@ do {								\
+ do {								\
+ 	instrumentation_begin();				\
+ 	_BUG_FLAGS(ASM_UD2, BUGFLAG_WARNING|(flags));		\
+-	instrumentation_end();					\
+ 	annotate_reachable();					\
++	instrumentation_end();					\
+ } while (0)
+ 
+ #include <asm-generic/bug.h>
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 7db5902f8f6e..f6f54e8e0797 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -120,25 +120,30 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ /* Annotate a C jump table to allow objtool to follow the code flow */
+ #define __annotate_jump_table __section(.rodata..c_jump_table)
+ 
++#ifdef CONFIG_DEBUG_ENTRY
+ /* Begin/end of an instrumentation safe region */
+-#define instrumentation_begin() ({						\
++#define instrumentation_begin() ({					\
+ 	asm volatile("%c0:\n\t"						\
+ 		     ".pushsection .discard.instr_begin\n\t"		\
+ 		     ".long %c0b - .\n\t"				\
+ 		     ".popsection\n\t" : : "i" (__COUNTER__));		\
+ })
+ 
+-#define instrumentation_end() ({							\
+-	asm volatile("%c0:\n\t"						\
++#define instrumentation_end() ({					\
++	asm volatile("%c0: nop\n\t"					\
+ 		     ".pushsection .discard.instr_end\n\t"		\
+ 		     ".long %c0b - .\n\t"				\
+ 		     ".popsection\n\t" : : "i" (__COUNTER__));		\
+ })
++#endif /* CONFIG_DEBUG_ENTRY */
+ 
+ #else
+ #define annotate_reachable()
+ #define annotate_unreachable()
+ #define __annotate_jump_table
++#endif
++
++#ifndef instrumentation_begin
+ #define instrumentation_begin()		do { } while(0)
+ #define instrumentation_end()		do { } while(0)
+ #endif
