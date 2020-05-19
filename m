@@ -2,68 +2,102 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDAEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5850C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5353020823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF662081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNDVxX4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgESMTD (ORCPT
+        id S1728855AbgESMTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
+        Tue, 19 May 2020 08:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgESMTD (ORCPT
+        with ESMTP id S1726880AbgESMTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:19:03 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A61C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 05:19:02 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A4833386; Tue, 19 May 2020 14:19:01 +0200 (CEST)
-Date:   Tue, 19 May 2020 14:19:00 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
-        anan.sun@mediatek.com
-Subject: Re: [PATCH] iommu/mediatek-v1: Fix a build warning for a unused
- variable 'data'
-Message-ID: <20200519121900.GI18353@8bytes.org>
-References: <1589875064-662-1-git-send-email-yong.wu@mediatek.com>
+        Tue, 19 May 2020 08:19:08 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74753C08C5C0;
+        Tue, 19 May 2020 05:19:07 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u1so2049593wmn.3;
+        Tue, 19 May 2020 05:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=p60TB+Tyypr34A8h+yZQiNDu/fhAf7U+hPUWshuyPPQ=;
+        b=fNDVxX4v/9yZjo6Ka/JZWCNnCthl0wRZ7qHbp9YiiWJnDSCwAOJZrvnfS2IBFci2iT
+         GxDcpsIq4HJ26zb2iLdrWraDMFawnKOHbxfRGif5vGQtBb95kjErhuREsyAvTHO8xXw+
+         0IlbCky1b86HJu+2SMmZNwPpQGd3YCCKsqPlXZW7vt2XbFOMkdGhn2UL9FlN8cGUvdYj
+         RHSdcxZYOqZoKHJF4CjKWwMcUMYyuSV3pE0Bx793YSlWsSRMm0zn0B2O+7DIv1ZcQtMB
+         K39A2AS5//Yv8xUYflkIsmUnlswZeMit//r6ivmRZIBVy8fmvcB2kyHQnZP2wNIFPY+F
+         LvRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=p60TB+Tyypr34A8h+yZQiNDu/fhAf7U+hPUWshuyPPQ=;
+        b=GaCPasPewJ2suW/onCLQS7ea9n57h2eI1i8yJGQa7LX7mFzoNBkcMOnvXpkwHf5/C8
+         fg+PHMPoCdWp31I7M/PA6nwpAv1fDvQWgRjXz3IzoQYvXLTk+RU8RpeC0YO8DvHn8v+b
+         Jz0ypdo0Id8dsdlPoDyjxhf0MsYE9Ioswivw2qq7f20b6XIr9dDYopqdM/l3HGSTgPNS
+         9lYoVMJbKFRth5l09iCVbM1wMOLGU+8hBoN4mo7omX239MtLm4a2pV8buICdgNYerdn7
+         Ee+z7lORQK5pMvbB4/rIVmjGPeWi921uoQjdobDK0WTVmfq/424o+mR2pTgxhxRAS/Pq
+         uV6w==
+X-Gm-Message-State: AOAM530VSbvJPKdBh1WK91HjgMR0jW3YuFQPrl9SCOx0RjPorTscuXKB
+        PJfk8Jn+8CrpF2qKRLSwbtw=
+X-Google-Smtp-Source: ABdhPJxF9SfebJ0+Qelp9N3dfeat3xZSDZwELOBS8RqyzDKPS9DM4f79WmvUaB+iKCUi2iTKDF69fw==
+X-Received: by 2002:a1c:4088:: with SMTP id n130mr4994461wma.43.1589890746219;
+        Tue, 19 May 2020 05:19:06 -0700 (PDT)
+Received: from dell5510 ([62.201.25.198])
+        by smtp.gmail.com with ESMTPSA id d9sm3763163wmd.10.2020.05.19.05.19.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 05:19:05 -0700 (PDT)
+Date:   Tue, 19 May 2020 14:19:03 +0200
+From:   Petr Vorel <petr.vorel@gmail.com>
+To:     Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        linux-snps-arc@lists.infradead.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v2] Kernel selftests: Add check if tpm devices are
+ supported
+Message-ID: <20200519121903.GB26265@dell5510>
+Reply-To: Petr Vorel <petr.vorel@gmail.com>
+References: <20200519120743.41358-1-Nikita.Sobolev@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589875064-662-1-git-send-email-yong.wu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200519120743.41358-1-Nikita.Sobolev@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 03:57:44PM +0800, Yong Wu wrote:
-> This patch fixes a build warning:
-> drivers/iommu/mtk_iommu_v1.c: In function 'mtk_iommu_release_device':
-> >> drivers/iommu/mtk_iommu_v1.c:467:25: warning: variable 'data' set but
-> >> not used [-Wunused-but-set-variable]
-> 467 |  struct mtk_iommu_data *data;
-> |                         ^~~~
-> 
-> It's reported at:
-> https://lore.kernel.org/linux-iommu/202005191458.gY38V8bU%25lkp@intel.com/T/#u
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
->  drivers/iommu/mtk_iommu_v1.c | 2 --
->  1 file changed, 2 deletions(-)
+> tpm2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
+> are available. In case, when these devices are not available test
+> fails, but expected behaviour is skipped test.
 
-Applied, thanks.
+> Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+OK, I see it was also reverted by Jarkko
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200518&id=aaa2d92efe1f972567f1691b423ab8dc606ab3a9
+
+I wonder if only wrong shell syntax (self.flags = flags) is a problem.
+
+Kind regards,
+Petr
