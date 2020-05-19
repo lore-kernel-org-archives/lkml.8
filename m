@@ -2,135 +2,85 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D061AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D080E2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaOTiOYG"
+	by mail.kernel.org (Postfix) with ESMTP id A481C2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgESUTR (ORCPT
+        id S1727772AbgESUT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:19:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55310 "EHLO
+        Tue, 19 May 2020 16:19:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgESUTQ (ORCPT
+        with ESMTP id S1726203AbgESUTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:19:16 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE20C08C5C0;
-        Tue, 19 May 2020 13:19:16 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id l6so904670oic.9;
-        Tue, 19 May 2020 13:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k9wGkUcX8mpQpH0xT7svm0mysTXkndwHirc7LDkmIVs=;
-        b=eaOTiOYGy7RGzDrE84ODOO4mkvp8w+Ti3n5zOCs2MzLSxzwRD0Mnt4wQ97IkJRivtX
-         zWbO7w8mEpIm0zoGTWMU7LLb515tER+6WW9JJIiGtPO079HzCh8fEgS12Igy/N/5eD8O
-         q1jMT5GGO6KS/gr3PifQQywcPiulG5aykfKC3KMge+rjXJtkbQsKkxCOyYieA3KiSprb
-         BkyqbX1rTF1rysO8HS6x14Ok1R5aRfFJr/sHFfYKVvEW7mn/j3D1Bb9tWwMpiWBEcqWp
-         XNdostXg+QFFN+cykYdZfnvmKR0DXLvMFUb7S51d36qvYUHbPufYd18ejnn0a2RIm2di
-         41rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k9wGkUcX8mpQpH0xT7svm0mysTXkndwHirc7LDkmIVs=;
-        b=sPZCpz/HJ49Tic1lgiAe163lL9roLMOYFjOBhv6ihuMjJzrHD/ee1vCxTQt0l7imPv
-         29l2Fg8v6e6d7FousatyAI+m3rjg7BbnEQD4xnScTcNpirNTRno2kVizCJT6R00Fc0zP
-         //CiR9f5MaRVtuqtZHo4ZMZ4KdejR37MuSVmblmd2HbNgpj01cNfK115JpJiomANaH/O
-         N5ffMraF855MnVg4FYIZb+vqM5Gonzxt5NdW8FgwUxH5JRMHkE8CZR6aBuF+dAhrghnb
-         GlmsSktitwTKdNb5Huqo6gyiuDYQC3ct29HaKj39Lrk5cwteJy3goz7CaO/hBZfe6Hnm
-         fS2w==
-X-Gm-Message-State: AOAM531QlPMAN6pCkZ6OffOBvBZpH2GG2h2GuBe/hUEOa+gGYqeeHP0e
-        UyfD35EvjlnJWzuo7sdzRzJuHOZm6OXP3EueXHc=
-X-Google-Smtp-Source: ABdhPJwpptg0g/2Fuqr75TcXz0TmtAi6ivq8xFaPLg5vusReOtbpkYwZQMxwK3sgeD/rniBZQ0FaeWVLtK50KUScI5w=
-X-Received: by 2002:a05:6808:a1b:: with SMTP id n27mr825430oij.171.1589919555708;
- Tue, 19 May 2020 13:19:15 -0700 (PDT)
+        Tue, 19 May 2020 16:19:25 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76FBDC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:19:25 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jb8hv-00012c-0o; Tue, 19 May 2020 22:19:23 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 0/8] Introduce local_lock()
+Date:   Tue, 19 May 2020 22:19:04 +0200
+Message-Id: <20200519201912.1564477-1-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200506060025.1535960-1-vkoul@kernel.org> <20200506060025.1535960-3-vkoul@kernel.org>
- <20200519114528.GC1298122@kuha.fi.intel.com>
-In-Reply-To: <20200519114528.GC1298122@kuha.fi.intel.com>
-From:   Christian Lamparter <chunkeey@gmail.com>
-Date:   Tue, 19 May 2020 22:19:03 +0200
-Message-ID: <CAAd0S9AEOsOLrnry4xNRVOi5fXwm3KXYzQsUMCm9tVxHr2sr1w@mail.gmail.com>
-Subject: Re: [PATCH v13 2/5] usb: renesas-xhci: Add the renesas xhci driver
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        =?UTF-8?Q?Andreas_B=C3=B6hler?= <dev@aboehler.at>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+preempt_disable() and local_irq_disable/save() are in principle per CPU big
+kernel locks. This has several downsides:
 
-On Tue, May 19, 2020 at 1:45 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
-> On Wed, May 06, 2020 at 11:30:22AM +0530, Vinod Koul wrote:
-> > From: Christian Lamparter <chunkeey@googlemail.com>
-> >
-> > This add a new driver for renesas xhci which is basically a firmware
-> > loader for uPD720201 and uPD720202 w/o ROM. The xhci-pci driver will
-> > invoke this driver for loading/unloading on relevant devices.
-> >
-> > This patch adds a firmware loader for the uPD720201K8-711-BAC-A
-> > and uPD720202K8-711-BAA-A variant. Both of these chips are listed
-> > in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
-> > devices which need the firmware loader on page 2 in order to
-> > work as they "do not support the External ROM".
-> >
-> > The "Firmware Download Sequence" is describe in chapter
-> > "7.1 FW Download Interface" R19UH0078EJ0500 Rev.5.00 page 131.
-> >
-> > The firmware "K2013080.mem" is available from a USB3.0 Host to
-> > PCIe Adapter (PP2U-E card) "Firmware download" archive. An
-> > alternative version can be sourced from Netgear's WNDR4700 GPL
-> > archives.
-> >
-> > The release notes of the PP2U-E's "Firmware Download" ver 2.0.1.3
-> > (2012-06-15) state that the firmware is for the following devices:
-> >  - uPD720201 ES 2.0 sample whose revision ID is 2.
-> >  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
-> >  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
->
-> You wouldn't happen to have access to the documentation of the
-> "original" uPD720200 USB 3.0 controller?
->
-> It would be cool if we could support that too with this driver.
+  - The protection scope is unknown
 
-???. I have one of those "original" uPD720200(A) working "just fine"
-in my Laptop currently.
-It's an really old HP dv6-6003eg from around 2011 that came with two
-USB 3.0 Ports, which
-are driven by a "NEC Corporation uPD720200 USB 3.0 Host Controller"
-1033:0194 (Rev 04).
+  - Violation of protection rules is hard to detect by instrumentation
 
-As for supporting the uPD720200 (flasher) with this serises.... There
-are some bad news:
+  - For PREEMPT_RT such sections, unless in low level critical code, can
+    violate the preemptability constraints.
 
-"In addition, the programming interface for the uPD720200 and uPD720200A
-is different from the uPD720202, needs different programming tools, and relies
-on proprietary chip features that cannot be disclosed outside of Renesas."
-<https://mail.coreboot.org/pipermail/flashrom/2013-February/010498.html> :-(
+To address this PREEMPT_RT introduced the concept of local_locks which are
+strictly per CPU.
 
-Regards,
-Christian
+The lock operations map to preempt_disable(), local_irq_disable/save() and
+the enabling counterparts on non RT enabled kernels.
+
+If lockdep is enabled local locks gain a lock map which tracks the usage
+context. This will catch cases where an area is protected by
+preempt_disable() but the access also happens from interrupt context. local
+locks have identified quite a few such issues over the years, the most
+recent example is:
+
+  b7d5dc21072cd ("random: add a spinlock_t to struct batched_entropy")
+
+Aside of the lockdep coverage this also improves code readability as it
+precisely annotates the protection scope.
+
+PREEMPT_RT substitutes these local locks with 'sleeping' spinlocks to
+protect such sections while maintaining preemtability and CPU locality.
+
+The following series introduces the infrastructure including
+documentation and provides a couple of examples how they are used to
+adjust code to be RT ready.
+
+Sebastian
+
+
