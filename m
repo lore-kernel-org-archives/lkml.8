@@ -2,127 +2,93 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A89C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B62C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8F67207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA4A207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:40:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6lJ1Nef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgESSke (ORCPT
+        id S1727832AbgESSkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:40:34 -0400
-Received: from mga06.intel.com ([134.134.136.31]:60774 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgESSkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:40:33 -0400
-IronPort-SDR: g/GadjegmeKhOlxFuR/BwCDwudzmgy65x9FvY96sLGuS+6iOVyu/hnvgyJt9Sx0JeJbex9DqUj
- L5g5+NnhDCgA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 11:40:33 -0700
-IronPort-SDR: D+jm1xpsdiPApGucH8RonxhW2osAHv0gYp6yWvUx7peRxHsoQ0vFEHwV7Czh/gp76Png2rfKJj
- 4SSgNhc/QOEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="264403264"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga003.jf.intel.com with ESMTP; 19 May 2020 11:40:32 -0700
-Date:   Tue, 19 May 2020 11:40:32 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
- pagefault/preempt twice
-Message-ID: <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
-References: <20200507150004.1423069-8-ira.weiny@intel.com>
- <20200518184843.3029640-1-ira.weiny@intel.com>
- <20200519165422.GA5838@roeck-us.net>
+        Tue, 19 May 2020 14:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgESSkr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 14:40:47 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DFAEC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:40:47 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id v63so298501pfb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=3UIUkFK5UG0bOogX1POZ1UAX7jc+YvXTKYkYLUvZsoE=;
+        b=r6lJ1NefMXg6Xd+KOUKQutzPNiXhXUrpPh+oBpRAHAS0moxFKnsBwjJ/pHX+BkRo+G
+         TSpOzwEDbYWy7EDvsxl7+107TACcWNWFSuaqYagA9h+RTYXUpQ6mp6I7UiOIuKuqMzl/
+         4vxEu44p5DfztIs8UP4UO5EpBnVYVNzPElLWQHvWT19gNwEIobRl0Lb8htHNOc9TN8ei
+         RAOJ+60Sr3xStvDobh5UXrJlD+6IDri+dQGx4k1ro+xy9e6VSHx5aTDy/3IiqUSdtLrC
+         VliW0oK2SIFh4Aaz7/afvJJxaJavYrFGATL66HJ0xkTSoO23YucDCgRoIZZ+HQCgiK3h
+         TLdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=3UIUkFK5UG0bOogX1POZ1UAX7jc+YvXTKYkYLUvZsoE=;
+        b=kGoqUbJjrfY4/aeTivqo9yU0+8EXJDHwOra2/SvFgP38P3fN7NfffyNeZmJj1jV4N6
+         2Pj3qv9ZIntWIZzfmh6fZQX0wGQPwBs0Og9hYtj7RLLay5bc3b89ZVQlq1JeqqrI6I9a
+         GwyxkE2zBYMjJ4SLvIX7FiipUTqLkLu27fGT91cX0Lwg8lymtkQDoELDtDyzZQ5ZDRyU
+         Mb5uhsn5d4Zj7VkSL+0neAZBUmApM0/hU8LlVLXRoRkfYxNib6xETAyDko6K9YFoQig2
+         1mqwBdqUxVyum4HD+fZtOBpQWtCVqUr7H/+OJyTz/o12ybSwyYKU8oiVj/MA3mvhU2YJ
+         NSdw==
+X-Gm-Message-State: AOAM531Mv56KgLa50Y+hPg+0IMgGCbnmhh7Pgpl9GOnw5Uy/1yHY1O8o
+        r/elSHlByPh+MlGOk1mFrrDGv0yNBQ==
+X-Google-Smtp-Source: ABdhPJxkDSB+fxjW089mDp2VCOfTNmW912VNwSPfP3ZXJhGPrB8l+kv3nZ4vDDqJZ9Qy77A8zmYx6g==
+X-Received: by 2002:a62:1e84:: with SMTP id e126mr453204pfe.67.1589913646276;
+        Tue, 19 May 2020 11:40:46 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:908:98af:f00e:87b6:e4b4:50f0])
+        by smtp.gmail.com with ESMTPSA id gg8sm229239pjb.39.2020.05.19.11.40.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 11:40:45 -0700 (PDT)
+Date:   Wed, 20 May 2020 00:10:41 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gitster@pobox.com
+Cc:     joe@perches.com, git@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: git-send-email: Ability to populate CC using more tags
+Message-ID: <20200519184041.GB4397@Mani-XPS-13-9360>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519165422.GA5838@roeck-us.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 09:54:22AM -0700, Guenter Roeck wrote:
-> On Mon, May 18, 2020 at 11:48:43AM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > The kunmap_atomic clean up failed to remove one set of pagefault/preempt
-> > enables when vaddr is not in the fixmap.
-> > 
-> > Fixes: bee2128a09e6 ("arch/kunmap_atomic: consolidate duplicate code")
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> microblazeel works with this patch,
+Hello,
 
-Awesome...  Andrew in my rush yesterday I should have put a reported by on the
-patch for Guenter as well.
+Currently 'git-send-email' lacks the ability to CC people described using
+tags such as Acked-by and Reported-by etc...
 
-Sorry about that Guenter,
-Ira
+While doing a bit of googling, I found a patch from Joe [1] but that doesn't
+look like made its way. And in that discussion I didn't see any real objections
+for the patch intention apart from the usage of the term 'trailers'.
 
-> as do the nosmp sparc32 boot tests,
-> but sparc32 boot tests with SMP enabled still fail with lots of messages
-> such as:
-> 
-> BUG: Bad page state in process swapper/0  pfn:006a1
-> page:f0933420 refcount:0 mapcount:1 mapping:(ptrval) index:0x1
-> flags: 0x0()
-> raw: 00000000 00000100 00000122 00000000 00000001 00000000 00000000 00000000
-> page dumped because: nonzero mapcount
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B             5.7.0-rc6-next-20200518-00002-gb178d2d56f29 #1
-> [f00e7ab8 :
-> bad_page+0xa8/0x108 ]
-> [f00e8b54 :
-> free_pcppages_bulk+0x154/0x52c ]
-> [f00ea024 :
-> free_unref_page+0x54/0x6c ]
-> [f00ed864 :
-> free_reserved_area+0x58/0xec ]
-> [f0527104 :
-> kernel_init+0x14/0x110 ]
-> [f000b77c :
-> ret_from_kernel_thread+0xc/0x38 ]
-> [00000000 :
-> 0x0 ]
-> 
-> Code path leading to that message is different but always the same
-> from free_unref_page().
-> 
-> Still testing ppc images.
-> 
-> Guenter
+So I'm just curious if Joe or anyone has plan to resubmit it! If not I may
+do that.
+
+PS: 'bylines' as mentioned by Joe seems reasonable to me.
+
+Thanks,
+Mani
+
+[1] https://lkml.org/lkml/2016/8/30/650
