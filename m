@@ -2,89 +2,132 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F46C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB8A2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:15:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bXf3BiIa"
+	by mail.kernel.org (Postfix) with ESMTP id 69702207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgESQPw (ORCPT
+        id S1729335AbgESQQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:15:52 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54106 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729001AbgESQPv (ORCPT
+        Tue, 19 May 2020 12:16:09 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41936 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728689AbgESQQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:15:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589904950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EEQD9h/kF91l4yOX6GQ7jX2yDtwS4/ThsvtEtohlnp4=;
-        b=bXf3BiIaC1zIgPq5SN9V7rngCSvvyri9WCIWsJzcyLCQURs0Cn37mfh2k9pf2jMD0tzhH6
-        0Ej2QfnaVcHrdanKeSIZMYlnfPSYty8Fc5l78picVlejbYP6JZG0YdoDVLWcDXJa07MY27
-        EwPi/+5nraCPSXOSoOkCK+RTtN2OpFQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-d6wPtHNMM7eUw2dTr1S_Mg-1; Tue, 19 May 2020 12:15:48 -0400
-X-MC-Unique: d6wPtHNMM7eUw2dTr1S_Mg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D635107ACCA;
-        Tue, 19 May 2020 16:15:47 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C3395D9C5;
-        Tue, 19 May 2020 16:15:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200514181926.16571-1-colin.king@canonical.com>
-References: <20200514181926.16571-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] fsinfo: fix an uninialized variable 'conn'
+        Tue, 19 May 2020 12:16:09 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a13so73783pls.8;
+        Tue, 19 May 2020 09:16:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QxKaFrKqCcwILQrx7w2ZBbHw7MyXAaQ0yfp2yLJWOL4=;
+        b=JjV3s2BJq97V4N5XxScV4fSgjB5SHp/trsQxtKgVsVaIE7KnEcyhnD7kn29HGBgVmG
+         ahANGqC27viuXSHQ7FJRAvlixZM6tu0cnHwTKKmi/8YVT9YGlMrhNQNowSFre3D9cDnW
+         TPOUtTufPfHL6qLIq9oi9UPwd1yOVOblrrhT1m3eoTkgGA9AcgcBb483MtXLIl7s4Ei1
+         /CY/CrL6aSRqdw0Z5KNW0zncBlosXRjyStZ2ViurjX0hc8ejJfvdvCiqdK5OOkUOONFL
+         wEvVh3ebVuFJMs++iz5nuKgr6s/iJnoZCtGy8EfJDcgoHsNOEO4ps5hbccEAIk0i7zS9
+         mN/w==
+X-Gm-Message-State: AOAM531fIPPXjmDlhbhJNAAxdbxWybbz/YaK9gCsTt943tsRhaZ6Wgpd
+        MTKhN8gGfcoacJQc9GsvqfY=
+X-Google-Smtp-Source: ABdhPJxTNi4/prRnHRZp5jgEZhvdYGVRY0F4710nT+lBjblX3yu7iW8AhPShUbaZk1LKjzlxCdZpDw==
+X-Received: by 2002:a17:902:bb86:: with SMTP id m6mr208429pls.341.1589904968185;
+        Tue, 19 May 2020 09:16:08 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:a402:5dc4:a04b:e81f? ([2601:647:4000:d7:a402:5dc4:a04b:e81f])
+        by smtp.gmail.com with ESMTPSA id i98sm54200pje.37.2020.05.19.09.16.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 09:16:07 -0700 (PDT)
+Subject: Re: [PATCH] RDMA/rtrs: client: Fix function return on success
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+References: <20200519161345.GA3910@embeddedor>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <220e3cd2-2f22-063a-4117-8ee987521c61@acm.org>
+Date:   Tue, 19 May 2020 09:16:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1514049.1589904935.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 19 May 2020 17:15:35 +0100
-Message-ID: <1514050.1589904935@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200519161345.GA3910@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
+On 2020-05-19 09:13, Gustavo A. R. Silva wrote:
+> The function should return 0 on success, instead of err.
+> 
+> Addresses-Coverity-ID: 1493753 ("Identical code for different branches")
+> Fixes: 6a98d71daea1 ("RDMA/rtrs: client: main functionality")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/infiniband/ulp/rtrs/rtrs-clt.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt.c b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+> index 468fdd0d8713c..465515e46bb1a 100644
+> --- a/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+> +++ b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+> @@ -1594,7 +1594,8 @@ static int create_con_cq_qp(struct rtrs_clt_con *con)
+>  
+>  	if (err)
+>  		return err;
+> -	return err;
+> +
+> +	return 0;
+>  }
 
-> From: Colin Ian King <colin.king@canonical.com>
-> =
+Why to keep the if-statement? Has the following been considered?
 
-> Variable conn is not initialized and can potentially contain
-> garbage causing a false -EPERM return on the !conn check.
-> Fix this by initializing it to false.
-> =
+diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt.c b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+index 8dfa56dc32bc..a7f5d55f8542 100644
+--- a/drivers/infiniband/ulp/rtrs/rtrs-clt.c
++++ b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+@@ -1587,8 +1587,6 @@ static int create_con_cq_qp(struct rtrs_clt_con *con)
+ 	 * since destroy_con_cq_qp() must be called.
+ 	 */
 
-> Addresses-Coverity: ("Uninitialized scalar variable")
-> Fixes: f2494de388bd ("fsinfo: Add an attribute that lists all the visibl=
-e mounts in a namespace")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+-	if (err)
+-		return err;
+ 	return err;
+ }
 
-Thanks, I've folded that in.
+Thanks,
 
-David
-
+Bart.
