@@ -2,185 +2,309 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B50C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67492C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11EBF20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE9320674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I0oRNXLB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cALJeUig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgESSO7 (ORCPT
+        id S1729479AbgESSPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:14:59 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2906 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgESSO6 (ORCPT
+        Tue, 19 May 2020 14:15:04 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55916 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729457AbgESSPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:14:58 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec421d30000>; Tue, 19 May 2020 11:13:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 19 May 2020 11:14:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 11:14:58 -0700
-Received: from [10.2.55.90] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
- 2020 18:14:57 +0000
-Subject: Re: [PATCH v5.5 10/10] mmap locking API: rename mmap_sem to mmap_lock
-To:     Matthew Wilcox <willy@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>
-CC:     Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-11-walken@google.com>
- <20200422015829.GR5820@bombadil.infradead.org>
- <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
- <20200423015917.GA13910@bombadil.infradead.org>
- <20200424012612.GA158937@google.com> <20200424013958.GC158937@google.com>
- <f20ab834-cddb-eaa7-c03e-18f0c4897a33@linux.ibm.com>
- <20200519131009.GD189720@google.com>
- <7c540ac9-ba44-7187-5dc2-60b4c761e91c@linux.ibm.com>
- <20200519153251.GY16070@bombadil.infradead.org>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <10d48b77-5c6e-2e10-84e6-16cdd76a45f1@nvidia.com>
-Date:   Tue, 19 May 2020 11:14:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 14:15:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589912102; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=WbWK+XDpZ1EpeB30moGdfoWRLNL/z7wIz2LDeq0cfpU=;
+ b=cALJeUigOd2UtDDodMFaIJ+TSsIRq45IyvTW9qPBt4YcxdSvUGHm5dg8Reu/iAp/RH2icsBt
+ GYBexS6EhIV3ZMKqoVM5w1NHYnPj/vuYS1m8jvngXGD5t3Dfp1hFXvP6ma99Gnr4YeioOHlw
+ DIWIN7MwwZCSsceDTQExShNVmqo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec4220d.7fa2b94590a0-smtp-out-n05;
+ Tue, 19 May 2020 18:14:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CF575C43636; Tue, 19 May 2020 18:14:36 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E60BC433D2;
+        Tue, 19 May 2020 18:14:36 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200519153251.GY16070@bombadil.infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589912020; bh=qRDhgMJVS65zoSzH6J9UQCG5SwUJjCY8MYMjTPxuvOo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=I0oRNXLBA36oLvTod3vkSKAjMd5mPAKcgCBpu/ir6Q1RzqdGLI8LOvRHO5ynWaWH1
-         9qCmkPOxn138M6pkRbijpa2pcK1R5KnFizEjwCuNwvAn2D+/Upm7LweZSswHK12iC9
-         DrMruKfAD3FSZ2WzcsONkeiOp9e9dv02i3tVh63ufP+68hllQWUgx+ZBsgXq4+smFc
-         a2ijFooZjbFt3jckn4cYt5klqBpVhraW89MHe3shh5sPPFVXvw93ZFCOIWOOWmOizI
-         sNcghrNgYhpG4yBE6ndv2ulv/xti5fTrhBiSuzH3S0jA4AcO4KHG/IdY72qhAzBXII
-         X/WY1CbpkE3Gw==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 May 2020 11:14:36 -0700
+From:   rishabhb@codeaurora.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc-owner@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] remoteproc: qcom: Update PIL relocation info on
+ load
+In-Reply-To: <20200513055641.1413100-4-bjorn.andersson@linaro.org>
+References: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
+ <20200513055641.1413100-4-bjorn.andersson@linaro.org>
+Message-ID: <3ff29ccc94d3097fb39b7df377754af6@codeaurora.org>
+X-Sender: rishabhb@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-19 08:32, Matthew Wilcox wrote:
-> On Tue, May 19, 2020 at 03:20:40PM +0200, Laurent Dufour wrote:
->> Le 19/05/2020 =C3=A0 15:10, Michel Lespinasse a =C3=A9crit=C2=A0:
->>> On Mon, May 18, 2020 at 03:45:22PM +0200, Laurent Dufour wrote:
->>>> Le 24/04/2020 =C3=A0 03:39, Michel Lespinasse a =C3=A9crit=C2=A0:
->>>>> Rename the mmap_sem field to mmap_lock. Any new uses of this lock
->>>>> should now go through the new mmap locking api. The mmap_lock is
->>>>> still implemented as a rwsem, though this could change in the future.
->>>>>
->>>>> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/=
-etnaviv/etnaviv_gem.c
->>>>> index dc9ef302f517..701f3995f621 100644
->>>>> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
->>>>> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
->>>>> @@ -661,7 +661,7 @@ static int etnaviv_gem_userptr_get_pages(struct e=
-tnaviv_gem_object *etnaviv_obj)
->>>>>     	struct etnaviv_gem_userptr *userptr =3D &etnaviv_obj->userptr;
->>>>>     	int ret, pinned =3D 0, npages =3D etnaviv_obj->base.size >> PAGE=
-_SHIFT;
->>>>> -	might_lock_read(&current->mm->mmap_sem);
->>>>> +	might_lock_read(&current->mm->mmap_lock);
->>>>
->>>> Why not a mm_might_lock_read() new API to hide the mmap_lock, and add =
-it to
->>>> the previous patch?
->>>
->>> I'm not sure why this is needed - we may rework the lock to be
->>> something else than rwsem, but might_lock_read should still apply to
->>> it and make sense ? I'm not sure what the extra API would bring...
->>
->> I guess at one time the API would become might_lock_read_a_range(), isn'=
-t it?
->> Furthermore this would hiding the lock's name which the goal of this ser=
-ies.
->=20
-> I think this assertion should be deleted from this driver.  It's there
-> in case get_user_pages_fast() takes the mmap sem.  It would make sense to
-> have this assertion in get_user_pages_fast() in case we take the fast pat=
-h
-> which doesn't acquire the mmap_sem.  Something like this:
->=20
-> +++ b/mm/gup.c
-> @@ -2754,6 +2754,7 @@ static int internal_get_user_pages_fast(unsigned lo=
-ng start, int nr_pages,
->                                         FOLL_FORCE | FOLL_PIN | FOLL_GET)=
-))
->                  return -EINVAL;
->  =20
-> +       might_lock_read(&current->mm->mmap_lock);
->          start =3D untagged_addr(start) & PAGE_MASK;
->          addr =3D start;
->          len =3D (unsigned long) nr_pages << PAGE_SHIFT;
->=20
->=20
-
-Hi Michel and Matthew and all,
-
-There are a couple of recent developments in this code to keep in mind. I d=
-on't
-*think* either one is a problem here, but just in case:
-
-a) The latest version of the above routine [1] is on its way to mmotm as of
-yesterday, and that version more firmly divides the fast and slow parts,
-via a new FOLL_FAST_ONLY flag. The fall-back to slow/regular gup only occur=
-s
-if the caller does not set FOLL_FAST_ONLY. (Note that it's a gup.c internal
-flag, btw.)
-
-That gives you additional options inside internal_get_user_pages_fast(), su=
-ch
-as, approximately:
-
-if (!(gup_flags & FOLL_FAST_ONLY))
-	might_lock_read(&current->mm->mmap_lock);
-
-...not that that is necessarily a great idea, seeing as how it merely chang=
-es
-"might lock" into "maybe might lock".  :)
-
-b) I've posted a small patch to that same etnaviv_gem.c file [2], over the
-weekend, to convert from get_user_pages()/put_page(), to=20
-pin_user_pages()/unpin_user_pages(). It hasn't been merged yet, and it
-shouldn't conflict either, but just one more reason to hope that the
-etnaviv list can do some run time testing on the whole lot.
-
-[1] https://lore.kernel.org/r/20200519002124.2025955-3-jhubbard@nvidia.com
-
-[2] https://lore.kernel.org/r/20200518054315.2407093-1-jhubbard@nvidia.com
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
+On 2020-05-12 22:56, Bjorn Andersson wrote:
+> Update the PIL relocation information in IMEM with information about
+> where the firmware for various remoteprocs are loaded.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v4:
+> - Dropped unnecessary comment about ignoring return value.
+> 
+>  drivers/remoteproc/Kconfig          |  3 +++
+>  drivers/remoteproc/qcom_q6v5_adsp.c | 16 +++++++++++++---
+>  drivers/remoteproc/qcom_q6v5_mss.c  |  3 +++
+>  drivers/remoteproc/qcom_q6v5_pas.c  | 15 ++++++++++++---
+>  drivers/remoteproc/qcom_q6v5_wcss.c | 14 +++++++++++---
+>  drivers/remoteproc/qcom_wcnss.c     | 14 +++++++++++---
+>  6 files changed, 53 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index 8088ca4dd6dc..6bd42a411ca8 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -126,6 +126,7 @@ config QCOM_Q6V5_ADSP
+>  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+>  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+>  	select MFD_SYSCON
+> +	select QCOM_PIL_INFO
+>  	select QCOM_MDT_LOADER
+>  	select QCOM_Q6V5_COMMON
+>  	select QCOM_RPROC_COMMON
+> @@ -158,6 +159,7 @@ config QCOM_Q6V5_PAS
+>  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+>  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+>  	select MFD_SYSCON
+> +	select QCOM_PIL_INFO
+>  	select QCOM_MDT_LOADER
+>  	select QCOM_Q6V5_COMMON
+>  	select QCOM_RPROC_COMMON
+> @@ -209,6 +211,7 @@ config QCOM_WCNSS_PIL
+>  	depends on QCOM_SMEM
+>  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+>  	select QCOM_MDT_LOADER
+> +	select QCOM_PIL_INFO
+>  	select QCOM_RPROC_COMMON
+>  	select QCOM_SCM
+>  	help
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c
+> b/drivers/remoteproc/qcom_q6v5_adsp.c
+> index d2a2574dcf35..c539e89664cb 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/soc/qcom/smem_state.h>
+> 
+>  #include "qcom_common.h"
+> +#include "qcom_pil_info.h"
+>  #include "qcom_q6v5.h"
+>  #include "remoteproc_internal.h"
+> 
+> @@ -82,6 +83,7 @@ struct qcom_adsp {
+>  	unsigned int halt_lpass;
+> 
+>  	int crash_reason_smem;
+> +	const char *info_name;
+> 
+>  	struct completion start_done;
+>  	struct completion stop_done;
+> @@ -164,10 +166,17 @@ static int qcom_adsp_shutdown(struct qcom_adsp 
+> *adsp)
+>  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+>  {
+>  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+> +	int ret;
+> +
+> +	ret = qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
+> +				    adsp->mem_region, adsp->mem_phys,
+> +				    adsp->mem_size, &adsp->mem_reloc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, 
+> adsp->mem_size);
+> 
+> -	return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
+> -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> -			     &adsp->mem_reloc);
+> +	return 0;
+>  }
+> 
+>  static int adsp_start(struct rproc *rproc)
+> @@ -436,6 +445,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	adsp = (struct qcom_adsp *)rproc->priv;
+>  	adsp->dev = &pdev->dev;
+>  	adsp->rproc = rproc;
+> +	adsp->info_name = desc->sysmon_name;
+>  	platform_set_drvdata(pdev, adsp);
+> 
+>  	ret = adsp_alloc_memory_region(adsp);
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
+> b/drivers/remoteproc/qcom_q6v5_mss.c
+> index c4936f4d1e80..fdbcae11ae64 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -29,6 +29,7 @@
+> 
+>  #include "remoteproc_internal.h"
+>  #include "qcom_common.h"
+> +#include "qcom_pil_info.h"
+>  #include "qcom_q6v5.h"
+> 
+>  #include <linux/qcom_scm.h>
+> @@ -1221,6 +1222,8 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+>  	else if (ret < 0)
+>  		dev_err(qproc->dev, "MPSS authentication failed: %d\n", ret);
+> 
+> +	qcom_pil_info_store("modem", mpss_reloc, qproc->mpss_size);
+> +
+>  release_firmware:
+>  	release_firmware(fw);
+>  out:
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c
+> b/drivers/remoteproc/qcom_q6v5_pas.c
+> index 3bb69f58e086..84cb19231c35 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/soc/qcom/smem_state.h>
+> 
+>  #include "qcom_common.h"
+> +#include "qcom_pil_info.h"
+>  #include "qcom_q6v5.h"
+>  #include "remoteproc_internal.h"
+> 
+> @@ -64,6 +65,7 @@ struct qcom_adsp {
+>  	int pas_id;
+>  	int crash_reason_smem;
+>  	bool has_aggre2_clk;
+> +	const char *info_name;
+> 
+>  	struct completion start_done;
+>  	struct completion stop_done;
+> @@ -117,11 +119,17 @@ static void adsp_pds_disable(struct qcom_adsp
+> *adsp, struct device **pds,
+>  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+>  {
+>  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+> +	int ret;
+> 
+> -	return qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
+> -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> -			     &adsp->mem_reloc);
+> +	ret = qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
+> +			    adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> +			    &adsp->mem_reloc);
+> +	if (ret)
+> +		return ret;
+> 
+> +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, 
+> adsp->mem_size);
+mem_reloc is used to calculate  offset and then we again add that offset 
+to the
+ioremapped region base. So we should pass adsp->mem_phys as start here?
+> +
+> +	return 0;
+>  }
+> 
+>  static int adsp_start(struct rproc *rproc)
+> @@ -405,6 +413,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	adsp->rproc = rproc;
+>  	adsp->pas_id = desc->pas_id;
+>  	adsp->has_aggre2_clk = desc->has_aggre2_clk;
+> +	adsp->info_name = desc->sysmon_name;
+>  	platform_set_drvdata(pdev, adsp);
+> 
+>  	ret = adsp_alloc_memory_region(adsp);
+> diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c
+> b/drivers/remoteproc/qcom_q6v5_wcss.c
+> index f1924b740a10..962e37a86b8b 100644
+> --- a/drivers/remoteproc/qcom_q6v5_wcss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+> @@ -421,10 +421,18 @@ static void *q6v5_wcss_da_to_va(struct rproc
+> *rproc, u64 da, size_t len)
+>  static int q6v5_wcss_load(struct rproc *rproc, const struct firmware 
+> *fw)
+>  {
+>  	struct q6v5_wcss *wcss = rproc->priv;
+> +	int ret;
+> +
+> +	ret = qcom_mdt_load_no_init(wcss->dev, fw, rproc->firmware,
+> +				    0, wcss->mem_region, wcss->mem_phys,
+> +				    wcss->mem_size, &wcss->mem_reloc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Failures only affect post mortem debugging, so ignore return value 
+> */
+> +	qcom_pil_info_store("wcnss", wcss->mem_reloc, wcss->mem_size);
+> 
+> -	return qcom_mdt_load_no_init(wcss->dev, fw, rproc->firmware,
+> -				     0, wcss->mem_region, wcss->mem_phys,
+> -				     wcss->mem_size, &wcss->mem_reloc);
+> +	return ret;
+>  }
+> 
+>  static const struct rproc_ops q6v5_wcss_ops = {
+> diff --git a/drivers/remoteproc/qcom_wcnss.c 
+> b/drivers/remoteproc/qcom_wcnss.c
+> index 5d65e1a9329a..229482b3231f 100644
+> --- a/drivers/remoteproc/qcom_wcnss.c
+> +++ b/drivers/remoteproc/qcom_wcnss.c
+> @@ -27,6 +27,7 @@
+> 
+>  #include "qcom_common.h"
+>  #include "remoteproc_internal.h"
+> +#include "qcom_pil_info.h"
+>  #include "qcom_wcnss.h"
+> 
+>  #define WCNSS_CRASH_REASON_SMEM		422
+> @@ -145,10 +146,17 @@ void qcom_wcnss_assign_iris(struct qcom_wcnss 
+> *wcnss,
+>  static int wcnss_load(struct rproc *rproc, const struct firmware *fw)
+>  {
+>  	struct qcom_wcnss *wcnss = (struct qcom_wcnss *)rproc->priv;
+> +	int ret;
+> +
+> +	ret = qcom_mdt_load(wcnss->dev, fw, rproc->firmware, WCNSS_PAS_ID,
+> +			    wcnss->mem_region, wcnss->mem_phys,
+> +			    wcnss->mem_size, &wcnss->mem_reloc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	qcom_pil_info_store("wcnss", wcnss->mem_reloc, wcnss->mem_size);
+> 
+> -	return qcom_mdt_load(wcnss->dev, fw, rproc->firmware, WCNSS_PAS_ID,
+> -			     wcnss->mem_region, wcnss->mem_phys,
+> -			     wcnss->mem_size, &wcnss->mem_reloc);
+> +	return 0;
+>  }
+> 
+>  static void wcnss_indicate_nv_download(struct qcom_wcnss *wcnss)
