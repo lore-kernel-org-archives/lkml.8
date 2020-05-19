@@ -2,238 +2,139 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDF9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC3120823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:25:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="M4WvS4C+"
+	by mail.kernel.org (Postfix) with ESMTP id A732320825
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589930732;
+	bh=ccZOuYZdXY28saLbk0F9wAgyg3BGaSBjnFIUUWFi3p8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=pELeLgTDWeVB6/EGMsfEbRg+Jp2gCCs5N5nXGGQCY2qY1Z2amQg6xWB4ycThaQ8XO
+	 uhcQ4IvGYSlVLH2tBqO2GVdPgaNKz5aQ8+5qfeDLimWqmXsPMg2xKZNXZeqIUnQ4em
+	 yPk+IWrHsBVPdN63opBph4krv5sxQxPpuKCwgKsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgESXZK (ORCPT
+        id S1728300AbgESXZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:25:10 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:58187 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgESXZK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:25:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589930709; x=1621466709;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=3obvm2K6wIdoHPoMRFNSCaSnwN5wi8ylwo2ias+p+AA=;
-  b=M4WvS4C+rybkeMqsRnWUkm7t+xL/zJE0be3On6d9TPDMAfMwa86DZoWh
-   lNPlFtYMVf3JuOAFT/hzUVmRzXirRSio6ECzyKh1dD9aiFYMXZHWk6Mw7
-   doQ3a7PD4gNuVS3NoWIFSbDmkkO4XZ/vRXQisKH4QuGtYZAtHEZHAkuSJ
-   0=;
-IronPort-SDR: P7emNvCRDvwDfHCN+LiCzJs6+SMASxtZyMSlkE+xUu3oDxVsLwu5RZokCrWc8Mmwr+VHYTbzkF
- Khz51BvVsG6g==
-X-IronPort-AV: E=Sophos;i="5.73,411,1583193600"; 
-   d="scan'208";a="45949175"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 19 May 2020 23:25:07 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 8694BA0161;
-        Tue, 19 May 2020 23:25:05 +0000 (UTC)
-Received: from EX13D08UEE001.ant.amazon.com (10.43.62.126) by
- EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 19 May 2020 23:24:52 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEE001.ant.amazon.com (10.43.62.126) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 19 May 2020 23:24:52 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 23:24:51 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id AD64640712; Tue, 19 May 2020 23:24:51 +0000 (UTC)
-Date:   Tue, 19 May 2020 23:24:51 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
-        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>
-Subject: [PATCH 01/12] xen/manage: keep track of the on-going suspend mode
-Message-ID: <20200519232451.GA18632@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <cover.1589926004.git.anchalag@amazon.com>
+        Tue, 19 May 2020 19:25:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725998AbgESXZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 19:25:30 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD06B20823;
+        Tue, 19 May 2020 23:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589930730;
+        bh=ccZOuYZdXY28saLbk0F9wAgyg3BGaSBjnFIUUWFi3p8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WpViHFEp1zeBQoJT+Vue+cgK/g9yG8v6Fc2Je0uUdIEbaEu4Tr3bxZs+t43lq+QDn
+         X3H0lsLYoWet2tE0+FkAMA3eJ6RvreN8q5hPxVmFYZdFKXv/TcN4b3m0YXnef92pla
+         is2O8WwOY/8IggV0NmGzVdePDHYvlKsgUCsNi09w=
+Date:   Tue, 19 May 2020 18:30:18 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] RDMA/siw: Replace one-element array and use struct_size()
+ helper
+Message-ID: <20200519233018.GA6105@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1589926004.git.anchalag@amazon.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Munehisa Kamata <kamatam@amazon.com>
+The current codebase makes use of one-element arrays in the following
+form:
 
-Guest hibernation is different from xen suspend/resume/live migration.
-Xen save/restore does not use pm_ops as is needed by guest hibernation.
-Hibernation in guest follows ACPI path and is guest inititated , the
-hibernation image is saved within guest as compared to later modes
-which are xen toolstack assisted and image creation/storage is in
-control of hypervisor/host machine.
-To differentiate between Xen suspend and PM hibernation, keep track
-of the on-going suspend mode by mainly using a new PM notifier.
-Introduce simple functions which help to know the on-going suspend mode
-so that other Xen-related code can behave differently according to the
-current suspend mode.
-Since Xen suspend doesn't have corresponding PM event, its main logic
-is modfied to acquire pm_mutex and set the current mode.
+struct something {
+    int length;
+    u8 data[1];
+};
 
-Though, acquirng pm_mutex is still right thing to do, we may
-see deadlock if PM hibernation is interrupted by Xen suspend.
-PM hibernation depends on xenwatch thread to process xenbus state
-transactions, but the thread will sleep to wait pm_mutex which is
-already held by PM hibernation context in the scenario. Xen shutdown
-code may need some changes to avoid the issue.
+struct something *instance;
 
-[Anchal Changelog: Code refactoring]
-Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
+
+but the preferred mechanism to declare variable-length types such as
+these ones is a flexible array member[1][2], introduced in C99:
+
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on. So, replace
+the one-element array with a flexible-array member.
+
+Also, make use of the new struct_size() helper to properly calculate the
+size of struct siw_pbl.
+
+This issue was found with the help of Coccinelle and, audited and fixed
+_manually_.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/xen/manage.c  | 73 +++++++++++++++++++++++++++++++++++++++++++
- include/xen/xen-ops.h |  3 ++
- 2 files changed, 76 insertions(+)
+ drivers/infiniband/sw/siw/siw.h     | 2 +-
+ drivers/infiniband/sw/siw/siw_mem.c | 5 +----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/xen/manage.c b/drivers/xen/manage.c
-index cd046684e0d1..0b30ab522b77 100644
---- a/drivers/xen/manage.c
-+++ b/drivers/xen/manage.c
-@@ -14,6 +14,7 @@
- #include <linux/freezer.h>
- #include <linux/syscore_ops.h>
- #include <linux/export.h>
-+#include <linux/suspend.h>
- 
- #include <xen/xen.h>
- #include <xen/xenbus.h>
-@@ -40,6 +41,31 @@ enum shutdown_state {
- /* Ignore multiple shutdown requests. */
- static enum shutdown_state shutting_down = SHUTDOWN_INVALID;
- 
-+enum suspend_modes {
-+	NO_SUSPEND = 0,
-+	XEN_SUSPEND,
-+	PM_SUSPEND,
-+	PM_HIBERNATION,
-+};
-+
-+/* Protected by pm_mutex */
-+static enum suspend_modes suspend_mode = NO_SUSPEND;
-+
-+bool xen_suspend_mode_is_xen_suspend(void)
-+{
-+	return suspend_mode == XEN_SUSPEND;
-+}
-+
-+bool xen_suspend_mode_is_pm_suspend(void)
-+{
-+	return suspend_mode == PM_SUSPEND;
-+}
-+
-+bool xen_suspend_mode_is_pm_hibernation(void)
-+{
-+	return suspend_mode == PM_HIBERNATION;
-+}
-+
- struct suspend_info {
- 	int cancelled;
+diff --git a/drivers/infiniband/sw/siw/siw.h b/drivers/infiniband/sw/siw/siw.h
+index af5e9f8c0fcd0..5a58a1cc7a7e8 100644
+--- a/drivers/infiniband/sw/siw/siw.h
++++ b/drivers/infiniband/sw/siw/siw.h
+@@ -139,7 +139,7 @@ struct siw_pble {
+ struct siw_pbl {
+ 	unsigned int num_buf;
+ 	unsigned int max_buf;
+-	struct siw_pble pbe[1];
++	struct siw_pble pbe[];
  };
-@@ -99,6 +125,10 @@ static void do_suspend(void)
- 	int err;
- 	struct suspend_info si;
  
-+	lock_system_sleep();
-+
-+	suspend_mode = XEN_SUSPEND;
-+
- 	shutting_down = SHUTDOWN_SUSPEND;
+ /*
+diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/siw/siw_mem.c
+index e2061dc0b043c..87117781d6374 100644
+--- a/drivers/infiniband/sw/siw/siw_mem.c
++++ b/drivers/infiniband/sw/siw/siw_mem.c
+@@ -349,14 +349,11 @@ dma_addr_t siw_pbl_get_buffer(struct siw_pbl *pbl, u64 off, int *len, int *idx)
+ struct siw_pbl *siw_pbl_alloc(u32 num_buf)
+ {
+ 	struct siw_pbl *pbl;
+-	int buf_size = sizeof(*pbl);
  
- 	err = freeze_processes();
-@@ -162,6 +192,10 @@ static void do_suspend(void)
- 	thaw_processes();
- out:
- 	shutting_down = SHUTDOWN_INVALID;
-+
-+	suspend_mode = NO_SUSPEND;
-+
-+	unlock_system_sleep();
- }
- #endif	/* CONFIG_HIBERNATE_CALLBACKS */
+ 	if (num_buf == 0)
+ 		return ERR_PTR(-EINVAL);
  
-@@ -387,3 +421,42 @@ int xen_setup_shutdown_event(void)
- EXPORT_SYMBOL_GPL(xen_setup_shutdown_event);
+-	buf_size += ((num_buf - 1) * sizeof(struct siw_pble));
+-
+-	pbl = kzalloc(buf_size, GFP_KERNEL);
++	pbl = kzalloc(struct_size(pbl, pbe, num_buf), GFP_KERNEL);
+ 	if (!pbl)
+ 		return ERR_PTR(-ENOMEM);
  
- subsys_initcall(xen_setup_shutdown_event);
-+
-+static int xen_pm_notifier(struct notifier_block *notifier,
-+			   unsigned long pm_event, void *unused)
-+{
-+	switch (pm_event) {
-+	case PM_SUSPEND_PREPARE:
-+		suspend_mode = PM_SUSPEND;
-+		break;
-+	case PM_HIBERNATION_PREPARE:
-+	case PM_RESTORE_PREPARE:
-+		suspend_mode = PM_HIBERNATION;
-+		break;
-+	case PM_POST_SUSPEND:
-+	case PM_POST_RESTORE:
-+	case PM_POST_HIBERNATION:
-+		/* Set back to the default */
-+		suspend_mode = NO_SUSPEND;
-+		break;
-+	default:
-+		pr_warn("Receive unknown PM event 0x%lx\n", pm_event);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+};
-+
-+static struct notifier_block xen_pm_notifier_block = {
-+	.notifier_call = xen_pm_notifier
-+};
-+
-+static int xen_setup_pm_notifier(void)
-+{
-+	if (!xen_hvm_domain())
-+		return -ENODEV;
-+
-+	return register_pm_notifier(&xen_pm_notifier_block);
-+}
-+
-+subsys_initcall(xen_setup_pm_notifier);
-diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
-index 095be1d66f31..4ffe031adfc7 100644
---- a/include/xen/xen-ops.h
-+++ b/include/xen/xen-ops.h
-@@ -40,6 +40,9 @@ u64 xen_steal_clock(int cpu);
- 
- int xen_setup_shutdown_event(void);
- 
-+bool xen_suspend_mode_is_xen_suspend(void);
-+bool xen_suspend_mode_is_pm_suspend(void);
-+bool xen_suspend_mode_is_pm_hibernation(void);
- extern unsigned long *xen_contiguous_bitmap;
- 
- #if defined(CONFIG_XEN_PV) || defined(CONFIG_ARM) || defined(CONFIG_ARM64)
 -- 
-2.24.1.AMZN
+2.26.2
 
