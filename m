@@ -4,100 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B90AF20825
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABC520674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:41:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PA0WHi9a"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IcOQERvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgESXg0 (ORCPT
+        id S1726535AbgESXll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:36:26 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:60301 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgESXgZ (ORCPT
+        Tue, 19 May 2020 19:41:41 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:18724 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgESXlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:36:25 -0400
+        Tue, 19 May 2020 19:41:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589931385; x=1621467385;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version;
-  bh=0h+Ql3kIm4ll7H2x0wPz8bL2x8DkfsmOA0XR/gfEPpY=;
-  b=PA0WHi9a1pXITQUUnk2ahZnIEkbGdTpTqmQBDre65zpPSqrs8cj4Z5tQ
-   bm0WWZqR3dWuG1pjDNKH5oeQD5IOFqhh/hTIS76GFoZWM5G59RAo9WqwY
-   8iDf5CjsFJAw6peHKPOa/ajgiRgVntKw083xi5Kw7U2fT0rxTlBkOGaL9
+  t=1589931699; x=1621467699;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=IbofWm/iMK1clAzyzSw2peC3VqkfUtxWdtzUMhauRHg=;
+  b=IcOQERvZLpaLBjlINgQ/Ozi5CeP56g2auc46asNOtP2cgT1KuNzKoDo0
+   GTF3aWELkyYXEODo8KYmZx1ROe3t+jfe94dByTU3GKwQ+paeFJTozKoz/
+   WgCFvt6cDOa9ZB9G+joaQsGhkf3ZXFF5NidIC7y5GX9UV+H/3VD5HfeHr
    g=;
-IronPort-SDR: Sh8oCgbi6ol5SpCMMV88N8TUDQi1X1SmJ82frou2UB9gXc2YCfQwJsx4ulZpnJZdnAgU8Z+Lwj
- +kWTUjNdOG8g==
+IronPort-SDR: T2gMicTsA/YT1+502F/BdDjy6yNGh0uOnQy64MbhC76QxzxW4whNhw+NBv0bmUGwIrqbQmDqwn
+ 7G6ahSvy7dpw==
 X-IronPort-AV: E=Sophos;i="5.73,411,1583193600"; 
-   d="scan'208";a="45951027"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 19 May 2020 23:36:23 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 14090A20B8;
-        Tue, 19 May 2020 23:36:15 +0000 (UTC)
+   d="scan'208";a="32498591"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 19 May 2020 23:41:27 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id E6358A0360;
+        Tue, 19 May 2020 23:41:24 +0000 (UTC)
+Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 19 May 2020 23:41:24 +0000
 Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 19 May 2020 23:36:15 +0000
-Received: from EX13D07UWB001.ant.amazon.com (10.43.161.238) by
- EX13d01UWB002.ant.amazon.com (10.43.161.136) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 19 May 2020 23:36:15 +0000
-Received: from EX13D07UWB001.ant.amazon.com ([10.43.161.238]) by
- EX13D07UWB001.ant.amazon.com ([10.43.161.238]) with mapi id 15.00.1497.006;
- Tue, 19 May 2020 23:36:15 +0000
-From:   "Agarwal, Anchal" <anchalag@amazon.com>
-To:     "Singh, Balbir" <sblbir@amazon.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+ EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 19 May 2020 23:41:23 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
+ Tue, 19 May 2020 23:41:23 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "keescook@chromium.org" <keescook@chromium.org>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>, "bp@alien8.de" <bp@alien8.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
         "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: Re: [PATCH 05/12] genirq: Shutdown irq chips in suspend/resume during
- hibernation
-Thread-Topic: [PATCH 05/12] genirq: Shutdown irq chips in suspend/resume
- during hibernation
-Thread-Index: AQHWLjMagtxHeVJBCkiD+MEoaDFA5aiwDkSA//+Mf4A=
-Date:   Tue, 19 May 2020 23:36:14 +0000
-Message-ID: <18B5CBBA-FF9E-4DBF-8631-EE9AF4925861@amazon.com>
-References: <cover.1589926004.git.anchalag@amazon.com>
- <fce013fc1348f02b8e4ec61e7a631093c72f993c.1589926004.git.anchalag@amazon.com>
- <d489ede4d70ae22a601ee0afc92bda936baa8b11.camel@amazon.com>
-In-Reply-To: <d489ede4d70ae22a601ee0afc92bda936baa8b11.camel@amazon.com>
-Accept-Language: en-US
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>
+Subject: Re:  [PATCH v2 3/4] arch/x86: Optionally flush L1D on context switch
+Thread-Topic: [PATCH v2 3/4] arch/x86: Optionally flush L1D on context switch
+Thread-Index: AQHWLjcBCjTHsBVi1Ear3DlyXwRTeA==
+Date:   Tue, 19 May 2020 23:41:23 +0000
+Message-ID: <1236b19be51d0d47ba73016b2bac352983107ce9.camel@amazon.com>
+References: <20200406031946.11815-1-sblbir@amazon.com>
+         <20200406031946.11815-4-sblbir@amazon.com> <202004071125.605F665@keescook>
+In-Reply-To: <202004071125.605F665@keescook>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.193]
+x-originating-ip: [10.43.160.26]
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <997D8B2104EB634CAA6BF7D36DEE734D@amazon.com>
+Content-ID: <00FAC354435987408F59F82E70E2817A@amazon.com>
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
@@ -105,9 +84,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzLiBMb29rcyBsaWtlIHNlbmQgYW4gb2xkIG9uZSB3aXRob3V0IGZpeC4gRGlkIHJlc2Vu
-ZCB0aGUgcGF0Y2ggYWdhaW4uDQoNCu+7vyAgICBPbiBUdWUsIDIwMjAtMDUtMTkgYXQgMjM6MjYg
-KzAwMDAsIEFuY2hhbCBBZ2Fyd2FsIHdyb3RlOg0KICAgID4gU2lnbmVkLW9mZi0tYnk6IFRob21h
-cyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KDQogICAgVGhlIFNpZ25lZC1vZmYtYnkg
-bGluZSBuZWVkcyB0byBiZSBmaXhlZCAoaGludDogeW91IGhhdmUgLS0pDQoNCiAgICBCYWxiaXIg
-U2luZ2gNCg0KDQo=
+T24gVHVlLCAyMDIwLTA0LTA3IGF0IDExOjI2IC0wNzAwLCBLZWVzIENvb2sgd3JvdGU6DQo+IA0K
+PiANCj4gT24gTW9uLCBBcHIgMDYsIDIwMjAgYXQgMDE6MTk6NDVQTSArMTAwMCwgQmFsYmlyIFNp
+bmdoIHdyb3RlOg0KPiA+IEltcGxlbWVudCBhIG1lY2hhbmlzbSB0byBzZWxlY3RpdmVseSBmbHVz
+aCB0aGUgTDFEIGNhY2hlLiBUaGUgZ29hbCBpcyB0bw0KPiA+IGFsbG93IHRhc2tzIHRoYXQgYXJl
+IHBhcmFub2lkIGR1ZSB0byB0aGUgcmVjZW50IHNub29wIGFzc2lzdGVkIGRhdGEgc2FtcGxpbmcN
+Cj4gPiB2dWxuZXJhYmlsaXRlcywgdG8gZmx1c2ggdGhlaXIgTDFEIG9uIGJlaW5nIHN3aXRjaGVk
+IG91dC4gIFRoaXMgcHJvdGVjdHMNCj4gPiB0aGVpciBkYXRhIGZyb20gYmVpbmcgc25vb3BlZCBv
+ciBsZWFrZWQgdmlhIHNpZGUgY2hhbm5lbHMgYWZ0ZXIgdGhlIHRhc2sNCj4gPiBoYXMgY29udGV4
+dCBzd2l0Y2hlZCBvdXQuDQo+ID4gDQo+ID4gVGhlcmUgYXJlIHR3byBzY2VuYXJpb3Mgd2UgbWln
+aHQgd2FudCB0byBwcm90ZWN0IGFnYWluc3QsIGEgdGFzayBsZWF2aW5nDQo+ID4gdGhlIENQVSB3
+aXRoIGRhdGEgc3RpbGwgaW4gTDFEICh3aGljaCBpcyB0aGUgbWFpbiBjb25jZXJuIG9mIHRoaXMg
+cGF0Y2gpLA0KPiA+IHRoZSBzZWNvbmQgc2NlbmFyaW8gaXMgYSBtYWxpY2lvdXMgdGFzayBjb21p
+bmcgaW4gKG5vdCBzbyB3ZWxsIHRydXN0ZWQpDQo+ID4gZm9yIHdoaWNoIHdlIHdhbnQgdG8gY2xl
+YW4gdXAgdGhlIGNhY2hlIGJlZm9yZSBpdCBzdGFydHMuIE9ubHkgdGhlIGNhc2UNCj4gPiBmb3Ig
+dGhlIGZvcm1lciBpcyBhZGRyZXNzZWQuDQo+ID4gDQo+ID4gQWRkIGFyY2ggc3BlY2lmaWMgcHJj
+dGwoKSdzIHRvIG9wdC1pbiB0byB0aGUgTDFEIGNhY2hlIG9uIGNvbnRleHQgc3dpdGNoDQo+ID4g
+b3V0LCB0aGUgZXhpc3RpbmcgbWVjaGFuaXNtcyBvZiB0cmFja2luZyBwcmV2X21tIHZpYSBjcHVf
+dGxic3RhdGUgaXMNCj4gPiByZXVzZWQuIGNvbmRfaWJwYigpIGlzIHJlZmFjdG9yZWQgYW5kIHJl
+bmFtZWQgaW50byBjb25kX21pdGlnYXRpb24oKS4NCj4gDQo+IEkgc3RpbGwgdGhpbmsgdGhpcyBz
+aG91bGQgYmUgYSBnZW5lcmljIHByY3RsKCkuIElmIHRoZXJlIGlzIGEgc3Ryb25nDQo+IHJlYXNv
+biBub3QgdG8gZG8gdGhpcywgY2FuIGl0IGJlIGRlc2NyaWJlZCBpbiB0aGUgY29tbWl0IGxvZyBo
+ZXJlPw0KDQpLZWVzLCB0aGUgY29udGV4dCBpbiB0aGUgY2hhbmdlbG9nIG1pZ2h0IGJlIG1pc2xl
+YWRpbmcsIHRoZSBwcmN0bCBpcyBnZW5lcmljLA0KdGhlIGltcGxlbWVudGF0aW9uIGlzIGFyY2gg
+c3BlY2lmaWMgYXMgeW91IGNhbiBzZWUgZnJvbSB0aGUgZm9sbG93aW5nIHBhdGNoZXMuDQpJIGNh
+biByZXdvcmQgdGhlIGNoYW5nZSBsb2csIHNvcnJ5IGZvciB0aGUgY29uZnVzaW9uLg0KDQpCYWxi
+aXIgU2luZ2guDQoNCg0K
