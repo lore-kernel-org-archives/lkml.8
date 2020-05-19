@@ -2,122 +2,91 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A508C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2974320709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B359207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgESIam (ORCPT
+        id S1728579AbgESIav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:30:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:31993 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgESIal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:30:41 -0400
-IronPort-SDR: hEmmlUeB+ksfMoUdFg2X2s1JAfKxF5v/fOl4w/E2SHkoWWwBwx3uQCmqdQn/s2EfdQQvxUw/yX
- 9HdopesDCUAw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 01:30:40 -0700
-IronPort-SDR: gaXqNWvjg8kCkmUz7jDm7ZIZiK+jr2wYSiQvRU+fSCgdHqkOJW0WITrnSitAbdoy+lsjEyhPlz
- o2pgjWk2kojw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,409,1583222400"; 
-   d="scan'208";a="264233991"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by orsmga003.jf.intel.com with ESMTP; 19 May 2020 01:30:36 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-Subject: [PATCH 1/3] soundwire: disco: s/ch/channels/
-Date:   Tue, 19 May 2020 04:35:49 +0800
-Message-Id: <20200518203551.2053-2-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200518203551.2053-1-yung-chuan.liao@linux.intel.com>
-References: <20200518203551.2053-1-yung-chuan.liao@linux.intel.com>
+        Tue, 19 May 2020 04:30:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38751 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728456AbgESIat (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 04:30:49 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jaxe9-0002B4-6Y; Tue, 19 May 2020 08:30:45 +0000
+Date:   Tue, 19 May 2020 10:30:44 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: seccomp feature development
+Message-ID: <20200519083044.lo5d22hdd5nc3dcm@wittgenstein>
+References: <202005181120.971232B7B@keescook>
+ <CAG48ez1LrQvR2RHD5-ZCEihL4YT1tVgoAJfGYo+M3QukumX=OQ@mail.gmail.com>
+ <20200519072451.GA3128@ircssh-2.c.rugged-nimbus-611.internal>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200519072451.GA3128@ircssh-2.c.rugged-nimbus-611.internal>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+On Tue, May 19, 2020 at 07:24:52AM +0000, Sargun Dhillon wrote:
+> On Tue, May 19, 2020 at 12:39:39AM +0200, Jann Horn wrote:
+> > > For user_notif, I think we need something in and around these options:
+> > >
+> > > - make a new API that explicitly follows EA struct design
+> > >   (and while read()/write() might be easier[4], I tend to agree with
+> > >   Jann and we need to stick to ioctl(): as Tycho noted, "read/write is
+> > >   for data". Though I wonder if read() could be used for the notifications,
+> > >   which ARE data, and use ioctl() for the responses?)
+> > 
+> > Just as a note: If we use read() there, we'll never be able to
+> > transfer things like FDs through that API.
 
-Use more meaningful member names in preparation for sysfs support.
-No functionality change.
+(Hm, how did I not get that message? Weird. :))
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
----
- drivers/soundwire/mipi_disco.c | 11 ++++++-----
- include/linux/soundwire/sdw.h  |  8 ++++----
- 2 files changed, 10 insertions(+), 9 deletions(-)
+I hope we won't be able to receive fds through read(). This quickly
+becomes quite problematic, I think.
 
-diff --git a/drivers/soundwire/mipi_disco.c b/drivers/soundwire/mipi_disco.c
-index 844e6b22974f..4ae62b452b8c 100644
---- a/drivers/soundwire/mipi_disco.c
-+++ b/drivers/soundwire/mipi_disco.c
-@@ -231,16 +231,17 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave,
- 
- 		nval = fwnode_property_count_u32(node, "mipi-sdw-channel-number-list");
- 		if (nval > 0) {
--			dpn[i].num_ch = nval;
--			dpn[i].ch = devm_kcalloc(&slave->dev, dpn[i].num_ch,
--						 sizeof(*dpn[i].ch),
-+			dpn[i].num_channels = nval;
-+			dpn[i].channels = devm_kcalloc(&slave->dev,
-+						       dpn[i].num_channels,
-+						       sizeof(*dpn[i].channels),
- 						 GFP_KERNEL);
--			if (!dpn[i].ch)
-+			if (!dpn[i].channels)
- 				return -ENOMEM;
- 
- 			fwnode_property_read_u32_array(node,
- 					"mipi-sdw-channel-number-list",
--					dpn[i].ch, dpn[i].num_ch);
-+					dpn[i].channels, dpn[i].num_channels);
- 		}
- 
- 		nval = fwnode_property_count_u32(node, "mipi-sdw-channel-combination-list");
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index 7658d9698dd5..9c27a32df9bb 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -291,8 +291,8 @@ struct sdw_dpn_audio_mode {
-  * implementation-defined interrupts
-  * @max_ch: Maximum channels supported
-  * @min_ch: Minimum channels supported
-- * @num_ch: Number of discrete channels supported
-- * @ch: Discrete channels supported
-+ * @num_channels: Number of discrete channels supported
-+ * @channels: Discrete channels supported
-  * @num_ch_combinations: Number of channel combinations supported
-  * @ch_combinations: Channel combinations supported
-  * @modes: SDW mode supported
-@@ -316,8 +316,8 @@ struct sdw_dpn_prop {
- 	u32 imp_def_interrupts;
- 	u32 max_ch;
- 	u32 min_ch;
--	u32 num_ch;
--	u32 *ch;
-+	u32 num_channels;
-+	u32 *channels;
- 	u32 num_ch_combinations;
- 	u32 *ch_combinations;
- 	u32 modes;
--- 
-2.17.1
+> > 
+> Although there is no good reason for read being able to receive FDs, there is
+> precedence for recvmsg being able to do this. Either way, I do not think
 
+Right, and recvmsg() is quite dangerous because of that because you need
+to be extremely careful when e.g. the message is truncated and you want
+to error out and you need to carefully close all fds and other shenanigans.
+
+Also, recvmsg() imho, is a bit different from read simply because
+it's sort-of a "typed" read; it's plumbed on top of a message protocol and
+that protocal includes the ability to read fds. read() on the other hand
+is completely agnostic and doesn't care about the data at all. But
+that's just how I always conceptualized it...
+
+> it's a good idea to recv file descriptors, and instead file descriptors
+> should be fetched via the pidfd_getfd syscall.
+
++1
+
+> 
+> Injection is more complicated, and for now, I believe that "writes" should
+> be done via ioctl, or in the future, something like sendmsg might work.
