@@ -2,75 +2,206 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CDDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E022084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C1A2081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:11:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G66bJ6dC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgESPLp (ORCPT
+        id S1729233AbgESPLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 11:11:45 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:14524 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728773AbgESPLo (ORCPT
+        Tue, 19 May 2020 11:11:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729152AbgESPLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 May 2020 11:11:44 -0400
-X-IronPort-AV: E=Sophos;i="5.73,410,1583161200"; 
-   d="scan'208";a="47275375"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 20 May 2020 00:11:43 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 98954400516E;
-        Wed, 20 May 2020 00:11:41 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] PCI: endpoint: Fix epc windows allocation in pci_epc_multi_mem_init()
-Date:   Tue, 19 May 2020 16:11:20 +0100
-Message-Id: <1589901081-29948-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB90C08C5C0;
+        Tue, 19 May 2020 08:11:44 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id a2so2579361ejb.10;
+        Tue, 19 May 2020 08:11:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qFmnDDUmU7bAXUCXAiIOCZYqhy9KJ7cJu0vEwn4yYb0=;
+        b=G66bJ6dC8bOeKCV1WGYuwjLa+qKy7Y0+n3uWze8Gn1ZAszBOTqKWQ62WTUjzafwL9U
+         +GTPdcyHtNf5XKqMcGlQmJUpD97lSXKgCjwnFB4vjmiLtm75QmbmYTM3DtiB9XBAXubk
+         8oSegy8cxFNV3j8wgjPmI1EI4FQZ05wphJXLMEfxZ7N/L87ptMxbQDNAdetxkOFNUMkL
+         HpE+J0BbniB9iXMsBbBOr2cxGGu68R8o5msor4h3OyP4WEVKPSwrF4l3Kxol9Kvm0vUG
+         oiXtOGlLJLyzkc5iFPnvHSCYntlakDIurYnTYtiSq9/gpPVc72+0QTJLIip+97mGYOYs
+         4eDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qFmnDDUmU7bAXUCXAiIOCZYqhy9KJ7cJu0vEwn4yYb0=;
+        b=RimmHQYVrejnmcibK7f0A1RQkVPgJbR4B/6YOUtJQXQfZCVFFpmJNvR4xpZm/bRUTp
+         mC0N2exf8/Fyix29oNpwuhzqj4ukbhe1/aNn49AsldGTAOHjjf326OckpRBm5BTCv06E
+         JykaJOs11MXERtDzre/T5+eTAGmXwGu3XK9M/0iDmUQmqTH7dZwBiqJJn8eW3YFnBLt1
+         oCmlWk5HGUPoCT7pfLOmaSkUvulGPTJfwJwlkJQwKm52LcoK88aViEqVlEppja6HNGfP
+         lEDiHU93J0AIlWZ5OjnuFSRKgxXF9+GUVleuGUsqrHTo9NaS0fRmBWZ6yJCdkuqLc9xI
+         LSng==
+X-Gm-Message-State: AOAM5325HF8+NR1HKBhdnVsTb8CRd8BfmGZANTSKe8HBMYzuQD6ZTSrx
+        Etg096xpmMhzthyt2XmfyCTXr31QYPgWNZAvvgk=
+X-Google-Smtp-Source: ABdhPJzO3neINwRRzJbIjXOIJwQTkTwZpvqUbx/rpVcTcaX7VHke7n+JUXqMuZyVp2d+kaG3FsnjsThgVhsZPoFWTDE=
+X-Received: by 2002:a17:906:1088:: with SMTP id u8mr1110995eju.428.1589901102998;
+ Tue, 19 May 2020 08:11:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
+ <b491e02ad790a437115fdeab6b21bc48@codeaurora.org> <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
+ <20200507125357.GA31783@willie-the-truck> <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
+ <CAF6AEGvuHKObTR97XdSXjmjKB+qjQ8N1_wxM=ZU8bEkF=cXp-A@mail.gmail.com>
+ <20200511173008.GA24282@jcrouse1-lnx.qualcomm.com> <20200518154522.GN32394@willie-the-truck>
+ <5a0ad639e272026c8be57393937cda22@codeaurora.org>
+In-Reply-To: <5a0ad639e272026c8be57393937cda22@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 19 May 2020 08:11:59 -0700
+Message-ID: <CAF6AEGuzBtj+srindmOvhaom5BdS2adLaOF=v_MtguMja14V2w@mail.gmail.com>
+Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS , Joerg Roedel <joro@8bytes.org>," 
+        <iommu@lists.linux-foundation.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix allocation of epc windows with the correct size, this also fix smatch
-warning:
+On Tue, May 19, 2020 at 2:26 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi Will,
+>
+> On 2020-05-18 21:15, Will Deacon wrote:
+> > On Mon, May 11, 2020 at 11:30:08AM -0600, Jordan Crouse wrote:
+> >> On Fri, May 08, 2020 at 08:40:40AM -0700, Rob Clark wrote:
+> >> > On Fri, May 8, 2020 at 8:32 AM Rob Clark <robdclark@gmail.com> wrote:
+> >> > >
+> >> > > On Thu, May 7, 2020 at 5:54 AM Will Deacon <will@kernel.org> wrote:
+> >> > > >
+> >> > > > On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
+> >> > > > > On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
+> >> > > > > > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
+> >> > > > > > > Add stall implementation hook to enable stalling
+> >> > > > > > > faults on QCOM platforms which supports it without
+> >> > > > > > > causing any kind of hardware mishaps. Without this
+> >> > > > > > > on QCOM platforms, GPU faults can cause unrelated
+> >> > > > > > > GPU memory accesses to return zeroes. This has the
+> >> > > > > > > unfortunate result of command-stream reads from CP
+> >> > > > > > > getting invalid data, causing a cascade of fail.
+> >> > > > >
+> >> > > > > I think this came up before, but something about this rationale doesn't add
+> >> > > > > up - we're not *using* stalls at all, we're still terminating faulting
+> >> > > > > transactions unconditionally; we're just using CFCFG to terminate them with
+> >> > > > > a slight delay, rather than immediately. It's really not clear how or why
+> >> > > > > that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
+> >> > > > > (or even a documented workaround for something), or might things start
+> >> > > > > blowing up again if any other behaviour subtly changes? I'm not dead set
+> >> > > > > against adding this, but I'd *really* like to have a lot more confidence in
+> >> > > > > it.
+> >> > > >
+> >> > > > Rob mentioned something about the "bus returning zeroes" before, but I agree
+> >> > > > that we need more information so that we can reason about this and maintain
+> >> > > > the code as the driver continues to change. That needs to be a comment in
+> >> > > > the driver, and I don't think "but android seems to work" is a good enough
+> >> > > > justification. There was some interaction with HUPCF as well.
+> >> > >
+> >> > > The issue is that there are multiple parallel memory accesses
+> >> > > happening at the same time, for example CP (the cmdstream processor)
+> >> > > will be reading ahead and setting things up for the next draw or
+> >> > > compute grid, in parallel with some memory accesses from the shader
+> >> > > which could trigger a fault.  (And with faults triggered by something
+> >> > > in the shader, there are *many* shader threads running in parallel so
+> >> > > those tend to generate a big number of faults at the same time.)
+> >> > >
+> >> > > We need either CFCFG or HUPCF, otherwise what I have observed is that
+> >> > > while the fault happens, CP's memory access will start returning
+> >> > > zero's instead of valid cmdstream data, which triggers a GPU hang.  I
+> >> > > can't say whether this is something unique to qcom's implementation of
+> >> > > the smmu spec or not.
+> >> > >
+> >> > > *Often* a fault is the result of the usermode gl/vk/cl driver bug,
+> >> > > although I don't think that is an argument against fixing this in the
+> >> > > smmu driver.. I've been carrying around a local patch to set HUPCF for
+> >> > > *years* because debugging usermode driver issues is so much harder
+> >> > > without.  But there are some APIs where faults can be caused by the
+> >> > > user's app on top of the usermode driver.
+> >> > >
+> >> >
+> >> > Also, I'll add to that, a big wish of mine is to have stall with the
+> >> > ability to resume later from a wq context.  That would enable me to
+> >> > hook in the gpu crash dump handling for faults, which would make
+> >> > debugging these sorts of issues much easier.  I think I posted a
+> >> > prototype of this quite some time back, which would schedule a worker
+> >> > on the first fault (since there are cases where you see 1000's of
+> >> > faults at once), which grabbed some information about the currently
+> >> > executing submit and some gpu registers to indicate *where* in the
+> >> > submit (a single submit could have 100's or 1000's of draws), and then
+> >> > resumed the iommu cb.
+> >> >
+> >> > (This would ofc eventually be useful for svm type things.. I expect
+> >> > we'll eventually care about that too.)
+> >>
+> >> Rob is right about HUPCF. Due to the parallel nature of the command
+> >> processor
+> >> there is always a very good chance that a CP access is somewhere in
+> >> the bus so
+> >> any pagefault is usually a death sentence. The GPU context bank would
+> >> always
+> >> want HUPCF set to 1.
+> >
+> > So this sounds like an erratum to me, and I'm happy to set HUPCF if we
+> > detect the broken implementation. However, it will need an entry in
+> > Documentation/arm64/silicon-errata.rst and a decent comment in the
+> > driver
+> > to explain what we're doing and why.
+> >
+>
+> AFAIK there is no erratum documented internally for this behaviour and
+> this
+> exists from MSM8996 SoC time and errata usually don't survive this long
+> across generation of SoCs and there is no point for us in disguising it.
 
-drivers/pci/endpoint/pci-epc-mem.c:65 pci_epc_multi_mem_init()
-warn: double check that we're allocating correct size: 4 vs 112
+possibly longer, qcom_iommu sets CFCFG..
 
-Fixes: ecbae87 ("PCI: endpoint: Add support to handle multiple base for mapping outbound memory")
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/pci/endpoint/pci-epc-mem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Is it OK if we clearly mention it as the "design limitation" or some
+> other
+> term which we can agree upon along with the description which Rob and
+> Jordan
+> provided for setting HUPCF in the driver when we add the set_hupcf
+> callback?
 
-diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-index 2325f74..80c46f3 100644
---- a/drivers/pci/endpoint/pci-epc-mem.c
-+++ b/drivers/pci/endpoint/pci-epc-mem.c
-@@ -62,7 +62,7 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
- 	if (!windows || !num_windows)
- 		return -EINVAL;
- 
--	epc->windows = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
-+	epc->windows = kcalloc(num_windows, sizeof(*epc->windows), GFP_KERNEL);
- 	if (!epc->windows)
- 		return -ENOMEM;
- 
--- 
-2.7.4
+I'm not too picky on what we call it, but afaict it has been this way
+since the beginning of time, rather than specific to a certain SoC or
+generation of SoCs.  So it doesn't seem like the hw designers consider
+it a bug.
 
+(I'm not sure what the expected behavior is.. nor if any other SMMU
+implementation encounters this sort of situation..)
+
+BR,
+-R
+
+>
+> Thanks,
+> Sai
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member
+> of Code Aurora Forum, hosted by The Linux Foundation
