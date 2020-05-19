@@ -2,71 +2,101 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7455020674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27CF20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:47:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Xhbw9rpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgESXnR (ORCPT
+        id S1727998AbgESXrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:43:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59148 "EHLO
+        Tue, 19 May 2020 19:47:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgESXnR (ORCPT
+        with ESMTP id S1725998AbgESXrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:43:17 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BBF9C061A0E;
-        Tue, 19 May 2020 16:43:17 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbBsV-0004NU-41; Wed, 20 May 2020 01:42:32 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6D1E3100D00; Wed, 20 May 2020 01:42:30 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of a seqcount
-In-Reply-To: <20200519161141.5fbab730@hermes.lan>
-References: <20200519214547.352050-1-a.darwish@linutronix.de> <20200519214547.352050-2-a.darwish@linutronix.de> <20200519150159.4d91af93@hermes.lan> <87v9kr5zt7.fsf@nanos.tec.linutronix.de> <20200519161141.5fbab730@hermes.lan>
-Date:   Wed, 20 May 2020 01:42:30 +0200
-Message-ID: <87lfln5w61.fsf@nanos.tec.linutronix.de>
+        Tue, 19 May 2020 19:47:14 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695E0C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:47:14 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id z9so500034qvi.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hab13sCBMoSFVDNe53Te5/um8u7Dvom/Oq5qeGy6LQM=;
+        b=Xhbw9rpuCFAsoXsARVsCZK+5mFgLakvRnkIHpbr4LPiEzmvAFLyiDyxRbU9Mkl9Tfe
+         73zROnHsRIGAQKxAXv5vA2bB+Mqm5m394G9/J23BDf/8WQGTOp/6wcKBy2SoClf1hE8n
+         CPJmIWUcNVVNK/QO/oUQckvWaQSs6cD3J+zf0ZvwZYNAAWHINHg4rKH8Ts6JpZVdQwET
+         dXiDnk2XP5PdM5lfJJldFqF3lgi12EFFkLAnQ4YVU0wRmjSr8MeUAgohtdLObAbCPMtL
+         fE28dcJgqERVB0truvko/CaxypXZzlRj+adKyQniVXkcKDWfHG7e52W70g1ZGmN6Ju8l
+         Evxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hab13sCBMoSFVDNe53Te5/um8u7Dvom/Oq5qeGy6LQM=;
+        b=WDz7OgPzp09w4tILhEsy4YVDjJTYOJH+yqABd31CXa+1+lX/kYex2717q/B7A9IDzk
+         E3POG3Isd0k7j9zVbIvPjCIRuCOe5RJTzCaBJRFwXYfvwCXlkBS/cLqosdmfkAVq86Y/
+         wTrF+K/CDcXaZomzqIekaYzfxyYUr99kOu82ZI39GoFxcX4yb5KA5c1+RH8ql2DZSWUq
+         zKWlwyKjFnOWy+WjP756i2ZO3O8cjybfWfl0e4Om2wlDpw1kSoq7UoLXDvYiC3EPySxf
+         q0E9dkm4ZzV9qCPJLpgnjWacLVBCOgYUMMW9mqCYUDmmWSY+toe0evhQv0V2I66m+wzf
+         ZLYQ==
+X-Gm-Message-State: AOAM530eOMH5lKcPdqDGRA8xtAHDpza/JULIFmLYZI+h4rXpUXemsJ8h
+        EU68io+3wOC45MBeNTczvQLe20PcFn4=
+X-Google-Smtp-Source: ABdhPJzpAvhAglbfwjvqzAhBMICKgBROUjygpu/1kcwuj3g1+1V47CU1Z7d97GhpLB+Zon5+2NymcQ==
+X-Received: by 2002:a0c:a619:: with SMTP id s25mr2273937qva.21.1589932033719;
+        Tue, 19 May 2020 16:47:13 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id q2sm845022qkn.116.2020.05.19.16.47.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 16:47:13 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jbBx2-00081J-VC; Tue, 19 May 2020 20:47:12 -0300
+Date:   Tue, 19 May 2020 20:47:12 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH v2] RDMA/rtrs: client: Fix function return on success
+Message-ID: <20200519234712.GE30609@ziepe.ca>
+References: <20200519163612.GA6043@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519163612.GA6043@embeddedor>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Hemminger <stephen@networkplumber.org> writes:
-> On Wed, 20 May 2020 00:23:48 +0200
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> No. We did not. -ENOTESTCASE
->
-> Please try, it isn't that hard..
->
-> # time for ((i=0;i<1000;i++)); do ip li add dev dummy$i type dummy; done
->
-> real	0m17.002s
-> user	0m1.064s
-> sys	0m0.375s
+On Tue, May 19, 2020 at 11:36:12AM -0500, Gustavo A. R. Silva wrote:
+> Remove the if-statement and return the value contained in _err_,
+> unconditionally.
+> 
+> Addresses-Coverity-ID: 1493753 ("Identical code for different branches")
+> Fixes: 6a98d71daea1 ("RDMA/rtrs: client: main functionality")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+> ---
+> Changes in v2:
+>  - Return err, unconditionally. As suggested by Bart Van Assche.
+>    Thanks, Bart.
 
-And that solves the incorrectness of the current code in which way?
+Applied to for-next, thanks
+
+Jason
