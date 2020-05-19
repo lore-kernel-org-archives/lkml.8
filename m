@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3FB205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E2F20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgESVqv (ORCPT
+        id S1728245AbgESVqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:46:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40824 "EHLO
+        Tue, 19 May 2020 17:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgESVqu (ORCPT
+        with ESMTP id S1726030AbgESVqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:46:50 -0400
+        Tue, 19 May 2020 17:46:52 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C86C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:46:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31BCCC08C5C0;
+        Tue, 19 May 2020 14:46:52 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1jbA48-0002eg-JX; Tue, 19 May 2020 23:46:24 +0200
+        id 1jbA3x-0002d6-SK; Tue, 19 May 2020 23:46:14 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -36,10 +37,12 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         "Sebastian A. Siewior" <bigeasy@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Subject: [PATCH v1 07/25] lockdep: Add preemption disabled assertion API
-Date:   Tue, 19 May 2020 23:45:29 +0200
-Message-Id: <20200519214547.352050-8-a.darwish@linutronix.de>
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH v1 05/25] u64_stats: Document writer non-preemptibility requirement
+Date:   Tue, 19 May 2020 23:45:27 +0200
+Message-Id: <20200519214547.352050-6-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -53,94 +56,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Asserting that preemption is disabled is a critical sanity check.
-Developers are usually reluctant to add such a check in a fastpath, as
-reading the preemption count can be costly.
+The u64_stats mechanism uses sequence counters to protect against 64-bit
+values tearing on 32-bit architectures. Updating such statistics is a
+sequence counter write side critical section.
 
-Extend the lockdep API with a preemption disabled assertion. If lockdep
-is disabled, or if the underlying architecture does not support kernel
-preemption, this assert has no runtime overhead.
+Preemption must be disabled before entering this seqcount write critical
+section.  Failing to do so, the seqcount read side can preempt the write
+side section and spin for the entire scheduler tick.  If that reader
+belongs to a real-time scheduling class, it can spin forever and the
+kernel will livelock.
 
-Since the lockdep assertion references sched.h task_struct current,
-define it at lockdep.c instead of lockdep.h. This unbinds a potential
-circular header dependency chain for call-sites, defined inlined, at
-other header files already included and needed by sched.h.
+Document this statistics update side non-preemptibility requirement.
 
-Mark the exported assertion symbol with NOKPROBE_SYMBOL. Lockdep
-functions can be involved in breakpoint handling and probing on those
-functions can cause a breakpoint recursion.
+Reword the u64_stats header file top comment to always mention "Reader"
+or "Writer" at the start of each bullet point, making it easier to
+follow which side each point is actually for.
 
-References: f54bb2ec02c8 ("locking/lockdep: Add IRQs disabled/enabled assertion APIs: ...")
-References: 2f43c6022d84 ("kprobes: Prohibit probing on lockdep functions")
+Fix the statement "whole thing is a NOOP on 64bit arches or UP kernels".
+For 32-bit UP kernels, preemption is always disabled for the statistics
+read side section.
+
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/lockdep.h  |  9 +++++++++
- kernel/locking/lockdep.c | 15 +++++++++++++++
- lib/Kconfig.debug        |  1 +
- 3 files changed, 25 insertions(+)
+ include/linux/u64_stats_sync.h | 38 ++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 206774ac6946..54c929ea5b98 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -702,6 +702,14 @@ do {									\
- 			  "Not in hardirq as expected\n");		\
- 	} while (0)
- 
-+/*
-+ * Don't define this assertion here to avoid a call-site's header file
-+ * dependency on sched.h task_struct current. This is needed by call
-+ * sites that are inline defined at header files already included by
-+ * sched.h.
-+ */
-+void lockdep_assert_preemption_disabled(void);
-+
- #else
- # define might_lock(lock) do { } while (0)
- # define might_lock_read(lock) do { } while (0)
-@@ -709,6 +717,7 @@ do {									\
- # define lockdep_assert_irqs_enabled() do { } while (0)
- # define lockdep_assert_irqs_disabled() do { } while (0)
- # define lockdep_assert_in_irq() do { } while (0)
-+# define lockdep_assert_preemption_disabled() do { } while (0)
- #endif
- 
- #ifdef CONFIG_PROVE_RAW_LOCK_NESTING
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index ac10db66cc63..4dae65bc65c2 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -5857,3 +5857,18 @@ void lockdep_rcu_suspicious(const char *file, const int line, const char *s)
- 	dump_stack();
- }
- EXPORT_SYMBOL_GPL(lockdep_rcu_suspicious);
-+
-+#ifdef CONFIG_PROVE_LOCKING
-+
-+void lockdep_assert_preemption_disabled(void)
-+{
-+	WARN_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&
-+		  debug_locks				&&
-+		  !current->lockdep_recursion		&&
-+		  (preempt_count() == 0 && current->hardirqs_enabled),
-+		  "preemption not disabled as expected\n");
-+}
-+EXPORT_SYMBOL_GPL(lockdep_assert_preemption_disabled);
-+NOKPROBE_SYMBOL(lockdep_assert_preemption_disabled);
-+
-+#endif
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 21d9c5f6e7ec..34d9d8896003 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1062,6 +1062,7 @@ config PROVE_LOCKING
- 	select DEBUG_RWSEMS
- 	select DEBUG_WW_MUTEX_SLOWPATH
- 	select DEBUG_LOCK_ALLOC
-+	select PREEMPT_COUNT if !ARCH_NO_PREEMPT
- 	select TRACE_IRQFLAGS
- 	default n
- 	help
+diff --git a/include/linux/u64_stats_sync.h b/include/linux/u64_stats_sync.h
+index 9de5c10293f5..30358ce3d8fe 100644
+--- a/include/linux/u64_stats_sync.h
++++ b/include/linux/u64_stats_sync.h
+@@ -7,29 +7,31 @@
+  * we provide a synchronization point, that is a noop on 64bit or UP kernels.
+  *
+  * Key points :
+- * 1) Use a seqcount on SMP 32bits, with low overhead.
+- * 2) Whole thing is a noop on 64bit arches or UP kernels.
+- * 3) Write side must ensure mutual exclusion or one seqcount update could
++ *
++ * 1) Use a seqcount on 32-bit SMP, only disable preemption for 32-bit UP.
++ *
++ * 2) The whole thing is a no-op on 64-bit architectures.
++ *
++ * 3) Write side must ensure mutual exclusion, or one seqcount update could
+  *    be lost, thus blocking readers forever.
+- *    If this synchronization point is not a mutex, but a spinlock or
+- *    spinlock_bh() or disable_bh() :
+- * 3.1) Write side should not sleep.
+- * 3.2) Write side should not allow preemption.
+- * 3.3) If applicable, interrupts should be disabled.
+  *
+- * 4) If reader fetches several counters, there is no guarantee the whole values
+- *    are consistent (remember point 1) : this is a noop on 64bit arches anyway)
++ * 4) Write side must disable preemption, or a seqcount reader can preempt the
++ *    writer and also spin forever.
+  *
+- * 5) readers are allowed to sleep or be preempted/interrupted : They perform
+- *    pure reads. But if they have to fetch many values, it's better to not allow
+- *    preemptions/interruptions to avoid many retries.
++ * 5) Write side must use the _irqsave() variant if other writers, or a reader,
++ *    can be invoked from an IRQ context.
+  *
+- * 6) If counter might be written by an interrupt, readers should block interrupts.
+- *    (On UP, there is no seqcount_t protection, a reader allowing interrupts could
+- *     read partial values)
++ * 6) If reader fetches several counters, there is no guarantee the whole values
++ *    are consistent w.r.t. each other (remember point #2: seqcounts are not
++ *    used for 64bit architectures).
+  *
+- * 7) For irq and softirq uses, readers can use u64_stats_fetch_begin_irq() and
+- *    u64_stats_fetch_retry_irq() helpers
++ * 7) Readers are allowed to sleep or be preempted/interrupted: they perform
++ *    pure reads.
++ *
++ * 8) Readers must use both u64_stats_fetch_{begin,retry}_irq() if the stats
++ *    might be updated from a hardirq or softirq context (remember point #1:
++ *    seqcounts are not used for UP kernels). 32-bit UP stat readers could read
++ *    corrupted 64-bit values otherwise.
+  *
+  * Usage :
+  *
 -- 
 2.20.1
 
