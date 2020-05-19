@@ -2,120 +2,138 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEF6F20715
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D4B20715
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:26:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PuB7x/uV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fp5I1zLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgESAZk (ORCPT
+        id S1727896AbgESA0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 20:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38160 "EHLO
+        Mon, 18 May 2020 20:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgESAZj (ORCPT
+        with ESMTP id S1726284AbgESA0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 20:25:39 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69063C061A0C;
-        Mon, 18 May 2020 17:25:39 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id d7so9740796qtn.11;
-        Mon, 18 May 2020 17:25:39 -0700 (PDT)
+        Mon, 18 May 2020 20:26:24 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7C8C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:26:24 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id m11so12659265qka.4
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:26:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6nQAIsGmbBiNV1zSsJWz0TENOrH6776bbwZuF8Trr/w=;
-        b=PuB7x/uVjj+wZ/Gxit6ndJAZ2p1GOG41RE3fdhvuzB3KG3w1MrvH1AbDzwTBrI+OTg
-         3qlFSI/J7tqm0sQzs0JKdBholOEQl5vDk9J8gEyowujMKD+xSbp15FX10gXg2rs+9N4/
-         15Qw+H+xeMeYCziG8zL48HeAJOISggk/T/BCCZD5qCP0Rc4U2rdcktZRudMN9NndwVG/
-         MBSovAoMGGZXRzHbXEdGGSKtka3KBnGf8kJ3JhVu+DXuP3mdzQ0PKnzNV3LLrURgqcSG
-         pCUq9CBCQ0pErIWy7cV+APAwi7ObeXfRIXnqAlNR5XfocyfJ43KTrjbs2x7RGEPqcKd+
-         C+Dw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vSJnwcwzJ6JQ8cOkRgXkpxTwGHhwzzMaFtdAARFsxXA=;
+        b=Fp5I1zLjyad2CUSFmsDYAcObjn71acu20n11AnJLUVFXrJo5RMDOe5M2EqavYD23Ws
+         G8wGk/jMQywcMZRmiaM6f2QXt7OE1tvnkE0Z4KCP9J/NyJzodUsQKAOG+W5Z9hL6YmVA
+         ztf6oeTYJrRfQGG4DWolxcRm6ABmRqBeIVx2kjHP+c6VzOvOFkCxm+bm0ggvEf0TitGQ
+         4nK/Vws5/yPko9TF4FzkCNe7pu4rsS/NHwJdLDM/nGV+FOT99ho8mep++0upq61Zwk0t
+         jVCzkLfDAYPaVZx1hvttS+U4oaEEQfVgEc3dpX7Ulw33WWVQ0a3FAWv61TT99P1jTX26
+         n98A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6nQAIsGmbBiNV1zSsJWz0TENOrH6776bbwZuF8Trr/w=;
-        b=qfFgQMcfEDXig+jaxgZb0JoVXz8djD9DycH4LztP1jZJu5iGVhYnhaS5iGOo4JQz1u
-         5L6S51E7LwhWE9iUTWA8/2LnAtAcKn4EA4gi8UylYMB01OgkXQn4dPBHkUewswBHL324
-         7fU57mVNAeGmVqKVbZ5jGSg3aZDu1KKVLasmKSl7fzYP5pjBMZRaHgjoUHbBVMUAYGKD
-         rCNyTcXX6qRAJXKOecUcFYFkjPPr5aCCQZfaaLVekdSpcFSVRK+gEpzvLPk7btT2/eju
-         /Fj5QotY7j27cqJU7C9RweRsDNOBSkuq7z4xzjcevyxwrZpmKJ+8rc60zwaKvAbdEFq2
-         907Q==
-X-Gm-Message-State: AOAM533jPtUbVqWpjFOML+Qf66VZ/47Q4IJltQVeLgNWNJFQddSE8m3H
-        R30plWTig35KwoL1w1lwygQtS+aWEzB4FzJ0I0g=
-X-Google-Smtp-Source: ABdhPJz4l7HrIm3Z41Fbwv9AZMAfCNar9zykDJML/8NhiMsNv1WTtuHZdvzwk12LIrWvtKuF/4VC9YZz8BdRrF7pHxk=
-X-Received: by 2002:aed:24a1:: with SMTP id t30mr18426331qtc.93.1589847938662;
- Mon, 18 May 2020 17:25:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vSJnwcwzJ6JQ8cOkRgXkpxTwGHhwzzMaFtdAARFsxXA=;
+        b=P49S8MGgClWapOEmRVhCrGTPwzKFpQg2Jz5+1ovesdXMrlqdw6BeV1pqkEMseqCbtV
+         j//REOhq4Qicj/vzfgzwWnACIBErLZRyXePCRUY0ez2PLjZssaG4eaYxzG3tHsNMT+ic
+         g8U5uJMmZtQJ7nHlZy7PE+/hSU/635Mcc3lEUeiV6Gt6AFBor+/l3c+BkT0uUKnNuOgj
+         +YEvWCl3ZV2AsqujBoiAHcgIjWvh9YouddO25Od2O1oCsY5CZwJA35THBAReGAl/6VvE
+         snwEryhRwv1r2KDwk8xTb7IXcV4DOF9YOjqY7buOT8tvmQsTd91p8G9omNAJFWeyO60q
+         QOCw==
+X-Gm-Message-State: AOAM533qkJ4m9bKTyiL+W5KAcnSgjLvzsksLErrb8YL2vA2erTI9gcsX
+        Vxg3RVS0KlLcT4pEb7UY5RY=
+X-Google-Smtp-Source: ABdhPJxc6ks256v3X/1qy6T5tU1qAbCGp8bsiXZlDzOdzp8HLmooSIIpu97YX77sV39D4Ma6oHkFFA==
+X-Received: by 2002:a37:b5c3:: with SMTP id e186mr17102893qkf.158.1589847983534;
+        Mon, 18 May 2020 17:26:23 -0700 (PDT)
+Received: from LeoBras.aus.stglabs.ibm.com (177-131-65-239.dynamic.desktop.com.br. [177.131.65.239])
+        by smtp.gmail.com with ESMTPSA id e34sm2284048qtb.21.2020.05.18.17.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 17:26:22 -0700 (PDT)
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Allison Randal <allison@lohutok.net>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/1] powerpc/crash: Use NMI context for printk when starting to crash
+Date:   Mon, 18 May 2020 21:25:58 -0300
+Message-Id: <20200519002558.202929-1-leobras.c@gmail.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <CAG=TAF6mfrwxF1-xEJJ9dL675uMUa7RZrOa_eL2mJizZJ-U7iQ@mail.gmail.com>
- <CAEf4BzazvGOoJbm+zNMqTjhTPJAnVLVv9V=rXkdXZELJ4FPtiA@mail.gmail.com> <CAG=TAF6aqo-sT2YE30riqp7f47KyXH_uhNJ=M9L12QU6EEEfqQ@mail.gmail.com>
-In-Reply-To: <CAG=TAF6aqo-sT2YE30riqp7f47KyXH_uhNJ=M9L12QU6EEEfqQ@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 18 May 2020 17:25:27 -0700
-Message-ID: <CAEf4BzaBfnDL=WpRP-7rYFhocOsCQyFuZaLvM0+k9sv2t_=rVw@mail.gmail.com>
-Subject: Re: UBSAN: array-index-out-of-bounds in kernel/bpf/arraymap.c:177
-To:     Qian Cai <cai@lca.pw>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 5:09 PM Qian Cai <cai@lca.pw> wrote:
->
-> On Mon, May 18, 2020 at 7:55 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Sun, May 17, 2020 at 7:45 PM Qian Cai <cai@lca.pw> wrote:
-> > >
-> > > With Clang 9.0.1,
-> > >
-> > > return array->value + array->elem_size * (index & array->index_mask);
-> > >
-> > > but array->value is,
-> > >
-> > > char value[0] __aligned(8);
-> >
-> > This, and ptrs and pptrs, should be flexible arrays. But they are in a
-> > union, and unions don't support flexible arrays. Putting each of them
-> > into anonymous struct field also doesn't work:
-> >
-> > /data/users/andriin/linux/include/linux/bpf.h:820:18: error: flexible
-> > array member in a struct with no named members
-> >    struct { void *ptrs[] __aligned(8); };
-> >
-> > So it probably has to stay this way. Is there a way to silence UBSAN
-> > for this particular case?
->
-> I am not aware of any way to disable a particular function in UBSAN
-> except for the whole file in kernel/bpf/Makefile,
->
-> UBSAN_SANITIZE_arraymap.o := n
->
-> If there is no better way to do it, I'll send a patch for it.
+Currently, if printk lock (logbuf_lock) is held by other thread during
+crash, there is a chance of deadlocking the crash on next printk, and
+blocking a possibly desired kdump.
 
+At the start of default_machine_crash_shutdown, make printk enter
+NMI context, as it will use per-cpu buffers to store the message,
+and avoid locking logbuf_lock.
 
-That's probably going to be too drastic, we still would want to
-validate the rest of arraymap.c code, probably. Not sure, maybe
-someone else has better ideas.
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+
+---
+Changes since v2:
+- Changes usage of printk_nmi_enter() to nmi_enter()
+  (Suggested by Nick Piggin)
+
+Changes since v1:
+- Added in-code comment explaining the need of context change
+- Function moved to the start of default_machine_crash_shutdown,
+  to avoid locking any printk on crashing routine.
+- Title was 'Use NMI context for printk after crashing other CPUs'
+
+---
+ arch/powerpc/kexec/crash.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+index d488311efab1..53c5cf9b6d3c 100644
+--- a/arch/powerpc/kexec/crash.c
++++ b/arch/powerpc/kexec/crash.c
+@@ -16,6 +16,7 @@
+ #include <linux/delay.h>
+ #include <linux/irq.h>
+ #include <linux/types.h>
++#include <linux/hardirq.h>
+ 
+ #include <asm/processor.h>
+ #include <asm/machdep.h>
+@@ -311,6 +312,13 @@ void default_machine_crash_shutdown(struct pt_regs *regs)
+ 	unsigned int i;
+ 	int (*old_handler)(struct pt_regs *regs);
+ 
++	/*
++	 * Avoid hardlocking with irresponsive CPU holding logbuf_lock,
++	 * by using printk nmi_context
++	 */
++	if (!in_nmi())
++		nmi_enter();
++
+ 	/*
+ 	 * This function is only called after the system
+ 	 * has panicked or is otherwise in a critical state.
+-- 
+2.25.4
+
