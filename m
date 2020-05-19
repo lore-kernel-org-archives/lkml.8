@@ -2,93 +2,101 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8895C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8DD820825
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:29:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="omrxtA0s"
+	by mail.kernel.org (Postfix) with ESMTP id B345A20825
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgESM3R (ORCPT
+        id S1728737AbgESMc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728691AbgESM3Q (ORCPT
+        Tue, 19 May 2020 08:32:29 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:53264 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgESMc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:29:16 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CFB3C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 05:29:16 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s10so14284729iog.7
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 05:29:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JW39g620VF1bHJrnnWjeDck8qGa5xf2Z2jMQhGIK+fo=;
-        b=omrxtA0s/+KjuQMYFq95kQ0IG5B0oyprCeyuRCYvUKk+ovmWC55kwXR9kBS2J6MtfW
-         FBHGYTtnVql17Jy5moSYPg/P95oCWnG3COzItzmkk3p9MoVybHxb+Zo4oloVIM4gdTpa
-         vbz6UkpgRAKe3N3D/+kc9aK1S7OlC5CQBLTi69aav+VvbEQdA/MDV79vn2/DDDykVwWr
-         VW/eoVYd2SuZnXqccbiMnk0kpb0tn0vvhhrrEDnvGgAyVRKgilzSdA+EiKQqIIqAcLsa
-         8od7tBxjf4HpoZjVLYfjqKjM+3wEIDnNV9NYdFcUb4Bym55MH8lIIAxbS4tZPXKrolIA
-         XQVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JW39g620VF1bHJrnnWjeDck8qGa5xf2Z2jMQhGIK+fo=;
-        b=Ga/xuDR7hOK4S6EDGilvA8+xqRzSlexNbOoJEj3vFY9DKvlSwdW4tZVHJXoRPb0EPM
-         ly3C88tWRpZ0yqkMbjOdOMNIJx36Dc5GA86UtEd06+r4SpuvkaKqKeVa22HUsuzyJgnW
-         vI1j93F7JQi9Upz/vnzVBAzwhlIPHEN5j97LbO8gMWvmX5TbQfrWdHUdxzLJnqANBDsc
-         w9TUh6V8nFBblW9vM4qwyx6UFZhqULsr+/WEB/2O11fw9CVet0hEBxzVZHi6ACPeFXwa
-         hrvX0OQz+CdFGX1ADU85TNFhuFh6iYP6YXQFVeC+Z/Jljm7RTRFy4OqWTcIMQ3myWUsu
-         GCxA==
-X-Gm-Message-State: AOAM533Fy/sYoqOjx/OuE/n3mgwpzPh5QjWwo6fq+XikzQvRV09GmedR
-        NTb4CXDkSTyinRtwfRJUtiGJI1peUlk=
-X-Google-Smtp-Source: ABdhPJzzy9J3x83nT2BRYeABnwvq5cbIn3qbKOZkTAg/uXp38aO1MzfiJityaNd8kKirOq5u+3OwZQ==
-X-Received: by 2002:a02:942a:: with SMTP id a39mr10249305jai.50.1589891355383;
-        Tue, 19 May 2020 05:29:15 -0700 (PDT)
-Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id p1sm4861155ioh.38.2020.05.19.05.29.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 05:29:14 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: enable IPA
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200518214834.9630-1-elder@linaro.org>
- <20200518232402.GM2165@builder.lan>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <f739b0de-cfc6-d0c0-df1c-d2ff4b56aeb4@linaro.org>
-Date:   Tue, 19 May 2020 07:29:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 08:32:28 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb1Q2-0000vi-W0; Tue, 19 May 2020 06:32:27 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb1Q2-0007fz-6K; Tue, 19 May 2020 06:32:26 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Andreas Schwab <schwab@linux-m68k.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+References: <20200518055457.12302-1-keescook@chromium.org>
+        <20200518055457.12302-2-keescook@chromium.org>
+        <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
+        <CAG48ez1FspvvypJSO6badG7Vb84KtudqjRk1D7VyHRm06AiEbQ@mail.gmail.com>
+        <20200518144627.sv5nesysvtgxwkp7@wittgenstein>
+        <87blmk3ig4.fsf@x220.int.ebiederm.org> <87mu64uxq1.fsf@igel.home>
+        <87sgfwuoi3.fsf@x220.int.ebiederm.org> <87eergunqs.fsf@igel.home>
+Date:   Tue, 19 May 2020 07:28:46 -0500
+In-Reply-To: <87eergunqs.fsf@igel.home> (Andreas Schwab's message of "Tue, 19
+        May 2020 14:12:59 +0200")
+Message-ID: <87ftbwun0h.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200518232402.GM2165@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jb1Q2-0007fz-6K;;;mid=<87ftbwun0h.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/TJHeqM7kG/mxWux7jgYWK9a5y1fosOwQ=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/20 6:24 PM, Bjorn Andersson wrote:
-> modem-init tells the IPA driver that the modem will load the ipa_fws
-> firmware, but the MTP is assumed to run "LA" firmware where it's the
-> Linux-side's job to do this.
+Andreas Schwab <schwab@linux-m68k.org> writes:
 
-I didn't see this message until just now, but I remembered that
-last night.  I just build my version 2 and will send it shortly.
-Sorry about that.
+> On Mai 19 2020, Eric W. Biederman wrote:
+>
+>> I am wondering if there are source trees for libc4 or libc5 around
+>> anywhere that we can look at to see how usage of uselib evolved.
+>
+> libc5 is available from archive.debian.org.
+>
+> http://archive.debian.org/debian-archive/debian/pool/main/libc/libc/libc_5.4.46.orig.tar.gz
 
-					-Alex
+Interesting.
+
+It appears that the old a.out code to make use of uselib remained in
+the libc5 sources but it was all conditional on the being compiled not
+to use ELF.
+
+libc5 did provide a wrapper for the uselib system call.
+
+It appears glibc also provides a wrapper for the uselib system call
+named: uselib@GLIBC_2.2.5.
+
+I don't see a glibc header file that provides a declaration for uselib
+though.
+
+So the question becomes did anyone use those glibc wrappers.
+
+Eric
+
+
