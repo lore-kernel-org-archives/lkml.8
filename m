@@ -2,82 +2,144 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C06FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0775C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2099E207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE828207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgESTGt (ORCPT
+        id S1726933AbgESTHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:06:49 -0400
-Received: from smtprelay0092.hostedemail.com ([216.40.44.92]:60242 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726059AbgESTGs (ORCPT
+        Tue, 19 May 2020 15:07:09 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:37846 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESTHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:06:48 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 4C1A9182CED28;
-        Tue, 19 May 2020 19:06:47 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cave79_0e050da26d0f
-X-Filterd-Recvd-Size: 1827
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 19 May 2020 19:06:46 +0000 (UTC)
-Message-ID: <f723cce2bcbccbfdf6ebc80d1e68ba4fe10c2aee.camel@perches.com>
-Subject: Re: git-send-email: Ability to populate CC using more tags
-From:   Joe Perches <joe@perches.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        gitster@pobox.com
-Cc:     git@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <rv@rasmusvillemoes.dk>
-Date:   Tue, 19 May 2020 12:06:45 -0700
-In-Reply-To: <20200519184041.GB4397@Mani-XPS-13-9360>
-References: <20200519184041.GB4397@Mani-XPS-13-9360>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Tue, 19 May 2020 15:07:08 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb7Zx-0007pH-RU; Tue, 19 May 2020 13:07:05 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb7Zw-0008Ly-Mw; Tue, 19 May 2020 13:07:05 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <87o8qkzrxp.fsf_-_@x220.int.ebiederm.org>
+        <202005191111.9B389D33@keescook>
+Date:   Tue, 19 May 2020 14:03:23 -0500
+In-Reply-To: <202005191111.9B389D33@keescook> (Kees Cook's message of "Tue, 19
+        May 2020 11:21:34 -0700")
+Message-ID: <875zcrpx1g.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jb7Zw-0008Ly-Mw;;;mid=<875zcrpx1g.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19uLsQEsrbyURG9a1RrgL6bJSOQRT5dyK8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 3/8] exec: Convert security_bprm_set_creds into security_bprm_repopulate_creds
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-20 at 00:10 +0530, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> Currently 'git-send-email' lacks the ability to CC people described using
-> tags such as Acked-by and Reported-by etc...
-> 
-> While doing a bit of googling, I found a patch from Joe [1] but that doesn't
-> look like made its way. And in that discussion I didn't see any real objections
-> for the patch intention apart from the usage of the term 'trailers'.
-> 
-> So I'm just curious if Joe or anyone has plan to resubmit it! If not I may
-> do that.
-> 
-> PS: 'bylines' as mentioned by Joe seems reasonable to me.
-> 
-> Thanks,
-> Mani
-> 
-> [1] https://lkml.org/lkml/2016/8/30/650
+Kees Cook <keescook@chromium.org> writes:
 
-You need to use the "--misc-by" option.
+> On Mon, May 18, 2020 at 07:31:14PM -0500, Eric W. Biederman wrote:
+>> 
+>> Rename bprm->cap_elevated to bprm->active_secureexec and initialize it
+>> in prepare_binprm instead of in cap_bprm_set_creds.  Initializing
+>> bprm->active_secureexec in prepare_binprm allows multiple
+>> implementations of security_bprm_repopulate_creds to play nicely with
+>> each other.
+>> 
+>> Rename security_bprm_set_creds to security_bprm_reopulate_creds to
+>> emphasize that this path recomputes part of bprm->cred.  This
+>> recomputation avoids the time of check vs time of use problems that
+>> are inherent in unix #! interpreters.
+>> 
+>> In short two renames and a move in the location of initializing
+>> bprm->active_secureexec.
+>
+> I like this much better than the direct call to the capabilities hook.
+> Thanks!
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> One nit is a bikeshed on the name "active_secureexec", since
+> the word "active" isn't really associated with any other part of the
+> binfmt logic. It's supposed to be "latest state from the binfmt loop",
+> so instead of "active", I considered these words that I also didn't
+> like: "current", "this", "recent", and "now". Is "latest" better than
+> "active"? Probably not.
 
-Perhaps you need to update your git version
-as that was added with:
+I had pretty much the same problem.  Active at least conveys that it
+is still malleable and might change.
 
-commit ef0cc1df90f6b6c2987ab2db8e0ccf2cfc421edf
-Author: Rasmus Villemoes <rv@rasmusvillemoes.dk>
-Date:   Tue Oct 16 09:39:23 2018 +0200
+>> [...]
+>> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+>> index d1217fcdedea..8605ab4a0f89 100644
+>> --- a/include/linux/binfmts.h
+>> +++ b/include/linux/binfmts.h
+>> @@ -27,10 +27,10 @@ struct linux_binprm {
+>>  	unsigned long argmin; /* rlimit marker for copy_strings() */
+>>  	unsigned int
+>>  		/*
+>> -		 * True if most recent call to cap_bprm_set_creds
+>> +		 * True if most recent call to security_bprm_set_creds
+>>  		 * resulted in elevated privileges.
+>>  		 */
+>> -		cap_elevated:1,
+>> +		active_secureexec:1,
+>
+> Also, I'd like it if this comment could be made more verbose as well, for
+> anyone trying to understand the binfmt execution flow for the first time.
+> Perhaps:
+>
+> 		/*
+> 		 * Must be set True during the any call to
+> 		 * bprm_set_creds hook where the execution would
+> 		 * reuslt in elevated privileges. (The hook can be
+> 		 * called multiple times during nested interpreter
+> 		 * resolution across binfmt_script, binfmt_misc, etc).
+> 		 */
+Well it is not during but after the call that it becomes true.
+I think most recent covers the case of multiple calls.
 
-send-email: also pick up cc addresses from -by trailers
+I think having the loop explicitly in the code a few patches
+later makes it clear that there is a loop dealing with interpreters.
 
+Conciseness has a virtue in that it is easy to absorb.  Seeing
+active says most recent and secureexec does not is enough to ask
+questions and look at the code.
+
+Eric
 
