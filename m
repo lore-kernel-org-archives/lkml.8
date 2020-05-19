@@ -2,250 +2,138 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A655AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0760C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7983620674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14CE207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IOeu2t77"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+KdDcW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgESDAh (ORCPT
+        id S1728139AbgESDAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34086 "EHLO
+        Mon, 18 May 2020 23:00:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgESDAh (ORCPT
+        with ESMTP id S1726270AbgESDAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:00:37 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F334FC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:00:35 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id 25so13176527qkc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:00:35 -0700 (PDT)
+        Mon, 18 May 2020 23:00:44 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92886C061A0C;
+        Mon, 18 May 2020 20:00:44 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id n15so720242pjt.4;
+        Mon, 18 May 2020 20:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:subject:from:to:cc;
-        bh=4WgMKlFf+yDJu5cFMCY1SnPgS1F2LkiitS7CYeN8mDg=;
-        b=IOeu2t77qcGbd2VFiwKZzZkPXeDUz6DTlWnMbRzAkUWUKKe86cBrd2t6SntwP/669L
-         f9ZoN7SdCLHtoMLJPMPRz6KsGv+1fbirR2b1r/rwydzB74ZAP8yPfQK+ZEwa5O902mxK
-         4rdW5D5PAi9cE214vZZw7joU5ERdWFPo5jGHkJEJ8TUbFx4t7cKSxzsX3m8mdiNwSFl8
-         h500g/fDQST6soiCoXah3rOBzvPG/ktoYP4voMPpWQ81ZgRPYAbbvamMkI7DcceePEcg
-         qXCiQD6hW9obnx0WDdvtnzsP7Ol8zmfV3965B0AMoYhP2bCHOEmo+hpz4KfHhtFv3qY6
-         MbQQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UnJKuJGVYF6fA5k6yoVG80q3S/n8nZyC72NBiLOx2Tg=;
+        b=s+KdDcW74Qx7WsQOS2WsQ5NCi7nor1ZWq4ORQvQb46SiW4wvGrRblUmtuTYvg9tkqA
+         r+iTJj7fZtCJw/YY778GrTZx0lfgOXzv1rids1lYZvPn11XUfyxhJjrXQLJiaPtUwK53
+         Fe2+UAE4pt4iHWddjSKXknhKacIS2FTJuvp/bBJlMk7ZYBwyZT0EvrzfGAPF/5Uq2YMl
+         hyDAEXF4dzP/mAI92nB1kL1lHx7K5JBmCdR7YtgrDgn4zo/OzTUBIC6KD88KHAA2D8qk
+         rKmSnU9AuqVsfYoMZ22iFCtvLFUlLfQheCznvApT1L8z2zKT+X9cpiGojNr+Rd+rmwVE
+         55Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version:subject
-         :from:to:cc;
-        bh=4WgMKlFf+yDJu5cFMCY1SnPgS1F2LkiitS7CYeN8mDg=;
-        b=EtQ5S1FaH4n2RktecpA8A+ReYUfibx5FdRVdT6NSuN5Wza8Wx2nwKy7f0tzKi/exf5
-         4ze+ZidBr9TQL3IHTG0iOGm2SffaKNW+3O7XMB5v2OCpiO8gu01Xwh0e5b7iAt1nH3s1
-         d/sSFgz6zyk66DhP0ZoP+hYlh5H/Q+20TdPrQC096j4zPavMbUJC/QdBomaH24PgBokt
-         zqRRxJUG/JnQr8bdvsBgM9XKMz6U/wyb9itjHpU+UkmMJIXRhb2Q32+sGjoV96U8H2VQ
-         pR6bkd+yGJJFpfCfF/N7OZx0fFTsz4rN0kIFx1IPcMFbFrmkd4apSyPVktgv13rMCLcX
-         bFcw==
-X-Gm-Message-State: AOAM532qjjoKncwZAhPE8xQr75FgZ+R6asfslJO899cjEy/fEDpEHi5e
-        InLkhheFs0/KKradzdOdrXe0haTWYEBLHnw=
-X-Google-Smtp-Source: ABdhPJx9smakYrdL37rRDIaE5LsCQO7O1Y7rwAGrtzGPz1MRKao22vuStTOtetzb4iRaxIgbXsNjJH5oIWWMjbs=
-X-Received: by 2002:a0c:9e6d:: with SMTP id z45mr19011169qve.206.1589857234675;
- Mon, 18 May 2020 20:00:34 -0700 (PDT)
-Date:   Mon, 18 May 2020 20:00:25 -0700
-In-Reply-To: <20200518080327.GA3126260@kroah.com>
-Message-Id: <20200519030025.99054-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v2] driver core: Fix SYNC_STATE_ONLY device link implementation
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     stable@vger.kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UnJKuJGVYF6fA5k6yoVG80q3S/n8nZyC72NBiLOx2Tg=;
+        b=hojnA4Zs4bLdF/dTx8+i3sD+Iq4XNlsbUeaOJN62JuOtL5CLV8zY7jKikUQsR29UsH
+         f9ooK2dkIObagDkrlpKLjPITfW00LhHK+dQmgXf/NQb0IZRtBEvm4c3M95t3TRXyUmfH
+         iZp6OyXstX1O9UGnfwuDYa+Fngc4EiABb2fNbChuE0holYB1ICGbfOXLllqiYiyVaTFu
+         Xpxp6PTh3rOFbxgkwbH5ite1FXQm6wVwmtCyxpe7pYQnQ/mqk8qQDfL0cB44V4pXTSCZ
+         RK+RdFCjgahvNg6THBkNUrjkLngfYA8tL/QbXB3sOKeLXjLEyk/EzRczukq1jZFgX4fK
+         bPxw==
+X-Gm-Message-State: AOAM531VIJlDmx2mXfMFzbgwX2LQmLSfz+uXPJthgW0g6YIhjLUHvDAw
+        bmesH3kRlSrvegUw8icVIwg=
+X-Google-Smtp-Source: ABdhPJy1t4rt9mTDBn6rNEdUra4+iLmjwqhnVTRDsQ7ivFkmrkzFRlSrX1T0iPpZs7VyJLOqEWn1NQ==
+X-Received: by 2002:a17:90a:3201:: with SMTP id k1mr2595156pjb.202.1589857244161;
+        Mon, 18 May 2020 20:00:44 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id k24sm9809494pfk.134.2020.05.18.20.00.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 20:00:43 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: [PATCH 1/2] clk: sprd: mark the local clock symbols static
+Date:   Tue, 19 May 2020 11:00:35 +0800
+Message-Id: <20200519030036.1785-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
-core: Add device link support for SYNC_STATE_ONLY flag"),
-device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
-device link to the supplier's and consumer's "device link" list.
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-This causes multiple issues:
-- The device link is lost forever from driver core if the caller
-  didn't keep track of it (caller typically isn't expected to). This is
-  a memory leak.
-- The device link is also never visible to any other code path after
-  device_link_add() returns.
+There's a few pll gate clocks which were not marked with static, and
+those clock are used only in the current file, so add static key word
+for them.
 
-If we fix the "device link" list handling, that exposes a bunch of
-issues.
-
-1. The device link "status" state management code rightfully doesn't
-handle the case where a DL_FLAG_MANAGED device link exists between a
-supplier and consumer, but the consumer manages to probe successfully
-before the supplier. The addition of DL_FLAG_SYNC_STATE_ONLY links break
-this assumption. This causes device_links_driver_bound() to throw a
-warning when this happens.
-
-Since DL_FLAG_SYNC_STATE_ONLY device links are mainly used for creating
-proxy device links for child device dependencies and aren't useful once
-the consumer device probes successfully, this patch just deletes
-DL_FLAG_SYNC_STATE_ONLY device links once its consumer device probes.
-This way, we avoid the warning, free up some memory and avoid
-complicating the device links "status" state management code.
-
-2. Creating a DL_FLAG_STATELESS device link between two devices that
-already have a DL_FLAG_SYNC_STATE_ONLY device link will result in the
-DL_FLAG_STATELESS flag not getting set correctly. This patch also fixes
-this.
-
-Lastly, this patch also fixes minor whitespace issues.
-
-Cc: stable@vger.kernel.org
-Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Fixes: 0e4b8a2349f3 ("clk: sprd: add clocks support for SC9863A")
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 ---
- drivers/base/core.c | 61 +++++++++++++++++++++++++++++----------------
- 1 file changed, 39 insertions(+), 22 deletions(-)
+ drivers/clk/sprd/sc9863a-clk.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 84c569726d75..f804e561e0a2 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -363,13 +363,12 @@ struct device_link *device_link_add(struct device *consumer,
+diff --git a/drivers/clk/sprd/sc9863a-clk.c b/drivers/clk/sprd/sc9863a-clk.c
+index 9568ec956ee4..ad2e0f9f8563 100644
+--- a/drivers/clk/sprd/sc9863a-clk.c
++++ b/drivers/clk/sprd/sc9863a-clk.c
+@@ -23,22 +23,22 @@
+ #include "pll.h"
  
- 		if (flags & DL_FLAG_STATELESS) {
- 			kref_get(&link->kref);
-+			link->flags |= DL_FLAG_STATELESS;
- 			if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
--			    !(link->flags & DL_FLAG_STATELESS)) {
--				link->flags |= DL_FLAG_STATELESS;
-+			    !(link->flags & DL_FLAG_STATELESS))
- 				goto reorder;
--			} else {
-+			else
- 				goto out;
--			}
- 		}
+ /* mpll*_gate clocks control cpu cores, they were enabled by default */
+-SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll0_gate, "mpll0-gate", "ext-26m", 0x94,
+-			     0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
+-SPRD_PLL_SC_GATE_CLK_FW_NAME(dpll0_gate, "dpll0-gate", "ext-26m", 0x98,
+-			     0x1000, BIT(0), 0, 0, 240);
+-SPRD_PLL_SC_GATE_CLK_FW_NAME(lpll_gate, "lpll-gate", "ext-26m", 0x9c,
+-			     0x1000, BIT(0), 0, 0, 240);
+-SPRD_PLL_SC_GATE_CLK_FW_NAME(gpll_gate, "gpll-gate", "ext-26m", 0xa8,
+-			     0x1000, BIT(0), 0, 0, 240);
+-SPRD_PLL_SC_GATE_CLK_FW_NAME(dpll1_gate, "dpll1-gate", "ext-26m", 0x1dc,
+-			     0x1000, BIT(0), 0, 0, 240);
+-SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll1_gate, "mpll1-gate", "ext-26m", 0x1e0,
+-			     0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
+-SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll2_gate, "mpll2-gate", "ext-26m", 0x1e4,
+-			     0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
+-SPRD_PLL_SC_GATE_CLK_FW_NAME(isppll_gate, "isppll-gate", "ext-26m", 0x1e8,
+-			     0x1000, BIT(0), 0, 0, 240);
++static SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll0_gate, "mpll0-gate", "ext-26m", 0x94,
++				    0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
++static SPRD_PLL_SC_GATE_CLK_FW_NAME(dpll0_gate, "dpll0-gate", "ext-26m", 0x98,
++				    0x1000, BIT(0), 0, 0, 240);
++static SPRD_PLL_SC_GATE_CLK_FW_NAME(lpll_gate, "lpll-gate", "ext-26m", 0x9c,
++				    0x1000, BIT(0), 0, 0, 240);
++static SPRD_PLL_SC_GATE_CLK_FW_NAME(gpll_gate, "gpll-gate", "ext-26m", 0xa8,
++				    0x1000, BIT(0), 0, 0, 240);
++static SPRD_PLL_SC_GATE_CLK_FW_NAME(dpll1_gate, "dpll1-gate", "ext-26m", 0x1dc,
++				    0x1000, BIT(0), 0, 0, 240);
++static SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll1_gate, "mpll1-gate", "ext-26m", 0x1e0,
++				    0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
++static SPRD_PLL_SC_GATE_CLK_FW_NAME(mpll2_gate, "mpll2-gate", "ext-26m", 0x1e4,
++				    0x1000, BIT(0), CLK_IGNORE_UNUSED, 0, 240);
++static SPRD_PLL_SC_GATE_CLK_FW_NAME(isppll_gate, "isppll-gate", "ext-26m",
++				    0x1e8, 0x1000, BIT(0), 0, 0, 240);
  
- 		/*
-@@ -436,12 +435,16 @@ struct device_link *device_link_add(struct device *consumer,
- 	    flags & DL_FLAG_PM_RUNTIME)
- 		pm_runtime_resume(supplier);
- 
-+	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
-+	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
-+
- 	if (flags & DL_FLAG_SYNC_STATE_ONLY) {
- 		dev_dbg(consumer,
- 			"Linked as a sync state only consumer to %s\n",
- 			dev_name(supplier));
- 		goto out;
- 	}
-+
- reorder:
- 	/*
- 	 * Move the consumer and all of the devices depending on it to the end
-@@ -452,12 +455,9 @@ struct device_link *device_link_add(struct device *consumer,
- 	 */
- 	device_reorder_to_tail(consumer, NULL);
- 
--	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
--	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
--
- 	dev_dbg(consumer, "Linked as a consumer to %s\n", dev_name(supplier));
- 
-- out:
-+out:
- 	device_pm_unlock();
- 	device_links_write_unlock();
- 
-@@ -832,6 +832,13 @@ static void __device_links_supplier_defer_sync(struct device *sup)
- 		list_add_tail(&sup->links.defer_sync, &deferred_sync);
- }
- 
-+static void device_link_drop_managed(struct device_link *link)
-+{
-+	link->flags &= ~DL_FLAG_MANAGED;
-+	WRITE_ONCE(link->status, DL_STATE_NONE);
-+	kref_put(&link->kref, __device_link_del);
-+}
-+
- /**
-  * device_links_driver_bound - Update device links after probing its driver.
-  * @dev: Device to update the links for.
-@@ -845,7 +852,7 @@ static void __device_links_supplier_defer_sync(struct device *sup)
-  */
- void device_links_driver_bound(struct device *dev)
- {
--	struct device_link *link;
-+	struct device_link *link, *ln;
- 	LIST_HEAD(sync_list);
- 
- 	/*
-@@ -885,18 +892,35 @@ void device_links_driver_bound(struct device *dev)
- 	else
- 		__device_links_queue_sync_state(dev, &sync_list);
- 
--	list_for_each_entry(link, &dev->links.suppliers, c_node) {
-+	list_for_each_entry_safe(link, ln, &dev->links.suppliers, c_node) {
-+		struct device *supplier;
-+
- 		if (!(link->flags & DL_FLAG_MANAGED))
- 			continue;
- 
--		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
--		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+		supplier = link->supplier;
-+		if (link->flags & DL_FLAG_SYNC_STATE_ONLY) {
-+			/*
-+			 * When DL_FLAG_SYNC_STATE_ONLY is set, it means no
-+			 * other DL_MANAGED_LINK_FLAGS have been set. So, it's
-+			 * save to drop the managed link completely.
-+			 */
-+			device_link_drop_managed(link);
-+		} else {
-+			WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
-+			WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+		}
- 
-+		/*
-+		 * This needs to be done even for the deleted
-+		 * DL_FLAG_SYNC_STATE_ONLY device link in case it was the last
-+		 * device link that was preventing the supplier from getting a
-+		 * sync_state() call.
-+		 */
- 		if (defer_sync_state_count)
--			__device_links_supplier_defer_sync(link->supplier);
-+			__device_links_supplier_defer_sync(supplier);
- 		else
--			__device_links_queue_sync_state(link->supplier,
--							&sync_list);
-+			__device_links_queue_sync_state(supplier, &sync_list);
- 	}
- 
- 	dev->links.status = DL_DEV_DRIVER_BOUND;
-@@ -906,13 +930,6 @@ void device_links_driver_bound(struct device *dev)
- 	device_links_flush_sync_list(&sync_list, dev);
- }
- 
--static void device_link_drop_managed(struct device_link *link)
--{
--	link->flags &= ~DL_FLAG_MANAGED;
--	WRITE_ONCE(link->status, DL_STATE_NONE);
--	kref_put(&link->kref, __device_link_del);
--}
--
- /**
-  * __device_links_no_driver - Update links of a device without a driver.
-  * @dev: Device without a drvier.
+ static struct sprd_clk_common *sc9863a_pmu_gate_clks[] = {
+ 	/* address base is 0x402b0000 */
 -- 
-2.26.2.761.g0e0b3e54be-goog
+2.20.1
 
