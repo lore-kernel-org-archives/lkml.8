@@ -2,238 +2,397 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EAAE2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:08:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eoXzf9hX"
+	by mail.kernel.org (Postfix) with ESMTP id C427E207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgESTIb (ORCPT
+        id S1727037AbgESTJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESTI3 (ORCPT
+        Tue, 19 May 2020 15:09:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23246 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726059AbgESTJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:08:29 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689BCC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:08:28 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id cx22so96228pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:08:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RmcIN7oDiRdqjbFzFUgxoG77VNtHMuczcjZzgJlogEA=;
-        b=eoXzf9hXQ06zaKJUBvPgE2YZz9h1zQ80EA6b8QroqlmFdCJ0ZIMsDkTGrDlydw01rB
-         ugyyTWz/NAmL2pyTZewiWZvEDazJmNUa4/96mQ68GCyfX0PYPUG0XCKQE/IKw4p5VwP8
-         cQ14sWK6koJ4BAyNNmA9lLIHrLuBQAEZ2EnyA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RmcIN7oDiRdqjbFzFUgxoG77VNtHMuczcjZzgJlogEA=;
-        b=MPVKVZzdDBPTWCqqlqLkm+rc0e1yijf36nMSL7fhLzaCu9MRwZeyFec2tcMpPk4kXU
-         m+BV33/+9ODEIkW1Ve9nQ8J5VE0w0Q3pFZ1UZfjpsPFfT5cDjiPday6QRtsy92s+rXcd
-         kdjQBxUUc0s/aEgZE/aoud52/4JyRNmHsI2LYH6UZNLySIGCCXKnIpsZK2cf/3huCkMr
-         IvaaZVn9plTZTqFQy6lv6fcSncN29xQyYj1xlztWCoMwy4Tt5sUDUnw/zbp0aDW2kDFY
-         /OmNfquqtmFjErO7Kj8VnncLwIpg+iFTRoZQMesH/AiwCUktxPhI5E7kIz9sxVMSgZEN
-         zqrw==
-X-Gm-Message-State: AOAM532d8+NVmnavg6iuZ88BiZCRAV/I5bMS8+19G5Ffx1IApa+y7l7B
-        VlUOtG7VG0MA5y2dFOrgKDaPCg==
-X-Google-Smtp-Source: ABdhPJwqEuEaq7kQpGUMeXthnwkUMJ6lgjSjG02qTXaI4b20dLAWrgvQRGgcnWVI0iaYLj+dy+rw8A==
-X-Received: by 2002:a17:90a:31c8:: with SMTP id j8mr1149298pjf.178.1589915307800;
-        Tue, 19 May 2020 12:08:27 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i12sm245353pjk.37.2020.05.19.12.08.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 12:08:26 -0700 (PDT)
-Date:   Tue, 19 May 2020 12:08:25 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 6/8] exec/binfmt_script: Don't modify bprm->buf and
- then return -ENOEXEC
-Message-ID: <202005191144.E3112135@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <874ksczru6.fsf_-_@x220.int.ebiederm.org>
+        Tue, 19 May 2020 15:09:26 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04JJ3pHp026184;
+        Tue, 19 May 2020 15:08:47 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312c64sut1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 May 2020 15:08:47 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04JJ7mUk040988;
+        Tue, 19 May 2020 15:08:47 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312c64susc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 May 2020 15:08:46 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04JJ12RG004538;
+        Tue, 19 May 2020 19:01:31 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 313x4xgw38-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 May 2020 19:01:31 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04JJ1S2N64553134
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 May 2020 19:01:29 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B995E52057;
+        Tue, 19 May 2020 19:01:28 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.89.230])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 653415204E;
+        Tue, 19 May 2020 19:01:25 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Wed, 20 May 2020 00:31:24 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [RESEND PATCH v7 5/5] powerpc/papr_scm: Implement support for PAPR_SCM_PDSM_HEALTH
+Date:   Wed, 20 May 2020 00:30:58 +0530
+Message-Id: <20200519190058.257981-6-vaibhav@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200519190058.257981-1-vaibhav@linux.ibm.com>
+References: <20200519190058.257981-1-vaibhav@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874ksczru6.fsf_-_@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-19_08:2020-05-19,2020-05-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 cotscore=-2147483648
+ spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 phishscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005190157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 07:33:21PM -0500, Eric W. Biederman wrote:
-> 
-> The return code -ENOEXEC serves to tell search_binary_handler that it
-> should continue searching for the binfmt to handle a given file.  This
-> makes return -ENOEXEC with a bprm->buf that is needed to continue the
-> search problematic.
-> 
-> The current binfmt_script manages to escape problems as it closes and
-> clears bprm->file before return -ENOEXEC with bprm->buf modified.
-> This prevents search_binary_handler from looping as it explicitly
-> handles a NULL bprm->file.
-> 
-> I plan on moving all of the bprm->file managment into fs/exec.c and out
-> of the binary handlers so this will become a problem.
-> 
-> Move closing bprm->file and the test for BINPRM_PATH_INACCESSIBLE
-> down below the last return of -ENOEXEC.
-> 
-> Introduce i_sep and i_end to track the end of the first argument and
-> the end of the parameters respectively.  Using those, constification
-> of all char * pointers, and the helpers next_terminator and
-> next_non_spacetab guarantee the parameter parsing will not modify
-> bprm->buf.
+This patch implements support for PDSM request 'PAPR_SCM_PDSM_HEALTH'
+that returns a newly introduced 'struct nd_papr_pdsm_health' instance
+containing dimm health information back to user space in response to
+ND_CMD_CALL. This functionality is implemented in newly introduced
+papr_scm_get_health() that queries the scm-dimm health information and
+then copies this information to the package payload whose layout is
+defined by 'struct nd_papr_pdsm_health'.
 
-I'm quite pleased this could be implemented using the existing helpers!
-It seems Linus and I were on the right track with these. :)
+The patch also introduces a new member 'struct papr_scm_priv.health'
+thats an instance of 'struct nd_papr_pdsm_health' to cache the health
+information of a nvdimm. As a result functions drc_pmem_query_health()
+and flags_show() are updated to populate and use this new struct
+instead of a u64 integer that was earlier used.
 
-> 
-> Only modify bprm->buf to terminate the strings i_arg and i_name with
-> '\0' for passing to copy_strings_kernel.
-> 
-> When replacing loops with next_non_spacetab and next_terminator care
-> has been take that the logic of the parsing code (short of replacing
-> characters by '\0') remains the same.
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+---
+Changelog:
 
-Ah, interesting. As in, bprm->buf must not be modified unless the binfmt
-handler is going to succeed. I think this requirement should be
-documented in the binfmt struct header file.
+Resend:
+* None
 
-> [...]
-> diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
-> index 8d718d8fd0fe..85e0ef86eb11 100644
-> --- a/fs/binfmt_script.c
-> +++ b/fs/binfmt_script.c
-> @@ -71,39 +56,48 @@ static int load_script(struct linux_binprm *bprm)
->  	 * parse them on its own.
->  	 */
->  	buf_end = bprm->buf + sizeof(bprm->buf) - 1;
-> -	cp = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
-> -	if (!cp) {
-> -		cp = next_non_spacetab(bprm->buf + 2, buf_end);
-> -		if (!cp)
-> +	i_end = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
-> +	if (!i_end) {
-> +		i_end = next_non_spacetab(bprm->buf + 2, buf_end);
-> +		if (!i_end)
->  			return -ENOEXEC; /* Entire buf is spaces/tabs */
->  		/*
->  		 * If there is no later space/tab/NUL we must assume the
->  		 * interpreter path is truncated.
->  		 */
-> -		if (!next_terminator(cp, buf_end))
-> +		if (!next_terminator(i_end, buf_end))
->  			return -ENOEXEC;
-> -		cp = buf_end;
-> +		i_end = buf_end;
->  	}
-> -	/* NUL-terminate the buffer and any trailing spaces/tabs. */
-> -	*cp = '\0';
-> -	while (cp > bprm->buf) {
-> -		cp--;
-> -		if ((*cp == ' ') || (*cp == '\t'))
-> -			*cp = '\0';
-> -		else
-> -			break;
-> -	}
-> -	for (cp = bprm->buf+2; (*cp == ' ') || (*cp == '\t'); cp++);
-> -	if (*cp == '\0')
-> +	/* Trim any trailing spaces/tabs from i_end */
-> +	while (spacetab(i_end[-1]))
-> +		i_end--;
-> +
-> +	/* Skip over leading spaces/tabs */
-> +	i_name = next_non_spacetab(bprm->buf+2, i_end);
-> +	if (!i_name || (i_name == i_end))
->  		return -ENOEXEC; /* No interpreter name found */
-> -	i_name = cp;
-> +
-> +	/* Is there an optional argument? */
->  	i_arg = NULL;
-> -	for ( ; *cp && (*cp != ' ') && (*cp != '\t'); cp++)
-> -		/* nothing */ ;
-> -	while ((*cp == ' ') || (*cp == '\t'))
-> -		*cp++ = '\0';
-> -	if (*cp)
-> -		i_arg = cp;
-> +	i_sep = next_terminator(i_name, i_end);
-> +	if (i_sep && (*i_sep != '\0'))
-> +		i_arg = next_non_spacetab(i_sep, i_end);
-> +
-> +	/*
-> +	 * If the script filename will be inaccessible after exec, typically
-> +	 * because it is a "/dev/fd/<fd>/.." path against an O_CLOEXEC fd, give
-> +	 * up now (on the assumption that the interpreter will want to load
-> +	 * this file).
-> +	 */
-> +	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
-> +		return -ENOENT;
-> +
-> +	/* Release since we are not mapping a binary into memory. */
-> +	allow_write_access(bprm->file);
-> +	fput(bprm->file);
-> +	bprm->file = NULL;
-> +
->  	/*
->  	 * OK, we've parsed out the interpreter name and
->  	 * (optional) argument.
-> @@ -121,7 +115,9 @@ static int load_script(struct linux_binprm *bprm)
->  	if (retval < 0)
->  		return retval;
->  	bprm->argc++;
-> +	*((char *)i_end) = '\0';
->  	if (i_arg) {
-> +		*((char *)i_sep) = '\0';
->  		retval = copy_strings_kernel(1, &i_arg, bprm);
->  		if (retval < 0)
->  			return retval;
+v6..v7:
+* Updated flags_show() to use seq_buf_printf(). [Mpe]
+* Updated papr_scm_get_health() to use newly introduced
+  __drc_pmem_query_health() bypassing the cache [Mpe].
 
-I think this is all correct, though I'm always suspicious of my visual
-inspection of string parsers. ;)
+v5..v6:
+* Added attribute '__packed' to 'struct nd_papr_pdsm_health_v1' to
+  gaurd against possibility of different compilers adding different
+  paddings to the struct [ Dan Williams ]
 
-I had a worry the \n was not handled correctly in some case. I.e. before
-any \n was converted into \0, and so next_terminator() didn't need to
-consider \n separately. (next_non_spacetab() doesn't care since \n and \0
-are both not ' ' nor '\t'.) For next_terminator(), though, I was worried
-there was a case where *i_end == '\n', and next_terminator()
-will return NULL instead of "last" due to *last being '\n' instead of
-'\0', causing a problem, but you're using the adjusted i_end so I think
-it's correct. And you've handled i_name == i_end.
+* Updated 'struct nd_papr_pdsm_health_v1' to use __u8 instead of
+  'bool' and also updated drc_pmem_query_health() to take this into
+  account. [ Dan Williams ]
 
-I will see if I can find my testing scripts I used when commit
-b5372fe5dc84 originally landed to double-check... until then:
+v4..v5:
+* None
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+v3..v4:
+* Call the DSM_PAPR_SCM_HEALTH service function from
+  papr_scm_service_dsm() instead of papr_scm_ndctl(). [Aneesh]
 
+v2..v3:
+* Updated struct nd_papr_scm_dimm_health_stat_v1 to use '__xx' types
+  as its exported to the userspace [Aneesh]
+* Changed the constants DSM_PAPR_SCM_DIMM_XX indicating dimm health
+  from enum to #defines [Aneesh]
+
+v1..v2:
+* New patch in the series
+---
+ arch/powerpc/include/uapi/asm/papr_scm_pdsm.h |  39 ++++++
+ arch/powerpc/platforms/pseries/papr_scm.c     | 125 +++++++++++++++---
+ 2 files changed, 147 insertions(+), 17 deletions(-)
+
+diff --git a/arch/powerpc/include/uapi/asm/papr_scm_pdsm.h b/arch/powerpc/include/uapi/asm/papr_scm_pdsm.h
+index 671693439c1c..db0cf550dabe 100644
+--- a/arch/powerpc/include/uapi/asm/papr_scm_pdsm.h
++++ b/arch/powerpc/include/uapi/asm/papr_scm_pdsm.h
+@@ -113,6 +113,7 @@ struct nd_pdsm_cmd_pkg {
+  */
+ enum papr_scm_pdsm {
+ 	PAPR_SCM_PDSM_MIN = 0x0,
++	PAPR_SCM_PDSM_HEALTH,
+ 	PAPR_SCM_PDSM_MAX,
+ };
+ 
+@@ -131,4 +132,42 @@ static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
+ 		return (void *)((__u8 *) pcmd + pcmd->payload_offset);
+ }
+ 
++/* Various scm-dimm health indicators */
++#define PAPR_PDSM_DIMM_HEALTHY       0
++#define PAPR_PDSM_DIMM_UNHEALTHY     1
++#define PAPR_PDSM_DIMM_CRITICAL      2
++#define PAPR_PDSM_DIMM_FATAL         3
++
++/*
++ * Struct exchanged between kernel & ndctl in for PAPR_SCM_PDSM_HEALTH
++ * Various flags indicate the health status of the dimm.
++ *
++ * dimm_unarmed		: Dimm not armed. So contents wont persist.
++ * dimm_bad_shutdown	: Previous shutdown did not persist contents.
++ * dimm_bad_restore	: Contents from previous shutdown werent restored.
++ * dimm_scrubbed	: Contents of the dimm have been scrubbed.
++ * dimm_locked		: Contents of the dimm cant be modified until CEC reboot
++ * dimm_encrypted	: Contents of dimm are encrypted.
++ * dimm_health		: Dimm health indicator. One of PAPR_PDSM_DIMM_XXXX
++ */
++struct nd_papr_pdsm_health_v1 {
++	__u8 dimm_unarmed;
++	__u8 dimm_bad_shutdown;
++	__u8 dimm_bad_restore;
++	__u8 dimm_scrubbed;
++	__u8 dimm_locked;
++	__u8 dimm_encrypted;
++	__u16 dimm_health;
++} __packed;
++
++/*
++ * Typedef the current struct for dimm_health so that any application
++ * or kernel recompiled after introducing a new version automatically
++ * supports the new version.
++ */
++#define nd_papr_pdsm_health nd_papr_pdsm_health_v1
++
++/* Current version number for the dimm health struct */
++#define ND_PAPR_PDSM_HEALTH_VERSION 1
++
+ #endif /* _UAPI_ASM_POWERPC_PAPR_SCM_PDSM_H_ */
+diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+index ed4b49a6f1e1..c59bf17ad054 100644
+--- a/arch/powerpc/platforms/pseries/papr_scm.c
++++ b/arch/powerpc/platforms/pseries/papr_scm.c
+@@ -88,7 +88,7 @@ struct papr_scm_priv {
+ 	unsigned long lasthealth_jiffies;
+ 
+ 	/* Health information for the dimm */
+-	u64 health_bitmap;
++	struct nd_papr_pdsm_health health;
+ };
+ 
+ static int drc_pmem_bind(struct papr_scm_priv *p)
+@@ -201,6 +201,7 @@ static int drc_pmem_query_n_bind(struct papr_scm_priv *p)
+ static int __drc_pmem_query_health(struct papr_scm_priv *p)
+ {
+ 	unsigned long ret[PLPAR_HCALL_BUFSIZE];
++	u64 health;
+ 	s64 rc;
+ 
+ 	/* issue the hcall */
+@@ -208,18 +209,46 @@ static int __drc_pmem_query_health(struct papr_scm_priv *p)
+ 	if (rc != H_SUCCESS) {
+ 		dev_err(&p->pdev->dev,
+ 			 "Failed to query health information, Err:%lld\n", rc);
+-		rc = -ENXIO;
+-		goto out;
++		return -ENXIO;
+ 	}
+ 
+ 	p->lasthealth_jiffies = jiffies;
+-	p->health_bitmap = ret[0] & ret[1];
++	health = ret[0] & ret[1];
+ 
+ 	dev_dbg(&p->pdev->dev,
+ 		"Queried dimm health info. Bitmap:0x%016lx Mask:0x%016lx\n",
+ 		ret[0], ret[1]);
+-out:
+-	return rc;
++
++	memset(&p->health, 0, sizeof(p->health));
++
++	/* Check for various masks in bitmap and set the buffer */
++	if (health & PAPR_SCM_DIMM_UNARMED_MASK)
++		p->health.dimm_unarmed = 1;
++
++	if (health & PAPR_SCM_DIMM_BAD_SHUTDOWN_MASK)
++		p->health.dimm_bad_shutdown = 1;
++
++	if (health & PAPR_SCM_DIMM_BAD_RESTORE_MASK)
++		p->health.dimm_bad_restore = 1;
++
++	if (health & PAPR_SCM_DIMM_ENCRYPTED)
++		p->health.dimm_encrypted = 1;
++
++	if (health & PAPR_SCM_DIMM_SCRUBBED_AND_LOCKED) {
++		p->health.dimm_locked = 1;
++		p->health.dimm_scrubbed = 1;
++	}
++
++	if (health & PAPR_SCM_DIMM_HEALTH_UNHEALTHY)
++		p->health.dimm_health = PAPR_PDSM_DIMM_UNHEALTHY;
++
++	if (health & PAPR_SCM_DIMM_HEALTH_CRITICAL)
++		p->health.dimm_health = PAPR_PDSM_DIMM_CRITICAL;
++
++	if (health & PAPR_SCM_DIMM_HEALTH_FATAL)
++		p->health.dimm_health = PAPR_PDSM_DIMM_FATAL;
++
++	return 0;
+ }
+ 
+ /* Min interval in seconds for assuming stable dimm health */
+@@ -403,6 +432,58 @@ static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+ 	return 0;
+ }
+ 
++/* Fetch the DIMM health info and populate it in provided package. */
++static int papr_scm_get_health(struct papr_scm_priv *p,
++			       struct nd_pdsm_cmd_pkg *pkg)
++{
++	int rc;
++	size_t copysize = sizeof(p->health);
++
++	/* Ensure dimm health mutex is taken preventing concurrent access */
++	rc = mutex_lock_interruptible(&p->health_mutex);
++	if (rc)
++		goto out;
++
++	/* Always fetch upto date dimm health data ignoring cached values */
++	rc = __drc_pmem_query_health(p);
++	if (rc)
++		goto out_unlock;
++	/*
++	 * If the requested payload version is greater than one we know
++	 * about, return the payload version we know about and let
++	 * caller/userspace handle.
++	 */
++	if (pkg->payload_version > ND_PAPR_PDSM_HEALTH_VERSION)
++		pkg->payload_version = ND_PAPR_PDSM_HEALTH_VERSION;
++
++	if (pkg->hdr.nd_size_out < copysize) {
++		dev_dbg(&p->pdev->dev, "Truncated payload (%u). Expected (%lu)",
++			pkg->hdr.nd_size_out, copysize);
++		rc = -ENOSPC;
++		goto out_unlock;
++	}
++
++	dev_dbg(&p->pdev->dev, "Copying payload size=%lu version=0x%x\n",
++		copysize, pkg->payload_version);
++
++	/* Copy the health struct to the payload */
++	memcpy(pdsm_cmd_to_payload(pkg), &p->health, copysize);
++	pkg->hdr.nd_fw_size = copysize;
++
++out_unlock:
++	mutex_unlock(&p->health_mutex);
++
++out:
++	/*
++	 * Put the error in out package and return success from function
++	 * so that errors if any are propogated back to userspace.
++	 */
++	pkg->cmd_status = rc;
++	dev_dbg(&p->pdev->dev, "completion code = %d\n", rc);
++
++	return 0;
++}
++
+ static int papr_scm_service_pdsm(struct papr_scm_priv *p,
+ 				struct nd_pdsm_cmd_pkg *call_pkg)
+ {
+@@ -417,6 +498,9 @@ static int papr_scm_service_pdsm(struct papr_scm_priv *p,
+ 
+ 	/* Depending on the DSM command call appropriate service routine */
+ 	switch (call_pkg->hdr.nd_command) {
++	case PAPR_SCM_PDSM_HEALTH:
++		return papr_scm_get_health(p, call_pkg);
++
+ 	default:
+ 		dev_dbg(&p->pdev->dev, "Unsupported PDSM request 0x%llx\n",
+ 			call_pkg->hdr.nd_command);
+@@ -485,34 +569,41 @@ static ssize_t flags_show(struct device *dev,
+ 	struct nvdimm *dimm = to_nvdimm(dev);
+ 	struct papr_scm_priv *p = nvdimm_provider_data(dimm);
+ 	struct seq_buf s;
+-	u64 health;
+ 	int rc;
+ 
+ 	rc = drc_pmem_query_health(p);
+ 	if (rc)
+ 		return rc;
+ 
+-	/* Copy health_bitmap locally, check masks & update out buffer */
+-	health = READ_ONCE(p->health_bitmap);
+-
+ 	seq_buf_init(&s, buf, PAGE_SIZE);
+-	if (health & PAPR_SCM_DIMM_UNARMED_MASK)
++
++	/* Protect concurrent modifications to papr_scm_priv */
++	rc = mutex_lock_interruptible(&p->health_mutex);
++	if (rc)
++		return rc;
++
++	if (p->health.dimm_unarmed)
+ 		seq_buf_printf(&s, "not_armed ");
+ 
+-	if (health & PAPR_SCM_DIMM_BAD_SHUTDOWN_MASK)
++	if (p->health.dimm_bad_shutdown)
+ 		seq_buf_printf(&s, "flush_fail ");
+ 
+-	if (health & PAPR_SCM_DIMM_BAD_RESTORE_MASK)
++	if (p->health.dimm_bad_restore)
+ 		seq_buf_printf(&s, "restore_fail ");
+ 
+-	if (health & PAPR_SCM_DIMM_ENCRYPTED)
++	if (p->health.dimm_encrypted)
+ 		seq_buf_printf(&s, "encrypted ");
+ 
+-	if (health & PAPR_SCM_DIMM_SMART_EVENT_MASK)
++	if (p->health.dimm_health)
+ 		seq_buf_printf(&s, "smart_notify ");
+ 
+-	if (health & PAPR_SCM_DIMM_SCRUBBED_AND_LOCKED)
+-		seq_buf_printf(&s, "scrubbed locked ");
++	if (p->health.dimm_scrubbed)
++		seq_buf_printf(&s, "scrubbed ");
++
++	if (p->health.dimm_locked)
++		seq_buf_printf(&s, "locked ");
++
++	mutex_unlock(&p->health_mutex);
+ 
+ 	if (seq_buf_used(&s))
+ 		seq_buf_printf(&s, "\n");
 -- 
-Kees Cook
+2.26.2
+
