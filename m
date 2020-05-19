@@ -2,97 +2,96 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDACCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F58C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B06E6204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BB0207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgESPrc (ORCPT
+        id S1729267AbgESPsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 11:47:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:35294 "EHLO foss.arm.com"
+        Tue, 19 May 2020 11:48:10 -0400
+Received: from muru.com ([72.249.23.125]:55022 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729007AbgESPrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 11:47:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BC0731B;
-        Tue, 19 May 2020 08:47:31 -0700 (PDT)
-Received: from [192.168.0.14] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CB2B3F305;
-        Tue, 19 May 2020 08:47:30 -0700 (PDT)
-From:   James Morse <james.morse@arm.com>
-Subject: Re: [PATCH] firmware: arm_sdei: remove unused interfaces
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200504164224.2842960-1-hch@lst.de>
- <7c127e49-b1c6-c7ac-69bf-9fc0a6dba4c4@arm.com>
- <6d0adc02-bcd8-2217-c145-d609528fbe77@huawei.com>
-Message-ID: <0ac1444b-bbdf-1efb-54e6-db90fe6ac707@arm.com>
-Date:   Tue, 19 May 2020 16:47:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1729007AbgESPsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 11:48:10 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9831D80FA;
+        Tue, 19 May 2020 15:48:59 +0000 (UTC)
+Date:   Tue, 19 May 2020 08:48:07 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Faiz Abbas <faiz_abbas@ti.com>
+Cc:     Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
+        robh+dt@kernel.org, bcousson@baylibre.com,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2] arm: dts: Move am33xx and am43xx mmc nodes to
+ sdhci-omap driver
+Message-ID: <20200519154807.GT37466@atomide.com>
+References: <20200512203804.9340-1-faiz_abbas@ti.com>
+ <20200513162327.GM37466@atomide.com>
+ <94025425-95e2-e53d-cfac-a1e73e6c011a@ti.com>
+ <53c815db-dd7d-e6e1-f81a-cf05ef340c71@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <6d0adc02-bcd8-2217-c145-d609528fbe77@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <53c815db-dd7d-e6e1-f81a-cf05ef340c71@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xiongfeng,
-
-On 05/05/2020 03:08, Xiongfeng Wang wrote:
-> On 2020/5/5 1:14, James Morse wrote:
->> Hi Christoph,
->>
->> (CC: +Xiongfeng)
->>
->> Thanks for the reminder - I was just searching for who was using this.
+* Faiz Abbas <faiz_abbas@ti.com> [200519 08:23]:
+> Tony,
 > 
-> Thanks for CC me. We do have a driver that are using it.
+> On 15/05/20 3:04 pm, Faiz Abbas wrote:
+> > Hi Tony,
+> > 
+> > On 13/05/20 9:53 pm, Tony Lindgren wrote:
+> >> * Faiz Abbas <faiz_abbas@ti.com> [200512 13:39]:
+> >>> Move mmc nodes to be compatible with the sdhci-omap driver. The following
+> >>> modifications are required for omap_hsmmc specific properties:
+> >>>
+> >>> ti,non-removable: convert to the generic mmc non-removable
+> >>> ti,needs-special-reset:  co-opted into the sdhci-omap driver
+> >>> ti,dual-volt: removed. Legacy property not used in am335x or am43xx
+> >>> ti,needs-special-hs-handling: removed. Legacy property not used in am335x
+> >>> or am43xx
+> >>>
+> >>> Also since the sdhci-omap driver does not support runtime PM, explicitly
+> >>> disable the mmc3 instance in the dtsi.
+> >>>
+> >>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> >>> ---
+> >>>
+> >>> v2: Rebased to latest mainline where all kernel dependancies have been merged.
+> >>>
+> >>> Suspend/Resume is now supported in the sdhci-omap driver.
+> >>
+> >> Great, thanks for updating it.
+> >>
+> >> Keerthy, care to test for am3 and am4?
+> >>
+> > 
+> > Suspend/resume on am43xx-gpevm is broken right now in mainline and the regression looks
+> > like it is caused by the display subsystem. I have reported this to Tomi and
+> > its being investigated.
+> > 
+> > Meanwhile I have tested this patch with display configs disabled and Keerthy's
+> > suspend/resume tests pass on both am3 and am4.
 
->> On 04/05/2020 17:42, Christoph Hellwig wrote:
->>> The export symbols to register/unregister and enable/disable events
->>> aren't ever used outside of arm_sdei.c, so mark them static.
->>
->> Xiongfeng, you have drivers using this, could they be posted upstream. Or can we stop
->> exporting these?
-> 
-> It's the SDEI Wathchdog which is used for hardlockup detection. But I wasn't
-> able to push it upstream because we have Pseudo-NMI in mainline.
+OK great thanks for checking it. Do you have the display subsystem
+related commit that broke PM? I'm wondering if my recent DSS platform
+data removal changes might have caused the regression.
 
-Hmm, that shouldn't be directly relevant, unless your SDEI watchdog is using the
-bindable-irq thing?
+> Can this patch be picked up? I would really like this to be merged by v5.8
 
-
-If your firmware offers an event-id for the watchdog, please upstream the driver. Half of
-the event-id space is reserved for vendor stuff like this.
-
-If firmware needs to be told to re-configure the watchdog irq to make this work, then pNMI
-is a much better fit. Having firmware and linux modifying the irqchip hardware is a
-nightmare best avoided.
-
-
->> (they were originally added for the GHES RAS thing, but by the time it was all merged
->> upstream, it wasn't possible to build it as a module)
-> 
-> The SDEI Watchdog driver also can't be built as a module. We still need to
-> modify the origin kernel. So I think this patch doesn't affect me. Thanks for CC me.
-
-Okay, I'll pick this up to drop the module exports.
-
-I'd prefer not to make all this static as these register/unregister calls are the
-interface that is supposed to be used. If we are going to gut it, we should do it completely.
-
+Yeah me too :) Looks good to me, planning on applying these today.
 
 Thanks,
 
-James
+Tony
