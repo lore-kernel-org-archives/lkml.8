@@ -2,175 +2,136 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D433CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D04C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5A43207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653CC20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:10:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FtKf2DlT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fqL0h3c2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgESRIs (ORCPT
+        id S1729317AbgESRKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:08:48 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17145 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbgESRIr (ORCPT
+        Tue, 19 May 2020 13:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729197AbgESRKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:08:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec412500000>; Tue, 19 May 2020 10:07:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 19 May 2020 10:08:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 10:08:47 -0700
-Received: from [10.25.75.192] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
- 2020 17:08:42 +0000
-Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
- size >4GB
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>,
-        "Alan Mikhak" <alan.mikhak@sifive.com>
-References: <20200513190855.23318-1-vidyas@nvidia.com>
- <20200513223508.GA352288@bjorn-Precision-5520>
- <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
- <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
- <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <59c32bed-3a6a-70ba-0052-65d9466a0790@nvidia.com>
-Date:   Tue, 19 May 2020 22:38:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 13:10:53 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 143E9C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 10:10:53 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f13so3819592wmc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 10:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xs2DZn2lRCTad+sBiNc+BctIq4JOr+bWIH96SVwqx0c=;
+        b=fqL0h3c2Xp2hoK5XrJG/CvNKsMpLGHx9LRNboyPqdPp9c/5mvU5A/y/Q8stJOThqjp
+         keJv+36/P7d+MxJQZ4QYLzAw4eBJAAZg8lsHyPzcKnM9wgIhKZ/CMnK5ef/pC3Xzrp79
+         Op1JvCnUuMY/QJIW/Av/ffefwKvq2w4hy1GQYdEadYCDLE7AG4YqBWAzbuEP5KboSWAB
+         iIUo+FMMQ3iNkPdpgLHWgwlZHvZE/+cQjkn8YUznKN9v9Zk9uSXUss8rBHFGDD0XP4ER
+         pGyxboWn5rpsi/O3glHXHYFEf5jSypil8wxw2WNBVbsf9HfvJ9jqp+4QQXWNOiuTWHGb
+         d5WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xs2DZn2lRCTad+sBiNc+BctIq4JOr+bWIH96SVwqx0c=;
+        b=ZKVLR+26Eood1mR9+Fxn7ytufKsOeAdKyph5WFdETjDNfBuT7OL+etHaO5CB6ihCfJ
+         2ZE2SpKjtyJaFUks4bJOPPmdnR0ErVLZDTDCOzz+cmn76GVE5HI4hROy1ETgUKbPKQDE
+         1UyPMsn0ZCLtG0yNo6pDLe52CM0aYl/SKwtqWib89Sy8R6Dhbh+PqytJopGGzvDa+YZA
+         s/HIqWpZb39A7VwmuGcr1ZVyO1n1CjKF0BcSFAOYmVK8jOKSpxEgRIa9+tkrG1uPq6Mm
+         V5XYxD2ukpKaKA5GqYd71saq2uYnh8d+jY5pphxOMnBRyloqQCDeP5HGhzUFRv/03vV0
+         whYw==
+X-Gm-Message-State: AOAM530XBpxD7lHLBko/5QYF/ECY3ZwEsYpHf3NP6fxB/eyKai1wnf1J
+        8YLu4szOqp7Z/u2OycvcHk+skUljwWI=
+X-Google-Smtp-Source: ABdhPJxxGkSH456U4yFcE/ijxHPZM9/w0ZbpuYtWJa6tbyJ/6YaYlZNtNUfv2VH19pVYKoaRtWmTRg==
+X-Received: by 2002:a1c:23d2:: with SMTP id j201mr406894wmj.48.1589907886459;
+        Tue, 19 May 2020 10:04:46 -0700 (PDT)
+Received: from starbuck.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.googlemail.com with ESMTPSA id b19sm352685wmd.26.2020.05.19.10.04.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 10:04:45 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: add api to get clk consummer from clk_hw
+Date:   Tue, 19 May 2020 19:04:40 +0200
+Message-Id: <20200519170440.294601-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589908048; bh=1rQXPA2oIArWGngeEsdBJMTOxHrSPSleJraforWbcuQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FtKf2DlTg2eG/uj3U/HEi0z+HTvs9Hi0pteXkU9kl9DlFxnV2OezCsGy8yZuGZLQQ
-         xgBxpAjR1lXlIupxRsEX5ZsNEaxuKkHO+7c81P+IFQzhZvgqIG98feDXT9a9C3mBkr
-         jkfh8gBU9D6eB2sdME3SEZdmQPnwdejLGH2oUvEg1YaeeLbRSfJu0mP9Zj/1uTHi3z
-         b7yY0fZ/qplPiV9ZvPRJMisS4NeZsZzpy+6/9zoK7ryMnHkCHsN1V2m4vUDkcIpKzu
-         17aaGJ5g6/u3BtJIV18dIQvwD7FTgWlfgEViQ8DJDStewYrgonTfgjxllTbXmpFOWx
-         +6Kb+RYAkGtTg==
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+clk_register() is deprecated. Using 'clk' member of struct clk_hw is
+discouraged. With this constrainst, it is difficult for driver to
+register clocks using the clk_hw API and then use the clock with
+the consummer API
 
+This add a simple helper, clk_hw_get_clk(), to get a struct clk from
+a struct clk_hw. Like other clk_get() variant, each call to this helper
+must be balanced with a call to clk_put().
 
-On 19-May-20 8:28 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Tue, May 19, 2020 at 07:25:02PM +0530, Vidya Sagar wrote:
->>
->>
->> On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
->>>> [+cc Alan; please cc authors of relevant commits,
->>>> updated Andrew's email address]
->>>>
->>>> On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
->>>>> commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
->>>>> 32-bits") enables warning for MEM resources of size >4GB but prefetchable
->>>>>    memory resources also come under this category where sizes can go beyond
->>>>> 4GB. Avoid logging a warning for prefetchable memory resources.
->>>>>
->>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>>> ---
->>>>>    drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
->>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> index 42fbfe2a1b8f..a29396529ea4 100644
->>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>>>                       pp->mem = win->res;
->>>>>                       pp->mem->name = "MEM";
->>>>>                       mem_size = resource_size(pp->mem);
->>>>> -                   if (upper_32_bits(mem_size))
->>>>> +                   if (upper_32_bits(mem_size) &&
->>>>> +                       !(win->res->flags & IORESOURCE_PREFETCH))
->>>>>                               dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
->>>>>                       pp->mem_size = mem_size;
->>>>>                       pp->mem_bus_addr = pp->mem->start - win->offset;
->>>
->>> That warning was added for a reason - why should not we log legitimate
->>> warnings ? AFAIU having resources larger than 4GB can lead to undefined
->>> behaviour given the current ATU programming API.
->> Yeah. I'm all for a warning if the size is larger than 4GB in case of
->> non-prefetchable window as one of the ATU outbound translation
->> channels is being used,
-> 
-> Is it true for all DWC host controllers ? Or there may be another
-> exception whereby we would be forced to disable this warning altogether
-> ?I think so. As I see from the code, ATU's
-Region-0 is used for config space translation
-Region-1 is used for non-prefetchable memory translation
-Region-2 is used for I/O translation
-So, there is no region reserved for translating prefetchable memory regions.
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ drivers/clk/clk.c            | 17 +++++++++++++++++
+ include/linux/clk-provider.h |  1 +
+ 2 files changed, 18 insertions(+)
 
-> 
->> but, we are not employing any ATU outbound translation channel for
-> 
-> What does this mean ? "we are not employing any ATU outbound...", is
-> this the tegra driver ? And what guarantees that this warning is not
-> legitimate on DWC host controllers that do use the ATU outbound
-> translation for prefetchable windows ?
-Not Tegra driver but Tegra HW. Tegra HW doesn't need any ATU outbound 
-translation for prefetchable (for that matter any 1-to-1 mapping to 
-generate memory transactions on the PCIe bus).
-The Warning is still valid for both Tegra and other DWC based 
-controllers for non-prefetchable memory translation.
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 6fd23ce3cb03..d9946e192cbc 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3625,6 +3625,23 @@ struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
+ 	return clk;
+ }
+ 
++/**
++ * clk_hw_get_clk: get clk consummer given an clk_hw
++ * @hw: clk_hw associated with the clk being consumed
++ *
++ * Returns: new clk consummer
++ * This is the function to be used by providers which need
++ * to get a consummer clk and act on the clock element
++ * Calls to this function must be balanced with calls clk_put()
++ */
++struct clk *clk_hw_get_clk(struct clk_hw *hw)
++{
++	struct device *dev = hw->core->dev;
++
++	return clk_hw_create_clk(dev, hw, dev_name(dev), NULL);
++}
++EXPORT_SYMBOL(clk_hw_get_clk);
++
+ static int clk_cpy_name(const char **dst_p, const char *src, bool must_exist)
+ {
+ 	const char *dst;
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index bd1ee9039558..a8f466bdda1a 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -1088,6 +1088,7 @@ static inline struct clk_hw *__clk_get_hw(struct clk *clk)
+ 	return (struct clk_hw *)clk;
+ }
+ #endif
++struct clk *clk_hw_get_clk(struct clk_hw *hw);
+ unsigned int clk_hw_get_num_parents(const struct clk_hw *hw);
+ struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw);
+ struct clk_hw *clk_hw_get_parent_by_index(const struct clk_hw *hw,
+-- 
+2.25.4
 
-> 
-> Can DWC maintainers chime in and clarify please ?
-> 
->> prefetchable window and they can be greater than 4GB in size for all
->> right reasons. So, logging a warning for prefetchable region doesn't
->> seem correct to me. Please let me know if my understanding is wrong.
-> 
-> I think your patch is wrong and it is applied on top of a patch that
-> is wrong too, so I won't apply yours and it is likely I will revert
-> Alan's because it seems to solve nothing (and warn spuriously).
-> 
-> It is time for people who maintain DWC please to speak up because I
-> don't have the HW details required to make a judgment.
-> 
-> Lorenzo
-> 
->> - Vidya Sagar
->>>
->>> Alan ? I want to understand what's the best course of action before
->>> merging these patches.
->>>
->>> Lorenzo
->>>
