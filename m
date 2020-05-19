@@ -2,110 +2,111 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C405CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ACCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC90F2081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67AB20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:54:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g7s/gYo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgESMva (ORCPT
+        id S1728773AbgESMyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:51:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:47865 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726991AbgESMv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:51:29 -0400
-IronPort-SDR: j3Px7osGxG7WSDJsfBM2hDsMm1AysejSzYsg7Iumi9EN5jjlKD2YZZGwHjP/aDAgGRcxLOKIey
- S08AxcH3j8Sg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 05:51:29 -0700
-IronPort-SDR: 0COlADP61rFlXgsldtC2+8lHkEFUk+vocSTxCrwrtsRUq8MnmP6g3iJsQ4U5byQqnPsvNn6dMc
- 3rsc5aNdgrxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="373716987"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 19 May 2020 05:51:25 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 19 May 2020 15:51:25 +0300
-Date:   Tue, 19 May 2020 15:51:24 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Christian Lamparter <chunkeey@googlemail.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 2/5] usb: renesas-xhci: Add the renesas xhci driver
-Message-ID: <20200519125124.GD1298122@kuha.fi.intel.com>
-References: <20200506060025.1535960-1-vkoul@kernel.org>
- <20200506060025.1535960-3-vkoul@kernel.org>
- <20200519114528.GC1298122@kuha.fi.intel.com>
- <20200519120130.GN374218@vkoul-mobl.Dlink>
+        Tue, 19 May 2020 08:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbgESMyT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 08:54:19 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABEDEC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 05:54:19 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x13so6493465pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 05:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=G+3IDjSQe5T10VvQiPvHkruTfhZCDaHQP43VPDmYK54=;
+        b=g7s/gYo884AOa/REioKbv6xPC+XS8JEcyTOZyZEftWHVNi/AZkMMQsZCrSmVvTpnrY
+         bMRpbEGj1TuqSCh8GzKZKNV2c8wazABvcuQUMy7/gne30Botlu0xqkZWtMfZnocLBrAL
+         5fHnoBkjUSpCsvv4ff5Lyilg4RosPraY7un+SosIxJugMcYwUxvuShZD52/PUEA7ckre
+         SDQBDX0gJ4eV4NOkL9xRDvonfqT2qH72tVBPA4oqOYpNQY7R0o72PIvznWWOmjOj/FE3
+         SsXorFaRT57g8d11sap/nnAvuVo/FxRunltRAhhi5NchyGxxAMaiPu9d4zBPLyuY1kNX
+         il2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G+3IDjSQe5T10VvQiPvHkruTfhZCDaHQP43VPDmYK54=;
+        b=VnV5/UnBXB5w0gqPiLvc+/1UFIFqfUm1IEhvsyDKs6ERYgYpmz1MH/JEkOgchy6l1w
+         nCLiM+hENnPZ/e6Gn2eOkU5yId9xA8Iy1Z9QpIGg3hJ0frsIQp4mORtnzSHv+uHz5rSs
+         v3pQZaKWOEHQJeGA4PdGZmNJaJhUjegzzouZvpiqn/AocYBvRmCsRsVX+xs07MSmQVzk
+         rThuj/HTlEBPhnJwiSm2BOnSVX39I1kM942jlgw6IqklTw4lHNDOy/OsGuW/lbiK85KV
+         vOiEV11BqNLyQuaMuK5ewrtZIZ3ZhKK6SWvPrsERvvp5KvizOsaXaywZIomD/rFufwHV
+         SQIQ==
+X-Gm-Message-State: AOAM533/i6AkChKROkdsT44pbctEuZeJ/reaTFHa+l4NeeQNujy6UJWN
+        aM6VZS1NP7MH26g5Kc4BXR8xMEpE3Fw=
+X-Google-Smtp-Source: ABdhPJyYJx833zFOzSVWomS3acnAcS+oW34Iz3pzV1ovicQc9QYaEhKOEwmBm50Nva3RBYLIqYsPgQ==
+X-Received: by 2002:a63:7d58:: with SMTP id m24mr17701283pgn.81.1589892858921;
+        Tue, 19 May 2020 05:54:18 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:202:2523:d194:de3b:636f])
+        by smtp.gmail.com with ESMTPSA id q7sm9932171pgs.13.2020.05.19.05.54.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 05:54:17 -0700 (PDT)
+Date:   Tue, 19 May 2020 05:54:15 -0700
+From:   Michel Lespinasse <walken@google.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH v5 06/10] mmap locking API: convert nested write lock
+ sites
+Message-ID: <20200519125415.GA189720@google.com>
+References: <20200422001422.232330-1-walken@google.com>
+ <20200422001422.232330-7-walken@google.com>
+ <6a23fcce-181b-01ad-4a83-ea24d07ac724@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519120130.GN374218@vkoul-mobl.Dlink>
+In-Reply-To: <6a23fcce-181b-01ad-4a83-ea24d07ac724@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 05:31:30PM +0530, Vinod Koul wrote:
-> Hi Heikki
+On Mon, May 18, 2020 at 12:32:03PM +0200, Vlastimil Babka wrote:
+> On 4/22/20 2:14 AM, Michel Lespinasse wrote:
+> > Add API for nested write locks and convert the few call sites doing that.
+> > 
+> > Signed-off-by: Michel Lespinasse <walken@google.com>
+> > Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 > 
-> On 19-05-20, 14:45, Heikki Krogerus wrote:
-> > Hi guys,
-> > 
-> > On Wed, May 06, 2020 at 11:30:22AM +0530, Vinod Koul wrote:
-> > > From: Christian Lamparter <chunkeey@googlemail.com>
-> > > 
-> > > This add a new driver for renesas xhci which is basically a firmware
-> > > loader for uPD720201 and uPD720202 w/o ROM. The xhci-pci driver will
-> > > invoke this driver for loading/unloading on relevant devices.
-> > > 
-> > > This patch adds a firmware loader for the uPD720201K8-711-BAC-A
-> > > and uPD720202K8-711-BAA-A variant. Both of these chips are listed
-> > > in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
-> > > devices which need the firmware loader on page 2 in order to
-> > > work as they "do not support the External ROM".
-> > > 
-> > > The "Firmware Download Sequence" is describe in chapter
-> > > "7.1 FW Download Interface" R19UH0078EJ0500 Rev.5.00 page 131.
-> > > 
-> > > The firmware "K2013080.mem" is available from a USB3.0 Host to
-> > > PCIe Adapter (PP2U-E card) "Firmware download" archive. An
-> > > alternative version can be sourced from Netgear's WNDR4700 GPL
-> > > archives.
-> > > 
-> > > The release notes of the PP2U-E's "Firmware Download" ver 2.0.1.3
-> > > (2012-06-15) state that the firmware is for the following devices:
-> > >  - uPD720201 ES 2.0 sample whose revision ID is 2.
-> > >  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
-> > >  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
-> > 
-> > You wouldn't happen to have access to the documentation of the
-> > "original" uPD720200 USB 3.0 controller?
-> > 
-> > It would be cool if we could support that too with this driver.
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 > 
-> Not me. does it also require firmware? If so you can try with this
-> driver and see if it works for you?
+> Perhaps we could even move SINGLE_DEPTH_NESTING into the wrapper? It's unlikely
+> there will be a new user with a different subclass?
 
-It does require firmware, and yes I can test this driver at some
-point.
-
-thanks,
+I think I'll leave it in the API for now. I don't foresee new uses
+being added as long as we stick to coarse mmap locking, but if
+extending the api to support range locking it'd become more likely
+that we'd want to lock multiple ranges for mremap...
 
 -- 
-heikki
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
