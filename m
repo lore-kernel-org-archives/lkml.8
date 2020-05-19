@@ -2,92 +2,97 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B57A120826
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B56420826
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OeA0URDd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZIPUfQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgESUDF (ORCPT
+        id S1728378AbgESUDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:03:05 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10958 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgESUDD (ORCPT
+        Tue, 19 May 2020 16:03:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgESUDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:03:03 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec43b280001>; Tue, 19 May 2020 13:01:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 19 May 2020 13:03:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 19 May 2020 13:03:03 -0700
-Received: from [10.2.90.179] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
- 2020 20:03:02 +0000
-Subject: Re: [PATCH] tee: convert convert get_user_pages() -->
- pin_user_pages()
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     Jens Wiklander <jens.wiklander@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        <tee-dev@lists.linaro.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>
-References: <20200519051850.2845561-1-jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <ad103c96-0b84-97cd-48eb-67f5e01e0349@nvidia.com>
-Date:   Tue, 19 May 2020 13:03:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 16:03:45 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351BBC08C5C0;
+        Tue, 19 May 2020 13:03:45 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z26so392101pfk.12;
+        Tue, 19 May 2020 13:03:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VClIq2B9DplbSOKi1zTCsffgA/r+9JDCQ+/Oexq2Kbk=;
+        b=KZIPUfQXpnCxNG32pxX147DeR6D91Kdr+r0m2x4aGxjDVGgQTL2+v1HSt2ZL67zpC3
+         /tW2rHERtgL/AQMlVG1VQcmUqJwvPy36j/pfpUBJ5dc5nAbx6nAmH5MkkxyAMFKmvJhx
+         0D0rzfdpdd2CPak1QIt70MAUD8tSVnzLf4Yo28Ijwy34ZtiSTHbFGaJWBQS4TKbFJQ4n
+         AaHerd7Ug/YPmUEA62/AIZOqtuE8w5pDQwofasje25X9FH4ut4nLAGutvpfBwjHH4rrg
+         Beqeuj18UmQ4vCgONCQcAwiG0lTFx6bMnRArEfqzym9uID+meL/sPOIZ4uyergWaPz+9
+         OI1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VClIq2B9DplbSOKi1zTCsffgA/r+9JDCQ+/Oexq2Kbk=;
+        b=cPo0Xw18P8kGMn/pdFmNz/KLgsuo1aqCqQjGqCIdXHp6vBYat3xXug8d7YV4DHueGQ
+         QABZQz2MX20b2ulre3/B7im5Jj9ZA9Ynsdk519dSo23qyI6R5O8rPM46OfL1s0Lg5OgB
+         uKNYmPr4efbOBTB5wsgUZM+KwdkrfYTaaF5FnURpUmzR23/YBlOVRMb7+c5rcNw0Z7nd
+         sUl1cePWWDUqgd4SxtDYKWWfz7NoaGa3fEG4sCkgPH3cjcoSyXdnw3cywXv41gAIJNd0
+         dxT4EbInSbfH5xS6VY1w5GT051CYkcX/dp1FIqNmREEBm3BXVBp/rtI5NLLoRs4imXpx
+         l9IQ==
+X-Gm-Message-State: AOAM533b4kuBzVnCLnSb8Qqf+vr4p9oMgRBdaxyhZJ8c18xr+I6U0+Fd
+        jUECmhplYC8WgOh/gDBPSpFY5WKD
+X-Google-Smtp-Source: ABdhPJy9ijc7fEmAwfNBZJGPHO63gmZjhFXdGzWAQS6rK1iFl0YpaplVO/GUwUsLu9q/nrTUCnEltQ==
+X-Received: by 2002:a63:dd11:: with SMTP id t17mr856548pgg.348.1589918624178;
+        Tue, 19 May 2020 13:03:44 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z29sm268534pff.120.2020.05.19.13.03.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 13:03:43 -0700 (PDT)
+Subject: Re: [PATCH net-next 1/4] net: phy: dp83869: Update port-mirroring to
+ read straps
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200519141813.28167-1-dmurphy@ti.com>
+ <20200519141813.28167-2-dmurphy@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <fad928ae-93cb-2ce8-98ab-68acb7bb02b8@gmail.com>
+Date:   Tue, 19 May 2020 13:03:42 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200519051850.2845561-1-jhubbard@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200519141813.28167-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589918504; bh=I+orG+7rEdCJPZjUgf5aOsrGlbkMUn9fDowKMSsoZ2g=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OeA0URDdDEoYmrSyeZbmNSjYkOHX/p9wy63Apbm2XjDHgq3miJl/i0na08Vfn43RI
-         YJi/E7JgJgoXCBwYik7RTdeSvY0bKSpoOinqqc+CK+NUow8VpXp3nz1wbytGFfkjN1
-         /2PyM61mbRSTw5aBh2po+7pSRo9zdFS3H+0b+8b7EHERtfPNskX7FcDvsyA2sWwjHg
-         jAor6efO7gcQ8b6mDVRwikI8RefZr+5pssUoEpJQ3UMBkBTqLknnxmMKSilKMNGQos
-         Pj5dDsBREkofQTJtBKeQFyv7wSW2CWQi7c09i+a2cQ0twqJbn0N6hitYffyPmO4hRw
-         XOflF6r7EqEXw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-18 22:18, John Hubbard wrote:
-> This code was using get_user_pages*(), in a "Case 2" scenario
-> (DMA/RDMA), using the categorization from [1]. That means that it's
-> time to convert the get_user_pages*() + put_page() calls to
-> pin_user_pages*() + unpin_user_pages() calls.
+
+
+On 5/19/2020 7:18 AM, Dan Murphy wrote:
+> The device tree may not have the property set for port mirroring
+> because the hardware may have it strapped. If the property is not in the
+> DT then check the straps and set the port mirroring bit appropriately.
 > 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-Looks like I accidentally doubled a word on the subject line:
-"convert convert". :)
-
-I'd appreciate it a maintainer could remove one of those for
-me, while applying the patch, assuming that we don't need a
-v2 for other reasons.
-
-
-thanks,
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-John Hubbard
-NVIDIA
+Florian
