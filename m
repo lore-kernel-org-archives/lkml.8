@@ -2,168 +2,139 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB06C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9CC5206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8C0206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:47:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p1lO8gQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgESTro (ORCPT
+        id S1727084AbgESTrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:47:44 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:54114 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726348AbgESTrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:47:43 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id 04JJkPnn004615;
-        Tue, 19 May 2020 22:46:25 +0300
-Date:   Tue, 19 May 2020 22:46:25 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Marco Angaroni <marcoangaroni@gmail.com>
-cc:     Andrew Kim <kim.andrewsy@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "open list:IPVS" <netdev@vger.kernel.org>,
-        "open list:IPVS" <lvs-devel@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
-        "open list:NETFILTER" <coreteam@netfilter.org>
-Subject: Re: [PATCH] netfilter/ipvs: immediately expire UDP connections
- matching unavailable destination if expire_nodest_conn=1
-In-Reply-To: <CANHHuCW6i0BjLRMYkfY8eZGZJZTnE-NO9EH+-gfH94cc6yYn1A@mail.gmail.com>
-Message-ID: <alpine.LFD.2.21.2005192139500.3504@ja.home.ssi.bg>
-References: <20200515013556.5582-1-kim.andrewsy@gmail.com> <20200517171654.8194-1-kim.andrewsy@gmail.com> <alpine.LFD.2.21.2005182027460.4524@ja.home.ssi.bg> <CABc050G-yW-frv0mCmg=hMnC4iOx9Ht2Zv8eoS1cxQ8uKX6NQw@mail.gmail.com>
- <CANHHuCW6i0BjLRMYkfY8eZGZJZTnE-NO9EH+-gfH94cc6yYn1A@mail.gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Tue, 19 May 2020 15:47:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726348AbgESTrv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 15:47:51 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8889C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:47:51 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ci23so134132pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:47:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CgyntvvUzH1XXLBzT1ZgjwhZo6axGQJQNJMNpQq/mjY=;
+        b=p1lO8gQM6mxvNv1BlHL2svVHbsP69QZ+XlG0COlRjlYM1DGwsqpnqMh/39++m5KE96
+         9n9ZehwfzYN68t7s0KmT0fNOdJ850WfDjLWMRxprnwcCwXNUa+oe4f7TLA117mDNkBiY
+         Fy4wvZ/eetly/jy2W6QHjqCgRMNox+JXoD7UOl+aDpZPISswLph6t/i6Szubr3feo3H5
+         22bmwheyp0Vyy0Jq1xHQ/y9ulpgwj32vBWubfmcAokQg8qPyC16CdKJx8pSM0bZdMn62
+         1+avZfYvheGKN0BzDIFCBnObRRrfeeNSFzCkEPoAms2Dj7pbE1prWTkrtEEQ7Kdpf5do
+         xfzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CgyntvvUzH1XXLBzT1ZgjwhZo6axGQJQNJMNpQq/mjY=;
+        b=nRx26pJdG7+BHdPbQXm3IN8QqV47OvL4I35PMNG4v43MjofsnNV5I6YwlVlLnMVkpp
+         gyaLVSxovgCsImNyVYxbKB+e/eEtCVz1Phg8YSJOKpMachNvu4HEHWdx/nep6p70yGfQ
+         Ex9B/ETgepPvJGjNzFDjucOUvbPVcT15pjPxgGQMRhhOPU8RabcMvMYLhGw91Glgk9Kg
+         e2ZloILuWyQBbmHbWUZrchiSmEITWWSlcaglyOOZ3Din6IO7YBzNuOHmXUEMUdxhN5in
+         0QE2BfUHePyY6wU0YxIWrAMDg88+wSyZLZ4L+v8Vnq9FhFjFk3miNP7mHQFpTuQYHDa+
+         L0bQ==
+X-Gm-Message-State: AOAM532ywWD+uSZp7mltlgcfhehr/50WSF9fYZtX70MwYRZ4QTDycQGa
+        IV6UANrPvTwW4k5wfJ2AkY4=
+X-Google-Smtp-Source: ABdhPJz81uFcj5ZQa6mkGTcmojKcSVnPbx9vOLpey0COrD8CM1hoAIfQebh1Ek7hG9dQucZqv5U15g==
+X-Received: by 2002:a17:902:c281:: with SMTP id i1mr1004179pld.177.1589917671065;
+        Tue, 19 May 2020 12:47:51 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u5sm236045pfu.198.2020.05.19.12.47.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 12:47:50 -0700 (PDT)
+Subject: Re: [PATCH 00/11] arm/arm64: Turning IPIs into normal interrupts
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Sumit Garg <sumit.garg@linaro.org>, kernel-team@android.com,
+        Russell King <linux@arm.linux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+References: <20200519161755.209565-1-maz@kernel.org>
+ <d1ac7873-0f02-dbe0-dd3c-4fd14a87cf03@gmail.com>
+Message-ID: <7b06f351-40f3-74c3-5d16-d7d58ab490b6@gmail.com>
+Date:   Tue, 19 May 2020 12:47:44 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463811672-1121648160-1589917585=:3504"
+In-Reply-To: <d1ac7873-0f02-dbe0-dd3c-4fd14a87cf03@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
----1463811672-1121648160-1589917585=:3504
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
 
 
-	Hello,
-
-On Tue, 19 May 2020, Marco Angaroni wrote:
-
-> Hi Andrew, Julian,
+On 5/19/2020 10:50 AM, Florian Fainelli wrote:
 > 
-> could you please confirm if/how this patch is changing any of the
-> following behaviours, which I’m listing below as per my understanding
-> ?
 > 
-> When expire_nodest is set and real-server is unavailable, at the
-> moment the following happens to a packet going through IPVS:
+> On 5/19/2020 9:17 AM, Marc Zyngier wrote:
+>> For as long as SMP ARM has existed, IPIs have been handled as
+>> something special. The arch code and the interrupt controller exchange
+>> a couple of hooks (one to generate an IPI, another to handle it).
+>>
+>> Although this is perfectly manageable, it prevents the use of features
+>> that we could use if IPIs were Linux IRQs (such as pseudo-NMIs). It
+>> also means that each interrupt controller driver has to follow an
+>> architecture-specific interface instead of just implementing the base
+>> irqchip functionnalities. The arch code also duplicates a number of
+>> things that the core irq code already does (such as calling
+>> set_irq_regs(), irq_enter()...).
+>>
+>> This series tries to remedy this on arm/arm64 by offering a new
+>> registration interface where the irqchip gives the arch code a range
+>> of interrupts to use for IPIs. The arch code requests these as normal
+>> interrupts.
+>>
+>> The bulk of the work is at the interrupt controller level, where all 3
+>> irqchips used on arm64 get converted.
+>>
+>> Finally, the arm64 code drops the legacy registration interface. The
+>> same thing could be done on 32bit as well once the two remaining
+>> irqchips using that interface get converted.
+>>
+>> There is probably more that could be done: statistics are still
+>> architecture-private code, for example, and no attempt is made to
+>> solve that (apart from hidding the IRQs from /proc/interrupt).
+>>
+>> This has been tested on a bunch of 32 and 64bit guests.
 > 
-> a) TCP (or other connection-oriented protocols):
->    the packet is silently dropped, then the following retransmission
-> causes the generation of a RST from the load-balancer to the client,
-> which will then re-open a new TCP connection
-
-	Yes. It seems we can not create new connection in
-all cases, we should also check with is_new_conn().
-
-	What we have is that two cases are possible depending on 
-conn_reuse_mode, the state of existing connection and whether
-netfilter conntrack is used:
-
-	1. setup expire for old conn, then drop packet
-	2. setup expire for old conn, then create new
-	conn to schedule the packet
-
-	When expiration is set, the timer will fire in the
-next jiffie to remove the connection from hash table. Until
-removed, the connection still can cause drops. Sometimes
-we can simply create new connection with the same tuple,
-so it is possible both connections to coexist for one jiffie
-but the old connection is not reached on lookup.
-
-> b) UDP:
->    the packet is silently dropped, then the following retransmission
-> is rescheduled to a new real-server
-
-	Yes, we drop while old conn is not expired yet
-
-> c) UDP in OPS mode:
->    the packet is rescheduled to a new real-server, as no previous
-> connection exists in IPVS connection table, and a new OPS connection
-> is created (but it lasts only the time to transmit the packet)
-
-	Yes, OPS is not affected.
-
-> d) UDP in OPS mode + persistent-template:
->    the packet is rescheduled to a new real-server, as previous
-> template-connection is invalidated, a new template-connection is
-> created, and a new OPS connection is created (but it lasts only the
-> time to transmit the packet)
-
-	Yes, the existing template is ignored when its server
-is unavailable.
-
-> It seems to me that you are trying to optimize case a) and b),
-> avoiding the first step where the packet is silently dropped and
-> consequently avoiding the retransmission.
-> And contextually expire also all the other connections pointing to the
-> unavailable real-sever.
-
-	The change will allow immediate scheduling in a new
-connection for any protocol when netfilter conntrack is not
-used:
-
-- TCP: avoids retransmission for SYN
-- UDP: reduces drops from 1 jiffie to 0 (no drops)
-
-	But this single jiffie compared to the delay between
-real server failure and the removal from the IPVS table can be
-negligible. Of course, if real server is removed while it is
-working, with this change we should not see any UDP drops.
-
-> However I'm confused about the references to OPS mode.
-> And why you need to expire all the connections at once: if you expire
-> on a per connection basis, the client experiences the same behaviour
-> (no more re-transmissions), but you avoid the complexities of a new
-> thread.
-
-	Such flushing can help when conntrack is used in which
-case the cost is a retransmission or downtime for one jiffie.
-
-> Maybe also the documentation of expire_nodest_conn sysctl should be updated.
-> When it's stated:
+> Does this patch series change your position on this patch series
 > 
->         If this feature is enabled, the load balancer will expire the
->         connection immediately when a packet arrives and its
->         destination server is not available, then the client program
->         will be notified that the connection is closed
+> https://lore.kernel.org/linux-arm-kernel/20191023000547.7831-3-f.fainelli@gmail.com/T/
 > 
-> I think it should be at least "and the client program" instead of
-> "then the client program".
-> Or a more detailed explanation.
+> or is this still a no-no?
 
-	Yes, if the packet is SYN we can create new connection.
-If it is ACK, the retransmission will get RST.
+Our firmware specifies SGI interrupts with the first interrupt cell
+specifier set to 2, so changing GIC_IRQ_TYPE_SGI to 2 allows me to use a
+nearly unmodified firmware with your changes, sweet! I know this is not
+supposed to be used that way, but the temptation was too big.
 
-Regards
+FWIW, on ARM64:
 
---
-Julian Anastasov <ja@ssi.bg>
----1463811672-1121648160-1589917585=:3504--
+Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
