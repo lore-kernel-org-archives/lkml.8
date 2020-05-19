@@ -1,172 +1,186 @@
 Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E72C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA60C2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A7E207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:44:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/ZuyZJC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1AE9fbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgESUmf (ORCPT
+        id S1726821AbgESUoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58972 "EHLO
+        Tue, 19 May 2020 16:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgESUme (ORCPT
+        with ESMTP id S1726178AbgESUoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:42:34 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93B58C08C5C0;
-        Tue, 19 May 2020 13:42:34 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id x13so317102qvr.2;
-        Tue, 19 May 2020 13:42:34 -0700 (PDT)
+        Tue, 19 May 2020 16:44:01 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD20C08C5C0;
+        Tue, 19 May 2020 13:44:01 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t7so382972plr.0;
+        Tue, 19 May 2020 13:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MxjzuKPTnqF+zzLncOFC5Grqt9HxOH+XXP2tkEyOZIU=;
-        b=P/ZuyZJCVyPLY5ZtIPXe6zWNbKqkMgexWJlRC3ENjSls6Co34mNngtMJP8ZyGy4iCD
-         Ro76TFrG/NqWv75K+jzp5ReOKHD966bFIm6ED/DlAIH6YEpun58VYSCPYvfNCSwkx06U
-         G+R/awU6zm2tAlK9UaiHYRla/uqf8/S9zK2bYvdlVhF0xiRzrUb4MksNwqhkukvbdCdm
-         4Bl22c3HJzK7x37QIxCfbfnezzqgT1JhlLymOdt1JR3IYSveya1XtT1JHt6So3OsYCHE
-         XH+p46YIYixuMLMHeGUPwUFimSuPz5g7DR0Nif9D9Oa+Zq36ebdQEK23dyikHrlPJX9e
-         sYTg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7NKe0dGCLuIFUTSDu/e/oZFqvqubemBEs4EDLcjwgzA=;
+        b=i1AE9fbb1/4A3jewEktdiPlEhm44n+aEzpUF/J6C5L/Vmt4RDWpg5l+3XaTGXPR2pA
+         jYk5iOBvDHwFMaVrwgNve7m/NAowuc6ceW2X3lcl2kZP59FjRMMXrnp847fkHyPRyzrn
+         UhA6HJ+izxCChQA+GOq4qeGv5WoioDVdSyW4BU7HYcc+qrbQW8rRzv+gbAGnSLZSb4f3
+         k1WxMhiBEPV33vNC4h/pD9HAg+wyRr2lHno32blg6wWj18WZ9xUxuCONDAezkJyOlUUr
+         MaQdqTBwSHwq3ZLdk9dN7iQJxhykm4NGX/Bfnws7VGfXepvQYlrCnwxGW025/zgM08Ul
+         jJww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MxjzuKPTnqF+zzLncOFC5Grqt9HxOH+XXP2tkEyOZIU=;
-        b=r6ZzCrUXcHDRNasMH1OuY4+regJW/zJ6biLxp/5ChtiGf0fHrvE9NKHZ73/MZ4QxEU
-         I6XBojD7RpEJhvklmJAtBPlyJB9yXk7ZRqjyKs37ED2Ho5fnPTe2CtnB7/uwESL6Tjw2
-         5RtKS7MZPjKJjWHVJ97+JaB73L8Edn2wYNGD+bkR1VQKgoBU54hv/mxuzzKF11uhprs0
-         4WKivqw43dYgXDcvSCNZ4wSqUQLJgLF16Pd4fsgJXVwNyv7Ht0ytIyQkHzmG4BgFyStL
-         vIsmk2whqzYhXPRa5ro+o2+wBo1OsgPjKPl469U8Dzp+EGBieILroEUbGCfZCvJ927YL
-         SkPw==
-X-Gm-Message-State: AOAM532IJBPo+p54XwH0qSgcA2fdg7wBlo5tfVjhRmI88jZNVM+xq34q
-        2iPB5MEtIsf2ntb1hvVBe3s=
-X-Google-Smtp-Source: ABdhPJxDd7E6iGbwI7VLhh2fvX9IgVo3t/EJnUPo9ANDGO1IO2Pk08BfulTqnEcCJYhBBdybQKMslw==
-X-Received: by 2002:a0c:ba99:: with SMTP id x25mr1576878qvf.119.1589920953653;
-        Tue, 19 May 2020 13:42:33 -0700 (PDT)
-Received: from localhost.localdomain ([168.181.48.225])
-        by smtp.gmail.com with ESMTPSA id n31sm813267qtc.36.2020.05.19.13.42.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 13:42:32 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id B3FB0C08DA; Tue, 19 May 2020 17:42:29 -0300 (-03)
-Date:   Tue, 19 May 2020 17:42:29 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Jonas Falkevik <jonas.falkevik@gmail.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xin Long <lucien.xin@gmail.com>
-Subject: Re: [PATCH] sctp: check assoc before SCTP_ADDR_{MADE_PRIM,ADDED}
- event
-Message-ID: <20200519204229.GQ2491@localhost.localdomain>
-References: <CABUN9aCXZBTdYHSK5oSVX-HAA1wTWmyBW_ked_ydsCjsV-Ckaw@mail.gmail.com>
- <20200513160116.GA2491@localhost.localdomain>
- <CABUN9aCuoA+CXLujUxXyiKWQPkwq9_eOXNqOR=MK7dPY++Fxng@mail.gmail.com>
- <20200513213230.GE2491@localhost.localdomain>
- <CABUN9aBoxXjdPk9piKAZV-2dYOCEnuXr-4H5ZVVvqeMMFRsf7A@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7NKe0dGCLuIFUTSDu/e/oZFqvqubemBEs4EDLcjwgzA=;
+        b=WCslaEhlN1HbhQmSOS3zVK6kWkvaw582VrPQ5o3oQG/Q97mtCJr/wcqgdFug8Ou9Xf
+         FMPPafnwyJKMMdjkO6fGTow7whp5nyT/Kksj51dUTgX5n+qInaNsU0cnS8uXSqSuQHJA
+         LFNW+4spMBMwKX+wOFZiJGMUqPSVZ8Jv2bCu+JyveakNfmuLSc3YJY42W566yfBukmji
+         hXgk2A6i9DLvN6AjlGhN80w0KiG/Hh1WIcl7ww/HPnHjWLbrlgs0exwBsugs+VFNErGr
+         b91l4zdzs1cB/mvQhfs6XRmT+rrq9fDdiVtC1Atn5dFHCwkLoDqwFxyT3qO4HCWM6KDf
+         K9pQ==
+X-Gm-Message-State: AOAM533L0MWHQ8Bv3o0WHvyopBdRpSCsNTNhHoQk31dFA8A58mtn6leR
+        /+/eLoZhuPOScsJEKMAQnI9BJEUEVGmKE8siuzQ=
+X-Google-Smtp-Source: ABdhPJyhoLKOvXYwlEtqNyJEFcVPhsytjjZvjtEBaBNriSxQfrCm3qrr6XzTUriBFI1NitA6C5nmn1Lg7mL7k2fxWGA=
+X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr1366526pjd.181.1589921041122;
+ Tue, 19 May 2020 13:44:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABUN9aBoxXjdPk9piKAZV-2dYOCEnuXr-4H5ZVVvqeMMFRsf7A@mail.gmail.com>
+References: <20200517194904.34758-1-contact@artur-rojek.eu> <20200517194904.34758-7-contact@artur-rojek.eu>
+In-Reply-To: <20200517194904.34758-7-contact@artur-rojek.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 19 May 2020 23:43:44 +0300
+Message-ID: <CAHp75VcChHOrxrqBM==-_SaTL4vSojKmRWvkNn-CHLH99pcAuQ@mail.gmail.com>
+Subject: Re: [PATCH v7 7/7] input: joystick: Add ADC attached joystick driver.
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 10:30:29AM +0200, Jonas Falkevik wrote:
-> On Wed, May 13, 2020 at 11:32 PM Marcelo Ricardo Leitner
-> <marcelo.leitner@gmail.com> wrote:
-> >
-> > On Wed, May 13, 2020 at 10:11:05PM +0200, Jonas Falkevik wrote:
-> > > On Wed, May 13, 2020 at 6:01 PM Marcelo Ricardo Leitner
-> > > <marcelo.leitner@gmail.com> wrote:
-> > > >
-> > > > On Wed, May 13, 2020 at 04:52:16PM +0200, Jonas Falkevik wrote:
-> > > > > Do not generate SCTP_ADDR_{MADE_PRIM,ADDED} events for SCTP_FUTURE_ASSOC assocs.
-> > > >
-> > > > How did you get them?
-> > > >
-> > >
-> > > I think one case is when receiving INIT chunk in sctp_sf_do_5_1B_init().
-> > > Here a closed association is created, sctp_make_temp_assoc().
-> > > Which is later used when calling sctp_process_init().
-> > > In sctp_process_init() one of the first things are to call
-> > > sctp_assoc_add_peer()
-> > > on the closed / temp assoc.
-> > >
-> > > sctp_assoc_add_peer() are generating the SCTP_ADDR_ADDED event on the socket
-> > > for the potentially new association.
-> >
-> > I see, thanks. The SCTP_FUTURE_ASSOC means something different. It is
-> > for setting/getting socket options that will be used for new asocs. In
-> > this case, it is just a coincidence that asoc_id is not set (but
-> > initialized to 0) and SCTP_FUTURE_ASSOC is also 0.
-> 
-> yes, you are right, I overlooked that.
-> 
-> > Moreso, if I didn't
-> > miss anything, it would block valid events, such as those from
-> >  sctp_sf_do_5_1D_ce
-> >    sctp_process_init
-> > because sctp_process_init will only call sctp_assoc_set_id() by its
-> > end.
-> 
-> Do we want these events at this stage?
-> Since the association is a newly established one, have the peer address changed?
-> Should we enqueue these messages with sm commands instead?
-> And drop them if we don't have state SCTP_STATE_ESTABLISHED?
-> 
-> >
-> > I can't see a good reason for generating any event on temp assocs. So
-> > I'm thinking the checks on this patch should be on whether the asoc is
-> > a temporary one instead. WDYT?
-> >
-> 
-> Agree, we shouldn't rely on coincidence.
-> Either check temp instead or the above mentioned state?
-> 
-> > Then, considering the socket is locked, both code points should be
-> > allocating the IDR earlier. It's expensive, yes (point being, it could
-> > be avoided in case of other failures), but it should be generating
-> > events with the right assoc id. Are you interested in pursuing this
-> > fix as well?
-> 
-> Sure.
-> 
-> If we check temp status instead, we would need to allocate IDR earlier,
-> as you mention. So that we send the notification with correct assoc id.
-> 
-> But shouldn't the SCTP_COMM_UP, for a newly established association, be the
-> first notification event sent?
-> The SCTP_COMM_UP notification is enqueued later in sctp_sf_do_5_1D_ce().
+On Sun, May 17, 2020 at 10:49 PM Artur Rojek <contact@artur-rojek.eu> wrote:
+>
+> Add a driver for joystick devices connected to ADC controllers
+> supporting the Industrial I/O subsystem.
 
-The RFC doesn't mention any specific ordering for them, but it would
-make sense. Reading the FreeBSD code now (which I consider a reference
-implementation), it doesn't raise these notifications from
-INIT_ACK/COOKIE_ECHO at all. The only trigger for SCTP_ADDR_ADDED
-event is ASCONF ADD command itself. So these are extra in Linux, and
-I'm afraid we got to stick with them.
+...
 
-Considering the error handling it already has, looks like the
-reordering is feasible and welcomed. I'm thinking the temp check and
-reordering is the best way forward here.
+> +static int adc_joystick_handle(const void *data, void *private)
+> +{
+> +       struct adc_joystick *joy = private;
+> +       enum iio_endian endianness;
+> +       int bytes, msb, val, i;
+> +       bool sign;
+> +
+> +       bytes = joy->chans[0].channel->scan_type.storagebits >> 3;
+> +
+> +       for (i = 0; i < joy->num_chans; ++i) {
+> +               endianness = joy->chans[i].channel->scan_type.endianness;
+> +               msb = joy->chans[i].channel->scan_type.realbits - 1;
 
-Thoughts? Neil? Xin? The assoc_id change might be considered an UAPI
-breakage.
+> +               sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
 
-Thanks,
-Marcelo
+Do we need tolower()?
+
+> +
+> +               switch (bytes) {
+> +               case 1:
+> +                       val = ((const u8 *)data)[i];
+> +                       break;
+> +               case 2:
+> +                       if (endianness == IIO_BE)
+
+> +                               val = be16_to_cpu(((const u16 *)data)[i]);
+
+Yeah, you have to provide bitwise types to satisfy sparse.
+Maybe using *_to_cpup() will cure this.
+
+> +                       else if (endianness == IIO_LE)
+> +                               val = le16_to_cpu(((const u16 *)data)[i]);
+> +                       else /* IIO_CPU */
+> +                               val = ((const u16 *)data)[i];
+> +                       break;
+> +               default:
+> +                       return -EINVAL;
+> +               }
+> +
+> +               val >>= joy->chans[i].channel->scan_type.shift;
+> +               if (sign)
+> +                       val = sign_extend32(val, msb);
+> +               else
+> +                       val &= GENMASK(msb, 0);
+> +               input_report_abs(joy->input, joy->axes[i].code, val);
+> +       }
+> +
+> +       input_sync(joy->input);
+> +
+> +       return 0;
+> +}
+
+...
+
+> +       /* Count how many channels we got. NULL terminated. */
+> +       while (joy->chans[joy->num_chans].indio_dev)
+> +               joy->num_chans++;
+
+I don't see how useful this is. Why not simple do below...
+
+> +       bits = joy->chans[0].channel->scan_type.storagebits;
+> +       if (!bits || (bits > 16)) {
+> +               dev_err(dev, "Unsupported channel storage size");
+> +               return -EINVAL;
+> +       }
+> +       for (i = 1; i < joy->num_chans; ++i)
+> +               if (joy->chans[i].channel->scan_type.storagebits != bits) {
+> +                       dev_err(dev, "Channels must have equal storage size");
+> +                       return -EINVAL;
+> +               }
+
+...something like
+
+  for (i = 0; joy->chans[i].indio_dev; i++) {
+    bits = joy->chans[i].channel->scan_type.storagebits;
+    if (bits ...) {
+      ...error handling...
+    }
+    if (bits != joy->chans[0].channel->scan_type.storagebits) {
+      ...second level of error handling...
+    }
+ }
+
+...
+
+> +static const struct of_device_id adc_joystick_of_match[] = {
+> +       { .compatible = "adc-joystick", },
+
+> +       { },
+
+No need comma.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
