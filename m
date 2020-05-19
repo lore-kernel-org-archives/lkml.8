@@ -2,178 +2,123 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47150C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC73207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:55:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cPAZTj1i"
+	by mail.kernel.org (Postfix) with ESMTP id 194EA206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589878630;
+	bh=QTb3Ql3v/aztTHy7ZsdufagH77Euo0cwl1cejITKAxc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MtuNbvO+DpW6ivuEHb21HCL6GQa0HaC6w+C0efZ4nFyGHGXrlRJ3kK9/hgV9jWxap
+	 dA3P9HBYaTSFkJnlhMMZa3kJAYwR+G+DJALq0CvwvRKYWZHhjecFdQrXkIVbBvBjP2
+	 +XotTNARAPakq6Vg1JoW3ULpQ7c4HGEZYM3tvfUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgESIzc (ORCPT
+        id S1728314AbgESI5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:55:32 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:55470 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgESIzb (ORCPT
+        Tue, 19 May 2020 04:57:09 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38168 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgESI5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:55:31 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8803B30C;
-        Tue, 19 May 2020 10:55:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589878528;
-        bh=5E5kdHtg8HwlXJSc6jOly3iQtH1Uqe/vd3xbGoNnfJg=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cPAZTj1i5klrl5mz6J1Kj5Iv817BrE78mWpsTFs/85C0tYwK9Xo6EvU6P0tM5EciH
-         IskEj7HGbJ8mdWqvUt2+0HbHN1e8xgJkgbS/qIT/l+ov3Acc9h9AlpaTj8zjOfbouN
-         PUCe6ZBaua9OfkUMrSdjAJ8TMxRZbokr7UjLV7Z4=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
-To:     Sakari Ailus <sakari.ailus@iki.fi>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
- <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
- <20200516215103.GA857@valkosipuli.retiisi.org.uk>
- <930009cd-d887-752a-4f1f-567c795101ee@ideasonboard.com>
- <20200519081019.GB3877@valkosipuli.retiisi.org.uk>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <8932699a-b321-2308-8903-31268af774cb@ideasonboard.com>
-Date:   Tue, 19 May 2020 09:55:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 04:57:09 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m18so4457855ljo.5;
+        Tue, 19 May 2020 01:57:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PJHKcK00srJhlFb8jqpH0pa2jLjQm3d68mr/bdpPl0o=;
+        b=ILo5fpWBMUHSVbW16rPYP9TgKvY3X/cUYs3uflgQeM57NOpo+x/5oqhmbdKoVh/Bx9
+         UNezcqu2bgARRPRfYC+1ZqIB2ApMAnUysSbpiBgDHyPPl+K5sl0v7Xtn3Ii1pLPiHw55
+         7ESNa8J66H8RqFkVTeZYLy3ci9BedqaX7RheApLJbiJ7+RCxl+F7xRBwEDm5356Wnx9N
+         beqAQAPg4FNlJSrMvNOJybHJuYywPGQqESYEMb/Sb/4h2mvv4NeaDiy/6qBIWp+aDhxV
+         q9OocLKeYi8BSkqUfFeoUl6Su9pA2g4GgebVeBHnY9jxSpZvZEj4OfgIvsY5UwmuLeFI
+         Uvtw==
+X-Gm-Message-State: AOAM5313BcphXphi71knahC3ANFq0VNti1pocoYdCs0yQXBly4dpJNtS
+        JT34Mr6A/ciHhi54oK5zAF8=
+X-Google-Smtp-Source: ABdhPJw9kdDoj/n3y2c3jAmQFmEOC5xmPBh/xHYXAWLH6k22GtQ5jriaPD5bqpkRAlbM8vWGmhFrXQ==
+X-Received: by 2002:a2e:898c:: with SMTP id c12mr7157424lji.200.1589878624854;
+        Tue, 19 May 2020 01:57:04 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id z13sm8881061lfd.7.2020.05.19.01.57.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 01:57:04 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jay3b-0001TY-4R; Tue, 19 May 2020 10:57:03 +0200
+Date:   Tue, 19 May 2020 10:57:03 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Johan Hovold <johan@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        patong.mxl@gmail.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
+Message-ID: <20200519085703.GB27787@localhost>
+References: <20200428195651.6793-1-mani@kernel.org>
+ <20200428195651.6793-3-mani@kernel.org>
+ <CACRpkdZ3b-VLvxN06H_4cDOtUEQTVbe=Zw+NA=YjssMzK2d2sQ@mail.gmail.com>
+ <20200429124918.GC6443@Mani-XPS-13-9360>
 MIME-Version: 1.0
-In-Reply-To: <20200519081019.GB3877@valkosipuli.retiisi.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429124918.GC6443@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
+On Wed, Apr 29, 2020 at 06:19:18PM +0530, Manivannan Sadhasivam wrote:
 
-On 19/05/2020 09:10, Sakari Ailus wrote:
-> Hi Kieran,
+> On Wed, Apr 29, 2020 at 02:12:24PM +0200, Linus Walleij wrote:
+> > On Tue, Apr 28, 2020 at 9:57 PM <mani@kernel.org> wrote:
+> > 
+> > > From: Manivannan Sadhasivam <mani@kernel.org>
+> > >
+> > > Add gpiochip support for Maxlinear/Exar USB to serial converter
+> > > for controlling the available gpios.
+> > >
+> > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > Cc: linux-gpio@vger.kernel.org
+> > > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+
+> > I would change this:
+> > 
+> >    port_priv->gc.label = "xr_gpios";
+> > 
+> > to something that is device-unique, like "xr-gpios-<serial number>"
+> > which makes it easy to locate the GPIOs on a specific serial converter
+> > for lab use. However the USB serial maintainers know better what
+> > to use here. Whatever makes a USB-to-serial unique from a TTY
+> > point of view is probably fine with me too.
+> > 
+> > My idea is that people might want to know which USB cable
+> > this is sitting on, so I have this USB cable and from this label
+> > I can always figure out which GPIO device it is.
+
+I think we've had this discussion before. First, not every device has a
+unique serial number. Second, we already have a universal way of
+distinguishing devices namely by using the bus topology. That's
+available through sysfs and shouldn't have to be be re-encoded by every
+driver in the gpiochip name.
+
+> Sounds reasonable. I can postfix the PID as below:
+>
+> port_priv->gc.label = devm_kasprintf(port->dev, GFP_KERNEL, "XR%04x",
+>                                      port_priv->idProduct);
 > 
-> On Mon, May 18, 2020 at 12:45:18PM +0100, Kieran Bingham wrote:
->> Hi Sakari,
->>
->> There are only fairly minor comments here, fix ups will be included in a
->> v10.
->>
->> Is there anything major blocking integration?
-> 
-> Not that I can see. But please see my comments below.
+> So this will become, "XR1410".
 
-Thanks,
+So this doesn't really buy us anything; what if you have two of these
+devices?
 
-We might have some more work tidying up the DT validation anyway which
-has come too late, and perhaps is going to bump this to v5.9 now anyway.
-
-I can still try but ... ;-S
-
-At least hopefully now we /can/ see a path to integration though.
-
-I probably don't care if it's 5.8 or 5.9 as long as it's not 8.5 ;-)
-
->>
->> Regards
->>
->> Kieran
->>
->>
->>
->> On 16/05/2020 22:51, Sakari Ailus wrote:
->>> Hi Kieran,
->>>
->>> Thanks for the update.
->>>
->>> On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
->>>
->>> ...
->>>
->>>> +static int max9286_enum_mbus_code(struct v4l2_subdev *sd,
->>>> +				  struct v4l2_subdev_pad_config *cfg,
->>>> +				  struct v4l2_subdev_mbus_code_enum *code)
->>>> +{
->>>> +	if (code->pad || code->index > 0)
->>>> +		return -EINVAL;
->>>> +
->>>> +	code->code = MEDIA_BUS_FMT_UYVY8_2X8;
->>>
->>> Why UYVY8_2X8 and not UYVY8_1X16? In general, the single sample / pixel
->>> variant of the format is generally used on the serial busses. This choice
->>> was made when serial busses were introduced.
->>
->> Ok - I presume this doesn't really have much effect anyway, they just
->> have to match for the transmitter/receiver?
-> 
-> In this case, yes. But it's harder to change later, so let's indeed do that
-> now.
-
-Yes indeed, I have to change my test scripts for the new configuration
-(or we should update the scripts to get the configuration from the
-device ;D)
-
-
->> But it makes sense to me, so I'll update to the 1x16 variant.
-> 
-> ...
-
-done anyway ;-)
-
-I see the ADV748x is using the 2x8 variants though ... (all the more
-reason for our scripts to /get/ the correct version when propagating
-formats).
-
-Perhaps I should/could add the 1x16 formats to the ADV748x too. (later)
-
-
->>> And as you don't, you also won't know which frequencies are known to be
->>> safe to use. That said, perhaps where this device is used having a random
->>> frequency on that bus could not be an issue. Perhaps.
->>
->> Does this generate a range? or a list of static supported frequencies?
->>
->> We configure the pixel clock based upon the number of cameras connected,
->> and their pixel rates etc ...
->>
->> Are you saying that the frequency of this clock should be validated to
->> be a specific range? or are you talking about a different frequency?
-> 
-> It depends on the system. In general, only frequencies known to be safe
-> should be used. If this one has enough shielding to guarantee there won't
-> be problems in using a random frequency in the entire range, is there a
-> guarantee that will be the case for all systems with this chip?
-
-I have no idea here... Maybe Niklas knows more having dealt more with
-the RCar-VIN/CSI parts.
-
-It seems like this is something we can add later if necessary, by
-extending the descriptions in the DT?
-
---
-Kieran
-
-
+Johan
