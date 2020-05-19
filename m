@@ -2,130 +2,78 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB60C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9856EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05572206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791E7207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589914988;
+	bh=yGKJu1xlG42vBKIuRnBWXZQM+NLQT8MzF+RRBMa5FQ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O+S4sDVTzGr2i3LulyPsgrvqUoild11voqCOcIFoRQ+k4s1MVpQ0sPeC0/18FtQ2H
+	 ypVXBmyYyqPGgFkfXpJ2eCtzK5+SaNfS7VQvjDwZ4YYzFzLpUadOniclK4AmSdTWGc
+	 6sFH33ILcXpcLqtCneQRS+an1wIss/UxPWGKOMUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgESTCP (ORCPT
+        id S1727854AbgESTDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:02:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48826 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726059AbgESTCM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:02:12 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04JIhNqx180189;
-        Tue, 19 May 2020 15:01:20 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31293vcss0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 May 2020 15:01:20 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04JIwNKd024674;
-        Tue, 19 May 2020 15:01:20 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31293vcsre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 May 2020 15:01:20 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04JJ17iM004547;
-        Tue, 19 May 2020 19:01:18 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma05fra.de.ibm.com with ESMTP id 313x4xgw34-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 May 2020 19:01:18 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04JJ1FkM59703546
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 May 2020 19:01:15 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B4DA5204E;
-        Tue, 19 May 2020 19:01:15 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.85.89.230])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 9991752050;
-        Tue, 19 May 2020 19:01:11 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Wed, 20 May 2020 00:31:10 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [RESEND PATCH v7 2/5] seq_buf: Export seq_buf_printf() to external modules
-Date:   Wed, 20 May 2020 00:30:55 +0530
-Message-Id: <20200519190058.257981-3-vaibhav@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200519190058.257981-1-vaibhav@linux.ibm.com>
-References: <20200519190058.257981-1-vaibhav@linux.ibm.com>
+        Tue, 19 May 2020 15:03:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbgESTDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 15:03:07 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 735D8206C3;
+        Tue, 19 May 2020 19:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589914986;
+        bh=yGKJu1xlG42vBKIuRnBWXZQM+NLQT8MzF+RRBMa5FQ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FtrDy/VdWXUK6kmNCsHw2vh9EIETgrekvcLoGJuk2Xv3rgo+2KWuI9joZxl25cakV
+         O0J8rc8IlWTaNBQgo1hQJYcEwVY6CmjofXJ60HUZxkdcuhXMtQs9Nl/1GxpfB4no4M
+         xolp7DYp2DpKeXm3XoLFcg2yNRyyGg0vUXRGtk+Y=
+Date:   Tue, 19 May 2020 14:07:53 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>
+Subject: Re: [tip: locking/core] locking/lockdep: Replace zero-length array
+ with flexible-array
+Message-ID: <20200519190753.GA10690@embeddedor>
+References: <20200507185804.GA15036@embeddedor>
+ <158991386428.17951.3540978557111480073.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-19_06:2020-05-19,2020-05-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 suspectscore=0 adultscore=0 lowpriorityscore=0
- cotscore=-2147483648 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005190153
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158991386428.17951.3540978557111480073.tip-bot2@tip-bot2>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'seq_buf' provides a very useful abstraction for writing to a string
-buffer without needing to worry about it over-flowing. However even
-though the API has been stable for couple of years now its stills not
-exported to external modules limiting its usage.
+On Tue, May 19, 2020 at 06:44:24PM -0000, tip-bot2 for Gustavo A. R. Silva wrote:
+> The following commit has been merged into the locking/core branch of tip:
+> 
+> Commit-ID:     db78538c75e49c09b002a2cd96a19ae0c39be771
+> Gitweb:        https://git.kernel.org/tip/db78538c75e49c09b002a2cd96a19ae0c39be771
+> Author:        Gustavo A. R. Silva <gustavoars@kernel.org>
+> AuthorDate:    Thu, 07 May 2020 13:58:04 -05:00
+> Committer:     Peter Zijlstra <peterz@infradead.org>
+> CommitterDate: Tue, 19 May 2020 20:34:18 +02:00
+> 
+> locking/lockdep: Replace zero-length array with flexible-array
+> 
 
-Hence this patch proposes update to 'seq_buf.c' to mark
-seq_buf_printf() which is part of the seq_buf API to be exported to
-external GPL modules. This symbol will be used in later parts of this
-patchset to simplify content creation for a sysfs attribute.
+Thanks, Peter.
 
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Cc: Cezary Rojewski <cezary.rojewski@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
----
-Changelog:
-
-Resend:
-* Added ack from Steven Rostedt
-
-v6..v7:
-* New patch in the series
----
- lib/seq_buf.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index 4e865d42ab03..707453f5d58e 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -91,6 +91,7 @@ int seq_buf_printf(struct seq_buf *s, const char *fmt, ...)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(seq_buf_printf);
- 
- #ifdef CONFIG_BINARY_PRINTF
- /**
--- 
-2.26.2
-
+--
+Gustavo
