@@ -2,193 +2,127 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FBEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3560206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:32:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UVRs57Az"
+	by mail.kernel.org (Postfix) with ESMTP id 72E5C20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589884371;
+	bh=APWdI/sKggcPUHM2EoqZ+F9oniCqmilI7u/Eu8rmUKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LHl5BQe60nTOaFT/s9vkO9y7HGFXgsfbwKhmkSY7gba3YNG7eQlsb/Dp6Mog/xW1I
+	 +9slk+Phs+O0Cl5KKLv67kYUPzv0a+q3EtLLgt+W/NNgjTIWIkL7Yv2sqf4EizEPrj
+	 subNad9xJTeFEbDblVc/eRP8lznwQuE4KgKumCuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgESKcf (ORCPT
+        id S1728683AbgESKcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:32:35 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53221 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbgESKce (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:32:34 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200519103232euoutp018e312fbb4b4495f9fe683b325bc7d08a~QZ2UgHU0Y1394513945euoutp01z
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 10:32:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200519103232euoutp018e312fbb4b4495f9fe683b325bc7d08a~QZ2UgHU0Y1394513945euoutp01z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589884352;
-        bh=8aqTPyb+75966luDR2CZdhE8lWVOMDbEHkMTToW0Gdw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=UVRs57AznvQOXUgb5s5z3+UVfOW1EGUps9dAtKqHklAIhRbvcXm1nnwBYuzjJxOSP
-         qyJQ3uFLEJdjHLrurTC+epApaWtG+fLxQYXNsks3f3/2DVNZVak+B/ZZu+Ac9ghSk0
-         hLvuvaXwtP+RXnc/gT4WhD3iZlZ6AoEdv3oRTKbI=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200519103232eucas1p194e62333f8c5f252d962d95915630bcb~QZ2UKu4ga1478214782eucas1p1m;
-        Tue, 19 May 2020 10:32:32 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 9E.10.60679.0C5B3CE5; Tue, 19
-        May 2020 11:32:32 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200519103231eucas1p105f6b8b68a285536795e726a4e98bee9~QZ2TxWUkR1516315163eucas1p1p;
-        Tue, 19 May 2020 10:32:31 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200519103231eusmtrp1db3cd1b337f0a47dd218d8a5924c6d3a~QZ2Twp9Dt0843608436eusmtrp16;
-        Tue, 19 May 2020 10:32:31 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-3f-5ec3b5c03e45
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id F6.4D.07950.FB5B3CE5; Tue, 19
-        May 2020 11:32:31 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200519103231eusmtip25924103fd58f2427f9171da4f4a01fbd~QZ2TLBGAi0462804628eusmtip2k;
-        Tue, 19 May 2020 10:32:31 +0000 (GMT)
-Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding
- all top level devices
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>
-Message-ID: <8dd9ecc2-0c61-49b7-d485-b169eb721712@samsung.com>
-Date:   Tue, 19 May 2020 12:32:30 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.0
+        Tue, 19 May 2020 06:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726412AbgESKcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 06:32:50 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D6E206BE;
+        Tue, 19 May 2020 10:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589884369;
+        bh=APWdI/sKggcPUHM2EoqZ+F9oniCqmilI7u/Eu8rmUKo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bb28hbkXTcnwyAr3AkQbQd7zAtdLWJXiwF/dtuByEyX/N6X+HswiTH+JVTDGBxke9
+         PRaBWt7ep0OcLP0hk1XvvEZBbrGuzZtn0CFZ5SqDVCMU8CkMuKgVJvzlMPWmK1ng2s
+         mB1xyHCzSfVJvy6NpiLF0vKH/DThsK16CNtbWd+U=
+Date:   Tue, 19 May 2020 11:32:47 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
+Message-ID: <20200519103247.GA4611@sirena.org.uk>
+References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
+ <20200508113751.GD4820@sirena.org.uk>
+ <20200510002039.hwahqasnnceowskz@mobilestation>
+ <20200511212506.GA23852@sirena.org.uk>
+ <20200518000542.ohtpem3lo2pbixbu@mobilestation>
+ <20200518151946.GH8699@sirena.org.uk>
+ <20200518211727.jrzo6tn7slqzxoyl@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <18332705-dd61-9a0e-d931-ae610c8fb600@samsung.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjtt3t37505+bksv7QXi8qkLK3oRmFZCiNUhP4TNK95UdE52d3s
-        QYVmZQ1JyZY6NSWh0qzhNJ2GpisUGflI6KWJmrCK1ggNU7JyXi3/O98553sc+BhCYZf6MakZ
-        Ol6bwaUrKQ+yqWumb2fHk+fxu/PMUrbyRa+ULf36h2Jzq80UWzL8gmatzT5sy5iTYu+3FyB2
-        sLV8nu9rl7AVU0aCvdI27zDY5qgjnqqmp01SVYvpA62qsuhVltrrlOpZRR2tqv9mlagmLRti
-        6FiPQ0l8emoWr90VmuCRkl3jIjO/+Jwxu4x0NnJgA5IxgPeCo/G7xIA8GAV+gGBmLp8WiykE
-        n3/MEmIxicBRbyOWWoYKRhZd9xG4vhVSbkGBXQja6nYYEMOswokwfcvLTVM4GAxOw4LFBweC
-        5fVH0t1L4MskDJXeWRDkOBQqi9yCjCHxFnhg70JuvBrHgb26AYkeb+gpnVjwyPBhGCibot2Y
-        wBuh2VlOiNgX3k9ULuQBPE6D42Wf1H0Q4HCoGFCIAVbBl+5GWsTrwF6UT4r+XARjvY9oschH
-        MHipBImugzDcO0u5BxF4O5hbd4l0GDTkFJHifC946/QWb/CCm03FhEjL4drVxbVbwdT9+N/a
-        zv5XRCFSmpYlMy1LY1qWxvR/bxUia5EvrxfUybwQksGfDhI4taDPSA46pVFb0PyL2X93T1lR
-        669EG8IMUnrKEzS2eIWUyxLOqm0IGELpIy/8NE/Jk7iz53it5qRWn84LNuTPkEpf+Z67n+MU
-        OJnT8Wk8n8lrl1QJI/PLRoXJP/1vCCsnj24TnpjD5HlKijOE90QZnQ8ZMvbC6LG8yPdZz+tP
-        rKiaHo8eDx+I2LwpKqCdOp8Qva8M9Q+YWhreBB0/GTJaYyFG7lVNrinWlSUJaRp8um9oLuVA
-        lzmnM+y2itPNFKRbDfq9kWvfGY2SAMf2hhj5/oiOi0PW9UpSSOGCAwmtwP0FXJ+ck14DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xe7r7tx6OM1jWo2kx/8g5VouZb/6z
-        WTQvXs9mMePOEXaLHdtFLHY+fMtmsXxfP6PF5V1zgOLn9zFZzP0yldmidS9QRdehv2wOPB7b
-        dm9j9dg56y67x4JNpR6bVnWyeeyfu4bdY+O7HUwenzfJBbBH6dkU5ZeWpCpk5BeX2CpFG1oY
-        6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GU0rHzPUvBKpGL9+6nsDYzPBboYOTkk
-        BEwkbvffY+9i5OIQEljKKPHo+XIWiISMxMlpDawQtrDEn2tdbBBFbxklfs85xdTFyMEhLJAk
-        8WCeJUgNm4ChRNdbkBpODhEBLYlN1x6zgNQzC7SxSByafxyq+QOTxOzNJ5hAqngF7CTmT34M
-        to1FQFVixeljjCC2qECsxOprrYwQNYISJ2c+AavhFLCXuDj7CzuIzSxgJjFv80NmCFteYvvb
-        OVC2uMStJ/OZJjAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltspFecmFtcmpeul5yfu4kR
-        GLnbjv3csoOx613wIUYBDkYlHt6E/ENxQqyJZcWVuYcYJTiYlUR4J7wACvGmJFZWpRblxxeV
-        5qQWH2I0BXpuIrOUaHI+MKnklcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLp
-        Y+LglGpg9LFxi3+awPd1gaBy+4RvLxrMTlR6f/ryhtnd8KhedOSjDxzhUQyFD0R+vrmUtC7/
-        VBXv5+qXi/Na93wtqrn5bZslk+KHX5bSQqyt0y4tdcyYef6Q3ZVnws+fbDPb0GBW9l/09rGq
-        xYckRXzl/TlOXvvWPTPo1xqmCZcvJkaJTYqtt58tPlfhrRJLcUaioRZzUXEiAGA0T7HyAgAA
-X-CMS-MailID: 20200519103231eucas1p105f6b8b68a285536795e726a4e98bee9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200519062510eucas1p27bc59da66e1b77534855103a27f87452
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200519062510eucas1p27bc59da66e1b77534855103a27f87452
-References: <20200515053500.215929-1-saravanak@google.com>
-        <CGME20200519062510eucas1p27bc59da66e1b77534855103a27f87452@eucas1p2.samsung.com>
-        <20200515053500.215929-5-saravanak@google.com>
-        <e0f9211d-9cf6-a12d-eb63-df06910920ed@samsung.com>
-        <CAGETcx_FOGgHdaNY8Dd-4rgT28U7_OHYeLsazbUE-1hyuatRSg@mail.gmail.com>
-        <18332705-dd61-9a0e-d931-ae610c8fb600@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Disposition: inline
+In-Reply-To: <20200518211727.jrzo6tn7slqzxoyl@mobilestation>
+X-Cookie: Do not write below this line.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
 
-On 19.05.2020 09:11, Marek Szyprowski wrote:
-> On 19.05.2020 08:48, Saravana Kannan wrote:
->> On Mon, May 18, 2020 at 11:25 PM Marek Szyprowski
->> <m.szyprowski@samsung.com> wrote:
->>> On 15.05.2020 07:35, Saravana Kannan wrote:
->>>> The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
->>>> parsing of the device tree nodes when a lot of devices are added. This
->>>> will significantly cut down parsing time (as much a 1 second on some
->>>> systems). So, use them when adding devices for all the top level 
->>>> device
->>>> tree nodes in a system.
->>>>
->>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
->>> This patch recently landed in linux-next 20200518. Sadly, it causes
->>> regression on Samsung Exynos5433-based TM2e board:
->>>
->>> ...
->>>
->>> Both issues, the lack of DMA for SPI device and Synchronous abort in 
->>> I2S
->>> probe are new after applying this patch. I'm trying to investigate 
->>> which
->>> resources are missing and why. The latter issue means typically that 
->>> the
->>> registers for the given device has been accessed without enabling the
->>> needed clocks or power domains.
->> Did you try this copy-pasta fix that I sent later?
->> https://lore.kernel.org/lkml/20200517173453.157703-1-saravanak@google.com/ 
->>
->>
->> Not every system would need it (my test setup didn't), but it helps 
->> some cases.
->>
->> If that fix doesn't help, then some tips for debugging the failing 
->> drivers.
->> What this pause/resume patch effectively (not explicitly) does is:
->> 1. Doesn't immediately probe the devices as they are added in
->> of_platform_default_populate_init()
->> 2. Adds them in order to the deferred probe list.
->> 3. Then kicks off deferred probe on them in the order they were added.
->>
->> These drivers are just not handling -EPROBE_DEFER correctly or
->> assuming probe order and that's causing these issues.
->>
->> So, we can either fix that or you can try adding some code to flush
->> the deferred probe workqueue at the end of fw_devlink_resume().
->>
->> Let me know how it goes.
->
-> So far it looks that your patch revealed a hidden issue in exynos5433 
-> clocks configuration, because adding clk_ignore_unused parameter to 
-> kernel command line fixes the boot. I'm still investigating it, so 
-> probable you can ignore my regression report. I will let you know asap 
-> I finish checking it.
->
-Okay, I confirm that the issue is in the Exynos I2S driver and 
-Exynos5433 clock provider. I've posted a quick workaround. I'm sorry for 
-the noise, your patch is fine.
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+On Tue, May 19, 2020 at 12:17:27AM +0300, Serge Semin wrote:
 
+> Here is what we need to do to perform the EEPROM-read operation:
+> 1) Enable EEPROM-read mode.
+> 2) Initialize a corresponding registers with a number of SPI transfer words
+>    (with bits-per-word taken into account) to read.
+> 3) Push opcode + address + dummy bytes into the Tx FIFO. When it's done and
+>    the Tx FIFO is empty, the controller will proceed with read operations by
+>    pushing zeros (or ones, don't remember what level it's by default) to MOSI
+>    and pulling data from MISO into the RX FIFO.
+> 4) Keep up with getting data from the Rx FIFO so one wouldn't get overflown.
+
+> Regarding programming write each time. Well, it's up to the driver implementation.
+> If opcode, address, dummy bytes and number of words to read are the same as before,
+> then re-programming isn't required.
+
+Ah, nice.  This should be useful for far more than just flash - most
+register reads will also be able to take advantage of this, they follow
+a similar write then read pattern.
+
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7DtcwACgkQJNaLcl1U
+h9BprQf/X3CrvqOEDZw4gFuSifMWeN7xtcsAEMLPFliUUq9vUY170vk9WBvEWXcU
+8+KvebwsMCXWGekf3ySdQN5xQlLrIZ86/mMpntqTMg2Gsvxm7TsoCyW+K0JO/6Ef
+2I+nIT+t92zUZhPbyzk7kmeKmC/Jsgg9zwHQpyN0+XjQlCUy0lCYhdR/P1y/5qsV
+By+n3t6C5Vi6Dnz2wrYL+gqoH6quWA/wGQe3o0xtFyZuQIVgKogTOrgFOFW8fSBK
+NUFEEZjIMctowJ27+FDhh5NXoJXqDUUkbzKOYGEf2Nja+Kk47clbgF/tDwfMlX/3
+2duleovaghp6/F5OsQSe05zjfEutIg==
+=0tWj
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
