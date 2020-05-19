@@ -2,331 +2,225 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EBEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A2FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B84C20758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8325820709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qFZKCnBB"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AVP7el2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgESLrB (ORCPT
+        id S1728817AbgESLrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728650AbgESLrA (ORCPT
+        Tue, 19 May 2020 07:47:02 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:34504 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgESLrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 May 2020 07:47:00 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E6AC08C5C0;
-        Tue, 19 May 2020 04:46:59 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id 79so14170600iou.2;
-        Tue, 19 May 2020 04:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vfcVnsyh74MxoB6IcL7pKDcNiYmTgj0OJ1KhYiQo3Ns=;
-        b=qFZKCnBBQ8YbvNvH6egICaSDY3n+2TGLLEcgC0nmA6fKAVT+V4G3gUHfUaKYlSDtXT
-         ugavvS6/xr+pgwlwOaHQqPRoH3APlAyPgp5rVG1NIrh9E/HZYp2DQKtCPAx8B6tfABzn
-         V9EO4TCxj7YYcSHI8Q7luu36+7zm7tsHUlO3A3AEgBQNCVv6OBpxUkJXDE/5WQ//asPp
-         hJw1j422+c6t2xmIDqgFzo3TO0fRbeIucz4y6Cw9VEoQb9HbDAGYWQxWYwuSLPuO05IS
-         dntJ+7/O7En4KehKWfQ1cUgvr+d16KNuePj1G4gUg5iQMedoD3pMr1VA9VWTtxODmPlR
-         7DDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vfcVnsyh74MxoB6IcL7pKDcNiYmTgj0OJ1KhYiQo3Ns=;
-        b=qtUHcZI/P86jKypAA1rembUo6ipamEmMMLiciMNB4fzzZcE1NvCFhjPHydRQZBV3Ir
-         GdZkh8i/mmZ33IHIWKz0TbWHqz5H/jzKV6AWllskeS1f2KbJRMDPPG/W673glXUNKy+l
-         7ZIhWE1uRh/Dw+unV88x+kvBs7/gfJ94zjHvnMymHkxbgovutSf2IPTfj2p0rGboznou
-         cCNo99X2PTXX/lh3v7UodLJSzhQJblf/vLfS8IilD0ov9CXiY9kBn3m8pJ22RnE0ZHIX
-         uaE08j1JWzw2pKnBNcnt1EW40+X3sztavZ9cNVFreE7cZ0ciHW8bdak7qGfifzerklYL
-         N8Fw==
-X-Gm-Message-State: AOAM533ySI1dxFYekCzPEud+rO3qHIK3VGXdnw6+nJpCwvaKAI2nIZth
-        NXBqHMjkt2dcHDRmDeLrOt+RXupJxZTVdTmT5g==
-X-Google-Smtp-Source: ABdhPJzvUmrcreU0QKiAmeoCn6It7PqTS9p5iMZP+CatLHKZxehtEdEOtfB3aOfiza9+ptf7TK5gyleMsaOUrpsWjP4=
-X-Received: by 2002:a6b:e006:: with SMTP id z6mr18712798iog.138.1589888818117;
- Tue, 19 May 2020 04:46:58 -0700 (PDT)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200519114658euoutp0211be7857ecbd099b4084898cd8f0ca4e~Qa3TaAVWI2023620236euoutp02R;
+        Tue, 19 May 2020 11:46:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200519114658euoutp0211be7857ecbd099b4084898cd8f0ca4e~Qa3TaAVWI2023620236euoutp02R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589888818;
+        bh=+4xbR5yi/fsd4WWsEKIf1E92qXdvxWNs5E/gLEHy4u8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AVP7el2HnLQM+i56cQ12g58xbwpQpbigzI+hrtbQV73OXPGdJRN1C7dBjGlsUueTt
+         fUrUbjTTQ+CnHq3Q1WOpjZdZzx6O0OlpYoN+3U3sguoYdb4DqiW3XuMev7Fr0zMewr
+         qQBTja9q6SbatzKFDUqdqxcr5pfv79CFbmu+jVyY=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200519114657eucas1p13823b5184c370eee4712a49ca5ca4aca~Qa3S9EBFb0950109501eucas1p1E;
+        Tue, 19 May 2020 11:46:57 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 85.FD.60698.137C3CE5; Tue, 19
+        May 2020 12:46:57 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200519114657eucas1p156e85218074a7656b93b162e6242bc56~Qa3SpSkyR0951409514eucas1p1G;
+        Tue, 19 May 2020 11:46:57 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200519114657eusmtrp2497f247edddcab7defcee56ba5383789~Qa3SoaPYN0526505265eusmtrp2v;
+        Tue, 19 May 2020 11:46:57 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-33-5ec3c7317e70
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 01.D7.07950.137C3CE5; Tue, 19
+        May 2020 12:46:57 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200519114657eusmtip213932892881e292daa826dc86dfeaa0b~Qa3SaBGH32062920629eusmtip2d;
+        Tue, 19 May 2020 11:46:56 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        Uwe =?utf-8?Q?Kleine?= =?utf-8?Q?-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Grant Likely <grant.likely@arm.com>
+Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
+Date:   Tue, 19 May 2020 13:46:41 +0200
+In-Reply-To: <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+        (Geert Uytterhoeven's message of "Tue, 19 May 2020 13:21:09 +0200")
+Message-ID: <dleftjblmk5eqm.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200515013556.5582-1-kim.andrewsy@gmail.com> <20200517171654.8194-1-kim.andrewsy@gmail.com>
- <alpine.LFD.2.21.2005182027460.4524@ja.home.ssi.bg> <CABc050G-yW-frv0mCmg=hMnC4iOx9Ht2Zv8eoS1cxQ8uKX6NQw@mail.gmail.com>
-In-Reply-To: <CABc050G-yW-frv0mCmg=hMnC4iOx9Ht2Zv8eoS1cxQ8uKX6NQw@mail.gmail.com>
-From:   Marco Angaroni <marcoangaroni@gmail.com>
-Date:   Tue, 19 May 2020 13:46:46 +0200
-Message-ID: <CANHHuCW6i0BjLRMYkfY8eZGZJZTnE-NO9EH+-gfH94cc6yYn1A@mail.gmail.com>
-Subject: Re: [PATCH] netfilter/ipvs: immediately expire UDP connections
- matching unavailable destination if expire_nodest_conn=1
-To:     Andrew Kim <kim.andrewsy@gmail.com>
-Cc:     Julian Anastasov <ja@ssi.bg>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "open list:IPVS" <netdev@vger.kernel.org>,
-        "open list:IPVS" <lvs-devel@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
-        "open list:NETFILTER" <coreteam@netfilter.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0wTWRj160ynA7FkKD4+gRBt1PgID3WzXrK7ZE38MWbVGBON8YFWGIFI
+        i9sRFH8oWR+wVQTLCoJIfUWxSFuxolVLtFTQiIhioIFlWUUFRDEblKUoIu1g4r/zne+cc++5
+        uSylKmNC2RTdTkGv06SqmUC6us77OHJBfW18jNU0g3g/vAcyYqxTkCsnrHJiKsqlicndKCcV
+        /3UBMV93UuR1m1NGruW10aSqq0VOmm+WMuRab7+MuI47gVS6OxTk+b8eOSnr6WHIQadbQdqP
+        FcCvKv5y2WXgm1ueUPynYSPwr+9nM7yjpEPBV5n/ZHhXbQ7wV8/v43P39zN83kgMP9hwjOaP
+        2s3AD1RFrFKuD/w5UUhNyRD00XFbApNHP79idrRG7PYetNJZ0DrNACyL3A+Y3ZdogEBWxZUD
+        Ng9eAmn4ANjSnUdJwwBgf2EO881xqTJW4i8CFhY2MtLQDeg60C7ziRguCisr1/ngJC4SS70y
+        n4TimhgsP3RXYYAANoT7Dbv6XJQP09wsPPxHsz8ngCsCND09SvsWSm4xZg+2+0WTuVi093Qq
+        JD4YHxS/9GsoTovFj9/6r43cMxbrP53yG5BbisZR+zgOwTf1doWEw3HUYZJJbfZhgfFHyXsE
+        sLp0iJY0P+HfjcPjjZeg4WqcBIPQ8y5YOjYIjdVFlEQrMeeQSjLOREve7fGQUMx9Uw4S5tHT
+        mD/+VOcB3x0xMPkwveS7NiXftSkZi6W4uWi9GS3R8/HCmT5Kwr+gxfKePg1yM0wV0kVtkiAu
+        0gm7okSNVkzXJUUlpGmrYOynPvxS//EG1Hze6gKOBfVEpcdRG6+SazLETK0LZo4lvbBVNEEo
+        rUvTCepJyvweV7xKmajJ3CPo0zbr01MF0QVhLK2eqlx0tneTikvS7BS2C8IOQf9tK2MDQrNg
+        772aPXMijRPM3fkj4XOGDNuZbXZqd/I6b8FQp3zD8K3g3xusbZqJTTfmL7fJTy4MWNZgs1es
+        DltjCfr/cPe0TmN4neieYn4UMu+RJ9qS8KJYN3vF4JUBmzul9dxGh+OfpoS1biYuMyuTuhOx
+        XNEbG7neuX8kxzaQNPuvzldnN60MU9NismbBPEovar4CSau4B7EDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+TxnZ0dt9HVU/FwXZBRdzKNz6r5FSn/FISPEELtpDTup6HZk
+        Z7OsP7qXTcprN7PUbuTUWUsrpVFNUbsg5VIjmWWmWYISpWBptTWC/nt4nt/7vLzw0gRzTiKn
+        s/RG3qDX5igoP/L5r87BcGVnW1rkrds0nvk+CfBcaYcU37nQKMFV50+TuKq9W4Lrvg4DbLlv
+        J/DoW7sPbi56S2LbcJ8EO1srKdz8ecIHO87aAW5od0nx0Ps3EnxlbIzCx+3tUjxQUgbWMVz9
+        lXrAOfteEdzPH6WAG+06SXEtFS4pZ7OcojhHWwHg7l4/yJ0+OkFxRXOR3PSLEpI702QB3Dfb
+        kkTZNnatQTAZ+dBMQTTGKbYrcRSr1GA2KlrDKlXq1DVRMYqI+LW7+ZysPN4QEb+Lzfw9O0Ll
+        9i/ZN3O8kTwE+kPMgKYRjEa1DRoz8KMZeAOgY70XKK8vR7WXM8zA1y0D0GyfmfIyIwBVVVtJ
+        D0NBFjU0bPHIQBiOKmd8PAgBeyhU/9oi9cwGwAQ0PO4gPAwDE1HvYZPHJuEyVHjE+bfSF553
+        V/acIT2BDKrRyekBwqODoAY1jb2Tev0F6OnFj38ZAmajqbpPRDGAFf9FFf9FFe51BFyJGlsj
+        vHYYulkzTnh1HLJaJ8lqILGAQN4k6jJ0YhQranWiSZ/Bpgs6G3D/wb2OmaYHwDyx2QEgDRTz
+        ZJEP29IYiTZPzNc5wFJ3zYfbdS+BnNQLel4RKCsec6Qxst3a/P28QdhpMOXwogPEuA8tIeRB
+        6YL7w/TGncoYpRprlGqVWhWLFcGyAvhkBwMztEY+m+dzecO/OR/aV34IMMH812zGf/DUiVbn
+        o9CUVCapdP5Ke2bcs5BWy4onb84dLIwvnFywjHVtPZAELwrLk7s+Wzf2pG6IKCfvXOMGp2oS
+        4mnVdad/1qaR8ZDoxNqy2RZBpUlZv9g1FGazurbsDRdG+5O7wx6Pd/Nxfl+uViWtPlJwdtHC
+        uf5LO4LL98QqSDFTq1xFGETtH9Vi7sMpAwAA
+X-CMS-MailID: 20200519114657eucas1p156e85218074a7656b93b162e6242bc56
+X-Msg-Generator: CA
+X-RootMTR: 20200519114657eucas1p156e85218074a7656b93b162e6242bc56
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200519114657eucas1p156e85218074a7656b93b162e6242bc56
+References: <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+        <CGME20200519114657eucas1p156e85218074a7656b93b162e6242bc56@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew, Julian,
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-could you please confirm if/how this patch is changing any of the
-following behaviours, which I=E2=80=99m listing below as per my understandi=
-ng
-?
-
-When expire_nodest is set and real-server is unavailable, at the
-moment the following happens to a packet going through IPVS:
-
-a) TCP (or other connection-oriented protocols):
-   the packet is silently dropped, then the following retransmission
-causes the generation of a RST from the load-balancer to the client,
-which will then re-open a new TCP connection
-b) UDP:
-   the packet is silently dropped, then the following retransmission
-is rescheduled to a new real-server
-c) UDP in OPS mode:
-   the packet is rescheduled to a new real-server, as no previous
-connection exists in IPVS connection table, and a new OPS connection
-is created (but it lasts only the time to transmit the packet)
-d) UDP in OPS mode + persistent-template:
-   the packet is rescheduled to a new real-server, as previous
-template-connection is invalidated, a new template-connection is
-created, and a new OPS connection is created (but it lasts only the
-time to transmit the packet)
-
-It seems to me that you are trying to optimize case a) and b),
-avoiding the first step where the packet is silently dropped and
-consequently avoiding the retransmission.
-And contextually expire also all the other connections pointing to the
-unavailable real-sever.
-
-However I'm confused about the references to OPS mode.
-And why you need to expire all the connections at once: if you expire
-on a per connection basis, the client experiences the same behaviour
-(no more re-transmissions), but you avoid the complexities of a new
-thread.
-
-Maybe also the documentation of expire_nodest_conn sysctl should be updated=
-.
-When it's stated:
-
-        If this feature is enabled, the load balancer will expire the
-        connection immediately when a packet arrives and its
-        destination server is not available, then the client program
-        will be notified that the connection is closed
-
-I think it should be at least "and the client program" instead of
-"then the client program".
-Or a more detailed explanation.
-
-Thanks
-Marco Angaroni
-
-
-Il giorno lun 18 mag 2020 alle ore 22:06 Andrew Kim
-<kim.andrewsy@gmail.com> ha scritto:
+It was <2020-05-19 wto 13:21>, when Geert Uytterhoeven wrote:
+> Hi Russell,
 >
-> Hi Julian,
+> CC devicetree
 >
-> Thank you for getting back to me. I will update the patch based on
-> your feedback shortly.
+> On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+>> On Tue, May 19, 2020 at 11:44:17AM +0200, Geert Uytterhoeven wrote:
+>>> On Tue, May 19, 2020 at 10:54 AM Lukasz Stelmach <l.stelmach@samsung.co=
+m> wrote:
+>>>> It was <2020-04-29 =C5=9Bro 10:21>, when Geert Uytterhoeven wrote:
+>>>>> Currently, the start address of physical memory is obtained by masking
+>>>>> the program counter with a fixed mask of 0xf8000000.  This mask value
+>>>>> was chosen as a balance between the requirements of different platfor=
+ms.
+>>>>> However, this does require that the start address of physical memory =
+is
+>>>>> a multiple of 128 MiB, precluding booting Linux on platforms where th=
+is
+>>>>> requirement is not fulfilled.
+>>>>>
+>>>>> Fix this limitation by obtaining the start address from the DTB inste=
+ad,
+>>>>> if available (either explicitly passed, or appended to the kernel).
+>>>>> Fall back to the traditional method when needed.
+>>>>>
+>>>>> This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDR=
+AM
+>>>>> on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
+>>>>> i.e. not at a multiple of 128 MiB.
+>>>>>
+>>>>> Suggested-by: Nicolas Pitre <nico@fluxnic.net>
+>>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>> Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+>>>>> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+>>>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>> ---
+>>>>
+>>>> [...]
+>>>>
+>>>> Apparently reading physical memory layout from DTB breaks crashdump
+>>>> kernels. A crashdump kernel is loaded into a region of memory, that
+>>>> is reserved in the original (i.e. to be crashed) kernel. The
+>>>> reserved region is large enough for the crashdump kernel to run
+>>>> completely inside it and don't modify anything outside it, just
+>>>> read and dump the remains of the crashed kernel. Using the
+>>>> information from DTB makes the decompressor place the kernel
+>>>> outside of the dedicated region.
+>>>>
+>>>> The log below shows that a zImage and DTB are loaded at 0x18eb8000
+>>>> and 0x193f6000 (physical). The kernel is expected to run at
+>>>> 0x18008000, but it is decompressed to 0x00008000 (see r4 reported
+>>>> before jumping from within __enter_kernel). If I were to suggest
+>>>> something, there need to be one more bit of information passed in
+>>>> the DTB telling the decompressor to use the old masking technique
+>>>> to determain kernel address. It would be set in the DTB loaded
+>>>> along with the crashdump kernel.
+>>>
+>>> Shouldn't the DTB passed to the crashkernel describe which region of
+>>> memory is to be used instead?
+>>
+>> Definitely not.  The crashkernel needs to know where the RAM in the
+>> machine is, so that it can create a coredump of the crashed kernel.
 >
-> Regards,
->
-> Andrew
->
-> On Mon, May 18, 2020 at 3:10 PM Julian Anastasov <ja@ssi.bg> wrote:
-> >
-> >
-> >         Hello,
-> >
-> > On Sun, 17 May 2020, Andrew Sy Kim wrote:
-> >
-> > > If expire_nodest_conn=3D1 and a UDP destination is deleted, IPVS shou=
-ld
-> > > also expire all matching connections immiediately instead of waiting =
-for
-> > > the next matching packet. This is particulary useful when there are a
-> > > lot of packets coming from a few number of clients. Those clients are
-> > > likely to match against existing entries if a source port in the
-> > > connection hash is reused. When the number of entries in the connecti=
-on
-> > > tracker is large, we can significantly reduce the number of dropped
-> > > packets by expiring all connections upon deletion.
-> > >
-> > > Signed-off-by: Andrew Sy Kim <kim.andrewsy@gmail.com>
-> > > ---
-> > >  include/net/ip_vs.h             |  7 ++++++
-> > >  net/netfilter/ipvs/ip_vs_conn.c | 38 +++++++++++++++++++++++++++++++=
-++
-> > >  net/netfilter/ipvs/ip_vs_core.c |  5 -----
-> > >  net/netfilter/ipvs/ip_vs_ctl.c  |  9 ++++++++
-> > >  4 files changed, 54 insertions(+), 5 deletions(-)
-> > >
-> >
-> > > diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_=
-vs_conn.c
-> > > index 02f2f636798d..c69dfbbc3416 100644
-> > > --- a/net/netfilter/ipvs/ip_vs_conn.c
-> > > +++ b/net/netfilter/ipvs/ip_vs_conn.c
-> > > @@ -1366,6 +1366,44 @@ static void ip_vs_conn_flush(struct netns_ipvs=
- *ipvs)
-> > >               goto flush_again;
-> > >       }
-> > >  }
-> > > +
-> > > +/*   Flush all the connection entries in the ip_vs_conn_tab with a
-> > > + *   matching destination.
-> > > + */
-> > > +void ip_vs_conn_flush_dest(struct netns_ipvs *ipvs, struct ip_vs_des=
-t *dest)
-> > > +{
-> > > +     int idx;
-> > > +     struct ip_vs_conn *cp, *cp_c;
-> > > +
-> > > +     rcu_read_lock();
-> > > +     for (idx =3D 0; idx < ip_vs_conn_tab_size; idx++) {
-> > > +             hlist_for_each_entry_rcu(cp, &ip_vs_conn_tab[idx], c_li=
-st) {
-> > > +                     if (cp->ipvs !=3D ipvs)
-> > > +                             continue;
-> > > +
-> > > +                     if (cp->dest !=3D dest)
-> > > +                             continue;
-> > > +
-> > > +                     /* As timers are expired in LIFO order, restart
-> > > +                      * the timer of controlling connection first, s=
-o
-> > > +                      * that it is expired after us.
-> > > +                      */
-> > > +                     cp_c =3D cp->control;
-> > > +                     /* cp->control is valid only with reference to =
-cp */
-> > > +                     if (cp_c && __ip_vs_conn_get(cp)) {
-> > > +                             IP_VS_DBG(4, "del controlling connectio=
-n\n");
-> > > +                             ip_vs_conn_expire_now(cp_c);
-> > > +                             __ip_vs_conn_put(cp);
-> > > +                     }
-> > > +                     IP_VS_DBG(4, "del connection\n");
-> > > +                     ip_vs_conn_expire_now(cp);
-> > > +             }
-> > > +             cond_resched_rcu();
-> >
-> >         Such kind of loop is correct if done in another context:
-> >
-> > 1. kthread
-> > or
-> > 2. delayed work: mod_delayed_work(system_long_wq, ...)
-> >
-> >         Otherwise cond_resched_rcu() can schedule() while holding
-> > __ip_vs_mutex. Also, it will add long delay if many dests are
-> > removed.
-> >
-> >         If such loop analyzes instead all cp->dest for
-> > IP_VS_DEST_F_AVAILABLE, it should be done after calling
-> > __ip_vs_conn_get().
-> >
-> > >  static int sysctl_snat_reroute(struct netns_ipvs *ipvs) { return 0; =
-}
-> > > diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_v=
-s_ctl.c
-> > > index 8d14a1acbc37..f87c03622874 100644
-> > > --- a/net/netfilter/ipvs/ip_vs_ctl.c
-> > > +++ b/net/netfilter/ipvs/ip_vs_ctl.c
-> > > @@ -1225,6 +1225,15 @@ ip_vs_del_dest(struct ip_vs_service *svc, stru=
-ct ip_vs_dest_user_kern *udest)
-> > >        */
-> > >       __ip_vs_del_dest(svc->ipvs, dest, false);
-> > >
-> > > +     /*      If expire_nodest_conn is enabled and protocol is UDP,
-> > > +      *      attempt best effort flush of all connections with this
-> > > +      *      destination.
-> > > +      */
-> > > +     if (sysctl_expire_nodest_conn(svc->ipvs) &&
-> > > +         dest->protocol =3D=3D IPPROTO_UDP) {
-> > > +             ip_vs_conn_flush_dest(svc->ipvs, dest);
-> >
-> >         Above work should be scheduled from __ip_vs_del_dest().
-> > Check for UDP is not needed, sysctl_expire_nodest_conn() is for
-> > all protocols.
-> >
-> >         If the flushing is complex to implement, we can still allow
-> > rescheduling for unavailable dests:
-> >
-> > - first we should move this block above the ip_vs_try_to_schedule()
-> > block because:
-> >
-> >         1. the scheduling does not return unavailabel dests, even
-> >         for persistence, so no need to check new connections for
-> >         the flag
-> >
-> >         2. it will allow to create new connection if dest for
-> >         existing connection is unavailable
-> >
-> >         if (cp && cp->dest && !(cp->dest->flags & IP_VS_DEST_F_AVAILABL=
-E)) {
-> >                 /* the destination server is not available */
-> >
-> >                 if (sysctl_expire_nodest_conn(ipvs)) {
-> >                         bool uses_ct =3D ip_vs_conn_uses_conntrack(cp, =
-skb);
-> >
-> >                         ip_vs_conn_expire_now(cp);
-> >                         __ip_vs_conn_put(cp);
-> >                         if (uses_ct)
-> >                                 return NF_DROP;
-> >                         cp =3D NULL;
-> >                 } else {
-> >                         __ip_vs_conn_put(cp);
-> >                         return NF_DROP;
-> >                 }
-> >         }
-> >
-> >         if (unlikely(!cp)) {
-> >                 int v;
-> >
-> >                 if (!ip_vs_try_to_schedule(ipvs, af, skb, pd, &v, &cp, =
-&iph))
-> >                         return v;
-> >         }
-> >
-> >         Before now, we always waited one jiffie connection to expire,
-> > now one packet will:
-> >
-> > - schedule expiration for existing connection with unavailable dest,
-> > as before
-> >
-> > - create new connection to available destination that will be found
-> > first in lists. But it can work only when sysctl var "conntrack" is 0,
-> > we do not want to create two netfilter conntracks to different
-> > real servers.
-> >
-> >         Note that we intentionally removed the timer_pending() check
-> > because we can not see existing ONE_PACKET connections in table.
-> >
-> > Regards
-> >
-> > --
-> > Julian Anastasov <ja@ssi.bg>
+> So the DTB should describe both ;-)
+
+So we can do without the mem=3D cmdline option which is required
+now. Sounds reasonable to me.
+
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl7DxyEACgkQsK4enJil
+gBDTlAgAkIRYwtBu+g2d1XV7Vb0nZGBCqOyYub+xsR6C6IBjdoYFxzvJvh6SeUl2
+FThIsU2I9nTx8L+abqURhb6A0l5dyIFohnVRfbCkLiYGSG59vzs/xFkdKJy/WX2S
+6IaYcSNrXF3TF4YOewkdoqumoliiqxx8ktrEnFHcHH364kRDQbHvcRF6c9x4fDv3
+Oi+0tSNEZJHoWm/kSmZ6RVi+tZboEwDNbkFbjddTu4CXsW2CkaASgV2iru2E5huZ
+bRphZw8bwY0wx1GO4jVxOLQvVbvswP6si+Pu225NFAUWvJp8WbNZ7/j43TxCgdG2
+ByyWMPQLq7pZkX0cNqExFqibkshAcg==
+=XeUh
+-----END PGP SIGNATURE-----
+--=-=-=--
