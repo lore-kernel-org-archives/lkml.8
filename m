@@ -2,92 +2,75 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACEEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6025AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 055952075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:16:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589872603;
-	bh=fpXw8UjrNLsw42ZqREF1astOwgPtPId8PMNmuvmW9iU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v2DjuEXr0HLI96F5G96Fec7UB73IIitzIm4mNIdEdgWymCrYHLlw30G3PirFKv489
-	 7T6UIEeML/pueQ9EAJB0Nrp0MqLTSi8sxBOgKPB973CUdsVMmxcthdEoYdXXCsYgC2
-	 9GE/Z9fu3KuioLxpNGlLDexv1xa7PSxE5AEGIeQ0=
+	by mail.kernel.org (Postfix) with ESMTP id 433822070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgESHQm convert rfc822-to-8bit (ORCPT
+        id S1728475AbgESHQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 03:16:42 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:46976 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgESHQm (ORCPT
+        Tue, 19 May 2020 03:16:55 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:57933 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgESHQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 03:16:42 -0400
-Received: by mail-ej1-f67.google.com with SMTP id e2so10866155eje.13;
-        Tue, 19 May 2020 00:16:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=czw5XAHuVQyeo0GaaGsHjL+iNsEvTVJwYFnML7pk990=;
-        b=g8Tl14Sniix92Mwgl3vIi4ITFl4rjPY31bEwq5NobtmN7+B9wrsCoew19K73VDXD76
-         ++T63ZgEijGrvR0oYozjTtXSeYaq57c83D2Ef6P4StKBAnhGHfKUWUnmecVY3F8W2ZvO
-         13z0u5KmQfFnnt1Xf9HcetHKFG0Nts0J2WhLzGeb49nzwW3gugm1/uqT4oDODxsRkTrl
-         dTgjhRfSJCM1tnixGzSIib9vAHsIRMF7p8smOdRVbGsjjG5hqWmgBknHmZk6WFHYwrWX
-         iKAtm7boPcm3D+UBiIGq1m1I88+1iUCwKU6Bp1BtS2EGuU02ek9PD8yR45Extib9Pwe6
-         0Pdw==
-X-Gm-Message-State: AOAM530dMzKdDX/M/7uKEKBgCdFmGrGwQe/P1sXLyDvgOHqwVQlkJT1T
-        EmBQEOOwe4du3R9e7gvXRkg=
-X-Google-Smtp-Source: ABdhPJzIRX+Uvac/mFboWQ4qXwL71U8FW6fLVGH+Y+7thPaQdu49D8AiTD5v1+LcEq4/Lq5C6URTog==
-X-Received: by 2002:a17:906:3048:: with SMTP id d8mr18239949ejd.97.1589872599602;
-        Tue, 19 May 2020 00:16:39 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.188])
-        by smtp.googlemail.com with ESMTPSA id o21sm18954edr.68.2020.05.19.00.16.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 00:16:38 -0700 (PDT)
-Date:   Tue, 19 May 2020 09:16:36 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-scsi@vger.kernel.org, avri.altman@wdc.com,
-        martin.petersen@oracle.com, kwmad.kim@samsung.com,
-        stanley.chu@mediatek.com, cang@codeaurora.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 10/10] arm64: dts: Add node for ufs exynos7
-Message-ID: <20200519071636.GA6971@kozik-lap>
-References: <20200514003914.26052-1-alim.akhtar@samsung.com>
- <CGME20200514005313epcas5p3eac58d00d9f617b860a3ac607c8413ec@epcas5p3.samsung.com>
- <20200514003914.26052-11-alim.akhtar@samsung.com>
+        Tue, 19 May 2020 03:16:55 -0400
+X-Originating-IP: 78.194.159.98
+Received: from clip-os.org (unknown [78.194.159.98])
+        (Authenticated sender: thibaut.sautereau@clip-os.org)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id DE5FF40006;
+        Tue, 19 May 2020 07:16:52 +0000 (UTC)
+Date:   Tue, 19 May 2020 09:16:52 +0200
+From:   Thibaut Sautereau <thibaut.sautereau@clip-os.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: NULL pointer dereference in coredump code
+Message-ID: <20200519071652.GA924@clip-os.org>
+References: <20200330083158.GA21845@clip-os.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200514003914.26052-11-alim.akhtar@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200330083158.GA21845@clip-os.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 06:09:14AM +0530, Alim Akhtar wrote:
-> Adding dt node foe UFS and UFS-PHY for exynos7 SoC.
+On Mon, Mar 30, 2020 at 10:31:59AM +0200, Thibaut Sautereau wrote:
+> I hit a kernel NULL pointer dereference caused by the following call chain:
 > 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> Tested-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
->  .../boot/dts/exynos/exynos7-espresso.dts      |  4 ++
->  arch/arm64/boot/dts/exynos/exynos7.dtsi       | 43 ++++++++++++++++++-
->  2 files changed, 45 insertions(+), 2 deletions(-)
+> do_coredump()
+>   file_start_write(cprm.file) # cprm.file is NULL
+>     file_inode(file) # NULL ptr deref
+> 
+> The `ispipe` path is followed in do_coredump(), and:
+>     # cat /proc/sys/kernel/core_pattern
+>     |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
+> 
+> It seems that cprm.file can be NULL after the call to the usermode
+> helper, especially when setting CONFIG_STATIC_USERMODEHELPER=y and
+> CONFIG_STATIC_USERMODEHELPER_PATH="", which is the case for me.
+> 
+> One may say it's a strange combination of configuration options but I
+> think it should not crash the kernel anyway. As I don't know much about
+> coredumps in general and this code, I don't know what's the best way to
+> fix this issue in a clean and comprehensive way.
+> 
+> I attached the patch I used to temporarily work around this issue, if
+> that can clarify anything.
+> 
+> Thanks,
 
-I will pick it up after all bindings get Rob's ack (or are picked up as
-well).  The second bindings patch are still pending on that.
+For the record, this had previously been reported [1] and was eventually
+fixed by 3740d93e3790 ("coredump: fix crash when umh is disabled").
 
-Best regards,
-Krzysztof
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=199795
+
+-- 
+Thibaut Sautereau
+CLIP OS developer
