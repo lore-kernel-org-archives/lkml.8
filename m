@@ -2,114 +2,205 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA072075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF78206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgESUU3 (ORCPT
+        id S1726545AbgESUUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55508 "EHLO
+        Tue, 19 May 2020 16:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgESUU2 (ORCPT
+        with ESMTP id S1726595AbgESUUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:20:28 -0400
+        Tue, 19 May 2020 16:20:37 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80714C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:20:28 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jb8iZ-00013p-1v; Tue, 19 May 2020 22:20:03 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 515EB100D01; Tue, 19 May 2020 22:20:02 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3838FC08C5C0;
+        Tue, 19 May 2020 13:20:37 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jb8if-00012c-4F; Tue, 19 May 2020 22:20:09 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V6 12/37] x86/entry: Provide idtentry_entry/exit_cond_rcu()
-In-Reply-To: <87ftbv7nsd.fsf@nanos.tec.linutronix.de>
-References: <20200515234547.710474468@linutronix.de> <20200515235125.628629605@linutronix.de> <CALCETrWnkuwvTuJKr8Vuecgr_q+1ReBDrTv4XOqGaw7-ZpEeQQ@mail.gmail.com> <87ftbv7nsd.fsf@nanos.tec.linutronix.de>
-Date:   Tue, 19 May 2020 22:20:02 +0200
-Message-ID: <87a7237k3x.fsf@nanos.tec.linutronix.de>
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 2/8] radix-tree: Use local_lock for protection
+Date:   Tue, 19 May 2020 22:19:06 +0200
+Message-Id: <20200519201912.1564477-3-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200519201912.1564477-1-bigeasy@linutronix.de>
+References: <20200519201912.1564477-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> Andy Lutomirski <luto@kernel.org> writes:
->> On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>> The pagefault handler cannot use the regular idtentry_enter() because that
->>> invokes rcu_irq_enter() if the pagefault was caused in the kernel. Not a
->>> problem per se, but kernel side page faults can schedule which is not
->>> possible without invoking rcu_irq_exit().
->>>
->>> Adding rcu_irq_exit() and a matching rcu_irq_enter() into the actual
->>> pagefault handling code would be possible, but not pretty either.
->>>
->>> Provide idtentry_entry/exit_cond_rcu() which calls rcu_irq_enter() only
->>> when RCU is not watching. The conditional RCU enabling is a correctness
->>> issue: A kernel page fault which hits a RCU idle reason can neither
->>> schedule nor is it likely to survive. But avoiding RCU warnings or RCU side
->>> effects is at least increasing the chance for useful debug output.
->>>
->>> The function is also useful for implementing lightweight reschedule IPI and
->>> KVM posted interrupt IPI entry handling later.
->>
->> Why is this conditional?  That is, couldn't we do this for all
->> idtentry_enter() calls instead of just for page faults?  Evil things
->> like NMI shouldn't go through this path at all.
->
-> I thought about that, but then ended up with the conclusion that RCU
-> might be unhappy, but my conclusion might be fundamentally wrong.
+The radix-tree and idr preload mechanisms use preempt_disable() to protect
+the complete operation between xxx_preload() and xxx_preload_end().
 
-It's about this:
+As the code inside the preempt disabled section acquires regular spinlocks,
+which are converted to 'sleeping' spinlocks on a PREEMPT_RT kernel and
+eventually calls into a memory allocator, this conflicts with the RT
+semantics.
 
-rcu_nmi_enter()
-{
-        if (!rcu_is_watching()) {
-            make it watch;
-        } else if (!in_nmi()) {
-            do_magic_nohz_dyntick_muck();
-        }
+Convert it to a local_lock which allows RT kernels to substitute them with
+a real per CPU lock. On non RT kernels this maps to preempt_disable() as
+before, but provides also lockdep coverage of the critical region.
+No functional change.
 
-So if we do all irq/system vector entries conditional then the
-do_magic() gets never executed. After that I got lost...
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ include/linux/idr.h        |  5 +----
+ include/linux/radix-tree.h |  6 +-----
+ lib/radix-tree.c           | 25 +++++++++++++++++++------
+ 3 files changed, 21 insertions(+), 15 deletions(-)
 
-Thanks,
+diff --git a/include/linux/idr.h b/include/linux/idr.h
+index ac6e946b6767b..839da8f2f6f13 100644
+--- a/include/linux/idr.h
++++ b/include/linux/idr.h
+@@ -169,10 +169,7 @@ static inline bool idr_is_empty(const struct idr *idr)
+  * Each idr_preload() should be matched with an invocation of this
+  * function.  See idr_preload() for details.
+  */
+-static inline void idr_preload_end(void)
+-{
+-	preempt_enable();
+-}
++void idr_preload_end(void);
+=20
+ /**
+  * idr_for_each_entry() - Iterate over an IDR's elements of a given type.
+diff --git a/include/linux/radix-tree.h b/include/linux/radix-tree.h
+index 63e62372443a5..040b1fd0ab940 100644
+--- a/include/linux/radix-tree.h
++++ b/include/linux/radix-tree.h
+@@ -226,6 +226,7 @@ unsigned int radix_tree_gang_lookup(const struct radix_=
+tree_root *,
+ 			unsigned int max_items);
+ int radix_tree_preload(gfp_t gfp_mask);
+ int radix_tree_maybe_preload(gfp_t gfp_mask);
++void radix_tree_preload_end(void);
+ void radix_tree_init(void);
+ void *radix_tree_tag_set(struct radix_tree_root *,
+ 			unsigned long index, unsigned int tag);
+@@ -243,11 +244,6 @@ unsigned int radix_tree_gang_lookup_tag_slot(const str=
+uct radix_tree_root *,
+ 		unsigned int max_items, unsigned int tag);
+ int radix_tree_tagged(const struct radix_tree_root *, unsigned int tag);
+=20
+-static inline void radix_tree_preload_end(void)
+-{
+-	preempt_enable();
+-}
+-
+ void __rcu **idr_get_free(struct radix_tree_root *root,
+ 			      struct radix_tree_iter *iter, gfp_t gfp,
+ 			      unsigned long max);
+diff --git a/lib/radix-tree.c b/lib/radix-tree.c
+index 2ee6ae3b0ade0..8a44f7b85dfdc 100644
+--- a/lib/radix-tree.c
++++ b/lib/radix-tree.c
+@@ -20,6 +20,7 @@
+ #include <linux/kernel.h>
+ #include <linux/kmemleak.h>
+ #include <linux/percpu.h>
++#include <linux/locallock.h>
+ #include <linux/preempt.h>		/* in_interrupt() */
+ #include <linux/radix-tree.h>
+ #include <linux/rcupdate.h>
+@@ -27,7 +28,6 @@
+ #include <linux/string.h>
+ #include <linux/xarray.h>
+=20
+-
+ /*
+  * Radix tree node cache.
+  */
+@@ -64,6 +64,7 @@ struct radix_tree_preload {
+ 	struct radix_tree_node *nodes;
+ };
+ static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) =3D =
+{ 0, };
++static DEFINE_LOCAL_LOCK(radix_tree_preloads_lock);
+=20
+ static inline struct radix_tree_node *entry_to_node(void *ptr)
+ {
+@@ -332,14 +333,14 @@ static __must_check int __radix_tree_preload(gfp_t gf=
+p_mask, unsigned nr)
+ 	 */
+ 	gfp_mask &=3D ~__GFP_ACCOUNT;
+=20
+-	preempt_disable();
++	local_lock(radix_tree_preloads_lock);
+ 	rtp =3D this_cpu_ptr(&radix_tree_preloads);
+ 	while (rtp->nr < nr) {
+-		preempt_enable();
++		local_unlock(radix_tree_preloads_lock);
+ 		node =3D kmem_cache_alloc(radix_tree_node_cachep, gfp_mask);
+ 		if (node =3D=3D NULL)
+ 			goto out;
+-		preempt_disable();
++		local_lock(radix_tree_preloads_lock);
+ 		rtp =3D this_cpu_ptr(&radix_tree_preloads);
+ 		if (rtp->nr < nr) {
+ 			node->parent =3D rtp->nodes;
+@@ -381,11 +382,17 @@ int radix_tree_maybe_preload(gfp_t gfp_mask)
+ 	if (gfpflags_allow_blocking(gfp_mask))
+ 		return __radix_tree_preload(gfp_mask, RADIX_TREE_PRELOAD_SIZE);
+ 	/* Preloading doesn't help anything with this gfp mask, skip it */
+-	preempt_disable();
++	local_lock(radix_tree_preloads_lock);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(radix_tree_maybe_preload);
+=20
++void radix_tree_preload_end(void)
++{
++	local_unlock(radix_tree_preloads_lock);
++}
++EXPORT_SYMBOL(radix_tree_preload_end);
++
+ static unsigned radix_tree_load_root(const struct radix_tree_root *root,
+ 		struct radix_tree_node **nodep, unsigned long *maxindex)
+ {
+@@ -1470,10 +1477,16 @@ EXPORT_SYMBOL(radix_tree_tagged);
+ void idr_preload(gfp_t gfp_mask)
+ {
+ 	if (__radix_tree_preload(gfp_mask, IDR_PRELOAD_SIZE))
+-		preempt_disable();
++		local_lock(radix_tree_preloads_lock);
+ }
+ EXPORT_SYMBOL(idr_preload);
+=20
++void idr_preload_end(void)
++{
++	local_unlock(radix_tree_preloads_lock);
++}
++EXPORT_SYMBOL(idr_preload_end);
++
+ void __rcu **idr_get_free(struct radix_tree_root *root,
+ 			      struct radix_tree_iter *iter, gfp_t gfp,
+ 			      unsigned long max)
+--=20
+2.26.2
 
-         tglx
