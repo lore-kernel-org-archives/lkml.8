@@ -2,245 +2,216 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F92C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95FAA20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB2E420709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:02:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Z00PO0N8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgESLBh (ORCPT
+        id S1728662AbgESLCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:01:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42636 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgESLBh (ORCPT
+        Tue, 19 May 2020 07:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbgESLC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:01:37 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jb001-0006AP-LY; Tue, 19 May 2020 11:01:29 +0000
-Date:   Tue, 19 May 2020 13:01:28 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Kees Cook <keescook@chromium.org>, Tycho Andersen <tycho@tycho.ws>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: seccomp feature development
-Message-ID: <20200519110128.oot4zzxhivtmk7us@wittgenstein>
-References: <202005181120.971232B7B@keescook>
- <20200519070929.55r3xvybjg6nnbsj@yavin.dot.cyphar.com>
+        Tue, 19 May 2020 07:02:29 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F2FC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 04:02:29 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u188so3031246wmu.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 04:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=s52mlTsjUnN/hszSD3ntozNUhM7CeKTjB2swQFJ/VzE=;
+        b=Z00PO0N8bwJyW34sYknRVpaPebRO0XK1OTBruW9R958GWNdQABdXjhXKCj3an1V0mo
+         wrpsjmdnoDOoQLEt+Ol72QBaSG4HdL9aqEnleXM4LD2BKyLCn1p43cN+/4kOpxt7QbgJ
+         X01f+NwoGBjRxQVNwYiZefffVXfX54+cQXe9q6MHzbh/girOJQajR+d0ypFYK0hSNV1k
+         4Kc78Xv3TbqKnjxjZ21yb7fOLyGbXCgOxFL4RDiRt6eNcdM/C+HefxzI+niJVTO5ABMB
+         5Pjx94ww1pHP5bU/1BbVR/msjiSoXW9LbwSkoIHRac27xV4UFOe9f+rMLIXa2WB95yJW
+         gSeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=s52mlTsjUnN/hszSD3ntozNUhM7CeKTjB2swQFJ/VzE=;
+        b=DDvAEWU6oM88L5E1Z8nzPgcAEfnX1IR3qm6kruQ1HZrQ3Ucrw5sLnnC4VWECdiJc0Y
+         euSYpb/MkE5bnTt4spvTOx7ITdV983CiRFZq2c1Q3nX1pqcReuT6fKJAtBgF2dkNXoI4
+         DgiGykiyFLr61vc0sDc+QZ9RIdXw7j0iAvPWzW27DB+JIxWyex+1eEuFpQjgi258hchY
+         dwe/H7/KIlhAHYwrSIXlDd18NFlgmGyqvrLtBp8WiDLHfgG13c9KvHUMuYWai6qmCRPQ
+         oRVVgL/v6R4Aq182sIQmqO995KjneNtzSI7EouvEGAheREjYGlpcuFl+ZV/HoYIYHqDd
+         OvFQ==
+X-Gm-Message-State: AOAM533YtLEnrV3j4Aj6skQnRlhGSD4ysASf0s7FOzq27HuQ7lNLqhzS
+        vENLPuBLa+iblYQXtHnAUP2ACw==
+X-Google-Smtp-Source: ABdhPJxe0tKAyuywYHm+UA8QhlNek+QE4HYepKMS2CYRkPo3zEkUlfBFZUqqlsgVFKXTnrO2ho9M8Q==
+X-Received: by 2002:a1c:1983:: with SMTP id 125mr4741395wmz.43.1589886147933;
+        Tue, 19 May 2020 04:02:27 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:4852:3600:e80e:f5df:f780:7d57? ([2001:16b8:4852:3600:e80e:f5df:f780:7d57])
+        by smtp.gmail.com with ESMTPSA id v5sm20365386wrr.93.2020.05.19.04.02.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 04:02:27 -0700 (PDT)
+Subject: Re: [PATCH 10/10] mm/migrate.c: call detach_page_private to cleanup
+ code
+To:     Gao Xiang <hsiangkao@gmx.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        david@fromorbit.com, hch@infradead.org, willy@infradead.org
+References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
+ <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
+ <20200518221235.1fa32c38e5766113f78e3f0d@linux-foundation.org>
+ <aade5d75-c9e9-4021-6eb7-174a921a7958@cloud.ionos.com>
+ <20200519100612.GA3687@hsiangkao-HP-ZHAN-66-Pro-G1>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <d731fde0-6503-42f5-67b3-a4359a06bbb6@cloud.ionos.com>
+Date:   Tue, 19 May 2020 13:02:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200519100612.GA3687@hsiangkao-HP-ZHAN-66-Pro-G1>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200519070929.55r3xvybjg6nnbsj@yavin.dot.cyphar.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 05:09:29PM +1000, Aleksa Sarai wrote:
-> On 2020-05-18, Kees Cook <keescook@chromium.org> wrote:
-> > ## fd passing
-> > 
-> > Background: seccomp users want to be able to install an fd in a
-> > monitored process during a user_notif to emulate "open" calls (or
-> > similar), possibly across security boundaries, etc.
-> > 
-> > On the fd passing front, it seems that gaining pidfd_addfd() is the way
-> > to go as it allows for generic use not tied to seccomp in particular.
-> > I expect this feature will be developed orthogonally to seccomp (where
-> > does this stand, BTW?). However, as Sargun has shown[1], seccomp could
-> > be friendlier to help with using it. Things that need to be resolved:
-> > 
-> > - report pidnr, or pidfd? It seems the consensus is to pass pidnr, but
-> >   if we're going to step back and make some design choices here, is
-> >   there a place for pidfds in seccomp user_notif, in order to avoid
-> >   needing the user_notif cookie? I think probably not: it's a rather lot
-> >   of overhead for notifications. It seems it's safe to perform an fd
-> >   installation with these steps:
-> > 	- get pidnr from user_notif_recv
-> > 	- open pidfd from pidnr
-> > 	- re-verify user_notif cookie is still valid
-> > 	- send new fd via pidfd
-> > 	- reply with user_notif_send
-> > 	- close pidfd
-> 
-> I agree that while it would be conceptually nicer to not need the
-> user_notif cookie, creating a new pidfd for every notification isn't a
-> good idea (not to mention that the program may not care about the pid or
-> pidfd when determining its response -- making the pidfd more of a pain
-> than anything else).
-> 
-> You'd also need to have special-casing based on the userspace length of
-> user_notif because old programs wouldn't know they'd have to close the
-> pidfd returned (which then brings us back to the fact that user_notif
-> doesn't specify what the usize of the struct is a-la
-> copy_struct_from_user).
-> 
-> > ## deep argument inspection
-> > 
-> > Background: seccomp users would like to write filters that traverse
-> > the user pointers passed into many syscalls, but seccomp can't do this
-> > dereference for a variety of reasons (mostly involving race conditions and
-> > rearchitecting the entire kernel syscall and copy_from_user() code flows).
-> > 
-> > During the last plumbers and in conversations since, the grudging
-> > consensus was reached that having seccomp do this for ALL syscalls was
-> > likely going to be extremely disruptive for very little gain (i.e.
-> > many things, like pathnames, have differing lifetimes, aliases, unstable
-> > kernel object references, etc[6]), but that there were a small subset of
-> > syscalls for which this WOULD be beneficial, and those are the newly
-> > created "Extensible Argument" syscalls (is there a better name for this
-> > design? I'm calling it "EA" for the rest of the email), like clone3(),
-> > openat2(), etc, which pass a pointer and a size:
-> 
-> I called them "extensible struct" syscalls, but "extensible arguments"
-> is probably a better name. Though if you want to call them EA, make sure
-> to include the ™. ;)
-> 
-> > long clone3(struct clone_args *cl_args, size_t size);
-> > 
-> > I think it should be possible to extend seccomp to examine this structure
-> > by appending it to seccomp_data, and allowing filters to examine the
-> > contents. This means that no BPF language extensions are required for
-> > seccomp, as I'd still prefer to avoid making the eBPF jump (I don't think
-> > seccomp's design principles work well with maps, kernel helpers, etc,
-> > and I think the earlier the examination of using eBPF for user_notif
-> > bares this out).
-> 
-> While I agree that we don't need to jump to eBPF for this, I do think
-> we'll need an opcode for is_zeroed() (or bpf_check_uarg_tail_zero()) --
-> see below.
-> 
-> > In order for this to work, there are a number of prerequisites:
-> > 
-> > - argument caching, in two halves: syscall side and seccomp side:
-> >   - the EA syscalls needs to include awareness of potential seccomp
-> >     hooking. i.e. seccomp may have done the copy_from_user() already and
-> >     kept a cached copy.
-> >   - seccomp needs to potentially DO the copy_from_user() itself when it
-> >     hits these syscalls for a given filter, and put it somewhere for
-> >     later use by the syscall.
-> > 
-> > The argument caching bit is, I think, rather mechanical in nature since
-> > it's all "just" internal to the kernel: seccomp can likely adjust how it
-> > allocates seccomp_data (maybe going so far as to have it split across two
-> > pages with the syscall argument struct always starting on the 2nd page
-> > boundary), and copying the EA struct into that page, which will be both
-> > used by the filter and by the syscall. I imagine state tracking ("is
-> > there a cached EA?", "what is the address of seccomp_data?", "what is
-> > the address of the EA?") can be associated with the thread struct.
-> 
-> I agree that while this is an important thing to handle properly, it's
-> internal and probably doesn't deserve the lions share of design
-> discussion.
-> 
-> > - the sizes of these EA structs are, by design, growable over time.
-> >   seccomp and its users need to be handle this in a forward and backward
-> >   compatible way, similar to the design of the EA syscall interface
-> >   itself.
-> > 
-> > The growing size of the EA struct will need some API design. For filters
-> > to operate on the contiguous seccomp_data+EA struct, the filter will
-> > need to know how large seccomp_data is (more on this later), and how
-> > large the EA struct is. When the filter is written in userspace, it can
-> > do the math, point into the expected offsets, and get what it needs. For
-> > this to work correctly in the kernel, though, the seccomp BPF verifier
-> > needs to know the size of the EA struct as well, so it can correctly
-> > perform the offset checking (as it currently does for just the
-> > seccomp_data struct size).
-> > 
-> > Since there is not really any caller-based "seccomp state" associated
-> > across seccomp(2) calls, I don't think we can add a new command to tell
-> > the kernel "I'm expecting the EA struct size to be $foo bytes", since
-> > the kernel doesn't track who "I" is besides just being "current", which
-> > doesn't take into account the thread lifetime -- if a process launcher
-> > knows about one size and the child knows about another, things will get
-> > confused. The sizes really are just associated with individual filters,
-> > based on the syscalls they're examining. So, I have thoughts on possible
-> > solutions:
-> > 
-> > - create a new seccomp command SECCOMP_SET_MODE_FILTER2 which uses the
-> >   EA style so we can pass in more than a filter and include also an
-> >   array of syscall to size mappings. (I don't like this...)
-> > - create a new filter flag, SECCOMP_FILTER_FLAG_EXTENSIBLE, which changes
-> >   the meaning of the uarg from "filter" to a EA-style structure with
-> >   sizes and pointers to the filter and an array of syscall to size
-> >   mappings. (I like this slightly better, but I still don't like it.)
-> > - leverage the EA design and just accept anything <= PAGE_SIZE, record
-> >   the "max offset" value seen during filter verification, and zero-fill
-> >   the EA struct with zeros to that size when constructing the
-> >   seccomp_data + EA struct that the filter will examine. Then the seccomp
-> >   filter doesn't care what any of the sizes are, and userspace doesn't
-> >   care what any of the sizes are. (I like this as it makes the problems
-> >   to solve contained entirely by the seccomp infrastructure and does not
-> >   touch user API, but I worry I'm missing some gotcha I haven't
-> >   considered.)
-> 
-> Okay, so here is my view on this. I think that the third option is
-> closest to what I'd like to see. Based on Jann's email, I think we're on
-> the same page but I'd just like to elaborate it a bit further:
-> 
-> First of all -- ideally, the backward and forward compatibility that EA
-> syscalls give us should be reflected with seccomp filters being
-> similarly compatible. Otherwise we're going to run into issues where all
-> of the hard work with ensuring EA syscalls behave when extended will be
-> less valuable if seccomp cannot handle it sufficiently. This means that
-> I would hope that every combination of {old,new} filter/kernel/program
-> would work on a best-effort (but fail-safe) basis.
-> 
-> In my view, the simplest way (from the kernel side) would be to simply
-> do what you outlined in (3) -- make all accesses past usize (and even
-> ksize) be zeroed.
-> 
-> However in order to make an old filter fail-safe on a new kernel with a
-> new program, we'd need a new opcode which basically does
-> bpf_check_uarg_tail_zero() after a given offset into the EA struct. This
-> would punt the fail-safe problem to userspace (libseccomp would need to
-> generate a check that any unknown-to-the-filter fields are zero). I
-> don't think this is a decision we can make in-kernel because it might be
-> that the filter doesn't care about the last field in a struct (and thus
-> doesn't access it) but we don't know the difference between a field the
-> filter doesn't care about and a field it doesn't know about.
-> 
-> Another issue which you haven't mentioned here is how do we deal with
-> pointers inside an EA struct. clone3() already has this with set_tid,
+On 5/19/20 12:06 PM, Gao Xiang wrote:
+> On Tue, May 19, 2020 at 09:35:59AM +0200, Guoqing Jiang wrote:
+>> On 5/19/20 7:12 AM, Andrew Morton wrote:
+>>> On Sun, 17 May 2020 23:47:18 +0200 Guoqing Jiang <guoqing.jiang@cloud.ionos.com> wrote:
+>>>
+>>>> We can cleanup code a little by call detach_page_private here.
+>>>>
+>>>> ...
+>>>>
+>>>> --- a/mm/migrate.c
+>>>> +++ b/mm/migrate.c
+>>>> @@ -804,10 +804,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
+>>>>    	if (rc != MIGRATEPAGE_SUCCESS)
+>>>>    		goto unlock_buffers;
+>>>> -	ClearPagePrivate(page);
+>>>> -	set_page_private(newpage, page_private(page));
+>>>> -	set_page_private(page, 0);
+>>>> -	put_page(page);
+>>>> +	set_page_private(newpage, detach_page_private(page));
+>>>>    	get_page(newpage);
+>>>>    	bh = head;
+>>> mm/migrate.c: In function '__buffer_migrate_page':
+>>> ./include/linux/mm_types.h:243:52: warning: assignment makes integer from pointer without a cast [-Wint-conversion]
+>>>    #define set_page_private(page, v) ((page)->private = (v))
+>>>                                                       ^
+>>> mm/migrate.c:800:2: note: in expansion of macro 'set_page_private'
+>>>     set_page_private(newpage, detach_page_private(page));
+>>>     ^~~~~~~~~~~~~~~~
+>>>
+>>> The fact that set_page_private(detach_page_private()) generates a type
+>>> mismatch warning seems deeply wrong, surely.
+>>>
+>>> Please let's get the types sorted out - either unsigned long or void *,
+>>> not half-one and half-the other.  Whatever needs the least typecasting
+>>> at callsites, I suggest.
+>> Sorry about that, I should notice the warning before. I will double check if
+>> other
+>> places need the typecast or not, then send a new version.
+>>
+>>> And can we please implement set_page_private() and page_private() with
+>>> inlined C code?  There is no need for these to be macros.
+>> Just did a quick change.
+>>
+>> -#define page_private(page)Â Â Â Â Â Â Â Â Â Â Â Â  ((page)->private)
+>> -#define set_page_private(page, v)Â Â Â Â Â  ((page)->private = (v))
+>> +static inline unsigned long page_private(struct page *page)
+>> +{
+>> +Â Â Â Â Â Â  return page->private;
+>> +}
+>> +
+>> +static inline void set_page_private(struct page *page, unsigned long
+>> priv_data)
+>> +{
+>> +Â Â Â Â Â Â  page->private = priv_data;
+>> +}
+>>
+>> Then I get error like.
+>>
+>> fs/erofs/zdata.h: In function â€˜z_erofs_onlinepage_indexâ€™:
+>> fs/erofs/zdata.h:126:8: error: lvalue required as unary â€˜&â€™ operand
+>> Â  u.v = &page_private(page);
+>> Â Â Â Â Â Â Â  ^
+>>
+>> I guess it is better to keep page_private as macro, please correct me in
+>> case I
+>> missed something.
+> I guess that you could Cc me in the reply.
 
-It's also passed with a set_tid_size argument so we'd know how large
-set_tid is.
+Sorry for not do that ...
 
-> and the thread on user_notif seems to be converging towards having the
-> user_notif2 struct just contain two pointers to EA structs. We could
-> punt on this for now, so long as we leave room for us to deal with this
-> problem in the future. However, I think it would be misguided to enable
-> deep argument inspection on syscalls which have such entries (such as
-> clone3) until we've figured out how we want to handle nested pointers --
+> In that case, EROFS uses page->private as an atomic integer to
+> trace 2 partial subpages in one page.
+>
+> I think that you could also use &page->private instead directly to
+> replace &page_private(page) here since I didn't find some hint to
+> pick &page_private(page) or &page->private.
 
-We can't really punt on this and should figure this out now. I've
-pointed to this problem in my other mail as well.
-Though I currently fail to see why this should be a huge problem to get
-that working as long as each pointer comes with a known size.
+Thanks for the input, I just did a quick test, so need to investigate more.
+And I think it is better to have another thread to change those macros to
+inline function, then fix related issues due to the change.
 
-> at the very least because the bpf_check_uarg_tail_zero() opcode
-> semantics need to consider this problem.
-> 
-> A silly proposal I had was that because the EA would never be bigger
-> than PAGE_SIZE, we could take the offset into the EA and multiply it by
-> PAGE_SIZE each time we wanted to do a "dereference" of a pointer in EA.
+> In addition, I found some limitation of new {attach,detach}_page_private
+> helper (that is why I was interested in this series at that time [1] [2],
+> but I gave up finally) since many patterns (not all) in EROFS are
+>
+> io_submit (origin, page locked):
+> attach_page_private(page);
+> ...
+> put_page(page);
+>
+> end_io (page locked):
+> SetPageUptodate(page);
+> unlock_page(page);
+>
+> since the page is always locked, so io_submit could be simplified as
+> set_page_private(page, ...);
+> SetPagePrivate(page);
+> , which can save both one temporary get_page(page) and one
+> put_page(page) since it could be regarded as safe with page locked.
 
-If you have a size to it it should be ok? I'm probably missing
-something.
+The SetPageUptodate is not called inside {attach,detach}_page_private,
+I could probably misunderstand your point, maybe you want the new pairs
+can handle the locked page, care to elaborate more?
 
-Christian
+> btw, I noticed the patchset versions are PATCH [3], RFC PATCH [4],
+> RFC PATCH v2 [5], RFC PATCH v3 [6], PATCH [7]. Although I also
+> noticed the patchset title was once changed, but it could be some
+> harder to trace the whole history discussion.
+>
+> [1] https://lore.kernel.org/linux-fsdevel/20200419051404.GA30986@hsiangkao-HP-ZHAN-66-Pro-G1/
+> [2] https://lore.kernel.org/linux-fsdevel/20200427025752.GA3979@hsiangkao-HP-ZHAN-66-Pro-G1/
+> [3] https://lore.kernel.org/linux-fsdevel/20200418225123.31850-1-guoqing.jiang@cloud.ionos.com/
+> [4] https://lore.kernel.org/linux-fsdevel/20200426214925.10970-1-guoqing.jiang@cloud.ionos.com/
+> [5] https://lore.kernel.org/linux-fsdevel/20200430214450.10662-1-guoqing.jiang@cloud.ionos.com/
+> [6] https://lore.kernel.org/linux-fsdevel/20200507214400.15785-1-guoqing.jiang@cloud.ionos.com/
+> [7] https://lore.kernel.org/linux-fsdevel/20200517214718.468-1-guoqing.jiang@cloud.ionos.com/
+
+All the cover letter of those series are here.
+
+RFC V3:https://lore.kernel.org/lkml/20200507214400.15785-1-guoqing.jiang@cloud.ionos.com/
+RFC V2:https://lore.kernel.org/lkml/20200430214450.10662-1-guoqing.jiang@cloud.ionos.com/
+RFC:https://lore.kernel.org/lkml/20200426214925.10970-1-guoqing.jiang@cloud.ionos.com/
+
+And the latest one:
+
+https://lore.kernel.org/lkml/20200430214450.10662-1-guoqing.jiang@cloud.ionos.com/
+
+
+Thanks,
+Guoqing
