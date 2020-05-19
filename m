@@ -2,130 +2,111 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF80AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69E1F207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDAC206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:21:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j92WI0OI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1Wm4uHHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgESKT6 (ORCPT
+        id S1728611AbgESKVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:19:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgESKTz (ORCPT
+        Tue, 19 May 2020 06:21:46 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58276 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgESKVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:19:55 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3747C061A0C;
-        Tue, 19 May 2020 03:19:54 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id y3so15284608wrt.1;
-        Tue, 19 May 2020 03:19:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pnjDftxxSSPg8a99O3CMzTvnM8zCPLUpID8zm/35UjQ=;
-        b=j92WI0OIbflFRPQPu3EVYEQCvUEHlpg8TNKie8Beddr2IZAmB12I4LVEPNspm91VhN
-         JGjXQtCh/T9GV70oOyMtjSPW0EupYoofuknbthtxs3AQ+wyZAInAArOUkaLuS/XfEdVs
-         cK3coxk8E4uQjdJgipJRssjbq9EiOsN/sYI98xSiOefKyCmr0J/u387xBUphmoHMbkkl
-         VUi/SfYUYd/uRah0Zu9WgsbFLNd+e8tEdu4siwlc+cTMCd5eQ4R3IwkiCSEm+aC6ygB4
-         t2z6egwiRYZ5V5uGKfpyZLY+kratcqS/UBWtS0MdLEKm/UAFvNVZZILxdZK5tDE+9ijZ
-         FMpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pnjDftxxSSPg8a99O3CMzTvnM8zCPLUpID8zm/35UjQ=;
-        b=n+jTHeuBQVIfclbKSmlpZS0Mmmm1lPvYsoEnjVsLCXDgETq+EPj3OqvgfX5Sgg1Khg
-         f0onkM9cTtF6drc0xwOFHONBBAsdE3wWCYATPe4R7PO/GWon8668odYZRKEGszLcCZaj
-         dF6F/sV68so8Wt9arh6cNCZxEBzo1ohaCsa5W+clTyRzajCIByByU0gQj6iCht9jINl4
-         N4kZpv8Fx1HJIDLl1nAy0+1v3FJ+UDLP0jRhskBqh1ThmWfgeLXV7Yt1WojXOUuCUX0l
-         HqfQ0/lVc7BCcKJDkeJzY06Si+I8/ocLIGukhdwiZrhyR8bVqRMwmVtJNzdmMJzIRN9T
-         hK6A==
-X-Gm-Message-State: AOAM530jFtIRWvYcjcdmudYTOp/Fia8oXhSr8XtfSCZ1Q0bUWajK67TI
-        s8okAJ9VeyZ8K2q30wjJK1g=
-X-Google-Smtp-Source: ABdhPJwAAtM0HgwUVFHhrsukc4a3ep+2NwtT5kMvoesLWOhh1z3TGoe3Ra/t6CXKylk7qCMmjyUatg==
-X-Received: by 2002:adf:db52:: with SMTP id f18mr24759961wrj.258.1589883593425;
-        Tue, 19 May 2020 03:19:53 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id g6sm20265410wrp.75.2020.05.19.03.19.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 03:19:52 -0700 (PDT)
-Date:   Tue, 19 May 2020 12:19:50 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 0/3] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200519101950.GC10391@ict14-OptiPlex-980>
-References: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
- <20200519092212.GT1634618@smile.fi.intel.com>
- <20200519094835.GB10391@ict14-OptiPlex-980>
- <20200519100815.GA1634618@smile.fi.intel.com>
+        Tue, 19 May 2020 06:21:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xWoCF9WU8+P6zH55pIbnIh/YF7QO+vlIXLrOeA3o7Zg=; b=1Wm4uHHD9O785s71uZF1SD0h43
+        htJi9GfIPTo3zg8VnurLo9CIa1ENv/ee4TkaFY2KgpsxDb9FVzgBfOpCVY9bCvfVWZqlnzy1O7GFF
+        Pfsjg/8O4wFpD7KgGArh5MhN3KMydT7B0f7Fm69RbfyL1Yuc/vbvAAm3j0Nt6qtCOhC/hMOyPkQVR
+        CrtK7aitoHf+21OA0GzrJKUn3SOsXfbNtUS69w5A/bnsxHqGoDEW07HO1ohHQPVllFW3pFHWkIGod
+        8/dztCyzABuz7CvjINUhADBbqh5uf/h0a0D1eUmQ+EnWllrixLLsC0jv22QHRkOK6v3n6iSJJh0Cs
+        8LhiDTCQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jazNS-00043O-9D; Tue, 19 May 2020 10:21:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 54B8E3008A8;
+        Tue, 19 May 2020 12:21:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 42DD12105F3B6; Tue, 19 May 2020 12:21:33 +0200 (CEST)
+Date:   Tue, 19 May 2020 12:21:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/29] modpost: add read_text_file() and get_line()
+ helpers
+Message-ID: <20200519102133.GA279905@hirez.programming.kicks-ass.net>
+References: <20200517094859.2376211-1-masahiroy@kernel.org>
+ <20200517094859.2376211-4-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519100815.GA1634618@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200517094859.2376211-4-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 01:08:15PM +0300, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 11:48:35AM +0200, Jonathan Albrieux wrote:
-> > On Tue, May 19, 2020 at 12:22:12PM +0300, Andy Shevchenko wrote:
-> > > On Tue, May 19, 2020 at 08:57:40AM +0200, Jonathan Albrieux wrote:
-> 
-> ...
-> 
-> > > I dunno if it's your first submission to Linux kernel project or other OSS,
-> > > but here you missed a changelog. Rule of thumb is to provide a summary of
-> > > the changes done in the history of the evolution of a patch series.
-> > > 
-> > 
-> > Oh thank you and sorry for not having included it. 
-> > 
-> > Does the changelog needs to be added to all patch files or just on the ones
-> > subject of the changes?
-> 
-> Up to you and maintainer of the corresponding subsystem.
-> 
-> My common sense tells me that
-> 1) if there is a cover letter, just put a joined changelog there
-> 2) otherwise, put changelog in each patch.
-> 
-> I saw in practice all possible variants, i.e.
-> a) cover letter w/o changelog + changelog per patch;
-> b) cover letter w/ changelog + changelog per patch;
-> c) cover letter w/ changelog.
-> 
-> I think any of it is fine in general.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+On Sun, May 17, 2020 at 06:48:33PM +0900, Masahiro Yamada wrote:
 
-Thank you for the tips, will work on it!
+> +char *read_text_file(const char *filename)
+> +{
+> +	struct stat st;
+> +	int fd;
+> +	char *buf;
+> +
+> +	fd = open(filename, O_RDONLY);
+> +	if (fd < 0)
+> +		return NULL;
+> +
+> +	if (fstat(fd, &st) < 0)
+> +		return NULL;
+> +
+> +	buf = NOFAIL(malloc(st.st_size + 1));
+> +
+> +	if (read(fd, buf, st.st_size) != st.st_size) {
 
-Best regards,
-Jonathan Albrieux
+Is this sensible coding ? I've always been taught read() can return
+early/short for a number of reasons and we must not assume this is an
+error.
+
+The 'normal' way to read a file is something like:
+
+	for (;;) {
+		ssize_t ret = read(fd, buf + size, st.st_size - size);
+		if (ret < 0) {
+			free(buf);
+			buf = NULL;
+			goto close;
+		}
+		if (!ret)
+			break;
+
+		size += ret;
+	}
+
+> +		free(buf);
+> +		buf = NULL;
+> +		goto close;
+> +	}
+> +	buf[st.st_size] = '\0';
+> +close:
+> +	close(fd);
+> +
+> +	return buf;
+> +}
