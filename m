@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D10C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70726C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0492E20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ADC42081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OjLKvawv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sTNGSLoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgESO1g (ORCPT
+        id S1729180AbgESO1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:27:36 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36810 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728953AbgESO1b (ORCPT
+        Tue, 19 May 2020 10:27:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43582 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729159AbgESO1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:27:31 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JERIAr062629;
-        Tue, 19 May 2020 09:27:18 -0500
+        Tue, 19 May 2020 10:27:35 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JER3Mp005249;
+        Tue, 19 May 2020 09:27:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589898438;
-        bh=qVEI4YqSpinXJJzMIo4+Ch+rlZfak9t3wtHZTvSLa/Y=;
+        s=ti-com-17Q1; t=1589898423;
+        bh=8wsmxHh8Fj6nnuOv4RqixX/76ikZXmO9s3dBnceWxdw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=OjLKvawvpVSpCjuqsvlu97PyFMEsc9kEL+6lqoyTyPNDolhXceevYwwv7GSIzP8c2
-         fXRqcsM9s5HYeKxsjO3S7wvrqDLNx2gh7+BIWiggiMQisO9f0JxTAIcgNHqr2RXDth
-         ArNVJ+m5uIv1U8XgjzKnI6rV5A/Lqmn625uJR1Ns=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JERIJv069589
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 09:27:18 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        b=sTNGSLoHgIbZldl7H5+uVC20Pf2pG9ekXgjXgkNBY8SbtsRpdN09a9leXDHl+9ybt
+         Q6/Tj/OZRDWK/4tqj2lW31Yk57bicxoQCbDo8UZnu+ATbfq37ijMXewSV9/TaNb5k4
+         bReo/wFDviBlwRrvG+OjEOiwfea/X/dz3qELbXgE=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JER3Hr037848;
+        Tue, 19 May 2020 09:27:03 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 09:27:18 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 09:27:03 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 09:27:18 -0500
+ Frontend Transport; Tue, 19 May 2020 09:27:03 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEQgjO008313;
-        Tue, 19 May 2020 09:27:13 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEQgjL008313;
+        Tue, 19 May 2020 09:26:58 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -65,9 +64,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v5 06/19] mtd: spi-nor: sfdp: default to addr_width of 3 for configurable widths
-Date:   Tue, 19 May 2020 19:56:28 +0530
-Message-ID: <20200519142642.24131-7-p.yadav@ti.com>
+Subject: [PATCH v5 03/19] spi: spi-mtk-nor: reject DTR ops
+Date:   Tue, 19 May 2020 19:56:25 +0530
+Message-ID: <20200519142642.24131-4-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200519142642.24131-1-p.yadav@ti.com>
 References: <20200519142642.24131-1-p.yadav@ti.com>
@@ -80,34 +79,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-JESD216D.01 says that when the address width can be 3 or 4, it defaults
-to 3 and enters 4-byte mode when given the appropriate command. So, when
-we see a configurable width, default to 3 and let flash that default to
-4 change it in a post-bfpt fixup.
-
-This fixes SMPT parsing for flashes with configurable address width. If
-the SMPT descriptor advertises variable address width, we use
-nor->addr_width as the address width. But since it was not set to any
-value from the SFDP table, the read command uses an address width of 0,
-resulting in an incorrect read being issued.
+Double Transfer Rate (DTR) ops are added in spi-mem. But this controller
+doesn't support DTR transactions. Since we don't use the default
+supports_op(), which rejects all DTR ops, do that explicitly in our
+supports_op().
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/sfdp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-mtk-nor.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
-index f917631c8110..5cecc4ba2141 100644
---- a/drivers/mtd/spi-nor/sfdp.c
-+++ b/drivers/mtd/spi-nor/sfdp.c
-@@ -460,6 +460,7 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
- 	/* Number of address bytes. */
- 	switch (bfpt.dwords[BFPT_DWORD(1)] & BFPT_DWORD1_ADDRESS_BYTES_MASK) {
- 	case BFPT_DWORD1_ADDRESS_BYTES_3_ONLY:
-+	case BFPT_DWORD1_ADDRESS_BYTES_3_OR_4:
- 		nor->addr_width = 3;
- 		break;
+diff --git a/drivers/spi/spi-mtk-nor.c b/drivers/spi/spi-mtk-nor.c
+index 7bc302b50396..7015dccedf00 100644
+--- a/drivers/spi/spi-mtk-nor.c
++++ b/drivers/spi/spi-mtk-nor.c
+@@ -211,6 +211,10 @@ static bool mtk_nor_supports_op(struct spi_mem *mem,
+ 	if (op->cmd.buswidth != 1)
+ 		return false;
  
++	/* DTR ops not supported. */
++	if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
++		return false;
++
+ 	if ((op->addr.nbytes == 3) || (op->addr.nbytes == 4)) {
+ 		if ((op->data.dir == SPI_MEM_DATA_IN) && mtk_nor_match_read(op))
+ 			return true;
 -- 
 2.26.2
 
