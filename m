@@ -2,159 +2,93 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E52DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48BFA207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6799F207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:36:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="JPl11egi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hJ2+oI5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgESNbk (ORCPT
+        id S1728725AbgESNgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728857AbgESNbj (ORCPT
+        Tue, 19 May 2020 09:36:21 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19114 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726880AbgESNgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:31:39 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6DE9C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:31:38 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w10so13739079ljo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:31:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=zz4KmcfH8bN5ODG0ex5UZiQJD1c8wBCbG4DymCKep+A=;
-        b=JPl11egiC/rpYvWWDESI7HA/BFOmPHzkcaUh+qIBTvnbvsS97QNPgaHNytnZKZc2WS
-         urX7266g5l2HYvhERmRCJEAL36Vot0tCVb9ldLccQUFp7AlOM0T/rKzZHFhB3wIGTY0Y
-         G9suicr/C8ZuoboVVRpFmxUnj/zGJyaXXQR6AByuU6S/5Pw5nCxfNQ2TVucTiC8EBprh
-         RYhHJIGS5ttTrhqQhF9QVM4hgCuAzeMhpnFEvqqZDUBb6xuyhliw+2EMakO9rU/T6met
-         nE4zZmk52U5WvroAp/Lbtyu812WeifFTbzfjq2JuP9JIEw7Zq5Nkw7FZLJ7MN0iWZbV7
-         Y1og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=zz4KmcfH8bN5ODG0ex5UZiQJD1c8wBCbG4DymCKep+A=;
-        b=N8hwr5+KVIoIdA1FQZYxZhlE+ebHqu40C4J4XJ9A7x+Fwjy2UKsdx8M4OuVoYrMka0
-         FBwoUYlKGW8uvEoRk/p0V0B+TrMNBgD3LCKQaytwgx3kyV1RghNM6a2RrHr8vd0K/MIk
-         IbJCsZXJwoGfKOLQv1ljdeMjF9wakKpEeoX5ZjkOkVTpYoiEDV8erXqhYU15X7AJeCF4
-         QpnlmxeU1wQ9pOZkCYSN31Lxj4A94JB9pqtXmOufXZUXJ9J7hswPMNuuej6Fej/dGNd8
-         8H4+tT1CsKV+/Myn4HmJTEAZ+0qmwbSUAALHlHD34mQeW09OOSzWLcwaoAh9oCQi1CiR
-         jKMA==
-X-Gm-Message-State: AOAM530o74P81wNVbcYo8pwd3bUJTNjHp8Ee9Y9VQuh5EwZqZAZK2ItD
-        +nofN2sHLxtWUvYYC5zag7Pe3A==
-X-Google-Smtp-Source: ABdhPJzb9RGwxu+tVzU1e8nCwzm1ZoYzVXHfqQ/a9+EsosV/wCYQzWZU/Q1MGMK7RV4gEl3OaN7u2Q==
-X-Received: by 2002:a2e:584a:: with SMTP id x10mr13878719ljd.181.1589895097279;
-        Tue, 19 May 2020 06:31:37 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id t30sm8193056lfd.29.2020.05.19.06.31.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 06:31:36 -0700 (PDT)
-Date:   Tue, 19 May 2020 15:31:35 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: Add renesas,em-sti bindings
-Message-ID: <20200519133135.GD470768@oden.dyn.berto.se>
-References: <20200519081101.28973-1-geert+renesas@glider.be>
+        Tue, 19 May 2020 09:36:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589895380; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=nOar5s8Y31oO1reXLuX2JVK+mSTXhf2iwsgGtLUlKiU=; b=hJ2+oI5M40jiqd648OpVQCcoGpbDKmveEMOTyRLkdpRE9Rvc8Ya/fdKIMnWw0dOreujIVN2n
+ hKgcTv6iLVeZQCx1hmL7mH++4YmVS7dY8kH/boqli7L9BACE7rwqBl0QcWPZkBRKTSBr+TN1
+ XBzMy+KWQQcQa/n/sBVakETb3kg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ec3e0d4e9d18cd52e5bc1de (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 19 May 2020 13:36:20
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6CF5FC432C2; Tue, 19 May 2020 13:36:19 +0000 (UTC)
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02DD7C433D2;
+        Tue, 19 May 2020 13:36:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02DD7C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2 0/4] Add support for replicators which loses context on clock removal
+Date:   Tue, 19 May 2020 19:05:59 +0530
+Message-Id: <cover.1589894597.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200519081101.28973-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+This series is mainly to add support for replicators
+which lose context on removing AMBA clock like on SC7180
+SoC where replicator in AOSS domain loses context.
 
-Thanks for your work.
+Patch 1 and 2 are minor cleanups to use macros.
+Patch 3 and 4 adds support for replicators which loses
+context on removing AMBA clock.
 
-On 2020-05-19 10:11:01 +0200, Geert Uytterhoeven wrote:
-> Document Device Tree bindings for the Renesas EMMA Mobile System Timer.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Previous version is here - https://lore.kernel.org/patchwork/patch/1239923/
+More discussion is found here - https://lore.kernel.org/patchwork/patch/1231182/
+There were no patch 1 and patch 2 in v1.
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Sai Prakash Ranjan (4):
+  coresight: replicator: Use CS_AMBA_ID macro for id table
+  coresight: catu: Use CS_AMBA_ID macro for id table
+  coresight: replicator: Reset replicator if context is lost
+  dt-bindings: arm: coresight: Add optional property to replicators
 
-> ---
->  .../bindings/timer/renesas,em-sti.yaml        | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/renesas,em-sti.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,em-sti.yaml b/Documentation/devicetree/bindings/timer/renesas,em-sti.yaml
-> new file mode 100644
-> index 0000000000000000..233d74d5402cf734
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/renesas,em-sti.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/renesas,em-sti.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas EMMA Mobile System Timer
-> +
-> +maintainers:
-> +  - Magnus Damm <magnus.damm@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: renesas,em-sti
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: sclk
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    timer@e0180000 {
-> +            compatible = "renesas,em-sti";
-> +            reg = <0xe0180000 0x54>;
-> +            interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
-> +            clocks = <&sti_sclk>;
-> +            clock-names = "sclk";
-> +    };
-> -- 
-> 2.17.1
-> 
+ .../devicetree/bindings/arm/coresight.txt     |  6 ++
+ drivers/hwtracing/coresight/coresight-catu.c  |  5 +-
+ .../coresight/coresight-replicator.c          | 66 +++++++++++--------
+ 3 files changed, 46 insertions(+), 31 deletions(-)
 
 -- 
-Regards,
-Niklas Söderlund
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
