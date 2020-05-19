@@ -2,218 +2,161 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4960C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0FF20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906D520709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gxYxckCx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ppCH2wak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgESH1k (ORCPT
+        id S1728494AbgESH3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 03:27:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47240 "EHLO
+        Tue, 19 May 2020 03:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728260AbgESH1i (ORCPT
+        with ESMTP id S1726892AbgESH3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 03:27:38 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF74C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:27:37 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id g4so12584713ljl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:27:37 -0700 (PDT)
+        Tue, 19 May 2020 03:29:21 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46B0C05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:29:20 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id a37so1501103uad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xxSaOAYdZ/P2LPa+RkxvFduPUE3GNPCNdQNl0HbVXo4=;
-        b=gxYxckCxwAOsiP0lqJ2lop9PNhRWiEwE+1jfsiCpw0NMUNN6IvKfT1w8vrcllcEiaX
-         D8GItZdIjOsDIMpYGv8pPAHt3o6gCpnwtGBeHkfGJJKo4C/1KYxEvcF7VDiJEDhMaw+c
-         xp0TJKiPP9TtgnzikV5mCSSNzj+tJUXJunutHPumUH1ApXdygADZhMMU3fBJ9UFDy1ms
-         tI5rYxF90N1ZT5P03oIEeasTl3jfcreawB5Hk0ilTnLIFqHa9OYHlZsaf1EIDYnB78Oy
-         DkA1+hLUYzVMAqF5t9cgDypf9dnT07ek0POQpiNlipC+9Gw2i8MWmZO9/+zOjJuda2is
-         /dYg==
+         :cc;
+        bh=MGKa+ni4azruYMg4t2OX9ZfrcsxATG1wfkYBrvmx3ac=;
+        b=ppCH2waksv32s+VVjjgoMAHZCn1L6IO+CmDuUgCw0Ah8QKNmJsagxzjFwL1icKfVL6
+         GMFWWLDxgqUgXutFVVzJi3VAwC3XUqmxCY6DikqwItRz2Z+sxzMOxZUIuGbPS7LMLFAo
+         2CrhGUnvrHNzcOhTf6J0cWp5Wo3JPer7NcqIN4d26PORoOmIKbmdOgEqFUpk8WacxsAB
+         sb+1PA2XFj/jrKGRv1/6lcfY4xY1zeXqbaeFMama6eAdHX+1zaVPRgJV0L6RpsaTdRae
+         i4ngUbPx2AjAShzmkOh4EQOybvPQ8BhHHrNYB7CrCeeFd2fNUK/+ptg132X2WpNow7o3
+         laUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xxSaOAYdZ/P2LPa+RkxvFduPUE3GNPCNdQNl0HbVXo4=;
-        b=gY2Amje7h1UEVPrjYYbceFXSvdvMxu2x4J2kgsLEQB7dnKjyXopqlCpO03LzOsSMnx
-         GFny2fzDBRteF5yYspliXeOKpDzGXxn5foS4/qLPgI5tJhx3QnnDjpt0W4Xr09+EjY2I
-         bRk7N4ioj4Mp6YPl/61tdOw0RqB0x0Xw2SGVAdcpMg6B7lppe6lK9XAAYXFCnY/2CBfk
-         oP5+UMltiOkOxdA1ru9xf8b/V8Rx4Yks3VlTmAUqf9GGYElLJNFD/XeFOcOHbE+02Xzn
-         F6cn364r9Mzc3cSlg/iDSNhtwikgbkYnJ4WOGhKkBROJc3Fh81F4ZEVhL0FyVFmBy4Kd
-         z2dw==
-X-Gm-Message-State: AOAM530ZcxgFKUZPgF4iAXruok3F4ChkEi+WbFj9h12A4H1P6PK8lED4
-        +x1vEXjriod91N0ifocRIBs4SL/Um/tZAG7Ah0PLYGt/LZEHUQ==
-X-Google-Smtp-Source: ABdhPJxukUp8JTGuGFk4m+6IZKXWul5pdOxr+SBVghfnSi1YvwZzy1DtbuljqEBS7ZNm23lLZlhAZiXCzRmYwKLD4uw=
-X-Received: by 2002:a05:651c:1a5:: with SMTP id c5mr12523269ljn.217.1589873254659;
- Tue, 19 May 2020 00:27:34 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=MGKa+ni4azruYMg4t2OX9ZfrcsxATG1wfkYBrvmx3ac=;
+        b=pPzgOzT9JQBmMRivjKiwY2TjbsNbhSccGZy/3uegPZEWkETM6v0F9ztJ3Ar1rAB/AZ
+         XFQ85dclGcZL2cDT9GwhTDJTFTJY8rzib14aZ4ARwdNkCbvfFP+Bpz9xzlnUrSTQr4Bu
+         Fg6laO/QsTdLma1X6GDOsSCzC/qW/7SYuEzasxxSIWFfDs5A2JaVcI07CGZb52ixbBYX
+         +QFjnoy0ybGAKb47JEAC2JQSgapDLTZhvdVRIZd2t8DS1NYY4hb4Xl+QffJBpnAOSrNO
+         yrgpegPmFAXxhgBYSiMSpAzm/p8cT9VyRgF3FU3n63b4iC5UnO+i9S2YHWUHeCISbBah
+         GwKQ==
+X-Gm-Message-State: AOAM532tXGY7xFv/tW9tpxC3j06jIthaDxv7GuVyjvRyBJpqKY2fI2YR
+        pH+xm4CTtFui9isnyKA6iK+fKwlxNHzT+E1UkL/dRg==
+X-Google-Smtp-Source: ABdhPJziq/dAaaMSV1g+QUyl2hxCAINBzMD1C8r8rFdoRyfZhqRSKCVUBriAlDSydtj6W9Tb1GcQRCiaHtbeQ3upsjw=
+X-Received: by 2002:ab0:5ca:: with SMTP id e68mr13796837uae.19.1589873359897;
+ Tue, 19 May 2020 00:29:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200518173513.009514388@linuxfoundation.org>
-In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 19 May 2020 12:57:23 +0530
-Message-ID: <CA+G9fYvT4rBSet6yjdFXeVcJGaFw6zvPZTKxPA-7_=P8Ehkx0g@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/147] 5.4.42-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
+References: <20200516154314.14769-1-digetx@gmail.com>
+In-Reply-To: <20200516154314.14769-1-digetx@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 19 May 2020 09:28:43 +0200
+Message-ID: <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
+Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
+ device-tree properties
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 at 23:30, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx@gmail.com> wrote:
 >
-> This is the start of the stable review cycle for the 5.4.42 release.
-> There are 147 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Several people asked me about the MMC warnings in the KMSG log and
+> I had to tell to ignore them because these warning are irrelevant to
+> pre-Tegra210 SoCs.
+
+Why are the warnings irrelevant?
+
+> It should be up to a board's device-tree writer to
+> properly describe all the necessary properties. Secondly, eventually all
+> device-tree bindings will be converted to YAML, which allows to validate
+> board DT files, giving a warning about missing properties. Hence let's
+> remove the noisy warnings to stop the confusion.
+
+Yep, makes sense. However, perhaps we should do this conversion then,
+rather than first drop the warnings?
+
+Kind regards
+Uffe
+
 >
-> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
-> Anything received after that time might be too late.
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 28 ++++------------------------
+>  1 file changed, 4 insertions(+), 24 deletions(-)
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.42-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index 3e2c5101291d..83867629013d 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -607,46 +607,26 @@ static void tegra_sdhci_parse_pad_autocal_dt(struct sdhci_host *host)
+>         err = device_property_read_u32(host->mmc->parent,
+>                         "nvidia,pad-autocal-pull-up-offset-3v3-timeout",
+>                         &autocal->pull_up_3v3_timeout);
+> -       if (err) {
+> -               if (!IS_ERR(tegra_host->pinctrl_state_3v3) &&
+> -                       (tegra_host->pinctrl_state_3v3_drv == NULL))
+> -                       pr_warn("%s: Missing autocal timeout 3v3-pad drvs\n",
+> -                               mmc_hostname(host->mmc));
+> +       if (err)
+>                 autocal->pull_up_3v3_timeout = 0;
+> -       }
 >
-> thanks,
+>         err = device_property_read_u32(host->mmc->parent,
+>                         "nvidia,pad-autocal-pull-down-offset-3v3-timeout",
+>                         &autocal->pull_down_3v3_timeout);
+> -       if (err) {
+> -               if (!IS_ERR(tegra_host->pinctrl_state_3v3) &&
+> -                       (tegra_host->pinctrl_state_3v3_drv == NULL))
+> -                       pr_warn("%s: Missing autocal timeout 3v3-pad drvs\n",
+> -                               mmc_hostname(host->mmc));
+> +       if (err)
+>                 autocal->pull_down_3v3_timeout = 0;
+> -       }
 >
-> greg k-h
-
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-NOTE:
-
-While running ftrace test on arm64 hikey device the following kernel warnin=
-g
-triggered and long with this rcu_preempt self-detected stall on CPU
-also noticed.
-Please find full test link below,
-
-[ 1313.494714] WARNING: CPU: 0 PID: 458 at
-/usr/src/kernel/kernel/trace/ring_buffer.c:2477 rb_commit+0x2c0/0x320
-<>
-[ 1313.770237] CPU: 0 PID: 458 Comm: avahi-daemon Not tainted 5.4.42-rc1 #1
-[ 1313.855515] Hardware name: HiKey Development Board (DT)
-[ 1313.939230] pstate: 60000005 (nZCv daif -PAN -UAO)
-[ 1314.022148] pc : rb_commit+0x2c0/0x320
-[ 1314.104229] lr : ring_buffer_unlock_commit+0x30/0x128
-
-full test log can be found here,
-https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/build/v5.4.41-148=
--gcac6eb2794c8/testrun/1441704/log
-
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.4.42-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: cac6eb2794c85e7777fb0caac6fa75b6364d81a0
-git describe: v5.4.41-148-gcac6eb2794c8
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.41-148-gcac6eb2794c8
-
-
-No regressions (compared to build v5.4.41)
-
-No fixes (compared to build v5.4.41)
-
-Ran 33314 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest/networking
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* perf
-* ltp-containers-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* network-basic-tests
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+>         err = device_property_read_u32(host->mmc->parent,
+>                         "nvidia,pad-autocal-pull-up-offset-1v8-timeout",
+>                         &autocal->pull_up_1v8_timeout);
+> -       if (err) {
+> -               if (!IS_ERR(tegra_host->pinctrl_state_1v8) &&
+> -                       (tegra_host->pinctrl_state_1v8_drv == NULL))
+> -                       pr_warn("%s: Missing autocal timeout 1v8-pad drvs\n",
+> -                               mmc_hostname(host->mmc));
+> +       if (err)
+>                 autocal->pull_up_1v8_timeout = 0;
+> -       }
+>
+>         err = device_property_read_u32(host->mmc->parent,
+>                         "nvidia,pad-autocal-pull-down-offset-1v8-timeout",
+>                         &autocal->pull_down_1v8_timeout);
+> -       if (err) {
+> -               if (!IS_ERR(tegra_host->pinctrl_state_1v8) &&
+> -                       (tegra_host->pinctrl_state_1v8_drv == NULL))
+> -                       pr_warn("%s: Missing autocal timeout 1v8-pad drvs\n",
+> -                               mmc_hostname(host->mmc));
+> +       if (err)
+>                 autocal->pull_down_1v8_timeout = 0;
+> -       }
+>
+>         err = device_property_read_u32(host->mmc->parent,
+>                         "nvidia,pad-autocal-pull-up-offset-sdr104",
+> --
+> 2.26.0
+>
