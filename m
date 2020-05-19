@@ -2,156 +2,177 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C10C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C81C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416A620823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:10:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfXV6uvW"
+	by mail.kernel.org (Postfix) with ESMTP id 07171206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgESNK5 (ORCPT
+        id S1728926AbgESNLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728705AbgESNK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:10:57 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93EBEC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:10:56 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z18so5445784lji.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c3T4HJxG7nloSmqdosUw7LZReYrTIT+rb+lo8g4PhXc=;
-        b=WfXV6uvWMP7bERrroIWlWQhf8aEFDvg396PU/l5K/u1eegAtL8ZrMTl1uXpTlHum05
-         INGDeUjN7qDA5B93Yy0zA6RENPkb7xW2Xl6XrgVzP0L9IjOUh9PjmELLWLgzF82kba5H
-         rc2p4ssL2U/+hddN81cxAqbASB3/3lt2ekMV/4CKKLcqxrj50Q1m5ZFjjo6m6WziXB2r
-         uphJkg7eeimwHvhdUjSoSU9X9ptyge1/gyA3V75PdKAaixQXPvstFGTxTNsXbQypHPC6
-         Ra6RQR2sWctWRMx+bFr8CWTxXRCZHf9BdB/rRaNMIHbXg5upwK2Y+zR4t7jkx4LDdvtM
-         vu2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c3T4HJxG7nloSmqdosUw7LZReYrTIT+rb+lo8g4PhXc=;
-        b=p6McBTmJfsnF2eavteh6iRGJGALa5p5IIpm9DWcyNxxCU7u2qzCnfLJVpniQnuO7sM
-         ucgK+Qzl9vD/klDibzffGMT4FKVvakKKjsqtaytpAMaISiVLmM8gy6hSh6REWjoWWPCU
-         Hlu4WKkBUGBW4FTf6AulfmJa1zabkRqxa3P1PbJVTmwh3KD3v4xsseyyRX5QIHNqZLWE
-         /KKbtaLlZKyAknfvAf665vq5zRt0DsDBN6r2uchtzqOZ9mVv64Y0oZW4Iyb4C8Hmsq2Z
-         egHp2tCTBFi9zu7j7nrgxvc0aK3DqS6DF9f4/fAyfRkjB0GUVwpHUIdyAqCMMUl07QXz
-         CY9Q==
-X-Gm-Message-State: AOAM532dw+RQVeHFvlc3vfy19mznnZ02ITniVfQ1BXMPzdNuZ/zDbXqO
-        /2OD/jd6/hos+/FK0GEyPvcWcbbYKJYI4/3rkeiUlA89
-X-Google-Smtp-Source: ABdhPJwtjCl2l/A0oGeUtPPFnQfGFCfpy9223dKnCMGr9Lf2njPCAfitKZVHMCS1pJNbPCr1hR5N3vAvLYMNVNoNaJg=
-X-Received: by 2002:a2e:9a0d:: with SMTP id o13mr12632808lji.15.1589893855058;
- Tue, 19 May 2020 06:10:55 -0700 (PDT)
+        Tue, 19 May 2020 09:11:05 -0400
+Received: from mga02.intel.com ([134.134.136.20]:10145 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728705AbgESNLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 09:11:04 -0400
+IronPort-SDR: c4t4SSwR/JNBF3lCrIwTh+v3Qmhi/MhIMmA9ss2up+76oStqQWOpnw/Mpgdb2lEgZ8wrYYzFVp
+ r2Ga4UrGIi6Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 06:11:04 -0700
+IronPort-SDR: Q1oJwjhWRHQZVxyRT2XVq6iFqHxtT7QDhVGshWTbMBpzbO6OUFVFWexIReRlCIeAOBMM1iDsnf
+ eRNW9Bzes32g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
+   d="scan'208";a="288951757"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.171.98]) ([10.249.171.98])
+  by fmsmga004.fm.intel.com with ESMTP; 19 May 2020 06:10:59 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH v11 10/11] KVM: x86/pmu: Check guest LBR availability in
+ case host reclaims them
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
+        wei.w.wang@intel.com
+References: <20200514083054.62538-1-like.xu@linux.intel.com>
+ <20200514083054.62538-11-like.xu@linux.intel.com>
+ <20200519111559.GJ279861@hirez.programming.kicks-ass.net>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <3a234754-e103-907f-9b06-44b5e7ae12d3@intel.com>
+Date:   Tue, 19 May 2020 21:10:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <c2fd765aa388d4510194ba02c017e39bde57c8d4.1587478171.git.baolin.wang7@gmail.com>
- <CADBw62rJ8VYTgnW_3q4=TkCyZx2B1DHsG+oOmiph8FLsukUROQ@mail.gmail.com>
- <20200427090518.GG3559@dell> <CADBw62qXtNnoNq0F1iZrvQHryMTy86GEqcD-qXBzsJJL-B8mQg@mail.gmail.com>
- <20200428071447.GJ3559@dell> <CADBw62o=D-hmp1yB=oPXPJfBucOEEa87cZado5+1mTKsCWDKfg@mail.gmail.com>
- <20200428081902.GK3559@dell> <CADBw62qrsOHUCKdU17ctQBM21EAOuAO8vxFabRP9hpguC5ixsg@mail.gmail.com>
- <CADBw62psCr1aSmYtqck5dpddCRk8f-UAw5rUsPyfhNw-OCfYkA@mail.gmail.com> <20200519103510.GV271301@dell>
-In-Reply-To: <20200519103510.GV271301@dell>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 19 May 2020 21:10:43 +0800
-Message-ID: <CADBw62qq4o8dXx=uvTKmaVJbgpAVnHx8gEfjdGn6EHKtg5b8PQ@mail.gmail.com>
-Subject: Re: [PATCH v3] mfd: syscon: Add Spreadtrum physical regmap bus support
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200519111559.GJ279861@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 6:35 PM Lee Jones <lee.jones@linaro.org> wrote:
+On 2020/5/19 19:15, Peter Zijlstra wrote:
+> On Thu, May 14, 2020 at 04:30:53PM +0800, Like Xu wrote:
 >
-> On Mon, 04 May 2020, Baolin Wang wrote:
->
-> > Hi Arnd
-> >
-> > On Tue, Apr 28, 2020 at 4:41 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > >
-> > > On Tue, Apr 28, 2020 at 4:19 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > >
-> > > > On Tue, 28 Apr 2020, Baolin Wang wrote:
-> > > >
-> > > > > On Tue, Apr 28, 2020 at 3:14 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > >
-> > > > > > On Tue, 28 Apr 2020, Baolin Wang wrote:
-> > > > > >
-> > > > > > > On Mon, Apr 27, 2020 at 5:05 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > > >
-> > > > > > > > On Mon, 27 Apr 2020, Baolin Wang wrote:
-> > > > > > > >
-> > > > > > > > > Hi Arnd and Lee,
-> > > > > > > > >
-> > > > > > > > > On Tue, Apr 21, 2020 at 10:13 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Some platforms such as Spreadtrum platform, define a special method to
-> > > > > > > > > > update bits of the registers instead of read-modify-write, which means
-> > > > > > > > > > we should use a physical regmap bus to define the reg_update_bits()
-> > > > > > > > > > operation instead of the MMIO regmap bus. Thus we can register a new
-> > > > > > > > > > physical regmap bus into syscon core to support this.
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > > > > > > > >
-> > > > > > > > > Do you have any comments for this patch? Thanks.
-> > > > > > > >
-> > > > > > > > Yes.  I'm not accepting it, sorry.
-> > > > > > > >
-> > > > > > > > I'd rather you duplicate the things you need from of_syscon_register()
-> > > > > > > > in your own driver than taint this one.
-> > > > > > >
-> > > > > > > Thanks for your comments and I can understand your concern. But we
-> > > > > > > still want to use the standard syscon APIs in syscon.c, which means we
-> > > > > > > still need insert an callback or registration or other similar methods
-> > > > > > > to support vendor specific regmap bus. Otherwise we should invent some
-> > > > > > > similar syscon APIs in our vendor syscon driver, like
-> > > > > > > sprd_syscon_regmap_lookup_by_phandle/sprd_syscon_regmap_lookup_by_compatible.
-> > > > > >
-> > > > > > So long as the generic driver stays generic.  Providing a registration
-> > > > > > function sounds cleaner than tainting the code with vendor specifics.
-> > > > >
-> > > > > So seems my V1 patch set [1] was on the direction as you suggested,
-> > > > > but Arnd did not like that.
-> > > > >
-> > > > > [1]
-> > > > > https://lore.kernel.org/patchwork/patch/1226161/
-> > > > > https://lore.kernel.org/patchwork/patch/1226162/
-> > > >
-> > > > I don't often disagree with Arnd, but in this instance I think a
-> > > > registration function which allows vendor spin-offs to use the generic
-> > > > API is better than tainting the generic driver by adding vendor
-> > > > specific #ifery/code to it.
-> > > >
-> > > > Your original idea seems more palatable to me.
-> > >
-> > > OK, thanks for sharing your opinion. Let's see what Arnd's opinion
-> > > before I send out new version.
-> >
-> > Do yo have any comments about how to add new bits updating method? Can
-> > I re-send my v1 patch set [1]? Thanks.
->
-> Just resend and we'll review.
+>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+>> index ea4faae56473..db185dca903d 100644
+>> --- a/arch/x86/kvm/vmx/pmu_intel.c
+>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+>> @@ -646,6 +646,43 @@ static void intel_pmu_lbr_cleanup(struct kvm_vcpu *vcpu)
+>>   		intel_pmu_free_lbr_event(vcpu);
+>>   }
+>>   
+>> +static bool intel_pmu_lbr_is_availabile(struct kvm_vcpu *vcpu)
+>> +{
+>> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+>> +
+>> +	if (!pmu->lbr_event)
+>> +		return false;
+>> +
+>> +	if (event_is_oncpu(pmu->lbr_event)) {
+>> +		intel_pmu_intercept_lbr_msrs(vcpu, false);
+>> +	} else {
+>> +		intel_pmu_intercept_lbr_msrs(vcpu, true);
+>> +		return false;
+>> +	}
+>> +
+>> +	return true;
+>> +}
+> This is unreadable gunk, what?
 
-Yes, I already sent out the v4 patch set.
-https://lore.kernel.org/patchwork/patch/1242814/
-https://lore.kernel.org/patchwork/patch/1242815/
+Abstractly, it is saying "KVM would passthrough the LBR satck MSRs if
+event_is_oncpu() is true, otherwise cancel the passthrough state if any."
 
--- 
-Baolin Wang
+I'm using 'event->oncpu != -1' to represent the guest LBR event
+is scheduled on rather than 'event->state == PERF_EVENT_STATE_ERROR'.
+
+For intel_pmu_intercept_lbr_msrs(), false means to passthrough the LBR stack
+MSRs to the vCPU, and true means to cancel the passthrough state and make
+LBR MSR accesses trapped by the KVM.
+
+>
+>> +/*
+>> + * Higher priority host perf events (e.g. cpu pinned) could reclaim the
+>> + * pmu resources (e.g. LBR) that were assigned to the guest. This is
+>> + * usually done via ipi calls (more details in perf_install_in_context).
+>> + *
+>> + * Before entering the non-root mode (with irq disabled here), double
+>> + * confirm that the pmu features enabled to the guest are not reclaimed
+>> + * by higher priority host events. Otherwise, disallow vcpu's access to
+>> + * the reclaimed features.
+>> + */
+>> +static void intel_pmu_availability_check(struct kvm_vcpu *vcpu)
+>> +{
+>> +	lockdep_assert_irqs_disabled();
+>> +
+>> +	if (lbr_is_enabled(vcpu) && !intel_pmu_lbr_is_availabile(vcpu) &&
+>> +		(vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR))
+>> +		pr_warn_ratelimited("kvm: vcpu-%d: LBR is temporarily unavailable.\n",
+>> +			vcpu->vcpu_id);
+> More unreadable nonsense; when the events go into ERROR state, it's a
+> permanent fail, they'll not come back.
+It's not true.  The guest LBR event with 'ERROR state' or 'oncpu != -1' 
+would be
+lazy released and re-created in the next time the 
+intel_pmu_create_lbr_event() is
+called and it's supposed to be re-scheduled and re-do availability_check() 
+as well.
+
+ From the perspective of the guest user, the guest LBR is only temporarily 
+unavailable
+until the host no longer reclaims the LBR.
+>
+>> +}
+>> +
+>>   struct kvm_pmu_ops intel_pmu_ops = {
+>>   	.find_arch_event = intel_find_arch_event,
+>>   	.find_fixed_event = intel_find_fixed_event,
+>> @@ -662,4 +699,5 @@ struct kvm_pmu_ops intel_pmu_ops = {
+>>   	.reset = intel_pmu_reset,
+>>   	.deliver_pmi = intel_pmu_deliver_pmi,
+>>   	.lbr_cleanup = intel_pmu_lbr_cleanup,
+>> +	.availability_check = intel_pmu_availability_check,
+>>   };
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index 9969d663826a..80d036c5f64a 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -6696,8 +6696,10 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>>   
+>>   	pt_guest_enter(vmx);
+>>   
+>> -	if (vcpu_to_pmu(vcpu)->version)
+>> +	if (vcpu_to_pmu(vcpu)->version) {
+>>   		atomic_switch_perf_msrs(vmx);
+>> +		kvm_x86_ops.pmu_ops->availability_check(vcpu);
+>> +	}
+> AFAICT you just did a call out to the kvm_pmu crud in
+> atomic_switch_perf_msrs(), why do another call?
+In fact, availability_check() is only called here for just one time.
+
+The callchain looks like:
+- vmx_vcpu_run()
+     - kvm_x86_ops.pmu_ops->availability_check();
+         - intel_pmu_availability_check()
+             - intel_pmu_lbr_is_availabile()
+                 - event_is_oncpu() ...
+
+Thanks,
+Like Xu
+>
+>
+
