@@ -2,236 +2,144 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB26AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D105F20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589912433;
-	bh=FMbkHHa+mICkdVdgDDcFfNBj1iV4kInxdudSOyP83lk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HG9KTGhKcbzn6VAiN4PbdbML1HYzjY5oL6drOFB2AOjy2hwjYVCgyeuKV1L4encTt
-	 sudy8W+lTCyVkuPPzVwHVX2K+ye0sn/0OCl1nHCcjk74BCNqnU/SHFAkJBZWyXOADN
-	 czacKQ49r/LbxSN+EGW+OOmU7xZ/8kVBzBG89iUI=
+	by mail.kernel.org (Postfix) with ESMTP id 357122075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgESSUd (ORCPT
+        id S1728948AbgESSUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:20:33 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32857 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESSUc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:20:32 -0400
-Received: by mail-io1-f65.google.com with SMTP id k18so233767ion.0;
-        Tue, 19 May 2020 11:20:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C/+WbZpW6fzoYD8VkS+1aw3FrtrjaYr1YvJ99Voi0R4=;
-        b=kO8SdHtPYtx4WlNekh///W47p5bLJ3HKmJnWO+tJLCb2e8IemaCxZIUTU0AgS80aFH
-         fzLJ2z2YhyeUchBnZVu7KdTC0eUgBGTYZ3Umt3dfU6yTORf6xKHCl6mIlKicXsA9fQbG
-         dx+N2pUM81o2XnPF7khQPlp7KZJ7TWLyEhF8GxRGR/zeXtp5peuFqLQACjDJzHn3VsPX
-         C/YvdGRX8AEwlTBYT1VkxZrzkhAD5rdV/J7JDfdfg2DJes/A+F9XL3rcMKbDu+FMoNNl
-         IGRIiaxjWsqPz6uNn5kLWT5eAqQZ8xO+xBWuOEmRnKX6DZbmEG7twp4KKnkKZyUM1jgA
-         zxyw==
-X-Gm-Message-State: AOAM531fA22VaGrZ6elvjc01gS+9XcjLleJRmoQAnVRCXaKHU2yeL2qb
-        tln5M1Ktts/gkW7f29+C+g==
-X-Google-Smtp-Source: ABdhPJy915OuehRkdPhEfoQo98D64T4fLNa9nG2JB08WidQt3qwfV8ozXd5uAN5DAlsvXCG3xjpzPg==
-X-Received: by 2002:a6b:b685:: with SMTP id g127mr214847iof.192.1589912431059;
-        Tue, 19 May 2020 11:20:31 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j15sm101169ilk.0.2020.05.19.11.20.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:20:29 -0700 (PDT)
-Received: (nullmailer pid 409338 invoked by uid 1000);
-        Tue, 19 May 2020 18:20:28 -0000
-Date:   Tue, 19 May 2020 12:20:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
- to yaml
-Message-ID: <20200519182028.GB342367@bogus>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
- <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+        Tue, 19 May 2020 14:20:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:38082 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728188AbgESSUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 14:20:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 228AC31B;
+        Tue, 19 May 2020 11:20:42 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B67A3F305;
+        Tue, 19 May 2020 11:20:40 -0700 (PDT)
+Date:   Tue, 19 May 2020 19:20:29 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        bhelgaas@google.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Alan Mikhak <alan.mikhak@sifive.com>
+Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
+ size >4GB
+Message-ID: <20200519182029.GA23677@e121166-lin.cambridge.arm.com>
+References: <20200513190855.23318-1-vidyas@nvidia.com>
+ <20200513223508.GA352288@bjorn-Precision-5520>
+ <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+ <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+ <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
+ <59c32bed-3a6a-70ba-0052-65d9466a0790@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+In-Reply-To: <59c32bed-3a6a-70ba-0052-65d9466a0790@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 09:50:57AM +0200, Jonathan Albrieux wrote:
-> Converts documentation from txt format to yaml 
+On Tue, May 19, 2020 at 10:38:39PM +0530, Vidya Sagar wrote:
+
+[...]
+
+> > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > index 42fbfe2a1b8f..a29396529ea4 100644
+> > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > > > > >                       pp->mem = win->res;
+> > > > > >                       pp->mem->name = "MEM";
+> > > > > >                       mem_size = resource_size(pp->mem);
+> > > > > > -                   if (upper_32_bits(mem_size))
+> > > > > > +                   if (upper_32_bits(mem_size) &&
+> > > > > > +                       !(win->res->flags & IORESOURCE_PREFETCH))
+> > > > > >                               dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+> > > > > >                       pp->mem_size = mem_size;
+> > > > > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
+> > > > 
+> > > > That warning was added for a reason - why should not we log legitimate
+> > > > warnings ? AFAIU having resources larger than 4GB can lead to undefined
+> > > > behaviour given the current ATU programming API.
+> > > Yeah. I'm all for a warning if the size is larger than 4GB in case of
+> > > non-prefetchable window as one of the ATU outbound translation
+> > > channels is being used,
+> > 
+> > Is it true for all DWC host controllers ? Or there may be another
+> > exception whereby we would be forced to disable this warning altogether
+> > ?I think so. As I see from the code, ATU's
+> Region-0 is used for config space translation
+> Region-1 is used for non-prefetchable memory translation
+> Region-2 is used for I/O translation
+> So, there is no region reserved for translating prefetchable memory regions.
+
+I am confused. Code in dw_pcie_setup_rc() programs a memory region
+into ATU. What defines that memory as non-prefetchable ?
+
+Code in dw_pcie_host_init() retrieves the bridge windows and
+there may be multiple memory regions.
+
+How is it determined which one ends up in pp->mem ? DT parsing order ?
+
+I reiterate the point - I need DWC maintainers to chime in to define
+how this must work.
+
+I am not conviced that your patch is safe to apply and I need to
+understand how HW works.
+
+> > > but, we are not employing any ATU outbound translation channel for
+> > 
+> > What does this mean ? "we are not employing any ATU outbound...", is
+> > this the tegra driver ? And what guarantees that this warning is not
+> > legitimate on DWC host controllers that do use the ATU outbound
+> > translation for prefetchable windows ?
+> Not Tegra driver but Tegra HW. Tegra HW doesn't need any ATU outbound
+> translation for prefetchable (for that matter any 1-to-1 mapping to
+> generate memory transactions on the PCIe bus).
+
+See above.
+
+Lorenzo
+
+> The Warning is still valid for both Tegra and other DWC based controllers
+> for non-prefetchable memory translation.
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
->  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 --------
->  .../devicetree/bindings/iio/imu/bmi160.yaml   | 84 +++++++++++++++++++
->  2 files changed, 84 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.yaml
-
-Use compatible string for filename: bosch,bmi160.yaml
-
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
-> deleted file mode 100644
-> index 900c169de00f..000000000000
-> --- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -Bosch BMI160 - Inertial Measurement Unit with Accelerometer, Gyroscope
-> -and externally connectable Magnetometer
-> -
-> -https://www.bosch-sensortec.com/bst/products/all_products/bmi160
-> -
-> -Required properties:
-> - - compatible : should be "bosch,bmi160"
-> - - reg : the I2C address or SPI chip select number of the sensor
-> - - spi-max-frequency : set maximum clock frequency (only for SPI)
-> -
-> -Optional properties:
-> - - interrupts : interrupt mapping for IRQ
-> - - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
-> -   input, set to "INT2" if INT2 pin should be used instead
-> - - drive-open-drain : set if the specified interrupt pin should be configured as
-> -   open drain. If not set, defaults to push-pull.
-> -
-> -Examples:
-> -
-> -bmi160@68 {
-> -	compatible = "bosch,bmi160";
-> -	reg = <0x68>;
-> -
-> -	interrupt-parent = <&gpio4>;
-> -	interrupts = <12 IRQ_TYPE_EDGE_RISING>;
-> -	interrupt-names = "INT1";
-> -};
-> -
-> -bmi160@0 {
-> -	compatible = "bosch,bmi160";
-> -	reg = <0>;
-> -	spi-max-frequency = <10000000>;
-> -
-> -	interrupt-parent = <&gpio2>;
-> -	interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-> -	interrupt-names = "INT2";
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
-> new file mode 100644
-> index 000000000000..6b464ce5ed0b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
-> @@ -0,0 +1,84 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/imu/bmi160.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bosch BMI160
-> +
-> +maintainers:
-> +  - can't find a mantainer, author is Daniel Baluta <daniel.baluta@intel.com>
-
-Would help to Cc him perhaps.
-
-> +
-> +description: |
-> +  Inertial Measurement Unit with Accelerometer, Gyroscope and externally
-> +  connectable Magnetometer
-> +  https://www.bosch-sensortec.com/bst/products/all_products/bmi160
-> +
-> +properties:
-> +  compatible:
-> +    const: bosch,bmi160
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: the I2C address or SPI chip select number of the sensor
-> +
-> +  spi-max-frequency:
-> +    maxItems: 1
-> +    description: set maximum clock frequency (required only for SPI)
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: interrupt mapping for IRQ
-
-No need for description if not adding anything unique for this device.
-
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 1
-> +    items:
-> +      enum:
-> +        - INT1
-> +        - INT2
-
-Just the enum is enough.
-
-> +    description: |
-> +      set to "INT1" if INT1 pin should be used as interrupt input, set
-> +      to "INT2" if INT2 pin should be used instead
-> +
-> +  drive-open-drain:
-> +    description: |
-> +      set if the specified interrupt pin should be configured as
-> +      open drain. If not set, defaults to push-pull.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    // Example for I2C
-> +    i2c@78b7000 {
-> +        reg = <0x78b6000 0x600>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        bmi160@68 {
-> +                compatible = "bosch,bmi160";
-> +                reg = <0x68>;
-> +                interrupt-parent = <&gpio4>;
-> +                interrupts = <12 1>;
-> +                interrupt-names = "INT1";
-> +        };
-> +  - |
-> +    // Example for SPI
-> +    spi@78b7000 {
-> +        reg = <0x78b7000 0x600>,
-> +              <0x7884000 0x23000>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        bmi160@0 {
-> +                compatible = "bosch,bmi160";
-> +                reg = <0>;
-> +                spi-max-frequency = <10000000>;
-> +                interrupt-parent = <&gpio2>;
-> +                interrupts = <12 1>;
-> +                interrupt-names = "INT2";
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
+> > 
+> > Can DWC maintainers chime in and clarify please ?
+> > 
+> > > prefetchable window and they can be greater than 4GB in size for all
+> > > right reasons. So, logging a warning for prefetchable region doesn't
+> > > seem correct to me. Please let me know if my understanding is wrong.
+> > 
+> > I think your patch is wrong and it is applied on top of a patch that
+> > is wrong too, so I won't apply yours and it is likely I will revert
+> > Alan's because it seems to solve nothing (and warn spuriously).
+> > 
+> > It is time for people who maintain DWC please to speak up because I
+> > don't have the HW details required to make a judgment.
+> > 
+> > Lorenzo
+> > 
+> > > - Vidya Sagar
+> > > > 
+> > > > Alan ? I want to understand what's the best course of action before
+> > > > merging these patches.
+> > > > 
+> > > > Lorenzo
+> > > > 
