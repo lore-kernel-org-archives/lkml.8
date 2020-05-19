@@ -2,75 +2,103 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F30FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33E972075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D829920888
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:30:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1XVZ5oVE"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QEpthBRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgESS30 (ORCPT
+        id S1728803AbgESSah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:29:26 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39514 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgESS3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:29:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=6uCQIOARttavPA6jMK2O27q7AM5rPupXUJtqotwWi1Q=; b=1XVZ5oVE7XtBh5zBkgH16yxly3
-        xp6tfNbcdSexEsqB5s7AEL7MkxuYEty1CC6UvPZUUq6Szy9LXuMzbIn55KqlHvn2U5ufQxSaaA3Pf
-        l3hZiuWdZwbempjBz5K+jItnAO5s+IzBS3qxDa+/xnBOtl02rgMMs5TVRzptC6dbvYCY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jb6zM-002jfC-Pp; Tue, 19 May 2020 20:29:16 +0200
-Date:   Tue, 19 May 2020 20:29:16 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Dan Murphy <dmurphy@ti.com>, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
-Message-ID: <20200519182916.GM624248@lunn.ch>
-References: <20200519141813.28167-1-dmurphy@ti.com>
- <20200519141813.28167-3-dmurphy@ti.com>
- <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Tue, 19 May 2020 14:30:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgESSag (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 14:30:36 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A954C08C5C0;
+        Tue, 19 May 2020 11:30:36 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49RPZf5VLHz9sRK;
+        Wed, 20 May 2020 04:30:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589913034;
+        bh=SFuRTS9+gsJOEt25G5xbN66octtTZc5pVmdnC8JSOYY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QEpthBRFmd43iIY8p0vuV5Mp3WB2/0eKTluuZ/LZTP8xRONH579DjzRhcHk6SV1oS
+         XO/4z+N+KYk6urcgUBwfjSnx9j1pKYz4WfR/g4AJlXkfyalVHwmmVjEkF546FUtu5X
+         UGAtG7hBJH4w/AJ1KuKmOEuWHZCLAKR9y4WCqD6nhcfr9EqZ6Ml3S/8fV8LOfzpaKd
+         71uEIDujTkcFnYkAmOBVSZSpofByN78wqMs603Ro98A0/uxu5bosOVN+P1+YvLpQHF
+         5l4LmKinHsU/FgTsyg/aGaXSPyD3diNmck9anKsdGqr9zuY1HuJMUQtKvj21tf5lex
+         YmBgOX291z/dg==
+Date:   Wed, 20 May 2020 04:30:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the nfs-anna tree
+Message-ID: <20200520043033.036c78ac@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: multipart/signed; boundary="Sig_/wf5Y6selKu=mRUD6OJSU6pF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 09:58:18AM -0700, Jakub Kicinski wrote:
-> On Tue, 19 May 2020 09:18:11 -0500 Dan Murphy wrote:
-> > If the op-mode for the device is not set in the device tree then set
-> > the strapped op-mode and store it for later configuration.
-> > 
-> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> 
-> ../drivers/net/phy/dp83869.c: In function0 dp83869_set_strapped_mode:
-> ../drivers/net/phy/dp83869.c:171:10: warning: comparison is always false due to limited range of data type [-Wtype-limits]
->   171 |  if (val < 0)
->       |          ^
+--Sig_/wf5Y6selKu=mRUD6OJSU6pF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jakub
+Hi all,
 
-This happens a lot with PHY drivers. The register being read is a u16,
-so that is what people use.
+In commit
 
-Is this now a standard GCC warning? Or have you turned on extra
-checking?
+  049a9d8a9117 ("NFSv4.1 fix rpc_call_done assignment for BIND_CONN_TO_SESS=
+ION")
 
-	Andrew
+Fixes tag
+
+  Fixes: 02a95dee8 ("NFS add callback_ops to nfs4_proc_bind_conn_to_session=
+_callback")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wf5Y6selKu=mRUD6OJSU6pF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7EJckACgkQAVBC80lX
+0Gw40AgAgKe6CQ2f2H1eOxpBpI+V2ulc+2ivYjOW8s5WxndVEN3VN+F+o836/JO6
+TS/WUmcnwXf6pAFULbMCmhOBWPTpIdKIHWgmOKBZiVIaZvtBN0mt2Sq02avbXecN
+itK7/uhvE2Oz8uEmT1eAlkw8Olu+i22PvrXWY9unv0pqaTkEWCd0EceLTWk2sKRx
+5xULqXHpO/5S1VS7E4Ne7Y3hHkZ6rOeeHzD1nqn0gYH/GYDL0HnZZZ1RWqEfM2WT
+qEqeG2g8MzTTvah4RFP00g1/TJ+k8DZO4ok6O3We/Phrf00bIEnuuNxvBj+n8J5v
+/+p9w78wgOzXVdAF4/lxUOtlCsXkYA==
+=heuu
+-----END PGP SIGNATURE-----
+
+--Sig_/wf5Y6selKu=mRUD6OJSU6pF--
