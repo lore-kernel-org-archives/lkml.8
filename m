@@ -2,127 +2,128 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72E5C20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E31E207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589884371;
-	bh=APWdI/sKggcPUHM2EoqZ+F9oniCqmilI7u/Eu8rmUKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LHl5BQe60nTOaFT/s9vkO9y7HGFXgsfbwKhmkSY7gba3YNG7eQlsb/Dp6Mog/xW1I
-	 +9slk+Phs+O0Cl5KKLv67kYUPzv0a+q3EtLLgt+W/NNgjTIWIkL7Yv2sqf4EizEPrj
-	 subNad9xJTeFEbDblVc/eRP8lznwQuE4KgKumCuI=
+	s=default; t=1589884379;
+	bh=Sz3NWQVCvErlN0KG9s3oNfFh9TODvLg02ncE3/8Xexo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=ZlkQT4nTLHAH7qVtbHNKk9NW0PAIrMfeSgvHTjADw/JlV5AiiA1TFjM+HLhe5l1e7
+	 d4C4ckBL3zy6jtDrVUILIWPI4lEBEUkrVPekYp0dI7294JPsQiBQIsDoC+9LInp/ik
+	 e6gaH7TcKb+cf8xK0MzVPdBYaPF1cOGbK/w9l5tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgESKcv (ORCPT
+        id S1728715AbgESKc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43650 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 06:32:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgESKcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:32:50 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1726412AbgESKc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 06:32:58 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D6E206BE;
-        Tue, 19 May 2020 10:32:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 281F0206BE;
+        Tue, 19 May 2020 10:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589884369;
-        bh=APWdI/sKggcPUHM2EoqZ+F9oniCqmilI7u/Eu8rmUKo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bb28hbkXTcnwyAr3AkQbQd7zAtdLWJXiwF/dtuByEyX/N6X+HswiTH+JVTDGBxke9
-         PRaBWt7ep0OcLP0hk1XvvEZBbrGuzZtn0CFZ5SqDVCMU8CkMuKgVJvzlMPWmK1ng2s
-         mB1xyHCzSfVJvy6NpiLF0vKH/DThsK16CNtbWd+U=
-Date:   Tue, 19 May 2020 11:32:47 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
-Message-ID: <20200519103247.GA4611@sirena.org.uk>
-References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
- <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
- <20200508113751.GD4820@sirena.org.uk>
- <20200510002039.hwahqasnnceowskz@mobilestation>
- <20200511212506.GA23852@sirena.org.uk>
- <20200518000542.ohtpem3lo2pbixbu@mobilestation>
- <20200518151946.GH8699@sirena.org.uk>
- <20200518211727.jrzo6tn7slqzxoyl@mobilestation>
+        s=default; t=1589884377;
+        bh=Sz3NWQVCvErlN0KG9s3oNfFh9TODvLg02ncE3/8Xexo=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=0qDdhJET96SLwW8UIT0ZyZa7u3uQg8aAlsr4fHIzN2JCfnX4F2MgZiXQGrwMHMVzy
+         CLr1/N2zrh33/ssJzJRVPXhftetT0ryTUVUv5BD/gA5Ovq9AfT0AcJwW9grQbFB5hc
+         j2TSyYJTnNd1097VcdLKriKvqOhk55eFHeSDII1k=
+Message-ID: <a9793df5b119b81b995b903505006076811227ed.camel@kernel.org>
+Subject: Re: [PATCH v2] ceph: don't return -ESTALE if there's still an open
+ file
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 19 May 2020 06:32:55 -0400
+In-Reply-To: <20200518174726.GA84496@suse.com>
+References: <20200518174726.GA84496@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
-Content-Disposition: inline
-In-Reply-To: <20200518211727.jrzo6tn7slqzxoyl@mobilestation>
-X-Cookie: Do not write below this line.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2020-05-18 at 18:47 +0100, Luis Henriques wrote:
+> Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+> a file handle to dentry"), this fixes another corner case with
+> name_to_handle_at/open_by_handle_at.  The issue has been detected by
+> xfstest generic/467, when doing:
+> 
+>  - name_to_handle_at("/cephfs/myfile")
+>  - open("/cephfs/myfile")
+>  - unlink("/cephfs/myfile")
+>  - sync; sync;
+>  - drop caches
+>  - open_by_handle_at()
+> 
+> The call to open_by_handle_at should not fail because the file hasn't been
+> deleted yet (only unlinked) and we do have a valid handle to it.  -ESTALE
+> shall be returned only if i_nlink is 0 *and* i_count is 1.
+> 
+> This patch also makes sure we have LINK caps before checking i_nlink.
+> 
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+> Hi!
+> 
+> (and sorry for the delay in my reply!)
+> 
+> So, from the discussion thread and some IRC chat with Jeff, I'm sending
+> v2.  What changed?  Everything! :-)
+> 
+> - Use i_count instead of __ceph_is_file_opened to check for open files
+> - Add call to ceph_do_getattr to make sure we have LINK caps before
+>   accessing i_nlink
+> 
+> Cheers,
+> --
+> Luis
+> 
+>  fs/ceph/export.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+> index 79dc06881e78..e088843a7734 100644
+> --- a/fs/ceph/export.c
+> +++ b/fs/ceph/export.c
+> @@ -172,9 +172,16 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+>  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+>  {
+>  	struct inode *inode = __lookup_inode(sb, ino);
+> +	int err;
+> +
+>  	if (IS_ERR(inode))
+>  		return ERR_CAST(inode);
+> -	if (inode->i_nlink == 0) {
+> +	/* We need LINK caps to reliably check i_nlink */
+> +	err = ceph_do_getattr(inode, CEPH_CAP_LINK_SHARED, false);
+> +	if (err)
+> +		return ERR_PTR(err);
+> +	/* -ESTALE if inode as been unlinked and no file is open */
+> +	if ((inode->i_nlink == 0) && (atomic_read(&inode->i_count) == 1)) {
+>  		iput(inode);
+>  		return ERR_PTR(-ESTALE);
+>  	}
+> 
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Looks good. Merged into testing branch.
 
-On Tue, May 19, 2020 at 12:17:27AM +0300, Serge Semin wrote:
+Thanks!
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-> Here is what we need to do to perform the EEPROM-read operation:
-> 1) Enable EEPROM-read mode.
-> 2) Initialize a corresponding registers with a number of SPI transfer words
->    (with bits-per-word taken into account) to read.
-> 3) Push opcode + address + dummy bytes into the Tx FIFO. When it's done and
->    the Tx FIFO is empty, the controller will proceed with read operations by
->    pushing zeros (or ones, don't remember what level it's by default) to MOSI
->    and pulling data from MISO into the RX FIFO.
-> 4) Keep up with getting data from the Rx FIFO so one wouldn't get overflown.
-
-> Regarding programming write each time. Well, it's up to the driver implementation.
-> If opcode, address, dummy bytes and number of words to read are the same as before,
-> then re-programming isn't required.
-
-Ah, nice.  This should be useful for far more than just flash - most
-register reads will also be able to take advantage of this, they follow
-a similar write then read pattern.
-
---KsGdsel6WgEHnImy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7DtcwACgkQJNaLcl1U
-h9BprQf/X3CrvqOEDZw4gFuSifMWeN7xtcsAEMLPFliUUq9vUY170vk9WBvEWXcU
-8+KvebwsMCXWGekf3ySdQN5xQlLrIZ86/mMpntqTMg2Gsvxm7TsoCyW+K0JO/6Ef
-2I+nIT+t92zUZhPbyzk7kmeKmC/Jsgg9zwHQpyN0+XjQlCUy0lCYhdR/P1y/5qsV
-By+n3t6C5Vi6Dnz2wrYL+gqoH6quWA/wGQe3o0xtFyZuQIVgKogTOrgFOFW8fSBK
-NUFEEZjIMctowJ27+FDhh5NXoJXqDUUkbzKOYGEf2Nja+Kk47clbgF/tDwfMlX/3
-2duleovaghp6/F5OsQSe05zjfEutIg==
-=0tWj
------END PGP SIGNATURE-----
-
---KsGdsel6WgEHnImy--
