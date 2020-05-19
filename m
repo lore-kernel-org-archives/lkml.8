@@ -2,133 +2,176 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0223C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC1B20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1A120674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgESRy4 (ORCPT
+        id S1729233AbgESR4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:54:56 -0400
-Received: from mga01.intel.com ([192.55.52.88]:45549 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgESRy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:54:56 -0400
-IronPort-SDR: Q43gCF6nAzm+KczJ8J8u3FB2Z1E14Btw9dTRv3+LSIsfrF0Ppw4XdNGCyHP2vyKmW2Xywhe0uX
- SzHX4OB1djvA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 10:54:54 -0700
-IronPort-SDR: hpPnUjjcjcPumfqHPKVthzvzlEuENKNnPVgsTW0wCgzE3FsftI1zpMToUV9TUSRC9AinDR/6dS
- tFZ1ILxHWeow==
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="439705633"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.255.229.46]) ([10.255.229.46])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 10:54:53 -0700
-Subject: Re: [PATCH V5 4/4] x86/resctrl: Use appropriate API for strings
- terminated by newline
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>, kuo-lang.tseng@intel.com,
-        ravi.v.shankar@intel.com, Ingo Molnar <mingo@redhat.com>,
-        Babu Moger <babu.moger@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <cover.1589844108.git.reinette.chatre@intel.com>
- <a953992d99a1930703cba1362a3005d517c4cb33.1589844108.git.reinette.chatre@intel.com>
- <CAHp75Vc_VA-2UNJh7epe+oQEiU3WBedomLbAVTD_L4_ocvt8Dw@mail.gmail.com>
- <4a9603b8-32fb-024a-e2f5-14e95b4e3763@intel.com>
- <20200519160710.GK1634618@smile.fi.intel.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <87d00e95-7944-2fa4-fd02-1662ec4382fe@intel.com>
-Date:   Tue, 19 May 2020 10:54:52 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 13:56:04 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2227 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726059AbgESR4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:56:04 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id D3A42D0D0FE715D87CBA;
+        Tue, 19 May 2020 18:56:02 +0100 (IST)
+Received: from localhost (10.47.86.149) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 19 May
+ 2020 18:56:02 +0100
+Date:   Tue, 19 May 2020 18:55:35 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 3/4] iio: imu: bmi160: added regulator support
+Message-ID: <20200519185535.00003cb7@Huawei.com>
+In-Reply-To: <20200519075111.6356-4-jonathan.albrieux@gmail.com>
+References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
+        <20200519075111.6356-4-jonathan.albrieux@gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20200519160710.GK1634618@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.86.149]
+X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Tue, 19 May 2020 09:50:59 +0200
+Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
 
-On 5/19/2020 9:07 AM, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 08:50:22AM -0700, Reinette Chatre wrote:
->> On 5/19/2020 1:28 AM, Andy Shevchenko wrote:
->>> On Tue, May 19, 2020 at 2:50 AM Reinette Chatre
->>> <reinette.chatre@intel.com> wrote:
-> 
-> ...
-> 
->>>> +       ret = sysfs_match_string(rdt_mode_str, buf);
->>>> +       if (ret < 0) {
->>>> +               rdt_last_cmd_puts("Unknown or unsupported mode\n");
->>>> +               ret = -EINVAL;
->>>> +               goto out;
->>>> +       }
->>
->> From your previous email ...
->>
->>>> +       ret = sysfs_match_string(rdt_mode_str, buf);
->>>> +       if (ret < 0) {
->>>> +               rdt_last_cmd_puts("Unknown or unsupported mode\n");
->>>
->>>> +               ret = -EINVAL;
->>>
->>> This is redundant.
->>
->> I understand that shadowing an error code is generally of concern. In
->> this case the error code is set to -EINVAL to ensure that it is the same
->> error code that was returned to user space originally and will continue
->> to be so no matter what changes may come to sysfs_match_string().
-> 
-> It returns -EINVAL and if that will be ever changed this driver would be one of
-> hundreds who suffers.
+> v2: fixed missing description
 
-Not if we keep this change ... but that is no longer of concern with the
-removal of the check as you propose later.
+Don't put change log here....
+> 
+> Add vdd-supply and vddio-supply support. Without this support vdd and vddio
+> should be set to always-on in device tree
+
+Kind of the opposite.  If they are always on we don't have to provide them
+in the device tree.
+
+A few trivial things inline.
 
 > 
-> ...
-> 
->>> Can't we unify latter with a former like ...
-> 
->> This would have been ideal if done from the start but currently "0" is
->> returned if the current mode is pseudo-locked and user attempts to
->> change the mode to pseudo-locked. Thus, to maintain the current user
->> interface the check if user wants to set pseudo-locked mode is moved
->> after the check if new mode is same as existing mode and thus not
->> unified because that will result in an error returned always when user
->> requests pseudo-locked mode.
-> 
-> Ah, I see now.
-> 
-> But we can then drop the check from sysfs_match_string() returned value, like
-> 
-> 	user_m = sysfs_match_string();
-> 	if (...) {
-> 		...
-> 	} else { // w/o even checking for the PSEUDO_LOCKED
-> 		...
-> 		goto out;
-> 	}
-> 
-> Can we?
-> 
+> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> ---
 
-Yes, we can. Will do.
+Change log goes here so we don't end up keeping it in the git log.
 
-Reinette
+>  drivers/iio/imu/bmi160/bmi160.h      |  2 ++
+>  drivers/iio/imu/bmi160/bmi160_core.c | 27 ++++++++++++++++++++++++++-
+>  2 files changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
+> index 621f5309d735..923c3b274fde 100644
+> --- a/drivers/iio/imu/bmi160/bmi160.h
+> +++ b/drivers/iio/imu/bmi160/bmi160.h
+> @@ -3,10 +3,12 @@
+>  #define BMI160_H_
+>  
+>  #include <linux/iio/iio.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  struct bmi160_data {
+>  	struct regmap *regmap;
+>  	struct iio_trigger *trig;
+> +	struct regulator_bulk_data supplies[2];
+>  };
+>  
+>  extern const struct regmap_config bmi160_regmap_config;
+> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
+> index 6af65d6f1d28..9bbe0d8e6720 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_core.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/irq.h>
+>  #include <linux/of_irq.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/triggered_buffer.h>
+> @@ -709,6 +710,12 @@ static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
+>  	unsigned int val;
+>  	struct device *dev = regmap_get_device(data->regmap);
+>  
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	ret = regmap_write(data->regmap, BMI160_REG_CMD, BMI160_CMD_SOFTRESET);
+>  	if (ret)
+>  		return ret;
+> @@ -793,9 +800,17 @@ int bmi160_probe_trigger(struct iio_dev *indio_dev, int irq, u32 irq_type)
+>  static void bmi160_chip_uninit(void *data)
+>  {
+>  	struct bmi160_data *bmi_data = data;
+> +	struct device *dev = regmap_get_device(bmi_data->regmap);
+> +	int ret;
+>  
+>  	bmi160_set_mode(bmi_data, BMI160_GYRO, false);
+>  	bmi160_set_mode(bmi_data, BMI160_ACCEL, false);
+> +
+> +	ret = regulator_bulk_disable(ARRAY_SIZE(bmi_data->supplies),
+> +				     bmi_data->supplies);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to disable regulators: %d\n", ret);
+> +	}
+No need for brackets around a 1 line if block
+
+	if (ret)
+		dev_err(dev, "failed to disable regulators: %d\n", ret);
+
+>  }
+>  
+>  int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+> @@ -815,6 +830,16 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+>  	dev_set_drvdata(dev, indio_dev);
+>  	data->regmap = regmap;
+>  
+> +	data->supplies[0].supply = "vdd";
+> +	data->supplies[1].supply = "vddio";
+> +	ret = devm_regulator_bulk_get(dev,
+> +				      ARRAY_SIZE(data->supplies),
+> +				      data->supplies);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to get regulators: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	ret = bmi160_chip_init(data, use_spi);
+>  	if (ret)
+>  		return ret;
+> @@ -853,6 +878,6 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+>  }
+>  EXPORT_SYMBOL_GPL(bmi160_core_probe);
+>  
+> -MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com");
+> +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com>");
+
+Good fix but shouldn't be in this patch.   Put it a separate patch on it's own.
+
+>  MODULE_DESCRIPTION("Bosch BMI160 driver");
+>  MODULE_LICENSE("GPL v2");
+
+
