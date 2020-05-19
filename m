@@ -2,127 +2,327 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF44C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC2382070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605832070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:10:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hZkkkcYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgESGJm convert rfc822-to-8bit (ORCPT
+        id S1728352AbgESGKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 02:09:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35114 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgESGJl (ORCPT
+        Tue, 19 May 2020 02:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbgESGKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 02:09:41 -0400
-Received: from mail-pg1-f200.google.com ([209.85.215.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1javRa-00085h-Iz
-        for linux-kernel@vger.kernel.org; Tue, 19 May 2020 06:09:38 +0000
-Received: by mail-pg1-f200.google.com with SMTP id r2so9896551pgd.23
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:09:38 -0700 (PDT)
+        Tue, 19 May 2020 02:10:12 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDC71C05BD0A
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:10:11 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id q16so5190442plr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CP9XCQfG2ZSOCOyU28y4kw4vgrG8+y1NqeqZ3rzvM4g=;
+        b=hZkkkcYr7TCepnvL55P/6J8dHRjg8REJE3ncFrbAt/ZVpo8361WTK9qQxzMdecrWF9
+         RBFtUujixVKrbkiRapSgr7z9gswuo2So2PknEonPYqsXnwJ/twjD5M56KBOc/dp8gvkt
+         ZsWUn8l57ZiaUouxLK07hfkQE/4wtT7sraROJVua7dJ607aPyGHJLqtv7EGEbDKSopYN
+         dGS1MmaPY0m58MSjwU3fuy1/r1Vse7xZpW2LXzRNW3YkVaMvIwEUl2OxQDJFVuDQfVr/
+         tv2/lHX365YykcVE5S8hp7jbx/jXO3ZwIHojI8JWajIE+LgG/sYgbvTJV0s7yx19ThAN
+         i+2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=DcZBTzbzjTjp7Ciwf677pVVb0h46IoEGoPMmMlLbb5M=;
-        b=nrMIHNliwKbbr8SFBWL+jI5rwelCldthEzlGXXj9B37t7/CEiH+G9fxD0j5tKHubJa
-         JJpLb/KTDymNYROmi1ZtBnjPByi6MEv9V8khjKcrIJv+kcDIlvq2yYsewMSk4Us/mU3d
-         m1/fa0218KbxxACi5f7oiWQmXO+BgxJT5Eb96HRr3QaWPOVLGf+8UnGfPnOLBafqpC32
-         N5wm+lu7id2somHmBP1vvkZoL9AGjEc9B9z9wF2l6EN6I20xRodzZOAOW05RInv4AAUS
-         QqQFP95e+ABqyo7o6ltUi5PM7VqkCNnYzurl/tzR1LZMJGTpAurbQPAnWrC7UZ7WJ3Eu
-         mcWA==
-X-Gm-Message-State: AOAM5303UVPeyLmWMrxcwOjlWmHALE0+tJSjkiKHwUhBxBi1bWXUyc8x
-        aZf6sBiYAUIYVtnnk6xePyDn+SehJPZy2FbaavKtvXkLlXxkMxJ3OSEzCHcdNGZFdPWmkddp76n
-        uiGA6ohaHK2O0GNiRQP+pO6YlHMeH4thUayk9U/Xwpw==
-X-Received: by 2002:a17:90a:ee91:: with SMTP id i17mr3044259pjz.45.1589868576730;
-        Mon, 18 May 2020 23:09:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJynoSVhg5x2eLcaVDrdt7BZjkwwAqw4hmDKS0ppPXDDJayTgx1/jvbxkou6+8x2E+ERpCT/xw==
-X-Received: by 2002:a17:90a:ee91:: with SMTP id i17mr3044238pjz.45.1589868576382;
-        Mon, 18 May 2020 23:09:36 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id z23sm3204439pga.86.2020.05.18.23.09.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 May 2020 23:09:35 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] libata: Use per port sync for detach
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <1470d3de-7785-9f05-2b12-9272ac0005b8@huawei.com>
-Date:   Tue, 19 May 2020 14:09:33 +0800
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <826B8B0D-29EE-4C4F-BBD3-B6442144CA65@canonical.com>
-References: <20200515110916.11556-1-kai.heng.feng@canonical.com>
- <555101fd-71bc-fa0b-98c2-69249bb3eda6@huawei.com>
- <15CFC20D-B8CB-43D7-8973-60E82DE6B894@canonical.com>
- <91334913-eac8-c8e0-ced6-f1bb8d8b2507@huawei.com>
- <1470d3de-7785-9f05-2b12-9272ac0005b8@huawei.com>
-To:     John Garry <john.garry@huawei.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CP9XCQfG2ZSOCOyU28y4kw4vgrG8+y1NqeqZ3rzvM4g=;
+        b=FO74Vwe0JBhGh7U0EsUV6ZF+i9FjGsDQsH3HxMlqtCNIDgEkrkDS1Q0c7wmxWRVmeb
+         rArCQJ/QJ9Nd3npq2u094+Su+doqboSWtgyYXgrq3YUC7s2fP3EbZAJvTWWmC2iR6Zd3
+         4y2O+M6awb7EgIRxuRT++5v3zT7qLmKycKVOniJ1CRy3icNrBIExuaGVrR17zctiPc6k
+         EP+/jyd5rv435Rv9S0oo6yP9ucwNTNZu1OwGgs8eDHHg7ZVA6VaJZf3mkHndCm1tvYwb
+         9ieH5jWSNUYi5FCdoxyxe5KtIJcm81epLIFFFICssc1vg6e4sIvQ+hP+BUvo/c+cekbj
+         k3+g==
+X-Gm-Message-State: AOAM533epS1d/gP/h4eIx3xE2aHOKzRldM1+xdlauRzDc6gL66LPCq/r
+        BVQO0iOLDj4ILuwRhLKmD+/4fg==
+X-Google-Smtp-Source: ABdhPJxbG0yuA+R347TJnZVfPH4vBAWdEp+84InhnBnw+gWgnk4cX8ff7f9TbNmp1nlrQvZlVFFjOQ==
+X-Received: by 2002:a17:90a:8b:: with SMTP id a11mr3227727pja.163.1589868611200;
+        Mon, 18 May 2020 23:10:11 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id cv21sm1187567pjb.23.2020.05.18.23.10.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 23:10:10 -0700 (PDT)
+Date:   Mon, 18 May 2020 23:08:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Eli Riggs <eli@rje.li>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: Add initial sm6125 SoC support
+Message-ID: <20200519060848.GB2165@builder.lan>
+References: <20200517115410.3374-1-eli@rje.li>
+ <20200517115410.3374-2-eli@rje.li>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200517115410.3374-2-eli@rje.li>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On Sun 17 May 04:54 PDT 2020, Eli Riggs wrote:
 
-> On May 18, 2020, at 23:21, John Garry <john.garry@huawei.com> wrote:
+> Initial support for SM6125 SoC. CPUs, fixed clocks,
+> interrupt controller, and UART.
 > 
-> On 18/05/2020 10:06, John Garry wrote:
->> On 15/05/2020 18:48, Kai-Heng Feng wrote:
->>>> 841]  ret_from_fork+0x10/0x1c
->>>> [   28.393400] ---[ end trace 9972785c7052048f ]---
->>>> [   28.435826] ahci 0000:b4:03.0: SSS flag set, parallel bus scan disabled
->>> Can you please test the following patch:
->>> 
->>> diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
->>> index 474c6c34fe02..51ee0cc4d414 100644
->>> --- a/drivers/ata/libata-eh.c
->>> +++ b/drivers/ata/libata-eh.c
->>> @@ -3583,8 +3583,10 @@ int ata_eh_recover(struct ata_port *ap, ata_prereset_fn_t prereset,
->>>          rc = 0;
->>>          /* if UNLOADING, finish immediately */
->>> -       if (ap->pflags & ATA_PFLAG_UNLOADING)
->>> +       if (ap->pflags & ATA_PFLAG_UNLOADING) {
->>> +               ap->pflags |= ATA_PFLAG_UNLOADED;
->>>                  goto out;
->>> +       }
->>> 
->>> It's only compile-tested, many drivers panic with CONFIG_DEBUG_TEST_DRIVER_REMOVE enabled, so the system I have can't even boot properly:(
+> This DTSI is ported from the forked vendor version from
+> XiaoMi which can be found at [0]. It seems internally
+> this board is referred to as "Trinket".
 > 
-> According to the comment for async_synchronize_cookie(), we sync upto (but excluding) the cookie:
+> Since GCC isn't upstreamed yet, we use dummy clocks for GENI.
 > 
-> /**
-> * async_synchronize_cookie - synchronize asynchronous function calls with cookie checkpointing
-> *
-> * This function waits until all asynchronous function calls prior to @cookie
-> * have been done.
+> [0]: https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/willow-p-oss/arch/arm64/boot/dts/qcom/trinket.dtsi
 > 
-> So maybe it should be:
+> Signed-off-by: Eli Riggs <eli@rje.li>
+> ---
+>  arch/arm64/boot/dts/qcom/sm6125.dtsi | 201 +++++++++++++++++++++++++++
+>  1 file changed, 201 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm6125.dtsi
 > 
-> +	for (i = 0; i < host->n_ports; i++)
-> +		async_synchronize_cookie(host->ports[i]->cookie + 1);
-> 
-> That is how other callsites use this API, and that change resolves the WARN for me.
+> diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> new file mode 100644
+> index 0000000000000..4931402d20c9d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> @@ -0,0 +1,201 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 
-Thanks for catching this up!
-Let me ask the user to test it, and I'll send v2 base on this.
+Please use dual GPL/BSD license for dts files, if you can.
 
-Kai-Heng
+> +// Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+> +// Copyright (C) 2019 XiaoMi, Inc.
+> +// Copyright (C) 2020 Eli Riggs <eli@rje.li>
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	interrupt-parent = <&intc>;
+> +
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	chosen { };
+> +
+> +	clocks {
+> +		xo_board: xo-board {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <19200000>;
+> +			clock-output-names = "xo_board";
+> +		};
+> +		sleep-clk {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <32000>;
+> +			clock-output-names = "sleep_clk";
+> +		};
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +		CPU0: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1638>;
+> +			d-cache-size = <0x10000>;
+> +			i-cache-size = <0x10000>;
+> +		};
+> +		CPU1: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x101>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1638>;
+> +			d-cache-size = <0x10000>;
+> +			i-cache-size = <0x10000>;
+> +		};
+> +		CPU2: cpu@102 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x102>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1638>;
+> +			d-cache-size = <0x10000>;
+> +			i-cache-size = <0x10000>;
+> +		};
+> +		CPU3: cpu@103 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x103>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1638>;
+> +			d-cache-size = <0x10000>;
+> +			i-cache-size = <0x10000>;
+> +		};
+> +		CPU4: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+> +			d-cache-size = <0x8000>;
+> +			i-cache-size = <0x8000>;
+> +		};
+> +		CPU5: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x1>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+> +			d-cache-size = <0x8000>;
+> +			i-cache-size = <0x8000>;
+> +		};
+> +		CPU6: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x2>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+> +			d-cache-size = <0x8000>;
+> +			i-cache-size = <0x8000>;
+> +		};
+> +		CPU7: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo260";
+> +			reg = <0x0 0x3>;
+> +			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+> +			d-cache-size = <0x8000>;
+> +			i-cache-size = <0x8000>;
+> +		};
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&CPU4>;
+> +				};
+> +				core1 {
+> +					cpu = <&CPU5>;
+> +				};
+> +				core2 {
+> +					cpu = <&CPU6>;
+> +				};
+> +				core3 {
+> +					cpu = <&CPU7>;
+> +				};
+> +			};
+> +			cluster1 {
+> +				core0 {
+> +					cpu = <&CPU0>;
+> +				};
+> +				core1 {
+> +					cpu = <&CPU1>;
+> +				};
+> +				core2 {
+> +					cpu = <&CPU2>;
+> +				};
+> +				core3 {
+> +					cpu = <&CPU3>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		/* We expect the bootloader to fill this in */
+> +		reg = <0 0 0 0>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
+> +		clock-frequency = <19200000>;
+> +	};
+> +
+> +	soc: soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
 
+In order to describe the dma-ranges properly the address-cells needs to
+be 2, so please make both of these 2 from the start.
+
+> +		ranges = <0 0 0 0xffffffff>;
+> +		compatible = "simple-bus";
+> +
+> +		intc: interrupt-controller@f200000 {
+> +			compatible = "arm,gic-v3";
+> +			reg = <0xf200000 0x10000>,	/* GICD */
+> +			      <0xf300000 0x100000>;	/* GICR * 8 */
+
+Please pad addresses to 8 digits and please sort nodes under /soc by
+address.
+
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			interrupt-controller;
+> +			#redistributor-regions = <1>;
+> +			redistributor-stride = <0x0 0x20000>;
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		/* This GENI and its children actually use GCC clocks,
+> +		 * but the bootloader has already set them up for us.
+> +		 * xo_board is used as a dummy here so the driver doesn't
+> +		 * give up.
+> +		 */
+
+Given that you won't get very far without GCC and e.g.  pinctrl driver I
+would prefer to see some patches for those as well, to ensure that this
+will be able to go beyond basic UART.
+
+Regards,
+Bjorn
+
+> +		qupv3_0: geniqup@4ac0000 {
+> +			compatible = "qcom,geni-se-qup";
+> +			reg = <0x4ac0000 0x2000>;
+> +			clock-names = "m-ahb", "s-ahb";
+> +			clocks = <&xo_board>, <&xo_board>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			qupv3_se4_2uart: serial@4a90000 {
+> +				compatible = "qcom,geni-debug-uart";
+> +				reg = <0x4a90000 0x4000>;
+> +				interrupts = <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>;
+> +				clock-names = "se";
+> +				clocks = <&xo_board>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.20.1
 > 
-> Thanks,
-> John
-
