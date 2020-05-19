@@ -2,128 +2,154 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BEFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C18C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9A8207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589906013;
-	bh=G0hjq1FuAIUXSXt7AARyzJ7voi2NiTJEEExK1h2Iz54=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EO+MJ6EV+1RAiwJwbivXxTbPmKox4+h9uWWm7caa8F36TRGGMFNWNjSDKTnO3bcoW
-	 +IgvYU6RIlTJZs9ttTt6+q2F04Q3BkKTWI9p1zikV4LdVBsnhSra88s2y1i4BTFoyb
-	 5F4MgLJ3CXkh1bUCwpkta+gO7e3RV2Mp+VJXnzGw=
+	by mail.kernel.org (Postfix) with ESMTP id F26B720709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXXIEkHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgESQdc (ORCPT
+        id S1729498AbgESQds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:33:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47842 "EHLO
+        Tue, 19 May 2020 12:33:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgESQd1 (ORCPT
+        with ESMTP id S1729488AbgESQdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:33:27 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9388EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:33:27 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id g1so400405ljk.7
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:33:27 -0700 (PDT)
+        Tue, 19 May 2020 12:33:43 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E863BC08C5C0;
+        Tue, 19 May 2020 09:33:41 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id c12so40979lfc.10;
+        Tue, 19 May 2020 09:33:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TFvy+u64rADS0X9wXPVDcnjojb1U9iWCN3n097gO97s=;
-        b=KITgpUd5bP2WD+I3Ft3adLmt6MH7MS4MFJexni61RXcXlzD9Gqjwa8Lmdkq9TYyfqS
-         KL4aFjs9x04ZYvGYs2IsxZG5dgyhwKLIBJrjoMKhrn6xZPweQeBnKjN1RmntmQCr96TY
-         jycjBR645lH/xqU7rOHokwZ9wup3usfS+9Z3A=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=erHld5g8aUsGObcGGn0MGFVIEHLOUjB0Us6LDfsWtwI=;
+        b=PXXIEkHbyn+P/kMEEJSfC4wL0O4hX4OmmwcfZbc+VOa1IlbTxAww8MjZF1eb69czSl
+         JhNxWfdAvNvf0aLOJ2zIgjjWjoo3/qMuhePXkwjT47u0273RtTb2w6fbghDsX1IyOsh7
+         ycbxPguVWsvQKY0q2jHaG22jnYYiiQMY92Rhi39x4/Lpu35VITIeAg19c9SUDG8w/qVo
+         OX3zjE3HtGEFaPiApNAXpWAwHWvFp5S5zxBcHjnSAgOQpvSbZOc664cbBcgISbUKtgLG
+         FhgDukKAHwsL4iNX8v0Uc6U3aGczmzdO5M2bQ+S/NnIv/eLlwVXMGR8NYl2RmzgB+wk1
+         u8mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TFvy+u64rADS0X9wXPVDcnjojb1U9iWCN3n097gO97s=;
-        b=jVtrPhc5RQhKkX/cynKv6lRxPjfIf5/tjP14XUZJxZeSQ8YeR+JmLChJf5yqFd7vdd
-         L0iGR6u8m6i/cMdNEHdrFCSAPrU6+Ii7K/5sMf9jdJLQs4Vn8RLLp3EWTLXNW+eC2nsr
-         R96If2Nhsg9ehP1OzjNwTfitXuVtoVVJEjNJbzdbmcbwKpj9HCL5QWCFbA7yd+VZCMM2
-         9eXOzjD77tTGYWixvmXkvcWtRq7/XjpUM6/vwE06Dosf9XzcWVdSQkYVy2dlIzeybgvA
-         k05mUrMhg8rnCT51R96gq5kqwHbRn1HHx9Ql1dQ9I2Aj8CO8qg8kK9MHMaiybkrKHyjI
-         zMVg==
-X-Gm-Message-State: AOAM531M8QoxTkg304zu0ylIm5PFUFfkEYjihN4SrB+bfqb1tQJLY8Jz
-        46R3M7zcIhpgeVkW3YsI1WiDCr8vvGs=
-X-Google-Smtp-Source: ABdhPJxymYeP5KmpqzqjbQZj9VFCTDcr1FUkh38/vdM4aZ55TnlaGMERsfjkrCgf8t7dm9ITjJDRYg==
-X-Received: by 2002:a2e:b16e:: with SMTP id a14mr185628ljm.70.1589906005293;
-        Tue, 19 May 2020 09:33:25 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id x11sm9288064lfe.6.2020.05.19.09.33.22
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=erHld5g8aUsGObcGGn0MGFVIEHLOUjB0Us6LDfsWtwI=;
+        b=mZVYCtG+b8MGjjdEASra3n+ImZWjkBDnrWDrC04vcBrkKpwVrAzsBgrLbKLTXgh3yR
+         /2fn0nTzN+q2YQxeqF9vf0MQgbBA0peUj4mfnBgY7B2h6ExnN2tPKoAeKTGRcbaLgyw7
+         /EHdPZ3vbE2Oh0aZi1Ifok1uZdAI61FFAAarRYs64E1Z1tMXUOi/TqG5L3LZNIIbZyld
+         ceCYu6T93g6eN86KXYKA83yokL8qi4zJdYX2NlvVdODRfQFKshE6CqH6XxIXzXdHnPDp
+         xtcjFHup8nGbEc/qjM5zHoe3pANHaDpaOxD+GnsyCqhiSix3mPuPWd3hpbN164eFfKFT
+         piZw==
+X-Gm-Message-State: AOAM531y+Ayjle6mwW5EvlH6xxYXtEVRvsYkdKpecs7K+YN5emUbOIm/
+        jAxzSxZP/Ohh6GqO7ruNWANN11Iw
+X-Google-Smtp-Source: ABdhPJynTG9WE/2wz7rU96llUm+O8M3VCxmsoLGn8GGEC/AtLXD3ecQSqJWInxjS2UgGX4APrbMdJA==
+X-Received: by 2002:ac2:5ccf:: with SMTP id f15mr15638072lfq.216.1589906019877;
+        Tue, 19 May 2020 09:33:39 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id v4sm52411ljj.104.2020.05.19.09.33.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 09:33:23 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id u15so432205ljd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:33:22 -0700 (PDT)
-X-Received: by 2002:a2e:9641:: with SMTP id z1mr145949ljh.201.1589906002260;
- Tue, 19 May 2020 09:33:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200519134449.1466624-1-hch@lst.de> <20200519134449.1466624-14-hch@lst.de>
-In-Reply-To: <20200519134449.1466624-14-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 19 May 2020 09:33:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjg6v1NU31ku2aAMfX7Yu0oDKRvKeBJVGZFQB7AjcwhAA@mail.gmail.com>
-Message-ID: <CAHk-=wjg6v1NU31ku2aAMfX7Yu0oDKRvKeBJVGZFQB7AjcwhAA@mail.gmail.com>
-Subject: Re: [PATCH 13/20] maccess: always use strict semantics for probe_kernel_read
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-parisc@vger.kernel.org,
-        linux-um <linux-um@lists.infradead.org>,
-        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
+        Tue, 19 May 2020 09:33:39 -0700 (PDT)
+Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
+ device-tree properties
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20200516154314.14769-1-digetx@gmail.com>
+ <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
+ <b634e7a5-9a30-3bd1-126d-be62e4dd73e1@gmail.com>
+ <20200519162444.GD2113674@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b4eb368e-adc2-7b77-3ae9-fefdcfddaf3d@gmail.com>
+Date:   Tue, 19 May 2020 19:33:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200519162444.GD2113674@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 6:45 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> +
-> +       if (IS_ENABLED(CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE) &&
-> +           compat && (unsigned long)unsafe_ptr < TASK_SIZE)
-> +               ret = probe_user_read(dst, user_ptr, size);
-> +       else
-> +               ret = probe_kernel_read(dst, unsafe_ptr, size);
-...
-> -               ret = probe_kernel_read(&c, (u8 *)addr + len, 1);
-> +               if (IS_ENABLED(CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE) &&
-> +                   (unsigned long)addr < TASK_SIZE) {
-> +                       ret = probe_user_read(&c,
-> +                               (__force u8 __user *)addr + len, 1);
-> +               } else {
-> +                       ret = probe_kernel_read(&c, (u8 *)addr + len, 1);
-> +               }
-...
-> +       if (IS_ENABLED(CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE) &&
-> +           (unsigned long)src < TASK_SIZE) {
-> +               return probe_user_read(dest, (__force const void __user *)src,
-> +                               size);
+19.05.2020 19:24, Thierry Reding пишет:
+> On Tue, May 19, 2020 at 05:05:27PM +0300, Dmitry Osipenko wrote:
+>> 19.05.2020 10:28, Ulf Hansson пишет:
+>>> On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>
+>>>> Several people asked me about the MMC warnings in the KMSG log and
+>>>> I had to tell to ignore them because these warning are irrelevant to
+>>>> pre-Tegra210 SoCs.
+>>>
+>>> Why are the warnings irrelevant?
+>>
+>> That's what the DT binding doc says [1].
+>>
+>> [1]
+>> https://www.kernel.org/doc/Documentation/devicetree/bindings/mmc/nvidia%2Ctegra20-sdhci.txt
+>>
+>> Although, looking at the driver's code and TRM docs, it seems that all
+>> those properties are really irrelevant only to the older Terga20 SoC. So
+>> the binding doc is a bit misleading.
+>>
+>> Nevertheless, the binding explicitly says that the properties are
+>> optional, which is correct.
+> 
+> Optional only means that drivers must not fail if these properties
+> aren't found, it doesn't mean that the driver can't warn that they
+> are missing.
+> 
+> Quite possibly the only reason why they were made optional is because
+> they weren't part of the bindings since the beginning. Anything added
+> to a binding after the first public release has to be optional by
+> definition, otherwise DT ABI wouldn't be stable.
+> 
+> I think these warnings were added on purpose, though I also see that
+> there are only values for these in device tree for Tegra186 and Tegra194
+> but not Tegra210 where these should also be necessary.
+> 
+> Adding Sowjanya who wrote this code. Perhaps she can clarify why the
+> warnings were added. If these values /should/ be there on a subset of
+> Tegra, then I think we should keep them, or add them again, but perhaps
+> add a better way of identifying when they are necessary and when it is
+> safe to work without them.
+> 
+> That said, looking at those checks I wonder if they are perhaps just
+> wrong. Or at the very least they seem redundant. It looks to me like
+> they can just be:
+> 
+> 	if (tegra_host->pinctrl_state_XYZ == NULL) {
+> 		...
+> 	}
+> 
+> That !IS_ERR(...) doesn't seem to do anything. But in that case, it's
+> also obvious why we're warning about them on platforms where these
+> properties don't exist in DT.
+> 
+> So I think we either need to add those values where appropriate so that
+> the warning doesn't show, or we need to narrow down where they are
+> really needed and add a corresponding condition.
+> 
+> But again, perhaps Sowjanya can help clarify if these really are only
+> needed on Tegra210 and later or if these also apply to older chips.
 
-If you can't make the conditional legible and fit on a single line and
-make it obvious _why_ you have that conditional, just use a helper
-function.
+Either way will be cleaner to convert the DT binding to YAML rather than
+clutter the driver, IMO.
 
-Either for just the conditional itself, or for the whole operation.
-And at least for the bpf case, since you want the whole operation for
-that error handling and clearing of the result buffer anyway, I
-suspect it would be cleaner to have that kind of
-"bpf_copy_legacy_nofault()" function or whatever.
-
-(And see previous email why I dislike that "compat" naming in the bpf case)
-
-                    Linus
