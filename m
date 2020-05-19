@@ -3,80 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF76207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CD920708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgESLSq (ORCPT
+        id S1728840AbgESLSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:18:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55720 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgESLSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:18:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 54856AE63;
+        Tue, 19 May 2020 07:18:52 -0400
+Received: from h2.fbrelay.privateemail.com ([131.153.2.43]:59734 "EHLO
+        h2.fbrelay.privateemail.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726157AbgESLSv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 07:18:51 -0400
+Received: from MTA-06-4.privateemail.com (mta-06.privateemail.com [68.65.122.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by h1.fbrelay.privateemail.com (Postfix) with ESMTPS id 102638009C;
+        Tue, 19 May 2020 07:18:50 -0400 (EDT)
+Received: from MTA-06.privateemail.com (localhost [127.0.0.1])
+        by MTA-06.privateemail.com (Postfix) with ESMTP id 79E5860043;
+        Tue, 19 May 2020 07:18:47 -0400 (EDT)
+Received: from casper (unknown [10.20.151.210])
+        by MTA-06.privateemail.com (Postfix) with ESMTPA id 0B1B76003F;
         Tue, 19 May 2020 11:18:46 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id 6CC1860302; Tue, 19 May 2020 13:18:42 +0200 (CEST)
-Date:   Tue, 19 May 2020 13:18:42 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        mkl@pengutronix.de, Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH net-next v1 1/2] ethtool: provide UAPI for PHY Signal
- Quality Index (SQI)
-Message-ID: <20200519111842.GC9046@lion.mk-sys.cz>
-References: <20200519075200.24631-1-o.rempel@pengutronix.de>
- <20200519085520.GB9046@lion.mk-sys.cz>
- <20200519105855.p7nqklhwotueloko@pengutronix.de>
+Date:   Tue, 19 May 2020 04:18:46 -0700
+From:   Eli Riggs <eli@rje.li>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: Add initial sm6125 SoC support
+Message-ID: <20200519041846.3892747b@casper>
+In-Reply-To: <20200519060848.GB2165@builder.lan>
+References: <20200517115410.3374-1-eli@rje.li>
+ <20200517115410.3374-2-eli@rje.li>
+ <20200519060848.GB2165@builder.lan>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519105855.p7nqklhwotueloko@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:58:55PM +0200, Oleksij Rempel wrote:
-> On Tue, May 19, 2020 at 10:55:20AM +0200, Michal Kubecek wrote:
-> > I'm also a bit worried about hardcoding the 0-7 value range. While I
-> > understand that it's defined by standard for 100base-T1, we my want to
-> > provide such information for other devices in the future. I tried to
-> > search if there is something like that for 1000base-T1 and found this:
-> > 
-> >   http://www.sigent.cn/wp-content/uploads/2019/12/TE-1400_User-Manual_1000BASE-T1-EMC-Converter_v3.3.pdf
-> > 
-> > The screenshot on page 10 shows "SQI Value: 00015".
-> 
-> Nice, screenshot based reverse engineering :)
-> 
-> > It's probably not
-> > standardized (yet?) but it seems to indicate we may expect other devices
-> > providing SQI information with different value range.
-> 
-> what maximal range do we wont to export? u8, u16 or u32?
+On Mon, 18 May 2020 23:08:48 -0700
+Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
 
-As the userspace API is "cast in stone" and there no actual space saved
-by using u8 or u16 due to padding (attributes are always padded to
-a multiple of 32 bits), I would suggest to go with u32 in uapi.
-Internally, we can use a smaller type for now if it is more convenient.
+> Please use dual GPL/BSD license for dts files, if you can.
 
-Michal
+Unfortunately the downstream tree I ported has a GPL-2-only header.
+
+> [...review]
+
+OK
+
+> Given that you won't get very far without GCC and e.g.  pinctrl
+> driver I would prefer to see some patches for those as well, to
+> ensure that this will be able to go beyond basic UART.
+
+Cleaning up my gcc and clk-smd-rpm drivers now, as well as another
+patchset for pm6125, qusb2-phy, dwc3, and sdhci. TLMM in the vague
+future.
+
+Eli
