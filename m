@@ -2,75 +2,143 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42889C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E36B20826
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEBD1207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:28:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/BKi7Io"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgESQ2F (ORCPT
+        id S1729370AbgESQ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:28:05 -0400
-Received: from muru.com ([72.249.23.125]:55086 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbgESQ2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:28:05 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 12A9380FA;
-        Tue, 19 May 2020 16:28:55 +0000 (UTC)
-Date:   Tue, 19 May 2020 09:28:02 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix warning for set but
- not used
-Message-ID: <20200519162802.GW37466@atomide.com>
-References: <20200519155157.12804-1-tony@atomide.com>
- <2f67a110-e52f-94fc-fae2-c3171a67bb8a@linaro.org>
- <20200519160630.GV37466@atomide.com>
- <552325fe-e759-6b22-ceee-2d0a4b3b4b2f@linaro.org>
+        Tue, 19 May 2020 12:28:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728775AbgESQ2k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 12:28:40 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C33FBC08C5C0;
+        Tue, 19 May 2020 09:28:40 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z1so153576pfn.3;
+        Tue, 19 May 2020 09:28:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=F84r5D7gUAsy7kryvSlBtHVWkHHrJxhmyXufbP1VMUk=;
+        b=S/BKi7IoKfu6cTgIaBUHnX5npOyWkD6mRoHj6CtErsnQ2rEcLXG8KPQ2W57BCKaJdM
+         SwniGMyqqs2Q2SVO2+U5xNrrKfUUdGStWz1+O6r2JH01rPKxiBHqUm2bfNLqOGqtekkT
+         GlJtnGMlmMreeuzjHRjAzxQ4Gx5CjvokZU2D/PlEI5QJsPuqnt+UqfdvhwXsKFh1rjEa
+         shQ2Oe0wfKkP1dy3RjS0lg60haFP98utSaIGZs25cBt4zeTMygzfoKV+cAp+8XZTf0vE
+         8CFE3eFs6LyDuyfm6zj6aGPHgQQNFJBK+2fF0+pDhfi6d+ztQrUx0NURv4uGFBUykJiY
+         nO3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=F84r5D7gUAsy7kryvSlBtHVWkHHrJxhmyXufbP1VMUk=;
+        b=FFMKzOaSllsO1XClEBqx+IiJxA4PeggdrTgjwLdblbZLViC/luGPPjs913kyloqMTX
+         Ds/5aGoh9rruI7fkUWJJAnf6v+p4Qz/WAbvBTel0RBvu3hJLTm7bgEMhgFnOe8epjnrl
+         G3UBIVKYIh7b49gl0/D4aP6J1922u/FBRGy7+iAV+hX7S5VsQUlVvZEjtap6C1yIkuzI
+         C43KXlyW1UYW5/T3qEt+JK96ZgZD4BAhfqThoY1W9xj/BhaWRnPX/k+bYD7MwhLKB7iC
+         ACuCUm3A+m8FSsycPnKQYeE6xoBMV0mP2KS/kXGKRDM+EQBf+8kV792AnfunSVNuB91Z
+         OAZg==
+X-Gm-Message-State: AOAM531kren2xu/Rg/pjwULtwdLCQclCzkE8SfqsuGsBygMcYq26So/r
+        WiTg3paKR5Hwcwtaps5w4f0GmG6q
+X-Google-Smtp-Source: ABdhPJzYD0ALWEoK6prn/bHv89t3kKQb2iDjtoUoXa9H7lApnLOp6h6e13fCEaiyITW6kWvB3IQCDw==
+X-Received: by 2002:a63:3587:: with SMTP id c129mr48143pga.190.1589905720188;
+        Tue, 19 May 2020 09:28:40 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v75sm74264pjb.35.2020.05.19.09.28.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 09:28:39 -0700 (PDT)
+Subject: Re: [PATCH 4.14 000/114] 4.14.181-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200518173503.033975649@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <b18563bd-384e-6fb2-cf0c-b1f29be3e3ed@roeck-us.net>
+Date:   Tue, 19 May 2020 09:28:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <552325fe-e759-6b22-ceee-2d0a4b3b4b2f@linaro.org>
+In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Daniel Lezcano <daniel.lezcano@linaro.org> [200519 16:27]:
-> On 19/05/2020 18:06, Tony Lindgren wrote:
-> > * Daniel Lezcano <daniel.lezcano@linaro.org> [200519 16:01]:
-> >> On 19/05/2020 17:51, Tony Lindgren wrote:
-> >>> We can get a warning for dmtimer_clocksource_init() with 'pa' set but
-> >>> not used. This was used in the earlier revisions of the code but no
-> >>> longer needed, so let's remove the unused pa and of_translate_address().
-> >>> Let's also do it for dmtimer_clockevent_init() that has a similar issue.
-> >>>
-> >>> Reported-by: kbuild test robot <lkp@intel.com>
-> >>> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> >>> ---
-> >>
-> >> Applied, thanks
-> > 
-> > Thanks! Do you already have some immutable commit I can use
-> > as the base for the SoC and dts changes? Or do you want to
-> > wait a bit for that?
+On 5/18/20 10:35 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.181 release.
+> There are 114 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Hi Tony,
+> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
+> Anything received after that time might be too late.
 > 
-> https://git.linaro.org/people/daniel.lezcano/linux.git/log/?h=timers/drivers/timer-ti
-> 
-> it contains the two patches + the warning fix
 
-OK thanks a lot! Will use that as the base then.
+Build results:
+	total: 171 pass: 171 fail: 0
+Qemu test results:
+	total: 408 pass: 408 fail: 0
 
-Regards,
-
-Tony
+Guenter
