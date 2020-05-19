@@ -6,147 +6,129 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC9320709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5171320709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgESFuq (ORCPT
+        id S1728526AbgESFtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:50:46 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:58079 "EHLO pegase1.c-s.fr"
+        Tue, 19 May 2020 01:49:05 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:8736 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728579AbgESFtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:49:12 -0400
+        id S1728439AbgESFs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:48:58 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49R4h40p3kz9txm4;
-        Tue, 19 May 2020 07:49:08 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49R4gq2Z7Vz9txm3;
+        Tue, 19 May 2020 07:48:55 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id WLed6crXJCks; Tue, 19 May 2020 07:49:08 +0200 (CEST)
+        with ESMTP id bOGbi5QSJxKh; Tue, 19 May 2020 07:48:55 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4h3733Zz9txlx;
-        Tue, 19 May 2020 07:49:07 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4gq1l0wz9txm1;
+        Tue, 19 May 2020 07:48:55 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E12098B7A7;
-        Tue, 19 May 2020 07:49:08 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 523B98B767;
+        Tue, 19 May 2020 07:48:56 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 4O7VWxnkPQpP; Tue, 19 May 2020 07:49:08 +0200 (CEST)
+        with ESMTP id 5wejxcLrHeo6; Tue, 19 May 2020 07:48:56 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9C22D8B767;
-        Tue, 19 May 2020 07:49:08 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 130568B7A7;
+        Tue, 19 May 2020 07:48:56 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 7A87165A4A; Tue, 19 May 2020 05:49:08 +0000 (UTC)
-Message-Id: <21fd1de8fba781bededa9474a5a9374aefb1f849.1589866984.git.christophe.leroy@csgroup.eu>
+        id E78F565A4A; Tue, 19 May 2020 05:48:55 +0000 (UTC)
+Message-Id: <630728289158dcfeb06b14d40ed7c4c4e7148cf1.1589866984.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 References: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v4 25/45] powerpc/8xx: Prepare handlers for _PAGE_HUGE for
- 512k pages.
+Subject: [PATCH v4 13/45] powerpc/ptdump: Handle hugepd at PGD level
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 19 May 2020 05:49:08 +0000 (UTC)
+Date:   Tue, 19 May 2020 05:48:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prepare ITLB handler to handle _PAGE_HUGE when CONFIG_HUGETLBFS
-is enabled. This means that the L1 entry has to be kept in r11
-until L2 entry is read, in order to insert _PAGE_HUGE into it.
+The 8xx is about to map kernel linear space and IMMR using huge
+pages.
 
-Also move pgd_offset helpers before pte_update() as they
-will be needed there in next patch.
+In order to display those pages properly, ptdump needs to handle
+hugepd tables at PGD level.
+
+For the time being do it only at PGD level. Further patches may
+add handling of hugepd tables at lower level for other platforms
+when needed in the future.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/nohash/32/pgtable.h | 13 ++++++-------
- arch/powerpc/kernel/head_8xx.S               | 15 +++++++++------
- 2 files changed, 15 insertions(+), 13 deletions(-)
+v3: notepage() now takes page size instead of page shift
+---
+ arch/powerpc/mm/ptdump/ptdump.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index ff78bf25f832..9a287a95acad 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -206,6 +206,12 @@ static inline void pmd_clear(pmd_t *pmdp)
+diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
+index 98d82dcf6f0b..5fc880e30175 100644
+--- a/arch/powerpc/mm/ptdump/ptdump.c
++++ b/arch/powerpc/mm/ptdump/ptdump.c
+@@ -23,6 +23,7 @@
+ #include <linux/const.h>
+ #include <asm/page.h>
+ #include <asm/pgalloc.h>
++#include <asm/hugetlb.h>
+ 
+ #include <mm/mmu_decl.h>
+ 
+@@ -269,6 +270,26 @@ static void walk_pte(struct pg_state *st, pmd_t *pmd, unsigned long start)
+ 	}
  }
  
- 
-+/* to find an entry in a kernel page-table-directory */
-+#define pgd_offset_k(address) pgd_offset(&init_mm, address)
++static void walk_hugepd(struct pg_state *st, hugepd_t *phpd, unsigned long start,
++			int pdshift, int level)
++{
++#ifdef CONFIG_ARCH_HAS_HUGEPD
++	unsigned int i;
++	int shift = hugepd_shift(*phpd);
++	int ptrs_per_hpd = pdshift - shift > 0 ? 1 << (pdshift - shift) : 1;
 +
-+/* to find an entry in a page-table-directory */
-+#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
-+#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
- 
- /*
-  * PTE updates. This function is called whenever an existing
-@@ -348,13 +354,6 @@ static inline int pte_young(pte_t pte)
- 	pfn_to_page((__pa(pmd_val(pmd)) >> PAGE_SHIFT))
- #endif
- 
--/* to find an entry in a kernel page-table-directory */
--#define pgd_offset_k(address) pgd_offset(&init_mm, address)
--
--/* to find an entry in a page-table-directory */
--#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
--#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
--
- /* Find an entry in the third-level page table.. */
- #define pte_index(address)		\
- 	(((address) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 905205c79a25..adad8baadcf5 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -196,7 +196,7 @@ SystemCall:
- 
- InstructionTLBMiss:
- 	mtspr	SPRN_SPRG_SCRATCH0, r10
--#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP)
-+#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP) || defined(CONFIG_HUGETLBFS)
- 	mtspr	SPRN_SPRG_SCRATCH1, r11
- #endif
- 
-@@ -235,16 +235,19 @@ InstructionTLBMiss:
- 	rlwinm	r10, r10, 0, 20, 31
- 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
- 3:
-+	mtcr	r11
- #endif
-+#ifdef CONFIG_HUGETLBFS
-+	lwz	r11, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
-+	mtspr	SPRN_MI_TWC, r11	/* Set segment attributes */
-+	mtspr	SPRN_MD_TWC, r11
-+#else
- 	lwz	r10, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
- 	mtspr	SPRN_MI_TWC, r10	/* Set segment attributes */
--
- 	mtspr	SPRN_MD_TWC, r10
++	if (start & ((1 << shift) - 1))
++		return;
++
++	for (i = 0; i < ptrs_per_hpd; i++) {
++		unsigned long addr = start + (i << shift);
++		pte_t *pte = hugepte_offset(*phpd, addr, pdshift);
++
++		note_page(st, addr, level + 1, pte_val(*pte), 1 << shift);
++	}
 +#endif
- 	mfspr	r10, SPRN_MD_TWC
- 	lwz	r10, 0(r10)	/* Get the pte */
--#ifdef ITLB_MISS_KERNEL
--	mtcr	r11
--#endif
- #ifdef CONFIG_SWAP
- 	rlwinm	r11, r10, 32-5, _PAGE_PRESENT
- 	and	r11, r11, r10
-@@ -263,7 +266,7 @@ InstructionTLBMiss:
++}
++
+ static void walk_pmd(struct pg_state *st, pud_t *pud, unsigned long start)
+ {
+ 	pmd_t *pmd = pmd_offset(pud, 0);
+@@ -312,11 +333,13 @@ static void walk_pagetables(struct pg_state *st)
+ 	 * the hash pagetable.
+ 	 */
+ 	for (i = pgd_index(addr); i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
+-		if (!pgd_none(*pgd) && !pgd_is_leaf(*pgd))
++		if (pgd_none(*pgd) || pgd_is_leaf(*pgd))
++			note_page(st, addr, 1, pgd_val(*pgd), PGDIR_SIZE);
++		else if (is_hugepd(__hugepd(pgd_val(*pgd))))
++			walk_hugepd(st, (hugepd_t *)pgd, addr, PGDIR_SHIFT, 1);
++		else
+ 			/* pgd exists */
+ 			walk_pud(st, pgd, addr);
+-		else
+-			note_page(st, addr, 1, pgd_val(*pgd), PGDIR_SIZE);
+ 	}
+ }
  
- 	/* Restore registers */
- 0:	mfspr	r10, SPRN_SPRG_SCRATCH0
--#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP)
-+#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP) || defined(CONFIG_HUGETLBFS)
- 	mfspr	r11, SPRN_SPRG_SCRATCH1
- #endif
- 	rfi
 -- 
 2.25.0
 
