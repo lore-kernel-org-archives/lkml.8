@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F720C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B57CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8B1204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3381F206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbgESOgj (ORCPT
+        id S1729193AbgESOge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:36:39 -0400
-Received: from out28-1.mail.aliyun.com ([115.124.28.1]:58431 "EHLO
-        out28-1.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgESOgf (ORCPT
+        Tue, 19 May 2020 10:36:34 -0400
+Received: from out28-74.mail.aliyun.com ([115.124.28.74]:55034 "EHLO
+        out28-74.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729136AbgESOgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:36:35 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0850729|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_social|0.0150892-0.000571518-0.984339;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=20;RT=20;SR=0;TI=SMTPD_---.HalgxFh_1589898954;
+        Tue, 19 May 2020 10:36:32 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07455434|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0280056-0.000386409-0.971608;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03295;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=20;RT=20;SR=0;TI=SMTPD_---.HalgxFh_1589898954;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HalgxFh_1589898954)
           by smtp.aliyun-inc.com(10.147.42.198);
-          Tue, 19 May 2020 22:36:22 +0800
+          Tue, 19 May 2020 22:36:26 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -37,9 +37,9 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
         rick.tyliu@ingenic.com, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com
-Subject: [PATCH v8 2/6] MIPS: CI20: Modify DTS to support high resolution timer for SMP.
-Date:   Tue, 19 May 2020 22:35:19 +0800
-Message-Id: <1589898923-60048-4-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v8 5/6] MIPS: Ingenic: Add 'cpus' node for Ingenic SoCs.
+Date:   Tue, 19 May 2020 22:35:22 +0800
+Message-Id: <1589898923-60048-7-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589898923-60048-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1589898923-60048-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -51,8 +51,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify DTS, change tcu channel from 2 to 3, channel #0 and #1 for
-per core local timer, #2 for clocksource.
+Add 'cpus' node to the jz4740.dtsi, jz4770.dtsi, jz4780.dtsi
+and x1000.dtsi files.
 
 Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
 Tested-by: Paul Boddie <paul@boddie.org.uk>
@@ -70,41 +70,138 @@ Notes:
     Rebase on top of kernel 5.6-rc1.
     
     v4->v5:
-    Move [5/6] in v4 to this patch, to ensure that we can
-    git-bisect without ending up with a broken kernel.
+    No change.
     
     v5->v6:
     No change.
     
     v6->v7:
-    Remove unnecessary "ingenic,pwm-channels-mask".
+    Update compatible strings.
     
     v7->v8:
     No change.
 
- arch/mips/boot/dts/ingenic/ci20.dts | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 14 ++++++++++++++
+ arch/mips/boot/dts/ingenic/jz4770.dtsi | 15 ++++++++++++++-
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 23 +++++++++++++++++++++++
+ arch/mips/boot/dts/ingenic/x1000.dtsi  | 14 ++++++++++++++
+ 4 files changed, 65 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index db0ca25..06e3186 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -486,7 +486,12 @@
- };
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index a3301ba..1f2f896 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -7,6 +7,20 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4740";
  
- &tcu {
--	/* 3 MHz for the system timer and clocksource */
--	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
--	assigned-clock-rates = <3000000>, <3000000>;
-+	/*
-+	 * 750 kHz for the system timers and clocksource,
-+	 * use channel #0 and #1 for the per cpu system timers,
-+	 * and use channel #2 for the clocksource.
-+	 */
-+	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>,
-+					  <&tcu TCU_CLK_TIMER2>;
-+	assigned-clock-rates = <750000>, <750000>, <750000>;
- };
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-mxu1.0";
++			reg = <0>;
++
++			clocks = <&cgu JZ4740_CLK_CCLK>;
++			clock-names = "cpu";
++		};
++	};
++
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+index 0bfb9ed..12c7101 100644
+--- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-
+ #include <dt-bindings/clock/jz4770-cgu.h>
+ 
+ / {
+@@ -7,6 +6,20 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4770";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
++			reg = <0>;
++
++			clocks = <&cgu JZ4770_CLK_CCLK>;
++			clock-names = "cpu";
++		};
++	};
++
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index bb89653..03aeeff 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -8,6 +8,29 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4780";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
++			reg = <0>;
++
++			clocks = <&cgu JZ4780_CLK_CPU>;
++			clock-names = "cpu";
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
++			reg = <1>;
++
++			clocks = <&cgu JZ4780_CLK_CORE1>;
++			clock-names = "cpu";
++		};
++	};
++
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+index 147f7d5..2205e1b 100644
+--- a/arch/mips/boot/dts/ingenic/x1000.dtsi
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -8,6 +8,20 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,x1000", "ingenic,x1000e";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
++			reg = <0>;
++
++			clocks = <&cgu X1000_CLK_CPU>;
++			clock-names = "cpu";
++		};
++	};
++
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
 -- 
 2.7.4
 
