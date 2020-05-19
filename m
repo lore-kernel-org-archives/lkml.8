@@ -2,84 +2,90 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D70C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E802072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B296207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728805AbgESL5m (ORCPT
+        id S1728773AbgESMA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:57:42 -0400
-Received: from mga12.intel.com ([192.55.52.136]:18100 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbgESL5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:57:42 -0400
-IronPort-SDR: F5YMKoU+qMHz1kUB8YfHDcjFhoLUYYLyGBP/VUD3srrqJfDKukutqK2Es39oaWn9Gi0u18cHo0
- wOx2S9xuUhgA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 04:57:42 -0700
-IronPort-SDR: YBmlirqP1mfDY2/shxRL2nz01uQVfsC6fFTTtPR/n2bkG/ZnhNOR6vu9dTc262VIJWmiUccltJ
- OFYuh7X3uZnQ==
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="439594040"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 04:57:37 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id BBB2920CEF; Tue, 19 May 2020 14:57:35 +0300 (EEST)
-Date:   Tue, 19 May 2020 14:57:35 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Luis Oliveira <lolivei@synopsys.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>
-Subject: Re: [PATCH v2 4/6] media: ov5647: Use gpiod_set_value_cansleep
-Message-ID: <20200519115735.GL20066@paasikivi.fi.intel.com>
-References: <cover.1589850165.git.roman.kovalivskyi@globallogic.com>
- <ff9d9fe93a50efdeced9efab7b38d72c7dabc08f.1589850165.git.roman.kovalivskyi@globallogic.com>
+        Tue, 19 May 2020 08:00:29 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:55794 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726949AbgESMA2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 08:00:28 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb0v1-00053s-PB; Tue, 19 May 2020 06:00:23 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jb0uu-0004Bg-MP; Tue, 19 May 2020 06:00:23 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Andreas Schwab <schwab@linux-m68k.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+References: <20200518055457.12302-1-keescook@chromium.org>
+        <20200518055457.12302-2-keescook@chromium.org>
+        <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
+        <CAG48ez1FspvvypJSO6badG7Vb84KtudqjRk1D7VyHRm06AiEbQ@mail.gmail.com>
+        <20200518144627.sv5nesysvtgxwkp7@wittgenstein>
+        <87blmk3ig4.fsf@x220.int.ebiederm.org> <87mu64uxq1.fsf@igel.home>
+Date:   Tue, 19 May 2020 06:56:36 -0500
+In-Reply-To: <87mu64uxq1.fsf@igel.home> (Andreas Schwab's message of "Tue, 19
+        May 2020 10:37:26 +0200")
+Message-ID: <87sgfwuoi3.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ff9d9fe93a50efdeced9efab7b38d72c7dabc08f.1589850165.git.roman.kovalivskyi@globallogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1jb0uu-0004Bg-MP;;;mid=<87sgfwuoi3.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18KHCvzrkAL+KkT291e5MaUNnZX1ztiKf4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 04:16:19AM +0300, Roman Kovalivskyi wrote:
-> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> 
-> All calls to the gpio library are in contexts that can sleep,
-> therefore there is no issue with having those GPIOs controlled
-> by controllers which require sleeping (eg I2C GPIO expanders).
-> 
-> Switch to using gpiod_set_value_cansleep instead of gpiod_set_value
-> to avoid triggering the warning in gpiolib should the GPIO
-> controller need to sleep.
-> 
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+Andreas Schwab <schwab@linux-m68k.org> writes:
 
-This needs to be merged with the 2nd patch.
+> On Mai 18 2020, Eric W. Biederman wrote:
+>
+>> If it was only libc4 and libc5 that used the uselib system call then it
+>> can probably be removed after enough time.
+>
+> Only libc4 used it, libc5 was already ELF.
 
--- 
-Sakari Ailus
+binfmt_elf.c supports uselib.  In a very a.out ish way.  Do you know if
+that support was ever used?
+
+If we are truly talking a.out only we should be able to make uselib
+conditional on a.out support in the kernel which is strongly mostly
+disabled at this point.
+
+I am wondering if there are source trees for libc4 or libc5 around
+anywhere that we can look at to see how usage of uselib evolved.
+
+Eric
