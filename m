@@ -2,208 +2,132 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81668C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7152C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5998120709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589932341;
-	bh=OWt0CaD4Fsfw5siM0y6++CUzVEtsGrAx7EDLibWsgWo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=v1cBs8U5apUdhjIY5oAfIRu2t78ZsfVObgTmPUyKU1N+LBYaWWjL0RA3Jjk/WHV2g
-	 ueHwcSwYkeEmNaxtGUCC32k8O72zjxjlWxMutuKi/XrzomSIs5Xt4zq5IHxzoCJ/sF
-	 N2DHnsHSgD8Mph10CFSPgl8Xo2IERikNefrQpkj0=
+	by mail.kernel.org (Postfix) with ESMTP id A4C8A20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:52:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jGdRfWOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgESXwU (ORCPT
+        id S1728085AbgESXwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgESXwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:52:20 -0400
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55EC20825;
-        Tue, 19 May 2020 23:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589932339;
-        bh=OWt0CaD4Fsfw5siM0y6++CUzVEtsGrAx7EDLibWsgWo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uORF1InmUjSKZcuPCDnZOzdo8NwdP/wvwP56Tx9AFtNogyil+/J32dElpEfXwnRzY
-         ANI5GiQyZ5bhMuRFcxkSo0oa7ffh+qS7mUlGM5tZaVPYxFFuGISChy2xxXAc/qZEmv
-         C/JNe7TJUBeE6PWjNcmVHfBKOGADlfBzyiChf/8U=
-Received: by mail-ej1-f42.google.com with SMTP id a2so1058732ejb.10;
-        Tue, 19 May 2020 16:52:18 -0700 (PDT)
-X-Gm-Message-State: AOAM531wUlugvWgkXa9E7tTDgNqAI3Kg8tpjzafTTUuuFYJQONAEyvwS
-        F+/aFNplBobS1Qyb243LgSBvn4auk4iJYS0gWA==
-X-Google-Smtp-Source: ABdhPJw1JCDhqKXkvZGIM4WsoCnWJfa3YD2v8vdk6bmkEBqQMPaWHJWvH+7WhRBlcuyMD61jGwKRPu6WcVgmnxgJy44=
-X-Received: by 2002:a17:906:abce:: with SMTP id kq14mr1448685ejb.187.1589932337214;
- Tue, 19 May 2020 16:52:17 -0700 (PDT)
+        Tue, 19 May 2020 19:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727833AbgESXwd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 19:52:33 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391CBC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:52:33 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id i5so1794893qkl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0w5Q0s8R2YEA3g1NY8XrirtV4Lvn0PXi0qUKfjx3g8I=;
+        b=jGdRfWODW/6EjBqooVOhtZrJh6yxWrpPId4S+vwSV/ouSCf853YEfbk7nnJEzfRP9D
+         OJYu6vayBWJBkcm1NUWfQMVQDwvSpNUvxcwPnoP3QkpUmF+PSC66htu0+V0HiWLXpWaK
+         SvKJ5L7OSkHzBFtpx75tK8HW68Sq6teAhd9XZRxuVrdeFD/0ii9SBeghVb5WBbt3XHyd
+         rcDWFEVu8E8INPSLr9llyaqc1LUnAsDvY3Q4LpNhYv3pp268dxKKuC6CY8gM6ha0k5J9
+         ivrGgCTKUdreVEsLkKgB5lJSim+9dauzI07OE7lBn6/Zc0WW6ErIHjqVtKDqETcOgaqZ
+         gGNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0w5Q0s8R2YEA3g1NY8XrirtV4Lvn0PXi0qUKfjx3g8I=;
+        b=JadR/gcvaefruwVv/UJMqC/vsJSLLa0fJQ9QqPgRjwktQGYRH6eGb2ULSy0IHRBnle
+         g6FEzzdIdEWJUkmQXLn3H7jgWBbUdyWDDSMdTuJjW1UkKEWXOhlvhb+OiKMvGnQZ1H3E
+         7wJtVzAAov/uaAu3D21bDXCX16OckcR/jA1fZ05bi7rWPl0PMFwoPEez4Pw/zX1usczh
+         MCVJSlAJAAEGYRwbwk5vxtBV0noX8EgWyLwIx8Xzrqucoyetw3DoqyH4cDSOW5PNxJry
+         Nl9tn1O8T5TAHJdXhXTm3hZuaa9i05V4H2S+5XP0CZLdsooEIFbt2X6FHRDHpiDkMkVT
+         /A5w==
+X-Gm-Message-State: AOAM533Gr1/O6jtDp/4WxZFZtmDBC9gNM2cya8CoipJLLs5oVXdrhPnt
+        xk2U1pqmTe/k27HpNWbanT+5Yw==
+X-Google-Smtp-Source: ABdhPJxEnvKvWp4JmgpC+vWG3nvTDPBBagW65uaps4SG5a24Zu4zPDQ8CAbK/+1jU8D7XBxg+INztQ==
+X-Received: by 2002:a37:b144:: with SMTP id a65mr2023826qkf.462.1589932352377;
+        Tue, 19 May 2020 16:52:32 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id y23sm1232277qta.37.2020.05.19.16.52.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 16:52:32 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jbC2B-0008Bd-IO; Tue, 19 May 2020 20:52:31 -0300
+Date:   Tue, 19 May 2020 20:52:31 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] RDMA/siw: Replace one-element array and use
+ struct_size() helper
+Message-ID: <20200519235231.GA31402@ziepe.ca>
+References: <20200519233018.GA6105@embeddedor>
 MIME-Version: 1.0
-References: <20200518113156.25009-1-matthias.bgg@kernel.org>
- <20200518113156.25009-3-matthias.bgg@kernel.org> <CAAOTY_80D6ZMM5_nEyf_XDjOLaWCOyi3mn9ibWhNX8_ozPK1BQ@mail.gmail.com>
- <3a8b3846-c399-2193-a203-8707d693dad8@suse.com>
-In-Reply-To: <3a8b3846-c399-2193-a203-8707d693dad8@suse.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 20 May 2020 07:52:05 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-Puu4d2nLjxdYLr-zMyJag4cTdtX5oG+GE6fuG_Qphjw@mail.gmail.com>
-Message-ID: <CAAOTY_-Puu4d2nLjxdYLr-zMyJag4cTdtX5oG+GE6fuG_Qphjw@mail.gmail.com>
-Subject: Re: [PATCH 3/4] clk/soc: mediatek: mt6779: Bind clock driver from
- platform device
-To:     Matthias Brugger <mbrugger@suse.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>, matthias.bgg@kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-clk@vger.kernel.org, Allison Randal <allison@lohutok.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519233018.GA6105@embeddedor>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthias Brugger <mbrugger@suse.com> =E6=96=BC 2020=E5=B9=B45=E6=9C=8820=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=885:26=E5=AF=AB=E9=81=93=EF=BC=9A
->
->
->
-> On 19/05/2020 17:10, Chun-Kuang Hu wrote:
-> > Hi, Matthias:
-> >
-> > <matthias.bgg@kernel.org> =E6=96=BC 2020=E5=B9=B45=E6=9C=8818=E6=97=A5 =
-=E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:33=E5=AF=AB=E9=81=93=EF=BC=9A
-> >>
-> >> From: Matthias Brugger <matthias.bgg@gmail.com>
-> >>
-> >> The mmsys driver is now the top level entry point for the multimedia
-> >> system (mmsys), we bind the clock driver by creating a platform device=
-.
-> >> We also bind the MediaTek DRM driver which is not yet implement and
-> >> therefor will errror out for now.
-> >>
-> >> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> >> ---
-> >>
-> >>  drivers/clk/mediatek/clk-mt6779-mm.c | 9 ++-------
-> >>  drivers/soc/mediatek/mtk-mmsys.c     | 8 ++++++++
-> >>  2 files changed, 10 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/drivers/clk/mediatek/clk-mt6779-mm.c b/drivers/clk/mediat=
-ek/clk-mt6779-mm.c
-> >> index fb5fbb8e3e41..059c1a41ac7a 100644
-> >> --- a/drivers/clk/mediatek/clk-mt6779-mm.c
-> >> +++ b/drivers/clk/mediatek/clk-mt6779-mm.c
-> >> @@ -84,15 +84,11 @@ static const struct mtk_gate mm_clks[] =3D {
-> >>         GATE_MM1(CLK_MM_DISP_OVL_FBDC, "mm_disp_ovl_fbdc", "mm_sel", 1=
-6),
-> >>  };
-> >>
-> >> -static const struct of_device_id of_match_clk_mt6779_mm[] =3D {
-> >> -       { .compatible =3D "mediatek,mt6779-mmsys", },
-> >> -       {}
-> >> -};
-> >> -
-> >>  static int clk_mt6779_mm_probe(struct platform_device *pdev)
-> >>  {
-> >> +       struct device *dev =3D &pdev->dev;
-> >> +       struct device_node *node =3D dev->parent->of_node;
-> >>         struct clk_onecell_data *clk_data;
-> >> -       struct device_node *node =3D pdev->dev.of_node;
-> >>
-> >>         clk_data =3D mtk_alloc_clk_data(CLK_MM_NR_CLK);
-> >>
-> >> @@ -106,7 +102,6 @@ static struct platform_driver clk_mt6779_mm_drv =
-=3D {
-> >>         .probe =3D clk_mt6779_mm_probe,
-> >>         .driver =3D {
-> >>                 .name =3D "clk-mt6779-mm",
-> >> -               .of_match_table =3D of_match_clk_mt6779_mm,
-> >>         },
-> >>  };
-> >>
-> >> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/m=
-tk-mmsys.c
-> >> index fee64c8d3020..dc15808cf3a3 100644
-> >> --- a/drivers/soc/mediatek/mtk-mmsys.c
-> >> +++ b/drivers/soc/mediatek/mtk-mmsys.c
-> >> @@ -88,6 +88,10 @@ static const struct mtk_mmsys_driver_data mt2712_mm=
-sys_driver_data =3D {
-> >>         .clk_driver =3D "clk-mt2712-mm",
-> >>  };
-> >>
-> >> +static const struct mtk_mmsys_driver_data mt6779_mmsys_driver_data =
-=3D {
-> >> +       .clk_driver =3D "clk-mt6779-mm",
-> >
-> > This patch looks good to me, but I've one question: why drm driver
-> > just use single "mediatek-drm" for sub driver name, but clock driver
-> > has different name for each SoC?
-> > Could we just use single name for clock driver such as "mediatek-clk-mm=
-"?
->
-> Because the DRM for all SoCs are handled in the same driver, while we hav=
-e a
-> different clock drivers for each SoC. So we need to specify which clock d=
-river
-> we want to load.
->
-> If we want to change that, we would need to refactor heavily the clock dr=
-ivers
-> for all MediaTek SoCs. I don't think it's worth the effort.
->
+On Tue, May 19, 2020 at 06:30:18PM -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of one-element arrays in the following
+> form:
+> 
+> struct something {
+>     int length;
+>     u8 data[1];
+> };
+> 
+> struct something *instance;
+> 
+> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> instance->length = size;
+> memcpy(instance->data, source, size);
+> 
+> but the preferred mechanism to declare variable-length types such as
+> these ones is a flexible array member[1][2], introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on. So, replace
+> the one-element array with a flexible-array member.
+> 
+> Also, make use of the new struct_size() helper to properly calculate the
+> size of struct siw_pbl.
+> 
+> This issue was found with the help of Coccinelle and, audited and fixed
+> _manually_.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/infiniband/sw/siw/siw.h     | 2 +-
+>  drivers/infiniband/sw/siw/siw_mem.c | 5 +----
+>  2 files changed, 2 insertions(+), 5 deletions(-)
 
-OK, so for this patch,
+Applied to for-next, thanks
 
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-
-> Regards,
-> Matthias
->
-> >
-> > Regards,
-> > Chun-Kuang.
-> >
-> >> +};
-> >> +
-> >>  static const struct mtk_mmsys_driver_data mt6797_mmsys_driver_data =
-=3D {
-> >>         .clk_driver =3D "clk-mt6797-mm",
-> >>  };
-> >> @@ -343,6 +347,10 @@ static const struct of_device_id of_match_mtk_mms=
-ys[] =3D {
-> >>                 .compatible =3D "mediatek,mt2712-mmsys",
-> >>                 .data =3D &mt2712_mmsys_driver_data,
-> >>         },
-> >> +       {
-> >> +               .compatible =3D "mediatek,mt6779-mmsys",
-> >> +               .data =3D &mt6779_mmsys_driver_data,
-> >> +       },
-> >>         {
-> >>                 .compatible =3D "mediatek,mt6797-mmsys",
-> >>                 .data =3D &mt6797_mmsys_driver_data,
-> >> --
-> >> 2.26.2
-> >>
-> >>
-> >> _______________________________________________
-> >> Linux-mediatek mailing list
-> >> Linux-mediatek@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Jason
