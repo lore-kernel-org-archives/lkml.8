@@ -2,193 +2,158 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B63C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3CC20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1AA206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dfr2Iiy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgESVqX (ORCPT
+        id S1728097AbgESVqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:46:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40742 "EHLO
+        Tue, 19 May 2020 17:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgESVqX (ORCPT
+        with ESMTP id S1726030AbgESVqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:46:23 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C07C08C5C0;
-        Tue, 19 May 2020 14:46:22 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jbA3e-0002Yy-7I; Tue, 19 May 2020 23:45:54 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of a seqcount
-Date:   Tue, 19 May 2020 23:45:23 +0200
-Message-Id: <20200519214547.352050-2-a.darwish@linutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
+        Tue, 19 May 2020 17:46:33 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96555C08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:46:32 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id y198so523884pfb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:46:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wbpf3YHhdKi0hj9/gLxGnwwJOKLMjdegtmkz5dArxGA=;
+        b=Dfr2Iiy9ihlox5SzAtBXjGIemJwVQ4F2JN3uJbTnbY/qrYXq8sQozcpMM/b8pKxPY0
+         V94cK/FnHX88kap4Wi+xUxYSPTBAcT20pUoRsuSaexowqwRd6OB3iOHUSyllctMEb+u7
+         7XgqDgwlIZoP8+BuhfDm1NBDvFu1/en5tP4I4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wbpf3YHhdKi0hj9/gLxGnwwJOKLMjdegtmkz5dArxGA=;
+        b=KzXiWRLm9pn/d9znp/+TjW+HLVCd5sIkDNUQBzSugK+Talml04qNHH8TjBAixJqpBG
+         dsyqhSo3FA5Lo6Q28/akaU/e4w5XCh6upxl41t23/wxBa5pkhE+v8kNg+0OHdI24ZeJ6
+         MXtPzp9fh5eOAFd5/liW/Xd4wsnZZjHkcBrrHMkbIQxY5DoP4/D+baaK5sMsjGr5KnT0
+         mtg3DVAhJRgNi3cUYj03QD2XvbXOmUt25D1vcGHsRhwsDz3041uRcvunZI3hr24edcpY
+         Mpvt6uh8VCa+//76C+sJYvS/kH6jX0KlpCDFwzRC/KAW1k89lp1qJVU0rhwu6xOTzWnT
+         C3ww==
+X-Gm-Message-State: AOAM531KwijS+mlvU0JFPBBA/gZ4gNSrmK/B7X7RfDq/jNY25X92H9B6
+        bSzsr+Eu811s90u1LQOcg/m2X2vzOSk=
+X-Google-Smtp-Source: ABdhPJwjUJDJtSAp8x1oX6Fqw6gFTc9NhosvV4//DjsVLDlDelXgP6ca/5uQeOs9JEzvruuzJWqOQw==
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr1113573pgb.74.1589924791817;
+        Tue, 19 May 2020 14:46:31 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id w1sm323779pgh.53.2020.05.19.14.46.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 14:46:30 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH v3 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+Date:   Tue, 19 May 2020 14:46:02 -0700
+Message-Id: <20200519214604.180036-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sequence counters write paths are critical sections that must never be
-preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
+Add properties for mode, orientation and USB data role switches for
+Type C connectors. When available, these will allow the Type C connector
+class port driver to configure the various switches according to USB PD
+information (like orientation, alt mode etc.) provided by the Chrome OS
+EC controller.
 
-Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
-netdev name retrieval.") handled a deadlock, observed with
-CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
-infinitely spinning: it got scheduled after the seqcount write side
-blocked inside its own critical section.
-
-To fix that deadlock, among other issues, the commit added a
-cond_resched() inside the read side section. While this will get the
-non-preemptible kernel eventually unstuck, the seqcount reader is fully
-exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
-
-The fix is also still broken: if the seqcount reader belongs to a
-real-time scheduling policy, it can spin forever and the kernel will
-livelock.
-
-Disabling preemption over the seqcount write side critical section will
-not work: inside it are a number of GFP_KERNEL allocations and mutex
-locking through the drivers/base/ :: device_rename() call chain.
-
-From all the above, replace the seqcount with a rwsem.
-
-Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
-Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
-Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Acked-by: Benson Leung <bleung@chromium.org>
 ---
- net/core/dev.c | 30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 522288177bbd..e18a4c23df0e 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -79,6 +79,7 @@
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
- #include <linux/mutex.h>
-+#include <linux/rwsem.h>
- #include <linux/string.h>
- #include <linux/mm.h>
- #include <linux/socket.h>
-@@ -194,7 +195,7 @@ static DEFINE_SPINLOCK(napi_hash_lock);
- static unsigned int napi_gen_id = NR_CPUS;
- static DEFINE_READ_MOSTLY_HASHTABLE(napi_hash, 8);
+Changes in v3:
+- Fixed Acked-by tag typo.
+
+Changes in v2:
+- Added more text to the switch descriptions, explaining their purpose,
+  and relation to the Type C connector class framework.
+
+ .../bindings/chrome/google,cros-ec-typec.yaml | 40 ++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+index 6d7396ab8bee..800c005a0e44 100644
+--- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
++++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+@@ -21,7 +21,34 @@ properties:
+     const: google,cros-ec-typec
  
--static seqcount_t devnet_rename_seq;
-+static DECLARE_RWSEM(devnet_rename_sem);
- 
- static inline void dev_base_seq_inc(struct net *net)
- {
-@@ -930,18 +931,13 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
-  *	@net: network namespace
-  *	@name: a pointer to the buffer where the name will be stored.
-  *	@ifindex: the ifindex of the interface to get the name from.
-- *
-- *	The use of raw_seqcount_begin() and cond_resched() before
-- *	retrying is required as we want to give the writers a chance
-- *	to complete when CONFIG_PREEMPTION is not set.
-  */
- int netdev_get_name(struct net *net, char *name, int ifindex)
- {
- 	struct net_device *dev;
--	unsigned int seq;
- 
--retry:
--	seq = raw_seqcount_begin(&devnet_rename_seq);
-+	down_read(&devnet_rename_sem);
+   connector:
+-    $ref: /schemas/connector/usb-connector.yaml#
++    allOf:
++      - $ref: /schemas/connector/usb-connector.yaml#
++      - type: object
++        properties:
++          mode-switch:
++            description: Reference to a DT node for the USB Type C Multiplexer
++              for this connector. This switch controls the data lines routing
++              for this connector for various operation modes, including
++              Alternate Modes. This switch is assumed registered with the Type C
++              connector class framework by its driver. The Type C connector
++              class framework assumes that the mode switch property uses this
++              name.
 +
- 	rcu_read_lock();
- 	dev = dev_get_by_index_rcu(net, ifindex);
- 	if (!dev) {
-@@ -951,10 +947,8 @@ int netdev_get_name(struct net *net, char *name, int ifindex)
- 
- 	strcpy(name, dev->name);
- 	rcu_read_unlock();
--	if (read_seqcount_retry(&devnet_rename_seq, seq)) {
--		cond_resched();
--		goto retry;
--	}
++          orientation-switch:
++            description: Reference to a DT node for the USB Type C orientation
++              switch for this connector. This switch controls routing the
++              correct data pairs depending on the cable plug orientation from
++              this connector to the USB / Alternate Mode controllers. This
++              switch is assumed registered with the Type C connector class
++              framework by its driver. The Type C connector class framework
++              assumes that the orientation switch property uses this name.
 +
-+	up_read(&devnet_rename_sem);
++          usb-role-switch:
++            description: Reference to a DT node for the USB Data role switch
++              for this connector. This switch is assumed registered with the
++              Type C connector class framework by its driver. The Type C
++              connector class framework assumes that the USB role switch
++              property uses this name.
  
- 	return 0;
- }
-@@ -1228,10 +1222,10 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 	    likely(!(dev->priv_flags & IFF_LIVE_RENAME_OK)))
- 		return -EBUSY;
- 
--	write_seqcount_begin(&devnet_rename_seq);
-+	down_write(&devnet_rename_sem);
- 
- 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return 0;
- 	}
- 
-@@ -1239,7 +1233,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 
- 	err = dev_get_valid_name(net, dev, newname);
- 	if (err < 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return err;
- 	}
- 
-@@ -1254,11 +1248,11 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 	if (ret) {
- 		memcpy(dev->name, oldname, IFNAMSIZ);
- 		dev->name_assign_type = old_assign_type;
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return ret;
- 	}
- 
--	write_seqcount_end(&devnet_rename_seq);
-+	up_write(&devnet_rename_sem);
- 
- 	netdev_adjacent_rename_links(dev, oldname);
- 
-@@ -1279,7 +1273,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 		/* err >= 0 after dev_alloc_name() or stores the first errno */
- 		if (err >= 0) {
- 			err = ret;
--			write_seqcount_begin(&devnet_rename_seq);
-+			down_write(&devnet_rename_sem);
- 			memcpy(dev->name, oldname, IFNAMSIZ);
- 			memcpy(oldname, newname, IFNAMSIZ);
- 			dev->name_assign_type = old_assign_type;
+ required:
+   - compatible
+@@ -49,6 +76,17 @@ examples:
+             data-role = "dual";
+             try-power-role = "source";
+           };
++
++          connector@1 {
++            compatible = "usb-c-connector";
++            reg = <1>;
++            power-role = "dual";
++            data-role = "host";
++            try-power-role = "source";
++            mode-switch = <&typec_mux>;
++            orientation-switch = <&typec_orientation_switch>;
++            usb-role-switch = <&typec_mux>;
++          };
+         };
+       };
+     };
 -- 
-2.20.1
+2.26.2.761.g0e0b3e54be-goog
 
