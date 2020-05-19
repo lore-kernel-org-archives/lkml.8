@@ -2,258 +2,118 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C13C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9F720758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F66120758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgESTx6 (ORCPT
+        id S1727815AbgESTyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:53:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:55386 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgESTx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:53:58 -0400
-IronPort-SDR: Yzy50tgAj/h/L9TOB29zHLm2Jvmj0SGQ26EnHUmuRXjUrovP2afaJt7oa7faxaH1JSCCiA0RMl
- +IYGhqZO8FHA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 12:53:55 -0700
-IronPort-SDR: 5yUPvJyiI5ojACezJJKD+qA5M0IVQhE8H6B8r4NuEi3aBfC6dQID71J5aCvmOCS0fBJ9IMw5lR
- ADiXKO6T3rWQ==
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="411754621"
-Received: from iwsiah-mobl.amr.corp.intel.com (HELO [10.209.55.229]) ([10.209.55.229])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 12:53:55 -0700
-From:   "Sean V Kelley" <sean.v.kelley@linux.intel.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 3/3] PCI: Add helpers to enable/disable CXL.mem and
- CXL.cache
-Date:   Tue, 19 May 2020 12:53:55 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <06AECD46-68DC-464F-A37E-F57A66E4F00D@linux.intel.com>
-In-Reply-To: <20200518165527.GA935823@bjorn-Precision-5520>
-References: <20200518165527.GA935823@bjorn-Precision-5520>
+        Tue, 19 May 2020 15:54:22 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:52335 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgESTyW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 15:54:22 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M27Bp-1jdb9h1SZd-002Zsx for <linux-kernel@vger.kernel.org>; Tue, 19 May
+ 2020 21:54:20 +0200
+Received: by mail-qk1-f181.google.com with SMTP id z80so1054206qka.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:54:20 -0700 (PDT)
+X-Gm-Message-State: AOAM530XkrYEMdSEjjbI+V4yXCqDb75n7c3T8JDmzmt0AH9JkFLnJzC7
+        rczr36ela9Whs1mb7QC5YcG9baSpmei8pinzpZY=
+X-Google-Smtp-Source: ABdhPJxmZ665bnKOzvdR2P18X8izcsTLDXWEaUV5X4KMbj1e+DoEU64Tu5I7jwlFmb0Sax5yLCI3R4V6Wl4XCtmZdLc=
+X-Received: by 2002:ae9:ed95:: with SMTP id c143mr1165079qkg.394.1589918059229;
+ Tue, 19 May 2020 12:54:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 19 May 2020 21:54:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2Tw2w73ZkK-W6AA9veMK4-miLUx-TL1EuOdP7EdW-AmQ@mail.gmail.com>
+Message-ID: <CAK8P3a2Tw2w73ZkK-W6AA9veMK4-miLUx-TL1EuOdP7EdW-AmQ@mail.gmail.com>
+Subject: clock_gettime64 vdso bug on 32-bit arm, rpi-4
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc:     Will Deacon <will@kernel.org>, Rich Felker <dalias@libc.org>,
+        Jack Schmidt <jack.schmidt@uky.edu>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:eJozbr21bM9Lq8IgkoRNAniWBUDHZTSvimsiRW2DZAMi16bo3pM
+ n+ci7aUKApbYDCEJC0UbW+P03V0a7PJ3GC4HQl3gQBLX1bdQOBeyRBmUjgB69rE7KUW5U/F
+ EZWWCV3EZEHgGsP2NOYE3d5nBYJ27yhEFbVqf0KTQyyTbydDWE5vdtGQBOS08cSRoXOhQcH
+ SJxLbqRF/3rnJ5DAXtv6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EuyWfmasTzA=:7w6J20igkootAEltQsPdF2
+ ZiY/tO9yx6Ybd4wBWuiBc78n5s/Ut7C9U7WELsZMDyuVYkDgq5UX1bCE4CCU4a4TzTdS3wH5l
+ 4YgStzr4Jk20jdLQQWiEiwbm7zBnMSwxuBsV5MPfgIbXr9zzEn0/f5KodR8oGa1poefxIaaDq
+ I8IboK1a75mZoGjg4oGWArj9fFmB0xjaoRWGT4x0u+N/DmPDVBVTkoIenAlPlLfAldGUynrus
+ WQ9HqYqv9F4xvicWAeBe2of4DLuVfx3EmNv0vM4PcdBCRo3/1IZ5QdzK50g9drRWNmksJj9sF
+ yWj/0J/w0OeTOZCauP0oGnXhBPwE5inXFfcZh0wa0K5RJ+CX8wgJ1f7FXi8aZeLSxgrSZGWND
+ PilV8WxEpL9aORl/zdBUNnsnVe9yVNHSicwfGKJpJ23GsmaxXSxkI3eK48zw6NJzP6FeRBZvy
+ WKnEf6Ax1y0MVsSHJCanWmnX0ueiB5yzzNSi1Rspu55caXmgXpHuh7F1/vKYguj3W8ppopTVc
+ GmC00DXNizrZaYhNcoUj+XQTGuh3g2Gb6HjP/X7ZL24jhF9dq68zaBS5m9c3XG0mB/OaKNUDo
+ i7hCN7oefqZaWFWfs85tsHRIhFxZf3IJ3KsI1bYIykUJ+Dw5c2x7zFPda7LNQGD2TCsGKQmZm
+ LmuTYzMIRZpxPxg2ExoWWQnhTOTxvTxnuYoz4068dUAEgicinYQ2YO9gM+JWkj6YUUI6My5Hy
+ et2vjFlpcCyVBD48KmXg0XbKvVszeeUELacwlrvnTTmhndPQdlbJVfP8NbqEJrhKj185G4iBI
+ nefDYU9ek1zZzsi4M2AGIuw4m1Tth9pYzoF4KDXtktr71CgFXo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18 May 2020, at 9:55, Bjorn Helgaas wrote:
+Jack Schmidt reported a bug for the arm32 clock_gettimeofday64 vdso call last
+month: https://github.com/richfelker/musl-cross-make/issues/96 and
+https://github.com/raspberrypi/linux/issues/3579
 
-> On Mon, May 18, 2020 at 09:35:23AM -0700, Sean V Kelley wrote:
->> With these helpers, a device driver can enable/disable access to
->> CXL.mem and CXL.cache. Note that the device driver is responsible for
->> managing the memory area.
->>
->> Signed-off-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
->> ---
->>  drivers/pci/cxl.c | 93 
->> ++++++++++++++++++++++++++++++++++++++++++++---
->>  drivers/pci/pci.h |  8 ++++
->>  2 files changed, 96 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pci/cxl.c b/drivers/pci/cxl.c
->> index 4437ca69ad33..0d0a1b82ea98 100644
->> --- a/drivers/pci/cxl.c
->> +++ b/drivers/pci/cxl.c
->> @@ -24,6 +24,88 @@
->>  #define PCI_CXL_HDM_COUNT(reg)		(((reg) & (3 << 4)) >> 4)
->>  #define PCI_CXL_VIRAL			BIT(14)
->>
->> +#define PCI_CXL_CONFIG_LOCK		BIT(0)
->> +
->> +static void pci_cxl_unlock(struct pci_dev *dev)
->> +{
->> +	int pos = dev->cxl_cap;
->> +	u16 lock;
->> +
->> +	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
->> +	lock &= ~PCI_CXL_CONFIG_LOCK;
->> +	pci_write_config_word(dev, pos + PCI_CXL_LOCK, lock);
->> +}
->> +
->> +static void pci_cxl_lock(struct pci_dev *dev)
->> +{
->> +	int pos = dev->cxl_cap;
->> +	u16 lock;
->> +
->> +	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
->> +	lock |= PCI_CXL_CONFIG_LOCK;
->> +	pci_write_config_word(dev, pos + PCI_CXL_LOCK, lock);
->> +}
->
-> Maybe a tiny comment about what PCI_CXL_CONFIG_LOCK does?  I guess
-> these functions don't enforce mutual exclusion (as I first expected a
-> "lock" function to do); they're simply telling the device to accept
-> CTRL changes or something?
+As Will Deacon pointed out, this was never reported on the mailing list,
+so I'll try to summarize what we know, so this can hopefully be resolved soon.
 
-Agree will add.  DVSEC Lock is intended to signify whether the CTRL bits 
-may be changed.
-It locks certain registers and makes them RO.  This lock is designed to 
-prevent future
-changes to configuration. Not to be confused with enforcing mutual 
-exclusion.
+- This happened reproducibly on Linux-5.6 on a 32-bit Raspberry Pi patched
+   kernel running on a 64-bit Raspberry Pi 4b (bcm2711) when calling
+   clock_gettime64(CLOCK_REALTIME)
 
+- The kernel tree is at https://github.com/raspberrypi/linux/, but I could
+  see no relevant changes compared to a mainline kernel.
 
->
->> +static int pci_cxl_enable_disable_feature(struct pci_dev *dev, int 
->> enable,
->> +					  u16 feature)
->> +{
->> +	int pos = dev->cxl_cap;
->> +	int ret;
->> +	u16 reg;
->> +
->> +	if (!dev->cxl_cap)
->> +		return -EINVAL;
->
-> "pos"
->
-> "pos" is the typical name for things like this, but sometimes I think
-> the code would be more descriptive if we used things like "cxl",
-> "aer", etc.
+- From the report, I see that the returned time value is larger than the
+  expected time, by 3.4 to 14.5 million seconds in four samples, my
+  guess is that a random number gets added in at some point.
 
-Will do, makes sense.
+- From other sources, I found that the Raspberry Pi clocksource runs
+  at 54 MHz, with a mask value of 0xffffffffffffff. From these numbers
+  I would expect that reading a completely random hardware register
+  value would result in an offset up to 1.33 billion seconds, which is
+  around factor 100 more than the error we see, though similar.
 
->
->> +
->> +	/* Only for PCIe */
->> +	if (!pci_is_pcie(dev))
->> +		return -EINVAL;
->
-> Probably not necessary here.  We already checked it in pci_cxi_init().
+- The test case calls the musl clock_gettime() function, which falls back to
+  the clock_gettime64() syscall on kernels prior to 5.5, or to the 32-bit
+  clock_gettime() prior to Linux-5.1. As reported in the bug, Linux-4.19 does
+  not show the bug.
 
-You are correct.  Will remove.
+- The behavior was not reproduced on the same user space in qemu,
+  though I cannot tell whether the exact same kernel binary was used.
 
->
->> +	/* Only for Device 0 Function 0, Root Complex Integrated Endpoints 
->> */
->> +	if (dev->devfn != 0 || (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END))
->> +		return -EINVAL;
->> +
->> +	pci_cxl_unlock(dev);
->> +	ret = pci_read_config_word(dev, pos + PCI_CXL_CTRL, &reg);
->> +	if (ret)
->> +		goto lock;
->> +
->> +	if (enable)
->> +		reg |= feature;
->> +	else
->> +		reg &= ~feature;
->> +
->> +	ret = pci_write_config_word(dev, pos + PCI_CXL_CTRL, reg);
->> +
->> +lock:
->> +	pci_cxl_lock(dev);
->> +
->> +	return ret;
->> +}
->> +
->> +int pci_cxl_mem_enable(struct pci_dev *dev)
->> +{
->> +	return pci_cxl_enable_disable_feature(dev, true, PCI_CXL_MEM);
->> +}
->> +EXPORT_SYMBOL_GPL(pci_cxl_mem_enable);
->> +
->> +void pci_cxl_mem_disable(struct pci_dev *dev)
->> +{
->> +	pci_cxl_enable_disable_feature(dev, false, PCI_CXL_MEM);
->> +}
->> +EXPORT_SYMBOL_GPL(pci_cxl_mem_disable);
->> +
->> +int pci_cxl_cache_enable(struct pci_dev *dev)
->> +{
->> +	return pci_cxl_enable_disable_feature(dev, true, PCI_CXL_CACHE);
->> +}
->> +EXPORT_SYMBOL_GPL(pci_cxl_cache_enable);
->> +
->> +void pci_cxl_cache_disable(struct pci_dev *dev)
->> +{
->> +	pci_cxl_enable_disable_feature(dev, false, PCI_CXL_CACHE);
->> +}
->> +EXPORT_SYMBOL_GPL(pci_cxl_cache_disable);
->> +
->>  /*
->>   * pci_find_cxl_capability - Identify and return offset to 
->> Vendor-Specific
->>   * capabilities.
->> @@ -73,11 +155,6 @@ void pci_cxl_init(struct pci_dev *dev)
->>  	dev->cxl_cap = pos;
->>
->>  	pci_read_config_word(dev, pos + PCI_CXL_CAP, &cap);
->> -	pci_read_config_word(dev, pos + PCI_CXL_CTRL, &ctrl);
->> -	pci_read_config_word(dev, pos + PCI_CXL_STS, &status);
->> -	pci_read_config_word(dev, pos + PCI_CXL_CTRL2, &ctrl2);
->> -	pci_read_config_word(dev, pos + PCI_CXL_STS2, &status2);
->> -	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
->>
->>  	pci_info(dev, "CXL: Cache%c IO%c Mem%c Viral%c HDMCount %d\n",
->>  		FLAG(cap, PCI_CXL_CACHE),
->> @@ -86,6 +163,12 @@ void pci_cxl_init(struct pci_dev *dev)
->>  		FLAG(cap, PCI_CXL_VIRAL),
->>  		PCI_CXL_HDM_COUNT(cap));
->>
->> +	pci_read_config_word(dev, pos + PCI_CXL_CTRL, &ctrl);
->> +	pci_read_config_word(dev, pos + PCI_CXL_STS, &status);
->> +	pci_read_config_word(dev, pos + PCI_CXL_CTRL2, &ctrl2);
->> +	pci_read_config_word(dev, pos + PCI_CXL_STS2, &status2);
->> +	pci_read_config_word(dev, pos + PCI_CXL_LOCK, &lock);
->
-> This looks like it's just moving these reads around and isn't actually
-> related to this patch.  Put them where you want them in the first
-> place so the move doesn't clutter this patch.
+- glibc-2.31 calls the same clock_gettime64() vdso function on arm to
+  implement clock_gettime(), but earlier versions did not. I have not
+  seen any reports of this bug, which could be explained by users
+  generally being on older versions.
 
-Looks that way.  I will clean it up.
+- As far as I can tell, there are no reports of this bug from other users,
+  and so far nobody could reproduce it.
 
->
->>  	pci_info(dev, "CXL: cap ctrl status ctrl2 status2 lock\n");
->>  	pci_info(dev, "CXL: %04x %04x %04x %04x %04x %04x\n",
->>  		 cap, ctrl, status, ctrl2, status2, lock);
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index d9905e2dee95..6336e16565ac 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -472,8 +472,16 @@ static inline void pci_restore_ats_state(struct 
->> pci_dev *dev) { }
->>  #ifdef CONFIG_PCI_CXL
->>  /* Compute eXpress Link */
->>  void pci_cxl_init(struct pci_dev *dev);
->> +int pci_cxl_mem_enable(struct pci_dev *dev);
->> +void pci_cxl_mem_disable(struct pci_dev *dev);
->> +int pci_cxl_cache_enable(struct pci_dev *dev);
->> +void pci_cxl_cache_disable(struct pci_dev *dev);
->>  #else
->>  static inline void pci_cxl_init(struct pci_dev *dev) { }
->> +static inline int pci_cxl_mem_enable(struct pci_dev *dev) {}
->> +static inline void pci_cxl_mem_disable(struct pci_dev *dev) {}
->> +static inline int pci_cxl_cache_enable(struct pci_dev *dev) {}
->> +static inline void pci_cxl_cache_disable(struct pci_dev *dev) {}
->
-> The stubs in this file aren't completely consistent, but you can be at
-> least locally consistent by including a space between the "{ }".
+- The current musl git tree has been patched to not call clock_gettime64
+   on ARM because of this problem, so it cannot be used for reproducing it.
 
-Will do.
+If anyone has other information that may help figure out what is going
+on, please share.
 
-Thanks,
-
-Sean
-
-
->
->>  #endif
->>
->>  #ifdef CONFIG_PCI_PRI
->> -- 
->> 2.26.2
->>
+        Arnd
