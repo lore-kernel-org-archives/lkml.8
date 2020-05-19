@@ -2,119 +2,86 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4992075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:35:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lNIV2LUU"
+	by mail.kernel.org (Postfix) with ESMTP id EFF69204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgESIfC (ORCPT
+        id S1726936AbgESIgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:35:02 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50702 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgESIfC (ORCPT
+        Tue, 19 May 2020 04:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgESIgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:35:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QwmitSwlirACqCyCNTRUZhDaJ4HYS/kaW8Cx57bX5c8=; b=lNIV2LUUjHNOY9YH9V1SHZvupD
-        Ap9O81Ry9Mm7QRxv1ir9txOzUjABze72YWF4n+e8jqzVQPpOz2Y0k1MmDdIem/y+1xlA+52ci/GBr
-        VhJgaAxUx6I8Pg8EKqkDJhytF0BSAvxYY8F35JnXJDYpJXdc/fpka+wNKxUlBo4ZaW9kOSumZRxwM
-        gKB/gcUCuqJkWEkWT/BdfO6O4Emzg6cUb6jUonsMqRKDT0LOMPDGPTFrM/zHqvdgFJG4hF0ZYeAHA
-        PyG8RS7VYQpLmw+y265BUaXen5nOl2xMNwH1nvP2Qiz8LHKmvzOVpG3SLpwUxDRCINsZ9jcDhybYT
-        ZjTch/FA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jaxd4-0006F1-1E; Tue, 19 May 2020 08:29:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8C8AB304A59;
-        Tue, 19 May 2020 10:29:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 47C4C29E21566; Tue, 19 May 2020 10:29:26 +0200 (CEST)
-Date:   Tue, 19 May 2020 10:29:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>
-Subject: Re: [patch V6 00/37] x86/entry: Rework leftovers and merge plan
-Message-ID: <20200519082926.GB279861@hirez.programming.kicks-ass.net>
-References: <20200515234547.710474468@linutronix.de>
- <20200518160750.GA279861@hirez.programming.kicks-ass.net>
- <87h7wdvzuq.fsf@nanos.tec.linutronix.de>
+        Tue, 19 May 2020 04:36:23 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1CCC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:36:23 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jaxjV-000476-KX; Tue, 19 May 2020 10:36:17 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 2386B1006A1; Tue, 19 May 2020 10:36:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xianting Tian <xianting_tian@126.com>, john.stultz@linaro.org,
+        sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] timers: Use set_current_state macro
+In-Reply-To: <1589469647-33814-1-git-send-email-xianting_tian@126.com>
+References: <1589469647-33814-1-git-send-email-xianting_tian@126.com>
+Date:   Tue, 19 May 2020 10:36:11 +0200
+Message-ID: <87imgsuxs4.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h7wdvzuq.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 08:53:49PM +0200, Thomas Gleixner wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
-> > So on top of you entry-v8-full; I had to chase one of those
-> > instrumentation_end() escapes an (extended) basic block chase (again!).
-> >  
-> > +#ifdef CONFIG_DEBUG_ENTRY
-> 
-> Why this? We lose the kprobes runtime protection that way.
+Xianting Tian <xianting_tian@126.com> writes:
+> Use set_current_state macro instead of current->state = TASK_RUNNING
+>
+> Signed-off-by: Xianting Tian <xianting_tian@126.com>
+> ---
+>  kernel/time/timer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> index 4820823..b9ecf87 100644
+> --- a/kernel/time/timer.c
+> +++ b/kernel/time/timer.c
+> @@ -1882,7 +1882,7 @@ signed long __sched schedule_timeout(signed long timeout)
+>  			printk(KERN_ERR "schedule_timeout: wrong timeout "
+>  				"value %lx\n", timeout);
+>  			dump_stack();
+> -			current->state = TASK_RUNNING;
+> +			set_current_state(TASK_RUNNING);
 
-Oh bugger indeed. I forgot about that :-(
+This is still wrong. Again:
 
-I added the CONFIG_DEBUG_ENTRY dependency to
-instrumentation_{begin,end}() because they now emit actual code, and I
-figured we shouldn't bother 'production' kernels with all them extra
-NOPs.
+   "That's not the same and adds a barrier which is not needed.
 
-And then I figured (wrongly!) that since I have that, I might as well
-add noinstr to is.
+    Not a big problem in that particular error handling code path, but in
+    general you really have to look whether your replacement is resulting in
+    the same code.
 
-> > +/* Section for code which can't be instrumented at all */
-> > +#define noinstr								\
-> > +	noinline notrace __attribute((__section__(".noinstr.text")))
-> > +
-> >  /* Begin/end of an instrumentation safe region */
-> > -#define instrumentation_begin() ({						\
-> > +#define instrumentation_begin() ({					\
-> >  	asm volatile("%c0:\n\t"						\
-> >  		     ".pushsection .discard.instr_begin\n\t"		\
-> >  		     ".long %c0b - .\n\t"				\
-> >  		     ".popsection\n\t" : : "i" (__COUNTER__));
-> 
-> Nifty.
+    If not then you need to make an argument in the changelog why you are
+    replacing existing code with something which is not fully equivalent.
 
-Yeah, took a bit of fiddling because objtool is a bit weird vs UD2, but
-if you order it just right in the WARN thing it works :-)
+    For this particular case, please check the implementation and read the
+    documentation of set_current_state() in include/linux/sched.h."
 
-You want a new delta without the noinstr thing on?
+Thanks,
+
+        tglx
