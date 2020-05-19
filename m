@@ -2,86 +2,124 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98F952065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C4520758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:37:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XWeV8b7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgESKfU (ORCPT
+        id S1728611AbgESKhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:35:20 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41840 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgESKfS (ORCPT
+        Tue, 19 May 2020 06:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgESKhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:35:18 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jazaa-0003Tv-Ci; Tue, 19 May 2020 10:35:12 +0000
-Date:   Tue, 19 May 2020 12:35:11 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: seccomp feature development
-Message-ID: <20200519103511.2kbnpio5b3bcrvoo@wittgenstein>
-References: <202005181120.971232B7B@keescook>
- <CAG48ez1LrQvR2RHD5-ZCEihL4YT1tVgoAJfGYo+M3QukumX=OQ@mail.gmail.com>
- <20200519024846.b6dr5cjojnuetuyb@yavin.dot.cyphar.com>
+        Tue, 19 May 2020 06:37:02 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF17C05BD0B
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:37:02 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id w7so15249274wre.13
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=i9H4OZ10YdHZdhc7/rIrHtv9xR5CbfD8gzRd+3adHCg=;
+        b=XWeV8b7S4EVjZhJ79Ag3v5DEaPyKNzfmliI3RiiRpgwEJDw+Ncgl4tXOIDiPBN0ehm
+         YWZkEFKgex9Pc/rKjydVwahDLrwR8y6N2K4ijHy3Amx1ZdXZ2xBQgWhfRQABcJPNiNen
+         rvvr6M54m9ca8L0/CiltsnZCDTQWxVvjmvFJbUT1tWQqdCluvrPTvoiST9aq4ly+lBdO
+         9EODHL0fC3KzWE7uHm51t4l8qTtDotOQL7iYLRSY1R7UA8NmexCH9vCLfXBsdeMPYMvj
+         3T+qCgXK3atV0sLi8FiY4uh4nBrb+rXL92/CWmN5vPGLifpAvQMdAg7EhyCp2P4iaesc
+         Ek2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i9H4OZ10YdHZdhc7/rIrHtv9xR5CbfD8gzRd+3adHCg=;
+        b=pMzXx4M4gRalbxS7N848nGOYBSW9FjKOWT+ocSl1edRFk4zL4GC0gzyJp9MrhcWs89
+         ZKg4nHBBtp3COiDYKxanAQnkI0qjbnFMNfO1rIrSfYL5Aw9N+NU4Hlq4pRvYU7FKG3W0
+         Fi7Rhu/IMDINuciBRKaLSKm3HVcwFl85M3E77AId8SchHXbhhngRUbKXkLPyPIlkunIB
+         tXgbSVwWATPnRmSSXvhnddWtw/mNsabwZ7OA7JK6G8NM1GWEKwD1LYy0grQhC6iwENhX
+         rDWWF/aX3zSAp50gHdGdO+6rYriXMp/UDxQT9mK3kUWIcIFkuZNYZX7tp/n/Sivtqwhe
+         1BdQ==
+X-Gm-Message-State: AOAM531gLsJnGvOS+ejwjkRuXwVWH9qVPMuJQP1geY3gETVaEV46yR6G
+        xvgXDpIo1Z9ImDAH2YcTwlkhIw==
+X-Google-Smtp-Source: ABdhPJzJiTwMyvVTnOctSw0HxZdkufYRwI8zQqI86F0CX4btXGOdMQMwWIBlYi+xtP8+zww/fzO92g==
+X-Received: by 2002:a5d:4dc9:: with SMTP id f9mr24784938wru.407.1589884621033;
+        Tue, 19 May 2020 03:37:01 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id l18sm3275536wmj.22.2020.05.19.03.36.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 03:37:00 -0700 (PDT)
+Date:   Tue, 19 May 2020 11:36:58 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
+        corbet@lwn.net, frowand.list@gmail.com, bjorn.andersson@linaro.org,
+        linux-serial@vger.kernel.org, mingo@redhat.com, hpa@zytor.com,
+        jslaby@suse.com, kgdb-bugreport@lists.sourceforge.net,
+        sumit.garg@linaro.org, will@kernel.org, tglx@linutronix.de,
+        agross@kernel.org, catalin.marinas@arm.com, bp@alien8.de,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Enrico Weigelt <info@metux.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        James Morse <james.morse@arm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        jinho lim <jordan.lim@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 00/12] kgdb: Support late serial drivers; enable early
+ debug w/ boot consoles
+Message-ID: <20200519103658.eha5zbmun4i56oml@holly.lan>
+References: <20200507200850.60646-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519024846.b6dr5cjojnuetuyb@yavin.dot.cyphar.com>
+In-Reply-To: <20200507200850.60646-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:48:46PM +1000, Aleksa Sarai wrote:
-> On 2020-05-19, Jann Horn <jannh@google.com> wrote:
-> > On Mon, May 18, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
-> > > ## deep argument inspection
-> > >
-> > > Background: seccomp users would like to write filters that traverse
-> > > the user pointers passed into many syscalls, but seccomp can't do this
-> > > dereference for a variety of reasons (mostly involving race conditions and
-> > > rearchitecting the entire kernel syscall and copy_from_user() code flows).
-> > 
-> > Also, other than for syscall entry, it might be worth thinking about
-> > whether we want to have a special hook into seccomp for io_uring.
-> > io_uring is growing support for more and more syscalls, including
-> > things like openat2, connect, sendmsg, splice and so on, and that list
-> > is probably just going to grow in the future. If people start wanting
-> > to use io_uring in software with seccomp filters, it might be
-> > necessary to come up with some mechanism to prevent io_uring from
-> > permitting access to almost everything else...
-> > 
-> > Probably not a big priority for now, but something to keep in mind for
-> > the future.
+On Thu, May 07, 2020 at 01:08:38PM -0700, Douglas Anderson wrote:
+> This whole pile of patches was motivated by me trying to get kgdb to
+> work properly on a platform where my serial driver ended up being hit
+> by the -EPROBE_DEFER virus (it wasn't practicing social distancing
+> from other drivers).  Specifically my serial driver's parent device
+> depended on a resource that wasn't available when its probe was first
+> called.  It returned -EPROBE_DEFER which meant that when "kgdboc"
+> tried to run its setup the serial driver wasn't there.  Unfortunately
+> "kgdboc" never tried again, so that meant that kgdb was disabled until
+> I manually enalbed it via sysfs.
 > 
-> Indeed. Quite a few people have raised concerns about io_uring and its
-> debug-ability, but I agree that another less-commonly-mentioned concern
-> should be how you restrict io_uring(2) from doing operations you've
-> disallowed through seccomp. Though obviously user_notif shouldn't be
-> allowed. :D
+> <snip>
+> 
+> This series (and my comments / documentation / commit messages) are
+> now long enough that my eyes glaze over when I try to read it all over
+> to double-check.  I've nontheless tried to double-check it, but I'm
+> pretty sure I did something stupid.  Thank you ahead of time for
+> pointing it out to me so I can fix it in v5.  If somehow I managed to
+> not do anything stupid (really?) then thank you for double-checking me
+> anyway.
 
-As soon as you switch kernels to an io_uring supported kernel while
-maintaing a blacklist without updating all your seccomp filters you're
-currently hosed (Yes, blacklists aren't great but they have their
-uses.).
+Applied (minus the arm64 specific stuff), should be in the next linux-next.
 
-Christian
+
+Daniel.
