@@ -2,119 +2,103 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2797FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65ADA207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EFE2083E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgESN2f (ORCPT
+        id S1728922AbgESN3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbgESN2f (ORCPT
+        Tue, 19 May 2020 09:29:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47777 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727057AbgESN3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:28:35 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4320BC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 06:28:35 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 7785F386; Tue, 19 May 2020 15:28:33 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     iommu@lists.linux-foundation.org
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, Joerg Roedel <jroedel@suse.de>,
-        Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH] iommu: Don't call .probe_finalize() under group->mutex
-Date:   Tue, 19 May 2020 15:28:24 +0200
-Message-Id: <20200519132824.15163-1-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 19 May 2020 09:29:53 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jb2JJ-0001zu-98; Tue, 19 May 2020 13:29:33 +0000
+Date:   Tue, 19 May 2020 15:29:31 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Andreas Schwab <schwab@linux-m68k.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
+Message-ID: <20200519132931.3b7yugfv2ajry6y7@wittgenstein>
+References: <20200518055457.12302-1-keescook@chromium.org>
+ <20200518055457.12302-2-keescook@chromium.org>
+ <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
+ <CAG48ez1FspvvypJSO6badG7Vb84KtudqjRk1D7VyHRm06AiEbQ@mail.gmail.com>
+ <20200518144627.sv5nesysvtgxwkp7@wittgenstein>
+ <87blmk3ig4.fsf@x220.int.ebiederm.org>
+ <87mu64uxq1.fsf@igel.home>
+ <87sgfwuoi3.fsf@x220.int.ebiederm.org>
+ <87eergunqs.fsf@igel.home>
+ <87ftbwun0h.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87ftbwun0h.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Tue, May 19, 2020 at 07:28:46AM -0500, Eric W. Biederman wrote:
+> Andreas Schwab <schwab@linux-m68k.org> writes:
+> 
+> > On Mai 19 2020, Eric W. Biederman wrote:
+> >
+> >> I am wondering if there are source trees for libc4 or libc5 around
+> >> anywhere that we can look at to see how usage of uselib evolved.
+> >
+> > libc5 is available from archive.debian.org.
+> >
+> > http://archive.debian.org/debian-archive/debian/pool/main/libc/libc/libc_5.4.46.orig.tar.gz
+> 
+> Interesting.
+> 
+> It appears that the old a.out code to make use of uselib remained in
+> the libc5 sources but it was all conditional on the being compiled not
+> to use ELF.
+> 
+> libc5 did provide a wrapper for the uselib system call.
+> 
+> It appears glibc also provides a wrapper for the uselib system call
+> named: uselib@GLIBC_2.2.5.
+> 
+> I don't see a glibc header file that provides a declaration for uselib
+> though.
+> 
+> So the question becomes did anyone use those glibc wrappers.
 
-The .probe_finalize() call-back of some IOMMU drivers calls into
-arm_iommu_attach_device(). This function will call back into the
-IOMMU core code, where it tries to take group->mutex again, resulting
-in a deadlock.
+The only software I could find was ski, the ia64 instruction set
+emulator, which apparently used to make use of this and when glibc
+removed they did:
 
-As there is no reason why .probe_finalize() needs to be called under
-that mutex, move it after the lock has been released to fix the
-deadlock.
+#define uselib(libname) syscall(__NR_uselib, libname)
 
-Cc: Yong Wu <yong.wu@mediatek.com>
-Reported-by: Yong Wu <yong.wu@mediatek.com>
-Fixes: deac0b3bed26 ("iommu: Split off default domain allocation from group assignment")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/iommu.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+but they only define it for the sake of the internal syscall list they
+maintain so not actively using it. I just checked, ski is available on
+Fedora 31 and Fedora has USELIB disabled.
+Codesearch on Debian yields no users that actively use the syscall for
+anything.
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 629d209b8e88..d5d9fcbc9714 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1683,17 +1683,8 @@ static void probe_alloc_default_domain(struct bus_type *bus,
- static int iommu_group_do_dma_attach(struct device *dev, void *data)
- {
- 	struct iommu_domain *domain = data;
--	const struct iommu_ops *ops;
--	int ret;
--
--	ret = __iommu_attach_device(domain, dev);
--
--	ops = domain->ops;
--
--	if (ret == 0 && ops->probe_finalize)
--		ops->probe_finalize(dev);
- 
--	return ret;
-+	return __iommu_attach_device(domain, dev);
- }
- 
- static int __iommu_group_dma_attach(struct iommu_group *group)
-@@ -1702,6 +1693,21 @@ static int __iommu_group_dma_attach(struct iommu_group *group)
- 					  iommu_group_do_dma_attach);
- }
- 
-+static int iommu_group_do_probe_finalize(struct device *dev, void *data)
-+{
-+	struct iommu_domain *domain = data;
-+
-+	if (domain->ops->probe_finalize)
-+		domain->ops->probe_finalize(dev);
-+
-+	return 0;
-+}
-+
-+static void __iommu_group_dma_finalize(struct iommu_group *group)
-+{
-+	__iommu_group_for_each_dev(group, group->default_domain,
-+				   iommu_group_do_probe_finalize);
-+}
- static int iommu_do_create_direct_mappings(struct device *dev, void *data)
- {
- 	struct iommu_group *group = data;
-@@ -1754,6 +1760,8 @@ int bus_iommu_probe(struct bus_type *bus)
- 
- 		if (ret)
- 			break;
-+
-+		__iommu_group_dma_finalize(group);
- 	}
- 
- 	return ret;
--- 
-2.25.1
-
+Christian
