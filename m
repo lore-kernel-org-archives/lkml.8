@@ -6,151 +6,197 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1563C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D89120709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D715C20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgESFtM (ORCPT
+        id S1728502AbgESFus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:49:12 -0400
+        Tue, 19 May 2020 01:50:48 -0400
 Received: from pegase1.c-s.fr ([93.17.236.30]:61897 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbgESFtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:49:02 -0400
+        id S1728553AbgESFtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:49:11 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49R4gv4Y5Kz9txm6;
-        Tue, 19 May 2020 07:48:59 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49R4h16gK1z9txm0;
+        Tue, 19 May 2020 07:49:05 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cmBCac8qLr3O; Tue, 19 May 2020 07:48:59 +0200 (CEST)
+        with ESMTP id 5WgodmLcCIFP; Tue, 19 May 2020 07:49:05 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4gv3l7Nz9txm0;
-        Tue, 19 May 2020 07:48:59 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4h14xfKz9txlx;
+        Tue, 19 May 2020 07:49:05 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 981E28B7A7;
-        Tue, 19 May 2020 07:49:00 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CF2278B7A7;
+        Tue, 19 May 2020 07:49:06 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id csgR_z2Tramd; Tue, 19 May 2020 07:49:00 +0200 (CEST)
+        with ESMTP id dI0oMjzhTzYu; Tue, 19 May 2020 07:49:06 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4F82C8B767;
-        Tue, 19 May 2020 07:49:00 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8D40A8B767;
+        Tue, 19 May 2020 07:49:06 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2F1EE65A4A; Tue, 19 May 2020 05:49:00 +0000 (UTC)
-Message-Id: <d6f8e1f46583f1842de24581a68b0496feb15516.1589866984.git.christophe.leroy@csgroup.eu>
+        id 6C77C65A4A; Tue, 19 May 2020 05:49:06 +0000 (UTC)
+Message-Id: <43050d1a0c2d6e1541cab9c1126fc80bc7015ebd.1589866984.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 References: <cover.1589866984.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v4 17/45] powerpc/mm: PTE_ATOMIC_UPDATES is only for 40x
+Subject: [PATCH v4 23/45] powerpc/mm: Reduce hugepd size for 8M hugepages on
+ 8xx
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 19 May 2020 05:49:00 +0000 (UTC)
+Date:   Tue, 19 May 2020 05:49:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only 40x still uses PTE_ATOMIC_UPDATES.
-40x cannot not select CONFIG_PTE64_BIT.
+Commit 55c8fc3f4930 ("powerpc/8xx: reintroduce 16K pages with HW
+assistance") redefined pte_t as a struct of 4 pte_basic_t, because
+in 16K pages mode there are four identical entries in the page table.
+But hugepd entries for 8M pages require only one entry of size
+pte_basic_t. So there is no point in creating a cache for 4 entries
+page tables.
 
-Drop handling of PTE_ATOMIC_UPDATES:
-- In nohash/64
-- In nohash/32 for CONFIG_PTE_64BIT
+Calculate PTE_T_ORDER using the size of pte_basic_t instead of pte_t.
 
-Keep PTE_ATOMIC_UPDATES only for nohash/32 for !CONFIG_PTE_64BIT
+Define specific huge_pte helpers (set_huge_pte_at(), huge_pte_clear(),
+huge_ptep_set_wrprotect()) to write the pte in a single entry instead
+of using set_pte_at() which writes 4 identical entries in 16k pages
+mode. Also make sure that __ptep_set_access_flags() properly handle
+the huge_pte case.
+
+Define set_pte_filter() inline otherwise GCC doesn't inline it anymore
+because it is now used twice, and that gives a pretty suboptimal code
+because of pte_t being a struct of 4 entries.
+
+Those functions are also used for 512k pages which only require one
+entry as well allthough replicating it four times was harmless as 512k
+pages entries are spread every 128 bytes in the table.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/nohash/32/pgtable.h | 17 ------------
- arch/powerpc/include/asm/nohash/64/pgtable.h | 28 +-------------------
- 2 files changed, 1 insertion(+), 44 deletions(-)
+ .../include/asm/nohash/32/hugetlb-8xx.h       | 20 ++++++++++++++
+ arch/powerpc/include/asm/nohash/32/pgtable.h  |  3 ++-
+ arch/powerpc/mm/hugetlbpage.c                 |  3 ++-
+ arch/powerpc/mm/pgtable.c                     | 26 ++++++++++++++++---
+ 4 files changed, 46 insertions(+), 6 deletions(-)
 
+diff --git a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
+index a46616937d20..785437323576 100644
+--- a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
+@@ -41,4 +41,24 @@ static inline int check_and_get_huge_psize(int shift)
+ 	return shift_to_mmu_psize(shift);
+ }
+ 
++#define __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT
++void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte);
++
++#define __HAVE_ARCH_HUGE_PTE_CLEAR
++static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
++				  pte_t *ptep, unsigned long sz)
++{
++	pte_update(mm, addr, ptep, ~0UL, 0, 1);
++}
++
++#define __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
++static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
++					   unsigned long addr, pte_t *ptep)
++{
++	unsigned long clr = ~pte_val(pte_wrprotect(__pte(~0)));
++	unsigned long set = pte_val(pte_wrprotect(__pte(0)));
++
++	pte_update(mm, addr, ptep, clr, set, 1);
++}
++
+ #endif /* _ASM_POWERPC_NOHASH_32_HUGETLB_8XX_H */
 diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index 4315d40906a0..7e908a176e9e 100644
+index 5fb3f6798e22..ff78bf25f832 100644
 --- a/arch/powerpc/include/asm/nohash/32/pgtable.h
 +++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -262,25 +262,8 @@ static inline unsigned long long pte_update(pte_t *p,
- 					    unsigned long clr,
- 					    unsigned long set)
- {
--#ifdef PTE_ATOMIC_UPDATES
--	unsigned long long old;
--	unsigned long tmp;
--
--	__asm__ __volatile__("\
--1:	lwarx	%L0,0,%4\n\
--	lwzx	%0,0,%3\n\
--	andc	%1,%L0,%5\n\
--	or	%1,%1,%6\n"
--	PPC405_ERR77(0,%3)
--"	stwcx.	%1,0,%4\n\
--	bne-	1b"
--	: "=&r" (old), "=&r" (tmp), "=m" (*p)
--	: "r" (p), "r" ((unsigned long)(p) + 4), "r" (clr), "r" (set), "m" (*p)
--	: "cc" );
--#else /* PTE_ATOMIC_UPDATES */
- 	unsigned long long old = pte_val(*p);
- 	*p = __pte((old & ~(unsigned long long)clr) | set);
--#endif /* !PTE_ATOMIC_UPDATES */
+@@ -314,8 +314,9 @@ static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
+ 	pte_t pte_clr = pte_mkyoung(pte_mkdirty(pte_mkwrite(pte_mkexec(__pte(~0)))));
+ 	unsigned long set = pte_val(entry) & pte_val(pte_set);
+ 	unsigned long clr = ~pte_val(entry) & ~pte_val(pte_clr);
++	int huge = psize > mmu_virtual_psize ? 1 : 0;
  
- #ifdef CONFIG_44x
- 	if ((old & _PAGE_USER) && (old & _PAGE_EXEC))
-diff --git a/arch/powerpc/include/asm/nohash/64/pgtable.h b/arch/powerpc/include/asm/nohash/64/pgtable.h
-index 9a33b8bd842d..9c703b140d64 100644
---- a/arch/powerpc/include/asm/nohash/64/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/64/pgtable.h
-@@ -211,22 +211,9 @@ static inline unsigned long pte_update(struct mm_struct *mm,
- 				       unsigned long set,
- 				       int huge)
- {
--#ifdef PTE_ATOMIC_UPDATES
--	unsigned long old, tmp;
--
--	__asm__ __volatile__(
--	"1:	ldarx	%0,0,%3		# pte_update\n\
--	andc	%1,%0,%4 \n\
--	or	%1,%1,%6\n\
--	stdcx.	%1,0,%3 \n\
--	bne-	1b"
--	: "=&r" (old), "=&r" (tmp), "=m" (*ptep)
--	: "r" (ptep), "r" (clr), "m" (*ptep), "r" (set)
--	: "cc" );
--#else
- 	unsigned long old = pte_val(*ptep);
- 	*ptep = __pte((old & ~clr) | set);
--#endif
-+
- 	/* huge pages use the old page table lock */
- 	if (!huge)
- 		assert_pte_locked(mm, addr);
-@@ -310,21 +297,8 @@ static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
- 	unsigned long bits = pte_val(entry) &
- 		(_PAGE_DIRTY | _PAGE_ACCESSED | _PAGE_RW | _PAGE_EXEC);
- 
--#ifdef PTE_ATOMIC_UPDATES
--	unsigned long old, tmp;
--
--	__asm__ __volatile__(
--	"1:	ldarx	%0,0,%4\n\
--		or	%0,%3,%0\n\
--		stdcx.	%0,0,%4\n\
--		bne-	1b"
--	:"=&r" (old), "=&r" (tmp), "=m" (*ptep)
--	:"r" (bits), "r" (ptep), "m" (*ptep)
--	:"cc");
--#else
- 	unsigned long old = pte_val(*ptep);
- 	*ptep = __pte(old | bits);
--#endif
+-	pte_update(vma->vm_mm, address, ptep, clr, set, 0);
++	pte_update(vma->vm_mm, address, ptep, clr, set, huge);
  
  	flush_tlb_page(vma, address);
  }
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index d06efb946c7d..521929a371af 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -30,7 +30,8 @@ bool hugetlb_disabled = false;
+ 
+ #define hugepd_none(hpd)	(hpd_val(hpd) == 0)
+ 
+-#define PTE_T_ORDER	(__builtin_ffs(sizeof(pte_t)) - __builtin_ffs(sizeof(void *)))
++#define PTE_T_ORDER	(__builtin_ffs(sizeof(pte_basic_t)) - \
++			 __builtin_ffs(sizeof(void *)))
+ 
+ pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr, unsigned long sz)
+ {
+diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
+index e3759b69f81b..214a5f4beb6c 100644
+--- a/arch/powerpc/mm/pgtable.c
++++ b/arch/powerpc/mm/pgtable.c
+@@ -100,7 +100,7 @@ static pte_t set_pte_filter_hash(pte_t pte) { return pte; }
+  * as we don't have two bits to spare for _PAGE_EXEC and _PAGE_HWEXEC so
+  * instead we "filter out" the exec permission for non clean pages.
+  */
+-static pte_t set_pte_filter(pte_t pte)
++static inline pte_t set_pte_filter(pte_t pte)
+ {
+ 	struct page *pg;
+ 
+@@ -249,16 +249,34 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 
+ #else
+ 		/*
+-		 * Not used on non book3s64 platforms. But 8xx
+-		 * can possibly use tsize derived from hstate.
++		 * Not used on non book3s64 platforms.
++		 * 8xx compares it with mmu_virtual_psize to
++		 * know if it is a huge page or not.
+ 		 */
+-		psize = 0;
++		psize = MMU_PAGE_COUNT;
+ #endif
+ 		__ptep_set_access_flags(vma, ptep, pte, addr, psize);
+ 	}
+ 	return changed;
+ #endif
+ }
++
++#if defined(CONFIG_PPC_8xx)
++void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte)
++{
++	/*
++	 * Make sure hardware valid bit is not set. We don't do
++	 * tlb flush for this update.
++	 */
++	VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
++
++	pte = pte_mkpte(pte);
++
++	pte = set_pte_filter(pte);
++
++	ptep->pte = pte_val(pte);
++}
++#endif
+ #endif /* CONFIG_HUGETLB_PAGE */
+ 
+ #ifdef CONFIG_DEBUG_VM
 -- 
 2.25.0
 
