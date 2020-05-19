@@ -2,194 +2,238 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5B1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E45D207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589915296;
-	bh=s0ggLM8TcUO/MB4Ceot/umDdgZQTbNFjRtm+3RpgAyM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1zNLWr2PJcFO6lbXDYLdfNeoeqH1c/D3CcrwWOrxl+r1p327+hk7C2zzsxxxrp5g8
-	 v8ud0/WXcsmqagkwmom+ucKqDWoEf6KTC9mQEPExeS1PIRYmjfpsol41b9+UTA0lC7
-	 xcaTSmutcjkuBhdOErI/kedWNh62v5V+fI+Bqd6Q=
+	by mail.kernel.org (Postfix) with ESMTP id 2EAAE2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:08:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eoXzf9hX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgESTIP (ORCPT
+        id S1727025AbgESTIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:08:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgESTIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:08:13 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E03E02075F;
-        Tue, 19 May 2020 19:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589915292;
-        bh=s0ggLM8TcUO/MB4Ceot/umDdgZQTbNFjRtm+3RpgAyM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HTZ3gDYsbeLgq1PsNyq6EQJky8wcaDS2aKtrh+XAeVuvH4zzL79qNR06nv1dhqQgr
-         I1OFEASOgalOyOStY7pf6+KowStVGu8TcZ4pi1PDueiwaa4+aTVnJ5RbXtwITSe4R/
-         RtXZclU5NC8Yamae33t5exrHcpW94u28E2FkE4CQ=
-Date:   Tue, 19 May 2020 14:12:59 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in
- intel_pt_synth_pebs_sample
-Message-ID: <20200519191259.GB10690@embeddedor>
-References: <20200513234738.GA21211@embeddedor>
- <20200514131030.GL5583@kernel.org>
- <20200514150601.GS4897@embeddedor>
- <CAP-5=fWTCFx80Hd_97_4AxFV4KsRyYptLbQfw=XVw_j8i-EAyg@mail.gmail.com>
- <20200514220934.GT4897@embeddedor>
- <CAP-5=fV5URsHn+SpW8N4XjkKT1vt2T1Us5FsqaJsoOW0zn=OxQ@mail.gmail.com>
- <20200515001025.GU4897@embeddedor>
- <20200515164153.GD9335@kernel.org>
- <2540ed9a-89f1-6d59-10c9-a66cc90db5d2@intel.com>
+        Tue, 19 May 2020 15:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESTI3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 15:08:29 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689BCC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:08:28 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id cx22so96228pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:08:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RmcIN7oDiRdqjbFzFUgxoG77VNtHMuczcjZzgJlogEA=;
+        b=eoXzf9hXQ06zaKJUBvPgE2YZz9h1zQ80EA6b8QroqlmFdCJ0ZIMsDkTGrDlydw01rB
+         ugyyTWz/NAmL2pyTZewiWZvEDazJmNUa4/96mQ68GCyfX0PYPUG0XCKQE/IKw4p5VwP8
+         cQ14sWK6koJ4BAyNNmA9lLIHrLuBQAEZ2EnyA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RmcIN7oDiRdqjbFzFUgxoG77VNtHMuczcjZzgJlogEA=;
+        b=MPVKVZzdDBPTWCqqlqLkm+rc0e1yijf36nMSL7fhLzaCu9MRwZeyFec2tcMpPk4kXU
+         m+BV33/+9ODEIkW1Ve9nQ8J5VE0w0Q3pFZ1UZfjpsPFfT5cDjiPday6QRtsy92s+rXcd
+         kdjQBxUUc0s/aEgZE/aoud52/4JyRNmHsI2LYH6UZNLySIGCCXKnIpsZK2cf/3huCkMr
+         IvaaZVn9plTZTqFQy6lv6fcSncN29xQyYj1xlztWCoMwy4Tt5sUDUnw/zbp0aDW2kDFY
+         /OmNfquqtmFjErO7Kj8VnncLwIpg+iFTRoZQMesH/AiwCUktxPhI5E7kIz9sxVMSgZEN
+         zqrw==
+X-Gm-Message-State: AOAM532d8+NVmnavg6iuZ88BiZCRAV/I5bMS8+19G5Ffx1IApa+y7l7B
+        VlUOtG7VG0MA5y2dFOrgKDaPCg==
+X-Google-Smtp-Source: ABdhPJwqEuEaq7kQpGUMeXthnwkUMJ6lgjSjG02qTXaI4b20dLAWrgvQRGgcnWVI0iaYLj+dy+rw8A==
+X-Received: by 2002:a17:90a:31c8:: with SMTP id j8mr1149298pjf.178.1589915307800;
+        Tue, 19 May 2020 12:08:27 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i12sm245353pjk.37.2020.05.19.12.08.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 12:08:26 -0700 (PDT)
+Date:   Tue, 19 May 2020 12:08:25 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v2 6/8] exec/binfmt_script: Don't modify bprm->buf and
+ then return -ENOEXEC
+Message-ID: <202005191144.E3112135@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+ <877dx822er.fsf_-_@x220.int.ebiederm.org>
+ <874ksczru6.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2540ed9a-89f1-6d59-10c9-a66cc90db5d2@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <874ksczru6.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 16, 2020 at 03:35:48PM +0300, Adrian Hunter wrote:
-> On 15/05/20 7:41 pm, Arnaldo Carvalho de Melo wrote:
-> > Sorry for the top post: Adrian, can you take a look at this?
-> > 
-> > Adrian Hunter was not CCed, Adrian?
+On Mon, May 18, 2020 at 07:33:21PM -0500, Eric W. Biederman wrote:
 > 
-> From: Adrian Hunter <adrian.hunter@intel.com>
-> Date: Sat, 16 May 2020 15:12:28 +0300
-> Subject: [PATCH] perf intel-pt: Use allocated branch stack for PEBS sample
+> The return code -ENOEXEC serves to tell search_binary_handler that it
+> should continue searching for the binfmt to handle a given file.  This
+> makes return -ENOEXEC with a bprm->buf that is needed to continue the
+> search problematic.
 > 
-> To avoid having struct branch_stack as a non-last structure member,
-> use allocated branch stack for PEBS sample.
+> The current binfmt_script manages to escape problems as it closes and
+> clears bprm->file before return -ENOEXEC with bprm->buf modified.
+> This prevents search_binary_handler from looping as it explicitly
+> handles a NULL bprm->file.
 > 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> I plan on moving all of the bprm->file managment into fs/exec.c and out
+> of the binary handlers so this will become a problem.
+> 
+> Move closing bprm->file and the test for BINPRM_PATH_INACCESSIBLE
+> down below the last return of -ENOEXEC.
+> 
+> Introduce i_sep and i_end to track the end of the first argument and
+> the end of the parameters respectively.  Using those, constification
+> of all char * pointers, and the helpers next_terminator and
+> next_non_spacetab guarantee the parameter parsing will not modify
+> bprm->buf.
 
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>>
+I'm quite pleased this could be implemented using the existing helpers!
+It seems Linus and I were on the right track with these. :)
 
-Thanks, Adrian.
---
-Gustavo
-
-> ---
->  tools/perf/util/intel-pt.c | 31 +++++++++++++------------------
->  1 file changed, 13 insertions(+), 18 deletions(-)
 > 
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index f17b1e769ae4..e4dd8bf610ce 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -913,11 +913,11 @@ static void intel_pt_add_callchain(struct intel_pt *pt,
->  	sample->callchain = pt->chain;
->  }
->  
-> -static struct branch_stack *intel_pt_alloc_br_stack(struct intel_pt *pt)
-> +static struct branch_stack *intel_pt_alloc_br_stack(unsigned int entry_cnt)
->  {
->  	size_t sz = sizeof(struct branch_stack);
->  
-> -	sz += pt->br_stack_sz * sizeof(struct branch_entry);
-> +	sz += entry_cnt * sizeof(struct branch_entry);
->  	return zalloc(sz);
->  }
->  
-> @@ -930,7 +930,7 @@ static int intel_pt_br_stack_init(struct intel_pt *pt)
->  			evsel->synth_sample_type |= PERF_SAMPLE_BRANCH_STACK;
+> Only modify bprm->buf to terminate the strings i_arg and i_name with
+> '\0' for passing to copy_strings_kernel.
+> 
+> When replacing loops with next_non_spacetab and next_terminator care
+> has been take that the logic of the parsing code (short of replacing
+> characters by '\0') remains the same.
+
+Ah, interesting. As in, bprm->buf must not be modified unless the binfmt
+handler is going to succeed. I think this requirement should be
+documented in the binfmt struct header file.
+
+> [...]
+> diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
+> index 8d718d8fd0fe..85e0ef86eb11 100644
+> --- a/fs/binfmt_script.c
+> +++ b/fs/binfmt_script.c
+> @@ -71,39 +56,48 @@ static int load_script(struct linux_binprm *bprm)
+>  	 * parse them on its own.
+>  	 */
+>  	buf_end = bprm->buf + sizeof(bprm->buf) - 1;
+> -	cp = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
+> -	if (!cp) {
+> -		cp = next_non_spacetab(bprm->buf + 2, buf_end);
+> -		if (!cp)
+> +	i_end = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
+> +	if (!i_end) {
+> +		i_end = next_non_spacetab(bprm->buf + 2, buf_end);
+> +		if (!i_end)
+>  			return -ENOEXEC; /* Entire buf is spaces/tabs */
+>  		/*
+>  		 * If there is no later space/tab/NUL we must assume the
+>  		 * interpreter path is truncated.
+>  		 */
+> -		if (!next_terminator(cp, buf_end))
+> +		if (!next_terminator(i_end, buf_end))
+>  			return -ENOEXEC;
+> -		cp = buf_end;
+> +		i_end = buf_end;
 >  	}
->  
-> -	pt->br_stack = intel_pt_alloc_br_stack(pt);
-> +	pt->br_stack = intel_pt_alloc_br_stack(pt->br_stack_sz);
->  	if (!pt->br_stack)
->  		return -ENOMEM;
->  
-> @@ -951,6 +951,9 @@ static void intel_pt_add_br_stack(struct intel_pt *pt,
->  	sample->branch_stack = pt->br_stack;
->  }
->  
-> +/* INTEL_PT_LBR_0, INTEL_PT_LBR_1 and INTEL_PT_LBR_2 */
-> +#define LBRS_MAX (INTEL_PT_BLK_ITEM_ID_CNT * 3U)
+> -	/* NUL-terminate the buffer and any trailing spaces/tabs. */
+> -	*cp = '\0';
+> -	while (cp > bprm->buf) {
+> -		cp--;
+> -		if ((*cp == ' ') || (*cp == '\t'))
+> -			*cp = '\0';
+> -		else
+> -			break;
+> -	}
+> -	for (cp = bprm->buf+2; (*cp == ' ') || (*cp == '\t'); cp++);
+> -	if (*cp == '\0')
+> +	/* Trim any trailing spaces/tabs from i_end */
+> +	while (spacetab(i_end[-1]))
+> +		i_end--;
 > +
->  static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
->  						   unsigned int queue_nr)
->  {
-> @@ -968,8 +971,10 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
->  			goto out_free;
->  	}
->  
-> -	if (pt->synth_opts.last_branch) {
-> -		ptq->last_branch = intel_pt_alloc_br_stack(pt);
-> +	if (pt->synth_opts.last_branch || pt->synth_opts.other_events) {
-> +		unsigned int entry_cnt = max(LBRS_MAX, pt->br_stack_sz);
+> +	/* Skip over leading spaces/tabs */
+> +	i_name = next_non_spacetab(bprm->buf+2, i_end);
+> +	if (!i_name || (i_name == i_end))
+>  		return -ENOEXEC; /* No interpreter name found */
+> -	i_name = cp;
 > +
-> +		ptq->last_branch = intel_pt_alloc_br_stack(entry_cnt);
->  		if (!ptq->last_branch)
->  			goto out_free;
->  	}
-> @@ -1720,9 +1725,6 @@ static void intel_pt_add_lbrs(struct branch_stack *br_stack,
->  	}
->  }
->  
-> -/* INTEL_PT_LBR_0, INTEL_PT_LBR_1 and INTEL_PT_LBR_2 */
-> -#define LBRS_MAX (INTEL_PT_BLK_ITEM_ID_CNT * 3)
-> -
->  static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
->  {
->  	const struct intel_pt_blk_items *items = &ptq->state->items;
-> @@ -1798,25 +1800,18 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
->  	}
->  
->  	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
-> -		struct {
-> -			struct branch_stack br_stack;
-> -			struct branch_entry entries[LBRS_MAX];
-> -		} br;
-> -
->  		if (items->mask[INTEL_PT_LBR_0_POS] ||
->  		    items->mask[INTEL_PT_LBR_1_POS] ||
->  		    items->mask[INTEL_PT_LBR_2_POS]) {
-> -			intel_pt_add_lbrs(&br.br_stack, items);
-> -			sample.branch_stack = &br.br_stack;
-> +			intel_pt_add_lbrs(ptq->last_branch, items);
->  		} else if (pt->synth_opts.last_branch) {
->  			thread_stack__br_sample(ptq->thread, ptq->cpu,
->  						ptq->last_branch,
->  						pt->br_stack_sz);
-> -			sample.branch_stack = ptq->last_branch;
->  		} else {
-> -			br.br_stack.nr = 0;
-> -			sample.branch_stack = &br.br_stack;
-> +			ptq->last_branch->nr = 0;
->  		}
-> +		sample.branch_stack = ptq->last_branch;
->  	}
->  
->  	if (sample_type & PERF_SAMPLE_ADDR && items->has_mem_access_address)
-> -- 
-> 2.17.1
-> 
-> 
-> 
+> +	/* Is there an optional argument? */
+>  	i_arg = NULL;
+> -	for ( ; *cp && (*cp != ' ') && (*cp != '\t'); cp++)
+> -		/* nothing */ ;
+> -	while ((*cp == ' ') || (*cp == '\t'))
+> -		*cp++ = '\0';
+> -	if (*cp)
+> -		i_arg = cp;
+> +	i_sep = next_terminator(i_name, i_end);
+> +	if (i_sep && (*i_sep != '\0'))
+> +		i_arg = next_non_spacetab(i_sep, i_end);
+> +
+> +	/*
+> +	 * If the script filename will be inaccessible after exec, typically
+> +	 * because it is a "/dev/fd/<fd>/.." path against an O_CLOEXEC fd, give
+> +	 * up now (on the assumption that the interpreter will want to load
+> +	 * this file).
+> +	 */
+> +	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
+> +		return -ENOENT;
+> +
+> +	/* Release since we are not mapping a binary into memory. */
+> +	allow_write_access(bprm->file);
+> +	fput(bprm->file);
+> +	bprm->file = NULL;
+> +
+>  	/*
+>  	 * OK, we've parsed out the interpreter name and
+>  	 * (optional) argument.
+> @@ -121,7 +115,9 @@ static int load_script(struct linux_binprm *bprm)
+>  	if (retval < 0)
+>  		return retval;
+>  	bprm->argc++;
+> +	*((char *)i_end) = '\0';
+>  	if (i_arg) {
+> +		*((char *)i_sep) = '\0';
+>  		retval = copy_strings_kernel(1, &i_arg, bprm);
+>  		if (retval < 0)
+>  			return retval;
+
+I think this is all correct, though I'm always suspicious of my visual
+inspection of string parsers. ;)
+
+I had a worry the \n was not handled correctly in some case. I.e. before
+any \n was converted into \0, and so next_terminator() didn't need to
+consider \n separately. (next_non_spacetab() doesn't care since \n and \0
+are both not ' ' nor '\t'.) For next_terminator(), though, I was worried
+there was a case where *i_end == '\n', and next_terminator()
+will return NULL instead of "last" due to *last being '\n' instead of
+'\0', causing a problem, but you're using the adjusted i_end so I think
+it's correct. And you've handled i_name == i_end.
+
+I will see if I can find my testing scripts I used when commit
+b5372fe5dc84 originally landed to double-check... until then:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
