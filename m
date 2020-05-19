@@ -2,223 +2,132 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 200CC206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:27:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cX4DoIYH"
+	by mail.kernel.org (Postfix) with ESMTP id 6710020708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgESL1Q (ORCPT
+        id S1728686AbgESL2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:27:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgESL1P (ORCPT
+        Tue, 19 May 2020 07:28:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:43685 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgESL2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:27:15 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E080C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 04:27:15 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u1so1886801wmn.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 04:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X9s1mFt4Y+m2GazZ8OD2weZt7bXYsBrAFY1mL2LOceo=;
-        b=cX4DoIYH4zV4RRwh3M8eeDx2prhyfWGoLozgWJzLGaCQtFLdCN3mhGyaLeM0u24A2y
-         KdvyIoGFULIuT3yUVPC1yPJ6zHpKBN5VDF1reoaLRfxBGUBc8KEVy+GWtOiBpKv3ScU9
-         KQJjY4quqA7OwJ8jdkg67DLfYm0taMb1LXsyfGcyPVV0AlO180hzrG/nE8WyVVZO3dhq
-         VTkzUoE/hKL+ZjAyql7ShrqsToG/V+iHDqxStHhbDhl8ii4upu0rT8j7w54FMM6PXx2Q
-         N1Zu6dseEeAEI5BVJyXwQ8unjhF4jqR19YWH+dwRli6DO4VJz/wxBgrVqn9lLG4FEZJq
-         uVuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X9s1mFt4Y+m2GazZ8OD2weZt7bXYsBrAFY1mL2LOceo=;
-        b=OIyBi9ssIEmU1S+uODte7cJJJD0zXZmmgsFGu0p/1o7bOOaHymUcT+19NhF9H5oA8c
-         eDb38s10Lg2hkL9Y/QEXUg2zCOh0rKlgQATe1JXFJHX5HfmoDdJDfcE+cC8bZg+w8Jg4
-         NP8z1ZmwHpwzHPl+rRJu73zAEnLYaETjgd3DSOUkzTpE2Wda5sisoE9kS0i+kEQ7kGto
-         CkV/t02v2C0OyKwk5jTY4ACfkVC0e4CMAbEDNpajWtc2SadlnmIg/Lo94XIvDVIYb+os
-         avVJbk/CVqjNj8ZTZBNeGRUqff5BmmasbJk2kuC6hb6SLdPuJQyQFx4Mrk6GQuhC3uFk
-         4Low==
-X-Gm-Message-State: AOAM531xhh4fjNBWZX4e4Wl7kfExL6hydDNpM9M2SfAIkMv16O8V6Eyk
-        9gZ2+ak80vZPyNx4PsPp9rc=
-X-Google-Smtp-Source: ABdhPJy0KfucZ/8phPGAZvlHvMxbheNSTC8rSaxIMz+lsRz3mXKl136S8UVrc4oLFoGta6/hrjU2kQ==
-X-Received: by 2002:a7b:c3d2:: with SMTP id t18mr5015488wmj.100.1589887633716;
-        Tue, 19 May 2020 04:27:13 -0700 (PDT)
-Received: from kwango.local (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
-        by smtp.gmail.com with ESMTPSA id 88sm19886645wrq.77.2020.05.19.04.27.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 04:27:12 -0700 (PDT)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] vsprintf: don't obfuscate NULL and error pointers
-Date:   Tue, 19 May 2020 13:26:57 +0200
-Message-Id: <20200519112657.17098-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Tue, 19 May 2020 07:28:46 -0400
+Received: from mail-qv1-f53.google.com ([209.85.219.53]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MD9Kj-1jjZ873ugj-009A98; Tue, 19 May 2020 13:28:43 +0200
+Received: by mail-qv1-f53.google.com with SMTP id g20so6254437qvb.9;
+        Tue, 19 May 2020 04:28:42 -0700 (PDT)
+X-Gm-Message-State: AOAM53169dBAgh8P3wFfy5W3dx7yLlAqSWDOnnio9wJY4xoZEtukxaP9
+        VvoLWZolSj1GxVRlpScsb9ssXo/c0WappXN01Ag=
+X-Google-Smtp-Source: ABdhPJx+Ipnp1De8u1nx4B4U7GgZtHcjTeorwfefYcSy2qSkv9jr1bxjHK/e2HLBvFYfYy1Fq3XFH9dyxPrnUgH7uP8=
+X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr19411615qvz.210.1589887721612;
+ Tue, 19 May 2020 04:28:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20200429082134eucas1p2415c5269202529e6b019f2d70c1b5572@eucas1p2.samsung.com>
+ <20200429082120.16259-1-geert+renesas@glider.be> <dleftjmu645mqn.fsf%l.stelmach@samsung.com>
+ <CAMuHMdXxq6m6gebQbWvxDynDcZ7dLyZzKC_QroK63L8FGeac1Q@mail.gmail.com>
+ <20200519094637.GZ1551@shell.armlinux.org.uk> <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+In-Reply-To: <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 19 May 2020 13:28:24 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3H=7qx+Rz9sScTVCSMKWGwQ_ROnyoyK73A5yUd+_jbTw@mail.gmail.com>
+Message-ID: <CAK8P3a3H=7qx+Rz9sScTVCSMKWGwQ_ROnyoyK73A5yUd+_jbTw@mail.gmail.com>
+Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Lukasz Stelmach <l.stelmach@samsung.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Grant Likely <grant.likely@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:CNVN5I2QxgwLHtGhj2XIlWHhA95Ln5IQ59NqTrneFm7uuYeJZ/d
+ UXEYTD0Yz/hqn+uAYntGDrQmvtCB4QsBO9Jif4coYjmud+2+T/QnlKXOPYV7NQmuSOw7+FD
+ lAtNH/7To3qRwMuf7HhGyrDio/xsfkWTHsFoW1PrfNkzbvyi5GC4RaupDdimwTg100a2bWR
+ r3NQcEAF7c/t9uQxmPCtQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l871HVkBlvM=:zHTVIOTzNjei48LbTdIcX/
+ TrSj/+8R6dSKCZlzmqH3864ZfgKmGcOYDYcQB9p69p38pkzdzTVdBWT/eEJa82qJWm2sg35vE
+ LurmOIZfHUxKtpVwK6CidDrOWZeENaxqtLxNVFvFkPATp0kgP9rKBY3/6Q0WNTLISx0DGf4Yl
+ q/7hJVbk5uJuDdEYdFVSBAEhZoHyCniedaa9XW50XHe7tNzICbAoCO/YUzKqo/zrs7k6olayT
+ 4UMut0Diqte95Cc9Ml973Gew1NJLCybZBQkDYC4IbzbZ2DOmubW2tsY/RrCVPm/0QuYThJJwu
+ ReuU/cAh3GSgviy0bd2xuyWdvEhke6EYlt9OkvH9y8hE7bTfnWrFsvA6p8eIzYotef+34HgzW
+ L0JqS8ELWFSp+RCeTaDeEBL3qVN5iuoWkoU9ZSsBV4UyXcU74IWqP7W86swJQLUqRqnR+y2Yc
+ S0sOiQhhfw5xzz4H3CtCCoEtHlLfQuj70zFfsQd8hDA/wdMZcm0P56vRbt+Tt9xhyz3AxvjTs
+ FKJTm2zbvNGmSMuXKFV+LpRqml392FIPtLfGRiC3s0HSmloqlDQm2n9AaeDeb+W1psYnIPz+r
+ L+cOrh2++ep6obIbe01o3DfYoYcmrU6St94x0TVnHLfm8q4FbVB8/9G3OFs9Hgd9gllWRW5DZ
+ 686tid+owAchEhOurHWyAyR9gfPullL8b32xP2Qgj1sWPu5oyXQRRV83Er5UqbGX/pSM1Ogil
+ OAnD3x8eQmjWF7bUFnDt/QYc4BnxfGRYvCLj9DWm/RxEYBClmm49Xwk4DMVoBwhC2oH1JYkm+
+ rVoHTqEIlLBbCiEYO/O3FP+1PbbgajOar0xaov3SQYsrHIpPyg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I don't see what security concern is addressed by obfuscating NULL
-and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-of sites where %p is used (over 10000) and the fact that NULL pointers
-aren't uncommon, it probably wouldn't take long for an attacker to
-find the hash that corresponds to 0.  Although harder, the same goes
-for most common error values, such as -1, -2, -11, -14, etc.
+On Tue, May 19, 2020 at 1:21 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
 
-The NULL part actually fixes a regression: NULL pointers weren't
-obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-dereferencing invalid pointers") which went into 5.2.  I'm tacking
-the IS_ERR() part on here because error pointers won't leak kernel
-addresses and printing them as pointers shouldn't be any different
-from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-debugging based on existing pr_debug and friends excruciating.
+> >
+> > > However, something under /chosen should work.
+> >
+> > Yet another sticky plaster...
+>
+> IMHO the old masking technique is the hacky solution covered by
+> plasters.
+>
+> DT describes the hardware.  In general, where to put the kernel is a
+> software policy, and thus doesn't belong in DT, except perhaps under
+> /chosen.  But that would open another can of worms, as people usually
+> have no business in specifying where the kernel should be located.
+> In the crashkernel case, there is a clear separation between memory to
+> be used by the crashkernel, and memory to be solely inspected by the
+> crashkernel.
+>
+> Devicetree Specification, Release v0.3, Section 3.4 "/memory node" says:
+>
+>     "The client program may access memory not covered by any memory
+>      reservations (see section 5.3)"
+>
+> (Section 5.3 "Memory Reservation Block" only talks about structures in
+> the FDT, not about DTS)
+>
+> Hence according to the above, the crashkernel is rightfully allowed to
+> do whatever it wants with all memory under the /memory node.
+> However, there is also
+> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
+> This suggests the crashkernel should be passed a DTB that contains a
+> /reserved-memory node, describing which memory cannot be used freely.
+> Then the decompressor needs to take this into account when deciding
+> where the put the kernel.
+>
+> Yes, the above requires changing code. But at least it provides a
+> path forward, getting rid of the fragile old masking technique.
 
-Note that the "always print 0's for %pK when kptr_restrict == 2"
-behaviour which goes way back is left as is.
+There is an existing "linux,usable-memory-range" property documented
+in Documentation/devicetree/bindings/chosen.txt, which as I understand
+is exactly what you are looking for, except that it is currently only
+documented for arm64.
 
-Example output with the patch applied:
+Would extending this to arm work?
 
-                            ptr         error-ptr              NULL
-%p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
-%pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
-%px:           ffff888048c04020  fffffffffffffff2  0000000000000000
-%pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
-%pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
-
-Fixes: 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
----
- lib/test_printf.c | 19 ++++++++++++++++++-
- lib/vsprintf.c    |  7 +++++++
- 2 files changed, 25 insertions(+), 1 deletion(-)
-
-Hi Petr,
-
-This just came up again, please consider sending this to Linus
-for 5.7.
-
-Prior discussion was split in three threads and revolved around the
-vision for how lib/test_printf.c should be structured between Rasmus
-and yourself.  The fix itself wasn't disputed and has several acks.
-
-If you want to restructure the test suite before adding any new
-test cases, v1 doesn't have them, but I'm reposting with test cases
-because I think it's best to add them right away to prevent further
-regressions.
-
-v3:
-- don't use EAGAIN macro in error_pointer() test case as the
-  actual error code varies between architectures
-
-v2:
-- fix null_pointer() test case (it didn't catch the original
-  regression because test_hashed() doesn't really test much)
-  and add error_pointer() test case
-
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 2d9f520d2f27..6b1622f4d7c2 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -214,6 +214,7 @@ test_string(void)
- #define PTR_STR "ffff0123456789ab"
- #define PTR_VAL_NO_CRNG "(____ptrval____)"
- #define ZEROS "00000000"	/* hex 32 zero bits */
-+#define ONES "ffffffff"		/* hex 32 one bits */
- 
- static int __init
- plain_format(void)
-@@ -245,6 +246,7 @@ plain_format(void)
- #define PTR_STR "456789ab"
- #define PTR_VAL_NO_CRNG "(ptrval)"
- #define ZEROS ""
-+#define ONES ""
- 
- static int __init
- plain_format(void)
-@@ -330,14 +332,28 @@ test_hashed(const char *fmt, const void *p)
- 	test(buf, fmt, p);
- }
- 
-+/*
-+ * NULL pointers aren't hashed.
-+ */
- static void __init
- null_pointer(void)
- {
--	test_hashed("%p", NULL);
-+	test(ZEROS "00000000", "%p", NULL);
- 	test(ZEROS "00000000", "%px", NULL);
- 	test("(null)", "%pE", NULL);
- }
- 
-+/*
-+ * Error pointers aren't hashed.
-+ */
-+static void __init
-+error_pointer(void)
-+{
-+	test(ONES "fffffff5", "%p", ERR_PTR(-11));
-+	test(ONES "fffffff5", "%px", ERR_PTR(-11));
-+	test("(efault)", "%pE", ERR_PTR(-11));
-+}
-+
- #define PTR_INVALID ((void *)0x000000ab)
- 
- static void __init
-@@ -649,6 +665,7 @@ test_pointer(void)
- {
- 	plain();
- 	null_pointer();
-+	error_pointer();
- 	invalid_pointer();
- 	symbol_ptr();
- 	kernel_ptr();
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 7c488a1ce318..f0f0522cd5a7 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -794,6 +794,13 @@ static char *ptr_to_id(char *buf, char *end, const void *ptr,
- 	unsigned long hashval;
- 	int ret;
- 
-+	/*
-+	 * Print the real pointer value for NULL and error pointers,
-+	 * as they are not actual addresses.
-+	 */
-+	if (IS_ERR_OR_NULL(ptr))
-+		return pointer_string(buf, end, ptr, spec);
-+
- 	/* When debugging early boot use non-cryptographically secure hash. */
- 	if (unlikely(debug_boot_weak_hash)) {
- 		hashval = hash_long((unsigned long)ptr, 32);
--- 
-2.19.2
-
+      Arnd
