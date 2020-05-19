@@ -2,43 +2,43 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8022C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6919BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B765720829
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453F820829
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EFGQQav6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pVRYa8P8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgESNEV (ORCPT
+        id S1729099AbgESNEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:04:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43266 "EHLO
+        Tue, 19 May 2020 09:04:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728989AbgESNEK (ORCPT
+        with ESMTP id S1729012AbgESNEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:04:10 -0400
+        Tue, 19 May 2020 09:04:16 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B81A9C08C5C5;
-        Tue, 19 May 2020 06:03:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD9CC08C5C0;
+        Tue, 19 May 2020 06:03:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=oOgdpV5F/azRvwA7AEZMBrl6ul8EwEc3E8NQyuJo/u0=; b=EFGQQav698EAkob+fy8pip8BYs
-        xEawgIObbTFnDvbBExooqgJ9vt5OGWUmzbn1/UZar7jr5f6+5ZtnhAo4znpmEIch72rSJ7wp1R1g4
-        byN2kmZ36w3JAvFUHCdNZb9reI5WOY/Gva90jGnPQMI7YSRhPuyTu8QTMioNXd5iPRHsY7QgbraIX
-        97/DX9cc0lV9VJ7m06cQpRS4FUrwIzNwGSOinSmzavPFkznEjrJ7g3I9J4wU3cS4LZ3U5ei+ZMztY
-        eGHCdz/enKc0x9f3xb/rp5m8aSd6Y1m5eaPeQV7oNBpFV8ch4thbajhVtkKSPterlZ5qlCfIbyMcB
-        iJM9lzOQ==;
+        bh=6MCEXCuyQ19zofaOQkoasXyj8+vdtyHO059Nwuls9kQ=; b=pVRYa8P8bX4OourdMSFgaj7CfH
+        wgfdDRSNF7nE8bZxTmLI9WZgwFUM/XdyNezoZ6V8IeYKOF1agYGFL2noI7uIsXgYfEchMI4DPi9k3
+        Osek2/27/3Xk961xDr+JEdKPb9l5dIC7UpJA9SjqFmoMh7gcQGPf5U/j1UcIuk40voPpVMLET5K7A
+        BwR7LtGblzn/2DMlUv7H45CmsdT6Fum5i2vSQbBaZ1eAJg6kGPbTvioqqVJ2LE2qf1byNQdOOoYiA
+        q76K9h79hYxc8bBgeckfksEOFJlaA+pxBHxBwX2nVq3B3eySKs1Kps/7q1+NFepHh+3FZWofl36Pg
+        ZLOL9YTg==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jb1uB-00046B-OY; Tue, 19 May 2020 13:03:36 +0000
+        id 1jb1u0-0003xC-Ev; Tue, 19 May 2020 13:03:24 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -47,9 +47,9 @@ Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/9] sit: refactor ipip6_tunnel_ioctl
-Date:   Tue, 19 May 2020 15:03:15 +0200
-Message-Id: <20200519130319.1464195-6-hch@lst.de>
+Subject: [PATCH 1/9] ipv4: streamline ipmr_new_tunnel
+Date:   Tue, 19 May 2020 15:03:11 +0200
+Message-Id: <20200519130319.1464195-2-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519130319.1464195-1-hch@lst.de>
 References: <20200519130319.1464195-1-hch@lst.de>
@@ -61,451 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split the ioctl handler into one function per command instead of having
-a all the logic sit in one giant switch statement.
+Reduce a few level of indentation to simplify the function.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- net/ipv6/sit.c | 368 ++++++++++++++++++++++++++++---------------------
- 1 file changed, 210 insertions(+), 158 deletions(-)
+ net/ipv4/ipmr.c | 73 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 36 insertions(+), 37 deletions(-)
 
-diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
-index 98954830c40ba..7c158fdc02daf 100644
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -83,6 +83,13 @@ struct sit_net {
- 	struct net_device *fb_tunnel_dev;
- };
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index 5c218db2dede7..a1169b6941134 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -471,50 +471,49 @@ static bool ipmr_init_vif_indev(const struct net_device *dev)
  
-+static inline struct sit_net *dev_to_sit_net(struct net_device *dev)
-+{
-+	struct ip_tunnel *t = netdev_priv(dev);
-+
-+	return net_generic(t->net, sit_net_id);
-+}
-+
- /*
-  * Must be invoked with rcu_read_lock
-  */
-@@ -291,14 +298,18 @@ __ipip6_tunnel_locate_prl(struct ip_tunnel *t, __be32 addr)
- 
- }
- 
--static int ipip6_tunnel_get_prl(struct ip_tunnel *t,
--				struct ip_tunnel_prl __user *a)
-+static int ipip6_tunnel_get_prl(struct net_device *dev, struct ifreq *ifr)
+ static struct net_device *ipmr_new_tunnel(struct net *net, struct vifctl *v)
  {
-+	struct ip_tunnel_prl __user *a = ifr->ifr_ifru.ifru_data;
-+	struct ip_tunnel *t = netdev_priv(dev);
- 	struct ip_tunnel_prl kprl, *kp;
- 	struct ip_tunnel_prl_entry *prl;
- 	unsigned int cmax, c = 0, ca, len;
- 	int ret = 0;
- 
-+	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev)
-+		return -EINVAL;
-+
- 	if (copy_from_user(&kprl, a, sizeof(kprl)))
- 		return -EFAULT;
- 	cmax = kprl.datalen / sizeof(kprl);
-@@ -441,6 +452,35 @@ ipip6_tunnel_del_prl(struct ip_tunnel *t, struct ip_tunnel_prl *a)
- 	return err;
- }
- 
-+static int ipip6_tunnel_prl_ctl(struct net_device *dev, struct ifreq *ifr,
-+		int cmd)
-+{
-+	struct ip_tunnel *t = netdev_priv(dev);
-+	struct ip_tunnel_prl prl;
-+	int err;
-+
-+	if (!ns_capable(t->net->user_ns, CAP_NET_ADMIN))
-+		return -EPERM;
-+	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev)
-+		return -EINVAL;
-+
-+	if (copy_from_user(&prl, ifr->ifr_ifru.ifru_data, sizeof(prl)))
-+		return -EFAULT;
-+
-+	switch (cmd) {
-+	case SIOCDELPRL:
-+		err = ipip6_tunnel_del_prl(t, &prl);
-+		break;
-+	case SIOCADDPRL:
-+	case SIOCCHGPRL:
-+		err = ipip6_tunnel_add_prl(t, &prl, cmd == SIOCCHGPRL);
-+		break;
-+	}
-+	dst_cache_reset(&t->dst_cache);
-+	netdev_state_change(dev);
-+	return err;
-+}
-+
- static int
- isatap_chksrc(struct sk_buff *skb, const struct iphdr *iph, struct ip_tunnel *t)
- {
-@@ -1151,7 +1191,53 @@ static int ipip6_tunnel_update_6rd(struct ip_tunnel *t,
- 	netdev_state_change(t->dev);
- 	return 0;
- }
--#endif
-+
-+static int
-+ipip6_tunnel_get6rd(struct net_device *dev, struct ifreq *ifr)
-+{
-+	struct ip_tunnel *t = netdev_priv(dev);
-+	struct ip_tunnel_6rd ip6rd;
-+	struct ip_tunnel_parm p;
-+
-+	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev) {
-+		if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
-+			return -EFAULT;
-+		t = ipip6_tunnel_locate(t->net, &p, 0);
-+	}
-+	if (!t)
-+		t = netdev_priv(dev);
-+
-+	ip6rd.prefix = t->ip6rd.prefix;
-+	ip6rd.relay_prefix = t->ip6rd.relay_prefix;
-+	ip6rd.prefixlen = t->ip6rd.prefixlen;
-+	ip6rd.relay_prefixlen = t->ip6rd.relay_prefixlen;
-+	if (copy_to_user(ifr->ifr_ifru.ifru_data, &ip6rd, sizeof(ip6rd)))
-+		return -EFAULT;
-+	return 0;
-+}
-+
-+static int
-+ipip6_tunnel_6rdctl(struct net_device *dev, struct ifreq *ifr, int cmd)
-+{
-+	struct ip_tunnel *t = netdev_priv(dev);
-+	struct ip_tunnel_6rd ip6rd;
-+	int err;
-+
-+	if (!ns_capable(t->net->user_ns, CAP_NET_ADMIN))
-+		return -EPERM;
-+	if (copy_from_user(&ip6rd, ifr->ifr_ifru.ifru_data, sizeof(ip6rd)))
-+		return -EFAULT;
-+
-+	if (cmd != SIOCDEL6RD) {
-+		err = ipip6_tunnel_update_6rd(t, &ip6rd);
-+		if (err < 0)
-+			return err;
-+	} else
-+		ipip6_tunnel_clone_6rd(dev, dev_to_sit_net(dev));
-+	return 0;
-+}
-+
-+#endif /* CONFIG_IPV6_SIT_6RD */
- 
- static bool ipip6_valid_ip_proto(u8 ipproto)
- {
-@@ -1164,185 +1250,151 @@ static bool ipip6_valid_ip_proto(u8 ipproto)
- }
- 
- static int
--ipip6_tunnel_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
-+__ipip6_tunnel_ioctl_validate(struct net *net, struct ip_tunnel_parm *p)
- {
--	int err = 0;
-+	if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
-+		return -EPERM;
-+
-+	if (!ipip6_valid_ip_proto(p->iph.protocol))
-+		return -EINVAL;
-+	if (p->iph.version != 4 ||
-+	    p->iph.ihl != 5 || (p->iph.frag_off & htons(~IP_DF)))
-+		return -EINVAL;
-+
-+	if (p->iph.ttl)
-+		p->iph.frag_off |= htons(IP_DF);
-+	return 0;
-+}
-+
-+static int
-+ipip6_tunnel_get(struct net_device *dev, struct ifreq *ifr)
-+{
-+	struct ip_tunnel *t = netdev_priv(dev);
- 	struct ip_tunnel_parm p;
--	struct ip_tunnel_prl prl;
-+
-+	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev) {
-+		if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
-+			return -EFAULT;
-+		t = ipip6_tunnel_locate(t->net, &p, 0);
-+	}
-+	if (!t)
-+		t = netdev_priv(dev);
-+
-+	if (copy_to_user(ifr->ifr_ifru.ifru_data, &t->parms, sizeof(p)))
-+		return -EFAULT;
-+	return 0;
-+}
-+
-+static int
-+ipip6_tunnel_add(struct net_device *dev, struct ifreq *ifr)
-+{
- 	struct ip_tunnel *t = netdev_priv(dev);
--	struct net *net = t->net;
--	struct sit_net *sitn = net_generic(net, sit_net_id);
--#ifdef CONFIG_IPV6_SIT_6RD
--	struct ip_tunnel_6rd ip6rd;
--#endif
-+	struct ip_tunnel_parm p;
+-	struct net_device  *dev;
++	struct net_device *tunnel_dev, *new_dev;
++	struct ip_tunnel_parm p = { };
++	mm_segment_t oldfs = get_fs();
++	struct ifreq ifr;
 +	int err;
  
--	switch (cmd) {
--	case SIOCGETTUNNEL:
--#ifdef CONFIG_IPV6_SIT_6RD
--	case SIOCGET6RD:
--#endif
--		if (dev == sitn->fb_tunnel_dev) {
--			if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p))) {
--				err = -EFAULT;
--				break;
--			}
--			t = ipip6_tunnel_locate(net, &p, 0);
--			if (!t)
--				t = netdev_priv(dev);
--		}
-+	if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
-+		return -EFAULT;
-+	err = __ipip6_tunnel_ioctl_validate(t->net, &p);
+-	dev = __dev_get_by_name(net, "tunl0");
++	tunnel_dev = __dev_get_by_name(net, "tunl0");
++	if (!tunnel_dev)
++		goto out;
+ 
+-	if (dev) {
+-		const struct net_device_ops *ops = dev->netdev_ops;
+-		int err;
+-		struct ifreq ifr;
+-		struct ip_tunnel_parm p;
++	p.iph.daddr = v->vifc_rmt_addr.s_addr;
++	p.iph.saddr = v->vifc_lcl_addr.s_addr;
++	p.iph.version = 4;
++	p.iph.ihl = 5;
++	p.iph.protocol = IPPROTO_IPIP;
++	sprintf(p.name, "dvmrp%d", v->vifc_vifi);
++	ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
+ 
+-		memset(&p, 0, sizeof(p));
+-		p.iph.daddr = v->vifc_rmt_addr.s_addr;
+-		p.iph.saddr = v->vifc_lcl_addr.s_addr;
+-		p.iph.version = 4;
+-		p.iph.ihl = 5;
+-		p.iph.protocol = IPPROTO_IPIP;
+-		sprintf(p.name, "dvmrp%d", v->vifc_vifi);
+-		ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
++	if (!tunnel_dev->netdev_ops->ndo_do_ioctl)
++		goto out;
+ 
+-		if (ops->ndo_do_ioctl) {
+-			mm_segment_t oldfs = get_fs();
++	set_fs(KERNEL_DS);
++	err = tunnel_dev->netdev_ops->ndo_do_ioctl(tunnel_dev, &ifr,
++			SIOCADDTUNNEL);
++	set_fs(oldfs);
 +	if (err)
-+		return err;
++		goto out;
  
--		err = -EFAULT;
--		if (cmd == SIOCGETTUNNEL) {
--			memcpy(&p, &t->parms, sizeof(p));
--			if (copy_to_user(ifr->ifr_ifru.ifru_data, &p,
--					 sizeof(p)))
--				goto done;
--#ifdef CONFIG_IPV6_SIT_6RD
-+	t = ipip6_tunnel_locate(t->net, &p, 1);
-+	if (!t)
-+		return -ENOBUFS;
-+
-+	if (copy_to_user(ifr->ifr_ifru.ifru_data, &t->parms, sizeof(p)))
-+		return -EFAULT;
-+	return 0;
-+}
-+
-+static int
-+ipip6_tunnel_change(struct net_device *dev, struct ifreq *ifr)
-+{
-+	struct ip_tunnel *t = netdev_priv(dev);
-+	struct ip_tunnel_parm p;
-+	int err;
-+
-+	if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
-+		return -EFAULT;
-+	err = __ipip6_tunnel_ioctl_validate(t->net, &p);
-+	if (err)
-+		return err;
-+
-+	t = ipip6_tunnel_locate(t->net, &p, 0);
-+	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev) {
-+		if (!t)
-+			return -ENOENT;
-+	} else {
-+		if (t) {
-+			if (t->dev != dev)
-+				return -EEXIST;
- 		} else {
--			ip6rd.prefix = t->ip6rd.prefix;
--			ip6rd.relay_prefix = t->ip6rd.relay_prefix;
--			ip6rd.prefixlen = t->ip6rd.prefixlen;
--			ip6rd.relay_prefixlen = t->ip6rd.relay_prefixlen;
--			if (copy_to_user(ifr->ifr_ifru.ifru_data, &ip6rd,
--					 sizeof(ip6rd)))
--				goto done;
--#endif
-+			if (((dev->flags & IFF_POINTOPOINT) && !p.iph.daddr) ||
-+			    (!(dev->flags & IFF_POINTOPOINT) && p.iph.daddr))
-+				return -EINVAL;
-+			t = netdev_priv(dev);
- 		}
--		err = 0;
--		break;
- 
--	case SIOCADDTUNNEL:
--	case SIOCCHGTUNNEL:
--		err = -EPERM;
--		if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
--			goto done;
-+		ipip6_tunnel_update(t, &p, t->fwmark);
-+	}
- 
--		err = -EFAULT;
--		if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
--			goto done;
--
--		err = -EINVAL;
--		if (!ipip6_valid_ip_proto(p.iph.protocol))
--			goto done;
--		if (p.iph.version != 4 ||
--		    p.iph.ihl != 5 || (p.iph.frag_off&htons(~IP_DF)))
--			goto done;
--		if (p.iph.ttl)
--			p.iph.frag_off |= htons(IP_DF);
--
--		t = ipip6_tunnel_locate(net, &p, cmd == SIOCADDTUNNEL);
--
--		if (dev != sitn->fb_tunnel_dev && cmd == SIOCCHGTUNNEL) {
--			if (t) {
--				if (t->dev != dev) {
--					err = -EEXIST;
--					break;
--				}
--			} else {
--				if (((dev->flags&IFF_POINTOPOINT) && !p.iph.daddr) ||
--				    (!(dev->flags&IFF_POINTOPOINT) && p.iph.daddr)) {
--					err = -EINVAL;
--					break;
--				}
--				t = netdev_priv(dev);
--			}
-+	if (copy_to_user(ifr->ifr_ifru.ifru_data, &t->parms, sizeof(p)))
-+		return -EFAULT;
-+	return 0;
-+}
- 
--			ipip6_tunnel_update(t, &p, t->fwmark);
+-			set_fs(KERNEL_DS);
+-			err = ops->ndo_do_ioctl(dev, &ifr, SIOCADDTUNNEL);
+-			set_fs(oldfs);
+-		} else {
+-			err = -EOPNOTSUPP;
 -		}
-+static int
-+ipip6_tunnel_del(struct net_device *dev, struct ifreq *ifr)
-+{
-+	struct ip_tunnel *t = netdev_priv(dev);
-+	struct ip_tunnel_parm p;
+-		dev = NULL;
++	new_dev = __dev_get_by_name(net, p.name);
++	if (!new_dev)
++		goto out;
  
--		if (t) {
--			err = 0;
--			if (copy_to_user(ifr->ifr_ifru.ifru_data, &t->parms, sizeof(p)))
--				err = -EFAULT;
--		} else
--			err = (cmd == SIOCADDTUNNEL ? -ENOBUFS : -ENOENT);
--		break;
-+	if (!ns_capable(t->net->user_ns, CAP_NET_ADMIN))
-+		return -EPERM;
- 
--	case SIOCDELTUNNEL:
--		err = -EPERM;
--		if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
--			goto done;
--
--		if (dev == sitn->fb_tunnel_dev) {
--			err = -EFAULT;
--			if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
--				goto done;
--			err = -ENOENT;
--			t = ipip6_tunnel_locate(net, &p, 0);
--			if (!t)
--				goto done;
--			err = -EPERM;
--			if (t == netdev_priv(sitn->fb_tunnel_dev))
--				goto done;
--			dev = t->dev;
+-		if (err == 0 &&
+-		    (dev = __dev_get_by_name(net, p.name)) != NULL) {
+-			dev->flags |= IFF_MULTICAST;
+-			if (!ipmr_init_vif_indev(dev))
+-				goto failure;
+-			if (dev_open(dev, NULL))
+-				goto failure;
+-			dev_hold(dev);
 -		}
--		unregister_netdevice(dev);
--		err = 0;
--		break;
-+	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev) {
-+		if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
-+			return -EFAULT;
-+		t = ipip6_tunnel_locate(t->net, &p, 0);
-+		if (!t)
-+			return -ENOENT;
-+		if (t == netdev_priv(dev_to_sit_net(dev)->fb_tunnel_dev))
-+			return -EPERM;
-+		dev = t->dev;
-+	}
-+	unregister_netdevice(dev);
-+	return 0;
-+}
+-	}
+-	return dev;
++	new_dev->flags |= IFF_MULTICAST;
++	if (!ipmr_init_vif_indev(new_dev))
++		goto out_unregister;
++	if (dev_open(new_dev, NULL))
++		goto out_unregister;
++	dev_hold(new_dev);
++	return new_dev;
  
-+static int
-+ipip6_tunnel_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
-+{
-+	switch (cmd) {
-+	case SIOCGETTUNNEL:
-+		return ipip6_tunnel_get(dev, ifr);
-+	case SIOCADDTUNNEL:
-+		return ipip6_tunnel_add(dev, ifr);
-+	case SIOCCHGTUNNEL:
-+		return ipip6_tunnel_change(dev, ifr);
-+	case SIOCDELTUNNEL:
-+		return ipip6_tunnel_del(dev, ifr);
- 	case SIOCGETPRL:
--		err = -EINVAL;
--		if (dev == sitn->fb_tunnel_dev)
--			goto done;
--		err = ipip6_tunnel_get_prl(t, ifr->ifr_ifru.ifru_data);
--		break;
--
-+		return ipip6_tunnel_get_prl(dev, ifr);
- 	case SIOCADDPRL:
- 	case SIOCDELPRL:
- 	case SIOCCHGPRL:
--		err = -EPERM;
--		if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
--			goto done;
--		err = -EINVAL;
--		if (dev == sitn->fb_tunnel_dev)
--			goto done;
--		err = -EFAULT;
--		if (copy_from_user(&prl, ifr->ifr_ifru.ifru_data, sizeof(prl)))
--			goto done;
--
--		switch (cmd) {
--		case SIOCDELPRL:
--			err = ipip6_tunnel_del_prl(t, &prl);
--			break;
--		case SIOCADDPRL:
--		case SIOCCHGPRL:
--			err = ipip6_tunnel_add_prl(t, &prl, cmd == SIOCCHGPRL);
--			break;
--		}
--		dst_cache_reset(&t->dst_cache);
--		netdev_state_change(dev);
--		break;
--
-+		return ipip6_tunnel_prl_ctl(dev, ifr, cmd);
- #ifdef CONFIG_IPV6_SIT_6RD
-+	case SIOCGET6RD:
-+		return ipip6_tunnel_get6rd(dev, ifr);
- 	case SIOCADD6RD:
- 	case SIOCCHG6RD:
- 	case SIOCDEL6RD:
--		err = -EPERM;
--		if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
--			goto done;
--
--		err = -EFAULT;
--		if (copy_from_user(&ip6rd, ifr->ifr_ifru.ifru_data,
--				   sizeof(ip6rd)))
--			goto done;
--
--		if (cmd != SIOCDEL6RD) {
--			err = ipip6_tunnel_update_6rd(t, &ip6rd);
--			if (err < 0)
--				goto done;
--		} else
--			ipip6_tunnel_clone_6rd(dev, sitn);
--
--		err = 0;
--		break;
-+		return ipip6_tunnel_6rdctl(dev, ifr, cmd);
- #endif
--
- 	default:
--		err = -EINVAL;
-+		return -EINVAL;
- 	}
--
--done:
--	return err;
+-failure:
+-	unregister_netdevice(dev);
++out_unregister:
++	unregister_netdevice(new_dev);
++out:
+ 	return NULL;
  }
  
- static const struct net_device_ops ipip6_netdev_ops = {
 -- 
 2.26.2
 
