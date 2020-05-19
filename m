@@ -2,123 +2,193 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB29FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7282FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B10AF20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D65C207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:31:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YygAM4rx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AMwWip3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgESXaF (ORCPT
+        id S1727915AbgESXbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:30:05 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:40836 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728432AbgESXaC (ORCPT
+        Tue, 19 May 2020 19:31:51 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59360 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgESXbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:30:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589931002; x=1621467002;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=fitAmmYR+siRHznU7MJYKk9c4Tw82/jy6e5chPwlJLw=;
-  b=YygAM4rxhevUTIpwXDea+e1znhZ7YOkK+Xbwgvyk2RpqEX1HneGo34qH
-   FUR9cIh77T27+TwpzuT/FfNlYH1JbfxCVlwArylM/KP1tL7hgMuWok+zE
-   H0QLewXYVd0zlqr1NelNitMrBpv7JsNH4728d9RmELnUU2LHe0srjoA2i
-   M=;
-IronPort-SDR: Wl3dSMwhpOL5k2tH39DJuBMefCB10ew0UQM8WlE40AAwlaQq7gFVjSYFqv7rMMiJuNURig22t8
- 62l/Qk1vmD/Q==
-X-IronPort-AV: E=Sophos;i="5.73,411,1583193600"; 
-   d="scan'208";a="36216330"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 19 May 2020 23:30:01 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id C56E42225D4;
-        Tue, 19 May 2020 23:29:59 +0000 (UTC)
-Received: from EX13D07UWB004.ant.amazon.com (10.43.161.196) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 19 May 2020 23:29:52 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D07UWB004.ant.amazon.com (10.43.161.196) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 19 May 2020 23:29:52 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 23:29:52 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 847C740712; Tue, 19 May 2020 23:29:52 +0000 (UTC)
-Date:   Tue, 19 May 2020 23:29:52 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
-        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>
-Subject: [PATCH 12/12] PM / hibernate: update the resume offset on
- SNAPSHOT_SET_SWAP_AREA
-Message-ID: <40de33ca69c0d3bcf8c827862768ae5d399698d6.1589926004.git.anchalag@amazon.com>
-References: <cover.1589926004.git.anchalag@amazon.com>
+        Tue, 19 May 2020 19:31:51 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04JNVlph177955;
+        Tue, 19 May 2020 23:31:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=UBY/k2OVYhF0QuJq9wx8qy4hPY57/Gp9Fme/ic3zlJs=;
+ b=AMwWip3wD3/NeiH6u7Qsc62pZB/6dvqQW0ZDgMK36mcbPbU2mcNEGfEzIxEJrJ1vEirn
+ qpXIWeTDJEy5XYuZLsTZoWLHe6ve/qIGqZ0vPHBHgEOHLcCliRouVuLuJLqkf50WkiMz
+ 9vPCb+aa3x8Ub4wseAmVuDvEyom5ZSy8M2nba5C3P5p2qRUZvJegcsVbNtQAF/CTEz1i
+ 1c2uAkeDNSeWjh/jkQJ22YjCoFyoQpmMAT2SxiIGloC6vj9dWn8gH7AgkW8t2rxoiBvR
+ +YpUXEh6W3Qof5+LkkMt5vuzGyOpXbM1i0YVvibOMTwC8pKJMIuwsiXrzAkrnbcr1VMQ 5g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31284m08mt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 May 2020 23:31:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04JNMgWv170092;
+        Tue, 19 May 2020 23:31:47 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 313gj2fj5a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 May 2020 23:31:47 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04JNVjvh004260;
+        Tue, 19 May 2020 23:31:45 GMT
+Received: from dhcp-10-159-149-244.vpn.oracle.com (/10.159.149.244)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 May 2020 16:31:45 -0700
+Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
+From:   Divya Indi <divya.indi@oracle.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
+ <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
+ <20200508000809.GM26002@ziepe.ca>
+ <33fc99e2-e9fc-3c8c-e47f-41535f514c2d@oracle.com>
+ <20200513150021.GD29989@ziepe.ca>
+ <c761da30-3663-4932-dd72-3501f15c0197@oracle.com>
+Message-ID: <272dbe83-a72b-d38b-6993-d3bbda50a7d1@oracle.com>
+Date:   Tue, 19 May 2020 16:30:52 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1589926004.git.anchalag@amazon.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <c761da30-3663-4932-dd72-3501f15c0197@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 bulkscore=0 suspectscore=11 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005190199
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 mlxscore=0
+ cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005190200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksei Besogonov <cyberax@amazon.com>
+Hi Jason,
 
-The SNAPSHOT_SET_SWAP_AREA is supposed to be used to set the hibernation
-offset on a running kernel to enable hibernating to a swap file.
-However, it doesn't actually update the swsusp_resume_block variable. As
-a result, the hibernation fails at the last step (after all the data is
-written out) in the validation of the swap signature in
-mark_swapfiles().
+I wanted to follow up to see if you got a chance to review the following reply?
 
-Before this patch, the command line processing was the only place where
-swsusp_resume_block was set.
-[Changelog: Resolved patch conflict as code fragmented to
-snapshot_set_swap_area]
-Signed-off-by: Aleksei Besogonov <cyberax@amazon.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
-Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
----
- kernel/power/user.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Let me know if it addresses your concern and if you have any questions!
 
-diff --git a/kernel/power/user.c b/kernel/power/user.c
-index 7959449765d9..1afa1f0a223e 100644
---- a/kernel/power/user.c
-+++ b/kernel/power/user.c
-@@ -235,8 +235,12 @@ static int snapshot_set_swap_area(struct snapshot_data *data,
- 		return -EINVAL;
- 	}
- 	data->swap = swap_type_of(swdev, offset, NULL);
--	if (data->swap < 0)
-+	if (data->swap < 0) {
- 		return -ENODEV;
-+	} else {
-+	    swsusp_resume_device = swdev;
-+	    swsusp_resume_block = offset;
-+	}
- 	return 0;
- }
- 
--- 
-2.24.1.AMZN
+Thanks,
+Divya
 
+On 5/13/20 2:02 PM, Divya Indi wrote:
+> Hi Jason,
+>
+> Please find my comments inline - 
+>
+> On 5/13/20 8:00 AM, Jason Gunthorpe wrote:
+>> On Mon, May 11, 2020 at 02:26:30PM -0700, Divya Indi wrote:
+>>>>> @@ -1123,6 +1156,18 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
+>>>>>  
+>>>>>  	send_buf = query->mad_buf;
+>>>>>  
+>>>>> +	/*
+>>>>> +	 * Make sure the IB_SA_NL_QUERY_SENT flag is set before
+>>>>> +	 * processing this query. If flag is not set, query can be accessed in
+>>>>> +	 * another context while setting the flag and processing the query will
+>>>>> +	 * eventually release it causing a possible use-after-free.
+>>>>> +	 */
+>>>> This comment doesn't really make sense, flags insige the memory being
+>>>> freed inherently can't prevent use after free.
+>>> I can definitely re-phrase here to make things clearer. But, the idea here is
+>>> in the unlikely/rare case where a response for a query comes in before the flag has been
+>>> set in ib_nl_make_request, we want to wait for the flag to be sent before proceeding. 
+>>> The response handler will eventually release the query so this wait avoids that if the flag has not been set
+>>> else 
+>>> 	"query->flags |= IB_SA_NL_QUERY_SENT;" 
+>>> will be accessing a query which was freed due to the above mentioned race.
+>>>
+>>> It is unlikely since getting a response => We have actually sent out the query to ibacm.
+>>>
+>>> How about this -
+>>>
+>>> "Getting a response is indicative of having sent out the query, but in an unlikely race when 
+>>> the response comes in before setting IB_SA_NL_QUERY_SENT, we need to wait till the flag is set to
+>>> avoid accessing a query that has been released."
+>> It still makes no sense, a flag that is set before freeing the memory
+>> is fundamentally useless to prevent races.
+> Here the race is -
+>
+> 1. ib_nl_send_msg()
+> 2. query->flags |= IB_SA_NL_QUERY_SENT
+> 3. return;
+>
+> -------------
+>
+> response_handler() {
+> wait till flag is set.
+> ....
+> kfree(query);
+>
+> }
+>
+> Here, if the response handler was called => Query was sent
+> and flag should have been set. However if response handler kicks in
+> before line 2, we want to wait and make sure the flag is set and
+> then free the query.
+>
+> Ideally after ib_nl_send_msg, we should not be accessing the query
+> because we can be getting a response/timeout asynchronously and cant be
+> sure when. 
+>
+> The only places we access a query after it is successfully sent [response handler getting called
+> => sending was successful] -
+> 1. ib_nl_request_timeout
+> 2. While setting the flag.
+>
+> 1. is taken care of because the request list access is protected by a lock
+> and whoever gets the lock first deletes it from the request list and
+> hence we can only have the response handler OR the timeout handler operate on the
+> query.
+>
+> 2. To handle this is why we wait in the response handler. Once the flag is
+> set we are no longer accessing the query and hence safe to release it.
+>
+> I have modified the comment for v2 as follows -
+>
+>       /*
+> +        * In case of a quick response ie when a response comes in before
+> +        * setting IB_SA_NL_QUERY_SENT, we can have an unlikely race where the
+> +        * response handler will release the query, but we can still access the
+> +        * freed query while setting the flag.
+> +        * Hence, before proceeding and eventually releasing the query -
+> +        * wait till the flag is set. The flag should be set soon since getting
+> +        * a response is indicative of having successfully sent the query.
+> +        */
+>
+>
+> Thanks,
+> Divya
+>
+>> Jason
