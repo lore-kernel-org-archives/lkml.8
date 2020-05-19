@@ -2,106 +2,86 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC10FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A77BE2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589910356;
-	bh=cHlc8fE1J62ViyaQ+0PZQXd4ySJzfbVUiBcqPeFMo6c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z2qW+wKNpaDW+K0VTzFOV/D6BmUWSL+MFzFAzhQ2cndJ436Qe4Tt714cZ+lWDkvOa
-	 bedZ3cfBAYzz/Rw4CCzRioSrMfFW6JupJZg9SP2QThnKy9vmT9r3OEXCD1EdtczATy
-	 MNy8rdkjSZUbUPD4/pjHV/8u2gNO7Z4NMdWT1oLI=
+	by mail.kernel.org (Postfix) with ESMTP id 0A8EF2072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgESRpz (ORCPT
+        id S1729492AbgESRqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49648 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 13:46:00 -0400
+Received: from muru.com ([72.249.23.125]:55104 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgESRpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:45:55 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C369520708;
-        Tue, 19 May 2020 17:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589910355;
-        bh=cHlc8fE1J62ViyaQ+0PZQXd4ySJzfbVUiBcqPeFMo6c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E8lJ59iYq5qN9g5SNw929Bk2LZarSUCjLpKOR+STiiUp8RF00nDK7Y5Ewf8aKQAIp
-         Qltp2vtjGOsydiVEmPGVYu+17orYXbehXtf6ah6q/pKagaGJXz7Bh8aU4UExvnuRzx
-         hb/Blb8y4lfO7fm8oSFjaH2IsJMRqjF1Yj9bEudw=
-Date:   Tue, 19 May 2020 13:45:53 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alexander.deucher@amd.com, chris@chris-wilson.co.uk,
-        ville.syrjala@linux.intel.com, Hawking.Zhang@amd.com,
-        tvrtko.ursulin@intel.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        spronovo@microsoft.com, iourit@microsoft.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] gpu: dxgkrnl: core code
-Message-ID: <20200519174553.GF33628@sasha-vm>
-References: <20200519163234.226513-1-sashal@kernel.org>
- <20200519163234.226513-2-sashal@kernel.org>
- <20200519172105.GB1101627@kroah.com>
+        id S1726059AbgESRp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:45:59 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 4D92980FA;
+        Tue, 19 May 2020 17:46:48 +0000 (UTC)
+Date:   Tue, 19 May 2020 10:45:55 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     ssantosh@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        s-anna@ti.com
+Subject: Re: [PATCH 1/1] soc: ti: omap-prm: use atomic iopoll instead of
+ sleeping one
+Message-ID: <20200519174555.GX37466@atomide.com>
+References: <20200514073718.17690-1-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519172105.GB1101627@kroah.com>
+In-Reply-To: <20200514073718.17690-1-t-kristo@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 07:21:05PM +0200, Greg KH wrote:
->On Tue, May 19, 2020 at 12:32:31PM -0400, Sasha Levin wrote:
->> +
->> +#define DXGK_MAX_LOCK_DEPTH	64
->> +#define W_MAX_PATH		260
->
->We already have a max path number, why use a different one?
+* Tero Kristo <t-kristo@ti.com> [200514 00:38]:
+> The reset handling APIs for omap-prm can be invoked PM runtime which
+> runs in atomic context. For this to work properly, switch to atomic
+> iopoll version instead of the current which can sleep. Otherwise,
+> this throws a "BUG: scheduling while atomic" warning. Issue is seen
+> rather easily when CONFIG_PREEMPT is enabled.
+> 
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 
-It's max path for Windows, not Linux (thus the "W_" prefix) :)
+Santosh do you want me to pick this for fixes?
 
-Maybe changing it to WIN_MAX_PATH or such will make it better?
+Regards,
 
->> +#define d3dkmt_handle		u32
->> +#define d3dgpu_virtual_address	u64
->> +#define winwchar		u16
->> +#define winhandle		u64
->> +#define ntstatus		int
->> +#define winbool			u32
->> +#define d3dgpu_size_t		u64
->
->These are all ripe for a simple search/replace in your editor before you
->do your next version :)
+Tony
 
-I've actually attempted that, and reverted that change, mostly because
-the whole 'handle' thing became very confusing.
-
-Note that we have a few 'handles', each with a different size, and thus
-calling get_something_something_handle() type of functions becase very
-confusing since it's not clear what handle we're working with in that
-case.
-
-With regards to the rest, I wanted to leave stuff like 'winbool' to
-document the expected ABI between the Windows and Linux side of things.
-Ideally it would be 'bool' or 'u8', but as you see we had to use 'u32'
-here which I feel lessens our ability to have the code document itself.
-
-I don't feel too strongly against doing the conversion, and I won't
-object to doing it if you do, but just be aware that I've tried it and
-preferred to go back (even though our coding style doesn't like this) :)
-
--- 
-Thanks,
-Sasha
+> ---
+>  drivers/soc/ti/omap_prm.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
+> index 96c6f777519c..c9b3f9ebf0bb 100644
+> --- a/drivers/soc/ti/omap_prm.c
+> +++ b/drivers/soc/ti/omap_prm.c
+> @@ -256,10 +256,10 @@ static int omap_reset_deassert(struct reset_controller_dev *rcdev,
+>  		goto exit;
+>  
+>  	/* wait for the status to be set */
+> -	ret = readl_relaxed_poll_timeout(reset->prm->base +
+> -					 reset->prm->data->rstst,
+> -					 v, v & BIT(st_bit), 1,
+> -					 OMAP_RESET_MAX_WAIT);
+> +	ret = readl_relaxed_poll_timeout_atomic(reset->prm->base +
+> +						 reset->prm->data->rstst,
+> +						 v, v & BIT(st_bit), 1,
+> +						 OMAP_RESET_MAX_WAIT);
+>  	if (ret)
+>  		pr_err("%s: timedout waiting for %s:%lu\n", __func__,
+>  		       reset->prm->data->name, id);
+> -- 
+> 2.17.1
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
