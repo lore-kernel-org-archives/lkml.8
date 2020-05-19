@@ -2,397 +2,162 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB4D2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66BF2072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GGK7OWOU"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QGdyhJkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgESUkQ (ORCPT
+        id S1726871AbgESUl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58604 "EHLO
+        Tue, 19 May 2020 16:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbgESUkQ (ORCPT
+        with ESMTP id S1725885AbgESUl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:40:16 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 952AFC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:40:15 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f6so381891pgm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:40:15 -0700 (PDT)
+        Tue, 19 May 2020 16:41:26 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF2BC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:41:26 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id c83so262829oob.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:41:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lnv8x2SVuDgdJgRoSASJVXMFFfVWFg9TrxU4jmpqEAw=;
-        b=GGK7OWOUBbIqXRAGSKeormKoGZKfaKF9d0TAqQIp7R6+kx9urHwyEz/s7OMB0q1z+G
-         pOTEXjj262ccGVmm+cqiMaBDjlfMkDU+IP2u3HxHzj2GFVDOCY4xoJstbKZMP+VF9Gba
-         c+8Wn7l9+TM4yGCjDzqi6vmFgl86vQj+svCPTqG77zulc6dcJKEXythwwOYprHFUNXLV
-         R8lZZcoJ4TWSng5OwUL6JpcxPAh4sRFi9G8/U9OL33e3O668nYRyCMBgi+66glwoHz+4
-         ec/imTW0u1+bzVYVHlqQz0EvVz8/hRpK+0PpndavUHSwSTCl/0GVZr0LvKtLfJuJyOVI
-         fYCA==
+        d=ffwll.ch; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=KqlY0HTT+IOHyYqsNVke69dYQGA7KHepidrczDemEV0=;
+        b=QGdyhJkp1DdKBLPoQNQnIKYhC6fJq0diB6e3HUnQosmcbIHkLgsPCnpZZi9nhFUBFR
+         ufALg9+CDJQTkIQruWIWbMiIcF8x8D/WIXcptC6CfuaVQF9VEhxW1ob6ud8UhpSGeqgZ
+         0jEzm47h0mp5kRVqaZC50bC3SLA3QwhfruNp0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lnv8x2SVuDgdJgRoSASJVXMFFfVWFg9TrxU4jmpqEAw=;
-        b=FGCXBvmoaccnk157aLJXRg03FNrCy7C8tGErzvQj94D5nuYwIrzCjU5D1eOjoztR5W
-         6qwSSLPbImz5Eo+8aj04YQyRChmuC5n31+HiyPDIC6Ms/8zvc2+PRjyKSnIpa+wxRFwk
-         9CfsPzMPzPUvyrLvwooC5XVZT2t7wTNCy5g1qIheQTG045kJKXmh3zxsCSV1Th2yLqx3
-         CBXjveM1n+vFFxvHf1fQ/TnR0aL/wkA2fwlSgdKk/ei+GdPj91oxlL0SeInCsZT8Y8Bq
-         yp/UesEtyGAJGbg5gwbb6G2WYVqrSQLiavoJoI1Y34UDDMuTQ6yINBoa47/485vCc1S0
-         Ab7w==
-X-Gm-Message-State: AOAM533tfsh8mwF7v2B7vYyJWw6jCsGjKi7M9qHC9ZfyPoBiYUfFDKXA
-        1/RzogEILV3UDd87+7Qc6q5RBruM3dc=
-X-Google-Smtp-Source: ABdhPJyRsbE7axPumrAiW0r3//jy0qgA/bTjSk7Fcd/4vdAvuSj5Unxqnv70vSFHX0qbzg7gPLgdeQ==
-X-Received: by 2002:a62:16d5:: with SMTP id 204mr873203pfw.10.1589920814881;
-        Tue, 19 May 2020 13:40:14 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q25sm305934pff.69.2020.05.19.13.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 13:40:13 -0700 (PDT)
-Date:   Tue, 19 May 2020 13:38:52 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-remoteproc@vger.kernel.org, ohad@wizery.com,
-        linux-kernel@vger.kernel.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, sidgup@codeaurora.org
-Subject: Re: [PATCH v3 1/2] remoteproc: qcom: Add per subsystem SSR
- notification
-Message-ID: <20200519203852.GC408178@builder.lan>
-References: <1588112169-29447-1-git-send-email-rishabhb@codeaurora.org>
- <1588112169-29447-2-git-send-email-rishabhb@codeaurora.org>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=KqlY0HTT+IOHyYqsNVke69dYQGA7KHepidrczDemEV0=;
+        b=DznXNr0DXcCSf3kruCgSFq6SAyqmCczAmS1ScSWXcUM1JTEKwJtY4lXW+cdlclvJcj
+         Rx38gR0Fze8h1JWVeEYWNaUYIivLkwzr75BUszgDlRMsyUzEojCA2Wm1f2YMJDV0LLha
+         b44ofQGNEi21BB/sh67oEgkbXGIwoZ8tyQIquF8yR0DMgi0dWDE/eEebu47PlgWer9u7
+         TiZbpirQlYnBDMKsiroMFdYeCGwIr3uE3Fvd0N5XTwfCSsMWe/4xlMmoL0RfrhvyY7od
+         L2c1Q80MTL+mwdWAks4HJUinUMbSzKqheDiqm1V0PIjklSZy7gBQrTUrwgqfCcnS74F+
+         pzQg==
+X-Gm-Message-State: AOAM531XK5ry2ZBKje83P79SL/9cxBs7/8+pODCYS+X5QUNn5GZf/fY8
+        B0Ae95a8pA+GMkVREL1baNB7MJS93LpH0SEEX6fTuA==
+X-Google-Smtp-Source: ABdhPJy+sQPtCXPvRCO/dG83ZBie1tD9S+4htYq0udq/GYRMDdPlJYAdylJ2iilHdgbiPgeFjf/3wmKXl3/gjVPYxwo=
+X-Received: by 2002:a4a:d136:: with SMTP id n22mr785994oor.85.1589920886046;
+ Tue, 19 May 2020 13:41:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588112169-29447-2-git-send-email-rishabhb@codeaurora.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 19 May 2020 22:41:15 +0200
+Message-ID: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Olof Johansson <olof.johansson@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        wufan@codeaurora.org, pratanan@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28 Apr 15:16 PDT 2020, Rishabh Bhatnagar wrote:
+On Tue, May 19, 2020 at 07:41:20PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
+> > On 5/18/2020 11:08 PM, Dave Airlie wrote:
+> > > On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+> > > >
+> > > > Introduction:
+> > > > Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
+> > > > SoC ASIC for the purpose of efficently running Deep Learning inference
+> > > > workloads in a data center environment.
+> > > >
+> > > > The offical press release can be found at -
+> > > > https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
+> > > >
+> > > > The offical product website is -
+> > > > https://www.qualcomm.com/products/datacenter-artificial-intelligence
+> > > >
+> > > > At the time of the offical press release, numerious technology news sites
+> > > > also covered the product.  Doing a search of your favorite site is likely
+> > > > to find their coverage of it.
+> > > >
+> > > > It is our goal to have the kernel driver for the product fully upstream.
+> > > > The purpose of this RFC is to start that process.  We are still doing
+> > > > development (see below), and thus not quite looking to gain acceptance quite
+> > > > yet, but now that we have a working driver we beleive we are at the stage
+> > > > where meaningful conversation with the community can occur.
+> > >
+> > >
+> > > Hi Jeffery,
+> > >
+> > > Just wondering what the userspace/testing plans for this driver.
+> > >
+> > > This introduces a new user facing API for a device without pointers to
+> > > users or tests for that API.
+> >
+> > We have daily internal testing, although I don't expect you to take my word
+> > for that.
+> >
+> > I would like to get one of these devices into the hands of Linaro, so that
+> > it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
+> > to convince the powers that be to make this happen.
+> >
+> > Regarding what the community could do on its own, everything but the Linux
+> > driver is considered proprietary - that includes the on device firmware and
+> > the entire userspace stack.  This is a decision above my pay grade.
+>
+> Ok, that's a decision you are going to have to push upward on, as we
+> really can't take this without a working, open, userspace.
 
-> Currently there is a single notification chain which is called whenever any
-> remoteproc shuts down. This leads to all the listeners being notified, and
-> is not an optimal design as kernel drivers might only be interested in
-> listening to notifications from a particular remoteproc. Create a global
-> list of remoteproc notification info data structures. This will hold the
-> name and notifier_list information for a particular remoteproc. The API
-> to register for notifications will use name argument to retrieve the
-> notification info data structure and the notifier block will be added to
-> that data structure's notification chain.
-> 
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Uh wut.
 
-Thanks Rishabh, design wise I think this looks good now, just some code
-style things below.
+So the merge criteria for drivers/accel (atm still drivers/misc but I
+thought that was interim until more drivers showed up) isn't actually
+"totally-not-a-gpu accel driver without open source userspace".
 
-> ---
->  drivers/remoteproc/qcom_common.c      | 89 ++++++++++++++++++++++++++++++-----
->  drivers/remoteproc/qcom_common.h      | 10 +++-
->  include/linux/remoteproc/qcom_rproc.h | 20 ++++++--
->  3 files changed, 99 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-> index 60650bc..7cd17be 100644
-> --- a/drivers/remoteproc/qcom_common.c
-> +++ b/drivers/remoteproc/qcom_common.c
-> @@ -15,16 +15,18 @@
->  #include <linux/rpmsg/qcom_glink.h>
->  #include <linux/rpmsg/qcom_smd.h>
->  #include <linux/soc/qcom/mdt_loader.h>
-> +#include <linux/remoteproc/qcom_rproc.h>
+Instead it's "totally-not-a-gpu accel driver without open source
+userspace" _and_ you have to be best buddies with Greg. Or at least
+not be on the naughty company list. Since for habanalabs all you
+wanted is a few test cases to exercise the ioctls. Not the entire
+userspace.
 
-Please maintain alphabetical sort order.
+The most bonkers part here is that drivers/gpu actually does have a bunch
+of active contributors from codeaurora ...
 
->  
->  #include "remoteproc_internal.h"
->  #include "qcom_common.h"
->  
-> +#define MAX_NAME_LEN	20
-> +DEFINE_MUTEX(rproc_notif_lock);
+> Especially given the copyright owner of this code, that would be just
+> crazy and foolish to not have open userspace code as well.  Firmware
+> would also be wonderful as well, go poke your lawyers about derivative
+> work issues and the like for fun conversations :)
+>
+> So without that changed, I'm not going to take this, and push to object
+> that anyone else take this.
+>
+> I'm not going to be able to review any of this code anymore until that
+> changes, sorry.
 
-Please rename this qcom_ssr_subsystem_lock
+So you couldn't review the habanalabs driver either?
 
-> +
->  #define to_glink_subdev(d) container_of(d, struct qcom_rproc_glink, subdev)
->  #define to_smd_subdev(d) container_of(d, struct qcom_rproc_subdev, subdev)
->  #define to_ssr_subdev(d) container_of(d, struct qcom_rproc_ssr, subdev)
->  
-> -static BLOCKING_NOTIFIER_HEAD(ssr_notifiers);
+Get some consistency into your decision making as maintainer. And don't
+tell me or anyone else that this is complicated, gpu and rdma driver folks
+very much told you and Olof last year that this is what you're getting
+yourself into.
 
-Move the definition of rproc_notif_info, the new rproc_notif_info list
-head and move the two lines above here as well.
+Cheers, Daniel
 
-> -
->  static int glink_subdev_start(struct rproc_subdev *subdev)
->  {
->  	struct qcom_rproc_glink *glink = to_glink_subdev(subdev);
-> @@ -174,39 +176,81 @@ void qcom_remove_smd_subdev(struct rproc *rproc, struct qcom_rproc_subdev *smd)
->  }
->  EXPORT_SYMBOL_GPL(qcom_remove_smd_subdev);
->  
-> +struct rproc_notif_info *find_notif_info(const char *name)
-
-Please make this qcom_ssr_get_subsystem(const char *name)
-
-> +{
-> +	struct rproc_notif_info *info;
-> +
-> +	/* Match in the global rproc_notif_list with name */
-> +	list_for_each_entry(info, &rproc_notif_list, list) {
-> +		if (!strncmp(info->name, name, strlen(name)))
-
-strncmp(a, b, strlen(b)) is the same thing as strcmp(a, b), unless a is
-shorted than b and not NUL terminated.
-
-> +			return info;
-> +	}
-> +	return NULL;
-
-Both callers of this function will if NULL is returned allocate a new
-subsystem object and attach to the list. If you do that here you can
-remove the duplication between these.
-
-> +}
-> +
->  /**
->   * qcom_register_ssr_notifier() - register SSR notification handler
-> + * @name:	pointer to name which will be searched in the global notif_list
->   * @nb:		notifier_block to notify for restart notifications
->   *
-> - * Returns 0 on success, negative errno on failure.
-> + * Returns pointer to srcu notifier head on success, ERR_PTR on failure.
-
-This shouldn't mention that the opaque pointer is of a type standard to
-the kernel. Better just say that it returns a "subsystem cookie".
-
->   *
-> - * This register the @notify function as handler for restart notifications. As
-> - * remote processors are stopped this function will be called, with the SSR
-> - * name passed as a parameter.
-> + * This registers the @nb notifier block as part the notifier chain for a
-> + * remoteproc associated with @name. The notifier block's callback
-> + * will be invoked when the particular remote processor is stopped.
->   */
-> -int qcom_register_ssr_notifier(struct notifier_block *nb)
-> +void *qcom_register_ssr_notifier(const char *name, struct notifier_block *nb)
->  {
-> -	return blocking_notifier_chain_register(&ssr_notifiers, nb);
-> +	struct rproc_notif_info *info;
-> +
-> +	mutex_lock(&rproc_notif_lock);
-> +	info = find_notif_info(name);
-> +	if (!info) {
-> +		info = kzalloc(sizeof(*info), GFP_KERNEL);
-> +		if (!info) {
-> +			mutex_unlock(&rproc_notif_lock);
-> +			return ERR_PTR(-ENOMEM);
-> +		}
-> +		info->name = kstrndup(name, MAX_NAME_LEN, GFP_KERNEL);
-
-This is going to be a constant in a lot of cases, so please use
-kstrdup_const(). Also what's the purpose of limiting the length of this?
-
-> +		srcu_init_notifier_head(&info->notifier_list);
-> +
-> +		/* Add to global notif list */
-> +		INIT_LIST_HEAD(&info->list);
-> +		list_add_tail(&info->list, &rproc_notif_list);
-> +	}
-> +
-> +	srcu_notifier_chain_register(&info->notifier_list, nb);
-> +	mutex_unlock(&rproc_notif_lock);
-> +	return &info->notifier_list;
->  }
->  EXPORT_SYMBOL_GPL(qcom_register_ssr_notifier);
->  
->  /**
->   * qcom_unregister_ssr_notifier() - unregister SSR notification handler
-> + * @notify:	pointer to srcu notifier head
-
-      @subsystem: subsystem cookie returned from qcom_register_ssr_notifier
-
->   * @nb:		notifier_block to unregister
->   */
-> -void qcom_unregister_ssr_notifier(struct notifier_block *nb)
-> +int qcom_unregister_ssr_notifier(void *notify, struct notifier_block *nb)
->  {
-> -	blocking_notifier_chain_unregister(&ssr_notifiers, nb);
-> +	if (!notify)
-> +		return -EINVAL;
-
-qcom_register_ssr_notifier() will return a valid cookie or a ERR_PTR()
-so if someone passes NULL here they did something wrong during
-development...
-
-So it's better to just remove this check and give the developer a nice
-callstack directly pointing out their mistake, than forcing them to
-chase where this -EINVAL comes from.
-
-> +
-> +	return srcu_notifier_chain_unregister(notify, nb);
->  }
->  EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
->  
->  static void ssr_notify_unprepare(struct rproc_subdev *subdev)
->  {
->  	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> +	struct rproc_notif_data data = {
-> +		.name = ssr->info->name,
-> +		.crashed = false,
-> +	};
->  
-> -	blocking_notifier_call_chain(&ssr_notifiers, 0, (void *)ssr->name);
-> +	srcu_notifier_call_chain(&ssr->info->notifier_list, 0, &data);
-
-Did we conclude on why you change blocking to srcu? Can we do it in a
-separate patch?
-
->  }
->  
-> +
->  /**
->   * qcom_add_ssr_subdev() - register subdevice as restart notification source
->   * @rproc:	rproc handle
-> @@ -214,12 +258,30 @@ static void ssr_notify_unprepare(struct rproc_subdev *subdev)
->   * @ssr_name:	identifier to use for notifications originating from @rproc
->   *
->   * As the @ssr is registered with the @rproc SSR events will be sent to all
-> - * registered listeners in the system as the remoteproc is shut down.
-> + * registered listeners for the particular remoteproc when it is shutdown.
->   */
->  void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
->  			 const char *ssr_name)
->  {
-> -	ssr->name = ssr_name;
-> +	struct rproc_notif_info *info;
-> +
-> +	mutex_lock(&rproc_notif_lock);
-> +	info = find_notif_info(ssr_name);
-> +	if (!info) {
-> +		info = kzalloc(sizeof(*info), GFP_KERNEL);
-> +		if (!info) {
-> +			mutex_unlock(&rproc_notif_lock);
-> +			return;
-> +		}
-> +		info->name = ssr_name;
-> +		srcu_init_notifier_head(&info->notifier_list);
-> +
-> +		/* Add to global notif_list */
-> +		INIT_LIST_HEAD(&info->list);
-> +		list_add_tail(&info->list, &rproc_notif_list);
-> +	}
-> +	mutex_unlock(&rproc_notif_lock);
-> +	ssr->info = info;
->  	ssr->subdev.unprepare = ssr_notify_unprepare;
->  
->  	rproc_add_subdev(rproc, &ssr->subdev);
-> @@ -233,6 +295,7 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
->   */
->  void qcom_remove_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr)
->  {
-> +	ssr->info = NULL;
-
-Move this after rproc_remove_subdev() and rely on the core for this not
-to race with the ssr_notify_unprepare().
-
->  	rproc_remove_subdev(rproc, &ssr->subdev);
->  }
->  EXPORT_SYMBOL_GPL(qcom_remove_ssr_subdev);
-
-It would be nice with a module_exit() that walks the rproc_notif_list
-and free all the elements, if qcom_common.ko is rmmod'ed. Given that
-this is uncommon I wouldn't mind to take that as a separate patch
-though.
-
-> diff --git a/drivers/remoteproc/qcom_common.h b/drivers/remoteproc/qcom_common.h
-> index 58de71e..0c1d288 100644
-> --- a/drivers/remoteproc/qcom_common.h
-> +++ b/drivers/remoteproc/qcom_common.h
-> @@ -24,10 +24,16 @@ struct qcom_rproc_subdev {
->  	struct qcom_smd_edge *edge;
->  };
->  
-> +struct rproc_notif_info {
-
-Please rename this struct qcom_ssr_subsystem
-
-> +	const char *name;
-> +	struct srcu_notifier_head notifier_list;
-> +	struct list_head list;
-> +};
-> +static LIST_HEAD(rproc_notif_list);
-
-Please rename this list qcom_ssr_subsystem_list and as stated above move
-it into qcom_common.c.
-
-
-To allow using qcom_ssr_subsystem in the struct below simply forward
-declare it here as:
-
-struct qcom_ssr_subsystem;
-
-> +
->  struct qcom_rproc_ssr {
->  	struct rproc_subdev subdev;
-> -
-> -	const char *name;
-> +	struct rproc_notif_info *info;
->  };
->  
-
-Regards,
-Bjorn
-
->  void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink);
-> diff --git a/include/linux/remoteproc/qcom_rproc.h b/include/linux/remoteproc/qcom_rproc.h
-> index fa8e386..3dc65c0 100644
-> --- a/include/linux/remoteproc/qcom_rproc.h
-> +++ b/include/linux/remoteproc/qcom_rproc.h
-> @@ -5,17 +5,27 @@
->  
->  #if IS_ENABLED(CONFIG_QCOM_RPROC_COMMON)
->  
-> -int qcom_register_ssr_notifier(struct notifier_block *nb);
-> -void qcom_unregister_ssr_notifier(struct notifier_block *nb);
-> +struct rproc_notif_data {
-> +	const char *name;
-> +	bool crashed;
-> +};
-> +
-> +void *qcom_register_ssr_notifier(const char *name, struct notifier_block *nb);
-> +int qcom_unregister_ssr_notifier(void *notify, struct notifier_block *nb);
->  
->  #else
->  
-> -static inline int qcom_register_ssr_notifier(struct notifier_block *nb)
-> +static inline void *qcom_register_ssr_notifier(const char *name,
-> +						struct notifier_block *nb)
->  {
-> -	return 0;
-> +	return NULL;
->  }
->  
-> -static inline void qcom_unregister_ssr_notifier(struct notifier_block *nb) {}
-> +static inline int qcom_unregister_ssr_notifier(void *notify,
-> +						struct notifier_block *nb)
-> +{
-> +	return 0;
-> +}
->  
->  #endif
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+PS: I guess congrats for figuring out you can't write a totally-not-a-gpu
+accel driver without making kernel and userspace parts derivatives works
+of each another. We told you that last year.
+--
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
