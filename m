@@ -2,246 +2,194 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF344C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDCA6207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:07:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qvZKjOCi"
+	by mail.kernel.org (Postfix) with ESMTP id 0E45D207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589915296;
+	bh=s0ggLM8TcUO/MB4Ceot/umDdgZQTbNFjRtm+3RpgAyM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1zNLWr2PJcFO6lbXDYLdfNeoeqH1c/D3CcrwWOrxl+r1p327+hk7C2zzsxxxrp5g8
+	 v8ud0/WXcsmqagkwmom+ucKqDWoEf6KTC9mQEPExeS1PIRYmjfpsol41b9+UTA0lC7
+	 xcaTSmutcjkuBhdOErI/kedWNh62v5V+fI+Bqd6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgESTHc (ORCPT
+        id S1727011AbgESTIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:07:32 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3409 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESTHb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:07:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec42e670000>; Tue, 19 May 2020 12:07:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 19 May 2020 12:07:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 12:07:31 -0700
-Received: from [10.2.164.184] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
- 2020 19:07:30 +0000
-Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
- device-tree properties
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200516154314.14769-1-digetx@gmail.com>
- <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
- <b634e7a5-9a30-3bd1-126d-be62e4dd73e1@gmail.com>
- <20200519162444.GD2113674@ulmo>
- <b4eb368e-adc2-7b77-3ae9-fefdcfddaf3d@gmail.com>
- <11c93dac-f5ba-2193-6f44-63af27fdce09@nvidia.com>
- <aed72c87-0e16-6dea-a4e2-7fc6a97cd313@nvidia.com>
-Message-ID: <c7469c16-f6f1-f9c0-566f-3b1d3774f130@nvidia.com>
-Date:   Tue, 19 May 2020 12:07:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 15:08:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbgESTIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 15:08:13 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E03E02075F;
+        Tue, 19 May 2020 19:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589915292;
+        bh=s0ggLM8TcUO/MB4Ceot/umDdgZQTbNFjRtm+3RpgAyM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HTZ3gDYsbeLgq1PsNyq6EQJky8wcaDS2aKtrh+XAeVuvH4zzL79qNR06nv1dhqQgr
+         I1OFEASOgalOyOStY7pf6+KowStVGu8TcZ4pi1PDueiwaa4+aTVnJ5RbXtwITSe4R/
+         RtXZclU5NC8Yamae33t5exrHcpW94u28E2FkE4CQ=
+Date:   Tue, 19 May 2020 14:12:59 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in
+ intel_pt_synth_pebs_sample
+Message-ID: <20200519191259.GB10690@embeddedor>
+References: <20200513234738.GA21211@embeddedor>
+ <20200514131030.GL5583@kernel.org>
+ <20200514150601.GS4897@embeddedor>
+ <CAP-5=fWTCFx80Hd_97_4AxFV4KsRyYptLbQfw=XVw_j8i-EAyg@mail.gmail.com>
+ <20200514220934.GT4897@embeddedor>
+ <CAP-5=fV5URsHn+SpW8N4XjkKT1vt2T1Us5FsqaJsoOW0zn=OxQ@mail.gmail.com>
+ <20200515001025.GU4897@embeddedor>
+ <20200515164153.GD9335@kernel.org>
+ <2540ed9a-89f1-6d59-10c9-a66cc90db5d2@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <aed72c87-0e16-6dea-a4e2-7fc6a97cd313@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589915239; bh=s6uam05ArM6BiI5b00L7hD1ybeok2Wgo9Vnh25tsBjM=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=qvZKjOCiZVe0c1lxZxtvzU8OQFU8m9bPfOb325PbIRH/WOZxSygAS61Rw23ZCM2Uk
-         f2O4vgzWe5Dt82fS2qx6+DmV+jHKxd9IkMf75U2eXOKLE6+Kiy8fwHhJZrMu328LmN
-         h508L3CC0IS4KmCFV1rD/stVZTyfNeafTa7mJXUy5U0U8jQNVuPhV5UoAQKRqOOv1f
-         /yIH4QVNzI+7CnZy9WlGIZ8doptV/Qfyo6ZKaR4gNGudqhw/Hfa5Kx0uUHnmAmhYV4
-         ysirI+fHK3Kuo/ESILzbxBTqeRoptlEghRLOec8ulWdMg1WYT+HJOX9aKx5D/UL91c
-         T2o/jte13E0tQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2540ed9a-89f1-6d59-10c9-a66cc90db5d2@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 16, 2020 at 03:35:48PM +0300, Adrian Hunter wrote:
+> On 15/05/20 7:41 pm, Arnaldo Carvalho de Melo wrote:
+> > Sorry for the top post: Adrian, can you take a look at this?
+> > 
+> > Adrian Hunter was not CCed, Adrian?
+> 
+> From: Adrian Hunter <adrian.hunter@intel.com>
+> Date: Sat, 16 May 2020 15:12:28 +0300
+> Subject: [PATCH] perf intel-pt: Use allocated branch stack for PEBS sample
+> 
+> To avoid having struct branch_stack as a non-last structure member,
+> use allocated branch stack for PEBS sample.
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-On 5/19/20 11:41 AM, Sowjanya Komatineni wrote:
->
-> On 5/19/20 11:34 AM, Sowjanya Komatineni wrote:
->>
->> On 5/19/20 9:33 AM, Dmitry Osipenko wrote:
->>> 19.05.2020 19:24, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> On Tue, May 19, 2020 at 05:05:27PM +0300, Dmitry Osipenko wrote:
->>>>> 19.05.2020 10:28, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx@gmail.com>=20
->>>>>> wrote:
->>>>>>> Several people asked me about the MMC warnings in the KMSG log and
->>>>>>> I had to tell to ignore them because these warning are=20
->>>>>>> irrelevant to
->>>>>>> pre-Tegra210 SoCs.
->>>>>> Why are the warnings irrelevant?
->>>>> That's what the DT binding doc says [1].
->>>>>
->>>>> [1]
->>>>> https://www.kernel.org/doc/Documentation/devicetree/bindings/mmc/nvid=
-ia%2Ctegra20-sdhci.txt=20
->>>>>
->>>>>
->>>>> Although, looking at the driver's code and TRM docs, it seems that=20
->>>>> all
->>>>> those properties are really irrelevant only to the older Terga20=20
->>>>> SoC. So
->>>>> the binding doc is a bit misleading.
->>>>>
->>>>> Nevertheless, the binding explicitly says that the properties are
->>>>> optional, which is correct.
->>>> Optional only means that drivers must not fail if these properties
->>>> aren't found, it doesn't mean that the driver can't warn that they
->>>> are missing.
->>>>
->>>> Quite possibly the only reason why they were made optional is because
->>>> they weren't part of the bindings since the beginning. Anything added
->>>> to a binding after the first public release has to be optional by
->>>> definition, otherwise DT ABI wouldn't be stable.
->>>>
->>>> I think these warnings were added on purpose, though I also see that
->>>> there are only values for these in device tree for Tegra186 and=20
->>>> Tegra194
->>>> but not Tegra210 where these should also be necessary.
->>
->> dt binding doc we have is common for MMC, SD and SDIO of all Tegras.=20
->> Its not mandatory to have both 3v3 and 1v8 in device tree as based on=20
->> signal mode.
->>
->> As these driver strengths are SoC specific, they are part of Tegra=20
->> SoC specific device tree where same values will be applicable to all=20
->> Tegra SoC specific platforms.
->>
->> Based on interface usage on platform, we use one or both of them like=20
->> sdcard supports dual voltage and we use both 3V3 and 1V8 but if same=20
->> interface is used for WIFI SD we use 1V8 only.
->>
->> So made these dt properties as optional.
->>
->> Other reason they are optional is, Tegra210 and prior has drive=20
->> strength settings part of apb_misc and Tegra186 and later has driver=20
->> strengths part of SDMMC controller. So,
->>
->> - Pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" for driver strengths=20
->> are applicable for Tegra210 and prior.
->> - dt properties pad-autocal-pull-up/down-offset-1v8/3v3-timeout are=20
->> for T186 onwards for driver strengths
->>
->> Looks like dt binding doc need fix to clearly document these based on=20
->> SoC or agree with Yaml we can conditionally specify pinctrl or dt=20
->> properties based on SoC dependent.
->>
->>
->>>> Adding Sowjanya who wrote this code. Perhaps she can clarify why the
->>>> warnings were added. If these values /should/ be there on a subset of
->>>> Tegra, then I think we should keep them, or add them again, but=20
->>>> perhaps
->>>> add a better way of identifying when they are necessary and when it is
->>>> safe to work without them.
->>>>
->>>> That said, looking at those checks I wonder if they are perhaps just
->>>> wrong. Or at the very least they seem redundant. It looks to me like
->>>> they can just be:
->>>>
->>>> =C2=A0=C2=A0=C2=A0=C2=A0if (tegra_host->pinctrl_state_XYZ =3D=3D NULL)=
- {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...
->>>> =C2=A0=C2=A0=C2=A0=C2=A0}
->>>>
->>>> That !IS_ERR(...) doesn't seem to do anything. But in that case, it's
->>>> also obvious why we're warning about them on platforms where these
->>>> properties don't exist in DT.
->>
->> As drive strengths are through dt properties for T186 and later and=20
->> thru pinctrl for T210 and prior, driver first checks for dt autocal=20
->> timeout pull-up/down properties and if they are not found, it then=20
->> checks for presence of pinctrl_state_xyx_drv only when valid=20
->> pinctrl_state_xyz is present.
->>
->> Driver expects either pinctrl or dt properties and shows warning when=20
->> neither of them are present as its mandatory to use fixed driver=20
->> strengths when auto calibration fails.
->>
->> =C2=A0=C2=A0=C2=A0 err =3D device_property_read_u32(host->mmc->parent,
->> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 "nvidia,pad-aut=
-ocal-pull-down-offset-3v3-timeout",
->> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 &autocal->pull_=
-down_3v3_timeout);
->> =C2=A0=C2=A0=C2=A0 if (err) {
->> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (!IS_ERR(tegra_host->pinctrl_st=
-ate_3v3) &&
->> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 (tegra_host->pi=
-nctrl_state_3v3_drv =3D=3D NULL))
->> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 pr_warn("%s: Mi=
-ssing autocal timeout 3v3-pad drvs\n",
->> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 mmc_hostname(host->mmc));
->> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 autocal->pull_down_3v3_timeout =3D=
- 0;
->> =C2=A0=C2=A0=C2=A0 }
->>
->>>>
->>>> So I think we either need to add those values where appropriate so=20
->>>> that
->>>> the warning doesn't show, or we need to narrow down where they are
->>>> really needed and add a corresponding condition.
->>>>
->>>> But again, perhaps Sowjanya can help clarify if these really are only
->>>> needed on Tegra210 and later or if these also apply to older chips.
->>> Either way will be cleaner to convert the DT binding to YAML rather=20
->>> than
->>> clutter the driver, IMO.
->>>
->>
->>
->>
-> Auto calibration is present from Tegra30 onward and looking into=20
-> change where autocalibration was added to sdhci driver somehow it was=20
-> enabled only for T30/T210/T186/T194.
->
-> tegra_sdhci_parse_pad_autocal_dt() was added when auto-calibration was=20
-> added to driver and I see this dt parse is being done irrespective of=20
-> NVQUIRK_HAS_PADCALIB quirk so even on platforms without auto cal=20
-> enabled in driver, these messages shows up.
->
-> This should be fixed in driver to allow=20
-> tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCALIB is=20
-> set to avoid dt parsing to happen on platforms that don't have auto=20
-> cal enabled.
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>>
 
-Warning on missing drive strengths when auto cal is enabled should be=20
-present as we should switch to fixed recommended drive strengths when=20
-auto cal fails.
+Thanks, Adrian.
+--
+Gustavo
 
-So probably proper fix should be
-
-- allow tegra_sdhci_parse_pad_autocal_dt() only when=20
-NVQUIRK_HAS_PADCALIB is set
-
-- current driver sets NVQUIRK_HAS_PADCALIB for T30 as well so need to=20
-add pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" to Tegra30 device tree.
-
-- Keep warning message of missing auto cal timeouts as its mandatory to=20
-use fixed recommended driver strengths when auto cal fails.
-
+> ---
+>  tools/perf/util/intel-pt.c | 31 +++++++++++++------------------
+>  1 file changed, 13 insertions(+), 18 deletions(-)
+> 
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index f17b1e769ae4..e4dd8bf610ce 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -913,11 +913,11 @@ static void intel_pt_add_callchain(struct intel_pt *pt,
+>  	sample->callchain = pt->chain;
+>  }
+>  
+> -static struct branch_stack *intel_pt_alloc_br_stack(struct intel_pt *pt)
+> +static struct branch_stack *intel_pt_alloc_br_stack(unsigned int entry_cnt)
+>  {
+>  	size_t sz = sizeof(struct branch_stack);
+>  
+> -	sz += pt->br_stack_sz * sizeof(struct branch_entry);
+> +	sz += entry_cnt * sizeof(struct branch_entry);
+>  	return zalloc(sz);
+>  }
+>  
+> @@ -930,7 +930,7 @@ static int intel_pt_br_stack_init(struct intel_pt *pt)
+>  			evsel->synth_sample_type |= PERF_SAMPLE_BRANCH_STACK;
+>  	}
+>  
+> -	pt->br_stack = intel_pt_alloc_br_stack(pt);
+> +	pt->br_stack = intel_pt_alloc_br_stack(pt->br_stack_sz);
+>  	if (!pt->br_stack)
+>  		return -ENOMEM;
+>  
+> @@ -951,6 +951,9 @@ static void intel_pt_add_br_stack(struct intel_pt *pt,
+>  	sample->branch_stack = pt->br_stack;
+>  }
+>  
+> +/* INTEL_PT_LBR_0, INTEL_PT_LBR_1 and INTEL_PT_LBR_2 */
+> +#define LBRS_MAX (INTEL_PT_BLK_ITEM_ID_CNT * 3U)
+> +
+>  static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
+>  						   unsigned int queue_nr)
+>  {
+> @@ -968,8 +971,10 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
+>  			goto out_free;
+>  	}
+>  
+> -	if (pt->synth_opts.last_branch) {
+> -		ptq->last_branch = intel_pt_alloc_br_stack(pt);
+> +	if (pt->synth_opts.last_branch || pt->synth_opts.other_events) {
+> +		unsigned int entry_cnt = max(LBRS_MAX, pt->br_stack_sz);
+> +
+> +		ptq->last_branch = intel_pt_alloc_br_stack(entry_cnt);
+>  		if (!ptq->last_branch)
+>  			goto out_free;
+>  	}
+> @@ -1720,9 +1725,6 @@ static void intel_pt_add_lbrs(struct branch_stack *br_stack,
+>  	}
+>  }
+>  
+> -/* INTEL_PT_LBR_0, INTEL_PT_LBR_1 and INTEL_PT_LBR_2 */
+> -#define LBRS_MAX (INTEL_PT_BLK_ITEM_ID_CNT * 3)
+> -
+>  static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
+>  {
+>  	const struct intel_pt_blk_items *items = &ptq->state->items;
+> @@ -1798,25 +1800,18 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
+>  	}
+>  
+>  	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+> -		struct {
+> -			struct branch_stack br_stack;
+> -			struct branch_entry entries[LBRS_MAX];
+> -		} br;
+> -
+>  		if (items->mask[INTEL_PT_LBR_0_POS] ||
+>  		    items->mask[INTEL_PT_LBR_1_POS] ||
+>  		    items->mask[INTEL_PT_LBR_2_POS]) {
+> -			intel_pt_add_lbrs(&br.br_stack, items);
+> -			sample.branch_stack = &br.br_stack;
+> +			intel_pt_add_lbrs(ptq->last_branch, items);
+>  		} else if (pt->synth_opts.last_branch) {
+>  			thread_stack__br_sample(ptq->thread, ptq->cpu,
+>  						ptq->last_branch,
+>  						pt->br_stack_sz);
+> -			sample.branch_stack = ptq->last_branch;
+>  		} else {
+> -			br.br_stack.nr = 0;
+> -			sample.branch_stack = &br.br_stack;
+> +			ptq->last_branch->nr = 0;
+>  		}
+> +		sample.branch_stack = ptq->last_branch;
+>  	}
+>  
+>  	if (sample_type & PERF_SAMPLE_ADDR && items->has_mem_access_address)
+> -- 
+> 2.17.1
+> 
+> 
+> 
