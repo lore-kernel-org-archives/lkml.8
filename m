@@ -2,146 +2,218 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E050C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEE5207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589873239;
-	bh=1gPFmN5vh0HFNtZmUH3ANVx5FUHBUfJHz+kqMUVqA78=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=euzye/8Z4DRkBD3coRhiEhz5G7rEWHqX4x2T/F7CBu11FHcxRFd1KMdTcYl8Ps182
-	 mRF5oCKTaa94KNpNgYhS8xDZ4QFU25IdBtVO2TD+wZIv0QGDAnywd88FXWWm0VDTHf
-	 i+MSWrYBj3M6Cj+GvWD+HVCNVo+HemQVzdufp6zQ=
+	by mail.kernel.org (Postfix) with ESMTP id DA0FF20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:27:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gxYxckCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgESH1S (ORCPT
+        id S1728488AbgESH1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 03:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728260AbgESH1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 03:27:18 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8579D20709;
-        Tue, 19 May 2020 07:27:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589873237;
-        bh=1gPFmN5vh0HFNtZmUH3ANVx5FUHBUfJHz+kqMUVqA78=;
-        h=From:To:Cc:Subject:Date:From;
-        b=qw92MoQ9RGxV7whGV0gESseVZ+m0i715xApX/DnsUNKqotjEg8N/+JvFWz4zLJW/G
-         TSpUXpR/pItbdu3GuGxiCWHjX6jMTSC1RB4uhIwF3TssJfbH3+8z8L2sQyQF+r7DfD
-         SZaDDwoXDut7HrAsxaCyKOIoqoIJwqgvjFUjt4s4=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: [PATCH rdma-next v2 0/7] Enable asynchronous event FD per object
-Date:   Tue, 19 May 2020 10:27:04 +0300
-Message-Id: <20200519072711.257271-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 19 May 2020 03:27:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728260AbgESH1i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 03:27:38 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF74C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:27:37 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g4so12584713ljl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 00:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xxSaOAYdZ/P2LPa+RkxvFduPUE3GNPCNdQNl0HbVXo4=;
+        b=gxYxckCxwAOsiP0lqJ2lop9PNhRWiEwE+1jfsiCpw0NMUNN6IvKfT1w8vrcllcEiaX
+         D8GItZdIjOsDIMpYGv8pPAHt3o6gCpnwtGBeHkfGJJKo4C/1KYxEvcF7VDiJEDhMaw+c
+         xp0TJKiPP9TtgnzikV5mCSSNzj+tJUXJunutHPumUH1ApXdygADZhMMU3fBJ9UFDy1ms
+         tI5rYxF90N1ZT5P03oIEeasTl3jfcreawB5Hk0ilTnLIFqHa9OYHlZsaf1EIDYnB78Oy
+         DkA1+hLUYzVMAqF5t9cgDypf9dnT07ek0POQpiNlipC+9Gw2i8MWmZO9/+zOjJuda2is
+         /dYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xxSaOAYdZ/P2LPa+RkxvFduPUE3GNPCNdQNl0HbVXo4=;
+        b=gY2Amje7h1UEVPrjYYbceFXSvdvMxu2x4J2kgsLEQB7dnKjyXopqlCpO03LzOsSMnx
+         GFny2fzDBRteF5yYspliXeOKpDzGXxn5foS4/qLPgI5tJhx3QnnDjpt0W4Xr09+EjY2I
+         bRk7N4ioj4Mp6YPl/61tdOw0RqB0x0Xw2SGVAdcpMg6B7lppe6lK9XAAYXFCnY/2CBfk
+         oP5+UMltiOkOxdA1ru9xf8b/V8Rx4Yks3VlTmAUqf9GGYElLJNFD/XeFOcOHbE+02Xzn
+         F6cn364r9Mzc3cSlg/iDSNhtwikgbkYnJ4WOGhKkBROJc3Fh81F4ZEVhL0FyVFmBy4Kd
+         z2dw==
+X-Gm-Message-State: AOAM530ZcxgFKUZPgF4iAXruok3F4ChkEi+WbFj9h12A4H1P6PK8lED4
+        +x1vEXjriod91N0ifocRIBs4SL/Um/tZAG7Ah0PLYGt/LZEHUQ==
+X-Google-Smtp-Source: ABdhPJxukUp8JTGuGFk4m+6IZKXWul5pdOxr+SBVghfnSi1YvwZzy1DtbuljqEBS7ZNm23lLZlhAZiXCzRmYwKLD4uw=
+X-Received: by 2002:a05:651c:1a5:: with SMTP id c5mr12523269ljn.217.1589873254659;
+ Tue, 19 May 2020 00:27:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200518173513.009514388@linuxfoundation.org>
+In-Reply-To: <20200518173513.009514388@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 19 May 2020 12:57:23 +0530
+Message-ID: <CA+G9fYvT4rBSet6yjdFXeVcJGaFw6zvPZTKxPA-7_=P8Ehkx0g@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/147] 5.4.42-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+On Mon, 18 May 2020 at 23:30, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.42 release.
+> There are 147 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.42-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Changelog:
-v2:
- * Added READ_ONCE to all default_async_file calls
- * Rebased on latest rdma/wip/jgg-for-next
- * Removed uninitalized_var?()
- * Simplified uverbs_free_srq()
- * Put uverbs_finalize_uobj_create() after object is finalized
-v1: https://lore.kernel.org/lkml/20200506082444.14502-1-leon@kernel.org
- * Forgot to add patch "IB/uverbs: Move QP, SRQ, WQ type and flags to UAPI"
-v0: https://lore.kernel.org/lkml/20200506074049.8347-1-leon@kernel.org
 
--------------------------------------------------------------------------------
-From Yishai:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-This series enables applicable events objects (i.e. QP, SRQ, CQ, WQ) to
-be created with their own asynchronous event FD.
+NOTE:
 
-Before this series any affiliated event on an object was reported on the
-first asynchronous event FD that was created on the context without the
-ability to create and use a dedicated FD for it.
+While running ftrace test on arm64 hikey device the following kernel warnin=
+g
+triggered and long with this rcu_preempt self-detected stall on CPU
+also noticed.
+Please find full test link below,
 
-With this series we enable granularity and control for the usage per
-object, according to the application's usage.
+[ 1313.494714] WARNING: CPU: 0 PID: 458 at
+/usr/src/kernel/kernel/trace/ring_buffer.c:2477 rb_commit+0x2c0/0x320
+<>
+[ 1313.770237] CPU: 0 PID: 458 Comm: avahi-daemon Not tainted 5.4.42-rc1 #1
+[ 1313.855515] Hardware name: HiKey Development Board (DT)
+[ 1313.939230] pstate: 60000005 (nZCv daif -PAN -UAO)
+[ 1314.022148] pc : rb_commit+0x2c0/0x320
+[ 1314.104229] lr : ring_buffer_unlock_commit+0x30/0x128
 
-For example, a secondary process that uses the same command FD as of the
-master one, can create its own objects with its dedicated event FD to be
-able to get the events for them once occurred, this couldn't be done
-before this series.
+full test log can be found here,
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/build/v5.4.41-148=
+-gcac6eb2794c8/testrun/1441704/log
 
-To achieve the above, any 'create' method for the applicable objects was
-extended to get from rdma-core its optional event FD, if wasn't
-supplied, the default one from the context will be used.
 
-As we prefer to not extend the 'write' mode KABIs anymore and fully
-move to the 'ioct' mode, as part of this extension QP, SRQ and WQ
-create/destroy commands were introduced over 'ioctl', the CQ KABI was
-extended over its existing 'ioctl' create command.
+Summary
+------------------------------------------------------------------------
 
-As part of moving to 'ioctl' for the above objects the frame work was
-improved to abort a fully created uobject upon some later error, some
-flows were consolidated with the 'write' mode and few bugs were found
-and fixed.
+kernel: 5.4.42-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: cac6eb2794c85e7777fb0caac6fa75b6364d81a0
+git describe: v5.4.41-148-gcac6eb2794c8
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.41-148-gcac6eb2794c8
 
-Yishai
 
-Jason Gunthorpe (1):
-  RDMA/core: Allow the ioctl layer to abort a fully created uobject
+No regressions (compared to build v5.4.41)
 
-Yishai Hadas (6):
-  IB/uverbs: Refactor related objects to use their own asynchronous
-    event FD
-  IB/uverbs: Extend CQ to get its own asynchronous event FD
-  IB/uverbs: Move QP, SRQ, WQ type and flags to UAPI
-  IB/uverbs: Introduce create/destroy SRQ commands over ioctl
-  IB/uverbs: Introduce create/destroy WQ commands over ioctl
-  IB/uverbs: Introduce create/destroy QP commands over ioctl
+No fixes (compared to build v5.4.41)
 
- drivers/infiniband/core/Makefile              |   5 +-
- drivers/infiniband/core/rdma_core.c           |  25 +-
- drivers/infiniband/core/rdma_core.h           |   7 +-
- drivers/infiniband/core/uverbs.h              |  21 +-
- drivers/infiniband/core/uverbs_cmd.c          |  27 +-
- drivers/infiniband/core/uverbs_ioctl.c        |  22 +-
- drivers/infiniband/core/uverbs_main.c         |  16 +-
- drivers/infiniband/core/uverbs_std_types.c    |  95 -----
- drivers/infiniband/core/uverbs_std_types_cq.c |  17 +-
- drivers/infiniband/core/uverbs_std_types_mr.c |  12 +-
- drivers/infiniband/core/uverbs_std_types_qp.c | 401 ++++++++++++++++++
- .../infiniband/core/uverbs_std_types_srq.c    | 234 ++++++++++
- drivers/infiniband/core/uverbs_std_types_wq.c | 194 +++++++++
- drivers/infiniband/core/uverbs_uapi.c         |   3 +
- drivers/infiniband/hw/mlx5/devx.c             |  10 +-
- drivers/infiniband/hw/mlx5/main.c             |  24 +-
- drivers/infiniband/hw/mlx5/qos.c              |  13 +-
- include/rdma/ib_verbs.h                       |  48 ++-
- include/rdma/uverbs_ioctl.h                   |   3 +
- include/rdma/uverbs_std_types.h               |   2 +-
- include/rdma/uverbs_types.h                   |   3 +-
- include/uapi/rdma/ib_user_ioctl_cmds.h        |  81 ++++
- include/uapi/rdma/ib_user_ioctl_verbs.h       |  43 ++
- 23 files changed, 1122 insertions(+), 184 deletions(-)
- create mode 100644 drivers/infiniband/core/uverbs_std_types_qp.c
- create mode 100644 drivers/infiniband/core/uverbs_std_types_srq.c
- create mode 100644 drivers/infiniband/core/uverbs_std_types_wq.c
+Ran 33314 total tests in the following environments and test suites.
 
---
-2.26.2
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
 
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* perf
+* ltp-containers-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* network-basic-tests
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
