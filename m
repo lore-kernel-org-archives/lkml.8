@@ -2,228 +2,150 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F268C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0218EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA8EA2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE942075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRZ1Qd9b"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Eab3V0ae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgESSVL (ORCPT
+        id S1729446AbgESSVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:21:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36504 "EHLO
+        Tue, 19 May 2020 14:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbgESSVK (ORCPT
+        with ESMTP id S1727007AbgESSVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:21:10 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05399C08C5C0;
-        Tue, 19 May 2020 11:21:10 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d3so240088pln.1;
-        Tue, 19 May 2020 11:21:10 -0700 (PDT)
+        Tue, 19 May 2020 14:21:37 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75AAAC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:21:37 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id n18so298301pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:21:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZU4MX3UuVlqXR/LqdfzQjV8hf24XkFU0arC2pFCvdx0=;
-        b=CRZ1Qd9bL4SgMCmIHoWAyaEgvD+PATSf1u6oi8Fwp2croHKpTPjS7Aa63C/7cyYAA4
-         tRuY6uc26ofGXL1DAdlW8CSTe6/MBDUsUqrcerYDII6WoYrP0VSWFA/trbeP0+IjCj4s
-         vd/gRxEXdVsqRpDJYcnOL6RHLvZqrXNM3fzuecZGTn3iduNN2SCva2O2OCn8MySuDPR0
-         vai8Fvh++sOQzwe62N5GYQaBfDOQm0OZ85bqWNP48gXR+4EqwFUm21ub0bDt1ZQwTWET
-         el+lM27xtkukd9907iV62fE86iqs4EQScasr3OmhAWMOild/4YxcaaeqNpwUhZMGTX9Q
-         wxJQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q5UHC553rY05IEMbXCgL1ZU4LhfKGIJXOMI9F65WCM0=;
+        b=Eab3V0aeJWywuatvac89Xj4XfyMtuFx+KgHTWt/TJ0ol7YVVNUJR29bRRwtmUXTfNv
+         TJanh8oN4Dslf95TZKpQ7qOUzyj/NLKttxV/yLvC5qRMUVUm1q23QwzohNMEBsTQIMPe
+         5G/981yXHcsvGBAwRdLh/CFiEL2sWB7oDcJDc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ZU4MX3UuVlqXR/LqdfzQjV8hf24XkFU0arC2pFCvdx0=;
-        b=hSzSzpb3B3iTC5hTsXPXmmZnab4jbHxngrWbsbuFt6MJiUcwI94mp6DfuL/mBiRCLr
-         uKoy5m+tlF0xcBrR1+jzlBourXtzOyHsoncoBwI8+4zuINCMZ3bhr3uGCnjuEn2Hhwvz
-         xqlOm9xcmYQC6fUGgVtTYmTN4nS3XKBRw9gnpJtFW2Ucb4bTZ6qXDFBVoTLS+dLEmwab
-         FDdqNc/2Bxk5i16nRgQyJCLcVWgBfb5tSCRWZ/xKu/PdsxlPk5XSEdpGiDUN3k6HOJT3
-         dQ2mUFYjq/c4t8f1VvfCAiLW1cLlDwOExLfKODCs5MMk9dpmMp71oshWfFtIoUMnuSPl
-         bP5w==
-X-Gm-Message-State: AOAM533KyqWgyM8lEcYqH39IMwBOoodVs/z6Aw4lh1k6M1z3Ser5a80N
-        +qrFbOWVrbQ3hptBDErR578=
-X-Google-Smtp-Source: ABdhPJwcoJ5+Ok8NG2eNQY3+AYvdKQyz3dw8tmuaR0DfLxvayvZXzaXxDAmhFV+FwQHAND4SlfXCig==
-X-Received: by 2002:a17:90b:20b:: with SMTP id fy11mr890107pjb.142.1589912469430;
-        Tue, 19 May 2020 11:21:09 -0700 (PDT)
-Received: from localhost.localdomain ([223.235.145.232])
-        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.20.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 May 2020 11:21:08 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, vkoul@kernel.org, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org
-Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: [PATCH v2 02/10] dmaengine: Actions: Add support for S700 DMA engine
-Date:   Tue, 19 May 2020 23:49:20 +0530
-Message-Id: <1589912368-480-3-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
-References: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q5UHC553rY05IEMbXCgL1ZU4LhfKGIJXOMI9F65WCM0=;
+        b=WkEJ9wzusdr/YML6oNYn+5rkS2GeGDatDDinuqdhbP8oGQuJ3fPNz542uvyfaBDi71
+         6iTpprJTTMJt+tVn+sBgmrnOyy6nmMiuVWRBdh6cM9V4n/s2Rds9+/nEOWj6YYQZZ2I2
+         6nLofkknCN/9UUCHkIVJdykCpIpX4S9QFV4dVfUa34Vj+pMj0pWuxJFO9KRCdVMCvwJL
+         qEkBJk8I4BI7GSbk0Ic8zPWEMi006Iku8AcCddjFslLKZ1sP8TNmuEEUAdFYVZlv6xEq
+         YassfoYXTlObG9S18DvHEkRhHYIDB1BDhNuzh0YjZE9zhhv+KA3Urr0slOaWBbEGQUCh
+         vo3Q==
+X-Gm-Message-State: AOAM532ZFTJZ2xnR88jrTHO5kLTkGDQJrdQq9fT1KAIo/mYk9a+51Vc/
+        O8bhzSf0OSoynVhRsA12kc3RfmcF2h2Wjg==
+X-Google-Smtp-Source: ABdhPJzynbql9pKULdgukQFTy4Z4t7DJQ/sjiUfpzwdYxlnUTNW41tR9eCeNK8c47FummadelJ5jQw==
+X-Received: by 2002:a63:1451:: with SMTP id 17mr472860pgu.242.1589912496698;
+        Tue, 19 May 2020 11:21:36 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d184sm147336pfc.130.2020.05.19.11.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 11:21:35 -0700 (PDT)
+Date:   Tue, 19 May 2020 11:21:34 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v2 3/8] exec: Convert security_bprm_set_creds into
+ security_bprm_repopulate_creds
+Message-ID: <202005191111.9B389D33@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+ <877dx822er.fsf_-_@x220.int.ebiederm.org>
+ <87o8qkzrxp.fsf_-_@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8qkzrxp.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DMA controller present on S700 SoC is compatible with the one on S900
-(as most of registers are same), but it has different DMA descriptor
-structure where registers "fcnt" and "ctrlb" uses different encoding.
+On Mon, May 18, 2020 at 07:31:14PM -0500, Eric W. Biederman wrote:
+> 
+> Rename bprm->cap_elevated to bprm->active_secureexec and initialize it
+> in prepare_binprm instead of in cap_bprm_set_creds.  Initializing
+> bprm->active_secureexec in prepare_binprm allows multiple
+> implementations of security_bprm_repopulate_creds to play nicely with
+> each other.
+> 
+> Rename security_bprm_set_creds to security_bprm_reopulate_creds to
+> emphasize that this path recomputes part of bprm->cred.  This
+> recomputation avoids the time of check vs time of use problems that
+> are inherent in unix #! interpreters.
+> 
+> In short two renames and a move in the location of initializing
+> bprm->active_secureexec.
 
-For instance, on S900 "fcnt" starts at offset 0x0c and uses upper 12
-bits whereas on S700, it starts at offset 0x1c and uses lower 12 bits.
+I like this much better than the direct call to the capabilities hook.
+Thanks!
 
-This commit adds support for DMA controller present on S700.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v1:
-	* Moved llc_hw_flen() to patch 1/9
-	* provided comments about dma descriptor difference 
-	  between S700 and S900.
-Changes since RFC:
-	* Added accessor function to get the frame lenght.
-        * Removed the SoC specific check in IRQ routine.
----
- drivers/dma/owl-dma.c | 46 +++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 37 insertions(+), 9 deletions(-)
+One nit is a bikeshed on the name "active_secureexec", since
+the word "active" isn't really associated with any other part of the
+binfmt logic. It's supposed to be "latest state from the binfmt loop",
+so instead of "active", I considered these words that I also didn't
+like: "current", "this", "recent", and "now". Is "latest" better than
+"active"? Probably not.
 
-diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-index dd85c205454e..17d2fc2d568b 100644
---- a/drivers/dma/owl-dma.c
-+++ b/drivers/dma/owl-dma.c
-@@ -137,6 +137,11 @@ enum owl_dmadesc_offsets {
- 	OWL_DMADESC_SIZE
- };
- 
-+enum owl_dma_id {
-+	S900_DMA,
-+	S700_DMA,
-+};
-+
- /**
-  * struct owl_dma_lli - Link list for dma transfer
-  * @hw: hardware link list
-@@ -203,6 +208,7 @@ struct owl_dma_vchan {
-  * @pchans: array of data for the physical channels
-  * @nr_vchans: the number of physical channels
-  * @vchans: array of data for the physical channels
-+ * @devid: device id based on OWL SoC
-  */
- struct owl_dma {
- 	struct dma_device	dma;
-@@ -217,6 +223,7 @@ struct owl_dma {
- 
- 	unsigned int		nr_vchans;
- 	struct owl_dma_vchan	*vchans;
-+	enum owl_dma_id		devid;
- };
- 
- static void pchan_update(struct owl_dma_pchan *pchan, u32 reg,
-@@ -306,6 +313,11 @@ static inline u32 llc_hw_ctrlb(u32 int_ctl)
- {
- 	u32 ctl;
- 
-+	/*
-+	 * Irrespective of the SoC, ctrlb value starts filling from
-+	 * bit 18.
-+	 */
-+
- 	ctl = BIT_FIELD(int_ctl, 7, 0, 18);
- 
- 	return ctl;
-@@ -362,6 +374,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
- 				  struct dma_slave_config *sconfig,
- 				  bool is_cyclic)
- {
-+	struct owl_dma *od = to_owl_dma(vchan->vc.chan.device);
- 	u32 mode, ctrlb;
- 
- 	mode = OWL_DMA_MODE_PW(0);
-@@ -417,8 +430,18 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
- 	lli->hw[OWL_DMADESC_DADDR] = dst;
- 	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
- 	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
--	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
--	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
-+
-+	/*
-+	 * S700 put flen and fcnt at offset 0x0c and 0x1c respectively,
-+	 * whereas S900 put flen and fcnt at offset 0x0c.
-+	 */
-+	if (od->devid == S700_DMA) {
-+		lli->hw[OWL_DMADESC_FLEN] = len;
-+		lli->hw[OWL_DMADESC_CTRLB] = FCNT_VAL | ctrlb;
-+	} else {
-+		lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
-+		lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
-+	}
- 
- 	return 0;
- }
-@@ -580,7 +603,7 @@ static irqreturn_t owl_dma_interrupt(int irq, void *dev_id)
- 
- 		global_irq_pending = dma_readl(od, OWL_DMA_IRQ_PD0);
- 
--		if (chan_irq_pending && !(global_irq_pending & BIT(i)))	{
-+		if (chan_irq_pending && !(global_irq_pending & BIT(i))) {
- 			dev_dbg(od->dma.dev,
- 				"global and channel IRQ pending match err\n");
- 
-@@ -1038,11 +1061,20 @@ static struct dma_chan *owl_dma_of_xlate(struct of_phandle_args *dma_spec,
- 	return chan;
- }
- 
-+static const struct of_device_id owl_dma_match[] = {
-+	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
-+	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, owl_dma_match);
-+
- static int owl_dma_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct owl_dma *od;
- 	int ret, i, nr_channels, nr_requests;
-+	const struct of_device_id *of_id =
-+				of_match_device(owl_dma_match, &pdev->dev);
- 
- 	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
- 	if (!od)
-@@ -1067,6 +1099,8 @@ static int owl_dma_probe(struct platform_device *pdev)
- 	dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
- 		 nr_channels, nr_requests);
- 
-+	od->devid = (enum owl_dma_id)of_id->data;
-+
- 	od->nr_pchans = nr_channels;
- 	od->nr_vchans = nr_requests;
- 
-@@ -1199,12 +1233,6 @@ static int owl_dma_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id owl_dma_match[] = {
--	{ .compatible = "actions,s900-dma", },
--	{ /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, owl_dma_match);
--
- static struct platform_driver owl_dma_driver = {
- 	.probe	= owl_dma_probe,
- 	.remove	= owl_dma_remove,
+> [...]
+> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+> index d1217fcdedea..8605ab4a0f89 100644
+> --- a/include/linux/binfmts.h
+> +++ b/include/linux/binfmts.h
+> @@ -27,10 +27,10 @@ struct linux_binprm {
+>  	unsigned long argmin; /* rlimit marker for copy_strings() */
+>  	unsigned int
+>  		/*
+> -		 * True if most recent call to cap_bprm_set_creds
+> +		 * True if most recent call to security_bprm_set_creds
+>  		 * resulted in elevated privileges.
+>  		 */
+> -		cap_elevated:1,
+> +		active_secureexec:1,
+
+Also, I'd like it if this comment could be made more verbose as well, for
+anyone trying to understand the binfmt execution flow for the first time.
+Perhaps:
+
+		/*
+		 * Must be set True during the any call to
+		 * bprm_set_creds hook where the execution would
+		 * reuslt in elevated privileges. (The hook can be
+		 * called multiple times during nested interpreter
+		 * resolution across binfmt_script, binfmt_misc, etc).
+		 */
+
+
 -- 
-2.7.4
-
+Kees Cook
