@@ -2,118 +2,130 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C328C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A24207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:41:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CjcChveg"
+	by mail.kernel.org (Postfix) with ESMTP id 401EA207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgESJlj (ORCPT
+        id S1728591AbgESJll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:41:39 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:46291 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727873AbgESJlh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:41:37 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04J9bCoK002859;
-        Tue, 19 May 2020 11:41:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=8umFBsqpXSyvV7P7Pt39jOOMGvMU9GE2G14TF8W9jgU=;
- b=CjcChvegMRR43kcF7VLmveYY3LeTbNP17nhluegroU/5+HEvQtGYduaZa4aBSWaz6hbm
- jZkaPjuVERGrfu3I5Yzf2SpMK08NSarRsty9Ffp1fxTff6Y9ykpSKjGNjQ+Fm1gsk5JX
- a5r0LvSOqXWI6MVOOIv45q9zV1YlsTKD6p5udChBW/fCXtow3Arj7pG2JAAlDk1wZopb
- g+ZOGREMtPrvN2goEFx4njwzqBHI12NAb5+vQVcm2rm1xKbqJrHKVRV09x8D1HHetv6r
- nzHbked10gKBadtATbbVKu2HXMNM1edJW6VQxNNNvfdTBXoB+UQa8Uv1wz3xLmcvikNB 8A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3125xxs1b2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 May 2020 11:41:13 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D257310002A;
-        Tue, 19 May 2020 11:41:10 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BD9F12B1881;
-        Tue, 19 May 2020 11:41:10 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May 2020 11:41:10
- +0200
-From:   Erwan Le Ray <erwan.leray@st.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-CC:     <linux-serial@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>,
-        Erwan Le Ray <erwan.leray@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 1/1] serial: stm32: add no_console_suspend support
-Date:   Tue, 19 May 2020 11:41:04 +0200
-Message-ID: <20200519094104.27082-1-erwan.leray@st.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-19_03:2020-05-19,2020-05-19 signatures=0
+        Tue, 19 May 2020 05:41:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:57400 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728440AbgESJli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 05:41:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFE9B101E;
+        Tue, 19 May 2020 02:41:37 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.75.102])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B439D3F305;
+        Tue, 19 May 2020 02:41:34 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
+        mark.rutland@arm.com, suzuki.poulose@arm.com,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        James Morse <james.morse@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: [PATCH V4 00/17] arm64/cpufeature: Introduce ID_PFR2, ID_DFR1, ID_MMFR5 and other changes
+Date:   Tue, 19 May 2020 15:10:37 +0530
+Message-Id: <1589881254-10082-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to display console messages in low power mode, console pins
-must be kept active after suspend call.
+This series is primarily motivated from an adhoc list from Mark Rutland
+during our previous ID_ISAR6 discussion [1]. The current proposal also
+accommodates some more suggestions from Will and Suzuki.
 
----
-Initial patch "serial: stm32: add support for no_console_suspend" was part
-of "STM32 usart power improvement" series, but as dependancy to
-console_suspend pinctl state has been removed to fit with Rob comment [1],
-this patch has no more dependancy with any other patch of this series.
+This series adds missing 32 bit system registers (ID_PFR2, ID_DFR1 and
+ID_MMFR5), adds missing features bits on all existing system registers
+(32 and 64 bit) and some other miscellaneous changes. While here it also
+includes a patch which does macro replacement for various open bits shift
+encodings for various CPU ID registers. There is a slight re-order of the
+patches here as compared to the previous version (V1).
 
-[1] https://lkml.org/lkml/2019/7/9/451
+This series is based on arm64 tree (for-next/cpufeature). All feature bits
+enabled here can be referred in ARM DDI 0487F.a specification. Though I
+have tried to select appropriate values for each new feature being added
+here, there might be some inconsistencies (or mistakes). In which case,
+please do let me know if anything needs to change. Thank you.
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+[1] https://patchwork.kernel.org/patch/11287805/
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 9cfcf355567a..5afd29162f6c 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -1425,7 +1425,18 @@ static int __maybe_unused stm32_serial_suspend(struct device *dev)
- 	else
- 		stm32_serial_enable_wakeup(port, false);
- 
--	pinctrl_pm_select_sleep_state(dev);
-+	/*
-+	 * When "no_console_suspend" is enabled, keep the pinctrl default state
-+	 * and rely on bootloader stage to restore this state upon resume.
-+	 * Otherwise, apply the idle or sleep states depending on wakeup
-+	 * capabilities.
-+	 */
-+	if (console_suspend_enabled || !uart_console(port)) {
-+		if (device_may_wakeup(dev))
-+			pinctrl_pm_select_idle_state(dev);
-+		else
-+			pinctrl_pm_select_sleep_state(dev);
-+	}
- 
- 	return 0;
- }
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com> 
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: kvmarm@lists.cs.columbia.edu
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+
+Changes in V4:
+
+- Updated ftr_id_dfr0[] with a documentation for now missing [31:28] Tracfilt per Will
+- Fixed erroneous bit width value from 28 to 4 for double lock feature per Will
+- Replaced ID_SANITIZED() with ID_HIDDEN() for SYS_ID_DFR1_EL1 per Suzuki
+- Fixed positions for register definitions as per new name based grouping per Will
+- Replaced FTR_VISIBLE with FTR_HIDDEN for TLB feature in ID_AA64ISAR0 per Suzuki
+- Replaced FTR_VISIBLE with FTR_HIDDEN for MPAM and SEL2 in ID_AA64PFR0 per Suzuki
+- Replaced FTR_VISIBLE with FTR_HIDDEN for MPAMFRAC and RASFRAC in ID_AA64PFR1 per Suzuki
+- Dropped both MTE and BT features from ftr_id_aa64pfr1[] to be added later per Suzuki
+- Added ID_MMFR4_EL1 into the cpuinfo_arm64 context per Will
+
+Changes in V3: (https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=281211)
+
+- Rebased on git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git (for-next/cpufeature)
+
+Changes in V2: (https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=270605)
+
+- Added Suggested-by tag from Mark Rutland for all changes he had proposed
+- Added comment for SpecSEI feature on why it is HIGHER_SAFE per Suzuki
+- Added a patch which makes ID_AA64DFR0_DOUBLELOCK a signed feature per Suzuki
+- Added ID_DFR1 and ID_MMFR5 system register definitions per Will
+- Added remaining features bits for relevant 64 bit system registers per Will
+- Changed commit message on [PATCH 5/7] regarding TraceFilt feature per Suzuki
+- Changed ID_PFR2.CSV3 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will
+- Changed ID_PFR0.CSV2 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will 
+- Changed some commit messages
+
+Changes in V1: (https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=234093)
+
+Anshuman Khandual (17):
+  arm64/cpufeature: Add explicit ftr_id_isar0[] for ID_ISAR0 register
+  arm64/cpufeature: Drop TraceFilt feature exposure from ID_DFR0 register
+  arm64/cpufeature: Make doublelock a signed feature in ID_AA64DFR0
+  arm64/cpufeature: Introduce ID_PFR2 CPU register
+  arm64/cpufeature: Introduce ID_DFR1 CPU register
+  arm64/cpufeature: Introduce ID_MMFR5 CPU register
+  arm64/cpufeature: Add remaining feature bits in ID_PFR0 register
+  arm64/cpufeature: Add remaining feature bits in ID_MMFR4 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64ISAR0 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64PFR0 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64PFR1 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR0 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR1 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR2 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64DFR0 register
+  arm64/cpufeature: Replace all open bits shift encodings with macros
+  arm64/cpuinfo: Add ID_MMFR4_EL1 into the cpuinfo_arm64 context
+
+ arch/arm64/include/asm/cpu.h    |   4 +
+ arch/arm64/include/asm/sysreg.h |  90 ++++++++++++++++++++
+ arch/arm64/kernel/cpufeature.c  | 144 +++++++++++++++++++++++++-------
+ arch/arm64/kernel/cpuinfo.c     |   4 +
+ arch/arm64/kvm/sys_regs.c       |   6 +-
+ 5 files changed, 216 insertions(+), 32 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
