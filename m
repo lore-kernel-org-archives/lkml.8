@@ -2,137 +2,115 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F572C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B36C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4512075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B31D20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:05:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589850335;
+	bh=aTiEN1aXvXSsO1ZaC/e/UxW8ePu/QNGXzmfGbHnOUGI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KF65iFxkcsTa0N/n5oH6jA7x+CPqjRCjUS1Og+QMXEFMYh0alrc2eqj4yS5W1pzoh
+	 K9sP1qySU+9sM6dYV2LJwkTIYOK69ysF9NAXNu6c5sa8SgCFA0QTc9fc5BZtoHfQzX
+	 7jJkRMTBVxtolPrQcgbWMECRfbeIzZPI06ORmOVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgESBEo (ORCPT
+        id S1728108AbgESBFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 21:04:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4813 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726696AbgESBEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 21:04:43 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B4266F56307FC087C700;
-        Tue, 19 May 2020 09:04:40 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.101) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 19 May 2020
- 09:04:34 +0800
-Subject: Re: [RFC PATCH 2/3] cpufreq: Add SW BOOST support for drivers without
- frequency table
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        <Souvik.Chakravarty@arm.com>, <Thanu.Rangarajan@arm.com>,
-        <Sudeep.Holla@arm.com>, <guohanjun@huawei.com>,
-        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588929064-30270-1-git-send-email-wangxiongfeng2@huawei.com>
- <1588929064-30270-3-git-send-email-wangxiongfeng2@huawei.com>
- <5858421.kfVlu25t0p@kreacher>
- <7325b64c-85f7-21fe-3860-faa10ab1cf21@huawei.com>
- <20200518075309.xoon4vyfjywmteww@vireshk-i7>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <9242eecc-6550-ea45-1ee6-1b75b48e8c0d@huawei.com>
-Date:   Tue, 19 May 2020 09:04:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 18 May 2020 21:05:34 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40380 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbgESBFe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 21:05:34 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t16so4940162plo.7;
+        Mon, 18 May 2020 18:05:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K9aPjeV4NwTg9tl9jzb0nJX+9U/z5KY8RnyA4zhH0iQ=;
+        b=saD0XHbQ0OnjTmfgpZU33WtR8Lxyc7JsvrRc/6wS9xSGDEG5yDwaN2P8GFPSbLoDP1
+         H8gsMcryUinOIuM54XrhAB/VDt58XBsypkKMEP1Cshp6XK751m8+42ikDGo5ClHs2Lyt
+         fmxnGkMEpmugFTeHZiEjgGqHoHKi54rqWdudeFQjJdqfKdRvgUSiXW5xLNyOrvAoLxd1
+         vSD/DBhBzjx4pQpeABQCY0HXphy9JH5WB5OKoXGNxNytFz2EkQFf+RuMtKHXeMPfLMct
+         HY36Mj8jvewGrSB2BF5uY/d9XyJ2IPS6/cIm+YJFrsbyCOw5r0ON6EiPm3Mz9x/lYDU8
+         jNew==
+X-Gm-Message-State: AOAM5320XOi+652GhE992ts8Rv+gD2aMol20l2zPQe7D9OBfUrwKtz87
+        IQi6sfECbEk9m1HYl37KPPeDUXZzNEk=
+X-Google-Smtp-Source: ABdhPJyqsiuMQQ8IrtPAOnXbAbCthJOk4QcQ7xbbMAx9MJhxdNXa/AIAheZ1W7B7s3zmFmh4S/9Rmg==
+X-Received: by 2002:a17:90a:b00d:: with SMTP id x13mr720432pjq.11.1589850333253;
+        Mon, 18 May 2020 18:05:33 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id l4sm8666640pgo.92.2020.05.18.18.05.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 18:05:31 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 0ED2640B24; Tue, 19 May 2020 01:05:31 +0000 (UTC)
+Date:   Tue, 19 May 2020 01:05:30 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        Steve deRosier <derosier@gmail.com>,
+        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com,
+        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
+        daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+Message-ID: <20200519010530.GS11244@42.do-not-panic.com>
+References: <CALLGbR+ht2V3m5f-aUbdwEMOvbsX8ebmzdWgX4jyWTbpHrXZ0Q@mail.gmail.com>
+ <20200518190930.GO11244@42.do-not-panic.com>
+ <e3d978c8fa6a4075f12e843548d41e2c8ab537d1.camel@sipsolutions.net>
+ <20200518132828.553159d9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <8d7a3bed242ac9d3ec55a4c97e008081230f1f6d.camel@sipsolutions.net>
+ <20200518133521.6052042e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <d81601b17065d7dc3b78bf8d68faf0fbfdb8c936.camel@sipsolutions.net>
+ <20200518134643.685fcb0e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200518212202.GR11244@42.do-not-panic.com>
+ <20200518151645.4693cf30@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200518075309.xoon4vyfjywmteww@vireshk-i7>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.101]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518151645.4693cf30@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
-
-Thanks for your reply !
-
-On 2020/5/18 15:53, Viresh Kumar wrote:
-> Sorry for the delay from my side in replying to this thread.
+On Mon, May 18, 2020 at 03:16:45PM -0700, Jakub Kicinski wrote:
+> On Mon, 18 May 2020 21:22:02 +0000 Luis Chamberlain wrote:
+> > Indeed my issue with devlink is that it did not seem generic enough for
+> > all devices which use firmware and for which firmware can crash. Support
+> > should not have to be "add devlink support" + "now use this new hook",
+> > but rather a very lighweight devlink_crash(device) call we can sprinkly
+> > with only the device as a functional requirement.
 > 
-> On 15-05-20, 09:49, Xiongfeng Wang wrote:
->> On 2020/5/14 22:16, Rafael J. Wysocki wrote:
->>> On Friday, May 8, 2020 11:11:03 AM CEST Xiongfeng Wang wrote:
->>>> Software-managed BOOST get the boost frequency by check the flag
->>>> CPUFREQ_BOOST_FREQ at driver's frequency table. But some cpufreq driver
->>>> don't have frequency table and use other methods to get the frequency
->>>> range, such CPPC cpufreq driver.
->>>>
->>>> To add SW BOOST support for drivers without frequency table, we add
->>>> members in 'cpufreq_policy.cpufreq_cpuinfo' to record the max frequency
->>>> of boost mode and non-boost mode. The cpufreq driver initialize these two
->>>> members when probing.
->>>>
->>>> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
->>>> ---
->>>>  drivers/cpufreq/cpufreq.c | 23 +++++++++++++++--------
->>>>  include/linux/cpufreq.h   |  2 ++
->>>>  2 files changed, 17 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
->>>> index 475fb1b..a299426 100644
->>>> --- a/drivers/cpufreq/cpufreq.c
->>>> +++ b/drivers/cpufreq/cpufreq.c
->>>> @@ -2508,15 +2508,22 @@ static int cpufreq_boost_set_sw(int state)
->>>>  	int ret = -EINVAL;
->>>>  
->>>>  	for_each_active_policy(policy) {
->>>> -		if (!policy->freq_table)
->>>> -			continue;
->>>> -
->>>> -		ret = cpufreq_frequency_table_cpuinfo(policy,
->>>> +		if (policy->freq_table) {
->>>> +			ret = cpufreq_frequency_table_cpuinfo(policy,
->>>>  						      policy->freq_table);
->>>> -		if (ret) {
->>>> -			pr_err("%s: Policy frequency update failed\n",
->>>> -			       __func__);
->>>> -			break;
->>>> +			if (ret) {
->>>> +				pr_err("%s: Policy frequency update failed\n",
->>>> +				       __func__);
->>>> +				break;
->>>> +			}
->>>> +		} else if (policy->cpuinfo.boost_max_freq) {
->>>> +			if (state)
->>>> +				policy->max = policy->cpuinfo.boost_max_freq;
->>>> +			else
->>>> +				policy->max = policy->cpuinfo.nonboost_max_freq;
->>>> +			policy->cpuinfo.max_freq = policy->max;
->>>> +		} else {
->>>> +			continue;
->>>>  		}
->>>
->>> Why do you need to update this function?
->>
->> My original thought is to reuse the current SW BOOST code as possible, but this
->> seems to change the cpufreq core too much.
->>
->> Thanks for your advice. This is better. I will provide a '->set_boost' callback
->> for CPPC driver. But I will need to export 'cpufreq_policy_list' and make the
->> macro 'for_each_active_policy' public.
-> 
-> This can and should be avoided, I will rather move the for-each-policy
-> loop in cpufreq_boost_trigger_state() and call ->set_boost() for each
-> policy and pass policy as argument as well. You would be required to
-> update existing users of sw boost.
+> We can provide a lightweight devlink_crash(device) which only generates
+> the notification, without the need to register the health reporter or a
+> devlink instance upfront. But then we loose the ability to control the
+> recovery, count errors, etc. So I'd think that's not the direction we
+> want to go in.
 
-Thanks for your advice. It's a good idea. I will change it in the next version.
+Care to show me what the diff stat for a non devlink driver would look
+like? Just keep in mind this taint is 1 line addition. Granted, if we
+can use SmPL grammar to automate addition of an initial framework to a
+driver that'd be great, but since the device addition is subsystem
+specific (device_add() and friends), I don't suspect this will be easily
+automated.
 
-Thanks,
-Xiongfeng
-
-> 
-
+   Luis
