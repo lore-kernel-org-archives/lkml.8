@@ -2,91 +2,57 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C06C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 324322081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589905887;
-	bh=uASEKNWX2uIB0hJ0wokVFicq/nmlpU2jfEmWO9zmSQo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=jvijY3ovgjwKbI1NJ/8yhOo74e8r6a7+b0AogYkf7x3fVCeQ1Y/INbqpZPy2pwaY0
-	 UEYAAlTZup3WR2lE8aN0FDjfAHZZYFTqzGB+zpz1smR+CAh/Y563ebM5p1RpdFLzR4
-	 lsrenI5HHSLKM1gVNVQWgr07HoBrrtvuqiSWEggM=
+	by mail.kernel.org (Postfix) with ESMTP id D997A20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbgESQb0 (ORCPT
+        id S1729331AbgESQb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44630 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 12:31:56 -0400
+Received: from elvis.franken.de ([193.175.24.41]:59328 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgESQb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:31:26 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40F85207D3;
-        Tue, 19 May 2020 16:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589905885;
-        bh=uASEKNWX2uIB0hJ0wokVFicq/nmlpU2jfEmWO9zmSQo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kuYBKgMixa56chL6YR3C8bnsP8+6t0kL1tZS2zyTTvHuAg+U+gB1qWU5ebGUrtVHy
-         q5KANzEo1MPjM533m4a9Eqsb4ZZFmnQ/sB240uzA/l1sIp1bz18iXx4pWaDd2Tlc23
-         8D1AC77nx1zgdy/cSYNeJGawKlh3T0F/pJxwiOfQ=
-Date:   Tue, 19 May 2020 11:36:12 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Bart Van Assche <bvanassche@acm.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH v2] RDMA/rtrs: client: Fix function return on success
-Message-ID: <20200519163612.GA6043@embeddedor>
+        id S1729118AbgESQbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 12:31:55 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jb59m-0001aq-01; Tue, 19 May 2020 18:31:54 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 81EFCC013A; Tue, 19 May 2020 18:04:00 +0200 (CEST)
+Date:   Tue, 19 May 2020 18:04:00 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Zhi Li <lizhi01@loongson.cn>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] MIPS: Remove useless parameter of bootcmdline_init()
+Message-ID: <20200519160400.GB16307@alpha.franken.de>
+References: <1589785688-10426-1-git-send-email-lizhi01@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1589785688-10426-1-git-send-email-lizhi01@loongson.cn>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the if-statement and return the value contained in _err_,
-unconditionally.
+On Mon, May 18, 2020 at 03:08:08PM +0800, Zhi Li wrote:
+> The parameter "cmdline_p" is useless in bootcmdline_init()，remove it.
+> 
+> Signed-off-by: Zhi Li <lizhi01@loongson.cn>
 
-Addresses-Coverity-ID: 1493753 ("Identical code for different branches")
-Fixes: 6a98d71daea1 ("RDMA/rtrs: client: main functionality")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Return err, unconditionally. As suggested by Bart Van Assche.
-   Thanks, Bart.
+applied to mips-next.
 
- drivers/infiniband/ulp/rtrs/rtrs-clt.c | 3 ---
- 1 file changed, 3 deletions(-)
+Thomas.
 
-diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt.c b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
-index 468fdd0d8713c..568741aa7f596 100644
---- a/drivers/infiniband/ulp/rtrs/rtrs-clt.c
-+++ b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
-@@ -1591,9 +1591,6 @@ static int create_con_cq_qp(struct rtrs_clt_con *con)
- 	 * In case of error we do not bother to clean previous allocations,
- 	 * since destroy_con_cq_qp() must be called.
- 	 */
--
--	if (err)
--		return err;
- 	return err;
- }
- 
 -- 
-2.26.2
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
