@@ -2,25 +2,25 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E44C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B63C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB84920758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CFD206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgESDbX (ORCPT
+        id S1728306AbgESDb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:31:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4860 "EHLO huawei.com"
+        Mon, 18 May 2020 23:31:28 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4861 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726492AbgESDbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:31:21 -0400
+        id S1728258AbgESDbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 23:31:24 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C0DA36D128BDB99DA3B5;
+        by Forcepoint Email with ESMTP id D25ACEF918C424D665AA;
         Tue, 19 May 2020 11:31:19 +0800 (CST)
 Received: from use12-sp2.huawei.com (10.67.189.174) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
@@ -36,12 +36,10 @@ To:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
         <bigeasy@linutronix.de>, <pmladek@suse.com>,
         <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
 CC:     <wangle6@huawei.com>, <alex.huangjianhui@huawei.com>
-Subject: [PATCH v4 2/4] sysctl: Move some boundary constants form sysctl.c to sysctl_vals
-Date:   Tue, 19 May 2020 11:31:09 +0800
-Message-ID: <1589859071-25898-3-git-send-email-nixiaoming@huawei.com>
+Subject: [PATCH v4 0/4] cleaning up the sysctls table (hung_task watchdog)
+Date:   Tue, 19 May 2020 11:31:07 +0800
+Message-ID: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
 X-Mailer: git-send-email 1.8.5.6
-In-Reply-To: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
-References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.189.174]
@@ -51,226 +49,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some boundary (.extra1 .extra2) constants (E.g: neg_one two) in
-sysctl.c are used in multiple features. Move these variables to
-sysctl_vals to avoid adding duplicate variables when cleaning up
-sysctls table.
+Kernel/sysctl.c contains more than 190 interface files, and there are a 
+large number of config macro controls. When modifying the sysctl 
+interface directly in kernel/sysctl.c, conflicts are very easy to occur.
+E.g: https://lore.kernel.org/lkml/99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com/
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- fs/proc/proc_sysctl.c  |  2 +-
- include/linux/sysctl.h | 11 ++++++++---
- kernel/sysctl.c        | 39 +++++++++++++++++----------------------
- 3 files changed, 26 insertions(+), 26 deletions(-)
+Use register_sysctl() to register the sysctl interface to avoid
+merge conflicts when different features modify sysctl.c at the same time.
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 5b405f3..3d65e7d 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -24,7 +24,7 @@
- static const struct inode_operations proc_sys_dir_operations;
- 
- /* shared constants to be used in various sysctls */
--const int sysctl_vals[] = { 0, 1, INT_MAX };
-+const int sysctl_vals[] = { -1, 0, 1, 2, 4, 100, 1000, INT_MAX };
- EXPORT_SYMBOL(sysctl_vals);
- 
- /* Support for permanently empty directories */
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 857ba93..97586ee 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -38,9 +38,14 @@
- struct ctl_dir;
- 
- /* Keep the same order as in fs/proc/proc_sysctl.c */
--#define SYSCTL_ZERO	((void *)&sysctl_vals[0])
--#define SYSCTL_ONE	((void *)&sysctl_vals[1])
--#define SYSCTL_INT_MAX	((void *)&sysctl_vals[2])
-+#define SYSCTL_NEG_ONE	((void *)&sysctl_vals[0])
-+#define SYSCTL_ZERO	((void *)&sysctl_vals[1])
-+#define SYSCTL_ONE	((void *)&sysctl_vals[2])
-+#define SYSCTL_TWO	((void *)&sysctl_vals[3])
-+#define SYSCTL_FOUR	((void *)&sysctl_vals[4])
-+#define SYSCTL_ONE_HUNDRED	((void *)&sysctl_vals[5])
-+#define SYSCTL_ONE_THOUSAND	((void *)&sysctl_vals[6])
-+#define SYSCTL_INT_MAX	((void *)&sysctl_vals[7])
- 
- extern const int sysctl_vals[];
- 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 8afd713..38469bf 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -111,14 +111,9 @@
- static int sixty = 60;
- #endif
- 
--static int __maybe_unused neg_one = -1;
--static int __maybe_unused two = 2;
--static int __maybe_unused four = 4;
- static unsigned long zero_ul;
- static unsigned long one_ul = 1;
- static unsigned long long_max = LONG_MAX;
--static int one_hundred = 100;
--static int one_thousand = 1000;
- #ifdef CONFIG_PRINTK
- static int ten_thousand = 10000;
- #endif
-@@ -1885,7 +1880,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &neg_one,
-+		.extra1		= SYSCTL_NEG_ONE,
- 		.extra2		= SYSCTL_ONE,
- 	},
- #endif
-@@ -2227,7 +2222,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax_sysadmin,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- #endif
- 	{
-@@ -2487,7 +2482,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &neg_one,
-+		.extra1		= SYSCTL_NEG_ONE,
- 	},
- #endif
- #ifdef CONFIG_RT_MUTEXES
-@@ -2549,7 +2544,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= perf_cpu_time_max_percent_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- 	{
- 		.procname	= "perf_event_max_stack",
-@@ -2567,7 +2562,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= perf_event_max_stack_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_thousand,
-+		.extra2		= SYSCTL_ONE_THOUSAND,
- 	},
- #endif
- 	{
-@@ -2642,7 +2637,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- 	{
- 		.procname	= "panic_on_oom",
-@@ -2651,7 +2646,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- 	{
- 		.procname	= "oom_kill_allocating_task",
-@@ -2696,7 +2691,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= dirty_background_ratio_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- 	{
- 		.procname	= "dirty_background_bytes",
-@@ -2713,7 +2708,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= dirty_ratio_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- 	{
- 		.procname	= "dirty_bytes",
-@@ -2753,7 +2748,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- #ifdef CONFIG_HUGETLB_PAGE
- 	{
-@@ -2810,7 +2805,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0200,
- 		.proc_handler	= drop_caches_sysctl_handler,
- 		.extra1		= SYSCTL_ONE,
--		.extra2		= &four,
-+		.extra2		= SYSCTL_FOUR,
- 	},
- #ifdef CONFIG_COMPACTION
- 	{
-@@ -2863,7 +2858,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= watermark_scale_factor_sysctl_handler,
- 		.extra1		= SYSCTL_ONE,
--		.extra2		= &one_thousand,
-+		.extra2		= SYSCTL_ONE_THOUSAND,
- 	},
- 	{
- 		.procname	= "percpu_pagelist_fraction",
-@@ -2942,7 +2937,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= sysctl_min_unmapped_ratio_sysctl_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- 	{
- 		.procname	= "min_slab_ratio",
-@@ -2951,7 +2946,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= sysctl_min_slab_ratio_sysctl_handler,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &one_hundred,
-+		.extra2		= SYSCTL_ONE_HUNDRED,
- 	},
- #endif
- #ifdef CONFIG_SMP
-@@ -3234,7 +3229,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0600,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- 	{
- 		.procname	= "protected_regular",
-@@ -3243,7 +3238,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0600,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- 	{
- 		.procname	= "suid_dumpable",
-@@ -3252,7 +3247,7 @@ int proc_do_static_key(struct ctl_table *table, int write,
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax_coredump,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= &two,
-+		.extra2		= SYSCTL_TWO,
- 	},
- #if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
- 	{
+So consider cleaning up the sysctls table, details are in:
+   https://kernelnewbies.org/KernelProjects/proc
+   https://lore.kernel.org/lkml/20200513141421.GP11244@42.do-not-panic.com/#t
+
+The current patch set extracts register_sysctl_init and some sysctl_vals
+variables, and clears the interface of hung_task and watchdog in sysctl.c.
+
+The current patch set is based on linux-next, commit 72bc15d0018ebfbc9
+("Add linux-next specific files for 20200518").
+
+changes in v4:
+  Handle the conflict with the commit d4ee116819ed714f ("kernel/hung_task.c:
+  introduce sysctl to print all traces when a hung task is detected"),
+  move the sysctl interface hung_task_all_cpu_backtrace to hung_task.c.
+
+V3: https://lore.kernel.org/lkml/1589774397-42485-1-git-send-email-nixiaoming@huawei.com/
+  base on commit b9bbe6ed63b2b9 ("Linux 5.7-rc6")
+changes in v3:
+  1. make hung_task_timeout_max to be const
+  2. fix build warning:
+     kernel/watchdog.c:779:14: warning: initialization discards 'const'
+         qualifier from pointer target type [-Wdiscarded-qualifiers]
+         .extra2  = &sixty,
+                    ^
+
+V2: https://lore.kernel.org/lkml/1589619315-65827-1-git-send-email-nixiaoming@huawei.com/
+changes in v2:
+  1. Adjusted the order of patches, first do public function
+     extraction, then do feature code movement
+  2. Move hung_task sysctl to hung_task.c instead of adding new file
+  3. Extract multiple common variables instead of only neg_one, and keep
+     the order of member values in sysctl_vals
+  4. Add const modification to the variable sixty in watchdog sysctl
+
+V1: https://lore.kernel.org/lkml/1589517224-123928-1-git-send-email-nixiaoming@huawei.com/
+
+Xiaoming Ni (4):
+  sysctl: Add register_sysctl_init() interface
+  sysctl: Move some boundary constants form sysctl.c to sysctl_vals
+  hung_task: Move hung_task sysctl interface to hung_task.c
+  watchdog: move watchdog sysctl interface to watchdog.c
+
+ fs/proc/proc_sysctl.c        |   2 +-
+ include/linux/sched/sysctl.h |  14 +--
+ include/linux/sysctl.h       |  13 ++-
+ kernel/hung_task.c           |  77 +++++++++++++++-
+ kernel/sysctl.c              | 214 +++++++------------------------------------
+ kernel/watchdog.c            | 101 ++++++++++++++++++++
+ 6 files changed, 224 insertions(+), 197 deletions(-)
+
 -- 
 1.8.5.6
-
