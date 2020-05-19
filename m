@@ -2,103 +2,148 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE96C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FE8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7556D207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="diMqmdWQ"
+	by mail.kernel.org (Postfix) with ESMTP id 807B42075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589912915;
+	bh=sX2nrEnVpN2EJZk71O2Mdg87RYloyV8VLjHIZmVjZIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f/D1zloff8jrynwuuic5Y5h40ssgk6AOoKgYmBKkkaXpFR8zJrlcROWRVznIT9d0L
+	 nTo+Blu+/QQPXTV47IsHgvc2K1JutUTgqnwu7wAHEb8/oyv1PAqSitYUnSoZoH6JjR
+	 p0/u3q4Neo0H+9WgRmxQ3x6cRjy+9YF1nl4G+y4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgESS15 (ORCPT
+        id S1729499AbgESS2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgESS1y (ORCPT
+        Tue, 19 May 2020 14:28:35 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33373 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgESS2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:27:54 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E9DC08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:54 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d3so246366pln.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nYhYvn46e/4SmfmVVbZOq3r5oEKfrjVdnN/U9wz4NtY=;
-        b=diMqmdWQ0qSMkp9euf6IGqcO8VzRvq0vOJY26a1wQ5Q8T/huOrpQE0gd6Ko7mlQmCM
-         RYUjZqut0yYI6BG9dGiYopn7GCLIpO4F540x9+dcHcfT4ZhgrSPNJ2FyiIX9KBoAii2Y
-         chvdiDdXI9/bVqduNh/8dHrLs1iQVkGJhhmbU=
+        Tue, 19 May 2020 14:28:34 -0400
+Received: by mail-il1-f194.google.com with SMTP id o67so416366ila.0;
+        Tue, 19 May 2020 11:28:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=nYhYvn46e/4SmfmVVbZOq3r5oEKfrjVdnN/U9wz4NtY=;
-        b=fr8Im0GPwiw0D6Pt4Sg1QSqhT8UvMLQYjK4bzvUryK/s68YMyvKDQVJ3fzIDD7JzQJ
-         ZvjkWv0heAjEGeymc5pdy0mUT6w3Y4/sYvvOjnDfThMJTtycZHFHW4jwki2AHl/jGuyY
-         RRFVBWfIOhJvF0Pp95zztiemzvXX3ER/Fnbopxw/xOCHwZJbLLkveZ0YWOe3wFJuViRw
-         HYUxqrOAWhLu5kqGfLsiozG/Jp3FgQ17MaccEEMstbuRBnsAr8ecB/1NbQoTXjDmrGT+
-         M2JMk8pljQhsXYb5PKlISJIJEh1+w4sMQwLvSm6wadaiCIOdpX8YTmqEpl4jMv++PNuo
-         wBRA==
-X-Gm-Message-State: AOAM531clHnIMkSgjtm3CF/OMiLWoF1Uf5Sytx844KJgW34lRl4dthXn
-        FaJ29u2Bg+PEYPKkFcBMLfr50A==
-X-Google-Smtp-Source: ABdhPJwaMTz8VrJTiETmULOC2bj+5LoutuSFETDCsFxyIxYRNBzPP4NYcHiEs4ivLHsqq7MQflRUMw==
-X-Received: by 2002:a17:90a:8b84:: with SMTP id z4mr954246pjn.86.1589912873632;
-        Tue, 19 May 2020 11:27:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a27sm146456pgn.62.2020.05.19.11.27.52
+        bh=J9uhOTh98EU4qKAMLm9nufM4MlbPiYXtLFkDWwncKGI=;
+        b=A4sRrNhMVonc0sqFOnlJWimpo4Dy4yYOxmUAMu+3rEaprYvf6p4LKuuY+jQUHYvhIb
+         ci2V46zDDEb1eAGXvf+PxxPKHquOu7xG4H0Ybjg8H3yyfTfEmbRfwvkY7v8VJtbuf+g3
+         MGxygAf4KkuipsdwOHGondlKkzuo02KA1wHowHlHCX8gWqlsyB2la3OqayAWzwt0q9ho
+         wLpiwigvt4wZXPfU2LOO3tymCxB5fmvYpgf9BXs0yqcZoec8aFDUrCz+BO4EhV1enCvZ
+         DJl7XETj5cOuw+eJF83jxtJH6AeemxQz69VdQWxlZSsKktNbp1NQLAX2gmp7B+Q04t8A
+         tpaQ==
+X-Gm-Message-State: AOAM533fQCZFuC+Wb6N9EU7mGVtgbuVrtesbaAjWfBTYLixS4vZtpucd
+        CQMPL62A+dkLgwf7ZVrNUHN7aGQ=
+X-Google-Smtp-Source: ABdhPJyzGMuEyVNB7e4uRuuhX+smoH/YHIHeUureMb4VVb62KfaPIvAZVXuVI5Ucz4yOw91ZAaFLjg==
+X-Received: by 2002:a05:6e02:cc1:: with SMTP id c1mr341461ilj.260.1589912913424;
+        Tue, 19 May 2020 11:28:33 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id h9sm168552ioa.6.2020.05.19.11.28.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:27:52 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:27:51 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 5/8] exec: Move the call of prepare_binprm into
- search_binary_handler
-Message-ID: <202005191127.E9F66F9E88@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87d070zrvx.fsf_-_@x220.int.ebiederm.org>
+        Tue, 19 May 2020 11:28:32 -0700 (PDT)
+Received: (nullmailer pid 424602 invoked by uid 1000);
+        Tue, 19 May 2020 18:28:31 -0000
+Date:   Tue, 19 May 2020 12:28:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: arm: add a binding document for
+ MediaTek PERICFG controller
+Message-ID: <20200519182831.GA418402@bogus>
+References: <20200511150759.18766-1-brgl@bgdev.pl>
+ <20200511150759.18766-2-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87d070zrvx.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <20200511150759.18766-2-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 07:32:18PM -0500, Eric W. Biederman wrote:
+On Mon, May 11, 2020 at 05:07:46PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> The code in prepare_binary_handler needs to be run every time
-> search_binary_handler is called so move the call into search_binary_handler
-> itself to make the code simpler and easier to understand.
+> This adds a binding document for the PERICFG controller present on
+> MediaTek SoCs. For now the only variant supported is 'mt8516-pericfg'.
 > 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../arm/mediatek/mediatek,pericfg.yaml        | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+> new file mode 100644
+> index 000000000000..74b2a6173ffb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+> @@ -0,0 +1,34 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/arm/mediatek/mediatek,pericfg.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: MediaTek Peripheral Configuration Controller
+> +
+> +maintainers:
+> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Don't need oneOf here.
 
--- 
-Kees Cook
+> +      - items:
+> +        - enum:
+> +          - mediatek,pericfg
+
+Doesn't match the example (which is correct).
+
+> +        - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pericfg: pericfg@10003050 {
+> +        compatible = "mediatek,mt8516-pericfg", "syscon";
+> +        reg = <0 0x10003050 0 0x1000>;
+> +    };
+> -- 
+> 2.25.0
+> 
