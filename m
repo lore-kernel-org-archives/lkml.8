@@ -2,90 +2,83 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D533CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFE1207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="izuWj3PJ"
+	by mail.kernel.org (Postfix) with ESMTP id B76AE2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgESPQg (ORCPT
+        id S1729124AbgESPZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 11:16:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728847AbgESPQg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 11:16:36 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1A5C08C5C0;
-        Tue, 19 May 2020 08:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AdOEDRxDGCk7juxgiVag4rwDu7GUxBm+spqJHfRFL34=; b=izuWj3PJVtncbaRo/nVgukcTqN
-        gJwJsEpWDLAmFjONjk5zY/gtlAJc4LQm9DXzpQJLwO1mCvGwYQxXPWIj8i69WA7sfGGCr+zhJXznT
-        O68emi4Dtzi7vm5WPUasi8WHHLxsGFKvU1iNuMrl5kdTerDlBClqUfV2kYbtMbEoXY/ltudMz9tW0
-        La/sno1U4DOWwkJ2knHfns+oTvJxC43ChATw0NwycWOynhizKkhqX81z7XcKKWE7wjFse12SncBCT
-        FxujU9PUiOCMGureSWUB9xVJ4qxJNyR8XiyBqvEuB7QFKnYBwUy2QS0ZkGqQKsPQ3bSoEKd1aw8ML
-        EP05HoPQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jb3yq-0004DD-Ul; Tue, 19 May 2020 15:16:32 +0000
-Date:   Tue, 19 May 2020 08:16:32 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Gao Xiang <hsiangkao@gmx.com>
-Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, david@fromorbit.com,
-        hch@infradead.org
-Subject: Re: [PATCH 10/10] mm/migrate.c: call detach_page_private to cleanup
- code
-Message-ID: <20200519151632.GX16070@bombadil.infradead.org>
-References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
- <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
- <20200518221235.1fa32c38e5766113f78e3f0d@linux-foundation.org>
- <aade5d75-c9e9-4021-6eb7-174a921a7958@cloud.ionos.com>
- <20200519100612.GA3687@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Tue, 19 May 2020 11:25:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43100 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728773AbgESPZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 11:25:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D5A5FB275;
+        Tue, 19 May 2020 15:25:17 +0000 (UTC)
+Date:   Tue, 19 May 2020 17:25:12 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v3 2/7] mm/vmalloc: Track which page-table levels were
+ modified
+Message-ID: <20200519152512.GO8135@suse.de>
+References: <20200515140023.25469-1-joro@8bytes.org>
+ <20200515140023.25469-3-joro@8bytes.org>
+ <20200515130142.4ca90ee590e9d8ab88497676@linux-foundation.org>
+ <20200516125641.GK8135@suse.de>
+ <20200518151828.ad3c714a29209b359e326ec4@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519100612.GA3687@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20200518151828.ad3c714a29209b359e326ec4@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 06:06:19PM +0800, Gao Xiang wrote:
-> In addition, I found some limitation of new {attach,detach}_page_private
-> helper (that is why I was interested in this series at that time [1] [2],
-> but I gave up finally) since many patterns (not all) in EROFS are
-> 
-> io_submit (origin, page locked):
-> attach_page_private(page);
-> ...
-> put_page(page);
-> 
-> end_io (page locked):
-> SetPageUptodate(page);
-> unlock_page(page);
-> 
-> since the page is always locked, so io_submit could be simplified as
-> set_page_private(page, ...);
-> SetPagePrivate(page);
-> , which can save both one temporary get_page(page) and one
-> put_page(page) since it could be regarded as safe with page locked.
+On Mon, May 18, 2020 at 03:18:28PM -0700, Andrew Morton wrote:
+> On Sat, 16 May 2020 14:56:41 +0200 Joerg Roedel <jroedel@suse.de> wrote:
+> --- a/mm/vmalloc.c~mm-vmalloc-track-which-page-table-levels-were-modified-fix
+> +++ a/mm/vmalloc.c
+> @@ -309,6 +309,9 @@ int map_kernel_range_noflush(unsigned lo
+>  			return err;
+>  	} while (pgd++, addr = next, addr != end);
+>  
+> +	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+> +		arch_sync_kernel_mappings(start, end);
+> +
+>  	return 0;
+>  }
 
-It's fine to use page private like this without incrementing the refcount,
-and I can't find any problematic cases in EROFS like those fixed by commit
-8e47a457321ca1a74ad194ab5dcbca764bc70731
+Yes, this is the right call.
 
-So I think the new helpers are not for you, and that's fine.  They'll be
-useful for other filesystems which are using page_private differently
-from the way that you do.
+> It would be nice to get all this (ie, linux-next) retested before we
+> send it upstream, please.
+
+Will do and report back.
+
+
+Thanks,
+
+	Joerg
+
