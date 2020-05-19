@@ -2,103 +2,95 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB64C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B482C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8B38207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eq23zFrK"
+	by mail.kernel.org (Postfix) with ESMTP id 2999C207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbgESQAp (ORCPT
+        id S1729370AbgESQBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:00:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729219AbgESQAp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:00:45 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F55C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:00:43 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id i15so16459272wrx.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZgDKc3HEYEnyhOTY+wQvny/RRZ2rvIz9Ed6CzUywMNk=;
-        b=Eq23zFrKqsJEF7WMk37RL9HDAg5eeAfNuJoLllOPXJZq5k3oneQ1YtMrHYsi4z39AL
-         o4cJg/JHwMEUVYwWSoezsqcaXsMxGYv+nDOdlVBMgUI2MkOroGxR1QrYvy6VNMFqSnkM
-         Xn+a2BnBAYcDYuYI8d1EdoYk8lxCoqkVhukHJSji8Q++Ywzqdt2eHIFg9K8GqFQ2R9Dg
-         NnRYperS/dEp68p/jHcIdzoGjMVcCbW9I96vR/+S5CKl9kqL74rUj6nLWaAe/XWkILlv
-         ngsJFGKW4rS0GS9ODLBTp7vdAJQGkQeque5riA0PgYITWqi2BRO847/Y1hNCfxaC5Cts
-         UzJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZgDKc3HEYEnyhOTY+wQvny/RRZ2rvIz9Ed6CzUywMNk=;
-        b=RqRMqcJRX7U/Rc+K0MdfjkAVHTvqtYCbaq5iaaj2ADew4QIldv4/eBIOlbrGjnBIgC
-         PHmCMzxQ6HvAKbf83U8CnBf9qsqcNjdWhliI5SmMYfYckivnR8iP66A6ne/SM6Xgceki
-         L+zR6CsOeuiW/Wm3sUY6+dFUOja2jzzsEAVlm2PQ0DSsagTkCOIiEZ29/8N/u3t6VgBk
-         nocC0RfuKCa2ZuCfqfCxPElSt7PhHDgnlrMo4yGHswvlF2phAKJe8OeAoIc8uloO2++c
-         04blqYTFu3m9SXtorHPRC8/4ZHM8o6asKHqdepsY06Lu/ji9WquognEpAwEMO8yioXIV
-         bupA==
-X-Gm-Message-State: AOAM533xR1hmnJOui6lpnCqczAJ3egJWee0VH18KrqhrL3XwbWdzk3ef
-        sSjdttrqruMuSQenAH/SJk/oqA==
-X-Google-Smtp-Source: ABdhPJxGVpesohvaaRIa7+vBgDYIMXNEEmp86gTxM/Sz51g4e2Mut4SoxAPLfwG5D/qKdaXzK/rZ9g==
-X-Received: by 2002:adf:e951:: with SMTP id m17mr26966121wrn.352.1589904042372;
-        Tue, 19 May 2020 09:00:42 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:e504:4297:986:ffb0? ([2a01:e34:ed2f:f020:e504:4297:986:ffb0])
-        by smtp.googlemail.com with ESMTPSA id c17sm21759979wrn.59.2020.05.19.09.00.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 09:00:41 -0700 (PDT)
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix warning for set but
- not used
-To:     Tony Lindgren <tony@atomide.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        kbuild test robot <lkp@intel.com>
-References: <20200519155157.12804-1-tony@atomide.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <2f67a110-e52f-94fc-fae2-c3171a67bb8a@linaro.org>
-Date:   Tue, 19 May 2020 18:00:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 12:01:41 -0400
+Received: from mga11.intel.com ([192.55.52.93]:7761 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729089AbgESQBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 12:01:41 -0400
+IronPort-SDR: YGm6iid6lnj/vQmKp9sqBZsge8uHzSqxU/jy48viIBkj6JURjh633CdkK8zYsKTTH4BFINykaM
+ LZ5kswIgIiyQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 09:01:40 -0700
+IronPort-SDR: 1Y/n7E8w3aaJVbDXpCS+Re2n7PRcfEj3aJ1T42ra9Cj6N7PVTfTCgsjxJb3pVHvmTlH6N69SqB
+ le4LZ4hiY53w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
+   d="scan'208";a="411682609"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 19 May 2020 09:01:35 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jb4gT-007g4P-KB; Tue, 19 May 2020 19:01:37 +0300
+Date:   Tue, 19 May 2020 19:01:37 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
+ txt format to yaml
+Message-ID: <20200519160137.GJ1634618@smile.fi.intel.com>
+References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
+ <20200519124402.26076-2-jonathan.albrieux@gmail.com>
+ <20200519132207.GA4623@gerhold.net>
+ <20200519140354.GB30573@ict14-OptiPlex-980>
 MIME-Version: 1.0
-In-Reply-To: <20200519155157.12804-1-tony@atomide.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519140354.GB30573@ict14-OptiPlex-980>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/05/2020 17:51, Tony Lindgren wrote:
-> We can get a warning for dmtimer_clocksource_init() with 'pa' set but
-> not used. This was used in the earlier revisions of the code but no
-> longer needed, so let's remove the unused pa and of_translate_address().
-> Let's also do it for dmtimer_clockevent_init() that has a similar issue.
+On Tue, May 19, 2020 at 04:03:54PM +0200, Jonathan Albrieux wrote:
+> On Tue, May 19, 2020 at 03:22:07PM +0200, Stephan Gerhold wrote:
+> > On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:
+
+...
+
+> > > +maintainers:
+> > > +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>
+> > 
+> > Should probably add someone here, although I'm not sure who either.
+> > 
 > 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
+> Yep I couldn't find a maintainer for that driver..what to do in this case?
 
-Applied, thanks
-
+Volunteer yourself!
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+With Best Regards,
+Andy Shevchenko
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+
