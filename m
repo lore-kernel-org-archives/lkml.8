@@ -2,88 +2,103 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E883FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80252204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:26:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pKgI8FPQ"
+	by mail.kernel.org (Postfix) with ESMTP id CF957206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgESN0p (ORCPT
+        id S1728994AbgESN11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:26:45 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38810 "EHLO vps0.lunn.ch"
+        Tue, 19 May 2020 09:27:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:32900 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbgESN0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:26:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=8n7QbL4CNWDNJgApYky9vIvZRe1axoMpHBCOkpZcb6k=; b=pKgI8FPQgtmEv9vHZUozTszU8n
-        xv+ZnZoCrDRhK6jrdW/9DhEShy/FkgyJDNCAH6IStPwT4BqCNHwTc8nYWkVwgGj7QeNExYwdk3iB8
-        F9lQuyeEeXwyV0ZSU5pBZpHOhTiCNA2d0AVOwNePLqk+gwKmhuB6OZKWBRCICuVouinw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jb2GM-002i3F-Sb; Tue, 19 May 2020 15:26:30 +0200
-Date:   Tue, 19 May 2020 15:26:30 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH net-next v1 1/2] ethtool: provide UAPI for PHY Signal
- Quality Index (SQI)
-Message-ID: <20200519132630.GH610998@lunn.ch>
-References: <20200519075200.24631-1-o.rempel@pengutronix.de>
+        id S1726471AbgESN10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 09:27:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2E6F30E;
+        Tue, 19 May 2020 06:27:25 -0700 (PDT)
+Received: from [10.37.8.206] (unknown [10.37.8.206])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 996353F52E;
+        Tue, 19 May 2020 06:27:24 -0700 (PDT)
+Subject: Re: [PATCH V4 12/17] arm64/cpufeature: Add remaining feature bits in
+ ID_AA64MMFR0 register
+To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org
+References: <1589881254-10082-1-git-send-email-anshuman.khandual@arm.com>
+ <1589881254-10082-13-git-send-email-anshuman.khandual@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <aab025fd-a9aa-0f1a-783b-eb5d3b40a327@arm.com>
+Date:   Tue, 19 May 2020 14:32:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519075200.24631-1-o.rempel@pengutronix.de>
+In-Reply-To: <1589881254-10082-13-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 09:51:59AM +0200, Oleksij Rempel wrote:
-> Signal Quality Index is a mandatory value required by "OPEN Alliance
-> SIG" for the 100Base-T1 PHYs [1]. This indicator can be used for cable
-> integrity diagnostic and investigating other noise sources and
-> implement by at least two vendors: NXP[2] and TI[3].
+On 05/19/2020 10:40 AM, Anshuman Khandual wrote:
+> Enable EVC, FGT, EXS, TGRAN4_2, TGRAN64_2 and TGRAN16_2 features bits in
+> ID_AA64MMFR0 register as per ARM DDI 0487F.a specification.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Suggested-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-Hi Oleksij
-
-With a multi part patch set, please always include a cover note,
-describing what the patchset as a whole does.
-
-> +int __ethtool_get_sqi(struct net_device *dev)
-> +{
-> +	struct phy_device *phydev = dev->phydev;
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index d1433f996710..7ce19f97ba73 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -267,6 +267,10 @@ static const struct arm64_ftr_bits ftr_id_aa64zfr0[] = {
+>   };
+>   
+>   static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
 > +
-> +	if (!phydev->drv->get_sqi)
-> +		return -EOPNOTSUPP;
-> +
-> +	return phydev->drv->get_sqi(phydev);
-> +}
 
-You are not doing any locking here, which you should. Due to modules
-vs built in, it can be a bit tricky getting this right. Take a look at
-how ethtool ioctl.c uses phy_ethtool_get_stats() and that inline
-function itself.
+minor nit: spurious new line.
 
-    Andrew
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_ECV_SHIFT, 4, 0),
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_FGT_SHIFT, 4, 0),
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_EXS_SHIFT, 4, 0),
+>   	/*
+>   	 * We already refuse to boot CPUs that don't support our configured
+>   	 * page size, so we can only detect mismatches for a page size other
+> @@ -274,6 +278,9 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
+>   	 * exist in the wild so, even though we don't like it, we'll have to go
+>   	 * along with it and treat them as non-strict.
+>   	 */
+> +	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_2_SHIFT, 4, ID_AA64MMFR0_TGRAN4_2_NI),
+> +	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_2_SHIFT, 4, ID_AA64MMFR0_TGRAN64_2_NI),
+> +	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_2_SHIFT, 4, ID_AA64MMFR0_TGRAN16_2_NI),
+
+These are not SIGNED as they don't have 0b1111 defined to represent
+something "lower" than '0b0'. It was signed for 4K and 64K, since
+
+0b0000 => supported
+0b1111 => Not supported.
+
+Also Please note, KVM-NV patches are adding these, so you may as well 
+drop them.
+
+>   	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_SHIFT, 4, ID_AA64MMFR0_TGRAN4_NI),
+>   	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_SHIFT, 4, ID_AA64MMFR0_TGRAN64_NI),
+>   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_SHIFT, 4, ID_AA64MMFR0_TGRAN16_NI),
+> 
+
+Suzuki
