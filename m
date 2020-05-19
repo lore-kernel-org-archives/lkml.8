@@ -2,216 +2,200 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F879C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4BA2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1DB12075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:28:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmQ+Yeug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgESTXq (ORCPT
+        id S1726567AbgEST2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:23:46 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:42842 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESTXq (ORCPT
+        Tue, 19 May 2020 15:28:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgEST2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:23:46 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jb7py-000156-HH; Tue, 19 May 2020 13:23:38 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jb7px-0002fg-EF; Tue, 19 May 2020 13:23:38 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <877dx822er.fsf_-_@x220.int.ebiederm.org>
-        <874ksczru6.fsf_-_@x220.int.ebiederm.org>
-        <202005191144.E3112135@keescook>
-Date:   Tue, 19 May 2020 14:19:56 -0500
-In-Reply-To: <202005191144.E3112135@keescook> (Kees Cook's message of "Tue, 19
-        May 2020 12:08:25 -0700")
-Message-ID: <87zha3n34z.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 19 May 2020 15:28:25 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B191C08C5C0;
+        Tue, 19 May 2020 12:28:25 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id ee19so168723qvb.11;
+        Tue, 19 May 2020 12:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sJ2WtymJ/44ukH73/nmAxCbRKt4OtZ9J3eO3Z1WCx+s=;
+        b=bmQ+YeugrD0P0y8R1+JB/gALpn6SNySKmGjb+J9kkUSjlI/t+EbizeE4z/gyb8qo4y
+         GqhM/bjwtEUJQU65fTXJ8yCTJnwoz1J6pE0MdL/A2Qjl4Q+AEe7sq6w/wYlAaAL4WjKN
+         FAKYvqSr1P6krmgL/EVrghAdWjfv1GkQ/7Ii65Q16+kwIbrJuTJJXh/p1iwpSPA2IiXs
+         ZXR4rs9p2ZsjPNyc1Pn2dR9ankY5kSbzKIW7CgDj01vXJrbX7W+7GqUEiO7OE+vS58SG
+         +FMRIU5HhTWdwC1RsYrRg2IVOHRm++eAQzJ8XBvBtCYv3pj9x3ovMPvHWIIK7Z1ozem4
+         QSeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sJ2WtymJ/44ukH73/nmAxCbRKt4OtZ9J3eO3Z1WCx+s=;
+        b=Vl+I4nNx1DH8P8ZmRa2TnY6tuiDpG/bgAetTNj++Ivr2MqXskxGW7tyVhNlN99bjRd
+         fzdKGq3HP1qbmfuRmk1zRkfdFxcTK+julNWIBI4TTTD9MvAtpO6R9cYJHTkq84ARic9e
+         CyVxb8LKVSUyuzVAsP7txs/7eduOyg3b+LVEr241UIhNqnngUgrTTbq0NwiJa33yuZge
+         6P+zTEsT+DNpY1I31GW9RQl9qwoWFYxvhCbf8KzyguWQaJlAXFLvrg9ijXvEFE1bgykh
+         IJDpKdKP+CKYxgvWPWMNkBh+Ws440oZ0EbG5WdXaRaMMQ0P7aL8FH2lOTTGc+lFIFOZM
+         jYqQ==
+X-Gm-Message-State: AOAM531RNwtONji/6WRqzvEEjmnHQBOv4H6PKvWJmM/0K7hZMDY0OYGK
+        /Pkf9cU0t63EB/DpaBUOsp0=
+X-Google-Smtp-Source: ABdhPJz0uBnKIXEfrTulqlvs6UK2lZUeYHabJFqmgAMRHk9g9NbIOh8l60tueo4Ud8wq6kVNiTiOqQ==
+X-Received: by 2002:a0c:a993:: with SMTP id a19mr1231250qvb.57.1589916503962;
+        Tue, 19 May 2020 12:28:23 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id u41sm656836qte.28.2020.05.19.12.28.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 12:28:22 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C333740AFD; Tue, 19 May 2020 16:28:19 -0300 (-03)
+Date:   Tue, 19 May 2020 16:28:19 -0300
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3 7/7] perf expr: Migrate expr ids table to a hashmap
+Message-ID: <20200519192819.GC28228@kernel.org>
+References: <20200515221732.44078-1-irogers@google.com>
+ <20200515221732.44078-8-irogers@google.com>
+ <20200518154505.GE24211@kernel.org>
+ <CAP-5=fWZwuSLaFX+-pgeE_H92Mtp7+_NrwBeRFTqyfPjVRkbWg@mail.gmail.com>
+ <20200518160648.GI24211@kernel.org>
+ <20200518161137.GK24211@kernel.org>
+ <CAP-5=fWzb5XxcFishFErRtdc-Gvv-7DkVpd6HSiy2_RswfjeDg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jb7px-0002fg-EF;;;mid=<87zha3n34z.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/o3JOqx7Xhio3cLEEFkP2sYm5qyEXZ5Q0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 6/8] exec/binfmt_script: Don't modify bprm->buf and then return -ENOEXEC
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fWzb5XxcFishFErRtdc-Gvv-7DkVpd6HSiy2_RswfjeDg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+Em Mon, May 18, 2020 at 09:29:06AM -0700, Ian Rogers escreveu:
+> I had some issues here too:
+> https://lore.kernel.org/lkml/CAEf4BzYxTTND7T7X0dLr2CbkEvUuKtarOeoJYYROefij+qds0w@mail.gmail.com/
+> The only reason for the bits/reg.h inclusion is for __WORDSIZE for the
+> hash_bits operation. As shown below:
 
-> On Mon, May 18, 2020 at 07:33:21PM -0500, Eric W. Biederman wrote:
->> 
->> When replacing loops with next_non_spacetab and next_terminator care
->> has been take that the logic of the parsing code (short of replacing
->> characters by '\0') remains the same.
->
-> Ah, interesting. As in, bprm->buf must not be modified unless the binfmt
-> handler is going to succeed. I think this requirement should be
-> documented in the binfmt struct header file.
+So, to have perf building in all the systems I have test build
+containers for I have this in:
 
-I think the best way to document this is to modify bprm->buf to be
-"const char buf[BINPRM_BUF_SIZE]" or something like that and not
-allow any modifications by anything except for the code that
-initially reads in contets of the file.
+tools/include/linux/bitops.h
 
-That unfortunately requires copy_strings_kernel which has become
-copy_string_kernel to take a length.  Then I don't need to modify the
-buffer at all here.
+#include <asm/types.h>
+#include <limits.h>
+#ifndef __WORDSIZE
+#define __WORDSIZE (__SIZEOF_LONG__ * 8)
+#endif
 
-I believe binfmt_scripts is a bit unique in wanting to modify the buffer
-because it is parsing strings.
+With that it works everywhere, Android cross NDK for arm64, older
+systems, cross compilers to many arches, Musl libc, uclibc, etc.
 
-The requirement is that a binfmt should not modify bprm unless it will
-succeed or fail with an error that is not -ENOEXEC.  The fundamental
-issue is that search_binary_handler will reuse bprm if -ENOEXEC is
-returned.
+So I'm trying, just to check, that this change will make this build
+everywhere:
 
-Until the next patch there is an escape hatch by clearing and closing
-bprm->file but that goes away.  Which is why I need this patch.
+commit ef4c968ccbd52d6a02553719ac7e97f70c65ba47
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Tue May 19 16:26:14 2020 -0300
 
-I guess I can see adding a comment about the general case of not
-changing bprm unless you are doing something other than returning
--ENOEXEC and letting the search continue.
+    WIP
+    
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Eric
+diff --git a/tools/perf/util/hashmap.h b/tools/perf/util/hashmap.h
+index e823b35e7371..df59fd4fc95b 100644
+--- a/tools/perf/util/hashmap.h
++++ b/tools/perf/util/hashmap.h
+@@ -10,10 +10,9 @@
+ 
+ #include <stdbool.h>
+ #include <stddef.h>
+-#ifdef __GLIBC__
+-#include <bits/wordsize.h>
+-#else
+-#include <bits/reg.h>
++#include <limits.h>
++#ifndef __WORDSIZE
++#define __WORDSIZE (__SIZEOF_LONG__ * 8)
+ #endif
+ 
+ static inline size_t hash_bits(size_t h, int bits)
 
 
->> [...]
->> diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
->> index 8d718d8fd0fe..85e0ef86eb11 100644
->> --- a/fs/binfmt_script.c
->> +++ b/fs/binfmt_script.c
->> @@ -71,39 +56,48 @@ static int load_script(struct linux_binprm *bprm)
->>  	 * parse them on its own.
->>  	 */
->>  	buf_end = bprm->buf + sizeof(bprm->buf) - 1;
->> -	cp = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
->> -	if (!cp) {
->> -		cp = next_non_spacetab(bprm->buf + 2, buf_end);
->> -		if (!cp)
->> +	i_end = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
->> +	if (!i_end) {
->> +		i_end = next_non_spacetab(bprm->buf + 2, buf_end);
->> +		if (!i_end)
->>  			return -ENOEXEC; /* Entire buf is spaces/tabs */
->>  		/*
->>  		 * If there is no later space/tab/NUL we must assume the
->>  		 * interpreter path is truncated.
->>  		 */
->> -		if (!next_terminator(cp, buf_end))
->> +		if (!next_terminator(i_end, buf_end))
->>  			return -ENOEXEC;
->> -		cp = buf_end;
->> +		i_end = buf_end;
->>  	}
->> -	/* NUL-terminate the buffer and any trailing spaces/tabs. */
->> -	*cp = '\0';
->> -	while (cp > bprm->buf) {
->> -		cp--;
->> -		if ((*cp == ' ') || (*cp == '\t'))
->> -			*cp = '\0';
->> -		else
->> -			break;
->> -	}
->> -	for (cp = bprm->buf+2; (*cp == ' ') || (*cp == '\t'); cp++);
->> -	if (*cp == '\0')
->> +	/* Trim any trailing spaces/tabs from i_end */
->> +	while (spacetab(i_end[-1]))
->> +		i_end--;
->> +
->> +	/* Skip over leading spaces/tabs */
->> +	i_name = next_non_spacetab(bprm->buf+2, i_end);
->> +	if (!i_name || (i_name == i_end))
->>  		return -ENOEXEC; /* No interpreter name found */
->> -	i_name = cp;
->> +
->> +	/* Is there an optional argument? */
->>  	i_arg = NULL;
->> -	for ( ; *cp && (*cp != ' ') && (*cp != '\t'); cp++)
->> -		/* nothing */ ;
->> -	while ((*cp == ' ') || (*cp == '\t'))
->> -		*cp++ = '\0';
->> -	if (*cp)
->> -		i_arg = cp;
->> +	i_sep = next_terminator(i_name, i_end);
->> +	if (i_sep && (*i_sep != '\0'))
->> +		i_arg = next_non_spacetab(i_sep, i_end);
->> +
->> +	/*
->> +	 * If the script filename will be inaccessible after exec, typically
->> +	 * because it is a "/dev/fd/<fd>/.." path against an O_CLOEXEC fd, give
->> +	 * up now (on the assumption that the interpreter will want to load
->> +	 * this file).
->> +	 */
->> +	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
->> +		return -ENOENT;
->> +
->> +	/* Release since we are not mapping a binary into memory. */
->> +	allow_write_access(bprm->file);
->> +	fput(bprm->file);
->> +	bprm->file = NULL;
->> +
->>  	/*
->>  	 * OK, we've parsed out the interpreter name and
->>  	 * (optional) argument.
->> @@ -121,7 +115,9 @@ static int load_script(struct linux_binprm *bprm)
->>  	if (retval < 0)
->>  		return retval;
->>  	bprm->argc++;
->> +	*((char *)i_end) = '\0';
->>  	if (i_arg) {
->> +		*((char *)i_sep) = '\0';
->>  		retval = copy_strings_kernel(1, &i_arg, bprm);
->>  		if (retval < 0)
->>  			return retval;
->
-> I think this is all correct, though I'm always suspicious of my visual
-> inspection of string parsers. ;)
->
-> I had a worry the \n was not handled correctly in some case. I.e. before
-> any \n was converted into \0, and so next_terminator() didn't need to
-> consider \n separately. (next_non_spacetab() doesn't care since \n and \0
-> are both not ' ' nor '\t'.) For next_terminator(), though, I was worried
-> there was a case where *i_end == '\n', and next_terminator()
-> will return NULL instead of "last" due to *last being '\n' instead of
-> '\0', causing a problem, but you're using the adjusted i_end so I think
-> it's correct. And you've handled i_name == i_end.
->
-> I will see if I can find my testing scripts I used when commit
-> b5372fe5dc84 originally landed to double-check... until then:
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> #ifdef __GLIBC__
+> #include <bits/wordsize.h>
+> #else
+> #include <bits/reg.h>
+> #endif
+> static inline size_t hash_bits(size_t h, int bits)
+> {
+> /* shuffle bits and return requested number of upper bits */
+> return (h * 11400714819323198485llu) >> (__WORDSIZE - bits);
+> }
+> 
+> It'd be possible to change the definition of hash_bits and remove the
+> #includes by:
+> 
+> static inline size_t hash_bits(size_t h, int bits)
+> {
+> /* shuffle bits and return requested number of upper bits */
+> #ifdef __LP64__
+>   int shift = 64 - bits;
+> #else
+>   int shift = 32 - bits;
+> #endif
+> return (h * 11400714819323198485llu) >> shift;
+> }
+> 
+> Others may have a prefered more portable solution. A separate issue
+> with this same function is undefined behavior getting flagged
+> (unnecessarily) by sanitizers:
+> https://lore.kernel.org/lkml/20200508063954.256593-1-irogers@google.com/
+> 
+> I was planning to come back to that once we got these changes landed.
+> 
+> Thanks!
+> Ian
+
+-- 
+
+- Arnaldo
