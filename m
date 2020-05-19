@@ -2,188 +2,186 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFC6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A47020758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B11207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TIbkUtCw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xMsQmaXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgESKXF (ORCPT
+        id S1726859AbgESKZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:23:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46418 "EHLO
+        Tue, 19 May 2020 06:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgESKXE (ORCPT
+        with ESMTP id S1726412AbgESKZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:23:04 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E52C05BD0A
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:23:03 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id n11so6179520pgl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:23:03 -0700 (PDT)
+        Tue, 19 May 2020 06:25:04 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE25C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:25:03 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id n18so2861562wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:25:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GQe9KMB2kqiw5JPO5UGD3SLSZt+HtAllRarrzvhgqqQ=;
-        b=TIbkUtCwuBgOInmLmiG7Hc3G2gu7E+9dN9+ZzJ9tM99uSq5liBw/XsGSHoXYaw56Dv
-         4YnCbnZyerH1I9Emfx9wZKta2DEfoPY+RsiXXN5HJzix5plLOYux4ZJPMWj4W6ioMuwM
-         PA6QchCxIJeeUjZuPTNNRzj6mZYe+7FPOckH2vQnuQp0oUGRoNCxD7TGZynUhMDQBzAb
-         PPNAL5dw2eZkyykpLJWibbCG/QDzP1PHqFnZXldDYrvEuNpuuqQLAYokWJvfLZlO8P+N
-         FCtKfqeDYXZ5vzL+mq69487lWDWC/bZys51tAq+vybkc4eASXy0rd9wLNyxPNhegSd8L
-         W0Ew==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=awX2jX8LmUgDnV/EUVgSbcUlz7JrWITf9HWfSAf2CVQ=;
+        b=xMsQmaXiJ9VvVmdReYjodGgkm8EEhzCHVGSQFm47FrlYqPR/OHZqgTVBmJL5mEVBo3
+         gVBlJASFpfphtWqcb/NjT7kQtfXcs0L7ikF88YcheiyZGzWQCGSfbZQHAHr7agXMvKb1
+         5sk/8ElwA8L+SGCyI6TwiA/hhvI2VabhMbqmSZ0gPMt4Zj7NdYS6HHr2U7v29rKcCaFQ
+         SP628cok5ydOh9OtbOmThuVPn5iHhcIk0fw/Rqx2+iUy1GXz5FL2jzZI9IlTCsOnZCZa
+         ciiO+ssSR6klZ+hjEMzS9uaMIucaT1P0dt8CKbieKf/VUuUswBK4vmNa6Hvn8JLUI7Zc
+         YaBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GQe9KMB2kqiw5JPO5UGD3SLSZt+HtAllRarrzvhgqqQ=;
-        b=DIiOUQ/DuI52x4xpGsP/DW1L1jfqY2BP2LowUgsz6dRud+EhUpPcIBfhKd/0hwB+BS
-         jx5dmfT8U0vTJOXkrwJ9naJ3ZJF5fJhNl/4/OnX4w4eiqKB32tbNC1z9rXu2UH8Ak/u4
-         igO6/49JfaUqLMjyaJOjCzPFfQ4MT63C1l/nTH+oEb+TlSjsKKshOXxicRqNheoR00J6
-         pS+HJINryQqJ9YhKM7yjgTxPSYNvDBMDjqSDeJDuXRCawmJHH+VTD9yNgVjnZL7OQ4NR
-         DX9obSAjGr+1KONWQckhCU6cJ4mSd5fU1k5nliBJXa2PonpPlHvR4v9Q+rQhQmyqlLiA
-         TK/Q==
-X-Gm-Message-State: AOAM533NIT/4gPSmgKmT37lztUsXTV59oaoVhmYIIMBPsbAsw3q/GGfq
-        o8jdmXmXgnObibS3lyM8pVmJ
-X-Google-Smtp-Source: ABdhPJwNLm53AdK7ivDSoX6ZtCtLWTXA8dPegoSMR4zKgGi/uWzIG+UNLlP0WqfO3yXjuyJ6hJzqHA==
-X-Received: by 2002:a63:d918:: with SMTP id r24mr3875348pgg.119.1589883782939;
-        Tue, 19 May 2020 03:23:02 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([157.50.251.138])
-        by smtp.gmail.com with ESMTPSA id s94sm1938664pjb.20.2020.05.19.03.22.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 03:23:02 -0700 (PDT)
-Date:   Tue, 19 May 2020 15:52:56 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Subject: Re: [PATCH v3] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm
- APQ8016 SBC + D3Camera mezzanine
-Message-ID: <20200519102256.GB8114@Mani-XPS-13-9360>
-References: <20200518082129.2103683-1-robert.foss@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=awX2jX8LmUgDnV/EUVgSbcUlz7JrWITf9HWfSAf2CVQ=;
+        b=L65by+uLxw5Hd5A5++5fQ3/Ju+wInjKqZ29oXTLoxyMdeKBmIb+kd17zn9OwUw7whU
+         kIoJAL4jLTiK6u1Rl2yzZYZ1HdW0Z+ktoDC4Mg427Ru2wevt/oLtZ96tIyUuGRZ7pKfc
+         oOoQQLer8XPQlepFzzQgJHnzT2B0tAchaZ1Vzk0E/ZoiJIRV+y2jq4BTeT1DNg0yCVo5
+         dfEyNf3w076FS7cPZh51bRd5LvneDhb+9jhpHXchpvwqykEt4jp0v04aDUZh/7Aeihtu
+         lA+96bToRBu9yhQx0BQxUMLfcftMA3UZTljbgVjO/qMvynef8eM84Umnijh0zJ3l91dT
+         Tc7A==
+X-Gm-Message-State: AOAM5327TSDJMyGzKotqtpYblEdxpclApF+m9yOcuzDZFAC6CgtPQsrP
+        kQPHH0aKFdcQaFlMs7GwJqFAiQ==
+X-Google-Smtp-Source: ABdhPJwCiCfZqap0SEdqAJlNQBrsjU/jJNF4qpGS38ljuuhN5oNUNql4zHZPXEUm3UlIetoObwQuqg==
+X-Received: by 2002:a1c:e903:: with SMTP id q3mr4499067wmc.76.1589883902079;
+        Tue, 19 May 2020 03:25:02 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:e504:4297:986:ffb0? ([2a01:e34:ed2f:f020:e504:4297:986:ffb0])
+        by smtp.googlemail.com with ESMTPSA id 8sm3519290wmb.15.2020.05.19.03.25.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 03:25:01 -0700 (PDT)
+Subject: Re: [RFC][PATCH 4/5] thermal: Add support for setting polling
+ interval
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
+ <20200504181616.175477-5-srinivas.pandruvada@linux.intel.com>
+ <c2aad548-32c2-f008-5ce4-97b76a19271d@linaro.org>
+ <b74767964b028c297840aefc166e2384333afd3b.camel@linux.intel.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <3898cf1a-8e4c-def4-73f7-9ef4954e88b8@linaro.org>
+Date:   Tue, 19 May 2020 12:25:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518082129.2103683-1-robert.foss@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b74767964b028c297840aefc166e2384333afd3b.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+On 19/05/2020 01:46, Srinivas Pandruvada wrote:
+> On Mon, 2020-05-18 at 18:51 +0200, Daniel Lezcano wrote:
+>> On 04/05/2020 20:16, Srinivas Pandruvada wrote:
+>>> Add new attribute in the thermal syfs for setting temperature
+>>> sampling
+>>> interval when CONFIG_THERMAL_USER_EVENT_INTERFACE is defined. The
+>>> default
+>>> value is 0, which means no polling.
+>>>
+>>> At this interval user space will get an event THERMAL_TEMP_SAMPLE
+>>> with
+>>> temperature sample. This reuses existing polling mecahnism when
+>>> polling
+>>> or passive delay is specified during zone registry. To avoid
+>>> interference
+>>> with passive and polling delay, this new polling attribute can't be
+>>> used
+>>> for those zones.
+>>
+>> The userspace can get the temperature whenever it wants via the
+>> temperature file. The polling is designed for a specific hardware and
+>> the slope of the temperature graphic.
+>>
+>> The userspace has the alternative of reading the temperature based on
+>> its own timer or wait for (and stick to) the thermal framework
+>> sampling
+>> rate. Adding a notification in the update is enough IMO.
+>>
+> The problem with this approach is that the user can't change sampling
+> interval. Those polling intervals are fixed during thermal-zone
+> register. Is there any way to change those defaults from user space?
 
-On Mon, May 18, 2020 at 10:21:29AM +0200, Robert Foss wrote:
-> Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
-> the Dragonboard 410c with the D3Camera mezzanine expansion board.
-> 
-> The D3Camera mezzanine ships in a kit with a OmniVision 5640 sensor module,
-> which is what this DT targets.
-> 
+No, we can't but the userspace can decide when to read the temperature
+(via sysfs or netlink) and thus decide its own sampling rate.
 
-What is the motivation behind adding this new dts? We have been using the
-userspace tool [1] for applying this as an overlay for some time. But if we
-start adding dts for mezzanines then for sure we'll end up with some good
-numbers which will flood arch/{..}/qcom directory.
+Otherwise, we are talking about an userspace governor, so the platform
+is setup with the desired sampling rate + userspace governor.
 
-I could understand that one of the motivation is to provide nice user experience
-to users but that's also taken care by the dt-update tool IMO.
+> Kernel can start with some long polling interval and user space can
+> change close to some trip.
 
-Thanks,
-Mani
+Ok, let me rephrase it. This (big) comment encompass also patch 3/5.
 
-[1] https://github.com/96boards/dt-update
+I understood now the initial need of adding user trip points.
 
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
-> 
-> Changes since v2:
->  - Vinod: Change copyright assignment to Linaro
-> 
-> Changes since v1:
->  - Vinod: Changed license to GPL+BSD
->  - Vinod: Changed copyright year to 2020
->  - Nico: Changed name of mezzanine to d3camera
-> 
->  arch/arm64/boot/dts/qcom/Makefile             |  1 +
->  .../boot/dts/qcom/apq8016-sbc-d3camera.dts    | 45 +++++++++++++++++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index cc103f7020fd..3f95b522694e 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3camera.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
->  dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-> new file mode 100644
-> index 000000000000..752e5ec47499
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3camera.dts
-> @@ -0,0 +1,45 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "apq8016-sbc.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3Camera Mezzanine";
-> +	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
-> +};
-> +
-> +&cci_i2c0 {
-> +	/delete-node/ camera_rear@3b;
-> +
-> +	camera_rear@76 {
-> +		compatible = "ovti,ov5640";
-> +		reg = <0x76>;
-> +
-> +		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
-> +		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&camera_rear_default>;
-> +
-> +		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-> +		clock-names = "xclk";
-> +		clock-frequency = <23880000>;
-> +
-> +		vdddo-supply = <&camera_vdddo_1v8>;
-> +		vdda-supply = <&camera_vdda_2v8>;
-> +		vddd-supply = <&camera_vddd_1v5>;
-> +
-> +		status = "ok";
-> +
-> +		port {
-> +			ov5640_ep: endpoint {
-> +				clock-lanes = <1>;
-> +				data-lanes = <0 2>;
-> +				remote-endpoint = <&csiphy0_ep>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.25.1
-> 
+There are platforms where the interrupt mode does not exist so setting
+an user trip point does not set the interrupt for the closer
+temperature, hence we end up with a kernel sampling rate and in this
+case adding a trip point + new user sampling rate is pointless as the
+userspace can poll the temperature at its convenient rate.
+
+If we summarize the different combinations we have:
+
+1. monitoring : interrupt mode, mitigation : interrupt mode
+
+There are no thermal zone update until an interrupt fires. The
+mitigation is based on trip point crossed.
+
+2. monitoring : interrupt mode, mitigation : polling
+
+There are no thermal zone update until an interrupt fires. The
+mitigation happens with a sampling rate specified with the polling rate.
+
+3. monitoring : polling, mitigation : polling
+
+The thermal zone is updated at the polling rate, the mitigation occurs
+with an update at the second polling rate.
+
+IIUC, the RFC proposes to add a new type of temperature threshold,
+followed a new polling rate to update the userspace.
+
+IMHO, it is not a good thing to delegate to the kernel what the
+userspace can handle easily.
+
+I suggest:
+
+ - Not add another polling rate. If the thermal zone has a polling rate
+or supports the interrupt mode, then the user trip point setup succeed
+otherwise it fails and up to the userspace to read the temperature at
+its convenient rate. (Note multiple process may want to get temperature,
+so one should not set the rate of others).
+
+ - Not add another temp threshold structure but add a new trip type
+"user" and keep using the existing trip structures, so the notification
+can happen in the handle_trip_point function. The sysfs only reflects
+the setup via the "trip_point_x_hyst", "trip_point_0_temp",
+"trip_point_x_type"
+
+ - Do not use sysfs for setup but rely on the genetlink for one message
+setup instead of multiple sysfs file writing. Adding a trip point will
+be straighforward.
+
+
+What do you think?
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
