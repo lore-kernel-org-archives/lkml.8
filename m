@@ -2,132 +2,114 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C19C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2367C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10235204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48F420709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VG11DQ32"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H8Q4t53M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgESFR2 (ORCPT
+        id S1728061AbgESFSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgESFR1 (ORCPT
+        Tue, 19 May 2020 01:18:02 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39422 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgESFSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:17:27 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17ADEC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 22:17:26 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 145so5982525pfw.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 22:17:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wyZN/R6qpcX7fc4AdyQ10EM48vce1r3i4Gy4ZEWGZyo=;
-        b=VG11DQ32nYPFoMQMwo0hmRhLveHx94x4UB3EV11E279byHVSl+SwEDY3t6lYUdIBqb
-         tSqc0GtMXZszHzQ9mmVMShWmPSH/k97kXZotCai/uoBwW3dEtIvSJM+Op7EQrwWWnCtD
-         Az9VmmRwkQGt+3ZS/vBB+5tKdzAJv497Qz80D8SxlcNJ4fHCdMHpPNBW6OfnlDqHAEQ8
-         JttQ/5qUcjnoeDK9mN+e4lcqvIZHNTGicdEJeAV47NgwHIBmQKXmO9MaigTmZXPyKeSn
-         xwkwD5YHHMVzTsXnEs74G8HAEDDqUlnKrT295laldHRhhVwBaxYPsF6MgvuM7jJ2cBDT
-         B+/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wyZN/R6qpcX7fc4AdyQ10EM48vce1r3i4Gy4ZEWGZyo=;
-        b=pBhkz5jrk9UCPh+gUPMbEyk2PH/EsRK70IUqGFsKASJdej24S7MHb1ICVhNB/YcDeT
-         X2uwsmhLSQ/MkPrqSq2HVLBR68CJJk7tz2GuinY2CqEhjgQZDPN4YX0R1nsjwt8Js5E8
-         QHWe4hq1gqoQk+7RGDthw1IOF62LQ4BeZBbwDMyUKJQVdyvjxkdlPJR45f4pjQ6WFpNp
-         6FeCeATXcqSOqAH/yJ9lXsAPdJhfjTc2tnRhq5GfxtMH5yadnL0xjcBQrf1ZfRyel19R
-         flXw3lmRJcdbuUwrplL0FoiewzR6ee/p+xMJqwdr/3lOLeKaqgNlufYxLbyTZkeAxine
-         jTPA==
-X-Gm-Message-State: AOAM532jvy19CZhPhyEbVlz3DdCxzm3LXOgFWOV5De9f9y6klTPYoi8W
-        w3GKyiQnk4ESjjEcBXCghXDDQUcGg34=
-X-Google-Smtp-Source: ABdhPJxnR3xVyoVXFCEFVT/fGHPOoUzzPxhKZnInZ4LxZVIfny/f/6lMiBq0X4YT2pattoSJDrNXAg==
-X-Received: by 2002:a63:e70b:: with SMTP id b11mr5062941pgi.88.1589865444874;
-        Mon, 18 May 2020 22:17:24 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id gv4sm1027617pjb.6.2020.05.18.22.17.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 22:17:24 -0700 (PDT)
-Date:   Mon, 18 May 2020 22:16:02 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] usb: xhci: fix USB_XHCI_PCI depends
-Message-ID: <20200519051602.GY2165@builder.lan>
-References: <20200519050622.994908-1-vkoul@kernel.org>
+        Tue, 19 May 2020 01:18:01 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hu3w128117;
+        Tue, 19 May 2020 00:17:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589865476;
+        bh=d/XYFqVdSGUT+50/eTEWr58MI/LZrlOnTqNemlIfRzk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=H8Q4t53Mkf3ONinqGeBDmIA3DgyyKj+4kwch9eqJotd8cnRfMjo1smdtpWEIFJLAv
+         sDFEoppkxzEZDP9fo3gFsP9Ob85EmJHkBMQRqVmtxchh7zGQTIBHEuAumkA9YJiG2V
+         5zkvQHgzDSYI6KMVlGFr9I+WTjsAlslhK7YTgTzs=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hu7F049091;
+        Tue, 19 May 2020 00:17:56 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 00:17:55 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 00:17:55 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J5Hql3092372;
+        Tue, 19 May 2020 00:17:53 -0500
+Subject: Re: [RESEND PATCH v8 0/3] Add Intel ComboPhy driver
+To:     Dilip Kota <eswara.kota@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh@kernel.org>, <andriy.shevchenko@intel.com>,
+        <cheol.yong.kim@intel.com>, <chuanhua.lei@linux.intel.com>,
+        <qi-ming.wu@intel.com>, <yixin.zhu@intel.com>
+References: <cover.1589530082.git.eswara.kota@linux.intel.com>
+ <1d58e6e6-4860-dbde-1b9e-e0804180cddb@ti.com>
+ <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <18a8da3f-4fdf-3da6-2023-c5c66176475d@ti.com>
+Date:   Tue, 19 May 2020 10:47:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519050622.994908-1-vkoul@kernel.org>
+In-Reply-To: <3e7e3f45-1441-84bd-a218-63847363d9ff@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18 May 22:06 PDT 2020, Vinod Koul wrote:
+Dilip,
 
-> The xhci-pci-renesas module exports symbols for xhci-pci to load the
-> RAM/ROM on renesas xhci controllers. We had dependency which works
-> when both the modules are builtin or modules.
+On 5/19/2020 9:26 AM, Dilip Kota wrote:
 > 
-> But if xhci-pci is inbuilt and xhci-pci-renesas in module, we get below
-> linker error:
-> drivers/usb/host/xhci-pci.o: In function `xhci_pci_remove':
-> drivers/usb/host/xhci-pci.c:411: undefined reference to `renesas_xhci_pci_exit'
-> drivers/usb/host/xhci-pci.o: In function `xhci_pci_probe':
-> drivers/usb/host/xhci-pci.c:345: undefined reference to `renesas_xhci_check_request_fw'
-> 
-> Fix this by adding USB_XHCI_PCI having depends on USB_XHCI_PCI_RENESAS
-> || !USB_XHCI_PCI_RENESAS so that both can be either inbuilt or modules.
-> 
+> On 5/18/2020 9:49 PM, Kishon Vijay Abraham I wrote:
+>> Dilip,
+>>
+>> On 5/15/2020 1:43 PM, Dilip Kota wrote:
+>>> This patch series adds Intel ComboPhy driver, respective yaml schemas
+>>>
+>>> Changes on v8:
+>>>    As per PHY Maintainer's request add description in comments for doing
+>>>    register access through register map framework.
+>>>
+>>> Changes on v7:
+>>>    As per System control driver maintainer's inputs remove
+>>>      fwnode_to_regmap() definition and use device_node_get_regmap()
+>> Can you fix this warning and resend the patch?
+>> drivers/phy/intel/phy-intel-combo.c:229:6: warning: ‘cb_mode’ may be used
+>> uninitialized in this function [-Wmaybe-uninitialized]
+>>    ret = regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
+>>    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/phy/intel/phy-intel-combo.c:204:24: note: ‘cb_mode’ was declared here
+>>    enum intel_combo_mode cb_mode;
+>>                          ^~~~~~~
+> I noticed this warning while preparing the patch.
+> It sounds like false warning because:
+> 1.) "cb_mode" is initialized in the switch case based on the "mode =
+> cbphy->phy_mode;"
+> 2.) cbphy->phy_mode is initialized during the probe in
+> "intel_cbphy_fwnode_parse()" with one of the 3 values.
+> PHY_PCIE_MODE, PHY_SATA_MODE, PHY_XPCS_MODE.
+> 3.) There is no chance of "cbphy->phy_mode" having different value.
+> 4.) And "cb_mode" will be initialized according to the "mode = cbphy->phy_mode;"
+> 5.) Hence, there is no chance of "cb_mode" getting accessed uninitialized.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Let's try to keep the compiler happy. Please fix this warning.
 
-Regards,
-Bjorn
-
-> Reported-by: Anders Roxell <anders.roxell@linaro.org>
-> Fixes: a66d21d7dba8 ("usb: xhci: Add support for Renesas controller with memory")
-> Tested-by: Anders Roxell <anders.roxell@linaro.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  drivers/usb/host/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index b5c542d6a1c5..92783d175b3f 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -40,11 +40,11 @@ config USB_XHCI_DBGCAP
->  config USB_XHCI_PCI
->  	tristate
->  	depends on USB_PCI
-> +	depends on USB_XHCI_PCI_RENESAS || !USB_XHCI_PCI_RENESAS
->  	default y
->  
->  config USB_XHCI_PCI_RENESAS
->  	tristate "Support for additional Renesas xHCI controller with firwmare"
-> -	depends on USB_XHCI_PCI
->  	---help---
->  	  Say 'Y' to enable the support for the Renesas xHCI controller with
->  	  firwmare. Make sure you have the firwmare for the device and
-> -- 
-> 2.25.4
-> 
+Thanks
+Kishon
