@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D3AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D593DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE5520849
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB5120849
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgESUCf (ORCPT
+        id S1727873AbgEST63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51936 "EHLO
+        Tue, 19 May 2020 15:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbgEST6c (ORCPT
+        with ESMTP id S1727033AbgEST6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:58:32 -0400
+        Tue, 19 May 2020 15:58:24 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9192EC08C5C0;
-        Tue, 19 May 2020 12:58:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70485C08C5C1;
+        Tue, 19 May 2020 12:58:24 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb8Ne-0008Au-Q2; Tue, 19 May 2020 21:58:26 +0200
+        id 1jb8NX-00089A-K3; Tue, 19 May 2020 21:58:20 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6736C1C0178;
-        Tue, 19 May 2020 21:58:21 +0200 (CEST)
-Date:   Tue, 19 May 2020 19:58:21 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3C03F1C0178;
+        Tue, 19 May 2020 21:58:19 +0200 (CEST)
+Date:   Tue, 19 May 2020 19:58:19 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/db: Split out dr6/7 handling
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Subject: [tip: x86/entry] x86/traps: Restructure #DB handling
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505135314.808628211@linutronix.de>
-References: <20200505135314.808628211@linutronix.de>
+In-Reply-To: <20200505135315.283276272@linutronix.de>
+References: <20200505135315.283276272@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158991830132.17951.16392458247550490927.tip-bot2@tip-bot2>
+Message-ID: <158991829913.17951.6613776015582569375.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,171 +61,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     9a3d7c76d28e55173be5dd7cadbe8760fb814afa
-Gitweb:        https://git.kernel.org/tip/9a3d7c76d28e55173be5dd7cadbe8760fb814afa
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 06 Apr 2020 21:02:56 +02:00
+Commit-ID:     ee8324f0167a914509d1db5ee0263620fd8e83b8
+Gitweb:        https://git.kernel.org/tip/ee8324f0167a914509d1db5ee0263620fd8e83b8
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 04 May 2020 19:56:26 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 19 May 2020 16:04:10 +02:00
+CommitterDate: Tue, 19 May 2020 16:04:13 +02:00
 
-x86/db: Split out dr6/7 handling
+x86/traps: Restructure #DB handling
 
-DR6/7 should be handled before nmi_enter() is invoked and restore after
-nmi_exit() to minimize the exposure.
+Now that there are separate entry points, move the kernel/user_mode specifc
+checks into the entry functions so the common handling code does not need
+the extra mode checks. Make the code more readable while at it.
 
-Split it out into helper inlines and bring it into the correct order.
-
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
 Acked-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/20200505135314.808628211@linutronix.de
+Link: https://lkml.kernel.org/r/20200505135315.283276272@linutronix.de
 
 
 ---
- arch/x86/kernel/hw_breakpoint.c |  6 +---
- arch/x86/kernel/traps.c         | 75 +++++++++++++++++++++++---------
- 2 files changed, 57 insertions(+), 24 deletions(-)
+ arch/x86/kernel/traps.c | 69 ++++++++++++++++++++--------------------
+ 1 file changed, 35 insertions(+), 34 deletions(-)
 
-diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-index d42fc0e..9ddf441 100644
---- a/arch/x86/kernel/hw_breakpoint.c
-+++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -464,7 +464,7 @@ static int hw_breakpoint_handler(struct die_args *args)
- {
- 	int i, cpu, rc = NOTIFY_STOP;
- 	struct perf_event *bp;
--	unsigned long dr7, dr6;
-+	unsigned long dr6;
- 	unsigned long *dr6_p;
- 
- 	/* The DR6 value is pointed by args->err */
-@@ -479,9 +479,6 @@ static int hw_breakpoint_handler(struct die_args *args)
- 	if ((dr6 & DR_TRAP_BITS) == 0)
- 		return NOTIFY_DONE;
- 
--	get_debugreg(dr7, 7);
--	/* Disable breakpoints during exception handling */
--	set_debugreg(0UL, 7);
- 	/*
- 	 * Assert that local interrupts are disabled
- 	 * Reset the DRn bits in the virtualized register value.
-@@ -538,7 +535,6 @@ static int hw_breakpoint_handler(struct die_args *args)
- 	    (dr6 & (~DR_TRAP_BITS)))
- 		rc = NOTIFY_DONE;
- 
--	set_debugreg(dr7, 7);
- 	put_cpu();
- 
- 	return rc;
 diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 21c8cfc..de5120e 100644
+index 4f248c5..b62e962 100644
 --- a/arch/x86/kernel/traps.c
 +++ b/arch/x86/kernel/traps.c
-@@ -700,6 +700,57 @@ static bool is_sysenter_singlestep(struct pt_regs *regs)
- #endif
- }
- 
-+static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
-+{
-+	/*
-+	 * Disable breakpoints during exception handling; recursive exceptions
-+	 * are exceedingly 'fun'.
-+	 *
-+	 * Since this function is NOKPROBE, and that also applies to
-+	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
-+	 * HW_BREAKPOINT_W on our stack)
-+	 *
-+	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
-+	 * includes the entry stack is excluded for everything.
-+	 */
-+	get_debugreg(*dr7, 7);
-+	set_debugreg(0, 7);
-+
-+	/*
-+	 * Ensure the compiler doesn't lower the above statements into
-+	 * the critical section; disabling breakpoints late would not
-+	 * be good.
-+	 */
-+	barrier();
-+
-+	/*
-+	 * The Intel SDM says:
-+	 *
-+	 *   Certain debug exceptions may clear bits 0-3. The remaining
-+	 *   contents of the DR6 register are never cleared by the
-+	 *   processor. To avoid confusion in identifying debug
-+	 *   exceptions, debug handlers should clear the register before
-+	 *   returning to the interrupted task.
-+	 *
-+	 * Keep it simple: clear DR6 immediately.
-+	 */
-+	get_debugreg(*dr6, 6);
-+	set_debugreg(0, 6);
-+	/* Filter out all the reserved bits which are preset to 1 */
-+	*dr6 &= ~DR6_RESERVED;
-+}
-+
-+static __always_inline void debug_exit(unsigned long dr7)
-+{
-+	/*
-+	 * Ensure the compiler doesn't raise this statement into
-+	 * the critical section; enabling breakpoints early would
-+	 * not be good.
-+	 */
-+	barrier();
-+	set_debugreg(dr7, 7);
-+}
-+
- /*
-  * Our handling of the processor debug registers is non-trivial.
-  * We do not clear them on entry and exit from the kernel. Therefore
-@@ -727,28 +778,13 @@ static bool is_sysenter_singlestep(struct pt_regs *regs)
- dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
+@@ -775,39 +775,12 @@ static __always_inline void debug_exit(unsigned long dr7)
+  *
+  * May run on IST stack.
+  */
+-static noinstr void handle_debug(struct pt_regs *regs, unsigned long dr6)
++static void noinstr handle_debug(struct pt_regs *regs, unsigned long dr6,
++				 bool user_icebp)
  {
  	struct task_struct *tsk = current;
-+	unsigned long dr6, dr7;
- 	int user_icebp = 0;
--	unsigned long dr6;
+-	int user_icebp = 0;
  	int si_code;
  
--	nmi_enter();
--
--	get_debugreg(dr6, 6);
 -	/*
--	 * The Intel SDM says:
--	 *
--	 *   Certain debug exceptions may clear bits 0-3. The remaining
--	 *   contents of the DR6 register are never cleared by the
--	 *   processor. To avoid confusion in identifying debug
--	 *   exceptions, debug handlers should clear the register before
--	 *   returning to the interrupted task.
--	 *
--	 * Keep it simple: clear DR6 immediately.
+-	 * The SDM says "The processor clears the BTF flag when it
+-	 * generates a debug exception."  Clear TIF_BLOCKSTEP to keep
+-	 * TIF_BLOCKSTEP in sync with the hardware BTF flag.
 -	 */
--	set_debugreg(0, 6);
-+	debug_enter(&dr6, &dr7);
+-	clear_tsk_thread_flag(tsk, TIF_BLOCKSTEP);
+-
+-	if (unlikely(!user_mode(regs) && (dr6 & DR_STEP) &&
+-		     is_sysenter_singlestep(regs))) {
+-		dr6 &= ~DR_STEP;
+-		if (!dr6)
+-			return;
+-		/*
+-		 * else we might have gotten a single-step trap and hit a
+-		 * watchpoint at the same time, in which case we should fall
+-		 * through and handle the watchpoint.
+-		 */
+-	}
+-
+-	/*
+-	 * If dr6 has no reason to give us about the origin of this trap,
+-	 * then it's very likely the result of an icebp/int01 trap.
+-	 * User wants a sigtrap for that.
+-	 */
+-	if (!dr6 && user_mode(regs))
+-		user_icebp = 1;
+-
+ 	/* Store the virtualized DR6 value */
+ 	tsk->thread.debugreg6 = dr6;
  
--	/* Filter out all the reserved bits which are preset to 1 */
--	dr6 &= ~DR6_RESERVED;
-+	nmi_enter();
+@@ -832,9 +805,7 @@ static noinstr void handle_debug(struct pt_regs *regs, unsigned long dr6)
+ 	if (v8086_mode(regs)) {
+ 		handle_vm86_trap((struct kernel_vm86_regs *) regs, 0,
+ 				 X86_TRAP_DB);
+-		cond_local_irq_disable(regs);
+-		debug_stack_usage_dec();
+-		return;
++		goto out;
+ 	}
  
- 	/*
- 	 * The SDM says "The processor clears the BTF flag when it
-@@ -786,7 +822,7 @@ dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
- #endif
- 
- 	if (notify_die(DIE_DEBUG, "debug", regs, (long)&dr6, error_code,
--							SIGTRAP) == NOTIFY_STOP)
-+		       SIGTRAP) == NOTIFY_STOP)
- 		goto exit;
- 
- 	/*
-@@ -825,6 +861,7 @@ dotraplinkage void do_debug(struct pt_regs *regs, long error_code)
- 
- exit:
- 	nmi_exit();
-+	debug_exit(dr7);
+ 	if (WARN_ON_ONCE((dr6 & DR_STEP) && !user_mode(regs))) {
+@@ -848,9 +819,12 @@ static noinstr void handle_debug(struct pt_regs *regs, unsigned long dr6)
+ 		set_tsk_thread_flag(tsk, TIF_SINGLESTEP);
+ 		regs->flags &= ~X86_EFLAGS_TF;
+ 	}
++
+ 	si_code = get_si_code(tsk->thread.debugreg6);
+ 	if (tsk->thread.debugreg6 & (DR_STEP | DR_TRAP_BITS) || user_icebp)
+ 		send_sigtrap(regs, 0, si_code);
++
++out:
+ 	cond_local_irq_disable(regs);
+ 	debug_stack_usage_dec();
  }
- NOKPROBE_SYMBOL(do_debug);
+@@ -859,7 +833,27 @@ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+ 					     unsigned long dr6)
+ {
+ 	nmi_enter();
+-	handle_debug(regs, dr6);
++	/*
++	 * The SDM says "The processor clears the BTF flag when it
++	 * generates a debug exception."  Clear TIF_BLOCKSTEP to keep
++	 * TIF_BLOCKSTEP in sync with the hardware BTF flag.
++	 */
++	clear_thread_flag(TIF_BLOCKSTEP);
++
++	/*
++	 * Catch SYSENTER with TF set and clear DR_STEP. If this hit a
++	 * watchpoint at the same time then that will still be handled.
++	 */
++	if ((dr6 & DR_STEP) && is_sysenter_singlestep(regs))
++		dr6 &= ~DR_STEP;
++
++	/*
++	 * If DR6 is zero, no point in trying to handle it. The kernel is
++	 * not using INT1.
++	 */
++	if (dr6)
++		handle_debug(regs, dr6, false);
++
+ 	nmi_exit();
+ }
+ 
+@@ -867,7 +861,14 @@ static __always_inline void exc_debug_user(struct pt_regs *regs,
+ 					   unsigned long dr6)
+ {
+ 	idtentry_enter(regs);
+-	handle_debug(regs, dr6);
++	clear_thread_flag(TIF_BLOCKSTEP);
++
++	/*
++	 * If dr6 has no reason to give us about the origin of this trap,
++	 * then it's very likely the result of an icebp/int01 trap.
++	 * User wants a sigtrap for that.
++	 */
++	handle_debug(regs, dr6, !dr6);
+ 	idtentry_exit(regs);
+ }
  
