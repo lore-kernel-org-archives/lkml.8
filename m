@@ -2,155 +2,239 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26CAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B35920825
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A660320823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="gYkf9VsF"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="CWYHgZqJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgESX0q (ORCPT
+        id S1728447AbgESX06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:26:46 -0400
-Received: from mail-am6eur05on2047.outbound.protection.outlook.com ([40.107.22.47]:6028
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726178AbgESX0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:26:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PuF9ygxDkSvzgwixLZ00oT9AykrzJWzXOJFYJJ1fWWCxlkQLANBlyEvNwHgjpv+fupuFY4OH2CC/VuCGHsO2V9A2NNV8IxEcjf9QFdaYi25Kcm632YTSUPXnUtphkn3X2N15T8DhnYBF7yuiONQAwt1LUJcngQaEYjs5lfvdmRCLByrwnRO4w6sooU1UhFhKQVuWTDNR+3nAB6VDM4HCJDvqK0N+iVD9jYP49395MdGYaOyW9HUtrMlnTOr3ovGOaqJvcMGURvnRYcq2bp8l6l6RE7vrLBsYK9f3rEX8J5ysbxzB2Wz7gmTM8dChHEEPk6baffghufQL1TTgXOfJ7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3out6jrln7PxKdCWAHNqerkDXxM/y0YwkyhcP1vS2nU=;
- b=n6w6UxWhc6giMAPOIx0sbFTcVf5RbWMZ8MaEE9XVEiGImr/V/68cCDIGbW6XOIYz/RI6sqMjrIzuezYgkv0OkFDfeAuyr+rB6anQK1RgIS7ARo/mrbc0mBqFWsuco9wi6zuTh29CIC9tl1L2bdzFMuI8IvgesDtjbVmoFSfVe0IOMmQe82Yh6z1Ou0wgXeyP6Ik//CFvtZ9nptH8n+3uQMg0SSAXVBSZskx12/ol/8udmUKI6dT6YR1eO6nQ5yCnYg0dsRx4z2sIT8QVy2sDzdt2NXqu49Vcf3g4Ge8AAH/YuFEEITazVq7wlX7+xxwzCqAKCabj/P6HYUMlOZC7dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3out6jrln7PxKdCWAHNqerkDXxM/y0YwkyhcP1vS2nU=;
- b=gYkf9VsFBNPcRj3HyTf8PE/g4EqNG+7pB66uIb8+aDO13k0AIjswBpmgPGFtzbZtcofNMa6pSQM916McPQ8AGus7Y0avGfuESu8rtJk34L6+5dMv1BnDzXl8LA/TSRe2suRDIkqilb1ZiQW9277udDaZGfDEz9G6p5+Z2dldCO8=
-Authentication-Results: ffwll.ch; dkim=none (message not signed)
- header.d=none;ffwll.ch; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB5533.eurprd05.prod.outlook.com (2603:10a6:803:96::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Tue, 19 May
- 2020 23:26:41 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3000.034; Tue, 19 May 2020
- 23:26:41 +0000
-Date:   Tue, 19 May 2020 20:26:36 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Olof Johansson <olof.johansson@gmail.com>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
-Message-ID: <20200519232636.GA24561@mellanox.com>
-References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR11CA0024.namprd11.prod.outlook.com
- (2603:10b6:208:23b::29) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Tue, 19 May 2020 19:26:58 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:50716 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgESX05 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 19:26:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589930816; x=1621466816;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=w1eiGIKxH2xekT/yRQZeyaclvCGnjD5HhlMWQPvovNo=;
+  b=CWYHgZqJRdDUtM1HZJEGRWcWAJhyfV/299740EWmc5U8hjOXiYBPwq2k
+   XZLmN2NXcD22S4OkWbBa7j+affNhg+dW3gyT+yMKUr+RDrzfI6hylDE91
+   JRZpTKEgBKL1zJ1tbLmqrX4LuTXovcH1R+Ts3aJCsPdrgREjwWcRQGxLn
+   w=;
+IronPort-SDR: 4zrULB5uLUcsAKAcAvhwiqdH17+b0NBjaHt+iOUxEhsVwTPymE9d12KL3WpgGQklo1tYTus5RN
+ BWO//n740XSQ==
+X-IronPort-AV: E=Sophos;i="5.73,411,1583193600"; 
+   d="scan'208";a="31182266"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 19 May 2020 23:26:53 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id BDAEFA20D6;
+        Tue, 19 May 2020 23:26:51 +0000 (UTC)
+Received: from EX13D08UEB001.ant.amazon.com (10.43.60.245) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 19 May 2020 23:26:37 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D08UEB001.ant.amazon.com (10.43.60.245) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 19 May 2020 23:26:37 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 23:26:37 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 3BF6D40712; Tue, 19 May 2020 23:26:37 +0000 (UTC)
+Date:   Tue, 19 May 2020 23:26:37 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>
+Subject: [PATCH 05/12] genirq: Shutdown irq chips in suspend/resume during
+ hibernation
+Message-ID: <fce013fc1348f02b8e4ec61e7a631093c72f993c.1589926004.git.anchalag@amazon.com>
+References: <cover.1589926004.git.anchalag@amazon.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR11CA0024.namprd11.prod.outlook.com (2603:10b6:208:23b::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24 via Frontend Transport; Tue, 19 May 2020 23:26:40 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jbBd6-00037I-5O; Tue, 19 May 2020 20:26:36 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3e0c6265-8af2-4196-789b-08d7fc4c1559
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5533:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB5533A7AD7EC2297299F8CBE7CFB90@VI1PR05MB5533.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 040866B734
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZJDZs4rETzrF9QviuUN8FPsVKL1NqJDBmWlHo1xeRlkLD5+ZlQ+ghO2j8D/D/X5wsrU23h/C3Hbq3ZsHn0JUTZa9AX7ZdNjfCY7weVnPRV6tRF1fy/G90MVoztede8gQqkO7MkMgN+YUQogZQr0yOIOZB6KCLenIiNrF0LuhkZCeUbFWlgAnAW00+rpNGJjYstvyyb2iVePtic8DjONWjXMzq3fNKTh0MUMTJ445IZ9Oz0BynRp8DNNo6aDdLg63s016cGD1h14N13N/Y+CV2CeFx14Gfo9co39vuTctrNR0fGDThwnATU93xgst9paQIe7EIBIpaaQQQke/WsZZrwrtv1tAYUHqidQ66AsFwh5AU93MsNVlQWpTvPWu/dvJMqngmZCvIp3t9FLENRt4OUVyfK8eIBQGDbuFLBAuEIUj4fZex+a/fDW49DSU9O8bFZKZAI4kZIcuotRwBRnA2LFTirz5yCjaggStmGGJz1rdLhTklBvza7ajoXhhGXwu
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(26005)(4326008)(9786002)(52116002)(33656002)(9746002)(2616005)(186003)(66476007)(66946007)(66556008)(2906002)(478600001)(316002)(36756003)(8676002)(6916009)(54906003)(86362001)(5660300002)(7416002)(8936002)(1076003)(24400500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: sjfbhFGgYpXl1eyHC0WgZrRACwq/2ZQ5YEde8RJVqXZc3Rgk2ncgPjNXxFcBeo76oKrU6jFfAgJYfCCv7yBVMQVBL5C8GE3L+dEQitB1SaOIz/BM9CTvDBcPox0Tzi9eDWuNZoTOKlfv6Q72jCB2WEh1UUhE0NS/uWk0/WaRc+DOhwDN3U2GuJa6A2HmpfcQy4+SROFiWr1R//TUwS0mQtXxlRdrS3MJ+Ap5AGZlxDGXB1MgeE3Hev7OK2ZyQrXv1NLLpM2tdSGtDWFqeUeCMnl97LTnWmUUdcRcYpj5Zg6A7hAznv4EvxPcpvm1ubr2QrPUcjhRC2+qbT+w69c3vDyCUrh6sISmLjgip+Fsy7HjW1t6gN0RMzzNeY/pXbpOxIk7VPmH0g3vGyoNPuddGxXrWw2MzFBFAs3WT8R1wa6eYqJHKpZ8CRff4OwhidD/l1WkYVq1mgmwTjEUjhvq4KBdvMgV0OVPgvB8aMsiEVQ=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e0c6265-8af2-4196-789b-08d7fc4c1559
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 23:26:40.9829
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cDWI9cIlSLy4pc7Gjtg6Kpg8IigaDSMeul28xIUBHbmDuaLBz21cn6yqLk/rdljw0S2aHpySVEZhHfFI8HAWlg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5533
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1589926004.git.anchalag@amazon.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
+Many legacy device drivers do not implement power management (PM)
+functions which means that interrupts requested by these drivers stay
+in active state when the kernel is hibernated.
 
-> Get some consistency into your decision making as maintainer. And don't
-> tell me or anyone else that this is complicated, gpu and rdma driver folks
-> very much told you and Olof last year that this is what you're getting
-> yourself into.
+This does not matter on bare metal and on most hypervisors because the
+interrupt is restored on resume without any noticable side effects as
+it stays connected to the same physical or virtual interrupt line.
 
-It is complicated!
+The XEN interrupt mechanism is different as it maintains a mapping
+between the Linux interrupt number and a XEN event channel. If the
+interrupt stays active on hibernation this mapping is preserved but
+there is unfortunately no guarantee that on resume the same event
+channels are reassigned to these devices. This can result in event
+channel conflicts which prevent the affected devices from being
+restored correctly.
 
-One of the big mistakes we learned from in RDMA is that we must have a
-cannonical open userspace, that is at least the user side of the uABI
-from the kernel. It doesn't have to do a lot but it does have to be
-there and everyone must use it.
+One way to solve this would be to add the necessary power management
+functions to all affected legacy device drivers, but that's a
+questionable effort which does not provide any benefits on non-XEN
+environments.
 
-Some time ago it was all a fragmented mess where every HW had its own
-library project with no community and that spilled into the kernel
-where it became impossible to be sure everyone was playing nicely and
-keeping their parts up to date. We are still digging out where I find
-stuff in the kernel that just never seemed to make it into any
-userspace..
+The least intrusive and most efficient solution is to provide a
+mechanism which allows the core interrupt code to tear down these
+interrupts on hibernation and bring them back up again on resume. This
+allows the XEN event channel mechanism to assign an arbitrary event
+channel on resume without affecting the functionality of these
+devices.
 
-I feel this is an essential ingredient, and I think I gave this advice
-at LPC as well - it is important to start as a proper subsystem with a
-proper standard user space. IMHO a random collection of opaque misc
-drivers for incredibly complex HW is not going to magically gel into a
-subsystem.
+Fortunately all these device interrupts are handled by a dedicated XEN
+interrupt chip so the chip can be marked that all interrupts connected
+to it are handled this way. This is pretty much in line with the other
+interrupt chip specific quirks, e.g. IRQCHIP_MASK_ON_SUSPEND.
 
-Given the state of the industry the userspace doesn't have to do
-alot, and maybe that library exposes unique APIs for each HW, but it
-is at least a rallying point to handle all these questions like: 'is
-the proposed userspace enough?', give some consistency, and be ready
-to add in those things that are common (like, say IOMMU PASID setup)
+Add a new quirk flag IRQCHIP_SHUTDOWN_ON_SUSPEND and add support for
+it the core interrupt suspend/resume paths.
 
-The uacce stuff is sort of interesting here as it does seem to take
-some of that approach, it is really simplistic, but the basic idea of
-creating a generic DMA work ring is in there, and probably applies
-just as well to several of these 'totally-not-a-GPU' drivers.
+Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
+Signed-off--by: Thomas Gleixner <tglx@linutronix.de>
+---
+ drivers/xen/events/events_base.c |  1 +
+ include/linux/irq.h              |  2 ++
+ kernel/irq/chip.c                |  2 +-
+ kernel/irq/internals.h           |  1 +
+ kernel/irq/pm.c                  | 31 ++++++++++++++++++++++---------
+ 5 files changed, 27 insertions(+), 10 deletions(-)
 
-The other key is that the uABI from the kernel does need to be very
-flexible as really any new HW can appear with any new strange need all
-the time, and there will not be detailed commonality between HWs. RDMA
-has made this mistake a lot in the past too.
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index 3a791c8485d0..decf65bd3451 100644
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -1613,6 +1613,7 @@ static struct irq_chip xen_pirq_chip __read_mostly = {
+ 	.irq_set_affinity	= set_affinity_irq,
+ 
+ 	.irq_retrigger		= retrigger_dynirq,
++	.flags                  = IRQCHIP_SHUTDOWN_ON_SUSPEND,
+ };
+ 
+ static struct irq_chip xen_percpu_chip __read_mostly = {
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 8d5bc2c237d7..94cb8c994d06 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -542,6 +542,7 @@ struct irq_chip {
+  * IRQCHIP_EOI_THREADED:	Chip requires eoi() on unmask in threaded mode
+  * IRQCHIP_SUPPORTS_LEVEL_MSI	Chip can provide two doorbells for Level MSIs
+  * IRQCHIP_SUPPORTS_NMI:	Chip can deliver NMIs, only for root irqchips
++ * IRQCHIP_SHUTDOWN_ON_SUSPEND: Shutdown non wake irqs in the suspend path
+  */
+ enum {
+ 	IRQCHIP_SET_TYPE_MASKED		= (1 <<  0),
+@@ -553,6 +554,7 @@ enum {
+ 	IRQCHIP_EOI_THREADED		= (1 <<  6),
+ 	IRQCHIP_SUPPORTS_LEVEL_MSI	= (1 <<  7),
+ 	IRQCHIP_SUPPORTS_NMI		= (1 <<  8),
++	IRQCHIP_SHUTDOWN_ON_SUSPEND     = (1 <<  9),
+ };
+ 
+ #include <linux/irqdesc.h>
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 41e7e37a0928..fd59489ff14b 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -233,7 +233,7 @@ __irq_startup_managed(struct irq_desc *desc, struct cpumask *aff, bool force)
+ }
+ #endif
+ 
+-static int __irq_startup(struct irq_desc *desc)
++int __irq_startup(struct irq_desc *desc)
+ {
+ 	struct irq_data *d = irq_desc_get_irq_data(desc);
+ 	int ret = 0;
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 7db284b10ac9..b6fca5eacff7 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -80,6 +80,7 @@ extern void __enable_irq(struct irq_desc *desc);
+ extern int irq_activate(struct irq_desc *desc);
+ extern int irq_activate_and_startup(struct irq_desc *desc, bool resend);
+ extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
++extern int __irq_startup(struct irq_desc *desc);
+ 
+ extern void irq_shutdown(struct irq_desc *desc);
+ extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
+diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+index 8f557fa1f4fe..dc48a25f1756 100644
+--- a/kernel/irq/pm.c
++++ b/kernel/irq/pm.c
+@@ -85,16 +85,25 @@ static bool suspend_device_irq(struct irq_desc *desc)
+ 	}
+ 
+ 	desc->istate |= IRQS_SUSPENDED;
+-	__disable_irq(desc);
+-
+ 	/*
+-	 * Hardware which has no wakeup source configuration facility
+-	 * requires that the non wakeup interrupts are masked at the
+-	 * chip level. The chip implementation indicates that with
+-	 * IRQCHIP_MASK_ON_SUSPEND.
++	 * Some irq chips (e.g. XEN PIRQ) require a full shutdown on suspend
++	 * as some of the legacy drivers(e.g. floppy) do nothing during the
++	 * suspend path
+ 	 */
+-	if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
+-		mask_irq(desc);
++	if (irq_desc_get_chip(desc)->flags & IRQCHIP_SHUTDOWN_ON_SUSPEND) {
++		irq_shutdown(desc);
++	} else {
++		__disable_irq(desc);
++
++	       /*
++		* Hardware which has no wakeup source configuration facility
++		* requires that the non wakeup interrupts are masked at the
++		* chip level. The chip implementation indicates that with
++		* IRQCHIP_MASK_ON_SUSPEND.
++		*/
++		if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
++			mask_irq(desc);
++	}
+ 	return true;
+ }
+ 
+@@ -152,7 +161,11 @@ static void resume_irq(struct irq_desc *desc)
+ 	irq_state_set_masked(desc);
+ resume:
+ 	desc->istate &= ~IRQS_SUSPENDED;
+-	__enable_irq(desc);
++
++	if (irq_desc_get_chip(desc)->flags & IRQCHIP_SHUTDOWN_ON_SUSPEND)
++		__irq_startup(desc);
++	else
++		__enable_irq(desc);
+ }
+ 
+ static void resume_irqs(bool want_early)
+-- 
+2.24.1.AMZN
 
-The newer RDMA netlink like API is actually turning out not bad for
-this purpose.. (again something a subsystem could provide)
-
-Also the approach in this driver to directly connect the device to
-userspace for control commands has worked for RDMA in the past few
-years.
-
-Jason
