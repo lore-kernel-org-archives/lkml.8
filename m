@@ -2,261 +2,197 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A38172072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:35:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cTZ2etu9"
+	by mail.kernel.org (Postfix) with ESMTP id 25385207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:36:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589920572;
+	bh=BLUycVs4uy2gq9SvV18LOkcki98gdsniYEsuiEbHhRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i1BgDzcyEV+gjXrrn6Nu/qTIZD5z+0302RA+ak4x74qMH1/S0XEHUFgbuuOkQPFiI
+	 DlyYYxLaz1pbNB5KE2HLE6L33IhnyamgoTJEDX5pvtfsG7Cu+X9WGnO1BillDknGwI
+	 aavQZySCig6TQFIEBvf1VvfcmaOOfc6XoKKVL7Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgESUfh (ORCPT
+        id S1728245AbgESUgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:35:37 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:34988 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726783AbgESUev (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:34:51 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 7F78F30D3F7;
-        Tue, 19 May 2020 13:33:27 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 7F78F30D3F7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1589920407;
-        bh=6jiHR37FraAIviJsY2NplPeNCzZpnug6DsMAoiO6v9U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTZ2etu9iYZrPCcOLmqT6V93KU/fhXvaM+5Vy5NgsnZVps6VKer4m1xi0l0gZXJ1g
-         oCTkiS4lCdngux4rrPalvL5N332CovqUbwX0yj1Q45c6sekJcC40SyY7/poHqNJzoi
-         M+Omd4DtmkqF6vjfNy3Ht3yC5a8HqtXEH2AXpdg4=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 89C1D14008B;
-        Tue, 19 May 2020 13:34:48 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     james.quinlan@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
-        ENDPOINT DRIVERS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 04/15] PCI: brcmstb: Add compatibily of other chips
-Date:   Tue, 19 May 2020 16:34:02 -0400
-Message-Id: <20200519203419.12369-5-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200519203419.12369-1-james.quinlan@broadcom.com>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+        Tue, 19 May 2020 16:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725885AbgESUgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 16:36:10 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A288A2072C;
+        Tue, 19 May 2020 20:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589920569;
+        bh=BLUycVs4uy2gq9SvV18LOkcki98gdsniYEsuiEbHhRM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sI+8DSdU6A/6DbMheBNPfOjeSHhlQ6GCVXC1LS6tq9WmyG0oSK7GCMyuyGYGN3MBN
+         /awAzEd4rACJNVuWjlm/w1COcEZEP+7z5TVDpqkGpCViuPiDqDGsceE2YRBOdzRlgy
+         8ChGcC4v9NbXSmu6/tgArVegHgjhiO6mJRW4tf7w=
+Date:   Tue, 19 May 2020 16:36:08 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Olof Johansson <olof.johansson@gmail.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "Wilson, Chris" <chris@chris-wilson.co.uk>,
+        "Syrjala, Ville" <ville.syrjala@linux.intel.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        spronovo@microsoft.com, Wei Liu <wei.liu@kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        iourit@microsoft.com, "K. Y. Srinivasan" <kys@microsoft.com>
+Subject: Re: [RFC PATCH 0/4] DirectX on Linux
+Message-ID: <20200519203608.GG33628@sasha-vm>
+References: <20200519163234.226513-1-sashal@kernel.org>
+ <CAKMK7uGnSDHdZha-=dZN5ns0sJ2CEnK2693uix4tzqyZb9MXCQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uGnSDHdZha-=dZN5ns0sJ2CEnK2693uix4tzqyZb9MXCQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+Hi Daniel,
 
-Add in compatibility strings and code for three Broadcom STB chips.
-Some of the register locations, shifts, and masks are different
-for certain chips, requiring the use of different constants based
-on of_id.
+On Tue, May 19, 2020 at 09:21:15PM +0200, Daniel Vetter wrote:
+>Hi Sasha
+>
+>So obviously great that Microsoft is trying to upstream all this, and
+>very much welcome and all that.
+>
+>But I guess there's a bunch of rather fundamental issues before we
+>look into any kind of code details. And that might make this quite a
+>hard sell for upstream to drivers/gpu subsystem:
 
-We would like to add the following at this time to the match list
-but we need to wait until the end of this patchset so that
-everything works.
+Let me preface my answers by saying that speaking personally I very much
+dislike that the userspace is closed and wish I could do something about
+it.
 
-    { .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
-    { .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
-    { .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
-    { .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
+>- From the blog it sounds like the userspace is all closed. That
+>includes the hw specific part and compiler chunks, all stuff we've
+>generally expected to be able to look in the past for any kind of
+>other driver. It's event documented here:
+>
+>https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#open-source-userspace-requirements
+>
+>What's your plan here?
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 103 +++++++++++++++++++++++---
- 1 file changed, 91 insertions(+), 12 deletions(-)
+Let me answer with a (genuine) question: does this driver have anything
+to do with DRM even after we enable graphics on it? I'm still trying to
+figure it out.
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 73020b4ff090..c1cf4ea7d3d9 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -120,9 +120,8 @@
- #define  PCIE_EXT_SLOT_SHIFT				15
- #define  PCIE_EXT_FUNC_SHIFT				12
- 
--#define PCIE_RGR1_SW_INIT_1				0x9210
- #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
--#define  PCIE_RGR1_SW_INIT_1_INIT_MASK			0x2
-+#define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
- 
- /* PCIe parameters */
- #define BRCM_NUM_PCIE_OUT_WINS		0x4
-@@ -152,6 +151,69 @@
- #define SSC_STATUS_SSC_MASK		0x400
- #define SSC_STATUS_PLL_LOCK_MASK	0x800
- 
-+#define IDX_ADDR(pcie)	\
-+	(pcie->reg_offsets[EXT_CFG_INDEX])
-+#define DATA_ADDR(pcie)	\
-+	(pcie->reg_offsets[EXT_CFG_DATA])
-+#define PCIE_RGR1_SW_INIT_1(pcie) \
-+	(pcie->reg_offsets[RGR1_SW_INIT_1])
-+
-+enum {
-+	RGR1_SW_INIT_1,
-+	EXT_CFG_INDEX,
-+	EXT_CFG_DATA,
-+};
-+
-+enum {
-+	RGR1_SW_INIT_1_INIT_MASK,
-+	RGR1_SW_INIT_1_INIT_SHIFT,
-+};
-+
-+enum pcie_type {
-+	GENERIC,
-+	BCM7278,
-+};
-+
-+struct pcie_cfg_data {
-+	const int *reg_field_info;
-+	const int *offsets;
-+	const enum pcie_type type;
-+};
-+
-+static const int pcie_reg_field_info[] = {
-+	[RGR1_SW_INIT_1_INIT_MASK] = 0x2,
-+	[RGR1_SW_INIT_1_INIT_SHIFT] = 0x1,
-+};
-+
-+static const int pcie_reg_field_info_bcm7278[] = {
-+	[RGR1_SW_INIT_1_INIT_MASK] = 0x1,
-+	[RGR1_SW_INIT_1_INIT_SHIFT] = 0x0,
-+};
-+
-+static const int pcie_offsets[] = {
-+	[RGR1_SW_INIT_1] = 0x9210,
-+	[EXT_CFG_INDEX]  = 0x9000,
-+	[EXT_CFG_DATA]   = 0x9004,
-+};
-+
-+static const struct pcie_cfg_data generic_cfg = {
-+	.reg_field_info	= pcie_reg_field_info,
-+	.offsets	= pcie_offsets,
-+	.type		= GENERIC,
-+};
-+
-+static const int pcie_offset_bcm7278[] = {
-+	[RGR1_SW_INIT_1] = 0xc010,
-+	[EXT_CFG_INDEX] = 0x9000,
-+	[EXT_CFG_DATA] = 0x9004,
-+};
-+
-+static const struct pcie_cfg_data bcm7278_cfg = {
-+	.reg_field_info = pcie_reg_field_info_bcm7278,
-+	.offsets	= pcie_offset_bcm7278,
-+	.type		= BCM7278,
-+};
-+
- struct brcm_msi {
- 	struct device		*dev;
- 	void __iomem		*base;
-@@ -176,6 +238,9 @@ struct brcm_pcie {
- 	int			gen;
- 	u64			msi_target_addr;
- 	struct brcm_msi		*msi;
-+	const int		*reg_offsets;
-+	const int		*reg_field_info;
-+	enum pcie_type		type;
- };
- 
- /*
-@@ -602,20 +667,21 @@ static struct pci_ops brcm_pcie_ops = {
- 
- static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie, u32 val)
- {
--	u32 tmp;
-+	u32 tmp, mask =  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
-+	u32 shift = pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
- 
--	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
--	u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_INIT_MASK);
--	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
-+	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-+	tmp = (tmp & ~mask) | ((val << shift) & mask);
-+	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
- }
- 
- static inline void brcm_pcie_perst_set(struct brcm_pcie *pcie, u32 val)
- {
- 	u32 tmp;
- 
--	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
-+	tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
- 	u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_PERST_MASK);
--	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
-+	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
- }
- 
- static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
-@@ -924,10 +990,17 @@ static int brcm_pcie_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id brcm_pcie_match[] = {
-+	{ .compatible = "brcm,bcm2711-pcie", .data = &generic_cfg },
-+	{},
-+};
-+
- static int brcm_pcie_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node, *msi_np;
- 	struct pci_host_bridge *bridge;
-+	const struct pcie_cfg_data *data;
-+	const struct of_device_id *of_id;
- 	struct brcm_pcie *pcie;
- 	struct pci_bus *child;
- 	struct resource *res;
-@@ -937,9 +1010,19 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	if (!bridge)
- 		return -ENOMEM;
- 
-+	of_id = of_match_node(brcm_pcie_match, np);
-+	if (!of_id) {
-+		pr_err("failed to look up compatible string\n");
-+		return -EINVAL;
-+	}
-+	data = of_id->data;
-+
- 	pcie = pci_host_bridge_priv(bridge);
- 	pcie->dev = &pdev->dev;
- 	pcie->np = np;
-+	pcie->reg_offsets = data->offsets;
-+	pcie->reg_field_info = data->reg_field_info;
-+	pcie->type = data->type;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pcie->base = devm_ioremap_resource(&pdev->dev, res);
-@@ -1005,10 +1088,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static const struct of_device_id brcm_pcie_match[] = {
--	{ .compatible = "brcm,bcm2711-pcie" },
--	{},
--};
- MODULE_DEVICE_TABLE(of, brcm_pcie_match);
- 
- static struct platform_driver brcm_pcie_driver = {
+There is an open source DX12 Galluim driver (that lives here:
+https://gitlab.freedesktop.org/kusma/mesa/-/tree/msclc-d3d12) with open
+source compiler and so on.
+
+The plan is for Microsoft to provide shims to allow the existing Linux
+userspace interact with DX12; I'll explain below why we had to pipe DX12
+all the way into the Linux guest, but this is *not* to introduce DX12
+into the Linux world as competition. There is no intent for anyone in
+the Linux world to start coding for the DX12 API.
+
+This is why I'm not sure whether this touches DRM on the Linux side of
+things. Nothing is actually rendered on Linux but rather piped to
+Windows to be done there.
+
+>btw since the main goal here (at least at first) seems to be get
+>compute and ML going the official work-around here is to relabel your
+>driver as an accelerator driver (just sed -e s/vGPU/vaccel/ over the
+>entire thing or so) and then Olof and Greg will take it into
+>drivers/accel ...
+
+This submission is not a case of "we want it upstream NOW" but rather
+"let's work together to figure out how to do it right" :)
+
+I thought about placing this driver in drivers/hyper-v/ given that it's
+basically just a pipe between the host and the guest. There is no fancy
+logic in this drivers. Maybe the right place is indeed drivers/accel or
+drivers/hyper-v but I'd love if we agree on that rather than doing that
+as a workaround and 6 months down the road enabling graphics.
+
+>- Next up (but that's not really a surprise for a fresh vendor driver)
+>at a more technical level, this seems to reinvent the world, from
+>device enumeration (why is this not exposed as /dev/dri/card0 so it
+>better integrates with existing linux desktop stuff, in case that
+>becomes a goal ever) down to reinvented kref_put_mutex (and please
+>look at drm_device->struct_mutex for an example of how bad of a
+>nightmare that locking pattern is and how many years it took us to
+>untangle that one.
+
+I'd maybe note that neither of us here at Microsoft is an expert in the
+Linux DRM world. Stuff might have been done in a certain way because we
+didn't know better.
+
+>- Why DX12 on linux? Looking at this feels like classic divide and
+
+There is a single usecase for this: WSL2 developer who wants to run
+machine learning on his GPU. The developer is working on his laptop,
+which is running Windows and that laptop has a single GPU that Windows
+is using.
+
+Since the GPU is being used by Windows, we can't assign it directly to
+the Linux guest, but instead we can use GPU Partitioning to give the
+guest access to the GPU. This means that the guest needs to be able to
+"speak" DX12, which is why we pulled DX12 into Linux.
+
+>conquer (or well triple E from the 90s), we have vk, we have
+>drm_syncobj, we have an entire ecosystem of winsys layers that work
+>across vendors. Is the plan here that we get a dx12 driver for other
+>hw mesa drivers from you guys, so this is all consistent and we have a
+>nice linux platform? How does this integrate everywhere else with
+>linux winsys standards, like dma-buf for passing stuff around,
+>dma-fence/sync_file/drm_syncobj for syncing, drm_fourcc/modifiers for
+>some idea how it all meshes together?
+
+Let me point you to this blog post that has more information about the
+graphics side of things:
+https://www.collabora.com/news-and-blog/news-and-events/introducing-opencl-and-opengl-on-directx.html
+.
+
+The intent is to wrap DX12 with shims to work with the existing
+ecosystem; DX12 isn't a new player on it's own and thus isn't trying to
+divide/conquer anything.
+
+>- There's been a pile of hallway track/private discussions about
+>moving on from the buffer-based memory managed model to something more
+>modern. That relates to your DXLOCK2 question, but there's a lot more
+>to userspace managed gpu memory residency than just that. monitored
+>fences are another part. Also, to avoid a platform split we need to
+>figure out how to tie this back into the dma-buf and dma-fence
+>(including various uapi flavours) or it'll be made of fail. dx12 has
+>all that in some form, except 0 integration with the linux stuff we
+>have (no surprise, since linux isn't windows). Finally if we go to the
+>trouble of a completely revamped I think ioctls aren't a great idea,
+>something like iouring (the gossip name is drm_uring) would be a lot
+>better. Also for easier paravirt we'd need 0 cpu pointers in any such
+>new interface. Adding a few people who've been involved in these
+>discussions thus far, mostly under a drm/hmm.ko heading iirc.
+>
+>I think the above are the really big ticket items around what's the
+>plan here and are we solving even the right problem.
+
+Part of the reason behind this implementation is simplicity. Again, no
+objections around moving to uring and doing other improvements.
+
 -- 
-2.17.1
-
+Thanks,
+Sasha
