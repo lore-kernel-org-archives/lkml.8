@@ -2,286 +2,136 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB06BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6A082075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3CAD20758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:13:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgESVMW (ORCPT
+        id S1727801AbgESVN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35384 "EHLO
+        Tue, 19 May 2020 17:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgESVMV (ORCPT
+        with ESMTP id S1726178AbgESVN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:12:21 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5359AC08C5C0;
-        Tue, 19 May 2020 14:12:21 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 8259A2A2536
-Subject: Re: [PATCHv2 4/5] Input: EXC3000: Add support to query model and
- fw_version
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-References: <20200519182447.73405-1-sebastian.reichel@collabora.com>
- <20200519182447.73405-5-sebastian.reichel@collabora.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <a1700a82-3fa0-771a-e924-7bdacca71c18@collabora.com>
-Date:   Tue, 19 May 2020 23:12:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 17:13:28 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D14C08C5C1;
+        Tue, 19 May 2020 14:13:28 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jb9Y6-0001xv-Jy; Tue, 19 May 2020 23:13:18 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2BC6F100D00;
+        Tue, 19 May 2020 23:13:18 +0200 (CEST)
+Message-Id: <20200519211224.476627641@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 19 May 2020 22:31:31 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        kvm@vger.kernel.org,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [patch 3/7] x86/kvm/svm: Add hardirq tracing on guest enter/exit
+References: <20200519203128.773151484@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200519182447.73405-5-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
 
-On 19/5/20 20:24, Sebastian Reichel wrote:
-> Expose model and fw_version via sysfs. Also query the model
-> in probe to make sure, that the I2C communication with the
-> device works before successfully probing the driver.
-> 
-> This is a bit complicated, since EETI devices do not have
-> a sync interface. Sending the commands and directly reading
-> does not work. Sending the command and waiting for some time
-> is also not an option, since there might be touch events in
-> the mean time.
-> 
-> Last but not least we do not cache the results, since this
-> interface can be used to check the I2C communication is still
-> working as expected.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  drivers/input/touchscreen/exc3000.c | 138 +++++++++++++++++++++++++++-
->  1 file changed, 137 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
-> index 9622cba514b3..1ae758bbf627 100644
-> --- a/drivers/input/touchscreen/exc3000.c
-> +++ b/drivers/input/touchscreen/exc3000.c
-> @@ -24,6 +24,9 @@
->  #define EXC3000_LEN_FRAME		66
->  #define EXC3000_LEN_POINT		10
->  
-> +#define EXC3000_LEN_MODEL_NAME		16
-> +#define EXC3000_LEN_FW_VERSION		16
-> +
->  #define EXC3000_MT1_EVENT		0x06
->  #define EXC3000_MT2_EVENT		0x18
->  
-> @@ -64,6 +67,11 @@ struct exc3000_data {
->  	struct touchscreen_properties prop;
->  	struct timer_list timer;
->  	u8 buf[2 * EXC3000_LEN_FRAME];
-> +	struct completion wait_event;
-> +	struct mutex query_lock;
-> +	int query_result;
-> +	char model[EXC3000_LEN_MODEL_NAME];
-> +	char fw_version[EXC3000_LEN_FW_VERSION];
->  };
->  
->  static void exc3000_report_slots(struct input_dev *input,
-> @@ -149,6 +157,28 @@ static int exc3000_read_data(struct exc3000_data *data,
->  	return 0;
->  }
->  
-> +static int exc3000_query_interrupt(struct exc3000_data *data)
-> +{
-> +	u8 *buf = data->buf;
-> +	int err;
-> +
-> +	err = i2c_master_recv(data->client, buf, EXC3000_LEN_FRAME);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (buf[0] != 0x42)
-> +		return -EPROTO;
-> +
-> +	if (buf[4] == 'E')
-> +		strlcpy(data->model, buf+5, sizeof(data->model));
-> +	else if (buf[4] == 'D')
-> +		strlcpy(data->fw_version, buf+5, sizeof(data->fw_version));
-> +	else
-> +		return -EPROTO;
-> +
-> +	return 0;
-> +}
-> +
->  static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
->  {
->  	struct exc3000_data *data = dev_id;
-> @@ -157,6 +187,12 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
->  	int slots, total_slots;
->  	int error;
->  
-> +	if (mutex_is_locked(&data->query_lock)) {
-> +		data->query_result = exc3000_query_interrupt(data);
-> +		complete(&data->wait_event);
-> +		goto out;
-> +	}
-> +
->  	error = exc3000_read_data(data, buf, &total_slots);
->  	if (error) {
->  		/* Schedule a timer to release "stuck" contacts */
-> @@ -184,11 +220,94 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> +static int fw_version_show(struct device *dev,
-> +			   struct device_attribute *attr, char *buf)
-> +{
-> +	struct exc3000_data *data = dev_get_drvdata(dev);
-> +	static const u8 request[68] = {
-> +		0x67, 0x00, 0x42, 0x00, 0x03, 0x01, 'D', 0x00
-> +	};
-> +	struct i2c_client *client = data->client;
-> +	int err;
-> +
-> +	mutex_lock(&data->query_lock);
-> +
-> +	data->query_result = -ETIMEDOUT;
-> +	reinit_completion(&data->wait_event);
-> +
-> +	err = i2c_master_send(client, request, sizeof(request));
-> +	if (err < 0) {
-> +		mutex_unlock(&data->query_lock);
-> +		return err;
-> +	}
-> +
-> +	wait_for_completion_interruptible_timeout(&data->wait_event, 1*HZ);
-> +	mutex_unlock(&data->query_lock);
-> +
-> +	if (data->query_result < 0)
-> +		return data->query_result;
-> +
-> +	return sprintf(buf, "%s\n", data->fw_version);
-> +}
-> +static DEVICE_ATTR_RO(fw_version);
-> +
+Entering guest mode is more or less the same as returning to user
+space. From an instrumentation point of view both leave kernel mode and the
+transition to guest or user mode reenables interrupts on the host. In user
+mode an interrupt is served directly and in guest mode it causes a VM exit
+which then handles or reinjects the interrupt.
 
-You should probably document the new sysfs entries, although are self-explanatory.
+The transition from guest mode or user mode to kernel mode disables
+interrupts, which needs to be recorded in instrumentation to set the
+correct state again.
 
-> +static ssize_t exc3000_get_model(struct exc3000_data *data)
-> +{
-> +	static const u8 request[68] = {
-> +		0x67, 0x00, 0x42, 0x00, 0x03, 0x01, 'E', 0x00
-> +	};
-> +	struct i2c_client *client = data->client;
-> +	int err;
-> +
-> +	mutex_lock(&data->query_lock);
-> +	data->query_result = -ETIMEDOUT;
-> +	reinit_completion(&data->wait_event);
-> +
-> +	err = i2c_master_send(client, request, sizeof(request));
-> +	if (err < 0) {
-> +		mutex_unlock(&data->query_lock);
-> +		return err;
-> +	}
-> +
-> +	wait_for_completion_interruptible_timeout(&data->wait_event, 1 * HZ);
-> +	mutex_unlock(&data->query_lock);
-> +
-> +	return data->query_result;
-> +}
-> +
-> +static ssize_t model_show(struct device *dev,
-> +			  struct device_attribute *attr, char *buf)
-> +{
-> +	struct exc3000_data *data = dev_get_drvdata(dev);
-> +	int err = exc3000_get_model(data);
-> +
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return sprintf(buf, "%s\n", data->model);
-> +}
-> +static DEVICE_ATTR_RO(model);
-> +
-> +static struct attribute *sysfs_attrs[] = {
-> +	&dev_attr_fw_version.attr,
-> +	&dev_attr_model.attr,
-> +	NULL
-> +};
-> +
-> +static struct attribute_group exc3000_attribute_group = {
-> +	.attrs = sysfs_attrs
-> +};
-> +
-> +static const struct attribute_group *exc3000_attribute_groups[] = {
-> +	&exc3000_attribute_group,
-> +	NULL
-> +};
-> +
->  static int exc3000_probe(struct i2c_client *client)
->  {
->  	struct exc3000_data *data;
->  	struct input_dev *input;
-> -	int error, max_xy;
-> +	int error, max_xy, retry;
->  
->  	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
->  	if (!data)
-> @@ -202,15 +321,19 @@ static int exc3000_probe(struct i2c_client *client)
->  		data->info = &exc3000_info[eeti_dev_id];
->  	}
->  	timer_setup(&data->timer, exc3000_timer, 0);
-> +	init_completion(&data->wait_event);
-> +	mutex_init(&data->query_lock);
->  
->  	input = devm_input_allocate_device(&client->dev);
->  	if (!input)
->  		return -ENOMEM;
->  
->  	data->input = input;
-> +	input_set_drvdata(input, data);
->  
->  	input->name = data->info->name;
->  	input->id.bustype = BUS_I2C;
-> +	input->dev.groups = exc3000_attribute_groups;
->  
->  	max_xy = data->info->max_xy;
->  	input_set_abs_params(input, ABS_MT_POSITION_X, 0, max_xy, 0, 0);
-> @@ -233,6 +356,19 @@ static int exc3000_probe(struct i2c_client *client)
->  	if (error)
->  		return error;
->  
-> +	for (retry = 0; retry < 3; ++retry) {
+This is important for e.g. latency analysis because otherwise the execution
+time in guest or user mode would be wrongly accounted as interrupt disabled
+and could trigger false positives.
 
-Just curious, is it known to fail and need retries?
+Add hardirq tracing to guest enter/exit functions in the same way as it
+is done in the user mode enter/exit code, respecting the RCU requirements.
 
-> +		error = exc3000_get_model(data);
-> +		if (!error)
-> +			break;
-> +		dev_warn(&client->dev, "Retry %d get EETI EXC3000 model: %d\n",
-> +			 retry + 1, error);
-> +	}
-> +
-> +	if (error)
-> +		return error;
-> +
-> +	dev_dbg(&client->dev, "TS Model: %s", data->model);
-> +
->  	return 0;
->  }
->  
-> 
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lkml.kernel.org/r/20200505134341.579034898@linutronix.de
+
+
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 40242e0af20d..46d69567faab 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3390,12 +3390,21 @@ static fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
+ 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
+ 
+ 	/*
+-	 * Tell context tracking that this CPU is about to enter guest
+-	 * mode. This has to be after x86_spec_ctrl_set_guest() because
+-	 * that can take locks (lockdep needs RCU) and calls into world and
+-	 * some more.
++	 * VMENTER enables interrupts (host state), but the kernel state is
++	 * interrupts disabled when this is invoked. Also tell RCU about
++	 * it. This is the same logic as for exit_to_user_mode().
++	 *
++	 * This ensures that e.g. latency analysis on the host observes
++	 * guest mode as interrupt enabled.
++	 *
++	 * guest_enter_irqoff() informs context tracking about the
++	 * transition to guest mode and if enabled adjusts RCU state
++	 * accordingly.
+ 	 */
++	trace_hardirqs_on_prepare();
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+ 	guest_enter_irqoff();
++	lockdep_hardirqs_on(CALLER_ADDR0);
+ 
+ 	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
+ 
+@@ -3407,14 +3416,22 @@ static fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
+ 	loadsegment(gs, svm->host.gs);
+ #endif
+ #endif
++
+ 	/*
+-	 * Tell context tracking that this CPU is back.
++	 * VMEXIT disables interrupts (host state), but tracing and lockdep
++	 * have them in state 'on' as recorded before entering guest mode.
++	 * Same as enter_from_user_mode().
++	 *
++	 * guest_exit_irqoff() restores host context and reinstates RCU if
++	 * enabled and required.
+ 	 *
+ 	 * This needs to be done before the below as native_read_msr()
+ 	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
+ 	 * into world and some more.
+ 	 */
++	lockdep_hardirqs_off(CALLER_ADDR0);
+ 	guest_exit_irqoff();
++	trace_hardirqs_off_prepare();
+ 
+ 	/*
+ 	 * We do not use IBRS in the kernel. If this vCPU has used the
+
