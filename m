@@ -4,25 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E943C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86298C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF1A205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BAAF205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgESWmf (ORCPT
+        id S1728420AbgESWmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:42:35 -0400
-Received: from v6.sk ([167.172.42.174]:58646 "EHLO v6.sk"
+        Tue, 19 May 2020 18:42:42 -0400
+Received: from v6.sk ([167.172.42.174]:58676 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728316AbgESWma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:42:30 -0400
+        id S1728191AbgESWmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 18:42:36 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 8D6EE610D5;
-        Tue, 19 May 2020 22:41:58 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 18704610DD;
+        Tue, 19 May 2020 22:42:05 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Michael Turquette <mturquette@baylibre.com>,
@@ -30,9 +29,9 @@ Cc:     Michael Turquette <mturquette@baylibre.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 02/13] clk: mmp: frac: Allow setting bits other than the numerator/denominator
-Date:   Wed, 20 May 2020 00:41:40 +0200
-Message-Id: <20200519224151.2074597-3-lkundrak@v3.sk>
+Subject: [PATCH v3 06/13] clk: mmp2: Rename mmp2_pll_init() to mmp2_main_clk_init()
+Date:   Wed, 20 May 2020 00:41:44 +0200
+Message-Id: <20200519224151.2074597-7-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519224151.2074597-1-lkundrak@v3.sk>
 References: <20200519224151.2074597-1-lkundrak@v3.sk>
@@ -43,42 +42,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the I2S fractional clocks, there are more bits that need to be set
-for the clock to run. Their actual meaning is unknown.
+This is a trivial rename for a routine that registers more clock sources
+than the PLLs -- there's also a XO.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- drivers/clk/mmp/clk-frac.c | 3 +++
- drivers/clk/mmp/clk.h      | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/clk/mmp/clk-of-mmp2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/mmp/clk-frac.c b/drivers/clk/mmp/clk-frac.c
-index ed9928f5bdc7..48f592bd633d 100644
---- a/drivers/clk/mmp/clk-frac.c
-+++ b/drivers/clk/mmp/clk-frac.c
-@@ -148,7 +148,10 @@ static int clk_factor_init(struct clk_hw *hw)
- 		val &= ~(masks->den_mask << masks->den_shift);
- 		val |= (factor->ftbl[0].den & masks->den_mask) <<
- 			masks->den_shift;
-+	}
- 
-+	if (!(val & masks->enable_mask) || i >= factor->ftbl_cnt) {
-+		val |= masks->enable_mask;
- 		writel(val, factor->base);
- 	}
- 
-diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
-index 20dc1e5dd756..369a09256e2f 100644
---- a/drivers/clk/mmp/clk.h
-+++ b/drivers/clk/mmp/clk.h
-@@ -16,6 +16,7 @@ struct mmp_clk_factor_masks {
- 	unsigned int den_mask;
- 	unsigned int num_shift;
- 	unsigned int den_shift;
-+	unsigned int enable_mask;
+diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
+index 524574187c17..ac88ea99b7c6 100644
+--- a/drivers/clk/mmp/clk-of-mmp2.c
++++ b/drivers/clk/mmp/clk-of-mmp2.c
+@@ -139,7 +139,7 @@ static struct mmp_clk_factor_tbl uart_factor_tbl[] = {
+ 	{.num = 3521, .den = 689},	/*19.23MHZ */
  };
  
- struct mmp_clk_factor_tbl {
+-static void mmp2_pll_init(struct mmp2_clk_unit *pxa_unit)
++static void mmp2_main_clk_init(struct mmp2_clk_unit *pxa_unit)
+ {
+ 	struct clk *clk;
+ 	struct mmp_clk_unit *unit = &pxa_unit->unit;
+@@ -456,7 +456,7 @@ static void __init mmp2_clk_init(struct device_node *np)
+ 
+ 	mmp_clk_init(np, &pxa_unit->unit, MMP2_NR_CLKS);
+ 
+-	mmp2_pll_init(pxa_unit);
++	mmp2_main_clk_init(pxa_unit);
+ 
+ 	mmp2_apb_periph_clk_init(pxa_unit);
+ 
 -- 
 2.26.2
 
