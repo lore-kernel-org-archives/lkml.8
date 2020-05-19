@@ -2,130 +2,138 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF50C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6599A20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:16:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNbDK0sm"
+	by mail.kernel.org (Postfix) with ESMTP id 04F68207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgESJQc (ORCPT
+        id S1726905AbgESJS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:16:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728227AbgESJQc (ORCPT
+        Tue, 19 May 2020 05:18:28 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:58396 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbgESJS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:16:32 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30A9C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 02:16:31 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id i15so14959128wrx.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 02:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fvsA9hOlkYDHUBf93/zCtkYfj1yjexkczlakdR3k0gs=;
-        b=UNbDK0sm2tqypIANAN/jPZp6rzoJ1aQh6eVSontFFtPNh4rh9zSRomjDjybQIlfNXf
-         VPVvRYiTH9FHLyZS5+H1DxyRRa8PUfhzAkQc285OlIDNChHIvhRTEMa3iFG5+YHUt+mz
-         E0c8VItID5EdHN6KBfncxV+fRWTUhjgQBD4HNUqxIbGdJ3MsP+Q33rqsi7NEfN6palg2
-         fP6aC5P7XG7256vHfpZVT4mNYvGDAv2+hj9/7DZUVWKrBECnEFHMy8XjHBHCVzyUZ+tG
-         Lb/N2DbOk+GPuhcY/UDyfzbuUf4i0z3JgGEUOvHo4kEYaegR9RA0rBemIO6lTlPoIR8g
-         wIGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fvsA9hOlkYDHUBf93/zCtkYfj1yjexkczlakdR3k0gs=;
-        b=g/liVsXZjC6QSgnu5tFS9GwHm5k9acuHXVE0KsnCT3AFGRsMd673bimvxej+jMOhnm
-         w/rX6cPIb3I1Pws8KSVuUsnF6XjO1dQD15td/XNZ4nGgI81p5c+TjO1NfF6cCMAsDqSQ
-         /CRWR0i4dNsyGc8GAa7Is1rATAxKslLTmJuFvMHaG16dzAHLzJtqcFi+JD9Rxr2CgsVY
-         QCY13qe6vpr1XyjpxP/1EVxyvm+P8C3YJdWXsw8G6hY5hI55QbTkrU7+hywx92IW2Oe0
-         5o3Kn3P+c48K3+ALNPekf075AR0IGpFXSrjyRbr3THe4PBFPN/73xrc8kjQTt1UJ62ou
-         VQ+g==
-X-Gm-Message-State: AOAM5333WEWxJ1gBvkCqwPjHqazkRcYBOa7mAnyyZNSfUrPycNDsaAAY
-        D7ETWXKxAiLKNrMbvrQInJA=
-X-Google-Smtp-Source: ABdhPJxJ2gDZDn3hvEwAhiB7igo/FQL/uK0t2STq4tAiEqmOU2jl/hNQwcMPOW7xg9lyilYt/j5xBA==
-X-Received: by 2002:adf:806e:: with SMTP id 101mr25062695wrk.225.1589879790599;
-        Tue, 19 May 2020 02:16:30 -0700 (PDT)
-Received: from ubuntu-g3.micron.com ([165.225.86.140])
-        by smtp.googlemail.com with ESMTPSA id d126sm3238159wmd.32.2020.05.19.02.16.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 02:16:30 -0700 (PDT)
-Message-ID: <a9529da36e73116a65a9bc8bd40b5ef54661e3d1.camel@gmail.com>
-Subject: Re: [PATCH v4 5/5] mtd: rawnand: micron: Micron SLC NAND filling
- block
-From:   Bean Huo <huobean@gmail.com>
-To:     Steve deRosier <derosier@gmail.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>, s.hauer@pengutronix.de,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bean Huo <beanhuo@micron.com>
-Date:   Tue, 19 May 2020 11:16:25 +0200
-In-Reply-To: <CALLGbR+MWz82hcC6jrv+MrH6Rhj5McW5vt9V+x4UhiZdsoqkRg@mail.gmail.com>
-References: <20200518135943.11749-1-huobean@gmail.com>
-         <20200518135943.11749-6-huobean@gmail.com>
-         <CALLGbR+MWz82hcC6jrv+MrH6Rhj5McW5vt9V+x4UhiZdsoqkRg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 19 May 2020 05:18:27 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04J9HD1v8024575, This message is accepted by code: ctloc85258
+Received: from RS-CAS02.realsil.com.cn (ms1.realsil.com.cn[172.29.17.3])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04J9HD1v8024575
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 19 May 2020 17:17:14 +0800
+Received: from RS-MBS01.realsil.com.cn ([::1]) by RS-CAS02.realsil.com.cn
+ ([::1]) with mapi id 14.03.0439.000; Tue, 19 May 2020 17:17:12 +0800
+From:   =?utf-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIG1tYzogcnRzeDogQWRkIFNEIEV4cHJlc3MgbW9k?= =?utf-8?Q?e_support_for_RTS5261?=
+Thread-Topic: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
+Thread-Index: AQHWG2mdb2Wi+0TUh0G7QGay1iuqfqiL+UQAgAC/B7D//5LPAIABmysAgAtv7gCAFdruEA==
+Date:   Tue, 19 May 2020 09:17:11 +0000
+Message-ID: <2A308283684ECD4B896628E09AF5361E59ACDB91@RS-MBS01.realsil.com.cn>
+References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
+ <20200427061426.GA11270@infradead.org>
+ <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
+ <CAK8P3a0EY=FOu5j5DG1BzMEoy_6nEy129kniWCjMYDEdO1o_Jw@mail.gmail.com>
+ <2A308283684ECD4B896628E09AF5361E028BCB4B@RS-MBS01.realsil.com.cn>
+ <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com>
+In-Reply-To: <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.29.40.150]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 11:32 -0700, Steve deRosier wrote:
-> On Mon, May 18, 2020 at 7:00 AM Bean Huo <huobean@gmail.com> wrote:
-> > 
-> > From: Bean Huo <beanhuo@micron.com>
-> > 
-> > On some legacy planar 2D Micron NAND devices when a block erase
-> > command
-> 
-> I object the use of the qualifications you're putting in this
-> sentence. By saying "some legacy...." you're implying that there's a
-> set that does and a set that doesn't require this. Which then leads
-> the reader of this commit message to #1 look for which ones this
-> applies to vs not, and #2 want to remove/exclude the feature when
-> they're using a "current" device. The wiggle-word wording is
-> confusing
-> and dishonest.
-> 
-> I've followed this discussion now intently and it seems like Micron
-> is
-> either unable or unwilling to determine which specific devices this
-> does or doesn't apply to. If you are unable to identify and restrict
-> this functionality to a specific subset of devices, then the fact is
-> it's "all."  Let's just say that and eliminate the confusion. And
-> please also update your datasheets to indicate that this is the
-> correct algorithm for working with these devices. Better would be to
-> issue an errata on the chips and notify your customers. I feel for
-> those customers who aren't using Linux and don't know the reliability
-> problem they've been tracking down for the last couple of years is
-> already known but they don't have any way of knowing about it.
-> 
-> In your commit message, rewording to "On planar 2D Micron NAND
-> devices
-> when a block erase command..." is sufficient.
-> 
-> - Steve
-> 
-ok, you are native English speaker, I will take this suggestion in the
-next version.
-
-thanks.
-Bean
-
-> 
-
+PiBPbiBUdWUsIDI4IEFwciAyMDIwIGF0IDA1OjQ0LCDlhq/plJAgPHJ1aV9mZW5nQHJlYWxzaWwu
+Y29tLmNuPiB3cm90ZToNCj4gPg0KPiA+ID4NCj4gPiA+IE9uIE1vbiwgQXByIDI3LCAyMDIwIGF0
+IDExOjQxIEFNIOWGr+mUkCA8cnVpX2ZlbmdAcmVhbHNpbC5jb20uY24+DQo+IHdyb3RlOg0KPiA+
+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiA+IE9uIFN1biwgQXByIDI2LCAyMDIwIGF0IDA5OjI1OjQ2
+QU0gKzA4MDAsDQo+ID4gPiA+ID4gcnVpX2ZlbmdAcmVhbHNpbC5jb20uY24NCj4gPiA+IHdyb3Rl
+Og0KPiA+ID4gPiA+ID4gRnJvbTogUnVpIEZlbmcgPHJ1aV9mZW5nQHJlYWxzaWwuY29tLmNuPg0K
+PiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFJUUzUyNjEgc3VwcG9ydCBsZWdhY3kgU0QgbW9kZSBh
+bmQgU0QgRXhwcmVzcyBtb2RlLg0KPiA+ID4gPiA+ID4gSW4gU0Q3LngsIFNEIGFzc29jaWF0aW9u
+IGludHJvZHVjZSBTRCBFeHByZXNzIGFzIGEgbmV3IG1vZGUuDQo+ID4gPiA+ID4gPiBTRCBFeHBy
+ZXNzIG1vZGUgaXMgZGlzdGluZ3Vpc2hlZCBieSBDTUQ4Lg0KPiA+ID4gPiA+ID4gVGhlcmVmb3Jl
+LCBDTUQ4IGhhcyBuZXcgYml0IGZvciBTRCBFeHByZXNzLg0KPiA+ID4gPiA+ID4gU0QgRXhwcmVz
+cyBpcyBiYXNlZCBvbiBQQ0llL05WTWUuDQo+ID4gPiA+ID4gPiBSVFM1MjYxIHVzZXMgQ01EOCB0
+byBzd2l0Y2ggdG8gU0QgRXhwcmVzcyBtb2RlLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gU28gaG93
+IGRvZXMgdGhpcyBiaXQgd29yaz8gIFRoZXkgd2F5IEkgaW1hZ2luZWQgU0QgRXhwcmVzcyB0bw0K
+PiA+ID4gPiA+IHdvcmsgaXMgdGhhdCB0aGUgYWN0dWFsIFNEIENhcmQganVzdCBzaG93cyB1cCBh
+cyBhIHJlYWwgUENJZQ0KPiA+ID4gPiA+IGRldmljZSwgc2ltaWxhciB0byBzYXkgVGh1bmRlcmJv
+bHQuDQo+ID4gPiA+DQo+ID4gPiA+IE5ldyBTRCBFeHByZXNzIGNhcmQgaGFzIGR1YWwgbW9kZS4g
+T25lIGlzIFNEIG1vZGUgYW5kIGFub3RoZXIgaXMNCj4gPiA+ID4gUENJZQ0KPiA+ID4gbW9kZS4N
+Cj4gPiA+ID4gSW4gUENJZSBtb2RlLCBpdCBhY3QgYXMgYSBQQ0llIGRldmljZSBhbmQgdXNlIFBD
+SWUgcHJvdG9jb2wgbm90DQo+ID4gPiA+IFRodW5kZXJib2x0DQo+ID4gPiBwcm90b2NvbC4NCj4g
+PiA+DQo+ID4gPiBJIHRoaW5rIHdoYXQgQ2hyaXN0b3BoIHdhcyBhc2tpbmcgYWJvdXQgaXMgd2h5
+IHlvdSBuZWVkIHRvIGlzc3VlIGFueQ0KPiA+ID4gY29tbWFuZHMgYXQgYWxsIGluIFNEIG1vZGUg
+d2hlbiB5b3Ugd2FudCB0byB1c2UgUENJZSBtb2RlIGluc3RlYWQuDQo+ID4gPiBXaGF0IGhhcHBl
+bnMgaWYgeW91IGxvYWQgdGhlIE5WTWUgZHRocml2ZXIgYmVmb3JlIGxvYWRpbmcgdGhlIHJ0czUy
+NjENCj4gZHJpdmVyPw0KPiA+ID4NCj4gPiA+ICAgICAgICBBcm5kDQo+ID4gPg0KPiA+ID4gLS0t
+LS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBl
+LW1haWwuDQo+ID4NCj4gPiBSVFM1MjYxIHN1cHBvcnQgU0QgbW9kZSBhbmQgUENJZS9OVk1lIG1v
+ZGUuIFRoZSB3b3JrZmxvdyBpcyBhcyBmb2xsb3dzLg0KPiA+IDEuUlRTNTI2MSB3b3JrIGluIFNE
+IG1vZGUuDQo+ID4gMi5JZiBjYXJkIGlzIHBsdWdnZWQgaW4sIEhvc3Qgc2VuZCBDTUQ4IHRvIGFz
+ayBjYXJkJ3MgUENJZSBhdmFpbGFiaWxpdHkuDQo+IA0KPiBUaGlzIHNvdW5kcyBsaWtlIHRoZSBj
+YXJkIGluc2VydC9yZW1vdmFsIG5lZWRzIHRvIGJlIG1hbmFnZWQgYnkgdGhlDQo+IHJ0c3hfcGNp
+X3NkbW1jIGRyaXZlciAobW1jKS4NCj4gDQo+ID4gMy5JZiB0aGUgY2FyZCBoYXMgUENJZSBhdmFp
+bGFiaWxpdHksIFJUUzUyNjEgc3dpdGNoIHRvIFBDSWUvTlZNZSBtb2RlLg0KPiANCj4gVGhpcyBz
+d2l0Y2ggaXMgZG9uZSBieSB0aGUgbW1jIGRyaXZlciwgYnV0IGhvdyBkb2VzIHRoZSBQQ0llL05W
+TWUgZHJpdmVyDQo+IGtub3cgd2hlbiB0byB0YWtlIG92ZXI/IElzbid0IHRoZXJlIGEgc3luY2hy
+b25pemF0aW9uIHBvaW50IG5lZWRlZD8NCj4gDQo+ID4gNC5NbWMgZHJpdmVyIGV4aXQgYW5kIE5W
+TWUgZHJpdmVyIHN0YXJ0IHdvcmtpbmcuDQo+IA0KPiBIYXZpbmcgdGhlIG1tYyBkcml2ZXIgdG8g
+ZXhpdCBzZWVtcyB3cm9uZyB0byBtZS4gRWxzZSBob3cgd291bGQgeW91IGhhbmRsZQ0KPiBhIGNh
+cmQgYmVpbmcgcmVtb3ZlZCBhbmQgaW5zZXJ0ZWQgYWdhaW4/DQo+IA0KPiBJbiBwcmluY2lwbGUg
+eW91IHdhbnQgdGhlIG1tYyBjb3JlIHRvIGZhaWwgdG8gZGV0ZWN0IHRoZSBjYXJkIGFuZCB0aGVu
+IGRvIGENCj4gaGFuZG92ZXIsIHNvbWVob3cuIE5vPw0KPiANCj4gQWx0aG91Z2gsIHRvIG1ha2Ug
+dGhpcyB3b3JrIHRoZXJlIGFyZSBhIGNvdXBsZSBvZiBwcm9ibGVtcyB5b3UgbmVlZCB0byBkZWFs
+DQo+IHdpdGguDQo+IA0KPiAxLiBJZiB0aGUgbW1jIGNvcmUgZG9lc24ndCBzdWNjZXNzZnVsbHkg
+ZGV0ZWN0IGEgY2FyZCwgaXQgd2lsbCByZXF1ZXN0IHRoZSBtbWMNCj4gaG9zdCB0byBwb3dlciBv
+ZmYgdGhlIGNhcmQuIEluIHRoaXMgc2l0dWF0aW9uLCB5b3Ugd2FudCB0byBrZWVwIHRoZSBwb3dl
+ciB0byB0aGUNCj4gY2FyZCwgYnV0IGxlYXZlIGl0IHRvIGJlIG1hbmFnZWQgYnkgdGhlIFBDSWUv
+TlZNZSBkcml2ZXIgaW4gc29tZSB3YXkuDQo+IA0KPiAyLiBEdXJpbmcgc3lzdGVtIHJlc3VtZSwg
+dGhlIG1tYyBjb3JlIG1heSB0cnkgdG8gcmVzdG9yZSBwb3dlciBmb3IgYSBjYXJkLA0KPiBlc3Bl
+Y2lhbGx5IGlmIGl0J3MgYSByZW1vdmFibGUgc2xvdCwgYXMgdG8gbWFrZSBzdXJlIGl0IGdldHMg
+ZGV0ZWN0ZWQgaWYgc29tZW9uZQ0KPiBpbnNlcnRlZCBhIGNhcmQgd2hpbGUgdGhlIHN5c3RlbSB3
+YXMgc3VzcGVuZGVkLg0KPiBOb3Qgc3VyZSBpZiB0aGlzIHBsYXlzIHdlbGwgd2l0aCB0aGUgUENJ
+ZS9OVk1lIGRyaXZlcidzIGJlaGF2aW91ci4NCj4gQWdhaW4sIEkgdGhpbmsgc29tZSBraW5kIG9m
+IHN5bmNocm9uaXphdGlvbiBpcyBuZWVkZWQuDQo+IA0KPiA+IDUuSWYgY2FyZCBpcyB1bnBsdWdn
+ZWQsIFJUUzUyNjEgd2lsbCBzd2l0Y2ggdG8gU0QgbW9kZS4NCj4gDQo+IEFscmlnaHQsIGNsZWFy
+bHkgdGhlIG1tYyBkcml2ZXIgaXMgbmVlZGVkIHRvIG1hbmFnZSBjYXJkIGluc2VydC9yZW1vdmFs
+Lg0KPiANCj4gPiBXZSBzaG91bGQgc2VuZCBDTUQ4IGluIFNEIG1vZGUgdG8gYXNrIGNhcmQncyBQ
+Q0llIGF2YWlsYWJpbGl0eSwgYW5kIHRoZQ0KPiBvcmRlciBvZiBOVk1lIGRyaXZlciBhbmQgcnRz
+NTI2MSBkcml2ZXIgZG9lc24ndCBtYXR0ZXIuDQo+IA0KPiBUaGF0IGFzc3VtZXMgdGhlcmUncyBh
+bm90aGVyIHN5bmNocm9uaXphdGlvbiBtZWNoYW5pc20uIE1heWJlIHRoZXJlIGlzLCBidXQNCj4g
+SSBkb24ndCB1bmRlcnN0YW5kIGhvdy4NCj4gDQpJZiBubyBjYXJkIGluIFJUUzUyNjEsIFJUUzUy
+NjEgd29ya3MgaW4gU0QgbW9kZS4gSWYgeW91IHJ1biBjb21tYW5kIGxzcGNpLCB5b3UgY2FuIHNl
+ZSB0aGUgUlRTNTI2MSBkZXZpY2UuDQpXaGVuIGluc2VydCBhIFNEIEV4cHJlc3MgY2FyZCwgTW1j
+IGRyaXZlciB3aWxsIHNlbmQgQ01EOCB0byBhc2sgdGhlIGNhcmQncyBQQ0llIGF2YWlsYWJpbGl0
+eSwgYmVjYXVzZSBpdCdzIGEgU0QgRVhQUkVTUyBjYXJkLA0KUlRTNTI2MSB3aWxsIHN3aXRjaCB0
+byBOVk1lIG1vZGUsIGFmdGVyIHN3aXRjaCBpZiB5b3UgcnVuIGxzcGNpLCB5b3UgY2FuIHNlZSBS
+VFM1MjYxIGRpc2FwcGVhcmVkIGFuZCBhIE5WTWUgZGV2aWNlIHJlcGxhY2VzIFJUUzUyNjEuDQpJ
+biBOVk1lIG1vZGUsIFJUUzUyNjEgb25seSBwcm92aWRlIGEgYnJpZGdlIGJldHdlZW4gU0QgRXhw
+cmVzcyBjYXJkIGFuZCBQQ0llLiBGb3IgTlZNZSBkcml2ZXIsIGp1c3QgbGlrZSBhIG5ldyBOVk1l
+IGRldmljZSBpcyBpbnNlcnRlZC4NCk1tYyBjb3JlIGRvZXNuJ3Qgc3VjY2Vzc2Z1bGx5IGRldGVj
+dCB0aGUgY2FyZCBhbmQgaGFuZG92ZXIgdG8gTlZNZSBkcml2ZXIuIEJlY2F1c2Ugb2YgZGV0ZWN0
+IHRoZSBjYXJkIGZhaWxlZCwNCk1tYyBkcml2ZXIgd2lsbCByZXF1ZXN0IHRoZSBSVFM1MjYxIHRv
+IHBvd2VyIG9mZiB0aGUgY2FyZCwgYnV0IGF0IHRoYXQgdGltZSBwb3dlciBvZmYgdGhlIGNhcmQg
+d2lsbCBub3Qgc3VjY2VlZC4NCldoZW4gdGhlIGNhcmQgaXMgdW5wbHVnZ2VkLCBSVFM1MjYxIHdp
+bGwgc3dpdGNoIHRvIFNEIG1vZGUgYnkgaXRzZWxmIGFuZCBkb24ndCBuZWVkIG1tYyBkcml2ZXIg
+dG8gZG8gYW55dGhpbmcsDQpJZiB5b3UgcnVuIGxzcGNpLCB5b3UgY2FuIHNlZSBOVk1lIGRldmlj
+ZSBkaXNhcHBlYXJlZCBhbmQgUlRTNTI2MSBhcHBlYXJlZCBhZ2Fpbi4NCg0KS2luZCByZWdhcmRz
+DQo=
