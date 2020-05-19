@@ -6,224 +6,98 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ACDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 677B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD4C20758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C68E20758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hpwirQ0X"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eqUyg0Fi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgESVRZ (ORCPT
+        id S1726801AbgESVSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:17:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgESVRZ (ORCPT
+        Tue, 19 May 2020 17:18:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51316 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726030AbgESVSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:17:25 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF30C08C5C3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:17:25 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z26so473095pfk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:17:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Cz7ypDwiQcY75biLKEJQMmwCg/gVg2A/D/by2yCpR7U=;
-        b=hpwirQ0Xs1SorucIF2v9uRq9u46loiYGcq4NK3JplwhSqVwyhavNf0YBGEMwX0Bma4
-         0qiabCHNEWCuGkSTjRhFXEwKkHxrDYGRFoHjGzsfnqLEIv9+DK/ZHc5YRuhfY23dKBN2
-         AHQMsFVocsK8Gz4nmxoV8PjJo6Hfj0jub8qS0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Cz7ypDwiQcY75biLKEJQMmwCg/gVg2A/D/by2yCpR7U=;
-        b=mgfQkJy+fwweeXsZjEyaZx6E5zJnmq8Ff0lwzfLUuNQs6m4WQHh3plD7ZVveSPL90l
-         U+aDVVlGBX1d7hOtu95aCxnDHJf1eBRpG29ASimzgXqNSh5pRUHqAWVCJ+2j0p8jVgCY
-         PwDgyClNXnplLloVA6R1h5KzdhmX7wl2ZLyQ1MRJbGstcuR2ABwbgZ70JUrg7ZNTZ23i
-         Dc1NY7YZLoJ5omtU987CCz29SDusVedJVbohBTQozvA3Q4tDZbof6MvWb13bBbtyF6uo
-         uEV0207m0Zre+xzBGpX5DlMPXvS/fQCMoO+jtaQaufmAYp+cgK3OwXso+R1VX9CKvqRl
-         oYWw==
-X-Gm-Message-State: AOAM5338vzJOiusBtC3q7s6VNFyko2DpwxtafqVMcK1Ojw5vl36z8/al
-        HcHIQ0+7hNe4pGXdLQQfuEXyEQ==
-X-Google-Smtp-Source: ABdhPJxbEob6J6f6hJy0GeqN5fD4zEgoeNcFb9XU7fUpXsQJwNl9Ou6crVqMvKvg1aajIHr6QDJ0Ww==
-X-Received: by 2002:a62:7c94:: with SMTP id x142mr1036481pfc.155.1589923044367;
-        Tue, 19 May 2020 14:17:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p62sm334352pfb.93.2020.05.19.14.17.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 14:17:23 -0700 (PDT)
-Date:   Tue, 19 May 2020 14:17:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        John Johansen <john.johansen@canonical.com>
-Subject: Re: [PATCH 0/4] Relocate execve() sanity checks
-Message-ID: <202005191342.97EE972E3@keescook>
-References: <20200518055457.12302-1-keescook@chromium.org>
- <87a724t153.fsf@x220.int.ebiederm.org>
- <202005190918.D2BD83F7C@keescook>
- <87o8qjstyw.fsf@x220.int.ebiederm.org>
- <202005191052.0A6B1D5843@keescook>
- <87sgfvrckr.fsf@x220.int.ebiederm.org>
+        Tue, 19 May 2020 17:18:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589923115;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dUOct4PHoq/QWft1/j7ZZiyNUOaYPjPbdH/q9Xj/tyY=;
+        b=eqUyg0FiNoJBVAFz8EZsJT176Th65GQwvVkngb6N9YjbzBJ0NOYlBIZz2O/1bNAtZN6yLn
+        67dhYaIsS2poCrQ1FSxfOJeV4jkaMCCNccecUng3jhqAxFhDE7KpvWHG45BrmMpElKzC2e
+        5EsMcqurWUYqrpS/2BjsNaAYM6sZlYg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-470-7YHKrUjEN0SBEU63otyAHw-1; Tue, 19 May 2020 17:18:34 -0400
+X-MC-Unique: 7YHKrUjEN0SBEU63otyAHw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9202F805724;
+        Tue, 19 May 2020 21:18:32 +0000 (UTC)
+Received: from treble (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 30B4C60BE1;
+        Tue, 19 May 2020 21:18:31 +0000 (UTC)
+Date:   Tue, 19 May 2020 16:18:29 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Matt Helsley <mhelsley@vmware.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 3/3] objtool: Enable compilation of objtool for all
+ architectures
+Message-ID: <20200519211829.p2d454nz3h3mdxsa@treble>
+References: <cover.1589913349.git.mhelsley@vmware.com>
+ <96252a8eee50710f4fe115ca516f0e6058b9f66b.1589913349.git.mhelsley@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87sgfvrckr.fsf@x220.int.ebiederm.org>
+In-Reply-To: <96252a8eee50710f4fe115ca516f0e6058b9f66b.1589913349.git.mhelsley@vmware.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 01:42:28PM -0500, Eric W. Biederman wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> 
-> > On Tue, May 19, 2020 at 12:41:27PM -0500, Eric W. Biederman wrote:
-> >> Kees Cook <keescook@chromium.org> writes:
-> >> > and given the LSM hooks, I think the noexec check is too late as well.
-> >> > (This is especially true for the coming O_MAYEXEC series, which will
-> >> > absolutely need those tests earlier as well[1] -- the permission checking
-> >> > is then in the correct place: during open, not exec.) I think the only
-> >> > question is about leaving the redundant checks in fs/exec.c, which I
-> >> > think are a cheap way to retain a sense of robustness.
-> >> 
-> >> The trouble is when someone passes through changes one of the permission
-> >> checks for whatever reason (misses that they are duplicated in another
-> >> location) and things then fail in some very unexpected way.
-> >
-> > Do you think this series should drop the "late" checks in fs/exec.c?
-> > Honestly, the largest motivation for me to move the checks earlier as
-> > I've done is so that other things besides execve() can use FMODE_EXEC
-> > during open() and receive the same sanity-checking as execve() (i.e the
-> > O_MAYEXEC series -- the details are still under discussion but this
-> > cleanup will be needed regardless).
-> 
-> I think this series should drop the "late" checks in fs/exec.c  It feels
-> less error prone, and it feels like that would transform this into
-> something Linus would be eager to merge because series becomes a cleanup
-> that reduces line count.
+On Tue, May 19, 2020 at 01:55:33PM -0700, Matt Helsley wrote:
+> +const char __attribute__ ((weak)) *objname;
+> +
+> +int missing_check(const char *_objname, bool orc)
+> +{
+> +	return 127;
+> +}
+> +
+> +int __attribute__ ((weak, alias("missing_check"))) check(const char *_objname, bool orc);
+> +
+> +int missing_orc_dump(const char *_objname)
+> +{
+> +	return 127;
+> +}
+> +
+> +int __attribute__ ((weak, alias("missing_orc_dump"))) orc_dump(const char *_objname);
+> +
+> +int __attribute__ ((weak)) create_orc(struct objtool_file *file)
+> +{
+> +	return 127;
+> +}
+> +
+> +int __attribute__ ((weak)) create_orc_sections(struct objtool_file *file)
+> +{
+> +	return 127;
+> +}
 
-Yeah, that was my initial sense too. I just started to get nervous about
-removing the long-standing exec sanity checks. ;)
+I think the aliased "missing_" functions are no longer needed, right?
+i.e. can we just have weak versions of check() and orc_dump()?
 
-> I haven't been inside of open recently enough to remember if the
-> location you are putting the check fundamentally makes sense.  But the
-> O_MAYEXEC bits make a pretty strong case that something of the sort
-> needs to happen.
-
-Right. I *think* it's correct place for now, based on my understanding
-of the call graph (which is why I included it in the commit logs).
-
-> I took a quick look but I can not see clearly where path_noexec
-> and the regular file tests should go.
-> 
-> I do see that you have code duplication with faccessat which suggests
-> that you haven't put the checks in the right place.
-
-Yeah, I have notes on the similar call sites (which I concluded, perhaps
-wrongly) to ignore:
-
-do_faccessat()
-    user_path_at(dfd, filename, lookup_flags, &path);
-    if (acc_mode & MAY_EXEC .... path_noexec()
-    inode_permission(inode, mode | MAY_ACCESS);
-
-This appears to be strictly advisory, and the path_noexec() test is
-there to, perhaps, avoid surprises when doing access() then fexecve()?
-I would note, however, that that path-based LSMs appear to have no hook
-in this call graph at all. I was expecting a call like:
-
-	security_file_permission(..., mode | MAY_ACCESS)
-
-but I couldn't find one (or anything like it), so only
-inode_permission() is being tested (which means also the existing
-execve() late tests are missed, and the newly added S_ISREG() test from
-do_dentry_open() is missed).
-
-
-prctl_set_mm_exe_file()
-    err = -EACCESS;
-    if (!S_ISREG(inode->i_mode) || path_noexec(&exe.file->f_path))
-        goto exit;
-    err = inode_permission(inode, MAY_EXEC);
-
-This is similar (no path-based LSM hooks present, only inode_permission()
-used for permission checking), but it is at least gated by CAP_SYS_ADMIN.
-
-
-And this bring me to a related question from my review: does
-dentry_open() intentionally bypass security_inode_permission()? I.e. it
-calls vfs_open() not do_open():
-
-openat2(dfd, char * filename, open_how)
-    build_open_flags(open_how, open_flags)
-    do_filp_open(dfd, filename, open_flags)
-        path_openat(nameidata, open_flags, flags)
-            file = alloc_empty_file(open_flags, current_cred());
-            do_open(nameidata, file, open_flags)
-                may_open(path, acc_mode, open_flag)
-                    inode_permission(inode, MAY_OPEN | acc_mode)
-                        security_inode_permission(inode, acc_mode)
-                vfs_open(path, file)
-                    do_dentry_open(file, path->dentry->d_inode, open)
-                        if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) ...
-                        security_file_open(f)
-                                /* path-based LSMs check for open here
-				 * and use FMODE_* flags to determine how a file
-                                 * is being opened. */
-                        open()
-
-vs
-
-dentry_open(path, flags, cred)
-        f = alloc_empty_file(flags, cred);
-        vfs_open(path, f);
-
-I would expect dentry_open() to mostly duplicate a bunch of
-path_openat(), but it lacks the may_open() call, etc.
-
-I really got the feeling that there was some new conceptual split needed
-inside do_open() where the nameidata details have been finished, after
-we've gained the "file" information, but before we've lost the "path"
-information. For example, may_open(path, ...) has no sense of "file",
-though it does do the inode_permission() call.
-
-Note also that may_open() is used in do_tmpfile() too, and has a comment
-implying it needs to be checking only a subset of the path details. So
-I'm not sure how to split things up.
-
-So, that's why I put the new checks just before the may_open() call in
-do_open(): it's the most central, positions itself correctly for dealing
-with O_MAYEXEC, and doesn't appear to make any existing paths worse.
-
-> I am wondering if we need something distinct to request the type of the
-> file being opened versus execute permissions.
-
-Well, this is why I wanted to centralize it -- the knowledge of how a
-file is going to be used needs to be tested both by the core VFS
-(S_ISREG, path_noexec) and the LSMs. Things were inconsistent before.
-
-> All I know is being careful and putting the tests in a good logical
-> place makes the code more maintainable, whereas not being careful
-> results in all kinds of sharp corners that might be exploitable.
-> So I think it is worth digging in and figuring out where those checks
-> should live.  Especially so that code like faccessat does not need
-> to duplicate them.
-
-I think this is the right place with respect to execve(), though I think
-there are other cases that could use to be improved (or at least made
-more consistent).
-
--Kees
+Otherwise everything looks good to me.
 
 -- 
-Kees Cook
+Josh
+
