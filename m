@@ -1,187 +1,91 @@
 Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2461BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86221207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95242075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:03:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="F4Aafco/"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="jyLgBnLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgESVDJ (ORCPT
+        id S1726651AbgESVDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:03:09 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:52776 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgESVDI (ORCPT
+        Tue, 19 May 2020 17:03:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgESVDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:03:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1589922186; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AYssrVu0EdXtQCut6RKI0Q/slktx5/swJ4iGM1S+aPM=;
-        b=F4Aafco/wu2j6SCR/42PO2SWWsZNMwDACorK4ZocGNHgTHLYesolX8x3ADsIjVRcCaeZJw
-        a5yXWDDmGEllGmsRIvWGFO92zvZOSpoomh8E/dyp8fSIQ3b84t/y6Kfg9TX/LNQX+pRKwZ
-        oPY9+Afv3CTrx52VuqQ3M+tOmXGy35o=
-Date:   Tue, 19 May 2020 23:02:54 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v7 7/7] input: joystick: Add ADC attached joystick driver.
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <USJLAQ.SNMLIAX3CX1J2@crapouillou.net>
-In-Reply-To: <CAHp75VcChHOrxrqBM==-_SaTL4vSojKmRWvkNn-CHLH99pcAuQ@mail.gmail.com>
-References: <20200517194904.34758-1-contact@artur-rojek.eu>
-        <20200517194904.34758-7-contact@artur-rojek.eu>
-        <CAHp75VcChHOrxrqBM==-_SaTL4vSojKmRWvkNn-CHLH99pcAuQ@mail.gmail.com>
+        Tue, 19 May 2020 17:03:38 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 868B0C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:03:38 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3DFAC23058;
+        Tue, 19 May 2020 23:03:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1589922214;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=e2AvKo/uy0nGZFQzGAIkim8WVx0YkRWQq0QMlwGjDV0=;
+        b=jyLgBnLeF7AbW2U7DkKUB57uyY/BtwIuUShn+R/KherCvtJ2KLyrxAviLzpp8abhDU35pf
+        lzscAb2vu4lcC7Hh/sd/FVvtTBixWQqscgrXABXXCwJUSgbid7chhXjVVy+WB2zdKBquMG
+        Dhlm+gXxtbOzP07pHu4w0cAfDfwN0q0=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Shawn Guo <shawnguo@kernel.org>, Michael Walle <michael@walle.cc>
+Subject: [PATCH] arm64: dts: ls1028a: sl28: keep switch port names consistent
+Date:   Tue, 19 May 2020 23:03:19 +0200
+Message-Id: <20200519210319.21319-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Keep the switch port labels consistent across the different board
+variants. If the user wants to rename them, it should be done in
+user-space.
 
-Le mar. 19 mai 2020 =E0 23:43, Andy Shevchenko=20
-<andy.shevchenko@gmail.com> a =E9crit :
-> On Sun, May 17, 2020 at 10:49 PM Artur Rojek <contact@artur-rojek.eu>=20
-> wrote:
->>=20
->>  Add a driver for joystick devices connected to ADC controllers
->>  supporting the Industrial I/O subsystem.
->=20
-> ...
->=20
->>  +static int adc_joystick_handle(const void *data, void *private)
->>  +{
->>  +       struct adc_joystick *joy =3D private;
->>  +       enum iio_endian endianness;
->>  +       int bytes, msb, val, i;
->>  +       bool sign;
->>  +
->>  +       bytes =3D joy->chans[0].channel->scan_type.storagebits >> 3;
->>  +
->>  +       for (i =3D 0; i < joy->num_chans; ++i) {
->>  +               endianness =3D=20
->> joy->chans[i].channel->scan_type.endianness;
->>  +               msb =3D joy->chans[i].channel->scan_type.realbits - 1;
->=20
->>  +               sign =3D=20
->> (tolower(joy->chans[i].channel->scan_type.sign) =3D=3D 's');
->=20
-> Do we need tolower()?
+Fixes: ab43f0307449 ("arm64: dts: ls1028a: sl28: add support for variant 2")
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ .../boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts      | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'll answer this one:
-
-The sign can be uppercase to specify that the value is sign-extended in=20
-all the storage bits.
-
--Paul
-
->>  +
->>  +               switch (bytes) {
->>  +               case 1:
->>  +                       val =3D ((const u8 *)data)[i];
->>  +                       break;
->>  +               case 2:
->>  +                       if (endianness =3D=3D IIO_BE)
->=20
->>  +                               val =3D be16_to_cpu(((const u16=20
->> *)data)[i]);
->=20
-> Yeah, you have to provide bitwise types to satisfy sparse.
-> Maybe using *_to_cpup() will cure this.
->=20
->>  +                       else if (endianness =3D=3D IIO_LE)
->>  +                               val =3D le16_to_cpu(((const u16=20
->> *)data)[i]);
->>  +                       else /* IIO_CPU */
->>  +                               val =3D ((const u16 *)data)[i];
->>  +                       break;
->>  +               default:
->>  +                       return -EINVAL;
->>  +               }
->>  +
->>  +               val >>=3D joy->chans[i].channel->scan_type.shift;
->>  +               if (sign)
->>  +                       val =3D sign_extend32(val, msb);
->>  +               else
->>  +                       val &=3D GENMASK(msb, 0);
->>  +               input_report_abs(joy->input, joy->axes[i].code,=20
->> val);
->>  +       }
->>  +
->>  +       input_sync(joy->input);
->>  +
->>  +       return 0;
->>  +}
->=20
-> ...
->=20
->>  +       /* Count how many channels we got. NULL terminated. */
->>  +       while (joy->chans[joy->num_chans].indio_dev)
->>  +               joy->num_chans++;
->=20
-> I don't see how useful this is. Why not simple do below...
->=20
->>  +       bits =3D joy->chans[0].channel->scan_type.storagebits;
->>  +       if (!bits || (bits > 16)) {
->>  +               dev_err(dev, "Unsupported channel storage size");
->>  +               return -EINVAL;
->>  +       }
->>  +       for (i =3D 1; i < joy->num_chans; ++i)
->>  +               if (joy->chans[i].channel->scan_type.storagebits !=3D=20
->> bits) {
->>  +                       dev_err(dev, "Channels must have equal=20
->> storage size");
->>  +                       return -EINVAL;
->>  +               }
->=20
-> ...something like
->=20
->   for (i =3D 0; joy->chans[i].indio_dev; i++) {
->     bits =3D joy->chans[i].channel->scan_type.storagebits;
->     if (bits ...) {
->       ...error handling...
->     }
->     if (bits !=3D joy->chans[0].channel->scan_type.storagebits) {
->       ...second level of error handling...
->     }
->  }
->=20
-> ...
->=20
->>  +static const struct of_device_id adc_joystick_of_match[] =3D {
->>  +       { .compatible =3D "adc-joystick", },
->=20
->>  +       { },
->=20
-> No need comma.
->=20
->>  +};
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
+index 901b5b161def..dd764b720fb0 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var2.dts
+@@ -53,14 +53,14 @@
+ };
+ 
+ &mscc_felix_port0 {
+-	label = "gbe0";
++	label = "swp0";
+ 	phy-handle = <&phy0>;
+ 	phy-mode = "sgmii";
+ 	status = "okay";
+ };
+ 
+ &mscc_felix_port1 {
+-	label = "gbe1";
++	label = "swp1";
+ 	phy-handle = <&phy1>;
+ 	phy-mode = "sgmii";
+ 	status = "okay";
+-- 
+2.20.1
 
