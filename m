@@ -2,134 +2,160 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17728C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5607C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7FC9207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7542081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:59:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g7UesDSw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N9MDY5T+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgESO7H (ORCPT
+        id S1729176AbgESO7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:59:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgESO7G (ORCPT
+        Tue, 19 May 2020 10:59:11 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:53162 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728775AbgESO7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:59:06 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E634C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 07:59:06 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id 62so8037947vsi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 07:59:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cAwM4xUN+JXfgmnpSakIzQBFryyxT4xbvQKyptF8HfU=;
-        b=g7UesDSwco++E9tvDmaeYZHTUzwg0n+acwSdyySMURap5qFLIynLhGq5AUrj1fYMJ0
-         sw/JLqS9GpKjA2q16tUiCfnRqLnJvDl/gct6mgVedTlmvLGW1Pf+VGOmT8FCq4ufSVfc
-         35euMAF2IOS7EKW54E0VcyplYL+ZhWm0tlpcI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cAwM4xUN+JXfgmnpSakIzQBFryyxT4xbvQKyptF8HfU=;
-        b=Fk+lk/sviDNaR65ZGkXnnq07iAa74Yw3mvGiHvluYhX/sCH/rVzmqugSXhgIuz+lqH
-         nX1eZTnwhVzvrzJf8nzQDN6MA/uAJLkNc31lnMAag4E1A6RAUlC3FIO3vvzxVezUoxNY
-         9RXVDXS46XUMM9uZ65xac4Lzy5lMl7aQeeEZ0M7HFdcbC8OLJWkv1d25wefb9r8A8Nuv
-         JTqvLVJvJXhuF99/EWUfxdt6b3cXvt64da1Y6YCYAk0hHLu0mDgPsA3P6szyEMzQSQjV
-         GSI00eX3zkqSa73xY60sKHzkRf8CaBTSjuLdeANIKvWiU2WDHQkTLq63yiQjWuA5Msax
-         uXcQ==
-X-Gm-Message-State: AOAM5309mSoHN7yaGGmpvcwOdMdGlyCcdTUJ4WFulvA9MFuhtJgYV3AK
-        PMYpieqcP40JGV5SlParjH/qBtmSnsk=
-X-Google-Smtp-Source: ABdhPJw4ytPiFoNoTgeEFoK4N93MkkCCoKvvis2XOO2NF7D4OK49LlyNIr/v+eNRazMfvee+9CRh4w==
-X-Received: by 2002:a67:ef1d:: with SMTP id j29mr1511392vsr.238.1589900345472;
-        Tue, 19 May 2020 07:59:05 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id 66sm3581189vss.16.2020.05.19.07.59.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 07:59:04 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id k4so4908359uaq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 07:59:03 -0700 (PDT)
-X-Received: by 2002:ab0:6806:: with SMTP id z6mr15603649uar.0.1589900343396;
- Tue, 19 May 2020 07:59:03 -0700 (PDT)
+        Tue, 19 May 2020 10:59:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=iDRSv4J4B4xFK8cXysXCGc6Xy6/lr+lLLXlM45hQqIw=; b=N9MDY5T+hbZmkPK/gFmMYLlxeb
+        qzwVUpmIbf5icmwzDCNFRXwwT4lhbty+6JzJ3ydROXYeZM3G/kvhgAEjbSJPUYipEyBghU3dxomRX
+        WUdZvc7U1Zzg4Nwq3kqCleZUiCnUQbEHErs/SdWI9McbnVIvs0cG4bTMqtCXq7oGBB5U8atXOLk3R
+        hUejaB5AXP2M863tNSjMw04ahlg5ic2AzeDRerfDBKmyDRhv8gVqOF8HM59mfmTgX9F5AzyLZ2Cqy
+        dxOxUXCiYzSExjx258fDvD8H3eMQOimE39t8F1UIlWfpB5Fq/kD91MCr1v9jgukF7GJVlPfb4GguI
+        IsNiF13Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jb3gx-0002Nz-Ly; Tue, 19 May 2020 14:58:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4B145301A80;
+        Tue, 19 May 2020 16:57:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 361E922B8C6B5; Tue, 19 May 2020 16:57:56 +0200 (CEST)
+Date:   Tue, 19 May 2020 16:57:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Xu, Like" <like.xu@intel.com>
+Cc:     Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
+        wei.w.wang@intel.com
+Subject: Re: [PATCH v11 10/11] KVM: x86/pmu: Check guest LBR availability in
+ case host reclaims them
+Message-ID: <20200519145756.GC317569@hirez.programming.kicks-ass.net>
+References: <20200514083054.62538-1-like.xu@linux.intel.com>
+ <20200514083054.62538-11-like.xu@linux.intel.com>
+ <20200519111559.GJ279861@hirez.programming.kicks-ass.net>
+ <3a234754-e103-907f-9b06-44b5e7ae12d3@intel.com>
 MIME-Version: 1.0
-References: <20200520000524.69af8a86@canb.auug.org.au>
-In-Reply-To: <20200520000524.69af8a86@canb.auug.org.au>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 19 May 2020 07:58:52 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WuXEO0KCoRnundQxVMJyre9UBdw2NDUSsWxJwADjCR9A@mail.gmail.com>
-Message-ID: <CAD=FV=WuXEO0KCoRnundQxVMJyre9UBdw2NDUSsWxJwADjCR9A@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the kgdb tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3a234754-e103-907f-9b06-44b5e7ae12d3@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, May 19, 2020 at 09:10:58PM +0800, Xu, Like wrote:
+> On 2020/5/19 19:15, Peter Zijlstra wrote:
+> > On Thu, May 14, 2020 at 04:30:53PM +0800, Like Xu wrote:
+> > 
+> > > diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> > > index ea4faae56473..db185dca903d 100644
+> > > --- a/arch/x86/kvm/vmx/pmu_intel.c
+> > > +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> > > @@ -646,6 +646,43 @@ static void intel_pmu_lbr_cleanup(struct kvm_vcpu *vcpu)
+> > >   		intel_pmu_free_lbr_event(vcpu);
+> > >   }
+> > > +static bool intel_pmu_lbr_is_availabile(struct kvm_vcpu *vcpu)
+> > > +{
+> > > +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> > > +
+> > > +	if (!pmu->lbr_event)
+> > > +		return false;
+> > > +
+> > > +	if (event_is_oncpu(pmu->lbr_event)) {
+> > > +		intel_pmu_intercept_lbr_msrs(vcpu, false);
+> > > +	} else {
+> > > +		intel_pmu_intercept_lbr_msrs(vcpu, true);
+> > > +		return false;
+> > > +	}
+> > > +
+> > > +	return true;
+> > > +}
+> > This is unreadable gunk, what?
+> 
+> Abstractly, it is saying "KVM would passthrough the LBR satck MSRs if
+> event_is_oncpu() is true, otherwise cancel the passthrough state if any."
+> 
+> I'm using 'event->oncpu != -1' to represent the guest LBR event
+> is scheduled on rather than 'event->state == PERF_EVENT_STATE_ERROR'.
+> 
+> For intel_pmu_intercept_lbr_msrs(), false means to passthrough the LBR stack
+> MSRs to the vCPU, and true means to cancel the passthrough state and make
+> LBR MSR accesses trapped by the KVM.
 
-On Tue, May 19, 2020 at 7:05 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the kgdb tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> drivers/tty/serial/kgdboc.c:418:13: error: expected declaration specifiers or '...' before string constant
->   418 | early_param("ekgdboc", kgdboc_early_init);
->       |             ^~~~~~~~~
-> drivers/tty/serial/kgdboc.c:418:24: error: expected declaration specifiers or '...' before 'kgdboc_early_init'
->   418 | early_param("ekgdboc", kgdboc_early_init);
->       |                        ^~~~~~~~~~~~~~~~~
-> drivers/tty/serial/kgdboc.c:546:13: error: expected declaration specifiers or '...' before string constant
->   546 | early_param("kgdboc_earlycon", kgdboc_earlycon_init);
->       |             ^~~~~~~~~~~~~~~~~
-> drivers/tty/serial/kgdboc.c:546:32: error: expected declaration specifiers or '...' before 'kgdboc_earlycon_init'
->   546 | early_param("kgdboc_earlycon", kgdboc_earlycon_init);
->       |                                ^~~~~~~~~~~~~~~~~~~~
-> drivers/tty/serial/kgdboc.c:505:19: warning: 'kgdboc_earlycon_init' defined but not used [-Wunused-function]
->   505 | static int __init kgdboc_earlycon_init(char *opt)
->       |                   ^~~~~~~~~~~~~~~~~~~~
-> drivers/tty/serial/kgdboc.c:411:19: warning: 'kgdboc_early_init' defined but not used [-Wunused-function]
->   411 | static int __init kgdboc_early_init(char *opt)
->       |                   ^~~~~~~~~~~~~~~~~
->
-> Caused by commit
->
->   220995622da5 ("kgdboc: Add kgdboc_earlycon to support early kgdb using boot consoles")
->
-> I have used the kgdb tree from next-20200518 for today.
+To me it seems very weird to change state in a function that is supposed
+to just query state.
 
-Ugh.  Actually, I think the commit to blame is:
+'is_available' seems to suggest a simple: return 'lbr_event->state ==
+PERF_EVENT_STATE_ACTIVE' or something.
 
-eae3e19ca930 ("kgdboc: Remove useless #ifdef
-CONFIG_KGDB_SERIAL_CONSOLE in kgdboc")
 
-The next commit just made it worse.  Apparently the #ifdef wasn't so
-useless after all.  It was just subtly keeping the code from compiling
-when kgdboc was used as a module.  That's because when it's a module
-we instead get this defined:
+> > > +static void intel_pmu_availability_check(struct kvm_vcpu *vcpu)
+> > > +{
+> > > +	lockdep_assert_irqs_disabled();
+> > > +
+> > > +	if (lbr_is_enabled(vcpu) && !intel_pmu_lbr_is_availabile(vcpu) &&
+> > > +		(vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR))
+> > > +		pr_warn_ratelimited("kvm: vcpu-%d: LBR is temporarily unavailable.\n",
+> > > +			vcpu->vcpu_id);
+> > More unreadable nonsense; when the events go into ERROR state, it's a
+> > permanent fail, they'll not come back.
+> It's not true.  The guest LBR event with 'ERROR state' or 'oncpu != -1'
+> would be
+> lazy released and re-created in the next time the
+> intel_pmu_create_lbr_event() is
+> called and it's supposed to be re-scheduled and re-do availability_check()
+> as well.
 
-#define CONFIG_KGDB_SERIAL_CONSOLE_MODULE 1
+Where? Also, wth would you need to destroy and re-create an event for
+that?
 
-Apparently I didn't re-test as a module after I made this change in
-one of the later spins.  :(
+> > > @@ -6696,8 +6696,10 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> > >   	pt_guest_enter(vmx);
+> > > -	if (vcpu_to_pmu(vcpu)->version)
+> > > +	if (vcpu_to_pmu(vcpu)->version) {
+> > >   		atomic_switch_perf_msrs(vmx);
+> > > +		kvm_x86_ops.pmu_ops->availability_check(vcpu);
+> > > +	}
+> > AFAICT you just did a call out to the kvm_pmu crud in
+> > atomic_switch_perf_msrs(), why do another call?
+> In fact, availability_check() is only called here for just one time.
+> 
+> The callchain looks like:
+> - vmx_vcpu_run()
+>     - kvm_x86_ops.pmu_ops->availability_check();
+>         - intel_pmu_availability_check()
+>             - intel_pmu_lbr_is_availabile()
+>                 - event_is_oncpu() ...
+> 
 
-I think I can whip up a quick patch that uses "IS_BUILTIN(option)".
-Basically this should go back to how the code was in one of the
-earlier patchsets where I tested this.
-
--Doug
+What I'm saying is that you just did a pmu_ops indirect call in
+atomic_switch_perf_msrs(), why add another?
