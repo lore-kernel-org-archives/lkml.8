@@ -2,139 +2,381 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB06C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 416DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8C0206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A792075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p1lO8gQM"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oNZZYMZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgESTrw (ORCPT
+        id S1727113AbgESTsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50214 "EHLO
+        Tue, 19 May 2020 15:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbgESTrv (ORCPT
+        with ESMTP id S1726348AbgESTsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:47:51 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8889C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:47:51 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ci23so134132pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:47:51 -0700 (PDT)
+        Tue, 19 May 2020 15:48:10 -0400
+Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E81C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:48:10 -0700 (PDT)
+Received: by mail-qk1-x72c.google.com with SMTP id 142so968160qkl.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 12:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CgyntvvUzH1XXLBzT1ZgjwhZo6axGQJQNJMNpQq/mjY=;
-        b=p1lO8gQM6mxvNv1BlHL2svVHbsP69QZ+XlG0COlRjlYM1DGwsqpnqMh/39++m5KE96
-         9n9ZehwfzYN68t7s0KmT0fNOdJ850WfDjLWMRxprnwcCwXNUa+oe4f7TLA117mDNkBiY
-         Fy4wvZ/eetly/jy2W6QHjqCgRMNox+JXoD7UOl+aDpZPISswLph6t/i6Szubr3feo3H5
-         22bmwheyp0Vyy0Jq1xHQ/y9ulpgwj32vBWubfmcAokQg8qPyC16CdKJx8pSM0bZdMn62
-         1+avZfYvheGKN0BzDIFCBnObRRrfeeNSFzCkEPoAms2Dj7pbE1prWTkrtEEQ7Kdpf5do
-         xfzw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=40NWANgzUC9sGVXNwplW4AYRC9383MiLAyHs+6kDGyk=;
+        b=oNZZYMZSln58Iz3M6Q0iaT923ZlU9XQ156KYUg0KxAADlqWMEUQgkRezuP9b05fMRR
+         lmmjkxcQ5s1lt5bX1gefXRLhwFtZPrtxX5Fyk4AhlC1wAqPg7uPAt1rF5l3O2gXs0S9U
+         1ASkHdiYH3CsUeDTlG9XfFGFYBFcBwk31B/3k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CgyntvvUzH1XXLBzT1ZgjwhZo6axGQJQNJMNpQq/mjY=;
-        b=nRx26pJdG7+BHdPbQXm3IN8QqV47OvL4I35PMNG4v43MjofsnNV5I6YwlVlLnMVkpp
-         gyaLVSxovgCsImNyVYxbKB+e/eEtCVz1Phg8YSJOKpMachNvu4HEHWdx/nep6p70yGfQ
-         Ex9B/ETgepPvJGjNzFDjucOUvbPVcT15pjPxgGQMRhhOPU8RabcMvMYLhGw91Glgk9Kg
-         e2ZloILuWyQBbmHbWUZrchiSmEITWWSlcaglyOOZ3Din6IO7YBzNuOHmXUEMUdxhN5in
-         0QE2BfUHePyY6wU0YxIWrAMDg88+wSyZLZ4L+v8Vnq9FhFjFk3miNP7mHQFpTuQYHDa+
-         L0bQ==
-X-Gm-Message-State: AOAM532ywWD+uSZp7mltlgcfhehr/50WSF9fYZtX70MwYRZ4QTDycQGa
-        IV6UANrPvTwW4k5wfJ2AkY4=
-X-Google-Smtp-Source: ABdhPJz81uFcj5ZQa6mkGTcmojKcSVnPbx9vOLpey0COrD8CM1hoAIfQebh1Ek7hG9dQucZqv5U15g==
-X-Received: by 2002:a17:902:c281:: with SMTP id i1mr1004179pld.177.1589917671065;
-        Tue, 19 May 2020 12:47:51 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id u5sm236045pfu.198.2020.05.19.12.47.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 12:47:50 -0700 (PDT)
-Subject: Re: [PATCH 00/11] arm/arm64: Turning IPIs into normal interrupts
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Sumit Garg <sumit.garg@linaro.org>, kernel-team@android.com,
-        Russell King <linux@arm.linux.org.uk>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>
-References: <20200519161755.209565-1-maz@kernel.org>
- <d1ac7873-0f02-dbe0-dd3c-4fd14a87cf03@gmail.com>
-Message-ID: <7b06f351-40f3-74c3-5d16-d7d58ab490b6@gmail.com>
-Date:   Tue, 19 May 2020 12:47:44 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=40NWANgzUC9sGVXNwplW4AYRC9383MiLAyHs+6kDGyk=;
+        b=Iqaz08CA7L18WEGOpkdY8PyXq5I56zgY/A9ZB5HViQ8vNQrb/W3TJDprAMFHynPYYO
+         hxpv5aGCg9FT9Gi2OHztGtr4kPakLMeVPvoRlPy2+NC8YVJP+CiG4VrKkhKDbPlNBeXM
+         5a8ibd0wCHKXtxQSU62ZHIkcQTkm2ki6Sr7ZwSVK6KEAAS5WkptcIRAEJ3EKb2HNdEGW
+         pyyw34L43bWhDSJPx0lYN7M8hJUAHN3djAJCW6tH0QqfuIk+MoNMChKQ19XIq65mCQvG
+         P/Mqj/ubmQFWS6J+3jcvQ0LUVkj9TI7CWa39DUXjjwJIML6e0XCdAyZUFu6qRhZj+ZTx
+         zY2A==
+X-Gm-Message-State: AOAM531an0zKQqO9ToIjDxwuVY1n4ORvZ7Tki+tmxXeDGrO4NlnwGQ51
+        VhYmM8LLANM+XuSPiStQ0Yyjcg==
+X-Google-Smtp-Source: ABdhPJywvv51IPEOCrMaFohjqx0bo6CaASeR9NRN3kDJCI+Ex/rjR94J7JNdMMCV7BaIVtH6F/dbDg==
+X-Received: by 2002:a05:620a:2190:: with SMTP id g16mr1043893qka.323.1589917688841;
+        Tue, 19 May 2020 12:48:08 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id g19sm455971qke.32.2020.05.19.12.48.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 12:48:08 -0700 (PDT)
+Date:   Tue, 19 May 2020 15:48:07 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>, vineethrp@gmail.com
+Subject: Re: [patch V4 part 1 25/36] rcu/tree: Mark the idle relevant
+ functions noinstr
+Message-ID: <20200519194807.GA17484@google.com>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134100.575356107@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <d1ac7873-0f02-dbe0-dd3c-4fd14a87cf03@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505134100.575356107@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thomas,
+
+On Tue, May 05, 2020 at 03:16:27PM +0200, Thomas Gleixner wrote:
+> These functions are invoked from context tracking and other places in the
+> low level entry code. Move them into the .noinstr.text section to exclude
+> them from instrumentation.
+> 
+> Mark the places which are safe to invoke traceable functions with
+> instr_begin/end() so objtool won't complain.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  kernel/rcu/tree.c        |   85 +++++++++++++++++++++++++----------------------
+>  kernel/rcu/tree_plugin.h |    4 +-
+>  kernel/rcu/update.c      |    7 +--
+>  3 files changed, 52 insertions(+), 44 deletions(-)
+[...]
+
+Just a few nits/questions but otherwise LGTM.
+
+> @@ -299,7 +294,7 @@ static void rcu_dynticks_eqs_online(void
+>   *
+>   * No ordering, as we are sampling CPU-local information.
+>   */
+> -static bool rcu_dynticks_curr_cpu_in_eqs(void)
+> +static __always_inline bool rcu_dynticks_curr_cpu_in_eqs(void)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  
+> @@ -566,7 +561,7 @@ EXPORT_SYMBOL_GPL(rcutorture_get_gp_data
+>   * the possibility of usermode upcalls having messed up our count
+>   * of interrupt nesting level during the prior busy period.
+>   */
+> -static void rcu_eqs_enter(bool user)
+> +static noinstr void rcu_eqs_enter(bool user)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  
+> @@ -581,12 +576,14 @@ static void rcu_eqs_enter(bool user)
+>  	}
+>  
+>  	lockdep_assert_irqs_disabled();
+> +	instr_begin();
+>  	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, atomic_read(&rdp->dynticks));
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	rdp = this_cpu_ptr(&rcu_data);
+>  	do_nocb_deferred_wakeup(rdp);
+>  	rcu_prepare_for_idle();
+>  	rcu_preempt_deferred_qs(current);
+> +	instr_end();
+>  	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid irq-access tearing. */
+>  	// RCU is watching here ...
+>  	rcu_dynticks_eqs_enter();
+> @@ -623,7 +620,7 @@ void rcu_idle_enter(void)
+>   * If you add or remove a call to rcu_user_enter(), be sure to test with
+>   * CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_user_enter(void)
+> +noinstr void rcu_user_enter(void)
+>  {
+>  	lockdep_assert_irqs_disabled();
+>  	rcu_eqs_enter(true);
+> @@ -656,19 +653,23 @@ static __always_inline void rcu_nmi_exit
+>  	 * leave it in non-RCU-idle state.
+>  	 */
+>  	if (rdp->dynticks_nmi_nesting != 1) {
+> +		instr_begin();
+>  		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
+>  				  atomic_read(&rdp->dynticks));
+>  		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+>  			   rdp->dynticks_nmi_nesting - 2);
+> +		instr_end();
+
+Can instr_end() be moved before the WRITE_ONCE() ?
+
+> @@ -737,7 +738,7 @@ void rcu_irq_exit_irqson(void)
+>   * allow for the possibility of usermode upcalls messing up our count of
+>   * interrupt nesting level during the busy period that is just now starting.
+>   */
+> -static void rcu_eqs_exit(bool user)
+> +static void noinstr rcu_eqs_exit(bool user)
+>  {
+>  	struct rcu_data *rdp;
+>  	long oldval;
+> @@ -755,12 +756,14 @@ static void rcu_eqs_exit(bool user)
+>  	// RCU is not watching here ...
+>  	rcu_dynticks_eqs_exit();
+>  	// ... but is watching here.
+> +	instr_begin();
+>  	rcu_cleanup_after_idle();
+>  	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	WRITE_ONCE(rdp->dynticks_nesting, 1);
+>  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
+> +	instr_end();
+
+And here I think instr_end() can be moved after the trace_rcu_dyntick() call?
+
+>  }
+>  
+>  /**
+> @@ -791,7 +794,7 @@ void rcu_idle_exit(void)
+>   * If you add or remove a call to rcu_user_exit(), be sure to test with
+>   * CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_user_exit(void)
+> +void noinstr rcu_user_exit(void)
+>  {
+>  	rcu_eqs_exit(1);
+>  }
+> @@ -839,28 +842,35 @@ static __always_inline void rcu_nmi_ente
+>  			rcu_cleanup_after_idle();
+>  
+>  		incby = 1;
+> -	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
+> -		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+> -		   READ_ONCE(rdp->rcu_urgent_qs) &&
+> -		   !READ_ONCE(rdp->rcu_forced_tick)) {
+> -		// We get here only if we had already exited the extended
+> -		// quiescent state and this was an interrupt (not an NMI).
+> -		// Therefore, (1) RCU is already watching and (2) The fact
+> -		// that we are in an interrupt handler and that the rcu_node
+> -		// lock is an irq-disabled lock prevents self-deadlock.
+> -		// So we can safely recheck under the lock.
+> -		raw_spin_lock_rcu_node(rdp->mynode);
+> -		if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> -			// A nohz_full CPU is in the kernel and RCU
+> -			// needs a quiescent state.  Turn on the tick!
+> -			WRITE_ONCE(rdp->rcu_forced_tick, true);
+> -			tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> +	} else if (irq) {
+> +		instr_begin();
+> +		if (tick_nohz_full_cpu(rdp->cpu) &&
+
+Not a huge fan of the extra indentation but don't see a better way :)
+
+> +		    rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+> +		    READ_ONCE(rdp->rcu_urgent_qs) &&
+> +		    !READ_ONCE(rdp->rcu_forced_tick)) {
+> +			// We get here only if we had already exited the
+> +			// extended quiescent state and this was an
+> +			// interrupt (not an NMI).  Therefore, (1) RCU is
+> +			// already watching and (2) The fact that we are in
+> +			// an interrupt handler and that the rcu_node lock
+> +			// is an irq-disabled lock prevents self-deadlock.
+> +			// So we can safely recheck under the lock.
+> +			raw_spin_lock_rcu_node(rdp->mynode);
+> +			if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> +				// A nohz_full CPU is in the kernel and RCU
+> +				// needs a quiescent state.  Turn on the tick!
+> +				WRITE_ONCE(rdp->rcu_forced_tick, true);
+> +				tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> +			}
+> +			raw_spin_unlock_rcu_node(rdp->mynode);
+>  		}
+> -		raw_spin_unlock_rcu_node(rdp->mynode);
+> +		instr_end();
+>  	}
+> +	instr_begin();
+>  	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
+>  			  rdp->dynticks_nmi_nesting,
+>  			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
+> +	instr_end();
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* Prevent store tearing. */
+>  		   rdp->dynticks_nmi_nesting + incby);
+>  	barrier();
+> @@ -869,11 +879,10 @@ static __always_inline void rcu_nmi_ente
+>  /**
+>   * rcu_nmi_enter - inform RCU of entry to NMI context
+>   */
+> -void rcu_nmi_enter(void)
+> +noinstr void rcu_nmi_enter(void)
+>  {
+>  	rcu_nmi_enter_common(false);
+>  }
+> -NOKPROBE_SYMBOL(rcu_nmi_enter);
+>  
+>  /**
+>   * rcu_irq_enter - inform RCU that current CPU is entering irq away from idle
+> @@ -897,7 +906,7 @@ NOKPROBE_SYMBOL(rcu_nmi_enter);
+>   * If you add or remove a call to rcu_irq_enter(), be sure to test with
+>   * CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_irq_enter(void)
+> +noinstr void rcu_irq_enter(void)
+
+Just checking if rcu_irq_enter_irqson() needs noinstr too?
+
+Would the noinstr checking be enforced by the kernel build as well or is the
+developer required to run it themselves?
+
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+
+thanks,
+
+ - Joel
 
 
-On 5/19/2020 10:50 AM, Florian Fainelli wrote:
+>  {
+>  	lockdep_assert_irqs_disabled();
+>  	rcu_nmi_enter_common(true);
+> @@ -942,7 +951,7 @@ static void rcu_disable_urgency_upon_qs(
+>   * if the current CPU is not in its idle loop or is in an interrupt or
+>   * NMI handler, return true.
+>   */
+> -bool notrace rcu_is_watching(void)
+> +noinstr bool rcu_is_watching(void)
+>  {
+>  	bool ret;
+>  
+> @@ -986,7 +995,7 @@ void rcu_request_urgent_qs_task(struct t
+>   * RCU on an offline processor during initial boot, hence the check for
+>   * rcu_scheduler_fully_active.
+>   */
+> -bool rcu_lockdep_current_cpu_online(void)
+> +noinstr bool rcu_lockdep_current_cpu_online(void)
+>  {
+>  	struct rcu_data *rdp;
+>  	struct rcu_node *rnp;
+> @@ -994,12 +1003,12 @@ bool rcu_lockdep_current_cpu_online(void
+>  
+>  	if (in_nmi() || !rcu_scheduler_fully_active)
+>  		return true;
+> -	preempt_disable();
+> +	preempt_disable_notrace();
+>  	rdp = this_cpu_ptr(&rcu_data);
+>  	rnp = rdp->mynode;
+>  	if (rdp->grpmask & rcu_rnp_online_cpus(rnp))
+>  		ret = true;
+> -	preempt_enable();
+> +	preempt_enable_notrace();
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(rcu_lockdep_current_cpu_online);
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -2553,7 +2553,7 @@ static void rcu_bind_gp_kthread(void)
+>  }
+>  
+>  /* Record the current task on dyntick-idle entry. */
+> -static void rcu_dynticks_task_enter(void)
+> +static void noinstr rcu_dynticks_task_enter(void)
+>  {
+>  #if defined(CONFIG_TASKS_RCU) && defined(CONFIG_NO_HZ_FULL)
+>  	WRITE_ONCE(current->rcu_tasks_idle_cpu, smp_processor_id());
+> @@ -2561,7 +2561,7 @@ static void rcu_dynticks_task_enter(void
+>  }
+>  
+>  /* Record no current task on dyntick-idle exit. */
+> -static void rcu_dynticks_task_exit(void)
+> +static void noinstr rcu_dynticks_task_exit(void)
+>  {
+>  #if defined(CONFIG_TASKS_RCU) && defined(CONFIG_NO_HZ_FULL)
+>  	WRITE_ONCE(current->rcu_tasks_idle_cpu, -1);
+> --- a/kernel/rcu/update.c
+> +++ b/kernel/rcu/update.c
+> @@ -95,7 +95,7 @@ module_param(rcu_normal_after_boot, int,
+>   * Similarly, we avoid claiming an RCU read lock held if the current
+>   * CPU is offline.
+>   */
+> -static bool rcu_read_lock_held_common(bool *ret)
+> +static noinstr bool rcu_read_lock_held_common(bool *ret)
+>  {
+>  	if (!debug_lockdep_rcu_enabled()) {
+>  		*ret = 1;
+> @@ -112,7 +112,7 @@ static bool rcu_read_lock_held_common(bo
+>  	return false;
+>  }
+>  
+> -int rcu_read_lock_sched_held(void)
+> +noinstr int rcu_read_lock_sched_held(void)
+>  {
+>  	bool ret;
+>  
+> @@ -270,13 +270,12 @@ struct lockdep_map rcu_callback_map =
+>  	STATIC_LOCKDEP_MAP_INIT("rcu_callback", &rcu_callback_key);
+>  EXPORT_SYMBOL_GPL(rcu_callback_map);
+>  
+> -int notrace debug_lockdep_rcu_enabled(void)
+> +noinstr int notrace debug_lockdep_rcu_enabled(void)
+>  {
+>  	return rcu_scheduler_active != RCU_SCHEDULER_INACTIVE && debug_locks &&
+>  	       current->lockdep_recursion == 0;
+>  }
+>  EXPORT_SYMBOL_GPL(debug_lockdep_rcu_enabled);
+> -NOKPROBE_SYMBOL(debug_lockdep_rcu_enabled);
+>  
+>  /**
+>   * rcu_read_lock_held() - might we be in RCU read-side critical section?
 > 
-> 
-> On 5/19/2020 9:17 AM, Marc Zyngier wrote:
->> For as long as SMP ARM has existed, IPIs have been handled as
->> something special. The arch code and the interrupt controller exchange
->> a couple of hooks (one to generate an IPI, another to handle it).
->>
->> Although this is perfectly manageable, it prevents the use of features
->> that we could use if IPIs were Linux IRQs (such as pseudo-NMIs). It
->> also means that each interrupt controller driver has to follow an
->> architecture-specific interface instead of just implementing the base
->> irqchip functionnalities. The arch code also duplicates a number of
->> things that the core irq code already does (such as calling
->> set_irq_regs(), irq_enter()...).
->>
->> This series tries to remedy this on arm/arm64 by offering a new
->> registration interface where the irqchip gives the arch code a range
->> of interrupts to use for IPIs. The arch code requests these as normal
->> interrupts.
->>
->> The bulk of the work is at the interrupt controller level, where all 3
->> irqchips used on arm64 get converted.
->>
->> Finally, the arm64 code drops the legacy registration interface. The
->> same thing could be done on 32bit as well once the two remaining
->> irqchips using that interface get converted.
->>
->> There is probably more that could be done: statistics are still
->> architecture-private code, for example, and no attempt is made to
->> solve that (apart from hidding the IRQs from /proc/interrupt).
->>
->> This has been tested on a bunch of 32 and 64bit guests.
-> 
-> Does this patch series change your position on this patch series
-> 
-> https://lore.kernel.org/linux-arm-kernel/20191023000547.7831-3-f.fainelli@gmail.com/T/
-> 
-> or is this still a no-no?
-
-Our firmware specifies SGI interrupts with the first interrupt cell
-specifier set to 2, so changing GIC_IRQ_TYPE_SGI to 2 allows me to use a
-nearly unmodified firmware with your changes, sweet! I know this is not
-supposed to be used that way, but the temptation was too big.
-
-FWIW, on ARM64:
-
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
