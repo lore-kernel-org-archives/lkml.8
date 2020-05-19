@@ -2,169 +2,131 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A141EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B91D207D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B7B207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589867390;
+	bh=FF7KN1OdpHlPUxJsyYLo5KCQclzjlL5l32hhGgYBOlc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qOkJkS8h5Bc6as8wmSJsTkB0M711Uxc9YpwLIsfRSyyBpdmOCHhXiQWvGr4UhWQVv
+	 OZLMnmhTntnzNY/FvvpoXuQKYo3pAhwl+03EW9TgCDUg9BG1ZJe/fd+RGI/wYGpr5F
+	 SMcfN6pGNbGO01e3yjFGGX8sXw3ANsHBzKgiapw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbgESFtq (ORCPT
+        id S1728811AbgESFtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:49:46 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:51466 "EHLO pegase1.c-s.fr"
+        Tue, 19 May 2020 01:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgESFtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:49:31 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49R4hS58Rrz9txm4;
-        Tue, 19 May 2020 07:49:28 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Lyrsl5okq7J7; Tue, 19 May 2020 07:49:28 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4hS4R27z9txlx;
-        Tue, 19 May 2020 07:49:28 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B94658B7A7;
-        Tue, 19 May 2020 07:49:29 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id YpGHmKomxx0b; Tue, 19 May 2020 07:49:29 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7991C8B767;
-        Tue, 19 May 2020 07:49:29 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 5558F65A4A; Tue, 19 May 2020 05:49:29 +0000 (UTC)
-Message-Id: <709e821602b48a1d7c211a9b156da26db98c3e9d.1589866984.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1589866984.git.christophe.leroy@csgroup.eu>
-References: <cover.1589866984.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v4 45/45] powerpc/32s: Implement dedicated kasan_init_region()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 19 May 2020 05:49:29 +0000 (UTC)
+        id S1728776AbgESFtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:49:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F1812075F;
+        Tue, 19 May 2020 05:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589867381;
+        bh=FF7KN1OdpHlPUxJsyYLo5KCQclzjlL5l32hhGgYBOlc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S184YSdBWMtOHDP29aI0nL6+Vz3uTarBr2r1hGAy4LD18h8TV71WlB0e/skLmU2md
+         zfFN1D56nZtPSLakefrU45pdOvcRca4fJyPaLnRlfgtxCPnYquwQN8BmMQBg78LXUW
+         b9hVs9YtmDz/ZdglI+V4fD2PW0FbBbnYFbIhR2so=
+Date:   Tue, 19 May 2020 07:49:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        syzbot+c8a8197c8852f566b9d9@syzkaller.appspotmail.com,
+        syzbot+40b71e145e73f78f81ad@syzkaller.appspotmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 02/80] shmem: fix possible deadlocks on
+ shmlock_user_lock
+Message-ID: <20200519054939.GB3826326@kroah.com>
+References: <20200518173450.097837707@linuxfoundation.org>
+ <20200518173450.633393924@linuxfoundation.org>
+ <20200518211330.GA25576@amd>
+ <alpine.LSU.2.11.2005181714490.1094@eggly.anvils>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.2005181714490.1094@eggly.anvils>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a kasan_init_region() dedicated to book3s/32 that
-allocates KASAN regions using BATs.
+On Mon, May 18, 2020 at 06:10:58PM -0700, Hugh Dickins wrote:
+> Hi Pavel,
+> 
+> On Mon, 18 May 2020, Pavel Machek wrote:
+> 
+> > Hi!
+> > 
+> > > This may not risk an actual deadlock, since shmem inodes do not take
+> > > part in writeback accounting, but there are several easy ways to avoid
+> > > it.
+> > 
+> > ...
+> > 
+> > > Take info->lock out of the chain and the possibility of deadlock or
+> > > lockdep warning goes away.
+> > 
+> > It is unclear to me if actual possibility of deadlock exists or not,
+> > but anyway:
+> > 
+> > >  	int retval = -ENOMEM;
+> > >  
+> > > -	spin_lock_irq(&info->lock);
+> > > +	/*
+> > > +	 * What serializes the accesses to info->flags?
+> > > +	 * ipc_lock_object() when called from shmctl_do_lock(),
+> > > +	 * no serialization needed when called from shm_destroy().
+> > > +	 */
+> > >  	if (lock && !(info->flags & VM_LOCKED)) {
+> > >  		if (!user_shm_lock(inode->i_size, user))
+> > >  			goto out_nomem;
+> > 
+> > Should we have READ_ONCE() here? If it is okay, are concurency
+> > sanitizers smart enough to realize that it is okay? Replacing warning
+> > with different one would not be exactly a win...
+> 
+> If a sanitizer comes to question this change, I don't see how a
+> READ_ONCE() anywhere near here (on info->flags?) is likely to be
+> enough to satisfy it - it would be asking for a locking scheme that
+> it understands (being unable to read the comment) - and might then
+> ask for that same locking in the numerous other places that read
+> info->flags (and a few that write it).  Add data_race()s all over?
+> 
+> (Or are you concerned about that inode->i_size, which I suppose ought
+> really to be i_size_read(inode) on some 32-bit configurations; though
+> that's of very long standing, and has never caused any concern before.)
+> 
+> I am not at all willing to add annotations speculatively, in case this
+> or that tool turns out to want help later.  So far I've not heard of
+> any such complaint on 5.7-rc[3456] or linux-next: but maybe this is
+> too soon to hear a complaint, and you feel this should not be rushed
+> into -stable?
+> 
+> This was an AUTOSEL selection, to which I have no objection, but it
+> isn't something we were desperate to push into -stable: so I've also
+> no objection if Greg shares your concern, and prefers to withdraw it.
+> (That choice may depend on to what extent he expects to be keeping
+> -stable clean against upcoming sanitizers in future.)
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/include/asm/kasan.h      |  1 +
- arch/powerpc/mm/kasan/Makefile        |  1 +
- arch/powerpc/mm/kasan/book3s_32.c     | 57 +++++++++++++++++++++++++++
- arch/powerpc/mm/kasan/kasan_init_32.c |  2 +-
- 4 files changed, 60 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/mm/kasan/book3s_32.c
+Sanitizers run on stable trees all the time as that's the releases that
+ends up on products, where people run them.  That's why I like to take
+those types of fixes, especially when tools report them.
 
-diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-index 107a24c3f7b3..be85c7005fb1 100644
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -34,6 +34,7 @@ static inline void kasan_init(void) { }
- static inline void kasan_late_init(void) { }
- #endif
- 
-+void kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte);
- int kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end);
- int kasan_init_region(void *start, size_t size);
- 
-diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
-index 440038ea79f1..bb1a5408b86b 100644
---- a/arch/powerpc/mm/kasan/Makefile
-+++ b/arch/powerpc/mm/kasan/Makefile
-@@ -4,3 +4,4 @@ KASAN_SANITIZE := n
- 
- obj-$(CONFIG_PPC32)           += kasan_init_32.o
- obj-$(CONFIG_PPC_8xx)		+= 8xx.o
-+obj-$(CONFIG_PPC_BOOK3S_32)	+= book3s_32.o
-diff --git a/arch/powerpc/mm/kasan/book3s_32.c b/arch/powerpc/mm/kasan/book3s_32.c
-new file mode 100644
-index 000000000000..4bc491a4a1fd
---- /dev/null
-+++ b/arch/powerpc/mm/kasan/book3s_32.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define DISABLE_BRANCH_PROFILING
-+
-+#include <linux/kasan.h>
-+#include <linux/memblock.h>
-+#include <asm/pgalloc.h>
-+#include <mm/mmu_decl.h>
-+
-+int __init kasan_init_region(void *start, size_t size)
-+{
-+	unsigned long k_start = (unsigned long)kasan_mem_to_shadow(start);
-+	unsigned long k_end = (unsigned long)kasan_mem_to_shadow(start + size);
-+	unsigned long k_cur = k_start;
-+	int k_size = k_end - k_start;
-+	int k_size_base = 1 << (ffs(k_size) - 1);
-+	int ret;
-+	void *block;
-+
-+	block = memblock_alloc(k_size, k_size_base);
-+
-+	if (block && k_size_base >= SZ_128K && k_start == ALIGN(k_start, k_size_base)) {
-+		int k_size_more = 1 << (ffs(k_size - k_size_base) - 1);
-+
-+		setbat(-1, k_start, __pa(block), k_size_base, PAGE_KERNEL);
-+		if (k_size_more >= SZ_128K)
-+			setbat(-1, k_start + k_size_base, __pa(block) + k_size_base,
-+			       k_size_more, PAGE_KERNEL);
-+		if (v_block_mapped(k_start))
-+			k_cur = k_start + k_size_base;
-+		if (v_block_mapped(k_start + k_size_base))
-+			k_cur = k_start + k_size_base + k_size_more;
-+
-+		update_bats();
-+	}
-+
-+	if (!block)
-+		block = memblock_alloc(k_size, PAGE_SIZE);
-+	if (!block)
-+		return -ENOMEM;
-+
-+	ret = kasan_init_shadow_page_tables(k_start, k_end);
-+	if (ret)
-+		return ret;
-+
-+	kasan_update_early_region(k_start, k_cur, __pte(0));
-+
-+	for (; k_cur < k_end; k_cur += PAGE_SIZE) {
-+		pmd_t *pmd = pmd_ptr_k(k_cur);
-+		void *va = block + k_cur - k_start;
-+		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
-+
-+		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
-+	}
-+	flush_tlb_kernel_range(k_start, k_end);
-+	return 0;
-+}
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 76d418af4ce8..c42085801c04 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -79,7 +79,7 @@ int __init __weak kasan_init_region(void *start, size_t size)
- 	return 0;
- }
- 
--static void __init
-+void __init
- kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte)
- {
- 	unsigned long k_cur;
--- 
-2.25.0
+thanks,
 
+greg k-h
