@@ -2,207 +2,156 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B04FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D58382075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:52:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589871178;
-	bh=CyfrSLclfmxgX/VSCSYoBd+ec6qbw/b1+Oqdv1x9CSE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=emyfZIq+VEm6+8RWsTkZivo/l+MG/3AXoE/zXEEeGAa/LwQrtUgeFVxs4m8Cjz067
-	 2p91zAXxlpvO2fcwL0mzrLV77PxVgnpsDhNBymADa+3ay9zAdEjZDHwSYbtaNbdQ+1
-	 hiiT/UGLf29s2PCJGZXH4z1eDtrZbvbKoui1/1zg=
+	by mail.kernel.org (Postfix) with ESMTP id AC0A620758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:53:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="L+oC/Jmj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgESGw6 (ORCPT
+        id S1728277AbgESGxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 02:52:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbgESGw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 02:52:57 -0400
-Received: from localhost (unknown [122.182.207.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EFE120758;
-        Tue, 19 May 2020 06:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589871176;
-        bh=CyfrSLclfmxgX/VSCSYoBd+ec6qbw/b1+Oqdv1x9CSE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M9UIdz7zVHWjlHi04D1zGW/6N9J7Qiq5/zpWEUrHTJ1i8NlilFX8UFZ9dRx4ybCGe
-         5/6Ajm1MzocZTqg6g2GF3vRCMD4EHPSTVkLMHwZNyJBZKRNVG7Sbi4J4m4yJAkunD9
-         2Bt9xMcCT7QfCVuEG4BxP+LF8u3XTTHIQuzUxo6E=
-Date:   Tue, 19 May 2020 12:22:51 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        linux-kernel@vger.kernel.org,
-        Bharat Gooty <bharat.gooty@broadcom.com>
-Subject: Re: [PATCH v1 1/1] drivers: phy: sr-usb: do not use internal fsm for
- USB2 phy init
-Message-ID: <20200519065251.GK374218@vkoul-mobl.Dlink>
-References: <20200513173947.10919-1-rayagonda.kokatanur@broadcom.com>
+        Tue, 19 May 2020 02:53:16 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:58061 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726841AbgESGxP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 02:53:15 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id aw7hj0Ey2tKAsaw7kjOvD7; Tue, 19 May 2020 08:53:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1589871193; bh=Ua/Rh1jOjXzr3/TuekSvHN/AoVWwSnLpt91fLWvkvRQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=L+oC/Jmjh2cFpViFqxKFurLG7iiTd+9gLDUXeMbolCH4lXYIiL4ALwmyqG5EZLCnd
+         8mhpwp+PG3Y360zqPOMhNNm/Gc/sKxe5TKNbmwvNArCMiALAFKxNt5nVqC2Edu3gJN
+         k4VCN1C6RoMeySee8kjvUHPA4RO2ho+cJXt5HflxHdAqof/RGTUi69aEbqncNsSd/k
+         rqYk8diCyTv4GdgtSjHOsxAUu8AonrXXVveOhn3k/f91gDTG3jiF3daQJQ+uv42xRj
+         UZb+gpEZpscL2SFm9um+jCYKy5GwAVeVi/zeLZk40OCZhxXx+B6fRrPyt76Yss2dS6
+         DdpPeaOPvW5aA==
+Subject: Re: [PATCH] media: v4l2-ctrls: add encoder skip frames control
+To:     Maheshwar Ajja <majja@codeaurora.org>, mchehab@kernel.org,
+        ezequiel@collabora.com, p.zabel@pengutronix.de,
+        paul.kocialkowski@bootlin.com, jonas@kwiboo.se,
+        posciak@chromium.org, boris.brezillon@collabora.com,
+        ribalda@kernel.org, tglx@linutronix.de, sumitg@nvidia.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1589853951-27948-1-git-send-email-majja@codeaurora.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <ba650d43-2d1d-bba7-383a-db55e9ce4f8a@xs4all.nl>
+Date:   Tue, 19 May 2020 08:53:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513173947.10919-1-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <1589853951-27948-1-git-send-email-majja@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBdGLGyDxqJBDhS4e1zv0v3mcuFZ3y4Tg1jyH0FDCqJs3x5d04ojQqEHC1xdyvODYpHRanzoCnfo6paJpmIeNZANOqQxM4a3CnU89qHsyoQcXYdPJyNt
+ Bl+1zahgUy6nYGflF2HRpW1ZAzWclHG42GZD6BpD0MZ7Ytfzb9RmvBLbUt9NRNjvrG7aOmajIhRt9WVIzehFp2zCpZh+m3/Sp6q35+oTFdpO/ym5uc+VGkk5
+ z/svh8k3hj/xIzLgwOeROGqqMBkS9JK+5e0CvyC1s5THeJ9zT0ytRm6GPjTEMBZv1fbjCWr85XQcTxHLgvd4DFz8dooMvkRVhekw9DbA7TXixNn5hueez/Fe
+ EKZAA38iBr7QrcdCpsSnOubQkRLgWNqU3QnhDOTzVmre3yMqxyd/p0Hwvgf6hc5sfZi9aOu+BSeXy9KYl8VSn8zIK1raV67KTNQRHfS4vHepglyI901jy3rG
+ l6uG1HtZPeE1ez+Ua/0NdubrXpXXh4uEU8QPa5I5oEuggfjB8p6ycVrE34bOIWsBfWjCVcvPhwPtsSkL4zKo0Phz8tGc/1zJa7TSEn3xF/a0XMhZ2tYOCQOS
+ LdQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-05-20, 23:09, Rayagonda Kokatanur wrote:
-> From: Bharat Gooty <bharat.gooty@broadcom.com>
+On 19/05/2020 04:05, Maheshwar Ajja wrote:
+> If V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES control is enabled
+> encoder can drop frames, if required, to achieve target bitrate
+> instead of modifying the quantization parameter which lowers
+> the encoded frame quality.
 > 
-> During different reboot cycles, USB PHY PLL may not always lock
-> during initialization and therefore can cause USB to be not usable.
-
-Ok
-
-> Hence do not use internal FSM programming sequence for the USB
-> PHY initialization.
-
-And what is the impact of not using FSM programming sequence? If not
-impact why was it added in the first place ?
-
-> Fixes: 4dcddbb38b64 ("phy: sr-usb: Add Stingray USB PHY driver")
-> Signed-off-by: Bharat Gooty <bharat.gooty@broadcom.com>
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Reference: 4.3.8.1 OMX_Video_ControlRateConstantSkipFrames
+> https://www.khronos.org/registry/OpenMAX-IL/specs/OpenMAX_IL_1_1_2_Specification.pdf
+> 
+> Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
 > ---
->  drivers/phy/broadcom/phy-bcm-sr-usb.c | 55 +--------------------------
->  1 file changed, 2 insertions(+), 53 deletions(-)
+>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 7 +++++++
+>  drivers/media/v4l2-core/v4l2-ctrls.c                      | 2 ++
+>  include/uapi/linux/v4l2-controls.h                        | 1 +
+>  3 files changed, 10 insertions(+)
 > 
-> diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-> index fe6c58910e4c..7c7862b4f41f 100644
-> --- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
-> +++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-> @@ -16,8 +16,6 @@ enum bcm_usb_phy_version {
->  };
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index d0d506a..bc9265d 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -1081,6 +1081,13 @@ enum v4l2_mpeg_video_h264_entropy_mode -
+>      Macroblock level rate control enable. Applicable to the MPEG4 and
+>      H264 encoders.
 >  
->  enum bcm_usb_phy_reg {
-> -	PLL_NDIV_FRAC,
-> -	PLL_NDIV_INT,
->  	PLL_CTRL,
->  	PHY_CTRL,
->  	PHY_PLL_CTRL,
-> @@ -31,18 +29,11 @@ static const u8 bcm_usb_combo_phy_ss[] = {
->  };
->  
->  static const u8 bcm_usb_combo_phy_hs[] = {
-> -	[PLL_NDIV_FRAC]	= 0x04,
-> -	[PLL_NDIV_INT]	= 0x08,
->  	[PLL_CTRL]	= 0x0c,
->  	[PHY_CTRL]	= 0x10,
->  };
->  
-> -#define HSPLL_NDIV_INT_VAL	0x13
-> -#define HSPLL_NDIV_FRAC_VAL	0x1005
-> -
->  static const u8 bcm_usb_hs_phy[] = {
-> -	[PLL_NDIV_FRAC]	= 0x0,
-> -	[PLL_NDIV_INT]	= 0x4,
->  	[PLL_CTRL]	= 0x8,
->  	[PHY_CTRL]	= 0xc,
->  };
-> @@ -52,7 +43,6 @@ enum pll_ctrl_bits {
->  	SSPLL_SUSPEND_EN,
->  	PLL_SEQ_START,
->  	PLL_LOCK,
-> -	PLL_PDIV,
->  };
->  
->  static const u8 u3pll_ctrl[] = {
-> @@ -66,29 +56,17 @@ static const u8 u3pll_ctrl[] = {
->  #define HSPLL_PDIV_VAL		0x1
->  
->  static const u8 u2pll_ctrl[] = {
-> -	[PLL_PDIV]	= 1,
->  	[PLL_RESETB]	= 5,
->  	[PLL_LOCK]	= 6,
->  };
->  
->  enum bcm_usb_phy_ctrl_bits {
->  	CORERDY,
-> -	AFE_LDO_PWRDWNB,
-> -	AFE_PLL_PWRDWNB,
-> -	AFE_BG_PWRDWNB,
-> -	PHY_ISO,
->  	PHY_RESETB,
->  	PHY_PCTL,
->  };
->  
->  #define PHY_PCTL_MASK	0xffff
-> -/*
-> - * 0x0806 of PCTL_VAL has below bits set
-> - * BIT-8 : refclk divider 1
-> - * BIT-3:2: device mode; mode is not effect
-> - * BIT-1: soft reset active low
-> - */
-> -#define HSPHY_PCTL_VAL	0x0806
->  #define SSPHY_PCTL_VAL	0x0006
->  
->  static const u8 u3phy_ctrl[] = {
-> @@ -98,10 +76,6 @@ static const u8 u3phy_ctrl[] = {
->  
->  static const u8 u2phy_ctrl[] = {
->  	[CORERDY]		= 0,
-> -	[AFE_LDO_PWRDWNB]	= 1,
-> -	[AFE_PLL_PWRDWNB]	= 2,
-> -	[AFE_BG_PWRDWNB]	= 3,
-> -	[PHY_ISO]		= 4,
->  	[PHY_RESETB]		= 5,
->  	[PHY_PCTL]		= 6,
->  };
-> @@ -186,38 +160,13 @@ static int bcm_usb_hs_phy_init(struct bcm_usb_phy_cfg *phy_cfg)
->  	int ret = 0;
->  	void __iomem *regs = phy_cfg->regs;
->  	const u8 *offset;
-> -	u32 rd_data;
->  
->  	offset = phy_cfg->offset;
->  
-> -	writel(HSPLL_NDIV_INT_VAL, regs + offset[PLL_NDIV_INT]);
-> -	writel(HSPLL_NDIV_FRAC_VAL, regs + offset[PLL_NDIV_FRAC]);
-> -
-> -	rd_data = readl(regs + offset[PLL_CTRL]);
-> -	rd_data &= ~(HSPLL_PDIV_MASK << u2pll_ctrl[PLL_PDIV]);
-> -	rd_data |= (HSPLL_PDIV_VAL << u2pll_ctrl[PLL_PDIV]);
-> -	writel(rd_data, regs + offset[PLL_CTRL]);
-> -
-> -	/* Set Core Ready high */
-> -	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
-> -			      BIT(u2phy_ctrl[CORERDY]));
-> -
-> -	/* Maximum timeout for Core Ready done */
-> -	msleep(30);
-> -
-> +	bcm_usb_reg32_clrbits(regs + offset[PLL_CTRL],
-> +			      BIT(u2pll_ctrl[PLL_RESETB]));
->  	bcm_usb_reg32_setbits(regs + offset[PLL_CTRL],
->  			      BIT(u2pll_ctrl[PLL_RESETB]));
-> -	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
-> -			      BIT(u2phy_ctrl[PHY_RESETB]));
-> -
-> -
-> -	rd_data = readl(regs + offset[PHY_CTRL]);
-> -	rd_data &= ~(PHY_PCTL_MASK << u2phy_ctrl[PHY_PCTL]);
-> -	rd_data |= (HSPHY_PCTL_VAL << u2phy_ctrl[PHY_PCTL]);
-> -	writel(rd_data, regs + offset[PHY_CTRL]);
-> -
-> -	/* Maximum timeout for PLL reset done */
-> -	msleep(30);
->  
->  	ret = bcm_usb_pll_lock_check(regs + offset[PLL_CTRL],
->  				     BIT(u2pll_ctrl[PLL_LOCK]));
-> -- 
-> 2.17.1
+> +``V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES (boolean)``
+> +    Encoder skip frames enable. This control is applicable only if
+> +    ``V4L2_CID_MPEG_VIDEO_BITRATE_MODE`` control is set. If this control
+> +    is enabled encoder can drop frames, if required, to achieve target
+> +    bitrate instead of modifying the quantization parameter which lowers
+> +    the encoded frame quality.
 
--- 
-~Vinod
+It's a bit unclear for which bitrate modes this control is valid: only for
+MODE_CBR, or also for the constant quality bitrate mode? Or both?
+
+The phrase 'control is set' is meaningless for a menu control: it really is
+always 'set'. So that needs to be reworked so it is more explicit.
+
+Also note that there is an Exynos MFC control that appears to do something
+similar: V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE.
+
+To what extent does that overlap with the functionality proposed here?
+
+It looks like this proposed control is basically the equivalent of setting
+V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE to V4L2_MPEG_MFC51_FRAME_SKIP_MODE_LEVEL_LIMIT.
+
+So perhaps this MFC control should be promoted to a standard MPEG control instead
+of inventing a new control?
+
+Regards,
+
+	Hans
+
+> +
+>  ``V4L2_CID_MPEG_VIDEO_MPEG4_QPEL (boolean)``
+>      Quarter pixel motion estimation for MPEG4. Applicable to the MPEG4
+>      encoder.
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 1c617b4..d2cb766 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -914,6 +914,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:			return "FWHT Stateless Parameters";
+>  	case V4L2_CID_FWHT_I_FRAME_QP:				return "FWHT I-Frame QP Value";
+>  	case V4L2_CID_FWHT_P_FRAME_QP:				return "FWHT P-Frame QP Value";
+> +	case V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES:		return "Encoder Skip Frames";
+>  
+>  	/* VPX controls */
+>  	case V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS:		return "VPX Number of Partitions";
+> @@ -1180,6 +1181,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_MPEG_VIDEO_DECODER_SLICE_INTERFACE:
+>  	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
+>  	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:
+> +	case V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES:
+>  	case V4L2_CID_MPEG_VIDEO_H264_8X8_TRANSFORM:
+>  	case V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE:
+>  	case V4L2_CID_MPEG_VIDEO_MPEG4_QPEL:
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index 0ba1005..d3bc015 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -742,6 +742,7 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
+>  #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
+>  #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
+>  #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
+> +#define V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES		(V4L2_CID_MPEG_BASE + 645)
+>  
+>  /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
+>  #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+> 
+
