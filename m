@@ -6,43 +6,42 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4981320758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E8A20758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgESVNa (ORCPT
+        id S1728039AbgESVNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:13:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35560 "EHLO
+        Tue, 19 May 2020 17:13:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgESVN3 (ORCPT
+        with ESMTP id S1727905AbgESVNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:13:29 -0400
+        Tue, 19 May 2020 17:13:32 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF6A1C08C5C2;
-        Tue, 19 May 2020 14:13:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30FFC08C5C2;
+        Tue, 19 May 2020 14:13:31 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jb9Y5-0001xZ-Cv; Tue, 19 May 2020 23:13:17 +0200
+        id 1jb9YA-0001zE-GS; Tue, 19 May 2020 23:13:22 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id EA0AC100D00;
-        Tue, 19 May 2020 23:13:16 +0200 (CEST)
-Message-Id: <20200519211224.385187310@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id D60D6100D00;
+        Tue, 19 May 2020 23:13:21 +0200 (CEST)
+Message-Id: <20200519211224.753841434@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 19 May 2020 22:31:30 +0200
+Date:   Tue, 19 May 2020 22:31:34 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        kvm@vger.kernel.org,
+        kvm@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [patch 2/7] x86/kvm/vmx: Add hardirq tracing to guest enter/exit
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [patch 6/7] x86/kvm/svm: Use uninstrumented wrmsrl() to restore GS
 References: <20200519203128.773151484@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -56,77 +55,47 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Entering guest mode is more or less the same as returning to user
-space. From an instrumentation point of view both leave kernel mode and the
-transition to guest or user mode reenables interrupts on the host. In user
-mode an interrupt is served directly and in guest mode it causes a VM exit
-which then handles or reinjects the interrupt.
+On guest exit MSR_GS_BASE contains whatever the guest wrote to it and the
+first action after returning from the ASM code is to set it to the host
+kernel value. This uses wrmsrl() which is interesting at least.
 
-The transition from guest mode or user mode to kernel mode disables
-interrupts, which needs to be recorded in instrumentation to set the
-correct state again.
+wrmsrl() is either using native_write_msr() or the paravirt variant. The
+XEN_PV code is uninteresting as nested SVM in a XEN_PV guest does not work.
 
-This is important for e.g. latency analysis because otherwise the execution
-time in guest or user mode would be wrongly accounted as interrupt disabled
-and could trigger false positives.
+But native_write_msr() can be placed out of line by the compiler especially
+when paravirtualization is enabled in the kernel configuration. The
+function is marked notrace, but still can be probed if
+CONFIG_KPROBE_EVENTS_ON_NOTRACE is enabled.
 
-Add hardirq tracing to guest enter/exit functions in the same way as it
-is done in the user mode enter/exit code, respecting the RCU requirements.
+That would be a fatal problem as kprobe events use per-CPU variables which
+are GS based and would be accessed with the guest GS. Depending on the GS
+value this would either explode in colorful ways or lead to completely
+undebugable data corruption.
+
+Aside of that native_write_msr() contains a tracepoint which objtool
+complains about as it is invoked from the noinstr section.
+
+As this cannot run inside a XEN_PV guest there is no point in using
+wrmsrl(). Use native_wrmsrl() instead which is just a plain native WRMSR
+without tracing or anything else attached.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Link: https://lkml.kernel.org/r/20200505134341.471542318@linutronix.de
+Acked-by: Juergen Gross <jgross@suse.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
 
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ad0159f68ce4..afdb6f489ab2 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6725,9 +6725,21 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 35bd95dd64dd..663333d34c84 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3353,7 +3353,7 @@ static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
  
- 	/*
--	 * Tell context tracking that this CPU is about to enter guest mode.
-+	 * VMENTER enables interrupts (host state), but the kernel state is
-+	 * interrupts disabled when this is invoked. Also tell RCU about
-+	 * it. This is the same logic as for exit_to_user_mode().
-+	 *
-+	 * This ensures that e.g. latency analysis on the host observes
-+	 * guest mode as interrupt enabled.
-+	 *
-+	 * guest_enter_irqoff() informs context tracking about the
-+	 * transition to guest mode and if enabled adjusts RCU state
-+	 * accordingly.
- 	 */
-+	trace_hardirqs_on_prepare();
-+	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
- 	guest_enter_irqoff();
-+	lockdep_hardirqs_on(CALLER_ADDR0);
- 
- 	/* L1D Flush includes CPU buffer clear to mitigate MDS */
- 	if (static_branch_unlikely(&vmx_l1d_should_flush))
-@@ -6744,9 +6756,20 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	vcpu->arch.cr2 = read_cr2();
- 
- 	/*
--	 * Tell context tracking that this CPU is back.
-+	 * VMEXIT disables interrupts (host state), but tracing and lockdep
-+	 * have them in state 'on' as recorded before entering guest mode.
-+	 * Same as enter_from_user_mode().
-+	 *
-+	 * guest_exit_irqoff() restores host context and reinstates RCU if
-+	 * enabled and required.
-+	 *
-+	 * This needs to be done before the below as native_read_msr()
-+	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
-+	 * into world and some more.
- 	 */
-+	lockdep_hardirqs_off(CALLER_ADDR0);
- 	guest_exit_irqoff();
-+	trace_hardirqs_off_prepare();
- 
- 	/*
- 	 * We do not use IBRS in the kernel. If this vCPU has used the
+ #ifdef CONFIG_X86_64
+-	wrmsrl(MSR_GS_BASE, svm->host.gs_base);
++	native_wrmsrl(MSR_GS_BASE, svm->host.gs_base);
+ #else
+ 	loadsegment(fs, svm->host.fs);
+ #ifndef CONFIG_X86_32_LAZY_GS
 
