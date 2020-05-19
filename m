@@ -2,112 +2,66 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ED0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A97AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8227C207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589879340;
-	bh=y2cp5hy3+T9Sj199CbqABbPzXotefdEyBwr3tr47dKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dAmoWJ7HsayCVgbPQ8UtWg9DIbmIpsW8lzwY1/F1h5qvfxqMXNJ6eKGS/4cUZ882c
-	 W1HUFegqwqnBbHeHjQ/sRvlPFbRo6bJQf8mWLTQLr8mZmIuZDhZqenWgO/JvJpc7ua
-	 COv2GlVm5rTtMnvzwOvAanRJYbWrjoql5+D7INW4=
+	by mail.kernel.org (Postfix) with ESMTP id 4FBE9206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgESJJA (ORCPT
+        id S1728396AbgESJOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:09:00 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35590 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgESJI7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:08:59 -0400
-Received: by mail-lj1-f196.google.com with SMTP id g4so12891011ljl.2;
-        Tue, 19 May 2020 02:08:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xiI/2QpELAfEPK4120aiFmsf0pOoqkdkwGMn109PtZw=;
-        b=q0WDAAtfr3kMy73LyGGBqna+41VW2WsZRnZdqjeUJMPvYmP+nx6YVLGpWm7feoNLUV
-         qj6j+p5QA+fjKriSW/yV/daQi0EiL7U2uOkfJX6UVPBHmEVC5eMu1ajJHW6XTwKC4g0+
-         U7rjNvLjuY2uyU1IwA3GqbrOzW2Uy5o29Y0e2jNZoUzkeRXmWu605L5It8p4PUiAmJg1
-         SonASmPvEUBJlnc/iEyBn2kojnqJutzm7EYlw0kiDoYWPMJ1i+fv9nJQc7cLNFar4cOs
-         d4yDd8pnSFH201DK0voh3LXCqV6tYqR44rxP5AzpAslo9WSEgmXV5cC4yx1lQIssJrai
-         nzMA==
-X-Gm-Message-State: AOAM532g7WkUQ4+hcC2zRiW3nyrsfhXvwZs72VuA93RRY7oVQNFAaQjk
-        T6u4JdJgO7KQfnZxpDLPuCo=
-X-Google-Smtp-Source: ABdhPJwIWR87RmvE2kNnZTkMBYdqnjzdIFQ6tkWYoYvaRJxpkDhoqsLt/Tgz+1V4uCm6Dz+BF3axmQ==
-X-Received: by 2002:a05:651c:549:: with SMTP id q9mr13334606ljp.236.1589879335470;
-        Tue, 19 May 2020 02:08:55 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id v126sm6236616lfa.50.2020.05.19.02.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 02:08:54 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jayF3-0001Yb-H8; Tue, 19 May 2020 11:08:53 +0200
-Date:   Tue, 19 May 2020 11:08:53 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     gregkh@linuxfoundation.org, johan@kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patong.mxl@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
-Message-ID: <20200519090853.GC27787@localhost>
-References: <20200428195651.6793-1-mani@kernel.org>
- <20200428195651.6793-3-mani@kernel.org>
- <20200429174727.GF6443@Mani-XPS-13-9360>
+        Tue, 19 May 2020 05:14:17 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:57758 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbgESJOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 05:14:16 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jayKA-0002vG-Ru; Tue, 19 May 2020 11:14:10 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] arm64: dts: rockchip: fix defines in pd_vio node for rk3399
+Date:   Tue, 19 May 2020 11:14:08 +0200
+Message-Id: <158987962022.2283062.2703252906443245111.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200428203003.3318-1-jbx6244@gmail.com>
+References: <20200428203003.3318-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429174727.GF6443@Mani-XPS-13-9360>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:17:27PM +0530, Manivannan Sadhasivam wrote:
-
-> On Wed, Apr 29, 2020 at 01:26:51AM +0530, mani@kernel.org wrote:
-> > From: Manivannan Sadhasivam <mani@kernel.org>
-> > 
-> > Add gpiochip support for Maxlinear/Exar USB to serial converter
-> > for controlling the available gpios.
-> > 
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: linux-gpio@vger.kernel.org
-> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-
-> >  static int xr_port_probe(struct usb_serial_port *port)
-> >  {
-> >  	struct usb_serial *serial = port->serial;
-> > @@ -495,13 +678,14 @@ static int xr_port_probe(struct usb_serial_port *port)
-> >  
-> >  	usb_set_serial_port_data(port, port_priv);
-> >  
-> > -	return 0;
-> > +	return xr_gpio_init(port);
+On Tue, 28 Apr 2020 22:30:02 +0200, Johan Jonker wrote:
+> A test with the command below gives for example this error:
 > 
-> Just realised that the gpiochip is registered for 2 interfaces exposed by
-> this chip. This is due to the fact that this chip presents CDC-ACM model,
-> so there are 2 interfaces (interrupt and bulk IN/OUT).
+> arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: pd_vio@15:
+> 'pd_tcpc0@RK3399_PD_TCPC0', 'pd_tcpc1@RK3399_PD_TCPC1'
+> do not match any of the regexes:
+> '.*-names$', '.*-supply$', '^#.*-cells$',
+> '^#[a-zA-Z0-9,+\\-._]{0,63}$',
+> '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$',
+> '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$',
+> '^__.*__$', 'pinctrl-[0-9]+'
 > 
-> We shouldn't need gpiochip for interface 0. So what is the recommended way
-> to filter that?
+> [...]
 
-Your driver should only bind to the data interface, but also claim the
-control interface (i.e. the reverse of what cdc-acm is doing).
+Applied, thanks!
 
-This CDC model doesn't really fit the assumptions of usb-serial core,
-but it might be doable. Try returning 1 from the attach callback for the
-control interface so that core claims it but doesn't register a tty
-device.
+[1/1] arm64: dts: rockchip: fix pd_tcpc0 and pd_tcpc1 node position on rk3399
+      commit: 2b99e6196663199409540fb95798dba464e34343
 
-Johan
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
