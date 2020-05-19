@@ -2,188 +2,84 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C882B20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFBF207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgESRK6 (ORCPT
+        id S1729423AbgESRLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:10:58 -0400
-Received: from mga06.intel.com ([134.134.136.31]:52187 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbgESRK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:10:57 -0400
-IronPort-SDR: mUdAwHwjaLqzVHZvw2xYplJCqd4YFkaQJFZJoEiJLoxkQd/1UTfAk50jEODfJCKf/iPmaNJGC0
- k43Gg1CoxXeA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 10:10:56 -0700
-IronPort-SDR: YEfPeTPLf3xKET0vqRozbESjJnBS3MFTOVE2oJhdp6jdCl/X6iv5Zo3fjjH1ObYkx3Y+d4KkDk
- 1MFbd3hx6BeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="343201225"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 19 May 2020 10:10:55 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 0C8375803C5;
-        Tue, 19 May 2020 10:10:54 -0700 (PDT)
-Message-ID: <8003f408ec9bcf0ea2522122ba4051ffb571e1b7.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] pci: Add ACPI StorageD3Enable _DSD support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     lenb@kernel.org, bhelgaas@google.com, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 19 May 2020 10:10:53 -0700
-In-Reply-To: <1967525.XL736rHnAO@kreacher>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
-         <20200428003214.3764-2-david.e.box@linux.intel.com>
-         <1967525.XL736rHnAO@kreacher>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 19 May 2020 13:11:02 -0400
+Received: from mailrelay4.webfaction.com ([185.20.51.6]:57804 "EHLO
+        mailrelay4.webfaction.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729001AbgESRLB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:11:01 -0400
+Received: from mailrelay3.webfaction.com (mailrelay3.webfaction.com [207.38.93.110])
+        by mailrelay4.webfaction.com (Postfix) with ESMTPS id AA711A6D79;
+        Tue, 19 May 2020 17:10:54 +0000 (UTC)
+Received: from mailrelay1.webfaction.com (mailrelay1.webfaction.com [207.38.86.46])
+        by mailrelay3.webfaction.com (Postfix) with ESMTPS id DEEE32A5088;
+        Tue, 19 May 2020 17:10:52 +0000 (UTC)
+Received: from smtp.webfaction.com (mail6.webfaction.com [31.170.123.134])
+        by mailrelay1.webfaction.com (Postfix) with ESMTPS id EA76E1A0E3D;
+        Tue, 19 May 2020 17:10:51 +0000 (UTC)
+Received: from jeremy.localnet (host-37-191-188-128.lynet.no [37.191.188.128])
+        by smtp.webfaction.com (Postfix) with ESMTPSA id 810DA60038E8E;
+        Tue, 19 May 2020 17:11:01 +0000 (UTC)
+From:   Paul Boddie <paul@boddie.org.uk>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        devicetree <devicetree@vger.kernel.org>, od@zcrc.me,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 11/12] gpu/drm: Ingenic: Add support for the IPU
+Date:   Tue, 19 May 2020 19:10:32 +0200
+Message-ID: <3220152.ycyENPvHUQ@jeremy>
+User-Agent: KMail/4.14.1 (Linux/3.16.0-10-586; KDE/4.14.2; i686; ; )
+In-Reply-To: <YGYIAQ.7N9YGTBML0143@crapouillou.net>
+References: <20200516215057.392609-1-paul@crapouillou.net> <CACvgo50q=qJXk3nFSCm+S6JHBMxpY0C_HwH8KGB2EAcKwgL0oQ@mail.gmail.com> <YGYIAQ.7N9YGTBML0143@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-18 at 14:34 +0200, Rafael J. Wysocki wrote:
-> On Tuesday, April 28, 2020 2:32:13 AM CEST David E. Box wrote:
-> > NVMe storage power management during suspend-to-idle, particularly
-> > on
-> > laptops, has been inconsistent with some devices working with D3
-> > while
-> > others must rely on NVMe APST in order for power savings to be
-> > realized.
-> > Currently the default is to use APST unless quirked to do
-> > otherwise.
-> > However newer platforms, like Intel Comet Lake systems, may require
-> > NVMe
-> > drives to use D3 in order for the PCIe ports to be properly power
-> > managed.
-> > To make it easier for drivers to choose, these platforms may supply
-> > a
-> > special "StorageD3Enable" _DSD property under the root port that
-> > the device
-> > is attached to. If supplied, the driver must use D3 in order for
-> > the
-> > platform to realize the deepest power savings in suspend-to-idle.
+On Monday 18. May 2020 13.26.58 Paul Cercueil wrote:
+> >>  
+> >>  @@ -186,13 +186,16 @@ static void
+> >> 
+> >> ingenic_drm_crtc_update_timings(struct ingenic_drm *priv,
+> >> 
+> >>          regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
+> >>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16,
+> >>                             JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16);
+> >>  
+> >>  +
+> >>  +       regmap_write(priv->map, JZ_REG_LCD_IPUR, JZ_LCD_IPUR_IPUREN
+> >>  +                    (ht * vpe / 3) << JZ_LCD_IPUR_IPUR_LSB);
 > > 
-> > Adds support for the _DSD to the pci/acpi layer.
-> > 
-> > Acked-by: Dan Williams <dan.j.williams@intel.com>
-> > Link: 
-> > https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> >  drivers/acpi/property.c |  3 +++
-> >  drivers/pci/pci-acpi.c  | 47
-> > +++++++++++++++++++++++++++++++++++++++++
-> >  drivers/pci/pci.c       |  6 ++++++
-> >  drivers/pci/pci.h       |  4 ++++
-> >  include/linux/pci.h     |  1 +
-> >  5 files changed, 61 insertions(+)
-> > 
-> > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> > index e601c4511a8b..f09375ab40e4 100644
-> > --- a/drivers/acpi/property.c
-> > +++ b/drivers/acpi/property.c
-> > @@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
-> >  	/* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-
-> > ba72-9bf5a26ebe5d */
-> >  	GUID_INIT(0x6c501103, 0xc189, 0x4296,
-> >  		  0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
-> > +	/* D3 Support for storage devivce: 5025030f-842f-4ab4-a561-
-> > 99a5189762d0 */
-> > +	GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
-> > +		  0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
-> >  };
-> >  
-> >  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-
-> > 1319f52a966b */
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index d21969fba6ab..5df249ebf022 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -972,6 +972,52 @@ static bool acpi_pci_bridge_d3(struct pci_dev
-> > *dev)
-> >  	return val == 1;
-> >  }
-> >  
-> > +static bool acpi_pci_storage_d3(struct pci_dev *dev)
-> > +{
-> > +	const struct fwnode_handle *fwnode;
-> > +	struct acpi_device *adev;
-> > +	struct pci_dev *root;
-> > +	acpi_handle handle;
-> > +	acpi_status status;
-> > +	u8 val;
-> > +
-> > +	/*
-> > +	 * Look for _DSD property specifying that the storage device on
-> > +	 * the port must use D3 to support deep platform power savings
-> > during
-> > +	 * suspend-to-idle
-> > +	 */
-> > +	root = pci_find_pcie_root_port(dev);
-> > +	if (!root)
-> > +		return false;
-> > +
-> > +	adev = ACPI_COMPANION(&root->dev);
-> > +	if (root == dev) {
-> > +		/*
-> > +		 * It is possible that the ACPI companion is not yet
-> > bound
-> > +		 * for the root port so look it up manually here.
-> > +		 */
-> > +		if (!adev && !pci_dev_is_added(root))
-> > +			adev = acpi_pci_find_companion(&root->dev);
-> > +	}
-> > +
-> > +	if (!adev)
-> > +		return false;
-> > +
-> > +	status = acpi_get_handle(adev->handle, "PXSX", &handle);
-> > +	if (ACPI_FAILURE(status))
-> > +		return false;
-> > +
-> > +	adev = acpi_bus_get_acpi_device(handle);
-> > +	if (!adev)
-> > +		return false;
-> > +
-> > +	fwnode = acpi_fwnode_handle(adev);
-> > +	if (!fwnode_property_read_u8(fwnode, "StorageD3Enable", &val))
-> > +		return val == 1;
-> > +
-> > +	return false;
-> > +}
+> > This hunk also indicates that it may be better to merge the IPU within
+> > the existing driver.
 > 
-> Kind of orthogonal to what happens to the second patch in this
-> series, I don't
-> think that the PCI changes below are all needed.
-> 
-> IMO it would be sufficient to export the function above, maybe as
-> pci_acpi_storage_d3(), to drivers, so that they can call it directly
-> as
-> desired.
-> 
-> Since _DSD return data are not allowed by the spec to change between
-> subsequent invocations of it, the interested driver may call this
-> function
-> once at the device init time and quirk it accordingly if needed.
+> This writes the IPUR register of the CRTC, nothing wrong here.
 
-Yeah this is better. Will do. Thanks.
+Since I noticed it in the above patch details, I think the mask when updating 
+the burst setting in the LCD_CTRL register should - in general - involve 
+multiple bits, since the BST field is 3 bits wide on the JZ4780 and 2 bits 
+wide on earlier products. Just setting BURST_16 (0b10) could potentially 
+enable BURST_32 (0b11) or other field values that are not explicitly defined.
 
+Hope this is useful!
+
+Paul
