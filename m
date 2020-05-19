@@ -2,238 +2,161 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F54C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55110C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81FED20878
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371C2207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589908317;
-	bh=J1Y30cmsXnTK+NpTbd/xD2zpvVMzNGnZNpopIBUAdOI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1d4DRpIcVo+8zRsFvYDKglbfqVO0xLbNN9YPixCxECLljGWKCRWPxL8ZMcUIcf3xd
-	 plwjfZghjsRxwLK0AdiHksnlnTisKXHYzWuuSAQdY9lCdoljjN8+CqfWVcfSNxqCrv
-	 rGC0a0jmsyKgYpPiLDHTvni7X64fpMGnRQHxUxi8=
+	s=default; t=1589908391;
+	bh=/cbKckJRw+86X99IGfbIbbjn7SPYk0nnauF+64dyhTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QFISdcPG9rzqAfFQre/Le6S9Mvrvj/pjbVZyPOpTGA0cl1xphWQKcOBiCxV0enlcZ
+	 6wsGN2DiAta066KRFWaVtrnK+Goewuij46uP8jzrgLfcLKlQ/PieqH5OMgvHC9TXK/
+	 LfILNenussksgStSVfQl1K87EY/vcWdSzxL/130U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbgESRL5 (ORCPT
+        id S1729417AbgESRNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:11:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 13:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbgESRL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:11:56 -0400
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729001AbgESRNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:13:10 -0400
+Received: from localhost (unknown [122.182.207.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78AA7207D8;
-        Tue, 19 May 2020 17:11:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC9E20709;
+        Tue, 19 May 2020 17:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589908315;
-        bh=J1Y30cmsXnTK+NpTbd/xD2zpvVMzNGnZNpopIBUAdOI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TLbCPhb4n0z4OOZth5bBxZ6VeNK677WoS6fBfxN7NTf8lXpCGiYv5YiDEsXfmiT0t
-         XrwIh0sAqkggc1hAxQbSeB6Zi6l+JIgCmwyPx0GHCi9VI9aDsjf/KyS7UgG0Ip79XR
-         lQUV4pbrxKCykGqXmxuD72w2Bid7Uv7Ret2WcZj4=
-Received: by mail-oi1-f176.google.com with SMTP id y85so364629oie.11;
-        Tue, 19 May 2020 10:11:55 -0700 (PDT)
-X-Gm-Message-State: AOAM531FmMnGSLLvn+AcEpondCGO1+N3L3egPZWUs9xrCinSo2sqq+tf
-        Lhi52ZJDwgf0AX5LfVHy2+Om2/PrleGyToBdrQ==
-X-Google-Smtp-Source: ABdhPJyaeG/VOd9sCaHIqKFgnKTdazwA1yv63I0/uCkGphrfwVHO31fj1lCt2eCihWn6JIce5iLdBPaPVV9gZstFRsM=
-X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr347220oie.152.1589908314771;
- Tue, 19 May 2020 10:11:54 -0700 (PDT)
+        s=default; t=1589908389;
+        bh=/cbKckJRw+86X99IGfbIbbjn7SPYk0nnauF+64dyhTU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XnuuUgpPkHbs515YoNx2qtoKgkv8I7D7RRJVK+RvBJaQ1XE1UWkWRDAYiJKgiiJ7w
+         aJRYzToHQcwpgip3O/RXYyzA79TkQQBlAjMsVkzhS1+WycPuRBj+eBfLaL9EZd0GGk
+         hq/ElEZ+REU/EupZp5tbp82/qJ3benVGfBlhS83M=
+Date:   Tue, 19 May 2020 22:43:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200519171304.GU374218@vkoul-mobl.Dlink>
+References: <20200511210138.GN185537@smile.fi.intel.com>
+ <20200511213531.wnywlljiulvndx6s@mobilestation>
+ <20200512090804.GR185537@smile.fi.intel.com>
+ <20200512114946.x777yb6bhe22ccn5@mobilestation>
+ <20200512123840.GY185537@smile.fi.intel.com>
+ <20200515060911.GF333670@vkoul-mobl>
+ <20200515105137.GK185537@smile.fi.intel.com>
+ <20200515105658.GR333670@vkoul-mobl>
+ <20200515111112.4umynrpgzjnca223@mobilestation>
+ <20200517174739.uis3wfievdcmtsxj@mobilestation>
 MIME-Version: 1.0
-References: <20200508130646.23939-1-kishon@ti.com> <20200508130646.23939-5-kishon@ti.com>
-In-Reply-To: <20200508130646.23939-5-kishon@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 19 May 2020 11:11:43 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
-Message-ID: <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200517174739.uis3wfievdcmtsxj@mobilestation>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 7:07 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
-> property to configure the number of bits passed through from PCIe
-> address to internal address in Inbound Address Translation register.
-> This only used the NO MATCH BAR.
->
-> However standard PCI dt-binding already defines "dma-ranges" to
-> describe the address ranges accessible by PCIe controller. Add support
-> in Cadence PCIe host driver to parse dma-ranges and configure the
-> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
-> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB, so if
-> the dma-ranges specifies a size larger than the maximum allowed, the
-> driver will split and configure the BARs.
+On 17-05-20, 20:47, Serge Semin wrote:
+> On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
+> > On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
+> > > On 15-05-20, 13:51, Andy Shevchenko wrote:
+> > > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
+> > > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
+> > > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
+> > > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
+> > > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
+> > > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> > > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> > > > 
+> > > > ...
+> > > > 
+> > > > > > I leave it to Rob and Vinod.
+> > > > > > It won't break our case, so, feel free with your approach.
+> > > > > 
+> > > > > I agree the DT is about describing the hardware and looks like value of
+> > > > > 1 is not allowed. If allowed it should be added..
+> > > > 
+> > > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
+> > > > synthesizing the IP.
+> > > 
+> > > Then it should be added ..
+> > 
+> > Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
+> > other" burst length. It's a constant defined at the IP-core synthesis stage and
+> > according to the Data Book, MAX burst length can't be 1. The allowed values are
+> > exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
+> > defines the upper limit of the run-time burst length. So setting it to 1 isn't
+> > about describing a hardware, but using DT for the software convenience.
+> > 
+> > -Sergey
+> 
+> Vinod, to make this completely clear. According to the DW DMAC data book:
+> - In general, run-time parameter of the DMA transaction burst length (set in
+>   the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
+>   to the set [1, 4, 8, 16, 32, 64, 128, 256].
 
-Would be useful to know what your dma-ranges contains now.
+so 1 is valid value for msize
 
+> - Actual upper limit of the burst length run-time parameter is limited by a
+>   constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
+>   and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
+>   in this set).
 
-> Legacy device tree binding compatibility is maintained by retaining
-> support for "cdns,no-bar-match-nbits".
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../controller/cadence/pcie-cadence-host.c    | 141 ++++++++++++++++--
->  drivers/pci/controller/cadence/pcie-cadence.h |  17 ++-
->  2 files changed, 141 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 6ecebb79057a..2485ecd8434d 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -11,6 +11,12 @@
->
->  #include "pcie-cadence.h"
->
-> +static u64 cdns_rp_bar_max_size[] = {
-> +       [RP_BAR0] = _ULL(128 * SZ_2G),
-> +       [RP_BAR1] = SZ_2G,
-> +       [RP_NO_BAR] = SZ_64T,
-> +};
-> +
->  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->                                int where)
->  {
-> @@ -106,6 +112,117 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->         return 0;
->  }
->
-> +static void cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
-> +                                        enum cdns_pcie_rp_bar bar,
-> +                                        u64 cpu_addr, u32 aperture)
-> +{
-> +       struct cdns_pcie *pcie = &rc->pcie;
-> +       u32 addr0, addr1;
-> +
-> +       addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
-> +               (lower_32_bits(cpu_addr) & GENMASK(31, 8));
-> +       addr1 = upper_32_bits(cpu_addr);
-> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
-> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
-> +}
-> +
-> +static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
-> +                                    struct resource_entry *entry,
-> +                                    enum cdns_pcie_rp_bar *index)
-> +{
-> +       u64 cpu_addr, pci_addr, size, winsize;
-> +       struct cdns_pcie *pcie = &rc->pcie;
-> +       struct device *dev = pcie->dev;
-> +       enum cdns_pcie_rp_bar bar;
-> +       unsigned long flags;
-> +       u32 aperture;
-> +       u32 value;
-> +
-> +       cpu_addr = entry->res->start;
-> +       flags = entry->res->flags;
-> +       pci_addr = entry->res->start - entry->offset;
-> +       size = resource_size(entry->res);
-> +       bar = *index;
-> +
-> +       if (entry->offset) {
-> +               dev_err(dev, "Cannot map PCI addr: %llx to CPU addr: %llx\n",
-> +                       pci_addr, cpu_addr);
+maximum can be 4 onwards, but in my configuration I can choose 1 as
+value for msize
 
-Would be a bit more clear to say PCI addr must equal CPU addr.
+> So the run-time burst length in a case of particular DW DMA controller belongs
+> to the range:
+> 1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+> and
+> 1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+> 
+> See. No mater which DW DMA controller we get each of them will at least support
+> the burst length of 1 and 4 transfer words. This is determined by design of the
+> DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
+> 
+> In this patch I suggest to add the max-burst-len property, which specifies
+> the upper limit for the run-time burst length. Since the maximum burst length
+> capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
+> register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
+> by the DW DMA IP design), max-burst-len property as being also responsible for
+> the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
+> thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
+> 
+> So 1 shouldn't be in the enum of the max-burst-len property constraint, because
+> hardware doesn't support such limitation by design, while setting 1 as
+> max-burst-len would mean incorrect description of the DMA controller.
+> 
+> Vinod, could you take a look at the info I provided above and say your final word
+> whether 1 should be really allowed to be in the max-burst-len enum constraints?
+> I'll do as you say in the next version of the patchset.
 
-> +               return -EINVAL;
-> +       }
-> +
-> +       value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
-> +       while (size > 0) {
-> +               if (bar > RP_NO_BAR) {
-> +                       dev_err(dev, "Failed to map inbound regions!\n");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               winsize = size;
-> +               if (size > cdns_rp_bar_max_size[bar])
-> +                       winsize = cdns_rp_bar_max_size[bar];
-> +
-> +               aperture = ilog2(winsize);
-> +
-> +               cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, aperture);
-> +
-> +               if (bar == RP_NO_BAR)
-> +                       break;
-> +
-> +               if (winsize + cpu_addr >= SZ_4G) {
-> +                       if (!(flags & IORESOURCE_PREFETCH))
-> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
-> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
-> +               } else {
-> +                       if (!(flags & IORESOURCE_PREFETCH))
-> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
-> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
-> +               }
-> +
-> +               value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
-> +
-> +               size -= winsize;
-> +               cpu_addr += winsize;
-> +               bar++;
-> +       }
-> +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
-> +       *index = bar;
-> +
-> +       return 0;
-> +}
-> +
-> +static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
-> +{
-> +       enum cdns_pcie_rp_bar bar = RP_BAR0;
-> +       struct cdns_pcie *pcie = &rc->pcie;
-> +       struct device *dev = pcie->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct pci_host_bridge *bridge;
-> +       struct resource_entry *entry;
-> +       u32 no_bar_nbits = 32;
-> +       int err;
-> +
-> +       bridge = pci_host_bridge_from_priv(rc);
-> +       if (!bridge)
-> +               return -ENOMEM;
-> +
-> +       if (list_empty(&bridge->dma_ranges)) {
-> +               of_property_read_u32(np, "cdns,no-bar-match-nbits",
-> +                                    &no_bar_nbits);
-> +               cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0, no_bar_nbits);
-> +               return 0;
-> +       }
-> +
-> +       resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-> +               err = cdns_pcie_host_bar_config(rc, entry, &bar);
+You are specifying the parameter which will be used to pick, i think
+starting with 4 makes sense as we are specifying maximum allowed values
+for msize. Values lesser than or equal to this would be allowed, I guess
+that should be added to documentation.
 
-Seems like this should have some better logic to pick which BAR to
-use. Something like find the biggest region and then find the smallest
-BAR that it fits in. Then get the next biggest...
-
-> +               if (err) {
-> +                       dev_err(dev, "Fail to configure IB using dma-ranges\n");
-> +                       return err;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
+thanks
+-- 
+~Vinod
