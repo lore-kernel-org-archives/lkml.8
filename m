@@ -2,138 +2,96 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E57C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04F68207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD96206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgESJS2 (ORCPT
+        id S1728159AbgESJSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:18:28 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:58396 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgESJS1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:18:27 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04J9HD1v8024575, This message is accepted by code: ctloc85258
-Received: from RS-CAS02.realsil.com.cn (ms1.realsil.com.cn[172.29.17.3])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04J9HD1v8024575
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 19 May 2020 17:17:14 +0800
-Received: from RS-MBS01.realsil.com.cn ([::1]) by RS-CAS02.realsil.com.cn
- ([::1]) with mapi id 14.03.0439.000; Tue, 19 May 2020 17:17:12 +0800
-From:   =?utf-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIG1tYzogcnRzeDogQWRkIFNEIEV4cHJlc3MgbW9k?= =?utf-8?Q?e_support_for_RTS5261?=
-Thread-Topic: [PATCH] mmc: rtsx: Add SD Express mode support for RTS5261
-Thread-Index: AQHWG2mdb2Wi+0TUh0G7QGay1iuqfqiL+UQAgAC/B7D//5LPAIABmysAgAtv7gCAFdruEA==
-Date:   Tue, 19 May 2020 09:17:11 +0000
-Message-ID: <2A308283684ECD4B896628E09AF5361E59ACDB91@RS-MBS01.realsil.com.cn>
-References: <1587864346-3144-1-git-send-email-rui_feng@realsil.com.cn>
- <20200427061426.GA11270@infradead.org>
- <2A308283684ECD4B896628E09AF5361E028BCA26@RS-MBS01.realsil.com.cn>
- <CAK8P3a0EY=FOu5j5DG1BzMEoy_6nEy129kniWCjMYDEdO1o_Jw@mail.gmail.com>
- <2A308283684ECD4B896628E09AF5361E028BCB4B@RS-MBS01.realsil.com.cn>
- <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com>
-In-Reply-To: <CAPDyKFqWAzzHDtCwaUUBVvzxX0cf46V-6RZrZ-jvnxpptNKppA@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.29.40.150]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 19 May 2020 05:18:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:6249 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726412AbgESJSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 05:18:53 -0400
+IronPort-SDR: rIJVXUsBaKHfdl9BCjYml+o83IGMNBQl2f8iyaOMxriJwEuhTYo0yi9iWFJAhWs7ZtMXYhv162
+ 0u0cZi9A3uSA==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 02:18:53 -0700
+IronPort-SDR: eLPJ7emkIjiGp5tvpgx2vYXt/WlHCVeI92gARiXcJIbFd985uSG4b3hmQ33/TUb4eoAoOhpFyj
+ NJi9cBfLPYoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,409,1583222400"; 
+   d="asc'?scan'208";a="264246035"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.160.147])
+  by orsmga003.jf.intel.com with ESMTP; 19 May 2020 02:18:49 -0700
+Date:   Tue, 19 May 2020 17:03:49 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/i915/gvt: Use ARRAY_SIZE for vgpu_types
+Message-ID: <20200519090349.GH12464@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20200518150336.15265-1-aishwaryarj100@gmail.com>
+ <158983565244.7442.10004490488930800145@build.alporthouse.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="XaUbO9McV5wPQijU"
+Content-Disposition: inline
+In-Reply-To: <158983565244.7442.10004490488930800145@build.alporthouse.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBUdWUsIDI4IEFwciAyMDIwIGF0IDA1OjQ0LCDlhq/plJAgPHJ1aV9mZW5nQHJlYWxzaWwu
-Y29tLmNuPiB3cm90ZToNCj4gPg0KPiA+ID4NCj4gPiA+IE9uIE1vbiwgQXByIDI3LCAyMDIwIGF0
-IDExOjQxIEFNIOWGr+mUkCA8cnVpX2ZlbmdAcmVhbHNpbC5jb20uY24+DQo+IHdyb3RlOg0KPiA+
-ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiA+IE9uIFN1biwgQXByIDI2LCAyMDIwIGF0IDA5OjI1OjQ2
-QU0gKzA4MDAsDQo+ID4gPiA+ID4gcnVpX2ZlbmdAcmVhbHNpbC5jb20uY24NCj4gPiA+IHdyb3Rl
-Og0KPiA+ID4gPiA+ID4gRnJvbTogUnVpIEZlbmcgPHJ1aV9mZW5nQHJlYWxzaWwuY29tLmNuPg0K
-PiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFJUUzUyNjEgc3VwcG9ydCBsZWdhY3kgU0QgbW9kZSBh
-bmQgU0QgRXhwcmVzcyBtb2RlLg0KPiA+ID4gPiA+ID4gSW4gU0Q3LngsIFNEIGFzc29jaWF0aW9u
-IGludHJvZHVjZSBTRCBFeHByZXNzIGFzIGEgbmV3IG1vZGUuDQo+ID4gPiA+ID4gPiBTRCBFeHBy
-ZXNzIG1vZGUgaXMgZGlzdGluZ3Vpc2hlZCBieSBDTUQ4Lg0KPiA+ID4gPiA+ID4gVGhlcmVmb3Jl
-LCBDTUQ4IGhhcyBuZXcgYml0IGZvciBTRCBFeHByZXNzLg0KPiA+ID4gPiA+ID4gU0QgRXhwcmVz
-cyBpcyBiYXNlZCBvbiBQQ0llL05WTWUuDQo+ID4gPiA+ID4gPiBSVFM1MjYxIHVzZXMgQ01EOCB0
-byBzd2l0Y2ggdG8gU0QgRXhwcmVzcyBtb2RlLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gU28gaG93
-IGRvZXMgdGhpcyBiaXQgd29yaz8gIFRoZXkgd2F5IEkgaW1hZ2luZWQgU0QgRXhwcmVzcyB0bw0K
-PiA+ID4gPiA+IHdvcmsgaXMgdGhhdCB0aGUgYWN0dWFsIFNEIENhcmQganVzdCBzaG93cyB1cCBh
-cyBhIHJlYWwgUENJZQ0KPiA+ID4gPiA+IGRldmljZSwgc2ltaWxhciB0byBzYXkgVGh1bmRlcmJv
-bHQuDQo+ID4gPiA+DQo+ID4gPiA+IE5ldyBTRCBFeHByZXNzIGNhcmQgaGFzIGR1YWwgbW9kZS4g
-T25lIGlzIFNEIG1vZGUgYW5kIGFub3RoZXIgaXMNCj4gPiA+ID4gUENJZQ0KPiA+ID4gbW9kZS4N
-Cj4gPiA+ID4gSW4gUENJZSBtb2RlLCBpdCBhY3QgYXMgYSBQQ0llIGRldmljZSBhbmQgdXNlIFBD
-SWUgcHJvdG9jb2wgbm90DQo+ID4gPiA+IFRodW5kZXJib2x0DQo+ID4gPiBwcm90b2NvbC4NCj4g
-PiA+DQo+ID4gPiBJIHRoaW5rIHdoYXQgQ2hyaXN0b3BoIHdhcyBhc2tpbmcgYWJvdXQgaXMgd2h5
-IHlvdSBuZWVkIHRvIGlzc3VlIGFueQ0KPiA+ID4gY29tbWFuZHMgYXQgYWxsIGluIFNEIG1vZGUg
-d2hlbiB5b3Ugd2FudCB0byB1c2UgUENJZSBtb2RlIGluc3RlYWQuDQo+ID4gPiBXaGF0IGhhcHBl
-bnMgaWYgeW91IGxvYWQgdGhlIE5WTWUgZHRocml2ZXIgYmVmb3JlIGxvYWRpbmcgdGhlIHJ0czUy
-NjENCj4gZHJpdmVyPw0KPiA+ID4NCj4gPiA+ICAgICAgICBBcm5kDQo+ID4gPg0KPiA+ID4gLS0t
-LS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBl
-LW1haWwuDQo+ID4NCj4gPiBSVFM1MjYxIHN1cHBvcnQgU0QgbW9kZSBhbmQgUENJZS9OVk1lIG1v
-ZGUuIFRoZSB3b3JrZmxvdyBpcyBhcyBmb2xsb3dzLg0KPiA+IDEuUlRTNTI2MSB3b3JrIGluIFNE
-IG1vZGUuDQo+ID4gMi5JZiBjYXJkIGlzIHBsdWdnZWQgaW4sIEhvc3Qgc2VuZCBDTUQ4IHRvIGFz
-ayBjYXJkJ3MgUENJZSBhdmFpbGFiaWxpdHkuDQo+IA0KPiBUaGlzIHNvdW5kcyBsaWtlIHRoZSBj
-YXJkIGluc2VydC9yZW1vdmFsIG5lZWRzIHRvIGJlIG1hbmFnZWQgYnkgdGhlDQo+IHJ0c3hfcGNp
-X3NkbW1jIGRyaXZlciAobW1jKS4NCj4gDQo+ID4gMy5JZiB0aGUgY2FyZCBoYXMgUENJZSBhdmFp
-bGFiaWxpdHksIFJUUzUyNjEgc3dpdGNoIHRvIFBDSWUvTlZNZSBtb2RlLg0KPiANCj4gVGhpcyBz
-d2l0Y2ggaXMgZG9uZSBieSB0aGUgbW1jIGRyaXZlciwgYnV0IGhvdyBkb2VzIHRoZSBQQ0llL05W
-TWUgZHJpdmVyDQo+IGtub3cgd2hlbiB0byB0YWtlIG92ZXI/IElzbid0IHRoZXJlIGEgc3luY2hy
-b25pemF0aW9uIHBvaW50IG5lZWRlZD8NCj4gDQo+ID4gNC5NbWMgZHJpdmVyIGV4aXQgYW5kIE5W
-TWUgZHJpdmVyIHN0YXJ0IHdvcmtpbmcuDQo+IA0KPiBIYXZpbmcgdGhlIG1tYyBkcml2ZXIgdG8g
-ZXhpdCBzZWVtcyB3cm9uZyB0byBtZS4gRWxzZSBob3cgd291bGQgeW91IGhhbmRsZQ0KPiBhIGNh
-cmQgYmVpbmcgcmVtb3ZlZCBhbmQgaW5zZXJ0ZWQgYWdhaW4/DQo+IA0KPiBJbiBwcmluY2lwbGUg
-eW91IHdhbnQgdGhlIG1tYyBjb3JlIHRvIGZhaWwgdG8gZGV0ZWN0IHRoZSBjYXJkIGFuZCB0aGVu
-IGRvIGENCj4gaGFuZG92ZXIsIHNvbWVob3cuIE5vPw0KPiANCj4gQWx0aG91Z2gsIHRvIG1ha2Ug
-dGhpcyB3b3JrIHRoZXJlIGFyZSBhIGNvdXBsZSBvZiBwcm9ibGVtcyB5b3UgbmVlZCB0byBkZWFs
-DQo+IHdpdGguDQo+IA0KPiAxLiBJZiB0aGUgbW1jIGNvcmUgZG9lc24ndCBzdWNjZXNzZnVsbHkg
-ZGV0ZWN0IGEgY2FyZCwgaXQgd2lsbCByZXF1ZXN0IHRoZSBtbWMNCj4gaG9zdCB0byBwb3dlciBv
-ZmYgdGhlIGNhcmQuIEluIHRoaXMgc2l0dWF0aW9uLCB5b3Ugd2FudCB0byBrZWVwIHRoZSBwb3dl
-ciB0byB0aGUNCj4gY2FyZCwgYnV0IGxlYXZlIGl0IHRvIGJlIG1hbmFnZWQgYnkgdGhlIFBDSWUv
-TlZNZSBkcml2ZXIgaW4gc29tZSB3YXkuDQo+IA0KPiAyLiBEdXJpbmcgc3lzdGVtIHJlc3VtZSwg
-dGhlIG1tYyBjb3JlIG1heSB0cnkgdG8gcmVzdG9yZSBwb3dlciBmb3IgYSBjYXJkLA0KPiBlc3Bl
-Y2lhbGx5IGlmIGl0J3MgYSByZW1vdmFibGUgc2xvdCwgYXMgdG8gbWFrZSBzdXJlIGl0IGdldHMg
-ZGV0ZWN0ZWQgaWYgc29tZW9uZQ0KPiBpbnNlcnRlZCBhIGNhcmQgd2hpbGUgdGhlIHN5c3RlbSB3
-YXMgc3VzcGVuZGVkLg0KPiBOb3Qgc3VyZSBpZiB0aGlzIHBsYXlzIHdlbGwgd2l0aCB0aGUgUENJ
-ZS9OVk1lIGRyaXZlcidzIGJlaGF2aW91ci4NCj4gQWdhaW4sIEkgdGhpbmsgc29tZSBraW5kIG9m
-IHN5bmNocm9uaXphdGlvbiBpcyBuZWVkZWQuDQo+IA0KPiA+IDUuSWYgY2FyZCBpcyB1bnBsdWdn
-ZWQsIFJUUzUyNjEgd2lsbCBzd2l0Y2ggdG8gU0QgbW9kZS4NCj4gDQo+IEFscmlnaHQsIGNsZWFy
-bHkgdGhlIG1tYyBkcml2ZXIgaXMgbmVlZGVkIHRvIG1hbmFnZSBjYXJkIGluc2VydC9yZW1vdmFs
-Lg0KPiANCj4gPiBXZSBzaG91bGQgc2VuZCBDTUQ4IGluIFNEIG1vZGUgdG8gYXNrIGNhcmQncyBQ
-Q0llIGF2YWlsYWJpbGl0eSwgYW5kIHRoZQ0KPiBvcmRlciBvZiBOVk1lIGRyaXZlciBhbmQgcnRz
-NTI2MSBkcml2ZXIgZG9lc24ndCBtYXR0ZXIuDQo+IA0KPiBUaGF0IGFzc3VtZXMgdGhlcmUncyBh
-bm90aGVyIHN5bmNocm9uaXphdGlvbiBtZWNoYW5pc20uIE1heWJlIHRoZXJlIGlzLCBidXQNCj4g
-SSBkb24ndCB1bmRlcnN0YW5kIGhvdy4NCj4gDQpJZiBubyBjYXJkIGluIFJUUzUyNjEsIFJUUzUy
-NjEgd29ya3MgaW4gU0QgbW9kZS4gSWYgeW91IHJ1biBjb21tYW5kIGxzcGNpLCB5b3UgY2FuIHNl
-ZSB0aGUgUlRTNTI2MSBkZXZpY2UuDQpXaGVuIGluc2VydCBhIFNEIEV4cHJlc3MgY2FyZCwgTW1j
-IGRyaXZlciB3aWxsIHNlbmQgQ01EOCB0byBhc2sgdGhlIGNhcmQncyBQQ0llIGF2YWlsYWJpbGl0
-eSwgYmVjYXVzZSBpdCdzIGEgU0QgRVhQUkVTUyBjYXJkLA0KUlRTNTI2MSB3aWxsIHN3aXRjaCB0
-byBOVk1lIG1vZGUsIGFmdGVyIHN3aXRjaCBpZiB5b3UgcnVuIGxzcGNpLCB5b3UgY2FuIHNlZSBS
-VFM1MjYxIGRpc2FwcGVhcmVkIGFuZCBhIE5WTWUgZGV2aWNlIHJlcGxhY2VzIFJUUzUyNjEuDQpJ
-biBOVk1lIG1vZGUsIFJUUzUyNjEgb25seSBwcm92aWRlIGEgYnJpZGdlIGJldHdlZW4gU0QgRXhw
-cmVzcyBjYXJkIGFuZCBQQ0llLiBGb3IgTlZNZSBkcml2ZXIsIGp1c3QgbGlrZSBhIG5ldyBOVk1l
-IGRldmljZSBpcyBpbnNlcnRlZC4NCk1tYyBjb3JlIGRvZXNuJ3Qgc3VjY2Vzc2Z1bGx5IGRldGVj
-dCB0aGUgY2FyZCBhbmQgaGFuZG92ZXIgdG8gTlZNZSBkcml2ZXIuIEJlY2F1c2Ugb2YgZGV0ZWN0
-IHRoZSBjYXJkIGZhaWxlZCwNCk1tYyBkcml2ZXIgd2lsbCByZXF1ZXN0IHRoZSBSVFM1MjYxIHRv
-IHBvd2VyIG9mZiB0aGUgY2FyZCwgYnV0IGF0IHRoYXQgdGltZSBwb3dlciBvZmYgdGhlIGNhcmQg
-d2lsbCBub3Qgc3VjY2VlZC4NCldoZW4gdGhlIGNhcmQgaXMgdW5wbHVnZ2VkLCBSVFM1MjYxIHdp
-bGwgc3dpdGNoIHRvIFNEIG1vZGUgYnkgaXRzZWxmIGFuZCBkb24ndCBuZWVkIG1tYyBkcml2ZXIg
-dG8gZG8gYW55dGhpbmcsDQpJZiB5b3UgcnVuIGxzcGNpLCB5b3UgY2FuIHNlZSBOVk1lIGRldmlj
-ZSBkaXNhcHBlYXJlZCBhbmQgUlRTNTI2MSBhcHBlYXJlZCBhZ2Fpbi4NCg0KS2luZCByZWdhcmRz
-DQo=
+
+--XaUbO9McV5wPQijU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2020.05.18 22:00:52 +0100, Chris Wilson wrote:
+> Quoting Aishwarya Ramakrishnan (2020-05-18 16:03:36)
+> > Prefer ARRAY_SIZE instead of using sizeof
+> >=20
+> > Fixes coccicheck warning: Use ARRAY_SIZE
+> >=20
+> > Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+> Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+
+Applied, thanks!
+
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--XaUbO9McV5wPQijU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXsOg9QAKCRCxBBozTXgY
+J77kAJwPrZXYQuwdV7vDYpOyws1dsMYDawCglf/k9lLHmCPNlRV4qCUW+TyrJMc=
+=L3VK
+-----END PGP SIGNATURE-----
+
+--XaUbO9McV5wPQijU--
