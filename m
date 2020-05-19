@@ -2,124 +2,149 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2714AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF08A2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FFD206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgESWZt (ORCPT
+        id S1727097AbgESW2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:25:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:42390 "EHLO foss.arm.com"
+        Tue, 19 May 2020 18:28:44 -0400
+Received: from mga12.intel.com ([192.55.52.136]:14393 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgESWZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:25:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6491830E;
-        Tue, 19 May 2020 15:25:47 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13FE93F52E;
-        Tue, 19 May 2020 15:25:45 -0700 (PDT)
-References: <20200519161755.209565-1-maz@kernel.org> <20200519161755.209565-2-maz@kernel.org>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sumit Garg <sumit.garg@linaro.org>, kernel-team@android.com
-Subject: Re: [PATCH 01/11] genirq: Add fasteoi IPI flow
-In-reply-to: <20200519161755.209565-2-maz@kernel.org>
-Date:   Tue, 19 May 2020 23:25:43 +0100
-Message-ID: <jhj8shnr28o.mognet@arm.com>
+        id S1726432AbgESW2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 18:28:44 -0400
+IronPort-SDR: tM64yaY0VVmOTrgLbsyZPHkwBBfokNq25XixByctoKhCrmsrRN9cYFmxrWySPt5NGS8sKZn5IB
+ Y7yA+o2ocXMA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 15:28:43 -0700
+IronPort-SDR: K4gouk3kgt6TlmETPZvcuoH4GKDKD8iWteFL3OMV34DttzTKYx2Vm86O3xgzK00SdxVPRNm6aX
+ xlKyDYPFpfmg==
+X-IronPort-AV: E=Sophos;i="5.73,411,1583222400"; 
+   d="scan'208";a="253395613"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 15:28:43 -0700
+Subject: [PATCH v3 0/2] Renovate memcpy_mcsafe with copy_mc_to_{user, kernel}
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com
+Cc:     Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Borislav Petkov <bp@alien8.de>, stable@vger.kernel.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Date:   Tue, 19 May 2020 15:12:31 -0700
+Message-ID: <158992635164.403910.2616621400995359522.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changes since v2 [1]:
+- Replace the non-descriptive copy_safe() with copy_mc_to_user() and
+  copy_mc_to_kernel() several code organization cleanups resulted from
+  this rename, which further proves the point that the name deeply
+  matters for maintainability in this case. (Linus)
 
-On 19/05/20 17:17, Marc Zyngier wrote:
-> For irqchips using the fasteoi flow, IPIs are a bit special.
->
-> They need to be EOId early (before calling the handler), as
-> funny things may happen in the handler (they do not necessarily
-> behave like a normal interrupt), and that the arch code is
-> already handling the stats.
->
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  include/linux/irq.h |  1 +
->  kernel/irq/chip.c   | 26 ++++++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
->
-> diff --git a/include/linux/irq.h b/include/linux/irq.h
-> index 8d5bc2c237d7..726f94d8b8cc 100644
-> --- a/include/linux/irq.h
-> +++ b/include/linux/irq.h
-> @@ -621,6 +621,7 @@ static inline int irq_set_parent(int irq, int parent_irq)
->   */
->  extern void handle_level_irq(struct irq_desc *desc);
->  extern void handle_fasteoi_irq(struct irq_desc *desc);
-> +extern void handle_percpu_devid_fasteoi_ipi(struct irq_desc *desc);
->  extern void handle_edge_irq(struct irq_desc *desc);
->  extern void handle_edge_eoi_irq(struct irq_desc *desc);
->  extern void handle_simple_irq(struct irq_desc *desc);
-> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-> index 41e7e37a0928..7b0b789cfed4 100644
-> --- a/kernel/irq/chip.c
-> +++ b/kernel/irq/chip.c
-> @@ -955,6 +955,32 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
->               chip->irq_eoi(&desc->irq_data);
->  }
->
-> +/**
-> + * handle_percpu_devid_fasteoi_ipi - Per CPU local IPI handler with per cpu
-> + *				     dev ids
-> + * @desc:	the interrupt description structure for this irq
-> + *
-> + * The biggest differences with the IRQ version are that:
-> + * - the interrupt is EOIed early, as the IPI could result in a context
-> + *   switch, and we need to make sure the IPI can fire again
-> + * - Stats are usually handled at the architecture level, so we ignore them
-> + *   here
-> + */
-> +void handle_percpu_devid_fasteoi_ipi(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct irqaction *action = desc->action;
-> +	unsigned int irq = irq_desc_get_irq(desc);
-> +	irqreturn_t res;
-> +
+- Do not use copy_user_generic() as the generic x86 backend for
+  copy_mc_to_user() since the #MC handler explicitly wants the exception
+  to be trapped by a _ASM_EXTABLE_FAULT handler. (Vivek).
 
-Tied to the following patch, does that want something like
+- Rename copy_safe_slow() to copy_mc_fragile() to better indicate what
+  the implementation is handling. copy_safe_fast() is replaced with
+  copy_mc_generic().
 
-+	if (!irq_settings_is_no_accounting(desc))
-+		__kstat_incr_irqs_this_cpu(desc);
-+
+---
 
-While I'm at it, now that we would have IPIs as 'normal' interrupts, what
-prevents us from getting rid of the arch-side accounting? Is it just that
-we are keeping it as long as handle_IPI() lives, or are there more hurdles
-hidden around?
+The primary motivation to go touch memcpy_mcsafe() is that the existing
+benefit of doing slow "handle with care" copies is obviated on newer
+CPUs. With that concern lifted it also obviates the need to continue to
+update the MCA-recovery capability detection code currently gated by
+"mcsafe_key". Now the old "mcsafe_key" opt-in to perform the copy with
+concerns for recovery fragility can instead be made an opt-out from the
+default fast copy implementation (enable_copy_mc_fragile()).
 
-> +	if (chip->irq_eoi)
-> +		chip->irq_eoi(&desc->irq_data);
-> +
-> +	trace_irq_handler_entry(irq, action);
-> +	res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
-> +	trace_irq_handler_exit(irq, action, res);
-> +}
-> +
->  /**
->   * handle_percpu_devid_fasteoi_nmi - Per CPU local NMI handler with per cpu
->   *				     dev ids
+The discussion with Linus on the first iteration of this patch
+identified that memcpy_mcsafe() was misnamed relative to its usage. The
+new names copy_mc_to_user() and copy_mc_to_kernel() clearly indicate the
+intended use case and lets the architecture organize the implementation
+accordingly.
+
+For both powerpc and x86 a copy_mc_generic() implementation is added as
+the backend for these interfaces.
+
+Patches are relative to tip/master.
+
+---
+
+Dan Williams (2):
+      x86, powerpc: Rename memcpy_mcsafe() to copy_mc_to_{user,kernel}()
+      x86/copy_mc: Introduce copy_mc_generic()
+
+ arch/powerpc/Kconfig                               |    2 
+ arch/powerpc/include/asm/string.h                  |    2 
+ arch/powerpc/include/asm/uaccess.h                 |   40 +++--
+ arch/powerpc/lib/Makefile                          |    2 
+ arch/powerpc/lib/copy_mc_64.S                      |    4 
+ arch/x86/Kconfig                                   |    2 
+ arch/x86/Kconfig.debug                             |    2 
+ arch/x86/include/asm/copy_mc_test.h                |   75 +++++++++
+ arch/x86/include/asm/mcsafe_test.h                 |   75 ---------
+ arch/x86/include/asm/string_64.h                   |   32 ----
+ arch/x86/include/asm/uaccess_64.h                  |   35 ++--
+ arch/x86/kernel/cpu/mce/core.c                     |    8 -
+ arch/x86/kernel/quirks.c                           |    9 -
+ arch/x86/lib/Makefile                              |    1 
+ arch/x86/lib/copy_mc.c                             |   64 ++++++++
+ arch/x86/lib/copy_mc_64.S                          |  165 ++++++++++++++++++++
+ arch/x86/lib/memcpy_64.S                           |  115 --------------
+ arch/x86/lib/usercopy_64.c                         |   21 ---
+ drivers/md/dm-writecache.c                         |   15 +-
+ drivers/nvdimm/claim.c                             |    2 
+ drivers/nvdimm/pmem.c                              |    6 -
+ include/linux/string.h                             |    9 -
+ include/linux/uaccess.h                            |    9 +
+ include/linux/uio.h                                |   10 +
+ lib/Kconfig                                        |    7 +
+ lib/iov_iter.c                                     |   43 +++--
+ tools/arch/x86/include/asm/copy_safe_test.h        |   13 ++
+ tools/arch/x86/include/asm/mcsafe_test.h           |   13 --
+ tools/arch/x86/lib/memcpy_64.S                     |  115 --------------
+ tools/objtool/check.c                              |    5 -
+ tools/perf/bench/Build                             |    1 
+ tools/perf/bench/mem-memcpy-x86-64-lib.c           |   24 ---
+ tools/testing/nvdimm/test/nfit.c                   |   48 +++---
+ .../testing/selftests/powerpc/copyloops/.gitignore |    2 
+ tools/testing/selftests/powerpc/copyloops/Makefile |    6 -
+ .../testing/selftests/powerpc/copyloops/copy_mc.S  |    0 
+ 36 files changed, 460 insertions(+), 522 deletions(-)
+ rename arch/powerpc/lib/{memcpy_mcsafe_64.S => copy_mc_64.S} (98%)
+ create mode 100644 arch/x86/include/asm/copy_mc_test.h
+ delete mode 100644 arch/x86/include/asm/mcsafe_test.h
+ create mode 100644 arch/x86/lib/copy_mc.c
+ create mode 100644 arch/x86/lib/copy_mc_64.S
+ create mode 100644 tools/arch/x86/include/asm/copy_safe_test.h
+ delete mode 100644 tools/arch/x86/include/asm/mcsafe_test.h
+ delete mode 100644 tools/perf/bench/mem-memcpy-x86-64-lib.c
+ rename tools/testing/selftests/powerpc/copyloops/{memcpy_mcsafe_64.S => copy_mc.S} (100%)
+
+base-commit: bba413deb1065f1291cb1f366247513f11215520
