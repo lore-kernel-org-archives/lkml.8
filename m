@@ -2,171 +2,187 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABA95207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:44:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="doPr+tGm"
+	by mail.kernel.org (Postfix) with ESMTP id 2A8E3207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgESJo2 (ORCPT
+        id S1728553AbgESJoc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:44:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgESJo1 (ORCPT
+        Tue, 19 May 2020 05:44:32 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38684 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgESJoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:44:27 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74333C061A0C;
-        Tue, 19 May 2020 02:44:27 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id n5so2749775wmd.0;
-        Tue, 19 May 2020 02:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cjmj1xzQu18Ru/uezNZCCqloNoHKEc4t1hO8iLb+89w=;
-        b=doPr+tGmmoXrEIV8pAXbYbWtSk35ohyC2eHhh7hjPB8PJNH1kytiu/kGI37eRDhvMA
-         BprWAATG708q5Or9loDVNLkQxAEhwiPNlAuETX3y9b/zlN9I60lC3Y/XCLYVtuflkZed
-         BR/lgrHjNdq+mSvH1CSrYFCrUgHZykgh7JD8DfpllMxRtT+1awR8kN8pp5q2YwpBw/ub
-         d0WSgQcjAJ4hW/1n+d5550Gpn/LV/2QMbzF0lJTvoE51Pr7XS6mtJ2IF7HRFR326+ujD
-         QkAep131uFWOO8DodV2+jVuALtctIzxnzt2PvjL1+5hHDoOV3LkPFQx+r8x/BTZoIZZ0
-         P+Cg==
+        Tue, 19 May 2020 05:44:30 -0400
+Received: by mail-oi1-f193.google.com with SMTP id j145so11766192oib.5;
+        Tue, 19 May 2020 02:44:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cjmj1xzQu18Ru/uezNZCCqloNoHKEc4t1hO8iLb+89w=;
-        b=ny56LZ1ElDLcKW4/3LVh/zc2K6k3d81Acdrh3rLiwaHhsU1imDwug+SVvcl3btP7lY
-         HHjQxmeAvfBWVzqL7uKvh9n9AqKt2e2a8LN76mOZQiSOBA6nzo1p2r8kYHdmZS2vszul
-         NpT3Kb6lhnLeEpW3UUfhO8y76CdNVIcBirmeFtYEaNVnWVO9ZdjzS2bxSBaxzIKw4rZm
-         02tYqY/Jsmh6BVxYDpofFvw4NV4jyGPnc5Zc0bSJB6yIf3s//ZLbeVR+qWakneimCB9m
-         XprMLKCo23LnBUvPnedbBbpareuz2UUyqgr5nxlI8fwH2WmJjj78Y3iON3oI+EZ/owyc
-         bQvA==
-X-Gm-Message-State: AOAM530CU5W29hNBARfz4fVDh8d/ssE548ZQgP3WTQh3RVHC8S2l0yMm
-        jq2gZsdusDK/ofUaFASaDyo=
-X-Google-Smtp-Source: ABdhPJxbdnRd+quHI/sSSncj5FZ+P/varJ6tdGMUZVPI0wYUfNhu7a6vWVjZXgZUOCkwj4xtkPsGPw==
-X-Received: by 2002:a1c:b141:: with SMTP id a62mr4319303wmf.7.1589881466008;
-        Tue, 19 May 2020 02:44:26 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id z11sm20132484wro.48.2020.05.19.02.44.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 02:44:24 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:44:18 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>
-Subject: Re: [PATCH v2 3/3] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200519094418.GA10391@ict14-OptiPlex-980>
-References: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
- <20200519065749.4624-4-jonathan.albrieux@gmail.com>
- <20200519092127.GS1634618@smile.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Rkuqfk9v0dSFtHNviTRsQ331KmGWIpp5BtZ5aSdCkiQ=;
+        b=BEV/4ugp8FFZAU1mkQA+rnSUkUmuejHFV4FgIUSrWbpKlSKvc3C85o7hxxGNT2Yo8S
+         HZ5IAWIs55n0ZBFWoLZEE74jPH1fuH3RXDMyTmW3cnWtWFUTxwWwqpPbe1TZEFg8W8RR
+         3Rw/d32D+7BpX8Ms2mb7qnmP9qy8Zjde1/w+0myANykOyTLSNBn3JYVs5W0Mpvs0yGCv
+         qmwSKa0CftFd2SS61NbTXoenN86i4cuaH3bDhDgBl8TEa+VIe0hVax1sOEYpEohgCOC/
+         OTU5B8uNDGPb0qXSoKjZsybpVWRDsKtXc/naUG+2/eWEXo+5MfP90AKTIvlHkG5bvJD3
+         gnDw==
+X-Gm-Message-State: AOAM5301H24g8HwGyjIzo1Tsq2p4r7CPPIjX3uMWDGTiuYQV5zMoWw+k
+        xoRbAyTejPzySVrhBqsEYIJd9QxBF/f2IcmC9b4=
+X-Google-Smtp-Source: ABdhPJxQYDIUSsP9aca2RSoR1nUOC1fHNj6QIDMPOAbQeBaLW5c/YfMluFpfBirWsZT6mg9LxxzuwmdGpo6c7ZFQpJs=
+X-Received: by 2002:a05:6808:1:: with SMTP id u1mr2557112oic.54.1589881469304;
+ Tue, 19 May 2020 02:44:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519092127.GS1634618@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CGME20200429082134eucas1p2415c5269202529e6b019f2d70c1b5572@eucas1p2.samsung.com>
+ <20200429082120.16259-1-geert+renesas@glider.be> <dleftjmu645mqn.fsf%l.stelmach@samsung.com>
+In-Reply-To: <dleftjmu645mqn.fsf%l.stelmach@samsung.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 19 May 2020 11:44:17 +0200
+Message-ID: <CAMuHMdXxq6m6gebQbWvxDynDcZ7dLyZzKC_QroK63L8FGeac1Q@mail.gmail.com>
+Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:21:27PM +0300, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 08:57:43AM +0200, Jonathan Albrieux wrote:
-> 
-> Thanks for an update, my comments below.
-> 
+Hi Łukasz
 
-Thanks to you for taking time to review the code!
+Thanks for your report!
 
-> > According to AK09911 datasheet, if reset gpio is provided then 
-> 
-> Trailing whitespace.
-> 
-> > deassert reset on ak8975_power_on and assert reset on ak8975_power_off.
-> > 
-> > Without reset's deassertion during ak8975_power_on, driver's probe fails on
-> > ak8975_who_i_am while checking for device identity for AK09911 chip
-> > 
-> > AK09911 has an active low reset gpio to handle register's reset.
-> > AK09911 datasheed says that, if not used, reset pin should be connected
-> > to VID. This patch emulates this situation
-> 
-> Please, put periods at the end of the phrases.
-> 
-> >  	/*
-> > -	 * According to the datasheet the power supply rise time i 200us
-> > +	 * According to the datasheet the power supply rise time is 200us
-> >  	 * and the minimum wait time before mode setting is 100us, in
-> > -	 * total 300 us. Add some margin and say minimum 500us here.
-> > +	 * total 300us. Add some margin and say minimum 500us here.
-> >  	 */
-> 
-> This is not related change (perhaps, you may do in separate patch), but I'm not
-> against it. Up to maintainer.
-> 
+On Tue, May 19, 2020 at 10:54 AM Lukasz Stelmach <l.stelmach@samsung.com> wrote:
+> It was <2020-04-29 śro 10:21>, when Geert Uytterhoeven wrote:
+> > Currently, the start address of physical memory is obtained by masking
+> > the program counter with a fixed mask of 0xf8000000.  This mask value
+> > was chosen as a balance between the requirements of different platforms.
+> > However, this does require that the start address of physical memory is
+> > a multiple of 128 MiB, precluding booting Linux on platforms where this
+> > requirement is not fulfilled.
+> >
+> > Fix this limitation by obtaining the start address from the DTB instead,
+> > if available (either explicitly passed, or appended to the kernel).
+> > Fall back to the traditional method when needed.
+> >
+> > This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDRAM
+> > on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
+> > i.e. not at a multiple of 128 MiB.
+> >
+> > Suggested-by: Nicolas Pitre <nico@fluxnic.net>
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+> > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> > ---
+>
+> [...]
+>
+> Apparently reading physical memory layout from DTB breaks crashdump
+> kernels. A crashdump kernel is loaded into a region of memory, that is
+> reserved in the original (i.e. to be crashed) kernel. The reserved
+> region is large enough for the crashdump kernel to run completely inside
+> it and don't modify anything outside it, just read and dump the remains
+> of the crashed kernel. Using the information from DTB makes the
+> decompressor place the kernel outside of the dedicated region.
+>
+> The log below shows that a zImage and DTB are loaded at 0x18eb8000 and
+> 0x193f6000 (physical). The kernel is expected to run at 0x18008000, but
+> it is decompressed to 0x00008000 (see r4 reported before jumping from
+> within __enter_kernel). If I were to suggest something, there need to be
+> one more bit of information passed in the DTB telling the decompressor
+> to use the old masking technique to determain kernel address. It would
+> be set in the DTB loaded along with the crashdump kernel.
 
-Ok I will separate the patch
+Shouldn't the DTB passed to the crashkernel describe which region of
+memory is to be used instead? Describing "to use the old masking
+technique" sounds a bit hackish to me.
+I guess it cannot just restrict the /memory node to the reserved region,
+as the crashkernel needs to be able to dump the remains of the crashed
+kernel, which lie outside this region.
+However, something under /chosen should work.
 
-> > +	/*
-> > +	 * According to AK09911 datasheet, if reset gpio is provided then
-> > +	 * deassert reset on ak8975_power_on and assert reset on
-> > +	 * ak8975_power_off.
-> 
-> We try to refer to the code accordingly to the kernel doc recommendations (even
-> for non-kdoc comments). So, here, 'function' as 'function()' (without quotes)
-> and so on.
-> 
+> Despite the fact the kernel is able to start and get quite far it simply
+> panics (for a reason unknown to me at the moment).
+>
+> Kind regards,
+> ŁS
+>
+> --8<---------------cut here---------------start------------->8---
+> [   42.358349] kexec_file:__do_sys_kexec_file_load:435: kexec_file: Loading segment 0: buf=0xf1871bcb bufsz=0x52c870 mem=0x18eb8000 memsz=0x52d000
+> [   42.374615] kexec_file:__do_sys_kexec_file_load:435: kexec_file: Loading segment 1: buf=0x012365f6 bufsz=0x5abf mem=0x193f6000 memsz=0x6000
+> root@target:~# sync && echo c > /proc/sysrq-trigger
+> [   62.206252] sysrq: Trigger a crash
+> [   62.209711] Kernel panic - not syncing: sysrq triggered crash
+> [   62.215548] CPU: 0 PID: 1236 Comm: bash Kdump: loaded Tainted: G        W         5.7.0-rc6-00011-gad3fbe6a883e #174
+> [   62.226225] Hardware name: BCM2711
+> [   62.229676] Backtrace:
+> [   62.232178] [<c010bfa4>] (dump_backtrace) from [<c010c334>] (show_stack+0x20/0x24)
+> [   62.239863]  r7:00000008 r6:c0b4a48d r5:00000000 r4:c0eb7b18
+> [   62.245617] [<c010c314>] (show_stack) from [<c03e475c>] (dump_stack+0x20/0x28)
+> [   62.252954] [<c03e473c>] (dump_stack) from [<c011e368>] (panic+0xf4/0x320)
+> [   62.259941] [<c011e274>] (panic) from [<c044bb60>] (sysrq_handle_crash+0x1c/0x20)
+> [   62.267536]  r3:c044bb44 r2:c57e1c21 r1:60000093 r0:c0b4a48d
+> [   62.273278]  r7:00000008
+> [   62.275853] [<c044bb44>] (sysrq_handle_crash) from [<c044c198>] (__handle_sysrq+0xa0/0x150)
+> [   62.284334] [<c044c0f8>] (__handle_sysrq) from [<c044c620>] (write_sysrq_trigger+0x68/0x78)
+> [   62.292814]  r10:00000002 r9:e9123f50 r8:00000002 r7:012f2408 r6:e9112cc0 r5:c044c5b8
+> [   62.300757]  r4:00000002
+> [   62.303335] [<c044c5b8>] (write_sysrq_trigger) from [<c02a7ad4>] (proc_reg_write+0x98/0xa8)
+> [   62.311808]  r5:c044c5b8 r4:eb655700
+> [   62.315443] [<c02a7a3c>] (proc_reg_write) from [<c023b080>] (__vfs_write+0x48/0xf4)
+> [   62.323216]  r9:012f2408 r8:c02a7a3c r7:00000002 r6:e9112cc0 r5:e9123f50 r4:c0e04248
+> [   62.331077] [<c023b038>] (__vfs_write) from [<c023c900>] (vfs_write+0xa8/0xcc)
+> [   62.338407]  r8:e9123f50 r7:012f2408 r6:00000002 r5:00000000 r4:e9112cc0
+> [   62.345211] [<c023c858>] (vfs_write) from [<c023cae0>] (ksys_write+0x78/0xc4)
+> [   62.352454]  r9:012f2408 r8:e9123f5c r7:c0e04248 r6:e9123f50 r5:012f2408 r4:e9112cc0
+> [   62.360316] [<c023ca68>] (ksys_write) from [<c023cb44>] (sys_write+0x18/0x1c)
+> [   62.367559]  r10:00000004 r9:e9122000 r8:c0100264 r7:00000004 r6:b6edcd90 r5:012f2408
+> [   62.375504]  r4:00000002
+> [   62.378080] [<c023cb2c>] (sys_write) from [<c0100060>] (ret_fast_syscall+0x0/0x54)
+> [   62.385759] Exception stack(0xe9123fa8 to 0xe9123ff0)
+> [   62.390889] 3fa0:                   00000002 012f2408 00000001 012f2408 00000002 00000000
+> [   62.399190] 3fc0: 00000002 012f2408 b6edcd90 00000004 012f2408 00000002 00000000 00118fd8
+> [   62.407488] 3fe0: 0000006c be82b7e8 b6df7010 b6e546e4
+> [   62.412647] Loading crashdump kernel...
+> [   62.416628] Bye!
+> Uncompressing Linux... done, booting the kernel.
+> r2:0x193F6000
+> r4:0x00008000
+> [    0.000000] Booting Linux on physical CPU 0x0
+> [    0.000000] Linux version 5.7.0-rc6-00011-gad3fbe6a883e (l.stelmach@AMDC1062) (gcc version 8.3.0 (Debian 8.3.0-2), GNU ld (GNU Binutils for Debian) 2.31.1) #174 Tue May 19
+> 09:37:10 CEST 2020
 
-Will fix this as like as the other changes you pointed out about periods and
-trailing spaces as soon as possible
+Gr{oetje,eeting}s,
 
-> > +	 */
-> > +	reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> > +					      "reset", GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(reset_gpiod))
-> > +		return PTR_ERR(reset_gpiod);
-> > +
-> >  	/* Register with IIO */
-> >  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> >  	if (indio_dev == NULL)
-> > @@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
-> >  
-> >  	data->client = client;
-> >  	data->eoc_gpiod = eoc_gpiod;
-> > +	data->reset_gpiod = reset_gpiod;
-> >  	data->eoc_irq = 0;
-> >  
-> >  	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
-> > -- 
-> > 2.17.1
-> > 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+                        Geert
 
-Again, thank you,
-Best regards,
-Jonathan Albrieux
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
