@@ -2,172 +2,210 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02916C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3562C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D23207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891C020835
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:23:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="w8SMq8DC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgESOXR (ORCPT
+        id S1729102AbgESOXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:23:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5870 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728847AbgESOXK (ORCPT
+        Tue, 19 May 2020 10:23:44 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59499 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728837AbgESOXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:23:10 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04JE2PCQ189091;
-        Tue, 19 May 2020 10:23:05 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312agdre9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 May 2020 10:23:05 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04JE6Vjs003068;
-        Tue, 19 May 2020 14:23:03 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 313xehhsf7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 May 2020 14:23:02 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04JEN0M666191704
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 May 2020 14:23:00 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39465AE053;
-        Tue, 19 May 2020 14:23:00 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2743FAE051;
-        Tue, 19 May 2020 14:23:00 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 19 May 2020 14:23:00 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id C4668E0145; Tue, 19 May 2020 16:22:59 +0200 (CEST)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     hch@lst.de
-Cc:     axboe@kernel.dk, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com
-Subject: [PATCH v4 1/2] dasd: refactor dasd_ioctl_information
-Date:   Tue, 19 May 2020 16:22:58 +0200
-Message-Id: <20200519142259.102279-2-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200519142259.102279-1-sth@linux.ibm.com>
-References: <20200519142259.102279-1-sth@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-19_04:2020-05-19,2020-05-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- malwarescore=0 impostorscore=0 mlxlogscore=817 clxscore=1015 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=1 cotscore=-2147483648
- spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005190122
+        Tue, 19 May 2020 10:23:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589898223; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=zgED/ndZHabjc446rJZWog4aE0Cl1Q+S59WZU+Bl6ws=; b=w8SMq8DCgt50ivmdHKh9eveEUFWxUCKzv2K1oeFLapALNZBgZZsukrhiXXcCuAls6n+NzLK2
+ ffC+98QcIDbftqrBlLviVs8A7rLeXSXJz5okTXop5pi2qXpaxKa2C3woI+mcBvz3xQk2MjtP
+ DwB6tYZIP6Oq1pf1QWy9BZqtEP8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec3ebe0.7f0bdba0aab0-smtp-out-n01;
+ Tue, 19 May 2020 14:23:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CC62FC43636; Tue, 19 May 2020 14:23:27 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92721C432C2;
+        Tue, 19 May 2020 14:23:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92721C432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v1 3/3] bus: mhi: clients: Add user space client interface
+ driver
+To:     Hemant Kumar <hemantk@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bbhatt@codeaurora.org
+References: <1589840619-18520-1-git-send-email-hemantk@codeaurora.org>
+ <1589840619-18520-4-git-send-email-hemantk@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <3ee9c396-d1e3-d50a-cd27-7b88f84cb37f@codeaurora.org>
+Date:   Tue, 19 May 2020 08:23:25 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1589840619-18520-4-git-send-email-hemantk@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+On 5/18/2020 4:23 PM, Hemant Kumar wrote:
+> +static ssize_t mhi_uci_read(struct file *file,
+> +			    char __user *buf,
+> +			    size_t count,
+> +			    loff_t *ppos)
+> +{
+> +	struct uci_dev *uci_dev = file->private_data;
+> +	struct mhi_device *mhi_dev = uci_dev->mhi_dev;
+> +	struct uci_chan *uci_chan = &uci_dev->dl_chan;
+> +	struct device *dev = &mhi_dev->dev;
+> +	struct uci_buf *uci_buf;
+> +	char *ptr;
+> +	size_t to_copy;
+> +	int ret = 0;
+> +
+> +	if (!buf)
+> +		return -EINVAL;
+> +
+> +	dev_dbg(dev, "Client provided buf len:%lu\n", count);
+> +
+> +	/* confirm channel is active */
+> +	spin_lock_bh(&uci_chan->lock);
+> +	if (!uci_dev->enabled) {
+> +		spin_unlock_bh(&uci_chan->lock);
+> +		return -ERESTARTSYS;
+> +	}
+> +
+> +	/* No data available to read, wait */
+> +	if (!uci_chan->cur_buf && list_empty(&uci_chan->pending)) {
+> +		dev_dbg(dev, "No data available to read waiting\n");
+> +
+> +		spin_unlock_bh(&uci_chan->lock);
+> +		ret = wait_event_interruptible(uci_chan->wq,
+> +					       (!uci_dev->enabled ||
+> +					      !list_empty(&uci_chan->pending)));
+> +		if (ret == -ERESTARTSYS) {
+> +			dev_dbg(dev, "Exit signal caught for node\n");
+> +			return -ERESTARTSYS;
+> +		}
+> +
+> +		spin_lock_bh(&uci_chan->lock);
+> +		if (!uci_dev->enabled) {
+> +			dev_dbg(dev, "node is disabled\n");
+> +			ret = -ERESTARTSYS;
+> +			goto read_error;
+> +		}
+> +	}
+> +
+> +	/* new read, get the next descriptor from the list */
+> +	if (!uci_chan->cur_buf) {
+> +		uci_buf = list_first_entry_or_null(&uci_chan->pending,
+> +						   struct uci_buf, node);
+> +		if (unlikely(!uci_buf)) {
+> +			ret = -EIO;
+> +			goto read_error;
+> +		}
+> +
+> +		list_del(&uci_buf->node);
+> +		uci_chan->cur_buf = uci_buf;
+> +		uci_chan->rx_size = uci_buf->len;
+> +		dev_dbg(dev, "Got pkt of size:%zu\n", uci_chan->rx_size);
+> +	}
+> +
+> +	uci_buf = uci_chan->cur_buf;
+> +
+> +	/* Copy the buffer to user space */
+> +	to_copy = min_t(size_t, count, uci_chan->rx_size);
+> +	ptr = uci_buf->data + (uci_buf->len - uci_chan->rx_size);
+> +	spin_unlock_bh(&uci_chan->lock);
 
-Prepare for in-kernel callers of this functionality.
+This presents a race condition.  Imagine if you will, two processes are 
+in read() at the same time.  They will be contending for the lock.  One 
+will win, and enter the above critical section.  As soon as the winner 
+gets here and unlocks the lock, the loser will get the lock and enter 
+the critical section.  There is a possibility that both processes get to 
+this point at roughly the same time, and thus both have a cached version 
+of the identical cur_buf pointer.  At this point, bad things can happen.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[sth@de.ibm.com: remove leftover kfree]
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
----
- drivers/s390/block/dasd_ioctl.c | 42 ++++++++++++++++++---------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
+If both processes consume the entire buffer, they will then both 
+re-queue the buffer to MHI.  You then can cause memory corruption, and a 
+kernel crash if the buffer is consumed, then freed, then the memory is 
+allocated to somewhere else in the kernel, then MHI consumed the buffer 
+again (memory corruption).  If the buffer gets freed again, slub may 
+trigger a BUG_ON if the allocation for elsewhere is completely different 
+in structure.
 
-diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
-index 9a5f3add325f..9b7782395c37 100644
---- a/drivers/s390/block/dasd_ioctl.c
-+++ b/drivers/s390/block/dasd_ioctl.c
-@@ -457,10 +457,9 @@ static int dasd_ioctl_read_profile(struct dasd_block *block, void __user *argp)
- /*
-  * Return dasd information. Used for BIODASDINFO and BIODASDINFO2.
-  */
--static int dasd_ioctl_information(struct dasd_block *block,
--				  unsigned int cmd, void __user *argp)
-+static int __dasd_ioctl_information(struct dasd_block *block,
-+		struct dasd_information2_t *dasd_info)
- {
--	struct dasd_information2_t *dasd_info;
- 	struct subchannel_id sch_id;
- 	struct ccw_dev_id dev_id;
- 	struct dasd_device *base;
-@@ -473,15 +472,9 @@ static int dasd_ioctl_information(struct dasd_block *block,
- 	if (!base->discipline || !base->discipline->fill_info)
- 		return -EINVAL;
- 
--	dasd_info = kzalloc(sizeof(struct dasd_information2_t), GFP_KERNEL);
--	if (dasd_info == NULL)
--		return -ENOMEM;
--
- 	rc = base->discipline->fill_info(base, dasd_info);
--	if (rc) {
--		kfree(dasd_info);
-+	if (rc)
- 		return rc;
--	}
- 
- 	cdev = base->cdev;
- 	ccw_device_get_id(cdev, &dev_id);
-@@ -520,15 +513,24 @@ static int dasd_ioctl_information(struct dasd_block *block,
- 	list_for_each(l, &base->ccw_queue)
- 		dasd_info->chanq_len++;
- 	spin_unlock_irqrestore(&block->queue_lock, flags);
-+	return 0;
-+}
- 
--	rc = 0;
--	if (copy_to_user(argp, dasd_info,
--			 ((cmd == (unsigned int) BIODASDINFO2) ?
--			  sizeof(struct dasd_information2_t) :
--			  sizeof(struct dasd_information_t))))
--		rc = -EFAULT;
-+static int dasd_ioctl_information(struct dasd_block *block, void __user *argp,
-+		size_t copy_size)
-+{
-+	struct dasd_information2_t *dasd_info;
-+	int error;
-+
-+	dasd_info = kzalloc(sizeof(*dasd_info), GFP_KERNEL);
-+	if (!dasd_info)
-+		return -ENOMEM;
-+
-+	error = __dasd_ioctl_information(block, dasd_info);
-+	if (!error && copy_to_user(argp, dasd_info, copy_size))
-+		error = -EFAULT;
- 	kfree(dasd_info);
--	return rc;
-+	return error;
- }
- 
- /*
-@@ -622,10 +624,12 @@ int dasd_ioctl(struct block_device *bdev, fmode_t mode,
- 		rc = dasd_ioctl_check_format(bdev, argp);
- 		break;
- 	case BIODASDINFO:
--		rc = dasd_ioctl_information(block, cmd, argp);
-+		rc = dasd_ioctl_information(block, argp,
-+				sizeof(struct dasd_information_t));
- 		break;
- 	case BIODASDINFO2:
--		rc = dasd_ioctl_information(block, cmd, argp);
-+		rc = dasd_ioctl_information(block, argp,
-+				sizeof(struct dasd_information2_t));
- 		break;
- 	case BIODASDPRRD:
- 		rc = dasd_ioctl_read_profile(block, argp);
+I think you need a mutex covering the entire read() operation to 
+serialize it.
+
+> +
+> +	ret = copy_to_user(buf, ptr, to_copy);
+> +	if (ret)
+> +		return ret;
+> +
+> +	spin_lock_bh(&uci_chan->lock);
+> +
+> +	/* Buffer already queued from diff thread while we dropped lock */
+> +	if (to_copy && !uci_chan->rx_size) {
+> +		dev_dbg(dev, "Bailout as buffer already queued (%lu %lu)\n",
+> +			to_copy, uci_chan->rx_size);
+> +		goto read_error;
+> +	}
+> +
+> +	dev_dbg(dev, "Copied %lu of %lu bytes\n", to_copy, uci_chan->rx_size);
+> +	uci_chan->rx_size -= to_copy;
+> +
+> +	/* we finished with this buffer, queue it back to hardware */
+> +	if (!uci_chan->rx_size) {
+> +		uci_chan->cur_buf = NULL;
+> +
+> +		if (uci_dev->enabled)
+> +			ret = mhi_queue_buf(mhi_dev, DMA_FROM_DEVICE,
+> +					    uci_buf->data,
+> +					    uci_dev->actual_mtu, MHI_EOT);
+> +		else
+> +			ret = -ERESTARTSYS;
+> +
+> +		if (ret) {
+> +			dev_err(dev, "Failed to recycle element\n");
+> +			kfree(uci_buf->data);
+> +			goto read_error;
+> +		}
+> +	}
+> +	spin_unlock_bh(&uci_chan->lock);
+> +
+> +	dev_dbg(dev, "Returning %lu bytes\n", to_copy);
+> +
+> +	return to_copy;
+> +
+> +read_error:
+> +	spin_unlock_bh(&uci_chan->lock);
+> +
+> +	return ret;
+> +}
+> +
+
+
+
 -- 
-2.17.1
-
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
