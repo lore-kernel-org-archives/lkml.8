@@ -2,76 +2,78 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDD2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC619C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1BD920674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963F920674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:45:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="EhnsoZyD";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="MxMn91Br"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="fqzmIQjl";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="rlJxEj3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgESKpt (ORCPT
+        id S1728766AbgESKpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:45:49 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:59142 "EHLO
+        Tue, 19 May 2020 06:45:51 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:51698 "EHLO
         mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728686AbgESKpn (ORCPT
+        by vger.kernel.org with ESMTP id S1728730AbgESKpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:45:43 -0400
+        Tue, 19 May 2020 06:45:45 -0400
 Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04JAepe6030448;
-        Tue, 19 May 2020 03:45:32 -0700
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04JAemou030443;
+        Tue, 19 May 2020 03:45:22 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version; s=pfpt0818;
- bh=egmW+7fOU3wI49v5Mo473K16edes6eXSnfW6okNrywk=;
- b=EhnsoZyDdkCfY/PGnY4N7V+ZUOnQVUpVDv122BXagX3SIqF+skzx29BCZehJBO3D/SUe
- dnl2sr9YIWx5hhuxQgrgflRpPbkSJvx8Wr2cNCIWdu2wMMZx7q0ir1S4d9IW2WzitI/d
- zQ2SjEqS0bcVTGUYsdOwRQbFGaI7IElUBw4IGV0KjmMLGnEAFJe0vDhEMWWsIoLrmLue
- npcxmas53UJQTnQiKjInrPn5NGTOJuSTWNKdih2S38nov0G263OqUFWVwLSAHZDdlS1L
- yBy3PuHsSNCyE0UjRVowRrHk8J8hv+6ylT1p+i9kOdy4pEpCvStdK90DF9VoUH0F0yLx uQ== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 312fpp2ybw-1
+ subject : date : message-id : content-transfer-encoding : content-type :
+ mime-version; s=pfpt0818; bh=PuBCEOaZYEbehnPX7Dr8/5qAJ86eq3A3lHMwS8a8LF8=;
+ b=fqzmIQjlipkDwUVLI/vn17hwZOzbKVMtTFWksTkNtBHhSM5jTnbNJU/8BSqD0l4c9hY8
+ Got2627MVNHB3bfX2wUYWvLsMelccs5cMkMdFuKHcNh3l8TlbqLXwd01vnJDpKSXbwX5
+ YvaBNRauf1xxuqN/Y65EGnDTfBuCBzBBqxyyLhcv2mqX+xWCsMCnK77BO6b9XHsVbI3T
+ jcWJA4NXnldSFr9rS84w1NIAwL3vWeTyKPckSK00nK/6As7NLLtVJmfLIjBk/ZcxNgCV
+ DLR/97XMHmdgN9MQBOVurMi5tR2+YhVb36LNlDoX2uWHRlkOlmtzDLUKmOlR/Fe26h0N jA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 312fpp2yba-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 19 May 2020 03:45:31 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 19 May
- 2020 03:45:30 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.106)
- by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 03:45:29 -0700
+        Tue, 19 May 2020 03:45:22 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 19 May
+ 2020 03:45:19 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 19 May
+ 2020 03:45:18 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
+ by SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Tue, 19 May 2020 03:45:17 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jCL2s68V8HCmpvP7VUA5KD7onxkEAbOjO4RmQh2kevD8yI+ItT24Pd+Fq8yFXsovF21dsZ+HME7ox6Kp//RxWxTP2Up4VbdWBTDGsJ8oJwuZ4Da5bE2yR10XUsLJrYCdJk16SbEKCXG6/spPhJB1bHOvLbHXt9aAZnRBzqDUmj4of+XCxi1HVastQH1PbC0EUN19FqQzPSPoecaVRCsMk3JsJ2We6EAM5rY/UwoubIuUAM3Du5PP/0XBftHZREFoRob/aX17P7Rxl43c/s8TLz+of4bmW+crm2Etd/VCD3ro+anv42+H0N5Q0l8Zl/T7gAc0Moj2ERZwMWs7yplQ4g==
+ b=oJnFaH+uT1Y90dDTYegCNh3cjrcufcn7dCeCNrbR9BSgGZ3P4W5ja5QvQ3UJIEkYo8k/h2MywQXKMds7Bl6028FrBDoW5J6qCvPlyFYSMhSUV8Q7Gpz/aG/IZHe9FWnRpMwHoEdO8V2qMCM471hoiLdS9NjpTHKy6fqkonG2STw9ZkMwC78fujNSo3ytKH7RMYLPfu9gfERWhb+GwJQC1s5WFOjmujkE6ey4unlHuVifvpQBKaDC6Iczs+tdCZleXTC9gQ6JV3F8BmNA/WydgSCJgNAGuBJa78XsTYJX4TJ84TGtpuuX8J06pH/xL6FMmszzUit64Jd9CXzlzBuyXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=egmW+7fOU3wI49v5Mo473K16edes6eXSnfW6okNrywk=;
- b=QkeQ/92kq0ksYH6h0iQfE//OpLorFWgEF3aeQ+3pZLRtUYh2a+BQbDg6MC/GpnljNlBgSobMw9iOEz29ztRnWBWWyk0UIr+iitUAYRSpiDs3R1coXWWKQ4tVN64PAoftdN1sQI6D+mkRK7emJ0Q/zmr8H3TYNFqSqHCM7wEyF5ORHkkXnFSfCcmw0NWTNAhfW4u2ObNrR0QI7zZWMmu3bZWIXQvj4JfrtjnsPnk4J+8TWZzjDnLPCPis6YXlORShJ/k/iOGGyJJ9AD940ySNXA4NSfh+rG61SHsJA0nq/Poiinu0CI6LPMk59o5w53dWs1MysFFfAfWVhKpQjZiAYw==
+ bh=PuBCEOaZYEbehnPX7Dr8/5qAJ86eq3A3lHMwS8a8LF8=;
+ b=WgI+rnPBB0Id5hu+suvPnKlwHLYVXhZSGc1p7TP46A/UJt4c5vEhRjl7NhZpgCKzyDGySmcQ9esZZn6RkAIRLqCkDpIR2LKZvShDh0+TiwJhxFPDn1AXy28/Mcs0ohEBS0EVZny1olPYEupmgCj6z8Zxdzcly4HlaAsSk61ngBBye/5wtud6O2iXX++0UmGNfqiTeM7t7bM2AbZaeSuGWfZHzO1uBMglMROlQ1V54qMDryhrmMsFYSQVJ/UFuh5XVVqL0VWnVXbhI9nPeIG0jtRHYV6aoI0hydHfCiuZVKmDZQuDCnwD0T0aKMDH2+1pUD9aM5SMoapNVEMFb4t56Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
  dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=egmW+7fOU3wI49v5Mo473K16edes6eXSnfW6okNrywk=;
- b=MxMn91BrGRdyi/yBeQEbFM2UqGgjcALWWAxWyMXYtjaZmeXiSJH0nzzLXyopQiMzR3SObdVPVUZAsOTf/pVfe8h/hKWPzrhnOC2rhqFZdp6uFec2yQ6lNqvMaM2eyx7ovCiHYFokfNuo1Krm3FnTgRF41CFqYDMrlFi0wCfisCA=
+ bh=PuBCEOaZYEbehnPX7Dr8/5qAJ86eq3A3lHMwS8a8LF8=;
+ b=rlJxEj3XS7LDCSIYD+LJecxNgEwD/q8p9tlv2ZfjfLSGgph54QGK1ktW+3zkUR3eYaSfxu/3Rn48CtqDAq/w3xwuikr8b0ATLKmaIgBTdTliYcH86R1wexpYcPLgawK7pNuHvDwGAfS0Xqsp6h6zAsCflMXnTJDtysMAP2jkDe0=
 Authentication-Results: alien8.de; dkim=none (message not signed)
  header.d=none;alien8.de; dmarc=none action=none header.from=marvell.com;
 Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
  by BYAPR18MB2455.namprd18.prod.outlook.com (2603:10b6:a03:132::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Tue, 19 May
- 2020 10:45:28 +0000
+ 2020 10:45:16 +0000
 Received: from BYAPR18MB2661.namprd18.prod.outlook.com
  ([fe80::a165:ffa5:f3eb:d62d]) by BYAPR18MB2661.namprd18.prod.outlook.com
  ([fe80::a165:ffa5:f3eb:d62d%7]) with mapi id 15.20.3021.020; Tue, 19 May 2020
- 10:45:28 +0000
+ 10:45:16 +0000
 From:   Robert Richter <rrichter@marvell.com>
 To:     Borislav Petkov <bp@alien8.de>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -81,40 +83,38 @@ CC:     James Morse <james.morse@arm.com>,
         Robert Richter <rrichter@marvell.com>,
         Matthias Brugger <mbrugger@suse.com>,
         <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 4/5] EDAC/ghes: Have a separate code path for creating the fake MC
-Date:   Tue, 19 May 2020 12:44:42 +0200
-Message-ID: <20200519104443.15673-5-rrichter@marvell.com>
+Subject: [PATCH v3 0/5] EDAC/ghes: Cleanup and reworks
+Date:   Tue, 19 May 2020 12:44:38 +0200
+Message-ID: <20200519104443.15673-1-rrichter@marvell.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200519104443.15673-1-rrichter@marvell.com>
-References: <20200519104443.15673-1-rrichter@marvell.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: HE1P189CA0023.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::36)
  To BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from rric.localdomain (31.208.96.227) by HE1P189CA0023.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24 via Frontend Transport; Tue, 19 May 2020 10:45:26 +0000
+Received: from rric.localdomain (31.208.96.227) by HE1P189CA0023.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24 via Frontend Transport; Tue, 19 May 2020 10:45:14 +0000
 X-Mailer: git-send-email 2.20.1
 X-Originating-IP: [31.208.96.227]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2318a0b3-6a75-4cb5-3379-08d7fbe1beb9
+X-MS-Office365-Filtering-Correlation-Id: 34156149-1d0f-4b81-ee22-08d7fbe1b785
 X-MS-TrafficTypeDiagnostic: BYAPR18MB2455:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR18MB2455193C62D8BE1444AB7B70D9B90@BYAPR18MB2455.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:303;
+X-Microsoft-Antispam-PRVS: <BYAPR18MB24553779182150C036230D0DD9B90@BYAPR18MB2455.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
 X-Forefront-PRVS: 040866B734
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fvAqKAXzZaU+eDnBXSrsB5yB6kyja+V+aA7CLbTwibNOrwncUCqFWsZAd33hhOZIQAgVxq9Ywl2tIRfq5hONAm0+9qow3dXeCBUlUCwaVSJOxg6ApEYTix6NAERH/qCGrzA9kKw6R2b9QzM7DHcJzC4gvXns1jubzFCoXrLbegvDIHLuCLmGLqxBkkn8MA1seaF3mwdd32KPj4hktwbE/Z0IPXYs5MNELmRxMHK/gjnbUlAvf3n4diCWbGBp0YWFWqwQLscFaMiRThNWXaZmNYuooRf3TxskwxfDvdBy7jC9WmnzK/ngH9yvkmQa8dPlPreiCaa0OjOvLnkulqxRQbfXxwIWguWF4fhatJEkXr/wx6dktRja2Zzd6QF4bcGycADifPGGrhzGWnAWF/y9a8TyEQcSQl9ZKH6yg4/ofwgEs7lLPo6UK8HF5sa5sSk0
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(186003)(316002)(16526019)(6666004)(956004)(2616005)(36756003)(8936002)(110136005)(86362001)(66946007)(6486002)(54906003)(26005)(5660300002)(6506007)(66556008)(6512007)(66476007)(52116002)(478600001)(8676002)(1076003)(4326008)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: GAqqQDUfuGnAygXCVhjny3AMmmJTW5Y3Y1IivmWo1VuE5yps6TSbTVMmUm/HZbpkF9vL8mq4jRJF9K9JwQII1iJPmCPyuL4DgdWU9CeshW6bB9dX8MBUW8rl0JtwBNf3UxPdZbzLccUKufkm4hvTTRKhx5NjqhUQEgMwtl6nTyl4AVeGyv2BX3mUbSX4vn8X7QMvXfKkiovTyqen4eREHDDJyGjZSXDgt2jee1a579RvXumayaE75zROmDanTL2941VCnwZOTAgknYHkWgsU02Jpxs87WODUUI265ZBp85OcNK/lthHqxvZ5SprUSTVa49wl+Wn5Rd1woFvxWH5pFilxq6ap6JWZ9WphZ044QaK0CYjrFK7cYFXA84Ju6PGvnNo1zeNsPCgK6WB7aPnDdq4Zt9l61OcugXh39sPHo0FMgAX7dkC8HV9J132aZQP7IJKaK6GBa7MudUg+XdcQ2e7J2SUGMcLphX5dKfF/xlE=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2318a0b3-6a75-4cb5-3379-08d7fbe1beb9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 10:45:28.5094
+X-Microsoft-Antispam-Message-Info: gxcV2LMw/2XAUQetIbQhcyg5PPTeI9wNKM/ECwqN5pK1GozwLEC8BNEtWt3fTSdfkDmg6BDBzAE9is72BPONQq1KUxXM43CZXxNyK9kHPEhjk/yomqmW1sd9MRd0G9yU2LqwxXSqid2IEEZzr6ievbC8PH9XOY92Ie0W/2uNW/vhBvt2LKJJKgx+QcLa42lAVQOVZglZ/C/LqhFosEf5OvG0y6TexP8rWIeQGIdT7XaCLfdSlZSK38gj4bDWRrNEYFaeOsF+Hcaz7GIQOmsCJhyzNxDFl5a/lENGA6rK5UtQKzWAkQIBpHPs19NvY79rTqq/q70bjqRSrfsRmFUGLjumLYi1hQX4+fBIfVWtk6rvFRHpDtOGnyCjpsbx/chrBZ2UxLWUxoHp29GGhQfJRTNYjwLLLOvpchFhzBBRtSpAzviAyZBVcMMiyzSBegaFAJl+AMwbFC+t6ubJirK7Vj0cKrBpA+0syDDSk5+bxuRTU5u5PBzovkvZ69UghF44jI4GoMiZm91ylF17ac4zwQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(186003)(316002)(16526019)(6666004)(956004)(2616005)(36756003)(8936002)(110136005)(86362001)(66946007)(966005)(6486002)(54906003)(26005)(5660300002)(6506007)(66556008)(6512007)(66476007)(52116002)(478600001)(8676002)(1076003)(4326008)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Ivw0Je2KhV3Cq4wGV+JKCSAUmsU0uibJ+gI930pHTb00prz7z3p6HSmDhqP19Z5CmFAjW7TgZ+6YlH1Slzy7Uhct9JZlhAwjH6RpF9ph3x6dkmQW/hhvDtGO4meHNyoUpaJICwUjL0VcdTYyWDUuD6vV08WF1kv77qtlvej5rALH4Gvg8AH98EkcA1k+2S+ttv8I9D/JxutXSVlNiBvlhQ2hgwYq8B/KaQBePDZ4HL/Z8Khgm7OmD3tDrJLFdg4L9JlGm7cSoMOv51f8PY0O2hF42pI4vn4ICgWfeHlzsx1kHCtBENWZac4y48xLGSx2eka/1dzoHkFMljQPZfN9z2zHYifHOI42/b0E4tyQA2hjgxWFmalDnN3pwFImNmAijTebW42BKIxBgNa1Fd3zKAL6fcnF8pvRAkwMzyXdDIAXpwhfmnAvUD7rdkyowlxRBoGopcKKhGcxq/PLj4h5XXUdOx+uujWIV9fKraz48pw=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34156149-1d0f-4b81-ee22-08d7fbe1b785
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 10:45:16.4673
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DbH/WlSN+z7F8c5UciqlSbXQzUlVoLsbRFrbk8vgzvHJRgHLk54/LC8wP0dac4FJ/pXIS7ryYqARAT2+OwvhgQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: uNDEm1cywk9lyOjWbwtSiH9YGm/sylbX1Nh78ctRsPgcuxMJr1Xhg/twX3Po9Xgqa5G16Gff3e3+OzATDlnDHQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2455
 X-OriginatorOrg: marvell.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
@@ -124,133 +124,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code in ghes_edac_register() switches back and forth between
-standard and fake controller creation. Do one thing only and separate
-the code path that creates the fake MC.
+This series contains a general cleanup and rework of the edac ghes
+driver:
 
-Note: For better review the code is not yet carved out in separate
-functions.
+ * Some small code improvements (patches #1, #2).
 
-Signed-off-by: Robert Richter <rrichter@marvell.com>
----
- drivers/edac/ghes_edac.c | 73 +++++++++++++++++++++++++---------------
- 1 file changed, 46 insertions(+), 27 deletions(-)
+ * Code in functions ghes_edac_{register,unregister}() is move to new
+   functions ghes_mc_{create,destroy}() and ghes_mc_{add,del}() (patch
+   #3).
 
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index 8329af037fbe..47b99e0fea6d 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -536,7 +536,6 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
- 	struct dimm_fill dimm_fill;
- 	int rc = 0, num_dimm = 0;
- 	struct mem_ctl_info *mci;
--	bool fake = false;
- 	int idx;
- 
- 	if (IS_ENABLED(CONFIG_X86)) {
-@@ -560,24 +559,44 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
- 	/* Get the number of DIMMs */
- 	dmi_walk(ghes_edac_count_dimms, &num_dimm);
- 
--	/* Check if we've got a bogus BIOS */
--	if (num_dimm == 0) {
--		fake = true;
--		num_dimm = 1;
--	}
-+	if (!num_dimm) {
-+		/*
-+		 * Bogus BIOS: Ignore DMI topology and use a single MC
-+		 * with only one DIMM for the whole address range to
-+		 * catch all errros.
-+		 */
-+		struct dimm_info *dimm;
- 
--	mci = ghes_mc_create(dev, 0, num_dimm);
--	if (!mci) {
--		pr_info("Can't allocate memory for EDAC data\n");
--		rc = -ENOMEM;
--		goto unlock;
--	}
-+		mci = ghes_mc_create(dev, 0, 1);
-+		if (!mci) {
-+			rc = -ENOMEM;
-+			goto unlock;
-+		}
-+
-+		dimm = edac_get_dimm_by_index(mci, 0);
-+
-+		dimm->nr_pages = 1;
-+		dimm->grain = 128;
-+		dimm->mtype = MEM_UNKNOWN;
-+		dimm->dtype = DEV_UNKNOWN;
-+		dimm->edac_mode = EDAC_SECDED;
-+
-+		snprintf(dimm->label, sizeof(dimm->label), "unknown memory");
-+
-+		rc = ghes_mc_add(mci);
-+		if (rc) {
-+			ghes_mc_destroy(mci);
-+			goto unlock;
-+		}
- 
--	if (fake) {
- 		pr_info("This system has a very crappy BIOS: It doesn't even list the DIMMS.\n");
- 		pr_info("Its SMBIOS info is wrong. It is doubtful that the error report would\n");
- 		pr_info("work on such system. Use this driver with caution\n");
--	} else if (idx < 0) {
-+
-+		goto out;
-+	}
-+
-+	if (idx < 0) {
- 		pr_info("This EDAC driver relies on BIOS to enumerate memory and get error reports.\n");
- 		pr_info("Unfortunately, not all BIOSes reflect the memory layout correctly.\n");
- 		pr_info("So, the end result of using this driver varies from vendor to vendor.\n");
-@@ -586,31 +605,31 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
- 		pr_info("This system has %d DIMM sockets.\n", num_dimm);
- 	}
- 
--	if (!fake) {
--		dimm_fill.index = 0;
--		dimm_fill.mci = mci;
--		dmi_walk(ghes_edac_dmidecode, &dimm_fill);
--	} else {
--		struct dimm_info *dimm = edac_get_dimm_by_index(mci, 0);
--
--		dimm->nr_pages = 1;
--		dimm->grain = 128;
--		dimm->mtype = MEM_UNKNOWN;
--		dimm->dtype = DEV_UNKNOWN;
--		dimm->edac_mode = EDAC_SECDED;
-+	mci = ghes_mc_create(dev, 0, num_dimm);
-+	if (!mci) {
-+		rc = -ENOMEM;
-+		goto unlock;
- 	}
- 
-+	dimm_fill.index = 0;
-+	dimm_fill.mci = mci;
-+
-+	dmi_walk(ghes_edac_dmidecode, &dimm_fill);
-+
- 	rc = ghes_mc_add(mci);
- 	if (rc < 0) {
--		pr_info("Can't register at EDAC core\n");
- 		ghes_mc_destroy(mci);
- 		goto unlock;
- 	}
- 
-+out:
- 	/* only set on success */
- 	refcount_set(&ghes_refcount, 1);
- 
- unlock:
-+	if (rc < 0)
-+		pr_info("Can't register at EDAC core\n");
-+
- 	mutex_unlock(&ghes_reg_mutex);
- 
- 	return rc;
+ * Separated 'fake' controller code path (patches #4, #5).
+
+Tested on a Marvell/Cavium ThunderX2 Sabre (dual socket) system.
+
+v3:
+ * Rebased onto dc63e28efa19 ("Merge branch 'edac-i10nm' into
+   edac-for-next") plus patch "EDAC/ghes: Setup DIMM label from DMI
+   and use it in error reports" applied from
+   https://lore.kernel.org/patchwork/patch/1243203/
+ * Removed v2 patches 01/10 and 02/10 for edac_mc driver from this
+   series, both are unrelated.
+ * Dropped v2 patch 04/10 "EDAC/ghes: Make SMBIOS handle private data
+   to ghes", there is no consent with the maintainer to the code
+   introduced to get a private ghes_dimm data structure, nor there was
+   any feasible alternative suggested.
+ * Taken v2 patch 05/10 "EDAC/ghes: Setup DIMM label from DMI and use
+   it in error reports" out of this series and submitted separately
+   (see above patchwork link).
+ * Dropped v2 patch 06/10, keep rdr_mask variable.
+ * Fixed subject of v2 patch 07/10 to 'EDAC/ghes: Cleanup struct
+   dimm_fill'.
+ * Reworked function interface, there is now
+   ghes_mc_{create,destroy}() and ghes_mc_{add,del}().
+ * Aligned arguments on the opening brace (ghes_mc_*()).
+ * Remove ghes_ prefix from ghes_dimm_* definitions.
+ * Use sizeof(struct ghes_pvt) in edac_mc_alloc().
+ * Rename struct ghes_mci to struct ghes_pvt.
+
+v2:
+ * https://lore.kernel.org/patchwork/cover/1229380/
+ * reordered patches to have fixes and struct changes first, code
+   refactoring patches last,
+ * dropped v1 patches #9 to #11 (multiple conrollers) to handle them
+   in a separate series,
+ * rewrote patch to remove smbios_handle (based on v1 #9): EDAC/ghes:
+   Move smbios_handle from struct dimm_info to ghes private data,
+ * added lockdep_assert_held() checkers,
+ * renamed struct ghes_dimm_fill to struct dimm_fill,
+ * renamed local variable dimms to dimm_list to avoid conflict with
+   the global variable,
+ * removed dimm list for "fake" controller,
+ * fixed return code check to use (rc < 0),
+ * added: EDAC/mc: Fix usage of snprintf() and dimm location setup
+
+v1:
+ * https://lore.kernel.org/patchwork/cover/1205901/
+
+
+Robert Richter (5):
+  EDAC/ghes: Remove unused members of struct ghes_edac_pvt, rename it to
+    ghes_pvt
+  EDAC/ghes: Cleanup struct dimm_fill
+  EDAC/ghes: Carve out MC device handling into separate functions
+  EDAC/ghes: Have a separate code path for creating the fake MC
+  EDAC/ghes: Carve out code into ghes_edac_register_{one,fake}()
+
+ drivers/edac/ghes_edac.c | 254 ++++++++++++++++++++++++---------------
+ 1 file changed, 159 insertions(+), 95 deletions(-)
+
 -- 
 2.20.1
 
