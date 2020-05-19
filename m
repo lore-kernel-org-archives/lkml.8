@@ -2,208 +2,72 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B64DF2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60022072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgESV26 (ORCPT
+        id S1727063AbgESV3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:28:58 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37790 "EHLO mga05.intel.com"
+        Tue, 19 May 2020 17:29:02 -0400
+Received: from namei.org ([65.99.196.166]:38282 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgESV25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:28:57 -0400
-IronPort-SDR: 4itu5KsTvTg1dzp+jcvu5lQ8PNqEUXXJLbnlw2zGsNmqDgGx2mKJp6HX9uyJv8y4nXYQitESsU
- eGHuuWewgyOQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 14:28:57 -0700
-IronPort-SDR: u4HyWDynjLXS0qy1Z6UqU20OYMOz4pqadrGGKQbRKM1WM7sLaj75DiC+zL11wMnXL6R8LeUpL8
- cwdeI8xEI5eQ==
-X-IronPort-AV: E=Sophos;i="5.73,411,1583222400"; 
-   d="scan'208";a="264449068"
-Received: from rchatre-s.jf.intel.com ([10.54.70.76])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 14:28:56 -0700
-From:   Reinette Chatre <reinette.chatre@intel.com>
-To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
-        tony.luck@intel.com
-Cc:     kuo-lang.tseng@intel.com, ravi.v.shankar@intel.com,
-        mingo@redhat.com, babu.moger@amd.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>
-Subject: [PATCH V6 0/4] x86/resctrl: Enable user to view and select thread throttling mode
-Date:   Tue, 19 May 2020 14:28:27 -0700
-Message-Id: <cover.1589922949.git.reinette.chatre@intel.com>
-X-Mailer: git-send-email 2.21.0
+        id S1725998AbgESV3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 17:29:01 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 04JLSVQr028873;
+        Tue, 19 May 2020 21:28:31 GMT
+Date:   Wed, 20 May 2020 07:28:31 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Kees Cook <keescook@chromium.org>
+cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v2 2/8] exec: Factor security_bprm_creds_for_exec out of
+ security_bprm_set_creds
+In-Reply-To: <202005191108.7A6E97831@keescook>
+Message-ID: <alpine.LRH.2.21.2005200728110.6670@namei.org>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org> <87sgga6ze4.fsf@x220.int.ebiederm.org> <87v9l4zyla.fsf_-_@x220.int.ebiederm.org> <877dx822er.fsf_-_@x220.int.ebiederm.org> <87v9kszrzh.fsf_-_@x220.int.ebiederm.org> <202005191108.7A6E97831@keescook>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V5 upstream submission available from:
-https://lore.kernel.org/lkml/cover.1589844108.git.reinette.chatre@intel.com
+On Tue, 19 May 2020, Kees Cook wrote:
 
-Patches apply against x86/cache branch commit 0c4d5ba1b998e of tip repo at
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+> >  	/* SELinux context only depends on initial program or script and not
+> >  	 * the script interpreter */
+> > -	if (bprm->called_set_creds)
+> > -		return 0;
+> >  
+> >  	old_tsec = selinux_cred(current_cred());
+> >  	new_tsec = selinux_cred(bprm->cred);
+> 
+> As you've done in the other LSMs, I think this comment can be removed
+> (or moved to the top of the function) too.
 
-Changes since V5:
-- Remove the early check of the sysfs_match_string() return code. (Andy)
-
-V4 upstream submission available from:
-https://lore.kernel.org/lkml/cover.1589652468.git.reinette.chatre@intel.com
-
-Patches apply against x86/cache branch commit 0c4d5ba1b998e of tip repo at
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-
-Changes since V4:
-- Pick up Babu's "Reviewed-by" tags.
-- Three checks are performed before the MBA_CFG register is updated from
-  its cache. Move all checks to the same if statement. (Babu)
-- Remove unnecessary return statement when there is only a switch statement
-  in the function that is already handling all cases. (Babu)
-- Remove "mode" local variable from rdtgroup_mode_write(). This variable
-  was previously used to create shorter lines with the original strcmp()
-  code that was removed in patch 4/4.
-- Andy pointed out that the repeated assignment to rdtgrp->mode could be
-  replaced by a single assignment after all the checks. This was initially
-  rejected because it would let the "RDT_MODE_PSEUDO_LOCKED" assignment
-  slip through. Even so, Andy's feedback revealed that the new changes
-  unintentionally let a user's attempt at setting the mode to pseudo-locked
-  be silently ignored where it previously reported an error. Restore original
-  user space behavior by returning success when user attempts to change any
-  mode when it is already the current mode (including pseudo-locked) and
-  returning failure when user attempts to set the mode to pseudo-locked.
-  After this change it is possible to follow Andy's original suggestion
-  of using a single assignment. (Andy)
-
-V3 upstream submission available from:
-https://lore.kernel.org/lkml/cover.1588808537.git.reinette.chatre@intel.com
-
-Patches apply against x86/cache branch of tip repo at
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-
-Changes since V3:
-- Maintain the thread throttling mode as a property ("arch_throttle_mode")
-  of the memory bandwidth allocation resource
-  instead of calling a function that queries the system's model each time
-  this information is needed. Use this new property generically throughout
-  with the goal of being independent of architecture. (Babu)
-- Remove "intel" from thread_throttle_mode_init_intel_rw() and
-  thread_throttle_mode_init_intel_ro() in anticipation of usage by other
-  architectures.
-- Use function parameter to update_mba_cfg() directly instead of having
-  local variable point to it. (Fenghua)
-- Remove unnecessary additional check whether platform supports feature
-  from the "thread_throttle_mode" callback. The file will only be
-  accessible on platforms that support the feature.
-- Rework commit message of first patch to be more complete regarding
-  support of all architectures after incorporating AMD feedback.
-- View the thread throttle mode with rdtgroup mutex held since it is using
-  cached information that may be changed concurrently.
-- Remove unnecessary empty line. (Babu)
-
-V2 upstream submission available from:
-https://lore.kernel.org/lkml/cover.1586801373.git.reinette.chatre@intel.com
-
-Changes since V2:
-- Rebase on top of recently merged series "x86/resctrl: Support wider
-  MBM counters". Small change needed to take into account
-  asm/resctrl_sched.h -> asm/resctrl.h name change.
-- Fix rST formatting of documentation (resctrl_ui.rst) describing
-  new "thread_throttle_mode" resctrl file.
-- Use boot_cpu_has() instead of static_cpu_has() when determining what
-  to display to user (slow path).
-
-V1 upstream submission available from:
-https://lore.kernel.org/lkml/cover.1585765499.git.reinette.chatre@intel.com
-
-A notable change since V1 is the inclusion of two additional patches from
-Fenghua Yu that introduce the new per-thread MBA feature. These changes are
-added to this series because they are small and closely related to the
-original submission. The per-thread MBA feature is a hardware advancement
-that requires no software interface changes. The patches added just enumerate
-the feature and expose it to userspace by showing "per-thread" in the new
-resctrl file "thread_throttle_mode" to help user applications fine tune
-performance.
-
-There are currently a few resctrl changes outstanding for upstream inclusion.
-To support their consideration all outstanding resctrl patches can be
-viewed at https://github.com/rchatre/linux.git (branch resctrl/next)
-
-Changes since V1 (also documented within patches to which they apply):
-- Rebased on top of James Morse's CDP fix
-(https://lore.kernel.org/lkml/20200221162105.154163-1-james.morse@arm.com)
-- Remove RF_UNINITIALIZED (having uninitialized be represented with ones
-  creates too much confusion), replace with an explicit check of rft->fflags
-  in rdtgroup_add_files() (Fenghua Yu)
-- Rename MBA_THREAD_THROTTLE_MODE to MBA_THROTTLE_MODE_MASK to clarify its
-  use as a mask (Tony Luck)
-- Introduce explicit MBA_THROTTLE_MODE_MAX instead of implying it is the
-  opposite of min and use these values (min and max) explicitly whenever
-  testing/setting the throttle mode value (Tony Luck)
-- Add __init attribute to thread_throttle_mode_init_intel_rw() and
-  thread_throttle_mode_init_intel_ro() since they are only needed during
-  initialization (Fenghua Yu)
-- Remove MBA_CFG MSR reads and error checking so that the patch is simpler
-  and easier to review (Fenghua Yu)
-- Ensure CPU hotplug lock is taken when writing register on multiple CPUs (Fenghua Yu)
-- Use CPU mask already maintained as part of domains to determine which
-  CPUs to update MBA register on (Fenghua Yu)
-- Maintain MBA configuration register contents to support use case when not
-  all CPUs of a package are online when configuration is set from user
-  space
-- Use seq_puts() instead of seq_printf() when simple strings are printed
-- Set MBA configuration to default when resctrl is unmounted
-- Complete rewrite of "thread_throttle_mode" documentation (Tony Luck)
-- Remove unnecessary checks on user input (Andy Shevchenko)
-- Change code style surrounding usage of sysfs_match_string() (Andy Shevchenko)
-
-From V1 submission:
-
-The first patch in this series introduces a new resctrl file,
-"thread_throttle_mode", on Intel systems that exposes to the
-user how per-thread values are allocated to a core. This is added in
-support of newer Intel systems that can be configured to allocate
-either maximum or minimum throttling of the per-thread CLOS values
-to the core.
-
-Details about the feature can be found in the commit description and
-in Chapter 9 of the most recent Intel ISE available from
-https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
-
-The first patch parses user input with the appropriate sysfs API that has
-not previously been used in resctrl. The second (later in the fourth) patch is
-added as a subsequent cleanup that switches existing resctrl string parsing
-code to also use this appropriate API.
-
-
-
-Fenghua Yu (2):
-  x86/resctrl: Enumerate per-thread MBA
-  x86/resctrl: Enable per-thread MBA
-
-Reinette Chatre (2):
-  x86/resctrl: Enable user to view and select thread throttling mode
-  x86/resctrl: Use appropriate API for strings terminated by newline
-
- Documentation/x86/resctrl_ui.rst       |  22 ++-
- arch/x86/include/asm/cpufeatures.h     |   1 +
- arch/x86/kernel/cpu/cpuid-deps.c       |   1 +
- arch/x86/kernel/cpu/resctrl/core.c     |  52 ++++++
- arch/x86/kernel/cpu/resctrl/internal.h |  49 +++++-
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 235 +++++++++++++++++++++++--
- arch/x86/kernel/cpu/scattered.c        |   1 +
- 7 files changed, 335 insertions(+), 26 deletions(-)
+I'd prefer moved to top of the function.
 
 -- 
-2.21.0
+James Morris
+<jmorris@namei.org>
 
