@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1201C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA12C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA2CE20826
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A5320872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgESUCX (ORCPT
+        id S1728837AbgESUC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:02:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51948 "EHLO
+        Tue, 19 May 2020 16:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgEST6d (ORCPT
+        with ESMTP id S1727973AbgEST6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 May 2020 15:58:33 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B291FC08C5C2;
-        Tue, 19 May 2020 12:58:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E59F1C08C5C1;
+        Tue, 19 May 2020 12:58:32 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb8Nh-0008G7-29; Tue, 19 May 2020 21:58:29 +0200
+        id 1jb8Nf-0008E8-D8; Tue, 19 May 2020 21:58:27 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 914651C0813;
-        Tue, 19 May 2020 21:58:26 +0200 (CEST)
-Date:   Tue, 19 May 2020 19:58:26 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CB4121C06DA;
+        Tue, 19 May 2020 21:58:24 +0200 (CEST)
+Date:   Tue, 19 May 2020 19:58:24 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] lib/bsearch: Provide __always_inline variant
+Subject: [tip: x86/entry] x86/traps: Split int3 handler up
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505135313.624443814@linutronix.de>
-References: <20200505135313.624443814@linutronix.de>
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200505135314.045220765@linutronix.de>
+References: <20200505135314.045220765@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158991830648.17951.969963884359483871.tip-bot2@tip-bot2>
+Message-ID: <158991830471.17951.13148640036237320422.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,100 +60,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     83b169bb1d30546c21cf1e22a0834547bfe91f06
-Gitweb:        https://git.kernel.org/tip/83b169bb1d30546c21cf1e22a0834547bfe91f06
+Commit-ID:     f4f6b66fd8011eb5f24dec936faaa4cab2ca7ebc
+Gitweb:        https://git.kernel.org/tip/f4f6b66fd8011eb5f24dec936faaa4cab2ca7ebc
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 19 Feb 2020 18:25:09 +01:00
+AuthorDate:    Thu, 05 Mar 2020 16:09:52 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 19 May 2020 16:04:05 +02:00
+CommitterDate: Tue, 19 May 2020 16:04:07 +02:00
 
-lib/bsearch: Provide __always_inline variant
+x86/traps: Split int3 handler up
 
-For code that needs the ultimate performance (it can inline the @cmp
-function too) or simply needs to avoid calling external functions for
-whatever reason, provide an __always_inline variant of bsearch().
-
-[ tglx: Renamed to __inline_bsearch() as suggested by Andy ]
+For code simplicity split up the int3 handler into a kernel and user part
+which makes the code flow simpler to understand.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/20200505135313.624443814@linutronix.de
+Link: https://lkml.kernel.org/r/20200505135314.045220765@linutronix.de
 
 
 ---
- include/linux/bsearch.h | 26 ++++++++++++++++++++++++--
- lib/bsearch.c           | 22 ++--------------------
- 2 files changed, 26 insertions(+), 22 deletions(-)
+ arch/x86/kernel/traps.c | 68 +++++++++++++++++++++++-----------------
+ 1 file changed, 40 insertions(+), 28 deletions(-)
 
-diff --git a/include/linux/bsearch.h b/include/linux/bsearch.h
-index 8ed53d7..e66b711 100644
---- a/include/linux/bsearch.h
-+++ b/include/linux/bsearch.h
-@@ -4,7 +4,29 @@
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 0ad12df..21c8cfc 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -568,6 +568,35 @@ exit:
+ 	cond_local_irq_disable(regs);
+ }
  
- #include <linux/types.h>
- 
--void *bsearch(const void *key, const void *base, size_t num, size_t size,
--	      cmp_func_t cmp);
-+static __always_inline
-+void *__inline_bsearch(const void *key, const void *base, size_t num, size_t size, cmp_func_t cmp)
++static bool do_int3(struct pt_regs *regs)
 +{
-+	const char *pivot;
-+	int result;
++	int res;
 +
-+	while (num > 0) {
-+		pivot = base + (num >> 1) * size;
-+		result = cmp(key, pivot);
++#ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
++	if (kgdb_ll_trap(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
++			 SIGTRAP) == NOTIFY_STOP)
++		return true;
++#endif /* CONFIG_KGDB_LOW_LEVEL_TRAP */
 +
-+		if (result == 0)
-+			return (void *)pivot;
++#ifdef CONFIG_KPROBES
++	if (kprobe_int3_handler(regs))
++		return true;
++#endif
++	res = notify_die(DIE_INT3, "int3", regs, 0, X86_TRAP_BP, SIGTRAP);
 +
-+		if (result > 0) {
-+			base = pivot + size;
-+			num--;
-+		}
-+		num >>= 1;
-+	}
-+
-+	return NULL;
++	return res == NOTIFY_STOP;
 +}
 +
-+extern void *bsearch(const void *key, const void *base, size_t num, size_t size, cmp_func_t cmp);
- 
- #endif /* _LINUX_BSEARCH_H */
-diff --git a/lib/bsearch.c b/lib/bsearch.c
-index 8b3aae5..bf86aa6 100644
---- a/lib/bsearch.c
-+++ b/lib/bsearch.c
-@@ -28,27 +28,9 @@
-  * the key and elements in the array are of the same type, you can use
-  * the same comparison function for both sort() and bsearch().
-  */
--void *bsearch(const void *key, const void *base, size_t num, size_t size,
--	      cmp_func_t cmp)
-+void *bsearch(const void *key, const void *base, size_t num, size_t size, cmp_func_t cmp)
++static void do_int3_user(struct pt_regs *regs)
++{
++	if (do_int3(regs))
++		return;
++
++	cond_local_irq_enable(regs);
++	do_trap(X86_TRAP_BP, SIGTRAP, "int3", regs, 0, 0, NULL);
++	cond_local_irq_disable(regs);
++}
++
+ DEFINE_IDTENTRY_RAW(exc_int3)
  {
--	const char *pivot;
--	int result;
+ 	/*
+@@ -585,37 +614,20 @@ DEFINE_IDTENTRY_RAW(exc_int3)
+ 	 * because the INT3 could have been hit in any context including
+ 	 * NMI.
+ 	 */
+-	if (user_mode(regs))
++	if (user_mode(regs)) {
+ 		idtentry_enter(regs);
+-	else
+-		nmi_enter();
 -
--	while (num > 0) {
--		pivot = base + (num >> 1) * size;
--		result = cmp(key, pivot);
+-	instrumentation_begin();
+-#ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
+-	if (kgdb_ll_trap(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
+-				SIGTRAP) == NOTIFY_STOP)
+-		goto exit;
+-#endif /* CONFIG_KGDB_LOW_LEVEL_TRAP */
 -
--		if (result == 0)
--			return (void *)pivot;
+-#ifdef CONFIG_KPROBES
+-	if (kprobe_int3_handler(regs))
+-		goto exit;
+-#endif
 -
--		if (result > 0) {
--			base = pivot + size;
--			num--;
--		}
--		num >>= 1;
--	}
+-	if (notify_die(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
+-			SIGTRAP) == NOTIFY_STOP)
+-		goto exit;
 -
--	return NULL;
-+	return __inline_bsearch(key, base, num, size, cmp);
+-	cond_local_irq_enable(regs);
+-	do_trap(X86_TRAP_BP, SIGTRAP, "int3", regs, 0, 0, NULL);
+-	cond_local_irq_disable(regs);
+-
+-exit:
+-	instrumentation_end();
+-	if (user_mode(regs))
++		instrumentation_begin();
++		do_int3_user(regs);
++		instrumentation_end();
+ 		idtentry_exit(regs);
+-	else
++	} else {
++		nmi_enter();
++		instrumentation_begin();
++		if (!do_int3(regs))
++			die("int3", regs, 0);
++		instrumentation_end();
+ 		nmi_exit();
++	}
  }
- EXPORT_SYMBOL(bsearch);
- NOKPROBE_SYMBOL(bsearch);
+ 
+ #ifdef CONFIG_X86_64
