@@ -2,150 +2,92 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86978C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5451A206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B73B207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:59:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X7kZZGEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgESS64 (ORCPT
+        id S1727075AbgESS72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:58:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgESS64 (ORCPT
+        Tue, 19 May 2020 14:59:28 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53522 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgESS72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:58:56 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A30C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:58:56 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jb7R8-0006vJ-Jc; Tue, 19 May 2020 20:57:58 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 187F7100D01; Tue, 19 May 2020 20:57:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V6 10/37] x86/entry: Switch XEN/PV hypercall entry to IDTENTRY
-In-Reply-To: <CALCETrUqK6hv4AuGL=GtK+12TCmr5nBA7CBy=X7TNA=w_Jk0Qw@mail.gmail.com>
-References: <20200515234547.710474468@linutronix.de> <20200515235125.425810667@linutronix.de> <CALCETrUqK6hv4AuGL=GtK+12TCmr5nBA7CBy=X7TNA=w_Jk0Qw@mail.gmail.com>
-Date:   Tue, 19 May 2020 20:57:58 +0200
-Message-ID: <87imgr7nwp.fsf@nanos.tec.linutronix.de>
+        Tue, 19 May 2020 14:59:28 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JIxMI4057912;
+        Tue, 19 May 2020 13:59:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589914762;
+        bh=rwh2Gt4nspEOd6+g3pYcOtsRvF3IZkaE/t4GtEJf3FQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=X7kZZGEm/RJjJ3rU1QkdE411IjXMFSO7PcjOriXyTCwdIlBTPGFbEv5gIdshzvoY/
+         FcKM+L5hhDGaOc406bfPtb9VA+Yv8vcd/H2cE8qGsh2dKqpOsRvRJ1EM69tgYYq15M
+         CCvR1H4wcKJHkW112X+UQJS+XvZCVl5FI1kIEowY=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JIxM8m038237
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 May 2020 13:59:22 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 13:59:21 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 13:59:21 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JIxLbs037318;
+        Tue, 19 May 2020 13:59:21 -0500
+Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     Andrew Lunn <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200519141813.28167-1-dmurphy@ti.com>
+ <20200519141813.28167-3-dmurphy@ti.com>
+ <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200519182916.GM624248@lunn.ch>
+ <c45bae32-d26f-cbe5-626b-2afae4a557b3@ti.com>
+ <20200519114843.34e65bcc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <5d6d799f-f7b6-566a-5038-5901590f2e7b@ti.com>
+Date:   Tue, 19 May 2020 13:59:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200519114843.34e65bcc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> @@ -573,6 +578,16 @@ static __always_inline void __idtentry_exit(struct pt_regs *regs)
->>                                 instrumentation_end();
->>                                 return;
->>                         }
->> +               } else if (IS_ENABLED(CONFIG_XEN_PV)) {
->> +                       if (preempt_hcall) {
->> +                               /* See CONFIG_PREEMPTION above */
->> +                               instrumentation_begin();
->> +                               rcu_irq_exit_preempt();
->> +                               xen_maybe_preempt_hcall();
->> +                               trace_hardirqs_on();
->> +                               instrumentation_end();
->> +                               return;
->> +                       }
->
-> Ewwwww!  This shouldn't be taken as a NAK -- it's just an expression
-> of disgust.
+Jakub
 
-I'm really not proud of it, but that was the least horrible thing I
-could come up with.
+On 5/19/20 1:48 PM, Jakub Kicinski wrote:
+> On Tue, 19 May 2020 13:41:40 -0500 Dan Murphy wrote:
+>>> Is this now a standard GCC warning? Or have you turned on extra
+>>> checking?
+>> I still was not able to reproduce this warning with gcc-9.2.  I would
+>> like to know the same
+> W=1 + gcc-10 here, also curious to know which one of the two makes
+> the difference :)
 
-> Shouldn't this be:
->
-> instrumentation_begin();
-> if (!irq_needs_irq_stack(...))
->   __blah();
-> else
->   run_on_irqstack(__blah, NULL);
-> instrumentation_end();
->
-> or even:
->
-> instrumentation_begin();
-> run_on_irqstack_if_needed(__blah, NULL);
-> instrumentation_end();
+W=1 made the difference I got the warning with gcc-9.2
 
-Yeah. In that case the instrumentation markers are not required as they
-will be inside the run....() function.
+Dan
 
-> ****** BUT *******
->
-> I think this is all arse-backwards.  This is a giant mess designed to
-> pretend we support preemption and to emulate normal preemption in a
-> non-preemptible kernel.  I propose one to two massive cleanups:
->
-> A: Just delete all of this code.  Preemptible hypercalls on
-> non-preempt kernels will still process interrupts but won't get
-> preempted.  If you want preemption, compile with preemption.
-
-I'm happy to do so, but the XEN folks might have opinions on that :)
-
-> B: Turn this thing around.  Specifically, in the one and only case we
-> care about, we know pretty much exactly what context we got this entry
-> in: we're running in a schedulable context doing an explicitly
-> preemptible hypercall, and we have RIP pointing at a SYSCALL
-> instruction (presumably, but we shouldn't bet on it) in the hypercall
-> page.  Ideally we would change the Xen PV ABI so the hypercall would
-> return something like EAGAIN instead of auto-restarting and we could
-> ditch this mess entirely.  But the ABI seems to be set in stone or at
-> least in molasses, so how about just:
->
-> idt_entry(exit(regs));
-> if (inhcall && need_resched())
->   schedule();
-
-Which brings you into the situation that you call schedule() from the
-point where we just moved it out. If we would go there we'd need to
-ensure that RCU is watching as well. idtentry_exit() might have it
-turned off ....
-
-That's why I did it this way to keep the code flow exactly the same for
-all these exit variants.
-
-Thanks,
-
-        tglx
