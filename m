@@ -2,75 +2,96 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6025AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D993C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 433822070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660312070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 07:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgESHQz (ORCPT
+        id S1728510AbgESHRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 03:16:55 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:57933 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgESHQz (ORCPT
+        Tue, 19 May 2020 03:17:10 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:45666 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgESHRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 03:16:55 -0400
-X-Originating-IP: 78.194.159.98
-Received: from clip-os.org (unknown [78.194.159.98])
-        (Authenticated sender: thibaut.sautereau@clip-os.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id DE5FF40006;
-        Tue, 19 May 2020 07:16:52 +0000 (UTC)
-Date:   Tue, 19 May 2020 09:16:52 +0200
-From:   Thibaut Sautereau <thibaut.sautereau@clip-os.org>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: NULL pointer dereference in coredump code
-Message-ID: <20200519071652.GA924@clip-os.org>
-References: <20200330083158.GA21845@clip-os.org>
+        Tue, 19 May 2020 03:17:09 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id E31491C025C; Tue, 19 May 2020 09:17:07 +0200 (CEST)
+Date:   Tue, 19 May 2020 09:17:07 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 4.19 01/80] net: dsa: Do not make user port errors fatal
+Message-ID: <20200519071707.GA2609@amd>
+References: <20200518173450.097837707@linuxfoundation.org>
+ <20200518173450.419156571@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
 Content-Disposition: inline
-In-Reply-To: <20200330083158.GA21845@clip-os.org>
+In-Reply-To: <20200518173450.419156571@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:31:59AM +0200, Thibaut Sautereau wrote:
-> I hit a kernel NULL pointer dereference caused by the following call chain:
-> 
-> do_coredump()
->   file_start_write(cprm.file) # cprm.file is NULL
->     file_inode(file) # NULL ptr deref
-> 
-> The `ispipe` path is followed in do_coredump(), and:
->     # cat /proc/sys/kernel/core_pattern
->     |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
-> 
-> It seems that cprm.file can be NULL after the call to the usermode
-> helper, especially when setting CONFIG_STATIC_USERMODEHELPER=y and
-> CONFIG_STATIC_USERMODEHELPER_PATH="", which is the case for me.
-> 
-> One may say it's a strange combination of configuration options but I
-> think it should not crash the kernel anyway. As I don't know much about
-> coredumps in general and this code, I don't know what's the best way to
-> fix this issue in a clean and comprehensive way.
-> 
-> I attached the patch I used to temporarily work around this issue, if
-> that can clarify anything.
-> 
-> Thanks,
 
-For the record, this had previously been reported [1] and was eventually
-fixed by 3740d93e3790 ("coredump: fix crash when umh is disabled").
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=199795
+Hi!
 
--- 
-Thibaut Sautereau
-CLIP OS developer
+> From: Florian Fainelli <f.fainelli@gmail.com>
+>=20
+> commit 86f8b1c01a0a537a73d2996615133be63cdf75db upstream.
+>=20
+> Prior to 1d27732f411d ("net: dsa: setup and teardown ports"), we would
+> not treat failures to set-up an user port as fatal, but after this
+> commit we would, which is a regression for some systems where interfaces
+> may be declared in the Device Tree, but the underlying hardware may not
+> be present (pluggable daughter cards for instance).
+>=20
+
+> +++ b/net/dsa/dsa2.c
+> @@ -412,7 +412,7 @@ static int dsa_tree_setup_switches(struc
+> =20
+>  		err =3D dsa_switch_setup(ds);
+>  		if (err)
+> -			return err;
+> +			continue;
+
+The error code is discarded here, so user can now wonder "why does not
+my port work" with no indications in the logs... Should we do
+dev_info() here?
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7Dh/MACgkQMOfwapXb+vK6EwCfbsYtW3pWBV0oHAsKPFkjovUR
+EMwAn0AlL0il0dzKyEclywFJIbeOaWmh
+=+Ing
+-----END PGP SIGNATURE-----
+
+--sdtB3X0nJg68CQEu--
