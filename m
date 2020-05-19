@@ -2,292 +2,174 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6460C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B249207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13A920709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T4c9syE2"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="MUO3gqmI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgESBaw (ORCPT
+        id S1727772AbgESBf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 21:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
+        Mon, 18 May 2020 21:35:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbgESBav (ORCPT
+        with ESMTP id S1726532AbgESBf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 21:30:51 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631F1C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:30:51 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q24so648176pjd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:30:51 -0700 (PDT)
+        Mon, 18 May 2020 21:35:27 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E9F4C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:35:27 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id b12so4944420plz.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:35:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LgMVdXCk9Y4Fkqf44jq13mswdAa1avDRlnZqO0g5o6o=;
-        b=T4c9syE2N/TuNooFzWa/GS0n7gi6fof9ZrcCwd6tqzjUOuM4j0VWLLCqT9VlFt7eM8
-         QnhCkYnEr/UzmOffONgE0umf1rJLWLpioxFKsjoyPwOCgUF/nA8qopO0/rJxaHqd77N8
-         7G5NVL2LxnvgQLAY/YyCGviSXY7lSywSQZr3VeDUiKWYMNy1YMSrWd7sVzuOu1pMhE4G
-         49AZTBtM+shipY67LlhyGB8FtDbLBTLrLGp9KbLGuoU+KAGvO0FS/8YE33dpY3FL0rhA
-         PWvb6NKeV/5cBb85VRayY9AYTpQhwt7mj1pRyaneizRAmfWsPPy5my1sypTcg3T5BwWw
-         0GMQ==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=eH46HFXVZAPfiSp4yenoocGuq08o9xIexbUXyqPElZM=;
+        b=MUO3gqmIH8arkfIZPDEnbj00SQROT+XbT+rDPd75eB/HjRGwYyynILINnbvrKpXwEh
+         xjH/zddHN9oG2KUZQh2WDdjrzRHcWR924fHvxZmLPfTJdee4nGqk/TmPTpHq6UOnoSUY
+         Nozsfy/yQQHZDuEJxIwU5re+Vw3ej5MOtr0VWeszUDlEBFOlzqSCZf1+kGB36LV8nFUS
+         p31AewNcXmp3fgPUaHEiV6z+GZWbHK2/pYqyfvA+Oz5jvNqeI9q2Bg9FM+0TD4x/ahM5
+         lWrAfGLCf1+679BxrayorUF3lrsFQlGBbjKB8TlTMIVRgW1CavVzF3C1QAL1cnXt1ks1
+         8d/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LgMVdXCk9Y4Fkqf44jq13mswdAa1avDRlnZqO0g5o6o=;
-        b=RQBJgLVcmwu/HwYtl/Xl0VQEI2nxb2f5g5uW546eJI8yJ+TPx5mRCTWGCSX5GiZkPX
-         jvYHos/+BUZaOiHhanZYqM0unnHuuKkOwqrRAC4nwAMds8XLxeK977b9XrVJO3bJkzwS
-         +8k8+zTDGxA8rT0CEJuMMp9Ay/myK0o7rYm3LmrVF9YvfkaYypDSRXJLvBYINpBlGiTz
-         fuJoN2LTtr8fuVtza9zNGxE9F/wUL7GtJDi678L8hm4Y4G+5nNpnTOVmawsXxfHIdZog
-         B4quPtc59NKh8vGosgbse5xpFXklnYD/8k4F0drYnmmY4y5SLymoxu6QG9gzL58IL8yr
-         dmfA==
-X-Gm-Message-State: AOAM531bjYgJUc5RfxMJRCiPxZtIP4AovukqGF4DB4PmqDNsFUVylfSD
-        dEOEN65KdoZmZABMiq5qbrvMYA==
-X-Google-Smtp-Source: ABdhPJwN5uQ6ZRocOB6ItmMfmFwDisBz5cuvAIkR30rNXA5NEEadjVEZvbK2RsAgxdtE9h7sVXma+w==
-X-Received: by 2002:a17:902:b98c:: with SMTP id i12mr4596397pls.41.1589851850376;
-        Mon, 18 May 2020 18:30:50 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x10sm8441543pgr.65.2020.05.18.18.30.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 18:30:49 -0700 (PDT)
-Date:   Mon, 18 May 2020 18:29:27 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=eH46HFXVZAPfiSp4yenoocGuq08o9xIexbUXyqPElZM=;
+        b=eyARlfq9N2jl3sYZt6ybWn7lXFE1YZTzTndYUpOMISQnneyGfOPJnvEUXPS1M+G9qc
+         HPEdFoRK96umAm8wfRLlQ2Ep2yFbtg8xRSSCDsLi1eziAL9cdA7LmU1AdjrQ6iBxgJin
+         MH7VWrwaFagFNXZR0IQ//oYV3n1gpSn4eYRWwzw47yPfHZm4UK0v8YJcRxMGPEFTaYPe
+         vK3dAvTAGc5quX6z7OnjOl1nX5qqGO826c2U1tF+VV/LeyGN3P5b7NpWMP9fdZzb64ZE
+         Yw7D+1bY8vEPOuRu6waYurJphkM6xO7AQYwwzWPmtTcSe10vK91RGS9+GxKc3tOAnJrG
+         xbTA==
+X-Gm-Message-State: AOAM532v8k0yJ3VY5aUxP+hiF73Vjvk+rbC8SpE4L4rIihnjbp5ZdHcA
+        Tuw2dNUYgX0zQa6MaSEFrUqoig==
+X-Google-Smtp-Source: ABdhPJy8HG2dxYu85sQ/k3xohgNFNrRpKa2Z8TapTI/kGsGKDc/vL2nDP6aXUMn7J4JK7jLX6crAhg==
+X-Received: by 2002:a17:90a:930b:: with SMTP id p11mr2442189pjo.46.1589852126573;
+        Mon, 18 May 2020 18:35:26 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:9c3c:ad41:e2e7:d4f4? ([2601:646:c200:1ef2:9c3c:ad41:e2e7:d4f4])
+        by smtp.gmail.com with ESMTPSA id 206sm4735467pfy.97.2020.05.18.18.35.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 18:35:25 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
+Date:   Mon, 18 May 2020 18:35:21 -0700
+Message-Id: <58319765-891D-44B9-AF18-64492B01FF36@amacapital.net>
+References: <2eb98637-bd2d-dda6-7729-f06ea84256ca@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200519012927.GT2165@builder.lan>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+In-Reply-To: <2eb98637-bd2d-dda6-7729-f06ea84256ca@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
 
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> Hi Rob, Arnd and Jassi,
-> 
-> This stuff has been doing rounds on the mailing list since several years
-> now with no agreed conclusion by all the parties. And here is another
-> attempt to get some feedback from everyone involved to close this once
-> and for ever. Your comments will very much be appreciated.
-> 
-> The ARM MHU is defined here in the TRM [1] for your reference, which
-> states following:
-> 
-> 	"The MHU drives the signal using a 32-bit register, with all 32
-> 	bits logically ORed together. The MHU provides a set of
-> 	registers to enable software to set, clear, and check the status
-> 	of each of the bits of this register independently.  The use of
-> 	32 bits for each interrupt line enables software to provide more
-> 	information about the source of the interrupt. For example, each
-> 	bit of the register can be associated with a type of event that
-> 	can contribute to raising the interrupt."
-> 
 
-Does this mean that there are 32 different signals and they are all ORed
-into the same interrupt line to trigger software action when something
-happens?
+> On May 18, 2020, at 5:38 PM, Dave Hansen <dave.hansen@intel.com> wrote:
+>=20
+> =EF=BB=BFOn 5/18/20 4:47 PM, Yu-cheng Yu wrote:
+>>> On Fri, 2020-05-15 at 19:53 -0700, Yu-cheng Yu wrote:
+>>> On Fri, 2020-05-15 at 16:56 -0700, Dave Hansen wrote:
+>>>> On 5/15/20 4:29 PM, Yu-cheng Yu wrote:
+>>>>> [...]
+>>>>> I have run them with CET enabled.  All of them pass, except for the fo=
+llowing:
+>>>>> Sigreturn from 64-bit to 32-bit fails, because shadow stack is at a 64=
+-bit
+>>>>> address.  This is understandable.
+>>>> [...]
+>>>> One a separate topic: You ran the selftests and one failed.  This is a
+>>>> *MASSIVE* warning sign.  It should minimally be described in your cover=
 
-Or does it mean that this register is used to pass multi-bit information
-and when any such information is passed an interrupt will be triggered?
-If so, what does that information mean? How is it tied into other Linux
-drivers/subsystems?
+>>>> letter, and accompanied by a fix to the test case.  It is absolutely
+>>>> unacceptable to introduce a kernel feature that causes a test to fail.
+>>>> You must either fix your kernel feature or you fix the test.
+>>>>=20
+>>>> This code can not be accepted until this selftests issue is rectified.
+>> The x86/sigreturn test constructs 32-bit ldt entries, and does sigreturn f=
+rom
+>> 64-bit to 32-bit context.  We do not have a way to construct a static 32-=
+bit
+>> shadow stack.
+>=20
+> Why? What's the limiting factor?  Hardware architecture?  Something in
+> the kernel?
+>=20
+>> Why do we want that?  I think we can simply run the test with CET
+>> disabled.
+>=20
+> The sadistic parts of selftests/x86 come from real bugs.  Either bugs
+> where the kernel fell over, or where behavior changed that broke apps.
+> I'd suggest doing some research on where that particular test case came
+> from.  Find the author of the test, look at the changelogs.
+>=20
+> If this is something that a real app does, this is a problem.  If it's a
+> sadistic test that Andy L added because it was an attack vector against
+> the entry code, it's a different story.
 
-> On few other platforms, like qcom, similar doorbell mechanism is present
-> with separate interrupt for each of the bits (that's how I understood
-> it), while in case of ARM MHU, there is a single interrupt line for all
-> the 32 bits. Also in case of ARM MHU, these registers and interrupts
-> have 3 copies for different priority levels, i.e. low priority
-> non-secure, high priority non-secure and secure channels.
-> 
+There are quite a few tests that do these horrible things in there. IN my pe=
+rsonal opinion, sigreturn.c is one of the most important tests we have =E2=80=
+=94 it does every horrible thing to the entry code that I thought of and tha=
+t I could come up with a way of doing.  We have been saved from regressing m=
+any times by these tests.  CET, and especially the CPL0 version of CET, is i=
+ts own set of entry horror, and we need to keep these tests working.
 
-In the Qualcomm case we have 32 bits in a register where each bit
-written will trigger an interrupt elsewhere in the SoC, as such the
-mailbox is purely write only and the "read" side is handled by some
-interrupt-controller.
+I assume the basic issue is that we call raise(), the context magically chan=
+ges to 32-bit, but SSP has a 64-bit value, and horrors happen.  So I think t=
+wo things need to happen:
 
-The three copies just sounds like 3 (or 3 * 32) different mailbox
-channels.
+1. Someone needs to document what happens when IRET tries to put a 64-bit va=
+lue into SSP but CS is compat. Because Intel has plenty of history of doing c=
+olossally broken things here. IOW you could easily be hitting a hardware des=
+ign problem, not a software issue per se.
 
-> For ARM MHU, both the dt bindings and the Linux driver support 3
-> channels for the different priorities right now and support sending a 32
-> bit data on every transfer in a locked fashion, i.e. only one transfer
-> can be done at once and the other have to wait for it to finish first.
-> 
-> Here are the point of view of the parties involved on this subject:
-> 
-> Jassi's viewpoint:
-> 
-> - Virtualization of channels should be discouraged in software based on
->   specific usecases of the application. This may invite other mailbox
->   driver authors to ask for doing virtualization in their drivers.
-> 
-> - In mailbox's terminology, every channel is equivalent to a signal,
->   since there is only one signal generated here by the MHU, there should
->   be only one channel per priority level.
-> 
-> - The clients should send data (of just setting 1 bit or many in the 32
->   bit word) using the existing mechanism as the delays due to
->   serialization shouldn't be significant anyway.
-> 
-> - The driver supports 90% of the users with the current implementation
->   and it shouldn't be extended to support doorbell and implement two
->   different modes by changing value of #mbox-cells field in bindings.
+2. The test needs to work. Assuming the hardware doesn=E2=80=99t do somethin=
+g utterly broken, either the 32-bit code needs to be adjusted to avoid any C=
+ALL
+or RET, or you need to write a little raise_on_32bit_shstk() func that switc=
+hes to an SSP that fits in 32 bits, calls raise(), and switches back.  =46rom=
+ memory, I didn=E2=80=99t think there was a CALl or RET, so I=E2=80=99m gues=
+sing that SSP is getting truncated when we round trip through CPL3 compat mo=
+de and the result is that the kernel invoked the signal handler with the wro=
+ng SSP.  Whoops.
 
-I interpret Jassi's view as this is a channel that passes 32 bit
-"messages".
-
-> 
-> Sudeep (ARM) and myself as well to some extent:
-> 
-> - The hardware gives us the capability to write the register in
->   parallel, i.e. we can write 0x800 and 0x400 together without any
->   software locks, and so these 32 bits should be considered as separate
->   channel even if only one interrupt is issued by the hardware finally.
->   This shouldn't be called as virtualization of the channels, as the
->   hardware supports this (as clearly mentioned in the TRM) and it takes
->   care of handling the signal properly.
-> 
-
-But if writes to the register is ORed together than it seems like the
-hardware isn't supposed to pass multi-bit messages, but instead is
-supposed to carry 32 individual signals - somewhat similar to the
-Qualcomm block.
-
-I don't see a problem with having a cascaded IRQ handler for incoming
-notifications.
-
-> - With serialization, if we use only one channel as today at every
->   priority, if there are 5 requests to send signal to the receiver and
->   the dvfs request is the last one in queue (which may be called from
->   scheduler's hot path with fast switching), it unnecessarily needs to
->   wait for the first four transfers to finish due to the software
->   locking imposed by the mailbox framework. This adds additional delay,
->   maybe of few ms only, which isn't required by the hardware but just by
->   the software and few ms can be important in scheduler's hotpath.
-> 
-
-So these 5 requests, are they conveyed by the signals [1,2,3,4,5] or
-[BIT(0), BIT(1), BIT(2), BIT(3), BIT(4)]?
-
-In the first case you have to serialize things given that e.g. signal 1
-immediately followed by 2 is indistinguishable from 3.
-
-If you signals are single-bit notifications then you don't need any
-serialization.
-
-Regards,
-Bjorn
-
-> - With the current approach it isn't possible to assign different bits
->   (or doorbell numbers) to clients from DT and the only way of doing
->   that without adding new bindings is by extending #mbox-cells to accept
->   a value of 2 as done in this patch.
-> 
-> Jassi and Sudeep, I hope I was able to represent both the view points
-> properly here. Please correct me if I have made a mistake here.
-> 
-> This is it. It would be nice to get the views of everyone now on this
-> and how should this be handled.
-> 
-> Thanks.
-> 
-> [1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515f/DDI0515F_juno_arm_development_platform_soc_trm.pdf , section 3.4.4, page 3-38.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  .../devicetree/bindings/mailbox/arm-mhu.txt   | 39 ++++++++++++++++++-
->  1 file changed, 37 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> index 4971f03f0b33..ba659bcc7109 100644
-> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-> @@ -10,6 +10,15 @@ STAT register and the remote clears it after having read the data.
->  The last channel is specified to be a 'Secure' resource, hence can't be
->  used by Linux running NS.
->  
-> +The MHU drives the interrupt signal using a 32-bit register, with all
-> +32-bits logically ORed together. It provides a set of registers to
-> +enable software to set, clear and check the status of each of the bits
-> +of this register independently. The use of 32 bits per interrupt line
-> +enables software to provide more information about the source of the
-> +interrupt. For example, each bit of the register can be associated with
-> +a type of event that can contribute to raising the interrupt. Each of
-> +the 32-bits can be used as "doorbell" to alert the remote processor.
-> +
->  Mailbox Device Node:
->  ====================
->  
-> @@ -18,13 +27,21 @@ used by Linux running NS.
->  - compatible:		Shall be "arm,mhu" & "arm,primecell"
->  - reg:			Contains the mailbox register address range (base
->  			address and length)
-> -- #mbox-cells		Shall be 1 - the index of the channel needed.
-> +- #mbox-cells		Shall be 1 - the index of the channel needed when
-> +			not used as set of doorbell bits.
-> +			Shall be 2 - the index of the channel needed, and
-> +			the index of the doorbell bit within the channel
-> +			when used in doorbell mode.
->  - interrupts:		Contains the interrupt information corresponding to
-> -			each of the 3 links of MHU.
-> +			each of the 3 physical channels of MHU namely low
-> +			priority non-secure, high priority non-secure and
-> +			secure channels.
->  
->  Example:
->  --------
->  
-> +1. Controller which doesn't support doorbells
-> +
->  	mhu: mailbox@2b1f0000 {
->  		#mbox-cells = <1>;
->  		compatible = "arm,mhu", "arm,primecell";
-> @@ -41,3 +58,21 @@ used by Linux running NS.
->  		reg = <0 0x2e000000 0x4000>;
->  		mboxes = <&mhu 1>; /* HP-NonSecure */
->  	};
-> +
-> +2. Controller which supports doorbells
-> +
-> +	mhu: mailbox@2b1f0000 {
-> +		#mbox-cells = <2>;
-> +		compatible = "arm,mhu", "arm,primecell";
-> +		reg = <0 0x2b1f0000 0x1000>;
-> +		interrupts = <0 36 4>, /* LP-NonSecure */
-> +			     <0 35 4>; /* HP-NonSecure */
-> +		clocks = <&clock 0 2 1>;
-> +		clock-names = "apb_pclk";
-> +	};
-> +
-> +	mhu_client: scb@2e000000 {
-> +		compatible = "arm,scpi";
-> +		reg = <0 0x2e000000 0x200>;
-> +		mboxes = <&mhu 1 4>; /* HP-NonSecure 5th doorbell bit */
-> +	};
-> -- 
-> 2.25.0.rc1.19.g042ed3e048af
-> 
+>=20
+> I don't personally know the background, but the changelogs can help you
+> find the person that does.
