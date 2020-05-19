@@ -2,158 +2,283 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B2D2081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:53:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V+ApZdPm"
+	by mail.kernel.org (Postfix) with ESMTP id 4F73B2081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgESNxX (ORCPT
+        id S1729001AbgESNyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:53:23 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29049 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729001AbgESNxW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:53:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589896401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z3JDC7hHAG3qt8ihx4nUX9Oy4XZ2I9b3feKVYfmOZwY=;
-        b=V+ApZdPmMPK9DxGtzP8YEtIfkwUnqRUyPZynoLfyXlPHBFDf9GRp6YOQwRIG4YQ7qynaRx
-        RH/ltig7lf8tNr1yf0RcC1qV0e0NQRxNF6Z/KHNsBoDe+06USznbkb3cjMvpDrv0s7SOrk
-        teKKr60fNYld5I0QBoRJTaQLD9vu6nU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-411-BIX5Nvf_MP2OJJmsKvkikA-1; Tue, 19 May 2020 09:53:17 -0400
-X-MC-Unique: BIX5Nvf_MP2OJJmsKvkikA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F9AF107ACF8;
-        Tue, 19 May 2020 13:53:15 +0000 (UTC)
-Received: from elisabeth (unknown [10.36.110.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 57FC71001B07;
-        Tue, 19 May 2020 13:53:10 +0000 (UTC)
-Date:   Tue, 19 May 2020 15:53:00 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>, Phil Sutter <phil@nwl.cc>
-Subject: Re: [PATCH 4.19 41/80] netfilter: nft_set_rbtree: Introduce and use
- nft_rbtree_interval_start()
-Message-ID: <20200519155300.3560394f@elisabeth>
-In-Reply-To: <20200519125113.GA376546@kroah.com>
-References: <20200518173450.097837707@linuxfoundation.org>
-        <20200518173458.612903024@linuxfoundation.org>
-        <20200519120625.GA8342@amd>
-        <20200519121356.GA354164@kroah.com>
-        <20200519121907.GA9158@amd>
-        <20200519125113.GA376546@kroah.com>
-Organization: Red Hat
+        Tue, 19 May 2020 09:54:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46244 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbgESNyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 09:54:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A8951AC64;
+        Tue, 19 May 2020 13:54:17 +0000 (UTC)
+Date:   Tue, 19 May 2020 23:53:56 +1000
+From:   Aleksa Sarai <asarai@suse.de>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        containers@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-api@vger.kernel.org
+Subject: Re: seccomp feature development
+Message-ID: <20200519135356.zmqvtzrxd63dgg4z@yavin.dot.cyphar.com>
+References: <202005181120.971232B7B@keescook>
+ <20200519070929.55r3xvybjg6nnbsj@yavin.dot.cyphar.com>
+ <20200519110128.oot4zzxhivtmk7us@wittgenstein>
+ <20200519134244.37bhucyram4n6sjk@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4un2g5pztqv57r4x"
+Content-Disposition: inline
+In-Reply-To: <20200519134244.37bhucyram4n6sjk@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 14:51:13 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-> On Tue, May 19, 2020 at 02:19:07PM +0200, Pavel Machek wrote:
-> > On Tue 2020-05-19 14:13:56, Greg Kroah-Hartman wrote: =20
-> > > On Tue, May 19, 2020 at 02:06:25PM +0200, Pavel Machek wrote: =20
-> > > > Hi!
-> > > >  =20
-> > > > > [ Upstream commit 6f7c9caf017be8ab0fe3b99509580d0793bf0833 ]
-> > > > >=20
-> > > > > Replace negations of nft_rbtree_interval_end() with a new helper,
-> > > > > nft_rbtree_interval_start(), wherever this helps to visualise the
-> > > > > problem at hand, that is, for all the occurrences except for the
-> > > > > comparison against given flags in __nft_rbtree_get().
-> > > > >=20
-> > > > > This gets especially useful in the next patch. =20
+--4un2g5pztqv57r4x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2020-05-19, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> On 2020-05-19, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> > On Tue, May 19, 2020 at 05:09:29PM +1000, Aleksa Sarai wrote:
+> > > On 2020-05-18, Kees Cook <keescook@chromium.org> wrote:
+> > > > - the sizes of these EA structs are, by design, growable over time.
+> > > >   seccomp and its users need to be handle this in a forward and bac=
+kward
+> > > >   compatible way, similar to the design of the EA syscall interface
+> > > >   itself.
 > > > >=20
-> > > > This looks like cleanup in preparation for the next patch. Next pat=
-ch
-> > > > is there for some series, but not for 4.19.124. Should this be in
-> > > > 4.19, then? =20
+> > > > The growing size of the EA struct will need some API design. For fi=
+lters
+> > > > to operate on the contiguous seccomp_data+EA struct, the filter will
+> > > > need to know how large seccomp_data is (more on this later), and how
+> > > > large the EA struct is. When the filter is written in userspace, it=
+ can
+> > > > do the math, point into the expected offsets, and get what it needs=
+=2E For
+> > > > this to work correctly in the kernel, though, the seccomp BPF verif=
+ier
+> > > > needs to know the size of the EA struct as well, so it can correctly
+> > > > perform the offset checking (as it currently does for just the
+> > > > seccomp_data struct size).
+> > > >=20
+> > > > Since there is not really any caller-based "seccomp state" associat=
+ed
+> > > > across seccomp(2) calls, I don't think we can add a new command to =
+tell
+> > > > the kernel "I'm expecting the EA struct size to be $foo bytes", sin=
+ce
+> > > > the kernel doesn't track who "I" is besides just being "current", w=
+hich
+> > > > doesn't take into account the thread lifetime -- if a process launc=
+her
+> > > > knows about one size and the child knows about another, things will=
+ get
+> > > > confused. The sizes really are just associated with individual filt=
+ers,
+> > > > based on the syscalls they're examining. So, I have thoughts on pos=
+sible
+> > > > solutions:
+> > > >=20
+> > > > - create a new seccomp command SECCOMP_SET_MODE_FILTER2 which uses =
+the
+> > > >   EA style so we can pass in more than a filter and include also an
+> > > >   array of syscall to size mappings. (I don't like this...)
+> > > > - create a new filter flag, SECCOMP_FILTER_FLAG_EXTENSIBLE, which c=
+hanges
+> > > >   the meaning of the uarg from "filter" to a EA-style structure with
+> > > >   sizes and pointers to the filter and an array of syscall to size
+> > > >   mappings. (I like this slightly better, but I still don't like it=
+=2E)
+> > > > - leverage the EA design and just accept anything <=3D PAGE_SIZE, r=
+ecord
+> > > >   the "max offset" value seen during filter verification, and zero-=
+fill
+> > > >   the EA struct with zeros to that size when constructing the
+> > > >   seccomp_data + EA struct that the filter will examine. Then the s=
+eccomp
+> > > >   filter doesn't care what any of the sizes are, and userspace does=
+n't
+> > > >   care what any of the sizes are. (I like this as it makes the prob=
+lems
+> > > >   to solve contained entirely by the seccomp infrastructure and doe=
+s not
+> > > >   touch user API, but I worry I'm missing some gotcha I haven't
+> > > >   considered.)
 > > >=20
-> > > What is the "next patch" in this situation? =20
+> > > Okay, so here is my view on this. I think that the third option is
+> > > closest to what I'd like to see. Based on Jann's email, I think we're=
+ on
+> > > the same page but I'd just like to elaborate it a bit further:
+> > >=20
+> > > First of all -- ideally, the backward and forward compatibility that =
+EA
+> > > syscalls give us should be reflected with seccomp filters being
+> > > similarly compatible. Otherwise we're going to run into issues where =
+all
+> > > of the hard work with ensuring EA syscalls behave when extended will =
+be
+> > > less valuable if seccomp cannot handle it sufficiently. This means th=
+at
+> > > I would hope that every combination of {old,new} filter/kernel/program
+> > > would work on a best-effort (but fail-safe) basis.
+> > >=20
+> > > In my view, the simplest way (from the kernel side) would be to simply
+> > > do what you outlined in (3) -- make all accesses past usize (and even
+> > > ksize) be zeroed.
+> > >=20
+> > > However in order to make an old filter fail-safe on a new kernel with=
+ a
+> > > new program, we'd need a new opcode which basically does
+> > > bpf_check_uarg_tail_zero() after a given offset into the EA struct. T=
+his
+> > > would punt the fail-safe problem to userspace (libseccomp would need =
+to
+> > > generate a check that any unknown-to-the-filter fields are zero). I
+> > > don't think this is a decision we can make in-kernel because it might=
+ be
+> > > that the filter doesn't care about the last field in a struct (and th=
+us
+> > > doesn't access it) but we don't know the difference between a field t=
+he
+> > > filter doesn't care about and a field it doesn't know about.
+> > >=20
+> > > Another issue which you haven't mentioned here is how do we deal with
+> > > pointers inside an EA struct. clone3() already has this with set_tid,
 > >=20
-> > In 5.4 you have:
-> >=20
-> > 9956 O   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 5.4 082/147] netfilter: n=
-ft_set_rbtree: Introduce and use nft
-> > 9957     Greg Kroah =E2=94=9C=E2=94=80>[PATCH 5.4 083/147] netfilter: n=
-ft_set_rbtree: Add missing expired c
-> >=20
-> > In 4.19 you have:
-> >=20
-> > 10373 r   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 4.19 41/80] netfilter: n=
-ft_set_rbtree: Introduce and use nft
-> > 10376 O   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 4.19 42/80] IB/mlx4: Tes=
-t return value of calls to ib_get_ca
-> >=20
-> > I believe 41/80 can be dropped from 4.19 series, as it is just a
-> > preparation for 083/147... which is not queued for 4.19. =20
+> > It's also passed with a set_tid_size argument so we'd know how large
+> > set_tid is.
 >=20
-> I've queued it up for 4.19 now, thanks.
+> Right, of course -- that's a given. See below for the point I was
+> making.
+>=20
+> > > and the thread on user_notif seems to be converging towards having the
+> > > user_notif2 struct just contain two pointers to EA structs. We could
+> > > punt on this for now, so long as we leave room for us to deal with th=
+is
+> > > problem in the future. However, I think it would be misguided to enab=
+le
+> > > deep argument inspection on syscalls which have such entries (such as
+> > > clone3) until we've figured out how we want to handle nested pointers=
+ --
+> >=20
+> > We can't really punt on this and should figure this out now. I've
+> > pointed to this problem in my other mail as well.
+> > Though I currently fail to see why this should be a huge problem to get
+> > that working as long as each pointer comes with a known size.
+>=20
+> It's not a huge problem necessarily, but we would need to figure out how
+> we would represent the "nested pointers" in the flattened version which
+> the seccomp filter will actually offset into. Specifically, my point is
+> that if we imagine that the proposed new seccomp_data API is:
+>=20
+>   [<seccomp_data>][<EA struct contents>]
+>=20
+> then any pointers in the EA struct will just be numerical values when
+> copied. How would write a filter on clone3() that requires the first
+> entry of set_tid to be 34? You couldn't with this simplified setup. And
+> unless I'm mistaken, BPF doesn't have pointer dereferences.
+>=20
+> So we need to embed the "nested pointers" somehow in the flattened
+> version of the EA struct. I don't think we can just append them to the
+> main EA struct -- while you might have the length, that'd mean that
+> seccomp would generate an array of zeroes whose length is a
+> user-specified value? And then what about extensible structs that have
+> their size embedded inside them (as you or someone else suggested for
+> seccomp user_notif)? How would the eBPF program know the length of the
+> struct?
+>=20
+> Maybe we could have some kind of jump table which the filter could use
+> (and just have there be a jump table for each embedded struct -- so
+> multiple embeddings have their own jump tables). So if we imagine some
+> user-extensible struct like
+>=20
+> 	struct open_how {
+> 		u64 flags, mode, resolve;
+> 		struct foo *foo;
+> 		struct bar *bar;
+> 		struct baz *baz;
+> 	};
+>=20
+> 	struct foo {
+> 		u64 foo;
+> 	};
+>=20
+> 	struct bar {
+> 		u64 bar;
+> 		struct barbaz *barbaz;
+> 	};
+>=20
+> 	struct barbaz {
+> 		u64 barbaz;
+> 	};
+>=20
+> 	struct baz {
+> 		u64 baz;
+> 	};
 
-Wait, wait, sorry. I thought you were queuing this up as a missing
-dependency or something, but I see it's not the case. That patch is
-*not* the preparation for:
+Sorry, I omitted all of the _size fields for extensibility. Just imagine
+I added them (or that the u64s represent the size).
 
-  340eaff65116 netfilter: nft_set_rbtree: Add missing expired checks
-
-...but rather preparation for:
-
-  7c84d41416d8 netfilter: nft_set_rbtree: Detect partial overlaps on insert=
-ion
-
-whose fix-up:
-
-  72239f2795fa netfilter: nft_set_rbtree: Drop spurious condition for overl=
-ap detection on insertion
-
-was queued for 5.6.x (see <20200421131431.GA793882@kroah.com>).
-
-Now, if you want to backport "Add missing expired checks", it *might* be
-more convenient to also backport:
-
-  6f7c9caf017b netfilter: nft_set_rbtree: Introduce and use nft_rbtree_inte=
-rval_start()
-
-and, perhaps (I haven't tried to actually cherry-pick) also:
-
-  7c84d41416d8 netfilter: nft_set_rbtree: Detect partial overlaps on insert=
-ion
-  72239f2795fa netfilter: nft_set_rbtree: Drop spurious condition for overl=
-ap detection on insertion
-
-and it's safe to either:
-
-- backport only 6f7c9caf017b
-- backport the three of them
-
-but other than avoiding conflicts, there should be no reason to do that.
-Sasha had already queued them up for 4.19 and 5.4, then dropped them as
-they weren't needed, see <20200413163900.GO27528@sasha-vm>.
+> Then we would lay out the seccomp_data as:
+>=20
+> 	[<seccomp data>][<jump table><open_how>]
+> 		[<jump table><open_how->foo>]
+> 		[<jump table><open_how->bar>]
+> 			[<jump table><open_how->bar->barbaz>]
+> 		[<jump table><open_how->baz>]
+>=20
+> The jump table could be as simple as a list of tuples (relative offset
+> of field in this struct from end of jump table, relative offset of the
+> copied structure at the end of the jump table). However, it's not
+> possible to do for-loops in cBPF -- so maybe we'd need to represent the
+> jump table differently (perhaps having it just be the same size as the
+> struct).
+>=20
+> The above is just a rough sketch, maybe there's a much simpler solution
+> I'm not seeing.
 
 --=20
-Stefano
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
+--4un2g5pztqv57r4x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl7D5O8ACgkQnhiqJn3b
+jbTv1xAAiUXQWimkrqn9Uz+HOtUS6/JFAwWLX+JIW7IKAcN8E/C5J79WvtCIXASx
+2ALN7a/V6LJt+IExYu3OC10031Qd41HVheLFCnqEXAbysl6xIL7C7y9IhkvjnSb7
+FDVG9DUxM9JG7RTuTDZCQAPsIq7wzhfNgJxvFZ3wb0udW0xAMC1ww7qzXO8UntgH
+nH001QvvhNqxl36r7Zh3ObD4PtUQCpuFNTMQIidQWoYjWvfzywosIzfWaXk8dOXt
+hVpRx8h4Vx4UEFjmzw5Rs5Ev1mNLGdVGRiSZY+SqhsqdUTobxkfuPKSF80/59CvE
+BlrKZs6ELpV0KX2vZsbgUcuabDjxKBD9429uo7ffRVu0bodgliVyBVY71HfRCDSZ
+tu394dbVVPvWtstVRoFNxHKffkZRF0n1SHMoVQwms8D+UV+arsDwipE8ba+Ivpxl
+PQ5mpbSqJWt8nhxw4yMmogzGy/dPduRw0+0OlkJkIPazj6HS1JvZs6/sJM81U+uO
+e6RncHOtAvF1pbwZ/6TX+47WC9Wvx7FAJvOxZ5g/0ossmZn4rJvZhMkMglTxozaW
+bvnhdLIhMK4rbq0xe7QD+o2tFemeoRNSzdJc8f+pXkBJy01DfnIhlTzBufaGbZui
+RoJy+URf1EOHBt4h+471ixCVaWH4cCojZE5kVjLgJhgJWDwiAeg=
+=vfZP
+-----END PGP SIGNATURE-----
+
+--4un2g5pztqv57r4x--
