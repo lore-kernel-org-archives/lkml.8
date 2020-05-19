@@ -2,193 +2,158 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85064C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6630620825
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B2D2081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:53:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZO14iWd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V+ApZdPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgESNxM (ORCPT
+        id S1729065AbgESNxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727086AbgESNxM (ORCPT
+        Tue, 19 May 2020 09:53:23 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29049 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729001AbgESNxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:53:12 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 257FDC08C5C0;
-        Tue, 19 May 2020 06:53:12 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id d10so70186pgn.4;
-        Tue, 19 May 2020 06:53:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NWtV2zmVO4n9CdPb/uqwMJhnY2pzIV0xOL5In4VvDGw=;
-        b=aZO14iWd+ay8rcl00Vn9yWGhdnr4w7Bh1P3ku0+WDHbo6LXo5vKqmPdhrSiB0EMbtk
-         2hVmjmqTierOxRQpBiVPaNMBiHtNlgGY+R6v0JRO7DUhYIxPU/lIwdL+b4LNAbaM76Z5
-         nIu9icY6gccfX+Tw0b772pEnUatneCyS7tfcbUOywr3P7AI/RtviVAQALmEMw9DaZ5AR
-         H8Ok7QfusUn7srO8ybpdNhH5Bjg96gcecWUUYg9CySBo6JbqreNkjO6kaOjA128h6B1+
-         4BSS1UrPktVq6EFBqNynsuGPtedDHowifuJ9Dt6yqqjd8brH5CGOgdgoFIEQYSWsJNQ6
-         pRdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NWtV2zmVO4n9CdPb/uqwMJhnY2pzIV0xOL5In4VvDGw=;
-        b=NiJ/1BsWteOQfC+iwJqtBKkM3gIEVPwvAiU4vbM4xyKw7x8FkYwI0BAC/bAio2WmJZ
-         xsLrcqXYBWF6R+CT/IucsdTFEYAf3qNzdrKwtGHLhXEdFeIVTKIfm4YV1rREAAdmfr43
-         FLhYo4Klk1l58gtJayXZFzYnv9Zxm/o+sfm1GEhhFyWEiNjJDfOTjmb4FlzKrC9B6nVO
-         LOTxT3iOXiwmp3eHouZ81iB8qjLkLxg+blHsusmrW0KtJeSVH9hXRwuo/KzdArtEOAQ0
-         SG3yO6Juh20bL7n8JV4zxHNzOnYsg16aZI2L2HttTGnowel4xWWRy2VfgN5FLTuxK9ZI
-         RAeQ==
-X-Gm-Message-State: AOAM530u6DFgtbz+oXXr7Br8+JCTLF2BuggxNmJQuygOPx3AO5jYrWtY
-        0zo9y7kOm7v4qZiPghS3loKcQXz0
-X-Google-Smtp-Source: ABdhPJyOGow9Pv3VRrRNNhBZjWcxQIUrFp5noO3UFGozI1bq/2r9qoF6a0pD7qQ5jvJKSmmoP+vzxg==
-X-Received: by 2002:aa7:8a92:: with SMTP id a18mr22281757pfc.0.1589896391568;
-        Tue, 19 May 2020 06:53:11 -0700 (PDT)
-Received: from localhost ([176.122.159.242])
-        by smtp.gmail.com with ESMTPSA id z18sm10213447pgi.68.2020.05.19.06.53.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 06:53:10 -0700 (PDT)
-Date:   Tue, 19 May 2020 21:53:06 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     gregkh@linuxfoundation.org, wsa+renesas@sang-engineering.com,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] i2c: busses: convert to
- devm_platform_request_irq()
-Message-ID: <20200519135306.GA1647@nuc8i5>
-References: <20200518155304.28639-1-zhengdejin5@gmail.com>
- <20200518155304.28639-3-zhengdejin5@gmail.com>
- <c4f33036-1a88-1d75-c4ce-3024d2bf9bb1@ti.com>
+        Tue, 19 May 2020 09:53:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589896401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z3JDC7hHAG3qt8ihx4nUX9Oy4XZ2I9b3feKVYfmOZwY=;
+        b=V+ApZdPmMPK9DxGtzP8YEtIfkwUnqRUyPZynoLfyXlPHBFDf9GRp6YOQwRIG4YQ7qynaRx
+        RH/ltig7lf8tNr1yf0RcC1qV0e0NQRxNF6Z/KHNsBoDe+06USznbkb3cjMvpDrv0s7SOrk
+        teKKr60fNYld5I0QBoRJTaQLD9vu6nU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-BIX5Nvf_MP2OJJmsKvkikA-1; Tue, 19 May 2020 09:53:17 -0400
+X-MC-Unique: BIX5Nvf_MP2OJJmsKvkikA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F9AF107ACF8;
+        Tue, 19 May 2020 13:53:15 +0000 (UTC)
+Received: from elisabeth (unknown [10.36.110.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 57FC71001B07;
+        Tue, 19 May 2020 13:53:10 +0000 (UTC)
+Date:   Tue, 19 May 2020 15:53:00 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>, Phil Sutter <phil@nwl.cc>
+Subject: Re: [PATCH 4.19 41/80] netfilter: nft_set_rbtree: Introduce and use
+ nft_rbtree_interval_start()
+Message-ID: <20200519155300.3560394f@elisabeth>
+In-Reply-To: <20200519125113.GA376546@kroah.com>
+References: <20200518173450.097837707@linuxfoundation.org>
+        <20200518173458.612903024@linuxfoundation.org>
+        <20200519120625.GA8342@amd>
+        <20200519121356.GA354164@kroah.com>
+        <20200519121907.GA9158@amd>
+        <20200519125113.GA376546@kroah.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4f33036-1a88-1d75-c4ce-3024d2bf9bb1@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 08:34:01PM +0300, Grygorii Strashko wrote:
-> 
-> 
-> On 18/05/2020 18:53, Dejin Zheng wrote:
-> > Use devm_platform_request_irq() to simplify code, and it contains
-> > platform_get_irq() and devm_request_irq().
-> > 
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > ---
-> >   drivers/i2c/busses/i2c-bcm-kona.c  | 16 +++-------------
-> >   drivers/i2c/busses/i2c-cadence.c   | 10 +++-------
-> >   drivers/i2c/busses/i2c-digicolor.c | 10 +++-------
-> >   drivers/i2c/busses/i2c-emev2.c     |  5 ++---
-> >   drivers/i2c/busses/i2c-jz4780.c    |  5 ++---
-> >   drivers/i2c/busses/i2c-meson.c     | 13 ++++---------
-> >   drivers/i2c/busses/i2c-mxs.c       |  9 +++------
-> >   drivers/i2c/busses/i2c-pnx.c       |  9 ++-------
-> >   drivers/i2c/busses/i2c-rcar.c      |  9 +++------
-> >   drivers/i2c/busses/i2c-rk3x.c      | 14 +++-----------
-> >   drivers/i2c/busses/i2c-sirf.c      | 10 ++--------
-> >   drivers/i2c/busses/i2c-stu300.c    |  4 ++--
-> >   drivers/i2c/busses/i2c-synquacer.c | 12 +++---------
-> >   13 files changed, 35 insertions(+), 91 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-bcm-kona.c b/drivers/i2c/busses/i2c-bcm-kona.c
-> > index ed5e1275ae46..f45acb47552a 100644
-> > --- a/drivers/i2c/busses/i2c-bcm-kona.c
-> > +++ b/drivers/i2c/busses/i2c-bcm-kona.c
-> > @@ -818,20 +818,10 @@ static int bcm_kona_i2c_probe(struct platform_device *pdev)
-> >   	       ISR_NOACK_MASK,
-> >   	       dev->base + ISR_OFFSET);
-> > -	/* Get the interrupt number */
-> > -	dev->irq = platform_get_irq(pdev, 0);
-> > -	if (dev->irq < 0) {
-> > -		rc = dev->irq;
-> > -		goto probe_disable_clk;
-> > -	}
-> > -
-> > -	/* register the ISR handler */
-> > -	rc = devm_request_irq(&pdev->dev, dev->irq, bcm_kona_i2c_isr,
-> > -			      IRQF_SHARED, pdev->name, dev);
-> > -	if (rc) {
-> > -		dev_err(dev->device, "failed to request irq %i\n", dev->irq);
-> > +	rc = devm_platform_request_irq(pdev, 0, &dev->irq, bcm_kona_i2c_isr,
-> > +					IRQF_SHARED, pdev->name, dev);
-> > +	if (rc)
-> >   		goto probe_disable_clk;
-> > -	}
-> >   	/* Enable the controller but leave it idle */
-> >   	bcm_kona_i2c_send_cmd_to_ctrl(dev, BCM_CMD_NOACTION);
-> > diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-> > index 4b72398af505..9ffae4d231dc 100644
-> > --- a/drivers/i2c/busses/i2c-cadence.c
-> > +++ b/drivers/i2c/busses/i2c-cadence.c
-> > @@ -1204,8 +1204,6 @@ static int cdns_i2c_probe(struct platform_device *pdev)
-> >   	if (IS_ERR(id->membase))
-> >   		return PTR_ERR(id->membase);
-> > -	id->irq = platform_get_irq(pdev, 0);
-> > -
-> 
-> 
-> In many cases It is two strictly different steps
-> 1) Request resource, including IRQ mapping and differed probe handling.
->    It should be done as early as possible to avoid unnecessary initialization steps
->    when resource (irq) is not ready,  and so avoid boot time increasing.
-> 2) Actually request and enable IRQ, which, in many case, should be done late in probe
->    when driver and HW are actually ready to handle IRQs.
-> 
-> here, for example, between this point
-> 
-> >   	id->adap.owner = THIS_MODULE;
-> >   	id->adap.dev.of_node = pdev->dev.of_node;
-> >   	id->adap.algo = &cdns_i2c_algo;
-> > @@ -1256,12 +1254,10 @@ static int cdns_i2c_probe(struct platform_device *pdev)
-> >   		goto err_clk_dis;
-> >   	}
-> > -	ret = devm_request_irq(&pdev->dev, id->irq, cdns_i2c_isr, 0,
-> > -				 DRIVER_NAME, id);
-> > -	if (ret) {
-> > -		dev_err(&pdev->dev, "cannot get irq %d\n", id->irq);
-> 
-> and this point the following happens:
->  - devm_clk_get() can fail and cause probe defer
->  - clk_prepare_enable()
->  - pm_runtime_.. - pm init
->  - cdns_i2c_.. - hw int
-> 
-> > +	ret = devm_platform_request_irq(pdev, 0, &id->irq, cdns_i2c_isr, 0,
-> > +					DRIVER_NAME, id);
-> 
-> and now platform_get_irq(), which can fail due to IRQ controller not ready,
-> and all above has to be reverted.
-> 
-> > +	if (ret)
-> >   		goto err_clk_dis;
-> > -	}
-> [...]
-> 
-> A bit risky optimization, especially for bulk changes.
->
-Grygorii, Thanks for your comments, you are right, abandon these two patches.
+On Tue, 19 May 2020 14:51:13 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-BTW, The gmail will prevent me sending messages to many recipients, so
-remove some recipients. and still sending to i2c and kernel mail list.
+> On Tue, May 19, 2020 at 02:19:07PM +0200, Pavel Machek wrote:
+> > On Tue 2020-05-19 14:13:56, Greg Kroah-Hartman wrote: =20
+> > > On Tue, May 19, 2020 at 02:06:25PM +0200, Pavel Machek wrote: =20
+> > > > Hi!
+> > > >  =20
+> > > > > [ Upstream commit 6f7c9caf017be8ab0fe3b99509580d0793bf0833 ]
+> > > > >=20
+> > > > > Replace negations of nft_rbtree_interval_end() with a new helper,
+> > > > > nft_rbtree_interval_start(), wherever this helps to visualise the
+> > > > > problem at hand, that is, for all the occurrences except for the
+> > > > > comparison against given flags in __nft_rbtree_get().
+> > > > >=20
+> > > > > This gets especially useful in the next patch. =20
+> > > >=20
+> > > > This looks like cleanup in preparation for the next patch. Next pat=
+ch
+> > > > is there for some series, but not for 4.19.124. Should this be in
+> > > > 4.19, then? =20
+> > >=20
+> > > What is the "next patch" in this situation? =20
+> >=20
+> > In 5.4 you have:
+> >=20
+> > 9956 O   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 5.4 082/147] netfilter: n=
+ft_set_rbtree: Introduce and use nft
+> > 9957     Greg Kroah =E2=94=9C=E2=94=80>[PATCH 5.4 083/147] netfilter: n=
+ft_set_rbtree: Add missing expired c
+> >=20
+> > In 4.19 you have:
+> >=20
+> > 10373 r   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 4.19 41/80] netfilter: n=
+ft_set_rbtree: Introduce and use nft
+> > 10376 O   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 4.19 42/80] IB/mlx4: Tes=
+t return value of calls to ib_get_ca
+> >=20
+> > I believe 41/80 can be dropped from 4.19 series, as it is just a
+> > preparation for 083/147... which is not queued for 4.19. =20
+>=20
+> I've queued it up for 4.19 now, thanks.
 
-BR,
-Dejin
+Wait, wait, sorry. I thought you were queuing this up as a missing
+dependency or something, but I see it's not the case. That patch is
+*not* the preparation for:
 
-> -- 
-> Best regards,
-> grygorii
+  340eaff65116 netfilter: nft_set_rbtree: Add missing expired checks
+
+...but rather preparation for:
+
+  7c84d41416d8 netfilter: nft_set_rbtree: Detect partial overlaps on insert=
+ion
+
+whose fix-up:
+
+  72239f2795fa netfilter: nft_set_rbtree: Drop spurious condition for overl=
+ap detection on insertion
+
+was queued for 5.6.x (see <20200421131431.GA793882@kroah.com>).
+
+Now, if you want to backport "Add missing expired checks", it *might* be
+more convenient to also backport:
+
+  6f7c9caf017b netfilter: nft_set_rbtree: Introduce and use nft_rbtree_inte=
+rval_start()
+
+and, perhaps (I haven't tried to actually cherry-pick) also:
+
+  7c84d41416d8 netfilter: nft_set_rbtree: Detect partial overlaps on insert=
+ion
+  72239f2795fa netfilter: nft_set_rbtree: Drop spurious condition for overl=
+ap detection on insertion
+
+and it's safe to either:
+
+- backport only 6f7c9caf017b
+- backport the three of them
+
+but other than avoiding conflicts, there should be no reason to do that.
+Sasha had already queued them up for 4.19 and 5.4, then dropped them as
+they weren't needed, see <20200413163900.GO27528@sasha-vm>.
+
+--=20
+Stefano
+
