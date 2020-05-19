@@ -2,143 +2,187 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C284C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEBD1207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:28:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/BKi7Io"
+	by mail.kernel.org (Postfix) with ESMTP id 45D9B207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:29:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgESQ2l (ORCPT
+        id S1729380AbgESQ3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:28:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgESQ2k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:28:40 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C33FBC08C5C0;
-        Tue, 19 May 2020 09:28:40 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z1so153576pfn.3;
-        Tue, 19 May 2020 09:28:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F84r5D7gUAsy7kryvSlBtHVWkHHrJxhmyXufbP1VMUk=;
-        b=S/BKi7IoKfu6cTgIaBUHnX5npOyWkD6mRoHj6CtErsnQ2rEcLXG8KPQ2W57BCKaJdM
-         SwniGMyqqs2Q2SVO2+U5xNrrKfUUdGStWz1+O6r2JH01rPKxiBHqUm2bfNLqOGqtekkT
-         GlJtnGMlmMreeuzjHRjAzxQ4Gx5CjvokZU2D/PlEI5QJsPuqnt+UqfdvhwXsKFh1rjEa
-         shQ2Oe0wfKkP1dy3RjS0lg60haFP98utSaIGZs25cBt4zeTMygzfoKV+cAp+8XZTf0vE
-         8CFE3eFs6LyDuyfm6zj6aGPHgQQNFJBK+2fF0+pDhfi6d+ztQrUx0NURv4uGFBUykJiY
-         nO3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=F84r5D7gUAsy7kryvSlBtHVWkHHrJxhmyXufbP1VMUk=;
-        b=FFMKzOaSllsO1XClEBqx+IiJxA4PeggdrTgjwLdblbZLViC/luGPPjs913kyloqMTX
-         Ds/5aGoh9rruI7fkUWJJAnf6v+p4Qz/WAbvBTel0RBvu3hJLTm7bgEMhgFnOe8epjnrl
-         G3UBIVKYIh7b49gl0/D4aP6J1922u/FBRGy7+iAV+hX7S5VsQUlVvZEjtap6C1yIkuzI
-         C43KXlyW1UYW5/T3qEt+JK96ZgZD4BAhfqThoY1W9xj/BhaWRnPX/k+bYD7MwhLKB7iC
-         ACuCUm3A+m8FSsycPnKQYeE6xoBMV0mP2KS/kXGKRDM+EQBf+8kV792AnfunSVNuB91Z
-         OAZg==
-X-Gm-Message-State: AOAM531kren2xu/Rg/pjwULtwdLCQclCzkE8SfqsuGsBygMcYq26So/r
-        WiTg3paKR5Hwcwtaps5w4f0GmG6q
-X-Google-Smtp-Source: ABdhPJzYD0ALWEoK6prn/bHv89t3kKQb2iDjtoUoXa9H7lApnLOp6h6e13fCEaiyITW6kWvB3IQCDw==
-X-Received: by 2002:a63:3587:: with SMTP id c129mr48143pga.190.1589905720188;
-        Tue, 19 May 2020 09:28:40 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v75sm74264pjb.35.2020.05.19.09.28.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 09:28:39 -0700 (PDT)
-Subject: Re: [PATCH 4.14 000/114] 4.14.181-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200518173503.033975649@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <b18563bd-384e-6fb2-cf0c-b1f29be3e3ed@roeck-us.net>
-Date:   Tue, 19 May 2020 09:28:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 12:29:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10763 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728775AbgESQ3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 12:29:07 -0400
+IronPort-SDR: B3sIpnkczxXommahql9taU3YYAeIsxYPhMSv9QtrdCEY1AffL5B3a52oNFhMdmWMeUDCstyxME
+ NvIDbI1jbFwA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 09:29:06 -0700
+IronPort-SDR: wMgiwHen2OPFlYyzOEz7g2rJdzh5JJtN4dIY2VFB92QqQMm8kp4VvGIH/smvNQpDVMcoLkKqX3
+ R44n5eaK0YwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
+   d="scan'208";a="343188490"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga001.jf.intel.com with ESMTP; 19 May 2020 09:29:05 -0700
+Date:   Tue, 19 May 2020 09:29:05 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH V3 07/15] arch/kunmap_atomic: Consolidate duplicate code
+Message-ID: <20200519162904.GA3356843@iweiny-DESK2.sc.intel.com>
+References: <20200507150004.1423069-1-ira.weiny@intel.com>
+ <20200507150004.1423069-8-ira.weiny@intel.com>
+ <20200516223306.GA161252@roeck-us.net>
+ <20200518034938.GA3023182@iweiny-DESK2.sc.intel.com>
+ <20200518042932.GA59205@roeck-us.net>
+ <20200519000352.GF3025231@iweiny-DESK2.sc.intel.com>
+ <47757f51-15f2-3abe-9035-abdb3ba5816e@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20200518173503.033975649@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47757f51-15f2-3abe-9035-abdb3ba5816e@roeck-us.net>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/20 10:35 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.181 release.
-> There are 114 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, May 18, 2020 at 07:50:36PM -0700, Guenter Roeck wrote:
+> Hi Ira,
 > 
-> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
-> Anything received after that time might be too late.
+> On 5/18/20 5:03 PM, Ira Weiny wrote:
+> > On Sun, May 17, 2020 at 09:29:32PM -0700, Guenter Roeck wrote:
+> >> On Sun, May 17, 2020 at 08:49:39PM -0700, Ira Weiny wrote:
+> >>> On Sat, May 16, 2020 at 03:33:06PM -0700, Guenter Roeck wrote:
+> >>>> On Thu, May 07, 2020 at 07:59:55AM -0700, ira.weiny@intel.com wrote:
+> >>>>> From: Ira Weiny <ira.weiny@intel.com>
+> >>>>>
+> >>>
+
+Sorry for the delay I missed this email last night...  I blame outlook...  ;-)
+
+...
+
+> >>> Do you have a kernel config?  Specifically is CONFIG_HIGHMEM set?
+> >>>
+> >> See below. Yes, CONFIG_HIGHMEM is set.
+> >>
+> >> The scripts used to build and boot the image are at:
+> >>
+> >> https://github.com/groeck/linux-build-test/tree/master/rootfs/microblazeel
+> > 
+> > Despite finding the obvious error earlier today I've still been trying to get
+> > this to work.
+> > 
+> > I had to make some slight modifications to use the 0-day cross compile build
+> > and my local qemu build.  But those were pretty minor modifications.  I'm
+> > running on x86_64 host.
+> > 
+> > With those slight mods to the scripts I get the following error even without my
+> > patch set on 5.7-rc4.  I have 1 cpu pegged at 100% while it is running...  Is
+> > there anything I can do to get more debug output?  Perhaps I just need to let
+> > it run longer?
+> > 
 > 
+> I don't think so. Try running it with "-d" parameter (run-qemu-microblazeel.sh
+> -d petalogix-s3adsp1800); that gives you the qemu command line. Once it says
+> "running", abort the script and execute qemu directly.
 
-Build results:
-	total: 171 pass: 171 fail: 0
-Qemu test results:
-	total: 408 pass: 408 fail: 0
+FYI Minor nit...  a simple copy/paste failed...  that print of the cmd line
+did not include quotes around the -append text:
 
-Guenter
+09:06:03 > /home/iweiny/dev/qemu/microblazeel-softmmu/qemu-system-microblazeel
+   -M petalogix-s3adsp1800 -m 256 -kernel arch/microblaze/boot/linux.bin
+   -no-reboot -initrd /tmp/buildbot-cache/microblazeel/rootfs.cpio -append
+   panic=-1 slub_debug=FZPUA rdinit=/sbin/init console=ttyUL0,115200 -monitor
+   none -serial stdio -nographic
+
+qemu-system-microblazeel: slub_debug=FZPUA: Could not open 'slub_debug=FZPUA': No such file or directory
+
+> Oh, and please update
+> the repository; turns out I didn't push for a while and made a number of
+> changes.
+
+Cool beans...  I've updated.
+
+> 
+> My compiler was compiled with buildroot (a long time ago). I don't recall if
+> it needed something special in the configuration, unfortunately.
+
+AFAICT the compile is working...  It is running from the command line now...  I
+expected it to be slow so I have also increased the timeouts last night.  So
+far it still fails.  I did notice that there is a new 'R' in the wait output.
+
+<quote>
+.........................R......................... failed (silent)
+------------
+qemu log:
+qemu-system-microblazeel: terminating on signal 15 from pid 3357146 (/bin/bash)
+</quote>
+
+I was hoping that meant it found qemu 'running' but looks like that was just a
+retry...  :-(
+
+Last night I increased some of the timeouts I could find.
+
+<quote>
+ LOOPTIME=5     # Wait time before checking status
+ -MAXTIME=150    # Maximum wait time for qemu session to complete
+ -MAXSTIME=60    # Maximum wait time for qemu session to generate output
+ +#MAXTIME=150   # Maximum wait time for qemu session to complete
+ +#MAXSTIME=60   # Maximum wait time for qemu session to generate output
+ +MAXTIME=300    # Maximum wait time for qemu session to complete
+ +MAXSTIME=120   # Maximum wait time for qemu session to generate output
+</quote>
+
+But thanks to the qemu command line hint I can see these were not nearly
+enough...  (It has been running for > 20 minutes...  and I'm not getting
+output...)  Or I've done something really wrong.  Shouldn't qemu be at least
+showing something on the terminal by now?  I normally run qemu with different
+display options (and my qemu foo is weak) so I'm not sure what I should be
+seeing with this command line.
+
+09:06:28 > /home/iweiny/dev/qemu/microblazeel-softmmu/qemu-system-microblazeel
+  -M petalogix-s3adsp1800 -m 256 -kernel arch/microblaze/boot/linux.bin
+  -no-reboot -initrd /tmp/buildbot-cache/microblazeel/rootfs.cpio -append
+  "panic=-1 slub_debug=FZPUA rdinit=/sbin/init console=ttyUL0,115200" -monitor
+  none -serial stdio -nographic
+
+Maybe I just have too slow of a machine...  :-/
+
+My qemu was built back in March.  I'm updating that now...
+
+Sorry for being so dense...
+Ira
