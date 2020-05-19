@@ -2,149 +2,167 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A78CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C544B205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:42:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AweT9CPI"
+	by mail.kernel.org (Postfix) with ESMTP id 33AAB205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:44:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589928254;
+	bh=KV1br4RP62dfaY+YojzIIXCxa+4QL84xTnfa3sI135I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ff8DoU4xA+UXFZIekoEQNbveI8YxAhKFya+rr8B4WLD32WoojmH12UUaJUZ7lsYhw
+	 eDwGF3k3gfKaGiL0e40SAF/eW2OgDUhaDzDxOP3OgrIL6+q11wFz0QLSNy/a/hrKTm
+	 LG0ft5IOzvgOXNYk6qDhC2MstIoi/u8lP1Q7zfp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgESWm7 (ORCPT
+        id S1728258AbgESWoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:42:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgESWm4 (ORCPT
+        Tue, 19 May 2020 18:44:13 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37324 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgESWoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:42:56 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3456DC061A0E;
-        Tue, 19 May 2020 15:42:56 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a2so881529ejb.10;
-        Tue, 19 May 2020 15:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XkNEkulDdH4K6Pc2AjIHGc1nu83ozdPkLgankdo3z+8=;
-        b=AweT9CPIrUxa0N4vmOK6oeo/RxnZYLc+CExt9z8FbB6GnMgeBCd0HEvdw8smURG8fg
-         ejGoOvcyyG4x6E1LsYeAohAFISL1LexnmcLI17QeGLW30w7WSPiLSp9PTWtY2jxCxCfG
-         T2LZQReOgUzOuD6RqkMr9W/oePZEfvsya+tZEwsqcIDTH93LLKWo/eYhSxAZmit3lexc
-         VRq86Yrb2RMPQZx87PCOtd1hZ+2IxPd0JKJso1L/tLwVYWaCH1MxtKCEbFdwHQwReNAT
-         GhAlb+w4vwOYm7cBfs+zGlldrJNucHi+c/0Omu1JZOKu0R/HdMfHM6Dqf1fWcIGwwETU
-         yVeQ==
+        Tue, 19 May 2020 18:44:13 -0400
+Received: by mail-io1-f67.google.com with SMTP id t15so1043888ios.4;
+        Tue, 19 May 2020 15:44:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XkNEkulDdH4K6Pc2AjIHGc1nu83ozdPkLgankdo3z+8=;
-        b=XaU1jhLE1SRbpBiJD1OF0Z1QNEEEMf+vE6DuHqsb3VORdGmlp9GKT9NVaQnsYSye/m
-         wsvxIbwL2u4d3JSfQZ9cxW3tomVgSTPX050hzk+PtlSRGDwUBZMO5PWOJl7bm9S2bzjT
-         z2upDf9yBcIZwsDvEd75/rWAh1fJVahTv7D7yhs46HreUaXOL/jejRW544r8ntvVAQ45
-         QuPb3wz+E7cKFv5gk+Gka5vcJxLHNsJNBLHnFCtYV8mYcHwypRwSfmk6MA1gap+khLTY
-         IzGmqkKfvxnUgYAKYItRpTF0Az7vXI2GxCCp7kjNesSwlKyQ0PEAfHQE23beg0F9hgXY
-         YqYw==
-X-Gm-Message-State: AOAM533h4nEXOSWhEsbZt3M4igiXyNm9w9jYsw7lV02fFbVNid89jG/E
-        PkQW3C0cIRPoXsnYCZpWrRI1aKCtw+u5mDqmrjXjAcyt
-X-Google-Smtp-Source: ABdhPJz1cbZ0mWSKAwLvdrgyvCIeCQXQpdCsWBcPW7aOrjkzx37rBjrlZHsWHTx3L65i6XkCMQlISf0P+HM/SVSd/tQ=
-X-Received: by 2002:a17:906:404c:: with SMTP id y12mr1381799ejj.9.1589928174706;
- Tue, 19 May 2020 15:42:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=N1lmJuXT33q6aZH18d7DfYmv0StosYI0OPktchqqKbA=;
+        b=OtUsF+RqRV1tX9pbf5h7C6lMXhObFIJe4jmotw3LJPDpxAtsNGhbvo5tmcpmdcXaQS
+         C37YIE4vnrUNaY9BijeQPF+ZhJ8lB1RrTVkulGWHZLleOtlFZwGjjAAjgifljgSiJge8
+         KGNc4tHwR9ASBDAVUmJxJhugByWm47bggakCs14unNpmWngcwdk0ncubZIDQYn5WqY3B
+         q4t2ECyNl0HSCDb3xh4IaM6bPXGhrbA9QroZxH2hRcHQUI6FH6g/D3UZLeKrdp8g5EKa
+         scDu0UOVRXs2ckwFiMjLpqLURfQlXKbJtsrLjrZZGWg7i7EB9GT0eLBuLSoYGT4mkSd1
+         yXbQ==
+X-Gm-Message-State: AOAM533PNk+0kb5xu+0IFsgg2m74VgjV+BNfEW0y/1/Ln3qh596JxtFM
+        KuZvoJwq+meJIBF3r7pW2A==
+X-Google-Smtp-Source: ABdhPJxKQ/TzQq03uf2VEzCewTAUROD8cEguB2dRtrUO2bJaC96i0KsUN7VLp2Hv2j6a2B1DjXP6BA==
+X-Received: by 2002:a02:76c4:: with SMTP id z187mr1922106jab.72.1589928252182;
+        Tue, 19 May 2020 15:44:12 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b7sm366733ioq.40.2020.05.19.15.44.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 15:44:11 -0700 (PDT)
+Received: (nullmailer pid 827084 invoked by uid 1000);
+        Tue, 19 May 2020 22:44:10 -0000
+Date:   Tue, 19 May 2020 16:44:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v8 7/8] tpm: Add YAML schema for TPM TIS I2C options
+Message-ID: <20200519224410.GA824372@bogus>
+References: <20200512141431.83833-1-amirmizi6@gmail.com>
+ <20200512141431.83833-8-amirmizi6@gmail.com>
 MIME-Version: 1.0
-References: <20200519163234.226513-1-sashal@kernel.org>
-In-Reply-To: <20200519163234.226513-1-sashal@kernel.org>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Wed, 20 May 2020 08:42:43 +1000
-Message-ID: <CAPM=9txZpiCGkv3jiBC1F8pTe4A2pqWpQDyjRBXk2roFqw+0+Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] DirectX on Linux
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        "Ursulin, Tvrtko" <tvrtko.ursulin@intel.com>,
-        linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        haiyangz@microsoft.com, LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        spronovo@microsoft.com, wei.liu@kernel.org,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        iourit@microsoft.com, kys@microsoft.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512141431.83833-8-amirmizi6@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 at 02:33, Sasha Levin <sashal@kernel.org> wrote:
->
-> There is a blog post that goes into more detail about the bigger
-> picture, and walks through all the required pieces to make this work. It
-> is available here:
-> https://devblogs.microsoft.com/directx/directx-heart-linux . The rest of
-> this cover letter will focus on the Linux Kernel bits.
->
-> Overview
-> ========
->
-> This is the first draft of the Microsoft Virtual GPU (vGPU) driver. The
-> driver exposes a paravirtualized GPU to user mode applications running
-> in a virtual machine on a Windows host. This enables hardware
-> acceleration in environment such as WSL (Windows Subsystem for Linux)
-> where the Linux virtual machine is able to share the GPU with the
-> Windows host.
->
-> The projection is accomplished by exposing the WDDM (Windows Display
-> Driver Model) interface as a set of IOCTL. This allows APIs and user
-> mode driver written against the WDDM GPU abstraction on Windows to be
-> ported to run within a Linux environment. This enables the port of the
-> D3D12 and DirectML APIs as well as their associated user mode driver to
-> Linux. This also enables third party APIs, such as the popular NVIDIA
-> Cuda compute API, to be hardware accelerated within a WSL environment.
->
-> Only the rendering/compute aspect of the GPU are projected to the
-> virtual machine, no display functionality is exposed. Further, at this
-> time there are no presentation integration. So although the D3D12 API
-> can be use to render graphics offscreen, there is no path (yet) for
-> pixel to flow from the Linux environment back onto the Windows host
-> desktop. This GPU stack is effectively side-by-side with the native
-> Linux graphics stack.
+On Tue, May 12, 2020 at 05:14:30PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
+> PTP based physical layer.
+> 
+> This patch adds the documentation for corresponding device tree bindings of
+> I2C based Physical TPM.
+> Refer to the 'I2C Interface Definition' section in
+> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
+> for specification.
+> 
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> ---
+>  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+> new file mode 100644
+> index 0000000..628c8f3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Okay I've had some caffiene and absorbed some more of this.
+Dual license new bindings please:
 
-This is a driver that connects a binary blob interface in the Windows
-kernel drivers to a binary blob that you run inside a Linux guest.
-It's a binary transport between two binary pieces. Personally this
-holds little of interest to me, I can see why it might be nice to have
-this upstream, but I don't forsee any other Linux distributor ever
-enabling it or having to ship it, it's purely a WSL2 pipe. I'm not
-saying I'd be happy to see this in the tree, since I don't see the
-value of maintaining it upstream, but it probably should just exists
-in a drivers/hyperv type area.
+(GPL-2.0-only OR BSD-2-Clause)
 
-Having said that, I hit one stumbling block:
-"Further, at this time there are no presentation integration. "
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/security/tpm/tpm-tis-i2c.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: I2C PTP based TPM Device Tree Bindings
+> +
+> +maintainers:
+> +  - Amir Mizinski <amirmizi6@gmail.com>
+> +
+> +description:
+> +  Device Tree Bindings for I2C based Trusted Platform Module(TPM).
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
 
-If we upstream this driver as-is into some hyperv specific place, and
-you decide to add presentation integration this is more than likely
-going to mean you will want to interact with dma-bufs and dma-fences.
-If the driver is hidden away in a hyperv place it's likely we won't
-even notice that feature landing until it's too late.
+You don't need 'oneOf'.
 
-I would like to see a coherent plan for presentation support (not
-code, just an architectural diagram), because I think when you
-contemplate how that works it will change the picture of how this
-driver looks and intergrates into the rest of the Linux graphics
-ecosystem.
+> +          - enum:
+> +              # Nuvoton's Trusted Platform Module (TPM) (NPCT75x)
+> +              - nuvoton,npct75x
+> +          - const: tcg,tpm-tis-i2c
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupt:
+> +    maxItems: 1
+> +
+> +  crc-checksum:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      Set this flag to enable CRC checksum.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      tpm_tis@2e {
 
-As-is I'd rather this didn't land under my purview, since I don't see
-the value this adds to the Linux ecosystem at all, and I think it's
-important when putting a burden on upstream that you provide some
-value.
+tpm@2e
 
-Dave.
+> +        compatible = "nuvoton,npct75x", "tcg,tpm-tis-i2c";
+> +        reg = <0x2e>;
+> +        crc-checksum;
+> +      };
+> +    };
+> +...
+> -- 
+> 2.7.4
+> 
