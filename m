@@ -2,143 +2,91 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F414A2065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:30:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYUHerbZ"
+	by mail.kernel.org (Postfix) with ESMTP id 324322081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589905887;
+	bh=uASEKNWX2uIB0hJ0wokVFicq/nmlpU2jfEmWO9zmSQo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=jvijY3ovgjwKbI1NJ/8yhOo74e8r6a7+b0AogYkf7x3fVCeQ1Y/INbqpZPy2pwaY0
+	 UEYAAlTZup3WR2lE8aN0FDjfAHZZYFTqzGB+zpz1smR+CAh/Y563ebM5p1RpdFLzR4
+	 lsrenI5HHSLKM1gVNVQWgr07HoBrrtvuqiSWEggM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbgESQaZ (ORCPT
+        id S1729254AbgESQb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgESQaZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:30:25 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC82CC08C5C0;
-        Tue, 19 May 2020 09:30:24 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id u35so68106pgk.6;
-        Tue, 19 May 2020 09:30:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zl27qRmpnEWPY5MX3lK7b0j3SSfkbuil8NRZek91WDE=;
-        b=CYUHerbZsjjZZn8LrFJpyrGdWRr1VF8zFHmAywfWFC3ZG4LSCtQANHi9Jm3YrwJo5Z
-         fJhq+YJalSrMC9OBgb7qmAHSQ9N9oyYvEFOKqGh6DNDIfRcTeWmXMd/UDXSJ/Vk+DniC
-         MWKHkrq82Rx1O6V+4GTp9OwHQyR31lTfEgV2j7ZPsMm9Y+3yqRG7u2+fgLgynlwSG7yy
-         25OpZ6cb40wtPnA5BoDn4B6oqWnYcl8BRpx7/VrNRDg5n7zhAG11sMkGssUIfxmgLWm8
-         zUUMohosotYvnXdqLg89PrFTWM6yTztpwwWLIs4DXzU0AdgXnBfGLA03pEQVYRyJLupT
-         5jKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zl27qRmpnEWPY5MX3lK7b0j3SSfkbuil8NRZek91WDE=;
-        b=Z4Uta4wEA724Dsj7UFfOujITWPWiOolCUSMGVwpzaerKUkvHzwnE81PSUD+s5QyUX9
-         bk6lwiL1N3EvGg0RVkMJP3pEYIE5JRrmWJOEWKrTNHuonEWiCnNMMMEMzGXmyzppVSnd
-         KGhtUWSEur6YVkcVFipHt6+Zm51jhWZHjxm2HVZIOtp0EoGRWpb1koQmwy6f3cN11H74
-         V7LWhwwyvfeQYiVyFKu76BuAHvCX9QLyAgUi5jrf//useO4dVDEG9xfo8FMOZ2aNusf3
-         tCW5ZzgJdvjbd0ZXens+sUc/FfJ2wpFMhvaJeTj+e5pnod9ve5on2wlKhdbmoY47kqHY
-         idfA==
-X-Gm-Message-State: AOAM530SA0oqgCjUrW5fkbr2uMvnwJBEomGf/677yrjCTfpa4xh50gcs
-        xmqXYqi2wLsB7/WiWCMnYOCOsEmH
-X-Google-Smtp-Source: ABdhPJypTOZPUIJ48RIunmKqZO1ZcLuThjgsZif4KwXDlDqCTU+XL+eOGO4ffqhw3setBjfy+kSCIA==
-X-Received: by 2002:a63:9e41:: with SMTP id r1mr23846pgo.97.1589905824369;
-        Tue, 19 May 2020 09:30:24 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z190sm25976pfb.1.2020.05.19.09.30.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 09:30:23 -0700 (PDT)
-Subject: Re: [PATCH 5.6 000/192] 5.6.14-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200519054650.064501564@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <981436bc-c36d-32e8-73ca-e121b4aea948@roeck-us.net>
-Date:   Tue, 19 May 2020 09:30:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 12:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbgESQb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 12:31:26 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40F85207D3;
+        Tue, 19 May 2020 16:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589905885;
+        bh=uASEKNWX2uIB0hJ0wokVFicq/nmlpU2jfEmWO9zmSQo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kuYBKgMixa56chL6YR3C8bnsP8+6t0kL1tZS2zyTTvHuAg+U+gB1qWU5ebGUrtVHy
+         q5KANzEo1MPjM533m4a9Eqsb4ZZFmnQ/sB240uzA/l1sIp1bz18iXx4pWaDd2Tlc23
+         8D1AC77nx1zgdy/cSYNeJGawKlh3T0F/pJxwiOfQ=
+Date:   Tue, 19 May 2020 11:36:12 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v2] RDMA/rtrs: client: Fix function return on success
+Message-ID: <20200519163612.GA6043@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200519054650.064501564@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/20 10:47 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.14 release.
-> There are 192 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 21 May 2020 05:45:41 +0000.
-> Anything received after that time might be too late.
-> 
+Remove the if-statement and return the value contained in _err_,
+unconditionally.
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 431 pass: 431 fail: 0
+Addresses-Coverity-ID: 1493753 ("Identical code for different branches")
+Fixes: 6a98d71daea1 ("RDMA/rtrs: client: main functionality")
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Return err, unconditionally. As suggested by Bart Van Assche.
+   Thanks, Bart.
 
-Guenter
+ drivers/infiniband/ulp/rtrs/rtrs-clt.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt.c b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+index 468fdd0d8713c..568741aa7f596 100644
+--- a/drivers/infiniband/ulp/rtrs/rtrs-clt.c
++++ b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+@@ -1591,9 +1591,6 @@ static int create_con_cq_qp(struct rtrs_clt_con *con)
+ 	 * In case of error we do not bother to clean previous allocations,
+ 	 * since destroy_con_cq_qp() must be called.
+ 	 */
+-
+-	if (err)
+-		return err;
+ 	return err;
+ }
+ 
+-- 
+2.26.2
+
