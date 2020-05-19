@@ -2,86 +2,86 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5A6C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF69204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C553204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgESIgY (ORCPT
+        id S1728336AbgESIhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgESIgX (ORCPT
+        Tue, 19 May 2020 04:37:34 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:40654 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgESIhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:36:23 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1CCC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:36:23 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jaxjV-000476-KX; Tue, 19 May 2020 10:36:17 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2386B1006A1; Tue, 19 May 2020 10:36:11 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xianting Tian <xianting_tian@126.com>, john.stultz@linaro.org,
-        sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] timers: Use set_current_state macro
-In-Reply-To: <1589469647-33814-1-git-send-email-xianting_tian@126.com>
-References: <1589469647-33814-1-git-send-email-xianting_tian@126.com>
-Date:   Tue, 19 May 2020 10:36:11 +0200
-Message-ID: <87imgsuxs4.fsf@nanos.tec.linutronix.de>
+        Tue, 19 May 2020 04:37:32 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 49R8QK0Grqz1qrf4;
+        Tue, 19 May 2020 10:37:29 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 49R8QJ5zQ7z1qsq7;
+        Tue, 19 May 2020 10:37:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id slUeY5zBMP1u; Tue, 19 May 2020 10:37:27 +0200 (CEST)
+X-Auth-Info: FqBIyAr0MyUGIS5Ip8Q7OSzRYusW2FcZjUE71QeBiiTFJFnlwZ4bNMhWHvnp6j06
+Received: from igel.home (ppp-46-244-171-2.dynamic.mnet-online.de [46.244.171.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue, 19 May 2020 10:37:27 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id C49402C0C39; Tue, 19 May 2020 10:37:26 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     ebiederm@xmission.com (Eric W. Biederman)
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] exec: Change uselib(2) IS_SREG() failure to EACCES
+References: <20200518055457.12302-1-keescook@chromium.org>
+        <20200518055457.12302-2-keescook@chromium.org>
+        <20200518130251.zih2s32q2rxhxg6f@wittgenstein>
+        <CAG48ez1FspvvypJSO6badG7Vb84KtudqjRk1D7VyHRm06AiEbQ@mail.gmail.com>
+        <20200518144627.sv5nesysvtgxwkp7@wittgenstein>
+        <87blmk3ig4.fsf@x220.int.ebiederm.org>
+X-Yow:  Two with FLUFFO, hold th' BEETS..side of SOYETTES!
+Date:   Tue, 19 May 2020 10:37:26 +0200
+In-Reply-To: <87blmk3ig4.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 18 May 2020 18:57:15 -0500")
+Message-ID: <87mu64uxq1.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xianting Tian <xianting_tian@126.com> writes:
-> Use set_current_state macro instead of current->state = TASK_RUNNING
->
-> Signed-off-by: Xianting Tian <xianting_tian@126.com>
-> ---
->  kernel/time/timer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-> index 4820823..b9ecf87 100644
-> --- a/kernel/time/timer.c
-> +++ b/kernel/time/timer.c
-> @@ -1882,7 +1882,7 @@ signed long __sched schedule_timeout(signed long timeout)
->  			printk(KERN_ERR "schedule_timeout: wrong timeout "
->  				"value %lx\n", timeout);
->  			dump_stack();
-> -			current->state = TASK_RUNNING;
-> +			set_current_state(TASK_RUNNING);
+On Mai 18 2020, Eric W. Biederman wrote:
 
-This is still wrong. Again:
+> If it was only libc4 and libc5 that used the uselib system call then it
+> can probably be removed after enough time.
 
-   "That's not the same and adds a barrier which is not needed.
+Only libc4 used it, libc5 was already ELF.
 
-    Not a big problem in that particular error handling code path, but in
-    general you really have to look whether your replacement is resulting in
-    the same code.
+Andreas.
 
-    If not then you need to make an argument in the changelog why you are
-    replacing existing code with something which is not fully equivalent.
-
-    For this particular case, please check the implementation and read the
-    documentation of set_current_state() in include/linux/sched.h."
-
-Thanks,
-
-        tglx
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
