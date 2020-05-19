@@ -5,69 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E799C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20182207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC2B207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:22:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vWSz0BBO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m/RAtZBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729488AbgESSVn (ORCPT
+        id S1729518AbgESSWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:21:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36592 "EHLO
+        Tue, 19 May 2020 14:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgESSVm (ORCPT
+        with ESMTP id S1729244AbgESSWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:21:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC402C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:21:41 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ci21so47293pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:21:41 -0700 (PDT)
+        Tue, 19 May 2020 14:22:02 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC780C08C5C0;
+        Tue, 19 May 2020 11:22:02 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p21so197638pgm.13;
+        Tue, 19 May 2020 11:22:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=b52A7vD+RR088Jsg7MbGhWVJbszSlF+rCVUgMjj+kMs=;
-        b=vWSz0BBOdzlZR3rjV4RVeNr/tSysik77xL++h89DZQuWbl/uK/LiTCvupqnojGgoWG
-         523FmT5ugUWk8LxKFBale9tvHpL4kaz1mVkqFZR+szr6J0G7mrp5sIdFJryzMEzR/N7U
-         ZOmTlh89BqpPuJ9CqdMtJvPp/E3ba5BcZrFJNUfR6/jE3j1bXQzaJ+I8YLU0WVBT8OZA
-         Yl1wNF1GShuriWr4x4bc8AL54sAVUvnJ2QCiWwpXgPi/25+uJMYYnnXkJR+wtBbC9ISE
-         Oqak0vA7BCVLpaoczJyD9bLmYI4bdtlPP8BBNuhIdOrSs2MTROi0pj9p+63HBpNLOTOo
-         74aw==
+        bh=nIw/Wm1p9mhtngU9JT40imNSzxd+hOjNvy14i5Yi/sk=;
+        b=m/RAtZBA268ogWyV0zd+y7ddhFSa2wnf7yzaJGsJZPgcu4Du5QqE5dNnUqY8YAsO8V
+         Ab8otkj74dK65n0oUJwIgKaUa8CW7RR+coQo2VaFpAnrxXUog/AVlPPx3uEUAvsAS2J1
+         uJk8BGHatFyX4+oEEeq/mJQDeG1tHArO3XRSzKNuGyqWpy2HY30MTP/Rqn5VxB6kw8hq
+         KfXBWO+8OYMDvuzmYzWYisQuKxYsL1BY5RY7fNCoDldvNe+I3opBCLypYGPXhEvSfOBd
+         sFCqlDW+mLZz6Q2DVjgIYXIVYos1D2xQI3SM8359abyfNPKCl2NA2DA6bwz0LpX/m4d8
+         ursA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=b52A7vD+RR088Jsg7MbGhWVJbszSlF+rCVUgMjj+kMs=;
-        b=VwmLxkCa95sUUCc+GoK4pz4Sf/X6yDvTsnraKNp6j+KIp64IRfbZFbnebuFeWD0xGI
-         1NcUcS/SztaOWlivB2fKHzaipbeiPzT2fcH7eIsW+Oiw24DDASnzPZmTPulatvblc5Hj
-         bjgDFq5G7TdVghd/RIo+kBW5yEoMWdyQk3/9MBF3+hwSYNQnuP3B0Meh5k/WZYCxpvHj
-         RHw9T4B5qmHRzT0+a5YjkIy1htOUx36jjN9HvK+fvlK9URfQaKqf3NGxS+1T0+65wVNX
-         2dhvZnULAkiUpQuVUrAO4qwiWYDAybldiVi/kRIvSJ6OjRw3coNdinuej+hkH7KRfDEI
-         mSHQ==
-X-Gm-Message-State: AOAM531NRpcsWtt+ps6yna9LQ+Fhy/cLeVI5SamEVivZpsSOzuR4RJb5
-        q41h+eTuLmJkg483dH1Pl8s=
-X-Google-Smtp-Source: ABdhPJws2U/VxXLXMna/NvEGpbIbjledu6ue4XKhF7XHouk2PIjlxarxjV0y9Pn0hcVd8HOR0tuCPw==
-X-Received: by 2002:a17:902:a584:: with SMTP id az4mr707797plb.201.1589912501372;
-        Tue, 19 May 2020 11:21:41 -0700 (PDT)
+        bh=nIw/Wm1p9mhtngU9JT40imNSzxd+hOjNvy14i5Yi/sk=;
+        b=fWecNGSiYYdF2fVlaOIGIdu1iuzD1YX3t2pwjvZDuW5igo5XjDczmpNQrrqLyDo9GP
+         k9qyUwQ29I/XgiZ52RIBVA5Z4fUSiHnNsMld3ypxPcvvbatC6pkgFHx4oiSxemKqjnVH
+         1skYqXW8Tob1+BLjpW4yyhU/S8k4ikOdETfZUxMSgqiMLsHLKPwL83FKsrmEmOAgXSec
+         Wbyov4JMFaTZxVekfQRz7IMDCry2Vrim2a+f4e2cgS6h6iDiReIDUGCGT5ltIvzOAow4
+         Hqa5plegF3ZfVYpRrnAPghe5yb5FjCkIhrokj/KXyXqbKP+rAuTDLCpjEVCmWCO/6+yE
+         WdpQ==
+X-Gm-Message-State: AOAM531vwU8449bJSbihXg0ShxXVCud1U2DSHLidhISG+yNivJLno3sb
+        wIN9ToASMKiMmMdgpwQgzt8=
+X-Google-Smtp-Source: ABdhPJy0U1J+zwnKEq+EV027rYJd4hOUnGCdZisBhQTKyjZoAWY9B1JJ1MqYTpbjWgwZSDs/yhPqXQ==
+X-Received: by 2002:aa7:8b12:: with SMTP id f18mr363582pfd.81.1589912522309;
+        Tue, 19 May 2020 11:22:02 -0700 (PDT)
 Received: from localhost.localdomain ([223.235.145.232])
-        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.21.09
+        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.21.42
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 May 2020 11:21:40 -0700 (PDT)
+        Tue, 19 May 2020 11:22:01 -0700 (PDT)
 From:   Amit Singh Tomar <amittomer25@gmail.com>
 To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, sboyd@kernel.org
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
 Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: [PATCH v2 03/10] clk: actions: Add MMC clock-register reset bits
-Date:   Tue, 19 May 2020 23:49:21 +0530
-Message-Id: <1589912368-480-4-git-send-email-amittomer25@gmail.com>
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v2 04/10] arm64: dts: actions: *do not merge* disable sps node from S700
+Date:   Tue, 19 May 2020 23:49:22 +0530
+Message-Id: <1589912368-480-5-git-send-email-amittomer25@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
 References: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
@@ -76,33 +76,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds reset bits needed for MMC clock registers present
-on Actions S700 SoC.
+After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
+Actions Semi S700") following error has been observed while booting
+Linux on Cubieboard7-lite(based on S700 SoC).
+
+[    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
+resource [mem 0xe01b0000-0xe01b0fff]
+[    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
+
+This is due to the fact that memory range for "sps" power domain controller
+clashes with pinctrl.
+
+This commit disable "sps" to avoid this conflict and let us test DMA and MMC
+related changes.
 
 Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 ---
-Changes from v1:
-        * No change.
-Changes from RFC:
-        * No change.
+Changes since v1:
+	* No change.
+Changes since RFC:
+        * kept as do not merge.
 ---
- drivers/clk/actions/owl-s700.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/actions/s700.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/actions/owl-s700.c b/drivers/clk/actions/owl-s700.c
-index a2f34d13fb54..cd60eca7727d 100644
---- a/drivers/clk/actions/owl-s700.c
-+++ b/drivers/clk/actions/owl-s700.c
-@@ -577,6 +577,9 @@ static const struct owl_reset_map s700_resets[] = {
- 	[RESET_DSI]	= { CMU_DEVRST0, BIT(2) },
- 	[RESET_CSI]	= { CMU_DEVRST0, BIT(13) },
- 	[RESET_SI]	= { CMU_DEVRST0, BIT(14) },
-+	[RESET_SD0]     = { CMU_DEVRST0, BIT(22) },
-+	[RESET_SD1]     = { CMU_DEVRST0, BIT(23) },
-+	[RESET_SD2]     = { CMU_DEVRST0, BIT(24) },
- 	[RESET_I2C0]	= { CMU_DEVRST1, BIT(0) },
- 	[RESET_I2C1]	= { CMU_DEVRST1, BIT(1) },
- 	[RESET_I2C2]	= { CMU_DEVRST1, BIT(2) },
+diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+index 2006ad5424fa..0397c5dd3dec 100644
+--- a/arch/arm64/boot/dts/actions/s700.dtsi
++++ b/arch/arm64/boot/dts/actions/s700.dtsi
+@@ -220,6 +220,7 @@
+ 			compatible = "actions,s700-sps";
+ 			reg = <0x0 0xe01b0100 0x0 0x100>;
+ 			#power-domain-cells = <1>;
++			status = "disabled";
+ 		};
+ 
+ 		timer: timer@e024c000 {
 -- 
 2.7.4
 
