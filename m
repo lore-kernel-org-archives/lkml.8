@@ -2,92 +2,124 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7077DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482C1207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90BAE20756
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:21:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E62FzXGP"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="JcucbRwn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgESQVI (ORCPT
+        id S1729380AbgESQVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:21:08 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28415 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728775AbgESQVI (ORCPT
+        Tue, 19 May 2020 12:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728775AbgESQVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:21:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589905267;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mfUhnJsBjAnTzzL+sHH9DFgILRNGyHwzu1Q5lwdqFzE=;
-        b=E62FzXGPFs9i4ohgkFvwxogTSyTuKy1kR7RIf+TGVsadmdW7gbpyEdyMrRXUx7Wtc6oEmC
-        er4cBL1zqBnqILQZV7U92GRWLv1Xv/YJLzMMwQHJV3zN3GcAX4iDOihK6Cn7P5rQpCtDtH
-        Wjfuyxn3F3MeDA+0qOrWvLJ62TrhbsE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-6U2vJhNAMrG7agpJUzVKqQ-1; Tue, 19 May 2020 12:21:03 -0400
-X-MC-Unique: 6U2vJhNAMrG7agpJUzVKqQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 791DB18C35A7;
-        Tue, 19 May 2020 16:20:55 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-95.rdu2.redhat.com [10.10.112.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 666355C1BB;
-        Tue, 19 May 2020 16:20:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200512181745.11866-1-anders.roxell@linaro.org>
-References: <20200512181745.11866-1-anders.roxell@linaro.org>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     dhowells@redhat.com, masahiroy@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v2] scripts: fix deprecated always and hostprogs-y
+        Tue, 19 May 2020 12:21:48 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A480C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:21:47 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id g9so86607edr.8
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dm7TwEXp4lhr5q0JgyLJfssXo7pDuSlgCbYoFZyD8x8=;
+        b=JcucbRwnAY3oAPJQ3DnkLD8AEFLKvd7kSm8tphkVFWNdCerEC97MAlx5wxfMtuKJic
+         r9G3rp606PXroChm0tmelvevNx+GaxbtSdzxw1YFXoYWBm2aZrr0cdMEyBeV85kgQ944
+         ENiCGwwr0Ncegl96r3x+wKydoOHhu8YVurYIYOJitKuFsn+4iQTJ9G6vpfTPJVBn2WUp
+         avsIEtk9wyhpvggARcKYmpte9+R2/bDXzd9VNy8Hk9iL0i5k47r3XJtfu+MRC7dDgdUU
+         svvC5i9ATPfSHpoWK/VO3AQWrnavjSlqlTUBHXbpJwaqjYrmiBnU5A89CvLtgeGaqnjQ
+         /q4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dm7TwEXp4lhr5q0JgyLJfssXo7pDuSlgCbYoFZyD8x8=;
+        b=a44IWPekm0VIttmkbcJdepf+xOGxkryIppfpaSUpRjU6d0VUyeHkoZ6QDf/sy813g/
+         hBthKNVVVCkr5cySD7kdMCD3cmJXMoH+HTJXDjwDWa1flCes9GIaUDuF6qNd0IdFYxmM
+         3oiBP43vX3QEVPPzUl+dGyFPl9/2KRLtvCD15e6CDOsu2DGnX0RMYVhOItrWCQJOhF5J
+         uWYbrqc+1/XhOrxkuhYxurJKBCXrnyT3tqUDUg3rougLW9MHX/54vxdRWE9xCv0WA9iE
+         9FswPxXHTg3ZgiAMVvS2gBEymojRlQ8qTg9syGe57foOmBRSVAZk3XO+mD+7MTl5r09z
+         PTrA==
+X-Gm-Message-State: AOAM5314tvTmv2F3Q3sNqdiF+binIN9PWsTOYvOsi32lCZ2iOAUNtQ5p
+        lxiqkapoBd2/eSaIzYXMYoxZfaM7I11IfcISI6AkXg==
+X-Google-Smtp-Source: ABdhPJxg9aUP5rG6HYpoyDZEiA16bkewm3N1LqXgR/j9efQBmYKFVB/ih/3ZmLgaXGcj/GUCuFlB7lKKykNH0WHxTGU=
+X-Received: by 2002:aa7:d787:: with SMTP id s7mr19137910edq.104.1589905305828;
+ Tue, 19 May 2020 09:21:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1514448.1589905253.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 19 May 2020 17:20:53 +0100
-Message-ID: <1514449.1589905253@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200519161345.GA3910@embeddedor> <220e3cd2-2f22-063a-4117-8ee987521c61@acm.org>
+In-Reply-To: <220e3cd2-2f22-063a-4117-8ee987521c61@acm.org>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Tue, 19 May 2020 18:21:35 +0200
+Message-ID: <CAMGffE=15s=GsO02iHL0qhBAaGx8OCBMUeR--GRWD6g41pnfyw@mail.gmail.com>
+Subject: Re: [PATCH] RDMA/rtrs: client: Fix function return on success
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anders Roxell <anders.roxell@linaro.org> wrote:
+On Tue, May 19, 2020 at 6:16 PM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> On 2020-05-19 09:13, Gustavo A. R. Silva wrote:
+> > The function should return 0 on success, instead of err.
+> >
+> > Addresses-Coverity-ID: 1493753 ("Identical code for different branches")
+> > Fixes: 6a98d71daea1 ("RDMA/rtrs: client: main functionality")
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >  drivers/infiniband/ulp/rtrs/rtrs-clt.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt.c b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+> > index 468fdd0d8713c..465515e46bb1a 100644
+> > --- a/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+> > +++ b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+> > @@ -1594,7 +1594,8 @@ static int create_con_cq_qp(struct rtrs_clt_con *con)
+> >
+> >       if (err)
+> >               return err;
+> > -     return err;
+> > +
+> > +     return 0;
+> >  }
+>
+> Why to keep the if-statement? Has the following been considered?
+>
+> diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt.c b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+> index 8dfa56dc32bc..a7f5d55f8542 100644
+> --- a/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+> +++ b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
+> @@ -1587,8 +1587,6 @@ static int create_con_cq_qp(struct rtrs_clt_con *con)
+>          * since destroy_con_cq_qp() must be called.
+>          */
+>
+> -       if (err)
+> -               return err;
+>         return err;
+>  }
+>
+> Thanks,
+>
+> Bart.
 
-> When I did an allmodconfig build the following warning showed up:
-> =
+This one seems better, thanks Bart and Gustavo, Gustavo, would you
+like to send a v2 patch as Bart suggested?
 
-> scripts/Makefile.lib:8: 'always' is deprecated. Please use 'always-y' in=
-stead
-> scripts/Makefile.lib:12: 'hostprogs-y' and 'hostprogs-m' are deprecated.=
- Please use 'hostprogs' instead
-> =
-
-> Rework to use the new 'always-y' and 'hostprogs'.
-> =
-
-> Fixes: 631ec151fd96 ("Add sample notification program")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-
-I've folded this in, thanks.
-
-David
-
+Thanks,
