@@ -2,98 +2,193 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59587C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDD120874
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3CC20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgESVqS convert rfc822-to-8bit (ORCPT
+        id S1728033AbgESVqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:46:18 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2506 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726030AbgESVqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:46:17 -0400
-Received: from dggemi403-hub.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id A1673E410988D330014D;
-        Wed, 20 May 2020 05:46:15 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.191]) by
- dggemi403-hub.china.huawei.com ([10.3.17.136]) with mapi id 14.03.0487.000;
- Wed, 20 May 2020 05:46:08 +0800
-From:   Song Bao Hua <song.bao.hua@hisilicon.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Tue, 19 May 2020 17:46:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgESVqX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 17:46:23 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C07C08C5C0;
+        Tue, 19 May 2020 14:46:22 -0700 (PDT)
+Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <a.darwish@linutronix.de>)
+        id 1jbA3e-0002Yy-7I; Tue, 19 May 2020 23:45:54 +0200
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH 8/8] mm/zswap: Use local lock to protect per-CPU data
-Thread-Topic: [PATCH 8/8] mm/zswap: Use local lock to protect per-CPU data
-Thread-Index: AQHWLhsB19zOKbhSok+Mjvon7Zb2Y6iv78fA
-Date:   Tue, 19 May 2020 21:46:06 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD24AFEC5@DGGEMI525-MBS.china.huawei.com>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-9-bigeasy@linutronix.de>
-In-Reply-To: <20200519201912.1564477-9-bigeasy@linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.125]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of a seqcount
+Date:   Tue, 19 May 2020 23:45:23 +0200
+Message-Id: <20200519214547.352050-2-a.darwish@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sequence counters write paths are critical sections that must never be
+preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
 
-> From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
+netdev name retrieval.") handled a deadlock, observed with
+CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
+infinitely spinning: it got scheduled after the seqcount write side
+blocked inside its own critical section.
 
-> zwap uses per-CPU compression. The per-CPU data pointer is acquired with
-> get_cpu_ptr() which implicitly disables preemption. It allocates memory inside the preempt disabled region which conflicts with the PREEMPT_RT semantics.
+To fix that deadlock, among other issues, the commit added a
+cond_resched() inside the read side section. While this will get the
+non-preemptible kernel eventually unstuck, the seqcount reader is fully
+exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
 
-> Replace the implicit preemption control with an explicit local lock.
-> This allows RT kernels to substitute it with a real per CPU lock, which serializes the access but keeps the code section preemptible. On non RT kernels this maps to preempt_disable() as before, i.e. no functional change.
+The fix is also still broken: if the seqcount reader belongs to a
+real-time scheduling policy, it can spin forever and the kernel will
+livelock.
 
-Hi Luis,
-In the below patch, in order to use the acomp APIs to leverage the power of hardware compressors. I have moved to mutex:
-https://marc.info/?l=linux-crypto-vger&m=158941285830302&w=2
-https://marc.info/?l=linux-crypto-vger&m=158941287930311&w=2
+Disabling preemption over the seqcount write side critical section will
+not work: inside it are a number of GFP_KERNEL allocations and mutex
+locking through the drivers/base/ :: device_rename() call chain.
 
-so once we get some progress on that one, I guess we don't need a special patch for RT any more.
+From all the above, replace the seqcount with a rwsem.
 
-> [bigeasy: Use local_lock(), additional hunks, patch description]
+Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
+Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
+Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ net/core/dev.c | 30 ++++++++++++------------------
+ 1 file changed, 12 insertions(+), 18 deletions(-)
 
-> Cc: Seth Jennings <sjenning@redhat.com>
-> Cc: Dan Streetman <ddstreet@ieee.org>
-> Cc: Vitaly Wool <vitaly.wool@konsulko.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  mm/zswap.c | 23 ++++++++++++++---------
->  1 file changed, 14 insertions(+), 9 deletions(-)
-
-Thanks
-Barry
-
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 522288177bbd..e18a4c23df0e 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -79,6 +79,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/mm.h>
+ #include <linux/mutex.h>
++#include <linux/rwsem.h>
+ #include <linux/string.h>
+ #include <linux/mm.h>
+ #include <linux/socket.h>
+@@ -194,7 +195,7 @@ static DEFINE_SPINLOCK(napi_hash_lock);
+ static unsigned int napi_gen_id = NR_CPUS;
+ static DEFINE_READ_MOSTLY_HASHTABLE(napi_hash, 8);
+ 
+-static seqcount_t devnet_rename_seq;
++static DECLARE_RWSEM(devnet_rename_sem);
+ 
+ static inline void dev_base_seq_inc(struct net *net)
+ {
+@@ -930,18 +931,13 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
+  *	@net: network namespace
+  *	@name: a pointer to the buffer where the name will be stored.
+  *	@ifindex: the ifindex of the interface to get the name from.
+- *
+- *	The use of raw_seqcount_begin() and cond_resched() before
+- *	retrying is required as we want to give the writers a chance
+- *	to complete when CONFIG_PREEMPTION is not set.
+  */
+ int netdev_get_name(struct net *net, char *name, int ifindex)
+ {
+ 	struct net_device *dev;
+-	unsigned int seq;
+ 
+-retry:
+-	seq = raw_seqcount_begin(&devnet_rename_seq);
++	down_read(&devnet_rename_sem);
++
+ 	rcu_read_lock();
+ 	dev = dev_get_by_index_rcu(net, ifindex);
+ 	if (!dev) {
+@@ -951,10 +947,8 @@ int netdev_get_name(struct net *net, char *name, int ifindex)
+ 
+ 	strcpy(name, dev->name);
+ 	rcu_read_unlock();
+-	if (read_seqcount_retry(&devnet_rename_seq, seq)) {
+-		cond_resched();
+-		goto retry;
+-	}
++
++	up_read(&devnet_rename_sem);
+ 
+ 	return 0;
+ }
+@@ -1228,10 +1222,10 @@ int dev_change_name(struct net_device *dev, const char *newname)
+ 	    likely(!(dev->priv_flags & IFF_LIVE_RENAME_OK)))
+ 		return -EBUSY;
+ 
+-	write_seqcount_begin(&devnet_rename_seq);
++	down_write(&devnet_rename_sem);
+ 
+ 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
+-		write_seqcount_end(&devnet_rename_seq);
++		up_write(&devnet_rename_sem);
+ 		return 0;
+ 	}
+ 
+@@ -1239,7 +1233,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
+ 
+ 	err = dev_get_valid_name(net, dev, newname);
+ 	if (err < 0) {
+-		write_seqcount_end(&devnet_rename_seq);
++		up_write(&devnet_rename_sem);
+ 		return err;
+ 	}
+ 
+@@ -1254,11 +1248,11 @@ int dev_change_name(struct net_device *dev, const char *newname)
+ 	if (ret) {
+ 		memcpy(dev->name, oldname, IFNAMSIZ);
+ 		dev->name_assign_type = old_assign_type;
+-		write_seqcount_end(&devnet_rename_seq);
++		up_write(&devnet_rename_sem);
+ 		return ret;
+ 	}
+ 
+-	write_seqcount_end(&devnet_rename_seq);
++	up_write(&devnet_rename_sem);
+ 
+ 	netdev_adjacent_rename_links(dev, oldname);
+ 
+@@ -1279,7 +1273,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
+ 		/* err >= 0 after dev_alloc_name() or stores the first errno */
+ 		if (err >= 0) {
+ 			err = ret;
+-			write_seqcount_begin(&devnet_rename_seq);
++			down_write(&devnet_rename_sem);
+ 			memcpy(dev->name, oldname, IFNAMSIZ);
+ 			memcpy(oldname, newname, IFNAMSIZ);
+ 			dev->name_assign_type = old_assign_type;
+-- 
+2.20.1
 
