@@ -2,102 +2,197 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB300C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37E2C20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77712081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HHwPT7+t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAjN6JYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgESNEB (ORCPT
+        id S1728980AbgESNED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:04:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43266 "EHLO
+        Tue, 19 May 2020 09:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728612AbgESND5 (ORCPT
+        with ESMTP id S1728612AbgESNEB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:03:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A3F9C08C5C4;
-        Tue, 19 May 2020 06:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=CzptVQvO43jJs3G5GLMVm9lezuT7/sLUYMXfvlaV0Hw=; b=HHwPT7+tTUc41fG/QypaZY/V29
-        mSgzjCiwEcqHYhI/N9cWuFTQExVe/+SoHWef8X7jE8PwxtmW2WW72g+V552shEf+XTQeg9LWylzNS
-        iSeeqfyGOYHEUbt9BhIM3BunBA62AzhGCsJ2Nnx3YCjU/dOrD+6xcloNQflpPf+iPKgaOkMMnP52k
-        KTed+jf9E/Dj9Q7zs8Mh8OWsiDQ3pVKQhXIRMGnSJVHu8cMr29VVSwDLxQYC8GoP1S+3n+dfjUTat
-        TXNXg6sB/slt5X9SdLywfy+UzFHaAqOegT+S3RjnsAz5YEzZB5c3lxfsqlqttmex3K7kUYI9Ewfzw
-        ouibK+hA==;
-Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jb1uM-0004Gx-Il; Tue, 19 May 2020 13:03:47 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 9/9] ipv6: use ->ndo_tunnel_ctl in addrconf_set_dstaddr
-Date:   Tue, 19 May 2020 15:03:19 +0200
-Message-Id: <20200519130319.1464195-10-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200519130319.1464195-1-hch@lst.de>
-References: <20200519130319.1464195-1-hch@lst.de>
+        Tue, 19 May 2020 09:04:01 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A53C08C5C6;
+        Tue, 19 May 2020 06:04:01 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l11so15893287wru.0;
+        Tue, 19 May 2020 06:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MSQgZfzN1EOgpi1rolFm8O7a7AGg5E5FcP9uK+1/dtU=;
+        b=pAjN6JYTHwQXICdoTL6xF71+mcn5qeFjRW9VbT65q+Nd/zfF0zNwOSpffyYLU6NR6W
+         bXN+8hyfaPh/iL2Vc+OnFFZMB+orlZZeCu66eBT319Y1RCemerMW7jyVHqDNQI+7XgjB
+         dTa9X1eBzwc9ylXSKSxzqyX2N224ORhplOtKPAR6JnmWwgKAfsKk7ScIvPypjWTSCMsw
+         0pjMsy0MOFRpMsoQV8yoj5FNjnzuAtjJyJjMpTnqngZD5q5T/JZcdER+m+w/Fy97Ju+M
+         IzWuUFHSmMNX5a4pHF+3G3ZFFJvCwzqycYIr7QelDgJc2CDaYb32TCTgN09lxFbKRg07
+         vm1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MSQgZfzN1EOgpi1rolFm8O7a7AGg5E5FcP9uK+1/dtU=;
+        b=aIsG3ehuYcpQkwVdxkOCzPwqGWTJWqtJ6mhTT3imQjNYF1aSn9py+F5fHaDdFY321u
+         XzpRi6sbxgr7IvjPsbZYtIMhvHI0dfNK6b6GED3ND+T96zUIrYwwobj/9qvLj9OcKRdL
+         zYRzN5HiUVqXCT6o35EP20xGGeE62gj989y/bJAPHiIXMimfGPi1tQy95SI16V4U3B0R
+         uqXlWxOPYqDrpvaD07cdvvLUuyiMJULUghzGRfpTAvcAVtWwK+YCPsvY6I9S6Av0VHGo
+         n9Xnv16LO2m3CMMFgXn+eRm1sDvrHqK0bnngJQX+Ixt0qMtaslHp9cwSc2zC2O9FRobJ
+         oSSQ==
+X-Gm-Message-State: AOAM533XWYpV1W6tU7a2Q5ZjwYOvbCyZ94whuZfoeHnnMcUC0w70H711
+        EMtfhI/+z1DqKlzWbUVuMBQ=
+X-Google-Smtp-Source: ABdhPJwcVvydfqwzIzdy+iGT+m9LpCim1x1QOadls17v2SDAn6uQqjJD2yJW+n0TB3wSpvtLswA4Zg==
+X-Received: by 2002:adf:f446:: with SMTP id f6mr25174511wrp.75.1589893439903;
+        Tue, 19 May 2020 06:03:59 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id u65sm3900406wmg.8.2020.05.19.06.03.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 06:03:58 -0700 (PDT)
+Date:   Tue, 19 May 2020 15:03:50 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Allison Randal <allison@lohutok.net>
+Subject: Re: [PATCH v3 4/4] iio: magnetometer: ak8975: Add gpio reset support
+Message-ID: <20200519130350.GA30573@ict14-OptiPlex-980>
+References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
+ <20200519124402.26076-5-jonathan.albrieux@gmail.com>
+ <20200519125713.GI1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519125713.GI1634618@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new ->ndo_tunnel_ctl instead of overriding the address limit
-and using ->ndo_do_ioctl just to do a pointless user copy.
+On Tue, May 19, 2020 at 03:57:13PM +0300, Andy Shevchenko wrote:
+> On Tue, May 19, 2020 at 02:43:54PM +0200, Jonathan Albrieux wrote:
+> > According to AK09911 datasheet, if reset gpio is provided then
+> > deassert reset on ak8975_power_on() and assert reset on ak8975_power_off().
+> > 
+> > Without reset's deassertion during ak8975_power_on(), driver's probe fails
+> > on ak8975_who_i_am while() checking for device identity for AK09911 chip.
+> 
+> Wrong position of (), but hold on, this is so minor, no need to send a new
+> version because of this.
+>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- net/ipv6/addrconf.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+Ops, if this represents a problem I can fix it, there's absolutely no problem!
+ 
+> > AK09911 has an active low reset gpio to handle register's reset.
+> > AK09911 datasheed says that, if not used, reset pin should be connected
+> > to VID. This patch emulates this situation.
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> > ---
+> >  drivers/iio/magnetometer/ak8975.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> > 
+> > diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
+> > index fd368455cd7b..a23422aad97d 100644
+> > --- a/drivers/iio/magnetometer/ak8975.c
+> > +++ b/drivers/iio/magnetometer/ak8975.c
+> > @@ -358,6 +358,7 @@ struct ak8975_data {
+> >  	u8			asa[3];
+> >  	long			raw_to_gauss[3];
+> >  	struct gpio_desc	*eoc_gpiod;
+> > +	struct gpio_desc	*reset_gpiod;
+> >  	int			eoc_irq;
+> >  	wait_queue_head_t	data_ready_queue;
+> >  	unsigned long		flags;
+> > @@ -384,6 +385,9 @@ static int ak8975_power_on(const struct ak8975_data *data)
+> >  			 "Failed to enable specified Vid supply\n");
+> >  		return ret;
+> >  	}
+> > +
+> > +	gpiod_set_value_cansleep(data->reset_gpiod, 0);
+> > +
+> >  	/*
+> >  	 * According to the datasheet the power supply rise time is 200us
+> >  	 * and the minimum wait time before mode setting is 100us, in
+> > @@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
+> >  /* Disable attached power regulator if any. */
+> >  static void ak8975_power_off(const struct ak8975_data *data)
+> >  {
+> > +	gpiod_set_value_cansleep(data->reset_gpiod, 1);
+> > +
+> >  	regulator_disable(data->vid);
+> >  	regulator_disable(data->vdd);
+> >  }
+> > @@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
+> >  	struct ak8975_data *data;
+> >  	struct iio_dev *indio_dev;
+> >  	struct gpio_desc *eoc_gpiod;
+> > +	struct gpio_desc *reset_gpiod;
+> >  	const void *match;
+> >  	unsigned int i;
+> >  	int err;
+> > @@ -856,6 +863,16 @@ static int ak8975_probe(struct i2c_client *client,
+> >  	if (eoc_gpiod)
+> >  		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
+> >  
+> > +	/*
+> > +	 * According to AK09911 datasheet, if reset GPIO is provided then
+> > +	 * deassert reset on ak8975_power_on() and assert reset on
+> > +	 * ak8975_power_off().
+> > +	 */
+> > +	reset_gpiod = devm_gpiod_get_optional(&client->dev,
+> > +					      "reset", GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(reset_gpiod))
+> > +		return PTR_ERR(reset_gpiod);
+> > +
+> >  	/* Register with IIO */
+> >  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> >  	if (indio_dev == NULL)
+> > @@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
+> >  
+> >  	data->client = client;
+> >  	data->eoc_gpiod = eoc_gpiod;
+> > +	data->reset_gpiod = reset_gpiod;
+> >  	data->eoc_irq = 0;
+> >  
+> >  	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
-diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index c827edf877414..09cfbf5dd7ce0 100644
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -2787,8 +2787,6 @@ static int addrconf_set_sit_dstaddr(struct net *net, struct net_device *dev,
- 		struct in6_ifreq *ireq)
- {
- 	struct ip_tunnel_parm p = { };
--	mm_segment_t oldfs = get_fs();
--	struct ifreq ifr;
- 	int err;
- 
- 	if (!(ipv6_addr_type(&ireq->ifr6_addr) & IPV6_ADDR_COMPATv4))
-@@ -2799,13 +2797,10 @@ static int addrconf_set_sit_dstaddr(struct net *net, struct net_device *dev,
- 	p.iph.ihl = 5;
- 	p.iph.protocol = IPPROTO_IPV6;
- 	p.iph.ttl = 64;
--	ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
- 
--	if (!dev->netdev_ops->ndo_do_ioctl)
-+	if (!dev->netdev_ops->ndo_tunnel_ctl)
- 		return -EOPNOTSUPP;
--	set_fs(KERNEL_DS);
--	err = dev->netdev_ops->ndo_do_ioctl(dev, &ifr, SIOCADDTUNNEL);
--	set_fs(oldfs);
-+	err = dev->netdev_ops->ndo_tunnel_ctl(dev, &p, SIOCADDTUNNEL);
- 	if (err)
- 		return err;
- 
--- 
-2.26.2
-
+Best regards,
+Jonathan Albrieux
