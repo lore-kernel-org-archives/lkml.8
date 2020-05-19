@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70726C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADC42081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776FF2083E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sTNGSLoH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D/BnVV3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgESO1j (ORCPT
+        id S1729191AbgESO1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:27:39 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43582 "EHLO
+        Tue, 19 May 2020 10:27:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43586 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729159AbgESO1f (ORCPT
+        with ESMTP id S1729164AbgESO1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:27:35 -0400
+        Tue, 19 May 2020 10:27:37 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JER3Mp005249;
-        Tue, 19 May 2020 09:27:03 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JERNMl005289;
+        Tue, 19 May 2020 09:27:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589898423;
-        bh=8wsmxHh8Fj6nnuOv4RqixX/76ikZXmO9s3dBnceWxdw=;
+        s=ti-com-17Q1; t=1589898443;
+        bh=oMN/iHiwQjDWS2EDa3kGydbVWyIjwSamwfacAnOEz7U=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=sTNGSLoHgIbZldl7H5+uVC20Pf2pG9ekXgjXgkNBY8SbtsRpdN09a9leXDHl+9ybt
-         Q6/Tj/OZRDWK/4tqj2lW31Yk57bicxoQCbDo8UZnu+ATbfq37ijMXewSV9/TaNb5k4
-         bReo/wFDviBlwRrvG+OjEOiwfea/X/dz3qELbXgE=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JER3Hr037848;
-        Tue, 19 May 2020 09:27:03 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        b=D/BnVV3aDW+YneYcsvIdC7k2RmUvDoo6rAR2Wg1nrBnTG1kfmuIYJIxff/pR6lrt3
+         yO57XvTaW6YmIkX66Ucbnp918pzuDNMTnKG2KLXjKux8iqwg7rig5yqCphvBu+fIpN
+         nZ04vZwSaXk9kvfzRM6Aek4jD6eqEPzYC9ZfqIYo=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JERNhv039557;
+        Tue, 19 May 2020 09:27:23 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 09:27:03 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 09:27:23 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 09:27:03 -0500
+ Frontend Transport; Tue, 19 May 2020 09:27:23 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEQgjL008313;
-        Tue, 19 May 2020 09:26:58 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEQgjP008313;
+        Tue, 19 May 2020 09:27:18 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -64,9 +64,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v5 03/19] spi: spi-mtk-nor: reject DTR ops
-Date:   Tue, 19 May 2020 19:56:25 +0530
-Message-ID: <20200519142642.24131-4-p.yadav@ti.com>
+Subject: [PATCH v5 07/19] mtd: spi-nor: sfdp: prepare BFPT parsing for JESD216 rev D
+Date:   Tue, 19 May 2020 19:56:29 +0530
+Message-ID: <20200519142642.24131-8-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200519142642.24131-1-p.yadav@ti.com>
 References: <20200519142642.24131-1-p.yadav@ti.com>
@@ -79,31 +79,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Double Transfer Rate (DTR) ops are added in spi-mem. But this controller
-doesn't support DTR transactions. Since we don't use the default
-supports_op(), which rejects all DTR ops, do that explicitly in our
-supports_op().
+JESD216 rev D makes BFPT 20 DWORDs. Update the BFPT size define to
+reflect that.
+
+The check for rev A or later compared the BFPT header length with the
+maximum BFPT length, BFPT_DWORD_MAX. Since BFPT_DWORD_MAX was 16, and so
+was the BFPT length for both rev A and B, this check worked fine. But
+now, since BFPT_DWORD_MAX is 20, it means this check will also stop BFPT
+parsing for rev A or B, since their length is 16.
+
+So, instead check for BFPT_DWORD_MAX_JESD216 to stop BFPT parsing for
+the first JESD216 version, and check for BFPT_DWORD_MAX_JESD216B for the
+next two versions.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/spi/spi-mtk-nor.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mtd/spi-nor/sfdp.c | 7 ++++++-
+ drivers/mtd/spi-nor/sfdp.h | 5 +++--
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-mtk-nor.c b/drivers/spi/spi-mtk-nor.c
-index 7bc302b50396..7015dccedf00 100644
---- a/drivers/spi/spi-mtk-nor.c
-+++ b/drivers/spi/spi-mtk-nor.c
-@@ -211,6 +211,10 @@ static bool mtk_nor_supports_op(struct spi_mem *mem,
- 	if (op->cmd.buswidth != 1)
- 		return false;
+diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+index 5cecc4ba2141..96960f2f3d7a 100644
+--- a/drivers/mtd/spi-nor/sfdp.c
++++ b/drivers/mtd/spi-nor/sfdp.c
+@@ -549,7 +549,7 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 				  SNOR_ERASE_TYPE_MASK;
  
-+	/* DTR ops not supported. */
-+	if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
-+		return false;
+ 	/* Stop here if not JESD216 rev A or later. */
+-	if (bfpt_header->length < BFPT_DWORD_MAX)
++	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216)
+ 		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
+ 						params);
+ 
+@@ -605,6 +605,11 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 		return -EINVAL;
+ 	}
+ 
++	/* Stop here if JESD216 rev B. */
++	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216B)
++		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
++						params);
 +
- 	if ((op->addr.nbytes == 3) || (op->addr.nbytes == 4)) {
- 		if ((op->data.dir == SPI_MEM_DATA_IN) && mtk_nor_match_read(op))
- 			return true;
+ 	return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt, params);
+ }
+ 
+diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
+index e0a8ded04890..f8198af43a63 100644
+--- a/drivers/mtd/spi-nor/sfdp.h
++++ b/drivers/mtd/spi-nor/sfdp.h
+@@ -10,11 +10,11 @@
+ /* Basic Flash Parameter Table */
+ 
+ /*
+- * JESD216 rev B defines a Basic Flash Parameter Table of 16 DWORDs.
++ * JESD216 rev D defines a Basic Flash Parameter Table of 20 DWORDs.
+  * They are indexed from 1 but C arrays are indexed from 0.
+  */
+ #define BFPT_DWORD(i)		((i) - 1)
+-#define BFPT_DWORD_MAX		16
++#define BFPT_DWORD_MAX		20
+ 
+ struct sfdp_bfpt {
+ 	u32	dwords[BFPT_DWORD_MAX];
+@@ -22,6 +22,7 @@ struct sfdp_bfpt {
+ 
+ /* The first version of JESD216 defined only 9 DWORDs. */
+ #define BFPT_DWORD_MAX_JESD216			9
++#define BFPT_DWORD_MAX_JESD216B			16
+ 
+ /* 1st DWORD. */
+ #define BFPT_DWORD1_FAST_READ_1_1_2		BIT(16)
 -- 
 2.26.2
 
