@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E6DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7C0C207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C60207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgESTx1 (ORCPT
+        id S1728111AbgESTxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
+        Tue, 19 May 2020 15:53:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbgESTwo (ORCPT
+        with ESMTP id S1726959AbgESTwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:52:44 -0400
+        Tue, 19 May 2020 15:52:40 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 767A8C08C5C0;
-        Tue, 19 May 2020 12:52:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D55BC08C5C4;
+        Tue, 19 May 2020 12:52:40 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb8I2-0007tT-B0; Tue, 19 May 2020 21:52:38 +0200
+        id 1jb8Hy-0007qD-Nv; Tue, 19 May 2020 21:52:34 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 94AA11C04D6;
-        Tue, 19 May 2020 21:52:37 +0200 (CEST)
-Date:   Tue, 19 May 2020 19:52:37 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4625F1C0480;
+        Tue, 19 May 2020 21:52:34 +0200 (CEST)
+Date:   Tue, 19 May 2020 19:52:34 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] vmlinux.lds.h: Create section for protection against
- instrumentation
+Subject: [tip: core/rcu] x86/entry: Get rid of ist_begin/end_non_atomic()
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
         Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505134100.075416272@linutronix.de>
-References: <20200505134100.075416272@linutronix.de>
+In-Reply-To: <20200505134059.462640294@linutronix.de>
+References: <20200505134059.462640294@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158991795749.17951.18190372549185535613.tip-bot2@tip-bot2>
+Message-ID: <158991795420.17951.1071064271217628063.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,201 +60,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     6553896666433e7efec589838b400a2a652b3ffa
-Gitweb:        https://git.kernel.org/tip/6553896666433e7efec589838b400a2a652b3ffa
+Commit-ID:     b052df3da821adfd6be26a6eb16624fb50e90e56
+Gitweb:        https://git.kernel.org/tip/b052df3da821adfd6be26a6eb16624fb50e90e56
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Mon, 09 Mar 2020 22:47:17 +01:00
+AuthorDate:    Thu, 05 Mar 2020 00:52:41 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 19 May 2020 15:47:20 +02:00
+CommitterDate: Tue, 19 May 2020 15:51:19 +02:00
 
-vmlinux.lds.h: Create section for protection against instrumentation
+x86/entry: Get rid of ist_begin/end_non_atomic()
 
-Some code pathes, especially the low level entry code, must be protected
-against instrumentation for various reasons:
-
- - Low level entry code can be a fragile beast, especially on x86.
-
- - With NO_HZ_FULL RCU state needs to be established before using it.
-
-Having a dedicated section for such code allows to validate with tooling
-that no unsafe functions are invoked.
-
-Add the .noinstr.text section and the noinstr attribute to mark
-functions. noinstr implies notrace. Kprobes will gain a section check
-later.
-
-Provide also a set of markers: instrumentation_begin()/end()
-
-These are used to mark code inside a noinstr function which calls
-into regular instrumentable text section as safe.
-
-The instrumentation markers are only active when CONFIG_DEBUG_ENTRY is
-enabled as the end marker emits a NOP to prevent the compiler from merging
-the annotation points. This means the objtool verification requires a
-kernel compiled with this option.
+This is completely overengineered and definitely not an interface which
+should be made available to anything else than this particular MCE case.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200505134100.075416272@linutronix.de
----
- arch/powerpc/kernel/vmlinux.lds.S |  1 +-
- include/asm-generic/sections.h    |  3 ++-
- include/asm-generic/vmlinux.lds.h | 10 ++++++-
- include/linux/compiler.h          | 53 ++++++++++++++++++++++++++++++-
- include/linux/compiler_types.h    |  4 ++-
- scripts/mod/modpost.c             |  2 +-
- 6 files changed, 72 insertions(+), 1 deletion(-)
+Link: https://lkml.kernel.org/r/20200505134059.462640294@linutronix.de
 
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-index 31a0f20..a1706b6 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -90,6 +90,7 @@ SECTIONS
- #ifdef CONFIG_PPC64
- 		*(.tramp.ftrace.text);
- #endif
-+		NOINSTR_TEXT
- 		SCHED_TEXT
- 		CPUIDLE_TEXT
- 		LOCK_TEXT
-diff --git a/include/asm-generic/sections.h b/include/asm-generic/sections.h
-index d1779d4..66397ed 100644
---- a/include/asm-generic/sections.h
-+++ b/include/asm-generic/sections.h
-@@ -53,6 +53,9 @@ extern char __ctors_start[], __ctors_end[];
- /* Start and end of .opd section - used for function descriptors. */
- extern char __start_opd[], __end_opd[];
+
+---
+ arch/x86/include/asm/traps.h   |  2 +--
+ arch/x86/kernel/cpu/mce/core.c |  6 +++--
+ arch/x86/kernel/traps.c        | 37 +---------------------------------
+ 3 files changed, 4 insertions(+), 41 deletions(-)
+
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index c26a7e1..fe109fc 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -120,8 +120,6 @@ asmlinkage void smp_irq_move_cleanup_interrupt(void);
  
-+/* Start and end of instrumentation protected text section */
-+extern char __noinstr_text_start[], __noinstr_text_end[];
-+
- extern __visible const void __nosave_begin, __nosave_end;
+ extern void ist_enter(struct pt_regs *regs);
+ extern void ist_exit(struct pt_regs *regs);
+-extern void ist_begin_non_atomic(struct pt_regs *regs);
+-extern void ist_end_non_atomic(void);
  
- /* Function descriptor handling (if any).  Override in asm/sections.h */
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 71e387a..db600ef 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -541,6 +541,15 @@
- 	__end_rodata = .;
+ #ifdef CONFIG_VMAP_STACK
+ void __noreturn handle_stack_overflow(const char *message,
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 54165f3..98bf91c 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1352,13 +1352,15 @@ void notrace do_machine_check(struct pt_regs *regs, long error_code)
  
- /*
-+ * Non-instrumentable text section
-+ */
-+#define NOINSTR_TEXT							\
-+		ALIGN_FUNCTION();					\
-+		__noinstr_text_start = .;				\
-+		*(.noinstr.text)					\
-+		__noinstr_text_end = .;
-+
-+/*
-  * .text section. Map to function alignment to avoid address changes
-  * during second ld run in second ld pass when generating System.map
-  *
-@@ -551,6 +560,7 @@
- #define TEXT_TEXT							\
- 		ALIGN_FUNCTION();					\
- 		*(.text.hot TEXT_MAIN .text.fixup .text.unlikely)	\
-+		NOINSTR_TEXT						\
- 		*(.text..refcount)					\
- 		*(.ref.text)						\
- 	MEM_KEEP(init.text*)						\
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 034b0a6..e9ead05 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -120,12 +120,65 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- /* Annotate a C jump table to allow objtool to follow the code flow */
- #define __annotate_jump_table __section(.rodata..c_jump_table)
+ 	/* Fault was in user mode and we need to take some action */
+ 	if ((m.cs & 3) == 3) {
+-		ist_begin_non_atomic(regs);
++		/* If this triggers there is no way to recover. Die hard. */
++		BUG_ON(!on_thread_stack() || !user_mode(regs));
+ 		local_irq_enable();
++		preempt_enable();
  
-+#ifdef CONFIG_DEBUG_ENTRY
-+/* Begin/end of an instrumentation safe region */
-+#define instrumentation_begin() ({					\
-+	asm volatile("%c0:\n\t"						\
-+		     ".pushsection .discard.instr_begin\n\t"		\
-+		     ".long %c0b - .\n\t"				\
-+		     ".popsection\n\t" : : "i" (__COUNTER__));		\
-+})
-+
-+/*
-+ * Because instrumentation_{begin,end}() can nest, objtool validation considers
-+ * _begin() a +1 and _end() a -1 and computes a sum over the instructions.
-+ * When the value is greater than 0, we consider instrumentation allowed.
-+ *
-+ * There is a problem with code like:
-+ *
-+ * noinstr void foo()
-+ * {
-+ *	instrumentation_begin();
-+ *	...
-+ *	if (cond) {
-+ *		instrumentation_begin();
-+ *		...
-+ *		instrumentation_end();
-+ *	}
-+ *	bar();
-+ *	instrumentation_end();
-+ * }
-+ *
-+ * If instrumentation_end() would be an empty label, like all the other
-+ * annotations, the inner _end(), which is at the end of a conditional block,
-+ * would land on the instruction after the block.
-+ *
-+ * If we then consider the sum of the !cond path, we'll see that the call to
-+ * bar() is with a 0-value, even though, we meant it to happen with a positive
-+ * value.
-+ *
-+ * To avoid this, have _end() be a NOP instruction, this ensures it will be
-+ * part of the condition block and does not escape.
-+ */
-+#define instrumentation_end() ({					\
-+	asm volatile("%c0: nop\n\t"					\
-+		     ".pushsection .discard.instr_end\n\t"		\
-+		     ".long %c0b - .\n\t"				\
-+		     ".popsection\n\t" : : "i" (__COUNTER__));		\
-+})
-+#endif /* CONFIG_DEBUG_ENTRY */
-+
- #else
- #define annotate_reachable()
- #define annotate_unreachable()
- #define __annotate_jump_table
- #endif
+ 		if (kill_it || do_memory_failure(&m))
+ 			force_sig(SIGBUS);
++		preempt_disable();
+ 		local_irq_disable();
+-		ist_end_non_atomic();
+ 	} else {
+ 		if (!fixup_exception(regs, X86_TRAP_MC, error_code, 0))
+ 			mce_panic("Failed kernel mode recovery", &m, msg);
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index d54cffd..6740e83 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -117,43 +117,6 @@ void ist_exit(struct pt_regs *regs)
+ 		rcu_nmi_exit();
+ }
  
-+#ifndef instrumentation_begin
-+#define instrumentation_begin()		do { } while(0)
-+#define instrumentation_end()		do { } while(0)
-+#endif
-+
- #ifndef ASM_UNREACHABLE
- # define ASM_UNREACHABLE
- #endif
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index e970f97..5da257c 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -118,6 +118,10 @@ struct ftrace_likely_data {
- #define notrace			__attribute__((__no_instrument_function__))
- #endif
- 
-+/* Section for code which can't be instrumented at all */
-+#define noinstr								\
-+	noinline notrace __attribute((__section__(".noinstr.text")))
-+
- /*
-  * it doesn't make sense on ARM (currently the only user of __naked)
-  * to trace naked functions because then mcount is called without
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 5c3c50c..0053d4f 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -948,7 +948,7 @@ static void check_section(const char *modname, struct elf_info *elf,
- 
- #define DATA_SECTIONS ".data", ".data.rel"
- #define TEXT_SECTIONS ".text", ".text.unlikely", ".sched.text", \
--		".kprobes.text", ".cpuidle.text"
-+		".kprobes.text", ".cpuidle.text", ".noinstr.text"
- #define OTHER_TEXT_SECTIONS ".ref.text", ".head.text", ".spinlock.text", \
- 		".fixup", ".entry.text", ".exception.text", ".text.*", \
- 		".coldtext"
+-/**
+- * ist_begin_non_atomic() - begin a non-atomic section in an IST exception
+- * @regs:	regs passed to the IST exception handler
+- *
+- * IST exception handlers normally cannot schedule.  As a special
+- * exception, if the exception interrupted userspace code (i.e.
+- * user_mode(regs) would return true) and the exception was not
+- * a double fault, it can be safe to schedule.  ist_begin_non_atomic()
+- * begins a non-atomic section within an ist_enter()/ist_exit() region.
+- * Callers are responsible for enabling interrupts themselves inside
+- * the non-atomic section, and callers must call ist_end_non_atomic()
+- * before ist_exit().
+- */
+-void ist_begin_non_atomic(struct pt_regs *regs)
+-{
+-	BUG_ON(!user_mode(regs));
+-
+-	/*
+-	 * Sanity check: we need to be on the normal thread stack.  This
+-	 * will catch asm bugs and any attempt to use ist_preempt_enable
+-	 * from double_fault.
+-	 */
+-	BUG_ON(!on_thread_stack());
+-
+-	preempt_enable_no_resched();
+-}
+-
+-/**
+- * ist_end_non_atomic() - begin a non-atomic section in an IST exception
+- *
+- * Ends a non-atomic section started with ist_begin_non_atomic().
+- */
+-void ist_end_non_atomic(void)
+-{
+-	preempt_disable();
+-}
+-
+ int is_valid_bugaddr(unsigned long addr)
+ {
+ 	unsigned short ud;
