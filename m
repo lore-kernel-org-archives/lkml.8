@@ -2,132 +2,134 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CD8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17728C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF945207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FC9207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:59:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g7UesDSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgESO6W (ORCPT
+        id S1729132AbgESO7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:58:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:34576 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728725AbgESO6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:58:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0505031B;
-        Tue, 19 May 2020 07:58:21 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EC203F305;
-        Tue, 19 May 2020 07:58:19 -0700 (PDT)
-Date:   Tue, 19 May 2020 15:58:16 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        bhelgaas@google.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        Alan Mikhak <alan.mikhak@sifive.com>
-Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
- size >4GB
-Message-ID: <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
-References: <20200513190855.23318-1-vidyas@nvidia.com>
- <20200513223508.GA352288@bjorn-Precision-5520>
- <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
- <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+        Tue, 19 May 2020 10:59:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728775AbgESO7G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 10:59:06 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E634C08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 07:59:06 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id 62so8037947vsi.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 07:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cAwM4xUN+JXfgmnpSakIzQBFryyxT4xbvQKyptF8HfU=;
+        b=g7UesDSwco++E9tvDmaeYZHTUzwg0n+acwSdyySMURap5qFLIynLhGq5AUrj1fYMJ0
+         sw/JLqS9GpKjA2q16tUiCfnRqLnJvDl/gct6mgVedTlmvLGW1Pf+VGOmT8FCq4ufSVfc
+         35euMAF2IOS7EKW54E0VcyplYL+ZhWm0tlpcI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cAwM4xUN+JXfgmnpSakIzQBFryyxT4xbvQKyptF8HfU=;
+        b=Fk+lk/sviDNaR65ZGkXnnq07iAa74Yw3mvGiHvluYhX/sCH/rVzmqugSXhgIuz+lqH
+         nX1eZTnwhVzvrzJf8nzQDN6MA/uAJLkNc31lnMAag4E1A6RAUlC3FIO3vvzxVezUoxNY
+         9RXVDXS46XUMM9uZ65xac4Lzy5lMl7aQeeEZ0M7HFdcbC8OLJWkv1d25wefb9r8A8Nuv
+         JTqvLVJvJXhuF99/EWUfxdt6b3cXvt64da1Y6YCYAk0hHLu0mDgPsA3P6szyEMzQSQjV
+         GSI00eX3zkqSa73xY60sKHzkRf8CaBTSjuLdeANIKvWiU2WDHQkTLq63yiQjWuA5Msax
+         uXcQ==
+X-Gm-Message-State: AOAM5309mSoHN7yaGGmpvcwOdMdGlyCcdTUJ4WFulvA9MFuhtJgYV3AK
+        PMYpieqcP40JGV5SlParjH/qBtmSnsk=
+X-Google-Smtp-Source: ABdhPJw4ytPiFoNoTgeEFoK4N93MkkCCoKvvis2XOO2NF7D4OK49LlyNIr/v+eNRazMfvee+9CRh4w==
+X-Received: by 2002:a67:ef1d:: with SMTP id j29mr1511392vsr.238.1589900345472;
+        Tue, 19 May 2020 07:59:05 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id 66sm3581189vss.16.2020.05.19.07.59.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 07:59:04 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id k4so4908359uaq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 07:59:03 -0700 (PDT)
+X-Received: by 2002:ab0:6806:: with SMTP id z6mr15603649uar.0.1589900343396;
+ Tue, 19 May 2020 07:59:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200520000524.69af8a86@canb.auug.org.au>
+In-Reply-To: <20200520000524.69af8a86@canb.auug.org.au>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 19 May 2020 07:58:52 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WuXEO0KCoRnundQxVMJyre9UBdw2NDUSsWxJwADjCR9A@mail.gmail.com>
+Message-ID: <CAD=FV=WuXEO0KCoRnundQxVMJyre9UBdw2NDUSsWxJwADjCR9A@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the kgdb tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 07:25:02PM +0530, Vidya Sagar wrote:
-> 
-> 
-> On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
-> > > [+cc Alan; please cc authors of relevant commits,
-> > > updated Andrew's email address]
-> > > 
-> > > On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
-> > > > commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
-> > > > 32-bits") enables warning for MEM resources of size >4GB but prefetchable
-> > > >   memory resources also come under this category where sizes can go beyond
-> > > > 4GB. Avoid logging a warning for prefetchable memory resources.
-> > > > 
-> > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > ---
-> > > >   drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
-> > > >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > index 42fbfe2a1b8f..a29396529ea4 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > >                      pp->mem = win->res;
-> > > >                      pp->mem->name = "MEM";
-> > > >                      mem_size = resource_size(pp->mem);
-> > > > -                   if (upper_32_bits(mem_size))
-> > > > +                   if (upper_32_bits(mem_size) &&
-> > > > +                       !(win->res->flags & IORESOURCE_PREFETCH))
-> > > >                              dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
-> > > >                      pp->mem_size = mem_size;
-> > > >                      pp->mem_bus_addr = pp->mem->start - win->offset;
-> > 
-> > That warning was added for a reason - why should not we log legitimate
-> > warnings ? AFAIU having resources larger than 4GB can lead to undefined
-> > behaviour given the current ATU programming API.
-> Yeah. I'm all for a warning if the size is larger than 4GB in case of
-> non-prefetchable window as one of the ATU outbound translation
-> channels is being used,
+Hi,
 
-Is it true for all DWC host controllers ? Or there may be another
-exception whereby we would be forced to disable this warning altogether
-?
+On Tue, May 19, 2020 at 7:05 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the kgdb tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> drivers/tty/serial/kgdboc.c:418:13: error: expected declaration specifiers or '...' before string constant
+>   418 | early_param("ekgdboc", kgdboc_early_init);
+>       |             ^~~~~~~~~
+> drivers/tty/serial/kgdboc.c:418:24: error: expected declaration specifiers or '...' before 'kgdboc_early_init'
+>   418 | early_param("ekgdboc", kgdboc_early_init);
+>       |                        ^~~~~~~~~~~~~~~~~
+> drivers/tty/serial/kgdboc.c:546:13: error: expected declaration specifiers or '...' before string constant
+>   546 | early_param("kgdboc_earlycon", kgdboc_earlycon_init);
+>       |             ^~~~~~~~~~~~~~~~~
+> drivers/tty/serial/kgdboc.c:546:32: error: expected declaration specifiers or '...' before 'kgdboc_earlycon_init'
+>   546 | early_param("kgdboc_earlycon", kgdboc_earlycon_init);
+>       |                                ^~~~~~~~~~~~~~~~~~~~
+> drivers/tty/serial/kgdboc.c:505:19: warning: 'kgdboc_earlycon_init' defined but not used [-Wunused-function]
+>   505 | static int __init kgdboc_earlycon_init(char *opt)
+>       |                   ^~~~~~~~~~~~~~~~~~~~
+> drivers/tty/serial/kgdboc.c:411:19: warning: 'kgdboc_early_init' defined but not used [-Wunused-function]
+>   411 | static int __init kgdboc_early_init(char *opt)
+>       |                   ^~~~~~~~~~~~~~~~~
+>
+> Caused by commit
+>
+>   220995622da5 ("kgdboc: Add kgdboc_earlycon to support early kgdb using boot consoles")
+>
+> I have used the kgdb tree from next-20200518 for today.
 
-> but, we are not employing any ATU outbound translation channel for
+Ugh.  Actually, I think the commit to blame is:
 
-What does this mean ? "we are not employing any ATU outbound...", is
-this the tegra driver ? And what guarantees that this warning is not
-legitimate on DWC host controllers that do use the ATU outbound
-translation for prefetchable windows ?
+eae3e19ca930 ("kgdboc: Remove useless #ifdef
+CONFIG_KGDB_SERIAL_CONSOLE in kgdboc")
 
-Can DWC maintainers chime in and clarify please ?
+The next commit just made it worse.  Apparently the #ifdef wasn't so
+useless after all.  It was just subtly keeping the code from compiling
+when kgdboc was used as a module.  That's because when it's a module
+we instead get this defined:
 
-> prefetchable window and they can be greater than 4GB in size for all
-> right reasons. So, logging a warning for prefetchable region doesn't
-> seem correct to me. Please let me know if my understanding is wrong.
+#define CONFIG_KGDB_SERIAL_CONSOLE_MODULE 1
 
-I think your patch is wrong and it is applied on top of a patch that
-is wrong too, so I won't apply yours and it is likely I will revert
-Alan's because it seems to solve nothing (and warn spuriously).
+Apparently I didn't re-test as a module after I made this change in
+one of the later spins.  :(
 
-It is time for people who maintain DWC please to speak up because I
-don't have the HW details required to make a judgment.
+I think I can whip up a quick patch that uses "IS_BUILTIN(option)".
+Basically this should go back to how the code was in one of the
+earlier patchsets where I tested this.
 
-Lorenzo
-
-> - Vidya Sagar
-> > 
-> > Alan ? I want to understand what's the best course of action before
-> > merging these patches.
-> > 
-> > Lorenzo
-> > 
+-Doug
