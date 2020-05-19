@@ -2,197 +2,233 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB300C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A77712081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5E620709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAjN6JYT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o1x4fSlQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgESNED (ORCPT
+        id S1728986AbgESNEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:04:03 -0400
+        Tue, 19 May 2020 09:04:07 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728612AbgESNEB (ORCPT
+        with ESMTP id S1728954AbgESNEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:04:01 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A53C08C5C6;
-        Tue, 19 May 2020 06:04:01 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l11so15893287wru.0;
-        Tue, 19 May 2020 06:04:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MSQgZfzN1EOgpi1rolFm8O7a7AGg5E5FcP9uK+1/dtU=;
-        b=pAjN6JYTHwQXICdoTL6xF71+mcn5qeFjRW9VbT65q+Nd/zfF0zNwOSpffyYLU6NR6W
-         bXN+8hyfaPh/iL2Vc+OnFFZMB+orlZZeCu66eBT319Y1RCemerMW7jyVHqDNQI+7XgjB
-         dTa9X1eBzwc9ylXSKSxzqyX2N224ORhplOtKPAR6JnmWwgKAfsKk7ScIvPypjWTSCMsw
-         0pjMsy0MOFRpMsoQV8yoj5FNjnzuAtjJyJjMpTnqngZD5q5T/JZcdER+m+w/Fy97Ju+M
-         IzWuUFHSmMNX5a4pHF+3G3ZFFJvCwzqycYIr7QelDgJc2CDaYb32TCTgN09lxFbKRg07
-         vm1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MSQgZfzN1EOgpi1rolFm8O7a7AGg5E5FcP9uK+1/dtU=;
-        b=aIsG3ehuYcpQkwVdxkOCzPwqGWTJWqtJ6mhTT3imQjNYF1aSn9py+F5fHaDdFY321u
-         XzpRi6sbxgr7IvjPsbZYtIMhvHI0dfNK6b6GED3ND+T96zUIrYwwobj/9qvLj9OcKRdL
-         zYRzN5HiUVqXCT6o35EP20xGGeE62gj989y/bJAPHiIXMimfGPi1tQy95SI16V4U3B0R
-         uqXlWxOPYqDrpvaD07cdvvLUuyiMJULUghzGRfpTAvcAVtWwK+YCPsvY6I9S6Av0VHGo
-         n9Xnv16LO2m3CMMFgXn+eRm1sDvrHqK0bnngJQX+Ixt0qMtaslHp9cwSc2zC2O9FRobJ
-         oSSQ==
-X-Gm-Message-State: AOAM533XWYpV1W6tU7a2Q5ZjwYOvbCyZ94whuZfoeHnnMcUC0w70H711
-        EMtfhI/+z1DqKlzWbUVuMBQ=
-X-Google-Smtp-Source: ABdhPJwcVvydfqwzIzdy+iGT+m9LpCim1x1QOadls17v2SDAn6uQqjJD2yJW+n0TB3wSpvtLswA4Zg==
-X-Received: by 2002:adf:f446:: with SMTP id f6mr25174511wrp.75.1589893439903;
-        Tue, 19 May 2020 06:03:59 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id u65sm3900406wmg.8.2020.05.19.06.03.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 06:03:58 -0700 (PDT)
-Date:   Tue, 19 May 2020 15:03:50 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH v3 4/4] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200519130350.GA30573@ict14-OptiPlex-980>
-References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
- <20200519124402.26076-5-jonathan.albrieux@gmail.com>
- <20200519125713.GI1634618@smile.fi.intel.com>
+        Tue, 19 May 2020 09:04:00 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C6AC08C5C4;
+        Tue, 19 May 2020 06:04:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=RjxiJywqJojajkQHo5ctJXUjgepAaAnx5XtlttT7D94=; b=o1x4fSlQCZi+V++zGwl1kfXPN5
+        SzACjpzA0QeCobSM+iONMAKqCdCLyr8UFjaUKxCFtuNHcelBdUufoMqX1mheFlSDz5aRvxaD+6ltv
+        PkLR0yVehkwudM746g7XUaeh72lwy7QcZ6Uaslqvs4cUjBgROvyfWrPLdrumLtM4Wxa8YRyktVvqq
+        ImeRIRTGDIN8tbPZHSFQxPKlbZvtNKlZPlIrqJ2joaLNE9fc2Pogy8oB/dXTxQSPyTsAks8mCFn96
+        AC/yzWRXaWiTskiQK4/M9YCegIOfx/eYMc9CA5ibtPtOzBZnFqMmHXrYTWTmjiVi/om0vBlfDH2FW
+        3QiBKrXw==;
+Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jb1uE-00048D-Ez; Tue, 19 May 2020 13:03:38 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 6/9] sit: impement ->ndo_tunnel_ctl
+Date:   Tue, 19 May 2020 15:03:16 +0200
+Message-Id: <20200519130319.1464195-7-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200519130319.1464195-1-hch@lst.de>
+References: <20200519130319.1464195-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519125713.GI1634618@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 03:57:13PM +0300, Andy Shevchenko wrote:
-> On Tue, May 19, 2020 at 02:43:54PM +0200, Jonathan Albrieux wrote:
-> > According to AK09911 datasheet, if reset gpio is provided then
-> > deassert reset on ak8975_power_on() and assert reset on ak8975_power_off().
-> > 
-> > Without reset's deassertion during ak8975_power_on(), driver's probe fails
-> > on ak8975_who_i_am while() checking for device identity for AK09911 chip.
-> 
-> Wrong position of (), but hold on, this is so minor, no need to send a new
-> version because of this.
->
+Implement the ->ndo_tunnel_ctl method, and use ip_tunnel_ioctl to
+handle userspace requests for the SIOCGETTUNNEL, SIOCADDTUNNEL,
+SIOCCHGTUNNEL and SIOCDELTUNNEL ioctls.
 
-Ops, if this represents a problem I can fix it, there's absolutely no problem!
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ net/ipv6/sit.c | 73 +++++++++++++++++++++++---------------------------
+ 1 file changed, 34 insertions(+), 39 deletions(-)
+
+diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
+index 7c158fdc02daf..1fbb4dfbb191b 100644
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -1267,60 +1267,45 @@ __ipip6_tunnel_ioctl_validate(struct net *net, struct ip_tunnel_parm *p)
+ }
  
-> > AK09911 has an active low reset gpio to handle register's reset.
-> > AK09911 datasheed says that, if not used, reset pin should be connected
-> > to VID. This patch emulates this situation.
-> 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > ---
-> >  drivers/iio/magnetometer/ak8975.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-> > index fd368455cd7b..a23422aad97d 100644
-> > --- a/drivers/iio/magnetometer/ak8975.c
-> > +++ b/drivers/iio/magnetometer/ak8975.c
-> > @@ -358,6 +358,7 @@ struct ak8975_data {
-> >  	u8			asa[3];
-> >  	long			raw_to_gauss[3];
-> >  	struct gpio_desc	*eoc_gpiod;
-> > +	struct gpio_desc	*reset_gpiod;
-> >  	int			eoc_irq;
-> >  	wait_queue_head_t	data_ready_queue;
-> >  	unsigned long		flags;
-> > @@ -384,6 +385,9 @@ static int ak8975_power_on(const struct ak8975_data *data)
-> >  			 "Failed to enable specified Vid supply\n");
-> >  		return ret;
-> >  	}
-> > +
-> > +	gpiod_set_value_cansleep(data->reset_gpiod, 0);
-> > +
-> >  	/*
-> >  	 * According to the datasheet the power supply rise time is 200us
-> >  	 * and the minimum wait time before mode setting is 100us, in
-> > @@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
-> >  /* Disable attached power regulator if any. */
-> >  static void ak8975_power_off(const struct ak8975_data *data)
-> >  {
-> > +	gpiod_set_value_cansleep(data->reset_gpiod, 1);
-> > +
-> >  	regulator_disable(data->vid);
-> >  	regulator_disable(data->vdd);
-> >  }
-> > @@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
-> >  	struct ak8975_data *data;
-> >  	struct iio_dev *indio_dev;
-> >  	struct gpio_desc *eoc_gpiod;
-> > +	struct gpio_desc *reset_gpiod;
-> >  	const void *match;
-> >  	unsigned int i;
-> >  	int err;
-> > @@ -856,6 +863,16 @@ static int ak8975_probe(struct i2c_client *client,
-> >  	if (eoc_gpiod)
-> >  		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
-> >  
-> > +	/*
-> > +	 * According to AK09911 datasheet, if reset GPIO is provided then
-> > +	 * deassert reset on ak8975_power_on() and assert reset on
-> > +	 * ak8975_power_off().
-> > +	 */
-> > +	reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> > +					      "reset", GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(reset_gpiod))
-> > +		return PTR_ERR(reset_gpiod);
-> > +
-> >  	/* Register with IIO */
-> >  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> >  	if (indio_dev == NULL)
-> > @@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
-> >  
-> >  	data->client = client;
-> >  	data->eoc_gpiod = eoc_gpiod;
-> > +	data->reset_gpiod = reset_gpiod;
-> >  	data->eoc_irq = 0;
-> >  
-> >  	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
-> > -- 
-> > 2.17.1
-> > 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+ static int
+-ipip6_tunnel_get(struct net_device *dev, struct ifreq *ifr)
++ipip6_tunnel_get(struct net_device *dev, struct ip_tunnel_parm *p)
+ {
+ 	struct ip_tunnel *t = netdev_priv(dev);
+-	struct ip_tunnel_parm p;
+ 
+-	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev) {
+-		if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
+-			return -EFAULT;
+-		t = ipip6_tunnel_locate(t->net, &p, 0);
+-	}
++	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev)
++		t = ipip6_tunnel_locate(t->net, p, 0);
+ 	if (!t)
+ 		t = netdev_priv(dev);
+-
+-	if (copy_to_user(ifr->ifr_ifru.ifru_data, &t->parms, sizeof(p)))
+-		return -EFAULT;
++	memcpy(p, &t->parms, sizeof(*p));
+ 	return 0;
+ }
+ 
+ static int
+-ipip6_tunnel_add(struct net_device *dev, struct ifreq *ifr)
++ipip6_tunnel_add(struct net_device *dev, struct ip_tunnel_parm *p)
+ {
+ 	struct ip_tunnel *t = netdev_priv(dev);
+-	struct ip_tunnel_parm p;
+ 	int err;
+ 
+-	if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
+-		return -EFAULT;
+-	err = __ipip6_tunnel_ioctl_validate(t->net, &p);
++	err = __ipip6_tunnel_ioctl_validate(t->net, p);
+ 	if (err)
+ 		return err;
+ 
+-	t = ipip6_tunnel_locate(t->net, &p, 1);
++	t = ipip6_tunnel_locate(t->net, p, 1);
+ 	if (!t)
+ 		return -ENOBUFS;
+-
+-	if (copy_to_user(ifr->ifr_ifru.ifru_data, &t->parms, sizeof(p)))
+-		return -EFAULT;
+ 	return 0;
+ }
+ 
+ static int
+-ipip6_tunnel_change(struct net_device *dev, struct ifreq *ifr)
++ipip6_tunnel_change(struct net_device *dev, struct ip_tunnel_parm *p)
+ {
+ 	struct ip_tunnel *t = netdev_priv(dev);
+-	struct ip_tunnel_parm p;
+ 	int err;
+ 
+-	if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
+-		return -EFAULT;
+-	err = __ipip6_tunnel_ioctl_validate(t->net, &p);
++	err = __ipip6_tunnel_ioctl_validate(t->net, p);
+ 	if (err)
+ 		return err;
+ 
+-	t = ipip6_tunnel_locate(t->net, &p, 0);
++	t = ipip6_tunnel_locate(t->net, p, 0);
+ 	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev) {
+ 		if (!t)
+ 			return -ENOENT;
+@@ -1329,33 +1314,28 @@ ipip6_tunnel_change(struct net_device *dev, struct ifreq *ifr)
+ 			if (t->dev != dev)
+ 				return -EEXIST;
+ 		} else {
+-			if (((dev->flags & IFF_POINTOPOINT) && !p.iph.daddr) ||
+-			    (!(dev->flags & IFF_POINTOPOINT) && p.iph.daddr))
++			if (((dev->flags & IFF_POINTOPOINT) && !p->iph.daddr) ||
++			    (!(dev->flags & IFF_POINTOPOINT) && p->iph.daddr))
+ 				return -EINVAL;
+ 			t = netdev_priv(dev);
+ 		}
+ 
+-		ipip6_tunnel_update(t, &p, t->fwmark);
++		ipip6_tunnel_update(t, p, t->fwmark);
+ 	}
+ 
+-	if (copy_to_user(ifr->ifr_ifru.ifru_data, &t->parms, sizeof(p)))
+-		return -EFAULT;
+ 	return 0;
+ }
+ 
+ static int
+-ipip6_tunnel_del(struct net_device *dev, struct ifreq *ifr)
++ipip6_tunnel_del(struct net_device *dev, struct ip_tunnel_parm *p)
+ {
+ 	struct ip_tunnel *t = netdev_priv(dev);
+-	struct ip_tunnel_parm p;
+ 
+ 	if (!ns_capable(t->net->user_ns, CAP_NET_ADMIN))
+ 		return -EPERM;
+ 
+ 	if (dev == dev_to_sit_net(dev)->fb_tunnel_dev) {
+-		if (copy_from_user(&p, ifr->ifr_ifru.ifru_data, sizeof(p)))
+-			return -EFAULT;
+-		t = ipip6_tunnel_locate(t->net, &p, 0);
++		t = ipip6_tunnel_locate(t->net, p, 0);
+ 		if (!t)
+ 			return -ENOENT;
+ 		if (t == netdev_priv(dev_to_sit_net(dev)->fb_tunnel_dev))
+@@ -1366,18 +1346,32 @@ ipip6_tunnel_del(struct net_device *dev, struct ifreq *ifr)
+ 	return 0;
+ }
+ 
++static int
++ipip6_tunnel_ctl(struct net_device *dev, struct ip_tunnel_parm *p, int cmd)
++{
++	switch (cmd) {
++	case SIOCGETTUNNEL:
++		return ipip6_tunnel_get(dev, p);
++	case SIOCADDTUNNEL:
++		return ipip6_tunnel_add(dev, p);
++	case SIOCCHGTUNNEL:
++		return ipip6_tunnel_change(dev, p);
++	case SIOCDELTUNNEL:
++		return ipip6_tunnel_del(dev, p);
++	default:
++		return -EINVAL;
++	}
++}
++
+ static int
+ ipip6_tunnel_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
+ {
+ 	switch (cmd) {
+ 	case SIOCGETTUNNEL:
+-		return ipip6_tunnel_get(dev, ifr);
+ 	case SIOCADDTUNNEL:
+-		return ipip6_tunnel_add(dev, ifr);
+ 	case SIOCCHGTUNNEL:
+-		return ipip6_tunnel_change(dev, ifr);
+ 	case SIOCDELTUNNEL:
+-		return ipip6_tunnel_del(dev, ifr);
++		return ip_tunnel_ioctl(dev, ifr, cmd);
+ 	case SIOCGETPRL:
+ 		return ipip6_tunnel_get_prl(dev, ifr);
+ 	case SIOCADDPRL:
+@@ -1404,6 +1398,7 @@ static const struct net_device_ops ipip6_netdev_ops = {
+ 	.ndo_do_ioctl	= ipip6_tunnel_ioctl,
+ 	.ndo_get_stats64 = ip_tunnel_get_stats64,
+ 	.ndo_get_iflink = ip_tunnel_get_iflink,
++	.ndo_tunnel_ctl = ipip6_tunnel_ctl,
+ };
+ 
+ static void ipip6_dev_free(struct net_device *dev)
+-- 
+2.26.2
 
-Best regards,
-Jonathan Albrieux
