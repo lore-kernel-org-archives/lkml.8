@@ -2,203 +2,134 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39DF20643
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9A320643
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:06:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oWzLF/YB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgESCGP (ORCPT
+        id S1728111AbgESCGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 22:06:15 -0400
-Received: from mga07.intel.com ([134.134.136.100]:35941 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726525AbgESCGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 22:06:14 -0400
-IronPort-SDR: H03rVvYym6DVGCu3BurasZS85kMkAB036JFNhRNl13+kB43eG9jFCY+EIQoDdkzp6esyAp38SC
- jxHer6ufjG2A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 19:06:13 -0700
-IronPort-SDR: +ehNVNOjJZquRZsp+oO8BlVBeeDro1NHIO8NuMC2i/eFScXPVzRESjTgNg/vxtOgyDcXpQluJQ
- jFzPDa6K1HBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,408,1583222400"; 
-   d="scan'208";a="439443229"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 18 May 2020 19:06:12 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jardz-0003V2-EF; Tue, 19 May 2020 10:06:11 +0800
-Date:   Tue, 19 May 2020 10:05:59 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/cpu] BUILD SUCCESS
- 3d81b3d1e55a518837c3d1f722c6d93abe34aa85
-Message-ID: <5ec33f07.b4wJuoPNNmSlrlHY%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Mon, 18 May 2020 22:06:18 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12562 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726302AbgESCGR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 22:06:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589853976; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=shu1nRH4yOUpMsF9x6Loiw97DfWS+2VXjIP+je/cjo4=; b=oWzLF/YBxpfPwAuW5Z5Qh/ntHSSyTBaBc2ujgchYdvc4yFb7fcDgshZuR9yeDDz0qYLwVBDd
+ vcGD5gRXeF6JQmI12kD33kNJyRqeo+yKjNvBXNSaVyD8JYJm2W87kb5rQf8YlHxmsvPKVrBD
+ FvkZei1nmT/RRWimyHGruOWAy9A=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ec33f0daefa5a01cc32da9c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 19 May 2020 02:06:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1F196C43637; Tue, 19 May 2020 02:06:04 +0000 (UTC)
+Received: from majja-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: majja)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 57895C433F2;
+        Tue, 19 May 2020 02:06:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 57895C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=majja@codeaurora.org
+From:   Maheshwar Ajja <majja@codeaurora.org>
+To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+        ezequiel@collabora.com, p.zabel@pengutronix.de,
+        paul.kocialkowski@bootlin.com, jonas@kwiboo.se,
+        posciak@chromium.org, boris.brezillon@collabora.com,
+        ribalda@kernel.org, tglx@linutronix.de, sumitg@nvidia.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Maheshwar Ajja <majja@codeaurora.org>
+Subject: [PATCH] media: v4l2-ctrls: add encoder skip frames control
+Date:   Mon, 18 May 2020 19:05:51 -0700
+Message-Id: <1589853951-27948-1-git-send-email-majja@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
-branch HEAD: 3d81b3d1e55a518837c3d1f722c6d93abe34aa85  x86/cpu: Use RDRAND and RDSEED mnemonics in archrandom.h
+If V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES control is enabled
+encoder can drop frames, if required, to achieve target bitrate
+instead of modifying the quantization parameter which lowers
+the encoded frame quality.
 
-i386-tinyconfig vmlinux size:
+Reference: 4.3.8.1 OMX_Video_ControlRateConstantSkipFrames
+https://www.khronos.org/registry/OpenMAX-IL/specs/OpenMAX_IL_1_1_2_Specification.pdf
 
-+-------+------------------------------------+-----------------------------------------------------------------------+
-| DELTA |               SYMBOL               |                                COMMIT                                 |
-+-------+------------------------------------+-----------------------------------------------------------------------+
-|  +284 | TOTAL                              | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|  +203 | TOTAL                              | e9d7144597b1 x86/cpu: Add a steppings field to struct x86_cpu_id      |
-|  +252 | TEXT                               | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|  +172 | TEXT                               | e9d7144597b1 x86/cpu: Add a steppings field to struct x86_cpu_id      |
-| +1355 | balance_dirty_pages()              | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|  +615 | __setup_rt_frame()                 | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|  +160 | init.data                          | e9d7144597b1 x86/cpu: Add a steppings field to struct x86_cpu_id      |
-|  +124 | cpu_vuln_whitelist()               | e9d7144597b1 x86/cpu: Add a steppings field to struct x86_cpu_id      |
-|  +113 | klist_release()                    | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|   +93 | change_clocksource()               | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|   +86 | release_bdi()                      | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|   +84 | kobject_release()                  | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|   -68 | bdi_put()                          | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|   -77 | kobject_put()                      | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|   -79 | timekeeping_notify()               | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|   -99 | klist_dec_and_del()                | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-|  -136 | arch/x86/events/zhaoxin/built-in.* | 3d81b3d1e55a x86/cpu: Use RDRAND and RDSEED mnemonics in archrandom.h |
-|  -555 | do_signal()                        | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-| -1383 | balance_dirty_pages_ratelimited()  | ae83d0b416db..3d81b3d1e55a (ALL COMMITS)                              |
-+-------+------------------------------------+-----------------------------------------------------------------------+
-
-elapsed time: 482m
-
-configs tested: 110
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sparc                            allyesconfig
-mips                             allyesconfig
-m68k                             allyesconfig
-mips                         tb0219_defconfig
-mips                 pnx8335_stb225_defconfig
-powerpc                       holly_defconfig
-m68k                       bvme6000_defconfig
-arm                       multi_v4t_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                       imx_v6_v7_defconfig
-mips                        maltaup_defconfig
-m68k                            mac_defconfig
-um                               alldefconfig
-um                                  defconfig
-mips                         rt305x_defconfig
-sh                            hp6xx_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a006-20200518
-i386                 randconfig-a005-20200518
-i386                 randconfig-a001-20200518
-i386                 randconfig-a003-20200518
-i386                 randconfig-a004-20200518
-i386                 randconfig-a002-20200518
-x86_64               randconfig-a016-20200518
-x86_64               randconfig-a012-20200518
-x86_64               randconfig-a015-20200518
-x86_64               randconfig-a013-20200518
-x86_64               randconfig-a011-20200518
-x86_64               randconfig-a014-20200518
-i386                 randconfig-a012-20200518
-i386                 randconfig-a014-20200518
-i386                 randconfig-a016-20200518
-i386                 randconfig-a011-20200518
-i386                 randconfig-a015-20200518
-i386                 randconfig-a013-20200518
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
+Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 7 +++++++
+ drivers/media/v4l2-core/v4l2-ctrls.c                      | 2 ++
+ include/uapi/linux/v4l2-controls.h                        | 1 +
+ 3 files changed, 10 insertions(+)
+
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+index d0d506a..bc9265d 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+@@ -1081,6 +1081,13 @@ enum v4l2_mpeg_video_h264_entropy_mode -
+     Macroblock level rate control enable. Applicable to the MPEG4 and
+     H264 encoders.
+ 
++``V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES (boolean)``
++    Encoder skip frames enable. This control is applicable only if
++    ``V4L2_CID_MPEG_VIDEO_BITRATE_MODE`` control is set. If this control
++    is enabled encoder can drop frames, if required, to achieve target
++    bitrate instead of modifying the quantization parameter which lowers
++    the encoded frame quality.
++
+ ``V4L2_CID_MPEG_VIDEO_MPEG4_QPEL (boolean)``
+     Quarter pixel motion estimation for MPEG4. Applicable to the MPEG4
+     encoder.
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 1c617b4..d2cb766 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -914,6 +914,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_MPEG_VIDEO_FWHT_PARAMS:			return "FWHT Stateless Parameters";
+ 	case V4L2_CID_FWHT_I_FRAME_QP:				return "FWHT I-Frame QP Value";
+ 	case V4L2_CID_FWHT_P_FRAME_QP:				return "FWHT P-Frame QP Value";
++	case V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES:		return "Encoder Skip Frames";
+ 
+ 	/* VPX controls */
+ 	case V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS:		return "VPX Number of Partitions";
+@@ -1180,6 +1181,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_MPEG_VIDEO_DECODER_SLICE_INTERFACE:
+ 	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
+ 	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:
++	case V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES:
+ 	case V4L2_CID_MPEG_VIDEO_H264_8X8_TRANSFORM:
+ 	case V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE:
+ 	case V4L2_CID_MPEG_VIDEO_MPEG4_QPEL:
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 0ba1005..d3bc015 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -742,6 +742,7 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
+ #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
+ #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
+ #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
++#define V4L2_CID_MPEG_VIDEO_ENC_SKIP_FRAMES		(V4L2_CID_MPEG_BASE + 645)
+ 
+ /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
+ #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
