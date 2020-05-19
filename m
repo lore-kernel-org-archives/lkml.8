@@ -2,90 +2,164 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59163C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8BCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 275E720578
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA62920578
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="A5oPi8I5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+HujN4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgESXL5 (ORCPT
+        id S1728250AbgESXMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 19:11:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54236 "EHLO
+        Tue, 19 May 2020 19:12:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgESXLz (ORCPT
+        with ESMTP id S1726348AbgESXMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 19:11:55 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D273C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:11:55 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id z26so622872pfk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:11:55 -0700 (PDT)
+        Tue, 19 May 2020 19:12:39 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 205DFC061A0E;
+        Tue, 19 May 2020 16:12:39 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m185so984940wme.3;
+        Tue, 19 May 2020 16:12:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lx7UJrQLBWSojDrUx+gUmzxXfR3CRe9hyj+Wu8TV59E=;
-        b=A5oPi8I5sC1vfxsrl1SRotsn0XbQlnU4l+EniyKtzY0siFWyg6jLea3qRNwgDiFZd1
-         z4NM+aZAM2If7cQMOkmhbi2//3CMrdMvRKIQ3xDem4GqVU5elpaHvRgiz2O9D81+ief/
-         G6ffhFeUe3LKqzIj1In5sAXgCEd2hC5dXQ3Vft77LMk06G6RwqXVLBYke2ooTXHPa1IZ
-         Xjy+l7Q90/SKSaW6sujHObI0N36jWxj2DNqEorK3b0K4lNavJZUYOQjrCE9y1XyM13rc
-         Ai2IzZAgKw1eYrYF6wRtZQcKTcgmDsLfK6QHfUtXsIWuuK5mk3izlz61DOk8PZH+OF32
-         1v7Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9nXZIh+0a9uZrepq31HrqjjhS+2AZ4SL6HL9QDxcUlU=;
+        b=a+HujN4J2T5GBiw+FOginmhSWhcLYquVQeHuLk5YIilloN5ZtHaFfSdVwmsWf3xHno
+         cZBu3sb2iEurmfDZvbqBbClGg9LFg8SVWo8KzIdVzn+mbfbEFQwI3OBZ6z3yL2/YTSI8
+         w1D7quHDgXaZVFy4bFv4mYt3R69G9ehUOVk6y86bLABjpRSLrbIFBvgFVFDL6vu+VKxT
+         D8H2yHEy7JIGpcxootlOblYZsUwXM5Sdy6XSOao11sK+qCMzBu2x+OmdEY2IZUyOUz+Z
+         g/zcdpZOSTmtzH3sQG7HV4tox1bOYPsBtsk4xde/Kp+1aXD/uqOTlf7Qk+12mfFvShgB
+         pMLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lx7UJrQLBWSojDrUx+gUmzxXfR3CRe9hyj+Wu8TV59E=;
-        b=PXiPgEKKFWCoJx53jqk5Fqu6BQsGXfei9VjaDdCyNa58v4PVOEq7+ySls2ErlH8eWB
-         PGzvlmV46CS4cZMD4kChSTbQ8TguHJtU38DKJNww9AwqLdEX8y4VPYqM02pAJttlNonr
-         u0tZPhvkxhO/W5vdulZ9y8EGrEBBSYRxrCwDVRIGmTaHUEjSfjpWXbPtEsJ/hnU9++JF
-         Inoco3FKdx1mniDHZAI2dSJvz4p7ol3NSal3vBNnX+sLKY5Td8Ae8YBJp7QvVKK2xHHq
-         3MTfq7jCNE72NJlixJGNEZJd9Llx6tS79IeT+sTnKvv9eUyFKeGz5Nt3VopszhBLJfYn
-         HyMg==
-X-Gm-Message-State: AOAM532bdKEJuHW7GJXWOKdBjdwhOPMXBlWicjz8ORrrlhOTCP2bBFlV
-        WKv19cD6apnSjmNd/KoMYU6cPkOc7H+Hug==
-X-Google-Smtp-Source: ABdhPJxsn0827XE2LOmPwBfl0cphgvNpH894AcJ7kRUW9DLwqSEUoaYm2yWR1fAAETXit5YR1DXd/g==
-X-Received: by 2002:a62:4dc3:: with SMTP id a186mr1327386pfb.269.1589929914830;
-        Tue, 19 May 2020 16:11:54 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id 192sm426908pfu.182.2020.05.19.16.11.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 16:11:54 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     linux-amlogic@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: meson: add the gadget mode properties to the USB0 controller
-Date:   Tue, 19 May 2020 16:11:53 -0700
-Message-Id: <158992990571.5859.7805491457862081284.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200504195105.2909711-1-martin.blumenstingl@googlemail.com>
-References: <20200504195105.2909711-1-martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9nXZIh+0a9uZrepq31HrqjjhS+2AZ4SL6HL9QDxcUlU=;
+        b=D06LThemApIglEAHxJ8vPCxSO19n1AubWkGQX0k/Kr2ESAUDnEy37qnrEk5jKr7PDM
+         VNIE/0ELmKuy3GnX8oTIw20AEMyYH8dOS/x46eQVl8xNrCMYjbaSbKBYZJ8/GZ2vCZ6R
+         FQIwJWSpBbCe66jjUxjvOr1cjXj8dVTKd/MBFoL1EP01UnmX679mS7FZZwyrAek/KhQq
+         gbxGb/7EMWxUhvvqT+fLrzdsOQC1fCX37g9WDq0E3MXBQsWjWGwwExjzjo6YVVofH4P6
+         rVc0ooOC+d30GurS/INsbqMq42fh3Yfomc64+e/oQcJcxanQ848f0xTO7MZ2gENMfzz0
+         8M0w==
+X-Gm-Message-State: AOAM533UH3LaYhZqzFMKDvnklrXx1IlBQZLndTh3EPqBkNShlVIkH2XS
+        O1ztT4s4czrYANl8H2NYs5ws2gpOpN5OStzqwVg=
+X-Google-Smtp-Source: ABdhPJxAHqucqBj12xjabdjLamMUC2A4wmKz1xYaVdTR7QJ4jEJL9z/KA49Rzy2njbcAVgo4okup/a+0i39+OHRlUGk=
+X-Received: by 2002:a1c:38c3:: with SMTP id f186mr1790842wma.137.1589929957694;
+ Tue, 19 May 2020 16:12:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200519163234.226513-1-sashal@kernel.org> <CAPM=9txZpiCGkv3jiBC1F8pTe4A2pqWpQDyjRBXk2roFqw+0+Q@mail.gmail.com>
+In-Reply-To: <CAPM=9txZpiCGkv3jiBC1F8pTe4A2pqWpQDyjRBXk2roFqw+0+Q@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Wed, 20 May 2020 09:12:25 +1000
+Message-ID: <CAPM=9tx4wh-Lk6Dffsdh-7mYvXx+GX2AxhrGqFgyN8-AWJvP6A@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/4] DirectX on Linux
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        "Ursulin, Tvrtko" <tvrtko.ursulin@intel.com>,
+        linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        haiyangz@microsoft.com, LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        spronovo@microsoft.com, wei.liu@kernel.org,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        iourit@microsoft.com, kys@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 21:51:05 +0200, Martin Blumenstingl wrote:
-> Testing with a USB RNDIS connection and iperf3 gives the following
-> results:
-> - From the host computer to the device at ~250Mbit/s
-> - From the device to the host computer at ~76Mbit/s
+On Wed, 20 May 2020 at 08:42, Dave Airlie <airlied@gmail.com> wrote:
+>
+> On Wed, 20 May 2020 at 02:33, Sasha Levin <sashal@kernel.org> wrote:
+> >
+> > There is a blog post that goes into more detail about the bigger
+> > picture, and walks through all the required pieces to make this work. It
+> > is available here:
+> > https://devblogs.microsoft.com/directx/directx-heart-linux . The rest of
+> > this cover letter will focus on the Linux Kernel bits.
+> >
+> > Overview
+> > ========
+> >
+> > This is the first draft of the Microsoft Virtual GPU (vGPU) driver. The
+> > driver exposes a paravirtualized GPU to user mode applications running
+> > in a virtual machine on a Windows host. This enables hardware
+> > acceleration in environment such as WSL (Windows Subsystem for Linux)
+> > where the Linux virtual machine is able to share the GPU with the
+> > Windows host.
+> >
+> > The projection is accomplished by exposing the WDDM (Windows Display
+> > Driver Model) interface as a set of IOCTL. This allows APIs and user
+> > mode driver written against the WDDM GPU abstraction on Windows to be
+> > ported to run within a Linux environment. This enables the port of the
+> > D3D12 and DirectML APIs as well as their associated user mode driver to
+> > Linux. This also enables third party APIs, such as the popular NVIDIA
+> > Cuda compute API, to be hardware accelerated within a WSL environment.
+> >
+> > Only the rendering/compute aspect of the GPU are projected to the
+> > virtual machine, no display functionality is exposed. Further, at this
+> > time there are no presentation integration. So although the D3D12 API
+> > can be use to render graphics offscreen, there is no path (yet) for
+> > pixel to flow from the Linux environment back onto the Windows host
+> > desktop. This GPU stack is effectively side-by-side with the native
+> > Linux graphics stack.
+>
+> Okay I've had some caffiene and absorbed some more of this.
+>
+> This is a driver that connects a binary blob interface in the Windows
+> kernel drivers to a binary blob that you run inside a Linux guest.
+> It's a binary transport between two binary pieces. Personally this
+> holds little of interest to me, I can see why it might be nice to have
+> this upstream, but I don't forsee any other Linux distributor ever
+> enabling it or having to ship it, it's purely a WSL2 pipe. I'm not
+> saying I'd be happy to see this in the tree, since I don't see the
+> value of maintaining it upstream, but it probably should just exists
+> in a drivers/hyperv type area.
+>
+> Having said that, I hit one stumbling block:
+> "Further, at this time there are no presentation integration. "
+>
+> If we upstream this driver as-is into some hyperv specific place, and
+> you decide to add presentation integration this is more than likely
+> going to mean you will want to interact with dma-bufs and dma-fences.
+> If the driver is hidden away in a hyperv place it's likely we won't
+> even notice that feature landing until it's too late.
+>
+> I would like to see a coherent plan for presentation support (not
+> code, just an architectural diagram), because I think when you
+> contemplate how that works it will change the picture of how this
+> driver looks and intergrates into the rest of the Linux graphics
+> ecosystem.
+>
+> As-is I'd rather this didn't land under my purview, since I don't see
+> the value this adds to the Linux ecosystem at all, and I think it's
+> important when putting a burden on upstream that you provide some
+> value.
 
-Applied, thanks!
+I also have another concern from a legal standpoint I'd rather not
+review the ioctl part of this. I'd probably request under DRI
+developers abstain as well.
 
-[1/1] ARM: dts: meson: add the gadget mode properties to the USB0 controller
-      commit: 9530dcf1082da23438ee557291c07d475128f63a
+This is a Windows kernel API being smashed into a Linux driver. I
+don't want to be tainted by knowledge of an API that I've no idea of
+the legal status of derived works. (it this all covered patent wise
+under OIN?)
 
-Best regards,
--- 
-Kevin Hilman <khilman@baylibre.com>
+I don't want to ever be accused of designing a Linux kernel API with
+illgotten D3DKMT knowledge, I feel tainting myself with knowledge of a
+properietary API might cause derived work issues.
+
+Dave.
