@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA45020849
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185AA2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgESTxH (ORCPT
+        id S1728037AbgESTxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:53:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51028 "EHLO
+        Tue, 19 May 2020 15:53:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgESTwu (ORCPT
+        with ESMTP id S1727978AbgESTxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:52:50 -0400
+        Tue, 19 May 2020 15:53:04 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B84FAC08C5C0;
-        Tue, 19 May 2020 12:52:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D8CC08C5C0;
+        Tue, 19 May 2020 12:53:04 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb8I4-0007rj-Tz; Tue, 19 May 2020 21:52:41 +0200
+        id 1jb8Hz-0007rb-GG; Tue, 19 May 2020 21:52:35 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7A1D71C0178;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 160791C047E;
         Tue, 19 May 2020 21:52:35 +0200 (CEST)
-Date:   Tue, 19 May 2020 19:52:35 -0000
+Date:   Tue, 19 May 2020 19:52:34 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] lockdep: Always inline lockdep_{off,on}()
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: core/rcu] sh/ftrace: Move arch_ftrace_nmi_{enter,exit} into nmi
+ exception
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505134101.048523500@linutronix.de>
-References: <20200505134101.048523500@linutronix.de>
+In-Reply-To: <20200505134101.248881738@linutronix.de>
+References: <20200505134101.248881738@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158991795538.17951.10475786862594383063.tip-bot2@tip-bot2>
+Message-ID: <158991795499.17951.5925531045899996305.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,91 +64,157 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     e616cb8daadf637175af4fe53138a94c190c4816
-Gitweb:        https://git.kernel.org/tip/e616cb8daadf637175af4fe53138a94c190c4816
+Commit-ID:     178ba00c354eb15cec6806a812771e60a5ae3ea1
+Gitweb:        https://git.kernel.org/tip/178ba00c354eb15cec6806a812771e60a5ae3ea1
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 24 Feb 2020 22:14:51 +01:00
+AuthorDate:    Mon, 24 Feb 2020 22:26:21 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 19 May 2020 15:51:18 +02:00
 
-lockdep: Always inline lockdep_{off,on}()
+sh/ftrace: Move arch_ftrace_nmi_{enter,exit} into nmi exception
 
-These functions are called {early,late} in nmi_{enter,exit} and should
-not be traced or probed. They are also puny, so 'inline' them.
+SuperH is the last remaining user of arch_ftrace_nmi_{enter,exit}(),
+remove it from the generic code and into the SuperH code.
 
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Link: https://lkml.kernel.org/r/20200505134101.048523500@linutronix.de
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Link: https://lkml.kernel.org/r/20200505134101.248881738@linutronix.de
 
 
 ---
- include/linux/lockdep.h  | 23 +++++++++++++++++++++--
- kernel/locking/lockdep.c | 19 -------------------
- 2 files changed, 21 insertions(+), 21 deletions(-)
+ Documentation/trace/ftrace-design.rst |  8 --------
+ arch/sh/Kconfig                       |  1 -
+ arch/sh/kernel/traps.c                | 12 ++++++++++++
+ include/linux/ftrace_irq.h            | 11 -----------
+ kernel/trace/Kconfig                  | 10 ----------
+ 5 files changed, 12 insertions(+), 30 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 206774a..8fce5c9 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -308,8 +308,27 @@ extern void lockdep_set_selftest_task(struct task_struct *task);
+diff --git a/Documentation/trace/ftrace-design.rst b/Documentation/trace/ftrace-design.rst
+index a8e22e0..6893399 100644
+--- a/Documentation/trace/ftrace-design.rst
++++ b/Documentation/trace/ftrace-design.rst
+@@ -229,14 +229,6 @@ Adding support for it is easy: just define the macro in asm/ftrace.h and
+ pass the return address pointer as the 'retp' argument to
+ ftrace_push_return_trace().
  
- extern void lockdep_init_task(struct task_struct *task);
+-HAVE_FTRACE_NMI_ENTER
+----------------------
+-
+-If you can't trace NMI functions, then skip this option.
+-
+-<details to be filled>
+-
+-
+ HAVE_SYSCALL_TRACEPOINTS
+ ------------------------
  
--extern void lockdep_off(void);
--extern void lockdep_on(void);
-+/*
-+ * Split the recrursion counter in two to readily detect 'off' vs recursion.
-+ */
-+#define LOCKDEP_RECURSION_BITS	16
-+#define LOCKDEP_OFF		(1U << LOCKDEP_RECURSION_BITS)
-+#define LOCKDEP_RECURSION_MASK	(LOCKDEP_OFF - 1)
-+
-+/*
-+ * lockdep_{off,on}() are macros to avoid tracing and kprobes; not inlines due
-+ * to header dependencies.
-+ */
-+
-+#define lockdep_off()					\
-+do {							\
-+	current->lockdep_recursion += LOCKDEP_OFF;	\
-+} while (0)
-+
-+#define lockdep_on()					\
-+do {							\
-+	current->lockdep_recursion -= LOCKDEP_OFF;	\
-+} while (0)
- 
- extern void lockdep_register_key(struct lock_class_key *key);
- extern void lockdep_unregister_key(struct lock_class_key *key);
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index ac10db6..6f1c8cb 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -393,25 +393,6 @@ void lockdep_init_task(struct task_struct *task)
- 	task->lockdep_recursion = 0;
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index b4f0e37..97656d2 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -71,7 +71,6 @@ config SUPERH32
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_DYNAMIC_FTRACE
+-	select HAVE_FTRACE_NMI_ENTER if DYNAMIC_FTRACE
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_ARCH_KGDB
+diff --git a/arch/sh/kernel/traps.c b/arch/sh/kernel/traps.c
+index 63cf17b..2130381 100644
+--- a/arch/sh/kernel/traps.c
++++ b/arch/sh/kernel/traps.c
+@@ -170,11 +170,21 @@ BUILD_TRAP_HANDLER(bug)
+ 	force_sig(SIGTRAP);
  }
  
--/*
-- * Split the recrursion counter in two to readily detect 'off' vs recursion.
-- */
--#define LOCKDEP_RECURSION_BITS	16
--#define LOCKDEP_OFF		(1U << LOCKDEP_RECURSION_BITS)
--#define LOCKDEP_RECURSION_MASK	(LOCKDEP_OFF - 1)
--
--void lockdep_off(void)
--{
--	current->lockdep_recursion += LOCKDEP_OFF;
--}
--EXPORT_SYMBOL(lockdep_off);
--
--void lockdep_on(void)
--{
--	current->lockdep_recursion -= LOCKDEP_OFF;
--}
--EXPORT_SYMBOL(lockdep_on);
--
- static inline void lockdep_recursion_finish(void)
++#ifdef CONFIG_DYNAMIC_FTRACE
++extern void arch_ftrace_nmi_enter(void);
++extern void arch_ftrace_nmi_exit(void);
++#else
++static inline void arch_ftrace_nmi_enter(void) { }
++static inline void arch_ftrace_nmi_exit(void) { }
++#endif
++
+ BUILD_TRAP_HANDLER(nmi)
  {
- 	if (WARN_ON_ONCE(--current->lockdep_recursion))
+ 	unsigned int cpu = smp_processor_id();
+ 	TRAP_HANDLER_DECL;
+ 
++	arch_ftrace_nmi_enter();
++
+ 	nmi_enter();
+ 	nmi_count(cpu)++;
+ 
+@@ -190,4 +200,6 @@ BUILD_TRAP_HANDLER(nmi)
+ 	}
+ 
+ 	nmi_exit();
++
++	arch_ftrace_nmi_exit();
+ }
+diff --git a/include/linux/ftrace_irq.h b/include/linux/ftrace_irq.h
+index ccda97d..0abd9a1 100644
+--- a/include/linux/ftrace_irq.h
++++ b/include/linux/ftrace_irq.h
+@@ -2,15 +2,6 @@
+ #ifndef _LINUX_FTRACE_IRQ_H
+ #define _LINUX_FTRACE_IRQ_H
+ 
+-
+-#ifdef CONFIG_FTRACE_NMI_ENTER
+-extern void arch_ftrace_nmi_enter(void);
+-extern void arch_ftrace_nmi_exit(void);
+-#else
+-static inline void arch_ftrace_nmi_enter(void) { }
+-static inline void arch_ftrace_nmi_exit(void) { }
+-#endif
+-
+ #ifdef CONFIG_HWLAT_TRACER
+ extern bool trace_hwlat_callback_enabled;
+ extern void trace_hwlat_callback(bool enter);
+@@ -22,12 +13,10 @@ static inline void ftrace_nmi_enter(void)
+ 	if (trace_hwlat_callback_enabled)
+ 		trace_hwlat_callback(true);
+ #endif
+-	arch_ftrace_nmi_enter();
+ }
+ 
+ static inline void ftrace_nmi_exit(void)
+ {
+-	arch_ftrace_nmi_exit();
+ #ifdef CONFIG_HWLAT_TRACER
+ 	if (trace_hwlat_callback_enabled)
+ 		trace_hwlat_callback(false);
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 1e9a8f9..24876fa 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -10,11 +10,6 @@ config USER_STACKTRACE_SUPPORT
+ config NOP_TRACER
+ 	bool
+ 
+-config HAVE_FTRACE_NMI_ENTER
+-	bool
+-	help
+-	  See Documentation/trace/ftrace-design.rst
+-
+ config HAVE_FUNCTION_TRACER
+ 	bool
+ 	help
+@@ -72,11 +67,6 @@ config RING_BUFFER
+ 	select TRACE_CLOCK
+ 	select IRQ_WORK
+ 
+-config FTRACE_NMI_ENTER
+-       bool
+-       depends on HAVE_FTRACE_NMI_ENTER
+-       default y
+-
+ config EVENT_TRACING
+ 	select CONTEXT_SWITCH_TRACER
+ 	select GLOB
