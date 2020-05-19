@@ -2,133 +2,93 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2040C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C01B207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C45207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589907830;
-	bh=xbj4MKDaCQ/uq8PfAJ4JLhs4zm+BOFwwLkxXtJGNpRE=;
+	s=default; t=1589907893;
+	bh=njSEaIFh9RXLbuVk3Wkbg0wE3C25mo8/xTDnz+hRj+o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yL9eEJmT1rHWn5IvQlcEUxwFuRRzF+2R3D6+65mMFEEsEMaXMUeBpKZ/GfusCGgd0
-	 0PkWTs7nKYE6mEujmeZvAZuIBjTIQu8FaVxNm70EBacPZs5mpmlzL9mRcEUmlDg4Ry
-	 I1sy+z6W6DfOSx2ezV2GFV+7BzDjg/5c2aXalj5A=
+	b=WGnn3cRPIpVzmw6IfUupQ8gcxZtz+/In54rwZTst6jnzonSPRcatYUwaY7rio79Tv
+	 7fvLGMe0gEcjNoimN59nNo9laLWFLsz2tLTNr7rHIzTPZvfyMPAjutHXBHkf1glfNv
+	 MFc/mURxF/fI0uk52gm+dKbC3xyG1BxUgOKXpMqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgESRDt (ORCPT
+        id S1729386AbgESREx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:03:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37260 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 13:04:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbgESRDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:03:49 -0400
+        id S1728778AbgESREw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:04:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F01F120708;
-        Tue, 19 May 2020 17:03:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0831B20708;
+        Tue, 19 May 2020 17:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589907828;
-        bh=xbj4MKDaCQ/uq8PfAJ4JLhs4zm+BOFwwLkxXtJGNpRE=;
+        s=default; t=1589907891;
+        bh=njSEaIFh9RXLbuVk3Wkbg0wE3C25mo8/xTDnz+hRj+o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x4PuJalfL2SwbUTdnUodUzcp+f41a2ge99eJTrO6kfYTyLHJWF96dQSI/a8xRkwMs
-         1Q6o4brIC0ng5v2SQMyLhTNO/JSB63X6UOWT52Wl60j/hmtTpCts5SHLjID4FZF8gq
-         qE4tcCxgB9RfvgwyMA8VtkKqCGOQSXBexbE9Ytw4=
-Date:   Tue, 19 May 2020 19:03:46 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v5 5/7] blktrace: fix debugfs use after free
-Message-ID: <20200519170346.GB1064707@kroah.com>
-References: <20200516031956.2605-1-mcgrof@kernel.org>
- <20200516031956.2605-6-mcgrof@kernel.org>
- <20200519144408.GA737365@kroah.com>
- <20200519155210.GU11244@42.do-not-panic.com>
+        b=TKwyT2Jk0UBMVvsQTn9cesqoPHXxrQrs5IanXez7s1I76HFXhGAUNttUnKWPJmGNg
+         QVV0Z8ETdh6RJY4Obym+GG0Y9MPQQbzWl5xp5gD0liwNgiz5wuJ/xFWx8XRqzWNWeV
+         EzsCk+9E5uurfFqYN45ToduDt0RsJkVXjL8/nziE=
+Date:   Tue, 19 May 2020 19:04:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.6 000/192] 5.6.14-rc2 review
+Message-ID: <20200519170449.GA1085364@kroah.com>
+References: <20200519054650.064501564@linuxfoundation.org>
+ <CA+G9fYuD66kXa-4kYNFsS+HBmu7qSSpCxSnVVSYzb++X=o=2cg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200519155210.GU11244@42.do-not-panic.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYuD66kXa-4kYNFsS+HBmu7qSSpCxSnVVSYzb++X=o=2cg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 03:52:10PM +0000, Luis Chamberlain wrote:
-> On Tue, May 19, 2020 at 04:44:08PM +0200, Greg KH wrote:
-> > On Sat, May 16, 2020 at 03:19:54AM +0000, Luis Chamberlain wrote:
-> > >  struct dentry *blk_debugfs_root;
-> > > +struct dentry *blk_debugfs_bsg = NULL;
-> > 
-> > checkpatch didn't complain about "= NULL;"?
+On Tue, May 19, 2020 at 06:25:05PM +0530, Naresh Kamboju wrote:
+> On Tue, 19 May 2020 at 11:17, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.6.14 release.
+> > There are 192 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 21 May 2020 05:45:41 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.14-rc2.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> Will remove.
-> 
-> > > +static void queue_debugfs_register_type(struct request_queue *q,
-> > > +					const char *name,
-> > > +					enum blk_debugfs_dir_type type)
-> > > +{
-> > > +	struct dentry *base_dir = queue_get_base_dir(type);
-> > 
-> > And it could be a simple if statement instead.
-> > 
-> > Oh well, I don't have to maintain this :)
-> 
-> I'll just use that, but yeah I think its a matter of preference.
-> 
-> > > +/**
-> > > + * blk_queue_debugfs_register - register the debugfs_dir for the block device
-> > > + * @q: the associated request_queue of the block device
-> > > + * @name: the name of the block device exposed
-> > > + *
-> > > + * This is used to create the debugfs_dir used by the block layer and blktrace.
-> > > + * Drivers which use any of the *add_disk*() calls or variants have this called
-> > > + * automatically for them. This directory is removed automatically on
-> > > + * blk_release_queue() once the request_queue reference count reaches 0.
-> > > + */
-> > > +void blk_queue_debugfs_register(struct request_queue *q, const char *name)
-> > > +{
-> > > +	queue_debugfs_register_type(q, name, BLK_DBG_DIR_BASE);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(blk_queue_debugfs_register);
-> > > +
-> > > +/**
-> > > + * blk_queue_debugfs_unregister - remove the debugfs_dir for the block device
-> > > + * @q: the associated request_queue of the block device
-> > > + *
-> > > + * Removes the debugfs_dir for the request_queue on the associated block device.
-> > > + * This is handled for you on blk_release_queue(), and that should only be
-> > > + * called once.
-> > > + *
-> > > + * Since we don't care where the debugfs_dir was created this is used for all
-> > > + * types of of enum blk_debugfs_dir_type.
-> > > + */
-> > > +void blk_queue_debugfs_unregister(struct request_queue *q)
-> > > +{
-> > > +	debugfs_remove_recursive(q->debugfs_dir);
-> > > +}
-> > 
-> > Why is register needed to be exported, but unregister does not?  Does
-> > some driver not properly clean things up?
-> 
-> Is the comment on blk_queue_debugfs_register() not sufficient?
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Ah, hm, ok, I guess so.
-
-> I thought I was going overboard with how clear this was.  Should I also
-> add a note here on unregister?
-
-Not really, it's fine, thanks.
+Thanks for testing all of these and letting me know.
 
 greg k-h
