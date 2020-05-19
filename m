@@ -6,91 +6,81 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B482C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA6AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2999C207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F70207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgESQBl (ORCPT
+        id S1729254AbgESQFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:01:41 -0400
-Received: from mga11.intel.com ([192.55.52.93]:7761 "EHLO mga11.intel.com"
+        Tue, 19 May 2020 12:05:01 -0400
+Received: from muru.com ([72.249.23.125]:55060 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729089AbgESQBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:01:41 -0400
-IronPort-SDR: YGm6iid6lnj/vQmKp9sqBZsge8uHzSqxU/jy48viIBkj6JURjh633CdkK8zYsKTTH4BFINykaM
- LZ5kswIgIiyQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 09:01:40 -0700
-IronPort-SDR: 1Y/n7E8w3aaJVbDXpCS+Re2n7PRcfEj3aJ1T42ra9Cj6N7PVTfTCgsjxJb3pVHvmTlH6N69SqB
- le4LZ4hiY53w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="411682609"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 19 May 2020 09:01:35 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jb4gT-007g4P-KB; Tue, 19 May 2020 19:01:37 +0300
-Date:   Tue, 19 May 2020 19:01:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
- txt format to yaml
-Message-ID: <20200519160137.GJ1634618@smile.fi.intel.com>
-References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
- <20200519124402.26076-2-jonathan.albrieux@gmail.com>
- <20200519132207.GA4623@gerhold.net>
- <20200519140354.GB30573@ict14-OptiPlex-980>
+        id S1729055AbgESQFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 12:05:01 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 07EAD80FA;
+        Tue, 19 May 2020 16:05:50 +0000 (UTC)
+Date:   Tue, 19 May 2020 09:04:58 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Faiz Abbas <faiz_abbas@ti.com>, Keerthy <j-keerthy@ti.com>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        bcousson@baylibre.com
+Subject: Re: [PATCH v2] arm: dts: Move am33xx and am43xx mmc nodes to
+ sdhci-omap driver
+Message-ID: <20200519160458.GU37466@atomide.com>
+References: <20200512203804.9340-1-faiz_abbas@ti.com>
+ <20200513162327.GM37466@atomide.com>
+ <94025425-95e2-e53d-cfac-a1e73e6c011a@ti.com>
+ <53c815db-dd7d-e6e1-f81a-cf05ef340c71@ti.com>
+ <20200519154807.GT37466@atomide.com>
+ <e37ed4be-aed5-8051-a9fd-c0704d947d75@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519140354.GB30573@ict14-OptiPlex-980>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <e37ed4be-aed5-8051-a9fd-c0704d947d75@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 04:03:54PM +0200, Jonathan Albrieux wrote:
-> On Tue, May 19, 2020 at 03:22:07PM +0200, Stephan Gerhold wrote:
-> > On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:
-
-...
-
-> > > +maintainers:
-> > > +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>
-> > 
-> > Should probably add someone here, although I'm not sure who either.
-> > 
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [200519 15:55]:
+> (Dropping DT from cc)
 > 
-> Yep I couldn't find a maintainer for that driver..what to do in this case?
+> On 19/05/2020 18:48, Tony Lindgren wrote:
+> 
+> > > > Suspend/resume on am43xx-gpevm is broken right now in mainline and the regression looks
+> > > > like it is caused by the display subsystem. I have reported this to Tomi and
+> > > > its being investigated.
+> > > > 
+> > > > Meanwhile I have tested this patch with display configs disabled and Keerthy's
+> > > > suspend/resume tests pass on both am3 and am4.
+> > 
+> > OK great thanks for checking it. Do you have the display subsystem
+> > related commit that broke PM? I'm wondering if my recent DSS platform
+> > data removal changes might have caused the regression.
+> 
+> I spent a bit time looking at this, but unfortunately I wasn't even able to
+> resume my AM4 evm from suspend. I tried with rtcwake and with plain console
+> (with no_console_suspend). I did not have DSS loaded.
 
-Volunteer yourself!
+My test-bbb-suspend script seems to have:
 
--- 
-With Best Regards,
-Andy Shevchenko
+sudo modprobe wkup_m3_ipc
+sudo modprobe pm33xx
+sudo modprobe rtc-omap
+rtcwake -m mem -s 5
 
+I think the same should work for am437x. But some boards do not support
+deep sleep like am437x-idk.
 
+> Anyone have quick hints on how to debug why resume doesn't seem to happen?
+
+You might get some info with no_console_suspend, but that might also
+cause other issues.
+
+Regards,
+
+Tony
