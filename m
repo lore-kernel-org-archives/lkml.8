@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0282C205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C886A205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgESVsG (ORCPT
+        id S1728622AbgESVsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41062 "EHLO
+        Tue, 19 May 2020 17:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728593AbgESVsB (ORCPT
+        with ESMTP id S1728566AbgESVsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 May 2020 17:48:01 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 546CAC08C5C2;
-        Tue, 19 May 2020 14:48:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE3F5C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:48:00 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1jbA5W-0002yb-3S; Tue, 19 May 2020 23:47:50 +0200
+        id 1jbA5a-0002zR-UN; Tue, 19 May 2020 23:47:55 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -37,11 +36,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         "Sebastian A. Siewior" <bigeasy@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [PATCH v1 24/25] kvm/eventfd: Use sequence counter with associated spinlock
-Date:   Tue, 19 May 2020 23:45:46 +0200
-Message-Id: <20200519214547.352050-25-a.darwish@linutronix.de>
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Subject: [PATCH v1 25/25] hrtimer: Use sequence counter with associated raw spinlock
+Date:   Tue, 19 May 2020 23:45:47 +0200
+Message-Id: <20200519214547.352050-26-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -60,46 +58,64 @@ form of locking to serialize writers. A plain seqcount_t does not
 contain the information of which lock must be held when entering a write
 side critical section.
 
-Use the new seqcount_spinlock_t data type, which allows to associate a
-spinlock with the sequence counter. This enables lockdep to verify that
-the spinlock used for writer serialization is held when the write side
-critical section is entered.
+Use the new seqcount_raw_spinlock_t data type, which allows to associate
+a raw spinlock with the sequence counter. This enables lockdep to verify
+that the raw spinlock used for writer serialization is held when the
+write side critical section is entered.
 
 If lockdep is disabled this lock association is compiled out and has
 neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- include/linux/kvm_irqfd.h | 2 +-
- virt/kvm/eventfd.c        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/linux/hrtimer.h |  2 +-
+ kernel/time/hrtimer.c   | 13 ++++++++++---
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/kvm_irqfd.h b/include/linux/kvm_irqfd.h
-index dc1da020305b..dac047abdba7 100644
---- a/include/linux/kvm_irqfd.h
-+++ b/include/linux/kvm_irqfd.h
-@@ -42,7 +42,7 @@ struct kvm_kernel_irqfd {
- 	wait_queue_entry_t wait;
- 	/* Update side is protected by irqfds.lock */
- 	struct kvm_kernel_irq_routing_entry irq_entry;
--	seqcount_t irq_entry_sc;
-+	seqcount_spinlock_t irq_entry_sc;
- 	/* Used for level IRQ fast-path */
- 	int gsi;
- 	struct work_struct inject;
-diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index 67b6fc153e9c..8694a2920ea9 100644
---- a/virt/kvm/eventfd.c
-+++ b/virt/kvm/eventfd.c
-@@ -303,7 +303,7 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
- 	INIT_LIST_HEAD(&irqfd->list);
- 	INIT_WORK(&irqfd->inject, irqfd_inject);
- 	INIT_WORK(&irqfd->shutdown, irqfd_shutdown);
--	seqcount_init(&irqfd->irq_entry_sc);
-+	seqcount_spinlock_init(&irqfd->irq_entry_sc, &kvm->irqfds.lock);
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 15c8ac313678..25993b86ac5c 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -159,7 +159,7 @@ struct hrtimer_clock_base {
+ 	struct hrtimer_cpu_base	*cpu_base;
+ 	unsigned int		index;
+ 	clockid_t		clockid;
+-	seqcount_t		seq;
++	seqcount_raw_spinlock_t	seq;
+ 	struct hrtimer		*running;
+ 	struct timerqueue_head	active;
+ 	ktime_t			(*get_time)(void);
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index d89da1c7e005..c4038511d5c9 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -135,7 +135,11 @@ static const int hrtimer_clock_to_base_table[MAX_CLOCKS] = {
+  * timer->base->cpu_base
+  */
+ static struct hrtimer_cpu_base migration_cpu_base = {
+-	.clock_base = { { .cpu_base = &migration_cpu_base, }, },
++	.clock_base = { {
++		.cpu_base = &migration_cpu_base,
++		.seq      = SEQCNT_RAW_SPINLOCK_ZERO(migration_cpu_base.seq,
++						     &migration_cpu_base.lock),
++	}, },
+ };
  
- 	f = fdget(args->fd);
- 	if (!f.file) {
+ #define migration_base	migration_cpu_base.clock_base[0]
+@@ -1998,8 +2002,11 @@ int hrtimers_prepare_cpu(unsigned int cpu)
+ 	int i;
+ 
+ 	for (i = 0; i < HRTIMER_MAX_CLOCK_BASES; i++) {
+-		cpu_base->clock_base[i].cpu_base = cpu_base;
+-		timerqueue_init_head(&cpu_base->clock_base[i].active);
++		struct hrtimer_clock_base *clock_b = &cpu_base->clock_base[i];
++
++		clock_b->cpu_base = cpu_base;
++		seqcount_raw_spinlock_init(&clock_b->seq, &cpu_base->lock);
++		timerqueue_init_head(&clock_b->active);
+ 	}
+ 
+ 	cpu_base->cpu = cpu;
 -- 
 2.20.1
 
