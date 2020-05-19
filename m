@@ -2,210 +2,99 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B47C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B52C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68AE9207D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:10:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KAT0G/mh"
+	by mail.kernel.org (Postfix) with ESMTP id 417512075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589865158;
+	bh=qrHKafA0ZTttPnEqF3hkLOvbCl6Fprw9RuG7qytReC8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ly9I0IyDmBoaVeChcu4jB+dfgyB4H2LWKeVtTSMennyQ+PtWfuJ0nXCc9DFFJG9hL
+	 z7737W+DkoZyOuyrbLJ5dWJSiuTMI90FZiWT1DksQxmlvPbaznJQHnXevv7klQHAWl
+	 SVBTq1YOjTJZV/lIGAx0eKFvYwzKAGdbm7PStEgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgESFKB (ORCPT
+        id S1727044AbgESFMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:10:01 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44179 "EHLO ozlabs.org"
+        Tue, 19 May 2020 01:12:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgESFKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:10:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726323AbgESFMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:12:37 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49R3ps4mscz9sTC;
-        Tue, 19 May 2020 15:09:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589864997;
-        bh=NPbDWL278efReNk+B+hfFv0HZoNl443h6DkFc96/Pt0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KAT0G/mhMR8HMRxdLhMu6dFLVeOAmoomShA4vCQVHro5GJHm8B+3Qz2x9jwWxA4Rc
-         iq46I7Mq/rcaEdoD2HSdSecXQogWnuqJ+aVuuszPLXciP/+sfN1mf61HNvr4Ro3adJ
-         /3ZXV4bxo26dzN0gEOYVTcUpX/ni8+54DmzBXn8ef3WkVd42ZERk/Iz5Zz5PQL26Oa
-         KyHi8qXe/7K/hP8ofy+3aeYC0RU3pgvOh6HXow5jAo2vL/0uVXbhcsW1uqghGqg5qj
-         RWpC58gDfZtjegrRb8mh/eYvFIGeeZWAl2c3FzDS8JE5jGSIQIJJNdU6tb3tLTpBDk
-         CgWyTB3Lf0n1g==
-Date:   Tue, 19 May 2020 15:09:55 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>
-Subject: inux-next: build failure after merge of the drm-msm tree
-Message-ID: <20200519150955.1667566a@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Kln4oS5T8VA/o/8ORVebug.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B93020758;
+        Tue, 19 May 2020 05:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589865156;
+        bh=qrHKafA0ZTttPnEqF3hkLOvbCl6Fprw9RuG7qytReC8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nlbIrf8Fy8HDlKACQi91AHg9NqzN0RQ0bvP2OUb2TFrW0wClvkadR8udy9FhxT6j0
+         QUNapjpdTE6IrfWtYzBdLzBnAHKQj3h7a4JlCowDPcDkGEKeDdsS/iNy8dk528O4qg
+         nbm9Y07gMePXo5wP9r4/4P2ShQhKEdTZ2+DDbmOc=
+Date:   Mon, 18 May 2020 22:12:35 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, david@fromorbit.com,
+        hch@infradead.org, willy@infradead.org
+Subject: Re: [PATCH 10/10] mm/migrate.c: call detach_page_private to cleanup
+ code
+Message-Id: <20200518221235.1fa32c38e5766113f78e3f0d@linux-foundation.org>
+In-Reply-To: <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
+References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
+        <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Kln4oS5T8VA/o/8ORVebug.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 17 May 2020 23:47:18 +0200 Guoqing Jiang <guoqing.jiang@cloud.ionos.com> wrote:
 
-Hi all,
+> We can cleanup code a little by call detach_page_private here.
+> 
+> ...
+>
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -804,10 +804,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
+>  	if (rc != MIGRATEPAGE_SUCCESS)
+>  		goto unlock_buffers;
+>  
+> -	ClearPagePrivate(page);
+> -	set_page_private(newpage, page_private(page));
+> -	set_page_private(page, 0);
+> -	put_page(page);
+> +	set_page_private(newpage, detach_page_private(page));
+>  	get_page(newpage);
+>  
+>  	bh = head;
 
-After merging the drm-msm tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+mm/migrate.c: In function '__buffer_migrate_page':
+./include/linux/mm_types.h:243:52: warning: assignment makes integer from pointer without a cast [-Wint-conversion]
+ #define set_page_private(page, v) ((page)->private = (v))
+                                                    ^
+mm/migrate.c:800:2: note: in expansion of macro 'set_page_private'
+  set_page_private(newpage, detach_page_private(page));
+  ^~~~~~~~~~~~~~~~
 
-ERROR: modpost: "__aeabi_ldivmod" [drivers/gpu/drm/msm/msm.ko] undefined!
-ERROR: modpost: "__aeabi_uldivmod" [drivers/gpu/drm/msm/msm.ko] undefined!
+The fact that set_page_private(detach_page_private()) generates a type
+mismatch warning seems deeply wrong, surely.
 
-Caused by commit
+Please let's get the types sorted out - either unsigned long or void *,
+not half-one and half-the other.  Whatever needs the least typecasting
+at callsites, I suggest.
 
-  04d9044f6c57 ("drm/msm/dpu: add support for clk and bw scaling for displa=
-y")
+And can we please implement set_page_private() and page_private() with
+inlined C code?  There is no need for these to be macros.
 
-I applied the following patch for today (this is mechanical, there may
-be a better way):
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 19 May 2020 14:12:39 +1000
-Subject: [PATCH] drm/msm/dpu: fix up u64/u32 division for 32 bit architectu=
-res
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 23 ++++++++++++++-----
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     | 15 ++++++++----
- 2 files changed, 28 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/dr=
-m/msm/disp/dpu1/dpu_core_perf.c
-index 9697abcbec3f..85c2a4190840 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-@@ -10,6 +10,7 @@
- #include <linux/sort.h>
- #include <linux/clk.h>
- #include <linux/bitmap.h>
-+#include <asm/div64.h>
-=20
- #include "dpu_kms.h"
- #include "dpu_trace.h"
-@@ -53,8 +54,11 @@ static u64 _dpu_core_perf_calc_bw(struct dpu_kms *kms,
- 	}
-=20
- 	bw_factor =3D kms->catalog->perf.bw_inefficiency_factor;
--	if (bw_factor)
--		crtc_plane_bw =3D mult_frac(crtc_plane_bw, bw_factor, 100);
-+	if (bw_factor) {
-+		u64 quot =3D crtc_plane_bw;
-+		u32 rem =3D do_div(quot, 100);
-+		crtc_plane_bw =3D (quot * bw_factor) + ((rem * bw_factor) / 100);
-+	}
-=20
- 	return crtc_plane_bw;
- }
-@@ -89,8 +93,11 @@ static u64 _dpu_core_perf_calc_clk(struct dpu_kms *kms,
- 	}
-=20
- 	clk_factor =3D kms->catalog->perf.clk_inefficiency_factor;
--	if (clk_factor)
--		crtc_clk =3D mult_frac(crtc_clk, clk_factor, 100);
-+	if (clk_factor) {
-+		u64 quot =3D crtc_clk;
-+		u32 rem =3D do_div(quot, 100);
-+		crtc_clk =3D (quot * clk_factor) + ((rem * clk_factor) / 100);
-+	}
-=20
- 	return crtc_clk;
- }
-@@ -234,8 +241,12 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_k=
-ms *kms,
- 		}
- 	}
-=20
--	avg_bw =3D kms->num_paths ?
--			perf.bw_ctl / kms->num_paths : 0;
-+	if (kms->num_paths) {
-+		avg_bw =3D perf.bw_ctl;
-+		do_div(avg_bw, kms->num_paths);
-+	} else {
-+		avg_bw =3D 0;
-+	}
-=20
- 	for (i =3D 0; i < kms->num_paths; i++)
- 		icc_set_bw(kms->path[i],
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/ms=
-m/disp/dpu1/dpu_plane.c
-index c2a6e3dacd68..ad95f32eac13 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -9,6 +9,7 @@
-=20
- #include <linux/debugfs.h>
- #include <linux/dma-buf.h>
-+#include <asm/div64.h>
-=20
- #include <drm/drm_atomic_uapi.h>
- #include <drm/drm_damage_helper.h>
-@@ -174,7 +175,11 @@ static void _dpu_plane_calc_bw(struct drm_plane *plane,
- 	plane_prefill_bw =3D
- 		src_width * hw_latency_lines * fps * fmt->bpp * scale_factor;
-=20
--	plane_prefill_bw =3D mult_frac(plane_prefill_bw, mode->vtotal, (vbp+vpw));
-+	{
-+		u64 quot =3D plane_prefill_bw;
-+		u32 rem =3D do_div(plane_prefill_bw, vbp + vpw);
-+		plane_prefill_bw =3D quot * mode->vtotal + rem * mode->vtotal / (vbp + v=
-pw);
-+	}
-=20
- 	pstate->plane_fetch_bw =3D max(plane_bw, plane_prefill_bw);
- }
-@@ -204,9 +209,11 @@ static void _dpu_plane_calc_clk(struct drm_plane *plan=
-e)
- 	pstate->plane_clk =3D
- 		dst_width * mode->vtotal * fps;
-=20
--	if (src_height > dst_height)
--		pstate->plane_clk =3D mult_frac(pstate->plane_clk,
--					src_height, dst_height);
-+	if (src_height > dst_height) {
-+		u64 quot =3D pstate->plane_clk;
-+		u32 rem =3D do_div(quot, dst_height);
-+		pstate->plane_clk =3D quot * src_height + rem * src_height / dst_height;
-+	}
- }
-=20
- /**
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Kln4oS5T8VA/o/8ORVebug.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7DaiMACgkQAVBC80lX
-0Gzi+AgAlDu8Xb4j4U4PuDi4PqfLmOOLXJxk9m6ObqW2ISePVocFLRJ2irj6pRMd
-vxPREGoqNvOZxIBLRxiOXUQtyGGFJ8u5eSm/fLA8ebuAqa7tlZ0kM0f4KTx8E0lD
-XJHQAKKrS93Tp3IS+bZSks3w9EX/4dNOoFJWnb3SIBRuP0+nhJYkWivmGsZ5rOU6
-roU+m7yIXEMK1WU5fArK6eskfFpErvt68d1IpyRmdUu4kAVvVQPlitEEQBttAKEj
-Ons82z0rXwTHehzJDhpQwEJ0NsiWen1QpiQhDsAHYskMLheYagg7vR6y4Lo/fxHQ
-Ap7Mc/v/AbDQzSIQ61nN+GTYatPirQ==
-=3dJO
------END PGP SIGNATURE-----
-
---Sig_/Kln4oS5T8VA/o/8ORVebug.--
