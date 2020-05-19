@@ -2,115 +2,166 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB53BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF07C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973EC20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B642620657
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 15:41:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W0KspSqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgESPkr (ORCPT
+        id S1729277AbgESPlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 11:40:47 -0400
-Received: from 8bytes.org ([81.169.241.247]:44002 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728633AbgESPkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 11:40:47 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 7A101286; Tue, 19 May 2020 17:40:46 +0200 (CEST)
-Date:   Tue, 19 May 2020 17:40:45 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Fixes for Linux v5.7-rc6
-Message-ID: <20200519154039.GA27645@8bytes.org>
+        Tue, 19 May 2020 11:41:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728633AbgESPlr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 11:41:47 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF60C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 08:41:47 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 202so11615002lfe.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 08:41:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0d43uTOdUMjo8+h/D8gql32mRU0y1WLhq8SXyWr0IXc=;
+        b=W0KspSqbJ6Aj72DfmWtAWHU7VMWd90gATZqaAo/4cvA1YpTLHu3x7p4bkzAcjLaecr
+         Ec7eCPkDgEVFv0Wem7uMj2a7aKEUpjEcYdMNfYPKUInU+vAUKoUKWNCA8zrJv7/cJXSm
+         7qddQEmzn2pUKGjmJw/bd9hbWC4M59o0nIuOTMSqZ6mw9Kc0dN2eCoxVULJXA0+ogLK+
+         4BMAw29cH29CrL8OJ3dv0Bzf4vfNQaIW8FjuLgbRGF93vIuRKDQnDeB+o4jHlWUBOF1b
+         s8OqYHkaUCkH5tgFJ2r+iMJ55IMhxjrE3OeuNWJE5ZwQ/4MqJ09mRD16n6OvzqasQev9
+         fPVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0d43uTOdUMjo8+h/D8gql32mRU0y1WLhq8SXyWr0IXc=;
+        b=H8gvCvwhm4ku10g90qNBCPRAWVQlk6k8XSe8hClaTs3RQcOL1usOMqIDQCNP9BW8s3
+         Ucmml9aoDjFaYzRED1Okfy5MZ5x6PiiD98OVXFqFws1XIhIm3KYm/yxVanQ+2lcSBcHy
+         Nn+WDiV79Yfyr6v+10gJXK/ktHQ1w20UguJKzHSUCex286XnakuNzq/sQq1JLxKvVjOs
+         sOL8dgd9dUWR7uy8aiOpNvrO8aNVdH9cy7O80w9vDOmVyBQQKOUkOH5OIkGvMS2ncpeQ
+         uhWf6J3/k90apB8Erm/jpA2/WUThstqg7xR0aZm+bebvj1OPA4tEargwUbtvbIpnSsDF
+         FQsw==
+X-Gm-Message-State: AOAM532V0Hg7ffU5vJGcrhBxxyYBX3AlCRgezDKAvv1H6CCRBfeX0PHc
+        cyMPFb0Rv8LtU8NHlBG16/Wki5CnGTbDawtXFQrHyg==
+X-Google-Smtp-Source: ABdhPJxpqURueWANIDMzW29s7P6vWansVCV4Mh3OJO30N8TKR9yc05pBBYd8/l5q2NntO3MMxGWTiC4sCRcG0bI92Hc=
+X-Received: by 2002:a05:6512:6ca:: with SMTP id u10mr16149796lff.184.1589902905516;
+ Tue, 19 May 2020 08:41:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200506155301.14288-1-vincent.guittot@linaro.org> <c1beb50b-d385-524b-56e0-eae16d3700df@arm.com>
+In-Reply-To: <c1beb50b-d385-524b-56e0-eae16d3700df@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 19 May 2020 17:41:19 +0200
+Message-ID: <CAKfTPtDLceotUW0ni=QhD9Z8cc7NA5Yz2vBJi+NjAVzYztrm+g@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/pelt: sync util/runnable_sum with PELT window
+ when propagating
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 19 May 2020 at 12:28, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> On 06/05/2020 17:53, Vincent Guittot wrote:
+>
+> [...]
+>
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 02f323b85b6d..df3923a65162 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -3441,52 +3441,46 @@ static inline void
+> >  update_tg_cfs_util(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+> >  {
+> >       long delta = gcfs_rq->avg.util_avg - se->avg.util_avg;
+> > +     /*
+> > +      * cfs_rq->avg.period_contrib can be used for both cfs_rq and se.
+> > +      * See ___update_load_avg() for details.
+> > +      */
+> > +     u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
+>
+> Why not doing the assignment (like in update_tg_cfs_load()) after the
+> next condition? Same question for update_tg_cfs_runnable().
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In fact, I expect the compiler to be smart enough to do this at the best place
 
-Hi Linus,
+>
+> [...]
+>
+> >  static inline void
+> >  update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+> >  {
+> >       long delta = gcfs_rq->avg.runnable_avg - se->avg.runnable_avg;
+> > +     /*
+> > +      * cfs_rq->avg.period_contrib can be used for both cfs_rq and se.
+> > +      * See ___update_load_avg() for details.
+> > +      */
+> > +     u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
+>
+> We know have 6 assignments like this in fair.c and 1 in pelt.c. Could
+> this not be refactored by using something like this in pelt.h:
+>
+> +static inline u32 get_divider(struct sched_avg *avg)
 
-The following changes since commit 2ef96a5bb12be62ef75b5828c0aab838ebb29cb8:
+That's a good point
+I would add a pelt in the name like
+static inline u32 get_pelt_divider(struct sched_avg *avg)
 
-  Linux 5.7-rc5 (2020-05-10 15:16:58 -0700)
+> +{
+> +       return LOAD_AVG_MAX - 1024 + avg->period_contrib;
+> +}
+>
+> [...]
+>
+> > diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> > index b647d04d9c8b..1feff80e7e45 100644
+> > --- a/kernel/sched/pelt.c
+> > +++ b/kernel/sched/pelt.c
+> > @@ -237,6 +237,30 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
+> >       return 1;
+> >  }
+> >
+> > +/*
+> > + * When syncing *_avg with *_sum, we must take into account the current
+> > + * position in the PELT segment otherwise the remaining part of the segment
+> > + * will be considered as idle time whereas it's not yet elapsed and this will
+> > + * generate unwanted oscillation in the range [1002..1024[.
+> > + *
+> > + * The max value of *_sum varies with the position in the time segment and is
+> > + * equals to :
+> > + *
+> > + *   LOAD_AVG_MAX*y + sa->period_contrib
+> > + *
+> > + * which can be simplified into:
+> > + *
+> > + *   LOAD_AVG_MAX - 1024 + sa->period_contrib
+> > + *
+> > + * because LOAD_AVG_MAX*y == LOAD_AVG_MAX-1024
+>
+> Isn't this rather '~' instead of '==', even for y^32 = 0.5 ?
+>
+> 47742 * 0.5^(1/32) ~ 47742 - 1024
 
-are available in the Git repository at:
+With integer precision and the runnable_avg_yN_inv array, you've got
+exactly 1024
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.7-rc6
-
-for you to fetch changes up to bd421264ed307dd296eab036851221b225071a32:
-
-  iommu: Fix deferred domain attachment (2020-05-19 15:05:43 +0200)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v5.7-rc6
-
-All related to the AMD IOMMU driver, including:
-
-	- ACPI table parser fix to correctly read the UID of ACPI
-	  devices.
-
-	- ACPI UID device matching fix.
-
-	- Fix deferred device attachment to a domain in kdump kernels
-	  when the IOMMU driver uses the dma-iommu DMA-API
-	  implementation.
-
-----------------------------------------------------------------
-Alexander Monakov (1):
-      iommu/amd: Fix over-read of ACPI UID from IVRS table
-
-Joerg Roedel (1):
-      iommu: Fix deferred domain attachment
-
-Raul E Rangel (1):
-      iommu/amd: Fix get_acpihid_device_id()
-
- drivers/iommu/amd_iommu.c      |  3 ++-
- drivers/iommu/amd_iommu_init.c |  9 +++++----
- drivers/iommu/iommu.c          | 17 +++++++++++------
- 3 files changed, 18 insertions(+), 11 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl7D/fQACgkQK/BELZcB
-GuPR5xAAiPtEmj0wQrMYkn7R6ukRjQiphX+jjjHJgRzQOm3MSpFVJ2YkKUkMJ7fI
-VxrK2BlZO03nHPRJMG1qERl8DZQZ7TMK7BIlcKAbVDTRhYslaXqqp7NT1Ctt3XaF
-AqCe6WRaOz+PJQGSV4lmYgOCX5N5qkpj4NBnVbNxOuAKnr4f6utpOxdG3qYW5Qzf
-mjya7kuKZb5+ppPWoq2r38JXo3xfMbZvyj2MsWqfkrtYdaZsWJm0jdnjshrnX5ma
-xfvP0JGl149wAqlO2EnJmOVkrWuZxHNVvPrJAVv1vyQdE4DEy4A6+WH2hVsJBFUs
-PtTxTvyvQpTlwY4hE/ZeUiwq52CAAzMOaii5xYwZ1+Lb6IX16+fN3pUTBwD4Y8Ia
-zIokGp1M8XcKxYLgVsnRfIWWD2HAmifbZOi/ZZc2BMOR7Skqbvq4s6D+pHYhfuoG
-1VOMsWUImTrvEVv6y0UwfYxhbO5rKCfzUh/6JS53sGnZmbkBAUAh9ynTYg9mFrpz
-wFfP6KG8XtxyQdL6MYes7haq75yS/0UtaEAHWE8oC5CbtPcI2TDhD3dUFEjETp1k
-d/0ZfRZTsOPK4mIvQYqVNRt9FkpAJQ5MlsyxAY5ux9bPyK46reCnJXp3bBAllglj
-KEdcJwN8LHS4UDzjf8rA0X9evdEKeifY6/P47Vih7AZs7vm3YPg=
-=dLUK
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+>
+>
+> Apart from that, LGTM
+>
+> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
