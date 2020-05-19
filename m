@@ -2,260 +2,127 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB77C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B2E2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:30:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uPr2mgJc"
+	by mail.kernel.org (Postfix) with ESMTP id B0C5420709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgESGaG (ORCPT
+        id S1727074AbgESGgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 02:30:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgESGaG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 02:30:06 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AC6C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:30:05 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id 14so13592683qkv.16
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 23:30:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:subject:from:to:cc;
-        bh=4i4qxV9jzWOFxyzaAzTO+rgpHE0hlQwFwvneTDDF6kk=;
-        b=uPr2mgJckyi8jTdbtTshjoDgkaEUxQDGNk4vOmUqCbXX1JpxXt+a8Yp0cU41arItdr
-         tQv8uPlJcaLqtccsQmEPgKHVPoZUcYg4FQIHOBbQSwCIRFRcTweb/SuDgNFg/rrqONY2
-         jmcrHO0lslojOi+zSQthcH4hJiu//PFcLe53qwOCSk8RpDnkBevXTSwpFtqLcH+SdTEL
-         ChQHgfizKhUSzdlYNB59LMArkz2XPb59WrWph95MUzZBFMfT85OCPEa+lUMiuBMwiaof
-         ACP/mG0ZPMQtFVr1pIPLT264aa6nOMp+3xqciI7gc4wdNDkagyusfaOC7iOielYSo5VF
-         kxvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version:subject
-         :from:to:cc;
-        bh=4i4qxV9jzWOFxyzaAzTO+rgpHE0hlQwFwvneTDDF6kk=;
-        b=rgr5nBUFFT9dh3fKUfI57TKGUmcm4cB38W5As3+QaOJg6/Vpe/CDmcaN6RKsaFmEy8
-         TT8uK/fn1hXRhP+6prcy/BpjnQSMqkg9A3NYsLIQVRnkaq++FNPGKRba7cug7b+hONvh
-         NBCEsYO465kHeotpkiE7GcFP0w3pDTZvIFY+MiXg5Cnv/MrQASY8k5y2C1GqO7ZGO70t
-         eKqiK4ReSOUPaJgTt5+NE9+ex+v96tm8jeTJvmHLVM2NNF1Sgk0oEdFRMO35o4sqoYRy
-         AiKkmi4EPvVLn1p/UZ6bR28fuuALwfxUcLv1G1h7ccd4kHsPAnSmCIaxNzOHl5guc6Gg
-         cyNA==
-X-Gm-Message-State: AOAM530781hbVuN08c5nQcXLLpPdZECdA9tQHwbNdYLmeMD6aWVSBrIw
-        cpb2TrQyh93XR0uUg5hUnA0SIod5lz7SAQQ=
-X-Google-Smtp-Source: ABdhPJyxYmRFI4xpzw7BbDsG467bmdxI3nMvfHGNehMyvRsCPd6nyXf4KL2CBP53AW+Wfl/qbFsaFX0rx0Q9sWE=
-X-Received: by 2002:a0c:b501:: with SMTP id d1mr20008437qve.63.1589869804847;
- Mon, 18 May 2020 23:30:04 -0700 (PDT)
-Date:   Mon, 18 May 2020 23:30:00 -0700
-In-Reply-To: <20200518080327.GA3126260@kroah.com>
-Message-Id: <20200519063000.128819-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v3] driver core: Fix SYNC_STATE_ONLY device link implementation
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     stable@vger.kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 19 May 2020 02:36:19 -0400
+Received: from sauhun.de ([88.99.104.3]:50420 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726841AbgESGgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 02:36:18 -0400
+Received: from localhost (p5486ceca.dip0.t-ipconnect.de [84.134.206.202])
+        by pokefinder.org (Postfix) with ESMTPSA id 3FFC22C1FA8;
+        Tue, 19 May 2020 08:36:16 +0200 (CEST)
+Date:   Tue, 19 May 2020 08:36:13 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for v5.8
+Message-ID: <20200519063609.GA2141@ninjato>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
-core: Add device link support for SYNC_STATE_ONLY flag"),
-device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
-device link to the supplier's and consumer's "device link" list.
 
-This causes multiple issues:
-- The device link is lost forever from driver core if the caller
-  didn't keep track of it (caller typically isn't expected to). This is
-  a memory leak.
-- The device link is also never visible to any other code path after
-  device_link_add() returns.
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If we fix the "device link" list handling, that exposes a bunch of
-issues.
+Linus,
 
-1. The device link "status" state management code rightfully doesn't
-handle the case where a DL_FLAG_MANAGED device link exists between a
-supplier and consumer, but the consumer manages to probe successfully
-before the supplier. The addition of DL_FLAG_SYNC_STATE_ONLY links break
-this assumption. This causes device_links_driver_bound() to throw a
-warning when this happens.
+here is the pull request which I missed last week. It contains a set of
+driver and core fixes as well as MAINTAINER updates.
 
-Since DL_FLAG_SYNC_STATE_ONLY device links are mainly used for creating
-proxy device links for child device dependencies and aren't useful once
-the consumer device probes successfully, this patch just deletes
-DL_FLAG_SYNC_STATE_ONLY device links once its consumer device probes.
-This way, we avoid the warning, free up some memory and avoid
-complicating the device links "status" state management code.
+Please pull.
 
-2. Creating a DL_FLAG_STATELESS device link between two devices that
-already have a DL_FLAG_SYNC_STATE_ONLY device link will result in the
-DL_FLAG_STATELESS flag not getting set correctly. This patch also fixes
-this.
+Thanks,
 
-Lastly, this patch also fixes minor whitespace issues.
+   Wolfram
 
-Cc: stable@vger.kernel.org
-Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
-v3:
-- Added this changelog text
-v2:
-- Delete DL_FLAG_SYNC_STATE_ONLY device links on consumer probe
-- Set DL_FLAG_STATELESS correct when added to an existing
-  DL_FLAG_SYNC_STATE_ONLY device link.
-v1:
-- Add device link to list
-- Minor whitespace fixes
 
- drivers/base/core.c | 61 +++++++++++++++++++++++++++++----------------
- 1 file changed, 39 insertions(+), 22 deletions(-)
+The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 84c569726d75..f804e561e0a2 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -363,13 +363,12 @@ struct device_link *device_link_add(struct device *consumer,
- 
- 		if (flags & DL_FLAG_STATELESS) {
- 			kref_get(&link->kref);
-+			link->flags |= DL_FLAG_STATELESS;
- 			if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
--			    !(link->flags & DL_FLAG_STATELESS)) {
--				link->flags |= DL_FLAG_STATELESS;
-+			    !(link->flags & DL_FLAG_STATELESS))
- 				goto reorder;
--			} else {
-+			else
- 				goto out;
--			}
- 		}
- 
- 		/*
-@@ -436,12 +435,16 @@ struct device_link *device_link_add(struct device *consumer,
- 	    flags & DL_FLAG_PM_RUNTIME)
- 		pm_runtime_resume(supplier);
- 
-+	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
-+	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
-+
- 	if (flags & DL_FLAG_SYNC_STATE_ONLY) {
- 		dev_dbg(consumer,
- 			"Linked as a sync state only consumer to %s\n",
- 			dev_name(supplier));
- 		goto out;
- 	}
-+
- reorder:
- 	/*
- 	 * Move the consumer and all of the devices depending on it to the end
-@@ -452,12 +455,9 @@ struct device_link *device_link_add(struct device *consumer,
- 	 */
- 	device_reorder_to_tail(consumer, NULL);
- 
--	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
--	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
--
- 	dev_dbg(consumer, "Linked as a consumer to %s\n", dev_name(supplier));
- 
-- out:
-+out:
- 	device_pm_unlock();
- 	device_links_write_unlock();
- 
-@@ -832,6 +832,13 @@ static void __device_links_supplier_defer_sync(struct device *sup)
- 		list_add_tail(&sup->links.defer_sync, &deferred_sync);
- }
- 
-+static void device_link_drop_managed(struct device_link *link)
-+{
-+	link->flags &= ~DL_FLAG_MANAGED;
-+	WRITE_ONCE(link->status, DL_STATE_NONE);
-+	kref_put(&link->kref, __device_link_del);
-+}
-+
- /**
-  * device_links_driver_bound - Update device links after probing its driver.
-  * @dev: Device to update the links for.
-@@ -845,7 +852,7 @@ static void __device_links_supplier_defer_sync(struct device *sup)
-  */
- void device_links_driver_bound(struct device *dev)
- {
--	struct device_link *link;
-+	struct device_link *link, *ln;
- 	LIST_HEAD(sync_list);
- 
- 	/*
-@@ -885,18 +892,35 @@ void device_links_driver_bound(struct device *dev)
- 	else
- 		__device_links_queue_sync_state(dev, &sync_list);
- 
--	list_for_each_entry(link, &dev->links.suppliers, c_node) {
-+	list_for_each_entry_safe(link, ln, &dev->links.suppliers, c_node) {
-+		struct device *supplier;
-+
- 		if (!(link->flags & DL_FLAG_MANAGED))
- 			continue;
- 
--		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
--		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+		supplier = link->supplier;
-+		if (link->flags & DL_FLAG_SYNC_STATE_ONLY) {
-+			/*
-+			 * When DL_FLAG_SYNC_STATE_ONLY is set, it means no
-+			 * other DL_MANAGED_LINK_FLAGS have been set. So, it's
-+			 * save to drop the managed link completely.
-+			 */
-+			device_link_drop_managed(link);
-+		} else {
-+			WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
-+			WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+		}
- 
-+		/*
-+		 * This needs to be done even for the deleted
-+		 * DL_FLAG_SYNC_STATE_ONLY device link in case it was the last
-+		 * device link that was preventing the supplier from getting a
-+		 * sync_state() call.
-+		 */
- 		if (defer_sync_state_count)
--			__device_links_supplier_defer_sync(link->supplier);
-+			__device_links_supplier_defer_sync(supplier);
- 		else
--			__device_links_queue_sync_state(link->supplier,
--							&sync_list);
-+			__device_links_queue_sync_state(supplier, &sync_list);
- 	}
- 
- 	dev->links.status = DL_DEV_DRIVER_BOUND;
-@@ -906,13 +930,6 @@ void device_links_driver_bound(struct device *dev)
- 	device_links_flush_sync_list(&sync_list, dev);
- }
- 
--static void device_link_drop_managed(struct device_link *link)
--{
--	link->flags &= ~DL_FLAG_MANAGED;
--	WRITE_ONCE(link->status, DL_STATE_NONE);
--	kref_put(&link->kref, __device_link_del);
--}
--
- /**
-  * __device_links_no_driver - Update links of a device without a driver.
-  * @dev: Device without a drvier.
--- 
-2.26.2.761.g0e0b3e54be-goog
+  Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current-fixed
+
+for you to fetch changes up to efa7fb4c6c8e4171fd29a5935a9dc7a28e363278:
+
+  MAINTAINERS: add maintainer for mediatek i2c controller driver (2020-05-15 11:40:54 +0200)
+
+----------------------------------------------------------------
+Alain Volmat (1):
+      i2c: fix missing pm_runtime_put_sync in i2c_device_probe
+
+Atsushi Nemoto (1):
+      i2c: altera: Fix race between xfer_msg and isr thread
+
+Christophe JAILLET (1):
+      i2c: mux: demux-pinctrl: Fix an error handling path in 'i2c_demux_pinctrl_probe()'
+
+Codrin Ciubotariu (1):
+      i2c: at91: Fix pinmux after devm_gpiod_get() for bus recovery
+
+Gustavo A. R. Silva (1):
+      i2c: mux: Replace zero-length array with flexible-array
+
+Qii Wang (1):
+      MAINTAINERS: add maintainer for mediatek i2c controller driver
+
+Wolfram Sang (2):
+      i2c: use my kernel.org address from now on
+      i2c: algo-pca: update contact email
+
+ .mailmap                              |  2 ++
+ MAINTAINERS                           |  9 ++++++++-
+ drivers/i2c/algos/i2c-algo-pca.c      |  2 +-
+ drivers/i2c/busses/i2c-altera.c       | 10 +++++++++-
+ drivers/i2c/busses/i2c-at91-master.c  | 20 +++++++++++++++++---
+ drivers/i2c/i2c-core-base.c           | 24 +++++++++++++++++-------
+ drivers/i2c/i2c-core-of.c             |  2 +-
+ drivers/i2c/muxes/i2c-demux-pinctrl.c |  1 +
+ include/linux/i2c-mux.h               |  2 +-
+ include/linux/i2c.h                   |  2 +-
+ 10 files changed, 58 insertions(+), 16 deletions(-)
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7Dfk8ACgkQFA3kzBSg
+KbbYGw//Q3qxp5Z7IJBeSHbJfiNwwa6YhbrJeUvfvXPlzC4c4yFZvfUIGimWeNt8
+RLCwDfMJDefbcPm65d9iKmwiYJ04rNpC641vdBDXSHeDC5bbSUq6tsDN1uZdGHWp
+MbeKeQNiSuOA1B9UJWkVpUksrHu3srHGPSzfXmf9DaVC31ZvOUQzpcrQvKP1Y/JH
+lAz+YqzKtaw9Ms+znv0sKY/Jr89DxIC+L9rIVnYFQ5ozQCne+PNQ+JjuCaTvaSsf
+vhUbTL1kThSHJC46p9nVDOOTsJw7hVNaOkPgfoc+9F8u3UASI2xLjEdJeQ0FKcMQ
+m1UJSLDJaICtQPzwezLfS/LnjQ4Kfr6VY2kBe6pxtAYiPNdI50gsaR39csgHQFyF
+Ip6B5CeKb+kZ+D0SplG2p7GUW61AQX8lzo/KkBDTSK2MkzyjOzJc9XdIP8KYDCCy
+Bbv+AiSEeuZmSHFEEcaDbT9nwNh6xpCNYh0p1n6vrJKkK2aFSyiEyj93kC8TnOkM
+5IlV9VTAQZHi44UMRpn3fha28Bmch1UO95wJEipw7YwROEnMk74dAFy7guB6pn9r
+7fwZYgFx2wA+Nc4wzWKzuha4bjmgv9cAguF6xOf5XZ2GwRrK1IVkGrMxoeUMY16T
+OTfvFsDWEtJ9lkeKp/uNjmxebOFV1BSUrQtZ6P1Bvljyd3D35ug=
+=E0Rw
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
