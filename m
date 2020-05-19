@@ -2,98 +2,82 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F69C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B021206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 059A720758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589885614;
+	bh=caz831zh9zz+Zj57ygMBoHpx7mNwspS/hNdKjQXpDa4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rpBBOpcomBFYzhaIesB5cb+EYvIMFtDwdz8nZPjQ9SaXavgCIGk3iMrn7CEojvFfA
+	 zW6re/jPJGiBT2EsqoZP6//p82utlr1tSZBrS+fm2XsstXsZtSRfwGvPKEMq94zqvF
+	 nbr3IKsY9deTqpOkKJZwpRDdZXe+2quIZQX3vEds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgESKwK (ORCPT
+        id S1728579AbgESKxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:52:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:58928 "EHLO foss.arm.com"
+        Tue, 19 May 2020 06:53:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgESKwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:52:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D258101E;
-        Tue, 19 May 2020 03:52:09 -0700 (PDT)
-Received: from [10.37.8.206] (unknown [10.37.8.206])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9CFB3F68F;
-        Tue, 19 May 2020 03:52:07 -0700 (PDT)
-Subject: Re: [PATCH V4 09/17] arm64/cpufeature: Add remaining feature bits in
- ID_AA64ISAR0 register
-To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org
-References: <1589881254-10082-1-git-send-email-anshuman.khandual@arm.com>
- <1589881254-10082-10-git-send-email-anshuman.khandual@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <8f22b383-91de-05c4-e133-ff2ff6f55a3a@arm.com>
-Date:   Tue, 19 May 2020 11:56:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1726121AbgESKxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 06:53:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AC7D206D4;
+        Tue, 19 May 2020 10:53:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589885612;
+        bh=caz831zh9zz+Zj57ygMBoHpx7mNwspS/hNdKjQXpDa4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WOGfVmFShUJdf+d1Il5Vw0rbaUx4nHBSCeZktzM4Q+lBY3u9hYvfq5JRtAHRNf3Y7
+         McWpUIiuHwwbCif2U32WG+Yetlv2xZ7rdayR1LSCah1gvlsUa4nApF1p5PX1Je93ko
+         xZlUEbaWb2XaUFNYmnW1cmoT/PoohF6PNmD6vnKE=
+Date:   Tue, 19 May 2020 12:53:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Henri Rosten <henri.rosten@unikie.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, lukas.bulwahn@gmail.com
+Subject: Re: [PATCH 4.4 17/86] phy: micrel: Disable auto negotiation on
+ startup
+Message-ID: <20200519105329.GA120343@kroah.com>
+References: <20200518173450.254571947@linuxfoundation.org>
+ <20200518173453.976038108@linuxfoundation.org>
+ <20200519054510.GA28178@buimax>
 MIME-Version: 1.0
-In-Reply-To: <1589881254-10082-10-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519054510.GA28178@buimax>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/19/2020 10:40 AM, Anshuman Khandual wrote:
-> Enable TLB features bit in ID_AA64ISAR0 register as per ARM DDI 0487F.a
-> specification.
+On Tue, May 19, 2020 at 08:45:12AM +0300, Henri Rosten wrote:
+> On Mon, May 18, 2020 at 07:35:48PM +0200, Greg Kroah-Hartman wrote:
+> > From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> > 
+> > [ Upstream commit 99f81afc139c6edd14d77a91ee91685a414a1c66 ]
 > 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+> I notice 99f81afc139c has been reverted in mainline with commit b43bd72835a5.  
+> The revert commit points out that:
 > 
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->   arch/arm64/include/asm/sysreg.h | 1 +
->   arch/arm64/kernel/cpufeature.c  | 1 +
->   2 files changed, 2 insertions(+)
+> "It was papering over the real problem, which is fixed by commit
+> f555f34fdc58 ("net: phy: fix auto-negotiation stall due to unavailable
+> interrupt")"
+>  
+> Therefore, consider backporting f555f34fdc58 instead of 99f81afc139c.
 > 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index 0a0cbb3add89..ea075cc08c8f 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -601,6 +601,7 @@
->   
->   /* id_aa64isar0 */
->   #define ID_AA64ISAR0_RNDR_SHIFT		60
-> +#define ID_AA64ISAR0_TLB_SHIFT		56
->   #define ID_AA64ISAR0_TS_SHIFT		52
->   #define ID_AA64ISAR0_FHM_SHIFT		48
->   #define ID_AA64ISAR0_DP_SHIFT		44
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 92186c40b817..ed0c400155c9 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -179,6 +179,7 @@ static bool __system_matches_cap(unsigned int n);
->    */
->   static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
->   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_RNDR_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TLB_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TS_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_FHM_SHIFT, 4, 0),
->   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_DP_SHIFT, 4, 0),
-> 
+> Notice if f555f34fdc58 is taken, then I believe 215d08a85b9a should also 
+> be backported.
 
-Heads up, this might conflict with other series which adds support for 
-the TLBI range.
+I'm just going to drop this single patch for now instead, thanks.
 
-As such :
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+greg k-h
