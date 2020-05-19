@@ -2,283 +2,132 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F73B2081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14CA42081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:55:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OlXn2hAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgESNyS (ORCPT
+        id S1729067AbgESNzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:54:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46244 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbgESNyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:54:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A8951AC64;
-        Tue, 19 May 2020 13:54:17 +0000 (UTC)
-Date:   Tue, 19 May 2020 23:53:56 +1000
-From:   Aleksa Sarai <asarai@suse.de>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        containers@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-api@vger.kernel.org
-Subject: Re: seccomp feature development
-Message-ID: <20200519135356.zmqvtzrxd63dgg4z@yavin.dot.cyphar.com>
-References: <202005181120.971232B7B@keescook>
- <20200519070929.55r3xvybjg6nnbsj@yavin.dot.cyphar.com>
- <20200519110128.oot4zzxhivtmk7us@wittgenstein>
- <20200519134244.37bhucyram4n6sjk@yavin.dot.cyphar.com>
+        Tue, 19 May 2020 09:55:10 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15738 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726471AbgESNzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 09:55:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec3e5310002>; Tue, 19 May 2020 06:54:57 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 May 2020 06:55:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 06:55:09 -0700
+Received: from [10.25.75.192] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
+ 2020 13:55:06 +0000
+Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
+ size >4GB
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>,
+        "Alan Mikhak" <alan.mikhak@sifive.com>
+References: <20200513190855.23318-1-vidyas@nvidia.com>
+ <20200513223508.GA352288@bjorn-Precision-5520>
+ <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+Date:   Tue, 19 May 2020 19:25:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4un2g5pztqv57r4x"
-Content-Disposition: inline
-In-Reply-To: <20200519134244.37bhucyram4n6sjk@yavin.dot.cyphar.com>
+In-Reply-To: <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589896497; bh=6vHGEj/TpmJyM9WFsoC2S9lYbY2NhVfAh120Hs1ELGY=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=OlXn2hASmaE4CevgDwu0v1G3RrE5I2TjKYMyOLgP7k68AL8XfgtCoxmGdxdTD9X7F
+         UGx0fDakgUdMFEvTzpx4ut11dAur/i4lA+GqSbhA0xAmvpSqv3baLlFwNPbKYD9Y75
+         1n1rO537E5sIOIXaQB+XdKew0XlFZ0SVA7hF6oXho5PaNTsIg3t9wqhGrUtNYKr9Iq
+         hXbECmVgzsG7tUnjilpxm36mmpP+5z9pnCZUcaS2A0k+lpIR5eblhIlgBLzhTgRaAs
+         zdNmN2x9mOPJgRtJ7aqOBj6pzw7NE7urqDcalef0/PS9lFOD2d+jGdNqeggdMFKwCp
+         ZRjMkKWd3SXbQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---4un2g5pztqv57r4x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On 2020-05-19, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2020-05-19, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> > On Tue, May 19, 2020 at 05:09:29PM +1000, Aleksa Sarai wrote:
-> > > On 2020-05-18, Kees Cook <keescook@chromium.org> wrote:
-> > > > - the sizes of these EA structs are, by design, growable over time.
-> > > >   seccomp and its users need to be handle this in a forward and bac=
-kward
-> > > >   compatible way, similar to the design of the EA syscall interface
-> > > >   itself.
-> > > >=20
-> > > > The growing size of the EA struct will need some API design. For fi=
-lters
-> > > > to operate on the contiguous seccomp_data+EA struct, the filter will
-> > > > need to know how large seccomp_data is (more on this later), and how
-> > > > large the EA struct is. When the filter is written in userspace, it=
- can
-> > > > do the math, point into the expected offsets, and get what it needs=
-=2E For
-> > > > this to work correctly in the kernel, though, the seccomp BPF verif=
-ier
-> > > > needs to know the size of the EA struct as well, so it can correctly
-> > > > perform the offset checking (as it currently does for just the
-> > > > seccomp_data struct size).
-> > > >=20
-> > > > Since there is not really any caller-based "seccomp state" associat=
-ed
-> > > > across seccomp(2) calls, I don't think we can add a new command to =
-tell
-> > > > the kernel "I'm expecting the EA struct size to be $foo bytes", sin=
-ce
-> > > > the kernel doesn't track who "I" is besides just being "current", w=
-hich
-> > > > doesn't take into account the thread lifetime -- if a process launc=
-her
-> > > > knows about one size and the child knows about another, things will=
- get
-> > > > confused. The sizes really are just associated with individual filt=
-ers,
-> > > > based on the syscalls they're examining. So, I have thoughts on pos=
-sible
-> > > > solutions:
-> > > >=20
-> > > > - create a new seccomp command SECCOMP_SET_MODE_FILTER2 which uses =
-the
-> > > >   EA style so we can pass in more than a filter and include also an
-> > > >   array of syscall to size mappings. (I don't like this...)
-> > > > - create a new filter flag, SECCOMP_FILTER_FLAG_EXTENSIBLE, which c=
-hanges
-> > > >   the meaning of the uarg from "filter" to a EA-style structure with
-> > > >   sizes and pointers to the filter and an array of syscall to size
-> > > >   mappings. (I like this slightly better, but I still don't like it=
-=2E)
-> > > > - leverage the EA design and just accept anything <=3D PAGE_SIZE, r=
-ecord
-> > > >   the "max offset" value seen during filter verification, and zero-=
-fill
-> > > >   the EA struct with zeros to that size when constructing the
-> > > >   seccomp_data + EA struct that the filter will examine. Then the s=
-eccomp
-> > > >   filter doesn't care what any of the sizes are, and userspace does=
-n't
-> > > >   care what any of the sizes are. (I like this as it makes the prob=
-lems
-> > > >   to solve contained entirely by the seccomp infrastructure and doe=
-s not
-> > > >   touch user API, but I worry I'm missing some gotcha I haven't
-> > > >   considered.)
-> > >=20
-> > > Okay, so here is my view on this. I think that the third option is
-> > > closest to what I'd like to see. Based on Jann's email, I think we're=
- on
-> > > the same page but I'd just like to elaborate it a bit further:
-> > >=20
-> > > First of all -- ideally, the backward and forward compatibility that =
-EA
-> > > syscalls give us should be reflected with seccomp filters being
-> > > similarly compatible. Otherwise we're going to run into issues where =
-all
-> > > of the hard work with ensuring EA syscalls behave when extended will =
-be
-> > > less valuable if seccomp cannot handle it sufficiently. This means th=
-at
-> > > I would hope that every combination of {old,new} filter/kernel/program
-> > > would work on a best-effort (but fail-safe) basis.
-> > >=20
-> > > In my view, the simplest way (from the kernel side) would be to simply
-> > > do what you outlined in (3) -- make all accesses past usize (and even
-> > > ksize) be zeroed.
-> > >=20
-> > > However in order to make an old filter fail-safe on a new kernel with=
- a
-> > > new program, we'd need a new opcode which basically does
-> > > bpf_check_uarg_tail_zero() after a given offset into the EA struct. T=
-his
-> > > would punt the fail-safe problem to userspace (libseccomp would need =
-to
-> > > generate a check that any unknown-to-the-filter fields are zero). I
-> > > don't think this is a decision we can make in-kernel because it might=
- be
-> > > that the filter doesn't care about the last field in a struct (and th=
-us
-> > > doesn't access it) but we don't know the difference between a field t=
-he
-> > > filter doesn't care about and a field it doesn't know about.
-> > >=20
-> > > Another issue which you haven't mentioned here is how do we deal with
-> > > pointers inside an EA struct. clone3() already has this with set_tid,
-> >=20
-> > It's also passed with a set_tid_size argument so we'd know how large
-> > set_tid is.
->=20
-> Right, of course -- that's a given. See below for the point I was
-> making.
->=20
-> > > and the thread on user_notif seems to be converging towards having the
-> > > user_notif2 struct just contain two pointers to EA structs. We could
-> > > punt on this for now, so long as we leave room for us to deal with th=
-is
-> > > problem in the future. However, I think it would be misguided to enab=
-le
-> > > deep argument inspection on syscalls which have such entries (such as
-> > > clone3) until we've figured out how we want to handle nested pointers=
- --
-> >=20
-> > We can't really punt on this and should figure this out now. I've
-> > pointed to this problem in my other mail as well.
-> > Though I currently fail to see why this should be a huge problem to get
-> > that working as long as each pointer comes with a known size.
->=20
-> It's not a huge problem necessarily, but we would need to figure out how
-> we would represent the "nested pointers" in the flattened version which
-> the seccomp filter will actually offset into. Specifically, my point is
-> that if we imagine that the proposed new seccomp_data API is:
->=20
->   [<seccomp_data>][<EA struct contents>]
->=20
-> then any pointers in the EA struct will just be numerical values when
-> copied. How would write a filter on clone3() that requires the first
-> entry of set_tid to be 34? You couldn't with this simplified setup. And
-> unless I'm mistaken, BPF doesn't have pointer dereferences.
->=20
-> So we need to embed the "nested pointers" somehow in the flattened
-> version of the EA struct. I don't think we can just append them to the
-> main EA struct -- while you might have the length, that'd mean that
-> seccomp would generate an array of zeroes whose length is a
-> user-specified value? And then what about extensible structs that have
-> their size embedded inside them (as you or someone else suggested for
-> seccomp user_notif)? How would the eBPF program know the length of the
-> struct?
->=20
-> Maybe we could have some kind of jump table which the filter could use
-> (and just have there be a jump table for each embedded struct -- so
-> multiple embeddings have their own jump tables). So if we imagine some
-> user-extensible struct like
->=20
-> 	struct open_how {
-> 		u64 flags, mode, resolve;
-> 		struct foo *foo;
-> 		struct bar *bar;
-> 		struct baz *baz;
-> 	};
->=20
-> 	struct foo {
-> 		u64 foo;
-> 	};
->=20
-> 	struct bar {
-> 		u64 bar;
-> 		struct barbaz *barbaz;
-> 	};
->=20
-> 	struct barbaz {
-> 		u64 barbaz;
-> 	};
->=20
-> 	struct baz {
-> 		u64 baz;
-> 	};
+On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
+>> [+cc Alan; please cc authors of relevant commits,
+>> updated Andrew's email address]
+>>
+>> On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
+>>> commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
+>>> 32-bits") enables warning for MEM resources of size >4GB but prefetchable
+>>>   memory resources also come under this category where sizes can go beyond
+>>> 4GB. Avoid logging a warning for prefetchable memory resources.
+>>>
+>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>> ---
+>>>   drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
+>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> index 42fbfe2a1b8f..a29396529ea4 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>                      pp->mem = win->res;
+>>>                      pp->mem->name = "MEM";
+>>>                      mem_size = resource_size(pp->mem);
+>>> -                   if (upper_32_bits(mem_size))
+>>> +                   if (upper_32_bits(mem_size) &&
+>>> +                       !(win->res->flags & IORESOURCE_PREFETCH))
+>>>                              dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+>>>                      pp->mem_size = mem_size;
+>>>                      pp->mem_bus_addr = pp->mem->start - win->offset;
+> 
+> That warning was added for a reason - why should not we log legitimate
+> warnings ? AFAIU having resources larger than 4GB can lead to undefined
+> behaviour given the current ATU programming API.
+Yeah. I'm all for a warning if the size is larger than 4GB in case of
+non-prefetchable window as one of the ATU outbound translation channels 
+is being used, but, we are not employing any ATU outbound translation 
+channel for prefetchable window and they can be greater than 4GB in size 
+for all right reasons. So, logging a warning for prefetchable region 
+doesn't seem correct to me. Please let me know if my understanding is wrong.
 
-Sorry, I omitted all of the _size fields for extensibility. Just imagine
-I added them (or that the u64s represent the size).
-
-> Then we would lay out the seccomp_data as:
->=20
-> 	[<seccomp data>][<jump table><open_how>]
-> 		[<jump table><open_how->foo>]
-> 		[<jump table><open_how->bar>]
-> 			[<jump table><open_how->bar->barbaz>]
-> 		[<jump table><open_how->baz>]
->=20
-> The jump table could be as simple as a list of tuples (relative offset
-> of field in this struct from end of jump table, relative offset of the
-> copied structure at the end of the jump table). However, it's not
-> possible to do for-loops in cBPF -- so maybe we'd need to represent the
-> jump table differently (perhaps having it just be the same size as the
-> struct).
->=20
-> The above is just a rough sketch, maybe there's a much simpler solution
-> I'm not seeing.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---4un2g5pztqv57r4x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl7D5O8ACgkQnhiqJn3b
-jbTv1xAAiUXQWimkrqn9Uz+HOtUS6/JFAwWLX+JIW7IKAcN8E/C5J79WvtCIXASx
-2ALN7a/V6LJt+IExYu3OC10031Qd41HVheLFCnqEXAbysl6xIL7C7y9IhkvjnSb7
-FDVG9DUxM9JG7RTuTDZCQAPsIq7wzhfNgJxvFZ3wb0udW0xAMC1ww7qzXO8UntgH
-nH001QvvhNqxl36r7Zh3ObD4PtUQCpuFNTMQIidQWoYjWvfzywosIzfWaXk8dOXt
-hVpRx8h4Vx4UEFjmzw5Rs5Ev1mNLGdVGRiSZY+SqhsqdUTobxkfuPKSF80/59CvE
-BlrKZs6ELpV0KX2vZsbgUcuabDjxKBD9429uo7ffRVu0bodgliVyBVY71HfRCDSZ
-tu394dbVVPvWtstVRoFNxHKffkZRF0n1SHMoVQwms8D+UV+arsDwipE8ba+Ivpxl
-PQ5mpbSqJWt8nhxw4yMmogzGy/dPduRw0+0OlkJkIPazj6HS1JvZs6/sJM81U+uO
-e6RncHOtAvF1pbwZ/6TX+47WC9Wvx7FAJvOxZ5g/0ossmZn4rJvZhMkMglTxozaW
-bvnhdLIhMK4rbq0xe7QD+o2tFemeoRNSzdJc8f+pXkBJy01DfnIhlTzBufaGbZui
-RoJy+URf1EOHBt4h+471ixCVaWH4cCojZE5kVjLgJhgJWDwiAeg=
-=vfZP
------END PGP SIGNATURE-----
-
---4un2g5pztqv57r4x--
+- Vidya Sagar
+> 
+> Alan ? I want to understand what's the best course of action before
+> merging these patches.
+> 
+> Lorenzo
+> 
