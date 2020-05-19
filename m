@@ -3,60 +3,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32181C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE96C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5752075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7556D207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k5wm3j0Z"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="diMqmdWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgESS12 (ORCPT
+        id S1729469AbgESS15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:27:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37528 "EHLO
+        Tue, 19 May 2020 14:27:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbgESS12 (ORCPT
+        with ESMTP id S1727033AbgESS1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:27:28 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4467C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:27 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id n15so309335pfd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:27 -0700 (PDT)
+        Tue, 19 May 2020 14:27:54 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E9DC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:54 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d3so246366pln.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:27:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=X+EjBfM39k69WBHN4/ekIWimO/d9vuhDt/Vo5vtGtAE=;
-        b=k5wm3j0ZFUD/z29kzyzWM3Ts6RzjmHfYKcvUqUD9IACZssyAf8JKWmEbFUkn1OrPKf
-         pmVYFVlyr+dS+hfCae3pARec9ZCRZUODOa9jm2cfESVBmVjP7xV6lP6DmtlCnPUWY0PB
-         JgYQESHA/aXh2EEkWDGlvcKEmdovXGAJygOBA=
+        bh=nYhYvn46e/4SmfmVVbZOq3r5oEKfrjVdnN/U9wz4NtY=;
+        b=diMqmdWQ0qSMkp9euf6IGqcO8VzRvq0vOJY26a1wQ5Q8T/huOrpQE0gd6Ko7mlQmCM
+         RYUjZqut0yYI6BG9dGiYopn7GCLIpO4F540x9+dcHcfT4ZhgrSPNJ2FyiIX9KBoAii2Y
+         chvdiDdXI9/bVqduNh/8dHrLs1iQVkGJhhmbU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=X+EjBfM39k69WBHN4/ekIWimO/d9vuhDt/Vo5vtGtAE=;
-        b=GAamdKrnK1b/pmApLaWo7myi2wwjAjuzK1iSzTCCI9cYNOQViON6gTcPBkSYW5fv0M
-         tihBzKrd8AWERtpAO3BK0GmHkNgyeAP56RR5QhtM5/MHyFgOhIGDGMTp6Qn+jY4ZEEj+
-         R13mg5BAaSqXmlgbRXXvvMa/KK1LG5sR2IKzenahvzVJMjj7XaHKeWqmKeaCac2zGQFF
-         tUbmYQ0a0dv/Co4clVFLlnXfaO8eDhEFShQyKYj7r2H5ew1BoWRQhxxcpMs07aXXKLq+
-         MSGRBCS2TLu2CB1HRy5mHYUXjDjG4Qd0HNTgLDf82rrxgVE3HD8Wfmw/6JTv31iTk8e5
-         Slvg==
-X-Gm-Message-State: AOAM532cYmSjDkFyziRmAAqnXXvH59KhIZFAZkjGDx74hqQjCPiOSGGZ
-        hZEJWjJWn68S1JEvEk5QpXfqWw==
-X-Google-Smtp-Source: ABdhPJxLV+9+iUF7RnugjFhTaU3WzPCcGgGLXrt1uU4iwA1cLBlFFTFDMUPFBE84tI2+OdJIcTyc+w==
-X-Received: by 2002:a62:76cc:: with SMTP id r195mr401180pfc.116.1589912847368;
-        Tue, 19 May 2020 11:27:27 -0700 (PDT)
+        bh=nYhYvn46e/4SmfmVVbZOq3r5oEKfrjVdnN/U9wz4NtY=;
+        b=fr8Im0GPwiw0D6Pt4Sg1QSqhT8UvMLQYjK4bzvUryK/s68YMyvKDQVJ3fzIDD7JzQJ
+         ZvjkWv0heAjEGeymc5pdy0mUT6w3Y4/sYvvOjnDfThMJTtycZHFHW4jwki2AHl/jGuyY
+         RRFVBWfIOhJvF0Pp95zztiemzvXX3ER/Fnbopxw/xOCHwZJbLLkveZ0YWOe3wFJuViRw
+         HYUxqrOAWhLu5kqGfLsiozG/Jp3FgQ17MaccEEMstbuRBnsAr8ecB/1NbQoTXjDmrGT+
+         M2JMk8pljQhsXYb5PKlISJIJEh1+w4sMQwLvSm6wadaiCIOdpX8YTmqEpl4jMv++PNuo
+         wBRA==
+X-Gm-Message-State: AOAM531clHnIMkSgjtm3CF/OMiLWoF1Uf5Sytx844KJgW34lRl4dthXn
+        FaJ29u2Bg+PEYPKkFcBMLfr50A==
+X-Google-Smtp-Source: ABdhPJwaMTz8VrJTiETmULOC2bj+5LoutuSFETDCsFxyIxYRNBzPP4NYcHiEs4ivLHsqq7MQflRUMw==
+X-Received: by 2002:a17:90a:8b84:: with SMTP id z4mr954246pjn.86.1589912873632;
+        Tue, 19 May 2020 11:27:53 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l3sm217492pju.38.2020.05.19.11.27.26
+        by smtp.gmail.com with ESMTPSA id a27sm146456pgn.62.2020.05.19.11.27.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:27:26 -0700 (PDT)
-Date:   Tue, 19 May 2020 11:27:25 -0700
+        Tue, 19 May 2020 11:27:52 -0700 (PDT)
+Date:   Tue, 19 May 2020 11:27:51 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Eric W. Biederman" <ebiederm@xmission.com>
 Cc:     linux-kernel@vger.kernel.org,
@@ -73,62 +73,32 @@ Cc:     linux-kernel@vger.kernel.org,
         James Morris <jmorris@namei.org>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 4/8] exec: Allow load_misc_binary to call
- prepare_binfmt unconditionally
-Message-ID: <202005191122.0A1FD07@keescook>
+Subject: Re: [PATCH v2 5/8] exec: Move the call of prepare_binprm into
+ search_binary_handler
+Message-ID: <202005191127.E9F66F9E88@keescook>
 References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
  <87sgga6ze4.fsf@x220.int.ebiederm.org>
  <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
  <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87imgszrwo.fsf_-_@x220.int.ebiederm.org>
+ <87d070zrvx.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87imgszrwo.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87d070zrvx.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 07:31:51PM -0500, Eric W. Biederman wrote:
+On Mon, May 18, 2020 at 07:32:18PM -0500, Eric W. Biederman wrote:
 > 
-> Add a flag preserve_creds that binfmt_misc can set to prevent
-> credentials from being updated.  This allows binfmt_misc to always
-> call prepare_binfmt.  Allowing the credential computation logic to be
-
-typo: prepare_binprm()
-
-> consolidated.
+> The code in prepare_binary_handler needs to be run every time
+> search_binary_handler is called so move the call into search_binary_handler
+> itself to make the code simpler and easier to understand.
 > 
-> Not replacing the credentials with the interpreters credentials is
-> safe because because an open file descriptor to the executable is
-> passed to the interpreter.   As the interpreter does not need to
-> reopen the executable it is guaranteed to see the same file that
-> exec sees.
-
-Yup, looks good. Note below on comment.
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-
-> [...]
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index 8605ab4a0f89..dbb5614d62a2 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -26,6 +26,8 @@ struct linux_binprm {
->  	unsigned long p; /* current top of mem */
->  	unsigned long argmin; /* rlimit marker for copy_strings() */
->  	unsigned int
-> +		/* It is safe to use the creds of a script (see binfmt_misc) */
-> +		preserve_creds:1,
-
-How about:
-
-		/*
-		 * A binfmt handler will set this to True before calling
-		 * prepare_binprm() if it is safe to reuse the previous
-		 * credentials, based on bprm->file (see binfmt_misc).
-		 */
 
 -- 
 Kees Cook
