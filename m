@@ -2,109 +2,91 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB05C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA3920708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589909864;
-	bh=7v9GoaJsODCxz6ZmftPOhFf1bOkxR2l3wooZAzierb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZwZKPe9u5uRPL/PIa6PZLRqOGy2rK11aUe+2nm7c/Z38O/Cxu5nZiJWaRJJ02mvlW
-	 PO5c+DhfzUhurAaISpYVkV1vHICo+AWaLVHYaQpL05uRcSbZDJQ93OUmnqJpuB4K7O
-	 WJpGtVCXyd9xzz4JCWZEa36ozao+YyirtZfOz3u8=
+	by mail.kernel.org (Postfix) with ESMTP id 9D21720708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:39:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eCnCl8ej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgESRhn (ORCPT
+        id S1729350AbgESRjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:37:43 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34023 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbgESRhm (ORCPT
+        Tue, 19 May 2020 13:39:04 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16978 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESRjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:37:42 -0400
-Received: by mail-io1-f66.google.com with SMTP id f3so63923ioj.1;
-        Tue, 19 May 2020 10:37:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PzvrAlMTo3QjrszDPhpWXPfC5/eKge0TGeIBkPLaXP8=;
-        b=lS+r7O+E0qg0Rd3qnBsa4U7/i54p2SRYNbjcSMPSRSU4iu4VRYvrxt3YLSabBbK+WQ
-         TD77uec8RYyL7P0C5mFRt1aszleCQE1vioTJ3J0Y7Yt4+LGoSiU7XhXqAbXn0mMxjr+J
-         zjrvGDnki5bAmpwSMAJBpCEU1vL5dEp95yqR3fslRPtSQ/Ru+LQjh0fsaR6She0vHIwN
-         jMj74Q9pWjmaIpbDDbRKMOD+V8fRSZ4ffsHs6lLrcdZQjXnXb3iN4xFIlpGPRHBLn28p
-         oessbRjPnok+glSnqvpVMrNijoE5MXsUrZsp1qKc5hy85BDObxwCfVPmIkQkgH51beO+
-         /ATQ==
-X-Gm-Message-State: AOAM532H0siypnrnq7HvnkBON8VIzpWUuR9AcsGDdaGoV6NeKHnf+rwd
-        Hl1KD9GhL6dgDdzc60uRKg==
-X-Google-Smtp-Source: ABdhPJz58zqeZlv/dD+ROsNtuxzjCBnL3izOh+epsxfI28X04sumVUJ16GKDoaGt4Y3OAF9rK9Gkog==
-X-Received: by 2002:a02:a1c8:: with SMTP id o8mr841870jah.38.1589909860215;
-        Tue, 19 May 2020 10:37:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b1sm111766ioe.46.2020.05.19.10.37.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 10:37:39 -0700 (PDT)
-Received: (nullmailer pid 342793 invoked by uid 1000);
-        Tue, 19 May 2020 17:37:38 -0000
-Date:   Tue, 19 May 2020 11:37:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
- to yaml
-Message-ID: <20200519173738.GA342367@bogus>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
- <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+        Tue, 19 May 2020 13:39:03 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec419280003>; Tue, 19 May 2020 10:36:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 May 2020 10:39:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 May 2020 10:39:03 -0700
+Received: from [10.2.55.90] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May
+ 2020 17:39:03 +0000
+Subject: Re: [PATCH] fpga: dfl: afu: convert get_user_pages() -->
+ pin_user_pages()
+To:     Xu Yilun <yilun.xu@intel.com>
+CC:     LKML <linux-kernel@vger.kernel.org>, Wu Hao <hao.wu@intel.com>,
+        Moritz Fischer <mdf@kernel.org>, <linux-fpga@vger.kernel.org>
+References: <20200517011837.382189-1-jhubbard@nvidia.com>
+ <20200519151037.GA20726@yilunxu-OptiPlex-7050>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <2e9e6c4e-296d-b0cd-88ce-1b300b9e2e0f@nvidia.com>
+Date:   Tue, 19 May 2020 10:39:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+In-Reply-To: <20200519151037.GA20726@yilunxu-OptiPlex-7050>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589909800; bh=xaoEgoCHnVQjnzVlZcdR0OFGUhzt1FfKdnkkdl3fyII=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=eCnCl8ej/a+dubGQt/M1eDAXqkCPp41qd7x0+oSo1SeUyUfm46JGguGD4T0w4re4q
+         ni5mQ8j0NKgUx9RydyNxzpFZuwJ+o3QNwG9Y7NELTtEcW/4N+SA+ZMySmg8Spb3Ixi
+         W4vlzLPO+qELePyHUMrUu6lXY7NR9t1ZbRrXqbfATRuektif7yc/aqFyJfUeJ0LvPT
+         LvM48tb4S+azJg9NMji7BVODQmFin2lYqva0ekD83OzOetCp5O4uzbLxMiVmyOiie5
+         8LWsnPWR4/WVLpX0STfZfg0klXdtsj6BWTeYm5p7nsICvcj0cygju6NZiKdYudAsv3
+         KDVaHU5VJEHmQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 09:50:57 +0200, Jonathan Albrieux wrote:
-> Converts documentation from txt format to yaml
+On 2020-05-19 08:10, Xu Yilun wrote:
+...
+>> @@ -72,7 +63,7 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+>>   	return 0;
+>>   
+>>   put_pages:
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
->  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 --------
->  .../devicetree/bindings/iio/imu/bmi160.yaml   | 84 +++++++++++++++++++
->  2 files changed, 84 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> How about we also change the tag to "unpin_pages"?
+> 
+> Others look good to me.
 > 
 
+Sure, I'll send a v2 with that.
 
-My bot found errors running 'make dt_binding_check' on your patch:
 
-Error: Documentation/devicetree/bindings/iio/imu/bmi160.example.dts:37.1-2 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/iio/imu/bmi160.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/iio/imu/bmi160.example.dt.yaml] Error 1
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1293085
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+thanks,
+-- 
+John Hubbard
+NVIDIA
