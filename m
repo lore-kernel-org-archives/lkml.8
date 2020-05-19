@@ -2,111 +2,95 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7443C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1000C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEBF0207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589867310;
-	bh=KAvlWsPDVRKpaNEURqp3QWPIzLEiQeR7GyhlgXrBnkA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kARe2xcke8kjRvCnh5zWfA1fa0AgDCIFoDGZ7UoDzkr4CEmDLnagJvJJ9kX/a8B2W
-	 QdTyrXT2nAp2J4fyMZLb0Bl2H5Pn/FWpjUjtSw9kDfEa+7BKvmD5n4f6lwCykVRw7z
-	 XTuq7oIUt+GXuiWFgNpBLOkvJl135+aXU09pyB3U=
+	by mail.kernel.org (Postfix) with ESMTP id A8BB020708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgESFsa (ORCPT
+        id S1728332AbgESFss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48540 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 01:48:48 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:6870 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbgESFsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:48:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08FD220708;
-        Tue, 19 May 2020 05:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589867309;
-        bh=KAvlWsPDVRKpaNEURqp3QWPIzLEiQeR7GyhlgXrBnkA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KZ4ayL8lkTfkZsD2JHfGMp0ngBkhhG1ALJ1l1zRtU4nQlGvqo8TKWNtZFpR043r/Z
-         x/OHdLYU/iVctTFc+OuEPZu1L3LRtGxdR/A2eGri7m2Zpsr9bGnlAusIINtiImZ1rW
-         NNtr7sopwxpoNzI8bQUE6DrTDWhA2QIXN5sGmkFw=
-Date:   Tue, 19 May 2020 07:48:27 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, stable@vger.kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] driver core: Fix SYNC_STATE_ONLY device link
- implementation
-Message-ID: <20200519054827.GA3826326@kroah.com>
-References: <20200518080327.GA3126260@kroah.com>
- <20200519030025.99054-1-saravanak@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519030025.99054-1-saravanak@google.com>
+        id S1727074AbgESFsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:48:47 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49R4gb1TM2z9txm0;
+        Tue, 19 May 2020 07:48:43 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 63XlcneLXsR3; Tue, 19 May 2020 07:48:43 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4gZ72BRz9txlx;
+        Tue, 19 May 2020 07:48:42 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0ABFE8B7A7;
+        Tue, 19 May 2020 07:48:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 48w6HbIsE106; Tue, 19 May 2020 07:48:43 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8C3258B767;
+        Tue, 19 May 2020 07:48:43 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 6AD6C65A4A; Tue, 19 May 2020 05:48:43 +0000 (UTC)
+Message-Id: <7cb8ca82042bfc45a5cfe726c921cd7e7eeb12a3.1589866984.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1589866984.git.christophe.leroy@csgroup.eu>
+References: <cover.1589866984.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v4 01/45] powerpc/kasan: Fix error detection on memory
+ allocation
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 19 May 2020 05:48:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 08:00:25PM -0700, Saravana Kannan wrote:
-> When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
-> core: Add device link support for SYNC_STATE_ONLY flag"),
-> device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
-> device link to the supplier's and consumer's "device link" list.
-> 
-> This causes multiple issues:
-> - The device link is lost forever from driver core if the caller
->   didn't keep track of it (caller typically isn't expected to). This is
->   a memory leak.
-> - The device link is also never visible to any other code path after
->   device_link_add() returns.
-> 
-> If we fix the "device link" list handling, that exposes a bunch of
-> issues.
-> 
-> 1. The device link "status" state management code rightfully doesn't
-> handle the case where a DL_FLAG_MANAGED device link exists between a
-> supplier and consumer, but the consumer manages to probe successfully
-> before the supplier. The addition of DL_FLAG_SYNC_STATE_ONLY links break
-> this assumption. This causes device_links_driver_bound() to throw a
-> warning when this happens.
-> 
-> Since DL_FLAG_SYNC_STATE_ONLY device links are mainly used for creating
-> proxy device links for child device dependencies and aren't useful once
-> the consumer device probes successfully, this patch just deletes
-> DL_FLAG_SYNC_STATE_ONLY device links once its consumer device probes.
-> This way, we avoid the warning, free up some memory and avoid
-> complicating the device links "status" state management code.
-> 
-> 2. Creating a DL_FLAG_STATELESS device link between two devices that
-> already have a DL_FLAG_SYNC_STATE_ONLY device link will result in the
-> DL_FLAG_STATELESS flag not getting set correctly. This patch also fixes
-> this.
-> 
-> Lastly, this patch also fixes minor whitespace issues.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/base/core.c | 61 +++++++++++++++++++++++++++++----------------
->  1 file changed, 39 insertions(+), 22 deletions(-)
+In case (k_start & PAGE_MASK) doesn't equal (kstart), 'va' will never be
+NULL allthough 'block' is NULL
 
-If this is v2, what changed from v1?
+Check the return of memblock_alloc() directly instead of
+the resulting address in the loop.
 
-That always goes below the --- line, you know this :)
+Fixes: 509cd3f2b473 ("powerpc/32: Simplify KASAN init")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/mm/kasan/kasan_init_32.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-v3 please?
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index cbcad369fcb2..8b15fe09b967 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -76,15 +76,14 @@ static int __init kasan_init_region(void *start, size_t size)
+ 		return ret;
+ 
+ 	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
++	if (!block)
++		return -ENOMEM;
+ 
+ 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
+ 		pmd_t *pmd = pmd_ptr_k(k_cur);
+ 		void *va = block + k_cur - k_start;
+ 		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
+ 
+-		if (!va)
+-			return -ENOMEM;
+-
+ 		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
+ 	}
+ 	flush_tlb_kernel_range(k_start, k_end);
+-- 
+2.25.0
 
-thanks,
-
-greg k-h
