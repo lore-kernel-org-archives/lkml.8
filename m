@@ -2,213 +2,118 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97040C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7284A2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:41:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ECzgFQEq"
+	by mail.kernel.org (Postfix) with ESMTP id 657E32072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgESUlo (ORCPT
+        id S1727122AbgESUls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgESUln (ORCPT
+        Tue, 19 May 2020 16:41:48 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:59274 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgESUlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:41:43 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9D52C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:41:43 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d3so379000pln.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:41:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=V6sKSE6C44cvXyb/g2V2AN4nvx5Jqz0pLmmsYUuA158=;
-        b=ECzgFQEqswMLnmgp4t2ImvrB0dMEkJX/CNCleRbBsYPzmIJ5T/IZxdh5bAvlfhT+A/
-         Ckyr1ua1yrzLCyr+YS6epqK80CBF5y7Trad7gcNuH3q/DjRGYVjXfe0rQTxxK8zMHHP7
-         /7C9H+0PuK+Yaum38tF9eC5pnhFCTuSbnYo46fvk5iVLYZbKcJoQOQDHgDpewnhM8+hR
-         1hB1nFtIQQYW2SdORmhoIq2aEVGDvPDmNo3uCyR1c+2kwZPTs5x67/0XtAWqdM/yZzSx
-         FTU2LBhVKLPWa2BaPTE/MRrRJYYo5UwGugMwpd8y8AsLVRgTWoO7rP4I1A4mIdxfmq1r
-         j/WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=V6sKSE6C44cvXyb/g2V2AN4nvx5Jqz0pLmmsYUuA158=;
-        b=dyVeYOtFxSvRa0wa3yxc3hqyiQkr2dqx7Waz7rLNgx6rTuLWnvkikk3oeg6kwbEJyQ
-         LgxUrUDAR5BMfz4YRM3zINi5YTteURTuSjtkQ5YqAhGTd6au5mL12Z+nGp+Ge6wLEz9d
-         mZSEQj52WNkNqcihkpbIf0NzR7DrHk/Ibhi+R8YnFmXvvBZjuoGcgSkIeS+sCJ6NTfMt
-         wHnL+3dEWCkVMaKxTdjHYfsvGALKKjNl3jezSTKLU/vFibHOS15wOSbBcMiUhatWuSdH
-         X6mc/Ng+LWNK9wTF5KXOGp8DBYz1tB+9AEB1ZoMFM62myuEf3aumJ5PjUCAD9P+wB1YF
-         HscA==
-X-Gm-Message-State: AOAM5339BBrUt9PVxdaqm2hO0YrszTKiOGmEy3wFS80Np9kotaqUyn65
-        euNXERM5lamw5R5IMdlq4uOL4Q==
-X-Google-Smtp-Source: ABdhPJx3WLU3KCmYxZ2FekGD/+RxK1YmHHMukDs1jdvhz4tqMxuP/miIxCvfyqUEeW8AE+HnlnqEow==
-X-Received: by 2002:a17:90a:141:: with SMTP id z1mr1382039pje.33.1589920903190;
-        Tue, 19 May 2020 13:41:43 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id t21sm276915pgu.39.2020.05.19.13.41.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 13:41:42 -0700 (PDT)
-Date:   Tue, 19 May 2020 13:40:21 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-remoteproc@vger.kernel.org, ohad@wizery.com,
-        linux-kernel@vger.kernel.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, sidgup@codeaurora.org
-Subject: Re: [PATCH v3 2/2] remoteproc: qcom: Add notification types to SSR
-Message-ID: <20200519204021.GD408178@builder.lan>
-References: <1588112169-29447-1-git-send-email-rishabhb@codeaurora.org>
- <1588112169-29447-3-git-send-email-rishabhb@codeaurora.org>
+        Tue, 19 May 2020 16:41:47 -0400
+Date:   Tue, 19 May 2020 16:41:44 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Jack Schmidt <jack.schmidt@uky.edu>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: clock_gettime64 vdso bug on 32-bit arm, rpi-4
+Message-ID: <20200519204143.GG1079@brightrain.aerifal.cx>
+References: <CAK8P3a2Tw2w73ZkK-W6AA9veMK4-miLUx-TL1EuOdP7EdW-AmQ@mail.gmail.com>
+ <0c2abcd1-7da8-2559-1e93-4c3bdd38dec1@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588112169-29447-3-git-send-email-rishabhb@codeaurora.org>
+In-Reply-To: <0c2abcd1-7da8-2559-1e93-4c3bdd38dec1@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28 Apr 15:16 PDT 2020, Rishabh Bhatnagar wrote:
-
-> From: Siddharth Gupta <sidgup@codeaurora.org>
+On Tue, May 19, 2020 at 05:24:18PM -0300, Adhemerval Zanella wrote:
 > 
-> The SSR subdevice only adds callback for the unprepare event. Add callbacks
-> for unprepare, start and prepare events. The client driver for a particular
-> remoteproc might be interested in knowing the status of the remoteproc
-> while undergoing SSR, not just when the remoteproc has finished shutting
-> down.
 > 
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
->  drivers/remoteproc/qcom_common.c      | 46 +++++++++++++++++++++++++++++++++--
->  include/linux/remoteproc/qcom_rproc.h | 14 +++++++++++
->  2 files changed, 58 insertions(+), 2 deletions(-)
+> On 19/05/2020 16:54, Arnd Bergmann wrote:
+> > Jack Schmidt reported a bug for the arm32 clock_gettimeofday64 vdso call last
+> > month: https://github.com/richfelker/musl-cross-make/issues/96 and
+> > https://github.com/raspberrypi/linux/issues/3579
+> > 
+> > As Will Deacon pointed out, this was never reported on the mailing list,
+> > so I'll try to summarize what we know, so this can hopefully be resolved soon.
+> > 
+> > - This happened reproducibly on Linux-5.6 on a 32-bit Raspberry Pi patched
+> >    kernel running on a 64-bit Raspberry Pi 4b (bcm2711) when calling
+> >    clock_gettime64(CLOCK_REALTIME)
 > 
-> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-> index 7cd17be..0d91cf3 100644
-> --- a/drivers/remoteproc/qcom_common.c
-> +++ b/drivers/remoteproc/qcom_common.c
-> @@ -197,7 +197,7 @@ struct rproc_notif_info *find_notif_info(const char *name)
->   *
->   * This registers the @nb notifier block as part the notifier chain for a
->   * remoteproc associated with @name. The notifier block's callback
-> - * will be invoked when the particular remote processor is stopped.
-> + * will be invoked when the particular remote processor is started/stopped.
->   */
->  void *qcom_register_ssr_notifier(const char *name, struct notifier_block *nb)
->  {
-> @@ -239,6 +239,44 @@ int qcom_unregister_ssr_notifier(void *notify, struct notifier_block *nb)
->  }
->  EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
->  
-> +static int ssr_notify_prepare(struct rproc_subdev *subdev)
-> +{
-> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> +	struct rproc_notif_data data = {
-> +		.name = ssr->info->name,
-> +		.crashed = false,
-> +	};
-> +
-> +	srcu_notifier_call_chain(&ssr->info->notifier_list,
-> +				 RPROC_BEFORE_POWERUP, &data);
-> +	return 0;
-> +}
-> +
-> +static int ssr_notify_start(struct rproc_subdev *subdev)
-> +{
-> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> +	struct rproc_notif_data data = {
-> +		.name = ssr->info->name,
-> +		.crashed = false,
-> +	};
-> +
-> +	srcu_notifier_call_chain(&ssr->info->notifier_list,
-> +				 RPROC_AFTER_POWERUP, &data);
-> +	return 0;
-> +}
-> +
-> +static void ssr_notify_stop(struct rproc_subdev *subdev, bool crashed)
-> +{
-> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> +	struct rproc_notif_data data = {
-> +		.name = ssr->info->name,
-> +		.crashed = crashed,
-> +	};
-> +
-> +	srcu_notifier_call_chain(&ssr->info->notifier_list,
-> +				 RPROC_BEFORE_SHUTDOWN, &data);
-> +}
-> +
->  static void ssr_notify_unprepare(struct rproc_subdev *subdev)
->  {
->  	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> @@ -247,7 +285,8 @@ static void ssr_notify_unprepare(struct rproc_subdev *subdev)
->  		.crashed = false,
->  	};
->  
-> -	srcu_notifier_call_chain(&ssr->info->notifier_list, 0, &data);
-> +	srcu_notifier_call_chain(&ssr->info->notifier_list,
-> +				 RPROC_AFTER_SHUTDOWN, &data);
->  }
->  
->  
-> @@ -282,6 +321,9 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
->  	}
->  	mutex_unlock(&rproc_notif_lock);
->  	ssr->info = info;
-> +	ssr->subdev.prepare = ssr_notify_prepare;
-> +	ssr->subdev.start = ssr_notify_start;
-> +	ssr->subdev.stop = ssr_notify_stop;
->  	ssr->subdev.unprepare = ssr_notify_unprepare;
->  
->  	rproc_add_subdev(rproc, &ssr->subdev);
-> diff --git a/include/linux/remoteproc/qcom_rproc.h b/include/linux/remoteproc/qcom_rproc.h
-> index 3dc65c0..567c1f9 100644
-> --- a/include/linux/remoteproc/qcom_rproc.h
-> +++ b/include/linux/remoteproc/qcom_rproc.h
-> @@ -5,6 +5,20 @@
->  
->  #if IS_ENABLED(CONFIG_QCOM_RPROC_COMMON)
->  
-> +/**
-> + * enum rproc_notif_type - Different stages of remoteproc notifications
-> + * @RPROC_BEFORE_SHUTDOWN:	unprepare stage of  remoteproc
-> + * @RPROC_AFTER_SHUTDOWN:	stop stage of  remoteproc
-> + * @RPROC_BEFORE_POWERUP:	prepare stage of  remoteproc
-> + * @RPROC_AFTER_POWERUP:	start stage of  remoteproc
-> + */
-> +enum rproc_notif_type {
-> +	RPROC_BEFORE_SHUTDOWN,
-> +	RPROC_AFTER_SHUTDOWN,
-> +	RPROC_BEFORE_POWERUP,
-> +	RPROC_AFTER_POWERUP,
+> Does it happen with other clocks as well?
+> 
+> > 
+> > - The kernel tree is at https://github.com/raspberrypi/linux/, but I could
+> >   see no relevant changes compared to a mainline kernel.
+> 
+> Is this bug reproducible with mainline kernel or mainline kernel can't be
+> booted on bcm2711?
+> 
+> > 
+> > - From the report, I see that the returned time value is larger than the
+> >   expected time, by 3.4 to 14.5 million seconds in four samples, my
+> >   guess is that a random number gets added in at some point.
+> 
+> What kind code are you using to reproduce it? It is threaded or issue
+> clock_gettime from signal handlers?
 
-Given that these are not generic remoteproc things I would like a qcom
-prefix on them.
+Original report thread is here:
 
-How about QCOM_SSR_BEFORE_SHUTDOWN ... 
+https://github.com/richfelker/musl-cross-make/issues/96
 
-Apart from that, this looks good.
+The reporter originally misunderstood the issue and wrongly attributed
+it to difference between gettimeofday and clock_gettime but it was
+just big jumps between successive vdso clock_gettime64 calls.
 
-Thanks,
-Bjorn
+No transformation was being done on the output of the vdso function;
+as long as it succeeds musl just returns directly with the value it
+stored in the timespec. No threads or anything fancy were involved.
 
-> +};
-> +
->  struct rproc_notif_data {
->  	const char *name;
->  	bool crashed;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Current musl will no longer call it but you should be able to
+dlopen("linux-gate.so.1", RTLD_NOW|RTLD_LOCAL) then use dlsym to get
+its address and call it (not tested; I've never used it this way).
+
+> > - The current musl git tree has been patched to not call clock_gettime64
+> >    on ARM because of this problem, so it cannot be used for reproducing it.
+> 
+> So should glibc follow musl and remove arm clock_gettime6y4 vDSO support
+> or this bug is localized to an specific kernel version running on an
+> specific hardware?
+
+For musl it was important to disable it asap pending a fix, because
+users are expected to generate static binaries, and these could make
+it into the wild without anyone realizing they're broken until much
+later when run on an affected kernel (especially since pre-5.6 kernels
+would hide the issue entirely due to lacking vdso). Ideally a fix will
+be something we can detect (e.g. new symbol version) so as not to risk
+calling the broken one, but whether that's necessary may depend on
+what's affected.
+
+I'm not sure if glibc should do the same; it's not often used in
+static linking, and replacing libc (shared lib, or re-static-linking
+which LGPL requires you to facilitate to distribute static binaries)
+could solve the issue on affected systems.
+
+Rich
