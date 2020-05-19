@@ -2,103 +2,125 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D635C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE592075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589848176;
-	bh=6z+i1jzY/lLmOEITZGgIJJVXgSxypwZdOj1IQH4nlUA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fbTx6ORFo+JsymphBk4PGrO5qKYtRva802OiFXl0YHppQhFbI4Q3WmmPAGxzBpqfE
-	 +N3xTIs32iNyT7zTJU677k/QKyb3ApHQgHGnA1PQi6f8f7m7cr3Rrb01y2tiHCeGLX
-	 n/hq/t1O4rGGlTvcGBCnc9SchHe6EHZJ9s6Ht6tY=
+	by mail.kernel.org (Postfix) with ESMTP id 50CFB20715
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 00:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgESA3f (ORCPT
+        id S1727063AbgESAcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 20:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgESA3e (ORCPT
+        Mon, 18 May 2020 20:32:46 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:59128 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgESAcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 20:29:34 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA6DC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:29:33 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id 202so9663654lfe.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:29:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lp5YS4wnqdBmdbNdBQYAqe4C1skHr56PklzUDuGNt/o=;
-        b=HhfO0c/8Afa39iKCJTB/VymbLZle1h5CJm8AufmRSEUwBn1RFOp146dtIZ9YMMYJwD
-         RIsrpTUNyS/4zSVsfHF+DajZ2AXyTU0XqO0JvcLfWy5PnMEXZeMdzN+/JsfVpklg/2It
-         hYaSG+aYP1iUn/RWWyuBF1JUePeDCVxxVxWUw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lp5YS4wnqdBmdbNdBQYAqe4C1skHr56PklzUDuGNt/o=;
-        b=k8QqDp8+QTZuz0bqQ4USM6cQbTFydNjBo8PDIpYJBQuJA2xqD6CBXamg4sA4FP/Jjv
-         rGqqEz1HJU6Vp+GPgqasGD0yoWNs7uTxjF1CbypqBEe4aFbv/8JjPX45eyzUKr6B3eWl
-         cC1lEjeUk9vdVd7Jvi2CSS6iYJtsvb1LIAAcZimJDczepEyziooby4wns3rfmfvgyAqH
-         n8ylYZIW6mEzgU43eUgS0jQfG7H4XwVcjeOnN6d4/tC1E+ylh0InBtb9x3JN2Z8sCIJj
-         p5YtusK+jExON8nhFVoMUOCiJfCHAu1AVG0fKqBQjMtlAFE+YxfF/kNj3G33T01GO38p
-         AreA==
-X-Gm-Message-State: AOAM533ZO++w8Sd8hW1z3IzTrntskTLT+5h1rFb3IZt8QvexO15vtUO/
-        MTbsDe9cplPj/CJ8lFlLnd5OQVa8Q1s=
-X-Google-Smtp-Source: ABdhPJzBOiDKZPvSWhVax8a/iFsouuf5pNGevrUgIhFnsUExvgmBX71zfIbqhqTYrAB8YE2BBNGyAA==
-X-Received: by 2002:a19:70d:: with SMTP id 13mr13512664lfh.60.1589848171412;
-        Mon, 18 May 2020 17:29:31 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id x11sm6384151ljj.15.2020.05.18.17.29.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2020 17:29:30 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id b6so11839130ljj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 17:29:30 -0700 (PDT)
-X-Received: by 2002:a2e:8956:: with SMTP id b22mr5686169ljk.16.1589848169813;
- Mon, 18 May 2020 17:29:29 -0700 (PDT)
+        Mon, 18 May 2020 20:32:46 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jaqBW-0002cm-4i; Mon, 18 May 2020 18:32:42 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jaqBU-0003N4-Tu; Mon, 18 May 2020 18:32:41 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 18 May 2020 19:29:00 -0500
+In-Reply-To: <87v9l4zyla.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Sat, 09 May 2020 14:40:17 -0500")
+Message-ID: <877dx822er.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200408205323.44490-1-natechancellor@gmail.com>
- <20200518093117.GA719849@ubuntu-s3-xlarge-x86> <CAKwvOdmXgYThHRDpt5dFZy5T1zS6MYQhcBNcq6-rsuc5fjiE6Q@mail.gmail.com>
- <20200518183513.53b94f11@gandalf.local.home>
-In-Reply-To: <20200518183513.53b94f11@gandalf.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 18 May 2020 17:29:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiwom6EF4DqStcZD0cJwXRMwAmLx2Z-wcn5xTiaJpgEkA@mail.gmail.com>
-Message-ID: <CAHk-=wiwom6EF4DqStcZD0cJwXRMwAmLx2Z-wcn5xTiaJpgEkA@mail.gmail.com>
-Subject: Re: [PATCH] x86: mmiotrace: Use cpumask_available for cpumask_var_t variables
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        nouveau@lists.freedesktop.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jaqBU-0003N4-Tu;;;mid=<877dx822er.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18by/aaLJV6sf4J1suuuELTUfpwuJ2FJIk=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v2 0/8] exec: Control flow simplifications
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 3:35 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> Linus,
->
-> Are you OK with this patch?
 
-Yup, I don't care deeply either way, as long as we can get rid of the warning.
+It is hard to follow the control flow in exec.c as the code has evolved over
+time and something that used to work one way now works another.  This set of
+changes attempts to address the worst of that, to remove unnecessary work
+and to make the code a little easier to follow.
 
-                Linus
+The churn is a bit higher than the last version of this patchset, with
+renaming and cleaning up of comments.  I have split security_bprm_set_creds
+into security_bprm_creds_for_exec and security_bprm_repopulate_creds.  My
+goal was to make it clear that one hook completes its work while the other
+recaculates it's work each time a new interpreter is selected.
+
+I have added a new change at the beginning to make it clear that neither
+security_bprm_creds_for_exec nor security_bprm_repopulate_creds needs to be
+implemented as prepare_exec_creds properly does the work of setting up
+credentials unless something special is going on.
+
+I have made the execfd support generic and moved out of binfmt_misc so that
+I can remove the recursion.
+
+I have moved reassigning bprm->file into the loop that replaces the
+recursion.  In doing so I discovered that binfmt_misc was naughty and
+was returning -ENOEXEC in such a way that the search_binary_handler loop
+could not continue.  So I added a change to remove that naughtiness.
+
+Eric W. Biederman (8):
+      exec: Teach prepare_exec_creds how exec treats uids & gids
+      exec: Factor security_bprm_creds_for_exec out of security_bprm_set_creds
+      exec: Convert security_bprm_set_creds into security_bprm_repopulate_creds
+      exec: Allow load_misc_binary to call prepare_binfmt unconditionally
+      exec: Move the call of prepare_binprm into search_binary_handler
+      exec/binfmt_script: Don't modify bprm->buf and then return -ENOEXEC
+      exec: Generic execfd support
+      exec: Remove recursion from search_binary_handler
+
+ arch/alpha/kernel/binfmt_loader.c  | 11 +----
+ fs/binfmt_elf.c                    |  4 +-
+ fs/binfmt_elf_fdpic.c              |  4 +-
+ fs/binfmt_em86.c                   | 13 +----
+ fs/binfmt_misc.c                   | 69 ++++-----------------------
+ fs/binfmt_script.c                 | 82 ++++++++++++++------------------
+ fs/exec.c                          | 97 ++++++++++++++++++++++++++------------
+ include/linux/binfmts.h            | 36 ++++++--------
+ include/linux/lsm_hook_defs.h      |  3 +-
+ include/linux/lsm_hooks.h          | 52 +++++++++++---------
+ include/linux/security.h           | 14 ++++--
+ kernel/cred.c                      |  3 ++
+ security/apparmor/domain.c         |  7 +--
+ security/apparmor/include/domain.h |  2 +-
+ security/apparmor/lsm.c            |  2 +-
+ security/commoncap.c               |  9 ++--
+ security/security.c                |  9 +++-
+ security/selinux/hooks.c           |  8 ++--
+ security/smack/smack_lsm.c         |  9 ++--
+ security/tomoyo/tomoyo.c           | 12 ++---
+ 20 files changed, 202 insertions(+), 244 deletions(-)
