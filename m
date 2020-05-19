@@ -2,200 +2,125 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14127C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14009C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E583E20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589896633;
-	bh=1ge7GtnAk4d1zwaRewUucQ51+d00fLsHnCTj6b5UyPo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=q9SJZgjD5yqyhQCOsrWipY5v/F53osV5O0p83wPbzL2jQlNFnDxZUsj16SzbVwjEh
-	 QtDT0FSVUw7CKVsis8z+klErSi13tWQf5qF+M1nNT9R4XhlcLyiYc5tEzwt9mruwT8
-	 snqf3HwoU1zTC+4Gdn9LuEYR7OiKjRL90K7fY05M=
+	by mail.kernel.org (Postfix) with ESMTP id DC79420825
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 13:58:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIB4BbVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgESN5N (ORCPT
+        id S1728965AbgESN6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 09:57:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727904AbgESN5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 09:57:13 -0400
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 261DB20842;
-        Tue, 19 May 2020 13:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589896632;
-        bh=1ge7GtnAk4d1zwaRewUucQ51+d00fLsHnCTj6b5UyPo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=w9c30JTdPhumdFKVx2WLG4ahdfmskibm3/J+VpvUHwCHDwxhKwWf068pSXin5P5W5
-         sq6YVsbx0z10ZWXz4kigPPjLTQzdth1AYxFcExRK24RFiAXIqkLlV8ovdAkMN5l1WA
-         M8mvGtaWJchuBp/Eh7FlgjR1Uss23J7O2tUEAQH4=
-Received: by mail-io1-f50.google.com with SMTP id s10so14589508iog.7;
-        Tue, 19 May 2020 06:57:12 -0700 (PDT)
-X-Gm-Message-State: AOAM533IzhrR/qovi3/2tkjc/kU/KL7rblDWZ3IPzNHFDlnkyQcQNQew
-        A2sapHqwRNoFW8UKKVvDu0yUPj9M2bwo1X7bkNQ=
-X-Google-Smtp-Source: ABdhPJxR1/bZ6OQaZesRjgU+B2k0BoP9B3nyHCz01LxPD8dIW+o5nveijsFfnE7y+oXqf41DyfMUKU6mdLde+phk4Ts=
-X-Received: by 2002:a6b:5008:: with SMTP id e8mr19309744iob.161.1589896631339;
- Tue, 19 May 2020 06:57:11 -0700 (PDT)
+        Tue, 19 May 2020 09:58:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727057AbgESN6a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 09:58:30 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84CC5C08C5C0;
+        Tue, 19 May 2020 06:58:30 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id j3so13430458ilk.11;
+        Tue, 19 May 2020 06:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n/gSlFWBQ3WxUydL0AG8RE+72oWOYudYm1JYvsV0Jus=;
+        b=fIB4BbVzW7vbkqKGKgmfgtVqfdtPo/YxHVrbHEHcSalctsC8Z1P/ZiMcrHG884CH/T
+         afZBfItuIrHPolRnpDDBn4+sdZVpYdBP5S8xbLo8cNmXYVc3M3DKaokQsaNWUl5Eee1q
+         ohpVvVCyMv3GJPSnXR2UI5aTBr1vw6bJFKDym5a0inaHP2eR4oVmhV2+MmFLuWT7+8oA
+         D6utLisJgmRj2Sw/p3vERjIrCk/Z+7QU6dsaBHzi6SVKJ0Ka+J/P8e2p3L9mlquNKTpN
+         fOzkHLkJefEIFpPUiQ8deUjtHUVX0E6KZqO2L9VevMlZVippSZ+9Y+HHF0Wrewa+mmPP
+         Qp9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n/gSlFWBQ3WxUydL0AG8RE+72oWOYudYm1JYvsV0Jus=;
+        b=NAdPHPbRDwIlRe/KEE3/LzXWResaB/btLIcnYduWg7Om0Aozn48qZD2UqY10fkW6Qc
+         +eiLtM0XRA+kqyj2hKSxTLsF2GuwiHLogP+EA2SWt6tDFQROkwuYirLFQUriHdXqI2rl
+         2nyJHMiDptTkb2sRa45ANLIVBaO9shUwd+YMEYLcx8WqNp2mwP6LpGJZ3ZoW8EBTzkmT
+         PqDAWJnISnVg2p+b8xtECB1366En336JtkBNGw4p9PdpXHFb2a/hdhF9t6yMf6kuJF6R
+         RKu0UuGaRJOMIbyQBO7JUWRQl7LSIcG7xZ9FvRqx+RgJls8FaSATnlrCSdagZJEfTrjT
+         x5ug==
+X-Gm-Message-State: AOAM530OZJwlosqh/rQvG9fx/zBmi0z1yhbqpQneRO6xGUUSNdfqPZUT
+        T4vtl7qSx5GLo7xDzfjrLzazpbZCAwAU6m1clg==
+X-Google-Smtp-Source: ABdhPJyzDk5ro9RaDhHf25IEza5E1ffJM8beDQGW8MgdSO58MbiCno3wYKG45cNLis7uZ+kYFAz0+QOPkms+WREOc3I=
+X-Received: by 2002:a92:8c4c:: with SMTP id o73mr21114094ild.172.1589896709896;
+ Tue, 19 May 2020 06:58:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20200429082134eucas1p2415c5269202529e6b019f2d70c1b5572@eucas1p2.samsung.com>
- <20200429082120.16259-1-geert+renesas@glider.be> <dleftjmu645mqn.fsf%l.stelmach@samsung.com>
- <CAMuHMdXxq6m6gebQbWvxDynDcZ7dLyZzKC_QroK63L8FGeac1Q@mail.gmail.com>
- <20200519094637.GZ1551@shell.armlinux.org.uk> <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
-In-Reply-To: <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 19 May 2020 15:56:59 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH_s4qjDfTO03PkGNaiwfjmfkrZ-FE8vTm74QSrgoVt0A@mail.gmail.com>
-Message-ID: <CAMj1kXH_s4qjDfTO03PkGNaiwfjmfkrZ-FE8vTm74QSrgoVt0A@mail.gmail.com>
-Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Lukasz Stelmach <l.stelmach@samsung.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Miao <eric.miao@nvidia.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+References: <20200428151725.31091-1-joro@8bytes.org> <20200428151725.31091-36-joro@8bytes.org>
+In-Reply-To: <20200428151725.31091-36-joro@8bytes.org>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Tue, 19 May 2020 09:58:18 -0400
+Message-ID: <CAMzpN2gfiBAeCV_1+9ogh42bMMuDW=qdwd7dYp49-=zY3kzBaA@mail.gmail.com>
+Subject: Re: [PATCH v3 35/75] x86/head/64: Build k/head64.c with -fno-stack-protector
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Grant Likely <grant.likely@arm.com>
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 at 13:21, Geert Uytterhoeven <geert@linux-m68k.org> wro=
-te:
+On Tue, Apr 28, 2020 at 11:28 AM Joerg Roedel <joro@8bytes.org> wrote:
 >
-> Hi Russell,
+> From: Joerg Roedel <jroedel@suse.de>
 >
-> CC devicetree
+> The code inserted by the stack protector does not work in the early
+> boot environment because it uses the GS segment, at least with memory
+> encryption enabled. Make sure the early code is compiled without this
+> feature enabled.
 >
-> On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> > On Tue, May 19, 2020 at 11:44:17AM +0200, Geert Uytterhoeven wrote:
-> > > On Tue, May 19, 2020 at 10:54 AM Lukasz Stelmach <l.stelmach@samsung.=
-com> wrote:
-> > > > It was <2020-04-29 =C5=9Bro 10:21>, when Geert Uytterhoeven wrote:
-> > > > > Currently, the start address of physical memory is obtained by ma=
-sking
-> > > > > the program counter with a fixed mask of 0xf8000000.  This mask v=
-alue
-> > > > > was chosen as a balance between the requirements of different pla=
-tforms.
-> > > > > However, this does require that the start address of physical mem=
-ory is
-> > > > > a multiple of 128 MiB, precluding booting Linux on platforms wher=
-e this
-> > > > > requirement is not fulfilled.
-> > > > >
-> > > > > Fix this limitation by obtaining the start address from the DTB i=
-nstead,
-> > > > > if available (either explicitly passed, or appended to the kernel=
-).
-> > > > > Fall back to the traditional method when needed.
-> > > > >
-> > > > > This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of=
- SDRAM
-> > > > > on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 sp=
-ace),
-> > > > > i.e. not at a multiple of 128 MiB.
-> > > > >
-> > > > > Suggested-by: Nicolas Pitre <nico@fluxnic.net>
-> > > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
-> > > > > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> > > > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > > Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> > > > > ---
-> > > >
-> > > > [...]
-> > > >
-> > > > Apparently reading physical memory layout from DTB breaks crashdump
-> > > > kernels. A crashdump kernel is loaded into a region of memory, that=
- is
-> > > > reserved in the original (i.e. to be crashed) kernel. The reserved
-> > > > region is large enough for the crashdump kernel to run completely i=
-nside
-> > > > it and don't modify anything outside it, just read and dump the rem=
-ains
-> > > > of the crashed kernel. Using the information from DTB makes the
-> > > > decompressor place the kernel outside of the dedicated region.
-> > > >
-> > > > The log below shows that a zImage and DTB are loaded at 0x18eb8000 =
-and
-> > > > 0x193f6000 (physical). The kernel is expected to run at 0x18008000,=
- but
-> > > > it is decompressed to 0x00008000 (see r4 reported before jumping fr=
-om
-> > > > within __enter_kernel). If I were to suggest something, there need =
-to be
-> > > > one more bit of information passed in the DTB telling the decompres=
-sor
-> > > > to use the old masking technique to determain kernel address. It wo=
-uld
-> > > > be set in the DTB loaded along with the crashdump kernel.
-> > >
-> > > Shouldn't the DTB passed to the crashkernel describe which region of
-> > > memory is to be used instead?
-> >
-> > Definitely not.  The crashkernel needs to know where the RAM in the
-> > machine is, so that it can create a coredump of the crashed kernel.
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/kernel/Makefile | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> So the DTB should describe both ;-)
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index ba89cabe5fcf..1192de38fa56 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -35,6 +35,10 @@ ifdef CONFIG_FRAME_POINTER
+>  OBJECT_FILES_NON_STANDARD_ftrace_$(BITS).o             := y
+>  endif
 >
-> > > Describing "to use the old masking technique" sounds a bit hackish to=
- me.
-> > > I guess it cannot just restrict the /memory node to the reserved regi=
-on,
-> > > as the crashkernel needs to be able to dump the remains of the crashe=
-d
-> > > kernel, which lie outside this region.
-> >
-> > Correct.
-> >
-> > > However, something under /chosen should work.
-> >
-> > Yet another sticky plaster...
->
-> IMHO the old masking technique is the hacky solution covered by
-> plasters.
->
+> +# make sure head64.c is built without stack protector
+> +nostackp := $(call cc-option, -fno-stack-protector)
+> +CFLAGS_head64.o                := $(nostackp)
+> +
+>  # If instrumentation of this dir is enabled, boot hangs during first second.
+>  # Probably could be more selective here, but note that files related to irqs,
+>  # boot, dumpstack/stacktrace, etc are either non-interesting or can lead to
 
-I think debating which solution is the hacky one will not get us anywhere.
+The proper fix would be to initialize MSR_GS_BASE earlier.
 
-The simple reality is that the existing solution works fine for
-existing platforms, and so any changes in the logic will have to be
-opt-in in one way or the other.
-
-Since U-boot supports EFI boot these days, one potential option is to
-rely on that. I have some changes implementing this that go on top of
-this patch, but they don't actually rely on it - it was just to
-prevent lexical conflicts.
-
-The only remaining options imo are a kernel command line option, or a
-DT property that tells the decompressor to look at the memory nodes.
-But using the DT memory nodes on all platforms like this patch does is
-obviously just too risky.
-
-On another note, I do think the usable-memory-region property should
-be implemented for ARM as well - relying on this rounding to ensure
-that the decompressor does the right thing is too fragile.
+--
+Brian Gerst
