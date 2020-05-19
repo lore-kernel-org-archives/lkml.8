@@ -2,149 +2,118 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2708FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06D82207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A24207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:41:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CjcChveg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgESJlY (ORCPT
+        id S1728502AbgESJlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgESJlX (ORCPT
+        Tue, 19 May 2020 05:41:39 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:46291 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727873AbgESJlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:41:23 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7DB9C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 02:41:23 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id DF3312A03BE
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH] drm/mediatek: mtk_hdmi: Remove debug messages for function calls
-Date:   Tue, 19 May 2020 11:41:15 +0200
-Message-Id: <20200519094115.2448092-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 19 May 2020 05:41:37 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04J9bCoK002859;
+        Tue, 19 May 2020 11:41:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=8umFBsqpXSyvV7P7Pt39jOOMGvMU9GE2G14TF8W9jgU=;
+ b=CjcChvegMRR43kcF7VLmveYY3LeTbNP17nhluegroU/5+HEvQtGYduaZa4aBSWaz6hbm
+ jZkaPjuVERGrfu3I5Yzf2SpMK08NSarRsty9Ffp1fxTff6Y9ykpSKjGNjQ+Fm1gsk5JX
+ a5r0LvSOqXWI6MVOOIv45q9zV1YlsTKD6p5udChBW/fCXtow3Arj7pG2JAAlDk1wZopb
+ g+ZOGREMtPrvN2goEFx4njwzqBHI12NAb5+vQVcm2rm1xKbqJrHKVRV09x8D1HHetv6r
+ nzHbked10gKBadtATbbVKu2HXMNM1edJW6VQxNNNvfdTBXoB+UQa8Uv1wz3xLmcvikNB 8A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3125xxs1b2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 May 2020 11:41:13 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D257310002A;
+        Tue, 19 May 2020 11:41:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BD9F12B1881;
+        Tue, 19 May 2020 11:41:10 +0200 (CEST)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 May 2020 11:41:10
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+CC:     <linux-serial@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 1/1] serial: stm32: add no_console_suspend support
+Date:   Tue, 19 May 2020 11:41:04 +0200
+Message-ID: <20200519094104.27082-1-erwan.leray@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-19_03:2020-05-19,2020-05-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Equivalent information can be nowadays obtained using function tracer
+In order to display console messages in low power mode, console pins
+must be kept active after suspend call.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
+Initial patch "serial: stm32: add support for no_console_suspend" was part
+of "STM32 usart power improvement" series, but as dependancy to
+console_suspend pinctl state has been removed to fit with Rob comment [1],
+this patch has no more dependancy with any other patch of this series.
 
- drivers/gpu/drm/mediatek/mtk_hdmi.c            | 12 +-----------
- drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c |  4 ----
- 2 files changed, 1 insertion(+), 15 deletions(-)
+[1] https://lkml.org/lkml/2019/7/9/451
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index b0555a7cb3b4..172d67294435 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1634,8 +1634,6 @@ static int mtk_hdmi_audio_startup(struct device *dev, void *data)
- {
- 	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
- 
--	dev_dbg(dev, "%s\n", __func__);
--
- 	mtk_hdmi_audio_enable(hdmi);
- 
- 	return 0;
-@@ -1645,8 +1643,6 @@ static void mtk_hdmi_audio_shutdown(struct device *dev, void *data)
- {
- 	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
- 
--	dev_dbg(dev, "%s\n", __func__);
--
- 	mtk_hdmi_audio_disable(hdmi);
- }
- 
-@@ -1655,8 +1651,6 @@ mtk_hdmi_audio_digital_mute(struct device *dev, void *data, bool enable)
- {
- 	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
- 
--	dev_dbg(dev, "%s(%d)\n", __func__, enable);
--
- 	if (enable)
- 		mtk_hdmi_hw_aud_mute(hdmi);
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index 9cfcf355567a..5afd29162f6c 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -1425,7 +1425,18 @@ static int __maybe_unused stm32_serial_suspend(struct device *dev)
  	else
-@@ -1669,8 +1663,6 @@ static int mtk_hdmi_audio_get_eld(struct device *dev, void *data, uint8_t *buf,
- {
- 	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
+ 		stm32_serial_enable_wakeup(port, false);
  
--	dev_dbg(dev, "%s\n", __func__);
--
- 	memcpy(buf, hdmi->conn.eld, min(sizeof(hdmi->conn.eld), len));
+-	pinctrl_pm_select_sleep_state(dev);
++	/*
++	 * When "no_console_suspend" is enabled, keep the pinctrl default state
++	 * and rely on bootloader stage to restore this state upon resume.
++	 * Otherwise, apply the idle or sleep states depending on wakeup
++	 * capabilities.
++	 */
++	if (console_suspend_enabled || !uart_console(port)) {
++		if (device_may_wakeup(dev))
++			pinctrl_pm_select_idle_state(dev);
++		else
++			pinctrl_pm_select_sleep_state(dev);
++	}
  
- 	return 0;
-@@ -1770,7 +1762,6 @@ static int mtk_drm_hdmi_probe(struct platform_device *pdev)
- 		goto err_bridge_remove;
- 	}
- 
--	dev_dbg(dev, "mediatek hdmi probe success\n");
- 	return 0;
- 
- err_bridge_remove:
-@@ -1793,7 +1784,7 @@ static int mtk_hdmi_suspend(struct device *dev)
- 	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
- 
- 	mtk_hdmi_clk_disable_audio(hdmi);
--	dev_dbg(dev, "hdmi suspend success!\n");
-+
  	return 0;
  }
- 
-@@ -1808,7 +1799,6 @@ static int mtk_hdmi_resume(struct device *dev)
- 		return ret;
- 	}
- 
--	dev_dbg(dev, "hdmi resume success!\n");
- 	return 0;
- }
- #endif
-diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-index b55f51675205..1c3575372230 100644
---- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-+++ b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-@@ -159,8 +159,6 @@ static int mtk_hdmi_pll_prepare(struct clk_hw *hw)
- {
- 	struct mtk_hdmi_phy *hdmi_phy = to_mtk_hdmi_phy(hw);
- 
--	dev_dbg(hdmi_phy->dev, "%s\n", __func__);
--
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON1, RG_HDMITX_PLL_AUTOK_EN);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_PLL_POSDIV);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON3, RG_HDMITX_MHLCK_EN);
-@@ -178,8 +176,6 @@ static void mtk_hdmi_pll_unprepare(struct clk_hw *hw)
- {
- 	struct mtk_hdmi_phy *hdmi_phy = to_mtk_hdmi_phy(hw);
- 
--	dev_dbg(hdmi_phy->dev, "%s\n", __func__);
--
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON1, RG_HDMITX_PLL_TXDIV_EN);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON1, RG_HDMITX_PLL_BIAS_LPF_EN);
- 	usleep_range(100, 150);
 -- 
-2.26.2
+2.17.1
 
