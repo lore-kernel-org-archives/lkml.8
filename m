@@ -2,116 +2,253 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ADAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E465E2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA9320829
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589922955;
+	bh=GCBiiHv4rqoiMSHfpHfVnIXqBOlV4WZ5kFNO/xIvb+0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QMz2mEkLUVzfRm/ONSsnRaSpJhSHEsOY4Hsn63+eleNzis2toagX9EXI4yfUhveiw
+	 YC5ptlw0bfPR855gSdxmLNT8JVBnf9UzL6c0Mgzxx1GbAXX9HBQcEV06YG+wWXTDu4
+	 YHLhkouqVtJjMCGTw99KLhzKuh7ai8ih54CrO+tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgESVN3 (ORCPT
+        id S1727902AbgESVPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:13:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgESVN2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:13:28 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4412C08C5C0;
-        Tue, 19 May 2020 14:13:28 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jb9Y2-0001wp-Uy; Tue, 19 May 2020 23:13:15 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 75291100D00;
-        Tue, 19 May 2020 23:13:14 +0200 (CEST)
-Message-Id: <20200519203128.773151484@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 19 May 2020 22:31:28 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        kvm@vger.kernel.org,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [patch 0/7] x86/KVM: Async #PF and instrumentation protection
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 19 May 2020 17:15:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbgESVPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 17:15:54 -0400
+Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F10F320758;
+        Tue, 19 May 2020 21:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589922953;
+        bh=GCBiiHv4rqoiMSHfpHfVnIXqBOlV4WZ5kFNO/xIvb+0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pMBOhtVGkpEKrdS3IQvTsqqlUWq2yrjH0OVxOrhEQbatn8Ht0p3CeE5SmTyR4HkSO
+         stOZu5LdNXWbJ4nkz+yJhMkAkNqzoppkQdh4hQaii8s16PZ338EEEBTal+chQiKhY8
+         dwa2gsyphgHyjurCHyQjBcWkjja7Y7FpdLBmbAu8=
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     mcgrof@kernel.org
+Cc:     johannes@sipsolutions.net, derosier@gmail.com,
+        greearb@candelatech.com, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
+        schlad@suse.de, andriy.shevchenko@linux.intel.com,
+        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org, jiri@resnulli.us,
+        briannorris@chromium.org, Jakub Kicinski <kuba@kernel.org>
+Subject: [RFC 1/2] devlink: add simple fw crash helpers
+Date:   Tue, 19 May 2020 14:15:30 -0700
+Message-Id: <20200519211531.3702593-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200519010530.GS11244@42.do-not-panic.com>
+References: <20200519010530.GS11244@42.do-not-panic.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Folks,
+Add infra for creating devlink instances for a device to report
+fw crashes. This patch expects the devlink instance to be registered
+at probe time. I belive to be the cleanest. We can also add a devm
+version of the helpers, so that we don't have to do the clean up.
+Or we can go even further and register the devlink instance only
+once error has happened (for the first time, then we can just
+find out if already registered by traversing the list like we
+do here).
 
-this series is the KVM side of the ongoing quest to confine instrumentation
-to safe places and ensure that RCU and context tracking state is correct.
+With the patch applied and a sample driver converted we get:
 
-The async #PF changes are in the tip tree already as they conflict with the
-entry code rework. The minimal set of commits to carry these have been
-isolated and tagged:
+$ devlink dev
+pci/0000:07:00.0
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git noinstr-x86-kvm-2020-05-16
+Then monitor for errors:
 
-Paolo, please pull this into your next branch to avoid conflicts in
-next. The prerequisites for the following KVM specific changes come with
-that tag so that you have no merge dependencies.
+$ devlink mon health
+[health,status] pci/0000:07:00.0:
+  reporter fw
+    state error error 1 recover 0
+[health,status] pci/0000:07:00.0:
+  reporter fw
+    state error error 2 recover 0
 
-The tag has also been merged into
+These are the events I triggered on purpose. One can also inspect
+the health of all devices capable of reporting fw errors:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+$ devlink health
+pci/0000:07:00.0:
+  reporter fw
+    state error error 7 recover 0
 
-where the x86 core #PF entry code changes will be queued soon as well.
+Obviously drivers may upgrade to the full devlink health API
+which includes state dump, state dump auto-collect and automatic
+error recovery control.
 
-The KVM specific patches which deal with the RCU and context tracking state
-and the protection against instrumentation in sensitive places have been
-split out from the larger entry/noinstr series:
-
-  https://lore.kernel.org/r/20200505134112.272268764@linutronix.de
-
-The patches deal with:
-
-  - Placing the guest_enter/exit() calls at the correct place
-
-  - Moving the sensitive VMENTER/EXIT code into the non-instrumentable code
-    section.
-
-  - Fixup the tracing code to comply with the non-instrumentation rules
-
-  - Use native functions to access CR2 and the GS base MSR in the critical
-    code pathes to prevent them from being instrumented.
-
-The patches apply on top of
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/kvm/kvm.git next
-
-with the noinstr-x86-kvm-2020-05-16 tag from the tip tree merged in.
-
-For reference the whole lot is available from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git kvm/noinstr
-
-Thanks,
-
-	tglx
-
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 ---
- include/asm/hardirq.h  |    4 +-
- include/asm/kvm_host.h |    8 +++++
- kvm/svm/svm.c          |   65 ++++++++++++++++++++++++++++++++++------
- kvm/svm/vmenter.S      |    2 -
- kvm/vmx/ops.h          |    4 ++
- kvm/vmx/vmenter.S      |    5 ++-
- kvm/vmx/vmx.c          |   78 ++++++++++++++++++++++++++++++++++++++-----------
- kvm/x86.c              |    4 --
- 8 files changed, 137 insertions(+), 33 deletions(-)
+ include/linux/devlink.h               |  11 +++
+ net/core/Makefile                     |   2 +-
+ net/core/devlink_simple_fw_reporter.c | 101 ++++++++++++++++++++++++++
+ 3 files changed, 113 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/devlink.h
+ create mode 100644 net/core/devlink_simple_fw_reporter.c
+
+diff --git a/include/linux/devlink.h b/include/linux/devlink.h
+new file mode 100644
+index 000000000000..2b73987eefca
+--- /dev/null
++++ b/include/linux/devlink.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _LINUX_DEVLINK_H_
++#define _LINUX_DEVLINK_H_
++
++struct device;
++
++void devlink_simple_fw_reporter_prepare(struct device *dev);
++void devlink_simple_fw_reporter_cleanup(struct device *dev);
++void devlink_simple_fw_reporter_report_crash(struct device *dev);
++
++#endif
+diff --git a/net/core/Makefile b/net/core/Makefile
+index 3e2c378e5f31..6f1513781c17 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -31,7 +31,7 @@ obj-$(CONFIG_LWTUNNEL_BPF) += lwt_bpf.o
+ obj-$(CONFIG_BPF_STREAM_PARSER) += sock_map.o
+ obj-$(CONFIG_DST_CACHE) += dst_cache.o
+ obj-$(CONFIG_HWBM) += hwbm.o
+-obj-$(CONFIG_NET_DEVLINK) += devlink.o
++obj-$(CONFIG_NET_DEVLINK) += devlink.o devlink_simple_fw_reporter.o
+ obj-$(CONFIG_GRO_CELLS) += gro_cells.o
+ obj-$(CONFIG_FAILOVER) += failover.o
+ obj-$(CONFIG_BPF_SYSCALL) += bpf_sk_storage.o
+diff --git a/net/core/devlink_simple_fw_reporter.c b/net/core/devlink_simple_fw_reporter.c
+new file mode 100644
+index 000000000000..48dde9123c3c
+--- /dev/null
++++ b/net/core/devlink_simple_fw_reporter.c
+@@ -0,0 +1,101 @@
++#include <linux/devlink.h>
++#include <linux/list.h>
++#include <linux/mutex.h>
++#include <net/devlink.h>
++
++struct devlink_simple_fw_reporter {
++	struct list_head list;
++	struct devlink_health_reporter *reporter;
++};
++
++
++static LIST_HEAD(devlink_simple_fw_reporters);
++static DEFINE_MUTEX(devlink_simple_fw_reporters_mutex);
++
++static const struct devlink_health_reporter_ops simple_devlink_health = {
++	.name = "fw",
++};
++
++static const struct devlink_ops simple_devlink_ops = {
++};
++
++static struct devlink_simple_fw_reporter *
++devlink_simple_fw_reporter_find_for_dev(struct device *dev)
++{
++	struct devlink_simple_fw_reporter *simple_devlink, *ret = NULL;
++	struct devlink *devlink;
++
++	mutex_lock(&devlink_simple_fw_reporters_mutex);
++	list_for_each_entry(simple_devlink, &devlink_simple_fw_reporters,
++			    list) {
++		devlink = priv_to_devlink(simple_devlink);
++		if (devlink->dev == dev) {
++			ret = simple_devlink;
++			break;
++		}
++	}
++	mutex_unlock(&devlink_simple_fw_reporters_mutex);
++
++	return ret;
++}
++
++void devlink_simple_fw_reporter_report_crash(struct device *dev)
++{
++	struct devlink_simple_fw_reporter *simple_devlink;
++
++	simple_devlink = devlink_simple_fw_reporter_find_for_dev(dev);
++	if (!simple_devlink)
++		return;
++
++	devlink_health_report(simple_devlink->reporter, "firmware crash", NULL);
++}
++EXPORT_SYMBOL_GPL(devlink_simple_fw_reporter_report_crash);
++
++void devlink_simple_fw_reporter_prepare(struct device *dev)
++{
++	struct devlink_simple_fw_reporter *simple_devlink;
++	struct devlink *devlink;
++
++	devlink = devlink_alloc(&simple_devlink_ops,
++				sizeof(struct devlink_simple_fw_reporter));
++	if (!devlink)
++		return;
++
++	if (devlink_register(devlink, dev))
++		goto err_free;
++
++	simple_devlink = devlink_priv(devlink);
++	simple_devlink->reporter =
++		devlink_health_reporter_create(devlink, &simple_devlink_health,
++					       0, NULL);
++	if (IS_ERR(simple_devlink->reporter))
++		goto err_unregister;
++
++	mutex_lock(&devlink_simple_fw_reporters_mutex);
++	list_add_tail(&simple_devlink->list, &devlink_simple_fw_reporters);
++	mutex_unlock(&devlink_simple_fw_reporters_mutex);
++
++	return;
++
++err_unregister:
++	devlink_unregister(devlink);
++err_free:
++	devlink_free(devlink);
++}
++EXPORT_SYMBOL_GPL(devlink_simple_fw_reporter_prepare);
++
++void devlink_simple_fw_reporter_cleanup(struct device *dev)
++{
++	struct devlink_simple_fw_reporter *simple_devlink;
++	struct devlink *devlink;
++
++	simple_devlink = devlink_simple_fw_reporter_find_for_dev(dev);
++	if (!simple_devlink)
++		return;
++
++	devlink = priv_to_devlink(simple_devlink);
++	devlink_health_reporter_destroy(simple_devlink->reporter);
++	devlink_unregister(devlink);
++	devlink_free(devlink);
++}
++EXPORT_SYMBOL_GPL(devlink_simple_fw_reporter_cleanup);
+-- 
+2.25.4
+
