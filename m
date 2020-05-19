@@ -2,156 +2,87 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2EC12083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:09:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzO4lgXA"
+	by mail.kernel.org (Postfix) with ESMTP id CCE3620825
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589897417;
+	bh=JYwdbAEvDvQlKjkqjM1FAAVeUY4eLELMMyAO2apEp98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=st3gDCTGQXldsQHsh7UFbWJL1qHAKjLcomGJe3etSBkz2xWzQymARQBEvF42rpdzh
+	 A139JNVmmCllHL/+1k8kb9Nzk6aagj1Bhz9BmGxI6Psg2Qyfhc0PqoK9qmqcDpdr3y
+	 37u8EqUVo+SyR4beud+KXMJZFEN7U1VcJKWThqxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbgESOJj (ORCPT
+        id S1729017AbgESOKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:09:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgESOJj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:09:39 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96F52C08C5C0;
-        Tue, 19 May 2020 07:09:38 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id z72so3767530wmc.2;
-        Tue, 19 May 2020 07:09:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ieDlz4aqwf0/0wrYIdBm1ppFOEhF3MtntEZgJd2AFUQ=;
-        b=AzO4lgXA6CB3e3NLyn+DtxyUqjJoYHxyOUXN0dw6fzOpuWudf7FfzlAc7rePX/9O8+
-         hPFohHOk2lBHgSq84/hvvbjnTNKWhhlpXy3Ij8CrpGPqQvu6f2ZBnINYR+GCDNIZk0Sh
-         FsciBfnhcbnol75ghooeA1wUrSlfFAfQ2mROThdihhSZOSBJUDkTCxtQEoikGgcrTYTs
-         8s6Qt1ZRpJniok3AZuJOv5McRtEpiVglLYgNTsyc8tAhF52npbSkDLQbANtRCW+zk9A3
-         YzzJwTidx51bMNLKkbGBiNhqYkm8Uh0Hjb3/pCJhT6muzU3ihTwubxr1oFHAinQlrs/k
-         hX6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ieDlz4aqwf0/0wrYIdBm1ppFOEhF3MtntEZgJd2AFUQ=;
-        b=cVtE2C1SUcSEa9bfiRYJUBX5C6rAWuQ+WlPMHQg2asP4d8jMUufoaAF94IIdtMP1/T
-         k6tDjV41ndkEwx8tbd1TAyIT4w6noa4Q9JSFlRv0gTgCrP61CaxEoS+N9aHAZEOI+Flq
-         yEnPf/cHuqzvWK56Ln/wrnRZsF6vtBL9JMAWuYbiDmDVygcZUvyOd83VPkNarDScGz/r
-         QqMwg1MW5xLo15ff+fK7MUt5lFMgfd4W4skfuXI7wJNOuXXdY6PWbDLLSACXjuXBKJow
-         9b3ZL6/G/ng97GHq/GfQH/rqfik4na5xbX/nDbQt2WPVAj/s9612cSMQoAHi8/KM8fLJ
-         1x8Q==
-X-Gm-Message-State: AOAM5333WiISY5No2/u6vJFJJ7rE1WHwf2m+8QE6q3yw7eUIG8jj9k/6
-        LKJ7uU8mCtKj/ChWodWtdMw=
-X-Google-Smtp-Source: ABdhPJy7q9J16sCXJITd75eu5Jgw4zyATN/KHypDzge1JYnzEhWsFG83oZ0nCxKHOdwZEF+q2bY4Hw==
-X-Received: by 2002:a05:600c:14c6:: with SMTP id i6mr5618622wmh.58.1589897377165;
-        Tue, 19 May 2020 07:09:37 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id x5sm22255722wro.12.2020.05.19.07.09.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 May 2020 07:09:33 -0700 (PDT)
-Date:   Tue, 19 May 2020 16:09:30 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 2/4] dt-bindings: iio: magnetometer: ak8975: add gpio
- reset support
-Message-ID: <20200519140930.GC30573@ict14-OptiPlex-980>
-References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
- <20200519124402.26076-3-jonathan.albrieux@gmail.com>
- <20200519132354.GB4623@gerhold.net>
+        Tue, 19 May 2020 10:10:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728609AbgESOKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 10:10:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3E472065F;
+        Tue, 19 May 2020 14:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589897416;
+        bh=JYwdbAEvDvQlKjkqjM1FAAVeUY4eLELMMyAO2apEp98=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lk2TW4a8TfpQpfvd56OBDl2FmL++QIDwKZgTl0RO+IIy2muyP8IxycpZnB0WgmGYq
+         LPh1b1/OUOQjy6FSkEENQFftoZ2S4IplY0RAWDRdx74zBaywjFOw4ebcP+rSUi3Kjh
+         vx+omNI9L6WaTFkTnTf2K2/hvH7c4KN55wAijfuQ=
+Date:   Tue, 19 May 2020 16:10:14 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, vkoul@kernel.org,
+        vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
+        bard.liao@intel.com
+Subject: Re: [PATCH 3/3] soundwire: add Slave sysfs support
+Message-ID: <20200519141014.GA535881@kroah.com>
+References: <20200518203551.2053-1-yung-chuan.liao@linux.intel.com>
+ <20200518203551.2053-4-yung-chuan.liao@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519132354.GB4623@gerhold.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200518203551.2053-4-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 03:23:54PM +0200, Stephan Gerhold wrote:
-> On Tue, May 19, 2020 at 02:43:52PM +0200, Jonathan Albrieux wrote:
-> > Add reset-gpio support.
-> > 
-> > Without reset's deassertion during ak8975_power_on(), driver's probe fails
-> > on ak8975_who_i_am() while checking for device identity for AK09911 chip.
-> > 
-> > AK09911 has an active low reset gpio to handle register's reset.
-> > AK09911 datasheed says that, if not used, reset pin should be connected
+On Tue, May 19, 2020 at 04:35:51AM +0800, Bard Liao wrote:
+> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > 
-> datasheed -> datasheet
->
+> Expose MIPI DisCo Slave properties in sysfs.
+> 
+> For Slave properties and Data Port 0, the attributes are managed with
+> simple devm_ support.
+> 
+> A Slave Device may have more than one Data Port (DPN), and each Data
+> Port can be sink or source. The attributes are created dynamically
+> using pre-canned macros, but still use devm_ with a name attribute
+> group to avoid creating kobjects - as requested by GregKH. In the
+> _show function, we use container_of() to retrieve port number and
+> direction required to extract the information.
+> 
+> Audio modes are not supported for now. Depending on the discussions
+> the SoundWire Device Class, we may add it later as is or follow the
+> new specification.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-Will fix that soon
- 
-> > to VID. This patch emulates this situation.
-> > 
-> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > ---
-> >  .../devicetree/bindings/iio/magnetometer/ak8975.yaml          | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
-> > index 86e3efa693a8..a82c0ff5d098 100644
-> > --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
-> > @@ -37,6 +37,9 @@ properties:
-> >    mount-matrix:
-> >      description: an optional 3x3 mounting rotation matrix
-> >  
-> > +  reset-gpio:
-> > +    description: an optional pin needed for AK09911 to set the reset state
-> 
-> Maybe add a comment that this should be "usually active low".
-> 
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -53,6 +56,7 @@ examples:
-> >              reg = <0x0c>;
-> >              gpios = <&gpj0 7 0>;
-> >              vdd-supply = <&ldo_3v3_gnss>;
-> > +            reset-gpio = <&msmgpio 111 1>;
-> 
-> Same here, reset-gpio = <&msmgpio 111 GPIO_ACTIVE_LOW>,
-> would be more clear.
-> 
-> >              mount-matrix = "-0.984807753012208",  /* x0 */
-> >                             "0",                   /* y0 */
-> >                             "-0.173648177666930",  /* z0 */
-> > -- 
-> > 2.17.1
-
-Thank you for the suggestions, will work on them,
-
-Best regards,
-Jonathan Albrieux
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
