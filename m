@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BC6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F97C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85A05206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED9B205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgESVsJ (ORCPT
+        id S1728482AbgESVrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:48:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41078 "EHLO
+        Tue, 19 May 2020 17:47:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728566AbgESVsI (ORCPT
+        with ESMTP id S1728433AbgESVrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:48:08 -0400
+        Tue, 19 May 2020 17:47:36 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A1EC08C5C0;
-        Tue, 19 May 2020 14:48:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7615DC08C5C1;
+        Tue, 19 May 2020 14:47:36 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1jbA5H-0002w4-Gd; Tue, 19 May 2020 23:47:35 +0200
+        id 1jbA57-0002rm-M7; Tue, 19 May 2020 23:47:25 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -37,10 +37,11 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: [PATCH v1 21/25] iocost: Use sequence counter with associated spinlock
-Date:   Tue, 19 May 2020 23:45:43 +0200
-Message-Id: <20200519214547.352050-22-a.darwish@linutronix.de>
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v1 19/25] vfs: Use sequence counter with associated spinlock
+Date:   Tue, 19 May 2020 23:45:41 +0200
+Message-Id: <20200519214547.352050-20-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -69,39 +70,72 @@ neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- block/blk-iocost.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ fs/dcache.c               | 2 +-
+ fs/fs_struct.c            | 4 ++--
+ include/linux/dcache.h    | 2 +-
+ include/linux/fs_struct.h | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 7c1fe605d0d6..8029a9e8fa55 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -405,7 +405,7 @@ struct ioc {
- 	enum ioc_running		running;
- 	atomic64_t			vtime_rate;
+diff --git a/fs/dcache.c b/fs/dcache.c
+index b280e07e162b..e5f365d8fd67 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -1727,7 +1727,7 @@ static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
+ 	dentry->d_lockref.count = 1;
+ 	dentry->d_flags = 0;
+ 	spin_lock_init(&dentry->d_lock);
+-	seqcount_init(&dentry->d_seq);
++	seqcount_spinlock_init(&dentry->d_seq, &dentry->d_lock);
+ 	dentry->d_inode = NULL;
+ 	dentry->d_parent = dentry;
+ 	dentry->d_sb = sb;
+diff --git a/fs/fs_struct.c b/fs/fs_struct.c
+index ca639ed967b7..04b3f5b9c629 100644
+--- a/fs/fs_struct.c
++++ b/fs/fs_struct.c
+@@ -117,7 +117,7 @@ struct fs_struct *copy_fs_struct(struct fs_struct *old)
+ 		fs->users = 1;
+ 		fs->in_exec = 0;
+ 		spin_lock_init(&fs->lock);
+-		seqcount_init(&fs->seq);
++		seqcount_spinlock_init(&fs->seq, &fs->lock);
+ 		fs->umask = old->umask;
  
--	seqcount_t			period_seqcount;
-+	seqcount_spinlock_t		period_seqcount;
- 	u32				period_at;	/* wallclock starttime */
- 	u64				period_at_vtime; /* vtime starttime */
- 
-@@ -872,7 +872,6 @@ static void ioc_now(struct ioc *ioc, struct ioc_now *now)
- 
- static void ioc_start_period(struct ioc *ioc, struct ioc_now *now)
- {
--	lockdep_assert_held(&ioc->lock);
- 	WARN_ON_ONCE(ioc->running != IOC_RUNNING);
- 
- 	write_seqcount_begin(&ioc->period_seqcount);
-@@ -1958,7 +1957,7 @@ static int blk_iocost_init(struct request_queue *q)
- 
- 	ioc->running = IOC_IDLE;
- 	atomic64_set(&ioc->vtime_rate, VTIME_PER_USEC);
--	seqcount_init(&ioc->period_seqcount);
-+	seqcount_spinlock_init(&ioc->period_seqcount, &ioc->lock);
- 	ioc->period_at = ktime_to_us(ktime_get());
- 	atomic64_set(&ioc->cur_period, 0);
- 	atomic_set(&ioc->hweight_gen, 0);
+ 		spin_lock(&old->lock);
+@@ -163,6 +163,6 @@ EXPORT_SYMBOL(current_umask);
+ struct fs_struct init_fs = {
+ 	.users		= 1,
+ 	.lock		= __SPIN_LOCK_UNLOCKED(init_fs.lock),
+-	.seq		= SEQCNT_ZERO(init_fs.seq),
++	.seq		= SEQCNT_SPINLOCK_ZERO(init_fs.seq, &init_fs.lock),
+ 	.umask		= 0022,
+ };
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index c1488cc84fd9..235563da356d 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -89,7 +89,7 @@ extern struct dentry_stat_t dentry_stat;
+ struct dentry {
+ 	/* RCU lookup touched fields */
+ 	unsigned int d_flags;		/* protected by d_lock */
+-	seqcount_t d_seq;		/* per dentry seqlock */
++	seqcount_spinlock_t d_seq;	/* per dentry seqlock */
+ 	struct hlist_bl_node d_hash;	/* lookup hash list */
+ 	struct dentry *d_parent;	/* parent directory */
+ 	struct qstr d_name;
+diff --git a/include/linux/fs_struct.h b/include/linux/fs_struct.h
+index cf1015abfbf2..783b48dedb72 100644
+--- a/include/linux/fs_struct.h
++++ b/include/linux/fs_struct.h
+@@ -9,7 +9,7 @@
+ struct fs_struct {
+ 	int users;
+ 	spinlock_t lock;
+-	seqcount_t seq;
++	seqcount_spinlock_t seq;
+ 	int umask;
+ 	int in_exec;
+ 	struct path root, pwd;
 -- 
 2.20.1
 
