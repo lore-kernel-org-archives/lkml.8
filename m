@@ -2,128 +2,223 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB246C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D59F420708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200CC206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:27:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cX4DoIYH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbgESLYK (ORCPT
+        id S1728286AbgESL1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:24:10 -0400
-Received: from mga11.intel.com ([192.55.52.93]:19307 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgESLYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:24:09 -0400
-IronPort-SDR: 2xWwAKQsABQaIgQP/t/nG8nuRoHdBE6qLIN6LapMjWui62JYeWQWCFLUSmGz5Fn6LMx+Ly9fY/
- ZzTGX4p9ZJiQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 04:24:09 -0700
-IronPort-SDR: oaZ8nk8yTbKOxBkv8QTVzCSAKKDxb40mum2qLj2Mjp5rgKJYNpXxQFX1l6Gbr6kVZ8lyGMZuO5
- soybODBCSujA==
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="300076326"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 04:24:05 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 322D720CEF; Tue, 19 May 2020 14:24:03 +0300 (EEST)
-Date:   Tue, 19 May 2020 14:24:03 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Luis Oliveira <lolivei@synopsys.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>
-Subject: Re: [PATCH v2 1/6] media: ov5647: Add set_fmt and get_fmt calls.
-Message-ID: <20200519112403.GG20066@paasikivi.fi.intel.com>
-References: <cover.1589850165.git.roman.kovalivskyi@globallogic.com>
- <8a4c0d157d26251c9916b32866e6a4a91c023ef9.1589850165.git.roman.kovalivskyi@globallogic.com>
+        Tue, 19 May 2020 07:27:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgESL1P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 07:27:15 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E080C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 04:27:15 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u1so1886801wmn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 04:27:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X9s1mFt4Y+m2GazZ8OD2weZt7bXYsBrAFY1mL2LOceo=;
+        b=cX4DoIYH4zV4RRwh3M8eeDx2prhyfWGoLozgWJzLGaCQtFLdCN3mhGyaLeM0u24A2y
+         KdvyIoGFULIuT3yUVPC1yPJ6zHpKBN5VDF1reoaLRfxBGUBc8KEVy+GWtOiBpKv3ScU9
+         KQJjY4quqA7OwJ8jdkg67DLfYm0taMb1LXsyfGcyPVV0AlO180hzrG/nE8WyVVZO3dhq
+         VTkzUoE/hKL+ZjAyql7ShrqsToG/V+iHDqxStHhbDhl8ii4upu0rT8j7w54FMM6PXx2Q
+         N1Zu6dseEeAEI5BVJyXwQ8unjhF4jqR19YWH+dwRli6DO4VJz/wxBgrVqn9lLG4FEZJq
+         uVuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X9s1mFt4Y+m2GazZ8OD2weZt7bXYsBrAFY1mL2LOceo=;
+        b=OIyBi9ssIEmU1S+uODte7cJJJD0zXZmmgsFGu0p/1o7bOOaHymUcT+19NhF9H5oA8c
+         eDb38s10Lg2hkL9Y/QEXUg2zCOh0rKlgQATe1JXFJHX5HfmoDdJDfcE+cC8bZg+w8Jg4
+         NP8z1ZmwHpwzHPl+rRJu73zAEnLYaETjgd3DSOUkzTpE2Wda5sisoE9kS0i+kEQ7kGto
+         CkV/t02v2C0OyKwk5jTY4ACfkVC0e4CMAbEDNpajWtc2SadlnmIg/Lo94XIvDVIYb+os
+         avVJbk/CVqjNj8ZTZBNeGRUqff5BmmasbJk2kuC6hb6SLdPuJQyQFx4Mrk6GQuhC3uFk
+         4Low==
+X-Gm-Message-State: AOAM531xhh4fjNBWZX4e4Wl7kfExL6hydDNpM9M2SfAIkMv16O8V6Eyk
+        9gZ2+ak80vZPyNx4PsPp9rc=
+X-Google-Smtp-Source: ABdhPJy0KfucZ/8phPGAZvlHvMxbheNSTC8rSaxIMz+lsRz3mXKl136S8UVrc4oLFoGta6/hrjU2kQ==
+X-Received: by 2002:a7b:c3d2:: with SMTP id t18mr5015488wmj.100.1589887633716;
+        Tue, 19 May 2020 04:27:13 -0700 (PDT)
+Received: from kwango.local (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
+        by smtp.gmail.com with ESMTPSA id 88sm19886645wrq.77.2020.05.19.04.27.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 04:27:12 -0700 (PDT)
+From:   Ilya Dryomov <idryomov@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] vsprintf: don't obfuscate NULL and error pointers
+Date:   Tue, 19 May 2020 13:26:57 +0200
+Message-Id: <20200519112657.17098-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a4c0d157d26251c9916b32866e6a4a91c023ef9.1589850165.git.roman.kovalivskyi@globallogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+I don't see what security concern is addressed by obfuscating NULL
+and IS_ERR() error pointers, printed with %p/%pK.  Given the number
+of sites where %p is used (over 10000) and the fact that NULL pointers
+aren't uncommon, it probably wouldn't take long for an attacker to
+find the hash that corresponds to 0.  Although harder, the same goes
+for most common error values, such as -1, -2, -11, -14, etc.
 
-Thanks for the patchset.
+The NULL part actually fixes a regression: NULL pointers weren't
+obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
+dereferencing invalid pointers") which went into 5.2.  I'm tacking
+the IS_ERR() part on here because error pointers won't leak kernel
+addresses and printing them as pointers shouldn't be any different
+from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
+debugging based on existing pr_debug and friends excruciating.
 
-On Tue, May 19, 2020 at 04:16:16AM +0300, Roman Kovalivskyi wrote:
-> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> 
-> There's no way to query the subdevice for the supported
-> resolutions. Add set_fmt and get_fmt implementations. Since there's
-> only one format supported set_fmt does nothing and get returns single
-> format.
-> 
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-> ---
->  drivers/media/i2c/ov5647.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-> index e7d2e5b4ad4b..3e587eb0a30e 100644
-> --- a/drivers/media/i2c/ov5647.c
-> +++ b/drivers/media/i2c/ov5647.c
-> @@ -463,8 +463,30 @@ static int ov5647_enum_mbus_code(struct v4l2_subdev *sd,
->  	return 0;
->  }
->  
-> +static int ov5647_set_get_fmt(struct v4l2_subdev *sd,
-> +			      struct v4l2_subdev_pad_config *cfg,
-> +			      struct v4l2_subdev_format *format)
-> +{
-> +	struct v4l2_mbus_framefmt *fmt = &format->format;
-> +
-> +	if (format->pad != 0)
-> +		return -EINVAL;
+Note that the "always print 0's for %pK when kptr_restrict == 2"
+behaviour which goes way back is left as is.
 
-No need to check the pad, the caller already has checked for it.
+Example output with the patch applied:
 
-> +
-> +	/* Only one format is supported, so return that */
-> +	memset(fmt, 0, sizeof(*fmt));
-> +	fmt->code = MEDIA_BUS_FMT_SBGGR8_1X8;
-> +	fmt->colorspace = V4L2_COLORSPACE_SRGB;
-> +	fmt->field = V4L2_FIELD_NONE;
-> +	fmt->width = 640;
-> +	fmt->height = 480;
-> +
-> +	return 0;
-> +}
-> +
->  static const struct v4l2_subdev_pad_ops ov5647_subdev_pad_ops = {
->  	.enum_mbus_code = ov5647_enum_mbus_code,
-> +	.set_fmt =	  ov5647_set_get_fmt,
-> +	.get_fmt =	  ov5647_set_get_fmt,
->  };
->  
->  static const struct v4l2_subdev_ops ov5647_subdev_ops = {
+                            ptr         error-ptr              NULL
+%p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
+%pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
+%px:           ffff888048c04020  fffffffffffffff2  0000000000000000
+%pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
+%pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
 
+Fixes: 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers")
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ lib/test_printf.c | 19 ++++++++++++++++++-
+ lib/vsprintf.c    |  7 +++++++
+ 2 files changed, 25 insertions(+), 1 deletion(-)
+
+Hi Petr,
+
+This just came up again, please consider sending this to Linus
+for 5.7.
+
+Prior discussion was split in three threads and revolved around the
+vision for how lib/test_printf.c should be structured between Rasmus
+and yourself.  The fix itself wasn't disputed and has several acks.
+
+If you want to restructure the test suite before adding any new
+test cases, v1 doesn't have them, but I'm reposting with test cases
+because I think it's best to add them right away to prevent further
+regressions.
+
+v3:
+- don't use EAGAIN macro in error_pointer() test case as the
+  actual error code varies between architectures
+
+v2:
+- fix null_pointer() test case (it didn't catch the original
+  regression because test_hashed() doesn't really test much)
+  and add error_pointer() test case
+
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 2d9f520d2f27..6b1622f4d7c2 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -214,6 +214,7 @@ test_string(void)
+ #define PTR_STR "ffff0123456789ab"
+ #define PTR_VAL_NO_CRNG "(____ptrval____)"
+ #define ZEROS "00000000"	/* hex 32 zero bits */
++#define ONES "ffffffff"		/* hex 32 one bits */
+ 
+ static int __init
+ plain_format(void)
+@@ -245,6 +246,7 @@ plain_format(void)
+ #define PTR_STR "456789ab"
+ #define PTR_VAL_NO_CRNG "(ptrval)"
+ #define ZEROS ""
++#define ONES ""
+ 
+ static int __init
+ plain_format(void)
+@@ -330,14 +332,28 @@ test_hashed(const char *fmt, const void *p)
+ 	test(buf, fmt, p);
+ }
+ 
++/*
++ * NULL pointers aren't hashed.
++ */
+ static void __init
+ null_pointer(void)
+ {
+-	test_hashed("%p", NULL);
++	test(ZEROS "00000000", "%p", NULL);
+ 	test(ZEROS "00000000", "%px", NULL);
+ 	test("(null)", "%pE", NULL);
+ }
+ 
++/*
++ * Error pointers aren't hashed.
++ */
++static void __init
++error_pointer(void)
++{
++	test(ONES "fffffff5", "%p", ERR_PTR(-11));
++	test(ONES "fffffff5", "%px", ERR_PTR(-11));
++	test("(efault)", "%pE", ERR_PTR(-11));
++}
++
+ #define PTR_INVALID ((void *)0x000000ab)
+ 
+ static void __init
+@@ -649,6 +665,7 @@ test_pointer(void)
+ {
+ 	plain();
+ 	null_pointer();
++	error_pointer();
+ 	invalid_pointer();
+ 	symbol_ptr();
+ 	kernel_ptr();
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 7c488a1ce318..f0f0522cd5a7 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -794,6 +794,13 @@ static char *ptr_to_id(char *buf, char *end, const void *ptr,
+ 	unsigned long hashval;
+ 	int ret;
+ 
++	/*
++	 * Print the real pointer value for NULL and error pointers,
++	 * as they are not actual addresses.
++	 */
++	if (IS_ERR_OR_NULL(ptr))
++		return pointer_string(buf, end, ptr, spec);
++
+ 	/* When debugging early boot use non-cryptographically secure hash. */
+ 	if (unlikely(debug_boot_weak_hash)) {
+ 		hashval = hash_long((unsigned long)ptr, 32);
 -- 
-Kind regards,
+2.19.2
 
-Sakari Ailus
