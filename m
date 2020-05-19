@@ -2,102 +2,109 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5850C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398B8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF662081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNDVxX4v"
+	by mail.kernel.org (Postfix) with ESMTP id 1465B2081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgESMTI (ORCPT
+        id S1728886AbgESMTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgESMTI (ORCPT
+        Tue, 19 May 2020 08:19:11 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48724 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728705AbgESMTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:19:08 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74753C08C5C0;
-        Tue, 19 May 2020 05:19:07 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u1so2049593wmn.3;
-        Tue, 19 May 2020 05:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=p60TB+Tyypr34A8h+yZQiNDu/fhAf7U+hPUWshuyPPQ=;
-        b=fNDVxX4v/9yZjo6Ka/JZWCNnCthl0wRZ7qHbp9YiiWJnDSCwAOJZrvnfS2IBFci2iT
-         GxDcpsIq4HJ26zb2iLdrWraDMFawnKOHbxfRGif5vGQtBb95kjErhuREsyAvTHO8xXw+
-         0IlbCky1b86HJu+2SMmZNwPpQGd3YCCKsqPlXZW7vt2XbFOMkdGhn2UL9FlN8cGUvdYj
-         RHSdcxZYOqZoKHJF4CjKWwMcUMYyuSV3pE0Bx793YSlWsSRMm0zn0B2O+7DIv1ZcQtMB
-         K39A2AS5//Yv8xUYflkIsmUnlswZeMit//r6ivmRZIBVy8fmvcB2kyHQnZP2wNIFPY+F
-         LvRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=p60TB+Tyypr34A8h+yZQiNDu/fhAf7U+hPUWshuyPPQ=;
-        b=GaCPasPewJ2suW/onCLQS7ea9n57h2eI1i8yJGQa7LX7mFzoNBkcMOnvXpkwHf5/C8
-         fg+PHMPoCdWp31I7M/PA6nwpAv1fDvQWgRjXz3IzoQYvXLTk+RU8RpeC0YO8DvHn8v+b
-         Jz0ypdo0Id8dsdlPoDyjxhf0MsYE9Ioswivw2qq7f20b6XIr9dDYopqdM/l3HGSTgPNS
-         9lYoVMJbKFRth5l09iCVbM1wMOLGU+8hBoN4mo7omX239MtLm4a2pV8buICdgNYerdn7
-         Ee+z7lORQK5pMvbB4/rIVmjGPeWi921uoQjdobDK0WTVmfq/424o+mR2pTgxhxRAS/Pq
-         uV6w==
-X-Gm-Message-State: AOAM530VSbvJPKdBh1WK91HjgMR0jW3YuFQPrl9SCOx0RjPorTscuXKB
-        PJfk8Jn+8CrpF2qKRLSwbtw=
-X-Google-Smtp-Source: ABdhPJxF9SfebJ0+Qelp9N3dfeat3xZSDZwELOBS8RqyzDKPS9DM4f79WmvUaB+iKCUi2iTKDF69fw==
-X-Received: by 2002:a1c:4088:: with SMTP id n130mr4994461wma.43.1589890746219;
-        Tue, 19 May 2020 05:19:06 -0700 (PDT)
-Received: from dell5510 ([62.201.25.198])
-        by smtp.gmail.com with ESMTPSA id d9sm3763163wmd.10.2020.05.19.05.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 05:19:05 -0700 (PDT)
-Date:   Tue, 19 May 2020 14:19:03 +0200
-From:   Petr Vorel <petr.vorel@gmail.com>
-To:     Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        Joey Pabalinas <joeypabalinas@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-snps-arc@lists.infradead.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v2] Kernel selftests: Add check if tpm devices are
- supported
-Message-ID: <20200519121903.GB26265@dell5510>
-Reply-To: Petr Vorel <petr.vorel@gmail.com>
-References: <20200519120743.41358-1-Nikita.Sobolev@synopsys.com>
+        Tue, 19 May 2020 08:19:09 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 9EF7B1C0261; Tue, 19 May 2020 14:19:07 +0200 (CEST)
+Date:   Tue, 19 May 2020 14:19:07 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Stefano Brivio <sbrivio@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 41/80] netfilter: nft_set_rbtree: Introduce and use
+ nft_rbtree_interval_start()
+Message-ID: <20200519121907.GA9158@amd>
+References: <20200518173450.097837707@linuxfoundation.org>
+ <20200518173458.612903024@linuxfoundation.org>
+ <20200519120625.GA8342@amd>
+ <20200519121356.GA354164@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
 Content-Disposition: inline
-In-Reply-To: <20200519120743.41358-1-Nikita.Sobolev@synopsys.com>
+In-Reply-To: <20200519121356.GA354164@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> tpm2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
-> are available. In case, when these devices are not available test
-> fails, but expected behaviour is skipped test.
 
-> Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-OK, I see it was also reverted by Jarkko
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200518&id=aaa2d92efe1f972567f1691b423ab8dc606ab3a9
+On Tue 2020-05-19 14:13:56, Greg Kroah-Hartman wrote:
+> On Tue, May 19, 2020 at 02:06:25PM +0200, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > [ Upstream commit 6f7c9caf017be8ab0fe3b99509580d0793bf0833 ]
+> > >=20
+> > > Replace negations of nft_rbtree_interval_end() with a new helper,
+> > > nft_rbtree_interval_start(), wherever this helps to visualise the
+> > > problem at hand, that is, for all the occurrences except for the
+> > > comparison against given flags in __nft_rbtree_get().
+> > >=20
+> > > This gets especially useful in the next patch.
+> >=20
+> > This looks like cleanup in preparation for the next patch. Next patch
+> > is there for some series, but not for 4.19.124. Should this be in
+> > 4.19, then?
+>=20
+> What is the "next patch" in this situation?
 
-I wonder if only wrong shell syntax (self.flags = flags) is a problem.
+In 5.4 you have:
 
-Kind regards,
-Petr
+9956 O   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 5.4 082/147] netfilter: nft_s=
+et_rbtree: Introduce and use nft
+9957     Greg Kroah =E2=94=9C=E2=94=80>[PATCH 5.4 083/147] netfilter: nft_s=
+et_rbtree: Add missing expired c
+
+In 4.19 you have:
+
+10373 r   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 4.19 41/80] netfilter: nft_s=
+et_rbtree: Introduce and use nft
+10376 O   Greg Kroah =E2=94=9C=E2=94=80>[PATCH 4.19 42/80] IB/mlx4: Test re=
+turn value of calls to ib_get_ca
+
+I believe 41/80 can be dropped from 4.19 series, as it is just a
+preparation for 083/147... which is not queued for 4.19.
+
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7DzrsACgkQMOfwapXb+vJb2ACglnpWTOFVsrEVvlkVxMWeJZSG
+F5kAoK+QLdn4SjARq123iklM6CKMTQKz
+=cmmv
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
