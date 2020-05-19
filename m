@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E70E72087D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5E520878
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgESUAo (ORCPT
+        id S1728329AbgEST7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:00:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52120 "EHLO
+        Tue, 19 May 2020 15:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728353AbgEST7H (ORCPT
+        with ESMTP id S1728209AbgEST6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:59:07 -0400
+        Tue, 19 May 2020 15:58:49 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF15C08C5C3;
-        Tue, 19 May 2020 12:59:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0327C08C5C0;
+        Tue, 19 May 2020 12:58:48 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb8OE-0000Ee-BH; Tue, 19 May 2020 21:59:02 +0200
+        id 1jb8Nw-0008TQ-8o; Tue, 19 May 2020 21:58:44 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A33961C0837;
-        Tue, 19 May 2020 21:58:47 +0200 (CEST)
-Date:   Tue, 19 May 2020 19:58:47 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AA21C1C0852;
+        Tue, 19 May 2020 21:58:36 +0200 (CEST)
+Date:   Tue, 19 May 2020 19:58:36 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] context_tracking: Make guest_enter/exit() .noinstr ready
+Subject: [tip: x86/entry] x86/entry/32: Provide macro to emit IDT entry stubs
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505134341.672545766@linutronix.de>
-References: <20200505134341.672545766@linutronix.de>
+In-Reply-To: <20200505134904.166735365@linutronix.de>
+References: <20200505134904.166735365@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158991832753.17951.748859244105491427.tip-bot2@tip-bot2>
+Message-ID: <158991831658.17951.1329853288584058411.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,98 +61,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     af1e56b78534c38bb0e0c712ca70e59f816b74e9
-Gitweb:        https://git.kernel.org/tip/af1e56b78534c38bb0e0c712ca70e59f816b74e9
+Commit-ID:     e94587c501c82a3c9153217a97db11a81ed37f85
+Gitweb:        https://git.kernel.org/tip/e94587c501c82a3c9153217a97db11a81ed37f85
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 19 Mar 2020 14:53:56 +01:00
+AuthorDate:    Tue, 25 Feb 2020 23:16:11 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 19 May 2020 15:47:21 +02:00
+CommitterDate: Tue, 19 May 2020 16:03:56 +02:00
 
-context_tracking: Make guest_enter/exit() .noinstr ready
+x86/entry/32: Provide macro to emit IDT entry stubs
 
-Force inlining of the helpers and mark the instrumentable parts
-accordingly.
+32 and 64 bit have unnecessary different ways to populate the exception
+entry code. Provide a idtentry macro which allows to consolidate all of
+that.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Acked-by: Andy Lutomirski <luto@kernel.org>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200505134341.672545766@linutronix.de
+Link: https://lkml.kernel.org/r/20200505134904.166735365@linutronix.de
 
 
 ---
- include/linux/context_tracking.h | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ arch/x86/entry/entry_32.S | 68 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 68 insertions(+)
 
-diff --git a/include/linux/context_tracking.h b/include/linux/context_tracking.h
-index 8150f5a..8cac62e 100644
---- a/include/linux/context_tracking.h
-+++ b/include/linux/context_tracking.h
-@@ -101,12 +101,14 @@ static inline void context_tracking_init(void) { }
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index d9da0b7..eb64e78 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -44,6 +44,7 @@
+ #include <asm/asm.h>
+ #include <asm/smap.h>
+ #include <asm/frame.h>
++#include <asm/trapnr.h>
+ #include <asm/nospec-branch.h>
  
- #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
- /* must be called with irqs disabled */
--static inline void guest_enter_irqoff(void)
-+static __always_inline void guest_enter_irqoff(void)
- {
-+	instrumentation_begin();
- 	if (vtime_accounting_enabled_this_cpu())
- 		vtime_guest_enter(current);
- 	else
- 		current->flags |= PF_VCPU;
-+	instrumentation_end();
+ #include "calling.h"
+@@ -726,6 +727,31 @@
  
- 	if (context_tracking_enabled())
- 		__context_tracking_enter(CONTEXT_GUEST);
-@@ -118,39 +120,48 @@ static inline void guest_enter_irqoff(void)
- 	 * one time slice). Lets treat guest mode as quiescent state, just like
- 	 * we do with user-mode execution.
- 	 */
--	if (!context_tracking_enabled_this_cpu())
-+	if (!context_tracking_enabled_this_cpu()) {
-+		instrumentation_begin();
- 		rcu_virt_note_context_switch(smp_processor_id());
-+		instrumentation_end();
-+	}
- }
+ .Lend_\@:
+ .endm
++
++/**
++ * idtentry - Macro to generate entry stubs for simple IDT entries
++ * @vector:		Vector number
++ * @asmsym:		ASM symbol for the entry point
++ * @cfunc:		C function to be called
++ * @has_error_code:	Hardware pushed error code on stack
++ * @sane:		Compatibility flag with 64bit
++ */
++.macro idtentry vector asmsym cfunc has_error_code:req sane=0
++SYM_CODE_START(\asmsym)
++	ASM_CLAC
++	cld
++
++	.if \has_error_code == 0
++		pushl	$0		/* Clear the error code */
++	.endif
++
++	/* Push the C-function address into the GS slot */
++	pushl	$\cfunc
++	/* Invoke the common exception entry */
++	jmp	handle_exception
++SYM_CODE_END(\asmsym)
++.endm
++
+ /*
+  * %eax: prev task
+  * %edx: next task
+@@ -1517,6 +1543,48 @@ SYM_CODE_START_LOCAL_NOALIGN(common_exception)
+ 	jmp	ret_from_exception
+ SYM_CODE_END(common_exception)
  
--static inline void guest_exit_irqoff(void)
-+static __always_inline void guest_exit_irqoff(void)
- {
- 	if (context_tracking_enabled())
- 		__context_tracking_exit(CONTEXT_GUEST);
- 
-+	instrumentation_begin();
- 	if (vtime_accounting_enabled_this_cpu())
- 		vtime_guest_exit(current);
- 	else
- 		current->flags &= ~PF_VCPU;
-+	instrumentation_end();
- }
- 
- #else
--static inline void guest_enter_irqoff(void)
-+static __always_inline void guest_enter_irqoff(void)
- {
++SYM_CODE_START_LOCAL_NOALIGN(handle_exception)
++	/* the function address is in %gs's slot on the stack */
++	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
++	ENCODE_FRAME_POINTER
++
++	/* fixup %gs */
++	GS_TO_REG %ecx
++	movl	PT_GS(%esp), %edi		# get the function address
++	REG_TO_PTGS %ecx
++	SET_KERNEL_GS %ecx
++
++	/* fixup orig %eax */
++	movl	PT_ORIG_EAX(%esp), %edx		# get the error code
++	movl	$-1, PT_ORIG_EAX(%esp)		# no syscall to restart
++
++	movl	%esp, %eax			# pt_regs pointer
++	CALL_NOSPEC edi
++
++#ifdef CONFIG_VM86
++	movl	PT_EFLAGS(%esp), %eax		# mix EFLAGS and CS
++	movb	PT_CS(%esp), %al
++	andl	$(X86_EFLAGS_VM | SEGMENT_RPL_MASK), %eax
++#else
++	/*
++	 * We can be coming here from child spawned by kernel_thread().
++	 */
++	movl	PT_CS(%esp), %eax
++	andl	$SEGMENT_RPL_MASK, %eax
++#endif
++	cmpl	$USER_RPL, %eax			# returning to v8086 or userspace ?
++	jnb	ret_to_user
++
++	PARANOID_EXIT_TO_KERNEL_MODE
++	BUG_IF_WRONG_CR3
++	RESTORE_REGS 4
++	jmp	.Lirq_return
++
++ret_to_user:
++	movl	%esp, %eax
++	jmp	restore_all_switch_stack
++SYM_CODE_END(handle_exception)
++
+ SYM_CODE_START(debug)
  	/*
- 	 * This is running in ioctl context so its safe
- 	 * to assume that it's the stime pending cputime
- 	 * to flush.
- 	 */
-+	instrumentation_begin();
- 	vtime_account_kernel(current);
- 	current->flags |= PF_VCPU;
- 	rcu_virt_note_context_switch(smp_processor_id());
-+	instrumentation_end();
- }
- 
--static inline void guest_exit_irqoff(void)
-+static __always_inline void guest_exit_irqoff(void)
- {
-+	instrumentation_begin();
- 	/* Flush the guest cputime we spent on the guest */
- 	vtime_account_kernel(current);
- 	current->flags &= ~PF_VCPU;
-+	instrumentation_end();
- }
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_GEN */
- 
+ 	 * Entry from sysenter is now handled in common_exception
