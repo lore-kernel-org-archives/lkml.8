@@ -2,183 +2,305 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4547FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC0EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2092A2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012B22072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nYb2JpgP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlxgfkqF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgESCt5 (ORCPT
+        id S1727964AbgESCun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 22:49:57 -0400
-Received: from mail-eopbgr10068.outbound.protection.outlook.com ([40.107.1.68]:47287
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726292AbgESCt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 22:49:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kTF4p+6hibFv6oHrFULdsvuNgxf5Z12PVUytnOoiIReayqzvXmOW93dRSBl6tKHKkg5IE8WbDA6ureSVv+60bmEDkfPONEsyqtpJy8/cDrZetT42TWEnlcS/vsTEriJ9ol6e3Xzfzq1IJvL52EJ1QoQConi4XZAMraRr++/P7l/XuJhirmZeO0PzUX1bP9PWsfGMEJpQHgfvhcgOiXSzrVS/6eqjeY0JfZeDxO8zq4hm1YfHTzeOFhCJL9lLSfa/PnoZKrEvppYR5Tl/50mC3M6vAOGnf3kF9DXUYi+IkIeDOlRokvDyvzvJJ+qQaf0elD6pGeV20oqqPGRGU4zNIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sGPcUiRJ0CW6YzTZqDrxG55/AfOzeV8hebde2afFCJE=;
- b=bswwKqQPm0cjWUsQnctO4V6fu64S25NeZsVUJ9T+PL/mZH24oWInonFy8TaliAkr/Ah6Jx4vFJqX+Ces6WHj3BGxwndIrE1Vdwnw+szIVPCjlKaKnGkQsFKOGEqEQJ5cMTgkTf1AdmDxOTLAvQOrf0sV71NKjL5rPzwbv8s2q0VyFXEdr3NLnwkGyVieduLrftsWQvJCqYRaGKunEtQx1qyZI/5ftz+AUBZVGfRX1xbkn6UZnCdR6kumIERB6Q5YFIb0dsW9/neitf+OeornS1V3q6cQ6ctx+bxdPto5rEzCe944WyUm8Wda7288WeBhrrE1wkqWEDomDLtrg6Z9rA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sGPcUiRJ0CW6YzTZqDrxG55/AfOzeV8hebde2afFCJE=;
- b=nYb2JpgPG0nFsj9yqi+Jfi8err0UaPcEETbzHEe73UMWatudAlzfoIXisgzNVLWFI0j/DnosM/gkd4AefQ0eroNSl2vO68J+yM14jgXkHD/kviN6LApHl/PNSt12vCh4CU6XcJSj2+VHTa4FChkuYnc0BkZeUa8Ikk8wXDfN3aA=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB4150.eurprd04.prod.outlook.com (2603:10a6:209:43::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Tue, 19 May
- 2020 02:49:51 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.034; Tue, 19 May 2020
- 02:49:51 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/3] dt-bindings: timer: Convert i.MX TPM to json-schema
-Thread-Topic: [PATCH 2/3] dt-bindings: timer: Convert i.MX TPM to json-schema
-Thread-Index: AQHWLSSm2/1WAPgK0U6sOtqNceGFLKiutSNw
-Date:   Tue, 19 May 2020 02:49:51 +0000
-Message-ID: <AM6PR04MB49661ACB965C762C30E39AF680B90@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589813260-20036-1-git-send-email-Anson.Huang@nxp.com>
- <1589813260-20036-3-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1589813260-20036-3-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b88891f4-4c89-4cf9-dfe5-08d7fb9f4d7a
-x-ms-traffictypediagnostic: AM6PR04MB4150:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4150294BE7DED975CDDE358580B90@AM6PR04MB4150.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 040866B734
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 89f/1xmP6O9Jh7KIR+4XMYPSMo0jN6YnPIElHXRAM46anK1yMgNZUpI6ZpQXjbrY2Ja3SvR/7y1lWq4JEoDw5CBaBVOkgYfF7nOyxtLmMCyWsZYAmw3RQ1L53ssCgEUeMd53W9xBFIhfmrrQDdBrKHzkH71gHY+HdtsPGAOu0jw5Aa5J4ERdHRHXZBlSsKB+HiDzGRDJJjdm1LFvErD7uGxIg+g+Udl9ozzbPpEuY28mrStenhewH8MWwfgGZx6CHisrMYYIP24EMAb+1WoQG9Iddxme9qLP+RmNeIkUhKnTHBzVN1jgtdv/Y+5QJIXjrMkj2pNnp6m7A/Zz7gHvwGUt+SknZ3D0iQgcwBUP2G9I8Pg8d5PsmyDvFyWuL+Rhq/T2bjsee+W/CdTAX8Di5zpC7IXgNWb72XvLzkVb/N4QynKiqn7iMdiDDzGthEZJ9iAnPsYwUsD+vrh4HRu7kly1beFQ05yvCrikNvE59zw=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(5660300002)(26005)(71200400001)(186003)(7696005)(8936002)(44832011)(55016002)(33656002)(76116006)(66556008)(66476007)(66946007)(2906002)(52536014)(7416002)(86362001)(316002)(66446008)(110136005)(4326008)(6506007)(478600001)(8676002)(64756008)(9686003)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: NoVWvZHtUvRY7Y29COiIdGOTAQJPwKO0WlY0407/wFITZdf5LJdr5kTx33cpxhWw1h0e/ZAfhrV4eK1Z0t+cYB5LqJC1a2//0lHcL/pZ1xEOHXDPSPrDASC6Fhl5rf5ANWE+gzVmmk6IA9iEBYyyz7itV+nqFZxUO0I8HYWBJykvfGH6DhJZJBiSzTHR+KrPpnJPGYJ02yNEcdLaqX3naa5h/ToUyJorNpSLZSszpfLp+xG8WXnnkA5xhQtdTm4E5O+27FCCUBI4LA2OJsdFud7nMKY1FRbJU5WAIl7r0Fx4YTIuP+uop+UbI2ntGFKqzpGi2VgsqifsZt96jkO/8I6KYQ9G53UvkfZRBLXQoNe9MKvAHmUZwquOr6P+K7PAdE3gdOwrQUgIjqzBMAxh/A9irGqWZ2CNCy9OuIO62INT/g5+didUCF5OYH8nxv9V3Jui8ag9fDUvjyv5hsn8YrfRJih8Qv5dxhHebfCujwYOnHFGjpR0T9IKBXGpU0wW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 18 May 2020 22:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgESCum (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 22:50:42 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A877C061A0C;
+        Mon, 18 May 2020 19:50:42 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m7so5027558plt.5;
+        Mon, 18 May 2020 19:50:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Um0MqAkT2AlqVBUz0LYl439Zam1W4yGyACS/84j23pE=;
+        b=VlxgfkqFfgs2apfaHWWzr3g6t+6/wCR2VJC7ihA4e0l96IgCbjQktpnPgecT+Sv7vY
+         R6EhRJvVj9HRsZsqdfzbSQDoj0FxQyENTy1PaQ3jfbPF9Anj2c/e7w3YFCiNWHWEG7AE
+         IQWB+ljTEmCh/JbiDhP8pITX8gCTE13vaQI5fC68J/0nzbwlh/s50UdehSHjgYt79Km4
+         C3Un28P8iJkovjp8wkEcJqyuskbdRYyIEqCo0IqMt5udz8lUnEkPIDEUo5BRNZ/xNRwb
+         GVnrRl5jt+QVlTqsEfqDY9c6anPu+OnsYBU32yOshZI4hLBu17zheYIb0ag81v/WjxIh
+         ooFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Um0MqAkT2AlqVBUz0LYl439Zam1W4yGyACS/84j23pE=;
+        b=PO+lBkJcYBwknMv1tW9jhBzn+xSmuhHb7VrWKuWopcnIvSW8vg3jIg/ODQ7tkc8+nt
+         FPgHjW4kkZoXnjP31aWE0g28CEcO+MEtRrhU5glG9N4bsCfDFR7zrC3K3w+uZjMuGgjw
+         PSziVKKPE/KquIGJLjvFK+RJl8CSqDfNUtzD+kYM1T1wvf8m+kiOT0p/wuh12AKLUdtx
+         gcf271bZPjwuHoyCx5rPH9mYv51hVqAyyBBI05k0ZEKQmp0lk4FQT82ecR/vTdqxEaCt
+         7QMn2vNpwJglYja+2/qoDrI7IXLE+f9JedmqVcYj7aLC5sUmOK7fveb5IMq3/ogdUqVS
+         08aw==
+X-Gm-Message-State: AOAM530BAFDKN7KO5AqvLfjOjcx1bkH3PSFNV3xYFGozSHO9F9HgOGsj
+        aEQrJiOdpoZzX7QOcegdwYc=
+X-Google-Smtp-Source: ABdhPJxUEb40eUAEJc/TR1ypP/gVIih2peaEeOHrNggdWNiZOeiW6/A7lE1LV83bcEZdcDNdsiy/5g==
+X-Received: by 2002:a17:902:b712:: with SMTP id d18mr18073790pls.143.1589856641522;
+        Mon, 18 May 2020 19:50:41 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w23sm18485pgc.78.2020.05.18.19.50.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2020 19:50:39 -0700 (PDT)
+Subject: Re: [PATCH V3 07/15] arch/kunmap_atomic: Consolidate duplicate code
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <20200507150004.1423069-1-ira.weiny@intel.com>
+ <20200507150004.1423069-8-ira.weiny@intel.com>
+ <20200516223306.GA161252@roeck-us.net>
+ <20200518034938.GA3023182@iweiny-DESK2.sc.intel.com>
+ <20200518042932.GA59205@roeck-us.net>
+ <20200519000352.GF3025231@iweiny-DESK2.sc.intel.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <47757f51-15f2-3abe-9035-abdb3ba5816e@roeck-us.net>
+Date:   Mon, 18 May 2020 19:50:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b88891f4-4c89-4cf9-dfe5-08d7fb9f4d7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2020 02:49:51.2935
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ukTilocx3wR/E2PTV/3M9gRjsyuIZz6BwHnWLqsqF4uqdhGuyTloe3oqomxMNbR3IYVeQMrpkz9P+GZsMEntEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4150
+In-Reply-To: <20200519000352.GF3025231@iweiny-DESK2.sc.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogTW9uZGF5
-LCBNYXkgMTgsIDIwMjAgMTA6NDggUE0NCj4gDQo+IENvbnZlcnQgdGhlIGkuTVggVFBNIGJpbmRp
-bmcgdG8gRFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29uLXNjaGVtYS4NCj4gDQo+IFNpZ25lZC1v
-ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiAtLS0NCj4gIC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL254cCx0cG0tdGltZXIudHh0ICAgIHwgMjggLS0tLS0t
-LS0tLQ0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhwLHRwbS10aW1lci55YW1s
-ICAgfCA2Mw0KPiArKysrKysrKysrKysrKysrKysrKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDYz
-IGluc2VydGlvbnMoKyksIDI4IGRlbGV0aW9ucygtKSAgZGVsZXRlIG1vZGUgMTAwNjQ0DQo+IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9ueHAsdHBtLXRpbWVyLnR4dA0K
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy90aW1lci9ueHAsdHBtLXRpbWVyLnlhbWwNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhwLHRwbS10aW1lci50eHQNCj4gYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhwLHRwbS10aW1lci50eHQNCj4g
-ZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IGY4MjA4N2IuLjAwMDAwMDANCj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL254cCx0cG0tdGltZXIu
-dHh0DQo+ICsrKyAvZGV2L251bGwNCj4gQEAgLTEsMjggKzAsMCBAQA0KPiAtTlhQIExvdyBQb3dl
-ciBUaW1lci9QdWxzZSBXaWR0aCBNb2R1bGF0aW9uIE1vZHVsZSAoVFBNKQ0KPiAtDQo+IC1UaGUg
-VGltZXIvUFdNIE1vZHVsZSAoVFBNKSBzdXBwb3J0cyBpbnB1dCBjYXB0dXJlLCBvdXRwdXQgY29t
-cGFyZSwgLWFuZA0KPiB0aGUgZ2VuZXJhdGlvbiBvZiBQV00gc2lnbmFscyB0byBjb250cm9sIGVs
-ZWN0cmljIG1vdG9yIGFuZCBwb3dlcg0KPiAtbWFuYWdlbWVudCBhcHBsaWNhdGlvbnMuIFRoZSBj
-b3VudGVyLCBjb21wYXJlIGFuZCBjYXB0dXJlIHJlZ2lzdGVycyAtYXJlDQo+IGNsb2NrZWQgYnkg
-YW4gYXN5bmNocm9ub3VzIGNsb2NrIHRoYXQgY2FuIHJlbWFpbiBlbmFibGVkIGluIGxvdyAtcG93
-ZXIgbW9kZXMuDQo+IFRQTSBjYW4gc3VwcG9ydCBnbG9iYWwgY291bnRlciBidXMgd2hlcmUgb25l
-IFRQTSBkcml2ZXMgLXRoZSBjb3VudGVyIGJ1cyBmb3INCj4gdGhlIG90aGVycywgcHJvdmlkZWQg
-Yml0IHdpZHRoIGlzIHRoZSBzYW1lLg0KPiAtDQo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAt
-DQo+IC0tIGNvbXBhdGlibGUgOglzaG91bGQgYmUgImZzbCxpbXg3dWxwLXRwbSINCj4gLS0gcmVn
-IDoJCVNwZWNpZmllcyBiYXNlIHBoeXNpY2FsIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIHJlZ2lz
-dGVyIHNldHMNCj4gLQkJZm9yIHRoZSBjbG9jayBldmVudCBkZXZpY2UgYW5kIGNsb2NrIHNvdXJj
-ZSBkZXZpY2UuDQo+IC0tIGludGVycnVwdHMgOglTaG91bGQgYmUgdGhlIGNsb2NrIGV2ZW50IGRl
-dmljZSBpbnRlcnJ1cHQuDQo+IC0tIGNsb2NrcyA6CVRoZSBjbG9ja3MgcHJvdmlkZWQgYnkgdGhl
-IFNvQyB0byBkcml2ZSB0aGUgdGltZXIsIG11c3QgY29udGFpbg0KPiAtCQlhbiBlbnRyeSBmb3Ig
-ZWFjaCBlbnRyeSBpbiBjbG9jay1uYW1lcy4NCj4gLS0gY2xvY2stbmFtZXMgOiBNdXN0IGluY2x1
-ZGUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOiAiaXBnIiBhbmQgInBlciIuDQo+IC0NCj4gLUV4YW1w
-bGU6DQo+IC10cG01OiB0cG1ANDAyNjAwMDAgew0KPiAtCWNvbXBhdGlibGUgPSAiZnNsLGlteDd1
-bHAtdHBtIjsNCj4gLQlyZWcgPSA8MHg0MDI2MDAwMCAweDEwMDA+Ow0KPiAtCWludGVycnVwdHMg
-PSA8R0lDX1NQSSAyMiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gLQljbG9ja3MgPSA8JmNsa3Mg
-SU1YN1VMUF9DTEtfTklDMV9CVVNfRElWPiwNCj4gLQkJIDwmY2xrcyBJTVg3VUxQX0NMS19MUFRQ
-TTU+Ow0KPiAtCWNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIiOw0KPiAtfTsNCj4gZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9ueHAsdHBtLXRpbWVy
-LnlhbWwNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhwLHRw
-bS10aW1lci55YW1sDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAuLjBk
-MzQ2MTANCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvdGltZXIvbnhwLHRwbS10aW1lci55YW1sDQo+IEBAIC0wLDAgKzEsNjMgQEANCj4g
-KyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNl
-KSAlWUFNTCAxLjINCg0KWy4uLl0NCg0KPiArDQo+ICt0aXRsZTogTlhQIExvdyBQb3dlciBUaW1l
-ci9QdWxzZSBXaWR0aCBNb2R1bGF0aW9uIE1vZHVsZSAoVFBNKQ0KPiArDQo+ICttYWludGFpbmVy
-czoNCj4gKyAgLSBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiArDQo+ICtk
-ZXNjcmlwdGlvbjogfA0KPiArICBUaGUgVGltZXIvUFdNIE1vZHVsZSAoVFBNKSBzdXBwb3J0cyBp
-bnB1dCBjYXB0dXJlLCBvdXRwdXQgY29tcGFyZSwNCj4gKyAgYW5kIHRoZSBnZW5lcmF0aW9uIG9m
-IFBXTSBzaWduYWxzIHRvIGNvbnRyb2wgZWxlY3RyaWMgbW90b3IgYW5kIHBvd2VyDQo+ICsgIG1h
-bmFnZW1lbnQgYXBwbGljYXRpb25zLiBUaGUgY291bnRlciwgY29tcGFyZSBhbmQgY2FwdHVyZSBy
-ZWdpc3RlcnMNCj4gKyAgYXJlIGNsb2NrZWQgYnkgYW4gYXN5bmNocm9ub3VzIGNsb2NrIHRoYXQg
-Y2FuIHJlbWFpbiBlbmFibGVkIGluIGxvdw0KPiArICBwb3dlciBtb2Rlcy4gVFBNIGNhbiBzdXBw
-b3J0IGdsb2JhbCBjb3VudGVyIGJ1cyB3aGVyZSBvbmUgVFBNIGRyaXZlcw0KPiArICB0aGUgY291
-bnRlciBidXMgZm9yIHRoZSBvdGhlcnMsIHByb3ZpZGVkIGJpdCB3aWR0aCBpcyB0aGUgc2FtZS4N
-Cj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAgY29tcGF0aWJsZToNCj4gKyAgICBjb25zdDogZnNs
-LGlteDd1bHAtdHBtDQo+ICsNCj4gKyAgcmVnOg0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4g
-KyAgaW50ZXJydXB0czoNCj4gKyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICsgIGNsb2NrczoNCj4g
-KyAgICBpdGVtczoNCj4gKyAgICAgIC0gZGVzY3JpcHRpb246IFNvQyBUUE0gaXBnIGNsb2NrDQo+
-ICsgICAgICAtIGRlc2NyaXB0aW9uOiBTb0MgVFBNIHBlciBjbG9jaw0KDQo+ICsgICAgbWF4SXRl
-bXM6IDINCg0KVW5uZWVkZWQgbGluZQ0KDQo+ICsNCj4gKyAgY2xvY2stbmFtZXM6DQo+ICsgICAg
-aXRlbXM6DQo+ICsgICAgICAtIGNvbnN0OiBpcGcNCj4gKyAgICAgIC0gY29uc3Q6IHBlcg0KDQo+
-ICsgICAgbWF4SXRlbXM6IDINCg0KRGl0dG8NCg0KT3RoZXJ3aXNlOg0KDQpSZXZpZXdlZC1ieTog
-RG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVnYXJkcw0KQWlzaGVuZw0K
-DQo+ICsNCj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGlibGUNCj4gKyAgLSByZWcNCj4gKyAg
-LSBpbnRlcnJ1cHRzDQo+ICsgIC0gY2xvY2tzDQo+ICsgIC0gY2xvY2stbmFtZXMNCj4gKw0KPiAr
-YWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ICsNCj4gK2V4YW1wbGVzOg0KPiArICAtIHwN
-Cj4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svaW14N3VscC1jbG9jay5oPg0KPiAr
-ICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+
-DQo+ICsNCj4gKyAgICB0aW1lckA0MDI2MDAwMCB7DQo+ICsgICAgICAgIGNvbXBhdGlibGUgPSAi
-ZnNsLGlteDd1bHAtdHBtIjsNCj4gKyAgICAgICAgcmVnID0gPDB4NDAyNjAwMDAgMHgxMDAwPjsN
-Cj4gKyAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyIElSUV9UWVBFX0xFVkVMX0hJR0g+
-Ow0KPiArICAgICAgICBjbG9ja3MgPSA8JnNjZzEgSU1YN1VMUF9DTEtfTklDMV9CVVNfRElWPiwN
-Cj4gKyAgICAgICAgICAgICAgICAgPCZwY2MyIElNWDdVTFBfQ0xLX0xQVFBNNT47DQo+ICsgICAg
-ICAgIGNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIiOw0KPiArICAgIH07DQo+IC0tDQo+IDIuNy40
-DQoNCg==
+Hi Ira,
+
+On 5/18/20 5:03 PM, Ira Weiny wrote:
+> On Sun, May 17, 2020 at 09:29:32PM -0700, Guenter Roeck wrote:
+>> On Sun, May 17, 2020 at 08:49:39PM -0700, Ira Weiny wrote:
+>>> On Sat, May 16, 2020 at 03:33:06PM -0700, Guenter Roeck wrote:
+>>>> On Thu, May 07, 2020 at 07:59:55AM -0700, ira.weiny@intel.com wrote:
+>>>>> From: Ira Weiny <ira.weiny@intel.com>
+>>>>>
+>>>>> Every single architecture (including !CONFIG_HIGHMEM) calls...
+>>>>>
+>>>>> 	pagefault_enable();
+>>>>> 	preempt_enable();
+>>>>>
+>>>>> ... before returning from __kunmap_atomic().  Lift this code into the
+>>>>> kunmap_atomic() macro.
+>>>>>
+>>>>> While we are at it rename __kunmap_atomic() to kunmap_atomic_high() to
+>>>>> be consistent.
+>>>>>
+>>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>>>>
+>>>> This patch results in:
+>>>>
+>>>> Starting init: /bin/sh exists but couldn't execute it (error -14)
+>>>>
+>>>> when trying to boot microblazeel:petalogix-ml605 in qemu.
+>>>
+>>> Thanks for the report.  I'm not readily seeing the issue.
+>>>
+>>> Do you have a kernel config?  Specifically is CONFIG_HIGHMEM set?
+>>>
+>> See below. Yes, CONFIG_HIGHMEM is set.
+>>
+>> The scripts used to build and boot the image are at:
+>>
+>> https://github.com/groeck/linux-build-test/tree/master/rootfs/microblazeel
+> 
+> Despite finding the obvious error earlier today I've still been trying to get
+> this to work.
+> 
+> I had to make some slight modifications to use the 0-day cross compile build
+> and my local qemu build.  But those were pretty minor modifications.  I'm
+> running on x86_64 host.
+> 
+> With those slight mods to the scripts I get the following error even without my
+> patch set on 5.7-rc4.  I have 1 cpu pegged at 100% while it is running...  Is
+> there anything I can do to get more debug output?  Perhaps I just need to let
+> it run longer?
+> 
+
+I don't think so. Try running it with "-d" parameter (run-qemu-microblazeel.sh
+-d petalogix-s3adsp1800); that gives you the qemu command line. Once it says
+"running", abort the script and execute qemu directly. Oh, and please update
+the repository; turns out I didn't push for a while and made a number of
+changes.
+
+My compiler was compiled with buildroot (a long time ago). I don't recall if
+it needed something special in the configuration, unfortunately.
+
+Guenter
+
+> Thanks,
+> Ira
+> 
+> 16:46:54 > ../linux-build-test/rootfs/microblazeel/run-qemu-microblazeel.sh 
+> Build reference: v5.7-rc4-2-g7c2411d7fb6a
+> 
+> Building microblaze:petalogix-s3adsp1800:qemu_microblazeel_defconfig ...
+> running ................ failed (silent)
+> ------------
+> qemu log:
+> qemu-system-microblazeel: terminating on signal 15 from pid 3277686 (/bin/bash)
+> ------------
+> Building microblaze:petalogix-ml605:qemu_microblazeel_ml605_defconfig ...
+> running ................ failed (silent)
+> ------------
+> qemu log:
+> qemu-system-microblazeel: terminating on signal 15 from pid 3277686 (/bin/bash)
+> ------------
+> 
+> <env changes>
+> 16:47:23 > git di
+> diff --git a/rootfs/microblazeel/run-qemu-microblazeel.sh b/rootfs/microblazeel/run-qemu-microblazeel.sh
+> index 68d4de39ab50..0d6a4f85308f 100755
+> --- a/rootfs/microblazeel/run-qemu-microblazeel.sh
+> +++ b/rootfs/microblazeel/run-qemu-microblazeel.sh
+> @@ -3,7 +3,8 @@
+>  dir=$(cd $(dirname $0); pwd)
+>  . ${dir}/../scripts/common.sh
+>  
+> -QEMU=${QEMU:-${QEMU_BIN}/qemu-system-microblazeel}
+> +#QEMU=${QEMU:-${QEMU_BIN}/qemu-system-microblazeel}
+> +QEMU=/home/iweiny/dev/qemu/microblazeel-softmmu/qemu-system-microblazeel
+>  PREFIX=microblazeel-linux-
+>  ARCH=microblaze
+>  PATH_MICROBLAZE=/opt/kernel/microblazeel/gcc-4.9.1/usr/bin
+> diff --git a/rootfs/scripts/common.sh b/rootfs/scripts/common.sh
+> index 8fa6a9be2b2f..c4550a27beaa 100644
+> --- a/rootfs/scripts/common.sh
+> +++ b/rootfs/scripts/common.sh
+> @@ -1,5 +1,9 @@
+>  #!/bin/bash
+>  
+> +# Set up make.cross
+> +export COMPILER_INSTALL_PATH=$HOME/0day
+> +export GCC_VERSION=6.5.0
+> +
+>  # Set the following variable to true to skip DC395/AM53C97 build tests
+>  __skip_dc395=0
+>  
+> @@ -569,7 +573,7 @@ doclean()
+>         then
+>                 git clean -x -d -f -q
+>         else
+> -               make ARCH=${ARCH} mrproper >/dev/null 2>&1
+> +               make.cross ARCH=${ARCH} mrproper >/dev/null 2>&1
+>         fi
+>  }
+>  
+> @@ -669,7 +673,7 @@ __setup_config()
+>         cp ${__progdir}/${defconfig} arch/${arch}/configs
+>      fi
+>  
+> -    if ! make ARCH=${ARCH} CROSS_COMPILE=${PREFIX} ${defconfig} >/dev/null 2>&1 </dev/null; then
+> +    if ! make.cross ARCH=${ARCH} ${defconfig} >/dev/null 2>&1 </dev/null; then
+>         return 2
+>      fi
+>  
+> @@ -687,7 +691,7 @@ __setup_config()
+>         if [[ "${rel}" = "v3.16" ]]; then
+>             target="oldconfig"
+>         fi
+> -       if ! make ARCH=${ARCH} CROSS_COMPILE=${PREFIX} ${target} >/dev/null 2>&1 </dev/null; then
+> +       if ! make.cross ARCH=${ARCH} ${target} >/dev/null 2>&1 </dev/null; then
+>             return 1
+>         fi
+>      fi
+> @@ -1038,7 +1042,7 @@ dosetup()
+>      rootfs="$(setup_rootfs ${dynamic} ${rootfs})"
+>      __common_fixups "${fixups}" "${rootfs}"
+>  
+> -    make -j${maxload} ARCH=${ARCH} CROSS_COMPILE=${PREFIX} ${EXTRAS} </dev/null >/dev/null 2>${logfile}
+> +    make.cross -j${maxload} ARCH=${ARCH} ${EXTRAS} </dev/null >/dev/null 2>${logfile}
+>      rv=$?
+>      if [ ${rv} -ne 0 ]
+>      then
+> 
+> </env changes>
+> 
+
