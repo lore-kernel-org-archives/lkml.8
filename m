@@ -2,117 +2,83 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CDA2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:12:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NtoxywpP"
+	by mail.kernel.org (Postfix) with ESMTP id 33650206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgESDM4 (ORCPT
+        id S1727964AbgESDRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgESDMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:12:55 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E340C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:12:55 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so5045295plt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3v3MiZlo1XQ0uF7dScBuWcXQ31132PApMmyTjCRh1s4=;
-        b=NtoxywpPq7v7prXF2XTo8wUph0rWq/S0lIXWZeyoP43Lz4+yRabPduDEKiiiKnCLIl
-         WuYV0IIA0xz1CZogBvWda/rdWNdn5TK70Ldx5aemk+SAUvI2x4S7MBGg1FUZAfwHoeYx
-         PE+kexXeLDnU+6qmmyohuEHNOea0C4k+sgy9zedhCcpGswf+MAgbVB4E8xroKBr5qy16
-         dTJJVZVcge8ZmyQ1AauEHTUYMrSibW0FPixF9PVjII96J1KPiPfuH48rwNS1xyJ6gmkZ
-         IMIfLYJuG7Fzc8LSWiP4JIx/AOEo56JjY+XMRwOOCaYTXuHmidNHMvw/9WL0/Yy/ttpk
-         N7lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3v3MiZlo1XQ0uF7dScBuWcXQ31132PApMmyTjCRh1s4=;
-        b=iAz8ZoBX2Tg2VPsR5Qafhw8GTjmbrg0VNJMKREzoqM9jZJSMbGUm+1CkOMlUDOzS1S
-         WEjGMxJ/ppXr+QJOhMF0rFgsNoGDn6BffIDOVzJ1/yjf7+vJSi8NhVxIU0+fUqFqW4ia
-         KOK/doaMGAxKlAqRx1Kw1uMkVfbIbxwlgK895N/1zOAX1t4y8zvDH3TC9y3pk6q7xVJT
-         yqkSFp9EguQvlH68nOMuY+waraNuOzmvKyc+K30rlfc7j4rg91fj/CFQpjeEl+5AqCKy
-         UeWmR3nqxMLliCbWdL5028K6UpJpHOcn+SChh5VybK6gNL+I5++H7S6H0ZTwhWpldOEr
-         RiDQ==
-X-Gm-Message-State: AOAM531rfGYIWsVCH8alnhXesdIWI/iVgmTJmdsY1H/VQRgpZA47FACG
-        woafn69ghBOPamR/SaWL4dm5cA==
-X-Google-Smtp-Source: ABdhPJwKax2oSjJnW36S7DMBKX2GCg1zj4Ul3O3ZQYqwsX5LcqUGPqt0MaNI/w1mWD7R19zaWEGFsg==
-X-Received: by 2002:a17:902:8e8c:: with SMTP id bg12mr19656340plb.279.1589857974810;
-        Mon, 18 May 2020 20:12:54 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id t20sm746677pjo.13.2020.05.18.20.12.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 20:12:53 -0700 (PDT)
-Date:   Mon, 18 May 2020 20:11:31 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH V1 2/3] mmc: sdhci-msm: Use internal voltage control
-Message-ID: <20200519031131.GH279327@builder.lan>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1589541535-8523-3-git-send-email-vbadigan@codeaurora.org>
- <20200518195711.GH2165@builder.lan>
+        Mon, 18 May 2020 23:17:43 -0400
+Received: from mga14.intel.com ([192.55.52.115]:30695 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726407AbgESDRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 May 2020 23:17:43 -0400
+IronPort-SDR: G4E1zqAl3h2vOcSkHkdf7rhr9BSiCFXNHMl3WOqt0vpf1mPKHNO9URT/UWzY8gW0zpdUvcmyE5
+ rmr6Pq4d+nhw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 20:17:42 -0700
+IronPort-SDR: nN+30u534C5x/E+ZsUfd0cyKu0tepiTkuKjyZkLIrR2mbR35brhx0CUlf5qxAkGWvJTUFWr1B3
+ ul4cIaeKgUWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,408,1583222400"; 
+   d="scan'208";a="264165179"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga003.jf.intel.com with ESMTP; 18 May 2020 20:17:42 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 429FA301B7F; Mon, 18 May 2020 20:17:42 -0700 (PDT)
+Date:   Mon, 18 May 2020 20:17:42 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Bob Haarman <inglorion@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Fangrui Song <maskray@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Alistair Delva <adelva@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Baoquan He <bhe@redhat.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Ross Zwisler <zwisler@chromium.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] x86_64: fix jiffies ODR violation
+Message-ID: <20200519031742.GB499505@tassilo.jf.intel.com>
+References: <20200515180544.59824-1-inglorion@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518195711.GH2165@builder.lan>
+In-Reply-To: <20200515180544.59824-1-inglorion@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18 May 12:57 PDT 2020, Bjorn Andersson wrote:
-> On Fri 15 May 04:18 PDT 2020, Veerabhadrarao Badiganti wrote:
-> > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-[..]
-> > +static int sdhci_msm_register_vreg(struct sdhci_msm_host *msm_host)
-> > +{
-> > +	int ret = 0;
-> 
-> No need to initialize ret, first use is an assignment.
-> 
-> > +	struct mmc_host *mmc = msm_host->mmc;
-> > +
-> > +	ret = mmc_regulator_get_supply(msm_host->mmc);
-> > +	if (ret)
-> > +		return ret;
-> > +	device_property_read_u32(&msm_host->pdev->dev,
-> > +			"vmmc-max-load-microamp",
-> > +			&msm_host->vmmc_load);
-> > +	device_property_read_u32(&msm_host->pdev->dev,
-> > +			"vqmmc-max-load-microamp",
-> > +			&msm_host->vqmmc_load);
-> 
-> These properties are not documented. Do they vary enough to mandate
-> being read from DT or could they simply be approximated by a define
-> instead?
-> 
+> Instead, we can avoid the ODR violation by matching other arch's by
+> defining jiffies only by linker script.  For -fno-semantic-interposition
+> + Full LTO, there is no longer a global definition of jiffies for the
+> compiler to produce a local symbol which the linker script won't ensure
+> aliases to jiffies_64.
 
-Disregard my comment about them not being documented, I wasn't Cc'ed on
-the binding patch and missed it.
+I guess it was an historical accident.
 
-My question about just defining them statically still stands.
-
-Thanks,
-Bjorn
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
