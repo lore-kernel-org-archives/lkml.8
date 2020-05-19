@@ -2,103 +2,182 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF255C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E94C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C25D320C09
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:41:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="dMU1FC1+"
+	by mail.kernel.org (Postfix) with ESMTP id 5C17F20C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgESVl1 (ORCPT
+        id S1727951AbgESVle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:41:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgESVl0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:41:26 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F27C08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:41:26 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id s3so752416eji.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8pHDt6TZphRZyh659OaqVb1mgoicXJZH6YOE21j5ScM=;
-        b=dMU1FC1+X+LgzrzDd8puroJ2VjoLl1b7VWx3Oxtyt5RbuHUQTWTuQLJk4KiUdb4hch
-         BOhMOsMa+J+rREOLJwUsj56zTOlxXC2WesxpqG32wtYHMXotR7Bxv6jTxRKbk8j03ZXt
-         fUBFDifGQEMkYvtRxGSYJDBgtvJyWBw656MILr0ozZkvxB3NbFT+XkVBtn3nY+mpTsDH
-         fkg3DmX9UVMYxBNBAT6Z5gxKSD2ZDXbMfEfN1B0N2FgeXBawY7+lPjO1Aqk6iJfuzwzM
-         W55AKS+fNrxcGfJI+ritFN9TMTQ8FvEJPoGMPSkPKYNauuL6Yx4M9XmccEbkC26jlWNw
-         RFUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8pHDt6TZphRZyh659OaqVb1mgoicXJZH6YOE21j5ScM=;
-        b=oNyXh3+nCaPV6DHptDz6akwASS0wPNnqV8gmk8t7aZtgd6AHSCBkU+KcdWoS2JWDyK
-         c2Ag/YkNMa1eSVKu+KL5Yz34ZmEBI+zNin5kQ63mp7hFkP1wBg1soOlOFCq0ndHXYuc8
-         aodQKqsApIR1oZPURcyoBJ8wCylnDcOn3G2tDYRCn4OUDPjlxDKUGkSKVx/4BqFISfQx
-         1JG03l8lxfdwb1xFQwFK8LKe16alaMejcTOxFv5SLH3utvw8n2PthihjxicSU010GF1Z
-         p3TAHTRLWeOcH8TJLXvq6+EJ509edZ1DJS5ADs0+1a+nLood9jBHxLTdWFGa4jmumjF+
-         R2TA==
-X-Gm-Message-State: AOAM530uGQFxhnaXdYsZDVOP++a/0OnJYxHOlZoKzzaxsNg1VdH5+CQI
-        XA2phVITwSljUFO/oQMvEXKQkQ==
-X-Google-Smtp-Source: ABdhPJzwziXIgJV3keA3OENqJBxwLFq+cjMJNMlZTNY3H5m85XcQYW/VSr4fcseQdwsGI40fWd9+NQ==
-X-Received: by 2002:a17:906:f53:: with SMTP id h19mr1065446ejj.343.1589924484583;
-        Tue, 19 May 2020 14:41:24 -0700 (PDT)
-Received: from ls00508.pb.local ([2001:1438:4010:2540:61fc:84a0:6c2a:7c97])
-        by smtp.gmail.com with ESMTPSA id j17sm337728ejs.108.2020.05.19.14.41.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 14:41:24 -0700 (PDT)
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        david@fromorbit.com, hch@infradead.org, willy@infradead.org,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Subject: [UPDATE PATCH 10/10] mm/migrate.c: call detach_page_private to cleanup code
-Date:   Tue, 19 May 2020 23:40:49 +0200
-Message-Id: <20200519214049.15179-1-guoqing.jiang@cloud.ionos.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
-References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
+        Tue, 19 May 2020 17:41:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:44926 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725885AbgESVle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 17:41:34 -0400
+IronPort-SDR: N+tCbAD/YQIaX0haWQ+dZpOzQnvdtidtMe1BAmbE8E4DFzM5hJ2tcV4NsHFu3wiNLr9LN8hIIP
+ loK/h8NRrETg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 14:41:33 -0700
+IronPort-SDR: 176L1nHLkifBP7xOT8nDNOoV4SWzQiVXJAbc2EZPe1hzS7aV+FADfa/tiI8VwNLrhEnIMhHZ08
+ 1HUZ/7GJFmbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,411,1583222400"; 
+   d="scan'208";a="268032056"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 19 May 2020 14:41:31 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jb9zO-0003SX-L6; Wed, 20 May 2020 05:41:30 +0800
+Date:   Wed, 20 May 2020 05:41:23 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/boot] BUILD SUCCESS
+ 5214028dd89e49ba27007c3ee475279e584261f0
+Message-ID: <5ec45283.7H/ZXIjlxQzCaywp%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can cleanup code a little by call detach_page_private here.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/boot
+branch HEAD: 5214028dd89e49ba27007c3ee475279e584261f0  x86/boot: Correct relocation destination on old linkers
 
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+i386-tinyconfig vmlinux size:
+
++-------+-----------------------------------+------------------------------------------+
+| DELTA |              SYMBOL               |                  COMMIT                  |
++-------+-----------------------------------+------------------------------------------+
+|   +97 | TOTAL                             | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|   +96 | TEXT                              | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+| +1355 | balance_dirty_pages()             | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|  +615 | __setup_rt_frame()                | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|  +113 | klist_release()                   | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|   +93 | change_clocksource()              | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|   +86 | release_bdi()                     | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|   +84 | kobject_release()                 | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|   -68 | bdi_put()                         | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|   -77 | kobject_put()                     | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|   -79 | timekeeping_notify()              | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|   -99 | klist_dec_and_del()               | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+|  -555 | do_signal()                       | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
+| -1383 | balance_dirty_pages_ratelimited() | 6a8b55ed4056..5214028dd89e (ALL COMMITS) |
++-------+-----------------------------------+------------------------------------------+
+
+elapsed time: 484m
+
+configs tested: 94
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                                 defconfig
+arm64                               defconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                            allmodconfig
+sparc                            allyesconfig
+mips                             allyesconfig
+m68k                             allyesconfig
+mips                        bcm47xx_defconfig
+arm                            mps2_defconfig
+i386                              allnoconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200519
+i386                 randconfig-a005-20200519
+i386                 randconfig-a001-20200519
+i386                 randconfig-a003-20200519
+i386                 randconfig-a004-20200519
+i386                 randconfig-a002-20200519
+x86_64               randconfig-a003-20200519
+x86_64               randconfig-a005-20200519
+x86_64               randconfig-a004-20200519
+x86_64               randconfig-a006-20200519
+x86_64               randconfig-a002-20200519
+x86_64               randconfig-a001-20200519
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
-Add the cast to fix type mismatch warning, sorry for the mistake.
-
- mm/migrate.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 7160c1556f79..44546d407e40 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -797,10 +797,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
- 	if (rc != MIGRATEPAGE_SUCCESS)
- 		goto unlock_buffers;
- 
--	ClearPagePrivate(page);
--	set_page_private(newpage, page_private(page));
--	set_page_private(page, 0);
--	put_page(page);
-+	set_page_private(newpage, (unsigned long)detach_page_private(page));
- 	get_page(newpage);
- 
- 	bh = head;
--- 
-2.17.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
