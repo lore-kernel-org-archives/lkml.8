@@ -2,158 +2,132 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 986222081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:57:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MrHk0LLv"
+	by mail.kernel.org (Postfix) with ESMTP id EF945207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:58:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgESO5v (ORCPT
+        id S1729124AbgESO6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:57:51 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:12702 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727910AbgESO5v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:57:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589900270; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=eQq0+XA7BHUTFnG43onEtGZel2grOtppjsJggmTLEhg=; b=MrHk0LLvm6EPx3m9Lq0LGUEK8kccrMJVICjZCq/1U3Lw5Q9fsaR3Lx02LGDF9Z9OqtSosx78
- hDAYRvcWqhNvB4I7csKCSxaOH3YW3RSK2cTDbVAKhAQDnvDy7nteU7swQQO3LaMkzMniv4R6
- 56pA2gvNOxDYiINExuvHlgSzl/M=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec3f3e6.7fc6707bb730-smtp-out-n05;
- Tue, 19 May 2020 14:57:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F3EE4C43637; Tue, 19 May 2020 14:57:41 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7B3BAC433F2;
-        Tue, 19 May 2020 14:57:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7B3BAC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
- <CAPM=9txXskVu_yD3DNuR0HgSUsE2v1Pv98dm=AHGvv_z2XKTAQ@mail.gmail.com>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <93238096-5861-c140-b94f-6137977c3d65@codeaurora.org>
-Date:   Tue, 19 May 2020 08:57:38 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 10:58:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:34576 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728725AbgESO6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 10:58:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0505031B;
+        Tue, 19 May 2020 07:58:21 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EC203F305;
+        Tue, 19 May 2020 07:58:19 -0700 (PDT)
+Date:   Tue, 19 May 2020 15:58:16 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        bhelgaas@google.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Alan Mikhak <alan.mikhak@sifive.com>
+Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
+ size >4GB
+Message-ID: <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
+References: <20200513190855.23318-1-vidyas@nvidia.com>
+ <20200513223508.GA352288@bjorn-Precision-5520>
+ <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+ <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPM=9txXskVu_yD3DNuR0HgSUsE2v1Pv98dm=AHGvv_z2XKTAQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/2020 11:08 PM, Dave Airlie wrote:
-> On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->>
->> Introduction:
->> Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
->> SoC ASIC for the purpose of efficently running Deep Learning inference
->> workloads in a data center environment.
->>
->> The offical press release can be found at -
->> https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
->>
->> The offical product website is -
->> https://www.qualcomm.com/products/datacenter-artificial-intelligence
->>
->> At the time of the offical press release, numerious technology news sites
->> also covered the product.  Doing a search of your favorite site is likely
->> to find their coverage of it.
->>
->> It is our goal to have the kernel driver for the product fully upstream.
->> The purpose of this RFC is to start that process.  We are still doing
->> development (see below), and thus not quite looking to gain acceptance quite
->> yet, but now that we have a working driver we beleive we are at the stage
->> where meaningful conversation with the community can occur.
+On Tue, May 19, 2020 at 07:25:02PM +0530, Vidya Sagar wrote:
 > 
 > 
-> Hi Jeffery,
-> 
-> Just wondering what the userspace/testing plans for this driver.
-> 
-> This introduces a new user facing API for a device without pointers to
-> users or tests for that API.
+> On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
+> > > [+cc Alan; please cc authors of relevant commits,
+> > > updated Andrew's email address]
+> > > 
+> > > On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
+> > > > commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
+> > > > 32-bits") enables warning for MEM resources of size >4GB but prefetchable
+> > > >   memory resources also come under this category where sizes can go beyond
+> > > > 4GB. Avoid logging a warning for prefetchable memory resources.
+> > > > 
+> > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > > ---
+> > > >   drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
+> > > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > index 42fbfe2a1b8f..a29396529ea4 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > > >                      pp->mem = win->res;
+> > > >                      pp->mem->name = "MEM";
+> > > >                      mem_size = resource_size(pp->mem);
+> > > > -                   if (upper_32_bits(mem_size))
+> > > > +                   if (upper_32_bits(mem_size) &&
+> > > > +                       !(win->res->flags & IORESOURCE_PREFETCH))
+> > > >                              dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+> > > >                      pp->mem_size = mem_size;
+> > > >                      pp->mem_bus_addr = pp->mem->start - win->offset;
+> > 
+> > That warning was added for a reason - why should not we log legitimate
+> > warnings ? AFAIU having resources larger than 4GB can lead to undefined
+> > behaviour given the current ATU programming API.
+> Yeah. I'm all for a warning if the size is larger than 4GB in case of
+> non-prefetchable window as one of the ATU outbound translation
+> channels is being used,
 
-We have daily internal testing, although I don't expect you to take my 
-word for that.
+Is it true for all DWC host controllers ? Or there may be another
+exception whereby we would be forced to disable this warning altogether
+?
 
-I would like to get one of these devices into the hands of Linaro, so 
-that it can be put into KernelCI.  Similar to other Qualcomm products. 
-I'm trying to convince the powers that be to make this happen.
+> but, we are not employing any ATU outbound translation channel for
 
-Regarding what the community could do on its own, everything but the 
-Linux driver is considered proprietary - that includes the on device 
-firmware and the entire userspace stack.  This is a decision above my 
-pay grade.
+What does this mean ? "we are not employing any ATU outbound...", is
+this the tegra driver ? And what guarantees that this warning is not
+legitimate on DWC host controllers that do use the ATU outbound
+translation for prefetchable windows ?
 
-I've asked for authorization to develop and publish a simple userspace 
-application that might enable the community to do such testing, but 
-obtaining that authorization has been slow.
+Can DWC maintainers chime in and clarify please ?
 
-> Although this isn't a graphics driver, and Greg will likely merge
-> anything to the kernel you throw at him, I do wonder how to validate
-> the uapi from a security perspective. It's always interesting when
-> someone wraps a DMA engine with user ioctls, and without enough
-> information to decide if the DMA engine is secure against userspace
-> misprogramming it.
+> prefetchable window and they can be greater than 4GB in size for all
+> right reasons. So, logging a warning for prefetchable region doesn't
+> seem correct to me. Please let me know if my understanding is wrong.
 
-I'm curious, what information might you be looking for?  Are you 
-concerned about the device attacking the host, or the host attacking the 
-device?
+I think your patch is wrong and it is applied on top of a patch that
+is wrong too, so I won't apply yours and it is likely I will revert
+Alan's because it seems to solve nothing (and warn spuriously).
 
-> Also if we don't understand the programming API on board the device,
-> we can't tell if the "core" on the device are able to reprogram the
-> device engines either.
+It is time for people who maintain DWC please to speak up because I
+don't have the HW details required to make a judgment.
 
-So, you are looking for details about the messaging protocol which are 
-considered opaque to the kernel driver?  Or something else?
+Lorenzo
 
-> Figuring this out is difficult at the best of times, it helps if there
-> is access to the complete device documentation or user space side
-> drivers in order to faciliate this.
-
-Regarding access to documentation, sadly that isn't going to happen now, 
-or in the near future.  Again, above my pay grade.  The only public 
-"documentation" is what you can see from my emails.
-
-I understand your position, and if I can "bound" the information you are 
-looking for, I can see what I can do about getting you what you want. 
-No promises, but I will try.
-
-> The other area I mention is testing the uAPI, how do you envisage
-> regression testing and long term sustainability of the uAPI?
-
-Can you clarify what you mean by "uAPI"?  Are you referring to the 
-interface between the device and the kernel driver?
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+> - Vidya Sagar
+> > 
+> > Alan ? I want to understand what's the best course of action before
+> > merging these patches.
+> > 
+> > Lorenzo
+> > 
