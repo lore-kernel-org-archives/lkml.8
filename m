@@ -2,187 +2,193 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65446C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C956C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38989205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:47:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bazibPMz"
+	by mail.kernel.org (Postfix) with ESMTP id DB22C205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgESVrF (ORCPT
+        id S1728336AbgESVrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:47:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
+        Tue, 19 May 2020 17:47:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbgESVqz (ORCPT
+        with ESMTP id S1728285AbgESVrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:46:55 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F302DC08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:46:54 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d10so438895pgn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:46:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Qesi/iapCeL81abTWSknFcADHHNz/GjwcctDzvBe+pM=;
-        b=bazibPMzI6USEfuV1VFPXiUOb/M/tOR2dXABcWMSo5t3Khkjc2196Z2Emfe7+qkVd7
-         cxbKccfvUoXxLoxudL9No/cpfn/7vqOqA1uuilax+SZ9E8gor8M1S1/K7ynKTVfiwd6i
-         Qfnp4RyncTT1PZQjtg4w+2H7p7vIayJrN2Iww=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Qesi/iapCeL81abTWSknFcADHHNz/GjwcctDzvBe+pM=;
-        b=rGWL+yplhyEqPt5TuQ73ZV++K7WX7426q2MdQvHvia1mC4mfbD38Rkxm6ko4J1V4Eu
-         ggwdVQHopzVZnC70+ys0EjBzHRbwYCnMZExfGsuUgXyQIgALDS8xllwGJmWMGrfq3GBI
-         IdcvWh/AfE2SSGKrbJxRkZax3yj0vUfENYhZqrRnfXLu1chAwzl7WxYa4BRJH72+zdSw
-         w8qb5SeL7ydLT+27gPY+2X1hE5mga4ehBULEI0RHGSgaNhnXu5y2TRf4TY0u+BfzozWG
-         fv1K2agiuPL+tOYVqZvOpbYaO4jv5UG50kU7FWx68bcS/wojR6JgWx9DiRg9V6ER8X2Q
-         2yhw==
-X-Gm-Message-State: AOAM5301mYNU7h94OcNlMVS7CZbDjOCjstUbIY+7euTmHRlmJ3Bh5VKR
-        Zhb7ty3XuxwqKTPBLs0QprIMJbJug40=
-X-Google-Smtp-Source: ABdhPJzjZsXLf/lBFThq5mgbKp/LSSbl4Rl7Hi7MR9R3uYwD+us9fjyyxT0gcryKKjIxuOEoFI8rFA==
-X-Received: by 2002:a62:7f11:: with SMTP id a17mr1179971pfd.36.1589924814184;
-        Tue, 19 May 2020 14:46:54 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id w1sm323779pgh.53.2020.05.19.14.46.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 14:46:53 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org, robh+dt@kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Prashant Malani <pmalani@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH v3 2/2] platform/chrome: typec: Register Type C switches
-Date:   Tue, 19 May 2020 14:46:04 -0700
-Message-Id: <20200519214604.180036-2-pmalani@chromium.org>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-In-Reply-To: <20200519214604.180036-1-pmalani@chromium.org>
-References: <20200519214604.180036-1-pmalani@chromium.org>
+        Tue, 19 May 2020 17:47:02 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6485C08C5C0;
+        Tue, 19 May 2020 14:47:01 -0700 (PDT)
+Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <a.darwish@linutronix.de>)
+        id 1jbA3Z-0002YP-5y; Tue, 19 May 2020 23:45:49 +0200
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, netdev@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: [PATCH v1 00/25] seqlock: Extend seqcount API with associated locks
+Date:   Tue, 19 May 2020 23:45:22 +0200
+Message-Id: <20200519214547.352050-1-a.darwish@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register Type C mux and switch handles, when provided via firmware
-bindings. These will allow the cros-ec-typec driver, and also alternate
-mode drivers to configure connected Muxes correctly, according to PD
-information retrieved from the Chrome OS EC.
+Hi,
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+A sequence counter write side critical section must be protected by some
+form of locking to serialize writers. If the serialization primitive is
+not disabling preemption implicitly, preemption has to be explicitly
+disabled before entering the write side critical section.
 
-Changes in v3:
-- Added Acked-by tag.
-- Fixed Heikki's email address in Reviewed-by tag.
+There is no built-in debugging mechanism to verify that the lock used
+for writer serialization is held and preemption is disabled. Some usage
+sites like dma-buf have explicit lockdep checks for the writer-side
+lock, but this covers only a small portion of the sequence counter usage
+in the kernel.
 
-Changes in v2:
-- Changed dev_info prints to dev_dbg.
+Add new sequence counter types which allows to associate a lock to the
+sequence counter at initialization time. The seqcount API functions are
+extended to provide appropriate lockdep assertions depending on the
+seqcount/lock type.
 
- drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+For sequence counters with associated locks that do not implicitly
+disable preemption, preemption protection is enforced in the sequence
+counter write side functions. This removes the need to explicitly add
+preempt_disable/enable() around the write side critical sections: the
+write_begin/end() functions for these new sequence counter types
+automatically do this.
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 66b8d21092af..6e79f917314b 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -14,6 +14,8 @@
- #include <linux/platform_data/cros_usbpd_notify.h>
- #include <linux/platform_device.h>
- #include <linux/usb/typec.h>
-+#include <linux/usb/typec_mux.h>
-+#include <linux/usb/role.h>
- 
- #define DRV_NAME "cros-ec-typec"
- 
-@@ -25,6 +27,9 @@ struct cros_typec_port {
- 	struct typec_partner *partner;
- 	/* Port partner PD identity info. */
- 	struct usb_pd_identity p_identity;
-+	struct typec_switch *ori_sw;
-+	struct typec_mux *mux;
-+	struct usb_role_switch *role_sw;
- };
- 
- /* Platform-specific data for the Chrome OS EC Type C controller. */
-@@ -84,6 +89,40 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
- 	return 0;
- }
- 
-+static int cros_typec_get_switch_handles(struct cros_typec_port *port,
-+					 struct fwnode_handle *fwnode,
-+					 struct device *dev)
-+{
-+	port->mux = fwnode_typec_mux_get(fwnode, NULL);
-+	if (IS_ERR(port->mux)) {
-+		dev_dbg(dev, "Mux handle not found.\n");
-+		goto mux_err;
-+	}
-+
-+	port->ori_sw = fwnode_typec_switch_get(fwnode);
-+	if (IS_ERR(port->ori_sw)) {
-+		dev_dbg(dev, "Orientation switch handle not found.\n");
-+		goto ori_sw_err;
-+	}
-+
-+	port->role_sw = fwnode_usb_role_switch_get(fwnode);
-+	if (IS_ERR(port->role_sw)) {
-+		dev_dbg(dev, "USB role switch handle not found.\n");
-+		goto role_sw_err;
-+	}
-+
-+	return 0;
-+
-+role_sw_err:
-+	usb_role_switch_put(port->role_sw);
-+ori_sw_err:
-+	typec_switch_put(port->ori_sw);
-+mux_err:
-+	typec_mux_put(port->mux);
-+
-+	return -ENODEV;
-+}
-+
- static void cros_unregister_ports(struct cros_typec_data *typec)
- {
- 	int i;
-@@ -91,6 +130,9 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
- 	for (i = 0; i < typec->num_ports; i++) {
- 		if (!typec->ports[i])
- 			continue;
-+		usb_role_switch_put(typec->ports[i]->role_sw);
-+		typec_switch_put(typec->ports[i]->ori_sw);
-+		typec_mux_put(typec->ports[i]->mux);
- 		typec_unregister_port(typec->ports[i]->port);
- 	}
- }
-@@ -153,6 +195,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
- 			ret = PTR_ERR(cros_port->port);
- 			goto unregister_ports;
- 		}
-+
-+		ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
-+		if (ret)
-+			dev_dbg(dev, "No switch control for port %d\n",
-+				port_num);
- 	}
- 
- 	return 0;
--- 
-2.26.2.761.g0e0b3e54be-goog
+Extend the lockdep API with a macro asserting that preemption is
+disabled.  Use it to verify that preemption is disabled for all sequence
+counters write side critical sections.
 
+If lockdep is disabled, these lock associations and non-preemptibility
+checks are compiled out and have neither storage size nor runtime
+overhead. If lockdep is enabled, a pointer to the lock is stored in the
+seqcount and the write side API functions enable lockdep assertions.
+
+The following seqcount types with associated locks are introduced:
+
+     seqcount_spinlock_t
+     seqcount_raw_spinlock_t
+     seqcount_rwlock_t
+     seqcount_mutex_t
+     seqcount_ww_mutex_t
+
+This lock association is not only useful for debugging purposes, it also
+provides a mechanism for PREEMPT_RT to prevent writer starvation. On RT
+kernels spinlocks and rwlocks are substituted with sleeping locks and
+the code sections protected by these locks become preemptible, which has
+the same problem as write side critical section with preemption enabled
+on a non-RT kernel. RT utilizes this association by storing the provided
+lock pointer and in case that a reader sees an active writer (seqcount
+is odd), it does not spin, but blocks on the associated lock similar to
+read_seqbegin_or_lock().
+
+By using the lockdep debugging mechanisms added in this patch series, a
+number of erroneous seqcount call-sites were discovered across the
+kernel. The fixes are included at the beginning of the series.
+
+Thanks,
+
+8<--------------
+
+Ahmed S. Darwish (25):
+  net: core: device_rename: Use rwsem instead of a seqcount
+  mm/swap: Don't abuse the seqcount latching API
+  net: phy: fixed_phy: Remove unused seqcount
+  block: nr_sects_write(): Disable preemption on seqcount write
+  u64_stats: Document writer non-preemptibility requirement
+  dma-buf: Remove custom seqcount lockdep class key
+  lockdep: Add preemption disabled assertion API
+  seqlock: lockdep assert non-preemptibility on seqcount_t write
+  Documentation: locking: Describe seqlock design and usage
+  seqlock: Add RST directives to kernel-doc code samples and notes
+  seqlock: Add missing kernel-doc annotations
+  seqlock: Extend seqcount API with associated locks
+  dma-buf: Use sequence counter with associated wound/wait mutex
+  sched: tasks: Use sequence counter with associated spinlock
+  netfilter: conntrack: Use sequence counter with associated spinlock
+  netfilter: nft_set_rbtree: Use sequence counter with associated rwlock
+  xfrm: policy: Use sequence counters with associated lock
+  timekeeping: Use sequence counter with associated raw spinlock
+  vfs: Use sequence counter with associated spinlock
+  raid5: Use sequence counter with associated spinlock
+  iocost: Use sequence counter with associated spinlock
+  NFSv4: Use sequence counter with associated spinlock
+  userfaultfd: Use sequence counter with associated spinlock
+  kvm/eventfd: Use sequence counter with associated spinlock
+  hrtimer: Use sequence counter with associated raw spinlock
+
+ Documentation/locking/index.rst               |   1 +
+ Documentation/locking/seqlock.rst             | 239 +++++
+ MAINTAINERS                                   |   2 +-
+ block/blk-iocost.c                            |   5 +-
+ block/blk.h                                   |   2 +
+ drivers/dma-buf/dma-resv.c                    |  15 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  |   2 -
+ drivers/md/raid5.c                            |   2 +-
+ drivers/md/raid5.h                            |   2 +-
+ drivers/net/phy/fixed_phy.c                   |  25 +-
+ fs/dcache.c                                   |   2 +-
+ fs/fs_struct.c                                |   4 +-
+ fs/nfs/nfs4_fs.h                              |   2 +-
+ fs/nfs/nfs4state.c                            |   2 +-
+ fs/userfaultfd.c                              |   4 +-
+ include/linux/dcache.h                        |   2 +-
+ include/linux/dma-resv.h                      |   4 +-
+ include/linux/fs_struct.h                     |   2 +-
+ include/linux/hrtimer.h                       |   2 +-
+ include/linux/kvm_irqfd.h                     |   2 +-
+ include/linux/lockdep.h                       |   9 +
+ include/linux/sched.h                         |   2 +-
+ include/linux/seqlock.h                       | 882 +++++++++++++++---
+ include/linux/seqlock_types_internal.h        | 187 ++++
+ include/linux/u64_stats_sync.h                |  38 +-
+ include/net/netfilter/nf_conntrack.h          |   2 +-
+ init/init_task.c                              |   3 +-
+ kernel/fork.c                                 |   2 +-
+ kernel/locking/lockdep.c                      |  15 +
+ kernel/time/hrtimer.c                         |  13 +-
+ kernel/time/timekeeping.c                     |  19 +-
+ lib/Kconfig.debug                             |   1 +
+ mm/swap.c                                     |  57 +-
+ net/core/dev.c                                |  30 +-
+ net/netfilter/nf_conntrack_core.c             |   5 +-
+ net/netfilter/nft_set_rbtree.c                |   4 +-
+ net/xfrm/xfrm_policy.c                        |  10 +-
+ virt/kvm/eventfd.c                            |   2 +-
+ 38 files changed, 1325 insertions(+), 277 deletions(-)
+ create mode 100644 Documentation/locking/seqlock.rst
+ create mode 100644 include/linux/seqlock_types_internal.h
+
+base-commit: 2ef96a5bb12be62ef75b5828c0aab838ebb29cb8
+--
+2.20.1
