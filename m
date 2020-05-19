@@ -2,121 +2,144 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF331C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B24C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B66207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589890279;
-	bh=lDb46p/0XzvV+nIWSNwOG8PA6sEkz0i+9XCjntJ0NAo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rCi2KjLo2SyTTkNjRjBZhFc+xhCtA0PympyessDfJ/q+urGBu/2q7yzz597oDgaNF
-	 USQySQ4k6wVjnvnGznZuS/o4O0AUj+iLR7e+Ans9nDiAXQp0GOkcsPQxfAvyW9yo+U
-	 o4mH5rWiwHHIWlmqTdGNbAL2IY4O/HaLvdkI2Azo=
+	by mail.kernel.org (Postfix) with ESMTP id 214702072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgESMLT (ORCPT
+        id S1728878AbgESML3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727057AbgESMLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:11:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A78BD2072C;
-        Tue, 19 May 2020 12:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589890278;
-        bh=lDb46p/0XzvV+nIWSNwOG8PA6sEkz0i+9XCjntJ0NAo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hKGWS3lAAwsrm2uxA/yEA91/u81l9RD6W7nThOe/ZFoqNkfekIVw8oqq0z34EoFO4
-         BNZWIp7vKXQywos1ApLMyhSFb4K95fhJRhmO8FFhLDQ0XGfK1n9VO+g0VU378o8cUn
-         HFr23bVdmzNjDYEgPtEVHU2kHjWIBnzqy1k1Gc0Y=
-Date:   Tue, 19 May 2020 14:11:15 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2] /dev/mem: Revoke mappings when a driver claims the
- region
-Message-ID: <20200519121115.GC332015@kroah.com>
-References: <158987153989.4000084.17143582803685077783.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Tue, 19 May 2020 08:11:29 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:43530 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727057AbgESML2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 08:11:28 -0400
+Received: by mail-oo1-f66.google.com with SMTP id u190so2748469ooa.10;
+        Tue, 19 May 2020 05:11:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YzPr5ME/rx0mm8f1HXcVFMEaGYLRdecJyu3Hp8Rox/0=;
+        b=moydElpkACHe9AeTwO5yZCdav/cqu2Cm4tEQBeiqbdy7nUEpIgzpOskOEriVHtqbDR
+         yRt425jmPMTGEZpOwQ702EhmcXkfAwK4ARALS4S4L2ydMXYkYsjCUKjTOukiFTSkSiIO
+         2jiEt9c5QhXCc61YXdtGaMUyEYatM/AV2GRfspOpFZMMy/64xwzBRrGjq/HY5ZsLubaf
+         ftgPu0v1wAbM0aaqDznfCnWKn/NuGPH2za15WAA/ezX64lMIaNy2mPgpaTfyQodjdfFy
+         bsUMn1XksnPiYuLAmE8Wixq9aBKBIavjGHWq40gUmf2ZdvpfzAHE+En1qhAEw9fvoYpV
+         gJ7g==
+X-Gm-Message-State: AOAM530jjRlgdXmrADi4so0mXY9sQ0pDLt391lYH9VyJTC3JcRk4EXqn
+        4oLRoCmbkmMpOQ4h7Rt06GhK0ctUtIyJQR+1Wa0=
+X-Google-Smtp-Source: ABdhPJyRSziZNrfSrilLC08tU525imlrr6yhGihg5O4ZATTVfbhCA5/40gAFoQqsQv6KSsH1dU3TNKmkqJKDRrsQJwc=
+X-Received: by 2002:a4a:95d0:: with SMTP id p16mr16485117ooi.40.1589890287441;
+ Tue, 19 May 2020 05:11:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158987153989.4000084.17143582803685077783.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <CGME20200429082134eucas1p2415c5269202529e6b019f2d70c1b5572@eucas1p2.samsung.com>
+ <20200429082120.16259-1-geert+renesas@glider.be> <dleftjmu645mqn.fsf%l.stelmach@samsung.com>
+ <CAMuHMdXxq6m6gebQbWvxDynDcZ7dLyZzKC_QroK63L8FGeac1Q@mail.gmail.com>
+ <20200519094637.GZ1551@shell.armlinux.org.uk> <CAMuHMdU5DG06G4H=+PH+OONMT_9oE==KS=wP+bLgY9xVCez6Ww@mail.gmail.com>
+ <CAK8P3a3H=7qx+Rz9sScTVCSMKWGwQ_ROnyoyK73A5yUd+_jbTw@mail.gmail.com>
+In-Reply-To: <CAK8P3a3H=7qx+Rz9sScTVCSMKWGwQ_ROnyoyK73A5yUd+_jbTw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 19 May 2020 14:11:14 +0200
+Message-ID: <CAMuHMdV0_GTop+YTPeu+aSFB=1YHsyzLXn-+0fa8upkNMq10bQ@mail.gmail.com>
+Subject: Re: [PATCH v6] ARM: boot: Obtain start of physical memory from DTB
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Lukasz Stelmach <l.stelmach@samsung.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Grant Likely <grant.likely@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:03:06AM -0700, Dan Williams wrote:
-> Close the hole of holding a mapping over kernel driver takeover event of
-> a given address range.
-> 
-> Commit 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-> introduced CONFIG_IO_STRICT_DEVMEM with the goal of protecting the
-> kernel against scenarios where a /dev/mem user tramples memory that a
-> kernel driver owns. However, this protection only prevents *new* read(),
-> write() and mmap() requests. Established mappings prior to the driver
-> calling request_mem_region() are left alone.
-> 
-> Especially with persistent memory, and the core kernel metadata that is
-> stored there, there are plentiful scenarios for a /dev/mem user to
-> violate the expectations of the driver and cause amplified damage.
-> 
-> Teach request_mem_region() to find and shoot down active /dev/mem
-> mappings that it believes it has successfully claimed for the exclusive
-> use of the driver. Effectively a driver call to request_mem_region()
-> becomes a hole-punch on the /dev/mem device.
-> 
-> The typical usage of unmap_mapping_range() is part of
-> truncate_pagecache() to punch a hole in a file, but in this case the
-> implementation is only doing the "first half" of a hole punch. Namely it
-> is just evacuating current established mappings of the "hole", and it
-> relies on the fact that /dev/mem establishes mappings in terms of
-> absolute physical address offsets. Once existing mmap users are
-> invalidated they can attempt to re-establish the mapping, or attempt to
-> continue issuing read(2) / write(2) to the invalidated extent, but they
-> will then be subject to the CONFIG_IO_STRICT_DEVMEM checking that can
-> block those subsequent accesses.
-> 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Fixes: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
-> Changes since v1 [1]:
-> 
-> - updated the changelog to describe the usage of unmap_mapping_range().
->   No other logic changes:
-> 
-> [1]: http://lore.kernel.org/r/158662721802.1893045.12301414116114602646.stgit@dwillia2-desk3.amr.corp.intel.com
-> 
-> Greg, Andrew,
-> 
-> I have a regression test for this case now. This was found by an
-> intermittent data corruption scenario on pmem from a test tool using
-> /dev/mem.
+Hi Arnd,
 
-Ick, why are test tools messing around in /dev/mem :)
+On Tue, May 19, 2020 at 1:28 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tue, May 19, 2020 at 1:21 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, May 19, 2020 at 11:46 AM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+>
+> > >
+> > > > However, something under /chosen should work.
+> > >
+> > > Yet another sticky plaster...
+> >
+> > IMHO the old masking technique is the hacky solution covered by
+> > plasters.
+> >
+> > DT describes the hardware.  In general, where to put the kernel is a
+> > software policy, and thus doesn't belong in DT, except perhaps under
+> > /chosen.  But that would open another can of worms, as people usually
+> > have no business in specifying where the kernel should be located.
+> > In the crashkernel case, there is a clear separation between memory to
+> > be used by the crashkernel, and memory to be solely inspected by the
+> > crashkernel.
+> >
+> > Devicetree Specification, Release v0.3, Section 3.4 "/memory node" says:
+> >
+> >     "The client program may access memory not covered by any memory
+> >      reservations (see section 5.3)"
+> >
+> > (Section 5.3 "Memory Reservation Block" only talks about structures in
+> > the FDT, not about DTS)
+> >
+> > Hence according to the above, the crashkernel is rightfully allowed to
+> > do whatever it wants with all memory under the /memory node.
+> > However, there is also
+> > Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
+> > This suggests the crashkernel should be passed a DTB that contains a
+> > /reserved-memory node, describing which memory cannot be used freely.
+> > Then the decompressor needs to take this into account when deciding
+> > where the put the kernel.
+> >
+> > Yes, the above requires changing code. But at least it provides a
+> > path forward, getting rid of the fragile old masking technique.
+>
+> There is an existing "linux,usable-memory-range" property documented
+> in Documentation/devicetree/bindings/chosen.txt, which as I understand
+> is exactly what you are looking for, except that it is currently only
+> documented for arm64.
 
-Anyway, this seems sane to me, want me to take it through my tree?
+Thank you, that looks appropriate!
 
-thanks,
+It seems this is not really used by the early startup code.
+Is that because the early startup code always runs in-place, and the
+kernel image is not even copied?
 
-greg k-h
+> Would extending this to arm work?
+
+Let's see.... Th arm early boot code seems to be more complex than the
+arm64 code ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
