@@ -2,156 +2,127 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC55AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90B0720674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9E420708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWKuumJ0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F+AEHxuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgESDis (ORCPT
+        id S1726958AbgESDlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 23:38:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
+        Mon, 18 May 2020 23:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgESDis (ORCPT
+        with ESMTP id S1726492AbgESDlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 23:38:48 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D4AC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:38:47 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s10so13042449iog.7
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:38:47 -0700 (PDT)
+        Mon, 18 May 2020 23:41:00 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCE1C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:41:00 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id s69so734566pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:41:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AmoSinb004QBItlczFEt+9SkY2V///JRTZUjH4ZHNBQ=;
-        b=hWKuumJ0qsNkKGUydur5dT61kC1W1kJNIPtC3QojiRprZEplH0oMQWn8HqFe8udhHX
-         hw+AUGbiPb8uNxQWmv1UMjCe/suc/nmMdKJjSURkqN2IBUpDGJKMA6xoKm2+Ht8xykC1
-         LLbZRI+8gTsSxUfnMR2zEjn4l16gAveE6iS3zX1tC5YReGjOhtrMJA1mi1VmlS6nNzTC
-         LMxbxNLqSkw3LkqSHfK4/qIcNN1uenuF9pLQzLFJU3bMN2xlJFjuO5hxIq/YTvoxc/hk
-         IrsE5y57UXbGLj0ByxGHQc4Na2lnYmXDOzOeZkBOSuKxho11O33B36lKSCzrsqEKY0z8
-         OCXA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CjNWuQJ9v0nVBb91ffdU0D6mxktZAQ032o7BcB0bNE4=;
+        b=F+AEHxuCaRGPIloYgy1mhW3Lfe9dOfLHKUZU9PfFM6Q0ED6ra92Z9qv0lsSJKjefzL
+         /G445Rt2MS+je7xFwaI3GdAaNppQpjtT9DZtZL1M+OFv4qHAM7NbdDZvrZQpYy476bzA
+         qFgVBP+l5L3NYSHQLLu/Kv4IkKI1BZeeHoCwRx11PEdPNVemStjkzdTRV4MbtpajRJQH
+         KY/4gQBQfdGL07373QE/k5YwyLOPIzVyqgueoA6pnQwXx8wUe0QKKoI3d8wNLCT+oYQP
+         MEDCH36FGnkOJNXu58mqL3PjD+FQbyE+D2IL6UiNHtKkxvzRDycr43draHRKBAdCtxgx
+         vfvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AmoSinb004QBItlczFEt+9SkY2V///JRTZUjH4ZHNBQ=;
-        b=g74glZjc3/mshNnXWLo9Hq650lT0ySzB0LOQZCbgCjFy565LU4skziZOqeBWj2E62M
-         TaJJkAmQGf2rU4+0TlDtZHp2O11hSYY5W/zUn/RjfQ1LoKeAbOobaRniffNewrzVqaEF
-         0/O6Gn+P+YvwuWjQHzffASH/JFOQ3KgkIbS3+ww3xOee89tONy6Fhfpj5uLpfy2cT9Mp
-         CgjMScbug/r7RVzYdDOKei2KCQBphWU5n6wTFlHRhx6hNsPnwg5oqkBBjh3IC9IjBX7h
-         o8ub98i3CY8CNyHcbe3OsTE56PHvkpXw+95o5tkpR5qNGDrf/lQeGU+EBHXAo2r1An2q
-         5Kjw==
-X-Gm-Message-State: AOAM531JWAVw+pb85O/O2iiu5ZMZ/RA1fNMO0hYApm85Wy18MPvdKAaS
-        2XEZGZE3x7GXNE2OxclYJ9mPA373zFTmv5qctA==
-X-Google-Smtp-Source: ABdhPJwejThxBcFi1wrqIV4aOVEm7IVUj3kJdt+7p+hDhsbNCilDuWhwHAdbVQ9xW9jx27VoEyW6FN4NuBB7Uk6Cu7M=
-X-Received: by 2002:a6b:d909:: with SMTP id r9mr17480387ioc.22.1589859525551;
- Mon, 18 May 2020 20:38:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CjNWuQJ9v0nVBb91ffdU0D6mxktZAQ032o7BcB0bNE4=;
+        b=hilaw+22Po2vzwgaKvQCu3XP+TiaYSPcJdsKVoNgnNThCOm2lj0sBdjhUxXEfISIg/
+         qkpDnogBgcpcaWQEGVck52WkeTDMlZ8jBG5+j9bP1CJeikotbMWDb6OIyW9rmRQsKB4r
+         Dwmdk2npKwstLcQ6kcT6693nWF0QFDlxOn1TBL8yE41ZU+jAc0AWRDWf2lmeIRRbI/lY
+         MOcOvOZuK8yNqy/uRgrRax3RxWCFR1oYEcb60XYItzbpxJiMZKSQzuSXpWIjB/YAL4+0
+         EQvUzopQILn+90XdEZR2YD8LC/LR21kTFpoHBuNWPh8ickb671m9rZycIimDuak47Dsc
+         8IjQ==
+X-Gm-Message-State: AOAM532bGrUialcOjwmnt/hNgPle4fjk80W7Q7uX2YkZrAdFP66jUFPV
+        AfYkYDGkdIAOO1s/MyYvFQtCnQ==
+X-Google-Smtp-Source: ABdhPJy30m1f36llwQe2czJwRgWZ2WYib3wh9j43NkV9xeaRb2PBycPJMqqn/lVk860NFOK6XhPyZQ==
+X-Received: by 2002:a17:90a:1b6c:: with SMTP id q99mr2824172pjq.214.1589859659084;
+        Mon, 18 May 2020 20:40:59 -0700 (PDT)
+Received: from localhost ([122.167.130.103])
+        by smtp.gmail.com with ESMTPSA id g1sm9573943pfo.142.2020.05.18.20.40.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 May 2020 20:40:57 -0700 (PDT)
+Date:   Tue, 19 May 2020 09:10:55 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200519034055.hfvifqz442yfduhg@vireshk-i7>
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <20200519012927.GT2165@builder.lan>
 MIME-Version: 1.0
-References: <20200517152916.3146539-1-brgerst@gmail.com> <20200517152916.3146539-3-brgerst@gmail.com>
- <CAKwvOdnCcpS_9A2y9tMqeiAg2NfcVx=gNeA2V=+zHknit7wGkg@mail.gmail.com>
-In-Reply-To: <CAKwvOdnCcpS_9A2y9tMqeiAg2NfcVx=gNeA2V=+zHknit7wGkg@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Mon, 18 May 2020 23:38:34 -0400
-Message-ID: <CAMzpN2gGbZABjtLQyiTdtaL5LYW-cfVQZqj6w=oZNa9Fw9GdCQ@mail.gmail.com>
-Subject: Re: [PATCH 2/7] x86/percpu: Clean up percpu_to_op()
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519012927.GT2165@builder.lan>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 5:15 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Sun, May 17, 2020 at 8:29 AM Brian Gerst <brgerst@gmail.com> wrote:
-> >
-> > The core percpu macros already have a switch on the data size, so the switch
-> > in the x86 code is redundant and produces more dead code.
-> >
-> > Also use appropriate types for the width of the instructions.  This avoids
-> > errors when compiling with Clang.
-> >
-> > Signed-off-by: Brian Gerst <brgerst@gmail.com>
-> > ---
-> >  arch/x86/include/asm/percpu.h | 90 ++++++++++++++---------------------
-> >  1 file changed, 35 insertions(+), 55 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-> > index 89f918a3e99b..233c7a78d1a6 100644
-> > --- a/arch/x86/include/asm/percpu.h
-> > +++ b/arch/x86/include/asm/percpu.h
-> > @@ -117,37 +117,17 @@ extern void __bad_percpu_size(void);
-> >  #define __pcpu_reg_imm_4(x) "ri" (x)
-> >  #define __pcpu_reg_imm_8(x) "re" (x)
-> >
-> > -#define percpu_to_op(qual, op, var, val)               \
-> > -do {                                                   \
-> > -       typedef typeof(var) pto_T__;                    \
-> > -       if (0) {                                        \
-> > -               pto_T__ pto_tmp__;                      \
-> > -               pto_tmp__ = (val);                      \
-> > -               (void)pto_tmp__;                        \
-> > -       }                                               \
-> > -       switch (sizeof(var)) {                          \
-> > -       case 1:                                         \
-> > -               asm qual (op "b %1,"__percpu_arg(0)     \
-> > -                   : "+m" (var)                        \
-> > -                   : "qi" ((pto_T__)(val)));           \
-> > -               break;                                  \
-> > -       case 2:                                         \
-> > -               asm qual (op "w %1,"__percpu_arg(0)     \
-> > -                   : "+m" (var)                        \
-> > -                   : "ri" ((pto_T__)(val)));           \
-> > -               break;                                  \
-> > -       case 4:                                         \
-> > -               asm qual (op "l %1,"__percpu_arg(0)     \
-> > -                   : "+m" (var)                        \
-> > -                   : "ri" ((pto_T__)(val)));           \
-> > -               break;                                  \
-> > -       case 8:                                         \
-> > -               asm qual (op "q %1,"__percpu_arg(0)     \
-> > -                   : "+m" (var)                        \
-> > -                   : "re" ((pto_T__)(val)));           \
-> > -               break;                                  \
-> > -       default: __bad_percpu_size();                   \
-> > -       }                                               \
-> > +#define percpu_to_op(size, qual, op, _var, _val)                       \
-> > +do {                                                                   \
-> > +       __pcpu_type_##size pto_val__ = __pcpu_cast_##size(_val);        \
-> > +       if (0) {                                                        \
-> > +               typeof(_var) pto_tmp__;                                 \
-> > +               pto_tmp__ = (_val);                                     \
-> > +               (void)pto_tmp__;                                        \
-> > +       }                                                               \
->
-> Please replace the whole `if (0)` block with:
-> ```c
-> __same_type(_var, _val);
-> ```
-> from include/linux/compiler.h.
+On 18-05-20, 18:29, Bjorn Andersson wrote:
+> On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
+> > This stuff has been doing rounds on the mailing list since several years
+> > now with no agreed conclusion by all the parties. And here is another
+> > attempt to get some feedback from everyone involved to close this once
+> > and for ever. Your comments will very much be appreciated.
+> > 
+> > The ARM MHU is defined here in the TRM [1] for your reference, which
+> > states following:
+> > 
+> > 	"The MHU drives the signal using a 32-bit register, with all 32
+> > 	bits logically ORed together. The MHU provides a set of
+> > 	registers to enable software to set, clear, and check the status
+> > 	of each of the bits of this register independently.  The use of
+> > 	32 bits for each interrupt line enables software to provide more
+> > 	information about the source of the interrupt. For example, each
+> > 	bit of the register can be associated with a type of event that
+> > 	can contribute to raising the interrupt."
+> > 
+> 
+> Does this mean that there are 32 different signals and they are all ORed
+> into the same interrupt line to trigger software action when something
+> happens?
+> 
+> Or does it mean that this register is used to pass multi-bit information
+> and when any such information is passed an interrupt will be triggered?
+> If so, what does that information mean? How is it tied into other Linux
+> drivers/subsystems?
 
-The problem with __builtin_types_compatible_p() is that it considers
-unsigned long and u64 (aka unsigned long long) as different types even
-though they are the same width on x86-64.  While this may be a good
-cleanup to look at in the future, it's not a simple drop-in
-replacement.
+I have started to believe the hardware is written badly at this point
+:)
 
---
-Brian Gerst
+The thing is that the register can be used to send a 32 bit data
+(which the driver already provides), or it can be used by writing
+different bits to the SET register concurrently, without corrupting
+the other bits as writing 0 to a bit has no effect, we have a separate
+CLEAR register for that. And so it says that all the bits are ORed
+together to generate the interrupt, i.e. any bit set will generate an
+interrupt. Which also means that you can't send data 0 with the
+register.
+
+-- 
+viresh
