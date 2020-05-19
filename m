@@ -2,287 +2,275 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF750C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 796BA207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA46E207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:54:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CekGnblN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgESJvs (ORCPT
+        id S1728159AbgESJyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:51:48 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46370 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgESJvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:51:48 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A83D62000E1;
-        Tue, 19 May 2020 11:51:45 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A0AA62000DB;
-        Tue, 19 May 2020 11:51:37 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DF866402B3;
-        Tue, 19 May 2020 17:51:27 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
-        sumit.semwal@linaro.org, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org
-Subject: [PATCH] ASoC: fsl: imx-pcm-dma: Don't request dma channel in probe
-Date:   Tue, 19 May 2020 17:41:41 +0800
-Message-Id: <1589881301-4143-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 19 May 2020 05:54:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgESJyG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 05:54:06 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2EBAC061A0C;
+        Tue, 19 May 2020 02:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=t8KriT0uzWTFwnHacOVwkrZw+QOSCqO/QLL7EaGziaY=; b=CekGnblNiV27nEzeC7Yt2QUlA
+        iprQsXoXs//fZzS67/ovHjUE25VvKy1m7GRj1QG/uR4qViqyr+eX+JRioE32vlQ50vZfmZhYoASRB
+        521kGHTglEg5fEedx7L6H0IW0KiGuJBoYIB1ZiFkUDkk32eqUKMzEWU0MQIBaJFQaJKrgcF/d3FjG
+        pBK2m+lWL0r1BLm5Gtb9ETsRMtvuyi67pdjYMJFYbiJCLdt5a6ZblmXi3nlQMXTkR0L0RJwwvIu+L
+        BA2P/0Z0zjeQSR2mvbRMrSpnBP8vK825qH5HqtRLCJfQUKEaXhikpyeX6bjW1W5pkNPX40KuZigg8
+        yV0YzMxQw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34126)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jaywQ-0004u8-JM; Tue, 19 May 2020 10:53:42 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jaywE-0005ca-M1; Tue, 19 May 2020 10:53:30 +0100
+Date:   Tue, 19 May 2020 10:53:30 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev <netdev@vger.kernel.org>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
+ to handle RSS tables
+Message-ID: <20200519095330.GA1551@shell.armlinux.org.uk>
+References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
+ <20190524100554.8606-4-maxime.chevallier@bootlin.com>
+ <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
+ <20200423170003.GT25745@shell.armlinux.org.uk>
+ <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
+ <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+ <20200509114518.GB1551@shell.armlinux.org.uk>
+ <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
+ <20200509195246.GJ1551@shell.armlinux.org.uk>
+ <20200509202050.GK1551@shell.armlinux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200509202050.GK1551@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two requirements that we need to move the request
-of dma channel from probe to open.
+On Sat, May 09, 2020 at 09:20:50PM +0100, Russell King - ARM Linux admin wrote:
+> On Sat, May 09, 2020 at 08:52:46PM +0100, Russell King - ARM Linux admin wrote:
+> > It is highly likely that 895586d5dc32 is responsible for this breakage.
+> > I've been investigating this afternoon, and what I've found, comparing
+> > a kernel without 895586d5dc32 and with 895586d5dc32 applied is:
+> > 
+> > - The table programmed into the hardware via mvpp22_rss_fill_table()
+> >   appears to be identical with or without the commit.
+> > 
+> > - When rxhash is enabled on eth2, mvpp2_rss_port_c2_enable() reports
+> >   that c2.attr[0] and c2.attr[2] are written back containing:
+> > 
+> >    - with 895586d5dc32, failing:    00200000 40000000
+> >    - without 895586d5dc32, working: 04000000 40000000
+> > 
+> > - When disabling rxhash, c2.attr[0] and c2.attr[2] are written back as:
+> > 
+> >    04000000 00000000
+> > 
+> > The second value represents the MVPP22_CLS_C2_ATTR2_RSS_EN bit, the
+> > first value is the queue number, which comprises two fields.  The high
+> > 5 bits are 24:29 and the low three are 21:23 inclusive.  This comes
+> > from:
+> > 
+> >        c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
+> >                      MVPP22_CLS_C2_ATTR0_QLOW(ql);
+> > #define     MVPP22_CLS_C2_ATTR0_QHIGH(qh)       (((qh) & 0x1f) << 24)
+> > #define     MVPP22_CLS_C2_ATTR0_QLOW(ql)        (((ql) & 0x7) << 21)
+> > 
+> > So, the working case gives eth2 a queue id of 4.0, or 32 as per
+> > port->first_rxq, and the non-working case a queue id of 0.1, or 1.
+> > 
+> > The allocation of queue IDs seems to be in mvpp2_port_probe():
+> > 
+> >         if (priv->hw_version == MVPP21)
+> >                 port->first_rxq = port->id * port->nrxqs;
+> >         else
+> >                 port->first_rxq = port->id * priv->max_port_rxqs;
+> > 
+> > Where:
+> > 
+> >         if (priv->hw_version == MVPP21)
+> >                 priv->max_port_rxqs = 8;
+> >         else
+> >                 priv->max_port_rxqs = 32;
+> > 
+> > Making the port 0 (eth0 / eth1) have port->first_rxq = 0, and port 1
+> > (eth2) be 32.  It seems the idea is that the first 32 queues belong to
+> > port 0, the second 32 queues belong to port 1, etc.
+> > 
+> > mvpp2_rss_port_c2_enable() gets the queue number from it's parameter,
+> > 'ctx', which comes from mvpp22_rss_ctx(port, 0).  This returns
+> > port->rss_ctx[0].
+> > 
+> > mvpp22_rss_context_create() is responsible for allocating that, which
+> > it does by looking for an unallocated priv->rss_tables[] pointer.  This
+> > table is shared amongst all ports on the CP silicon.
+> > 
+> > When we write the tables in mvpp22_rss_fill_table(), the RSS table
+> > entry is defined by:
+> > 
+> > 		u32 sel = MVPP22_RSS_INDEX_TABLE(rss_ctx) |
+> >                           MVPP22_RSS_INDEX_TABLE_ENTRY(i);
+> > 
+> > where rss_ctx is the context ID (queue number) and i is the index in
+> > the table.
+> > 
+> > #define     MVPP22_RSS_INDEX_TABLE_ENTRY(idx)   (idx)
+> > #define     MVPP22_RSS_INDEX_TABLE(idx)         ((idx) << 8)
+> > #define     MVPP22_RSS_INDEX_QUEUE(idx)         ((idx) << 16)
+> > 
+> > If we look at what is written:
+> > 
+> > - The first table to be written has "sel" values of 00000000..0000001f,
+> >   containing values 0..3. This appears to be for eth1.  This is table 0,
+> >   RX queue number 0.
+> > - The second table has "sel" values of 00000100..0000011f, and appears
+> >   to be for eth2.  These contain values 0x20..0x23.  This is table 1,
+> >   RX queue number 0.
+> > - The third table has "sel" values of 00000200..0000021f, and appears
+> >   to be for eth3.  These contain values 0x40..0x43.  This is table 2,
+> >   RX queue number 0.
+> > 
+> > Okay, so how do queue numbers translate to the RSS table?  There is
+> > another table - the RXQ2RSS table, indexed by the MVPP22_RSS_INDEX_QUEUE
+> > field of MVPP22_RSS_INDEX and accessed through the MVPP22_RXQ2RSS_TABLE
+> > register.  Before 895586d5dc32, it was:
+> > 
+> >        mvpp2_write(priv, MVPP22_RSS_INDEX,
+> >                    MVPP22_RSS_INDEX_QUEUE(port->first_rxq));
+> >        mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE,
+> >                    MVPP22_RSS_TABLE_POINTER(port->id));
+> > 
+> > and after:
+> > 
+> >        mvpp2_write(priv, MVPP22_RSS_INDEX, MVPP22_RSS_INDEX_QUEUE(ctx));
+> >        mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE, MVPP22_RSS_TABLE_POINTER(ctx));
+> > 
+> > So, before the commit, for eth2, that would've contained '32' for the
+> > index and '1' for the table pointer - mapping queue 32 to table 1.
+> > Remember that this is queue-high.queue-low of 4.0.
+> > 
+> > After the commit, we appear to map queue 1 to table 1.  That again
+> > looks fine on the face of it.
+> > 
+> > Section 9.3.1 of the A8040 manual seems indicate the reason that the
+> > queue number is separated.  queue-low seems to always come from the
+> > classifier, whereas queue-high can be from the ingress physical port
+> > number or the classifier depending on the MVPP2_CLS_SWFWD_PCTRL_REG.
+> > 
+> > We set the port bit in MVPP2_CLS_SWFWD_PCTRL_REG, meaning that queue-high
+> > comes from the MVPP2_CLS_SWFWD_P2HQ_REG() register... and this seems to
+> > be where our bug comes from.
+> > 
+> > mvpp2_cls_oversize_rxq_set() sets this up as:
+> > 
+> >         mvpp2_write(port->priv, MVPP2_CLS_SWFWD_P2HQ_REG(port->id),
+> >                     (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
+> > 
+> >         val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
+> >         val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+> >         mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
+> > 
+> > so, the queue-high for eth2 is _always_ 4, meaning that only queues
+> > 32 through 39 inclusive are available to eth2.  Yet, we're trying to
+> > tell the classifier to set queue-high, which will be ignored, to zero.
+> > 
+> > So we end up directing traffic from eth2 not to queue 1, but to queue
+> > 33, and then we tell it to look up queue 33 in the RSS table.  However,
+> > RSS table has not been programmed for queue 33, and so it ends up
+> > (presumably) dropping the packets.
+> > 
+> > It seems that mvpp22_rss_context_create() doesn't take account of the
+> > fact that the upper 5 bits of the queue ID can't actually be changed
+> > due to the settings in mvpp2_cls_oversize_rxq_set(), _or_ it seems
+> > that mvpp2_cls_oversize_rxq_set() has been missed in this commit.
+> > Either way, these two functions mutually disagree with what queue
+> > number should be used.
+> > 
+> > So, 895586d5dc32 is indeed the cause of this problem.
+> 
+> Looking deeper into what mvpp2_cls_oversize_rxq_set() and the MTU
+> validation is doing, it seems that MVPP2_CLS_SWFWD_P2HQ_REG() is
+> used for at least a couple of things.
+> 
+> So, with the classifier having had RSS enabled and directing eth2
+> traffic to queue 1, we can not ignore the fact that we may have
+> packets appearing on queue 32 for this port.
+> 
+> One of the things that queue 32 will be used for is if an over-sized
+> packet attempts to egress through eth2 - it seems that the A8040 has
+> the ability to forward frames between its ports.  However, afaik we
+> don't support that feature, and the kernel restricts the packet size,
+> so we should never violate the MTU validator and end up with such a
+> packet.  In any case, _if_ we were to attempt to transmit an oversized
+> packet, we have no support in the kernel to deal with that appearing
+> in the port's receive queue.
+> 
+> Maybe it would be safe to clear the MVPP2_CLS_SWFWD_PCTRL_MASK() bit?
+> 
+> My testing seems to confirm my findings above - clearing this bit
+> means that if I enable rxhash on eth2, the interface can then pass
+> traffic, as we are now directing traffic to RX queue 1 rather than
+> queue 33.  Traffic still seems to work with rxhash off as well.
+> 
+> So, I think it's clear where the problem lies, but not what the correct
+> solution is; someone with more experience of packet classifiers (this
+> one?) needs to look at this - this is my first venture into these
+> things, and certainly the first time I've traced through how this is
+> trying to work (or not)...
 
-- When dma device binds with power-domains, the power will
-be enabled when we request dma channel. If the request of dma
-channel happen on probe, then the power-domains will be always
-enabled after kernel boot up,  which is not good for power
-saving,  so we need to move the request of dma channel to .open();
+This is what I was using here to work around the problem, and what I
+mentioned above.
 
-- With FE-BE case, if the dma channel is requested in probe,
-then there will be below issue, which is caused by that the
-dma channel will be requested duplicately
-
-[  638.906268] sysfs: cannot create duplicate filename '/devices/soc0/soc/2000000.bus/2000000.spba-bus/2024000.esai/dma:tx'
-[  638.919061] CPU: 1 PID: 673 Comm: aplay Not tainted 5.7.0-rc1-12956-gfc64b2585593 #287
-[  638.927113] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-[  638.933690] [<c0110dd8>] (unwind_backtrace) from [<c010b8ec>] (show_stack+0x10/0x14)
-[  638.941464] [<c010b8ec>] (show_stack) from [<c0557fc0>] (dump_stack+0xe4/0x118)
-[  638.948808] [<c0557fc0>] (dump_stack) from [<c032aeb4>] (sysfs_warn_dup+0x50/0x64)
-[  638.956406] [<c032aeb4>] (sysfs_warn_dup) from [<c032b1a8>] (sysfs_do_create_link_sd+0xc8/0xd4)
-[  638.965134] [<c032b1a8>] (sysfs_do_create_link_sd) from [<c05dc668>] (dma_request_chan+0xb0/0x210)
-[  638.974120] [<c05dc668>] (dma_request_chan) from [<c05dc7d0>] (dma_request_slave_channel+0x8/0x14)
-[  638.983111] [<c05dc7d0>] (dma_request_slave_channel) from [<c09d5548>] (fsl_asrc_dma_hw_params+0x1e0/0x438)
-[  638.992881] [<c09d5548>] (fsl_asrc_dma_hw_params) from [<c09c1654>] (soc_pcm_hw_params+0x4a0/0x6a8)
-[  639.001952] [<c09c1654>] (soc_pcm_hw_params) from [<c09c39d4>] (dpcm_fe_dai_hw_params+0x70/0xe4)
-[  639.010765] [<c09c39d4>] (dpcm_fe_dai_hw_params) from [<c099b274>] (snd_pcm_hw_params+0x158/0x418)
-[  639.019750] [<c099b274>] (snd_pcm_hw_params) from [<c099c5a0>] (snd_pcm_ioctl+0x734/0x183c)
-[  639.028129] [<c099c5a0>] (snd_pcm_ioctl) from [<c029ff94>] (ksys_ioctl+0x2ac/0xb98)
-[  639.035812] [<c029ff94>] (ksys_ioctl) from [<c0100080>] (ret_fast_syscall+0x0/0x28)
-[  639.043490] Exception stack(0xec529fa8 to 0xec529ff0)
-[  639.048565] 9fa0:                   bee84650 01321870 00000004 c25c4111 bee84650 0002000f
-[  639.056766] 9fc0: bee84650 01321870 01321820 00000036 00001f40 00000000 0002c2f8 00000003
-[  639.064964] 9fe0: b6f483fc bee8451c b6ee2655 b6e1dcf8
-[  639.070339] fsl-esai-dai 2024000.esai: Cannot create DMA dma:tx symlink
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/imx-pcm-dma.c | 173 +++++++++++++++++++++++++++++++++---
- 1 file changed, 159 insertions(+), 14 deletions(-)
-
-diff --git a/sound/soc/fsl/imx-pcm-dma.c b/sound/soc/fsl/imx-pcm-dma.c
-index 04a9bc749016..dae53b384df4 100644
---- a/sound/soc/fsl/imx-pcm-dma.c
-+++ b/sound/soc/fsl/imx-pcm-dma.c
-@@ -11,6 +11,7 @@
- #include <linux/dmaengine.h>
- #include <linux/types.h>
- #include <linux/module.h>
-+#include <linux/dma-mapping.h>
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+index fd221d88811e..0dd3b65822dd 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+@@ -1058,7 +1058,7 @@ void mvpp2_cls_oversize_rxq_set(struct mvpp2_port *port)
+ 		    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
  
- #include <sound/core.h>
- #include <sound/pcm.h>
-@@ -29,24 +30,168 @@ static bool filter(struct dma_chan *chan, void *param)
- 	return true;
+ 	val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
+-	val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
++	val &= ~MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+ 	mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
  }
  
--static const struct snd_dmaengine_pcm_config imx_dmaengine_pcm_config = {
--	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
--	.compat_filter_fn = filter,
--};
-+static int imx_pcm_hw_params(struct snd_soc_component *component,
-+			     struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-+	struct snd_dmaengine_dai_dma_data *dma_data;
-+	struct dma_slave_config config;
-+	struct dma_chan *chan;
-+	int ret = 0;
- 
--int imx_pcm_dma_init(struct platform_device *pdev, size_t size)
-+	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
-+	runtime->dma_bytes = params_buffer_bytes(params);
-+
-+	chan = snd_dmaengine_pcm_get_chan(substream);
-+	if (!chan)
-+		return -EINVAL;
-+
-+	ret = snd_hwparams_to_dma_slave_config(substream, params, &config);
-+	if (ret)
-+		return ret;
-+
-+	dma_data = snd_soc_dai_get_dma_data(cpu_dai, substream);
-+	if (!dma_data)
-+		return -EINVAL;
-+
-+	snd_dmaengine_pcm_set_config_from_dai_data(substream,
-+						   dma_data,
-+						   &config);
-+	return dmaengine_slave_config(chan, &config);
-+}
-+
-+static int imx_pcm_hw_free(struct snd_soc_component *component,
-+			   struct snd_pcm_substream *substream)
- {
--	struct snd_dmaengine_pcm_config *config;
-+	snd_pcm_set_runtime_buffer(substream, NULL);
-+	return 0;
-+}
-+
-+static snd_pcm_uframes_t imx_pcm_pointer(struct snd_soc_component *component,
-+					 struct snd_pcm_substream *substream)
-+{
-+	return snd_dmaengine_pcm_pointer(substream);
-+}
-+
-+static int imx_pcm_trigger(struct snd_soc_component *component,
-+			   struct snd_pcm_substream *substream, int cmd)
-+{
-+	return snd_dmaengine_pcm_trigger(substream, cmd);
-+}
-+
-+static int imx_pcm_open(struct snd_soc_component *component,
-+			struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-+	struct snd_dmaengine_dai_dma_data *dma_data;
-+	struct device *dev = component->dev;
-+	struct snd_pcm_hardware hw;
-+	struct dma_chan *chan;
-+	int ret;
-+
-+	ret = snd_pcm_hw_constraint_integer(substream->runtime,
-+					    SNDRV_PCM_HW_PARAM_PERIODS);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to set pcm hw params periods\n");
-+		return ret;
-+	}
-+
-+	dma_data = snd_soc_dai_get_dma_data(cpu_dai, substream);
-+	if (!dma_data)
-+		return -EINVAL;
-+
-+	chan = dma_request_slave_channel(cpu_dai->dev, tx ? "tx" : "rx");
-+	if (!chan) {
-+		/* Try to request channel using compat_filter_fn */
-+		chan = snd_dmaengine_pcm_request_channel(filter,
-+							 dma_data->filter_data);
-+		if (!chan)
-+			return -ENXIO;
-+	}
- 
--	config = devm_kzalloc(&pdev->dev,
--			sizeof(struct snd_dmaengine_pcm_config), GFP_KERNEL);
--	if (!config)
--		return -ENOMEM;
--	*config = imx_dmaengine_pcm_config;
-+	ret = snd_dmaengine_pcm_open(substream, chan);
-+	if (ret)
-+		goto pcm_open_fail;
- 
--	return devm_snd_dmaengine_pcm_register(&pdev->dev,
--		config,
--		SND_DMAENGINE_PCM_FLAG_COMPAT);
-+	memset(&hw, 0, sizeof(hw));
-+	hw.info = SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_MMAP_VALID |
-+			SNDRV_PCM_INFO_INTERLEAVED;
-+	hw.periods_min = 2;
-+	hw.periods_max = UINT_MAX;
-+	hw.period_bytes_min = 256;
-+	hw.period_bytes_max = dma_get_max_seg_size(chan->device->dev);
-+	hw.buffer_bytes_max = IMX_DEFAULT_DMABUF_SIZE;
-+	hw.fifo_size = dma_data->fifo_size;
-+
-+	/* Refine the hw according to caps of DMA. */
-+	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
-+							dma_data,
-+							&hw,
-+							chan);
-+	if (ret < 0)
-+		goto refine_runtime_hwparams_fail;
-+
-+	snd_soc_set_runtime_hwparams(substream, &hw);
-+
-+	/* Support allocate memory from IRAM */
-+	ret = snd_dma_alloc_pages(SNDRV_DMA_TYPE_DEV_IRAM,
-+				  chan->device->dev,
-+				  hw.buffer_bytes_max,
-+				  &substream->dma_buffer);
-+	if (ret < 0)
-+		goto alloc_pagas_fail;
-+
-+	return 0;
-+
-+alloc_pagas_fail:
-+refine_runtime_hwparams_fail:
-+	snd_dmaengine_pcm_close(substream);
-+pcm_open_fail:
-+	dma_release_channel(chan);
-+
-+	return ret;
-+}
-+
-+static int imx_pcm_close(struct snd_soc_component *component,
-+			 struct snd_pcm_substream *substream)
-+{
-+	if (substream) {
-+		snd_dma_free_pages(&substream->dma_buffer);
-+		substream->dma_buffer.area = NULL;
-+		substream->dma_buffer.addr = 0;
-+	}
-+
-+	return snd_dmaengine_pcm_close_release_chan(substream);
-+}
-+
-+static int imx_pcm_new(struct snd_soc_component *component,
-+		       struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct snd_card *card = rtd->card->snd_card;
-+
-+	return dma_coerce_mask_and_coherent(card->dev, DMA_BIT_MASK(32));
-+}
-+
-+static const struct snd_soc_component_driver imx_pcm_component = {
-+	.name           = "imx-pcm-dma",
-+	.pcm_construct	= imx_pcm_new,
-+	.open		= imx_pcm_open,
-+	.close		= imx_pcm_close,
-+	.hw_params	= imx_pcm_hw_params,
-+	.hw_free	= imx_pcm_hw_free,
-+	.trigger	= imx_pcm_trigger,
-+	.pointer	= imx_pcm_pointer,
-+};
-+
-+int imx_pcm_dma_init(struct platform_device *pdev, size_t size)
-+{
-+	return devm_snd_soc_register_component(&pdev->dev,
-+					       &imx_pcm_component, NULL, 0);
- }
- EXPORT_SYMBOL_GPL(imx_pcm_dma_init);
- 
+
 -- 
-2.21.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
