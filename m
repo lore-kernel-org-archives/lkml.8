@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D45C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A32C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 363DB205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7180205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgESVs2 (ORCPT
+        id S1728640AbgESVs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40848 "EHLO
+        Tue, 19 May 2020 17:48:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728255AbgESVqz (ORCPT
+        with ESMTP id S1728248AbgESVqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:46:55 -0400
+        Tue, 19 May 2020 17:46:54 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 006D4C08C5C3;
-        Tue, 19 May 2020 14:46:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71792C08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:46:54 -0700 (PDT)
 Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <a.darwish@linutronix.de>)
-        id 1jbA42-0002dr-Ph; Tue, 19 May 2020 23:46:18 +0200
+        id 1jbA4D-0002fp-GG; Tue, 19 May 2020 23:46:29 +0200
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
@@ -36,14 +36,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         "Sebastian A. Siewior" <bigeasy@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v1 06/25] dma-buf: Remove custom seqcount lockdep class key
-Date:   Tue, 19 May 2020 23:45:28 +0200
-Message-Id: <20200519214547.352050-7-a.darwish@linutronix.de>
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Subject: [PATCH v1 08/25] seqlock: lockdep assert non-preemptibility on seqcount_t write
+Date:   Tue, 19 May 2020 23:45:30 +0200
+Message-Id: <20200519214547.352050-9-a.darwish@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
@@ -57,72 +53,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 3c3b177a9369 ("reservation: add support for read-only access
-using rcu") introduced a sequence counter to manage updates to
-reservations. Back then, the reservation object initializer
-reservation_object_init() was always inlined.
+Preemption must be disabled before entering a sequence count write side
+critical section.  Failing to do so, the seqcount read side can preempt
+the write side section and spin for the entire scheduler tick.  If that
+reader belongs to a real-time scheduling class, it can spin forever and
+the kernel will livelock.
 
-Having the sequence counter initialization inlined meant that each of
-the call sites would have a different lockdep class key, which would've
-broken lockdep's deadlock detection. The aforementioned commit thus
-introduced, and exported, a custom seqcount lockdep class key and name.
-
-The commit 8735f16803f00 ("dma-buf: cleanup reservation_object_init...")
-transformed the reservation object initializer to a normal non-inlined C
-function. seqcount_init(), which automatically defines the seqcount
-lockdep class key and must be called non-inlined, can now be safely used.
-
-Remove the seqcount custom lockdep class key, name, and export. Use
-seqcount_init() inside the dma reservation object initializer.
+Assert through lockdep that preemption is disabled for seqcount writers.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- drivers/dma-buf/dma-resv.c | 9 +--------
- include/linux/dma-resv.h   | 2 --
- 2 files changed, 1 insertion(+), 10 deletions(-)
+ include/linux/seqlock.h | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-index 4264e64788c4..590ce7ad60a0 100644
---- a/drivers/dma-buf/dma-resv.c
-+++ b/drivers/dma-buf/dma-resv.c
-@@ -50,12 +50,6 @@
- DEFINE_WD_CLASS(reservation_ww_class);
- EXPORT_SYMBOL(reservation_ww_class);
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 0491d963d47e..d35be7709403 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -369,14 +369,32 @@ static inline void raw_write_seqcount_latch(seqcount_t *s)
  
--struct lock_class_key reservation_seqcount_class;
--EXPORT_SYMBOL(reservation_seqcount_class);
--
--const char reservation_seqcount_string[] = "reservation_seqcount";
--EXPORT_SYMBOL(reservation_seqcount_string);
--
- /**
-  * dma_resv_list_alloc - allocate fence list
-  * @shared_max: number of fences we need space for
-@@ -134,9 +128,8 @@ subsys_initcall(dma_resv_lockdep);
- void dma_resv_init(struct dma_resv *obj)
+ /*
+  * Sequence counter only version assumes that callers are using their
+- * own mutexing.
++ * own locking and preemption is disabled.
+  */
+-static inline void write_seqcount_begin_nested(seqcount_t *s, int subclass)
++
++static inline void __write_seqcount_begin_nested(seqcount_t *s, int subclass)
  {
- 	ww_mutex_init(&obj->lock, &reservation_ww_class);
-+	seqcount_init(&obj->seq);
- 
--	__seqcount_init(&obj->seq, reservation_seqcount_string,
--			&reservation_seqcount_class);
- 	RCU_INIT_POINTER(obj->fence, NULL);
- 	RCU_INIT_POINTER(obj->fence_excl, NULL);
+ 	raw_write_seqcount_begin(s);
+ 	seqcount_acquire(&s->dep_map, subclass, 0, _RET_IP_);
  }
-diff --git a/include/linux/dma-resv.h b/include/linux/dma-resv.h
-index ee50d10f052b..a6538ae7d93f 100644
---- a/include/linux/dma-resv.h
-+++ b/include/linux/dma-resv.h
-@@ -46,8 +46,6 @@
- #include <linux/rcupdate.h>
  
- extern struct ww_class reservation_ww_class;
--extern struct lock_class_key reservation_seqcount_class;
--extern const char reservation_seqcount_string[];
++static inline void write_seqcount_begin_nested(seqcount_t *s, int subclass)
++{
++	lockdep_assert_preemption_disabled();
++	__write_seqcount_begin_nested(s, subclass);
++}
++
++/*
++ * write_seqcount_begin() without lockdep non-preemptibility checks.
++ *
++ * Use for internal seqlock.h code where it's known that preemption
++ * is already disabled. For example, seqlock_t write functions.
++ */
++static inline void __write_seqcount_begin(seqcount_t *s)
++{
++	__write_seqcount_begin_nested(s, 0);
++}
++
+ static inline void write_seqcount_begin(seqcount_t *s)
+ {
+ 	write_seqcount_begin_nested(s, 0);
+@@ -446,7 +464,7 @@ static inline unsigned read_seqretry(const seqlock_t *sl, unsigned start)
+ static inline void write_seqlock(seqlock_t *sl)
+ {
+ 	spin_lock(&sl->lock);
+-	write_seqcount_begin(&sl->seqcount);
++	__write_seqcount_begin(&sl->seqcount);
+ }
  
- /**
-  * struct dma_resv_list - a list of shared fences
+ static inline void write_sequnlock(seqlock_t *sl)
+@@ -458,7 +476,7 @@ static inline void write_sequnlock(seqlock_t *sl)
+ static inline void write_seqlock_bh(seqlock_t *sl)
+ {
+ 	spin_lock_bh(&sl->lock);
+-	write_seqcount_begin(&sl->seqcount);
++	__write_seqcount_begin(&sl->seqcount);
+ }
+ 
+ static inline void write_sequnlock_bh(seqlock_t *sl)
+@@ -470,7 +488,7 @@ static inline void write_sequnlock_bh(seqlock_t *sl)
+ static inline void write_seqlock_irq(seqlock_t *sl)
+ {
+ 	spin_lock_irq(&sl->lock);
+-	write_seqcount_begin(&sl->seqcount);
++	__write_seqcount_begin(&sl->seqcount);
+ }
+ 
+ static inline void write_sequnlock_irq(seqlock_t *sl)
+@@ -484,7 +502,7 @@ static inline unsigned long __write_seqlock_irqsave(seqlock_t *sl)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&sl->lock, flags);
+-	write_seqcount_begin(&sl->seqcount);
++	__write_seqcount_begin(&sl->seqcount);
+ 	return flags;
+ }
+ 
 -- 
 2.20.1
 
