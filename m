@@ -2,66 +2,96 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A97AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42387C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBE9206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F1C206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:15:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UCHDF2Zg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgESJOR (ORCPT
+        id S1728573AbgESJPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:14:17 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:57758 "EHLO gloria.sntech.de"
+        Tue, 19 May 2020 05:15:36 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57080 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgESJOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:14:16 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jayKA-0002vG-Ru; Tue, 19 May 2020 11:14:10 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] arm64: dts: rockchip: fix defines in pd_vio node for rk3399
-Date:   Tue, 19 May 2020 11:14:08 +0200
-Message-Id: <158987962022.2283062.2703252906443245111.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200428203003.3318-1-jbx6244@gmail.com>
-References: <20200428203003.3318-1-jbx6244@gmail.com>
+        id S1726818AbgESJPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 05:15:36 -0400
+Received: from zn.tnic (p200300ec2f0b87003113f65f16dcf690.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8700:3113:f65f:16dc:f690])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 99A811EC0322;
+        Tue, 19 May 2020 11:15:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589879734;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3zIW0mscrSzBoJoj+N7Op6mZu6eLSey92yt+pTI7244=;
+        b=UCHDF2ZgyRLRTP7XNdnuIZv4h2qPUWVp7D7heCzAdEWdt15yHiKvQO71Kib2dI9IztD8je
+        0XrJlp8xpdDb5g8DZ7zW5IDgqVo7PX01g/D/UXElv00ZpVvJMc6eM9sQURxg+yMMLTb+Sd
+        4Qav+EDQoW5GfHKrvicE0mYg0jJJncI=
+Date:   Tue, 19 May 2020 11:15:26 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 35/75] x86/head/64: Build k/head64.c with
+ -fno-stack-protector
+Message-ID: <20200519091526.GB444@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-36-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428151725.31091-36-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 22:30:02 +0200, Johan Jonker wrote:
-> A test with the command below gives for example this error:
+On Tue, Apr 28, 2020 at 05:16:45PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: pd_vio@15:
-> 'pd_tcpc0@RK3399_PD_TCPC0', 'pd_tcpc1@RK3399_PD_TCPC1'
-> do not match any of the regexes:
-> '.*-names$', '.*-supply$', '^#.*-cells$',
-> '^#[a-zA-Z0-9,+\\-._]{0,63}$',
-> '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$',
-> '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$',
-> '^__.*__$', 'pinctrl-[0-9]+'
-> 
-> [...]
+> The code inserted by the stack protector does not work in the early
+> boot environment because it uses the GS segment, at least with memory
+> encryption enabled.
 
-Applied, thanks!
+Can you elaborate on why is that a problem?
 
-[1/1] arm64: dts: rockchip: fix pd_tcpc0 and pd_tcpc1 node position on rk3399
-      commit: 2b99e6196663199409540fb95798dba464e34343
+The stack cookie is not generated that early yet so it should be
+comparing %gs:40 to 0.
 
-Best regards,
+Also, it generates the checking code here only with
+
+CONFIG_STACKPROTECTOR_STRONG=y
+
+> Make sure the early code is compiled without this feature enabled.
+
+If so, then this should be with CONFIG_AMD_MEM_ENCRYPT ifdeffery around
+it.
+
 -- 
-Heiko Stuebner <heiko@sntech.de>
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
