@@ -2,100 +2,137 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D755C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED4912070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCCF20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uI4Z4CVh"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Jrs74L0j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgESUZj (ORCPT
+        id S1728008AbgESUZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56324 "EHLO
+        Tue, 19 May 2020 16:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgESUZh (ORCPT
+        with ESMTP id S1727882AbgESUZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:25:37 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9B1C08C5C0;
-        Tue, 19 May 2020 13:25:37 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id j28so173588vkn.8;
-        Tue, 19 May 2020 13:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cysi0CoNBsu9DhP/dMMLTlA0RNEElv2ZCbOSz0zvm1U=;
-        b=uI4Z4CVhMiPZX6sByzDWE7ZFzcwaR+6wPM7HAlZLpc4hLaQ4012RvTFwesTownI+Bs
-         j8kpFgg17yYeJhbuR+n9lnpXEr8tBTkj6xaVlmRt/vnllgXmZMEjSgfPTKetO2FaQWKV
-         VpfnSqfteyu+lbYGOp0/zHd858vbvRHaXBwBj0zjkFWzpLd1kJUasVZITFtoF5ZCrWQM
-         WWkmAvZbjeIvNQB/KpaTxpaJXWL8dLZnVrjus730ZRNma+mRrjL9fIc4Ch7v9O6ajCkz
-         yf9hFXaO3YJoSejYY1qxdHiVuQc5W+IPxTYlsl+SjH65eJW13lwqZY7bAgRVnGWDjtf/
-         5x9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cysi0CoNBsu9DhP/dMMLTlA0RNEElv2ZCbOSz0zvm1U=;
-        b=ab2+91xpj3nZ59SsWj4bmsxfBP/OHDP8F7+67ePZJG4zVUaQlBwlEeqDkIwW8VVv6F
-         5Yo0O9ETTXqhldrWTkkR6oB8JVZegMU741iUwnEAXKR83PDEIYBaIOwBPaIeQz4rL3lL
-         7x6ogRK5hpyyDZ1uTzz4e4VUeE4vhBsT+O6XqPBJWwtH4+X9RlcL8032JYnLwxebGju2
-         RBWVLqJuYzSkk2vbTIymUjFPaEtcxEbcAiKxEFTU0IlrE1J/DGimuW5cHxTSKyjj3rA1
-         nI2FwqEuvl0j/N3gObAENqyMF2Cpd9uR4+BLH7AnmXTB/pt6jK7OODMRSnBqYLJTs1+T
-         NaZQ==
-X-Gm-Message-State: AOAM532kwnDaqKJc4kI+oBGOnRjdhOJVZn07ZnLtJRVNfKV7rfzyZ1vM
-        v395q+Z/wyMIC4DlHSYszZM8wLZms2SnpJfIPZ4=
-X-Google-Smtp-Source: ABdhPJxzr/wYHStcp2W7Yr/aP7XG19XGEIQOjr8Kxa0FejuJCLcwi9VSK/A8W46CT4JeGy/ZYWZ/uyU4spAYVziWDD8=
-X-Received: by 2002:a1f:bd96:: with SMTP id n144mr1516532vkf.6.1589919936532;
- Tue, 19 May 2020 13:25:36 -0700 (PDT)
+        Tue, 19 May 2020 16:25:43 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C8EC08C5C0;
+        Tue, 19 May 2020 13:25:43 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0b87001461a870af27ee92.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8700:1461:a870:af27:ee92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7C7E61EC02A7;
+        Tue, 19 May 2020 22:25:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589919941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=0KQyk6eHRwREL78mJ6GkGFFWFdrtxrD703khoZRYXS8=;
+        b=Jrs74L0jyryYiOWqzSGi+NpM7qxfVX2uWG3+US/KKWLVeV+2W1/gipMtwlAgsEHhaAmaPI
+        c74gjETApzBnmXYJSYN9ZhJ1HwSYsIENOf6iIHMdYdmahX6eYhGsjTRUn382XO7cB/ctdt
+        wqE6Wd7LmqQ6SCdGBvhe5+vvQ+E7z10=
+Date:   Tue, 19 May 2020 22:25:35 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] EDAC/ghes: Setup DIMM label from DMI and use it in
+ error reports
+Message-ID: <20200519202535.GC444@zn.tnic>
+References: <20200518095852.28010-1-rrichter@marvell.com>
 MIME-Version: 1.0
-References: <20200518201646.48312-1-dagmcr@gmail.com>
-In-Reply-To: <20200518201646.48312-1-dagmcr@gmail.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Tue, 19 May 2020 21:22:42 +0100
-Message-ID: <CACvgo50w90k18K8pEtiAv5foesEcJ9LuOyUzegY8Z9aidscwGw@mail.gmail.com>
-Subject: Re: [PATCH] drm: rcar-du: Fix build error
-To:     Daniel Gomez <dagmcr@gmail.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@linux.ie>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200518095852.28010-1-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 at 08:01, Daniel Gomez <dagmcr@gmail.com> wrote:
->
-> Select DRM_KMS_HELPER dependency.
->
-> Build error when DRM_KMS_HELPER is not selected:
->
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
-> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
->
-> Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-Nicely spotted.
-AFAICT the only way this ever worked is if people had
-DRM_FBDEV_EMULATION, which is unset in your case.
+On Mon, May 18, 2020 at 11:58:52AM +0200, Robert Richter wrote:
+> +static void dimm_setup_label(struct dimm_info *dimm, u16 handle)
+> +{
+> +	const char *bank = NULL, *device = NULL;
+> +
+> +	dmi_memdev_name(handle, &bank, &device);
+> +
+> +	/* both strings must be non-zero */
+> +	if (bank && *bank && device && *device)
+> +		snprintf(dimm->label, sizeof(dimm->label),
+> +			"%s %s", bank, device);
+> +	else
+> +		snprintf(dimm->label, sizeof(dimm->label),
+> +			"unknown memory (handle: 0x%.4x)", handle);
 
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+This changes the sysfs strings on my test box like this. 00-ghes.before
+and 01-ghes.after are created by doing:
 
-I suspect Laurent will pick this in due time.
--Emil
+grep -EriIn . /sys/devices/system/edac/ 2>/dev/null > [filename]
+
+edac_mc_alloc_dimms() already sets the dimm->label to "mc#%dmemory#%d"
+but I'm guessing that dmi_memdev_name() doesn't give on my machine what
+it gives on yours.
+
+Welcome to the wonderful world of consistently implemented firmware!
+
+--- 00-ghes.before      2020-05-19 17:55:50.821220239 +0200
++++ 01-ghes.after       2020-05-19 22:09:28.808492701 +0200
+@@ -17,7 +17,7 @@
+ /sys/devices/system/edac/mc/mc0/ce_count:1:0
+ /sys/devices/system/edac/mc/mc0/mc_name:1:ghes_edac
+ /sys/devices/system/edac/mc/mc0/csrow15/ce_count:1:0
+-/sys/devices/system/edac/mc/mc0/csrow15/ch0_dimm_label:1:mc#0memory#15
++/sys/devices/system/edac/mc/mc0/csrow15/ch0_dimm_label:1:unknown memory (handle: 0x0030)
+ /sys/devices/system/edac/mc/mc0/csrow15/power/runtime_active_time:1:0
+ /sys/devices/system/edac/mc/mc0/csrow15/power/runtime_active_kids:1:0
+ /sys/devices/system/edac/mc/mc0/csrow15/power/runtime_usage:1:0
+@@ -42,7 +42,7 @@
+ /sys/devices/system/edac/mc/mc0/power/runtime_enabled:1:disabled & forbidden
+ /sys/devices/system/edac/mc/mc0/power/control:1:on
+ /sys/devices/system/edac/mc/mc0/csrow31/ce_count:1:0
+-/sys/devices/system/edac/mc/mc0/csrow31/ch0_dimm_label:1:mc#0memory#31
++/sys/devices/system/edac/mc/mc0/csrow31/ch0_dimm_label:1:unknown memory (handle: 0x0040)
+ /sys/devices/system/edac/mc/mc0/csrow31/power/runtime_active_time:1:0
+ /sys/devices/system/edac/mc/mc0/csrow31/power/runtime_active_kids:1:0
+ /sys/devices/system/edac/mc/mc0/csrow31/power/runtime_usage:1:0
+@@ -73,10 +73,10 @@
+ /sys/devices/system/edac/mc/mc0/dimm15/dimm_dev_type:1:Unknown
+ /sys/devices/system/edac/mc/mc0/dimm15/size:1:32768
+ /sys/devices/system/edac/mc/mc0/dimm15/dimm_ce_count:1:0
+-/sys/devices/system/edac/mc/mc0/dimm15/dimm_label:1:mc#0memory#15
++/sys/devices/system/edac/mc/mc0/dimm15/dimm_label:1:unknown memory (handle: 0x0030)
+ /sys/devices/system/edac/mc/mc0/dimm15/dimm_location:1:memory 15 
+ /sys/devices/system/edac/mc/mc0/dimm15/dimm_edac_mode:1:SECDED
+-/sys/devices/system/edac/mc/mc0/seconds_since_reset:1:354
++/sys/devices/system/edac/mc/mc0/seconds_since_reset:1:979
+ /sys/devices/system/edac/mc/mc0/dimm31/dimm_ue_count:1:0
+ /sys/devices/system/edac/mc/mc0/dimm31/dimm_mem_type:1:Registered-DDR4
+ /sys/devices/system/edac/mc/mc0/dimm31/power/runtime_active_time:1:0
+@@ -90,7 +90,7 @@
+ /sys/devices/system/edac/mc/mc0/dimm31/dimm_dev_type:1:Unknown
+ /sys/devices/system/edac/mc/mc0/dimm31/size:1:32768
+ /sys/devices/system/edac/mc/mc0/dimm31/dimm_ce_count:1:0
+-/sys/devices/system/edac/mc/mc0/dimm31/dimm_label:1:mc#0memory#31
++/sys/devices/system/edac/mc/mc0/dimm31/dimm_label:1:unknown memory (handle: 0x0040)
+ /sys/devices/system/edac/mc/mc0/dimm31/dimm_location:1:memory 31 
+ /sys/devices/system/edac/mc/mc0/dimm31/dimm_edac_mode:1:SECDED
+ /sys/devices/system/edac/mc/mc0/max_location:1:memory 31
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
