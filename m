@@ -2,58 +2,80 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C123C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44260C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 622F02075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589909353;
-	bh=l8ymiYuKfdsRmQw6Cm7rnQiWDG9HYPK4dsgenRxrdtc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=pQMJiB+3vmwonC/dGrd4frFT1axaQ4NLFomgJP5U6Ya7fgNsN+oNCSQ5n9jFwgJJA
-	 63QDKqmrnSZ8RoPQ/K/bJZbOOxTy+S0x2CtGiZfpfMVNoPDP8HwBk1x4tE5KsupCS4
-	 KHwh2DcmTsvKJLu0/tCmcgUQpCD4Sl8dpgZihP3Q=
+	by mail.kernel.org (Postfix) with ESMTP id 27EA0207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:31:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dBhIFO6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgESR3M (ORCPT
+        id S1729455AbgESRbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729185AbgESR3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:29:12 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CC702075F;
-        Tue, 19 May 2020 17:29:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589909351;
-        bh=l8ymiYuKfdsRmQw6Cm7rnQiWDG9HYPK4dsgenRxrdtc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=e2RJRqHKW/iq4dxwrAz5Tz68/UNyype6IhQyjrf2FLIvRoDYx+DTDA59HR/2nS8Lc
-         smnr1j+quIaQYInOMqH27LibpZ9Pnmei2/QNZcSVXALxaEkwZl9egD1EU9k1kpd0Tc
-         70OtAQK89StfzM2ui/YD1T2jhvOUOLTvGxl2O1dk=
-Subject: Re: [PATCH 2/3] selftests: vdso: Use a header file to prototype
- parse_vdso API
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20200505174728.46594-1-broonie@kernel.org>
- <20200505174728.46594-3-broonie@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <aaeb0619-68d2-18f8-f72a-b8b37f348b4e@kernel.org>
-Date:   Tue, 19 May 2020 11:29:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 13:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729197AbgESRbI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:31:08 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1243AC08C5C0;
+        Tue, 19 May 2020 10:31:08 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l17so308256wrr.4;
+        Tue, 19 May 2020 10:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kwsJJSPwIW1RER2lwybPrjIu+9cw8TmM1I6Izb8Qnaw=;
+        b=dBhIFO6rkpy6660MNRUbiQSMw3OsR01yPDEYPqsNwYkENCVx2ZHgVf6EkFIqAWwIQT
+         tFa+jJTO9sQZMi18OLiTJvCGEe8yDDAmK2seGHLjD5p23enXlhEG10XzswqepdHl++i0
+         JjpgPvvrEHBzp0gtpVa0KqLBE8gc7x2X71RfCmBU5GYUyqSFVyafYI841v4nfLUDic7Z
+         ZeCKqDog8yPJwR7sVVAPKcEimvUIudPMVftzP4N9dCQBkkiEc1Jw1ZWH6Tj+UbTCbMda
+         lXxodAJLPuQ/gk9sz4iiSrlodCEux9EdBnn1hlJJTd6yI2YUQQjmbcxrkrm6VpVpU/5a
+         3krg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kwsJJSPwIW1RER2lwybPrjIu+9cw8TmM1I6Izb8Qnaw=;
+        b=Moc7873c48vHoyNen7YNVtVhVUNqS3aOOK5cXpPsigOlc83Lw8M1d8DMd1KcPbqomX
+         06C9Zuqz99LQLqeA4KbPxanYTcWlly2z4/rlAT95R6uvxIKNHmRBus6TMHJr9agjHZbo
+         Cg3L6c9KHvsLbtDqDqCRRJMQQhR+r3d5N+blDoj4WdJOm/bC92FeEk86ZQEI+5MV5wUd
+         aCLCPX0I0bdUUtyH9pZRnQgVJ9jbjkP/L/lkn9kY9twIwtaIqwKktkKhHtONbnCsHOEU
+         o1OyIqhTovBnI4A3NKSx13YUKH9wDK2KbyJKPac9f0eMaQcK4/VjZCflq+N7PXTuHGev
+         QaBw==
+X-Gm-Message-State: AOAM532iHe5xQ4DVNGJ2BggklDQAyPJT2JsgOXX8vhO/cupl421EQn1B
+        3fxm6wb1aL7ixC57rh5+S6w=
+X-Google-Smtp-Source: ABdhPJz4+NY5+8ioCpdwW4ZaMW+f3pW9y+pcWexTKP5iWLuCtP/HjhFZjq+mjF03TWuVGfY6nqTppQ==
+X-Received: by 2002:adf:9d91:: with SMTP id p17mr25952400wre.119.1589909466755;
+        Tue, 19 May 2020 10:31:06 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s11sm90421wrp.79.2020.05.19.10.31.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 10:31:05 -0700 (PDT)
+Subject: Re: [PATCH 4.19 01/80] net: dsa: Do not make user port errors fatal
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200518173450.097837707@linuxfoundation.org>
+ <20200518173450.419156571@linuxfoundation.org> <20200519071707.GA2609@amd>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <f11d7eba-17a4-28f9-0bb1-2fae1e0518a3@gmail.com>
+Date:   Tue, 19 May 2020 10:31:04 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200505174728.46594-3-broonie@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200519071707.GA2609@amd>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,109 +83,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/5/20 11:47 AM, Mark Brown wrote:
-> Both vdso_test_gettimeofday and vdso_standalone_test_x86 use the library in
-> parse_vdso.c but each separately declares the API it offers which is not
-> ideal. Create a header file with prototypes of the functions and use it in
-> both the library and the tests to ensure that the same prototypes are used
-> throughout.
+
+
+On 5/19/2020 12:17 AM, Pavel Machek wrote:
+> Hi!
 > 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->   tools/testing/selftests/vDSO/parse_vdso.c     | 24 +-------------
->   tools/testing/selftests/vDSO/parse_vdso.h     | 31 +++++++++++++++++++
->   .../selftests/vDSO/vdso_standalone_test_x86.c |  4 +--
->   .../selftests/vDSO/vdso_test_gettimeofday.c   |  5 +--
->   4 files changed, 34 insertions(+), 30 deletions(-)
->   create mode 100644 tools/testing/selftests/vDSO/parse_vdso.h
+>> From: Florian Fainelli <f.fainelli@gmail.com>
+>>
+>> commit 86f8b1c01a0a537a73d2996615133be63cdf75db upstream.
+>>
+>> Prior to 1d27732f411d ("net: dsa: setup and teardown ports"), we would
+>> not treat failures to set-up an user port as fatal, but after this
+>> commit we would, which is a regression for some systems where interfaces
+>> may be declared in the Device Tree, but the underlying hardware may not
+>> be present (pluggable daughter cards for instance).
+>>
 > 
-> diff --git a/tools/testing/selftests/vDSO/parse_vdso.c b/tools/testing/selftests/vDSO/parse_vdso.c
-> index 1dbb4b87268f..413f75620a35 100644
-> --- a/tools/testing/selftests/vDSO/parse_vdso.c
-> +++ b/tools/testing/selftests/vDSO/parse_vdso.c
-> @@ -21,29 +21,7 @@
->   #include <limits.h>
->   #include <elf.h>
->   
-> -/*
-> - * To use this vDSO parser, first call one of the vdso_init_* functions.
-> - * If you've already parsed auxv, then pass the value of AT_SYSINFO_EHDR
-> - * to vdso_init_from_sysinfo_ehdr.  Otherwise pass auxv to vdso_init_from_auxv.
-> - * Then call vdso_sym for each symbol you want.  For example, to look up
-> - * gettimeofday on x86_64, use:
-> - *
-> - *     <some pointer> = vdso_sym("LINUX_2.6", "gettimeofday");
-> - * or
-> - *     <some pointer> = vdso_sym("LINUX_2.6", "__vdso_gettimeofday");
-> - *
-> - * vdso_sym will return 0 if the symbol doesn't exist or if the init function
-> - * failed or was not called.  vdso_sym is a little slow, so its return value
-> - * should be cached.
-> - *
-> - * vdso_sym is threadsafe; the init functions are not.
-> - *
-> - * These are the prototypes:
-> - */
-> -extern void vdso_init_from_auxv(void *auxv);
-> -extern void vdso_init_from_sysinfo_ehdr(uintptr_t base);
-> -extern void *vdso_sym(const char *version, const char *name);
-> -
-> +#include "parse_vdso.h"
->   
->   /* And here's the code. */
->   #ifndef ELF_BITS
-> diff --git a/tools/testing/selftests/vDSO/parse_vdso.h b/tools/testing/selftests/vDSO/parse_vdso.h
-> new file mode 100644
-> index 000000000000..ea4b8635bb0b
-> --- /dev/null
-> +++ b/tools/testing/selftests/vDSO/parse_vdso.h
-> @@ -0,0 +1,31 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#ifndef PARSE_VDSO_H
-> +#define PARSE_VDSO_H
-> +
-> +#include <stdint.h>
-> +
-> +/*
-> + * To use this vDSO parser, first call one of the vdso_init_* functions.
-> + * If you've already parsed auxv, then pass the value of AT_SYSINFO_EHDR
-> + * to vdso_init_from_sysinfo_ehdr.  Otherwise pass auxv to vdso_init_from_auxv.
-> + * Then call vdso_sym for each symbol you want.  For example, to look up
-> + * gettimeofday on x86_64, use:
-> + *
-> + *     <some pointer> = vdso_sym("LINUX_2.6", "gettimeofday");
-> + * or
-> + *     <some pointer> = vdso_sym("LINUX_2.6", "__vdso_gettimeofday");
-> + *
-> + * vdso_sym will return 0 if the symbol doesn't exist or if the init function
-> + * failed or was not called.  vdso_sym is a little slow, so its return value
-> + * should be cached.
-> + *
-> + * vdso_sym is threadsafe; the init functions are not.
-> + *
-> + * These are the prototypes:
-> + */
-> +extern void *vdso_sym(const char *version, const char *name);
-> +extern void vdso_init_from_sysinfo_ehdr(uintptr_t base);
-> +extern void vdso_init_from_auxv(void *auxv);
-> +
+>> +++ b/net/dsa/dsa2.c
+>> @@ -412,7 +412,7 @@ static int dsa_tree_setup_switches(struc
+>>  
+>>  		err = dsa_switch_setup(ds);
+>>  		if (err)
+>> -			return err;
+>> +			continue;
+> 
+> The error code is discarded here, so user can now wonder "why does not
+> my port work" with no indications in the logs... Should we do
+> dev_info() here?
 
-You don't need extern here - this should be in scope?
-
-> +#endif
-> diff --git a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-> index 5ac4b00acfbc..8a44ff973ee1 100644
-> --- a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-> +++ b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
-> @@ -16,9 +16,7 @@
->   #include <unistd.h>
->   #include <stdint.h>
->   
-> -extern void *vdso_sym(const char *version, const char *name);
-> -extern void vdso_init_from_sysinfo_ehdr(uintptr_t base);
-> -extern void vdso_init_from_auxv(void *auxv);
-
-
-thanks,
--- Shuah
+There are informational messages provided at various points where a
+failure can happen and especially in the net/dsa/slave.c file where most
+of the errors are. I do not think an additional is needed at all.
+-- 
+Florian
