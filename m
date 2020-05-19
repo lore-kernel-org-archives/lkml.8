@@ -2,136 +2,195 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C035EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C43C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A053E2088E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F0F208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 09:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t+kUlADo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="trpRupFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgESJET (ORCPT
+        id S1728616AbgESJEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 05:04:19 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:61008 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726333AbgESJEQ (ORCPT
+        Tue, 19 May 2020 05:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgESJEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 05:04:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589879056; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=krynLA3PVnStDQ90BA4lcITyrT/iSvbyv+EPo/hP2Ao=;
- b=t+kUlADoFqk2nX/65Phd+o0hNVTBRhvuKfAjtjTLfuNRsmtq7Rk14fak0LV6VlMFP5X0/b0M
- ULTW9WGl2W53kfWpSWo310omNVmNOUKn7foXmQsJnua2JpRkevcxUYDhZmEJCl52/B2+4hxL
- 1puGTvX3AW7wbWwE+2mHqPXKb9E=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec3a104.7f793d152148-smtp-out-n03;
- Tue, 19 May 2020 09:04:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BBFCAC433F2; Tue, 19 May 2020 09:04:04 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14B85C433D2;
-        Tue, 19 May 2020 09:04:03 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 19 May 2020 14:34:03 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
- connections
-In-Reply-To: <4bd741e342f8e2743197ed6105dacffa@codeaurora.org>
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
- <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
- <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
- <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
- <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
- <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
- <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
- <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
- <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
- <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
- <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
- <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
- <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
- <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org>
- <37b3749e-2363-0877-c318-9c334a5d1881@arm.com>
- <d47271ee6a2a6f0f30da7e140b6f196c@codeaurora.org>
- <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
- <364049a30dc9d242ec611bf27a16a6c9@codeaurora.org>
- <CAJ9a7VjAoUmMG9pLEzE_rMSpOjwVOi-ZCinF87n9H0JgfMDsiQ@mail.gmail.com>
- <5a76926a6532d3f91cca169d474ba98e@codeaurora.org>
- <4bd741e342f8e2743197ed6105dacffa@codeaurora.org>
-Message-ID: <825b922dab9821fa46f321d600648e10@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Tue, 19 May 2020 05:04:24 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275D5C05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 02:04:24 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id w64so2549337wmg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 02:04:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TRUKrhEDvmas9xbqBpI5eK4i0cGdO3vlXJ/AHu3xRYU=;
+        b=trpRupFW1M7ki7aL3dKNLYSFtviNCiZiGyEk0VI0fAwqLOew+P/vqdMH4PgeXYQwFQ
+         0PDCWdXWwejp82rCVc68RCE9JnLxyrwu/H5cclySsYRlFzq27HVrviBrth84qv2TPY6R
+         3pE69qBjyGmKdjZPgxhXi+e0L0PNqH4XQXFJmxFOjbAvr9msXKS0tfU6vHNFwgYKiM7/
+         vCdtImiQn8S7LLG8+d0uwFh/4mNac5zA6t8N6qkZbDI+6j6XsLfWgh4hJlC6hRHA/68K
+         wHZ3kARLfk5vmZ6Gen4L5NWrTVBwW+5B5fCzfeew0hxp7FzhOaulVLk4Twh+PnTe5Ytx
+         jA/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TRUKrhEDvmas9xbqBpI5eK4i0cGdO3vlXJ/AHu3xRYU=;
+        b=EOO8vLcImTP/VziT5A97t40raaspadg4zoWdcJhBFmSjldgjxGNmYL93SM+e2nsVr5
+         fRfH6VJIYTA1+YuRsKpH5OaROoMrSwxsafHWut1uFoMg5mw6STIwe2/diLg3rcmpclBX
+         mp/QVhm+ntbvDihWbHn7x9S3IlvU49h10/c2hpeaxbkExHk2LWKarfySdrCqZrYDlTc9
+         Xz2qWkeGtvbQtnWh6NFJl0H2lfzJ00VsJPQOeJQOANXCZ9AQ4Othj1pewEkzNtB+bRxI
+         XfK0qmcD272L9uJEPDs60iAJf0+UI3AQpvzlrEcBxVxeBV0VygebWXoGQV8a/EQbjkl9
+         KRKw==
+X-Gm-Message-State: AOAM530tKRartIMgPi97s3Bqel/eqADtDHl/o5s/n0Cu0KbfGDhULIhf
+        Gxdbj8JjHzkFyN2yvKi+ciU=
+X-Google-Smtp-Source: ABdhPJwWCcYoNzmHFAM5uYaZlva33QM5VyOq8Gd7cJm6+UEZuT5wDqwCSIb09WmBYIU9GQlcVz+1Xg==
+X-Received: by 2002:a1c:2314:: with SMTP id j20mr2907200wmj.139.1589879062350;
+        Tue, 19 May 2020 02:04:22 -0700 (PDT)
+Received: from ubuntu-g3.micron.com ([165.225.86.140])
+        by smtp.googlemail.com with ESMTPSA id x22sm2923759wmi.32.2020.05.19.02.04.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 02:04:21 -0700 (PDT)
+Message-ID: <8de0911281b4c03671841027ec165422789b63f2.camel@gmail.com>
+Subject: Re: [PATCH v4 0/5] Micron SLC NAND filling block
+From:   Bean Huo <huobean@gmail.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     richard@nod.at, vigneshr@ti.com, s.hauer@pengutronix.de,
+        boris.brezillon@collabora.com, derosier@gmail.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bean Huo <beanhuo@micron.com>
+Date:   Tue, 19 May 2020 11:04:15 +0200
+In-Reply-To: <20200518172253.1c3b9d32@xps13>
+References: <20200518135943.11749-1-huobean@gmail.com>
+         <20200518172253.1c3b9d32@xps13>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike, Suzuki,
+hi,  Miquel
 
-On 2020-05-16 15:34, Sai Prakash Ranjan wrote:
-> Hi Mike, Suzuki
+On Mon, 2020-05-18 at 17:22 +0200, Miquel Raynal wrote:
+> Hi Bean,
 > 
-> [...]
+> Bean Huo <huobean@gmail.com> wrote on Mon, 18 May 2020 15:59:38
+> +0200:
 > 
->>> 
->>> Please look at the CoreSight components specification 3.0 (ARM IHI
->>> 0029E) Section B2.1.2 which describes the Unique Component Identifier
->>> (UCI).
->>> As mentioned above this consists of a combination of bits from
->>> multiple registers, including PIDR4.
->>> 
->> 
->> Ok got it now, thanks for clearing the doubt. I will go ahead with
->> this method to identify QCOM impl and post a patch.
->> 
+> > From: Bean Huo <beanhuo@micron.com>
+> > 
+> > After submission of patch V1 [1] and V2 [2], we stopped its update
+> > since we get
+> > stuck in the solution on how to avoid the power-loss issue in case
+> > power-cut
+> > hits the block filling. In the v1 and v2, to avoid this issue, we
+> > always damaged
+> > page0, page1, this's based on the hypothesis that NAND FS is UBIFS.
+> > This
+> > FS-specifical code is unacceptable in the MTD layer. Also, it
+> > cannot cover all
+> > NAND based file system. Based on the current discussion, seems that
+> > re-write all
+> > first 15 page from page0 is a satisfactory solution.
 > 
-> Looking some more into this, since we have this limitation only on
-> specific replicator on very few QCOM SoCs, rather than having a blanket
-> workaround for all QCOM, we were thinking it would be better to have
-> this workaround based on a firmware property something like
-> "qcom,replicator-loses-context" for those replicators with this
-> limitation and then set the drvdata->check_idfilter_val based on
-> this property.
+> We have a layering problem now. Maybe we should just have an MTD
+> internal variable like min_written_pages_before_erase that the Micron
+> driver could set to a !0 value.
+> 
+> Then, the handling could be done by the user (UBI/UBIFS, JFFS2, MTD
+> user if exported).
 > 
 
-Sorry for going back and forth on this one, but I think having a 
-firmware
-property will clearly help us identify the issue on specific SoCs rather 
-than
-wholesale workaround for all QCOM SoCs. For now, I will post a patch 
-based on
-the property "qcom,replicator-loses-context", please feel free to yell 
-at me
-if this is completely wrong and we can discuss it further in that patch.
+This is NAND its own problem, if no significant adantage, I don't think
+it's a good solution to extend the problem to the upper FS layer.
+also, in the FS erase path, doesn't have the programmed pages counter.
+we should repeat the same approach as we did in MTD layer.
 
-Thanks,
-Sai
+> > 
+> > Meanwhile, I borrowed one idea from Miquel Raynal patchset [3], in
+> > which keeps
+> > a recode of programmed pages, base on it, for most of the cases, we
+> > don't need
+> > to read every page to see if current erasing block is a partially
+> > programmed
+> > block.
+> > 
+> > Changelog:
+> > 
+> > v3 - v4:
+> >     1. In the patch 4/5, change to directly use ecc.strength to
+> > judge the page
+> >        is a empty page or not, rather than max_bitflips < mtd-
+> > >bitflip_threshold
+> >     2. In the patch 5/5, for the powerloss case, from the next time
+> > boot up,
+> >        lots of page will be programmed from >page15 address, if
+> > still using
+> >        first_p as GENMASK() bitmask starting position, writtenp
+> > will be always 0,
+> >        fix it by changing its bitmask starting at bit position 0.
+> > 
+> > v2 - v3:
+> >     1. Rebase patch to the latest MTD git tree
+> >     2. Add a record that keeps tracking the programmed pages in the
+> > first 16
+> >        pages
+> >     3. Change from program odd pages, damage page 0 and page 1, to
+> > program all
+> >        first 15 pages
+> >     4. Address issues which exist in the V2.
+> > 
+> > v1 - v2:
+> >     1. Rebased V1 to latest Linux kernel.
+> >     2. Add erase preparation function pointer in
+> > nand_manufacturer_ops.
+> > 
+> > 
+> > [1] https://www.spinics.net/lists/linux-mtd/msg04112.html
+> > [2] https://www.spinics.net/lists/linux-mtd/msg04450.html
+> > [3] https://www.spinics.net/lists/linux-mtd/msg13083.html
+> > 
+> > 
+> > Bean Huo (5):
+> >   mtd: rawnand: group all NAND specific ops into new nand_chip_ops
+> >   mtd: rawnand: Add {pre,post}_erase hooks in nand_chip_ops
+> >   mtd: rawnand: Add write_oob hook in nand_chip_ops
+> >   mtd: rawnand: Introduce a new function
+> > nand_check_is_erased_page()
+> >   mtd: rawnand: micron: Micron SLC NAND filling block
+> 
+> When you take my patches in your series, especially when not touching
+> them at all, you should keep my Authorship and SoB first, then add
+> your
+> SoB.
+> 
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+sorry for my fault, I thought adding your Signed-off-by in 3/5 is
+suffient. you mean I should add your signed-off-by in 5/5 as well?
+I will do that in next version.
+
+thanks Miquel.
+
+
+BTW: would you please help me review other code?
+
+
+ 
+Bean
+
+
+> 
+> Thanks,
+> Miquèl
+
