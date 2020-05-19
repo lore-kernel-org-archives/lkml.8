@@ -2,78 +2,78 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9856EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C973DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 791E7207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589914988;
-	bh=yGKJu1xlG42vBKIuRnBWXZQM+NLQT8MzF+RRBMa5FQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O+S4sDVTzGr2i3LulyPsgrvqUoild11voqCOcIFoRQ+k4s1MVpQ0sPeC0/18FtQ2H
-	 ypVXBmyYyqPGgFkfXpJ2eCtzK5+SaNfS7VQvjDwZ4YYzFzLpUadOniclK4AmSdTWGc
-	 6sFH33ILcXpcLqtCneQRS+an1wIss/UxPWGKOMUE=
+	by mail.kernel.org (Postfix) with ESMTP id AC53C206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:03:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GDwmkcDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgESTDH (ORCPT
+        id S1727956AbgESTDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:03:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56478 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 15:03:24 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39584 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgESTDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:03:07 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 735D8206C3;
-        Tue, 19 May 2020 19:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589914986;
-        bh=yGKJu1xlG42vBKIuRnBWXZQM+NLQT8MzF+RRBMa5FQ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FtrDy/VdWXUK6kmNCsHw2vh9EIETgrekvcLoGJuk2Xv3rgo+2KWuI9joZxl25cakV
-         O0J8rc8IlWTaNBQgo1hQJYcEwVY6CmjofXJ60HUZxkdcuhXMtQs9Nl/1GxpfB4no4M
-         xolp7DYp2DpKeXm3XoLFcg2yNRyyGg0vUXRGtk+Y=
-Date:   Tue, 19 May 2020 14:07:53 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>
-Subject: Re: [tip: locking/core] locking/lockdep: Replace zero-length array
- with flexible-array
-Message-ID: <20200519190753.GA10690@embeddedor>
-References: <20200507185804.GA15036@embeddedor>
- <158991386428.17951.3540978557111480073.tip-bot2@tip-bot2>
+        id S1726059AbgESTDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 15:03:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=9A+5GLQ4ZvDD5R6P8r1Zmt+li9/vFkdMpJLubAsAUJM=; b=GDwmkcDsZTEbdZnUdW4xyG49Bq
+        mUeLP+79BCgs5oXv6W9Fy9JcP/IG1S+Cqg3c7/I6IqaEysybIXxuUVkqTTCQwzezGIvde8IrlPAAj
+        rJWFDNWXhpVeMIL0NLNiKXDhvpgZxu1gFmG5RMG33+noqU9IYG68dbgqx6QTlUqIiZfE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jb7WG-002jqs-Vy; Tue, 19 May 2020 21:03:16 +0200
+Date:   Tue, 19 May 2020 21:03:16 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
+Message-ID: <20200519190316.GA652285@lunn.ch>
+References: <20200519141813.28167-1-dmurphy@ti.com>
+ <20200519141813.28167-3-dmurphy@ti.com>
+ <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200519182916.GM624248@lunn.ch>
+ <c45bae32-d26f-cbe5-626b-2afae4a557b3@ti.com>
+ <20200519114843.34e65bcc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <5d6d799f-f7b6-566a-5038-5901590f2e7b@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <158991386428.17951.3540978557111480073.tip-bot2@tip-bot2>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5d6d799f-f7b6-566a-5038-5901590f2e7b@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 06:44:24PM -0000, tip-bot2 for Gustavo A. R. Silva wrote:
-> The following commit has been merged into the locking/core branch of tip:
+On Tue, May 19, 2020 at 01:59:16PM -0500, Dan Murphy wrote:
+> Jakub
 > 
-> Commit-ID:     db78538c75e49c09b002a2cd96a19ae0c39be771
-> Gitweb:        https://git.kernel.org/tip/db78538c75e49c09b002a2cd96a19ae0c39be771
-> Author:        Gustavo A. R. Silva <gustavoars@kernel.org>
-> AuthorDate:    Thu, 07 May 2020 13:58:04 -05:00
-> Committer:     Peter Zijlstra <peterz@infradead.org>
-> CommitterDate: Tue, 19 May 2020 20:34:18 +02:00
+> On 5/19/20 1:48 PM, Jakub Kicinski wrote:
+> > On Tue, 19 May 2020 13:41:40 -0500 Dan Murphy wrote:
+> > > > Is this now a standard GCC warning? Or have you turned on extra
+> > > > checking?
+> > > I still was not able to reproduce this warning with gcc-9.2.  I would
+> > > like to know the same
+> > W=1 + gcc-10 here, also curious to know which one of the two makes
+> > the difference :)
 > 
-> locking/lockdep: Replace zero-length array with flexible-array
-> 
+> W=1 made the difference I got the warning with gcc-9.2
 
-Thanks, Peter.
+I wonder if we should turn on this specific warning by default in
+drivers/net/phy? I keep making the same mistake, and it would be nice
+if GCC actually told me.
 
---
-Gustavo
+   Andrew
