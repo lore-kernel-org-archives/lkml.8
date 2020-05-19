@@ -2,184 +2,111 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 657EE207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UWYL2bAe"
+	by mail.kernel.org (Postfix) with ESMTP id 4659520829
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgESLg1 (ORCPT
+        id S1728778AbgESLgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:36:27 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36041 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728691AbgESLg1 (ORCPT
+        Tue, 19 May 2020 07:36:52 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46862 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbgESLgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:36:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589888185;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=anDETXwhf+20F673AErHdDJk1touv5h1QiuXeaGAwVo=;
-        b=UWYL2bAeNRZ9K4rBOUdTrnq8teZHPbs5vDZ1it4JCgy/vv6p6E8cG2X+8E3kD9dM0C+aqm
-        FHibnfuSrTLrZkggK97nJtTkhTi5yurwqlQL4Yv0Hys8V2U6aMryX5bTyyMfxs3lWPU/3i
-        wgwEyDLg0kLXWDq2IHHFdlGMBu0+kJ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-vHxp75QHNPuKDbecYtsieA-1; Tue, 19 May 2020 07:36:21 -0400
-X-MC-Unique: vHxp75QHNPuKDbecYtsieA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F43F1085944;
-        Tue, 19 May 2020 11:36:20 +0000 (UTC)
-Received: from starship (unknown [10.35.207.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F2DC160BF3;
-        Tue, 19 May 2020 11:36:18 +0000 (UTC)
-Message-ID: <b46795c18d2c2e1294b67c530ebde0041fbbe131.camel@redhat.com>
-Subject: Re: [PATCH] KVM: x86: only do L1TF workaround on affected processors
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>, stable@vger.kernel.org
-Date:   Tue, 19 May 2020 14:36:17 +0300
-In-Reply-To: <adb8a844689f1569875b1e6574ce7db4962e611c.camel@redhat.com>
-References: <20200519095008.1212-1-pbonzini@redhat.com>
-         <adb8a844689f1569875b1e6574ce7db4962e611c.camel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 19 May 2020 07:36:52 -0400
+Received: from 89-64-84-14.dynamic.chello.pl (89.64.84.14) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id a7004566450acdb1; Tue, 19 May 2020 13:36:49 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] ACPI: PM: s2idle: Print type of wakeup debug messages
+Date:   Tue, 19 May 2020 13:36:48 +0200
+Message-ID: <1709513.f9ygnvZT4z@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-19 at 13:59 +0300, Maxim Levitsky wrote:
-> On Tue, 2020-05-19 at 05:50 -0400, Paolo Bonzini wrote:
-> > KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are split
-> > in two parts, as in "[high 11111 low]", to thwart any attempt to use these bits
-> > in an L1TF attack.  This works as long as there are 5 free bits between
-> > MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
-> > access triggers a reserved-bit-set page fault.
-> 
-> Most of machines I used have MAXPHYADDR=39, however on larger server machines,
-> isn't MAXPHYADDR already something like 48, thus not allowing enought space for these bits?
-> This is the case for my machine as well.
-> 
-> In this case, if I understand correctly, the MAXPHYADDR value reported to the guest can
-> be reduced to accomodate for these bits, is that true?
-> 
-> 
-> > The bit positions however were computed wrongly for AMD processors that have
-> > encryption support.  In this case, x86_phys_bits is reduced (for example
-> > from 48 to 43, to account for the C bit at position 47 and four bits used
-> > internally to store the SEV ASID and other stuff) while x86_cache_bits in
-> > would remain set to 48, and _all_ bits between the reduced MAXPHYADDR
-> > and bit 51 are set.  
-> 
-> If I understand correctly this is done by the host kernel. I haven't had memory encryption
-> enabled when I did these tests.
-> 
-> 
-> FYI, later on, I did some digging about SME and SEV on my machine (3970X), and found out that memory encryption (SME) does actually work,
-> except that it makes AMD's own amdgpu driver panic on boot and according to google this is a very well known issue.
-> This is why I always thought that it wasn't supported.
-> 
-> I tested this issue while SME is enabled with efifb and it seems that its state (enabled/disabled) doesn't affect this bug,
-> which suggest me that a buggy bios always reports that memory encrypiton is enabled in that msr, or something
-> like that. I haven't yet studied this area well enought to be sure.
-> 
-> SEV on the other hand is not active because the system doesn't seem to have PSP firmware loaded,
-> and only have CCP active (I added some printks to the ccp/psp driver and it shows that PSP reports 0 capability which indicates that it is not there)
-> It is reported as supported in CPUID (even SEV-ES).
-> 
-> I tested this patch and it works.
-> 
-> However note (not related to this patch) that running nested guest,
-> makes the L1 guest panic right in the very startup of the guest when npt=1.
-npt=0 of course - I need more coffee today.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Best regards,
-	Maxim Levitsky
+Since acpi_s2idle_wake() knows the category of wakeup causing the
+system to resume from suspend-to-idle, make it print a unique message
+for each of them to help diagnose wakeup issues.
 
-> I tested this with many guest/host combinations and even with fedora kernel 5.3 running
-> on both host and guest, this is the case.
-> 
-> Tested-by: Maxim Levitsky <mlevitsk@redhat.com>
-> 
-> Overall the patch makes sense to me, however I don't yet know this area well enought
-> for a review, but I think I'll dig into it today and once it all makes sense to me,
-> I'll review this patch as well.
-> 
-> Best regards,
-> 	Maxim Levitsky
-> 
-> > Then low_phys_bits would also cover some of the
-> > bits that are set in the shadow_mmio_value, terribly confusing the gfn
-> > caching mechanism.
-> > 
-> > To fix this, avoid splitting gfns as long as the processor does not have
-> > the L1TF bug (which includes all AMD processors).  When there is no
-> > splitting, low_phys_bits can be set to the reduced MAXPHYADDR removing
-> > the overlap.  This fixes "npt=0" operation on EPYC processors.
-> > 
-> > Thanks to Maxim Levitsky for bisecting this bug.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: 52918ed5fcf0 ("KVM: SVM: Override default MMIO mask if memory encryption is enabled")
-> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > ---
-> >  arch/x86/kvm/mmu/mmu.c | 19 ++++++++++---------
-> >  1 file changed, 10 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index 8071952e9cf2..86619631ff6a 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -335,6 +335,8 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value, u64 access_mask)
-> >  {
-> >  	BUG_ON((u64)(unsigned)access_mask != access_mask);
-> >  	BUG_ON((mmio_mask & mmio_value) != mmio_value);
-> > +	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
-> > +	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
-> >  	shadow_mmio_value = mmio_value | SPTE_MMIO_MASK;
-> >  	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
-> >  	shadow_mmio_access_mask = access_mask;
-> > @@ -583,16 +585,15 @@ static void kvm_mmu_reset_all_pte_masks(void)
-> >  	 * the most significant bits of legal physical address space.
-> >  	 */
-> >  	shadow_nonpresent_or_rsvd_mask = 0;
-> > -	low_phys_bits = boot_cpu_data.x86_cache_bits;
-> > -	if (boot_cpu_data.x86_cache_bits <
-> > -	    52 - shadow_nonpresent_or_rsvd_mask_len) {
-> > +	low_phys_bits = boot_cpu_data.x86_phys_bits;
-> > +	if (boot_cpu_has_bug(X86_BUG_L1TF) &&
-> > +	    !WARN_ON_ONCE(boot_cpu_data.x86_cache_bits >=
-> > +			  52 - shadow_nonpresent_or_rsvd_mask_len)) {
-> > +		low_phys_bits = boot_cpu_data.x86_cache_bits
-> > +			- shadow_nonpresent_or_rsvd_mask_len;
-> >  		shadow_nonpresent_or_rsvd_mask =
-> > -			rsvd_bits(boot_cpu_data.x86_cache_bits -
-> > -				  shadow_nonpresent_or_rsvd_mask_len,
-> > -				  boot_cpu_data.x86_cache_bits - 1);
-> > -		low_phys_bits -= shadow_nonpresent_or_rsvd_mask_len;
-> > -	} else
-> > -		WARN_ON_ONCE(boot_cpu_has_bug(X86_BUG_L1TF));
-> > +			rsvd_bits(low_phys_bits, boot_cpu_data.x86_cache_bits - 1);
-> > +	}
-> >  
-> >  	shadow_nonpresent_or_rsvd_lower_gfn_mask =
-> >  		GENMASK_ULL(low_phys_bits - 1, PAGE_SHIFT);
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+The patch is on top of the linux-next branch in linux-pm.git.
+
+---
+ drivers/acpi/sleep.c |   20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+Index: linux-pm/drivers/acpi/sleep.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/sleep.c
++++ linux-pm/drivers/acpi/sleep.c
+@@ -992,23 +992,31 @@ static bool acpi_s2idle_wake(void)
+ 		 * wakeup is pending anyway and the SCI is not the source of
+ 		 * it).
+ 		 */
+-		if (irqd_is_wakeup_armed(irq_get_irq_data(acpi_sci_irq)))
++		if (irqd_is_wakeup_armed(irq_get_irq_data(acpi_sci_irq))) {
++			pm_pr_dbg("Wakeup unrelated to ACPI SCI\n");
+ 			return true;
++		}
+ 
+ 		/*
+ 		 * If the status bit of any enabled fixed event is set, the
+ 		 * wakeup is regarded as valid.
+ 		 */
+-		if (acpi_any_fixed_event_status_set())
++		if (acpi_any_fixed_event_status_set()) {
++			pm_pr_dbg("ACPI fixed event wakeup\n");
+ 			return true;
++		}
+ 
+ 		/* Check wakeups from drivers sharing the SCI. */
+-		if (acpi_check_wakeup_handlers())
++		if (acpi_check_wakeup_handlers()) {
++			pm_pr_dbg("ACPI custom handler wakeup\n");
+ 			return true;
++		}
+ 
+ 		/* Check non-EC GPE wakeups and dispatch the EC GPE. */
+-		if (acpi_ec_dispatch_gpe())
++		if (acpi_ec_dispatch_gpe()) {
++			pm_pr_dbg("ACPI non-EC GPE wakeup\n");
+ 			return true;
++		}
+ 
+ 		/*
+ 		 * Cancel the SCI wakeup and process all pending events in case
+@@ -1027,8 +1035,10 @@ static bool acpi_s2idle_wake(void)
+ 		 * are pending here, they must be resulting from the processing
+ 		 * of EC events above or coming from somewhere else.
+ 		 */
+-		if (pm_wakeup_pending())
++		if (pm_wakeup_pending()) {
++			pm_pr_dbg("Wakeup after ACPI Notify sync\n");
+ 			return true;
++		}
+ 
+ 		rearm_wake_irq(acpi_sci_irq);
+ 	}
+
 
 
