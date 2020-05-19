@@ -2,38 +2,38 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ADAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25F9F2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E465E2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgESVNu (ORCPT
+        id S1727047AbgESVN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35574 "EHLO
+        Tue, 19 May 2020 17:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgESVNb (ORCPT
+        with ESMTP id S1725998AbgESVN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:13:31 -0400
+        Tue, 19 May 2020 17:13:28 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0284C08C5C1;
-        Tue, 19 May 2020 14:13:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4412C08C5C0;
+        Tue, 19 May 2020 14:13:28 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jb9Y9-0001yk-4I; Tue, 19 May 2020 23:13:21 +0200
+        id 1jb9Y2-0001wp-Uy; Tue, 19 May 2020 23:13:15 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9CBEC100D00;
-        Tue, 19 May 2020 23:13:20 +0200 (CEST)
-Message-Id: <20200519211224.660776631@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 75291100D00;
+        Tue, 19 May 2020 23:13:14 +0200 (CEST)
+Message-Id: <20200519203128.773151484@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 19 May 2020 22:31:33 +0200
+Date:   Tue, 19 May 2020 22:31:28 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -42,10 +42,7 @@ Cc:     x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Juergen Gross <jgross@suse.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [patch 5/7] x86/kvm/svm: Move guest enter/exit into .noinstr.text
-References: <20200519203128.773151484@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [patch 0/7] x86/KVM: Async #PF and instrumentation protection
 Content-transfer-encoding: 8-bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
@@ -55,144 +52,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Folks,
 
-Move the functions which are inside the RCU off region into the
-non-instrumentable text section.
+this series is the KVM side of the ongoing quest to confine instrumentation
+to safe places and ensure that RCU and context tracking state is correct.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Link: https://lkml.kernel.org/r/20200505134341.873785437@linutronix.de
+The async #PF changes are in the tip tree already as they conflict with the
+entry code rework. The minimal set of commits to carry these have been
+isolated and tagged:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git noinstr-x86-kvm-2020-05-16
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 46d69567faab..35bd95dd64dd 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3327,6 +3327,60 @@ static fastpath_t svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
- 
- void __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
- 
-+static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu,
-+					struct vcpu_svm *svm)
-+{
-+	/*
-+	 * VMENTER enables interrupts (host state), but the kernel state is
-+	 * interrupts disabled when this is invoked. Also tell RCU about
-+	 * it. This is the same logic as for exit_to_user_mode().
-+	 *
-+	 * This ensures that e.g. latency analysis on the host observes
-+	 * guest mode as interrupt enabled.
-+	 *
-+	 * guest_enter_irqoff() informs context tracking about the
-+	 * transition to guest mode and if enabled adjusts RCU state
-+	 * accordingly.
-+	 */
-+	instrumentation_begin();
-+	trace_hardirqs_on_prepare();
-+	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-+	instrumentation_end();
-+
-+	guest_enter_irqoff();
-+	lockdep_hardirqs_on(CALLER_ADDR0);
-+
-+	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
-+
-+#ifdef CONFIG_X86_64
-+	wrmsrl(MSR_GS_BASE, svm->host.gs_base);
-+#else
-+	loadsegment(fs, svm->host.fs);
-+#ifndef CONFIG_X86_32_LAZY_GS
-+	loadsegment(gs, svm->host.gs);
-+#endif
-+#endif
-+
-+	/*
-+	 * VMEXIT disables interrupts (host state), but tracing and lockdep
-+	 * have them in state 'on' as recorded before entering guest mode.
-+	 * Same as enter_from_user_mode().
-+	 *
-+	 * guest_exit_irqoff() restores host context and reinstates RCU if
-+	 * enabled and required.
-+	 *
-+	 * This needs to be done before the below as native_read_msr()
-+	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
-+	 * into world and some more.
-+	 */
-+	lockdep_hardirqs_off(CALLER_ADDR0);
-+	guest_exit_irqoff();
-+
-+	instrumentation_begin();
-+	trace_hardirqs_off_prepare();
-+	instrumentation_end();
-+}
-+
- static fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- {
- 	fastpath_t exit_fastpath;
-@@ -3389,49 +3443,7 @@ static fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	 */
- 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
- 
--	/*
--	 * VMENTER enables interrupts (host state), but the kernel state is
--	 * interrupts disabled when this is invoked. Also tell RCU about
--	 * it. This is the same logic as for exit_to_user_mode().
--	 *
--	 * This ensures that e.g. latency analysis on the host observes
--	 * guest mode as interrupt enabled.
--	 *
--	 * guest_enter_irqoff() informs context tracking about the
--	 * transition to guest mode and if enabled adjusts RCU state
--	 * accordingly.
--	 */
--	trace_hardirqs_on_prepare();
--	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
--	guest_enter_irqoff();
--	lockdep_hardirqs_on(CALLER_ADDR0);
--
--	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
--
--#ifdef CONFIG_X86_64
--	wrmsrl(MSR_GS_BASE, svm->host.gs_base);
--#else
--	loadsegment(fs, svm->host.fs);
--#ifndef CONFIG_X86_32_LAZY_GS
--	loadsegment(gs, svm->host.gs);
--#endif
--#endif
--
--	/*
--	 * VMEXIT disables interrupts (host state), but tracing and lockdep
--	 * have them in state 'on' as recorded before entering guest mode.
--	 * Same as enter_from_user_mode().
--	 *
--	 * guest_exit_irqoff() restores host context and reinstates RCU if
--	 * enabled and required.
--	 *
--	 * This needs to be done before the below as native_read_msr()
--	 * contains a tracepoint and x86_spec_ctrl_restore_host() calls
--	 * into world and some more.
--	 */
--	lockdep_hardirqs_off(CALLER_ADDR0);
--	guest_exit_irqoff();
--	trace_hardirqs_off_prepare();
-+	svm_vcpu_enter_exit(vcpu, svm);
- 
- 	/*
- 	 * We do not use IBRS in the kernel. If this vCPU has used the
-diff --git a/arch/x86/kvm/svm/vmenter.S b/arch/x86/kvm/svm/vmenter.S
-index bf944334003a..1ec1ac40e328 100644
---- a/arch/x86/kvm/svm/vmenter.S
-+++ b/arch/x86/kvm/svm/vmenter.S
-@@ -27,7 +27,7 @@
- #define VCPU_R15	__VCPU_REGS_R15 * WORD_SIZE
- #endif
- 
--	.text
-+.section .noinstr.text, "ax"
- 
- /**
-  * __svm_vcpu_run - Run a vCPU via a transition to SVM guest mode
+Paolo, please pull this into your next branch to avoid conflicts in
+next. The prerequisites for the following KVM specific changes come with
+that tag so that you have no merge dependencies.
 
+The tag has also been merged into
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+
+where the x86 core #PF entry code changes will be queued soon as well.
+
+The KVM specific patches which deal with the RCU and context tracking state
+and the protection against instrumentation in sensitive places have been
+split out from the larger entry/noinstr series:
+
+  https://lore.kernel.org/r/20200505134112.272268764@linutronix.de
+
+The patches deal with:
+
+  - Placing the guest_enter/exit() calls at the correct place
+
+  - Moving the sensitive VMENTER/EXIT code into the non-instrumentable code
+    section.
+
+  - Fixup the tracing code to comply with the non-instrumentation rules
+
+  - Use native functions to access CR2 and the GS base MSR in the critical
+    code pathes to prevent them from being instrumented.
+
+The patches apply on top of
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/kvm/kvm.git next
+
+with the noinstr-x86-kvm-2020-05-16 tag from the tip tree merged in.
+
+For reference the whole lot is available from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git kvm/noinstr
+
+Thanks,
+
+	tglx
+
+---
+ include/asm/hardirq.h  |    4 +-
+ include/asm/kvm_host.h |    8 +++++
+ kvm/svm/svm.c          |   65 ++++++++++++++++++++++++++++++++++------
+ kvm/svm/vmenter.S      |    2 -
+ kvm/vmx/ops.h          |    4 ++
+ kvm/vmx/vmenter.S      |    5 ++-
+ kvm/vmx/vmx.c          |   78 ++++++++++++++++++++++++++++++++++++++-----------
+ kvm/x86.c              |    4 --
+ 8 files changed, 137 insertions(+), 33 deletions(-)
