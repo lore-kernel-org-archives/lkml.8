@@ -2,150 +2,115 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36D1C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C19CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93514207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589905579;
-	bh=NTirTEmGhpSEDm5jG+eNbo8finTZb/dlG9CSBQARp3k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=H+HegWvNfV9COBuLp5LV/S2yb8yhOlj2KWsKj5e9FvGRkMcVeDU0PFTlmNOswQUg0
-	 5MPPsO7k0X/fqnTuQVtwENM1hJ3AokUcFD/TOv24eqq6wOQooAOP0fIJJRYtUsT8/U
-	 8V7+Wqu4GGxCOI4z3DhLWufkuOx+jyxyap4TVKFg=
+	by mail.kernel.org (Postfix) with ESMTP id EC6F920756
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:26:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KyS2adH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgESQ0T (ORCPT
+        id S1729423AbgESQ0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:26:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
+        Tue, 19 May 2020 12:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729340AbgESQ0S (ORCPT
+        with ESMTP id S1729001AbgESQ0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:26:18 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1ABC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:26:17 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b6so418459ljj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:26:17 -0700 (PDT)
+        Tue, 19 May 2020 12:26:36 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0CAC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:26:35 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i15so52881wrx.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:26:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dhbRZ27gTq3LlamCeWaOIagumkyuEgHdNj01JBr2vyU=;
-        b=a8S6FimrljQCYdqdMRjHudj5xuwSAYeW17sDBke8Wp/wO6Vv10u9cXvAcweW0ZSEYT
-         O3hXN68ol8TooTR2xUI2YNd5y+PctNRhxhENJnhmYB+aBitMMtqsXQFMvUY86xEYH5PA
-         jFICERjG8bgZGMW0GbVN6qDt50ZsFp9Lq9zCI=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K6T9ygmhh8EhbslL3sJRcc4x716+9VUP4WUa0BI/g7k=;
+        b=KyS2adH6J20IkVkDzWeskLntpio/aiFWAT54p7fge0aGwq3syL00BvBetJl0+S1Gnw
+         GXiik1Xnty5KjvC6I1Vav4WpmOS/PB7uow2Fow8lo/ak63ln61UKwoJO7dUjyRTuBvQj
+         iqtvoW2rtsrfYUcOjK6uAiQl78R/CjYrHy7zZmAu3PafwnKivwYvG99IgImSE7twVEpv
+         tNPInTEymxi7rKYnrKdyfChxrF6eDnUB0Q5HEoi1jdAzWmIpLSBXQQXraFWjPc+v50W2
+         bNFNzqRChTJfsBt+A6gsbE4+bqe4jx+RIQxQb49wiOalqqwsK9LQYmQTy6stJrsAhD/z
+         b83g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dhbRZ27gTq3LlamCeWaOIagumkyuEgHdNj01JBr2vyU=;
-        b=sPtcYoXApujBVLiHcKINXhjfI/pdTRxUg/H82nl9SJgyWgzJk/sde58qB4ANFBA7Nz
-         4ZdoxcDem/aFenx75H/o6K77dsdK07u8ansDpaC0/oRV5q7C4xisIhR2Ay/l19qFoIRL
-         qCehXJqLsh5bMwcjDBOeL9X6ohEQyWPRpG45WTM7bCcj+tPjb2m0+qyRbX5+mFZvIlFw
-         gFHjxBy8b/2ZL0U212ALRW5+E76WRE5JnpKFnh+eCvyGXcRP5NSNk+i8Cow9wcT61H17
-         jAWenXBBqkgJA8EUlVJmwUCjwOfb+6u2csK1B/sM/3prtsesto7IM7da5C/bIsgF3S3W
-         kp9w==
-X-Gm-Message-State: AOAM533noDBoiBfze9tyybj8cGiYs8BAChA2E5u9Vs11/D9GJFuTFvQN
-        cc6RnsIa3aiErpmVd/+sJs3Qu5m3HHI=
-X-Google-Smtp-Source: ABdhPJydBW3EVX4Yhd5/4EX14cHK7VL6CTShFWAR7wGjGcmpKBt/qZxTkyg+LXHVlLs9hjf8mdga9g==
-X-Received: by 2002:a2e:a171:: with SMTP id u17mr122687ljl.225.1589905575230;
-        Tue, 19 May 2020 09:26:15 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id n23sm1495618lfq.76.2020.05.19.09.26.13
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K6T9ygmhh8EhbslL3sJRcc4x716+9VUP4WUa0BI/g7k=;
+        b=F3Mqt0DCO+O8sv6gI0r9FrW2r+NTHE+FzY2JxIMfCbYynUDpFfcoy5Jbf/gujdlTZB
+         o18URuHiXiAVZz3qaR5R6o2/zfXzDhdWa5OQZHd2iKTf1LrN+wuG49C+iCHMB+q6eC/j
+         eYCzuNyPulD+Xg8Yxeci9jUiTrC06FQTkA36oDiNTDlCFbe4CymUnO7TUKkqTbOvH9Tp
+         5i/fYElxRFtricasdyaNR/Qdf81fcaM716zE/OOLmoE6Jse+Ojd+tDbtv7lt6jjG8EAe
+         WDKbhxM9x56N1BNtVhDpqyjUqdOSiIjSiluHGw31MsgfGrOiyYXID/tYwgMZLE2nWAdI
+         xiEQ==
+X-Gm-Message-State: AOAM533vD4rdoQchLJX1LY1Hki0WkzDku1SKMCkDPjrDKH6t+zU+Ku3p
+        jIG+z66Hfabgru9QA0Mb/S7Mhg==
+X-Google-Smtp-Source: ABdhPJwRjXPCt4dLaDXXZQvKwEnH3bzcKxN3nJxJp0U7JlJ1qTXlZcQj1Ebi+46WU21NIvSpo2QqKQ==
+X-Received: by 2002:a5d:4806:: with SMTP id l6mr27114609wrq.121.1589905593900;
+        Tue, 19 May 2020 09:26:33 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:e504:4297:986:ffb0? ([2a01:e34:ed2f:f020:e504:4297:986:ffb0])
+        by smtp.googlemail.com with ESMTPSA id x22sm203518wmi.32.2020.05.19.09.26.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 09:26:14 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id q2so352261ljm.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 09:26:13 -0700 (PDT)
-X-Received: by 2002:a05:651c:1183:: with SMTP id w3mr128485ljo.265.1589905573160;
- Tue, 19 May 2020 09:26:13 -0700 (PDT)
+        Tue, 19 May 2020 09:26:33 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix warning for set but
+ not used
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kbuild test robot <lkp@intel.com>
+References: <20200519155157.12804-1-tony@atomide.com>
+ <2f67a110-e52f-94fc-fae2-c3171a67bb8a@linaro.org>
+ <20200519160630.GV37466@atomide.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <552325fe-e759-6b22-ceee-2d0a4b3b4b2f@linaro.org>
+Date:   Tue, 19 May 2020 18:26:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200519134449.1466624-1-hch@lst.de> <20200519134449.1466624-13-hch@lst.de>
-In-Reply-To: <20200519134449.1466624-13-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 19 May 2020 09:25:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whE_C2JF0ywF09iMBWtquEfMM3aSxCeLrb5S75EdHr1JA@mail.gmail.com>
-Message-ID: <CAHk-=whE_C2JF0ywF09iMBWtquEfMM3aSxCeLrb5S75EdHr1JA@mail.gmail.com>
-Subject: Re: [PATCH 12/20] maccess: remove strncpy_from_unsafe
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-parisc@vger.kernel.org,
-        linux-um <linux-um@lists.infradead.org>,
-        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200519160630.GV37466@atomide.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 6:45 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> +       if (IS_ENABLED(CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE) &&
-> +           compat && (unsigned long)unsafe_ptr < TASK_SIZE)
-> +               ret = strncpy_from_user_nofault(dst, user_ptr, size);
-> +       else
-> +               ret = strncpy_from_kernel_nofault(dst, unsafe_ptr, size);
+On 19/05/2020 18:06, Tony Lindgren wrote:
+> * Daniel Lezcano <daniel.lezcano@linaro.org> [200519 16:01]:
+>> On 19/05/2020 17:51, Tony Lindgren wrote:
+>>> We can get a warning for dmtimer_clocksource_init() with 'pa' set but
+>>> not used. This was used in the earlier revisions of the code but no
+>>> longer needed, so let's remove the unused pa and of_translate_address().
+>>> Let's also do it for dmtimer_clockevent_init() that has a similar issue.
+>>>
+>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>>> ---
+>>
+>> Applied, thanks
+> 
+> Thanks! Do you already have some immutable commit I can use
+> as the base for the SoC and dts changes? Or do you want to
+> wait a bit for that?
 
-These conditionals are completely illegible.
+Hi Tony,
 
-That's true in the next patch too.
+https://git.linaro.org/people/daniel.lezcano/linux.git/log/?h=timers/drivers/timer-ti
 
-Stop using "IS_ENABLED(config)" to make very complex conditionals.
+it contains the two patches + the warning fix
 
-A clear #ifdef is much better if the alternative is a conditional that
-is completely impossible to actually understand and needs multiple
-lines to read.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-If you made this a simple helper (called "bpf_strncpy_from_unsafe()"
-with that "compat" flag, perhaps?), it would be much more legible as
-
-  /*
-   * Big comment goes here about the compat behavior and
-   * non-overlapping address spaces and ambiguous pointers.
-   */
-  static long bpf_strncpy_from_legacy(void *dest, const void
-*unsafe_ptr, long size, bool legacy)
-  {
-  #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-        if (legacy && addr < TASK_SIZE)
-            return strncpy_from_user_nofault(dst, (const void __user
-*) unsafe_ptr, size);
-  #endif
-
-        return strncpy_from_kernel_nofault(dst, unsafe_ptr, size);
-  }
-
-and then you'd just use
-
-        if (bpf_strncpy_from_unsafe(dst, unsafe_ptr, size, compat) < 0)
-                memset(dst, 0, size);
-
-and avoid any complicated conditionals, goto's, and make the code much
-easier to understand thanks to having a big comment about the legacy
-case.
-
-In fact, separately I'd probably want that "compat" naming to be
-scrapped entirely in that file.
-
-"compat" generally means something very specific and completely
-different in the kernel: it's the "I'm a 32-bit binary on a 64-bit
-kernel" compatibility case.
-
-Here, it's literally "BPF legacy behavior", not that kind of "compat" thing.
-
-But that renaming is separate, although I'd start the ball rolling
-with that "bpf_strncpy_from_legacy()" helper.
-
-                Linus
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
