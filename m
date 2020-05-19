@@ -2,153 +2,127 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2791AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0567E20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589892143;
-	bh=f5OsPgAe/ppTyyXK8XOFW0ghBuiEYD4TKNC7dZ+SMYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q5MiC+paXwj+8+XgLGZ4qJDDY8471O0APsMX0AObRN+ZyXfGqILHBnCosjhfSSkKK
-	 hDemn8/mZPp6DEJxYCkmmHGv2XOa1c0T+Xjzt8C+oo/R3q2EFXGsXaDMVnf2nqu4CM
-	 1eh8D8MyrfiZ6sJlYto0prl5cUOHcCblaWvfoOhQ=
+	by mail.kernel.org (Postfix) with ESMTP id DC19E20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 12:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZiIm4xm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgESMmW (ORCPT
+        id S1728840AbgESMoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 08:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726471AbgESMmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 08:42:22 -0400
-Received: from localhost (unknown [122.182.207.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31BE620657;
-        Tue, 19 May 2020 12:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589892141;
-        bh=f5OsPgAe/ppTyyXK8XOFW0ghBuiEYD4TKNC7dZ+SMYo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aLgW8ezP3WXZsCBJ9YpVI+t2yYJcDhVdasfgkMqharhG8o4/zk+c3tx28FK3UxjpI
-         lHuxb+ps3r9VMQW4psb191jw15agyIHojlR7xJrhDxZYc4OIWjkc0RrKxjnY9anQSi
-         BEbM/E9wNXMphi3G5bOUK6AkbFJS8lJkAKfYoAn0=
-Date:   Tue, 19 May 2020 18:12:16 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
+        Tue, 19 May 2020 08:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726991AbgESMoR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 08:44:17 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91B90C08C5C0;
+        Tue, 19 May 2020 05:44:17 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id v12so15688618wrp.12;
+        Tue, 19 May 2020 05:44:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ILSGLr4PTG4hHuLbl/jfVaGJlNauWt/s2JzJ6o43rnE=;
+        b=tZiIm4xm9TCzSwfdVSICyGr+S5PkpwIVdBUJRglkqoZ9CHvvYvtR2JCKWLfHtkKGrQ
+         sH0CRkKLO29EMlLw2GtfqeFSNlNtJJjQpw4qwOryphHyk64d+q8RuWM2R+OIlTw2HXZ/
+         utDXRmcOG8DRjOttVA2z4kRiQ+ceDB+fkWIBY0Pw85QVqOJ/q//CLKV7ylZ9X6GB5+Sb
+         TmvHhR5dtqooI5I39gZHNPdopov7EIHksQcXlz60JdKRPTGJdCIapoSt2JWZJwo4aZa7
+         R/rtl/NMS0FgndZ/s3A558DyDkB7i6jU43GExsBUeAwwn3EgNdYxGlhGKeK7acEpekmz
+         86Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ILSGLr4PTG4hHuLbl/jfVaGJlNauWt/s2JzJ6o43rnE=;
+        b=hk73Zj9G1/BX0ZGD1+bTBR1Tt4zHjPyjTtgg/P1XNErvj5WQNYKXI+5priZvoyZyx9
+         tN93Djex1pwS9COHyODrKUdWN8mP/8o2XtShiR4wIJoTx+IPzZaOGyeFob9Tc3FFaMBk
+         cIWJc0ScJ60Zk0K88ZQfgwG7mdVmW2yeA7LAxtEGgcoO4ocuLjxbEjKuX5WiHPdb2R5C
+         1QPEWqS0copIg2FxTSrPLUQdL7EQm2XlxxtUZl37bQwwRd8CCiYQS//KkqpAdS5eEM19
+         EdJG2MH5hJIFTHlD7kPMdMakgGAbKqX+dWel5H3OSkXwlcSOLfjpnlFtYEksQwBGmncR
+         uD7Q==
+X-Gm-Message-State: AOAM532oDv14km4Zgg/g76f4wy0Am/IQGynUT2g04xn+rWWb+ZM0vOxO
+        O5dNKIS1Q05GlEufqPPRaHPe5FW1lQyO/g==
+X-Google-Smtp-Source: ABdhPJw629rJE6pDTM+0ibqZS6vtE2fHVU9WkEg3ZszeBcuEB3Gh2NrbKzz43KhI7veIk84LWchXAg==
+X-Received: by 2002:adf:a285:: with SMTP id s5mr28241564wra.60.1589892255688;
+        Tue, 19 May 2020 05:44:15 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id b12sm3953870wmj.0.2020.05.19.05.44.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 05:44:14 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v13 3/5] usb: xhci: Add support for Renesas controller
- with memory
-Message-ID: <20200519124216.GO374218@vkoul-mobl.Dlink>
-References: <20200506060025.1535960-1-vkoul@kernel.org>
- <20200506060025.1535960-4-vkoul@kernel.org>
- <CADYN=9JLeWHODRWDEcTE_6iZ3TX-E4yyx3OwqzK-H-ytLAmQUg@mail.gmail.com>
- <20200518195719.GG374218@vkoul-mobl.Dlink>
- <CADYN=9+VuTwVk32hQXAAeDyErMn7D4Y+Gzdehy_=c8fBeU23jA@mail.gmail.com>
- <20200519045336.GH374218@vkoul-mobl.Dlink>
- <CAK8P3a2CCwfXz8_p6zscuq21tCRZ_aHRZUa_9ov1b4sSqvL_aw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2CCwfXz8_p6zscuq21tCRZ_aHRZUa_9ov1b4sSqvL_aw@mail.gmail.com>
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v3 0/4] iio: magnetometer: ak8975: Add gpio reset support
+Date:   Tue, 19 May 2020 14:43:50 +0200
+Message-Id: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Arnd,
+v3:
+ - fix patch messages style
+ - align reset gpio comment to kernel doc reccomendation
+ - introduce changelog.
 
-On 19-05-20, 09:44, Arnd Bergmann wrote:
-> On Tue, May 19, 2020 at 6:53 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > On 19-05-20, 00:37, Anders Roxell wrote:
-> > > On Mon, 18 May 2020 at 21:57, Vinod Koul <vkoul@kernel.org> wrote:
-> > > > On 18-05-20, 19:53, Anders Roxell wrote:
-> > > > > On Wed, 6 May 2020 at 08:01, Vinod Koul <vkoul@kernel.org> wrote:
-> > > > > >
-> > > > > > Some rensas controller like uPD720201 and uPD720202 need firmware to be
-> > > > > > loaded. Add these devices in pci table and invoke renesas firmware loader
-> > > > > > functions to check and load the firmware into device memory when
-> > > > > > required.
-> > > > > >
-> > > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > > >
-> > > > > Hi, I got a build error when I built an arm64 allmodconfig kernel.
-> > > >
-> > > > Thanks for this. This is happening as we have default y for USB_XHCI_PCI
-> > > > and then we make USB_XHCI_PCI_RENESAS=m. That should be not allowed as
-> > > > we export as symbol so both can be inbuilt or modules but USB_XHCI_PCI=y
-> > > > and USB_XHCI_PCI_RENESAS=m cant. While it is valid that USB_XHCI_PCI=y|m
-> > > > and USB_XHCI_PCI_RENESAS=n
-> > > >
-> > > > So this seems to get fixed by below for me. I have tested with
-> > > >  - both y and m (easy)
-> > > >  - make USB_XHCI_PCI_RENESAS=n, USB_XHCI_PCI=y|m works
-> > > >  - try making USB_XHCI_PCI=y and USB_XHCI_PCI_RENESAS=m, then
-> > > >    USB_XHCI_PCI=m by kbuild :)
-> > > >  - try making USB_XHCI_PCI=m and USB_XHCI_PCI_RENESAS=y, kbuild gives
-> > > >    error prompt that it will be m due to depends
-> > > >
-> > > > Thanks to all the fixes done by Arnd which pointed me to this. Pls
-> > > > verify
-> > >
-> > > I was able to build an arm64 allmodconfig kernel with this change.
-> >
-> > I will send the formal patch and add your name in reported and
-> > tested. Thanks for the quick verification
-> 
-> I just checked the patch and I think this will work correctly in all cases,
-> but it still seems a bit backwards:
-> 
-> > > > diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> > > > index b5c542d6a1c5..92783d175b3f 100644
-> > > > --- a/drivers/usb/host/Kconfig
-> > > > +++ b/drivers/usb/host/Kconfig
-> > > > @@ -40,11 +40,11 @@ config USB_XHCI_DBGCAP
-> > > >  config USB_XHCI_PCI
-> > > >         tristate
-> > > >         depends on USB_PCI
-> > > > +       depends on USB_XHCI_PCI_RENESAS || !USB_XHCI_PCI_RENESAS
-> > > >         default y
-> > > >
-> > > >  config USB_XHCI_PCI_RENESAS
-> > > >         tristate "Support for additional Renesas xHCI controller with firwmare"
-> > > > -       depends on USB_XHCI_PCI
-> > > >         ---help---
-> > > >           Say 'Y' to enable the support for the Renesas xHCI controller with
-> > > >           firwmare. Make sure you have the firwmare for the device and
-> > > >
-> 
-> I think it would have been better to follow the normal driver abstraction here
-> and make the renesas xhci a specialized version of the xhci driver with
-> its own platform_driver instance that calls into the generic xhci_pci module,
-> rather than having the generic code treat it as a quirk.
-> 
-> That would be more like how we handle all the ehci and ohci variants, though
-> I'm not sure how exactly it would work with two drivers having pci_device_id
-> tables with non-exclusive members. Presumably the generic driver would
-> still have to know that it needs to fail its probe() function on devices that
-> need the firmware.
+v2:
+ - rewording of reset gpio comment and patch messages to better clarify
+   reset gpio behaviour.
+https://lore.kernel.org/linux-iio/20200518133645.19127-1-jonathan.albrieux@gmail.com/
 
-Yeah one of the earlier versions did try this and it wasn't nice. The
-xhci driver claims the devices as it registers for the class. Now only
-solution is to ensure we load the renesas first and resort to makefile
-hacks..
+v1:
+ - initial patch submission.
+https://lore.kernel.org/linux-iio/20200519065749.4624-1-jonathan.albrieux@gmail.com/
+
+Convert documentation from txt format to yaml. Add documentation about
+reset-gpio.
+
+Deassert reset on ak8975_power_on(), assert reset on ak8975_power_off().
+
+Without reset's deassertion during ak8975_power_on(), driver's probe fails
+on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+
+AK09911 has an active low reset gpio to handle register's reset.
+AK09911 datasheed says that, if not used, reset pin should be connected
+to VID. This patch emulates this situation.
+
+Jonathan Albrieux (4):
+  dt-bindings: iio: magnetometer: ak8975: convert txt format to yaml
+  dt-bindings: iio: magnetometer: ak8975: add gpio reset support
+  iio: magnetometer: ak8975: Fix typo, uniform measurement unit style
+  iio: magnetometer: ak8975: Add gpio reset support
+
+ .../bindings/iio/magnetometer/ak8975.txt      | 30 --------
+ .../bindings/iio/magnetometer/ak8975.yaml     | 70 +++++++++++++++++++
+ drivers/iio/magnetometer/ak8975.c             | 22 +++++-
+ 3 files changed, 90 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
 
 -- 
-~Vinod
+2.17.1
+
