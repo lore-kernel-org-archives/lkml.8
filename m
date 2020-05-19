@@ -2,143 +2,250 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0012FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A655AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4CC320853
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 02:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7983620674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 03:00:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Hfb1/kAc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IOeu2t77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgESC7f (ORCPT
+        id S1728032AbgESDAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 22:59:35 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:23660 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726270AbgESC7e (ORCPT
+        Mon, 18 May 2020 23:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgESDAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 22:59:34 -0400
-X-UUID: 65406e5a649647bcb639b8e9ec35218a-20200519
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=M+o0Anz4/UQjLm5nYoVibliTyzmVqym+xJdpP5blyMg=;
-        b=Hfb1/kAcOMyc62ESYxEaNe9rl85iTGBbye1u2kksbh65RXJ/yGx23mtBAhLKezkSCdBF8Q3sh19OqhMixugH6/LkpgS4Y3+k+Nlp/GnY0FoSR4Y7kqF9mJDxD0EA4nBnOLW8vDTEyeIenlvNDv23Kp2epA7Xr+UARfVcANG+sOM=;
-X-UUID: 65406e5a649647bcb639b8e9ec35218a-20200519
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1280698048; Tue, 19 May 2020 10:59:23 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 19 May
- 2020 10:59:22 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 19 May 2020 10:59:21 +0800
-Message-ID: <1589857073.25512.34.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c ac-timing adjust support
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Joe Perches <joe@perches.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Wolfram Sang <wsa@the-dreams.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        <leilk.liu@mediatek.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 19 May 2020 10:57:53 +0800
-In-Reply-To: <CAMuHMdXjLakWDDEy=02prC7XjAs_xBnt2mArPFNwyHgUoWw6-g@mail.gmail.com>
-References: <1589461844-15614-1-git-send-email-qii.wang@mediatek.com>
-         <1589461844-15614-3-git-send-email-qii.wang@mediatek.com>
-         <CAMuHMdXjLakWDDEy=02prC7XjAs_xBnt2mArPFNwyHgUoWw6-g@mail.gmail.com>
+        Mon, 18 May 2020 23:00:37 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F334FC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:00:35 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id 25so13176527qkc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 20:00:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:subject:from:to:cc;
+        bh=4WgMKlFf+yDJu5cFMCY1SnPgS1F2LkiitS7CYeN8mDg=;
+        b=IOeu2t77qcGbd2VFiwKZzZkPXeDUz6DTlWnMbRzAkUWUKKe86cBrd2t6SntwP/669L
+         f9ZoN7SdCLHtoMLJPMPRz6KsGv+1fbirR2b1r/rwydzB74ZAP8yPfQK+ZEwa5O902mxK
+         4rdW5D5PAi9cE214vZZw7joU5ERdWFPo5jGHkJEJ8TUbFx4t7cKSxzsX3m8mdiNwSFl8
+         h500g/fDQST6soiCoXah3rOBzvPG/ktoYP4voMPpWQ81ZgRPYAbbvamMkI7DcceePEcg
+         qXCiQD6hW9obnx0WDdvtnzsP7Ol8zmfV3965B0AMoYhP2bCHOEmo+hpz4KfHhtFv3qY6
+         MbQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version:subject
+         :from:to:cc;
+        bh=4WgMKlFf+yDJu5cFMCY1SnPgS1F2LkiitS7CYeN8mDg=;
+        b=EtQ5S1FaH4n2RktecpA8A+ReYUfibx5FdRVdT6NSuN5Wza8Wx2nwKy7f0tzKi/exf5
+         4ze+ZidBr9TQL3IHTG0iOGm2SffaKNW+3O7XMB5v2OCpiO8gu01Xwh0e5b7iAt1nH3s1
+         d/sSFgz6zyk66DhP0ZoP+hYlh5H/Q+20TdPrQC096j4zPavMbUJC/QdBomaH24PgBokt
+         zqRRxJUG/JnQr8bdvsBgM9XKMz6U/wyb9itjHpU+UkmMJIXRhb2Q32+sGjoV96U8H2VQ
+         pR6bkd+yGJJFpfCfF/N7OZx0fFTsz4rN0kIFx1IPcMFbFrmkd4apSyPVktgv13rMCLcX
+         bFcw==
+X-Gm-Message-State: AOAM532qjjoKncwZAhPE8xQr75FgZ+R6asfslJO899cjEy/fEDpEHi5e
+        InLkhheFs0/KKradzdOdrXe0haTWYEBLHnw=
+X-Google-Smtp-Source: ABdhPJx9smakYrdL37rRDIaE5LsCQO7O1Y7rwAGrtzGPz1MRKao22vuStTOtetzb4iRaxIgbXsNjJH5oIWWMjbs=
+X-Received: by 2002:a0c:9e6d:: with SMTP id z45mr19011169qve.206.1589857234675;
+ Mon, 18 May 2020 20:00:34 -0700 (PDT)
+Date:   Mon, 18 May 2020 20:00:25 -0700
+In-Reply-To: <20200518080327.GA3126260@kroah.com>
+Message-Id: <20200519030025.99054-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+Subject: [PATCH v2] driver core: Fix SYNC_STATE_ONLY device link implementation
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     stable@vger.kernel.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 2E488EF03A7622D1ADEEB7C7CD1CCABA41B9EB17953038A2511499CEDEE1E7E62000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA1LTE4IGF0IDE3OjQ0ICswMjAwLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
-dGU6DQo+IE9uIFRodSwgTWF5IDE0LCAyMDIwIGF0IDM6MTMgUE0gUWlpIFdhbmcgPHFpaS53YW5n
-QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGRzIGEgYWxnb3JpdGhtIHRv
-IGNhbGN1bGF0ZSBzb21lIGFjLXRpbWluZyBwYXJhbWV0ZXJzDQo+ID4gd2hpY2ggY2FuIGZ1bGx5
-IG1lZXQgSTJDIFNwZWMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBRaWkgV2FuZyA8cWlpLndh
-bmdAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10
-NjV4eC5jIHwgMzI4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4g
-PiAgMSBmaWxlIGNoYW5nZWQsIDI3NyBpbnNlcnRpb25zKCspLCA1MSBkZWxldGlvbnMoLSkNCj4g
-Pg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jIGIvZHJp
-dmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0KPiA+IGluZGV4IDBjYTZjMzhhLi43MDIwNjE4
-IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCj4gPiAr
-KysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQo+IA0KPiA+ICsvKg0KPiA+ICsg
-KiBDaGVjayBhbmQgQ2FsY3VsYXRlIGkyYyBhYy10aW1pbmcNCj4gPiArICoNCj4gPiArICogSGFy
-ZHdhcmUgZGVzaWduOg0KPiA+ICsgKiBzYW1wbGVfbnMgPSAoMTAwMDAwMDAwMCAqIChzYW1wbGVf
-Y250ICsgMSkpIC8gY2xrX3NyYw0KPiA+ICsgKiB4eHhfY250X2RpdiA9ICBzcGVjLT5taW5feHh4
-X25zIC8gc2FtcGxlX25zDQo+ID4gKyAqDQo+ID4gKyAqIFNhbXBsZV9ucyBpcyByb3VuZGVkIGRv
-d24gZm9yIHh4eF9jbnRfZGl2IHdvdWxkIGJlIGdyZWF0ZXINCj4gPiArICogdGhhbiB0aGUgc21h
-bGxlc3Qgc3BlYy4NCj4gPiArICogVGhlIHNkYV90aW1pbmcgaXMgY2hvc2VuIGFzIHRoZSBtaWRk
-bGUgdmFsdWUgYmV0d2Vlbg0KPiA+ICsgKiB0aGUgbGFyZ2VzdCBhbmQgc21hbGxlc3QuDQo+ID4g
-KyAqLw0KPiA+ICtzdGF0aWMgaW50IG10a19pMmNfY2hlY2tfYWNfdGltaW5nKHN0cnVjdCBtdGtf
-aTJjICppMmMsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25l
-ZCBpbnQgY2xrX3NyYywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVu
-c2lnbmVkIGludCBjaGVja19zcGVlZCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHVuc2lnbmVkIGludCBzdGVwX2NudCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHVuc2lnbmVkIGludCBzYW1wbGVfY250KQ0KPiA+ICt7DQo+ID4gKyAgICAg
-ICBjb25zdCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzICpzcGVjOw0KPiA+ICsgICAgICAgdW5zaWdu
-ZWQgaW50IHN1X3N0YV9jbnQsIGxvd19jbnQsIGhpZ2hfY250LCBtYXhfc3RlcF9jbnQ7DQo+ID4g
-KyAgICAgICB1bnNpZ25lZCBpbnQgc2RhX21heCwgc2RhX21pbiwgY2xrX25zLCBtYXhfc3RhX2Nu
-dCA9IDB4M2Y7DQo+ID4gKyAgICAgICBsb25nIGxvbmcgc2FtcGxlX25zID0gKDEwMDAwMDAwMDAg
-KiAoc2FtcGxlX2NudCArIDEpKSAvIGNsa19zcmM7DQo+IA0KPiBTbyBzYW1wbGVfbnMgaXMgYSA2
-NC1iaXQgdmFsdWUuIElzIHRoYXQgcmVhbGx5IG5lZWRlZD8NCj4gDQoNCigxMDAwMDAwMDAwICog
-KHNhbXBsZV9jbnQgKyAxKSkgLyBjbGtfc3JjIHZhbHVlIGlzIGEgMzItYml0LCAoMTAwMDAwMDAw
-MA0KKiAoc2FtcGxlX2NudCArIDEpKSB3aWxsIG92ZXIgMzItYml0IGlmIHNhbXBsZV9jbnQgaXMg
-Ny4NCg0KSSB0aGluayAxMDAwMDAwMDAwIGFuZCBjbGtfc3JjIGlzIHRvbyBiaWcsIG1heWJlIEkg
-Y2FuIHJlZHVjZSB0aGVuIHdpdGgNCmJlIGRpdmlkZWQgYWxsIGJ5IDEwMDAuDQpleGFtcGxlOg0K
-DQp1bnNpZ25lZCBpbnQgc2FtcGxlX25zOw0KdW5zaWduZWQgaW50IGNsa19zcmNfa2h6ID0gY2xr
-X3NyYyAvIDEwMDA7DQoNCmlmKGNsa19zcmNfa2h6KQ0KCXNhbXBsZV9ucyA9ICgxMDAwMDAwICog
-KHNhbXBsZV9jbnQgKyAxKSkgLyBjbGtfc3JjX2toejsNCmVsc2UNCglyZXR1cm4gLUVJTlZBTDsN
-Cg0KPiA+ICsgICAgICAgaWYgKCFpMmMtPmRldl9jb21wLT50aW1pbmdfYWRqdXN0KQ0KPiA+ICsg
-ICAgICAgICAgICAgICByZXR1cm4gMDsNCj4gPiArDQo+ID4gKyAgICAgICBpZiAoaTJjLT5kZXZf
-Y29tcC0+bHRpbWluZ19hZGp1c3QpDQo+ID4gKyAgICAgICAgICAgICAgIG1heF9zdGFfY250ID0g
-MHgxMDA7DQo+ID4gKw0KPiA+ICsgICAgICAgc3BlYyA9IG10a19pMmNfZ2V0X3NwZWMoY2hlY2tf
-c3BlZWQpOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChpMmMtPmRldl9jb21wLT5sdGltaW5nX2Fk
-anVzdCkNCj4gPiArICAgICAgICAgICAgICAgY2xrX25zID0gMTAwMDAwMDAwMCAvIGNsa19zcmM7
-DQo+ID4gKyAgICAgICBlbHNlDQo+ID4gKyAgICAgICAgICAgICAgIGNsa19ucyA9IHNhbXBsZV9u
-cyAvIDI7DQo+ID4gKw0KPiA+ICsgICAgICAgc3Vfc3RhX2NudCA9IERJVl9ST1VORF9VUChzcGVj
-LT5taW5fc3Vfc3RhX25zLCBjbGtfbnMpOw0KPiA+ICsgICAgICAgaWYgKHN1X3N0YV9jbnQgPiBt
-YXhfc3RhX2NudCkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC0xOw0KPiA+ICsNCj4gPiAr
-ICAgICAgIGxvd19jbnQgPSBESVZfUk9VTkRfVVAoc3BlYy0+bWluX2xvd19ucywgc2FtcGxlX25z
-KTsNCj4gDQo+IFNvIHRoaXMgaXMgYSAzMi1iaXQgYnkgNjQtYml0IGRpdmlzaW9uIChpbmRlZWQs
-IG5vdCA2NC1ieS0zMiEpDQo+IA0KPiBub3JlcGx5QGVsbGVybWFuLmlkLmF1IHJlcG9ydHM6DQo+
-IA0KPiAgICAgRVJST1I6IG1vZHBvc3Q6ICJfX3VkaXZkaTMiIFtkcml2ZXJzL2kyYy9idXNzZXMv
-aTJjLW10NjV4eC5rb10gdW5kZWZpbmVkIQ0KPiAgICAgRVJST1I6IG1vZHBvc3Q6ICJfX2RpdmRp
-MyIgW2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmtvXSB1bmRlZmluZWQhDQo+IA0KPiBm
-b3IgMzItYml0IGJ1aWxkcy4NCj4gDQo+ID4gKyAgICAgICBtYXhfc3RlcF9jbnQgPSBtdGtfaTJj
-X21heF9zdGVwX2NudChjaGVja19zcGVlZCk7DQo+ID4gKyAgICAgICBpZiAoKDIgKiBzdGVwX2Nu
-dCkgPiBsb3dfY250ICYmIGxvd19jbnQgPCBtYXhfc3RlcF9jbnQpIHsNCj4gPiArICAgICAgICAg
-ICAgICAgaWYgKGxvd19jbnQgPiBzdGVwX2NudCkgew0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIGhpZ2hfY250ID0gMiAqIHN0ZXBfY250IC0gbG93X2NudDsNCj4gPiArICAgICAgICAgICAg
-ICAgfSBlbHNlIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBoaWdoX2NudCA9IHN0ZXBf
-Y250Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGxvd19jbnQgPSBzdGVwX2NudDsNCj4g
-PiArICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgfSBlbHNlIHsNCj4gPiArICAgICAgICAg
-ICAgICAgcmV0dXJuIC0yOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIHNkYV9t
-YXggPSBzcGVjLT5tYXhfaGRfZGF0X25zIC8gc2FtcGxlX25zOw0KPiA+ICsgICAgICAgaWYgKHNk
-YV9tYXggPiBsb3dfY250KQ0KPiA+ICsgICAgICAgICAgICAgICBzZGFfbWF4ID0gMDsNCj4gPiAr
-DQo+ID4gKyAgICAgICBzZGFfbWluID0gRElWX1JPVU5EX1VQKHNwZWMtPm1pbl9zdV9kYXRfbnMs
-IHNhbXBsZV9ucyk7DQo+IA0KPiBPbmUgbW9yZS4NCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0K
-PiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5
-dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRA
-bGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNo
-bmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFs
-a2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcg
-bGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRv
-cnZhbGRzDQoNCg==
+When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
+core: Add device link support for SYNC_STATE_ONLY flag"),
+device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
+device link to the supplier's and consumer's "device link" list.
+
+This causes multiple issues:
+- The device link is lost forever from driver core if the caller
+  didn't keep track of it (caller typically isn't expected to). This is
+  a memory leak.
+- The device link is also never visible to any other code path after
+  device_link_add() returns.
+
+If we fix the "device link" list handling, that exposes a bunch of
+issues.
+
+1. The device link "status" state management code rightfully doesn't
+handle the case where a DL_FLAG_MANAGED device link exists between a
+supplier and consumer, but the consumer manages to probe successfully
+before the supplier. The addition of DL_FLAG_SYNC_STATE_ONLY links break
+this assumption. This causes device_links_driver_bound() to throw a
+warning when this happens.
+
+Since DL_FLAG_SYNC_STATE_ONLY device links are mainly used for creating
+proxy device links for child device dependencies and aren't useful once
+the consumer device probes successfully, this patch just deletes
+DL_FLAG_SYNC_STATE_ONLY device links once its consumer device probes.
+This way, we avoid the warning, free up some memory and avoid
+complicating the device links "status" state management code.
+
+2. Creating a DL_FLAG_STATELESS device link between two devices that
+already have a DL_FLAG_SYNC_STATE_ONLY device link will result in the
+DL_FLAG_STATELESS flag not getting set correctly. This patch also fixes
+this.
+
+Lastly, this patch also fixes minor whitespace issues.
+
+Cc: stable@vger.kernel.org
+Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/base/core.c | 61 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 39 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 84c569726d75..f804e561e0a2 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -363,13 +363,12 @@ struct device_link *device_link_add(struct device *consumer,
+ 
+ 		if (flags & DL_FLAG_STATELESS) {
+ 			kref_get(&link->kref);
++			link->flags |= DL_FLAG_STATELESS;
+ 			if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
+-			    !(link->flags & DL_FLAG_STATELESS)) {
+-				link->flags |= DL_FLAG_STATELESS;
++			    !(link->flags & DL_FLAG_STATELESS))
+ 				goto reorder;
+-			} else {
++			else
+ 				goto out;
+-			}
+ 		}
+ 
+ 		/*
+@@ -436,12 +435,16 @@ struct device_link *device_link_add(struct device *consumer,
+ 	    flags & DL_FLAG_PM_RUNTIME)
+ 		pm_runtime_resume(supplier);
+ 
++	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
++	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
++
+ 	if (flags & DL_FLAG_SYNC_STATE_ONLY) {
+ 		dev_dbg(consumer,
+ 			"Linked as a sync state only consumer to %s\n",
+ 			dev_name(supplier));
+ 		goto out;
+ 	}
++
+ reorder:
+ 	/*
+ 	 * Move the consumer and all of the devices depending on it to the end
+@@ -452,12 +455,9 @@ struct device_link *device_link_add(struct device *consumer,
+ 	 */
+ 	device_reorder_to_tail(consumer, NULL);
+ 
+-	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
+-	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
+-
+ 	dev_dbg(consumer, "Linked as a consumer to %s\n", dev_name(supplier));
+ 
+- out:
++out:
+ 	device_pm_unlock();
+ 	device_links_write_unlock();
+ 
+@@ -832,6 +832,13 @@ static void __device_links_supplier_defer_sync(struct device *sup)
+ 		list_add_tail(&sup->links.defer_sync, &deferred_sync);
+ }
+ 
++static void device_link_drop_managed(struct device_link *link)
++{
++	link->flags &= ~DL_FLAG_MANAGED;
++	WRITE_ONCE(link->status, DL_STATE_NONE);
++	kref_put(&link->kref, __device_link_del);
++}
++
+ /**
+  * device_links_driver_bound - Update device links after probing its driver.
+  * @dev: Device to update the links for.
+@@ -845,7 +852,7 @@ static void __device_links_supplier_defer_sync(struct device *sup)
+  */
+ void device_links_driver_bound(struct device *dev)
+ {
+-	struct device_link *link;
++	struct device_link *link, *ln;
+ 	LIST_HEAD(sync_list);
+ 
+ 	/*
+@@ -885,18 +892,35 @@ void device_links_driver_bound(struct device *dev)
+ 	else
+ 		__device_links_queue_sync_state(dev, &sync_list);
+ 
+-	list_for_each_entry(link, &dev->links.suppliers, c_node) {
++	list_for_each_entry_safe(link, ln, &dev->links.suppliers, c_node) {
++		struct device *supplier;
++
+ 		if (!(link->flags & DL_FLAG_MANAGED))
+ 			continue;
+ 
+-		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
+-		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
++		supplier = link->supplier;
++		if (link->flags & DL_FLAG_SYNC_STATE_ONLY) {
++			/*
++			 * When DL_FLAG_SYNC_STATE_ONLY is set, it means no
++			 * other DL_MANAGED_LINK_FLAGS have been set. So, it's
++			 * save to drop the managed link completely.
++			 */
++			device_link_drop_managed(link);
++		} else {
++			WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
++			WRITE_ONCE(link->status, DL_STATE_ACTIVE);
++		}
+ 
++		/*
++		 * This needs to be done even for the deleted
++		 * DL_FLAG_SYNC_STATE_ONLY device link in case it was the last
++		 * device link that was preventing the supplier from getting a
++		 * sync_state() call.
++		 */
+ 		if (defer_sync_state_count)
+-			__device_links_supplier_defer_sync(link->supplier);
++			__device_links_supplier_defer_sync(supplier);
+ 		else
+-			__device_links_queue_sync_state(link->supplier,
+-							&sync_list);
++			__device_links_queue_sync_state(supplier, &sync_list);
+ 	}
+ 
+ 	dev->links.status = DL_DEV_DRIVER_BOUND;
+@@ -906,13 +930,6 @@ void device_links_driver_bound(struct device *dev)
+ 	device_links_flush_sync_list(&sync_list, dev);
+ }
+ 
+-static void device_link_drop_managed(struct device_link *link)
+-{
+-	link->flags &= ~DL_FLAG_MANAGED;
+-	WRITE_ONCE(link->status, DL_STATE_NONE);
+-	kref_put(&link->kref, __device_link_del);
+-}
+-
+ /**
+  * __device_links_no_driver - Update links of a device without a driver.
+  * @dev: Device without a drvier.
+-- 
+2.26.2.761.g0e0b3e54be-goog
 
