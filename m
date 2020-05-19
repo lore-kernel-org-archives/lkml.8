@@ -2,204 +2,119 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E8EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5FA920709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4992075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lNIV2LUU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgESIas (ORCPT
+        id S1726674AbgESIfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:30:48 -0400
-Received: from mga05.intel.com ([192.55.52.43]:31993 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgESIar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:30:47 -0400
-IronPort-SDR: FgqzXGANHq4tn1V0BBGd6PO58rwgFcCfFmC55JAUUHKDfUVJOHNV2cCF6DtsL2zThPplPy8lFy
- WUxAK3XFyBaA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 01:30:45 -0700
-IronPort-SDR: V5XC9tv8exP3gG6P7AtGtNEHOBH6QMa/lM81dPQnQQsHOKFyzf8vBwrwsrFs7Gm7mxMe7AeXdz
- oqkGXyk3fpJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,409,1583222400"; 
-   d="scan'208";a="264234012"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by orsmga003.jf.intel.com with ESMTP; 19 May 2020 01:30:40 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-Subject: [PATCH 2/3] soundwire: master: add sysfs support
-Date:   Tue, 19 May 2020 04:35:50 +0800
-Message-Id: <20200518203551.2053-3-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200518203551.2053-1-yung-chuan.liao@linux.intel.com>
-References: <20200518203551.2053-1-yung-chuan.liao@linux.intel.com>
+        Tue, 19 May 2020 04:35:02 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50702 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgESIfC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 04:35:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QwmitSwlirACqCyCNTRUZhDaJ4HYS/kaW8Cx57bX5c8=; b=lNIV2LUUjHNOY9YH9V1SHZvupD
+        Ap9O81Ry9Mm7QRxv1ir9txOzUjABze72YWF4n+e8jqzVQPpOz2Y0k1MmDdIem/y+1xlA+52ci/GBr
+        VhJgaAxUx6I8Pg8EKqkDJhytF0BSAvxYY8F35JnXJDYpJXdc/fpka+wNKxUlBo4ZaW9kOSumZRxwM
+        gKB/gcUCuqJkWEkWT/BdfO6O4Emzg6cUb6jUonsMqRKDT0LOMPDGPTFrM/zHqvdgFJG4hF0ZYeAHA
+        PyG8RS7VYQpLmw+y265BUaXen5nOl2xMNwH1nvP2Qiz8LHKmvzOVpG3SLpwUxDRCINsZ9jcDhybYT
+        ZjTch/FA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jaxd4-0006F1-1E; Tue, 19 May 2020 08:29:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8C8AB304A59;
+        Tue, 19 May 2020 10:29:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 47C4C29E21566; Tue, 19 May 2020 10:29:26 +0200 (CEST)
+Date:   Tue, 19 May 2020 10:29:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>
+Subject: Re: [patch V6 00/37] x86/entry: Rework leftovers and merge plan
+Message-ID: <20200519082926.GB279861@hirez.programming.kicks-ass.net>
+References: <20200515234547.710474468@linutronix.de>
+ <20200518160750.GA279861@hirez.programming.kicks-ass.net>
+ <87h7wdvzuq.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7wdvzuq.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+On Mon, May 18, 2020 at 08:53:49PM +0200, Thomas Gleixner wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
+> > So on top of you entry-v8-full; I had to chase one of those
+> > instrumentation_end() escapes an (extended) basic block chase (again!).
+> >  
+> > +#ifdef CONFIG_DEBUG_ENTRY
+> 
+> Why this? We lose the kprobes runtime protection that way.
 
-Add the master properties as attributes. The description is directly
-derived from the MIPI DisCo specification.
+Oh bugger indeed. I forgot about that :-(
 
-Credits: this patch is based on an earlier internal contribution by
-Vinod Koul, Sanyog Kale, Shreyas Nc and Hardik Shah.
+I added the CONFIG_DEBUG_ENTRY dependency to
+instrumentation_{begin,end}() because they now emit actual code, and I
+figured we shouldn't bother 'production' kernels with all them extra
+NOPs.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
----
- .../ABI/testing/sysfs-bus-soundwire-master    | 23 +++++
- drivers/soundwire/master.c                    | 84 +++++++++++++++++++
- 2 files changed, 107 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-soundwire-master
+And then I figured (wrongly!) that since I have that, I might as well
+add noinstr to is.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-soundwire-master b/Documentation/ABI/testing/sysfs-bus-soundwire-master
-new file mode 100644
-index 000000000000..46ef038d8722
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-soundwire-master
-@@ -0,0 +1,23 @@
-+What:		/sys/bus/soundwire/devices/sdw-master-N/revision
-+		/sys/bus/soundwire/devices/sdw-master-N/clk_stop_modes
-+		/sys/bus/soundwire/devices/sdw-master-N/clk_freq
-+		/sys/bus/soundwire/devices/sdw-master-N/clk_gears
-+		/sys/bus/soundwire/devices/sdw-master-N/default_col
-+		/sys/bus/soundwire/devices/sdw-master-N/default_frame_rate
-+		/sys/bus/soundwire/devices/sdw-master-N/default_row
-+		/sys/bus/soundwire/devices/sdw-master-N/dynamic_shape
-+		/sys/bus/soundwire/devices/sdw-master-N/err_threshold
-+		/sys/bus/soundwire/devices/sdw-master-N/max_clk_freq
-+
-+Date:		April 2020
-+
-+Contact:	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-+		Bard Liao <yung-chuan.liao@linux.intel.com>
-+		Vinod Koul <vkoul@kernel.org>
-+
-+Description:	SoundWire Master-N DisCo properties.
-+		These properties are defined by MIPI DisCo Specification
-+		for SoundWire. They define various properties of the Master
-+		and are used by the bus to configure the Master. clk_stop_modes
-+		is a bitmask for simplifications and combines the
-+		clock-stop-mode0 and clock-stop-mode1 properties.
-diff --git a/drivers/soundwire/master.c b/drivers/soundwire/master.c
-index 5411791e6aff..5f0b2189defe 100644
---- a/drivers/soundwire/master.c
-+++ b/drivers/soundwire/master.c
-@@ -8,6 +8,89 @@
- #include <linux/soundwire/sdw_type.h>
- #include "bus.h"
- 
-+/*
-+ * The sysfs for properties reflects the MIPI description as given
-+ * in the MIPI DisCo spec
-+ *
-+ * Base file is:
-+ *	sdw-master-N
-+ *      |---- revision
-+ *      |---- clk_stop_modes
-+ *      |---- max_clk_freq
-+ *      |---- clk_freq
-+ *      |---- clk_gears
-+ *      |---- default_row
-+ *      |---- default_col
-+ *      |---- dynamic_shape
-+ *      |---- err_threshold
-+ */
-+
-+#define sdw_master_attr(field, format_string)				\
-+static ssize_t field##_show(struct device *dev,				\
-+			    struct device_attribute *attr,		\
-+			    char *buf)					\
-+{									\
-+	struct sdw_master_device *md = dev_to_sdw_master_device(dev);	\
-+	return sprintf(buf, format_string, md->bus->prop.field);	\
-+}									\
-+static DEVICE_ATTR_RO(field)
-+
-+sdw_master_attr(revision, "0x%x\n");
-+sdw_master_attr(clk_stop_modes, "0x%x\n");
-+sdw_master_attr(max_clk_freq, "%d\n");
-+sdw_master_attr(default_row, "%d\n");
-+sdw_master_attr(default_col, "%d\n");
-+sdw_master_attr(default_frame_rate, "%d\n");
-+sdw_master_attr(dynamic_frame, "%d\n");
-+sdw_master_attr(err_threshold, "%d\n");
-+
-+static ssize_t clock_frequencies_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct sdw_master_device *md = dev_to_sdw_master_device(dev);
-+	ssize_t size = 0;
-+	int i;
-+
-+	for (i = 0; i < md->bus->prop.num_clk_freq; i++)
-+		size += sprintf(buf + size, "%8d ",
-+				md->bus->prop.clk_freq[i]);
-+	size += sprintf(buf + size, "\n");
-+
-+	return size;
-+}
-+static DEVICE_ATTR_RO(clock_frequencies);
-+
-+static ssize_t clock_gears_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct sdw_master_device *md = dev_to_sdw_master_device(dev);
-+	ssize_t size = 0;
-+	int i;
-+
-+	for (i = 0; i < md->bus->prop.num_clk_gears; i++)
-+		size += sprintf(buf + size, "%8d ",
-+				md->bus->prop.clk_gears[i]);
-+	size += sprintf(buf + size, "\n");
-+
-+	return size;
-+}
-+static DEVICE_ATTR_RO(clock_gears);
-+
-+static struct attribute *master_node_attrs[] = {
-+	&dev_attr_revision.attr,
-+	&dev_attr_clk_stop_modes.attr,
-+	&dev_attr_max_clk_freq.attr,
-+	&dev_attr_default_row.attr,
-+	&dev_attr_default_col.attr,
-+	&dev_attr_default_frame_rate.attr,
-+	&dev_attr_dynamic_frame.attr,
-+	&dev_attr_err_threshold.attr,
-+	&dev_attr_clock_frequencies.attr,
-+	&dev_attr_clock_gears.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(master_node);
-+
- static void sdw_master_device_release(struct device *dev)
- {
- 	struct sdw_master_device *md = dev_to_sdw_master_device(dev);
-@@ -48,6 +131,7 @@ int sdw_master_device_add(struct sdw_bus *bus, struct device *parent,
- 	md->dev.bus = &sdw_bus_type;
- 	md->dev.type = &sdw_master_type;
- 	md->dev.parent = parent;
-+	md->dev.groups = master_node_groups;
- 	md->dev.of_node = parent->of_node;
- 	md->dev.fwnode = fwnode;
- 	md->dev.dma_mask = parent->dma_mask;
--- 
-2.17.1
+> > +/* Section for code which can't be instrumented at all */
+> > +#define noinstr								\
+> > +	noinline notrace __attribute((__section__(".noinstr.text")))
+> > +
+> >  /* Begin/end of an instrumentation safe region */
+> > -#define instrumentation_begin() ({						\
+> > +#define instrumentation_begin() ({					\
+> >  	asm volatile("%c0:\n\t"						\
+> >  		     ".pushsection .discard.instr_begin\n\t"		\
+> >  		     ".long %c0b - .\n\t"				\
+> >  		     ".popsection\n\t" : : "i" (__COUNTER__));
+> 
+> Nifty.
 
+Yeah, took a bit of fiddling because objtool is a bit weird vs UD2, but
+if you order it just right in the WARN thing it works :-)
+
+You want a new delta without the noinstr thing on?
