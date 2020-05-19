@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBC82087D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 078CF2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 01:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="VTogGKZn"
+	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="dnGRrZss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgESBRD (ORCPT
+        id S1728287AbgESBRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 May 2020 21:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46186 "EHLO
+        Mon, 18 May 2020 21:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgESBRA (ORCPT
+        with ESMTP id S1728229AbgESBRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 May 2020 21:17:00 -0400
+        Mon, 18 May 2020 21:17:03 -0400
 Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20FFDC05BD0A
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:17:00 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h188so9773608lfd.7
-        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:17:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7578DC05BD0A
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:17:03 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id v5so9731039lfp.13
+        for <linux-kernel@vger.kernel.org>; Mon, 18 May 2020 18:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=globallogic.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=43OydlKMeB2soLpqk183X/YWIZp+nTEpweso2ysEnH8=;
-        b=VTogGKZn+8HP6GLONdbHWU4k1rjj64jS78ZiVB++LI5W7p7SrXGVUzIPFmY50BLNIk
-         Cax85IyQomdbhLSFvPdkDaka+MFsdCLDe9scDrLEAwpbPc07vgtEuTxVH1M9ttxOa2sf
-         RQI5dBeIl71cBJvEEgkz7FaK5TYvsMyVWi8vJTVO4hRKmog7A/BuDSDU5aMRA0pKGOdK
-         HBAAckL80AmiKDHQw2joI2h5SJISobfBWyd2C8m8ecD+PVLwdMTDQJuB4U8NXwoHYAiQ
-         1cL6iVEOIjfrQMibRTL1y7T0MkfnacAQ4TcIZ/HXOtBuAkRPxRL23E6rs05GvC0E3rNT
-         kU9w==
+        bh=P9lg9epxYOzkosVwby4Ch0c5f3sEFwO/BYfn6STJCRA=;
+        b=dnGRrZssVumc5SEFAZDBsPOY9hvFC40lYXZykyXE9HitinWK3gVLHaowFu/ndnKf3E
+         Eahvt7emsbSwgH5KfQC284+soIz189FhkiiyMymQ7DVuc15qQRLJUc/fYYb2hYtGD3l4
+         4O3u+RWaTI3idfzHkF6+PIDzS/vf8ZOFoBhhc5Q/T5JncefXj3qg0DRf8tB7GkLN6422
+         Ktp0rBPJY7jQGlixyD+2soZN+Fc1/INvkzy2KS4vAPK7/V4T4OIcYFq4YdF6cVF2rQJq
+         ZPhF6si4grS3QFHFkGPXKaJmjos/q1wd/T06xCeYhm8yy05tie3ptyUQZOs0QGiB/PgC
+         aQOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=43OydlKMeB2soLpqk183X/YWIZp+nTEpweso2ysEnH8=;
-        b=MRglVnEZK+BcXJnirtSWHJ1JkkNjhvp2DY/OGMKkwKCittRmst4eWuG07J1AzAkZYR
-         eBEBECUW/qBcOjDj8PSdJJmJCZO5zI6UmGHYjR4QfPd08hr9m1uzbIx2kQWVARjctNQv
-         FVla1nl0fHK2Hpz0oHxuSItPQUXM37c8e4/2j5qWtvtZWaCYbSQC6wgoLpqahhTukc6A
-         gWkxjW505stZ475hiuOdOq2O+nsfOwV0E9IWpsa6gCVaA5M4/0tnPWpSHFZpnJ8DQCZA
-         1mXPOHXreacyF/MapbtMdnpQLQrQG4eG4oQd8gu9oYW5RJ4lkhlTDmy1A6H/6NT/Xg2R
-         iwYw==
-X-Gm-Message-State: AOAM531xWyHrGFi10HK9rigjtoGmgB7elqneS9ajwzUUGuU6XRuNK3hi
-        nqhutNu4MgJWToU3byM6lSVbUscOYq6/kg==
-X-Google-Smtp-Source: ABdhPJxcnMOesb+fL00R07l3WHxAvKG8zfvphHel04zHEX97w5/GIihgHhN0s7YHytf2m6QMXp6I/A==
-X-Received: by 2002:a05:6512:3082:: with SMTP id z2mr13587206lfd.32.1589851018350;
-        Mon, 18 May 2020 18:16:58 -0700 (PDT)
+        bh=P9lg9epxYOzkosVwby4Ch0c5f3sEFwO/BYfn6STJCRA=;
+        b=qYvU+ZmSaGaqH7aVz2Qmhp0JappWJ/78dJss2m0GmRsajgTrA0IexT8oMch0GEq4Fu
+         H1RxP84NQY0a60z+s314LkmFVINvCDCQfKEGGZc1Xe4FKugW1HPsjTHe5hcDOl2/e5ni
+         iphUf3BmSWDzOCWIMQ6aq453508FgUw4jBr6GonBCc87t70hR7UJSy4wrgiKiXWJQOK0
+         ZtpLYCXklMWh1Dq3O0JQm0ZU1wfmzxYc/t8R3DFjAeCMo6Idx3gKmt4343DgdtC4OtXK
+         Gb+5sWR93vguXDfq/xzvidWZRcDyI7m/8DYsIq2Iq1MHxm46PoykzicAtKaZ4ujXSQQ0
+         2Yew==
+X-Gm-Message-State: AOAM533IkCUdBInkhE6nMlbvsrHSbhl+81DhQco3JVt9gnF9Rr6tgr46
+        KxsKlQP5TXpBK87LcnoNLJZT6BPtfVBA1w==
+X-Google-Smtp-Source: ABdhPJxUWZSHm+8W4zyIHf+3MNavCDTyvyl8RtkB0iPvNIiUOFO5Nejen8EZS1lW4DYxSFMygiHsoQ==
+X-Received: by 2002:a19:c311:: with SMTP id t17mr7309705lff.58.1589851021800;
+        Mon, 18 May 2020 18:17:01 -0700 (PDT)
 Received: from localhost.localdomain ([159.224.5.60])
-        by smtp.googlemail.com with ESMTPSA id i8sm4764244lfl.72.2020.05.18.18.16.56
+        by smtp.googlemail.com with ESMTPSA id i8sm4764244lfl.72.2020.05.18.18.17.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 18:16:57 -0700 (PDT)
+        Mon, 18 May 2020 18:17:01 -0700 (PDT)
 From:   Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
 To:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org
@@ -77,9 +77,9 @@ Cc:     Luis Oliveira <lolivei@synopsys.com>,
         Eugeniu Rosca <erosca@de.adit-jv.com>,
         Dave Stevenson <dave.stevenson@raspberrypi.org>,
         Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-Subject: [PATCH v2 3/6] media: ov5647: Add support for non-continuous clock mode
-Date:   Tue, 19 May 2020 04:16:18 +0300
-Message-Id: <cd04fe908fc1a747949ee83044f4d2abc1885cee.1589850165.git.roman.kovalivskyi@globallogic.com>
+Subject: [PATCH v2 5/6] media: dt-bindings: ov5647: Add property for PWDN control
+Date:   Tue, 19 May 2020 04:16:20 +0300
+Message-Id: <c81da93a9aa97c3cfd208a84d0391c856e5fcbcd.1589850165.git.roman.kovalivskyi@globallogic.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1589847910.git.roman.kovalivskyi@globallogic.com>
 References: <cover.1589847910.git.roman.kovalivskyi@globallogic.com>
@@ -92,90 +92,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.org>
 
-The driver was only supporting continuous clock mode
-although this was not stated anywhere.
-Non-continuous clock saves a small amount of power and
-on some SoCs is easier to interface with.
+Add optional GPIO pwdn to connect to the PWDN line on the sensor.
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
 Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
 ---
- drivers/media/i2c/ov5647.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/media/i2c/ov5647.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-index 796cc80f8ee1..10f35c637f91 100644
---- a/drivers/media/i2c/ov5647.c
-+++ b/drivers/media/i2c/ov5647.c
-@@ -44,6 +44,7 @@
- #define PWDN_ACTIVE_DELAY_MS	20
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+index 22e44945b661..70f06c24f470 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov5647.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+@@ -10,6 +10,9 @@ Required properties:
+ - reg			: I2C slave address of the sensor.
+ - clocks		: Reference to the xclk clock.
  
- #define MIPI_CTRL00_CLOCK_LANE_GATE		BIT(5)
-+#define MIPI_CTRL00_LINE_SYNC_ENABLE		BIT(4)
- #define MIPI_CTRL00_BUS_IDLE			BIT(2)
- #define MIPI_CTRL00_CLOCK_LANE_DISABLE		BIT(0)
- 
-@@ -95,6 +96,7 @@ struct ov5647 {
- 	int				power_count;
- 	struct clk			*xclk;
- 	struct gpio_desc		*pwdn;
-+	bool				is_clock_contiguous;
- };
- 
- static inline struct ov5647 *to_state(struct v4l2_subdev *sd)
-@@ -274,9 +276,15 @@ static int ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
- 
- static int ov5647_stream_on(struct v4l2_subdev *sd)
- {
-+	struct ov5647 *ov5647 = to_state(sd);
-+	u8 val = MIPI_CTRL00_BUS_IDLE;
- 	int ret;
- 
--	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, MIPI_CTRL00_BUS_IDLE);
-+	if (ov5647->is_clock_contiguous)
-+		val |= MIPI_CTRL00_CLOCK_LANE_GATE |
-+		       MIPI_CTRL00_LINE_SYNC_ENABLE;
++Optional Properties:
++- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
 +
-+	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, val);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -573,7 +581,7 @@ static const struct v4l2_subdev_internal_ops ov5647_subdev_internal_ops = {
- 	.open = ov5647_open,
- };
- 
--static int ov5647_parse_dt(struct device_node *np)
-+static int ov5647_parse_dt(struct ov5647 *sensor, struct device_node *np)
- {
- 	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
- 	struct device_node *ep;
-@@ -586,6 +594,17 @@ static int ov5647_parse_dt(struct device_node *np)
- 
- 	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
- 
-+	if (!ret) {
-+		of_node_put(ep);
-+		of_node_put(np);
-+		return ret;
-+	}
-+
-+	if (bus_cfg.bus_type == V4L2_MBUS_CSI2_DPHY
-+		|| bus_cfg.bus_type == V4L2_MBUS_CSI2_CPHY)
-+		sensor->is_clock_contiguous = bus_cfg.bus.mipi_csi2.flags
-+			& V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK;
-+
- 	of_node_put(ep);
- 	return ret;
- }
-@@ -604,7 +623,7 @@ static int ov5647_probe(struct i2c_client *client)
- 		return -ENOMEM;
- 
- 	if (IS_ENABLED(CONFIG_OF) && np) {
--		ret = ov5647_parse_dt(np);
-+		ret = ov5647_parse_dt(sensor, np);
- 		if (ret) {
- 			dev_err(dev, "DT parsing error: %d\n", ret);
- 			return ret;
+ The common video interfaces bindings (see video-interfaces.txt) should be
+ used to specify link to the image data receiver. The OV5647 device
+ node should contain one 'port' child node with an 'endpoint' subnode.
+@@ -26,6 +29,7 @@ Example:
+ 			compatible = "ovti,ov5647";
+ 			reg = <0x36>;
+ 			clocks = <&camera_clk>;
++			pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
+ 			port {
+ 				camera_1: endpoint {
+ 					remote-endpoint = <&csi1_ep1>;
 -- 
 2.17.1
 
