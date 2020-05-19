@@ -3,56 +3,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AB6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B694F20829
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3941207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589920078;
-	bh=JnJNNgYcMhrKz88UBpA/6enF19eGRatiGjSZo+KP/aU=;
+	s=default; t=1589920116;
+	bh=cv6xmqv3ovI2yurgdTY3UYx7aV+dLrOOzyq3cQI3jNM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=swKzD3jjuEzsFj98W9JAsYB+1NWLRgUs88CldbQtypb+BYgxasdrN8kxbumM90whj
-	 FiEjTT1hrllH9yAbtsJvES+g7Z+R109trcR1S6ZqBlRQvxlnqUVZKz1MXTiJQ3nsBW
-	 vFHOql8hSYDWwtMsr1OlJYHLn9dVE/6ESirpDcd0=
+	b=DxYolx6UZnC+OylobtKNo/3gZEJMOUxEp42uUOM5nGCUm+LfLQQQz2yTZyeTc+Ypw
+	 NU8YcI8Lcg57cYAceQXzg1Nh4nbxHtxoB8uMVqhaYvpHXM4IqdcThz+wTCdIdnbikJ
+	 FIWTCuoNHszfRhyQN0/tdizrUmUG+117Y99NVeng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgESU15 (ORCPT
+        id S1726447AbgESU2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40984 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 16:28:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgESU15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:27:57 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        id S1725885AbgESU2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 16:28:35 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DCDF20842
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0B9C20826
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589920076;
-        bh=JnJNNgYcMhrKz88UBpA/6enF19eGRatiGjSZo+KP/aU=;
+        s=default; t=1589920115;
+        bh=cv6xmqv3ovI2yurgdTY3UYx7aV+dLrOOzyq3cQI3jNM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KtKXURiqlf9KNqpSwo/grNL3vSyk7L/h5fq//A0hLNv9Ab0PzA9paYSlcvQVVDJyB
-         3WeZW5s+/qbtCXuhoZ5L9U3RirfKvSwnHAzHritxoCwqt5Lbn3hVpGDHBEZ/NDS7KM
-         2fV76TIh/MMXIpB4/qqo7g4JIKIvzeoP9wBC9aO8=
-Received: by mail-wm1-f42.google.com with SMTP id m185so632233wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:27:56 -0700 (PDT)
-X-Gm-Message-State: AOAM532GKahq58luqIyAXRT+XXee/IcLQM3MrL09TKC79O0ZYoSk9Fcm
-        BUdBNWyCuS6Zg/nkQhZUynHZs1KQJIw0hxnwmwqQcQ==
-X-Google-Smtp-Source: ABdhPJx2KqyKhU0NRQeaUdnyxxhuHiBHdYFrHXGfD1F6LD5nouaESKzvUxVSfxYQ/5AwaARfeG+1Qevz7ezuEHwInS4=
-X-Received: by 2002:a1c:2bc2:: with SMTP id r185mr1199978wmr.49.1589920074921;
- Tue, 19 May 2020 13:27:54 -0700 (PDT)
+        b=EEIqQDcFGkxw2H8DcIYC/z9+BzWGvVYeClibfhMZ8CwOonGz1NJ0MCDGSfLGsRl5o
+         h6zkCOhbfr4kmz9Y9SkFh2tumCccwccwKtJPyg4ZeLWpfDvr6KXstobansgyrm12b4
+         FqNc8H2EFVInJF4zEp9/Kzd8qnmPfux7SskQ4vQw=
+Received: by mail-wr1-f54.google.com with SMTP id e16so831156wra.7
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:28:34 -0700 (PDT)
+X-Gm-Message-State: AOAM532xtdj19ZXkg9POYgAlyMiaSqgEQj8AoCtgzc3VBXHN+qXs+0Ad
+        vxaCd55CfY5hgLWDLVd73aaA8iOnFqVJFmi/hugdEg==
+X-Google-Smtp-Source: ABdhPJw0+oYmcGYQ4tCAMqU9iVvzlx9KHoJD1psit8jzF4RBp3Z4bw3DnZCwrw8oZxqMP/AAizYzwzMlpHRCG/gTY5w=
+X-Received: by 2002:adf:a298:: with SMTP id s24mr666239wra.184.1589920113319;
+ Tue, 19 May 2020 13:28:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200515234547.710474468@linutronix.de> <20200515235126.522540101@linutronix.de>
-In-Reply-To: <20200515235126.522540101@linutronix.de>
+References: <20200515234547.710474468@linutronix.de> <20200515235126.617248111@linutronix.de>
+In-Reply-To: <20200515235126.617248111@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 19 May 2020 13:27:43 -0700
-X-Gmail-Original-Message-ID: <CALCETrWNBNCuNv==ZTBom5+X-Wyp+4_tsy=C_at-orv=0H3kuA@mail.gmail.com>
-Message-ID: <CALCETrWNBNCuNv==ZTBom5+X-Wyp+4_tsy=C_at-orv=0H3kuA@mail.gmail.com>
-Subject: Re: [patch V6 21/37] x86/entry: Add IRQENTRY_IRQ macro
+Date:   Tue, 19 May 2020 13:28:21 -0700
+X-Gmail-Original-Message-ID: <CALCETrUAv91_07LNLmCtuXbp8c5hQVoGW_cYDf6ZgTBSuvwbcQ@mail.gmail.com>
+Message-ID: <CALCETrUAv91_07LNLmCtuXbp8c5hQVoGW_cYDf6ZgTBSuvwbcQ@mail.gmail.com>
+Subject: Re: [patch V6 22/37] x86/entry: Use idtentry for interrupts
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
@@ -86,26 +86,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
 >
-> Provide a seperate IDTENTRY macro for device interrupts. Similar to
-> IDTENTRY_ERRORCODE with the addition of invoking irq_enter/exit_rcu() and
-> providing the errorcode as a 'u8' argument to the C function, which
-> truncates the sign extended vector number.
+> Replace the extra interrupt handling code and reuse the existing idtentry
+> machinery. This moves the irq stack switching on 64 bit from ASM to C code;
+> 32bit already does the stack switching in C.
 
 Acked-by: Andy Lutomirski <luto@kernel.org>
-
-with a minor minor optimization suggestion:
-
-> +.macro idtentry_irq vector cfunc
-> +       .p2align CONFIG_X86_L1_CACHE_SHIFT
-> +SYM_CODE_START_LOCAL(asm_\cfunc)
-> +       ASM_CLAC
-> +       SAVE_ALL switch_stacks=1
-> +       ENCODE_FRAME_POINTER
-> +       movl    %esp, %eax
-> +       movl    PT_ORIG_EAX(%esp), %edx         /* get the vector from stack */
-
-You could save somewhere between 0 and 1 cycles by using movzbl here...
-
-> +       __##func (regs, (u8)error_code);                                \
-
-And eliminating this cast.  Totally worth it, right?
