@@ -2,92 +2,84 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86978C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B73B207D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C32A206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:59:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X7kZZGEm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uv5AlaFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgESS72 (ORCPT
+        id S1727770AbgESS7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:59:28 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53522 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgESS72 (ORCPT
+        Tue, 19 May 2020 14:59:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgESS7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:59:28 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JIxMI4057912;
-        Tue, 19 May 2020 13:59:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589914762;
-        bh=rwh2Gt4nspEOd6+g3pYcOtsRvF3IZkaE/t4GtEJf3FQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=X7kZZGEm/RJjJ3rU1QkdE411IjXMFSO7PcjOriXyTCwdIlBTPGFbEv5gIdshzvoY/
-         FcKM+L5hhDGaOc406bfPtb9VA+Yv8vcd/H2cE8qGsh2dKqpOsRvRJ1EM69tgYYq15M
-         CCvR1H4wcKJHkW112X+UQJS+XvZCVl5FI1kIEowY=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JIxM8m038237
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 13:59:22 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 13:59:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 13:59:21 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JIxLbs037318;
-        Tue, 19 May 2020 13:59:21 -0500
-Subject: Re: [PATCH net-next 2/4] net: phy: dp83869: Set opmode from straps
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     Andrew Lunn <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200519141813.28167-1-dmurphy@ti.com>
- <20200519141813.28167-3-dmurphy@ti.com>
- <20200519095818.425d227b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200519182916.GM624248@lunn.ch>
- <c45bae32-d26f-cbe5-626b-2afae4a557b3@ti.com>
- <20200519114843.34e65bcc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <5d6d799f-f7b6-566a-5038-5901590f2e7b@ti.com>
-Date:   Tue, 19 May 2020 13:59:16 -0500
+        Tue, 19 May 2020 14:59:50 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173ECC08C5C0;
+        Tue, 19 May 2020 11:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=yji08Qj3j2iBSbLsrUBloFzlCS8ISnQy1mF6aa7Asmo=; b=Uv5AlaFIYV9rL1YMkp+IpbriSt
+        8FwAcSoUV7TAduiwVDGjY7hDXX2rct1ZtwKP/VL/TyhqR+H3bnYw+pcWHIAZH9RPJWp0ehLdnppMS
+        SgVtw+mAK+kyBPddMvrCrb4OuMFcMa6LxzuIfX7laXyCPZF5tXyRunLuEQsdzWKvyj67LQgQa4YEd
+        EyOKLO+wQiVfdKl/UzrA7spNAfwOVrgfOfHhUoQ0gm3h2FPU66Pb1ZOSRxr1i6wF4z2wWtOfrYNMb
+        I78z6CEcOn0oHI+wG68i5cJ+tB1IYjPw5jYwVh6tNvUdoHgUIv650rU4ju1o46tysDH+yW7OOBVad
+        fdh5/jjg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jb7Sv-0003qS-II; Tue, 19 May 2020 18:59:49 +0000
+Subject: Re: linux-next: Tree for May 19 (block/rnbd/)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+References: <20200520040354.3e619918@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <86962843-e786-4a3f-0b85-1e06fbdbd76a@infradead.org>
+Date:   Tue, 19 May 2020 11:59:48 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200519114843.34e65bcc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200520040354.3e619918@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jakub
+On 5/19/20 11:03 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> News: there will be no linux-next release tomorrow.
+> 
+> Changes since 20200518:
+> 
 
-On 5/19/20 1:48 PM, Jakub Kicinski wrote:
-> On Tue, 19 May 2020 13:41:40 -0500 Dan Murphy wrote:
->>> Is this now a standard GCC warning? Or have you turned on extra
->>> checking?
->> I still was not able to reproduce this warning with gcc-9.2.  I would
->> like to know the same
-> W=1 + gcc-10 here, also curious to know which one of the two makes
-> the difference :)
+seen on i386:
 
-W=1 made the difference I got the warning with gcc-9.2
+when CONFIG_MODULES is not set/enabled:
 
-Dan
+../drivers/block/rnbd/rnbd-clt-sysfs.c: In function 'rnbd_clt_remove_dev_symlink':
+../drivers/block/rnbd/rnbd-clt-sysfs.c:435:39: error: implicit declaration of function 'module_is_live'; did you mean 'module_driver'? [-Werror=implicit-function-declaration]
+  if (strlen(dev->blk_symlink_name) && module_is_live(THIS_MODULE))
+                                       ^~~~~~~~~~~~~~
+                                       module_driver
 
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
