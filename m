@@ -2,145 +2,149 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C43C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3860CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 318FF2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BEF2072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 21:26:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SOxhHUdF"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l95Lbh8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgESV0D (ORCPT
+        id S1727777AbgESV0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 17:26:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgESV0C (ORCPT
+        Tue, 19 May 2020 17:26:21 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:45529 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgESV0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 17:26:02 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A9DC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:26:02 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id 19so1085712oiy.8
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 14:26:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8/DW1pZj1YNbWgzrr4MlM3GiIz1LA4FZ7zkZDxQ3+/E=;
-        b=SOxhHUdF5aVkURIMUqLZSfCO16IDtsaxcATYSXXOV7Uy3Me1WBKsTQA8ldEVBy1MDf
-         FIbQveeRlcMwBv/lGeNHNhtNv5idIinT8VezWnN9nZfywxCHSN+XrrXWheRyJ+EorNAH
-         xD44DZ0kfGGuYmwEVXfGgtF3cnShbYD4UTL4/46wlHxa5jt8zJZ06D7dc8uR6iO9sMbv
-         QAbUHJGBH0liQNxp8dlnqRTtzswct6efckiIiFL747yiR0ZJ49FHEYZN4CLhvllJziT+
-         yB8sGqbgpk+CM2CLeXrO0lvSVUsdhADe9r1awZhvzww9Qk6bA4RPIaSFihjrxTX2+tsL
-         Jsbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8/DW1pZj1YNbWgzrr4MlM3GiIz1LA4FZ7zkZDxQ3+/E=;
-        b=rZrh3h/IELCdVaU3o5qSRtX+kB/I7Q1r1K9tmEyhwC2VW9RpdRiNp7rmRQSh/fvRhN
-         uZoodZBRCVkFf2/dl2/IvvKTeRdplru5LRr8J5zFCF3TJMJcvcMEvSQuDgUASx0bEHuc
-         dyAz9Bac5HFdxHXMt85qfOWa24v/DKospIxEGN14UHDyoNoBhbHKl9lU5KjnGGecaHu4
-         otnIMeAR0GOlZZdykG8gLF7VYnIwi6jhf2GTFrOQC5gNdpQccYJFzvfhwSO25QMLftVz
-         C5KsdKX3YPIcBgE7IfpNNs6wHno5TXjzb/sflEaYZUWeocXtiicvY3d7bPHUZRgEheiZ
-         YjTQ==
-X-Gm-Message-State: AOAM530SdbQ51ikJI5YdR98rSG8Q/s/S1rGxIApVdbs5rsH1xyAMda+P
-        gKPHZPr2c/jmHif62ASTktWLTvX4scfo+OJsIdo9/A==
-X-Google-Smtp-Source: ABdhPJwxJ91vZNt3aFO0c9nFQyUQ96gp/th2m+lM/IG4zTw2ixlyakzQVMwUgpbvUcbN93Zcsxa13MM7/JNOpDWPpRk=
-X-Received: by 2002:aca:6747:: with SMTP id b7mr771179oiy.121.1589923561779;
- Tue, 19 May 2020 14:26:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200512183839.2373-1-elver@google.com> <20200512190910.GM2957@hirez.programming.kicks-ass.net>
- <CAG=TAF5S+n_W4KM9F8QuCisyV+s6_QA_gO70y6ckt=V7SS2BXw@mail.gmail.com>
-In-Reply-To: <CAG=TAF5S+n_W4KM9F8QuCisyV+s6_QA_gO70y6ckt=V7SS2BXw@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
+        Tue, 19 May 2020 17:26:20 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200519212619euoutp02c536ddd72240d0b1a14b8e9427a7c86e~QixJCuHcC2169021690euoutp02F
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:26:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200519212619euoutp02c536ddd72240d0b1a14b8e9427a7c86e~QixJCuHcC2169021690euoutp02F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589923579;
+        bh=1c7VGWvexy2eW95UqCglB2SCwEWKkXv1iIEzc8i/+A0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l95Lbh8Uek6BIOdoOAGVVQNqUD6Ef/OpWdjsOfK035IpvHdN8Of8a/Ty9W7W39HzI
+         dfsfJIKUG7hiNaavmuE3XuDSZ93iEWz7kmQpjF7qARZ9bw3sqOsduvFcIJ2Ax9ULZT
+         fA8eXDfhZ2H5JPAj91e7OGq7qMGAVFHA5xVPJUNs=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200519212617eucas1p184ae7a3c1ceef4f3069943c69c8bbed0~QixIAgXno2659226592eucas1p1b;
+        Tue, 19 May 2020 21:26:17 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id A9.EB.60679.9FE44CE5; Tue, 19
+        May 2020 22:26:17 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200519212617eucas1p1b6e7af0ecb894896b165601fafd6abe8~QixHPs0gA2557025570eucas1p1W;
+        Tue, 19 May 2020 21:26:17 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200519212617eusmtrp292b562aade6f48110764323077d6f380~QixHO68Go1117911179eusmtrp2b;
+        Tue, 19 May 2020 21:26:17 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-2d-5ec44ef94874
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 83.A7.08375.8FE44CE5; Tue, 19
+        May 2020 22:26:16 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200519212616eusmtip13926f680a1fb9914bec1e3649925e7ca~QixHBwEZQ2033920339eusmtip1y;
+        Tue, 19 May 2020 21:26:16 +0000 (GMT)
+From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Stephan Mueller <smueller@chronox.de>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+Subject: [PATCH v2 0/2] Set the quality value for two HW RNGs
 Date:   Tue, 19 May 2020 23:25:50 +0200
-Message-ID: <CANpmjNMxvMpr=KaJEoEeRMuS3PGZEyi-VkeSmNywpQTAzFMSVA@mail.gmail.com>
-Subject: Re: [PATCH] READ_ONCE, WRITE_ONCE, kcsan: Perform checks in __*_ONCE variants
-To:     Qian Cai <cai@lca.pw>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <20200519212552.11671-1-l.stelmach@samsung.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200514190734.32746-1-l.stelmach@samsung.com>
+MIME-Version: 1.0
+Organization: Samsung R&D Institute Poland
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+3bOzjla0+OSejFLGmkYZXazD+xexOkfsaKgQGu107p4Y0vt
+        AhmTNJdupUQ1lbZUZsvrZitFU5ZpWamRZdFlXRaWZVgatnWfx6j/fu/7Pc/zfQ98DCHNooKY
+        PUn7eVWSPEFG+ZL2NnfnHHdMa3ykpi8S/8hvo3Ht2Woxrsy7QeKuHDOBPR9baZxZUk3hE/3B
+        WP/6PYG7umpo/NhRjrD19UMxdj53i/D9hiIKn+26JsLGApcYG+06hN+cs1H44yUXwqdvV5K4
+        /WYOsSKQ++bJR5zBeZfiPvf0iLh6wzOaK7E2U5y9JZSzWnIorrm4guZspRmcrs6CON27GsRV
+        1z0gOU1Htpgbsk6L9dvqu0TBJ+xJ41Vzl2333X3PXECnZIkPWM1PyKMom9QihgF2Idw5ptQi
+        X0bKliNwtZURwjCMwK1z0Frk82cYQpCZu+mvwfaJEzRmBIXuEloY+hCY7CaR10CxK0FfdlPs
+        5UC2SgwjZbyXCTYdjr10je4nskvB9sqEvEyyodA06BhlCRsNec/clJeBDYFs85VR9mGXQO9b
+        j0jQBMCtcy7Sy/7sLKjQ9JJCfghkXi4cbQBsNwPGERMhBK2BHJ1mLHQi9LfX0QIHw6/68yKh
+        WQYU5EcJ3lwE9qKvpKCJhqedHsqrIdhwqG6YK6xXQqlFP2b1g0cDAcIT/CDffoYQ1hI4niUV
+        1DOgSt84FhgEef3l6CSSGf4rY/ivgOHfXUZEWNBkPlWdqOTV85P49Ai1PFGdmqSM2JmcaEV/
+        fuftn+3DV1HD9x0OxDJINkES2Xg9XiqWp6kPJjoQMIQsUHLyrSNeKlHIDx7iVcnbVKkJvNqB
+        pjCkbLJkwYV3cVJWKd/P7+P5FF7191TE+AQdRYe3KAJP3SEWaQecMfhi2pueCVPHj3v+wrn4
+        iEJlLptWGZWwPiRuqLn2Rea+l0u7i8M29yyOcPetuYGDp5fSXKs+/QPBOK2Wtf57lU19w++b
+        TS21G2aGbWlctGtgVUd2bCxet7oxxEPvaunP7axq3zpbYbRtXP5Fq+mYVBzeGlU+KCPVu+Xz
+        ZhEqtfw3JclJQJkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBKsWRmVeSWpSXmKPExsVy+t/xu7o//I7EGeycbmPxd9IxdouNM9az
+        WqztPcpicb5zObPFr3dH2C2aF69ns+h+JWPR//g1s8X58xvYLW4eWsFosenxNVaL+/d+Mllc
+        3jWHzWLG+X1MFgsmP2G1WLCtj9Hi6czNbBbvVj9htJh6ei2LxfETncwOIh6/f01i9Jh1/yyb
+        x6crV5g8ds66y+6xeNN+No9tB1Q9Nq3qZPPYP3cNu8fmJfUefVtWMXr0vdzA6LF+y1UWj6ZT
+        7awenzfJBfBF6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW
+        6dsl6GVcXD6ZvaCNtWLT8tssDYztLF2MHBwSAiYSmz96dDFycQgJLGWU2L/xGyNEXEpi5dz0
+        LkZOIFNY4s+1LjYQW0jgKaPE6++yIDabgKNE/9ITrCC9IgJ7WCV23+hkAkkwC5RLtD58wgpi
+        CwvYSmx+tJARxGYRUJXY++EQmM0rYC3Re/cnG8QCeYn25dvBbE4BG4nrL34xQSyzlrjzZS4r
+        RL2gxMmZT8BuZhZQl1g/TwgkzC+gJbGm6ToLxFp5ieats5knMArNQtIxC6FjFpKqBYzMqxhF
+        UkuLc9Nziw31ihNzi0vz0vWS83M3MQJTxbZjPzfvYLy0MfgQowAHoxIPr8Gew3FCrIllxZW5
+        hxglOJiVRHgnvDgUJ8SbklhZlVqUH19UmpNafIjRFOjNicxSosn5wDSWVxJvaGpobmFpaG5s
+        bmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qBsSH2fXJgdk2TwvTAi483rZwp9crpHGOg
+        OEOfofxJyZn6vum/NeY37wtb/7LjDhPTcfVvSnY+6zUM/a5fTfuxkW1CqutGnV4rvyU+qx4v
+        fn87XeK2gW6U7ikHwc5Jio0rzlzQvd8pO/ninl1WyydJn7qtx79k0qvsd99+Tq0weMMfvTvH
+        93hkhBJLcUaioRZzUXEiACOC+cArAwAA
+X-CMS-MailID: 20200519212617eucas1p1b6e7af0ecb894896b165601fafd6abe8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200519212617eucas1p1b6e7af0ecb894896b165601fafd6abe8
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200519212617eucas1p1b6e7af0ecb894896b165601fafd6abe8
+References: <20200514190734.32746-1-l.stelmach@samsung.com>
+        <CGME20200519212617eucas1p1b6e7af0ecb894896b165601fafd6abe8@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 at 23:10, Qian Cai <cai@lca.pw> wrote:
->
-> On Tue, May 12, 2020 at 3:09 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Tue, May 12, 2020 at 08:38:39PM +0200, Marco Elver wrote:
-> > > diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> > > index 741c93c62ecf..e902ca5de811 100644
-> > > --- a/include/linux/compiler.h
-> > > +++ b/include/linux/compiler.h
-> > > @@ -224,13 +224,16 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-> > >   * atomicity or dependency ordering guarantees. Note that this may result
-> > >   * in tears!
-> > >   */
-> > > -#define __READ_ONCE(x)       (*(const volatile __unqual_scalar_typeof(x) *)&(x))
-> > > +#define __READ_ONCE(x)                                                       \
-> > > +({                                                                   \
-> > > +     kcsan_check_atomic_read(&(x), sizeof(x));                       \
-> > > +     data_race((*(const volatile __unqual_scalar_typeof(x) *)&(x))); \
-> > > +})
-> >
-> > NAK
-> >
-> > This will actively insert instrumentation into __READ_ONCE() and I need
-> > it to not have any.
->
-> Any way to move this forward? Due to linux-next commit 6bcc8f459fe7
-> (locking/atomics: Flip fallbacks and instrumentation), it triggers a
-> lots of KCSAN warnings due to atomic ops are no longer marked.
+The rng structure contains the quality field which tells how many bits
+of entropy can be obtained from 1024 bits read from a device. With the
+quality value set the hw_random framework starts a kernel thread to feed
+the entropy pool in the CRNG, which helps to initialize it quickly
+especially during boot.
 
-This is no longer the right solution we believe due to the various
-requirements that Peter also mentioned. See the discussion here:
-    https://lkml.kernel.org/r/CANpmjNOGFqhtDa9wWpXs2kztQsSozbwsuMO5BqqW0c0g0zGfSA@mail.gmail.com
+Łukasz Stelmach (2):
+  hwrng: iproc-rng200 - Set the quality value
+  hwrng: exynos - Set the quality value
 
-The new solution is here:
-    https://lkml.kernel.org/r/20200515150338.190344-1-elver@google.com
-While it's a little inconvenient that we'll require Clang 11
-(currently available by building yourself from LLVM repo), but until
-we get GCC fixed (my patch there still pending :-/), this is probably
-the right solution going forward.   If possible, please do test!
+ drivers/char/hw_random/exynos-trng.c  | 1 +
+ drivers/char/hw_random/iproc-rng200.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-Thanks,
--- Marco
+v2:
+  - recalculated values using the SP800-90B_EntropyAssessment package
+-- 
+2.25.0
 
-> For
-> example,
-> [  197.318288][ T1041] write to 0xffff9302764ccc78 of 8 bytes by task
-> 1048 on cpu 47:
-> [  197.353119][ T1041]  down_read_trylock+0x9e/0x1e0
-> atomic_long_set(&sem->owner, val);
-> __rwsem_set_reader_owned at kernel/locking/rwsem.c:205
-> (inlined by) rwsem_set_reader_owned at kernel/locking/rwsem.c:213
-> (inlined by) __down_read_trylock at kernel/locking/rwsem.c:1373
-> (inlined by) down_read_trylock at kernel/locking/rwsem.c:1517
-> [  197.374641][ T1041]  page_lock_anon_vma_read+0x19d/0x3c0
-> [  197.398894][ T1041]  rmap_walk_anon+0x30e/0x620
->
-> [  197.924695][ T1041] read to 0xffff9302764ccc78 of 8 bytes by task
-> 1041 on cpu 43:
-> [  197.959501][ T1041]  up_read+0xb8/0x41a
-> arch_atomic64_read at arch/x86/include/asm/atomic64_64.h:22
-> (inlined by) atomic64_read at include/asm-generic/atomic-instrumented.h:838
-> (inlined by) atomic_long_read at include/asm-generic/atomic-long.h:29
-> (inlined by) rwsem_clear_reader_owned at kernel/locking/rwsem.c:242
-> (inlined by) __up_read at kernel/locking/rwsem.c:1433
-> (inlined by) up_read at kernel/locking/rwsem.c:1574
-> [  197.977728][ T1041]  rmap_walk_anon+0x2f2/0x620
-> [  197.999055][ T1041]  rmap_walk+0xb5/0xe0
