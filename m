@@ -2,309 +2,166 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67492C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6032C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE9320674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cALJeUig"
+	by mail.kernel.org (Postfix) with ESMTP id 9780420674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgESSPE (ORCPT
+        id S1729148AbgESSPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:15:04 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55916 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729457AbgESSPD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:15:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589912102; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=WbWK+XDpZ1EpeB30moGdfoWRLNL/z7wIz2LDeq0cfpU=;
- b=cALJeUigOd2UtDDodMFaIJ+TSsIRq45IyvTW9qPBt4YcxdSvUGHm5dg8Reu/iAp/RH2icsBt
- GYBexS6EhIV3ZMKqoVM5w1NHYnPj/vuYS1m8jvngXGD5t3Dfp1hFXvP6ma99Gnr4YeioOHlw
- DIWIN7MwwZCSsceDTQExShNVmqo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec4220d.7fa2b94590a0-smtp-out-n05;
- Tue, 19 May 2020 18:14:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CF575C43636; Tue, 19 May 2020 18:14:36 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E60BC433D2;
-        Tue, 19 May 2020 18:14:36 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 19 May 2020 11:14:36 -0700
-From:   rishabhb@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Tue, 19 May 2020 14:15:41 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2230 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726447AbgESSPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 14:15:40 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 578699F2B73643D873E3;
+        Tue, 19 May 2020 19:15:39 +0100 (IST)
+Received: from localhost (10.47.86.149) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 19 May
+ 2020 19:15:38 +0100
+Date:   Tue, 19 May 2020 19:15:11 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Artur Rojek <contact@artur-rojek.eu>
+CC:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-remoteproc-owner@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] remoteproc: qcom: Update PIL relocation info on
- load
-In-Reply-To: <20200513055641.1413100-4-bjorn.andersson@linaro.org>
-References: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
- <20200513055641.1413100-4-bjorn.andersson@linaro.org>
-Message-ID: <3ff29ccc94d3097fb39b7df377754af6@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "Ezequiel Garcia" <ezequiel@vanguardiasur.com.ar>,
+        <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 2/7] IIO: Ingenic JZ47xx: Error check clk_enable
+ calls.
+Message-ID: <20200519191511.00007c78@Huawei.com>
+In-Reply-To: <20200517194904.34758-2-contact@artur-rojek.eu>
+References: <20200517194904.34758-1-contact@artur-rojek.eu>
+        <20200517194904.34758-2-contact@artur-rojek.eu>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.86.149]
+X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-12 22:56, Bjorn Andersson wrote:
-> Update the PIL relocation information in IMEM with information about
-> where the firmware for various remoteprocs are loaded.
+On Sun, 17 May 2020 21:48:59 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
+
+> Introduce error checks for the clk_enable calls used in this driver.
+> As part of the changes, move clk_enable/clk_disable calls out of
+> ingenic_adc_set_config and into respective logic of its callers.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+
+One trivial thing inline.
+
 > ---
 > 
-> Changes since v4:
-> - Dropped unnecessary comment about ignoring return value.
+>  Changes:
 > 
->  drivers/remoteproc/Kconfig          |  3 +++
->  drivers/remoteproc/qcom_q6v5_adsp.c | 16 +++++++++++++---
->  drivers/remoteproc/qcom_q6v5_mss.c  |  3 +++
->  drivers/remoteproc/qcom_q6v5_pas.c  | 15 ++++++++++++---
->  drivers/remoteproc/qcom_q6v5_wcss.c | 14 +++++++++++---
->  drivers/remoteproc/qcom_wcnss.c     | 14 +++++++++++---
->  6 files changed, 53 insertions(+), 12 deletions(-)
+>  v6: new patch
 > 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 8088ca4dd6dc..6bd42a411ca8 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -126,6 +126,7 @@ config QCOM_Q6V5_ADSP
->  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
->  	depends on QCOM_SYSMON || QCOM_SYSMON=n
->  	select MFD_SYSCON
-> +	select QCOM_PIL_INFO
->  	select QCOM_MDT_LOADER
->  	select QCOM_Q6V5_COMMON
->  	select QCOM_RPROC_COMMON
-> @@ -158,6 +159,7 @@ config QCOM_Q6V5_PAS
->  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
->  	depends on QCOM_SYSMON || QCOM_SYSMON=n
->  	select MFD_SYSCON
-> +	select QCOM_PIL_INFO
->  	select QCOM_MDT_LOADER
->  	select QCOM_Q6V5_COMMON
->  	select QCOM_RPROC_COMMON
-> @@ -209,6 +211,7 @@ config QCOM_WCNSS_PIL
->  	depends on QCOM_SMEM
->  	depends on QCOM_SYSMON || QCOM_SYSMON=n
->  	select QCOM_MDT_LOADER
-> +	select QCOM_PIL_INFO
->  	select QCOM_RPROC_COMMON
->  	select QCOM_SCM
->  	help
-> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c
-> b/drivers/remoteproc/qcom_q6v5_adsp.c
-> index d2a2574dcf35..c539e89664cb 100644
-> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
-> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-> @@ -26,6 +26,7 @@
->  #include <linux/soc/qcom/smem_state.h>
+>  v7: no change
 > 
->  #include "qcom_common.h"
-> +#include "qcom_pil_info.h"
->  #include "qcom_q6v5.h"
->  #include "remoteproc_internal.h"
+>  drivers/iio/adc/ingenic-adc.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
 > 
-> @@ -82,6 +83,7 @@ struct qcom_adsp {
->  	unsigned int halt_lpass;
-> 
->  	int crash_reason_smem;
-> +	const char *info_name;
-> 
->  	struct completion start_done;
->  	struct completion stop_done;
-> @@ -164,10 +166,17 @@ static int qcom_adsp_shutdown(struct qcom_adsp 
-> *adsp)
->  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+> diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+> index 39c0a609fc94..6c3bbba7c44b 100644
+> --- a/drivers/iio/adc/ingenic-adc.c
+> +++ b/drivers/iio/adc/ingenic-adc.c
+> @@ -73,7 +73,6 @@ static void ingenic_adc_set_config(struct ingenic_adc *adc,
 >  {
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-> +	int ret;
-> +
-> +	ret = qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-> +				    adsp->mem_region, adsp->mem_phys,
-> +				    adsp->mem_size, &adsp->mem_reloc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, 
-> adsp->mem_size);
-> 
-> -	return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-> -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-> -			     &adsp->mem_reloc);
-> +	return 0;
+>  	uint32_t cfg;
+>  
+> -	clk_enable(adc->clk);
+>  	mutex_lock(&adc->lock);
+>  
+>  	cfg = readl(adc->base + JZ_ADC_REG_CFG) & ~mask;
+> @@ -81,7 +80,6 @@ static void ingenic_adc_set_config(struct ingenic_adc *adc,
+>  	writel(cfg, adc->base + JZ_ADC_REG_CFG);
+>  
+>  	mutex_unlock(&adc->lock);
+> -	clk_disable(adc->clk);
 >  }
-> 
->  static int adsp_start(struct rproc *rproc)
-> @@ -436,6 +445,7 @@ static int adsp_probe(struct platform_device *pdev)
->  	adsp = (struct qcom_adsp *)rproc->priv;
->  	adsp->dev = &pdev->dev;
->  	adsp->rproc = rproc;
-> +	adsp->info_name = desc->sysmon_name;
->  	platform_set_drvdata(pdev, adsp);
-> 
->  	ret = adsp_alloc_memory_region(adsp);
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
-> b/drivers/remoteproc/qcom_q6v5_mss.c
-> index c4936f4d1e80..fdbcae11ae64 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -29,6 +29,7 @@
-> 
->  #include "remoteproc_internal.h"
->  #include "qcom_common.h"
-> +#include "qcom_pil_info.h"
->  #include "qcom_q6v5.h"
-> 
->  #include <linux/qcom_scm.h>
-> @@ -1221,6 +1222,8 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  	else if (ret < 0)
->  		dev_err(qproc->dev, "MPSS authentication failed: %d\n", ret);
-> 
-> +	qcom_pil_info_store("modem", mpss_reloc, qproc->mpss_size);
-> +
->  release_firmware:
->  	release_firmware(fw);
->  out:
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c
-> b/drivers/remoteproc/qcom_q6v5_pas.c
-> index 3bb69f58e086..84cb19231c35 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -25,6 +25,7 @@
->  #include <linux/soc/qcom/smem_state.h>
-> 
->  #include "qcom_common.h"
-> +#include "qcom_pil_info.h"
->  #include "qcom_q6v5.h"
->  #include "remoteproc_internal.h"
-> 
-> @@ -64,6 +65,7 @@ struct qcom_adsp {
->  	int pas_id;
->  	int crash_reason_smem;
->  	bool has_aggre2_clk;
-> +	const char *info_name;
-> 
->  	struct completion start_done;
->  	struct completion stop_done;
-> @@ -117,11 +119,17 @@ static void adsp_pds_disable(struct qcom_adsp
-> *adsp, struct device **pds,
->  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+>  
+>  static void ingenic_adc_enable(struct ingenic_adc *adc,
+> @@ -124,6 +122,8 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
+>  				 long m)
 >  {
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+>  	struct ingenic_adc *adc = iio_priv(iio_dev);
+> +	struct device *dev = iio_dev->dev.parent;
 > +	int ret;
-> 
-> -	return qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
-> -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-> -			     &adsp->mem_reloc);
-> +	ret = qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
-> +			    adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-> +			    &adsp->mem_reloc);
-> +	if (ret)
-> +		return ret;
-> 
-> +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, 
-> adsp->mem_size);
-mem_reloc is used to calculate  offset and then we again add that offset 
-to the
-ioremapped region base. So we should pass adsp->mem_phys as start here?
+>  
+>  	switch (m) {
+>  	case IIO_CHAN_INFO_SCALE:
+> @@ -131,6 +131,14 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
+>  		case INGENIC_ADC_BATTERY:
+>  			if (!adc->soc_data->battery_vref_mode)
+>  				return -EINVAL;
 > +
-> +	return 0;
->  }
-> 
->  static int adsp_start(struct rproc *rproc)
-> @@ -405,6 +413,7 @@ static int adsp_probe(struct platform_device *pdev)
->  	adsp->rproc = rproc;
->  	adsp->pas_id = desc->pas_id;
->  	adsp->has_aggre2_clk = desc->has_aggre2_clk;
-> +	adsp->info_name = desc->sysmon_name;
->  	platform_set_drvdata(pdev, adsp);
-> 
->  	ret = adsp_alloc_memory_region(adsp);
-> diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c
-> b/drivers/remoteproc/qcom_q6v5_wcss.c
-> index f1924b740a10..962e37a86b8b 100644
-> --- a/drivers/remoteproc/qcom_q6v5_wcss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-> @@ -421,10 +421,18 @@ static void *q6v5_wcss_da_to_va(struct rproc
-> *rproc, u64 da, size_t len)
->  static int q6v5_wcss_load(struct rproc *rproc, const struct firmware 
-> *fw)
+> +			ret = clk_enable(adc->clk);
+> +			if (ret) {
+> +				dev_err(dev, "Failed to enable clock: %d\n",
+> +					ret);
+> +				return ret;
+> +			}
+> +
+>  			if (val > JZ_ADC_BATTERY_LOW_VREF) {
+>  				ingenic_adc_set_config(adc,
+>  						       JZ_ADC_REG_CFG_BAT_MD,
+> @@ -142,6 +150,9 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
+>  						       JZ_ADC_REG_CFG_BAT_MD);
+>  				adc->low_vref_mode = true;
+>  			}
+> +
+> +			clk_disable(adc->clk);
+> +
+>  			return 0;
+>  		default:
+>  			return -EINVAL;
+> @@ -317,6 +328,13 @@ static int ingenic_adc_read_chan_info_raw(struct ingenic_adc *adc,
+>  					  int *val)
 >  {
->  	struct q6v5_wcss *wcss = rproc->priv;
-> +	int ret;
+>  	int bit, ret, engine = (chan->channel == INGENIC_ADC_BATTERY);
+> +	struct device *dev = iio_priv_to_dev(adc)->dev.parent;
 > +
-> +	ret = qcom_mdt_load_no_init(wcss->dev, fw, rproc->firmware,
-> +				    0, wcss->mem_region, wcss->mem_phys,
-> +				    wcss->mem_size, &wcss->mem_reloc);
-> +	if (ret)
+> +	ret = clk_enable(adc->clk);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable clock: %d\n", ret);
 > +		return ret;
-> +
-> +	/* Failures only affect post mortem debugging, so ignore return value 
-> */
-> +	qcom_pil_info_store("wcnss", wcss->mem_reloc, wcss->mem_size);
-> 
-> -	return qcom_mdt_load_no_init(wcss->dev, fw, rproc->firmware,
-> -				     0, wcss->mem_region, wcss->mem_phys,
-> -				     wcss->mem_size, &wcss->mem_reloc);
-> +	return ret;
->  }
-> 
->  static const struct rproc_ops q6v5_wcss_ops = {
-> diff --git a/drivers/remoteproc/qcom_wcnss.c 
-> b/drivers/remoteproc/qcom_wcnss.c
-> index 5d65e1a9329a..229482b3231f 100644
-> --- a/drivers/remoteproc/qcom_wcnss.c
-> +++ b/drivers/remoteproc/qcom_wcnss.c
-> @@ -27,6 +27,7 @@
-> 
->  #include "qcom_common.h"
->  #include "remoteproc_internal.h"
-> +#include "qcom_pil_info.h"
->  #include "qcom_wcnss.h"
-> 
->  #define WCNSS_CRASH_REASON_SMEM		422
-> @@ -145,10 +146,17 @@ void qcom_wcnss_assign_iris(struct qcom_wcnss 
-> *wcnss,
->  static int wcnss_load(struct rproc *rproc, const struct firmware *fw)
->  {
->  	struct qcom_wcnss *wcnss = (struct qcom_wcnss *)rproc->priv;
-> +	int ret;
-> +
-> +	ret = qcom_mdt_load(wcnss->dev, fw, rproc->firmware, WCNSS_PAS_ID,
-> +			    wcnss->mem_region, wcnss->mem_phys,
-> +			    wcnss->mem_size, &wcnss->mem_reloc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	qcom_pil_info_store("wcnss", wcnss->mem_reloc, wcnss->mem_size);
-> 
-> -	return qcom_mdt_load(wcnss->dev, fw, rproc->firmware, WCNSS_PAS_ID,
-> -			     wcnss->mem_region, wcnss->mem_phys,
-> -			     wcnss->mem_size, &wcnss->mem_reloc);
-> +	return 0;
->  }
-> 
->  static void wcnss_indicate_nv_download(struct qcom_wcnss *wcnss)
+> +	}
+
+It almost certainly doesn't matter, but if we are going to move the clk enable
+outside the lock, we should do the same with the disable.
+
+>  
+>  	/* We cannot sample AUX/AUX2 in parallel. */
+>  	mutex_lock(&adc->aux_lock);
+> @@ -325,7 +343,6 @@ static int ingenic_adc_read_chan_info_raw(struct ingenic_adc *adc,
+>  		ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_AUX_MD, bit);
+>  	}
+>  
+> -	clk_enable(adc->clk);
+>  	ret = ingenic_adc_capture(adc, engine);
+>  	if (ret)
+>  		goto out;
+
+
