@@ -2,184 +2,81 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7215C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3812EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB0A4207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF5B2072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 11:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgESLsF (ORCPT
+        id S1728769AbgESLvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 07:48:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4868 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728730AbgESLr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 07:47:57 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BDB311AD85804D11C374;
-        Tue, 19 May 2020 19:47:54 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 19 May 2020 19:47:46 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <Souvik.Chakravarty@arm.com>, <Thanu.Rangarajan@arm.com>
-CC:     <Sudeep.Holla@arm.com>, <guohanjun@huawei.com>,
-        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <wangxiongfeng2@huawei.com>
-Subject: [RFC PATCH v3 1/2] cpufreq: change '.set_boost' to act on only one policy
-Date:   Tue, 19 May 2020 19:41:28 +0800
-Message-ID: <1589888489-13828-2-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
-In-Reply-To: <1589888489-13828-1-git-send-email-wangxiongfeng2@huawei.com>
-References: <1589888489-13828-1-git-send-email-wangxiongfeng2@huawei.com>
+        Tue, 19 May 2020 07:51:13 -0400
+Received: from mga07.intel.com ([134.134.136.100]:15818 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbgESLvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 07:51:13 -0400
+IronPort-SDR: 8BVxFzWq5czlc5DqfUJUBCOCpUg4yAJQ50dkpFeS4N5I7B/sTt13A6RlCHqJKVIcbJ/BS0mjEU
+ EpVVSRa3TyNA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 04:51:12 -0700
+IronPort-SDR: AnY//32YLbelSgs7Tx6USgNj/zyg3fy8LBnHosoRWIWCL81pNMywog2n8l8xb++psXhjnNMvDM
+ t5s2pJPdXOiA==
+X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
+   d="scan'208";a="373704897"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 04:51:08 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id C497F20CEF; Tue, 19 May 2020 14:51:06 +0300 (EEST)
+Date:   Tue, 19 May 2020 14:51:06 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Luis Oliveira <lolivei@synopsys.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>
+Subject: Re: [PATCH v2 5/6] media: dt-bindings: ov5647: Add property for PWDN
+ control
+Message-ID: <20200519115106.GI20066@paasikivi.fi.intel.com>
+References: <cover.1589850165.git.roman.kovalivskyi@globallogic.com>
+ <c81da93a9aa97c3cfd208a84d0391c856e5fcbcd.1589850165.git.roman.kovalivskyi@globallogic.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c81da93a9aa97c3cfd208a84d0391c856e5fcbcd.1589850165.git.roman.kovalivskyi@globallogic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Macro 'for_each_active_policy()' is defined internally. To avoid some
-cpufreq driver needing this macro to iterate over all the policies in
-'.set_boost' callback, we redefine '.set_boost' to act on only one
-policy and pass the policy as an argument.
-'cpufreq_boost_trigger_state()' iterate over all the policies to set
-boost for the system. This is preparation for adding SW BOOST support
-for CPPC.
+Hi Roman,
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
----
- drivers/cpufreq/acpi-cpufreq.c |  4 ++--
- drivers/cpufreq/cpufreq.c      | 53 +++++++++++++++++++++---------------------
- include/linux/cpufreq.h        |  2 +-
- 3 files changed, 30 insertions(+), 29 deletions(-)
+On Tue, May 19, 2020 at 04:16:20AM +0300, Roman Kovalivskyi wrote:
+> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> 
+> Add optional GPIO pwdn to connect to the PWDN line on the sensor.
+> 
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
 
-diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-index 289e8ce..b0a9eb5 100644
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@ -126,7 +126,7 @@ static void boost_set_msr_each(void *p_en)
- 	boost_set_msr(enable);
- }
- 
--static int set_boost(int val)
-+static int set_boost(struct cpufreq_policy *policy, int val)
- {
- 	get_online_cpus();
- 	on_each_cpu(boost_set_msr_each, (void *)(long)val, 1);
-@@ -162,7 +162,7 @@ static ssize_t store_cpb(struct cpufreq_policy *policy, const char *buf,
- 	if (ret || val > 1)
- 		return -EINVAL;
- 
--	set_boost(val);
-+	set_boost(policy, val);
- 
- 	return count;
- }
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index d03f250..d0d86b1 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2532,34 +2532,29 @@ void cpufreq_update_limits(unsigned int cpu)
- /*********************************************************************
-  *               BOOST						     *
-  *********************************************************************/
--static int cpufreq_boost_set_sw(int state)
-+static int cpufreq_boost_set_sw(struct cpufreq_policy *policy, int state)
- {
--	struct cpufreq_policy *policy;
--
--	for_each_active_policy(policy) {
--		int ret;
--
--		if (!policy->freq_table)
--			return -ENXIO;
-+	int ret;
- 
--		ret = cpufreq_frequency_table_cpuinfo(policy,
--						      policy->freq_table);
--		if (ret) {
--			pr_err("%s: Policy frequency update failed\n",
--			       __func__);
--			return ret;
--		}
-+	if (!policy->freq_table)
-+		return -ENXIO;
- 
--		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
--		if (ret < 0)
--			return ret;
-+	ret = cpufreq_frequency_table_cpuinfo(policy, policy->freq_table);
-+	if (ret) {
-+		pr_err("%s: Policy frequency update failed\n", __func__);
-+		return ret;
- 	}
- 
-+	ret = freq_qos_update_request(policy->max_freq_req, policy->max);
-+	if (ret < 0)
-+		return ret;
-+
- 	return 0;
- }
- 
- int cpufreq_boost_trigger_state(int state)
- {
-+	struct cpufreq_policy *policy;
- 	unsigned long flags;
- 	int ret = 0;
- 
-@@ -2570,16 +2565,22 @@ int cpufreq_boost_trigger_state(int state)
- 	cpufreq_driver->boost_enabled = state;
- 	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
- 
--	ret = cpufreq_driver->set_boost(state);
--	if (ret) {
--		write_lock_irqsave(&cpufreq_driver_lock, flags);
--		cpufreq_driver->boost_enabled = !state;
--		write_unlock_irqrestore(&cpufreq_driver_lock, flags);
--
--		pr_err("%s: Cannot %s BOOST\n",
--		       __func__, state ? "enable" : "disable");
-+	for_each_active_policy(policy) {
-+		ret = cpufreq_driver->set_boost(policy, state);
-+		if (ret)
-+			goto err_reset_state;
- 	}
- 
-+	return 0;
-+
-+err_reset_state:
-+	write_lock_irqsave(&cpufreq_driver_lock, flags);
-+	cpufreq_driver->boost_enabled = !state;
-+	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
-+
-+	pr_err("%s: Cannot %s BOOST\n",
-+	       __func__, state ? "enable" : "disable");
-+
- 	return ret;
- }
- 
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index 67d5950..3494f67 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -367,7 +367,7 @@ struct cpufreq_driver {
- 
- 	/* platform specific boost support code */
- 	bool		boost_enabled;
--	int		(*set_boost)(int state);
-+	int		(*set_boost)(struct cpufreq_policy *policy, int state);
- };
- 
- /* flags */
+This patch should precede the corresponding driver patch.
+
 -- 
-1.7.12.4
-
+Sakari Ailus
