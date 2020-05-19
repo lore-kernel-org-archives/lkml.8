@@ -2,105 +2,130 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_BL,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33716C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8978207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09AE2207D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 16:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="thnsfHkv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWyV3xqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgESQok (ORCPT
+        id S1729419AbgESQoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 12:44:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
+        Tue, 19 May 2020 12:44:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729132AbgESQoj (ORCPT
+        with ESMTP id S1729358AbgESQom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 12:44:39 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D647C08C5C0;
-        Tue, 19 May 2020 09:44:39 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a2so2939807ejb.10;
-        Tue, 19 May 2020 09:44:39 -0700 (PDT)
+        Tue, 19 May 2020 12:44:42 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84672C08C5C0;
+        Tue, 19 May 2020 09:44:42 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l18so143679wrn.6;
+        Tue, 19 May 2020 09:44:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=x55y7NheOCYCR/iiqhGsYzOg4DTF/y3LF/qDoYECs4o=;
-        b=thnsfHkv0gxvjmBc79oOPNa2XSk/2n5KFV9FZB7tOa33jiWBZ1goEgBCBwUdrwZ3gj
-         OTCkcHhoWCeQ1W2Nh125unX/RglfetrAr5DQQzJrz76pUhOC9BTlo31qcxY+eal1Z18J
-         G+eb/Kbx8lFloEz4tj66j3zowbRjicyuqKcaX8cJzzKOgA2in0yampzsSdGccRslDYuP
-         dTxIpS0YXYZjzpLBHS3iLdoE6X1YzfUIsLswsmaQdVOIOdl5adc78Sqbe53kVmau7Lmu
-         Y0OCL23mG7KsKA9JSvccCLbb484dJ+fBfTRBO65FVFIQxgopISt+qn+kqokAxh66IZPV
-         /hNw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VqC8rxTTkCeV8e6ysDgNotLUcsV868zIffxxJilbTVg=;
+        b=YWyV3xqfslc9r+swGji8dPqRm1Lfbv3kwe/eMh0BbjbO+6H5AF2bcnTJ8UEqFbe6mx
+         EQkaJ8rJYEmXKxSVFIorQsPnIp6mDtoedIxYUCRoglAfoj2wEbyNU3p/I8XOAqnvtOwS
+         LEqIQTJtyKttjObDOojC9GqgiNJksXGQN8dd521h9IZjpueNsCFSbvAwrbVzZ1qD8tpB
+         oTcvLk2IEZ/OW6VpyiOXrGxRflwQeWI9icXheaUSVFWXKEQJ/Ewa9QgIVHw3vKt+ethK
+         FGT/mLWh6jEcab3W2YWKrsmyFjAIuWnHhTNjtwJVU7d+pqMgfJuRSU2E7kzhaHOXSaW9
+         FiAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=x55y7NheOCYCR/iiqhGsYzOg4DTF/y3LF/qDoYECs4o=;
-        b=rZ1oL1ZpH7+U0ZiBM8hfzAZG975YQRKGogOZaRueid/gLAdgHJIyKeuj3m6Ha7afuz
-         ErZx2vL8YO8ZdMjfSO9zACfJ0OZKGTA3jXyKXijGrr7Ec90wPnmfm7d+09soFFqjlfqv
-         GX8DHEHkbJQEnShOShd0ASraBrDTCWnOZ63BnTn93P3z5y7uvmF9HudxURoGw6EBRA3n
-         lBPr2Bf5U7dCU26+G4UtFSFPeX6KLFcgd32+5KMKcv2XWsXCPGceQwFyyGr79ivxd+hg
-         ZWWBvI+JmRovv4DMfqJwrW3U5ObgKZYzClp4k5GIgnYujQ8i+u8DtRgMC1lwlYNVsRn4
-         +pmQ==
-X-Gm-Message-State: AOAM532k9cad84dORSzQtDRcrHRDI681IeonnkKBULrbUJAdKJnIMdaG
-        MBhBx9xmxinmPLX95GbOEoeplFbL6TI=
-X-Google-Smtp-Source: ABdhPJzyeykMTQLiecg5AXfa/nUcuDFcwIRER9TYnQXDCL+XVixes/FbSGKEiL37/S3TIG69RrvBIw==
-X-Received: by 2002:a17:906:f1cf:: with SMTP id gx15mr60051ejb.471.1589906677896;
-        Tue, 19 May 2020 09:44:37 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id b3sm49627ejq.52.2020.05.19.09.44.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 May 2020 09:44:37 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, maxime.ripard@free-electrons.com,
-        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: gpu: arm,mali-utgard: add additional properties
-Date:   Tue, 19 May 2020 18:44:25 +0200
-Message-Id: <20200519164425.9729-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VqC8rxTTkCeV8e6ysDgNotLUcsV868zIffxxJilbTVg=;
+        b=Zx/TVhMvHLSDkci/pVsLjZRv4cx3DwDhWKAl68PvI4cQ9ct6O7CsY0rkDZWZc4OCj2
+         4gbzkv/yhgzjSzVWHqNXaQPkU/U/iyb4/aDdNEdVYma0IdnS44V3skWsoR+BlY3E7Ny4
+         hBXm1gHBg33x0DptWcMoTjkeDfvAC56Mw8t+Nj2tEmHp3xEFQIiCQbrWQw3OSvQ0kwye
+         WSW86EnabzgTAn4e7r85h8GdDPY2rFOTXJVNTc1wjyvBDpUry7OoUXplgK3erhBcH6EE
+         SuXXqYUrny1nuffgOouRB4FUEuYWRnj0RnpCD4J8k50xh7PWiEt736QPodOi0CJ8hX30
+         Rs6w==
+X-Gm-Message-State: AOAM532XYrEBygJc0AyndQLe6Qs0aUqov+eAjvoKpaGx4ZugP5s4Qub3
+        DBVLk6VY8CZvXGkb2YPslTg=
+X-Google-Smtp-Source: ABdhPJwSe6JzoKEGUpPYAynD9BDmuOFYIj6qReIqYmiaR8ffpFG20UDn7uYCl9Ig5eN+Td+tCyjfhw==
+X-Received: by 2002:a5d:6144:: with SMTP id y4mr27357671wrt.185.1589906681081;
+        Tue, 19 May 2020 09:44:41 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id j190sm271138wmb.33.2020.05.19.09.44.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 09:44:39 -0700 (PDT)
+Date:   Tue, 19 May 2020 18:44:33 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
+ txt format to yaml
+Message-ID: <20200519164433.GA8726@ict14-OptiPlex-980>
+References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
+ <20200519124402.26076-2-jonathan.albrieux@gmail.com>
+ <20200519132207.GA4623@gerhold.net>
+ <20200519140354.GB30573@ict14-OptiPlex-980>
+ <20200519160137.GJ1634618@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519160137.GJ1634618@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the old txt situation we add/describe only properties that are used
-by the driver/hardware itself. With yaml it also filters things in a
-node that are used by other drivers like 'assigned-clocks' and
-'assigned-clock-rates' for some older Rockchip SoCs in 'gpu' nodes,
-so add them to 'arm,mali-utgard.yaml'.
+On Tue, May 19, 2020 at 07:01:37PM +0300, Andy Shevchenko wrote:
+> On Tue, May 19, 2020 at 04:03:54PM +0200, Jonathan Albrieux wrote:
+> > On Tue, May 19, 2020 at 03:22:07PM +0200, Stephan Gerhold wrote:
+> > > On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:
+> 
+> ...
+> 
+> > > > +maintainers:
+> > > > +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>
+> > > 
+> > > Should probably add someone here, although I'm not sure who either.
+> > > 
+> > 
+> > Yep I couldn't find a maintainer for that driver..what to do in this case?
+> 
+> Volunteer yourself!
+> 
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+While I'd really like to, I have to decline the offer as I currently don't have
+enought knowledge to become a maintainer :-) but thank you! (Who knows, maybe in
+a couple of year!) Now I'll make the final edits and will submit a new
+patchset soon with all the changes
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-index 4869258da..2fc97c544 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-@@ -95,6 +95,12 @@ properties:
-       - const: bus
-       - const: core
- 
-+  assigned-clocks:
-+    maxItems: 1
-+
-+  assigned-clock-rates:
-+    maxItems: 1
-+
-   memory-region: true
- 
-   mali-supply: true
--- 
-2.11.0
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
+Best regards,
+Jonathan Albrieux
