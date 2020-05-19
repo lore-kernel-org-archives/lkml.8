@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8847FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C877207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3B2207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgEST6X (ORCPT
+        id S1727839AbgEST61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:58:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
+        Tue, 19 May 2020 15:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbgEST6X (ORCPT
+        with ESMTP id S1726369AbgEST6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:58:23 -0400
+        Tue, 19 May 2020 15:58:25 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D9C4C08C5C1;
-        Tue, 19 May 2020 12:58:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE9CC08C5C3;
+        Tue, 19 May 2020 12:58:25 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb8NW-00087w-Bm; Tue, 19 May 2020 21:58:18 +0200
+        id 1jb8NY-00089p-HJ; Tue, 19 May 2020 21:58:20 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E78941C047E;
-        Tue, 19 May 2020 21:58:17 +0200 (CEST)
-Date:   Tue, 19 May 2020 19:58:17 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 250731C0480;
+        Tue, 19 May 2020 21:58:20 +0200 (CEST)
+Date:   Tue, 19 May 2020 19:58:20 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/idtentry: Provide IDTENTRY_DF
+Subject: [tip: x86/entry] x86/idtentry: Provide IDTRENTRY_NOIST variants for
+ #DB and #MC
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505135315.583415264@linutronix.de>
-References: <20200505135315.583415264@linutronix.de>
+In-Reply-To: <20200505135315.084882104@linutronix.de>
+References: <20200505135315.084882104@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158991829784.17951.5084767126120807951.tip-bot2@tip-bot2>
+Message-ID: <158991830005.17951.1353363997980016294.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,156 +62,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     9bf779984c19883354f55a54283292b927939b6a
-Gitweb:        https://git.kernel.org/tip/9bf779984c19883354f55a54283292b927939b6a
+Commit-ID:     97f4e8b75a99efc7376b6c7b5bc2a3124f609bc1
+Gitweb:        https://git.kernel.org/tip/97f4e8b75a99efc7376b6c7b5bc2a3124f609bc1
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 25 Feb 2020 23:33:30 +01:00
+AuthorDate:    Tue, 25 Feb 2020 23:33:28 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 19 May 2020 16:04:14 +02:00
+CommitterDate: Tue, 19 May 2020 16:04:12 +02:00
 
-x86/idtentry: Provide IDTENTRY_DF
+x86/idtentry: Provide IDTRENTRY_NOIST variants for #DB and #MC
 
-Provide a separate macro for #DF as this needs to emit paranoid only code
-and has also a special ASM stub in 32bit.
+Provide NOIST entry point macros which allows to implement NOIST variants
+of the C entry points. These are invoked when #DB or #MC enter from user
+space. This allows explicit handling of the difference between user mode
+and kernel mode entry later.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
 Acked-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/20200505135315.583415264@linutronix.de
-
+Link: https://lkml.kernel.org/r/20200505135315.084882104@linutronix.de
 
 
 ---
- arch/x86/include/asm/idtentry.h | 87 ++++++++++++++++++++++++++++++++-
- 1 file changed, 87 insertions(+)
+ arch/x86/include/asm/idtentry.h | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index 060f9e3..9521f32 100644
+index fcd4230..060f9e3 100644
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -132,6 +132,35 @@ static __always_inline void __##func(struct pt_regs *regs,		\
- #define DEFINE_IDTENTRY_RAW(func)					\
- __visible noinstr void func(struct pt_regs *regs)
+@@ -138,10 +138,12 @@ __visible noinstr void func(struct pt_regs *regs)
+  * @vector:	Vector number (ignored for C)
+  * @func:	Function name of the entry point
+  *
+- * Maps to DECLARE_IDTENTRY_RAW
++ * Maps to DECLARE_IDTENTRY_RAW, but declares also the NOIST C handler
++ * which is called from the ASM entry point on user mode entry
+  */
+ #define DECLARE_IDTENTRY_IST(vector, func)				\
+-	DECLARE_IDTENTRY_RAW(vector, func)
++	DECLARE_IDTENTRY_RAW(vector, func);				\
++	__visible void noist_##func(struct pt_regs *regs)
  
-+/**
-+ * DECLARE_IDTENTRY_RAW_ERRORCODE - Declare functions for raw IDT entry points
-+ *				    Error code pushed by hardware
-+ * @vector:	Vector number (ignored for C)
-+ * @func:	Function name of the entry point
-+ *
-+ * Maps to DECLARE_IDTENTRY_ERRORCODE()
-+ */
-+#define DECLARE_IDTENTRY_RAW_ERRORCODE(vector, func)			\
-+	DECLARE_IDTENTRY_ERRORCODE(vector, func)
-+
-+/**
-+ * DEFINE_IDTENTRY_RAW_ERRORCODE - Emit code for raw IDT entry points
-+ * @func:	Function name of the entry point
-+ *
-+ * @func is called from ASM entry code with interrupts disabled.
-+ *
-+ * The macro is written so it acts as function definition. Append the
-+ * body with a pair of curly brackets.
-+ *
-+ * Contrary to DEFINE_IDTENTRY_ERRORCODE() this does not invoke the
-+ * idtentry_enter/exit() helpers before and after the body invocation. This
-+ * needs to be done in the body itself if applicable. Use if extra work
-+ * is required before the enter/exit() helpers are invoked.
-+ */
-+#define DEFINE_IDTENTRY_RAW_ERRORCODE(func)				\
-+__visible noinstr void func(struct pt_regs *regs, unsigned long error_code)
-+
-+
- #ifdef CONFIG_X86_64
  /**
-  * DECLARE_IDTENTRY_IST - Declare functions for IST handling IDT entry points
-@@ -165,10 +194,58 @@ __visible noinstr void func(struct pt_regs *regs)
- #define DEFINE_IDTENTRY_NOIST(func)					\
- 	DEFINE_IDTENTRY_RAW(noist_##func)
+  * DEFINE_IDTENTRY_IST - Emit code for IST entry points
+@@ -152,6 +154,17 @@ __visible noinstr void func(struct pt_regs *regs)
+ #define DEFINE_IDTENTRY_IST(func)					\
+ 	DEFINE_IDTENTRY_RAW(func)
  
 +/**
-+ * DECLARE_IDTENTRY_DF - Declare functions for double fault
-+ * @vector:	Vector number (ignored for C)
-+ * @func:	Function name of the entry point
++ * DEFINE_IDTENTRY_NOIST - Emit code for NOIST entry points which
++ *			   belong to a IST entry point (MCE, DB)
++ * @func:	Function name of the entry point. Must be the same as
++ *		the function name of the corresponding IST variant
 + *
-+ * Maps to DECLARE_IDTENTRY_RAW_ERRORCODE
++ * Maps to DEFINE_IDTENTRY_RAW().
 + */
-+#define DECLARE_IDTENTRY_DF(vector, func)				\
-+	DECLARE_IDTENTRY_RAW_ERRORCODE(vector, func)
-+
-+/**
-+ * DEFINE_IDTENTRY_DF - Emit code for double fault
-+ * @func:	Function name of the entry point
-+ *
-+ * Maps to DEFINE_IDTENTRY_RAW_ERRORCODE
-+ */
-+#define DEFINE_IDTENTRY_DF(func)					\
-+	DEFINE_IDTENTRY_RAW_ERRORCODE(func)
++#define DEFINE_IDTENTRY_NOIST(func)					\
++	DEFINE_IDTENTRY_RAW(noist_##func)
 +
  #else	/* CONFIG_X86_64 */
-+
  /* Maps to a regular IDTENTRY on 32bit for now */
  # define DECLARE_IDTENTRY_IST		DECLARE_IDTENTRY
- # define DEFINE_IDTENTRY_IST		DEFINE_IDTENTRY
-+
-+/**
-+ * DECLARE_IDTENTRY_DF - Declare functions for double fault 32bit variant
-+ * @vector:	Vector number (ignored for C)
-+ * @func:	Function name of the entry point
-+ *
-+ * Declares two functions:
-+ * - The ASM entry point: asm_##func
-+ * - The C handler called from the C shim
-+ */
-+#define DECLARE_IDTENTRY_DF(vector, func)				\
-+	asmlinkage void asm_##func(void);				\
-+	__visible void func(struct pt_regs *regs,			\
-+			    unsigned long error_code,			\
-+			    unsigned long address)
-+
-+/**
-+ * DEFINE_IDTENTRY_DF - Emit code for double fault on 32bit
-+ * @func:	Function name of the entry point
-+ *
-+ * This is called through the doublefault shim which already provides
-+ * cr2 in the address argument.
-+ */
-+#define DEFINE_IDTENTRY_DF(func)					\
-+__visible noinstr void func(struct pt_regs *regs,			\
-+			    unsigned long error_code,			\
-+			    unsigned long address)
-+
- #endif	/* !CONFIG_X86_64 */
- 
+@@ -161,12 +174,14 @@ __visible noinstr void func(struct pt_regs *regs)
  /* C-Code mapping */
-@@ -212,6 +289,9 @@ __visible noinstr void func(struct pt_regs *regs)
- #define DECLARE_IDTENTRY_RAW(vector, func)				\
- 	DECLARE_IDTENTRY(vector, func)
+ #define DECLARE_IDTENTRY_MCE		DECLARE_IDTENTRY_IST
+ #define DEFINE_IDTENTRY_MCE		DEFINE_IDTENTRY_IST
++#define DEFINE_IDTENTRY_MCE_USER	DEFINE_IDTENTRY_NOIST
  
-+#define DECLARE_IDTENTRY_RAW_ERRORCODE(vector, func)			\
-+	DECLARE_IDTENTRY_ERRORCODE(vector, func)
-+
- #ifdef CONFIG_X86_64
- # define DECLARE_IDTENTRY_MCE(vector, func)				\
- 	idtentry_mce_db vector asm_##func func
-@@ -219,12 +299,19 @@ __visible noinstr void func(struct pt_regs *regs)
- # define DECLARE_IDTENTRY_DEBUG(vector, func)				\
- 	idtentry_mce_db vector asm_##func func
+ #define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_IST
+ #define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_IST
  
-+# define DECLARE_IDTENTRY_DF(vector, func)				\
-+	idtentry_df vector asm_##func func
-+
- #else
- # define DECLARE_IDTENTRY_MCE(vector, func)				\
- 	DECLARE_IDTENTRY(vector, func)
+ #define DECLARE_IDTENTRY_DEBUG		DECLARE_IDTENTRY_IST
+ #define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
++#define DEFINE_IDTENTRY_DEBUG_USER	DEFINE_IDTENTRY_NOIST
  
- # define DECLARE_IDTENTRY_DEBUG(vector, func)				\
- 	DECLARE_IDTENTRY(vector, func)
-+
-+/* No ASM emitted for DF as this goes through a C shim */
-+# define DECLARE_IDTENTRY_DF(vector, func)
-+
- #endif
- 
- /* No ASM code emitted for NMI */
+ /**
+  * DECLARE_IDTENTRY_XEN - Declare functions for XEN redirect IDT entry points
