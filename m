@@ -2,153 +2,117 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECEDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA34CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17D4206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589883928;
-	bh=HrjjwkWJodhGb9/Bx09ZP1CAb65UMYfoXlglLu8nRPE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NdLRUtEHFGKTwZwlBZJoJA0pfqe3n7Jzz9L2tR36LQ1oHbKqrYiljPhKOXdUNO3VS
-	 oYfej4fMvIJRHVqq/qlms2Z8dxm0LUMnmoAdPSVenPMQ6nqOuYovzbQ7WIxBFfeHAS
-	 4KbcdcQ7AMMIODlwHzUDOqw2DSn7yVWECXlnz1rQ=
+	by mail.kernel.org (Postfix) with ESMTP id BAD14206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="XX3ksfK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgESKZ1 (ORCPT
+        id S1728658AbgESK0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:25:27 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35936 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgESKZ0 (ORCPT
+        Tue, 19 May 2020 06:26:03 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:14134 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbgESK0D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:25:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id h7so3704592otr.3;
-        Tue, 19 May 2020 03:25:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eV7W0QRQXtndP6jkP/fVWb+3f6ZswnL5HLdjdhMzchY=;
-        b=L/xT6m/ySneD9xBsuvOY68tuRbcGVhEcvduQ8KG/nCjcC57u2mKNA2BJarM4cTkWwK
-         6o+/M+xz92e8F8uelqNL1XViXlBn3XKCzQYHQduJhYdWEpbqZVYAAxIq+s1W7PkGXgXI
-         SRbx1PYpAtiWhI2JhxgZC/o2/F8Zz60WvmsngNJmsFBycXM18JTAq7eWXpgH2T7l3Vj7
-         tw8cUfCCd+7YvwghVTaIiq5eKqn94hTVKuK3yNUnzrdDDBOieUBz/3jz10pE97IB63io
-         ygidwK14Dznb02ZGVrJWNzEZyczo0CU8Yl+msrwUpIkAPY6PZ9oAoq0dK1cB5COxttS+
-         H71w==
-X-Gm-Message-State: AOAM531z9gG4nzBQQUCCjxtdLIDHb6BxC1aP1EDM6dCLTDEqVPbgFAol
-        Rrhvhkt2jGtZBf24kLN+3022EVrusNCVxlWr3ek=
-X-Google-Smtp-Source: ABdhPJxsHZmJ0GxGhgBhGR2E78WtzR03gWHvv1HislPOLfyFU37t73pV2JWpfKyHtneguOkz8Su1AOTRYH864ZCfDwc=
-X-Received: by 2002:a9d:3d05:: with SMTP id a5mr4477701otc.262.1589883925192;
- Tue, 19 May 2020 03:25:25 -0700 (PDT)
+        Tue, 19 May 2020 06:26:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589883962; x=1621419962;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=rt0ifteO2Q6DmuLLDH31oRBTPIJqimPHw4gnMaEY94M=;
+  b=XX3ksfK61swSxk7LMN3CUZrvaY6rZn9wOcizo2zbnqLs9yukDaEf9ONp
+   yzrCK3Qu9CchLM1oBUch0nYb7VMyYZJm64vxiYI1D6MOIZN7/O/1yl81e
+   KR4unUuxgKF1AwO6gULYXIuQULDl8SnsA9yLj4FBCW/0myiYOruB/7MC3
+   IS7u46vv4pbfNtficjITtI+x4jqpTuXT2Cq6+vgoAvD/zfWj7y8pjvqad
+   aywIi6QVlht4B9CiZyPAtMrBNHZykFQaNQzGh5YhItlPwQMCulsp2O0Rf
+   yemIRy44DuKFCdWvedKMGV/GYh7iDLEDB4m2Km+eRrHH7kHLuWvUJqU4V
+   A==;
+IronPort-SDR: LdawkTFAm4n+RjRpzDLC2tUtB0nKBzLCfIAS+HLACuFeo7EkFgeCPl1TGx7GUd8jVy5JPcJRoq
+ h/N3cUP2rlzaCgREWQ6bhD/rT/bYVm0EJNb+aFMriMbVsT4nhQUVhsjy7FgtejdcKvlJvxaTOm
+ nTA8KGU9DjkqTLHL12uyrW/QbJk+y8HTtedTDOG8Lqgv9CweSedF6YVOR6HMoBdmlw3T4fGhjq
+ 3Z5EcZAamvESE2WYI0ThqVgKztDp32U/40OiaTIh/vOaxaI6hotPkDE0d/m0S4Ln3AImXxlhYz
+ bY4=
+X-IronPort-AV: E=Sophos;i="5.73,409,1583218800"; 
+   d="scan'208";a="77149472"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 May 2020 03:26:02 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 19 May 2020 03:26:03 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 19 May 2020 03:26:01 -0700
+References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-2-lars.povlsen@microchip.com> <CAHp75VcA-oDboufsDNx1ZR4+HBwYt7LdLOpbfs7-bM9ByucKJA@mail.gmail.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no IRQ specified in DT
+In-Reply-To: <CAHp75VcA-oDboufsDNx1ZR4+HBwYt7LdLOpbfs7-bM9ByucKJA@mail.gmail.com>
+Date:   Tue, 19 May 2020 12:25:58 +0200
+Message-ID: <87a724p6fd.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-References: <20200518222722.GA7791@embeddedor>
-In-Reply-To: <20200518222722.GA7791@embeddedor>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 19 May 2020 12:25:13 +0200
-Message-ID: <CAJZ5v0goZpvRQ6du214FqvFNQnqZHR9-kz=WhEgRsMJ3Zx0WiQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPICA: Replace one-element array and use struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:22 AM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> The current codebase makes use of one-element arrays in the following
-> form:
->
-> struct something {
->     int length;
->     u8 data[1];
-> };
->
-> struct something *instance;
->
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
->
-> but the preferred mechanism to declare variable-length types such as
-> these ones is a flexible array member[1][2], introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
 
-However, the ACPICA code in the kernel comes from an external project
-and changes of this type are generally not applicable to it unless
-accepted upstream.
+Andy Shevchenko writes:
 
-I'll let Erik and Bob take over.
+> On Wed, May 13, 2020 at 5:03 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>>
+>> With this change a SPI controller can be added without having a IRQ
+>> associated, and causing all transfers to be polled. For SPI controllers
+>> without DMA, this can significantly improve performance by less
+>> interrupt handling overhead.
+>
+> ...
+>
+>> +#define VALID_IRQ(i) (i >= 0)
+>
+> drivers/rtc/rtc-cmos.c:95:#define is_valid_irq(n)               ((n) > 0)
+>
+> Candidate to be in include/linux/irq.h ?
+>
+> ...
+>
+>> +       if (VALID_IRQ(dws->irq))
+>> +               free_irq(dws->irq, master);
+>
+> Isn't free_irq() aware of invalid ones (not found IRQ in the tree or
+> any other backend container won't do anything)?
+>
+>
+>>  err_free_master:
+>>         spi_controller_put(master);
+>>         return ret;
+>> --
+>> 2.26.2
 
-> Also, make use of the new struct_size() helper to properly calculate the
-> size of struct acpi_pnp_device_id_list.
->
-> This issue was found with the help of Coccinellea and, audited and
-> fixed _manually_.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/acpi/acpica/utids.c | 4 +---
->  include/acpi/actypes.h      | 2 +-
->  2 files changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/acpi/acpica/utids.c b/drivers/acpi/acpica/utids.c
-> index 3bb06935a2ad3..c2f819a39424a 100644
-> --- a/drivers/acpi/acpica/utids.c
-> +++ b/drivers/acpi/acpica/utids.c
-> @@ -262,9 +262,7 @@ acpi_ut_execute_CID(struct acpi_namespace_node *device_node,
->          * 2) Size of the CID PNP_DEVICE_ID array +
->          * 3) Size of the actual CID strings
->          */
-> -       cid_list_size = sizeof(struct acpi_pnp_device_id_list) +
-> -           ((count - 1) * sizeof(struct acpi_pnp_device_id)) +
-> -           string_area_size;
-> +       cid_list_size = struct_size(cid_list, ids, count) + string_area_size;
->
->         cid_list = ACPI_ALLOCATE_ZEROED(cid_list_size);
->         if (!cid_list) {
-> diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-> index 4defed58ea338..c7bcda0ad366a 100644
-> --- a/include/acpi/actypes.h
-> +++ b/include/acpi/actypes.h
-> @@ -1145,7 +1145,7 @@ struct acpi_pnp_device_id {
->  struct acpi_pnp_device_id_list {
->         u32 count;              /* Number of IDs in Ids array */
->         u32 list_size;          /* Size of list, including ID strings */
-> -       struct acpi_pnp_device_id ids[1];       /* ID array */
-> +       struct acpi_pnp_device_id ids[];        /* ID array */
->  };
->
->  /*
-> --
-> 2.26.2
->
+I'll rework this with Serge.
+
+Thank you!
+
+-- 
+Lars Povlsen,
+Microchip
