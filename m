@@ -2,218 +2,137 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F234B20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB11F2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 05:52:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bwEorBm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgESFvX (ORCPT
+        id S1728584AbgESFwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 01:51:23 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:15401 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728352AbgESFsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 01:48:53 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49R4gj1gsnz9txm6;
-        Tue, 19 May 2020 07:48:49 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id fuECqO-WYOaH; Tue, 19 May 2020 07:48:49 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49R4gj0bw4z9txm4;
-        Tue, 19 May 2020 07:48:49 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 180CD8B7A7;
-        Tue, 19 May 2020 07:48:50 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id t9FeGQVhJJ3h; Tue, 19 May 2020 07:48:49 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C23AD8B7A8;
-        Tue, 19 May 2020 07:48:49 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 97F0665A4A; Tue, 19 May 2020 05:48:49 +0000 (UTC)
-Message-Id: <83a7a0cfca6198e63caf7a16839bd18454961f52.1589866984.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1589866984.git.christophe.leroy@csgroup.eu>
-References: <cover.1589866984.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v4 07/45] powerpc/ptdump: Limit size of flags text to 1/2
- chars on PPC32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 19 May 2020 05:48:49 +0000 (UTC)
+        Tue, 19 May 2020 01:52:55 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45275 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726859AbgESFwy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 01:52:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589867573;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=F8sf/V9iwhvJqIQR3nLkO+0EgUVeCfEhuWkJ9NRPG2w=;
+        b=bwEorBm9EQw79eMp4qBihqEGeUvvnUi3QvH9qmcAs/TH/a+clVR0CzusFxs/EP93EHhd9M
+        sn3AHkwVJ1lGKYRlZR9/i5p6oMge5iaHzmRvJmAhDz2w4I/wXu3CWmobEzS+9qSGD8xWsh
+        hFAoAcsSZgcJP/h8A2k1iWJ3/2Ifylk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-390-nxLGNieMMVafcALNrIp15Q-1; Tue, 19 May 2020 01:52:51 -0400
+X-MC-Unique: nxLGNieMMVafcALNrIp15Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 083CB1005510;
+        Tue, 19 May 2020 05:52:45 +0000 (UTC)
+Received: from [10.72.13.247] (ovpn-13-247.pek2.redhat.com [10.72.13.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 804DD2BFCC;
+        Tue, 19 May 2020 05:52:39 +0000 (UTC)
+Subject: Re: [PATCH V2] ifcvf: move IRQ request/free to status change handlers
+To:     Cindy Lu <lulu@redhat.com>
+Cc:     "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        Michael Tsirkin <mst@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        dan.daly@intel.com, "Liang, Cunming" <cunming.liang@intel.com>
+References: <1589270444-3669-1-git-send-email-lingshan.zhu@intel.com>
+ <8aca85c3-3bf6-a1ec-7009-cd9a635647d7@redhat.com>
+ <5bbe0c21-8638-45e4-04e8-02ad0df44b38@intel.com>
+ <572ed6af-7a04-730e-c803-a41868091e88@redhat.com>
+ <CACLfguXXPArd9UWX-HpfqNvgpWS=Nyt6SJ4kUkjjpVsVvVe9oA@mail.gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <c927fcff-de09-d623-e119-4611ab65ff04@redhat.com>
+Date:   Tue, 19 May 2020 13:52:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CACLfguXXPArd9UWX-HpfqNvgpWS=Nyt6SJ4kUkjjpVsVvVe9oA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to have all flags fit on a 80 chars wide screen,
-reduce the flags to 1 char (2 where ambiguous).
 
-No cache is 'i'
-User is 'ur' (Supervisor would be sr)
-Shared (for 8xx) becomes 'sh' (it was 'user' when not shared but
-that was ambiguous because that's not entirely right)
+On 2020/5/19 上午9:51, Cindy Lu wrote:
+> Hi ,Jason
+> It works ok in the latest version of qemu vdpa code , So I think the
+> patch is ok.
+> Thanks
+> Cindy
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/mm/ptdump/8xx.c    | 33 ++++++++++++++++---------------
- arch/powerpc/mm/ptdump/shared.c | 35 +++++++++++++++++----------------
- 2 files changed, 35 insertions(+), 33 deletions(-)
 
-diff --git a/arch/powerpc/mm/ptdump/8xx.c b/arch/powerpc/mm/ptdump/8xx.c
-index 9e2d8e847d6e..ca9ce94672f5 100644
---- a/arch/powerpc/mm/ptdump/8xx.c
-+++ b/arch/powerpc/mm/ptdump/8xx.c
-@@ -12,9 +12,9 @@
- static const struct flag_info flag_array[] = {
- 	{
- 		.mask	= _PAGE_SH,
--		.val	= 0,
--		.set	= "user",
--		.clear	= "    ",
-+		.val	= _PAGE_SH,
-+		.set	= "sh",
-+		.clear	= "  ",
- 	}, {
- 		.mask	= _PAGE_RO | _PAGE_NA,
- 		.val	= 0,
-@@ -30,37 +30,38 @@ static const struct flag_info flag_array[] = {
- 	}, {
- 		.mask	= _PAGE_EXEC,
- 		.val	= _PAGE_EXEC,
--		.set	= " X ",
--		.clear	= "   ",
-+		.set	= "x",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_PRESENT,
- 		.val	= _PAGE_PRESENT,
--		.set	= "present",
--		.clear	= "       ",
-+		.set	= "p",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_GUARDED,
- 		.val	= _PAGE_GUARDED,
--		.set	= "guarded",
--		.clear	= "       ",
-+		.set	= "g",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_DIRTY,
- 		.val	= _PAGE_DIRTY,
--		.set	= "dirty",
--		.clear	= "     ",
-+		.set	= "d",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_ACCESSED,
- 		.val	= _PAGE_ACCESSED,
--		.set	= "accessed",
--		.clear	= "        ",
-+		.set	= "a",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_NO_CACHE,
- 		.val	= _PAGE_NO_CACHE,
--		.set	= "no cache",
--		.clear	= "        ",
-+		.set	= "i",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_SPECIAL,
- 		.val	= _PAGE_SPECIAL,
--		.set	= "special",
-+		.set	= "s",
-+		.clear	= " ",
- 	}
- };
- 
-diff --git a/arch/powerpc/mm/ptdump/shared.c b/arch/powerpc/mm/ptdump/shared.c
-index f7ed2f187cb0..44a8a64a664f 100644
---- a/arch/powerpc/mm/ptdump/shared.c
-+++ b/arch/powerpc/mm/ptdump/shared.c
-@@ -13,8 +13,8 @@ static const struct flag_info flag_array[] = {
- 	{
- 		.mask	= _PAGE_USER,
- 		.val	= _PAGE_USER,
--		.set	= "user",
--		.clear	= "    ",
-+		.set	= "ur",
-+		.clear	= "  ",
- 	}, {
- 		.mask	= _PAGE_RW,
- 		.val	= _PAGE_RW,
-@@ -23,42 +23,43 @@ static const struct flag_info flag_array[] = {
- 	}, {
- 		.mask	= _PAGE_EXEC,
- 		.val	= _PAGE_EXEC,
--		.set	= " X ",
--		.clear	= "   ",
-+		.set	= "x",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_PRESENT,
- 		.val	= _PAGE_PRESENT,
--		.set	= "present",
--		.clear	= "       ",
-+		.set	= "p",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_GUARDED,
- 		.val	= _PAGE_GUARDED,
--		.set	= "guarded",
--		.clear	= "       ",
-+		.set	= "g",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_DIRTY,
- 		.val	= _PAGE_DIRTY,
--		.set	= "dirty",
--		.clear	= "     ",
-+		.set	= "d",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_ACCESSED,
- 		.val	= _PAGE_ACCESSED,
--		.set	= "accessed",
--		.clear	= "        ",
-+		.set	= "a",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_WRITETHRU,
- 		.val	= _PAGE_WRITETHRU,
--		.set	= "write through",
--		.clear	= "             ",
-+		.set	= "w",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_NO_CACHE,
- 		.val	= _PAGE_NO_CACHE,
--		.set	= "no cache",
--		.clear	= "        ",
-+		.set	= "i",
-+		.clear	= " ",
- 	}, {
- 		.mask	= _PAGE_SPECIAL,
- 		.val	= _PAGE_SPECIAL,
--		.set	= "special",
-+		.set	= "s",
-+		.clear	= " ",
- 	}
- };
- 
--- 
-2.25.0
+Thanks for the testing, (btw, we'd better not do top posting when 
+discuss in the community).
+
+So,
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+
+
+> On Wed, May 13, 2020 at 3:18 PM Jason Wang <jasowang@redhat.com> wrote:
+>>
+>> On 2020/5/13 下午12:42, Zhu, Lingshan wrote:
+>>>
+>>> On 5/13/2020 12:12 PM, Jason Wang wrote:
+>>>> On 2020/5/12 下午4:00, Zhu Lingshan wrote:
+>>>>> This commit move IRQ request and free operations from probe()
+>>>>> to VIRTIO status change handler to comply with VIRTIO spec.
+>>>>>
+>>>>> VIRTIO spec 1.1, section 2.1.2 Device Requirements: Device Status Field
+>>>>> The device MUST NOT consume buffers or send any used buffer
+>>>>> notifications to the driver before DRIVER_OK.
+>>>>
+>>>> This comment needs to be checked as I said previously. It's only
+>>>> needed if we're sure ifcvf can generate interrupt before DRIVER_OK.
+>>>>
+>>>>
+>>>>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+>>>>> ---
+>>>>> changes from V1:
+>>>>> remove ifcvf_stop_datapath() in status == 0 handler, we don't need
+>>>>> to do this
+>>>>> twice; handle status == 0 after DRIVER_OK -> !DRIVER_OK handler
+>>>>> (Jason Wang)
+>>>>
+>>>> Patch looks good to me, but with this patch ping cannot work on my
+>>>> machine. (It works without this patch).
+>>>>
+>>>> Thanks
+>>> This is strange, it works on my machines, let's have a check offline.
+>>>
+>>> Thanks,
+>>> BR
+>>> Zhu Lingshan
+>>
+>> I give it a try with virito-vpda and a tiny userspace. Either works.
+>>
+>> So it could be an issue of qemu codes.
+>>
+>> Let's wait for Cindy to test if it really works.
+>>
+>> Thanks
+>>
+>>
 
