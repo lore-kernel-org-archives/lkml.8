@@ -2,122 +2,103 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABA6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6865CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33816206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:09:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="UuoVs2/x"
+	by mail.kernel.org (Postfix) with ESMTP id 28321206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgESWJd (ORCPT
+        id S1727992AbgESWJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgESWJc (ORCPT
+        Tue, 19 May 2020 18:09:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:55601 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgESWJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:09:32 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC43C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 15:09:32 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id j21so861226ejy.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 15:09:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=wbXocx2IVcd/8hG9Fw76EUVKCyEFsGvoPgyI2u8Yy7s=;
-        b=UuoVs2/xVkQsqh8oRKq34Pi7IJzz+LxoGejoY/A86MXa6IeiwmeyUzjMuiXugpkXeM
-         uqgKJCo1MiY6ZK2ei1nM2/349ru0e63XRYH5zD3LuwdgOnc8mMiNwy4xCYAROdsyW8gD
-         032b+dSPWY9eIbClbaCYY6+2LXUKJmK0+0vcT66LdaQ/Z739mfN4IlsVFL7JjrQ3NxH9
-         inmwLO1xpczAlXrEOyLybgtsbYttc/EJuT2eClMezcfLIvIzB06L1W/q/HPhCJbJtNB3
-         w7nDDdiXbHS11rmiRGFzCGOrcfC655w8l7e5zCTE6XVnQuPm9yxdHFj+cX0Iah2VS/ck
-         2+IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=wbXocx2IVcd/8hG9Fw76EUVKCyEFsGvoPgyI2u8Yy7s=;
-        b=VwBIgLNyvL64FLUk/FTFGyn1LAbg9xsAymiWKGW88Yxoy/sfYISR+SHSJBCkhp4q4o
-         4AQ/xaJDNVuS78a7x06pfgQ3z6+2CtAqY3KhWmAAoYTlPNGFEU4UO9JdCmzYZy26EBk9
-         dhFHU/jLIm+JPz8RXTTIWSlShYzXh91z1KI47Nfx/xOHsHjwdC/V9aBOjEe1ukhye9LV
-         GROmzCXJxV4bYHk00HXx1+bygfPACC3AcMUxL3g8BA7+jkOe21h6dDY+zzxh3bEMUFH3
-         9AmF6N9QMuoU4nH+gWOVmm8wziUT4JG8u0TNYcQ2u6yxeKFBBV5ft2ZYTiZjFcxrqEXS
-         h8MA==
-X-Gm-Message-State: AOAM531nMBqFzi1bkTeVzim9IHdURehPue8+XN+Ieg6ncj0g+j30oLp2
-        B+9mZKaclZWFhk4tuAYCgBTbYE6SjNi9RT0Z2IA3KQ==
-X-Google-Smtp-Source: ABdhPJz8Afk0tO3ZoqGa4Ed2tdS7qerbDDkJXRn2mhV2+4mQheYHREs7S7MxTs1oJsVybE+vXqGgZgmrDb8ZCclPEFo=
-X-Received: by 2002:a17:906:934d:: with SMTP id p13mr1192908ejw.452.1589926170654;
- Tue, 19 May 2020 15:09:30 -0700 (PDT)
+        Tue, 19 May 2020 18:09:46 -0400
+Received: from localhost.localdomain ([149.172.98.151]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mj8Vx-1j5fUO0KHd-00f6z6; Wed, 20 May 2020 00:09:33 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: pass -msoft-float to gcc earlier
+Date:   Wed, 20 May 2020 00:08:55 +0200
+Message-Id: <20200519220923.1601303-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-From:   Qian Cai <cai@lca.pw>
-Date:   Tue, 19 May 2020 18:09:19 -0400
-Message-ID: <CAG=TAF6hJL-wfGLq3oa-ZGk3-YGEtuMyO2V9ePFUcbv99NWVSw@mail.gmail.com>
-Subject: BUG: sleeping function called from atomic due to "Balance initial LPI
- affinity across CPUs"
-To:     Marc Zyngier <maz@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     John Garry <john.garry@huawei.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:wV6x9QxzVEAmfgleaEmiJ1+1+ez2lYlhCOI97T7b7A0kktn7leA
+ eBNumwgh0dBbKPKtn+41PyK6S+nmES2j2TmO36+gTiFDUB/N9XddcQFPMmz0U7D1mTzzSNb
+ MwAp6ICoc/0TD2RKRnDzTHm40zeWhHHW8hv+m2V0GAYVT2cZple0hKqcb0wjc6uJwUU/wnR
+ R7UKIdUdosSPE8YD7owUg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GczoRTp8Z20=:oElP6mJ4TmvCNUchkcksR+
+ 2pwnLqRT4T0zcnrSMOQAFu7G6tdX+3MyhN1+8omC9LGIJxSQiiaexTqh/czy/LPRJBRdnS8ui
+ htb14BcwzwvGw2tj1DXBpJKDpevif5iU+0qbrryfIi7NkHIzn0E/e91JmBhkMGpA9aDK7qAOv
+ DJDEtKvfFevGRlBnstNBQ+TW7jSjky8y3ZxwG3nbOPiJgHwmP12HXHCfEvkQm1hrIDg1ALQjq
+ 4L4AdTyNNTb2EQMMZ1QVCAHFXL0NbZCYIwUaHtRnD8gWqqb5wZLwyX+JodAUZW/URv/1NmL5e
+ Z/Gg0NdIP0yp/PVRrW9ls+JtzAShB9ZwDjacH3GDnr7JZAquKFKUMGJWJLQ/d+gz9pXrbkkr4
+ ykAJZE1qB1c7ih2GorSojElV/e+l3U7bKWmkuhCRsF7zsXTNarcj4fxXT+RG5AsBXQLQUvmkm
+ LJdit0f/yLMwg3YKC1kEV5y9/l2pRbyeCpvd5ym72EiXbVVulipUn6zrocaWTC8TcCXRLzzHz
+ n/PgxQ2QpySb0I30DTW3/RU2FZFoAq0xp/WouJLJLjQnCT33b+u3U5vDrTwU4aN0Mv9+mSYzz
+ vBtTbcE3fC23Mbv5a+PuVXZfS1Z0bTau4l915odZjay8hFi95vPbMpFry8dYWzR+qp19gbWcq
+ K/tleul1NYY8t+UU/5rY8skb7kPpeSbyf8cLg0wIOJBIvds1qNbMsGv5kcQXqvUJleNaodBp6
+ +Hgj2ERR/vpeJj1hwCpA8rD1xLe+cn8Kw9BHMRo6h5hqQOX80F6d/EmFMwFDNPP89H4d88Q0m
+ JVNGe4G5fxQLSpcuvoc6hAabeqVMPMT30WUTInGbL2lHjVL8Hw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reverted the linux-next commit f068a62c548c ("irqchip/gic-v3-its:
-Balance initial LPI affinity across CPUs") fixed these warnings during
-boot,
+Szabolcs Nagy ran into a kernel build failure with a custom gcc
+toochain that sets -mfpu=auto -mfloat-abi=hard:
 
-its_select_cpu at drivers/irqchip/irq-gic-v3-its.c:1572
+ /tmp/ccmNdcdf.s:1898: Error: selected processor does not support `cpsid i' in ARM mode
 
-[  332.819381][ T3359] BUG: sleeping function called from invalid
-context at mm/slab.h:568
-[  332.827405][ T3359] in_atomic(): 1, irqs_disabled(): 128,
-non_block: 0, pid: 3359, name: irqbalance
-[  332.836455][ T3359] INFO: lockdep is turned off.
-[  332.841076][ T3359] irq event stamp: 0
-[  332.844836][ T3359] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-[  332.851828][ T3359] hardirqs last disabled at (0):
-[<ffff9000101ea65c>] copy_process+0x98c/0x1f34
-[  332.860710][ T3359] softirqs last  enabled at (0):
-[<ffff9000101ea690>] copy_process+0x9c0/0x1f34
-[  332.869586][ T3359] softirqs last disabled at (0): [<0000000000000000>] 0x0
-[  332.876560][ T3359] CPU: 155 PID: 3359 Comm: irqbalance Tainted: G
-      W    L    5.7.0-rc6-next-20200519 #1
-[  332.886563][ T3359] Hardware name: HPE Apollo 70
-/C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
-[  332.897000][ T3359] Call trace:
-[  332.900151][ T3359]  dump_backtrace+0x0/0x22c
-[  332.904514][ T3359]  show_stack+0x28/0x34
-[  332.908543][ T3359]  dump_stack+0x104/0x194
-[  332.912738][ T3359]  ___might_sleep+0x314/0x328
-[  332.917274][ T3359]  __might_sleep+0x7c/0xe0
-[  332.921563][ T3359]  slab_pre_alloc_hook+0x44/0x8c
-[  332.926360][ T3359]  __kmalloc_node+0xb0/0x618
-[  332.930811][ T3359]  alloc_cpumask_var_node+0x48/0x94
-[  332.935868][ T3359]  alloc_cpumask_var+0x10/0x1c
-[  332.940496][ T3359]  its_select_cpu+0x58/0x2e4
-[  332.944945][ T3359]  its_set_affinity+0xe8/0x27c
-[  332.949576][ T3359]  msi_domain_set_affinity+0x78/0x114
-[  332.954813][ T3359]  irq_do_set_affinity+0x84/0x198
-[  332.959697][ T3359]  irq_set_affinity_locked+0x80/0x1a8
-[  332.964927][ T3359]  __irq_set_affinity+0x54/0x84
-[  332.969637][ T3359]  write_irq_affinity+0x16c/0x198
-[  332.974520][ T3359]  irq_affinity_proc_write+0x34/0x44
-[  332.979672][ T3359]  pde_write+0x5c/0x78
-[  332.983602][ T3359]  proc_reg_write+0x74/0xc0
-[  332.987974][ T3359]  __vfs_write+0x84/0x1d8
-[  332.992163][ T3359]  vfs_write+0x13c/0x1b8
-[  332.996265][ T3359]  ksys_write+0xb0/0x120
-[  333.000385][ T3359]  __arm64_sys_write+0x54/0x88
-[  333.005017][ T3359]  do_el0_svc+0x128/0x1dc
-[  333.009213][ T3359]  el0_sync_handler+0xd0/0x268
-[  333.013836][ T3359]  el0_sync+0x164/0x180
-[  336.527739][ T3356] mlx5_core 0000:0b:00.1 enp11s0f1np1: Link down
+The problem is that $(call cc-option, -march=armv7-a) fails before the
+kernel overrides the gcc options to also pass -msoft-float.
+
+Move the option to the beginning the Makefile, before we call
+cc-option for the first time.
+
+Reported-by: Szabolcs Nagy <szabolcs.nagy@arm.com>
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87302
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 7d5cd0f85461..e428ea6eb0fa 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -16,6 +16,8 @@ LDFLAGS_vmlinux	+= --be8
+ KBUILD_LDFLAGS_MODULE	+= --be8
+ endif
+ 
++KBUILD_CFLAGS	+= -msoft-float
++
+ ifeq ($(CONFIG_ARM_MODULE_PLTS),y)
+ KBUILD_LDS_MODULE	+= $(srctree)/arch/arm/kernel/module.lds
+ endif
+@@ -135,7 +137,7 @@ AFLAGS_ISA	:=$(CFLAGS_ISA)
+ endif
+ 
+ # Need -Uarm for gcc < 3.x
+-KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
++KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -Uarm
+ KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
+ 
+ CHECKFLAGS	+= -D__arm__
+-- 
+2.26.2
+
