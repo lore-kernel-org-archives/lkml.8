@@ -2,84 +2,168 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9584C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C123C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13402075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622F02075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 17:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589909353;
+	bh=l8ymiYuKfdsRmQw6Cm7rnQiWDG9HYPK4dsgenRxrdtc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=pQMJiB+3vmwonC/dGrd4frFT1axaQ4NLFomgJP5U6Ya7fgNsN+oNCSQ5n9jFwgJJA
+	 63QDKqmrnSZ8RoPQ/K/bJZbOOxTy+S0x2CtGiZfpfMVNoPDP8HwBk1x4tE5KsupCS4
+	 KHwh2DcmTsvKJLu0/tCmcgUQpCD4Sl8dpgZihP3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbgESR3F (ORCPT
+        id S1729452AbgESR3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 13:29:05 -0400
-Received: from smtprelay0174.hostedemail.com ([216.40.44.174]:39444 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729185AbgESR3F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 13:29:05 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 8BFFE182244E8;
-        Tue, 19 May 2020 17:29:04 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bite97_2b148ed26d0e
-X-Filterd-Recvd-Size: 1920
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 19 May 2020 17:29:03 +0000 (UTC)
-Message-ID: <b10a31d999addb474530afaca7b2d4929a8da474.camel@perches.com>
-Subject: [PATCH] lockdep: Use different indentation in
- print_lock_class_header/print_lock_trace
-From:   Joe Perches <joe@perches.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will@kernel.org>
-Date:   Tue, 19 May 2020 10:29:02 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Tue, 19 May 2020 13:29:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729185AbgESR3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 13:29:12 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CC702075F;
+        Tue, 19 May 2020 17:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589909351;
+        bh=l8ymiYuKfdsRmQw6Cm7rnQiWDG9HYPK4dsgenRxrdtc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=e2RJRqHKW/iq4dxwrAz5Tz68/UNyype6IhQyjrf2FLIvRoDYx+DTDA59HR/2nS8Lc
+         smnr1j+quIaQYInOMqH27LibpZ9Pnmei2/QNZcSVXALxaEkwZl9egD1EU9k1kpd0Tc
+         70OtAQK89StfzM2ui/YD1T2jhvOUOLTvGxl2O1dk=
+Subject: Re: [PATCH 2/3] selftests: vdso: Use a header file to prototype
+ parse_vdso API
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20200505174728.46594-1-broonie@kernel.org>
+ <20200505174728.46594-3-broonie@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <aaeb0619-68d2-18f8-f72a-b8b37f348b4e@kernel.org>
+Date:   Tue, 19 May 2020 11:29:10 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200505174728.46594-3-broonie@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code that uses the printk return value in
-kernel/locking/lockdep.c is odd because the printk
-return value includes both the length of a KERN_<LEVEL>
-prefix and a newline.  depth is also double counted.
+On 5/5/20 11:47 AM, Mark Brown wrote:
+> Both vdso_test_gettimeofday and vdso_standalone_test_x86 use the library in
+> parse_vdso.c but each separately declares the API it offers which is not
+> ideal. Create a header file with prototypes of the functions and use it in
+> both the library and the tests to ensure that the same prototypes are used
+> throughout.
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>   tools/testing/selftests/vDSO/parse_vdso.c     | 24 +-------------
+>   tools/testing/selftests/vDSO/parse_vdso.h     | 31 +++++++++++++++++++
+>   .../selftests/vDSO/vdso_standalone_test_x86.c |  4 +--
+>   .../selftests/vDSO/vdso_test_gettimeofday.c   |  5 +--
+>   4 files changed, 34 insertions(+), 30 deletions(-)
+>   create mode 100644 tools/testing/selftests/vDSO/parse_vdso.h
+> 
+> diff --git a/tools/testing/selftests/vDSO/parse_vdso.c b/tools/testing/selftests/vDSO/parse_vdso.c
+> index 1dbb4b87268f..413f75620a35 100644
+> --- a/tools/testing/selftests/vDSO/parse_vdso.c
+> +++ b/tools/testing/selftests/vDSO/parse_vdso.c
+> @@ -21,29 +21,7 @@
+>   #include <limits.h>
+>   #include <elf.h>
+>   
+> -/*
+> - * To use this vDSO parser, first call one of the vdso_init_* functions.
+> - * If you've already parsed auxv, then pass the value of AT_SYSINFO_EHDR
+> - * to vdso_init_from_sysinfo_ehdr.  Otherwise pass auxv to vdso_init_from_auxv.
+> - * Then call vdso_sym for each symbol you want.  For example, to look up
+> - * gettimeofday on x86_64, use:
+> - *
+> - *     <some pointer> = vdso_sym("LINUX_2.6", "gettimeofday");
+> - * or
+> - *     <some pointer> = vdso_sym("LINUX_2.6", "__vdso_gettimeofday");
+> - *
+> - * vdso_sym will return 0 if the symbol doesn't exist or if the init function
+> - * failed or was not called.  vdso_sym is a little slow, so its return value
+> - * should be cached.
+> - *
+> - * vdso_sym is threadsafe; the init functions are not.
+> - *
+> - * These are the prototypes:
+> - */
+> -extern void vdso_init_from_auxv(void *auxv);
+> -extern void vdso_init_from_sysinfo_ehdr(uintptr_t base);
+> -extern void *vdso_sym(const char *version, const char *name);
+> -
+> +#include "parse_vdso.h"
+>   
+>   /* And here's the code. */
+>   #ifndef ELF_BITS
+> diff --git a/tools/testing/selftests/vDSO/parse_vdso.h b/tools/testing/selftests/vDSO/parse_vdso.h
+> new file mode 100644
+> index 000000000000..ea4b8635bb0b
+> --- /dev/null
+> +++ b/tools/testing/selftests/vDSO/parse_vdso.h
+> @@ -0,0 +1,31 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef PARSE_VDSO_H
+> +#define PARSE_VDSO_H
+> +
+> +#include <stdint.h>
+> +
+> +/*
+> + * To use this vDSO parser, first call one of the vdso_init_* functions.
+> + * If you've already parsed auxv, then pass the value of AT_SYSINFO_EHDR
+> + * to vdso_init_from_sysinfo_ehdr.  Otherwise pass auxv to vdso_init_from_auxv.
+> + * Then call vdso_sym for each symbol you want.  For example, to look up
+> + * gettimeofday on x86_64, use:
+> + *
+> + *     <some pointer> = vdso_sym("LINUX_2.6", "gettimeofday");
+> + * or
+> + *     <some pointer> = vdso_sym("LINUX_2.6", "__vdso_gettimeofday");
+> + *
+> + * vdso_sym will return 0 if the symbol doesn't exist or if the init function
+> + * failed or was not called.  vdso_sym is a little slow, so its return value
+> + * should be cached.
+> + *
+> + * vdso_sym is threadsafe; the init functions are not.
+> + *
+> + * These are the prototypes:
+> + */
+> +extern void *vdso_sym(const char *version, const char *name);
+> +extern void vdso_init_from_sysinfo_ehdr(uintptr_t base);
+> +extern void vdso_init_from_auxv(void *auxv);
+> +
 
-Change the code to calculate depth + 3 + strlen.
+You don't need extern here - this should be in scope?
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- kernel/locking/lockdep.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2fadc2635946..265227edc550 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1960,11 +1960,9 @@ static void print_lock_class_header(struct lock_class *class, int depth)
- 
- 	for (bit = 0; bit < LOCK_USAGE_STATES; bit++) {
- 		if (class->usage_mask & (1 << bit)) {
--			int len = depth;
--
--			len += printk("%*s   %s", depth, "", usage_str[bit]);
--			len += printk(KERN_CONT " at:\n");
--			print_lock_trace(class->usage_traces[bit], len);
-+			printk("%*s   %s at:\n", depth, "", usage_str[bit]);
-+			print_lock_trace(class->usage_traces[bit],
-+					 depth + 3 + strlen(usage_str[bit]);
- 		}
- 	}
- 	printk("%*s }\n", depth, "");
+> +#endif
+> diff --git a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
+> index 5ac4b00acfbc..8a44ff973ee1 100644
+> --- a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
+> +++ b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
+> @@ -16,9 +16,7 @@
+>   #include <unistd.h>
+>   #include <stdint.h>
+>   
+> -extern void *vdso_sym(const char *version, const char *name);
+> -extern void vdso_init_from_sysinfo_ehdr(uintptr_t base);
+> -extern void vdso_init_from_auxv(void *auxv);
 
 
-
+thanks,
+-- Shuah
