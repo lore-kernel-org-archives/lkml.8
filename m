@@ -2,99 +2,108 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BD3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEBB920758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1DE20758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 06:58:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d5cIqdxc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfCP9Jp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgESG5j (ORCPT
+        id S1728466AbgESG62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 02:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42560 "EHLO
+        Tue, 19 May 2020 02:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgESG5j (ORCPT
+        with ESMTP id S1726881AbgESG62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 02:57:39 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42FFC061A0C;
-        Mon, 18 May 2020 23:57:38 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49R6C35ks6z9sPK;
-        Tue, 19 May 2020 16:57:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589871456;
-        bh=IxBXL6U6L4IxYEayNUyM3xRdVe8j9U+f97iPpjKQK/Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=d5cIqdxc1kDoa8gfu4qUrgeKsHIKZ7nAcwAxtx5L/ut0atkhrw4iZAHUUW6uHKzUw
-         jTqz829ph/vzH+av19uQwaE9QgbImS0Vh0KpG8gofVsEZSP64m72aD9PiuY2RXMeLM
-         PERpwbcDUG6H/JwBTY3LDMDTxcsLPgCSmaHvX2uol7qmIr7njY0tR4R6oyMqjr0iDd
-         KeTVIkeupmi4tPcYULkiOe/RNbXGkkIt/oyDU+x6fghWhyZrv3jCDiwZiyyczUpQ2s
-         PsIpYKkKO2hDMV0Dt+Jqmcdwzq5TF9tNnz9XzFDE29X/VVFV2vWvn835i9UJYMJ0yZ
-         /Y9qsYadJQMHw==
-Date:   Tue, 19 May 2020 16:57:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steve French <smfrench@gmail.com>,
-        CIFS <linux-cifs@vger.kernel.org>
-Subject: linux-next: build warning after merge of the tip tree
-Message-ID: <20200519165734.79d0c3a3@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/NTxEosSAH2jF3h/=xPOfI7y";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 19 May 2020 02:58:28 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFD8C061A0C;
+        Mon, 18 May 2020 23:58:26 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id e16so14533516wra.7;
+        Mon, 18 May 2020 23:58:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6AiFstTGhSyCdoIyVevq1TzhnB979sWMq0QAD1SrSBs=;
+        b=WfCP9Jp+k2orQPgDRRs9SJZG2q/hGIvIbZlFmjqXHN5Fi9T/vfLleNqiVsRhf7NCtl
+         F3OdStA9N02oazimnHm9h+9m0sNJUGOwDgAOsw5XfobrO57VCvyRMt+SPT+Y7e7W71XC
+         R0zQjb5+E6kjP/bZ5txomdxD5uRESteqkt0evAg96Ie4/uXcTApWXmm1+ubQEQPpv2Qu
+         qSvvkVNMTzpLwJVM8hVaVps1wGwK4LED4pQJDa0TWukWwGo01M5JiuFmJziRGiMEuj64
+         /8/WSo7H5J0znyE4VvM3+jQ6/uVcXKpvF7t4rqajkHCnDUIqtB2P7CueglIcl6Zp8MXe
+         SHRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6AiFstTGhSyCdoIyVevq1TzhnB979sWMq0QAD1SrSBs=;
+        b=PslKd/QEnOVpFDJZA2FcBx+bp8YCfLxuzibZXZmK1HofgWoOFX0OG72hBwaHrarwR/
+         jlc4vjFlQvZhMRudcUFvLCsbT/S2pwSmYGXAozvhHTWs8cgJhFNEBUIBkpxyjUms8t/q
+         A09j11+WgNnJFCeremFRt81KYFpDjDURYu0VRViDKwyHwozrqu6+Ly6vAhi7r3RAQ1A/
+         a/6/T7WO5sX2h4WhdFiANO36B//NrvSymYPWnPStTi0+Um4YYrWlcZlBmvhjoa//FRV8
+         Q1emsF+WIIahDwu+WbEQi/wM4Xi++gQaupTYcTbbhqmNl8pahUThD13yWA9RKRWz4Jnv
+         7KAQ==
+X-Gm-Message-State: AOAM533dXi9yL656hROVMDivcllDlQUBxADjZmu7ODgjJOESsAewHvpI
+        YjUh8vuWEZF1Xzy7hLw1SfikxeSDI5A=
+X-Google-Smtp-Source: ABdhPJxfUmPhNp7q/loYzQNsi3pPdXWIjEal6xtNYBxVffPeI0E5IhKWYlQ1EOe4Q43a8VIR9AqHCQ==
+X-Received: by 2002:adf:f783:: with SMTP id q3mr23693925wrp.348.1589871505014;
+        Mon, 18 May 2020 23:58:25 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id p7sm2597550wmc.24.2020.05.18.23.58.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 23:58:23 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 0/3] iio: magnetometer: ak8975: Add gpio reset support
+Date:   Tue, 19 May 2020 08:57:40 +0200
+Message-Id: <20200519065749.4624-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/NTxEosSAH2jF3h/=xPOfI7y
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Convert documentation from txt format to yaml. Add documentation about
+reset-gpio. 
 
-Hi all,
+Deassert reset on ak8975_power_on, assert reset on ak8975_power_off.
 
-After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
+Without reset's deassertion during ak8975_power_on, driver's probe fails
+on ak8975_who_i_am while checking for device identity for AK09911 chip
 
-fs/cifs/smb2inode.c: In function 'smb2_compound_op':
-fs/cifs/smb2inode.c:424:1: warning: the frame size of 2736 bytes is larger =
-than 2048 bytes [-Wframe-larger-than=3D]
-  424 | }
-      | ^
+AK09911 has an active low reset gpio to handle register's reset.
+AK09911 datasheed says that, if not used, reset pin should be connected
+to VID. This patch emulates this situation
 
-I have no idea what caused this.
+Jonathan Albrieux (3):
+  dt-bindings: iio: magnetometer: ak8975: convert txt format to yaml
+  dt-bindings: iio: magnetometer: ak8975: add gpio reset support
+  iio: magnetometer: ak8975: Add gpio reset support
 
---=20
-Cheers,
-Stephen Rothwell
+ .../bindings/iio/magnetometer/ak8975.txt      | 30 --------
+ .../bindings/iio/magnetometer/ak8975.yaml     | 70 +++++++++++++++++++
+ drivers/iio/magnetometer/ak8975.c             | 22 +++++-
+ 3 files changed, 90 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
 
---Sig_/NTxEosSAH2jF3h/=xPOfI7y
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+2.17.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Dg14ACgkQAVBC80lX
-0GznOwgAnCzYIEnj/kJJV5yqM8jXBNyygHuHGJpWPShzEv4hF0OV/qOgujVAS9wy
-VfnOyHcFWmErwwmiNXdzk/ctbtJhrOkU31+hUJDzO8JH0poRBx0XeomKKdCae5D7
-GWoz5jv1nEzcZ/bLdXPKJ7Q9LydfBd+hXbWAh0kp50p28HPKa0MFe8Oa5/s7wwbV
-Gtykq9yOyneZXoOo6ouGW4a1FmUV89PyIntj+LtEp1S3ieF67WfZFi87M3yC0jlx
-YUw5uR3VOZm7Kg02frhjHgXpBXlJ8eyYzO+OKI2mmqwog3EiD2MhiuClTyA5L9E2
-+VvrxpxEaZfhvRi1zQKOVaZtKlZ4VQ==
-=PKGY
------END PGP SIGNATURE-----
-
---Sig_/NTxEosSAH2jF3h/=xPOfI7y--
