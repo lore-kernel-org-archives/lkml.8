@@ -2,141 +2,240 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E89C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2461207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589911980;
-	bh=N7DRKm3rp+MzcDn49dUPoPcqJb/laTPZQeRIAO0h6d8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2Pqd/N4iW4TyTf+IhLnTHZ9jk0hHTR1ilzMpwtYRWtsjNq+YcNHBfygj5InpvLWzk
-	 4D1FkFM4EPfciXXMr1+XhqrGVw1Ncv9DNMCbEH96AgufJeJLFQSo8CN5wmWztJFO9c
-	 9zLJugGIhglmu4ldqRIRpU13ZPY2pbPEN1OqfNKM=
+	by mail.kernel.org (Postfix) with ESMTP id 8586620758
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:14:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDw1q/Gc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgESSNA (ORCPT
+        id S1728918AbgESSOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgESSM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:12:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD6F220674;
-        Tue, 19 May 2020 18:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589911979;
-        bh=N7DRKm3rp+MzcDn49dUPoPcqJb/laTPZQeRIAO0h6d8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nQMXC10XZP9euUWntn1r34yUp6GaM10pqUR0Nvd2RrbZJVYqEwArnowXkLkh9AVWn
-         YKFOjwciVTmsIL3FdPi+qX6kn9wrVjJFdwugmxQCbgZL+82htarrQNnvqkmT93plMC
-         996LaWxaQ+d11jbV/lGtnA6V6AeMN+RJaH1pzsUg=
-Date:   Tue, 19 May 2020 20:12:56 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
-Message-ID: <20200519181256.GA1215993@kroah.com>
-References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
- <CAPM=9txXskVu_yD3DNuR0HgSUsE2v1Pv98dm=AHGvv_z2XKTAQ@mail.gmail.com>
- <93238096-5861-c140-b94f-6137977c3d65@codeaurora.org>
- <20200519174120.GC1158284@kroah.com>
- <ce0e69ef-116c-df95-c136-d4714e02e96e@codeaurora.org>
+        Tue, 19 May 2020 14:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgESSOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 14:14:16 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC65FC08C5C0;
+        Tue, 19 May 2020 11:14:14 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id h4so198970wmb.4;
+        Tue, 19 May 2020 11:14:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :mime-version:content-disposition:user-agent;
+        bh=Smbnh/HjJZfXW9umDTUlih066PFtxdapl55+liTkPwU=;
+        b=aDw1q/Gcg/iKskACjlVFyCLUCG7c7zqmH32bqk8M1zWcKSzmtRuNo9w3BCn0wKWsjL
+         AnyO3xoCyLsf8Z3YX7yykH4AXXIE5jJBgBnxOWWVWC+3jbal211Cy9p0XfM43vXfujG4
+         3VcVe+Q/UgcclgL0x5PHCog6v9iWU+ELVwCd+IKXGLFHpqahv2ReoXSbEhasm5iOzALt
+         hKFCaQKfogF6F8WskDDf0vWICcYHdARKj0Bz2lXc5otMmr4NHcpJ+8mOeRK2s0G0HIVn
+         KKAYICIqXJqkIrqzh9bvNkYZuSGO1VXcmZwGtJKZTxQ41KexhZ45pIrHGOp94wYAHf1t
+         Qo8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:mime-version:content-disposition:user-agent;
+        bh=Smbnh/HjJZfXW9umDTUlih066PFtxdapl55+liTkPwU=;
+        b=R5PZQAQtVMD1uzsLcrOEhisdJBO2Y3zVsqiyc4B+1nl1ZHXqgtxUa3IZp9Rw49l7OQ
+         WIxk9ybT8Hm4frqCPo4/CEhSLFdHw9pgnlwD6nDlIN3NLYbNesSoc28SWbhTs3JLHvjH
+         IHAWgEDlH1/bsxPlfGAavA6NdiqcxytxpaiB3kLa8cl7QdgGIP47E56IvMmK4bwVSxNl
+         yMj5ukBk3aJdZQvBhf+fGGdySJfagVDF5gNdcn13thdZeJGlwjdvaXmkVO5Vv/BnZb1X
+         qSJn5HB1c/j9pj8xjRkylo0+kFWtGib1wTiD4WLIZfRBN9TzrcENHnweTTCYyyS1hlvV
+         kfLA==
+X-Gm-Message-State: AOAM532x4oeRf8O2zFtqWuDIWKnxtuEJyfn+TY0XfL4Ho6zwffKx8zHH
+        E0D//G6eCqa0hm3+nFpush8=
+X-Google-Smtp-Source: ABdhPJwtwcBxa1z6T7T+kmhD2d0HQ+Omb3d13a8dvsF60CkMyXrE0dYCYUK7i1sDzO1JsSZN1YcYYQ==
+X-Received: by 2002:a1c:7e03:: with SMTP id z3mr670958wmc.88.1589912053600;
+        Tue, 19 May 2020 11:14:13 -0700 (PDT)
+Received: from dumbo ([185.220.101.209])
+        by smtp.gmail.com with ESMTPSA id s8sm265465wrg.34.2020.05.19.11.14.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 11:14:12 -0700 (PDT)
+Received: from cavok by dumbo with local (Exim 4.92)
+        (envelope-from <cavok@dumbo>)
+        id 1jb6kk-0004L5-Q7; Tue, 19 May 2020 20:14:10 +0200
+Date:   Tue, 19 May 2020 20:14:10 +0200
+From:   Domenico Andreoli <domenico.andreoli@linux.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Christoph Hellwig <hch@lst.de>,
+        viro@zeniv.linux.org.uk, tytso@mit.edu, len.brown@intel.com,
+        linux-pm@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Domenico Andreoli <domenico.andreoli@linux.com>
+Subject: [PATCH v2] PM: hibernate: restrict writes to the resume device
+Message-ID: <20200519181410.GA1963@dumbo>
+Mail-Followup-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Pavel Machek <pavel@ucw.cz>, Christoph Hellwig <hch@lst.de>,
+        viro@zeniv.linux.org.uk, tytso@mit.edu, len.brown@intel.com,
+        linux-pm@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ce0e69ef-116c-df95-c136-d4714e02e96e@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:07:03PM -0600, Jeffrey Hugo wrote:
-> On 5/19/2020 11:41 AM, Greg Kroah-Hartman wrote:
-> > On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
-> > > On 5/18/2020 11:08 PM, Dave Airlie wrote:
-> > > > On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
-> > > > > 
-> > > > > Introduction:
-> > > > > Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
-> > > > > SoC ASIC for the purpose of efficently running Deep Learning inference
-> > > > > workloads in a data center environment.
-> > > > > 
-> > > > > The offical press release can be found at -
-> > > > > https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
-> > > > > 
-> > > > > The offical product website is -
-> > > > > https://www.qualcomm.com/products/datacenter-artificial-intelligence
-> > > > > 
-> > > > > At the time of the offical press release, numerious technology news sites
-> > > > > also covered the product.  Doing a search of your favorite site is likely
-> > > > > to find their coverage of it.
-> > > > > 
-> > > > > It is our goal to have the kernel driver for the product fully upstream.
-> > > > > The purpose of this RFC is to start that process.  We are still doing
-> > > > > development (see below), and thus not quite looking to gain acceptance quite
-> > > > > yet, but now that we have a working driver we beleive we are at the stage
-> > > > > where meaningful conversation with the community can occur.
-> > > > 
-> > > > 
-> > > > Hi Jeffery,
-> > > > 
-> > > > Just wondering what the userspace/testing plans for this driver.
-> > > > 
-> > > > This introduces a new user facing API for a device without pointers to
-> > > > users or tests for that API.
-> > > 
-> > > We have daily internal testing, although I don't expect you to take my word
-> > > for that.
-> > > 
-> > > I would like to get one of these devices into the hands of Linaro, so that
-> > > it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
-> > > to convince the powers that be to make this happen.
-> > > 
-> > > Regarding what the community could do on its own, everything but the Linux
-> > > driver is considered proprietary - that includes the on device firmware and
-> > > the entire userspace stack.  This is a decision above my pay grade.
-> > 
-> > Ok, that's a decision you are going to have to push upward on, as we
-> > really can't take this without a working, open, userspace.
-> 
-> Fair enough.  I hope that your position may have made things easier for me.
-> 
-> I hope this doesn't widen the rift as it were, but what is the "bar" for
-> this userspace?
-> 
-> Is a simple test application that adds two numbers on the hardware
-> acceptable?
+From: Domenico Andreoli <domenico.andreoli@linux.com>
 
-Make it the real library that you use for your applications that anyone
-can then also use as well if they have the hardware.  Why would you want
-something "crippled"?
+Hibernation via snapshot device requires write permission to the swap
+block device, the one that more often (but not necessarily) is used to
+store the hibernation image.
 
-> What is the bar "working"?  I intend to satisfy this request in good faith,
-> but I wonder, if no one has the hardware besides our customers, and possibly
-> KernelCI, can you really say that I've provided a working userspace?
+With this patch, such permissions are granted iff:
 
-How do you know who your customers really are, or who they sell the
-chips to?  I could end up with one of these... :)
+1) snapshot device config option is enabled
+2) swap partition is used as resume device
 
-> > Especially given the copyright owner of this code, that would be just
-> > crazy and foolish to not have open userspace code as well.  Firmware
-> > would also be wonderful as well, go poke your lawyers about derivative
-> > work issues and the like for fun conversations :)
-> 
-> Those are the kind of conversations I try to avoid  :)
+In other circumstances the swap device is not writable from userspace.
 
-Sounds like you are going to now have to have them, have fun!
+In order to achieve this, every write attempt to a swap device is
+checked against the device configured as part of the uswsusp API [0]
+using a pointer to the inode struct in memory. If the swap device being
+written was not configured for resuming, the write request is denied.
 
-greg k-h
+NOTE: this implementation works only for swap block devices, where the
+inode configured by swapon (which sets S_SWAPFILE) is the same used
+by SNAPSHOT_SET_SWAP_AREA.
+
+In case of swap file, SNAPSHOT_SET_SWAP_AREA indeed receives the inode
+of the block device containing the filesystem where the swap file is
+located (+ offset in it) which is never passed to swapon and then has
+not set S_SWAPFILE.
+
+As result, the swap file itself (as a file) has never an option to be
+written from userspace. Instead it remains writable if accessed directly
+from the containing block device, which is always writeable from root.
+
+[0] Documentation/power/userland-swsusp.rst
+
+v2:
+ - rename is_hibernate_snapshot_dev() to is_hibernate_resume_dev()
+ - fix description so to correctly refer to the resume device
+
+Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Darrick J. Wong <darrick.wong@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: viro@zeniv.linux.org.uk
+Cc: tytso@mit.edu
+Cc: len.brown@intel.com
+Cc: linux-pm@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-xfs@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+---
+ fs/block_dev.c          |    3 +--
+ include/linux/suspend.h |    6 ++++++
+ kernel/power/user.c     |   14 +++++++++++++-
+ 3 files changed, 20 insertions(+), 3 deletions(-)
+
+Index: b/include/linux/suspend.h
+===================================================================
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -466,6 +466,12 @@ static inline bool system_entering_hiber
+ static inline bool hibernation_available(void) { return false; }
+ #endif /* CONFIG_HIBERNATION */
+ 
++#ifdef CONFIG_HIBERNATION_SNAPSHOT_DEV
++int is_hibernate_resume_dev(const struct inode *);
++#else
++static inline int is_hibernate_resume_dev(const struct inode *i) { return 0; }
++#endif
++
+ /* Hibernation and suspend events */
+ #define PM_HIBERNATION_PREPARE	0x0001 /* Going to hibernate */
+ #define PM_POST_HIBERNATION	0x0002 /* Hibernation finished */
+Index: b/kernel/power/user.c
+===================================================================
+--- a/kernel/power/user.c
++++ b/kernel/power/user.c
+@@ -35,8 +35,14 @@ static struct snapshot_data {
+ 	bool ready;
+ 	bool platform_support;
+ 	bool free_bitmaps;
++	struct inode *bd_inode;
+ } snapshot_state;
+ 
++int is_hibernate_resume_dev(const struct inode *bd_inode)
++{
++	return hibernation_available() && snapshot_state.bd_inode == bd_inode;
++}
++
+ static int snapshot_open(struct inode *inode, struct file *filp)
+ {
+ 	struct snapshot_data *data;
+@@ -95,6 +101,7 @@ static int snapshot_open(struct inode *i
+ 	data->frozen = false;
+ 	data->ready = false;
+ 	data->platform_support = false;
++	data->bd_inode = NULL;
+ 
+  Unlock:
+ 	unlock_system_sleep();
+@@ -110,6 +117,7 @@ static int snapshot_release(struct inode
+ 
+ 	swsusp_free();
+ 	data = filp->private_data;
++	data->bd_inode = NULL;
+ 	free_all_swap_pages(data->swap);
+ 	if (data->frozen) {
+ 		pm_restore_gfp_mask();
+@@ -202,6 +210,7 @@ struct compat_resume_swap_area {
+ static int snapshot_set_swap_area(struct snapshot_data *data,
+ 		void __user *argp)
+ {
++	struct block_device *bdev;
+ 	sector_t offset;
+ 	dev_t swdev;
+ 
+@@ -232,9 +241,12 @@ static int snapshot_set_swap_area(struct
+ 		data->swap = -1;
+ 		return -EINVAL;
+ 	}
+-	data->swap = swap_type_of(swdev, offset, NULL);
++	data->swap = swap_type_of(swdev, offset, &bdev);
+ 	if (data->swap < 0)
+ 		return -ENODEV;
++
++	data->bd_inode = bdev->bd_inode;
++	bdput(bdev);
+ 	return 0;
+ }
+ 
+Index: b/fs/block_dev.c
+===================================================================
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -2023,8 +2023,7 @@ ssize_t blkdev_write_iter(struct kiocb *
+ 	if (bdev_read_only(I_BDEV(bd_inode)))
+ 		return -EPERM;
+ 
+-	/* uswsusp needs write permission to the swap */
+-	if (IS_SWAPFILE(bd_inode) && !hibernation_available())
++	if (IS_SWAPFILE(bd_inode) && !is_hibernate_resume_dev(bd_inode))
+ 		return -ETXTBSY;
+ 
+ 	if (!iov_iter_count(from))
+
+-- 
+rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
+ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
