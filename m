@@ -2,144 +2,250 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 357122075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16C12075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPaLyrYF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgESSUn (ORCPT
+        id S1729214AbgESSU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:20:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:38082 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbgESSUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:20:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 228AC31B;
-        Tue, 19 May 2020 11:20:42 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B67A3F305;
-        Tue, 19 May 2020 11:20:40 -0700 (PDT)
-Date:   Tue, 19 May 2020 19:20:29 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        bhelgaas@google.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        Alan Mikhak <alan.mikhak@sifive.com>
-Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
- size >4GB
-Message-ID: <20200519182029.GA23677@e121166-lin.cambridge.arm.com>
-References: <20200513190855.23318-1-vidyas@nvidia.com>
- <20200513223508.GA352288@bjorn-Precision-5520>
- <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
- <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
- <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
- <59c32bed-3a6a-70ba-0052-65d9466a0790@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59c32bed-3a6a-70ba-0052-65d9466a0790@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 19 May 2020 14:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbgESSU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 14:20:58 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E1AC08C5C0;
+        Tue, 19 May 2020 11:20:58 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p30so200398pgl.11;
+        Tue, 19 May 2020 11:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=zoQaFihILtKPwZMgbHdP4bf5m5RLMdG3wGV1m6Btdw0=;
+        b=FPaLyrYFsQfuy77R1zPdfN14FvIRn4VIc7JS/Bs7WyrLCYwS82KhnRUbw+79Jyy72Z
+         KImDNrfN8eCGyZN8VTB3/ho9IYc5GFbOAnR2DlDxR/6Dw6ho3JGgkMHo5wpFBSlgG5UT
+         1ihTG2d2UHMFJ8oHk35CkGGxb8KhXQk8aNsI5ZaDOETBWZNseeln2lk135fJLDSg2iMB
+         6ZaBNxhaSmvp6WzuORhrzEeGeXoZ062l0ZXgREernaRrEBA9nDutSiBekSsT1W1kCgqQ
+         BFXwJxczTxsSK9UN5zui4Htw6Bo3DLXkwi1Fm6ZZF9oNW7C+mngzgydU4Y755D7HNi+G
+         Na2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=zoQaFihILtKPwZMgbHdP4bf5m5RLMdG3wGV1m6Btdw0=;
+        b=G86ILOB5VJwzoDMLzL3V09F0db1biZDJXPyMFlb2arAbRZdQ8edwymFOQJZoLEWocV
+         w7DsP5CGUHh1zF9sayW/7PQfS7x9Km3SFnrOzVpPEh7Zb9BiP4wpYg9Rs9fwswfk+tVH
+         /jDM5VdhgMGLlVlFC2poI+ophg4Hg+5ZK8qwTv2VbOY281IBOWsxGaLBvsYodkRenpUr
+         yyJH13m/bq6ROOOVteu7+Ro/sJxuyom9fa8nxGs9seeqXVJt3eGUefFwytg60xKAXwqe
+         IzrZtVBzXyjspydnbVc2XxWapACH6jS8qVzbERUxjaMH4EpS+WHyi6NaZYtmLUbIbuY5
+         vL7g==
+X-Gm-Message-State: AOAM533+yykt1gHj6wMvTclLyI9OqwhHmFCaKhtOdwTvi8VdgEfWWpNw
+        HGcV8nIqAqW8WiiC5To+SwY=
+X-Google-Smtp-Source: ABdhPJwA2Cj9S6u0ZPXQB50/kX/b47N3rBoHaxPdSmgazULDADvZfdmLGhh5UdTuG3xy5n11NegjZQ==
+X-Received: by 2002:a05:6a00:1510:: with SMTP id q16mr322814pfu.311.1589912457993;
+        Tue, 19 May 2020 11:20:57 -0700 (PDT)
+Received: from localhost.localdomain ([223.235.145.232])
+        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.20.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 11:20:57 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, vkoul@kernel.org, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v2 01/10] dmaengine: Actions: get rid of bit fields from dma descriptor
+Date:   Tue, 19 May 2020 23:49:19 +0530
+Message-Id: <1589912368-480-2-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
+References: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:38:39PM +0530, Vidya Sagar wrote:
+At the moment, Driver uses bit fields to describe registers of the DMA
+descriptor structure that makes it less portable and maintainable, and
+Andre suugested(and even sketched important bits for it) to make use of
+array to describe this DMA descriptors instead. It gives the flexibility
+while extending support for other platform such as Actions S700.
 
-[...]
+This commit removes the "owl_dma_lli_hw" (that includes bit-fields) and
+uses array to describe DMA descriptor.
 
-> > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > index 42fbfe2a1b8f..a29396529ea4 100644
-> > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > > > >                       pp->mem = win->res;
-> > > > > >                       pp->mem->name = "MEM";
-> > > > > >                       mem_size = resource_size(pp->mem);
-> > > > > > -                   if (upper_32_bits(mem_size))
-> > > > > > +                   if (upper_32_bits(mem_size) &&
-> > > > > > +                       !(win->res->flags & IORESOURCE_PREFETCH))
-> > > > > >                               dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
-> > > > > >                       pp->mem_size = mem_size;
-> > > > > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
-> > > > 
-> > > > That warning was added for a reason - why should not we log legitimate
-> > > > warnings ? AFAIU having resources larger than 4GB can lead to undefined
-> > > > behaviour given the current ATU programming API.
-> > > Yeah. I'm all for a warning if the size is larger than 4GB in case of
-> > > non-prefetchable window as one of the ATU outbound translation
-> > > channels is being used,
-> > 
-> > Is it true for all DWC host controllers ? Or there may be another
-> > exception whereby we would be forced to disable this warning altogether
-> > ?I think so. As I see from the code, ATU's
-> Region-0 is used for config space translation
-> Region-1 is used for non-prefetchable memory translation
-> Region-2 is used for I/O translation
-> So, there is no region reserved for translating prefetchable memory regions.
+Suggested-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes since v1:
+	* Defined macro for frame count value.
+	* Introduced llc_hw_flen() from patch 2/9.
+	* Removed the unnecessary line break.
+Changes since rfc:
+	* No change.
+---
+ drivers/dma/owl-dma.c | 84 ++++++++++++++++++++++++---------------------------
+ 1 file changed, 40 insertions(+), 44 deletions(-)
 
-I am confused. Code in dw_pcie_setup_rc() programs a memory region
-into ATU. What defines that memory as non-prefetchable ?
+diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+index c683051257fd..dd85c205454e 100644
+--- a/drivers/dma/owl-dma.c
++++ b/drivers/dma/owl-dma.c
+@@ -120,30 +120,21 @@
+ #define BIT_FIELD(val, width, shift, newshift)	\
+ 		((((val) >> (shift)) & ((BIT(width)) - 1)) << (newshift))
+ 
+-/**
+- * struct owl_dma_lli_hw - Hardware link list for dma transfer
+- * @next_lli: physical address of the next link list
+- * @saddr: source physical address
+- * @daddr: destination physical address
+- * @flen: frame length
+- * @fcnt: frame count
+- * @src_stride: source stride
+- * @dst_stride: destination stride
+- * @ctrla: dma_mode and linklist ctrl config
+- * @ctrlb: interrupt config
+- * @const_num: data for constant fill
+- */
+-struct owl_dma_lli_hw {
+-	u32	next_lli;
+-	u32	saddr;
+-	u32	daddr;
+-	u32	flen:20;
+-	u32	fcnt:12;
+-	u32	src_stride;
+-	u32	dst_stride;
+-	u32	ctrla;
+-	u32	ctrlb;
+-	u32	const_num;
++/* Frame count value is fixed as 1 */
++#define FCNT_VAL				0x1
++
++/* Describe DMA descriptor, hardware link list for dma transfer */
++enum owl_dmadesc_offsets {
++	OWL_DMADESC_NEXT_LLI = 0,
++	OWL_DMADESC_SADDR,
++	OWL_DMADESC_DADDR,
++	OWL_DMADESC_FLEN,
++	OWL_DMADESC_SRC_STRIDE,
++	OWL_DMADESC_DST_STRIDE,
++	OWL_DMADESC_CTRLA,
++	OWL_DMADESC_CTRLB,
++	OWL_DMADESC_CONST_NUM,
++	OWL_DMADESC_SIZE
+ };
+ 
+ /**
+@@ -153,7 +144,7 @@ struct owl_dma_lli_hw {
+  * @node: node for txd's lli_list
+  */
+ struct owl_dma_lli {
+-	struct  owl_dma_lli_hw	hw;
++	u32			hw[OWL_DMADESC_SIZE];
+ 	dma_addr_t		phys;
+ 	struct list_head	node;
+ };
+@@ -320,6 +311,11 @@ static inline u32 llc_hw_ctrlb(u32 int_ctl)
+ 	return ctl;
+ }
+ 
++static u32 llc_hw_flen(struct owl_dma_lli *lli)
++{
++	return lli->hw[OWL_DMADESC_FLEN] & GENMASK(19, 0);
++}
++
+ static void owl_dma_free_lli(struct owl_dma *od,
+ 			     struct owl_dma_lli *lli)
+ {
+@@ -351,8 +347,9 @@ static struct owl_dma_lli *owl_dma_add_lli(struct owl_dma_txd *txd,
+ 		list_add_tail(&next->node, &txd->lli_list);
+ 
+ 	if (prev) {
+-		prev->hw.next_lli = next->phys;
+-		prev->hw.ctrla |= llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
++		prev->hw[OWL_DMADESC_NEXT_LLI] = next->phys;
++		prev->hw[OWL_DMADESC_CTRLA] |=
++					llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
+ 	}
+ 
+ 	return next;
+@@ -365,8 +362,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 				  struct dma_slave_config *sconfig,
+ 				  bool is_cyclic)
+ {
+-	struct owl_dma_lli_hw *hw = &lli->hw;
+-	u32 mode;
++	u32 mode, ctrlb;
+ 
+ 	mode = OWL_DMA_MODE_PW(0);
+ 
+@@ -407,22 +403,22 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 		return -EINVAL;
+ 	}
+ 
+-	hw->next_lli = 0; /* One link list by default */
+-	hw->saddr = src;
+-	hw->daddr = dst;
+-
+-	hw->fcnt = 1; /* Frame count fixed as 1 */
+-	hw->flen = len; /* Max frame length is 1MB */
+-	hw->src_stride = 0;
+-	hw->dst_stride = 0;
+-	hw->ctrla = llc_hw_ctrla(mode,
+-				 OWL_DMA_LLC_SAV_LOAD_NEXT |
+-				 OWL_DMA_LLC_DAV_LOAD_NEXT);
++	lli->hw[OWL_DMADESC_CTRLA] = llc_hw_ctrla(mode,
++						  OWL_DMA_LLC_SAV_LOAD_NEXT |
++						  OWL_DMA_LLC_DAV_LOAD_NEXT);
+ 
+ 	if (is_cyclic)
+-		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
++		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
+ 	else
+-		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
++		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
++
++	lli->hw[OWL_DMADESC_NEXT_LLI] = 0;
++	lli->hw[OWL_DMADESC_SADDR] = src;
++	lli->hw[OWL_DMADESC_DADDR] = dst;
++	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
++	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
++	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
++	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+ 
+ 	return 0;
+ }
+@@ -754,7 +750,7 @@ static u32 owl_dma_getbytes_chan(struct owl_dma_vchan *vchan)
+ 			/* Start from the next active node */
+ 			if (lli->phys == next_lli_phy) {
+ 				list_for_each_entry(lli, &txd->lli_list, node)
+-					bytes += lli->hw.flen;
++					bytes += llc_hw_flen(lli);
+ 				break;
+ 			}
+ 		}
+@@ -785,7 +781,7 @@ static enum dma_status owl_dma_tx_status(struct dma_chan *chan,
+ 	if (vd) {
+ 		txd = to_owl_txd(&vd->tx);
+ 		list_for_each_entry(lli, &txd->lli_list, node)
+-			bytes += lli->hw.flen;
++			bytes += llc_hw_flen(lli);
+ 	} else {
+ 		bytes = owl_dma_getbytes_chan(vchan);
+ 	}
+-- 
+2.7.4
 
-Code in dw_pcie_host_init() retrieves the bridge windows and
-there may be multiple memory regions.
-
-How is it determined which one ends up in pp->mem ? DT parsing order ?
-
-I reiterate the point - I need DWC maintainers to chime in to define
-how this must work.
-
-I am not conviced that your patch is safe to apply and I need to
-understand how HW works.
-
-> > > but, we are not employing any ATU outbound translation channel for
-> > 
-> > What does this mean ? "we are not employing any ATU outbound...", is
-> > this the tegra driver ? And what guarantees that this warning is not
-> > legitimate on DWC host controllers that do use the ATU outbound
-> > translation for prefetchable windows ?
-> Not Tegra driver but Tegra HW. Tegra HW doesn't need any ATU outbound
-> translation for prefetchable (for that matter any 1-to-1 mapping to
-> generate memory transactions on the PCIe bus).
-
-See above.
-
-Lorenzo
-
-> The Warning is still valid for both Tegra and other DWC based controllers
-> for non-prefetchable memory translation.
-> 
-> > 
-> > Can DWC maintainers chime in and clarify please ?
-> > 
-> > > prefetchable window and they can be greater than 4GB in size for all
-> > > right reasons. So, logging a warning for prefetchable region doesn't
-> > > seem correct to me. Please let me know if my understanding is wrong.
-> > 
-> > I think your patch is wrong and it is applied on top of a patch that
-> > is wrong too, so I won't apply yours and it is likely I will revert
-> > Alan's because it seems to solve nothing (and warn spuriously).
-> > 
-> > It is time for people who maintain DWC please to speak up because I
-> > don't have the HW details required to make a judgment.
-> > 
-> > Lorenzo
-> > 
-> > > - Vidya Sagar
-> > > > 
-> > > > Alan ? I want to understand what's the best course of action before
-> > > > merging these patches.
-> > > > 
-> > > > Lorenzo
-> > > > 
