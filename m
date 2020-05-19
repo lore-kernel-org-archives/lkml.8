@@ -2,103 +2,158 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E825AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B649C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD665207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D36204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="x+YXCZzB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jUxVQLMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbgESSEX (ORCPT
+        id S1728290AbgESSHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:04:23 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57014 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgESSEW (ORCPT
+        Tue, 19 May 2020 14:07:09 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:39081 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726510AbgESSHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:04:22 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04JHpj7k050572;
-        Tue, 19 May 2020 18:04:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=M6R/9jCPPjZ0Z40jIhYBTQf+9wpABaTJMFO+RN34OXA=;
- b=x+YXCZzBmbzN9frri30aQU4Rzx1EPD/SrJ8k4Ng/E0VhVukGXQJbWVL51owiEWbNAK8a
- UCu9y9zIFOeI6pPJnSu4ynOMmG8hLX0Woq2wIxGv7eM/9pfsTFkKqOIBKI5seAueBzsF
- Etx5w+iZ5uAVz01XmqDQ8TwCk4yC6Pk7Sr1L9B1ZWPenwUPI4s8NY4lxV9jbfvwr6c1B
- Ssa6WhyTiwZxo4WDAlngj5FjD+1ADVz0hKacWl5uItoYup/FjtxEM8Xoz773XuTcqtxr
- MtyZeRWLxJeHUijeLi1oXQ/PR/J0QU7l67CJp9I0l1v1jK2LueyD24ebestsMtS8Tf6W kA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31284kxyyp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 18:04:10 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04JHr8nq110322;
-        Tue, 19 May 2020 18:04:10 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 312sxt8kj9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 May 2020 18:04:10 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04JI483L016827;
-        Tue, 19 May 2020 18:04:09 GMT
-Received: from [10.74.104.239] (/10.74.104.239)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 May 2020 11:04:08 -0700
-Subject: Re: [PATCH 1/1] soc: ti: omap-prm: use atomic iopoll instead of
- sleeping one
-To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-Cc:     ssantosh@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        s-anna@ti.com
-References: <20200514073718.17690-1-t-kristo@ti.com>
- <20200519174555.GX37466@atomide.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <eff0d78e-7e94-6574-6b17-f3293ef55918@oracle.com>
-Date:   Tue, 19 May 2020 11:04:06 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Tue, 19 May 2020 14:07:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589911628; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=17pbhKPLb0x+5QvEAOVCbb6Ucpo1/xaIDMY482XpM0o=; b=jUxVQLMfgIMCQ+s+oxH+/aiYNw1ZMtb00WqtGOUNl6q8zXf7wiQdJX7utx1bk2whZdFrGAu3
+ UC5M4887vQ1nkbFuwVwrz5rDPvldhjHS3B51pFl5oHgY53adnRkUPTze604vFDPFpZv0foML
+ Xp0LEhdgj1X+AAjA13/Z1Dd9MCA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ec4204c087f08818e55d193 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 19 May 2020 18:07:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B93DAC072A4; Tue, 19 May 2020 18:07:06 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0DE89C4478F;
+        Tue, 19 May 2020 18:07:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0DE89C4478F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org,
+        wufan@codeaurora.org, pratanan@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
+ <CAPM=9txXskVu_yD3DNuR0HgSUsE2v1Pv98dm=AHGvv_z2XKTAQ@mail.gmail.com>
+ <93238096-5861-c140-b94f-6137977c3d65@codeaurora.org>
+ <20200519174120.GC1158284@kroah.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <ce0e69ef-116c-df95-c136-d4714e02e96e@codeaurora.org>
+Date:   Tue, 19 May 2020 12:07:03 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200519174555.GX37466@atomide.com>
+In-Reply-To: <20200519174120.GC1158284@kroah.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005190153
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
- cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005190153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/19/20 10:45 AM, Tony Lindgren wrote:
-> * Tero Kristo <t-kristo@ti.com> [200514 00:38]:
->> The reset handling APIs for omap-prm can be invoked PM runtime which
->> runs in atomic context. For this to work properly, switch to atomic
->> iopoll version instead of the current which can sleep. Otherwise,
->> this throws a "BUG: scheduling while atomic" warning. Issue is seen
->> rather easily when CONFIG_PREEMPT is enabled.
+On 5/19/2020 11:41 AM, Greg Kroah-Hartman wrote:
+> On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
+>> On 5/18/2020 11:08 PM, Dave Airlie wrote:
+>>> On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>>>>
+>>>> Introduction:
+>>>> Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
+>>>> SoC ASIC for the purpose of efficently running Deep Learning inference
+>>>> workloads in a data center environment.
+>>>>
+>>>> The offical press release can be found at -
+>>>> https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
+>>>>
+>>>> The offical product website is -
+>>>> https://www.qualcomm.com/products/datacenter-artificial-intelligence
+>>>>
+>>>> At the time of the offical press release, numerious technology news sites
+>>>> also covered the product.  Doing a search of your favorite site is likely
+>>>> to find their coverage of it.
+>>>>
+>>>> It is our goal to have the kernel driver for the product fully upstream.
+>>>> The purpose of this RFC is to start that process.  We are still doing
+>>>> development (see below), and thus not quite looking to gain acceptance quite
+>>>> yet, but now that we have a working driver we beleive we are at the stage
+>>>> where meaningful conversation with the community can occur.
+>>>
+>>>
+>>> Hi Jeffery,
+>>>
+>>> Just wondering what the userspace/testing plans for this driver.
+>>>
+>>> This introduces a new user facing API for a device without pointers to
+>>> users or tests for that API.
 >>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> We have daily internal testing, although I don't expect you to take my word
+>> for that.
+>>
+>> I would like to get one of these devices into the hands of Linaro, so that
+>> it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
+>> to convince the powers that be to make this happen.
+>>
+>> Regarding what the community could do on its own, everything but the Linux
+>> driver is considered proprietary - that includes the on device firmware and
+>> the entire userspace stack.  This is a decision above my pay grade.
 > 
-> Santosh do you want me to pick this for fixes?
-> 
-Sure Tony. Thanks !!
+> Ok, that's a decision you are going to have to push upward on, as we
+> really can't take this without a working, open, userspace.
 
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+Fair enough.  I hope that your position may have made things easier for me.
+
+I hope this doesn't widen the rift as it were, but what is the "bar" for 
+this userspace?
+
+Is a simple test application that adds two numbers on the hardware 
+acceptable?
+
+What is the bar "working"?  I intend to satisfy this request in good 
+faith, but I wonder, if no one has the hardware besides our customers, 
+and possibly KernelCI, can you really say that I've provided a working 
+userspace?
+
+> Especially given the copyright owner of this code, that would be just
+> crazy and foolish to not have open userspace code as well.  Firmware
+> would also be wonderful as well, go poke your lawyers about derivative
+> work issues and the like for fun conversations :)
+
+Those are the kind of conversations I try to avoid  :)
+
+> So without that changed, I'm not going to take this, and push to object
+> that anyone else take this.
+> 
+> I'm not going to be able to review any of this code anymore until that
+> changes, sorry.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
