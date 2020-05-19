@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FC9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7916C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 776FF2083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19E92084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D/BnVV3a"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oPN23grp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgESO1n (ORCPT
+        id S1729203AbgESO1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:27:43 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43586 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729164AbgESO1h (ORCPT
+        Tue, 19 May 2020 10:27:50 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53776 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728994AbgESO1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:27:37 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JERNMl005289;
-        Tue, 19 May 2020 09:27:23 -0500
+        Tue, 19 May 2020 10:27:48 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JERXRN123385;
+        Tue, 19 May 2020 09:27:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589898443;
-        bh=oMN/iHiwQjDWS2EDa3kGydbVWyIjwSamwfacAnOEz7U=;
+        s=ti-com-17Q1; t=1589898453;
+        bh=eISrLet83O0w+gQtwdj2mYLowiqEnJmVDkyyRd/HTHg=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=D/BnVV3aDW+YneYcsvIdC7k2RmUvDoo6rAR2Wg1nrBnTG1kfmuIYJIxff/pR6lrt3
-         yO57XvTaW6YmIkX66Ucbnp918pzuDNMTnKG2KLXjKux8iqwg7rig5yqCphvBu+fIpN
-         nZ04vZwSaXk9kvfzRM6Aek4jD6eqEPzYC9ZfqIYo=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JERNhv039557;
-        Tue, 19 May 2020 09:27:23 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+        b=oPN23grpOFBBk8ppm1M32JM30QXVeifjk06fFEHI0w8/qNLwJusm9b3GcV/76kdla
+         xN7bzisT1UWxnhmRkF1Qrw7csblPl4UeJEvoNHPHq86AQdM0FV0RplXD8XcZCKgv1R
+         XiA1V2HXW1/SHI0WTiLhJO85e5E9bbQQOjzUE+WQ=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04JERXJi081983
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 May 2020 09:27:33 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 09:27:23 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 09:27:33 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 09:27:23 -0500
+ Frontend Transport; Tue, 19 May 2020 09:27:33 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEQgjP008313;
-        Tue, 19 May 2020 09:27:18 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JEQgjR008313;
+        Tue, 19 May 2020 09:27:28 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -64,9 +65,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v5 07/19] mtd: spi-nor: sfdp: prepare BFPT parsing for JESD216 rev D
-Date:   Tue, 19 May 2020 19:56:29 +0530
-Message-ID: <20200519142642.24131-8-p.yadav@ti.com>
+Subject: [PATCH v5 09/19] mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
+Date:   Tue, 19 May 2020 19:56:31 +0530
+Message-ID: <20200519142642.24131-10-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200519142642.24131-1-p.yadav@ti.com>
 References: <20200519142642.24131-1-p.yadav@ti.com>
@@ -79,76 +80,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-JESD216 rev D makes BFPT 20 DWORDs. Update the BFPT size define to
-reflect that.
+This table is indication that the flash is xSPI compliant and hence
+supports octal DTR mode. Extract information like the fast read opcode,
+the number of dummy cycles needed for a Read Status Register command,
+and the number of address bytes needed for a Read Status Register
+command.
 
-The check for rev A or later compared the BFPT header length with the
-maximum BFPT length, BFPT_DWORD_MAX. Since BFPT_DWORD_MAX was 16, and so
-was the BFPT length for both rev A and B, this check worked fine. But
-now, since BFPT_DWORD_MAX is 20, it means this check will also stop BFPT
-parsing for rev A or B, since their length is 16.
+The default dummy cycles for a fast octal DTR read are set to 20. Since
+there is no simple way of determining the dummy cycles needed for the
+fast read command, flashes that use a different value should update it
+in their flash-specific hooks.
 
-So, instead check for BFPT_DWORD_MAX_JESD216 to stop BFPT parsing for
-the first JESD216 version, and check for BFPT_DWORD_MAX_JESD216B for the
-next two versions.
+Since we want to set read settings, expose spi_nor_set_read_settings()
+in core.h.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/sfdp.c | 7 ++++++-
- drivers/mtd/spi-nor/sfdp.h | 5 +++--
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/mtd/spi-nor/core.c |  2 +-
+ drivers/mtd/spi-nor/core.h | 10 ++++++
+ drivers/mtd/spi-nor/sfdp.c | 73 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 84 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
-index 5cecc4ba2141..96960f2f3d7a 100644
---- a/drivers/mtd/spi-nor/sfdp.c
-+++ b/drivers/mtd/spi-nor/sfdp.c
-@@ -549,7 +549,7 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
- 				  SNOR_ERASE_TYPE_MASK;
- 
- 	/* Stop here if not JESD216 rev A or later. */
--	if (bfpt_header->length < BFPT_DWORD_MAX)
-+	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216)
- 		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
- 						params);
- 
-@@ -605,6 +605,11 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
- 		return -EINVAL;
- 	}
- 
-+	/* Stop here if JESD216 rev B. */
-+	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216B)
-+		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
-+						params);
-+
- 	return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt, params);
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index 388e695e763f..642e3c07acf9 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -2355,7 +2355,7 @@ static int spi_nor_check(struct spi_nor *nor)
+ 	return 0;
  }
  
-diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
-index e0a8ded04890..f8198af43a63 100644
---- a/drivers/mtd/spi-nor/sfdp.h
-+++ b/drivers/mtd/spi-nor/sfdp.h
-@@ -10,11 +10,11 @@
- /* Basic Flash Parameter Table */
+-static void
++void
+ spi_nor_set_read_settings(struct spi_nor_read_command *read,
+ 			  u8 num_mode_clocks,
+ 			  u8 num_wait_states,
+diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+index de1e3917889f..7e6df8322da0 100644
+--- a/drivers/mtd/spi-nor/core.h
++++ b/drivers/mtd/spi-nor/core.h
+@@ -192,6 +192,9 @@ struct spi_nor_locking_ops {
+  *
+  * @size:		the flash memory density in bytes.
+  * @page_size:		the page size of the SPI NOR flash memory.
++ * @rdsr_dummy:		dummy cycles needed for Read Status Register command.
++ * @rdsr_addr_nbytes:	dummy address bytes needed for Read Status Register
++ *			command.
+  * @hwcaps:		describes the read and page program hardware
+  *			capabilities.
+  * @reads:		read capabilities ordered by priority: the higher index
+@@ -214,6 +217,8 @@ struct spi_nor_locking_ops {
+ struct spi_nor_flash_parameter {
+ 	u64				size;
+ 	u32				page_size;
++	u8				rdsr_dummy;
++	u8				rdsr_addr_nbytes;
  
- /*
-- * JESD216 rev B defines a Basic Flash Parameter Table of 16 DWORDs.
-+ * JESD216 rev D defines a Basic Flash Parameter Table of 20 DWORDs.
-  * They are indexed from 1 but C arrays are indexed from 0.
+ 	struct spi_nor_hwcaps		hwcaps;
+ 	struct spi_nor_read_command	reads[SNOR_CMD_READ_MAX];
+@@ -424,6 +429,11 @@ ssize_t spi_nor_write_data(struct spi_nor *nor, loff_t to, size_t len,
+ 
+ int spi_nor_hwcaps_read2cmd(u32 hwcaps);
+ u8 spi_nor_convert_3to4_read(u8 opcode);
++void spi_nor_set_read_settings(struct spi_nor_read_command *read,
++			      u8 num_mode_clocks,
++			      u8 num_wait_states,
++			      u8 opcode,
++			      enum spi_nor_protocol proto);
+ void spi_nor_set_pp_settings(struct spi_nor_pp_command *pp, u8 opcode,
+ 			     enum spi_nor_protocol proto);
+ 
+diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+index ab086aa4746f..4e5e0eabe2d9 100644
+--- a/drivers/mtd/spi-nor/sfdp.c
++++ b/drivers/mtd/spi-nor/sfdp.c
+@@ -4,6 +4,7 @@
+  * Copyright (C) 2014, Freescale Semiconductor, Inc.
   */
- #define BFPT_DWORD(i)		((i) - 1)
--#define BFPT_DWORD_MAX		16
-+#define BFPT_DWORD_MAX		20
  
- struct sfdp_bfpt {
- 	u32	dwords[BFPT_DWORD_MAX];
-@@ -22,6 +22,7 @@ struct sfdp_bfpt {
++#include <linux/bitfield.h>
+ #include <linux/slab.h>
+ #include <linux/sort.h>
+ #include <linux/mtd/spi-nor.h>
+@@ -19,12 +20,14 @@
+ #define SFDP_BFPT_ID		0xff00	/* Basic Flash Parameter Table */
+ #define SFDP_SECTOR_MAP_ID	0xff81	/* Sector Map Table */
+ #define SFDP_4BAIT_ID		0xff84  /* 4-byte Address Instruction Table */
++#define SFDP_PROFILE1_ID	0xff05	/* xSPI Profile 1.0 table. */
  
- /* The first version of JESD216 defined only 9 DWORDs. */
- #define BFPT_DWORD_MAX_JESD216			9
-+#define BFPT_DWORD_MAX_JESD216B			16
+ #define SFDP_SIGNATURE		0x50444653U
+ #define SFDP_JESD216_MAJOR	1
+ #define SFDP_JESD216_MINOR	0
+ #define SFDP_JESD216A_MINOR	5
+ #define SFDP_JESD216B_MINOR	6
++#define SFDP_JESD216D_MINOR	8
  
- /* 1st DWORD. */
- #define BFPT_DWORD1_FAST_READ_1_1_2		BIT(16)
+ struct sfdp_header {
+ 	u32		signature; /* Ox50444653U <=> "SFDP" */
+@@ -70,6 +73,11 @@ struct sfdp_bfpt_erase {
+ 	u32			shift;
+ };
+ 
++/* xSPI Profile 1.0 table (from JESD216D.01). */
++#define PROFILE1_DWORD1_RD_FAST_CMD		GENMASK(15, 8)
++#define PROFILE1_DWORD1_RDSR_DUMMY		BIT(28)
++#define PROFILE1_DWORD1_RDSR_ADDR_BYTES		BIT(29)
++
+ #define SMPT_CMD_ADDRESS_LEN_MASK		GENMASK(23, 22)
+ #define SMPT_CMD_ADDRESS_LEN_0			(0x0UL << 22)
+ #define SMPT_CMD_ADDRESS_LEN_3			(0x1UL << 22)
+@@ -1110,6 +1118,67 @@ static int spi_nor_parse_4bait(struct spi_nor *nor,
+ 	return ret;
+ }
+ 
++/**
++ * spi_nor_parse_profile1() - parse the xSPI Profile 1.0 table
++ * @nor:		pointer to a 'struct spi_nor'
++ * @param_header:	pointer to the 'struct sfdp_parameter_header' describing
++ *			the 4-Byte Address Instruction Table length and version.
++ * @params:		pointer to the 'struct spi_nor_flash_parameter' to be.
++ *
++ * Return: 0 on success, -errno otherwise.
++ */
++static int spi_nor_parse_profile1(struct spi_nor *nor,
++				  const struct sfdp_parameter_header *profile1_header,
++				  struct spi_nor_flash_parameter *params)
++{
++	u32 *table, opcode, addr;
++	size_t len;
++	int ret, i;
++
++	len = profile1_header->length * sizeof(*table);
++	table = kmalloc(len, GFP_KERNEL);
++	if (!table)
++		return -ENOMEM;
++
++	addr = SFDP_PARAM_HEADER_PTP(profile1_header);
++	ret = spi_nor_read_sfdp(nor, addr, len, table);
++	if (ret)
++		goto out;
++
++	/* Fix endianness of the table DWORDs. */
++	for (i = 0; i < profile1_header->length; i++)
++		table[i] = le32_to_cpu(table[i]);
++
++	/* Get 8D-8D-8D fast read opcode and dummy cycles. */
++	opcode = FIELD_GET(PROFILE1_DWORD1_RD_FAST_CMD, table[0]);
++
++	/*
++	 * Update the fast read settings. We set the default dummy cycles to 20
++	 * here. Flashes can change this value if they need to when enabling
++	 * octal mode.
++	 */
++	spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8_8_8_DTR],
++				  0, 20, opcode,
++				  SNOR_PROTO_8_8_8_DTR);
++
++	/*
++	 * Set the Read Status Register dummy cycles and dummy address bytes.
++	 */
++	if (table[0] & PROFILE1_DWORD1_RDSR_DUMMY)
++		params->rdsr_dummy = 8;
++	else
++		params->rdsr_dummy = 4;
++
++	if (table[0] & PROFILE1_DWORD1_RDSR_ADDR_BYTES)
++		params->rdsr_addr_nbytes = 4;
++	else
++		params->rdsr_addr_nbytes = 0;
++
++out:
++	kfree(table);
++	return ret;
++}
++
+ /**
+  * spi_nor_parse_sfdp() - parse the Serial Flash Discoverable Parameters.
+  * @nor:		pointer to a 'struct spi_nor'
+@@ -1211,6 +1280,10 @@ int spi_nor_parse_sfdp(struct spi_nor *nor,
+ 			err = spi_nor_parse_4bait(nor, param_header, params);
+ 			break;
+ 
++		case SFDP_PROFILE1_ID:
++			err = spi_nor_parse_profile1(nor, param_header, params);
++			break;
++
+ 		default:
+ 			break;
+ 		}
 -- 
 2.26.2
 
