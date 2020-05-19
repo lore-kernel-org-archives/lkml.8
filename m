@@ -2,288 +2,180 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D27C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67DDB20825
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 22:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701CB20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 23:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UOcCbH88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgESW6l (ORCPT
+        id S1727097AbgESXBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 18:58:41 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37712 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgESW6k (ORCPT
+        Tue, 19 May 2020 19:01:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgESXB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 18:58:40 -0400
-Received: from static-50-53-45-43.bvtn.or.frontiernet.net ([50.53.45.43] helo=[192.168.192.153])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <john.johansen@canonical.com>)
-        id 1jbBBy-00019f-Ib; Tue, 19 May 2020 22:58:34 +0000
-Subject: Re: [PATCH 0/4] Relocate execve() sanity checks
-To:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200518055457.12302-1-keescook@chromium.org>
- <87a724t153.fsf@x220.int.ebiederm.org> <202005190918.D2BD83F7C@keescook>
- <87o8qjstyw.fsf@x220.int.ebiederm.org> <202005191052.0A6B1D5843@keescook>
- <87sgfvrckr.fsf@x220.int.ebiederm.org> <202005191342.97EE972E3@keescook>
-From:   John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
- LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgptUUlOQkU1bXJQb0JFQURB
- azE5UHNnVmdCS2tJbW1SMmlzUFE2bzdLSmhUVEtqSmR3VmJrV1NuTm4rbzZVcDVrCm5LUDFm
- NDlFQlFsY2VXZzF5cC9Od2JSOGFkK2VTRU8vdW1hL0srUHFXdkJwdEtDOVNXRDk3Rkc0dUI0
- L2Nhb20KTEVVOTdzTFFNdG52R1dkeHJ4VlJHTTRhbnpXWU1neno1VFptSWlWVFo0M091NVZw
- YVMxVnoxWlN4UDNoL3hLTgpaci9UY1c1V1FhaTh1M1BXVm5ia2poU1pQSHYxQmdoTjY5cXhF
- UG9tckpCbTFnbXR4M1ppVm1GWGx1d1RtVGdKCk9rcEZvbDduYkowaWxuWUhyQTdTWDNDdFIx
- dXBlVXBNYS9XSWFuVk85NldkVGpISElhNDNmYmhtUXViZTR0eFMKM0ZjUUxPSlZxUXN4NmxF
- OUI3cUFwcG05aFExMHFQV3dkZlB5LyswVzZBV3ROdTVBU2lHVkNJbld6bDJIQnFZZAovWmxs
- OTN6VXErTklvQ244c0RBTTlpSCt3dGFHRGNKeXdJR0luK2VkS050SzcyQU1nQ2hUZy9qMVpv
- V0g2WmVXClBqdVVmdWJWelp0bzFGTW9HSi9TRjRNbWRRRzFpUU50ZjRzRlpiRWdYdXk5Y0dp
- MmJvbUYwenZ5QkpTQU5weGwKS05CRFlLek42S3owOUhVQWtqbEZNTmdvbUwvY2pxZ0FCdEF4
- NTlMK2RWSVpmYUYyODFwSWNVWnp3dmg1K0pvRwplT1c1dUJTTWJFN0wzOG5zem9veWtJSjVY
- ckFjaGtKeE5mejdrK0ZuUWVLRWtOekVkMkxXYzNRRjRCUVpZUlQ2ClBISGdhM1JneWtXNSsx
- d1RNcUpJTGRtdGFQYlhyRjNGdm5WMExSUGN2NHhLeDdCM2ZHbTd5Z2Rvb3dBUkFRQUIKdEIx
- S2IyaHVJRXB2YUdGdWMyVnVJRHhxYjJodVFHcHFiWGd1Ym1WMFBva0NPZ1FUQVFvQUpBSWJB
- d1VMQ1FnSApBd1VWQ2drSUN3VVdBZ01CQUFJZUFRSVhnQVVDVG8wWVZ3SVpBUUFLQ1JBRkx6
- WndHTlhEMkx4SkQvOVRKWkNwCndsbmNUZ1llcmFFTWVEZmtXdjhjMUlzTTFqMEFtRTRWdEwr
- ZkU3ODBaVlA5Z2tqZ2tkWVN4dDdlY0VUUFRLTWEKWlNpc3JsMVJ3cVUwb29nWGRYUVNweHJH
- SDAxaWN1LzJuMGpjWVNxWUtnZ1B4eTc4QkdzMkxacTRYUGZKVFptSApaR25YR3EvZURyL21T
- bmowYWF2QkptTVo2amJpUHo2eUh0QllQWjlmZG84YnRjendQNDFZZVdvSXUyNi84SUk2CmYw
- WG0zVkM1b0FhOHY3UmQrUldaYThUTXdsaHpIRXh4ZWwzanRJN0l6ek9zbm1FOS84RG0wQVJE
- NWlUTENYd1IKMWN3SS9KOUJGL1MxWHY4UE4xaHVUM0l0Q05kYXRncDh6cW9Ka2dQVmptdnlM
- NjRRM2ZFa1liZkhPV3NhYmE5LwprQVZ0Qk56OVJURmg3SUhEZkVDVmFUb3VqQmQ3QnRQcXIr
- cUlqV0ZhZEpEM0k1ZUxDVkp2VnJyb2xyQ0FUbEZ0Ck4zWWtRczZKbjFBaUlWSVUzYkhSOEdq
- ZXZnejVMbDZTQ0dIZ1Jya3lScG5TWWFVL3VMZ24zN042QVl4aS9RQUwKK2J5M0N5RUZManpX
- QUV2eVE4YnEzSXVjbjdKRWJoUy9KLy9kVXFMb2VVZjh0c0dpMDB6bXJJVFpZZUZZQVJoUQpN
- dHNmaXpJclZEdHoxaVBmL1pNcDVnUkJuaXlqcFhuMTMxY20zTTNndjZIclFzQUdubjhBSnJ1
- OEdEaTVYSllJCmNvLzEreC9xRWlOMm5DbGFBT3BiaHpOMmVVdlBEWTVXMHEzYkEvWnAybWZH
- NTJ2YlJJK3RRMEJyMUhkL3ZzbnQKVUhPOTAzbU1aZXAyTnpOM0JaNXFFdlB2RzRyVzVacTJE
- cHliV2JRclNtOW9iaUJLYjJoaGJuTmxiaUE4YW05bwpiaTVxYjJoaGJuTmxia0JqWVc1dmJt
- bGpZV3d1WTI5dFBva0NOd1FUQVFvQUlRVUNUbzBYV2dJYkF3VUxDUWdICkF3VVZDZ2tJQ3dV
- V0FnTUJBQUllQVFJWGdBQUtDUkFGTHpad0dOWEQySXRNRC85anliYzg3ZE00dUFIazZ5Tk0K
- TjBZL0JGbW10VFdWc09CaHFPbm9iNGkzOEJyRE8yQzFoUUNQQ1FlNExMczEvNHB0ZW92UXQ4
- QjJGeXJQVmp3Zwo3alpUSE5LNzRyNmxDQ1Z4eDN5dTFCN1U5UG80VlRrY3NsVmIxL3FtV3V4
- OFhXY040eXZrVHFsTCtHeHB5Sm45CjlaWmZmWEpjNk9oNlRtT2ZiS0d2TXV1djVhclNJQTNK
- SEZMZjlhTHZadEExaXNKVXI3cFM5YXBnOXVUVUdVcDcKd2ZWMFdUNlQzZUczbXRVVTJ1cDVK
- VjQ4NTBMMDVqSFM2dVdpZS9ZK3lmSk9iaXlyeE4vNlpxVzVHb25oTEJxLwptc3pjVjV2QlQz
- QkRWZTNSdkY2WGRNOU9oUG4xK1k4MXg1NCt2UTExM044aUx3RjdHR2ExNFp5SVZBTlpEMEkw
- CkhqUnZhMmsvUnFJUlR6S3l1UEg1cGtsY0tIVlBFRk1tT3pNVCtGT294Tmp2Uys3K3dHMktN
- RFlFbUhQcjFQSkIKWlNaZUh6SzE5dGZhbFBNcHBGeGkrc3lZTGFnTjBtQjdKSFF3WTdjclV1
- T0RoeWNxNjBZVnoxdGFFeWd1M1l2MgoyL0kxRUNHSHZLSEc2d2M5MG80M0MvZWxIRUNYbkVo
- N3RLcGxEY3BJQytPQ21NeEtIaFI0NitYY1p2Z3c0RGdiCjdjYTgzZVFSM0NHODlMdlFwVzJM
- TEtFRUJEajdoWmhrTGJra1BSWm0zdzhKWTQ0YXc4VnRneFdkblNFTUNMeEwKSU9OaDZ1Wjcv
- L0RZVnRjSWFNSllrZWJhWnRHZENwMElnVVpiMjQvVmR2WkNZYk82MkhrLzNWbzFuWHdIVUVz
- Mwo2RC92MWJUMFJaRmk2OUxnc0NjT2N4NGdZTGtDRFFST1pxejZBUkFBb3F3NmtrQmhXeU0x
- ZnZnYW1BVmplWjZuCktFZm5SV2JrQzk0TDFFc0pMdXAzV2IyWDBBQk5PSFNrYlNENHBBdUMy
- dEtGL0VHQnQ1Q1A3UWRWS1JHY1F6QWQKNmIyYzFJZHk5Ukx3Nnc0Z2krbm4vZDFQbTFra1lo
- a1NpNXpXYUlnMG01UlFVaytFbDh6a2Y1dGNFLzFOMFo1TwpLMkpoandGdTViWDBhMGw0Y0ZH
- V1ZRRWNpVk1ES1J0eE1qRXRrM1N4RmFsbTZaZFEycHAyODIyY2xucTR6WjltCld1MWQyd2F4
- aXorYjVJYTR3ZURZYTduNDFVUmNCRVViSkFnbmljSmtKdENUd3lJeElXMktuVnlPcmp2a1F6
- SUIKdmFQMEZkUDJ2dlpvUE1kbENJek9sSWtQTGd4RTBJV3VlVFhlQkpoTnMwMXBiOGJMcW1U
- SU1sdTRMdkJFTEEvdgplaWFqajVzOHk1NDJIL2FIc2ZCZjRNUVVoSHhPL0JaVjdoMDZLU1Vm
- SWFZN09nQWdLdUdOQjNVaWFJVVM1K2E5CmduRU9RTER4S1J5L2E3UTF2OVMrTnZ4KzdqOGlI
- M2prUUpoeFQ2WkJoWkdSeDBna0gzVCtGMG5ORG01TmFKVXMKYXN3Z0pycUZaa1VHZDJNcm0x
- cW5Ld1hpQXQ4U0ljRU5kcTMzUjBLS0tSQzgwWGd3ajhKbjMwdlhMU0crTk8xRwpIMFVNY0F4
- TXd5L3B2azZMVTVKR2paUjczSjVVTFZoSDRNTGJEZ2dEM21QYWlHOCtmb3RUckpVUHFxaGc5
- aHlVCkVQcFlHN3NxdDc0WG43OStDRVpjakxIenlsNnZBRkUyVzBreGxMdFF0VVpVSE8zNmFm
- RnY4cUdwTzNacVB2akIKVXVhdFhGNnR2VVFDd2YzSDZYTUFFUUVBQVlrQ0h3UVlBUW9BQ1FV
- Q1RtYXMrZ0liREFBS0NSQUZMelp3R05YRAoyRC9YRC8wZGRNLzRhaTFiK1RsMWp6bkthalgz
- a0crTWVFWWVJNGY0MHZjbzNyT0xyblJHRk9jYnl5ZlZGNjlNCktlcGllNE93b0kxamNUVTBB
- RGVjbmJXbkROSHByMFNjenhCTXJvM2Juckxoc212anVuVFlJdnNzQlp0QjRhVkoKanVMSUxQ
- VWxuaEZxYTdmYlZxMFpRamJpVi9ydDJqQkVOZG05cGJKWjZHam5wWUljQWJQQ0NhL2ZmTDQv
- U1FSUwpZSFhvaEdpaVM0eTVqQlRtSzVsdGZld0xPdzAyZmtleEgrSUpGcnJHQlhEU2c2bjJT
- Z3hubisrTkYzNGZYY205CnBpYXczbUtzSUNtKzBoZE5oNGFmR1o2SVdWOFBHMnRlb29WRHA0
- ZFlpaCsreFgvWFM4ekJDYzFPOXc0bnpsUDIKZ0t6bHFTV2JoaVdwaWZSSkJGYTRXdEFlSlRk
- WFlkMzdqL0JJNFJXV2hueXc3YUFQTkdqMzN5dEdITlVmNlJvMgovanRqNHRGMXkvUUZYcWpK
- Ry93R2pwZHRSZmJ0VWpxTEhJc3ZmUE5OSnEvOTU4cDc0bmRBQ2lkbFdTSHpqK09wCjI2S3Bi
- Rm5td05PMHBzaVVzbmh2SEZ3UE8vdkFibDNSc1I1KzBSbytodnMyY0VtUXV2OXIvYkRsQ2Zw
- enAydDMKY0srcmh4VXFpc094OERaZnoxQm5rYW9DUkZidnZ2ays3TC9mb21QbnRHUGtxSmNp
- WUU4VEdIa1p3MWhPa3UrNApPb00yR0I1bkVEbGorMlRGL2pMUStFaXBYOVBrUEpZdnhmUmxD
- NmRLOFBLS2ZYOUtkZm1BSWNnSGZuVjFqU24rCjh5SDJkakJQdEtpcVcwSjY5YUlzeXg3aVYv
- MDNwYVBDakpoN1hxOXZBenlkTjVVL1VBPT0KPTZQL2IKLS0tLS1FTkQgUEdQIFBVQkxJQyBL
- RVkgQkxPQ0stLS0tLQo=
-Organization: Canonical
-Message-ID: <4ec7af27-1614-534d-f659-b9dfe26e2f38@canonical.com>
-Date:   Tue, 19 May 2020 15:58:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 19 May 2020 19:01:29 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB0C4C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:01:28 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id o24so1327229oic.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 16:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=npvWnReb2IJt3VMAmxpMhac7mlmWW3J/lX24SrgS9qE=;
+        b=UOcCbH88owtzIRMNcPE+vdkyIkUinAEqPG/2YOPPDTTUWNJRr1tgJdTZlr0vWZgJGW
+         yMEPgA/E7XaOt0KFHP+BLdJZWh3BqrXHdORvRWc7/00F6kdrdK9wmiaR1ixpDzDBn91V
+         JDrLsJZoYRkuGucu7UUe46PhrZjYmm6C4BcrA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=npvWnReb2IJt3VMAmxpMhac7mlmWW3J/lX24SrgS9qE=;
+        b=F+mqP5KaqkgGeXzA8O1/1zYuB42v8dkRtM+8xq0AHIeqD7D/l52Bbs3dbm2EMVssi+
+         GuTBl7ib68Sku1RIyP8bAMRRgB3KMVYYP3Du30yMUk6OP76Ruu/vfwxziNgZu3gQrS5Q
+         Efry+ajCRnRPAA1rBNTopXy/af8sr53loYU5ZgDuboZiJy4kiayPNUZ7b+tGUlBkE15P
+         Gbc5N7gOufhhbFuCWDPqQnDVAY7rvi+a13MuWHvdscbOlrNRWqhTJEMM+ukDRtqNgUk8
+         PY9RdGXt/scItN202UZCJR3xnuPFSXl4DPBZV5QAzJDWL6qE5mL19YBB4TcL7qeng9Or
+         4Pgg==
+X-Gm-Message-State: AOAM532vdJ/ravWxVvkpsePicE09hIylujFomoBULmFpyOAOoTCjFdR7
+        6M+Vd0HWbm+VpHYSQCm3ZsavPuLHSxkAU9woRKU/BA==
+X-Google-Smtp-Source: ABdhPJzSeSchW1yQuuAJC6w8IpTar3IEvAnrtbLequiDAv30+NoQ1PDJ2Oj/ZnR5ghBhUq8zNh/OM7ccdGUffFcjoNM=
+X-Received: by 2002:aca:1e12:: with SMTP id m18mr1294095oic.128.1589929288064;
+ Tue, 19 May 2020 16:01:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202005191342.97EE972E3@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200519163234.226513-1-sashal@kernel.org> <CAPM=9txZpiCGkv3jiBC1F8pTe4A2pqWpQDyjRBXk2roFqw+0+Q@mail.gmail.com>
+In-Reply-To: <CAPM=9txZpiCGkv3jiBC1F8pTe4A2pqWpQDyjRBXk2roFqw+0+Q@mail.gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 20 May 2020 01:01:16 +0200
+Message-ID: <CAKMK7uEa0FH5_AyopVH+wpAXOOxoeo8Acck2qwzzyVnq0UuSZA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/4] DirectX on Linux
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "Ursulin, Tvrtko" <tvrtko.ursulin@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        spronovo@microsoft.com,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        iourit@microsoft.com,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Hawking Zhang <Hawking.Zhang@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/19/20 2:17 PM, Kees Cook wrote:
-> On Tue, May 19, 2020 at 01:42:28PM -0500, Eric W. Biederman wrote:
->> Kees Cook <keescook@chromium.org> writes:
->>
->>> On Tue, May 19, 2020 at 12:41:27PM -0500, Eric W. Biederman wrote:
->>>> Kees Cook <keescook@chromium.org> writes:
->>>>> and given the LSM hooks, I think the noexec check is too late as well.
->>>>> (This is especially true for the coming O_MAYEXEC series, which will
->>>>> absolutely need those tests earlier as well[1] -- the permission checking
->>>>> is then in the correct place: during open, not exec.) I think the only
->>>>> question is about leaving the redundant checks in fs/exec.c, which I
->>>>> think are a cheap way to retain a sense of robustness.
->>>>
->>>> The trouble is when someone passes through changes one of the permission
->>>> checks for whatever reason (misses that they are duplicated in another
->>>> location) and things then fail in some very unexpected way.
->>>
->>> Do you think this series should drop the "late" checks in fs/exec.c?
->>> Honestly, the largest motivation for me to move the checks earlier as
->>> I've done is so that other things besides execve() can use FMODE_EXEC
->>> during open() and receive the same sanity-checking as execve() (i.e the
->>> O_MAYEXEC series -- the details are still under discussion but this
->>> cleanup will be needed regardless).
->>
->> I think this series should drop the "late" checks in fs/exec.c  It feels
->> less error prone, and it feels like that would transform this into
->> something Linus would be eager to merge because series becomes a cleanup
->> that reduces line count.
-> 
-> Yeah, that was my initial sense too. I just started to get nervous about
-> removing the long-standing exec sanity checks. ;)
-> 
->> I haven't been inside of open recently enough to remember if the
->> location you are putting the check fundamentally makes sense.  But the
->> O_MAYEXEC bits make a pretty strong case that something of the sort
->> needs to happen.
-> 
-> Right. I *think* it's correct place for now, based on my understanding
-> of the call graph (which is why I included it in the commit logs).
-> 
->> I took a quick look but I can not see clearly where path_noexec
->> and the regular file tests should go.
->>
->> I do see that you have code duplication with faccessat which suggests
->> that you haven't put the checks in the right place.
-> 
-> Yeah, I have notes on the similar call sites (which I concluded, perhaps
-> wrongly) to ignore:
-> 
-> do_faccessat()
->     user_path_at(dfd, filename, lookup_flags, &path);
->     if (acc_mode & MAY_EXEC .... path_noexec()
->     inode_permission(inode, mode | MAY_ACCESS);
-> 
-> This appears to be strictly advisory, and the path_noexec() test is
-> there to, perhaps, avoid surprises when doing access() then fexecve()?
-> I would note, however, that that path-based LSMs appear to have no hook
-> in this call graph at all. I was expecting a call like:
-> 
-> 	security_file_permission(..., mode | MAY_ACCESS)
-> 
-> but I couldn't find one (or anything like it), so only
-> inode_permission() is being tested (which means also the existing
-> execve() late tests are missed, and the newly added S_ISREG() test from
-> do_dentry_open() is missed).
-> 
-> 
+On Wed, May 20, 2020 at 12:42 AM Dave Airlie <airlied@gmail.com> wrote:
+>
+> On Wed, 20 May 2020 at 02:33, Sasha Levin <sashal@kernel.org> wrote:
+> >
+> > There is a blog post that goes into more detail about the bigger
+> > picture, and walks through all the required pieces to make this work. It
+> > is available here:
+> > https://devblogs.microsoft.com/directx/directx-heart-linux . The rest of
+> > this cover letter will focus on the Linux Kernel bits.
+> >
+> > Overview
+> > ========
+> >
+> > This is the first draft of the Microsoft Virtual GPU (vGPU) driver. The
+> > driver exposes a paravirtualized GPU to user mode applications running
+> > in a virtual machine on a Windows host. This enables hardware
+> > acceleration in environment such as WSL (Windows Subsystem for Linux)
+> > where the Linux virtual machine is able to share the GPU with the
+> > Windows host.
+> >
+> > The projection is accomplished by exposing the WDDM (Windows Display
+> > Driver Model) interface as a set of IOCTL. This allows APIs and user
+> > mode driver written against the WDDM GPU abstraction on Windows to be
+> > ported to run within a Linux environment. This enables the port of the
+> > D3D12 and DirectML APIs as well as their associated user mode driver to
+> > Linux. This also enables third party APIs, such as the popular NVIDIA
+> > Cuda compute API, to be hardware accelerated within a WSL environment.
+> >
+> > Only the rendering/compute aspect of the GPU are projected to the
+> > virtual machine, no display functionality is exposed. Further, at this
+> > time there are no presentation integration. So although the D3D12 API
+> > can be use to render graphics offscreen, there is no path (yet) for
+> > pixel to flow from the Linux environment back onto the Windows host
+> > desktop. This GPU stack is effectively side-by-side with the native
+> > Linux graphics stack.
+>
+> Okay I've had some caffiene and absorbed some more of this.
+>
+> This is a driver that connects a binary blob interface in the Windows
+> kernel drivers to a binary blob that you run inside a Linux guest.
+> It's a binary transport between two binary pieces. Personally this
+> holds little of interest to me, I can see why it might be nice to have
+> this upstream, but I don't forsee any other Linux distributor ever
+> enabling it or having to ship it, it's purely a WSL2 pipe. I'm not
+> saying I'd be happy to see this in the tree, since I don't see the
+> value of maintaining it upstream, but it probably should just exists
+> in a drivers/hyperv type area.
 
-sadly correct, its something that we intend to fix but haven't gotten
-to it
+Yup as-is (especially with the goal of this being aimed at ml/compute
+only) drivers/hyperv sounds a bunch more reasonable than drivers/gpu.
 
-> prctl_set_mm_exe_file()
->     err = -EACCESS;
->     if (!S_ISREG(inode->i_mode) || path_noexec(&exe.file->f_path))
->         goto exit;
->     err = inode_permission(inode, MAY_EXEC);
-> 
-> This is similar (no path-based LSM hooks present, only inode_permission()
-> used for permission checking), but it is at least gated by CAP_SYS_ADMIN.
-> 
+> Having said that, I hit one stumbling block:
+> "Further, at this time there are no presentation integration. "
+>
+> If we upstream this driver as-is into some hyperv specific place, and
+> you decide to add presentation integration this is more than likely
+> going to mean you will want to interact with dma-bufs and dma-fences.
+> If the driver is hidden away in a hyperv place it's likely we won't
+> even notice that feature landing until it's too late.
 
-dito here
+I've recently added regex matches to MAINTAINERS so we'll see
+dma_buf/fence/anything show up on dri-devel. So that part is solved
+hopefully.
 
-> 
-> And this bring me to a related question from my review: does
-> dentry_open() intentionally bypass security_inode_permission()? I.e. it
-> calls vfs_open() not do_open():
-> 
-> openat2(dfd, char * filename, open_how)
->     build_open_flags(open_how, open_flags)
->     do_filp_open(dfd, filename, open_flags)
->         path_openat(nameidata, open_flags, flags)
->             file = alloc_empty_file(open_flags, current_cred());
->             do_open(nameidata, file, open_flags)
->                 may_open(path, acc_mode, open_flag)
->                     inode_permission(inode, MAY_OPEN | acc_mode)
->                         security_inode_permission(inode, acc_mode)
->                 vfs_open(path, file)
->                     do_dentry_open(file, path->dentry->d_inode, open)
->                         if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) ...
->                         security_file_open(f)
->                                 /* path-based LSMs check for open here
-> 				 * and use FMODE_* flags to determine how a file
->                                  * is being opened. */
->                         open()
-> 
-> vs
-> 
-> dentry_open(path, flags, cred)
->         f = alloc_empty_file(flags, cred);
->         vfs_open(path, f);
-> 
-> I would expect dentry_open() to mostly duplicate a bunch of
-> path_openat(), but it lacks the may_open() call, etc.
-> 
-> I really got the feeling that there was some new conceptual split needed
-> inside do_open() where the nameidata details have been finished, after
-> we've gained the "file" information, but before we've lost the "path"
-> information. For example, may_open(path, ...) has no sense of "file",
-> though it does do the inode_permission() call.
-> 
-yes that would be nice, sadly the path hooks are really a bolted on after thought
+> I would like to see a coherent plan for presentation support (not
+> code, just an architectural diagram), because I think when you
+> contemplate how that works it will change the picture of how this
+> driver looks and intergrates into the rest of the Linux graphics
+> ecosystem.
 
-> Note also that may_open() is used in do_tmpfile() too, and has a comment
-> implying it needs to be checking only a subset of the path details. So
-> I'm not sure how to split things up.
-> 
-/me neither anymore
+Yeah once we have the feature-creep to presentation support all the
+integration fun starts, with all the questions about "why does this
+not look like any other linux gpu driver". We have that already with
+nvidia insisting they just can't implement any of the upstream gpu
+uapi we have, but at least they're not in-tree, so not our problem
+from an upstream maintainership pov.
 
-> So, that's why I put the new checks just before the may_open() call in
-> do_open(): it's the most central, positions itself correctly for dealing
-> with O_MAYEXEC, and doesn't appear to make any existing paths worse.
-> 
->> I am wondering if we need something distinct to request the type of the
->> file being opened versus execute permissions.
-> 
-> Well, this is why I wanted to centralize it -- the knowledge of how a
-> file is going to be used needs to be tested both by the core VFS
-> (S_ISREG, path_noexec) and the LSMs. Things were inconsistent before.
-> 
+But once this dx12 pipe is landed and then we want to extend it it's
+still going to have all the "we can't ever release the sources to any
+of the parts we usually expect to be open for gpu drivers in upstream"
+problems. Then we're stuck at a rather awkward point of why one vendor
+gets an exception and all the others dont.
 
-yep
+> As-is I'd rather this didn't land under my purview, since I don't see
+> the value this adds to the Linux ecosystem at all, and I think it's
+> important when putting a burden on upstream that you provide some
+> value.
 
->> All I know is being careful and putting the tests in a good logical
->> place makes the code more maintainable, whereas not being careful
->> results in all kinds of sharp corners that might be exploitable.
->> So I think it is worth digging in and figuring out where those checks
->> should live.  Especially so that code like faccessat does not need
->> to duplicate them.
-> 
-> I think this is the right place with respect to execve(), though I think
-> there are other cases that could use to be improved (or at least made
-> more consistent).
-> 
-> -Kees
-> 
-
+Well there is some in the form of "more hw/platform support". But
+given that gpus evolved rather fast, including the entire integration
+ecosystem (it's by far not just the hw drivers that move quickly). So
+that value deprecates a lot faster than for other kernel subsystems.
+And all that's left is the pain of not breaking anything without
+actually being able to evolve the overall stack in any meaningful way.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
