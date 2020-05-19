@@ -2,235 +2,293 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAECFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB98DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A70C020756
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CA0206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 10:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GqxbbDC0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WLNGyhE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgESKFj (ORCPT
+        id S1728728AbgESKGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 06:05:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbgESKFd (ORCPT
+        Tue, 19 May 2020 06:06:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29553 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728632AbgESKGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 06:05:33 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53004C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:05:32 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f13so2409138wmc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:05:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1GMSJCrVKCMzm4RoTB2snBSGZpkdY3EFXYzNpB+xzY4=;
-        b=GqxbbDC0jocpqGUD1GN7Ds69rwrA0JczU3I6iaX/nBBLNBJNsAUS1PVbzwgaW+OnKE
-         X8PGEnjA1MJLxPYivD8yWuM+3ZfMQihBgWeNJnWhG1ZgKDh8Anhb8kbuk2ogj1Y0ewwm
-         TNfL1N9L7+eFLW3t8ocPvJ9wXhovd4rxVkC1y3Eu5qFw7yStZAsCbct7VIrKeNJGNlwX
-         RsjYNu//FmvxdqsJbeJoDa+wgD/1a7ZNyLGqxmaz4cqOQ6Qa4DnB+1NBpD3qgVnSlLpv
-         5Lyg1491lLXqp4zpY94LR1S5jwi2usnYE5mdSHhlAhiDbyTbYo/oxa80waqPnH6w0sqj
-         Xb8g==
+        Tue, 19 May 2020 06:06:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589882759;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i7Pb0OijTA+irttwxC+dxELBnYCuz9NJOuNYknbTw1Q=;
+        b=WLNGyhE59TAn+NOIB3tfIp1NHP6D6qhXpXRogSNh2raDSZe+ImnAtCoZf5Wb0PyScLdoV8
+        E5oM/Jfx84pRPBj+O1G6XbsN2uqYMw5Oo+gO3RetgIZlOUcCpgblV3r0uteTyE2HEkb00j
+        JwJKnE5t/XfRwUCAYAzFHaNnlc3yRnA=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-131-hjiB7Y2jM-2xfzB52wTqnw-1; Tue, 19 May 2020 06:05:58 -0400
+X-MC-Unique: hjiB7Y2jM-2xfzB52wTqnw-1
+Received: by mail-ej1-f72.google.com with SMTP id h6so1829159ejb.17
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 03:05:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=1GMSJCrVKCMzm4RoTB2snBSGZpkdY3EFXYzNpB+xzY4=;
-        b=W4T6JVBMEPm6gnijuUQ9uLgujaONIk10VTEtw2nnW5i5/jR5ag8Rxz6MLvJGDw6h8b
-         KpZ7ecLnY63Zj4/c8ABjeKgrOv+o8JLSWCqAtP74VFvhfT+10PDU0CCoVigUhI/fDVvE
-         gGSyyXhR7mcIe3ox7RQoQ+AWIGbLL/86wEZpjbhRjDGdo/G/LfJO0kMJ9V9PkTEP7RpZ
-         PHMSl3r9Oe3nd0e/jqhEl/EP9TSQ9EUPWd2LDkit0/jjwjsineSSbllkj4iF7R1cGKCj
-         3Jmw4d+q/U92ZwEOlqZiaYcrfaDuhyNxdkk9UdmOeVxjEJNaTMB4H2iD7OZAyPFZqgXG
-         MRSA==
-X-Gm-Message-State: AOAM5318+dDVXQ7+QniiKp28cMj461XKgAbEtqTnzCVkUoUlZzG8O+pv
-        VATDApuvFuxfbp0iLZPV+9A=
-X-Google-Smtp-Source: ABdhPJySVGHY3Ow4lEdRvcSpfi2x+vjpHrg10Futm+xnWY0KfG5b4LhONXz7f/w5AcQOFUkANOVNuQ==
-X-Received: by 2002:a1c:7305:: with SMTP id d5mr4717705wmb.85.1589882730918;
-        Tue, 19 May 2020 03:05:30 -0700 (PDT)
-Received: from ubuntu-G3.micron.com ([165.225.86.140])
-        by smtp.gmail.com with ESMTPSA id b18sm19968008wrn.82.2020.05.19.03.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 03:05:30 -0700 (PDT)
-From:   Bean Huo <huobean@gmail.com>
-To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        s.hauer@pengutronix.de, boris.brezillon@collabora.com,
-        derosier@gmail.com
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        huobean@gmail.com, Bean Huo <beanhuo@micron.com>
-Subject: [PATCH v5 5/5] mtd: rawnand: micron: Micron SLC NAND filling block
-Date:   Tue, 19 May 2020 12:05:07 +0200
-Message-Id: <20200519100507.19323-6-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200519100507.19323-1-huobean@gmail.com>
-References: <20200519100507.19323-1-huobean@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i7Pb0OijTA+irttwxC+dxELBnYCuz9NJOuNYknbTw1Q=;
+        b=tppXz77sBxDGi6mC4l00BtvkToru9aEtsLIOb5g1YqQlg0oRWpHu0rG10hrG6SCqHV
+         1dyY8W++CGb2xWIjhtEuo6+k+KCbbTsbxGQKOFGuix8ThgV4edU419qmz94EFlNpWRKo
+         qZ4a5BlEPszjIudlbzXhFx5bb+XjYjFgtfdKyWOR17VW7XWCWD+U2r7hj+0Pks25gdAY
+         eJExOQGIclFXBZqJDqcab/GYqeW7c2dY2EyUKUxm7eRXXsZrO0DhE2ESHGRLgYLggUg9
+         JWUD0cM/76U80fR8Q51LaF3Vh09qfWjJfU7U3Ze8bO7QKsBZtFQEtTSzW+BeMzN+WEyB
+         vbsw==
+X-Gm-Message-State: AOAM531tdO9t+S4UxUncWiFTjYA8VEAJq0FNABGPESYKU71ITG0Wr4VD
+        fr4hF+yx5E/Z+osxFMrSruLPUOELGnGW3cF4bPok7z9kdMQiO2IQJzmrDOBbgWMUQx46I8G2+M8
+        SkkkbXonHbm7F9yEPYS1aRi8ySFZYBblkpOPWc8Rk
+X-Received: by 2002:a17:906:2503:: with SMTP id i3mr17354033ejb.293.1589882756924;
+        Tue, 19 May 2020 03:05:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxJ1McJxtcCmjVmosQ2avZ2PtCSSDCXz2Om0hD2da3gdN7fS7o6Mf8E32HG29p7gwidi7B2T3qwUaeoW85+L6Q=
+X-Received: by 2002:a17:906:2503:: with SMTP id i3mr17354012ejb.293.1589882756498;
+ Tue, 19 May 2020 03:05:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
+ <20190524100554.8606-4-maxime.chevallier@bootlin.com> <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
+ <20200423170003.GT25745@shell.armlinux.org.uk> <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
+ <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+ <20200509114518.GB1551@shell.armlinux.org.uk> <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
+ <20200509195246.GJ1551@shell.armlinux.org.uk> <20200509202050.GK1551@shell.armlinux.org.uk>
+ <20200519095330.GA1551@shell.armlinux.org.uk>
+In-Reply-To: <20200519095330.GA1551@shell.armlinux.org.uk>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Tue, 19 May 2020 12:05:20 +0200
+Message-ID: <CAGnkfhzuyxJDo-DXPHPiNtP4RbRpry+3M9eoiTknGR0zvgPuoA@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
+ to handle RSS tables
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev <netdev@vger.kernel.org>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+On Tue, May 19, 2020 at 11:54 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Sat, May 09, 2020 at 09:20:50PM +0100, Russell King - ARM Linux admin wrote:
+> > On Sat, May 09, 2020 at 08:52:46PM +0100, Russell King - ARM Linux admin wrote:
+> > > It is highly likely that 895586d5dc32 is responsible for this breakage.
+> > > I've been investigating this afternoon, and what I've found, comparing
+> > > a kernel without 895586d5dc32 and with 895586d5dc32 applied is:
+> > >
+> > > - The table programmed into the hardware via mvpp22_rss_fill_table()
+> > >   appears to be identical with or without the commit.
+> > >
+> > > - When rxhash is enabled on eth2, mvpp2_rss_port_c2_enable() reports
+> > >   that c2.attr[0] and c2.attr[2] are written back containing:
+> > >
+> > >    - with 895586d5dc32, failing:    00200000 40000000
+> > >    - without 895586d5dc32, working: 04000000 40000000
+> > >
+> > > - When disabling rxhash, c2.attr[0] and c2.attr[2] are written back as:
+> > >
+> > >    04000000 00000000
+> > >
+> > > The second value represents the MVPP22_CLS_C2_ATTR2_RSS_EN bit, the
+> > > first value is the queue number, which comprises two fields.  The high
+> > > 5 bits are 24:29 and the low three are 21:23 inclusive.  This comes
+> > > from:
+> > >
+> > >        c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
+> > >                      MVPP22_CLS_C2_ATTR0_QLOW(ql);
+> > > #define     MVPP22_CLS_C2_ATTR0_QHIGH(qh)       (((qh) & 0x1f) << 24)
+> > > #define     MVPP22_CLS_C2_ATTR0_QLOW(ql)        (((ql) & 0x7) << 21)
+> > >
+> > > So, the working case gives eth2 a queue id of 4.0, or 32 as per
+> > > port->first_rxq, and the non-working case a queue id of 0.1, or 1.
+> > >
+> > > The allocation of queue IDs seems to be in mvpp2_port_probe():
+> > >
+> > >         if (priv->hw_version == MVPP21)
+> > >                 port->first_rxq = port->id * port->nrxqs;
+> > >         else
+> > >                 port->first_rxq = port->id * priv->max_port_rxqs;
+> > >
+> > > Where:
+> > >
+> > >         if (priv->hw_version == MVPP21)
+> > >                 priv->max_port_rxqs = 8;
+> > >         else
+> > >                 priv->max_port_rxqs = 32;
+> > >
+> > > Making the port 0 (eth0 / eth1) have port->first_rxq = 0, and port 1
+> > > (eth2) be 32.  It seems the idea is that the first 32 queues belong to
+> > > port 0, the second 32 queues belong to port 1, etc.
+> > >
+> > > mvpp2_rss_port_c2_enable() gets the queue number from it's parameter,
+> > > 'ctx', which comes from mvpp22_rss_ctx(port, 0).  This returns
+> > > port->rss_ctx[0].
+> > >
+> > > mvpp22_rss_context_create() is responsible for allocating that, which
+> > > it does by looking for an unallocated priv->rss_tables[] pointer.  This
+> > > table is shared amongst all ports on the CP silicon.
+> > >
+> > > When we write the tables in mvpp22_rss_fill_table(), the RSS table
+> > > entry is defined by:
+> > >
+> > >             u32 sel = MVPP22_RSS_INDEX_TABLE(rss_ctx) |
+> > >                           MVPP22_RSS_INDEX_TABLE_ENTRY(i);
+> > >
+> > > where rss_ctx is the context ID (queue number) and i is the index in
+> > > the table.
+> > >
+> > > #define     MVPP22_RSS_INDEX_TABLE_ENTRY(idx)   (idx)
+> > > #define     MVPP22_RSS_INDEX_TABLE(idx)         ((idx) << 8)
+> > > #define     MVPP22_RSS_INDEX_QUEUE(idx)         ((idx) << 16)
+> > >
+> > > If we look at what is written:
+> > >
+> > > - The first table to be written has "sel" values of 00000000..0000001f,
+> > >   containing values 0..3. This appears to be for eth1.  This is table 0,
+> > >   RX queue number 0.
+> > > - The second table has "sel" values of 00000100..0000011f, and appears
+> > >   to be for eth2.  These contain values 0x20..0x23.  This is table 1,
+> > >   RX queue number 0.
+> > > - The third table has "sel" values of 00000200..0000021f, and appears
+> > >   to be for eth3.  These contain values 0x40..0x43.  This is table 2,
+> > >   RX queue number 0.
+> > >
+> > > Okay, so how do queue numbers translate to the RSS table?  There is
+> > > another table - the RXQ2RSS table, indexed by the MVPP22_RSS_INDEX_QUEUE
+> > > field of MVPP22_RSS_INDEX and accessed through the MVPP22_RXQ2RSS_TABLE
+> > > register.  Before 895586d5dc32, it was:
+> > >
+> > >        mvpp2_write(priv, MVPP22_RSS_INDEX,
+> > >                    MVPP22_RSS_INDEX_QUEUE(port->first_rxq));
+> > >        mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE,
+> > >                    MVPP22_RSS_TABLE_POINTER(port->id));
+> > >
+> > > and after:
+> > >
+> > >        mvpp2_write(priv, MVPP22_RSS_INDEX, MVPP22_RSS_INDEX_QUEUE(ctx));
+> > >        mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE, MVPP22_RSS_TABLE_POINTER(ctx));
+> > >
+> > > So, before the commit, for eth2, that would've contained '32' for the
+> > > index and '1' for the table pointer - mapping queue 32 to table 1.
+> > > Remember that this is queue-high.queue-low of 4.0.
+> > >
+> > > After the commit, we appear to map queue 1 to table 1.  That again
+> > > looks fine on the face of it.
+> > >
+> > > Section 9.3.1 of the A8040 manual seems indicate the reason that the
+> > > queue number is separated.  queue-low seems to always come from the
+> > > classifier, whereas queue-high can be from the ingress physical port
+> > > number or the classifier depending on the MVPP2_CLS_SWFWD_PCTRL_REG.
+> > >
+> > > We set the port bit in MVPP2_CLS_SWFWD_PCTRL_REG, meaning that queue-high
+> > > comes from the MVPP2_CLS_SWFWD_P2HQ_REG() register... and this seems to
+> > > be where our bug comes from.
+> > >
+> > > mvpp2_cls_oversize_rxq_set() sets this up as:
+> > >
+> > >         mvpp2_write(port->priv, MVPP2_CLS_SWFWD_P2HQ_REG(port->id),
+> > >                     (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
+> > >
+> > >         val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
+> > >         val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+> > >         mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
+> > >
+> > > so, the queue-high for eth2 is _always_ 4, meaning that only queues
+> > > 32 through 39 inclusive are available to eth2.  Yet, we're trying to
+> > > tell the classifier to set queue-high, which will be ignored, to zero.
+> > >
+> > > So we end up directing traffic from eth2 not to queue 1, but to queue
+> > > 33, and then we tell it to look up queue 33 in the RSS table.  However,
+> > > RSS table has not been programmed for queue 33, and so it ends up
+> > > (presumably) dropping the packets.
+> > >
+> > > It seems that mvpp22_rss_context_create() doesn't take account of the
+> > > fact that the upper 5 bits of the queue ID can't actually be changed
+> > > due to the settings in mvpp2_cls_oversize_rxq_set(), _or_ it seems
+> > > that mvpp2_cls_oversize_rxq_set() has been missed in this commit.
+> > > Either way, these two functions mutually disagree with what queue
+> > > number should be used.
+> > >
+> > > So, 895586d5dc32 is indeed the cause of this problem.
+> >
+> > Looking deeper into what mvpp2_cls_oversize_rxq_set() and the MTU
+> > validation is doing, it seems that MVPP2_CLS_SWFWD_P2HQ_REG() is
+> > used for at least a couple of things.
+> >
+> > So, with the classifier having had RSS enabled and directing eth2
+> > traffic to queue 1, we can not ignore the fact that we may have
+> > packets appearing on queue 32 for this port.
+> >
+> > One of the things that queue 32 will be used for is if an over-sized
+> > packet attempts to egress through eth2 - it seems that the A8040 has
+> > the ability to forward frames between its ports.  However, afaik we
+> > don't support that feature, and the kernel restricts the packet size,
+> > so we should never violate the MTU validator and end up with such a
+> > packet.  In any case, _if_ we were to attempt to transmit an oversized
+> > packet, we have no support in the kernel to deal with that appearing
+> > in the port's receive queue.
+> >
+> > Maybe it would be safe to clear the MVPP2_CLS_SWFWD_PCTRL_MASK() bit?
+> >
+> > My testing seems to confirm my findings above - clearing this bit
+> > means that if I enable rxhash on eth2, the interface can then pass
+> > traffic, as we are now directing traffic to RX queue 1 rather than
+> > queue 33.  Traffic still seems to work with rxhash off as well.
+> >
+> > So, I think it's clear where the problem lies, but not what the correct
+> > solution is; someone with more experience of packet classifiers (this
+> > one?) needs to look at this - this is my first venture into these
+> > things, and certainly the first time I've traced through how this is
+> > trying to work (or not)...
+>
+> This is what I was using here to work around the problem, and what I
+> mentioned above.
+>
+> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+> index fd221d88811e..0dd3b65822dd 100644
+> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+> @@ -1058,7 +1058,7 @@ void mvpp2_cls_oversize_rxq_set(struct mvpp2_port *port)
+>                     (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
+>
+>         val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
+> -       val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+> +       val &= ~MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+>         mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
+>  }
+>
+>
 
-On planar 2D Micron NAND devices when a block erase command is issued,
-occasionally even though a block erase operation completes and returns a
-pass status, the flash block may not be completely erased. Subsequent
-operations to this block on very rare cases can result in subtle failures
-or corruption. These extremely rare cases should nevertheless be
-considered. These rare occurrences have been observed on partially written
-blocks.
+Hi,
 
-To avoid this rare occurrence, we should make sure that at least 15 pages
-have been programmed to a block before it is erased. In case we find that
-less than 15 pages have been programmed, we will rewrite first 15 pages of
-block.
+I will try this change and let you know if it works.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/mtd/nand/raw/nand_micron.c | 102 +++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+Thanks
 
-diff --git a/drivers/mtd/nand/raw/nand_micron.c b/drivers/mtd/nand/raw/nand_micron.c
-index b3485b0995ad..c5fd9e60f46d 100644
---- a/drivers/mtd/nand/raw/nand_micron.c
-+++ b/drivers/mtd/nand/raw/nand_micron.c
-@@ -36,6 +36,9 @@
- #define NAND_ECC_STATUS_1_3_CORRECTED	BIT(4)
- #define NAND_ECC_STATUS_7_8_CORRECTED	(BIT(4) | BIT(3))
- 
-+#define MICRON_SHALLOW_ERASE_MIN_PAGE 15
-+#define MICRON_PAGE_MASK_TRIGGER GENMASK(MICRON_SHALLOW_ERASE_MIN_PAGE, 0)
-+
- struct nand_onfi_vendor_micron {
- 	u8 two_plane_read;
- 	u8 read_cache;
-@@ -64,6 +67,7 @@ struct micron_on_die_ecc {
- 
- struct micron_nand {
- 	struct micron_on_die_ecc ecc;
-+	u16 *writtenp;
- };
- 
- static int micron_nand_setup_read_retry(struct nand_chip *chip, int retry_mode)
-@@ -429,6 +433,93 @@ static int micron_supports_on_die_ecc(struct nand_chip *chip)
- 	return MICRON_ON_DIE_SUPPORTED;
- }
- 
-+static int micron_nand_pre_erase(struct nand_chip *chip, u32 eraseblock)
-+{
-+	struct micron_nand *micron = nand_get_manufacturer_data(chip);
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	u8 last_page = MICRON_SHALLOW_ERASE_MIN_PAGE - 1;
-+	u32 page;
-+	u8 *data_buf;
-+	int ret, i;
-+
-+	data_buf = nand_get_data_buf(chip);
-+	WARN_ON(!data_buf);
-+
-+	if (likely(micron->writtenp[eraseblock] & BIT(last_page)))
-+		return 0;
-+
-+	page = eraseblock << (chip->phys_erase_shift - chip->page_shift);
-+
-+	if (unlikely(micron->writtenp[eraseblock] == 0)) {
-+		ret = nand_read_page_raw(chip, data_buf, 1, page + last_page);
-+		if (ret)
-+			return ret; /* Read error */
-+		ret = nand_check_is_erased_page(chip, data_buf, true);
-+		if (!ret)
-+			return 0;
-+	}
-+
-+	memset(data_buf, 0x00, mtd->writesize);
-+
-+	for (i = 0; i < MICRON_SHALLOW_ERASE_MIN_PAGE; i++) {
-+		ret = nand_write_page_raw(chip, data_buf, false, page + i);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int micron_nand_post_erase(struct nand_chip *chip, u32 eraseblock)
-+{
-+	struct micron_nand *micron = nand_get_manufacturer_data(chip);
-+
-+	if (!micron)
-+		return -EINVAL;
-+
-+	micron->writtenp[eraseblock] = 0;
-+
-+	return 0;
-+}
-+
-+static int micron_nand_write_oob(struct nand_chip *chip, loff_t to,
-+				 struct mtd_oob_ops *ops)
-+{
-+	struct micron_nand *micron = nand_get_manufacturer_data(chip);
-+	u32 eb_sz = nanddev_eraseblock_size(&chip->base);
-+	u32 p_sz = nanddev_page_size(&chip->base);
-+	u32 ppeb = nanddev_pages_per_eraseblock(&chip->base);
-+	u32 nb_p_tot = ops->len / p_sz;
-+	u32 first_eb = DIV_ROUND_DOWN_ULL(to, eb_sz);
-+	u32 first_p = DIV_ROUND_UP_ULL(to - (first_eb * eb_sz), p_sz);
-+	u32 nb_eb = DIV_ROUND_UP_ULL(first_p + nb_p_tot, ppeb);
-+	u32 remaining_p, eb, nb_p;
-+	int ret;
-+
-+	ret = nand_write_oob_nand(chip, to, ops);
-+
-+	if (ret || ops->len != ops->retlen)
-+		return ret;
-+
-+	/* Mark the last pages of the first erase block to write */
-+	nb_p = min(nb_p_tot, ppeb - first_p);
-+	micron->writtenp[first_eb] |= GENMASK(first_p + nb_p, 0) &
-+					MICRON_PAGE_MASK_TRIGGER;
-+	remaining_p = nb_p_tot - nb_p;
-+
-+	/* Mark all the pages of all "in-the-middle" erase blocks */
-+	for (eb = first_eb + 1; eb < first_eb + nb_eb - 1; eb++) {
-+		micron->writtenp[eb] |= MICRON_PAGE_MASK_TRIGGER;
-+		remaining_p -= ppeb;
-+	}
-+
-+	/* Mark the first pages of the last erase block to write */
-+	if (remaining_p)
-+		micron->writtenp[eb] |= GENMASK(remaining_p - 1, 0) &
-+					MICRON_PAGE_MASK_TRIGGER;
-+		return 0;
-+}
-+
- static int micron_nand_init(struct nand_chip *chip)
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
-@@ -515,6 +606,17 @@ static int micron_nand_init(struct nand_chip *chip)
- 		}
- 	}
- 
-+	if (nand_is_slc(chip)) {
-+		micron->writtenp = kcalloc(nanddev_neraseblocks(&chip->base),
-+					   sizeof(u16), GFP_KERNEL);
-+		if (!micron->writtenp)
-+			goto err_free_manuf_data;
-+
-+		chip->ops.write_oob = micron_nand_write_oob;
-+		chip->ops.pre_erase = micron_nand_pre_erase;
-+		chip->ops.post_erase = micron_nand_post_erase;
-+	}
-+
- 	return 0;
- 
- err_free_manuf_data:
 -- 
-2.17.1
+Matteo Croce
+per aspera ad upstream
 
