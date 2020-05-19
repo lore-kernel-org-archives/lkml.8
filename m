@@ -2,242 +2,241 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33433C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130BB20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DBD207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 08:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EbYPn7i5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zL7BEAXN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgESI3N (ORCPT
+        id S1728273AbgESI3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 04:29:13 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55896 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgESI3N (ORCPT
+        Tue, 19 May 2020 04:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728026AbgESI3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 04:29:13 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04J8T9oa106526;
-        Tue, 19 May 2020 03:29:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589876949;
-        bh=ZiduhVOg5MMMMQdQPVOx0auXP9xGjDBpjLfphpPRrss=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=EbYPn7i53B1QGcA2r/+RQRlTWtyxlor4rw10b0cp8uhtGkE8HL93a7eUlZlwNSoFL
-         Fx0guQY6HuTlr638BDdIXyqmFdMtP6gSXLorQBqud0plwxDEcKKkSYdQXypm4YCsZl
-         qh1CZyLHE70MsG/ywJJmNVUORye1yP1pHI9p02FU=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04J8T9sJ091602
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 May 2020 03:29:09 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
- May 2020 03:29:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 19 May 2020 03:29:08 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04J8T5Vj037768;
-        Tue, 19 May 2020 03:29:06 -0500
-Subject: Re: [PATCH v8 1/3] dt-bindings: phy: Add DT bindings for Xilinx
- ZynqMP PSGTR PHY
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
- <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <eaeba80e-9082-2eeb-8c66-7ef28b7fb895@ti.com>
-Date:   Tue, 19 May 2020 13:59:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 19 May 2020 04:29:18 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB08C05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:29:18 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c12so7016249lfc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 01:29:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=p+XoVit7LGOjjY6u1+Jrt54E75IAgdqCJEY4iPDPDiQ=;
+        b=zL7BEAXNG80fzsY+ZK8t5byed/+Mt4CFH0DsvwfTxAx4gqbRWsdz+4VnFvIir+eqM2
+         0wnShYzPeitZmzrrh/+fu9zXNEtAifvmcwMQJmpitbdDNsSA2rKoQ+gBX8Qn+qadS/eo
+         Z6oO0NP4JfWnEubc0ZWhCuG4AAQYRxrDvDKj4giYJE3LII8H+syaZ/xaZ4br31hoQ0+6
+         wkztveeqbqlN7JgUt2QOiTCueuh8GZbyrT6hmVbuWUiSnYxHGFRGvH1/LkMy7UGBgLSM
+         3Rt4jfdA2uFcnHtiX8W/2kzUIm6WN1dNmZQtePoTlMLR0aAdhkBoFBjXYBp22huGM+st
+         oCMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p+XoVit7LGOjjY6u1+Jrt54E75IAgdqCJEY4iPDPDiQ=;
+        b=rtBnlKfrk9aDy4xyqKcbTtZasxjEY0l3k2Cf0bxeR8Zy4duiRJFb8oJ2iEnwMRqZPz
+         /ICkiCYqAPwdTQVq9XTQSTJ6+AlnZH1r/nlIkLtI7vadKkrdwntIjT8QrGJDtgxk+hrI
+         uZnyG8CpGTrqjUvH4d3O2ffUVnl6gCd3b9pY9Hg5zGtMqJqPtTTDeYCV209zjw+vQZR5
+         HQ/W9ndvRl52h44uTR8bYqKb+eGLwi8n7lxFouVka5HNsmj44KrgfGdumdZ1L+0Q7ZTy
+         aQmlI47h0T40UY6GZnq6SBxN9lgdAi7Lj9rUH6q7S7naowmae4L28uw04pF0iD4+ZMec
+         zhBw==
+X-Gm-Message-State: AOAM533cI0a7lj8PRIwKW/ff6VybLw3PPB2/7Mkqt8Zy8m8zvMsMKx5P
+        ka8BV7sP7yppH3bL6ImfxmR44/YUmrZjzbRFdjaP8W6PIqM5Vg==
+X-Google-Smtp-Source: ABdhPJyhpsiHB9AMkoVjVYhMXWKpaAjLucwJpMpktnjOqlp27EtpX8ESukkgGvewFCHkngTXwtdRSBmUzClOsKzSEFs=
+X-Received: by 2002:a19:8453:: with SMTP id g80mr14616265lfd.167.1589876956314;
+ Tue, 19 May 2020 01:29:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200518173450.254571947@linuxfoundation.org>
+In-Reply-To: <20200518173450.254571947@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 19 May 2020 13:59:04 +0530
+Message-ID: <CA+G9fYsoqa1KdvG+PfxAQTnan+XJFcvXnoaPfONK0DD70HFUww@mail.gmail.com>
+Subject: Re: [PATCH 4.4 00/86] 4.4.224-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 18 May 2020 at 23:08, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.224 release.
+> There are 86 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 20 May 2020 17:32:42 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.224-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.224-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 5614224b8432edc87094945490727479494da465
+git describe: v4.4.223-87-g5614224b8432
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.223-87-g5614224b8432
+
+No regressions (compared to build v4.4.223)
+
+No fixes (compared to build v4.4.223)
+
+Ran 18965 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest/net
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
 
 
-On 5/13/2020 10:52 PM, Laurent Pinchart wrote:
-> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> 
-> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-> Processing System Gigabit Transceiver which provides PHY capabilities to
-> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-> 
-> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Summary
+------------------------------------------------------------------------
 
-Need RobH Ack for this to be merged.
+kernel: 4.4.224-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.224-rc1-hikey-20200518-727
+git commit: 59657db1accd5fa3cc599da31d1501113075794c
+git describe: 4.4.224-rc1-hikey-20200518-727
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.224-rc1-hikey-20200518-727
 
-Thanks
-Kishon
-> ---
-> Changes since v7:
-> 
-> - Switch to GPL-2.0-only OR BSD-2-Clause
-> 
-> Changes since v6:
-> 
-> - Fixed specification of compatible-dependent xlnx,tx-termination-fix
->   property
-> - Dropped status property from example
-> - Use 4 spaces to indent example
-> 
-> Changes since v5:
-> 
-> - Document clocks and clock-names properties
-> - Document resets and reset-names properties
-> - Replace subnodes with an additional entry in the PHY cells
-> - Drop lane frequency PHY cell, replaced by reference clock phandle
-> - Convert bindings to YAML
-> - Reword the subject line
-> - Drop Rob's R-b as the bindings have significantly changed
-> - Drop resets and reset-names properties
-> ---
->  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
->  include/dt-bindings/phy/phy.h                 |   1 +
->  2 files changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> new file mode 100644
-> index 000000000000..09e3cde7ebca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> @@ -0,0 +1,105 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
-> +
-> +maintainers:
-> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> +
-> +description: |
-> +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
-> +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
-> +  Ethernet SGMII controllers.
-> +
-> +properties:
-> +  "#phy-cells":
-> +    const: 4
-> +    description: |
-> +      The cells contain the following arguments.
-> +
-> +      - description: The GTR lane
-> +        minimum: 0
-> +        maximum: 3
-> +      - description: The PHY type
-> +        enum:
-> +          - PHY_TYPE_DP
-> +          - PHY_TYPE_PCIE
-> +          - PHY_TYPE_SATA
-> +          - PHY_TYPE_SGMII
-> +          - PHY_TYPE_USB
-> +      - description: The PHY instance
-> +        minimum: 0
-> +        maximum: 1 # for DP, SATA or USB
-> +        maximum: 3 # for PCIE or SGMII
-> +      - description: The reference clock number
-> +        minimum: 0
-> +        maximum: 3
-> +
-> +  compatible:
-> +    enum:
-> +      - xlnx,zynqmp-psgtr-v1.1
-> +      - xlnx,zynqmp-psgtr
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 4
-> +    description: |
-> +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
-> +      inputs shall not have an entry.
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 4
-> +    items:
-> +      pattern: "^ref[0-3]$"
-> +
-> +  reg:
-> +    items:
-> +      - description: SERDES registers block
-> +      - description: SIOU registers block
-> +
-> +  reg-names:
-> +    items:
-> +      - const: serdes
-> +      - const: siou
-> +
-> +  xlnx,tx-termination-fix:
-> +    description: |
-> +      Include this for fixing functional issue with the TX termination
-> +      resistance in GT, which can be out of spec for the XCZU9EG silicon
-> +      version.
-> +    type: boolean
-> +
-> +required:
-> +  - "#phy-cells"
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      const: xlnx,zynqmp-psgtr-v1.1
-> +
-> +then:
-> +  properties:
-> +    xlnx,tx-termination-fix: false
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    phy: phy@fd400000 {
-> +        compatible = "xlnx,zynqmp-psgtr-v1.1";
-> +        reg = <0x0 0xfd400000 0x0 0x40000>,
-> +              <0x0 0xfd3d0000 0x0 0x1000>;
-> +        reg-names = "serdes", "siou";
-> +        clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
-> +        clock-names = "ref1", "ref2", "ref3";
-> +        #phy-cells = <4>;
-> +    };
-> +
-> +...
-> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-> index 1f3f866fae7b..f6bc83b66ae9 100644
-> --- a/include/dt-bindings/phy/phy.h
-> +++ b/include/dt-bindings/phy/phy.h
-> @@ -17,5 +17,6 @@
->  #define PHY_TYPE_USB3		4
->  #define PHY_TYPE_UFS		5
->  #define PHY_TYPE_DP		6
-> +#define PHY_TYPE_SGMII		7
->  
->  #endif /* _DT_BINDINGS_PHY */
-> 
+
+No regressions (compared to build 4.4.224-rc1-hikey-20200518-726)
+
+
+No fixes (compared to build 4.4.224-rc1-hikey-20200518-726)
+
+Ran 1813 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
