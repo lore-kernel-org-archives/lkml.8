@@ -2,128 +2,178 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773EDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A278C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8B82087D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A796207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 18:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0B7KgpZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vHq0swLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgESSRS (ORCPT
+        id S1727063AbgESSUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 14:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35908 "EHLO
+        Tue, 19 May 2020 14:20:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESSRR (ORCPT
+        with ESMTP id S1726059AbgESSUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 14:17:17 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF4BC08C5C0;
-        Tue, 19 May 2020 11:17:17 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l18so460024wrn.6;
-        Tue, 19 May 2020 11:17:17 -0700 (PDT)
+        Tue, 19 May 2020 14:20:14 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE6BC08C5C0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:20:14 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k19so223934pll.9
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 11:20:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9i8fE9UcQoMjC7gZk0f5UIj2Ufp+6XHlfmp4ao/4O3I=;
-        b=M0B7KgpZsBQt4E5X8OxXyD2yTNZWolR2/f+H8u41fyIpqXTQ/IBkg+PIk5pQaf9vVM
-         B7FvAhfWR1Ys+m0PgvW4bYZdhRkSN72vW+NPWuFXNjOut7tyAU1zAhCgo0t/tzzyScxo
-         7v428tVbz9c1onq0wHUsVOODP7mwAeG57d5EcWSgVjstv5AnNaRYDSg+IpUshqa4jCi0
-         ZY2uUsdYSopy9gG2dy9+JsJkNabpMVOrmLEYO8GpjMhHzvTmmQ5E1cffTvmnVK3bJfol
-         dRf+5Rb+dfJpS7ZkbpmYXVwTnfBgs42KLrH5bAIpl7PIt9yglAJbH2e4ykXBWz8d9oL3
-         neqA==
+        h=from:to:cc:subject:date:message-id;
+        bh=tweaTiRjNAlBbJQOd2LW81zPO4VwEBmw+s1bm5RU2eU=;
+        b=vHq0swLh3ABD8frFY+Q+x4NSOGVByP2eneaj1MaHs/gOWHnrtLDjDI+f1gQefr0YLK
+         H8UsD5ubiyEhndkgLM10NpfpZCtap+ir7DE5Osjs+0VCavZ2LjY1ycsHaBrtXeX4EwQg
+         F8pEEDFuQmgKsdwhv7zaaQ1adwxVcEIeYilLCSMXNvXViMXtdQefRbLNEzyRZOj/6rip
+         u0/U54xMJ6D/yFYQP0IBCcfi8VwjOkr02wk29LfUC+SwPTImJ/jEwAv5anGiXZ+prS6V
+         6jTX0/KlcimopFZncKG1q9rs8bq2ec9T3UryTZ6MxUHXoK1MTjuqxhSQEeFBDAVaepLx
+         S66Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=9i8fE9UcQoMjC7gZk0f5UIj2Ufp+6XHlfmp4ao/4O3I=;
-        b=mFW6msmY4FYrToxgnLx8a5szJiSSh2psvYSGOO4BXmOi/k1Zwl6+TeSuLPTuD518Ac
-         oXJrC8+woD3ilShbWN84gpxt6NgHiSeybgCpqe283sm7vQEGxIURAoJfMCtgTfynBhfK
-         7yTnZknBpBQ0kjIssBmAPu7JSM6xfcpb7jShdB+Zi6XOUj6VpId67gXGZhI8145WQeMM
-         WRAhEj8RlURPIOW7lsC6btbGq33bfs+os/CS4IOd6qrfGl3CUi3B+/Dbc8ll5XJnSpjR
-         XgzDEit32QEeeGfk6E1cl6LJQ7tS77KhIqrUJA48QzJCKSLC0esg3MFy8OuO8fPJ6o33
-         Jzyg==
-X-Gm-Message-State: AOAM530W7GTnNqbAEIJm/vMGRn3QWhybP5ifeYRAq80Xx6PFkHbBMHh6
-        KxSGui0euEg7A0Rsa/IWnS4=
-X-Google-Smtp-Source: ABdhPJyxXQek9kmfiklyRswq34puGT0/qkq70Y1A0X+1ql8Y7CIbt8KUIclIUmKsIVrJHd1bSQywiA==
-X-Received: by 2002:adf:b301:: with SMTP id j1mr148805wrd.221.1589912236198;
-        Tue, 19 May 2020 11:17:16 -0700 (PDT)
-Received: from dumbo ([185.220.101.209])
-        by smtp.gmail.com with ESMTPSA id d4sm250548wre.22.2020.05.19.11.17.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 11:17:15 -0700 (PDT)
-Received: from cavok by dumbo with local (Exim 4.92)
-        (envelope-from <cavok@dumbo>)
-        id 1jb6ni-0004ND-0s; Tue, 19 May 2020 20:17:14 +0200
-Date:   Tue, 19 May 2020 20:17:13 +0200
-From:   Domenico Andreoli <domenico.andreoli@linux.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Pavel Machek <pavel@ucw.cz>, Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>, Ted Ts'o <tytso@mit.edu>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] hibernate: restrict writes to the snapshot device
-Message-ID: <20200519181713.GB1963@dumbo>
-Mail-Followup-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Pavel Machek <pavel@ucw.cz>, Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>, Ted Ts'o <tytso@mit.edu>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200507080456.069724962@linux.com>
- <20200507080650.439636033@linux.com>
- <CAJZ5v0jnfeAQ4JDz+BTZp8P98h6emTizGWLYNL_QtbQ=3Nw03Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jnfeAQ4JDz+BTZp8P98h6emTizGWLYNL_QtbQ=3Nw03Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tweaTiRjNAlBbJQOd2LW81zPO4VwEBmw+s1bm5RU2eU=;
+        b=GdbD8wnZ0gD4j9SIQAL/5BkAskZuIlN7nkGEXsv1dIlN2kI32/K6/6HvUJRIuwYDPy
+         RtwXs7kEbV085uTnpQ267PlQmwgLyqzJm5hT+C9PEB/OrfK/VeZrQ9YkXX9F1y+Bp1b2
+         JwQ2IdiHBzc+7WfqMgyo4qGe02k9x5SnaQJtlDZQ/L+srkI0LxrWZdJqv3M2YO1CeeNv
+         4hdT8CktP5zzCZ/9cVtG4A8qzuLzo/Cz3YnEOVVheLNh2QZ3La/X7s5PhlKVTUo96qPz
+         ei4PeOq8eBRrWwzC00R2ALA46faAUmqBiyejNpb388iHrziBPU8xvRKfS/KnL5luvxad
+         UMrA==
+X-Gm-Message-State: AOAM533fyZm9akZBct1iLd2vUuGJ+j5o6f2D5vf0iIlBJ3+PBThCKE/f
+        da/Em4dEGTmjm60kEoZ4Atg=
+X-Google-Smtp-Source: ABdhPJyx5zytVaBkGF0VlwfL0XvKFiqFmUUAxNpAKbtFa5W/8VkVNNuk72lYjfO4ELheovvj/LX0jA==
+X-Received: by 2002:a17:902:8b88:: with SMTP id ay8mr697128plb.235.1589912413949;
+        Tue, 19 May 2020 11:20:13 -0700 (PDT)
+Received: from localhost.localdomain ([223.235.145.232])
+        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.19.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 11:20:13 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, vkoul@kernel.org,
+        sboyd@kernel.org, robh+dt@kernel.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v2 00/10] Add MMC and DMA support for Actions S700
+Date:   Tue, 19 May 2020 23:49:18 +0530
+Message-Id: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 05:59:15PM +0200, Rafael J. Wysocki wrote:
-> It would be better to paste the patch instead of attaching it.
+This series(v2) addressed the review comments provided by Andre, and
+there are changes in patch 1/10, 2/10, 5/10 and 9/10.
 
-Done with v2.
+* Accessor function (to get the frame lenght) has moved from
+  patch 2/9 to patch 1/9 with inline removed.
+* Removed the unnecessary line break.
+* Added comments about the way DMA descriptor differs between S700
+  and S900.
+* Added a macro to define fcnt value.
+* Updated dma DT bindings.
+* Used SoC secific compatible string for MMC.
 
-> Anyway, note that the snapshot special device is not the target block
-> device for saving the image, so it would be good to avoid that
-> confusion in the naming.
+Apart from it, a new patch 8/10 is added in this series to
+update mmc DT bindings.
 
-I realize that it was a bit hazy in my head as well. It should be fixed
-in v2.
+Series is rebased on 5.7.0-rc6.
 
-> 
-> I.e. I would rename is_hibernate_snapshot_dev() to something like
-> is_hibernate_image_dev() or is_hibernate_resume_dev() (for consistency
-> with the resume= kernel command line parameter name).
+----------------------------------------------------------------------
 
-Done as well.
+Series(v1) have following changes from the previous series.
 
-> Thanks!
+New patch(5/8) has been introduced that converts dma dt-binding
+for Actions OWL SoC from text format to yaml file.
 
-Thank you!
+For patch(2/8) new accessor function is added to get the frame
+lenght which is common to both S900 and S700. Apart from it
+SoC check is removed from irq routine as it is not needed.
 
-Dom
+Patch(4/8) which is an hack to prove our DMA and MMC works
+for S700 is now sent as *do not merge* patch.
+ 
+DMA is tested using dmatest with follwoing result:
+
+root@ubuntu:~# echo dma0chan1 > /sys/module/dmatest/parameters/channel
+root@ubuntu:~# echo 2000 > /sys/module/dmatest/parameters/timeout
+root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/iterations
+root@ubuntu:~# echo 1 > /sys/module/dmatest/parameters/run
+
+root@ubuntu:~# dmesg | tail
+[  303.362586] dmatest: Added 1 threads using dma0chan1
+[  317.258658] dmatest: Started 1 threads using dma0chan1
+[  317.259397] dmatest: dma0chan1-copy0: summary 1 tests, 0 failures 16129.03 iops 32258 KB/s (0)
+
+-------------------------------------------------------------------------------
+
+The intention of RFC series is to enable uSD and DMA support for
+Cubieboard7 based on Actions S700 SoC, and on the way we found that
+it requires changes in dmaengine present on S700 as its different
+from what is present on S900.
+
+Patch(1/8) does provide a new way to describe DMA descriptor, idea is
+to remove the bit-fields as its less maintainable. It is only build
+tested and it would be great if this can be tested on S900 based
+hardware.
+
+Patch(2/8) adds S700 DMA engine support, there is new compatible
+string added for it, which means a changed bindings needed to submitted
+for this. I would plan to send it later the converted "owl-dma.yaml".
+
+Patch(4/8) disables the sps node as its memory range is conflicting
+pinctrl node and results in pinctrl proble failure.
+
+Rest of patches in the series adds DMA/MMC nodes for S700
+alone with binding constants and enables the uSD for Cubieboard7.
+
+This whole series is tested, by building/compiling Kernel on
+Cubieboard7-lite which was *almost* successful (OOM kicked in,
+while Linking due to less RAM present on hardware).
+
+Following is the mmc speed :
+
+ubuntu@ubuntu:~$ sudo hdparm -tT /dev/mmcblk0
+
+/dev/mmcblk0:
+ Timing cached reads:   1310 MB in  2.00 seconds = 655.15 MB/sec
+ Timing buffered disk reads:  62 MB in  3.05 seconds =  20.30 MB/sec
+
+Amit Singh Tomar (10):
+  dmaengine: Actions: get rid of bit fields from dma descriptor
+  dmaengine: Actions: Add support for S700 DMA engine
+  clk: actions: Add MMC clock-register reset bits
+  arm64: dts: actions: do not merge disable sps node from S700
+  dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
+  arm64: dts: actions: Add DMA Controller for S700
+  dt-bindings: reset: s700: Add binding constants for mmc
+  dt-bindings: mmc: owl: add compatible string actions,s700-mmc
+  arm64: dts: actions: Add MMC controller support for S700
+  arm64: dts: actions: Add uSD support for Cubieboard7
+
+ Documentation/devicetree/bindings/dma/owl-dma.txt  |  47 --------
+ Documentation/devicetree/bindings/dma/owl-dma.yaml |  76 +++++++++++++
+ Documentation/devicetree/bindings/mmc/owl-mmc.yaml |   6 +-
+ arch/arm64/boot/dts/actions/s700-cubieboard7.dts   |  41 +++++++
+ arch/arm64/boot/dts/actions/s700.dtsi              |  48 ++++++++
+ drivers/clk/actions/owl-s700.c                     |   3 +
+ drivers/dma/owl-dma.c                              | 126 ++++++++++++---------
+ include/dt-bindings/reset/actions,s700-reset.h     |   3 +
+ 8 files changed, 251 insertions(+), 99 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
 
 -- 
-rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
-ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
+2.7.4
+
