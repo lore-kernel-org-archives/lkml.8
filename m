@@ -2,133 +2,90 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E20C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 062B920758
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A74862075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 19:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589917986;
+	bh=rdizb6054sUWQ6fZD+89J2wGwwMQkGnOG0/yiHK/LbE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=iBVQC/yMW7kZnSlUE0oIf/eBv7KyjLDmB9AUVGL/etCWX5RouwjsRpDhaChjPEAjK
+	 fXvBgBXDvlzhcYLqHnLf/77Ja/NKGtsbqQaonoTMpqjpsi+4H7AohEw2a01ObOMXAi
+	 8HqqYaHC+hIIra85oynFCH2wZsowQLwuUVJm+BYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgESTw7 (ORCPT
+        id S1728004AbgESTxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 15:52:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgESTw5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 15:52:57 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EECFDC08C5C0;
-        Tue, 19 May 2020 12:52:56 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jb8Hz-0007qz-2J; Tue, 19 May 2020 21:52:35 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A41BF1C0178;
-        Tue, 19 May 2020 21:52:34 +0200 (CEST)
-Date:   Tue, 19 May 2020 19:52:34 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] sched,rcu,tracing: Avoid tracing before in_nmi() is correct
-Cc:     "Steven Rostedt (VMware)" <rosted@goodmis.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200505134101.434193525@linutronix.de>
-References: <20200505134101.434193525@linutronix.de>
-MIME-Version: 1.0
-Message-ID: <158991795458.17951.16867777710377461415.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 19 May 2020 15:53:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727854AbgESTxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 15:53:01 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BCD3207E8;
+        Tue, 19 May 2020 19:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589917981;
+        bh=rdizb6054sUWQ6fZD+89J2wGwwMQkGnOG0/yiHK/LbE=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=ZKhevx5QN2OPN7XottC5bZLJlVfh5Rg8EfQxBPu3lxMvDVX6sXczyiVzISI71VjLL
+         k1gSSXozLucDwKGyaSo4zyvh8jAmRxyTB9p8TSuGonDZnKCHl2NKFO4P5U1DuCHRqZ
+         DNn+LI1kutOg3GO4GnQIaJA4Ody/rIKlZmAUjl1k=
+Date:   Tue, 19 May 2020 20:52:58 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <20200511210134.1224532-2-lkundrak@v3.sk>
+References: <20200511210134.1224532-1-lkundrak@v3.sk> <20200511210134.1224532-2-lkundrak@v3.sk>
+Subject: Re: [PATCH 01/11] ASoC: mmp-sspa: Flip SNDRV_PCM_FMTBIT_S24_3LE on
+Message-Id: <158991797896.23137.453146749205778028.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/rcu branch of tip:
+On Mon, 11 May 2020 23:01:24 +0200, Lubomir Rintel wrote:
+> The hw_params() callback handles the 3-byte format, not
+> SNDRV_PCM_FMTBIT_S24_LE.
 
-Commit-ID:     f93524eb9c54f49be150167918f6546b0a2e09b1
-Gitweb:        https://git.kernel.org/tip/f93524eb9c54f49be150167918f6546b0a2e09b1
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 12 Feb 2020 21:01:16 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 19 May 2020 15:51:18 +02:00
+Applied to
 
-sched,rcu,tracing: Avoid tracing before in_nmi() is correct
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
 
-If a tracer is invoked before in_nmi() becomes true, the tracer can no
-longer detect it is called from NMI context and behave correctly.
+Thanks!
 
-Therefore change nmi_{enter,exit}() to use __preempt_count_{add,sub}()
-as the normal preempt_count_{add,sub}() have a (desired) function
-trace entry.
+[1/2] ASoC: Add Marvell MMP SSPA binding
+      commit: d81bb8726c247c3e7719d21bf213c5400de29e03
+[2/2] ASoC: mmp-sspa: Add Device Tree support
+      commit: a97e384ba78fd8bf7ba8c32718424d8a7536416e
 
-This fixes a potential issue with the current code; when the function-tracer
-has stack-tracing enabled __trace_stack() will malfunction when it hits the
-preempt_count_add() function entry from NMI context.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Link: https://lkml.kernel.org/r/20200505134101.434193525@linutronix.de
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
----
- include/linux/hardirq.h | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
-index a043ad8..621556e 100644
---- a/include/linux/hardirq.h
-+++ b/include/linux/hardirq.h
-@@ -66,6 +66,15 @@ extern void irq_exit(void);
- #endif
- 
- /*
-+ * NMI vs Tracing
-+ * --------------
-+ *
-+ * We must not land in a tracer until (or after) we've changed preempt_count
-+ * such that in_nmi() becomes true. To that effect all NMI C entry points must
-+ * be marked 'notrace' and call nmi_enter() as soon as possible.
-+ */
-+
-+/*
-  * nmi_enter() can nest up to 15 times; see NMI_BITS.
-  */
- #define nmi_enter()						\
-@@ -75,7 +84,7 @@ extern void irq_exit(void);
- 		lockdep_off();					\
- 		ftrace_nmi_enter();				\
- 		BUG_ON(in_nmi() == NMI_MASK);			\
--		preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);	\
-+		__preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);	\
- 		rcu_nmi_enter();				\
- 		lockdep_hardirq_enter();			\
- 	} while (0)
-@@ -85,7 +94,7 @@ extern void irq_exit(void);
- 		lockdep_hardirq_exit();				\
- 		rcu_nmi_exit();					\
- 		BUG_ON(!in_nmi());				\
--		preempt_count_sub(NMI_OFFSET + HARDIRQ_OFFSET);	\
-+		__preempt_count_sub(NMI_OFFSET + HARDIRQ_OFFSET);	\
- 		ftrace_nmi_exit();				\
- 		lockdep_on();					\
- 		printk_nmi_exit();				\
+Thanks,
+Mark
