@@ -2,210 +2,75 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3562C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4107C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 891C020835
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:23:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="w8SMq8DC"
+	by mail.kernel.org (Postfix) with ESMTP id B7E8920709
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 14:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589898365;
+	bh=boYqNgFwlXUKiPwvvJJXpwr400FQfOFd/ekPF0S0brI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l28NDgXw0nuZEUst0sIHU/PT7/S962aNnpajJFSUoya/k7LRY8/OETUPXiLspxMmb
+	 f7CG37BKBE6W9YV6b0KtVEiIgH3VYcTJD2KNWxX1H/JHoID7mmnkBJF97Zx+qzIYgj
+	 /XklqBXXu+F+7apFV5eaw8w8OQEf6TwuLy60Ry5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgESOXo (ORCPT
+        id S1728894AbgESO0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 10:23:44 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:59499 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728837AbgESOXo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 10:23:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589898223; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=zgED/ndZHabjc446rJZWog4aE0Cl1Q+S59WZU+Bl6ws=; b=w8SMq8DCgt50ivmdHKh9eveEUFWxUCKzv2K1oeFLapALNZBgZZsukrhiXXcCuAls6n+NzLK2
- ffC+98QcIDbftqrBlLviVs8A7rLeXSXJz5okTXop5pi2qXpaxKa2C3woI+mcBvz3xQk2MjtP
- DwB6tYZIP6Oq1pf1QWy9BZqtEP8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec3ebe0.7f0bdba0aab0-smtp-out-n01;
- Tue, 19 May 2020 14:23:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CC62FC43636; Tue, 19 May 2020 14:23:27 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 19 May 2020 10:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbgESO0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 10:26:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92721C432C2;
-        Tue, 19 May 2020 14:23:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92721C432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v1 3/3] bus: mhi: clients: Add user space client interface
- driver
-To:     Hemant Kumar <hemantk@codeaurora.org>,
-        manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bbhatt@codeaurora.org
-References: <1589840619-18520-1-git-send-email-hemantk@codeaurora.org>
- <1589840619-18520-4-git-send-email-hemantk@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <3ee9c396-d1e3-d50a-cd27-7b88f84cb37f@codeaurora.org>
-Date:   Tue, 19 May 2020 08:23:25 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id CF11020825;
+        Tue, 19 May 2020 14:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589898363;
+        bh=boYqNgFwlXUKiPwvvJJXpwr400FQfOFd/ekPF0S0brI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sv5z+OUiRKIG6nUlqWKNXJUpCm3oZCfGCKKBfHFoyshjC7PRLEDjtd7yoPL5KxGxr
+         71mVHieKEVAI7R5yW4uNkF4NNX+eGpshVV9vN7KhljityIlohmIR0x0gcELQEQzN4+
+         Va1B7L9568Tvu56mbbseukJ/Pu+rSG46U9vvQ/qk=
+Date:   Tue, 19 May 2020 16:24:48 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [git pull] habanalabs pull request for kernel 5.8
+Message-ID: <20200519142448.GA635386@kroah.com>
+References: <20200519130924.GA27366@ogabbay-VM>
 MIME-Version: 1.0
-In-Reply-To: <1589840619-18520-4-git-send-email-hemantk@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519130924.GA27366@ogabbay-VM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/2020 4:23 PM, Hemant Kumar wrote:
-> +static ssize_t mhi_uci_read(struct file *file,
-> +			    char __user *buf,
-> +			    size_t count,
-> +			    loff_t *ppos)
-> +{
-> +	struct uci_dev *uci_dev = file->private_data;
-> +	struct mhi_device *mhi_dev = uci_dev->mhi_dev;
-> +	struct uci_chan *uci_chan = &uci_dev->dl_chan;
-> +	struct device *dev = &mhi_dev->dev;
-> +	struct uci_buf *uci_buf;
-> +	char *ptr;
-> +	size_t to_copy;
-> +	int ret = 0;
-> +
-> +	if (!buf)
-> +		return -EINVAL;
-> +
-> +	dev_dbg(dev, "Client provided buf len:%lu\n", count);
-> +
-> +	/* confirm channel is active */
-> +	spin_lock_bh(&uci_chan->lock);
-> +	if (!uci_dev->enabled) {
-> +		spin_unlock_bh(&uci_chan->lock);
-> +		return -ERESTARTSYS;
-> +	}
-> +
-> +	/* No data available to read, wait */
-> +	if (!uci_chan->cur_buf && list_empty(&uci_chan->pending)) {
-> +		dev_dbg(dev, "No data available to read waiting\n");
-> +
-> +		spin_unlock_bh(&uci_chan->lock);
-> +		ret = wait_event_interruptible(uci_chan->wq,
-> +					       (!uci_dev->enabled ||
-> +					      !list_empty(&uci_chan->pending)));
-> +		if (ret == -ERESTARTSYS) {
-> +			dev_dbg(dev, "Exit signal caught for node\n");
-> +			return -ERESTARTSYS;
-> +		}
-> +
-> +		spin_lock_bh(&uci_chan->lock);
-> +		if (!uci_dev->enabled) {
-> +			dev_dbg(dev, "node is disabled\n");
-> +			ret = -ERESTARTSYS;
-> +			goto read_error;
-> +		}
-> +	}
-> +
-> +	/* new read, get the next descriptor from the list */
-> +	if (!uci_chan->cur_buf) {
-> +		uci_buf = list_first_entry_or_null(&uci_chan->pending,
-> +						   struct uci_buf, node);
-> +		if (unlikely(!uci_buf)) {
-> +			ret = -EIO;
-> +			goto read_error;
-> +		}
-> +
-> +		list_del(&uci_buf->node);
-> +		uci_chan->cur_buf = uci_buf;
-> +		uci_chan->rx_size = uci_buf->len;
-> +		dev_dbg(dev, "Got pkt of size:%zu\n", uci_chan->rx_size);
-> +	}
-> +
-> +	uci_buf = uci_chan->cur_buf;
-> +
-> +	/* Copy the buffer to user space */
-> +	to_copy = min_t(size_t, count, uci_chan->rx_size);
-> +	ptr = uci_buf->data + (uci_buf->len - uci_chan->rx_size);
-> +	spin_unlock_bh(&uci_chan->lock);
+On Tue, May 19, 2020 at 04:09:24PM +0300, Oded Gabbay wrote:
+> Hello Greg,
+> 
+> This is the pull request for habanalabs driver for kernel 5.8.
+> 
+> This pull-request finally contains the code to handle the GAUDI ASIC. It
+> contains both minor changes to the common code of the driver and of course
+> the GAUDI-specific code, which is similar to the GOYA-specific code.
+> 
+> In addition, there is a new feature for command submission of signals and
+> wait for signals through the driver. And of course other improvements.
+> 
+> Please see the tag message for more details on what this pull request
+> contains.
 
-This presents a race condition.  Imagine if you will, two processes are 
-in read() at the same time.  They will be contending for the lock.  One 
-will win, and enter the above critical section.  As soon as the winner 
-gets here and unlocks the lock, the loser will get the lock and enter 
-the critical section.  There is a possibility that both processes get to 
-this point at roughly the same time, and thus both have a cached version 
-of the identical cur_buf pointer.  At this point, bad things can happen.
+Wow, 90k more new lines, not much sharing between the different ASICs :(
 
-If both processes consume the entire buffer, they will then both 
-re-queue the buffer to MHI.  You then can cause memory corruption, and a 
-kernel crash if the buffer is consumed, then freed, then the memory is 
-allocated to somewhere else in the kernel, then MHI consumed the buffer 
-again (memory corruption).  If the buffer gets freed again, slub may 
-trigger a BUG_ON if the allocation for elsewhere is completely different 
-in structure.
+Anyway, now pulled and pushed out, thanks.
 
-I think you need a mutex covering the entire read() operation to 
-serialize it.
-
-> +
-> +	ret = copy_to_user(buf, ptr, to_copy);
-> +	if (ret)
-> +		return ret;
-> +
-> +	spin_lock_bh(&uci_chan->lock);
-> +
-> +	/* Buffer already queued from diff thread while we dropped lock */
-> +	if (to_copy && !uci_chan->rx_size) {
-> +		dev_dbg(dev, "Bailout as buffer already queued (%lu %lu)\n",
-> +			to_copy, uci_chan->rx_size);
-> +		goto read_error;
-> +	}
-> +
-> +	dev_dbg(dev, "Copied %lu of %lu bytes\n", to_copy, uci_chan->rx_size);
-> +	uci_chan->rx_size -= to_copy;
-> +
-> +	/* we finished with this buffer, queue it back to hardware */
-> +	if (!uci_chan->rx_size) {
-> +		uci_chan->cur_buf = NULL;
-> +
-> +		if (uci_dev->enabled)
-> +			ret = mhi_queue_buf(mhi_dev, DMA_FROM_DEVICE,
-> +					    uci_buf->data,
-> +					    uci_dev->actual_mtu, MHI_EOT);
-> +		else
-> +			ret = -ERESTARTSYS;
-> +
-> +		if (ret) {
-> +			dev_err(dev, "Failed to recycle element\n");
-> +			kfree(uci_buf->data);
-> +			goto read_error;
-> +		}
-> +	}
-> +	spin_unlock_bh(&uci_chan->lock);
-> +
-> +	dev_dbg(dev, "Returning %lu bytes\n", to_copy);
-> +
-> +	return to_copy;
-> +
-> +read_error:
-> +	spin_unlock_bh(&uci_chan->lock);
-> +
-> +	return ret;
-> +}
-> +
-
-
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+greg k-h
