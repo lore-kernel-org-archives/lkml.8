@@ -2,163 +2,163 @@ Return-Path: <SRS0=IaiW=7B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D411C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3451F2072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bdpue+Oj"
+	by mail.kernel.org (Postfix) with ESMTP id 6D09B207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 May 2020 20:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgESUiB (ORCPT
+        id S1727882AbgESUiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 16:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58244 "EHLO
+        Tue, 19 May 2020 16:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgESUiA (ORCPT
+        with ESMTP id S1726030AbgESUiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 16:38:00 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A135BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:38:00 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id c75so375728pga.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 13:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1ajSll4bK53Qb2Ak/L8hDSxkSGAnkpDcgNlbRYtpvdY=;
-        b=bdpue+Ojf13IRe6EAqF+S2fM9FW1U9KJIwBTq1d4UtGhfpgkzxqbNMwL2t9gD/HgLg
-         dzeF1gIHEz8PErdvGj7aC4MbQMcPkV3d3d2qYtkVu2Wif68mY8/Wm6UD9TIbyOM18bXQ
-         GIF7TGksPetl0XqMWhyuq9wcVAqbqi+bOu8+A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1ajSll4bK53Qb2Ak/L8hDSxkSGAnkpDcgNlbRYtpvdY=;
-        b=tOFlU3e3D/G9scEPSK6UZLQAB7++TjDKAVbPl6GgCPA+XqDf3817MBjqPN21pOgIEz
-         w/gacTp4/qs3iKUw2T1ssHqN0SwI1B3v1f0Vi1eSfhQLMAnnadMfhXf/FMYfyM84CY82
-         XMKg84xLTY2HDunR0w0DV3Ikct2IL5ffZOQKDmRalnMyC/i57KYeqOyWEmPFScU0jY+A
-         SvokbCJ9rnv16IHEOpXavHrU/wG8HSWQlnfQbBpXKEeI6Lh/MzbAYtYVKweGdChWG3Zn
-         Nistnb7G1DT4xuKNX9snky6sLRGQkTSvcY2LwOebp1COznTtJwSZptinIN/Wpdi7RL2d
-         dmUA==
-X-Gm-Message-State: AOAM533pJ4v3DXjlh7vpgbVhquXJNqz//9rOo0WkqovVVKGNEbgV6gyn
-        vIXA210pBmfPfWOVv2Lo300esw==
-X-Google-Smtp-Source: ABdhPJzOaJoPTT49vaOBrznFkW9TmN9W+ndpxwI48V37k7vrHTnQHLcXHDI+QItVM51xmiO2ue42TQ==
-X-Received: by 2002:aa7:91da:: with SMTP id z26mr954615pfa.18.1589920680112;
-        Tue, 19 May 2020 13:38:00 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i184sm278051pgc.36.2020.05.19.13.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 13:37:59 -0700 (PDT)
-Date:   Tue, 19 May 2020 13:37:57 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 8/8] exec: Remove recursion from search_binary_handler
-Message-ID: <202005191320.230EFDFCB@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87sgfwyd84.fsf_-_@x220.int.ebiederm.org>
+        Tue, 19 May 2020 16:38:15 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF32C08C5C0;
+        Tue, 19 May 2020 13:38:15 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 8B9612A2039
+Subject: Re: [PATCHv2 1/5] dt-bindings: touchscreen: Convert EETI EXC3000
+ touchscreen to json-schema
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ahmet Inan <inan@distec.de>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+References: <20200519182447.73405-1-sebastian.reichel@collabora.com>
+ <20200519182447.73405-2-sebastian.reichel@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <b52144ad-3123-5705-9489-1bf6994f462f@collabora.com>
+Date:   Tue, 19 May 2020 22:38:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgfwyd84.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <20200519182447.73405-2-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 07:34:19PM -0500, Eric W. Biederman wrote:
-> 
-> Recursion in kernel code is generally a bad idea as it can overflow
-> the kernel stack.  Recursion in exec also hides that the code is
-> looping and that the loop changes bprm->file.
-> 
-> Instead of recursing in search_binary_handler have the methods that
-> would recurse set bprm->interpreter and return 0.  Modify exec_binprm
-> to loop when bprm->interpreter is set.  Consolidate all of the
-> reassignments of bprm->file in that loop to make it clear what is
-> going on.
-> 
-> The structure of the new loop in exec_binprm is that all errors return
-> immediately, while successful completion (ret == 0 &&
-> !bprm->interpreter) just breaks out of the loop and runs what
-> exec_bprm has always run upon successful completion.
-> 
-> Fail if the an interpreter is being call after execfd has been set.
-> The code has never properly handled an interpreter being called with
-> execfd being set and with reassignments of bprm->file and the
-> assignment of bprm->executable in generic code it has finally become
-> possible to test and fail when if this problematic condition happens.
-> 
-> With the reassignments of bprm->file and the assignment of
-> bprm->executable moved into the generic code add a test to see if
-> bprm->executable is being reassigned.
-> 
-> In search_binary_handler remove the test for !bprm->file.  With all
-> reassignments of bprm->file moved to exec_binprm bprm->file can never
-> be NULL in search_binary_handler.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Hi Sebastian,
 
-Lovely!
+A minor thing.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+On 19/5/20 20:24, Sebastian Reichel wrote:
+> Convert the EETI EXC3000 binding to DT schema format using json-schema
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/input/touchscreen/exc3000.txt    | 26 ---------
+>  .../bindings/input/touchscreen/exc3000.yaml   | 53 +++++++++++++++++++
 
-I spent some time following the file lifetimes of deny/allow_write_access()
-and the fget/fput() paths. It all looks correct to me; it's tricky
-(especially bprm->executable) but so very much cleaner than before. :)
+The binding name should start with the vendor, aka eeti,exc3000.yaml
 
-The only suggestion I could come up with is more comments (surprise) to
-help anyone new to this loop realize what the "common" path is (and
-similarly, a compiler hint too):
-
-diff --git a/fs/exec.c b/fs/exec.c
-index a9f421ec9e27..738051a698e1 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1790,15 +1790,19 @@ static int exec_binprm(struct linux_binprm *bprm)
- 	/* This allows 4 levels of binfmt rewrites before failing hard. */
- 	for (depth = 0;; depth++) {
- 		struct file *exec;
-+
- 		if (depth > 5)
- 			return -ELOOP;
- 
- 		ret = search_binary_handler(bprm);
-+		/* Unrecoverable error, give up. */
- 		if (ret < 0)
- 			return ret;
--		if (!bprm->interpreter)
-+		/* Found final handler, start execution. */
-+		if (likely(!bprm->interpreter))
- 			break;
- 
-+		/* Found an interpreter, so try again and attempt to run it. */
- 		exec = bprm->file;
- 		bprm->file = bprm->interpreter;
- 		bprm->interpreter = NULL;
-
--- 
-Kees Cook
+>  2 files changed, 53 insertions(+), 26 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/exc3000.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
+> deleted file mode 100644
+> index 68291b94fec2..000000000000
+> --- a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
+> +++ /dev/null
+> @@ -1,26 +0,0 @@
+> -* EETI EXC3000 Multiple Touch Controller
+> -
+> -Required properties:
+> -- compatible: must be "eeti,exc3000"
+> -- reg: i2c slave address
+> -- interrupts: touch controller interrupt
+> -- touchscreen-size-x: See touchscreen.txt
+> -- touchscreen-size-y: See touchscreen.txt
+> -
+> -Optional properties:
+> -- touchscreen-inverted-x: See touchscreen.txt
+> -- touchscreen-inverted-y: See touchscreen.txt
+> -- touchscreen-swapped-x-y: See touchscreen.txt
+> -
+> -Example:
+> -
+> -	touchscreen@2a {
+> -		compatible = "eeti,exc3000";
+> -		reg = <0x2a>;
+> -		interrupt-parent = <&gpio1>;
+> -		interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
+> -		touchscreen-size-x = <4096>;
+> -		touchscreen-size-y = <4096>;
+> -		touchscreen-inverted-x;
+> -		touchscreen-swapped-x-y;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/exc3000.yaml b/Documentation/devicetree/bindings/input/touchscreen/exc3000.yaml
+> new file mode 100644
+> index 000000000000..5d2e7496d6dd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/exc3000.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/touchscreen/exc3000.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: EETI EXC3000 series touchscreen controller
+> +
+> +maintainers:
+> +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> +
+> +allOf:
+> +  - $ref: touchscreen.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: eeti,exc3000
+> +  reg:
+> +    const: 0x2a
+> +  interrupts:
+> +    maxItems: 1
+> +  touchscreen-size-x: true
+> +  touchscreen-size-y: true
+> +  touchscreen-inverted-x: true
+> +  touchscreen-inverted-y: true
+> +  touchscreen-swapped-x-y: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - touchscreen-size-x
+> +  - touchscreen-size-y
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include "dt-bindings/interrupt-controller/irq.h"
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        touchscreen@2a {
+> +                compatible = "eeti,exc3000";
+> +                reg = <0x2a>;
+> +                interrupt-parent = <&gpio1>;
+> +                interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
+> +                touchscreen-size-x = <4096>;
+> +                touchscreen-size-y = <4096>;
+> +                touchscreen-inverted-x;
+> +                touchscreen-swapped-x-y;
+> +        };
+> +    };
+> 
