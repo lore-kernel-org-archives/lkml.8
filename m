@@ -2,95 +2,86 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0D4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27AB32065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A0920671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgETQtr (ORCPT
+        id S1727025AbgETQuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:49:47 -0400
-Received: from mga11.intel.com ([192.55.52.93]:40989 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbgETQtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:49:46 -0400
-IronPort-SDR: CDIAnRxHwz2fRbPpt6045xdiUAhYrNiwtisjCMXj4vqO24Xep41PMvLAOF52igLkxskQ6lyQKd
- kqJPdlYoYrvg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 09:49:30 -0700
-IronPort-SDR: QSmIUmN5LSjnVegBOaEDJUo4hEJu5QoOWHXqoqQ7SeziH1+4eKGMYk2IAw/pqGQVqj8aHGXqe3
- 4gulLecZzHFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="374138640"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 20 May 2020 09:49:29 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 633FC1ED; Wed, 20 May 2020 19:49:28 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 3/3] irqdomain: Allow software node to be correct one for IRQ domain
-Date:   Wed, 20 May 2020 19:49:27 +0300
-Message-Id: <20200520164927.39090-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520164927.39090-1-andriy.shevchenko@linux.intel.com>
-References: <20200520164927.39090-1-andriy.shevchenko@linux.intel.com>
+        Wed, 20 May 2020 12:50:16 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39390 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbgETQuP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:50:15 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id EE5282A07CC
+Subject: Re: [PATCHv3 2/5] Input: EXC3000: switch to i2c's probe_new API
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ahmet Inan <inan@distec.de>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
+ <20200520153936.46869-3-sebastian.reichel@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <1d0d7e26-379f-5918-451f-b4445a652272@collabora.com>
+Date:   Wed, 20 May 2020 18:50:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200520153936.46869-3-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some cases we might need to have an IRQ domain created out of software node.
-One of such cases is DesignWare GPIO driver when it's instantiated from
-half-baked ACPI table (alas, we can't fix it for devices which are few years
-on market) and thus using software nodes to quirk this up. But the driver
-is using IRQ domains based on per GPIO port firmware nodes, which are in
-the above case software ones. This brings a warning message to be printed
+Hi Sebastian,
 
-  [   73.957183] irq: Invalid fwnode type for irqdomain
+On 20/5/20 17:39, Sebastian Reichel wrote:
+> Switch to the "new" I2C probe API.
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-and creates an unknown IRQ domain.
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-When we allow software node to be correct one for IRQ domain we will
-get rid of the warning message and nice domain name at the same time:
-
-  % ls -1 /sys/kernel/debug/irq/domains/
-  ...
-  intel-quark-dw-apb-gpio:portA
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- kernel/irq/irqdomain.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index c6204bc606a2..e4ebc5398ef5 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -161,7 +161,8 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
- 			domain->name = fwid->name;
- 			break;
- 		}
--	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode)) {
-+	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode) ||
-+		   is_software_node(fwnode)) {
- 		char *name;
- 
- 		/*
--- 
-2.26.2
-
+> ---
+>  drivers/input/touchscreen/exc3000.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
+> index e007e2e8f626..555a14305cd4 100644
+> --- a/drivers/input/touchscreen/exc3000.c
+> +++ b/drivers/input/touchscreen/exc3000.c
+> @@ -145,8 +145,7 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static int exc3000_probe(struct i2c_client *client,
+> -			 const struct i2c_device_id *id)
+> +static int exc3000_probe(struct i2c_client *client)
+>  {
+>  	struct exc3000_data *data;
+>  	struct input_dev *input;
+> @@ -210,7 +209,7 @@ static struct i2c_driver exc3000_driver = {
+>  		.of_match_table = of_match_ptr(exc3000_of_match),
+>  	},
+>  	.id_table	= exc3000_id,
+> -	.probe		= exc3000_probe,
+> +	.probe_new	= exc3000_probe,
+>  };
+>  
+>  module_i2c_driver(exc3000_driver);
+> 
