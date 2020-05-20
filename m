@@ -2,104 +2,158 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35556C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D1920671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B6C20671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:13:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aFCsAMhd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AB7gbnYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgETPMM (ORCPT
+        id S1726748AbgETPN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:12:12 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19943 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgETPML (ORCPT
+        Wed, 20 May 2020 11:13:28 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:11599 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726439AbgETPN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:12:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec548bf0000>; Wed, 20 May 2020 08:11:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 20 May 2020 08:12:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 20 May 2020 08:12:11 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May
- 2020 15:12:10 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 20 May 2020 15:12:10 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.26.75.44]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec548c90000>; Wed, 20 May 2020 08:12:09 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] firmware: tegra: Defer BPMP probe if shared memory not available
-Date:   Wed, 20 May 2020 16:12:06 +0100
-Message-ID: <20200520151206.15253-1-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        Wed, 20 May 2020 11:13:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589987606; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=FU2/F0+z/dsbqHttz+iiGqnFGzScOK5dcu4PKa2fHvs=; b=AB7gbnYgap84/VJI25MVyEYvu0QTOk/0QSTuIQTPZby57+h3WgjujWC5BGBGv7N3oF7ZkllE
+ U1QsthITi2c9nIAKG2jGt73lOffEH36CGTiFgQ9nuJdzZGKRx0iWAGKlvvxPZMUPaxkE6RLc
+ qLi24iM02nEv9RzUOOn/Yv4B6lw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ec5490c4c3faf51e20711d5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 15:13:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3A97FC433C9; Wed, 20 May 2020 15:13:15 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2BBA5C433C6;
+        Wed, 20 May 2020 15:13:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2BBA5C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Wed, 20 May 2020 09:13:12 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v1 2/6] arm/smmu: Add auxiliary domain support for
+ arm-smmuv2
+Message-ID: <20200520151312.GB31730@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Will Deacon <will@kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+References: <1580249770-1088-1-git-send-email-jcrouse@codeaurora.org>
+ <1580249770-1088-3-git-send-email-jcrouse@codeaurora.org>
+ <20200318224840.GA10796@willie-the-truck>
+ <CAF6AEGu-hj6=3rsCe5XeBq_ffoq9VFmL+ycrQ8N=iv89DZf=8Q@mail.gmail.com>
+ <20200518151838.GL32394@willie-the-truck>
+ <CAF6AEGswv3ZaJyy_kYv6FKAjO5=_juDwEtK+VE9TcVMLGvrdwA@mail.gmail.com>
+ <20200520125700.GD25815@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589987519; bh=F7hvT2hG6fOGVSVaRQDr8+JP8MjnrkNvzh0h68pPxoo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=aFCsAMhdTklDBDBpY/DNcsgc61NF+gUwy2Jam9df7p6IVWding6xw1LETUsISY6YE
-         BpAZ9NZ1igW67SW/3WOoD2T9zO+T6U7AEkZbvvRMmgo5r/Hl8Tj66HYHURbuf7GCGI
-         5gvCkcrCIPxq1JgDxOar0ESGMJT7LMq5mpJ8uRlw2rmuSJdDD6B4J2DqGa8EoLDQ+O
-         xq6Z9O84J3Xoxuj/MWGejkuvFGvIQmmXsegSy4KkjXs01ifViSTFR1fBscWJr5n1KS
-         xubCbfINvJSj/5Fz4goVtwS5TZ/y6XqvnI6n6Ztc+6JNjLlX5LuTWVLEf0N4YjHhBa
-         v15zVfST1ml9Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520125700.GD25815@willie-the-truck>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 93d2e4322aa7 ("of: platform: Batch fwnode parsing when
-adding all top level devices") was added, the probing of the Tegra
-SRAM device has occurred later in the boot sequence, after the BPMP
-has been probed. The BPMP uses sections of the SRAM for shared memory
-and if the BPMP is probed before the SRAM then it fails to probe and
-never tries again. This is causing a boot failure on Tegra186 and
-Tegra194. Fix this by allowing the probe of the BPMP to be deferred if
-the SRAM is not available yet.
+On Wed, May 20, 2020 at 01:57:01PM +0100, Will Deacon wrote:
+> On Mon, May 18, 2020 at 08:50:27AM -0700, Rob Clark wrote:
+> > On Mon, May 18, 2020 at 8:18 AM Will Deacon <will@kernel.org> wrote:
+> > > On Wed, Mar 18, 2020 at 04:43:07PM -0700, Rob Clark wrote:
+> > > > We do in fact need live domain switching, that is really the whole
+> > > > point.  The GPU CP (command processor/parser) is directly updating
+> > > > TTBR0 and triggering TLB flush, asynchronously from the CPU.
+> > > >
+> > > > And I think the answer about ASID is easy (on current hw).. it must be zero[*].
+> > >
+> > > Using ASID zero is really bad, because it means that you will end up sharing
+> > > TLB entries with whichever device is using context bank 0.
+> > >
+> > > Is the SMMU only used by the GPU in your SoC?
+> > >
+> > 
+> > yes, the snapdragon SoCs have two SMMU instances, one used by the GPU,
+> > where ASID0/cb0 is the gpu itself, and another cb is the GMU
+> > (basically power control for the gpu), and the second SMMU is
+> > everything else.
+> 
+> Right, in which case I'm starting to think that we should treat this GPU
+> SMMU instance specially. Give it its own compatible string (looks like you
+> need this for HUPCFG anyway) and hook in via arm_smmu_impl_init(). You can
+> then set IO_PGTABLE_QUIRK_ARM_TTBR1 when talking to the io-pgtable code
+> without having to add a domain attribute.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/firmware/tegra/bpmp-tegra186.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If we did this via a special GPU SMMU instance then we could also create and
+register a dummy TTBR0 instance along with the TTBR1 instance and then we
+wouldn't need to worry about the aux domains at all.
 
-diff --git a/drivers/firmware/tegra/bpmp-tegra186.c b/drivers/firmware/tegra/bpmp-tegra186.c
-index ea308751635f..63ab21d89c2c 100644
---- a/drivers/firmware/tegra/bpmp-tegra186.c
-+++ b/drivers/firmware/tegra/bpmp-tegra186.c
-@@ -176,7 +176,7 @@ static int tegra186_bpmp_init(struct tegra_bpmp *bpmp)
- 	priv->tx.pool = of_gen_pool_get(bpmp->dev->of_node, "shmem", 0);
- 	if (!priv->tx.pool) {
- 		dev_err(bpmp->dev, "TX shmem pool not found\n");
--		return -ENOMEM;
-+		return -EPROBE_DEFER;
- 	}
+> With that. you'll need to find a way to allow the GPU driver to call into
+> your own hooks for getting at the TTBR0 tables -- given that you're
+> programming these in the hardware, I don't think it makes sense to expose
+> that in the IOMMU API, since most devices won't be able to do anything with
+> that data. Perhaps you could install a couple of function pointers
+> (subdomain_alloc/subdomain_free) in the GPU device when you see it appear
+> from the SMMU driver? Alternatively, you could make an io_pgtable_cfg
+> available so that the GPU driver can interface with io-pgtable directly.
  
- 	priv->tx.virt = gen_pool_dma_alloc(priv->tx.pool, 4096, &priv->tx.phys);
-@@ -188,7 +188,7 @@ static int tegra186_bpmp_init(struct tegra_bpmp *bpmp)
- 	priv->rx.pool = of_gen_pool_get(bpmp->dev->of_node, "shmem", 1);
- 	if (!priv->rx.pool) {
- 		dev_err(bpmp->dev, "RX shmem pool not found\n");
--		err = -ENOMEM;
-+		err = -EPROBE_DEFER;
- 		goto free_tx;
- 	}
- 
+I don't want to speak for Rob but I think that this is the same direction we've
+landed on. If we use the implementation specific code to initialize the base
+pagetables then the GPU driver can use io-pgtable directly. We can easily
+construct an io_pgtable_cfg. This feature will only be available for opt-in
+GPU targets that will have a known configuration.
+
+The only gotcha is TLB maintenance but Rob and I have ideas about coordinating
+with the GPU hardware (which has to do a TLBIALL during a switch anyway) and we
+can always use the iommu_tlb_flush_all() hammer from software if we really need
+it. It might take a bit of thought, but it is doable.
+
+> Yes, it's ugly, but I don't think it's worth trying to abstract this.
+
+I'm not sure how ugly it is. I've always operated under the assumption that the
+GPU SMMU was special (though it had generic registers) just because of where it
+was and how it it was used.  In the long run baking in a implementation specific
+solution would probably be preferable to lots of domain attributes and aux
+domains that would never be used except by us.
+
+> Thoughts? It's taken me a long time to figure out what's going on here,
+> so sorry if it feels like I'm leading you round the houses.
+
+I'll hack on this and try to get something in place. It might be dumber on the
+GPU side than we would like but it would at least spur some more conversation.
+
+Jordan
+
+> Will
+
 -- 
-2.17.1
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
