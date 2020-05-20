@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C435C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7371207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C274207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgETOWc (ORCPT
+        id S1727799AbgETOWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:22:32 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60946 "EHLO
+        Wed, 20 May 2020 10:22:35 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60966 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726810AbgETOWV (ORCPT
+        by vger.kernel.org with ESMTP id S1726829AbgETOWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:21 -0400
+        Wed, 20 May 2020 10:22:22 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-00035I-OJ; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-00035N-UU; Wed, 20 May 2020 15:22:18 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DOx-5k; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-007DPC-9Y; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric Biggers" <ebiggers@kernel.org>,
         "Herbert Xu" <herbert@gondor.apana.org.au>
-Date:   Wed, 20 May 2020 15:13:42 +0100
-Message-ID: <lsq.1589984008.209271583@decadent.org.uk>
+Date:   Wed, 20 May 2020 15:13:45 +0100
+Message-ID: <lsq.1589984008.328549696@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 14/99] crypto: pcrypt - Do not clear MAY_SLEEP flag
- in original request
+Subject: [PATCH 3.16 17/99] crypto: api - Check spawn->alg under lock in
+ crypto_drop_spawn
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,29 +57,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit e8d998264bffade3cfe0536559f712ab9058d654 upstream.
+commit 7db3b61b6bba4310f454588c2ca6faf2958ad79f upstream.
 
-We should not be modifying the original request's MAY_SLEEP flag
-upon completion.  It makes no sense to do so anyway.
+We need to check whether spawn->alg is NULL under lock as otherwise
+the algorithm could be removed from under us after we have checked
+it and found it to be non-NULL.  This could cause us to remove the
+spawn from a non-existent list.
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 5068c7a883d1 ("crypto: pcrypt - Add pcrypt crypto...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Tested-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: 7ede5a5ba55a ("crypto: api - Fix crypto_drop_spawn crash...")
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- crypto/pcrypt.c | 1 -
- 1 file changed, 1 deletion(-)
+ crypto/algapi.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -137,7 +137,6 @@ static void pcrypt_aead_done(struct cryp
- 	struct padata_priv *padata = pcrypt_request_padata(preq);
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -618,11 +618,9 @@ EXPORT_SYMBOL_GPL(crypto_init_spawn2);
  
- 	padata->info = err;
--	req->base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
- 
- 	padata_do_serial(padata);
+ void crypto_drop_spawn(struct crypto_spawn *spawn)
+ {
+-	if (!spawn->alg)
+-		return;
+-
+ 	down_write(&crypto_alg_sem);
+-	list_del(&spawn->list);
++	if (spawn->alg)
++		list_del(&spawn->list);
+ 	up_write(&crypto_alg_sem);
  }
+ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
 
