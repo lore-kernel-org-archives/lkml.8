@@ -2,188 +2,149 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E91C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03458C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A31420708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0772081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgETCBy (ORCPT
+        id S1728573AbgETCCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 22:01:54 -0400
-Received: from mga02.intel.com ([134.134.136.20]:11265 "EHLO mga02.intel.com"
+        Tue, 19 May 2020 22:02:35 -0400
+Received: from mga02.intel.com ([134.134.136.20]:11305 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726348AbgETCBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 22:01:54 -0400
-IronPort-SDR: kTWqmYpW6EkOtejWN+oRs01tcIR6Ss/IGlDXzaKFATrJwlXUiOj5GIaxw3vPw9Lp9sBw19HZH5
- /DXu7SkPoz8Q==
+        id S1726379AbgETCCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 22:02:34 -0400
+IronPort-SDR: KXF6qd43oAx8/UnDSaK4asVuHJ+/bSNwS+SENonGqW++3WS/7MnzVhNci1siOL6aCqWtPKxamD
+ w17MzyKZycIQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 19:01:53 -0700
-IronPort-SDR: Bx2MGVsoWwRD9snZ15HM/bJkxeVIqCjxfvW0LzfuaFFvtBEeXEa1nSYY5BtC/tDNhXcVOG5gvX
- Qgk35wLCxytA==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 19:02:34 -0700
+IronPort-SDR: m/fhxx6jPbq7qZ0zgedcE0xpHxfN3zP7A9oZnB302QnVzCHxMgMIzOf8NbcKm47m7FnUyO55hO
+ +uQHaEVufyJw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,412,1583222400"; 
-   d="scan'208";a="254893848"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.141]) ([10.238.4.141])
-  by fmsmga008.fm.intel.com with ESMTP; 19 May 2020 19:01:50 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH v11 10/11] KVM: x86/pmu: Check guest LBR availability in
- case host reclaims them
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
-        wei.w.wang@intel.com
-References: <20200514083054.62538-1-like.xu@linux.intel.com>
- <20200514083054.62538-11-like.xu@linux.intel.com>
- <20200519111559.GJ279861@hirez.programming.kicks-ass.net>
- <3a234754-e103-907f-9b06-44b5e7ae12d3@intel.com>
- <20200519145756.GC317569@hirez.programming.kicks-ass.net>
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <9577169d-62f4-0750-7054-5e842d5d2296@intel.com>
-Date:   Wed, 20 May 2020 10:01:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+   d="scan'208";a="282519935"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga002.jf.intel.com with ESMTP; 19 May 2020 19:02:33 -0700
+Date:   Tue, 19 May 2020 19:02:33 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/9] fs/ext4: Disallow encryption if inode is DAX
+Message-ID: <20200520020232.GA3470571@iweiny-DESK2.sc.intel.com>
+References: <20200513054324.2138483-1-ira.weiny@intel.com>
+ <20200513054324.2138483-4-ira.weiny@intel.com>
+ <20200516020253.GG1009@sol.localdomain>
+ <20200518050315.GA3025231@iweiny-DESK2.sc.intel.com>
+ <20200518162447.GA954@sol.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20200519145756.GC317569@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518162447.GA954@sol.localdomain>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/19 22:57, Peter Zijlstra wrote:
-> On Tue, May 19, 2020 at 09:10:58PM +0800, Xu, Like wrote:
->> On 2020/5/19 19:15, Peter Zijlstra wrote:
->>> On Thu, May 14, 2020 at 04:30:53PM +0800, Like Xu wrote:
->>>
->>>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
->>>> index ea4faae56473..db185dca903d 100644
->>>> --- a/arch/x86/kvm/vmx/pmu_intel.c
->>>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
->>>> @@ -646,6 +646,43 @@ static void intel_pmu_lbr_cleanup(struct kvm_vcpu *vcpu)
->>>>    		intel_pmu_free_lbr_event(vcpu);
->>>>    }
->>>> +static bool intel_pmu_lbr_is_availabile(struct kvm_vcpu *vcpu)
->>>> +{
->>>> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->>>> +
->>>> +	if (!pmu->lbr_event)
->>>> +		return false;
->>>> +
->>>> +	if (event_is_oncpu(pmu->lbr_event)) {
->>>> +		intel_pmu_intercept_lbr_msrs(vcpu, false);
->>>> +	} else {
->>>> +		intel_pmu_intercept_lbr_msrs(vcpu, true);
->>>> +		return false;
->>>> +	}
->>>> +
->>>> +	return true;
->>>> +}
->>> This is unreadable gunk, what?
->> Abstractly, it is saying "KVM would passthrough the LBR satck MSRs if
->> event_is_oncpu() is true, otherwise cancel the passthrough state if any."
->>
->> I'm using 'event->oncpu != -1' to represent the guest LBR event
->> is scheduled on rather than 'event->state == PERF_EVENT_STATE_ERROR'.
->>
->> For intel_pmu_intercept_lbr_msrs(), false means to passthrough the LBR stack
->> MSRs to the vCPU, and true means to cancel the passthrough state and make
->> LBR MSR accesses trapped by the KVM.
-> To me it seems very weird to change state in a function that is supposed
-> to just query state.
+On Mon, May 18, 2020 at 09:24:47AM -0700, Eric Biggers wrote:
+> On Sun, May 17, 2020 at 10:03:15PM -0700, Ira Weiny wrote:
+
+First off...  OMG...
+
+I'm seeing some possible user pitfalls which are complicating things IMO.  It
+probably does not matter because most users don't care and have either enabled
+DAX on _every_ mount or _not_ enabled DAX on _every_ mount.  And have _not_
+used verity nor encryption while using DAX.
+
+Verity is a bit easier because verity is not inherited and we only need to
+protect against setting it if DAX is on.
+
+However, it can be weird for the user thusly:
+
+1) mount _without_ DAX
+2) enable verity on individual inodes
+3) unmount/mount _with_ DAX
+
+Now the verity files are not enabled for DAX without any indication...  <sigh>
+This is still true with my patch.  But at least it closes the hole of trying to
+change the DAX flag after the fact (because verity was set).
+
+Also both this check and the verity need to be maintained to keep the mount
+option working as it was before...
+
+For encryption it is more complicated because encryption can be set on
+directories and inherited so the IS_DAX() check does nothing while '-o dax' is
+used.  Therefore users can:
+
+1) mount _with_ DAX
+2) enable encryption on a directory
+3) files created in that directory will not have DAX set
+
+And I now understand why the WARN_ON() was there...  To tell users about this
+craziness.
+
+...
+
+> > This is, AFAICS, not going to affect correctness.  It will only be confusing
+> > because the user will be able to set both DAX and encryption on the directory
+> > but files there will only see encryption being used...  :-(
+> > 
+> > Assuming you are correct about this call path only being valid on directories.
+> > It seems this IS_DAX() needs to be changed to check for EXT4_DAX_FL in
+> > "fs/ext4: Introduce DAX inode flag"?  Then at that point we can prevent DAX and
+> > encryption on a directory.  ...  and at this point IS_DAX() could be removed at
+> > this point in the series???
+> 
+> I haven't read the whole series, but if you are indeed trying to prevent a
+> directory with EXT4_DAX_FL from being encrypted, then it does look like you'd
+> need to check EXT4_DAX_FL, not S_DAX.
+> 
+> The other question is what should happen when a file is created in an encrypted
+> directory when the filesystem is mounted with -o dax.  Actually, I think I
+> missed something there.  Currently (based on reading the code) the DAX flag will
+> get set first, and then ext4_set_context() will see IS_DAX() && i_size == 0 and
+> clear the DAX flag when setting the encrypt flag.
+
+I think you are correct.
+
 >
-> 'is_available' seems to suggest a simple: return 'lbr_event->state ==
-> PERF_EVENT_STATE_ACTIVE' or something.
-This clarification led me to reconsider the use of a more readable name here.
+> So, the i_size == 0 check is actually needed.
+> Your patch (AFAICS) just makes creating an encrypted file fail
+> when '-o dax'.  Is that intended?
 
-Do you accept the check usage of "event->oncpu != -1" instead of
-'event->state == PERF_EVENT_STATE_ERROR' before KVM do passthrough ?
->
->>>> +static void intel_pmu_availability_check(struct kvm_vcpu *vcpu)
->>>> +{
->>>> +	lockdep_assert_irqs_disabled();
->>>> +
->>>> +	if (lbr_is_enabled(vcpu) && !intel_pmu_lbr_is_availabile(vcpu) &&
->>>> +		(vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR))
->>>> +		pr_warn_ratelimited("kvm: vcpu-%d: LBR is temporarily unavailable.\n",
->>>> +			vcpu->vcpu_id);
->>> More unreadable nonsense; when the events go into ERROR state, it's a
->>> permanent fail, they'll not come back.
->> It's not true.  The guest LBR event with 'ERROR state' or 'oncpu != -1'
->> would be
->> lazy released and re-created in the next time the
->> intel_pmu_create_lbr_event() is
->> called and it's supposed to be re-scheduled and re-do availability_check()
->> as well.
-> Where? Also, wth would you need to destroy and re-create an event for
-> that?
-If the guest does not set the EN_LBR bit and did not touch any LBR-related 
-registers
-in the last time slice, KVM will destroy the guest LBR event in 
-kvm_pmu_cleanup()
-which is called once every time the vCPU thread is scheduled in.
+Yes that is what I intended but it is more complicated I see now.
 
-The re-creation is not directly called after the destruction
-but is triggered by the next guest access to the LBR-related registers if any.
+The intent is that IS_DAX() should _never_ be true on an encrypted or verity
+file...  even if -o dax is specified.  Because IS_DAX() should be a result of
+the inode flags being checked.  The order of the setting of those flags is a
+bit odd for the encrypted case.  I don't really like that DAX is set then
+un-set.  It is convoluted but I'm not clear right now how to fix it.
 
- From the time when the guest LBR event enters the "oncpu! = -1" state
-to the next re-creation, the guest LBR is not available. After the re-creation,
-the guest LBR is hopefully available and if it's true, the LBR will be 
-passthrough
-and used by the guest normally.
+> If not, maybe you should change it to check
+> S_NEW instead of i_size == 0 to make it clearer?
 
-That's the reason for "LBR is temporarily unavailable"
-and please let me know if it doesn't make sense to you.
+The patch is completely unnecessary.
 
->>>> @@ -6696,8 +6696,10 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>>>    	pt_guest_enter(vmx);
->>>> -	if (vcpu_to_pmu(vcpu)->version)
->>>> +	if (vcpu_to_pmu(vcpu)->version) {
->>>>    		atomic_switch_perf_msrs(vmx);
->>>> +		kvm_x86_ops.pmu_ops->availability_check(vcpu);
->>>> +	}
->>> AFAICT you just did a call out to the kvm_pmu crud in
->>> atomic_switch_perf_msrs(), why do another call?
->> In fact, availability_check() is only called here for just one time.
->>
->> The callchain looks like:
->> - vmx_vcpu_run()
->>      - kvm_x86_ops.pmu_ops->availability_check();
->>          - intel_pmu_availability_check()
->>              - intel_pmu_lbr_is_availabile()
->>                  - event_is_oncpu() ...
->>
-> What I'm saying is that you just did a pmu_ops indirect call in
-> atomic_switch_perf_msrs(), why add another?
-Do you mean the indirect call:
-- atomic_switch_perf_msrs()
-     - perf_guest_get_msrs()
-         - x86_pmu.guest_get_msrs()
-?
+It is much easier to make (EXT4_ENCRYPT_FL | EXT4_VERITY_FL) incompatible with
+EXT4_DAX_FL when it is introduced later in the series.  Furthermore this mutual
+exclusion can be done on directories in the encrypt case.  Which I think will
+be nicer for the user if they get an error when trying to set one when the other
+is set.
 
-The two pmu_ops are quite different:
-- the first one in atomic_switch_perf_msrs() is defined in the host side;
-- the second one for availability_check() is defined in the KVM side;
-
-The availability_check() for guest LBR event and MSRs pass-through
-operations are definitely KVM context specific.
-
-Thanks,
-Like Xu
+Ira
 
