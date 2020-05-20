@@ -2,213 +2,147 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D490AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E76BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B27EA2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:00:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oV7qcWIq"
+	by mail.kernel.org (Postfix) with ESMTP id 65F952075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbgETFAS (ORCPT
+        id S1726685AbgETFCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 01:00:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgETFAR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 01:00:17 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB792C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:00:17 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id e11so29480pfn.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QaxIGFD8jHmVVWBDhurC80V7YJ3c6OZJikPPga/xLT8=;
-        b=oV7qcWIq+QUjh+p5X2N6/qwDruyKEBc1dUFlvyWKdI5MvoC9swHpy5J08pS/2gqkhT
-         CFA2Tg/O2eV3xr73Ofgocvy5rS91QDhGnB+WeHTyMKrqq1aHNIgBw7Dh0GqHGoSwoDhL
-         amnI4YwTZycIwJ80VU1ZhuTj0qX+t8BPQmYfkhGrFi+M4OhlZ1jnsZXu+/Uo/YW7BPll
-         BzsxP7dEkSCWxuEJKW5cQW/8ee79LzgovnPDSYaLaFBpDT7gkcAeHKIQtMa2MTc+9m/+
-         AibzcIXzbTGFj5TufSgWEVH+uPASB4jV93yGWFODYoIRYsZ9OaBn6b3vuzYu/sgLP12x
-         CHIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QaxIGFD8jHmVVWBDhurC80V7YJ3c6OZJikPPga/xLT8=;
-        b=VhfnD2khb82gQrqSJFU46qJMFHJ/vn0MPdUpttJ2EJ1GIskKj0W9gPU5+UtJ9wH/Iu
-         1UFBAZmfPsqGrK/aJzhB86Q3t53TKDVqBXKtjkpBiRyl0oBKJ7L820hpvbF1EUb+KVQH
-         I4jLirk0R8qe6QkoZdJCxbMoUC3nrYVRZmRvfZw17xmECImC1KlcodRn1k1SURxwJmkJ
-         cdPoqeRCbMbQyJvfONQsXZ5i15fC9ZKTwuDA3CwK6MpJ0nRsmHaltAcS2Cdw7L1DKCMX
-         NwUJc4IqDzCmKARyUgGjPgoCfdwW4g8nqUVnOic+Kxd3C+q7CPxz9ZMdS5O8EJBnN8So
-         4RYA==
-X-Gm-Message-State: AOAM531MI5WGbqBKdt2Ea5gNIUbKOz1koGCQArZHeUwmNGJo1Nsk7vRZ
-        gs7MaWqZaStnlHDcPyCB9zfShw==
-X-Google-Smtp-Source: ABdhPJyfKsbIaXqxVGHZTQx2Y4OfuMFdkbnDNsj1D8KQxFQoEnTjtiS+OPtTZhhMSEdByg8AHiPaag==
-X-Received: by 2002:a62:5ac5:: with SMTP id o188mr2597090pfb.37.1589950817112;
-        Tue, 19 May 2020 22:00:17 -0700 (PDT)
-Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id p62sm926052pfb.93.2020.05.19.22.00.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 May 2020 22:00:16 -0700 (PDT)
-Date:   Wed, 20 May 2020 10:30:14 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     rjw@rjwysocki.net, Souvik.Chakravarty@arm.com,
-        Thanu.Rangarajan@arm.com, Sudeep.Holla@arm.com,
-        guohanjun@huawei.com, john.garry@huawei.com,
-        jonathan.cameron@huawei.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 2/2] CPPC: add support for SW BOOST
-Message-ID: <20200520050014.qpnnmyas2z7mvcss@vireshk-i7>
-References: <1589888489-13828-1-git-send-email-wangxiongfeng2@huawei.com>
- <1589888489-13828-3-git-send-email-wangxiongfeng2@huawei.com>
+        Wed, 20 May 2020 01:02:36 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49153 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgETFCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 01:02:36 -0400
+IronPort-SDR: tBzu7XWPPHectZh84+boP5KQkGvCLVkR7x2son4wGIc2YQhj97AI3FrnJWKRmT+S6irIdN/nvJ
+ JzY57JSw0T1Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 22:02:35 -0700
+IronPort-SDR: 5mdOya4YqlgSTKO3c+IE0Bjj3/zITTGmWtyJGGPQcID/7L0ymDI6FfjftlmZFv5htpsyDfUzlC
+ eVvrVdKIk9ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,412,1583222400"; 
+   d="scan'208";a="439885922"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga005.jf.intel.com with ESMTP; 19 May 2020 22:02:34 -0700
+Date:   Tue, 19 May 2020 22:02:34 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
+ pagefault/preempt twice
+Message-ID: <20200520050233.GB3470571@iweiny-DESK2.sc.intel.com>
+References: <20200507150004.1423069-8-ira.weiny@intel.com>
+ <20200518184843.3029640-1-ira.weiny@intel.com>
+ <20200519165422.GA5838@roeck-us.net>
+ <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
+ <20200519194215.GA71941@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589888489-13828-3-git-send-email-wangxiongfeng2@huawei.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200519194215.GA71941@roeck-us.net>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-05-20, 19:41, Xiongfeng Wang wrote:
-> To add SW BOOST support for CPPC, we need to get the max frequency of
-> boost mode and non-boost mode. ACPI spec 6.2 section 8.4.7.1 describe
-> the following two CPC registers.
+On Tue, May 19, 2020 at 12:42:15PM -0700, Guenter Roeck wrote:
+> On Tue, May 19, 2020 at 11:40:32AM -0700, Ira Weiny wrote:
+> > On Tue, May 19, 2020 at 09:54:22AM -0700, Guenter Roeck wrote:
+> > > On Mon, May 18, 2020 at 11:48:43AM -0700, ira.weiny@intel.com wrote:
+> > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > 
+> > > > The kunmap_atomic clean up failed to remove one set of pagefault/preempt
+> > > > enables when vaddr is not in the fixmap.
+> > > > 
+> > > > Fixes: bee2128a09e6 ("arch/kunmap_atomic: consolidate duplicate code")
+> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > microblazeel works with this patch,
+> > 
+> > Awesome...  Andrew in my rush yesterday I should have put a reported by on the
+> > patch for Guenter as well.
+> > 
+> > Sorry about that Guenter,
 > 
-> "Highest performance is the absolute maximum performance an individual
-> processor may reach, assuming ideal conditions. This performance level
-> may not be sustainable for long durations, and may only be achievable if
-> other platform components are in a specific state; for example, it may
-> require other processors be in an idle state.
+> No worries.
 > 
-> Nominal Performance is the maximum sustained performance level of the
-> processor, assuming ideal operating conditions. In absence of an
-> external constraint (power, thermal, etc.) this is the performance level
-> the platform is expected to be able to maintain continuously. All
-> processors are expected to be able to sustain their nominal performance
-> state simultaneously."
-> 
-> To add SW BOOST support for CPPC, we can use Highest Performance as the
-> max performance in boost mode and Nominal Performance as the max
-> performance in non-boost mode. If the Highest Performance is greater
-> than the Nominal Performance, we assume SW BOOST is supported.
-> 
-> The current CPPC driver does not support SW BOOST and use 'Highest
-> Performance' as the max performance the CPU can achieve. 'Nominal
-> Performance' is used to convert 'performance' to 'frequency'. That
-> means, if firmware enable boost and provide a value for Highest
-> Performance which is greater than Nominal Performance, boost feature is
-> enabled by default.
-> 
-> Because SW BOOST is disabled by default, so, after this patch, boost
-> feature is disabled by default even if boost is enabled by firmware.
-> 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->  drivers/cpufreq/cppc_cpufreq.c | 39 +++++++++++++++++++++++++++++++++++++--
->  1 file changed, 37 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-> index bda0b24..792ed9e 100644
-> --- a/drivers/cpufreq/cppc_cpufreq.c
-> +++ b/drivers/cpufreq/cppc_cpufreq.c
-> @@ -37,6 +37,7 @@
->   * requested etc.
->   */
->  static struct cppc_cpudata **all_cpu_data;
-> +static bool boost_supported;
->  
->  struct cppc_workaround_oem_info {
->  	char oem_id[ACPI_OEM_ID_SIZE + 1];
-> @@ -310,7 +311,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	 * Section 8.4.7.1.1.5 of ACPI 6.1 spec)
->  	 */
->  	policy->min = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.lowest_nonlinear_perf);
-> -	policy->max = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.highest_perf);
-> +	policy->max = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.nominal_perf);
->  
->  	/*
->  	 * Set cpuinfo.min_freq to Lowest to make the full range of performance
-> @@ -318,7 +319,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	 * nonlinear perf
->  	 */
->  	policy->cpuinfo.min_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.lowest_perf);
-> -	policy->cpuinfo.max_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.highest_perf);
-> +	policy->cpuinfo.max_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.nominal_perf);
->  
->  	policy->transition_delay_us = cppc_cpufreq_get_transition_delay_us(cpu_num);
->  	policy->shared_type = cpu->shared_type;
-> @@ -343,6 +344,13 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  
->  	cpu->cur_policy = policy;
->  
-> +	/*
-> +	 * If 'highest_perf' is greater than 'nominal_perf', we assume CPU Boost
-> +	 * is supported.
-> +	 */
-> +	if (cpu->perf_caps.highest_perf > cpu->perf_caps.nominal_perf)
-> +		boost_supported = true;
-> +
->  	/* Set policy->cur to max now. The governors will adjust later. */
->  	policy->cur = cppc_cpufreq_perf_to_khz(cpu,
->  					cpu->perf_caps.highest_perf);
-> @@ -410,6 +418,32 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
->  	return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
->  }
->  
-> +static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
-> +{
-> +	struct cppc_cpudata *cpudata;
-> +	int ret = 0;
+> > Ira
+> > 
+> > > as do the nosmp sparc32 boot tests,
+> > > but sparc32 boot tests with SMP enabled still fail with lots of messages
+> > > such as:
+> > > 
+> > > BUG: Bad page state in process swapper/0  pfn:006a1
+> > > page:f0933420 refcount:0 mapcount:1 mapping:(ptrval) index:0x1
+> > > flags: 0x0()
+> > > raw: 00000000 00000100 00000122 00000000 00000001 00000000 00000000 00000000
+> > > page dumped because: nonzero mapcount
+> > > Modules linked in:
+> > > CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B             5.7.0-rc6-next-20200518-00002-gb178d2d56f29 #1
+> > > [f00e7ab8 :
+> > > bad_page+0xa8/0x108 ]
+> > > [f00e8b54 :
+> > > free_pcppages_bulk+0x154/0x52c ]
+> > > [f00ea024 :
+> > > free_unref_page+0x54/0x6c ]
+> > > [f00ed864 :
+> > > free_reserved_area+0x58/0xec ]
+> > > [f0527104 :
+> > > kernel_init+0x14/0x110 ]
+> > > [f000b77c :
+> > > ret_from_kernel_thread+0xc/0x38 ]
+> > > [00000000 :
+> > > 0x0 ]
 
-No need to initialize this.
+I'm really not seeing how this is related to the kmap clean up.
 
-> +
-> +	if (!boost_supported) {
-> +		pr_err("BOOST not supported by CPU or firmware\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	cpudata = all_cpu_data[policy->cpu];
-> +	if (state)
-> +		policy->max = cppc_cpufreq_perf_to_khz(cpudata,
-> +					cpudata->perf_caps.highest_perf);
-> +	else
-> +		policy->max = cppc_cpufreq_perf_to_khz(cpudata,
-> +					cpudata->perf_caps.nominal_perf);
-> +	policy->cpuinfo.max_freq = policy->max;
-> +
-> +	ret = freq_qos_update_request(policy->max_freq_req, policy->max);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
->  static struct cpufreq_driver cppc_cpufreq_driver = {
->  	.flags = CPUFREQ_CONST_LOOPS,
->  	.verify = cppc_verify_policy,
-> @@ -417,6 +451,7 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
->  	.get = cppc_cpufreq_get_rate,
->  	.init = cppc_cpufreq_cpu_init,
->  	.stop_cpu = cppc_cpufreq_stop_cpu,
-> +	.set_boost = cppc_cpufreq_set_boost,
->  	.name = "cppc_cpufreq",
->  };
->  
-> -- 
-> 1.7.12.4
+But just to make sure I'm trying to run your environment for sparc and having
+less luck than with microblaze.
 
--- 
-viresh
+Could you give me the command which is failing above?
+
+Ira
+
+> > > 
+> > > Code path leading to that message is different but always the same
+> > > from free_unref_page().
+> > > 
+> > > Still testing ppc images.
+> > > 
+> 
+> ppc image tests are passing with this patch.
+> 
+> Guenter
