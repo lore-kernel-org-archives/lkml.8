@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A219207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8EED207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sP1AgZpH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IA1nCq53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgETUAl (ORCPT
+        id S1727973AbgETT4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:00:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbgETT4K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 15:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgETT4G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 15:56:06 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83ED5C061A0E;
-        Wed, 20 May 2020 12:56:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9AA2C08C5C2;
+        Wed, 20 May 2020 12:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=VdTXGAkw/1nyL6z33X0b7/NfvqZ5AsGTWmUq3QW34Eo=; b=sP1AgZpHmBOJUgORxF1Q3Yl0Nq
-        LEaAnzrXH0IACXVLmx6OIVbcscW0R2W5TvriIN3uIsuBZDP1Dec4s1GdTnq8+RWfLo4mI0cmntirI
-        F9PZF/1/pYGiqYs+Vl+s7aDnND0jzF2RyuBpmKnCGivxr2imyNhRTCegf/VgYxnlnwJS0X9HVhShb
-        L7HrZHOuWjds4Vdyxwe7OWKk28J5M1Qg1fpahZwHU7E36LIE0h4ObltqkJDxUy1xAsg8z/Lyh3/MN
-        u+cR9L4cHBuZQpJpN3ArdUnKxBgWIhs7Wqwnxa4cmOQ/knTaWBbgyP+GbR6osrfa4MmAXgZHM2EYN
-        Gc9zWKsg==;
+        bh=RS3LTvliBGxyGsnnvxZgDr4L9B5S1/4iYu+vJVezXGg=; b=IA1nCq5387FDZyPHwQSHibUr1/
+        CT/pQ8Y8GNTneQCNiXZ9KBQ4yjdLFbYZFxIB6Tfyb7D4QTdFOK/o4kw4gwVgy5S/ZkREyErzJAnOR
+        i01FLml+PjMqNs8nDgbcDYUf/SSA/WCWP7F4U/AsS3vqGHB8MwZyfqWZbHp2OLMwLVNuRLdi++WUu
+        a7+3MH7Xpz/v+9TTm/NiAVRL+fpr5wPbDv88+1MRVSMVdD6PMFgky6/E1SICQf9+MnSmH+cd7RR30
+        FKS2Xm1gzdYW7d8wR9H7+rveKj4+Z6ni4falzXtAE3UpwenhCou7XXCvS1uVMo/w/U/aEpo29VtXD
+        wOuEI/gQ==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbUoM-0002DS-V4; Wed, 20 May 2020 19:55:31 +0000
+        id 1jbUo8-0001ss-Fg; Wed, 20 May 2020 19:55:16 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
         ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
         linux-nfs@vger.kernel.org
-Subject: [PATCH 07/33] net: add sock_bindtoindex
-Date:   Wed, 20 May 2020 21:54:43 +0200
-Message-Id: <20200520195509.2215098-8-hch@lst.de>
+Subject: [PATCH 02/33] net: remove kernel_getsockopt
+Date:   Wed, 20 May 2020 21:54:38 +0200
+Message-Id: <20200520195509.2215098-3-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200520195509.2215098-1-hch@lst.de>
 References: <20200520195509.2215098-1-hch@lst.de>
@@ -71,112 +71,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to directly set the SO_BINDTOIFINDEX sockopt from kernel
-space without going through a fake uaccess.
+No users left.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/net/sock.h        |  1 +
- net/core/sock.c           | 21 +++++++++++++++------
- net/ipv4/udp_tunnel.c     |  4 +---
- net/ipv6/ip6_udp_tunnel.c |  4 +---
- 4 files changed, 18 insertions(+), 12 deletions(-)
+ include/linux/net.h |  2 --
+ net/socket.c        | 34 ----------------------------------
+ 2 files changed, 36 deletions(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 9a7b9e98685ac..cdec7bc055d5b 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2688,6 +2688,7 @@ static inline bool sk_dev_equal_l3scope(struct sock *sk, int dif)
- 
- void sock_def_readable(struct sock *sk);
- 
-+int sock_bindtoindex(struct sock *sk, int ifindex);
- void sock_no_linger(struct sock *sk);
- void sock_set_priority(struct sock *sk, u32 priority);
- void sock_set_reuseaddr(struct sock *sk);
-diff --git a/net/core/sock.c b/net/core/sock.c
-index d3b1d61e4f768..23f80880fbb2c 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -566,7 +566,7 @@ struct dst_entry *sk_dst_check(struct sock *sk, u32 cookie)
+diff --git a/include/linux/net.h b/include/linux/net.h
+index 6451425e828f5..74ef5d7315f70 100644
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -303,8 +303,6 @@ int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
+ 		   int flags);
+ int kernel_getsockname(struct socket *sock, struct sockaddr *addr);
+ int kernel_getpeername(struct socket *sock, struct sockaddr *addr);
+-int kernel_getsockopt(struct socket *sock, int level, int optname, char *optval,
+-		      int *optlen);
+ int kernel_setsockopt(struct socket *sock, int level, int optname, char *optval,
+ 		      unsigned int optlen);
+ int kernel_sendpage(struct socket *sock, struct page *page, int offset,
+diff --git a/net/socket.c b/net/socket.c
+index 80422fc3c836e..81a98b6cbd087 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3624,40 +3624,6 @@ int kernel_getpeername(struct socket *sock, struct sockaddr *addr)
  }
- EXPORT_SYMBOL(sk_dst_check);
+ EXPORT_SYMBOL(kernel_getpeername);
  
--static int sock_setbindtodevice_locked(struct sock *sk, int ifindex)
-+static int sock_bindtoindex_locked(struct sock *sk, int ifindex)
- {
- 	int ret = -ENOPROTOOPT;
- #ifdef CONFIG_NETDEVICES
-@@ -594,6 +594,18 @@ static int sock_setbindtodevice_locked(struct sock *sk, int ifindex)
- 	return ret;
- }
- 
-+int sock_bindtoindex(struct sock *sk, int ifindex)
-+{
-+	int ret;
-+
-+	lock_sock(sk);
-+	ret = sock_bindtoindex_locked(sk, ifindex);
-+	release_sock(sk);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(sock_bindtoindex);
-+
- static int sock_setbindtodevice(struct sock *sk, char __user *optval,
- 				int optlen)
- {
-@@ -634,10 +646,7 @@ static int sock_setbindtodevice(struct sock *sk, char __user *optval,
- 			goto out;
- 	}
- 
--	lock_sock(sk);
--	ret = sock_setbindtodevice_locked(sk, index);
--	release_sock(sk);
+-/**
+- *	kernel_getsockopt - get a socket option (kernel space)
+- *	@sock: socket
+- *	@level: API level (SOL_SOCKET, ...)
+- *	@optname: option tag
+- *	@optval: option value
+- *	@optlen: option length
+- *
+- *	Assigns the option length to @optlen.
+- *	Returns 0 or an error.
+- */
 -
-+	return sock_bindtoindex(sk, index);
- out:
- #endif
- 
-@@ -1216,7 +1225,7 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 		break;
- 
- 	case SO_BINDTOIFINDEX:
--		ret = sock_setbindtodevice_locked(sk, val);
-+		ret = sock_bindtoindex_locked(sk, val);
- 		break;
- 
- 	default:
-diff --git a/net/ipv4/udp_tunnel.c b/net/ipv4/udp_tunnel.c
-index 150e6f0fdbf59..2158e8bddf41c 100644
---- a/net/ipv4/udp_tunnel.c
-+++ b/net/ipv4/udp_tunnel.c
-@@ -22,9 +22,7 @@ int udp_sock_create4(struct net *net, struct udp_port_cfg *cfg,
- 		goto error;
- 
- 	if (cfg->bind_ifindex) {
--		err = kernel_setsockopt(sock, SOL_SOCKET, SO_BINDTOIFINDEX,
--					(void *)&cfg->bind_ifindex,
--					sizeof(cfg->bind_ifindex));
-+		err = sock_bindtoindex(sock->sk, cfg->bind_ifindex);
- 		if (err < 0)
- 			goto error;
- 	}
-diff --git a/net/ipv6/ip6_udp_tunnel.c b/net/ipv6/ip6_udp_tunnel.c
-index 58956a6b66a21..6523609516d25 100644
---- a/net/ipv6/ip6_udp_tunnel.c
-+++ b/net/ipv6/ip6_udp_tunnel.c
-@@ -33,9 +33,7 @@ int udp_sock_create6(struct net *net, struct udp_port_cfg *cfg,
- 			goto error;
- 	}
- 	if (cfg->bind_ifindex) {
--		err = kernel_setsockopt(sock, SOL_SOCKET, SO_BINDTOIFINDEX,
--					(void *)&cfg->bind_ifindex,
--					sizeof(cfg->bind_ifindex));
-+		err = sock_bindtoindex(sock->sk, cfg->bind_ifindex);
- 		if (err < 0)
- 			goto error;
- 	}
+-int kernel_getsockopt(struct socket *sock, int level, int optname,
+-			char *optval, int *optlen)
+-{
+-	mm_segment_t oldfs = get_fs();
+-	char __user *uoptval;
+-	int __user *uoptlen;
+-	int err;
+-
+-	uoptval = (char __user __force *) optval;
+-	uoptlen = (int __user __force *) optlen;
+-
+-	set_fs(KERNEL_DS);
+-	if (level == SOL_SOCKET)
+-		err = sock_getsockopt(sock, level, optname, uoptval, uoptlen);
+-	else
+-		err = sock->ops->getsockopt(sock, level, optname, uoptval,
+-					    uoptlen);
+-	set_fs(oldfs);
+-	return err;
+-}
+-EXPORT_SYMBOL(kernel_getsockopt);
+-
+ /**
+  *	kernel_setsockopt - set a socket option (kernel space)
+  *	@sock: socket
 -- 
 2.26.2
 
