@@ -2,104 +2,124 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46735C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A92C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F1220758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598DD20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EfnCZypm"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="NZ05gz8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgETURd (ORCPT
+        id S1727854AbgETUSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:17:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54450 "EHLO
+        Wed, 20 May 2020 16:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgETURd (ORCPT
+        with ESMTP id S1727009AbgETUSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:17:33 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65BCC05BD43
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:17:32 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id j8so4722152iog.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:17:32 -0700 (PDT)
+        Wed, 20 May 2020 16:18:39 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DC5C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:18:38 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id cx22so1836131pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:18:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VyaSYeCN7SlfNpIcnaBLrvnj4Za8Y5YWee7k0M093LM=;
-        b=EfnCZypmdGa8VpCH0ge9lM32x0XwnmHj2izqsNgRTS3I07JG3e/hF4lLCo5kXYO4/g
-         GtxgCniYtCnG++FB/8kG6zPSRmFLKhxRqmmq4IdVKeBaftKKpwV9wCZorD+0tHjfkdlf
-         iKIaBkXsdUOcUzEbaSjKSZqabgCT3OCAuVYYojsL0oGeaGv8yix5Xa36HevdrmZQA1d3
-         oZiCFN22Zq85rpV1iC6H6WuqAmzoFZO6oguZ9pkB1ojjDMsp42z1ILZhpfs69Ar45MbZ
-         DEZchCUERGXKZVtVhJ2ntdiyp4CuUJlSp/UEMGtBpuJcdmq5WBjbssYBuRlEU2sLgeuf
-         ZmiA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GD7wbiQVI9rDR+L0sEdN/nHd36x0k4vATNQrzzfPzoU=;
+        b=NZ05gz8s6GydpM6eOuzSznetqGRW9eW/02dAMxNfEUCAM4R+pMFoXINk7ro5zVCii9
+         jjfDfQggtDRPOnsgnmOwbScCf7gWYW18dSNk7I2YE2Ow/un4uL71VpEsOYWOQLlUU3lV
+         xNwHfwD85yMZZpH43YizXLDKZaVzttOu0Yp4IXNdNVxaxk4eFnmWmSGXydslh/oebnfg
+         QEb6xgcB518MMvYDug8FuRQ3JAh34QHBEGJizbuoY6Sj4A4nr/MGGkM0Skdw8iqTmD3K
+         cxVwr/XsRe5yVRkEr0v1SQgB4XYpJQNJhqmCw1ya1EAFWgkHmuLkjhgU1mgssMgb/k9O
+         3wew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VyaSYeCN7SlfNpIcnaBLrvnj4Za8Y5YWee7k0M093LM=;
-        b=P9FAy/vEJ1wStDw0G9V6SqvPi7Fz+AwwXfwet0G9U2C4LQc/YfuDfvsu78Lda7fEI8
-         XuxmYjh81DSKP1LHujOP/aBPk48gzGPDGWcKJNjxXfK4Z5Svyl3uo+Hiwy4F74ARMXlw
-         uRED/jaSzqLkzLpCTAjrvjyVVpMUijhZe6HmJvl0iAlEPDa3soSM7ZfobvUEU8kebq3F
-         WZTFnsDzXrz43QEd7aQfNhDtPp5u0cqa/1FFspk8gAVGD6Pn543UJm4FrUiUnymdKItR
-         kmz/EXLEvwq/Sr2aL8CPKtKTSy1tcCNJSC6agWNsy2ZFOB6XyaRxJgrOhd3hy3zcbWYt
-         olmQ==
-X-Gm-Message-State: AOAM533zOqpxqMlk1/JYP7AIeNbJIM9RAEPl/ryh1WNsvr5Trs8KUW0e
-        eeXGBXXgz8QzPbAIJsqOSXr75klqv28mVO4coSObuQ==
-X-Google-Smtp-Source: ABdhPJxf5r3SCDgK6PuxVrPSpsHX45TKCMtlgHtmR2oB4Pr8N10SC5JVUCM3UWZi1m7AGto9SCPNRm16+lOlW4mhbLA=
-X-Received: by 2002:a5d:8a10:: with SMTP id w16mr4683295iod.95.1590005851709;
- Wed, 20 May 2020 13:17:31 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GD7wbiQVI9rDR+L0sEdN/nHd36x0k4vATNQrzzfPzoU=;
+        b=b6JcScbsWJI/uLkDKhPRVQ1yGunOKeAtis/GDg/3SUcprjXbj8tv88yeUQAJVnOgXf
+         q9Z22HUMhNsVzSfIhSu8NR3dTzCNIeyI73xb4WDu+/pyLTIE6wpNocuSrpRMbs+OP6UK
+         U+5f5+M1hL5I4bai6rQs3tAOi3/FmkFUIwZp/5balUPzU2BrUxgOXBC9KXmM/Qxcchak
+         mMOePvVv7SJu3XAuspBDxhUy8SOZ3WAHnMgqHITnQZ2URbYgebEJu7QTpJTgMghm7epP
+         ee4xHSerelZ+xyWLN079+eY/gHO3etqnVxxwHK1EM+gTBsQn6mSut57RADgFdP/aLtpp
+         AzEA==
+X-Gm-Message-State: AOAM533V8YVCw7RPnlILGpnTtNh/cwi3M34f10pqTdqacOB2ekZJDlGb
+        yR7ULYGFurzjEwtazNZJdF7IDA==
+X-Google-Smtp-Source: ABdhPJxusZNKzaTGl4uzCNSAer9ynGVb3v2uIj/wxTVjbrHKoqcG7zisYx84mtxQ+xz2+LlHEXh4oQ==
+X-Received: by 2002:a17:90a:648c:: with SMTP id h12mr7504923pjj.229.1590005918384;
+        Wed, 20 May 2020 13:18:38 -0700 (PDT)
+Received: from [192.168.86.156] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
+        by smtp.gmail.com with ESMTPSA id h4sm2675419pfo.3.2020.05.20.13.18.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 13:18:37 -0700 (PDT)
+Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set
+ data->ctx and data->hctx in blk_mq_alloc_request_hctx
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org
+References: <20200518093155.GB35380@T590>
+ <87imgty15d.fsf@nanos.tec.linutronix.de> <20200518115454.GA46364@T590>
+ <20200518131634.GA645@lst.de> <20200518141107.GA50374@T590>
+ <20200518165619.GA17465@lst.de> <20200519015420.GA70957@T590>
+ <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590>
+ <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de>
+ <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
+ <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
+ <87tv0av1gu.fsf@nanos.tec.linutronix.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
+Date:   Wed, 20 May 2020 14:18:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200423002632.224776-1-dancol@google.com> <20200423002632.224776-3-dancol@google.com>
- <20200508125054-mutt-send-email-mst@kernel.org> <20200508125314-mutt-send-email-mst@kernel.org>
- <20200520045938.GC26186@redhat.com> <202005200921.2BD5A0ADD@keescook>
- <20200520194804.GJ26186@redhat.com> <20200520195134.GK26186@redhat.com>
-In-Reply-To: <20200520195134.GK26186@redhat.com>
-From:   Lokesh Gidra <lokeshgidra@google.com>
-Date:   Wed, 20 May 2020 13:17:20 -0700
-Message-ID: <CA+EESO4wEQz3CMxNLh8mQmTpUHdO+zZbV10zUfYGKEwfRPK2nQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Add a new sysctl knob: unprivileged_userfaultfd_user_mode_only
-To:     Andrea Arcangeli <aarcange@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Daniel Colascione <dancol@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Tim Murray <timmurray@google.com>,
-        Minchan Kim <minchan@google.com>,
-        Sandeep Patil <sspatil@google.com>, kernel@android.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87tv0av1gu.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding the Android kernel team in the discussion.
+On 5/20/20 1:41 PM, Thomas Gleixner wrote:
+> Jens Axboe <axboe@kernel.dk> writes:
+>> On 5/20/20 8:45 AM, Jens Axboe wrote:
+>>> It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
+>>> they just break affinity if that CPU goes offline.
+>>
+>> Just checked, and it works fine for me. If I create an SQPOLL ring with
+>> SQ_AFF set and bound to CPU 3, if CPU 3 goes offline, then the kthread
+>> just appears unbound but runs just fine. When CPU 3 comes online again,
+>> the mask appears correct.
+> 
+> When exactly during the unplug operation is it unbound?
 
-On Wed, May 20, 2020 at 12:51 PM Andrea Arcangeli <aarcange@redhat.com> wrote:
->
-> On Wed, May 20, 2020 at 03:48:04PM -0400, Andrea Arcangeli wrote:
-> > The sysctl /proc/sys/kernel/unprivileged_bpf_disabled is already there
->
-> Oops I picked the wrong unprivileged_* :) of course I meant:
-> /proc/sys/vm/unprivileged_userfaultfd
->
+When the CPU has been fully offlined. I check the affinity mask, it
+reports 0. But it's still being scheduled, and it's processing work.
+Here's an example, PID 420 is the thread in question:
+
+[root@archlinux cpu3]# taskset -p 420
+pid 420's current affinity mask: 8
+[root@archlinux cpu3]# echo 0 > online 
+[root@archlinux cpu3]# taskset -p 420
+pid 420's current affinity mask: 0
+[root@archlinux cpu3]# echo 1 > online 
+[root@archlinux cpu3]# taskset -p 420
+pid 420's current affinity mask: 8
+
+So as far as I can tell, it's working fine for me with the goals
+I have for that kthread.
+
+-- 
+Jens Axboe
+
