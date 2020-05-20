@@ -2,205 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B68FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C168C206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCF2206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Qgy/XtcH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UmPc6+0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgETPZ4 (ORCPT
+        id S1726831AbgETP0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:25:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETPZz (ORCPT
+        Wed, 20 May 2020 11:26:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38404 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETP0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:25:55 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1226FC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:25:55 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id z5so4356578ejb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MmgOIn7CLKu0/cluJFaG5idJvO1nymi+j4c/I4o6A5Y=;
-        b=Qgy/XtcHoi9ZAcx9KfXpQh1hEMUZwd60c5Tc6HwImodikXHQ3WWjJddr3duPA+g0aJ
-         IOm8S1DosmIyQDxFSiWLzeKIgkYBUuhMHCkWT0Bxb21CIz1zs+LmyTbV0XH+FPGEflMn
-         i2NOLSwhV0pWln/dtffguH47aDwfE2Oa65KFVm7XT/cPVxp/Uv0qKK98Wva5QdhTlUYA
-         SZRi6yhKIWkwWAbF5vEb2MIxNt9+J6hcwHvrbERPeLuaR4vRBenWMILZDxISaQ9EdxgH
-         0966BZYXXprTJAgdtoPxbqoK1oDe0+mJv5OXr5X3SQTtN9mgWJbAPsCWpLAUYT/wALPf
-         EsMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MmgOIn7CLKu0/cluJFaG5idJvO1nymi+j4c/I4o6A5Y=;
-        b=FbAik8bdr789yJ+WvnwDmx1b/oWOQp3P3vQdK45+HYhM22zOcszSyB+fqZuGxqIoVh
-         JkazUPub2OyIAOG03xEREgpex/woDkEdjJmj2uYtwazMlzeavU3TObSb/3fBIV2vTcAU
-         pwAdgLxU62S8+GoEplcsNBq8FuxW034oai+dnOKZ9LqNnOrFg6g1X83YXrPClsTpoqDY
-         FCbt72G0sJ9Dtj3DxXqjsLoFOM90Ssnn8Ply8ExIfVPZFYmtebIkDD0TYCKtyiGMBZc1
-         +/eyksfa+Lc2URvx/wc8eiDhrfJMazyoTg3C8/2jAeGmyYyTSkgvCl9U4/CnIEcfQFzU
-         Ve7g==
-X-Gm-Message-State: AOAM533UUQJHV+CipzTO6R4TRjxSNceFXFlRerrmRgQEwGKYHBw6SYDt
-        VVGMu7Q//R7hNNtMDvuF7MyPmKG1MpmxIecprJcR5Q==
-X-Google-Smtp-Source: ABdhPJxKctA75G7J/qj6W53QptYi2MZiZGA/evgiJh+TTmSwgPpMWJZVUfO6u+1qqh8vaK8Uz54Ei0uURfXf108uvpU=
-X-Received: by 2002:a17:906:ff54:: with SMTP id zo20mr4065711ejb.124.1589988353659;
- Wed, 20 May 2020 08:25:53 -0700 (PDT)
+        Wed, 20 May 2020 11:26:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KFHG6Q076583;
+        Wed, 20 May 2020 15:26:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=us1UyD3eb7iJfl6Z3bLFPAGiXiDBjSZBmVmqk0QGUNc=;
+ b=UmPc6+0inQWEbzaEFKEDNeJN07Gfg3Bdl2wV+TyTbU5NkKVJ6Hx3iAm/EaPnOyR/jOEn
+ 76Pfbs1ruJ7tsNc0QBUyziXvPqqsmY8SPpgLiDVq16zOvWY2DX1e9A1ryFnAi2RRgNEN
+ m45kXwrhzEg6acq1hoWDsR/KGhgAAoNw70G8rilJCCYOscqDUhdQ4BqOyWB1ddhTGs80
+ XROz97K0j3kT2CPv6tUEuthNw2V1VirUGDIxOD50SBWJAtPIIawV6B8/owzeIFYO9IJg
+ WOTBz34LwPsGNZrptphJoHlCT9IQOi55XukGq+r0bKv2NgSkzKvhXZPWa+xiGXOXocVd dQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 3127krbt8s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 15:26:08 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KFD8pI058218;
+        Wed, 20 May 2020 15:26:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 312t37xnad-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 15:26:06 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KFQ5bw026329;
+        Wed, 20 May 2020 15:26:05 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 May 2020 08:26:04 -0700
+Date:   Wed, 20 May 2020 18:25:56 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Kevin Wang <kevin1.wang@amd.com>,
+        "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Evan Quan <evan.quan@amd.com>,
+        Rui Huang <ray.huang@amd.com>,
+        Kenneth Feng <kenneth.feng@amd.com>,
+        Yintian Tao <yttao@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH v3] drm/amdgpu: off by one in
+ amdgpu_device_attr_create_groups() error handling
+Message-ID: <20200520152556.GQ3041@kadam>
 MIME-Version: 1.0
-References: <158992635164.403910.2616621400995359522.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158992635697.403910.6957168747147028694.stgit@dwillia2-desk3.amr.corp.intel.com>
- <87d06z7x1a.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87d06z7x1a.fsf@mpe.ellerman.id.au>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 20 May 2020 08:25:42 -0700
-Message-ID: <CAPcyv4igM-jK6OkPzd91ur_fNCaUxwbWTHhwWsWe-PJNjZdWGw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] x86, powerpc: Rename memcpy_mcsafe() to
- copy_mc_to_{user, kernel}()
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663010E2302FA@FMSMSX108.amr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1011 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 2:54 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> Hi Dan,
->
-> Just a couple of minor things ...
->
-> Dan Williams <dan.j.williams@intel.com> writes:
-> > In reaction to a proposal to introduce a memcpy_mcsafe_fast()
-> > implementation Linus points out that memcpy_mcsafe() is poorly named
-> > relative to communicating the scope of the interface. Specifically what
-> > addresses are valid to pass as source, destination, and what faults /
-> > exceptions are handled. Of particular concern is that even though x86
-> > might be able to handle the semantics of copy_mc_to_user() with its
-> > common copy_user_generic() implementation other archs likely need / want
-> > an explicit path for this case:
-> ...
->
-> > diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-> > index 0969285996cb..dcbbcbf3552c 100644
-> > --- a/arch/powerpc/include/asm/uaccess.h
-> > +++ b/arch/powerpc/include/asm/uaccess.h
-> > @@ -348,6 +348,32 @@ do {                                                             \
-> >  extern unsigned long __copy_tofrom_user(void __user *to,
-> >               const void __user *from, unsigned long size);
-> >
-> > +#ifdef CONFIG_ARCH_HAS_COPY_MC
-> > +extern unsigned long __must_check
->
-> We try not to add extern in headers anymore.
+This loop in the error handling code should start a "i - 1" and end at
+"i == 0".  Currently it starts a "i" and ends at "i == 1".  The result
+is that it removes one attribute that wasn't created yet, and leaks the
+zeroeth attribute.
 
-Ok, I was doing the copy-pasta dance, but I'll remove this.
+Fixes: 4e01847c38f7 ("drm/amdgpu: optimize amdgpu device attribute code")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+v2: style change
+v3: Fix embarrassing typo in the subject
 
->
-> > +copy_mc_generic(void *to, const void *from, unsigned long size);
-> > +
-> > +static inline unsigned long __must_check
-> > +copy_mc_to_kernel(void *to, const void *from, unsigned long size)
-> > +{
-> > +     return copy_mc_generic(to, from, size);
-> > +}
-> > +#define copy_mc_to_kernel copy_mc_to_kernel
-> > +
-> > +static inline unsigned long __must_check
-> > +copy_mc_to_user(void __user *to, const void *from, unsigned long n)
-> > +{
-> > +     if (likely(check_copy_size(from, n, true))) {
-> > +             if (access_ok(to, n)) {
-> > +                     allow_write_to_user(to, n);
-> > +                     n = copy_mc_generic((void *)to, from, n);
-> > +                     prevent_write_to_user(to, n);
-> > +             }
-> > +     }
-> > +
-> > +     return n;
-> > +}
-> > +#endif
->
-> Otherwise that looks fine.
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c           | 3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
 
-Cool.
-
->
-> ...
->
-> > diff --git a/tools/testing/selftests/powerpc/copyloops/Makefile b/tools/testing/selftests/powerpc/copyloops/Makefile
-> > index 0917983a1c78..959817e7567c 100644
-> > --- a/tools/testing/selftests/powerpc/copyloops/Makefile
-> > +++ b/tools/testing/selftests/powerpc/copyloops/Makefile
-> > @@ -45,9 +45,9 @@ $(OUTPUT)/memcpy_p7_t%:     memcpy_power7.S $(EXTRA_SOURCES)
-> >               -D SELFTEST_CASE=$(subst memcpy_p7_t,,$(notdir $@)) \
-> >               -o $@ $^
-> >
-> > -$(OUTPUT)/memcpy_mcsafe_64: memcpy_mcsafe_64.S $(EXTRA_SOURCES)
-> > +$(OUTPUT)/copy_mc: copy_mc.S $(EXTRA_SOURCES)
-> >       $(CC) $(CPPFLAGS) $(CFLAGS) \
-> > -             -D COPY_LOOP=test_memcpy_mcsafe \
-> > +             -D COPY_LOOP=test_copy_mc \
-
-Ok.
-
->
-> This needs a fixup:
->
-> diff --git a/tools/testing/selftests/powerpc/copyloops/Makefile b/tools/testing/selftests/powerpc/copyloops/Makefile
-> index 959817e7567c..b4eb5c4c6858 100644
-> --- a/tools/testing/selftests/powerpc/copyloops/Makefile
-> +++ b/tools/testing/selftests/powerpc/copyloops/Makefile
-> @@ -47,7 +47,7 @@ $(OUTPUT)/memcpy_p7_t%:       memcpy_power7.S $(EXTRA_SOURCES)
->
->  $(OUTPUT)/copy_mc: copy_mc.S $(EXTRA_SOURCES)
->         $(CC) $(CPPFLAGS) $(CFLAGS) \
-> -               -D COPY_LOOP=test_copy_mc \
-> +               -D COPY_LOOP=test_copy_mc_generic \
->                 -o $@ $^
->
->  $(OUTPUT)/copyuser_64_exc_t%: copyuser_64.S exc_validate.c ../harness.c \
->
->
-> >               -o $@ $^
-> >
-> >  $(OUTPUT)/copyuser_64_exc_t%: copyuser_64.S exc_validate.c ../harness.c \
-> > diff --git a/tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S b/tools/testing/selftests/powerpc/copyloops/copy_mc.S
-> > similarity index 100%
-> > rename from tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
-> > rename to tools/testing/selftests/powerpc/copyloops/copy_mc.S
->
-> This file is a symlink to the file in arch/powerpc/lib, so the name of
-> the link needs updating, as well as the target.
->
-> Also is there a reason you dropped the "_64"? It would make most sense
-> to keep it I think, as then the file in selftests and the file in arch/
-> have the same name.
->
-> If you want to keep the copy_mc.S name it needs the diff below. Though
-> as I said I think it would be better to use copy_mc_64.S.
-
-copy_mc_64.S looks good to me.
-
-Thanks Michael!
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+index b75362bf0742..e809534fabd4 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+@@ -1942,9 +1942,8 @@ static int amdgpu_device_attr_create_groups(struct amdgpu_device *adev,
+ 	return 0;
+ 
+ failed:
+-	for (; i > 0; i--) {
++	while (i--)
+ 		amdgpu_device_attr_remove(adev, &attrs[i]);
+-	}
+ 
+ 	return ret;
+ }
