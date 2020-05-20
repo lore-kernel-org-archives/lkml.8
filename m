@@ -2,149 +2,107 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3245AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5004FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 068B82070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1745E2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgETNLa (ORCPT
+        id S1726829AbgETNMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:11:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53668 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgETNLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:11:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C9140AF26;
-        Wed, 20 May 2020 13:11:30 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id F00F21E126B; Wed, 20 May 2020 15:11:26 +0200 (CEST)
-Date:   Wed, 20 May 2020 15:11:26 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/9] fs/ext4: Disallow encryption if inode is DAX
-Message-ID: <20200520131126.GA30597@quack2.suse.cz>
-References: <20200513054324.2138483-1-ira.weiny@intel.com>
- <20200513054324.2138483-4-ira.weiny@intel.com>
- <20200516020253.GG1009@sol.localdomain>
- <20200518050315.GA3025231@iweiny-DESK2.sc.intel.com>
- <20200518162447.GA954@sol.localdomain>
- <20200520020232.GA3470571@iweiny-DESK2.sc.intel.com>
+        Wed, 20 May 2020 09:12:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgETNMw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:12:52 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3400C061A0E;
+        Wed, 20 May 2020 06:12:51 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 110E02A2C40
+Message-ID: <4182e7477c43e6b5d93311de4b86f8274a0913a6.camel@collabora.com>
+Subject: Re: [PATCH v4 1/3] media: rkvdec: Fix .buf_prepare
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        gustavo.padovan@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date:   Wed, 20 May 2020 10:12:40 -0300
+In-Reply-To: <2c69a8d6-3402-15e8-1b19-49b8591ae1d8@xs4all.nl>
+References: <20200518174011.15543-1-ezequiel@collabora.com>
+         <20200518174011.15543-2-ezequiel@collabora.com>
+         <2c69a8d6-3402-15e8-1b19-49b8591ae1d8@xs4all.nl>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520020232.GA3470571@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 19-05-20 19:02:33, Ira Weiny wrote:
-> On Mon, May 18, 2020 at 09:24:47AM -0700, Eric Biggers wrote:
-> > On Sun, May 17, 2020 at 10:03:15PM -0700, Ira Weiny wrote:
-> 
-> First off...  OMG...
-> 
-> I'm seeing some possible user pitfalls which are complicating things IMO.  It
-> probably does not matter because most users don't care and have either enabled
-> DAX on _every_ mount or _not_ enabled DAX on _every_ mount.  And have _not_
-> used verity nor encryption while using DAX.
-> 
-> Verity is a bit easier because verity is not inherited and we only need to
-> protect against setting it if DAX is on.
-> 
-> However, it can be weird for the user thusly:
-> 
-> 1) mount _without_ DAX
-> 2) enable verity on individual inodes
-> 3) unmount/mount _with_ DAX
-> 
-> Now the verity files are not enabled for DAX without any indication...
-> <sigh> This is still true with my patch.  But at least it closes the hole
-> of trying to change the DAX flag after the fact (because verity was set).
-> 
-> Also both this check and the verity need to be maintained to keep the mount
-> option working as it was before...
-> 
-> For encryption it is more complicated because encryption can be set on
-> directories and inherited so the IS_DAX() check does nothing while '-o
-> dax' is used.  Therefore users can:
-> 
-> 1) mount _with_ DAX
-> 2) enable encryption on a directory
-> 3) files created in that directory will not have DAX set
-> 
-> And I now understand why the WARN_ON() was there...  To tell users about this
-> craziness.
-
-Thanks for digging into this! I agree that just not setting S_DAX where
-other inode features disallow that is probably the best.
-
-> > > This is, AFAICS, not going to affect correctness.  It will only be confusing
-> > > because the user will be able to set both DAX and encryption on the directory
-> > > but files there will only see encryption being used...  :-(
-> > > 
-> > > Assuming you are correct about this call path only being valid on directories.
-> > > It seems this IS_DAX() needs to be changed to check for EXT4_DAX_FL in
-> > > "fs/ext4: Introduce DAX inode flag"?  Then at that point we can prevent DAX and
-> > > encryption on a directory.  ...  and at this point IS_DAX() could be removed at
-> > > this point in the series???
+On Wed, 2020-05-20 at 15:07 +0200, Hans Verkuil wrote:
+> On 18/05/2020 19:40, Ezequiel Garcia wrote:
+> > The driver should only set the payload on .buf_prepare
+> > if the buffer is CAPTURE type, or if an OUTPUT buffer
+> > has a zeroed payload.
 > > 
-> > I haven't read the whole series, but if you are indeed trying to prevent a
-> > directory with EXT4_DAX_FL from being encrypted, then it does look like you'd
-> > need to check EXT4_DAX_FL, not S_DAX.
+> > Fix it.
 > > 
-> > The other question is what should happen when a file is created in an encrypted
-> > directory when the filesystem is mounted with -o dax.  Actually, I think I
-> > missed something there.  Currently (based on reading the code) the DAX flag will
-> > get set first, and then ext4_set_context() will see IS_DAX() && i_size == 0 and
-> > clear the DAX flag when setting the encrypt flag.
+> > Fixes: cd33c830448ba ("media: rkvdec: Add the rkvdec driver")
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  drivers/staging/media/rkvdec/rkvdec.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+> > index 225eeca73356..4df2a248ab96 100644
+> > --- a/drivers/staging/media/rkvdec/rkvdec.c
+> > +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> > @@ -456,7 +456,15 @@ static int rkvdec_buf_prepare(struct vb2_buffer *vb)
+> >  		if (vb2_plane_size(vb, i) < sizeimage)
+> >  			return -EINVAL;
+> >  	}
+> > -	vb2_set_plane_payload(vb, 0, f->fmt.pix_mp.plane_fmt[0].sizeimage);
+> > +
+> > +	/*
+> > +	 * Buffer's bytesused is written by the driver for CAPTURE buffers,
+> > +	 * or if the application passed zero bytesused on an OUTPUT buffer.
+> > +	 */
+> > +	if (!V4L2_TYPE_IS_OUTPUT(vq->type) ||
+> > +	    (V4L2_TYPE_IS_OUTPUT(vq->type) && !vb2_get_plane_payload(vb, 0)))
+> > +		vb2_set_plane_payload(vb, 0,
+> > +				      f->fmt.pix_mp.plane_fmt[0].sizeimage);
 > 
-> I think you are correct.
+> This should just be:
 > 
-> >
-> > So, the i_size == 0 check is actually needed.
-> > Your patch (AFAICS) just makes creating an encrypted file fail
-> > when '-o dax'.  Is that intended?
+> 	if (!V4L2_TYPE_IS_OUTPUT(vq->type))
+> 		vb2_set_plane_payload(vb, 0, f->fmt.pix_mp.plane_fmt[0].sizeimage);
 > 
-> Yes that is what I intended but it is more complicated I see now.
+> If the application passes 0 as bytesused, then 1) a warning will be generated
+> by the v4l2 core and 2) the v4l2 core will set bytesused to the length of the
+> buffer. See vb2_fill_vb2_v4l2_buffer() in videobuf2-v4l2.c.
 > 
-> The intent is that IS_DAX() should _never_ be true on an encrypted or verity
-> file...  even if -o dax is specified.  Because IS_DAX() should be a result of
-> the inode flags being checked.  The order of the setting of those flags is a
-> bit odd for the encrypted case.  I don't really like that DAX is set then
-> un-set.  It is convoluted but I'm not clear right now how to fix it.
+> Some old drivers explicitly allow bytesused to be 0 for an output queue to
+> signal end-of-stream, but that's only supported if the allow_zero_bytesused
+> flag is set in the vb2_queue, and that shall not be used for new drivers
+> since it is deprecated functionality.
 > 
-> > If not, maybe you should change it to check
-> > S_NEW instead of i_size == 0 to make it clearer?
-> 
-> The patch is completely unnecessary.
-> 
-> It is much easier to make (EXT4_ENCRYPT_FL | EXT4_VERITY_FL) incompatible
-> with EXT4_DAX_FL when it is introduced later in the series.  Furthermore
-> this mutual exclusion can be done on directories in the encrypt case.
-> Which I think will be nicer for the user if they get an error when trying
-> to set one when the other is set.
 
-Agreed.
+Ah, good catch. I'll get you a v5.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Thanks,
+Ezequiel
+
