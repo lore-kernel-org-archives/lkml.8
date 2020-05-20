@@ -2,85 +2,136 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FEAE2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856402065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgETIWt (ORCPT
+        id S1726820AbgETIXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:22:49 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:41796 "EHLO zju.edu.cn"
+        Wed, 20 May 2020 04:23:13 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:38488 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726570AbgETIWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:22:49 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app3 (Coremail) with SMTP id cC_KCgB3f0PG6MRe6UTfAA--.12230S4;
-        Wed, 20 May 2020 16:22:35 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: rcar: fix runtime pm imbalance on error
-Date:   Wed, 20 May 2020 16:22:28 +0800
-Message-Id: <20200520082228.26881-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgB3f0PG6MRe6UTfAA--.12230S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW5ZF15Jr17CrWrKFy7trb_yoWfWrb_u3
-        WY9Fs7Crs5Gr9Ikry2ya13ZF9YvasIq3Wqg3WrtF1ayaySvws8Xr97XFZ8Zrs5Cr45AF1q
-        yr1q9F1xurWUujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWU
-        XwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
-        14v_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbqQ6JUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
+        id S1726403AbgETIXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 04:23:12 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP2jB6MReLuc2AA--.129S3;
+        Wed, 20 May 2020 16:22:26 +0800 (CST)
+Subject: Re: [PATCH v4 3/4] mm/memory.c: Add memory read privilege on page
+ fault handling
+To:     Andrew Morton <akpm@linux-foundation.org>
+References: <1589882610-7291-1-git-send-email-maobibo@loongson.cn>
+ <1589882610-7291-3-git-send-email-maobibo@loongson.cn>
+ <20200519183035.14fc56ba957266dde87a7778@linux-foundation.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <55379391-7c1f-7d0e-773e-d44fa95e0e24@loongson.cn>
+Date:   Wed, 20 May 2020 16:22:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <20200519183035.14fc56ba957266dde87a7778@linux-foundation.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxP2jB6MReLuc2AA--.129S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF4DtF1fWF4rKFyxJr1fWFg_yoW8ury7pF
+        ykCF1jvF4DJr17AFyxGws7ur1fC3yfKFsrurn3KryDC3Z8JrnYgrs7JayYgFy8GF4jv3Wr
+        Ar4qqFZ8ZanFvaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvEb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
+        xwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+        b7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+        vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI
+        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73UjIFyTuYvjxUg0D7DUUUU
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/pci/controller/pcie-rcar.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-index 759c6542c5c8..a9de65438051 100644
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -1207,9 +1207,8 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 	irq_dispose_mapping(pcie->msi.irq1);
+On 05/20/2020 09:30 AM, Andrew Morton wrote:
+> On Tue, 19 May 2020 18:03:29 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
+> 
+>> Here add pte_sw_mkyoung function to make page readable on MIPS
+>> platform during page fault handling. This patch improves page
+>> fault latency about 10% on my MIPS machine with lmbench
+>> lat_pagefault case.
+>>
+>> It is noop function on other arches, there is no negative
+>> influence on those architectures.
+>>
+>> --- a/arch/mips/include/asm/pgtable.h
+>> +++ b/arch/mips/include/asm/pgtable.h
+>> @@ -414,6 +414,8 @@ static inline pte_t pte_mkyoung(pte_t pte)
+>>  	return pte;
+>>  }
+>>  
+>> +#define pte_sw_mkyoung	pte_mkyoung
+>> +
+>>  #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
+>>  static inline int pte_huge(pte_t pte)	{ return pte_val(pte) & _PAGE_HUGE; }
+>>  
+>> --- a/include/asm-generic/pgtable.h
+>> +++ b/include/asm-generic/pgtable.h
+>> @@ -227,6 +227,21 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addres
+>>  }
+>>  #endif
+>>  
+>> +/*
+>> + * On some architectures hardware does not set page access bit when accessing
+>> + * memory page, it is responsibilty of software setting this bit. It brings
+>> + * out extra page fault penalty to track page access bit. For optimization page
+>> + * access bit can be set during all page fault flow on these arches.
+>> + * To be differentiate with macro pte_mkyoung, this macro is used on platforms
+>> + * where software maintains page access bit.
+>> + */
+>> +#ifndef pte_sw_mkyoung
+>> +static inline pte_t pte_sw_mkyoung(pte_t pte)
+>> +{
+>> +	return pte;
+>> +}
+>> +#endif
+> 
+> Yup, that's neat enough.  Thanks for making this change.  It looks like
+> all architectures include asm-generic/pgtable.h so that's fine.
+> 
+> It's conventional to add a
+> 
+> #define pte_sw_mkyoung pte_sw_mkyoung
+> 
+> immediately above the #endif there, so we can't try to implement
+> pte_sw_mkyoung() twice if this header gets included twice.  But the
+> header has #ifndef _ASM_GENERIC_PGTABLE_H around the whole thing so
+> that should be OK.
+
+Sure, will do, and thanks for your kindly help and guidance
+
  
- err_pm_put:
--	pm_runtime_put(dev);
--
- err_pm_disable:
-+	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
- 	pci_free_resource_list(&pcie->resources);
- 
--- 
-2.17.1
 
