@@ -2,150 +2,270 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5394F206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7770B206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgETRJf (ORCPT
+        id S1726890AbgETRKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:09:35 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:59644 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbgETRJf (ORCPT
+        Wed, 20 May 2020 13:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgETRKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:09:35 -0400
-Date:   Wed, 20 May 2020 13:09:34 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Szabolcs Nagy <szabolcs.nagy@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Jack Schmidt <jack.schmidt@uky.edu>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, nd@arm.com
-Subject: Re: clock_gettime64 vdso bug on 32-bit arm, rpi-4
-Message-ID: <20200520170932.GO1079@brightrain.aerifal.cx>
-References: <CAK8P3a2Tw2w73ZkK-W6AA9veMK4-miLUx-TL1EuOdP7EdW-AmQ@mail.gmail.com>
- <0c2abcd1-7da8-2559-1e93-4c3bdd38dec1@linaro.org>
- <CAK8P3a3fxs+14ZdCRmt_GwJGv3Aipm1r9sAHH6aVj2UrWBNuQQ@mail.gmail.com>
- <20200520154128.GA24483@arm.com>
- <20200520160810.GM1079@brightrain.aerifal.cx>
+        Wed, 20 May 2020 13:10:50 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB7AC061A0E;
+        Wed, 20 May 2020 10:10:49 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=pengu.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1jbSEt-00088y-Ih; Wed, 20 May 2020 19:10:43 +0200
+From:   Roelof Berg <rberg@berg-solutions.de>
+To:     rberg@berg-solutions.de
+Cc:     andrew@lunn.ch, Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] lan743x: Added fixed link support
+Date:   Wed, 20 May 2020 19:10:06 +0200
+Message-Id: <20200520171006.5263-1-rberg@berg-solutions.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520160810.GM1079@brightrain.aerifal.cx>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1589994650;ee76ab02;
+X-HE-SMSGID: 1jbSEt-00088y-Ih
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 12:08:10PM -0400, Rich Felker wrote:
-> On Wed, May 20, 2020 at 04:41:29PM +0100, Szabolcs Nagy wrote:
-> > The 05/19/2020 22:31, Arnd Bergmann wrote:
-> > > On Tue, May 19, 2020 at 10:24 PM Adhemerval Zanella
-> > > <adhemerval.zanella@linaro.org> wrote:
-> > > > On 19/05/2020 16:54, Arnd Bergmann wrote:
-> > > > > Jack Schmidt reported a bug for the arm32 clock_gettimeofday64 vdso call last
-> > > > > month: https://github.com/richfelker/musl-cross-make/issues/96 and
-> > > > > https://github.com/raspberrypi/linux/issues/3579
-> > > > >
-> > > > > As Will Deacon pointed out, this was never reported on the mailing list,
-> > > > > so I'll try to summarize what we know, so this can hopefully be resolved soon.
-> > > > >
-> > > > > - This happened reproducibly on Linux-5.6 on a 32-bit Raspberry Pi patched
-> > > > >    kernel running on a 64-bit Raspberry Pi 4b (bcm2711) when calling
-> > > > >    clock_gettime64(CLOCK_REALTIME)
-> > > >
-> > > > Does it happen with other clocks as well?
-> > > 
-> > > Unclear.
-> > > 
-> > > > > - The kernel tree is at https://github.com/raspberrypi/linux/, but I could
-> > > > >   see no relevant changes compared to a mainline kernel.
-> > > >
-> > > > Is this bug reproducible with mainline kernel or mainline kernel can't be
-> > > > booted on bcm2711?
-> > > 
-> > > Mainline linux-5.6 should boot on that machine but might not have
-> > > all the other features, so I think users tend to use the raspberry pi
-> > > kernel sources for now.
-> > > 
-> > > > > - From the report, I see that the returned time value is larger than the
-> > > > >   expected time, by 3.4 to 14.5 million seconds in four samples, my
-> > > > >   guess is that a random number gets added in at some point.
-> > > >
-> > > > What kind code are you using to reproduce it? It is threaded or issue
-> > > > clock_gettime from signal handlers?
-> > > 
-> > > The reproducer is very simple without threads or signals,
-> > > see the start of https://github.com/richfelker/musl-cross-make/issues/96
-> > > 
-> > > It does rely on calling into the musl wrapper, not the direct vdso
-> > > call.
-> > > 
-> > > > > - From other sources, I found that the Raspberry Pi clocksource runs
-> > > > >   at 54 MHz, with a mask value of 0xffffffffffffff. From these numbers
-> > > > >   I would expect that reading a completely random hardware register
-> > > > >   value would result in an offset up to 1.33 billion seconds, which is
-> > > > >   around factor 100 more than the error we see, though similar.
-> > > > >
-> > > > > - The test case calls the musl clock_gettime() function, which falls back to
-> > > > >   the clock_gettime64() syscall on kernels prior to 5.5, or to the 32-bit
-> > > > >   clock_gettime() prior to Linux-5.1. As reported in the bug, Linux-4.19 does
-> > > > >   not show the bug.
-> > > > >
-> > > > > - The behavior was not reproduced on the same user space in qemu,
-> > > > >   though I cannot tell whether the exact same kernel binary was used.
-> > > > >
-> > > > > - glibc-2.31 calls the same clock_gettime64() vdso function on arm to
-> > > > >   implement clock_gettime(), but earlier versions did not. I have not
-> > > > >   seen any reports of this bug, which could be explained by users
-> > > > >   generally being on older versions.
-> > > > >
-> > > > > - As far as I can tell, there are no reports of this bug from other users,
-> > > > >   and so far nobody could reproduce it.
-> > 
-> > note: i could not reproduce it in qemu-system with these configs:
-> > 
-> > qemu-system-aarch64 + arm64 kernel + compat vdso
-> > qemu-system-aarch64 + kvm accel (on cortex-a72) + 32bit arm kernel
-> > qemu-system-arm + cpu max + 32bit arm kernel
-> > 
-> > so i think it's something specific to that user's setup
-> > (maybe rpi hw bug or gcc miscompiled the vdso or something
-> > with that particular linux, i built my own linux 5.6 because
-> > i did not know the exact kernel version where the bug was seen)
-> > 
-> > i don't have access to rpi (or other cortex-a53 where i
-> > can install my own kernel) so this is as far as i got.
-> 
-> If we have a binary of the kernel that's known to be failing on the
-> hardware, it would be useful to dump its vdso and examine the
-> disassembly to see if it was miscompiled.
+Microchip lan7431 is frequently connected to a phy. However, it
+can also be directly connected to a MII remote peer without
+any phy in between. For supporting such a phyless hardware setup
+in Linux we added the capability to the driver to understand
+the fixed-link and the phy-connection-type entries in the device
+tree.
 
-OK, OP posted it and I think we've solved this. See
-https://github.com/richfelker/musl-cross-make/issues/96#issuecomment-631604410
+New behavior:
+. If no device tree node is configured the behavior of the driver remains
+  unchanged. This will ensure backwards compatibility to off-the-shelve
+  PC hardware.
 
-And my analysis:
+. If a device tree node is configured but no fixed-link node is present
+  the phy-connection-type (as specified in the device tree)  will be
+  applied and of_phy_connect() will be used instead of
+  phy_connect_direct().
 
-<@dalias> see what i just found on the tracker
-<@dalias> patch_vdso/vdso_nullpatch_one in arch/arm/kernel/vdso.c patches out the time32 functions in this case
-<@dalias> but not the time64 one
-<@dalias> this looks like a real kernel bug that's not hw-specific except breaking on all hardware where the patching-out is needed
-<@dalias> we could possibly work around it by refusing to use the time64 vdso unless the time32 one is also present
-<@dalias> yep
-<@dalias> so i think we've solved this. the kernel thought it wasnt using vdso anymore because it patched it out
-<@dalias> but it forgot to patch out the time64 one
-<@dalias> so it stopped updating the data needed for vdso to work
+. If a device tree node is configured and a fixed-link node is present
+  the phy-connection-type will be applied, of_phy_connect() will be
+  used and the MAC will be configured to use the fix speed and duplex
+  mode configured in the fixed-link node. Also ASD and ADD will be
+  switched off.
+
+Example:
+
+ &pcie {
+	status = "okay";
+
+	host@0 {
+		reg = <0 0 0 0 0>;
+
+		#address-cells = <3>;
+		#size-cells = <2>;
+
+		ethernet@0 {
+			compatible = "weyland-yutani,noscom1", "microchip,lan743x";
+			status = "okay";
+			reg = <0 0 0 0 0>;
+			phy-connection-type = "rgmii";
+
+			fixed-link {
+				speed = <100>;
+				full-duplex;
+			};
+		};
+	};
+};
+
+Signed-off-by: Roelof Berg <rberg@berg-solutions.de>
+---
+ drivers/net/ethernet/microchip/lan743x_main.c | 101 ++++++++++++++++--
+ drivers/net/ethernet/microchip/lan743x_main.h |   4 +
+ 2 files changed, 97 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
+index a43140f7b5eb..50ca223e8b8f 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.c
++++ b/drivers/net/ethernet/microchip/lan743x_main.c
+@@ -9,9 +9,12 @@
+ #include <linux/microchipphy.h>
+ #include <linux/net_tstamp.h>
+ #include <linux/phy.h>
++#include <linux/phy_fixed.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/iopoll.h>
+ #include <linux/crc16.h>
++#include <linux/of_mdio.h>
++#include <linux/of_net.h>
+ #include "lan743x_main.h"
+ #include "lan743x_ethtool.h"
+ 
+@@ -946,6 +949,10 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+ {
+ 	struct lan743x_adapter *adapter = netdev_priv(netdev);
+ 	struct phy_device *phydev = netdev->phydev;
++	struct device_node *phynode;
++	phy_interface_t phyifc;
++	int ret = -EIO;
++	u32 data;
+ 
+ 	phy_print_status(phydev);
+ 	if (phydev->state == PHY_RUNNING) {
+@@ -953,6 +960,53 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+ 		int remote_advertisement = 0;
+ 		int local_advertisement = 0;
+ 
++		/* check if a device-tree configuration is present */
++		phynode = of_node_get(adapter->pdev->dev.of_node);
++		if (phynode) {
++			data = lan743x_csr_read(adapter, MAC_CR);
++
++			/* set interface mode */
++			ret = of_get_phy_mode(phynode, &phyifc);
++			if (ret)
++				phyifc = PHY_INTERFACE_MODE_GMII;
++
++			if (phy_interface_mode_is_rgmii(phyifc))
++				/* RGMII */
++				data &= ~MAC_CR_MII_EN_;
++			else
++				/* GMII */
++				data |= MAC_CR_MII_EN_;
++
++			/* apply fixed-link configuration */
++			if (of_phy_is_fixed_link(phynode)) {
++				/* disable auto duplex, and speed detection */
++				data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
++				/* set fixed duplex mode */
++				if (phydev->duplex)
++					data |= MAC_CR_DPX_;
++				else
++					data &= ~MAC_CR_DPX_;
++				/* set fixed bus speed */
++				switch (phydev->speed) {
++				case 10:
++					data &= ~MAC_CR_CFG_H_;
++					data &= ~MAC_CR_CFG_L_;
++					break;
++				case 100:
++					data &= ~MAC_CR_CFG_H_;
++					data |= MAC_CR_CFG_L_;
++					break;
++				case 1000:
++					data |= MAC_CR_CFG_H_;
++					data |= MAC_CR_CFG_L_;
++					break;
++				}
++			}
++
++			lan743x_csr_write(adapter, MAC_CR, data);
++			of_node_put(phynode);
++		}
++
+ 		memset(&ksettings, 0, sizeof(ksettings));
+ 		phy_ethtool_get_link_ksettings(netdev, &ksettings);
+ 		local_advertisement =
+@@ -974,26 +1028,57 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
+ 
+ 	phy_stop(netdev->phydev);
+ 	phy_disconnect(netdev->phydev);
++	if (of_phy_is_fixed_link(adapter->pdev->dev.of_node))
++		of_phy_deregister_fixed_link(adapter->pdev->dev.of_node);
+ 	netdev->phydev = NULL;
+ }
+ 
+ static int lan743x_phy_open(struct lan743x_adapter *adapter)
+ {
+ 	struct lan743x_phy *phy = &adapter->phy;
++	struct device_node *phynode;
+ 	struct phy_device *phydev;
+ 	struct net_device *netdev;
++	phy_interface_t phyifc;
+ 	int ret = -EIO;
+ 
+ 	netdev = adapter->netdev;
+-	phydev = phy_find_first(adapter->mdiobus);
+-	if (!phydev)
+-		goto return_error;
+ 
+-	ret = phy_connect_direct(netdev, phydev,
+-				 lan743x_phy_link_status_change,
+-				 PHY_INTERFACE_MODE_GMII);
+-	if (ret)
+-		goto return_error;
++	/* is a device tree configuration present */
++	phynode = of_node_get(adapter->pdev->dev.of_node);
++	if (phynode) {
++		/* apply device tree configuration */
++		if (of_phy_is_fixed_link(phynode)) {
++			ret = of_phy_register_fixed_link(phynode);
++			if (ret) {
++				netdev_err(netdev, "cannot register fixed PHY\n");
++				of_node_put(phynode);
++				goto return_error;
++			}
++		}
++
++		ret = of_get_phy_mode(phynode, &phyifc);
++		if (ret)
++			phyifc = PHY_INTERFACE_MODE_GMII;
++
++		phydev = of_phy_connect(netdev, phynode,
++					lan743x_phy_link_status_change,
++					0, phyifc);
++		of_node_put(phynode);
++		if (!phydev)
++			goto return_error;
++	} else {
++		/* no device tree configuration */
++		phydev = phy_find_first(adapter->mdiobus);
++		if (!phydev)
++			goto return_error;
++
++		ret = phy_connect_direct(netdev, phydev,
++					 lan743x_phy_link_status_change,
++					 PHY_INTERFACE_MODE_GMII);
++		if (ret)
++			goto return_error;
++	}
+ 
+ 	/* MAC doesn't support 1000T Half */
+ 	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
+index 3b02eeae5f45..e49f6b6cd440 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.h
++++ b/drivers/net/ethernet/microchip/lan743x_main.h
+@@ -104,10 +104,14 @@
+ 	((value << 0) & FCT_FLOW_CTL_ON_THRESHOLD_)
+ 
+ #define MAC_CR				(0x100)
++#define MAC_CR_MII_EN_			BIT(19)
+ #define MAC_CR_EEE_EN_			BIT(17)
+ #define MAC_CR_ADD_			BIT(12)
+ #define MAC_CR_ASD_			BIT(11)
+ #define MAC_CR_CNTR_RST_		BIT(5)
++#define MAC_CR_DPX_			BIT(3)
++#define MAC_CR_CFG_H_			BIT(2)
++#define MAC_CR_CFG_L_			BIT(1)
+ #define MAC_CR_RST_			BIT(0)
+ 
+ #define MAC_RX				(0x104)
+-- 
+2.25.1
 
