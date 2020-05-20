@@ -2,94 +2,241 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0698C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C484B20756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D4320756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f7mZU9ne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgETOEO (ORCPT
+        id S1726870AbgETOEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:04:14 -0400
-Received: from mga17.intel.com ([192.55.52.151]:33806 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgETOEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:04:13 -0400
-IronPort-SDR: cfOqL/2PglMPsMUqmPBL46dgO7pfvm9ZT4Y5GbnsNSvyavvbOuwE23vSubNGqD6MwUMHtUTnfc
- /qmB0cd3VpRg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 07:04:12 -0700
-IronPort-SDR: M9dCvdQeUC+baWWCbFtgbQpU/ZPq6nmnS5bIdWxLmZRnk9Tb+A64fwQlUFOOlp5PjS0kuQJO5Z
- IvbtydjIPTUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="440039112"
-Received: from ttluu1x-mobl.ger.corp.intel.com (HELO localhost) ([10.252.38.239])
-  by orsmga005.jf.intel.com with ESMTP; 20 May 2020 07:04:03 -0700
-Date:   Wed, 20 May 2020 17:04:01 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 02/20] x86/cpufeatures: x86/msr: Intel SGX Launch
- Control hardware bits
-Message-ID: <20200520140401.GB34750@linux.intel.com>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-3-jarkko.sakkinen@linux.intel.com>
- <20200520122346.GG1457@zn.tnic>
+        Wed, 20 May 2020 10:04:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39652 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726789AbgETOEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:04:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589983461;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=xTGlqq0w081BobQNfRL2NqghydaELJw3UKoGzWbyJpk=;
+        b=f7mZU9nem8GE+fqjbTzU9AuKvQuXyZhtnrg8MOrGpIoqaBXwyW9k8fxtQ0bVyVraOOQbjB
+        Y+DoswVj8s8pjO3qpoEqLukj6AJboxm4XpJwm/clxcHrWwR1jOJgbS0vp+QZD9csjk6KPE
+        nKZSiQZ96G+CEP7R2PSMtwOZVGHJIZ4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-TaGil7twNdmUL5A2nCCURA-1; Wed, 20 May 2020 10:04:19 -0400
+X-MC-Unique: TaGil7twNdmUL5A2nCCURA-1
+Received: by mail-wr1-f72.google.com with SMTP id p8so1455557wrj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:04:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xTGlqq0w081BobQNfRL2NqghydaELJw3UKoGzWbyJpk=;
+        b=sRsPBeTFqJu/861t2vaSPuyoMSWw3o1P/TS21vzll6x5f1dMJHwSEBlIN75K9u+FMR
+         WJaRq7vMOsrBrbJMAXFkbhG3XSnc2slBwOQt0sN5bxTTyxV06ffvxAWUALo0P+qQ4prU
+         o8CfQJExUoTPBNFE++hp6ri93IsOkTG3kKmIa58QDVav94n8YrET87BWFz3ddpSt//lC
+         5sPpOkrHd83LJMmyLebsPKjEy/cO42W/9EoxWGI+IRIAz71nWNmuBONNz8eV5PLauUKb
+         cKFCEbKM8vy1Hw6cE6D079msCO/H6j6KLBYw2IzjUTyBJpYYH1h1RpB8LOq187xkoi3J
+         7qGg==
+X-Gm-Message-State: AOAM531aAUvGzdnpBdMmUWKhr5j4Y4M/hKfnxOlu9k0OH5WSdFXnRKQF
+        5xrzecgDvlKTUGRqrC65BXzECdNWwjvWVm7eZ2JCNlyaPVIUrMDU4Xb0Gg7/jqitN+kYH/6QhGo
+        pvc8ImQnMaloWDckvZvJs9Qgn
+X-Received: by 2002:adf:82ab:: with SMTP id 40mr1435267wrc.85.1589983458488;
+        Wed, 20 May 2020 07:04:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyu0MqZibcZwm0TugA9lSrlYHRFVkt44fdqu7Gy6ljrDMmGQ6iF6IJ+Tw+6grygO2EOUDDaFA==
+X-Received: by 2002:adf:82ab:: with SMTP id 40mr1435250wrc.85.1589983458178;
+        Wed, 20 May 2020 07:04:18 -0700 (PDT)
+Received: from localhost.localdomain.com ([151.29.188.60])
+        by smtp.gmail.com with ESMTPSA id q4sm3293174wma.9.2020.05.20.07.04.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 07:04:17 -0700 (PDT)
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org
+Cc:     linux-rt-users@vger.kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
+Subject: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep is cleared
+Date:   Wed, 20 May 2020 16:04:02 +0200
+Message-Id: <20200520140402.358880-1-juri.lelli@redhat.com>
+X-Mailer: git-send-email 2.25.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520122346.GG1457@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 02:23:47PM +0200, Borislav Petkov wrote:
-> 
-> > Subject: Re: [PATCH v30 02/20] x86/cpufeatures: x86/msr: Intel SGX Launch Control hardware bits
-> 							  ^
-> 							Add
-> 
-> Needs a verb.
+After tasks enter or leave a runqueue (wakeup/block) SCHED full_nohz
+dependency is checked (via sched_update_tick_dependency()). In case tick
+can be stopped on a CPU (see sched_can_stop_tick() for details), SCHED
+dependency for such CPU is cleared. However, this new information is not
+used right away to actually stop the tick.
 
-"x86/cpufeatures: x86/msr: Add Intel SGX Launch Control hardware bits"
+In CONFIG_PREEMPT systems booted with threadirqs option, sched clock
+tick is serviced by an actual task (ksoftirqd corresponding to the CPU
+where tick timer fired). So, in case a CPU was running a single task,
+servicing the timer involves exiting full nozh mode. Problem at this
+point is that we might lose chances to enter back into full nozh mode,
+since info about ksoftirqd thread going back to sleep is not used (as
+mentioned above).
 
-> On Fri, May 15, 2020 at 03:43:52AM +0300, Jarkko Sakkinen wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > Add X86_FEATURE_SGX_LC, which informs whether or not the CPU supports SGX
-> > Launch Control.
-> > 
-> > Add MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}, which when combined contain a
-> > SHA256 hash of a 3072-bit RSA public key. SGX backed software packages, so
-> > called enclaves, are always signed. All enclaves signed with the public key
-> > are unconditionally allowed to initialize. [1]
-> > 
-> > Add FEATURE_CONTROL_SGX_LE_WR bit of the feature control MSR, which informs
-> > whether the formentioned MSRs are writable or not. If the bit is off, the
-> 
-> "aforementioned"
-> 
-> > public key MSRs are read-only for the OS.
+Fix it by calling tick_nozh_full_update_tick(_cpu)() right after SCHED
+dependency is cleared, so that tick can be promptly stopped.
 
-Thanks, fixed.
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+---
+Hi,
 
-> Regards/Gruss,
->     Boris.
+I noticed what seems to be the problem described in the changelog while
+running sysjitter [1] on a PREEMPT system setup for isolation and full
+nozh, i.e. ... skew_tick=1 nohz=on nohz_full=4-35 rcu_nocbs=4-35
+threadirqs (36 CPUs box).
 
-/Jarkko
+Starting sysjitter with something like the following
+
+perf stat -C 4-35 -e irq_vectors:local_timer_entry taskset \
+--cpu-list 4-35 ./sysjitter/sysjitter --runtime 30 200
+
+with vanilla kernel was returning ~5k local_timer_entry events, while
+that number goes down to ~100 or so with the proposed patch applied.
+
+The following trace snippet also highlight the problematic situation:
+
+...
+ksoftirqd/19-125   [019]   170.700754: softirq_entry:        vec=1 [action=TIMER]
+ksoftirqd/19-125   [019]   170.700755: softirq_exit:         vec=1 [action=TIMER]
+ksoftirqd/19-125   [019]   170.700756: softirq_entry:        vec=7 [action=SCHED]
+ksoftirqd/19-125   [019]   170.700757: softirq_exit:         vec=7 [action=SCHED]
+ksoftirqd/19-125   [019]   170.700759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
+   sysjitter-2459  [019]   170.701740: local_timer_entry:    vector=236
+   sysjitter-2459  [019]   170.701742: softirq_raise:        vec=1 [action=TIMER]
+   sysjitter-2459  [019]   170.701743: softirq_raise:        vec=7 [action=SCHED]
+   sysjitter-2459  [019]   170.701744: local_timer_exit:     vector=236
+   sysjitter-2459  [019]   170.701747: sched_wakeup:         ksoftirqd/19:125 [120] success=1 CPU:019
+   sysjitter-2459  [019]   170.701748: tick_stop:            success=0 dependency=SCHED
+   sysjitter-2459  [019]   170.701749: irq_work_entry:       vector=246
+   sysjitter-2459  [019]   170.701750: irq_work_exit:        vector=246
+   sysjitter-2459  [019]   170.701751: tick_stop:            success=0 dependency=SCHED
+   sysjitter-2459  [019]   170.701753: sched_switch:         sysjitter:2459 [120] R ==> ksoftirqd/19:125 [120]
+ksoftirqd/19-125   [019]   170.701754: softirq_entry:        vec=1 [action=TIMER]
+ksoftirqd/19-125   [019]   170.701756: softirq_exit:         vec=1 [action=TIMER]
+ksoftirqd/19-125   [019]   170.701756: softirq_entry:        vec=7 [action=SCHED]
+ksoftirqd/19-125   [019]   170.701758: softirq_exit:         vec=7 [action=SCHED]
+ksoftirqd/19-125   [019]   170.701759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
+   sysjitter-2459  [019]   170.702740: local_timer_entry:    vector=236
+   sysjitter-2459  [019]   170.702742: softirq_raise:        vec=1 [action=TIMER]
+   sysjitter-2459  [019]   170.702743: softirq_raise:        vec=7 [action=SCHED]
+   sysjitter-2459  [019]   170.702744: local_timer_exit:     vector=236
+   sysjitter-2459  [019]   170.702747: sched_wakeup:         ksoftirqd/19:125 [120] success=1 CPU:019
+   sysjitter-2459  [019]   170.702748: tick_stop:            success=0 dependency=SCHED
+   sysjitter-2459  [019]   170.702749: irq_work_entry:       vector=246
+   sysjitter-2459  [019]   170.702750: irq_work_exit:        vector=246
+   sysjitter-2459  [019]   170.702751: tick_stop:            success=0 dependency=SCHED
+   sysjitter-2459  [019]   170.702753: sched_switch:         sysjitter:2459 [120] R ==> ksoftirqd/19:125 [120]
+ksoftirqd/19-125   [019]   170.702755: softirq_entry:        vec=1 [action=TIMER]
+ksoftirqd/19-125   [019]   170.702756: softirq_exit:         vec=1 [action=TIMER]
+ksoftirqd/19-125   [019]   170.702757: softirq_entry:        vec=7 [action=SCHED]
+ksoftirqd/19-125   [019]   170.702758: softirq_exit:         vec=7 [action=SCHED]
+ksoftirqd/19-125   [019]   170.702760: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
+   sysjitter-2459  [019]   170.703740: local_timer_entry:    vector=236
+   sysjitter-2459  [019]   170.703742: softirq_raise:        vec=1 [action=TIMER]
+   sysjitter-2459  [019]   170.703743: softirq_raise:        vec=7 [action=SCHED]
+   sysjitter-2459  [019]   170.703745: local_timer_exit:     vector=236
+   sysjitter-2459  [019]   170.703747: sched_wakeup:         ksoftirqd/19:125 [120] success=1 CPU:019
+   sysjitter-2459  [019]   170.703748: tick_stop:            success=0 dependency=SCHED
+   sysjitter-2459  [019]   170.703749: irq_work_entry:       vector=246
+   sysjitter-2459  [019]   170.703750: irq_work_exit:        vector=246
+   sysjitter-2459  [019]   170.703751: tick_stop:            success=0 dependency=SCHED
+   sysjitter-2459  [019]   170.703753: sched_switch:         sysjitter:2459 [120] R ==> ksoftirqd/19:125 [120]
+ksoftirqd/19-125   [019]   170.703755: softirq_entry:        vec=1 [action=TIMER]
+ksoftirqd/19-125   [019]   170.703756: softirq_exit:         vec=1 [action=TIMER]
+ksoftirqd/19-125   [019]   170.703757: softirq_entry:        vec=7 [action=SCHED]
+ksoftirqd/19-125   [019]   170.703758: softirq_exit:         vec=7 [action=SCHED]
+ksoftirqd/19-125   [019]   170.703759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
+   sysjitter-2459  [019]   170.704500: call_function_single_entry: vector=251
+   sysjitter-2459  [019]   170.704502: call_function_single_exit: vector=251
+   sysjitter-2459  [019]   170.704504: tick_stop:            success=1 dependency=NONE
+...
+
+Luckily sometimes it happens (like in the above) that an interrupt fires
+on a CPU while ksoftirqd is not executing, SCHED dep is seen as cleared
+and the CPU enters full nohz. I've however observed pathological cases
+where CPUs aren't able to enter back full nohz for a long time.
+
+Hope my understanding is correct. Please find below a naive attempt to
+fix the problem. I'm pretty sure I'm missing details, e.g. I'm not sure
+it is safe to possibly stop the tick remotely. Consider the following as
+not more than another way of pointing the problem out. :-)
+
+Best,
+
+Juri
+
+1 - https://github.com/alexeiz/sysjitter
+---
+ kernel/time/tick-sched.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 3e2dc9b8858c..0d696e55d774 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -342,11 +342,16 @@ void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit)
+ }
+ EXPORT_SYMBOL_GPL(tick_nohz_dep_set_cpu);
+ 
++static void tick_nohz_full_update_tick_cpu(struct tick_sched *ts, int cpu);
++
+ void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
+ {
+ 	struct tick_sched *ts = per_cpu_ptr(&tick_cpu_sched, cpu);
+ 
+ 	atomic_andnot(BIT(bit), &ts->tick_dep_mask);
++
++	if (!in_irq())
++		tick_nohz_full_update_tick_cpu(ts, cpu);
+ }
+ EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
+ 
+@@ -870,11 +875,9 @@ static void tick_nohz_restart_sched_tick(struct tick_sched *ts, ktime_t now)
+ 	tick_nohz_restart(ts, now);
+ }
+ 
+-static void tick_nohz_full_update_tick(struct tick_sched *ts)
++static void tick_nohz_full_update_tick_cpu(struct tick_sched *ts, int cpu)
+ {
+ #ifdef CONFIG_NO_HZ_FULL
+-	int cpu = smp_processor_id();
+-
+ 	if (!tick_nohz_full_cpu(cpu))
+ 		return;
+ 
+@@ -888,6 +891,15 @@ static void tick_nohz_full_update_tick(struct tick_sched *ts)
+ #endif
+ }
+ 
++static void tick_nohz_full_update_tick(struct tick_sched *ts)
++{
++#ifdef CONFIG_NO_HZ_FULL
++	int cpu = smp_processor_id();
++
++	tick_nohz_full_update_tick_cpu(ts, cpu);
++#endif
++}
++
+ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
+ {
+ 	/*
+-- 
+2.25.3
+
