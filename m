@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4342BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF269C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 213E8207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB91207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgETO0f (ORCPT
+        id S1728491AbgETO06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:26:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32986 "EHLO
+        Wed, 20 May 2020 10:26:58 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32966 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726993AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726988AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-00035i-7X; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbw-00036I-6K; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DRm-Hg; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbv-007DR4-7a; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Felipe Balbi" <balbi@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Date:   Wed, 20 May 2020 15:14:17 +0100
-Message-ID: <lsq.1589984008.506380468@decadent.org.uk>
+        "Oliver Neukum" <oneukum@suse.com>,
+        "Johan Hovold" <johan@kernel.org>, "Sean Young" <sean@mess.org>,
+        "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>
+Date:   Wed, 20 May 2020 15:14:08 +0100
+Message-ID: <lsq.1589984008.452943796@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 49/99] usb: gadget: f_ncm: Use atomic_t to track
- in-flight request
+Subject: [PATCH 3.16 40/99] media: iguanair: fix endpoint sanity check
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,96 +56,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 5b24c28cfe136597dc3913e1c00b119307a20c7e upstream.
+commit 1b257870a78b0a9ce98fdfb052c58542022ffb5b upstream.
 
-Currently ncm->notify_req is used to flag when a request is in-flight.
-ncm->notify_req is set to NULL and when a request completes it is
-subsequently reset.
+Make sure to use the current alternate setting, which need not be the
+first one by index, when verifying the endpoint descriptors and
+initialising the URBs.
 
-This is fundamentally buggy in that the unbind logic of the NCM driver will
-unconditionally free ncm->notify_req leading to a NULL pointer dereference.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: 40d133d7f542 ("usb: gadget: f_ncm: convert to new function interface with backward compatibility")
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust filename]
+Fixes: 26ff63137c45 ("[media] Add support for the IguanaWorks USB IR Transceiver")
+Fixes: ab1cbdf159be ("media: iguanair: add sanity checks")
+Cc: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/gadget/f_ncm.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/media/rc/iguanair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/f_ncm.c
-+++ b/drivers/usb/gadget/f_ncm.c
-@@ -57,6 +57,7 @@ struct f_ncm {
- 	struct usb_ep			*notify;
- 	struct usb_request		*notify_req;
- 	u8				notify_state;
-+	atomic_t			notify_count;
- 	bool				is_open;
+--- a/drivers/media/rc/iguanair.c
++++ b/drivers/media/rc/iguanair.c
+@@ -430,7 +430,7 @@ static int iguanair_probe(struct usb_int
+ 	int ret, pipein, pipeout;
+ 	struct usb_host_interface *idesc;
  
- 	const struct ndp_parser_opts	*parser_opts;
-@@ -460,7 +461,7 @@ static void ncm_do_notify(struct f_ncm *
- 	int				status;
+-	idesc = intf->altsetting;
++	idesc = intf->cur_altsetting;
+ 	if (idesc->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
  
- 	/* notification already in flight? */
--	if (!req)
-+	if (atomic_read(&ncm->notify_count))
- 		return;
- 
- 	event = req->buf;
-@@ -500,7 +501,8 @@ static void ncm_do_notify(struct f_ncm *
- 	event->bmRequestType = 0xA1;
- 	event->wIndex = cpu_to_le16(ncm->ctrl_id);
- 
--	ncm->notify_req = NULL;
-+	atomic_inc(&ncm->notify_count);
-+
- 	/*
- 	 * In double buffering if there is a space in FIFO,
- 	 * completion callback can be called right after the call,
-@@ -510,7 +512,7 @@ static void ncm_do_notify(struct f_ncm *
- 	status = usb_ep_queue(ncm->notify, req, GFP_ATOMIC);
- 	spin_lock(&ncm->lock);
- 	if (status < 0) {
--		ncm->notify_req = req;
-+		atomic_dec(&ncm->notify_count);
- 		DBG(cdev, "notify --> %d\n", status);
- 	}
- }
-@@ -545,17 +547,19 @@ static void ncm_notify_complete(struct u
- 	case 0:
- 		VDBG(cdev, "Notification %02x sent\n",
- 		     event->bNotificationType);
-+		atomic_dec(&ncm->notify_count);
- 		break;
- 	case -ECONNRESET:
- 	case -ESHUTDOWN:
-+		atomic_set(&ncm->notify_count, 0);
- 		ncm->notify_state = NCM_NOTIFY_NONE;
- 		break;
- 	default:
- 		DBG(cdev, "event %02x --> %d\n",
- 			event->bNotificationType, req->status);
-+		atomic_dec(&ncm->notify_count);
- 		break;
- 	}
--	ncm->notify_req = req;
- 	ncm_do_notify(ncm);
- 	spin_unlock(&ncm->lock);
- }
-@@ -1382,6 +1386,11 @@ static void ncm_unbind(struct usb_config
- 
- 	usb_free_all_descriptors(f);
- 
-+	if (atomic_read(&ncm->notify_count)) {
-+		usb_ep_dequeue(ncm->notify, ncm->notify_req);
-+		atomic_set(&ncm->notify_count, 0);
-+	}
-+
- 	kfree(ncm->notify_req->buf);
- 	usb_ep_free_request(ncm->notify, ncm->notify_req);
- }
 
