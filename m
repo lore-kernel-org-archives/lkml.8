@@ -2,122 +2,101 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B340C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F05B20708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421C420708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:58:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H9rgqIVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728498AbgETB4P (ORCPT
+        id S1728509AbgETB6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 21:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgETB4P (ORCPT
+        Tue, 19 May 2020 21:58:03 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51516 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgETB6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 21:56:15 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA96C061A0E;
-        Tue, 19 May 2020 18:56:15 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbDxG-0005nh-7R; Wed, 20 May 2020 03:55:34 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 77588100D00; Wed, 20 May 2020 03:55:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of a seqcount
-In-Reply-To: <20200519170637.56d1a20a@hermes.lan>
-References: <20200519214547.352050-1-a.darwish@linutronix.de> <20200519214547.352050-2-a.darwish@linutronix.de> <20200519150159.4d91af93@hermes.lan> <87v9kr5zt7.fsf@nanos.tec.linutronix.de> <20200519161141.5fbab730@hermes.lan> <87lfln5w61.fsf@nanos.tec.linutronix.de> <20200519170637.56d1a20a@hermes.lan>
-Date:   Wed, 20 May 2020 03:55:33 +0200
-Message-ID: <87d06z5q0a.fsf@nanos.tec.linutronix.de>
+        Tue, 19 May 2020 21:58:03 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K1pbPZ078876;
+        Wed, 20 May 2020 01:57:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=/KpLfiF3yE04CnWO301FHWY+Pb0/izJPSpL1Ck1Oh3E=;
+ b=H9rgqIVIO8tVMlKGHRMeKD6zV3D9RcXUiaLMlJDpth4bKowufEIkgg2NkSud4P76X/Z4
+ bYmWn6dwvWv8cASbpNSIS74DP69/GLncfPNGAJScC+CYxPx/E9XFOK5fg5PqPJb1j5Um
+ hw/17lZbJQezSw/J84qkWMMLGU56hEpl2CYmrWLQFx6q8MQqLH7rgG/reydpXpDMtCt2
+ R3EPeRCV/yndL2KvpG121w+EWY5aSUHXr2euAnVQY45q6DcG0CmgLVDls8X9XKSHeTeg
+ cd0XjwdIyfkUXQ3ANL1wtG5PYZhvgMtib0cZo7WuDqiBLPKbbx9hUmqpHPAZ/PJRVtHp 2Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 3128tngfrs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 01:57:51 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K1sUOx095184;
+        Wed, 20 May 2020 01:57:51 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 314gm64dpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 01:57:50 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04K1vmT4008030;
+        Wed, 20 May 2020 01:57:48 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 May 2020 18:57:47 -0700
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kai =?utf-8?Q?M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH] scsi: st: convert convert get_user_pages() -->
+ pin_user_pages()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1d06zweqg.fsf@ca-mkp.ca.oracle.com>
+References: <20200519045525.2446851-1-jhubbard@nvidia.com>
+        <7440e420-009b-20cc-e1e6-7e2a212f65fa@nvidia.com>
+Date:   Tue, 19 May 2020 21:57:45 -0400
+In-Reply-To: <7440e420-009b-20cc-e1e6-7e2a212f65fa@nvidia.com> (John Hubbard's
+        message of "Tue, 19 May 2020 13:12:11 -0700")
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=1
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200014
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 cotscore=-2147483648 suspectscore=1 lowpriorityscore=0
+ adultscore=0 phishscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Hemminger <stephen@networkplumber.org> writes:
-> On Wed, 20 May 2020 01:42:30 +0200
-> Thomas Gleixner <tglx@linutronix.de> wrote:
+
+John,
+
+> Looks like I accidentally doubled a word on the subject line: "convert
+> convert".
 >
->> Stephen Hemminger <stephen@networkplumber.org> writes:
->> > On Wed, 20 May 2020 00:23:48 +0200
->> > Thomas Gleixner <tglx@linutronix.de> wrote:  
->> >> No. We did not. -ENOTESTCASE  
->> >
->> > Please try, it isn't that hard..
->> >
->> > # time for ((i=0;i<1000;i++)); do ip li add dev dummy$i type dummy; done
->> >
->> > real	0m17.002s
->> > user	0m1.064s
->> > sys	0m0.375s  
->> 
->> And that solves the incorrectness of the current code in which way?
->
-> Agree that the current code is has evolved over time to a state where it is not
-> correct in the case of Preempt-RT.
+> I'd appreciate it a maintainer could remove one of those for me, while
+> applying the patch, assuming that we don't need a v2 for other
+> reasons.
 
-That's not a RT problem as explained in great length in the changelog
-and as I pointed out in my previous reply.
+I can fix that up. But I'll give Kai a chance to review before I apply.
 
- Realtime scheduling classes are available on stock kernels and all
- those attempts to "fix" the livelock problem are ignoring that fact.
-
-Just because you or whoever involved are not using them or do not care
-is not making the code more correct.
-
-> The motivation for the changes to seqcount goes back many years when
-> there were ISP's that were concerned about scaling of tunnels, vlans
-> etc.
-
-I completely understand where this comes from, but that is not a
-justification for incorrect code at all.
-
-> Is it too much to ask for a simple before/after test of your patch as part 
-> of the submission. You probably measure latency changes to the
-> nanosecond.
-
-It's not too much to ask and I'm happy to provide the numbers.
-
-But before I waste my time and produce them, can you please explain how
-any numbers provided are going to change the fact that the code is
-incorrect?
-
-  A bug, is a bug no matter what the numbers are.
-
-I don't have a insta reproducer at hand for the problem which made that
-code go belly up, but the net result is simply:
-
-      Before:			After:
-	real	INFINTE         0mxx.yyys
-
-And the 'Before' comes with the extra benefit of stall warnings (if
-enabled in the config).
-
-If you insist I surely can go the extra mile and write up the insta
-reproducer and stick it into a bugzilla for you.
-
-Thanks,
-
-        tglx
+-- 
+Martin K. Petersen	Oracle Linux Engineering
