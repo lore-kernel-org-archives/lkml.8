@@ -2,98 +2,121 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A39EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5995DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59D4E20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589934488;
-	bh=7UHveCpdfXMHC57oV2Hc+hDgHd5kA5vSu2isyOQABb8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YcLSwpls/QB7Y8Vphh8fIeTBNxK5KekNjFQUkMv3CGEpMD0wgPqSqGlTUVXZmbq+5
-	 c8o4nE13W1wQn/dt1ebU3FvmCnsA2vZ/uNz4YK4W0q0uY04jUVHxBfqmaAJ37lmHx9
-	 t4cOwXvsmkN3zE3BtgJdrdx+2aEdNE2qzehvpoiI=
+	by mail.kernel.org (Postfix) with ESMTP id 3704C20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgETA2H (ORCPT
+        id S1728292AbgETA2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:28:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40834 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 20:28:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:44316 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgETA2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:28:06 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D2DD20873
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589934486;
-        bh=7UHveCpdfXMHC57oV2Hc+hDgHd5kA5vSu2isyOQABb8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ox+ZvLKNB//e2KJog5T24fH6I6SCf8raDd+42YTCLKHK1ZUVcXjpIe8gYiRs9XVW7
-         cUFebQ4FMpW9yPU8ZXTOw5OYejOUeiKjc5XkP4DgF0OB73c4C9iYslZCg+JQNOAtP0
-         Hb2+pylgA1HdVtqJZ5llztYMPg4cqjvAl2w/RNHk=
-Received: by mail-wm1-f53.google.com with SMTP id f134so977589wmf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:28:06 -0700 (PDT)
-X-Gm-Message-State: AOAM530cB8w1bZuvGAueJ2Fkk+H7wKtbTICUgEocYlxVlo1vMmw5ZZiz
-        J6xCVtZVWs8jaeuAfrV+FQmr6AI/Xb54kNo64LyQ1w==
-X-Google-Smtp-Source: ABdhPJwgGP8bkGoVEkJonFiFvO8/Mk/2EBWX0tPVvwkLSgEI/K8gpEjdj/ljf1H+9iSoJehD6pxSNPETylXrDBmGwdg=
-X-Received: by 2002:a1c:2bc2:: with SMTP id r185mr2035119wmr.49.1589934484657;
- Tue, 19 May 2020 17:28:04 -0700 (PDT)
+        id S1726318AbgETA2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:28:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52EC631B;
+        Tue, 19 May 2020 17:28:30 -0700 (PDT)
+Received: from [10.163.75.101] (unknown [10.163.75.101])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 833363F68F;
+        Tue, 19 May 2020 17:28:27 -0700 (PDT)
+Subject: Re: [PATCH V2] arm64/cpuinfo: Move HWCAP name arrays alongside their
+ bit definitions
+To:     Will Deacon <will@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <1588858150-26823-1-git-send-email-anshuman.khandual@arm.com>
+ <20200513150405.GS21779@arm.com>
+ <0999fa28-3ee7-3f02-4def-a0c6013ec6dd@arm.com>
+ <20200514073613.GB4280@willie-the-truck>
+ <8ddd0ca5-07c9-3a99-2ec6-4a201725ebe8@arm.com>
+ <20200518223506.GA5866@willie-the-truck>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <f3f3836c-42bb-9745-88ee-a6fe6f653cc5@arm.com>
+Date:   Wed, 20 May 2020 05:57:52 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20200515234547.710474468@linutronix.de> <20200515235126.818063410@linutronix.de>
-In-Reply-To: <20200515235126.818063410@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 19 May 2020 17:27:53 -0700
-X-Gmail-Original-Message-ID: <CALCETrVmYn6j+5cYzmKGELHP6ZLW-ZE38HHSRvPMFQs+41_6=A@mail.gmail.com>
-Message-ID: <CALCETrVmYn6j+5cYzmKGELHP6ZLW-ZE38HHSRvPMFQs+41_6=A@mail.gmail.com>
-Subject: Re: [patch V6 24/37] x86/entry: Convert APIC interrupts to IDTENTRY_SYSVEC
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200518223506.GA5866@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
->
-> Convert APIC interrupts to IDTENTRY_SYSVEC
->   - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
->   - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
->   - Remove the ASM idtentries in 64bit
->   - Remove the BUILD_INTERRUPT entries in 32bit
->   - Remove the old prototypes
->
-> No functional change.
->
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+
+On 05/19/2020 04:05 AM, Will Deacon wrote:
+> On Fri, May 15, 2020 at 08:58:05AM +0530, Anshuman Khandual wrote:
+>> On 05/14/2020 01:06 PM, Will Deacon wrote:
+>>> Why is it a change? We've never reported e.g. "java" on an arm64 kernel, so
+>>
+>> We already have "java" defined in existing compat_hwcap_str[] array even
+>> though it might never get set in compat_elf_hwcap. AFAICS, compat_elf_hwcap
+>> will have the following capabilities set (at the most).
+>>
+>> Via COMPAT_ELF_HWCAP_DEFAULT
+>>
+>> 01.  COMPAT_HWCAP_HALF
+>> 02.  COMPAT_HWCAP_THUMB
+>> 03.  COMPAT_HWCAP_FAST_MULT
+>> 04.  COMPAT_HWCAP_EDSP
+>> 05.  COMPAT_HWCAP_TLS
+>> 06.  COMPAT_HWCAP_IDIV
+>> 07.  COMPAT_HWCAP_LPAE
+>>
+>> Via setup_elf_hwcaps(compat_elf_hwcaps) <-- setup_cpu_features()
+>>
+>> 8.  COMPAT_HWCAP_NEON
+>> 9.  COMPAT_HWCAP_VFPv4
+>> 10. COMPAT_HWCAP_VFP
+>> 11. COMPAT_HWCAP_VFPv3
+>>
+>> Via arch_timer_set_evtstrm_feature()
+>>
+>> 12. COMPAT_HWCAP_EVTSTRM
+>>
+>> The code exists for "java" string to be displayed with /proc/cpuinfo but it
+>> may never get triggered as compat_elf_hwcap will never have JAVA capability
+>> unless there is a bug as you had rightly mentioned.
+> 
+> Fair enough, but applying this patch causes a *tonne* of warnings from
+> aiaiai:
+> 
+> +In file included from arch/arm64/include/asm/cpufeature.h:11,
+> +                 from arch/arm64/include/asm/ptrace.h:11,
+> +                 from arch/arm64/include/asm/irqflags.h:10,
+> +                 from include/linux/irqflags.h:16,
+> +                 from include/linux/spinlock.h:54,
+> +                 from include/linux/seqlock.h:36,
+> +                 from include/linux/time.h:6,
+> +                 from arch/arm64/include/asm/stat.h:12,
+> +                 from include/linux/stat.h:6,
+> +                 from include/linux/module.h:13,
+> +                 from drivers/media/rc/keymaps/rc-imon-mce.mod.c:1:
+> +arch/arm64/include/asm/hwcap.h:189:26: warning: ‘compat_hwcap2_str’ defined but not used [-Wunused-const-variable=]
+> +  189 | static const char *const compat_hwcap2_str[] = {
+> +      |                          ^~~~~~~~~~~~~~~~~
+
+Native default build (defconfig) on arm64 does not throw this warning.
+I guess this came up with 'make W=n' or something. Anyways if this is
+indeed an issue, we will have to add in helpers for each HWCAP arrays
+which will fetch a feature string on index value to be used in c_show
+(arch/arm64/kernel/cpuinfo.c). I wanted to avoid this to reduce code. 
+
+> 
+> so I'm dropping this for now.
+
+Sure, will respin this later probably after 5.8-rc1.
