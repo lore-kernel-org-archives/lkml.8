@@ -2,106 +2,99 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2473C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3435C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70BBF2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE072075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cQpNRMs3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dmBboRb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbgETC2o (ORCPT
+        id S1728587AbgETCa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 22:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgETC2o (ORCPT
+        Tue, 19 May 2020 22:30:28 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57998 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728415AbgETCa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 22:28:44 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13739C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 19:28:44 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id f89so672060qva.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 19:28:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=6Y7HJEX97OtUoScp+6aHU6PvBtaRCji4KFMDWzl/1dU=;
-        b=cQpNRMs3iNodzFhYuYipwiBMcUEGOJ3xUdc3cfUveLOQY59Je2GsuNTi2qpKEMxCpQ
-         3bqSWrAGjqBoAKndJjjTJrgrLfwV0bEtLHNG8higFC140vI+VtauJs/m9kOAIHQ6bdEw
-         QRu0U4nvggp52A00zOVb/a/qFsqC/GopXdX8Jhr4Op5hTwamyOUlKSvJCKIRDiAIwkTo
-         XfRXahdTu0FwM1JDD2xDu73FAuvNFDfQjV+Q3E36HgXNh7DUvzGr+s3+FZYeI/Wx2n+Q
-         +d1/j8ipY6CjVaaY4nrlOIakqFbwnltU0/SBa5QN+3728tuYh4pF+2SKKjug3/I9bVaB
-         +tpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=6Y7HJEX97OtUoScp+6aHU6PvBtaRCji4KFMDWzl/1dU=;
-        b=gLM/tbKiKzVlim1/fokAOHKuHEjZt3/GHLjxrdT+1PtfUxc6oQUHtFWdxIfbnC8aJv
-         wGsMTLhcmOzBGl03yDgEWuaei/dpx1bh/BvgmNWfq5eY1u2oUepNqT+jMBYZS0ROKG3c
-         OxNEcd2XM4fdxvvYFE5kzcA9rJ5WOBh8hDmhSmDr9JgLkfLrz7W2r2AhIe9yl2FwtPMf
-         waEhig0zjTFZzbgDU5Y242dROae4Ny1JiMK0qG0G/h/a5L5r9DWQuuQk1cODS2qYWdQQ
-         X5LfRGPVXvkxzUQCOeUCuiN12EPu0+O7ZXcIl9PIFczIHrIXChzfw0W9h3QVWbci2HAO
-         P3xA==
-X-Gm-Message-State: AOAM533s+Eu5oqll3Yg1kppv23HxLioAAUtcibI0WvsHMYi/3/2CuUye
-        GbFL9yC72sZF8428MaY9VIOLI8VhTAqDdQ==
-X-Google-Smtp-Source: ABdhPJxjYdKtmPOvMy1Q+JLwtSfq4dDdlPjcDcKr8rNqyafvMGhhzymtntu2oBRo1PCaBOT5oqbIQg==
-X-Received: by 2002:a05:6214:1c2:: with SMTP id c2mr2800690qvt.185.1589941723237;
-        Tue, 19 May 2020 19:28:43 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id y66sm988332qka.24.2020.05.19.19.28.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 19:28:42 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] READ_ONCE, WRITE_ONCE, kcsan: Perform checks in __*_ONCE variants
-Date:   Tue, 19 May 2020 22:28:41 -0400
-Message-Id: <360AFD09-27EC-4133-A5E3-149B8C0C4232@lca.pw>
-References: <87y2pn60ob.fsf@nanos.tec.linutronix.de>
-Cc:     Marco Elver <elver@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-In-Reply-To: <87y2pn60ob.fsf@nanos.tec.linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-X-Mailer: iPhone Mail (17E262)
+        Tue, 19 May 2020 22:30:27 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K2RBHE084678;
+        Wed, 20 May 2020 02:30:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=x7lJWCOox4jkdsPlPXMyrL9vU0HyFBMasClnr6W3zDs=;
+ b=dmBboRb/1L5IYKmX2ps+rQshKhXLhogBJMvtthSdW+sD8gkKYz32Tyogrde4FkFYNeVN
+ 4U730/OHth/ziCNHe+5ol0Tmu127NBYVlHn2yzvDFEU0mCfSq334EUfkf3I8NftN6kL9
+ OHC1V22F/Tts6xspwG1qsfJ/P7DRexmmGJBG6tS5hPTZJ0qXuzD9p3XyzHBC6jsDt7yt
+ VHw0ZU5PKfbeo6oLC3H+3hWO5iKGhNdQ/88iSOgBGnIlMsOmrG8eqwvjWiFbZHh1cksO
+ P9GOzHwR+teL3Lk44xN2FlezC4OfeK+CbgLMl5oO0gsI8l+LEueb5BGhT0GRu1hppXCL NQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 3127kr8n9q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 02:30:21 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K2SPDT001293;
+        Wed, 20 May 2020 02:30:21 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 314gm65d7g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 02:30:21 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04K2UKba011815;
+        Wed, 20 May 2020 02:30:20 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 May 2020 19:30:19 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     mchristi@redhat.com, Lance Digby <lance.digby@gmail.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        target-devel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 target] target: Add initiatorname to NON_EXISTENT_LUN error
+Date:   Tue, 19 May 2020 22:30:07 -0400
+Message-Id: <158994171818.20861.13529776753176885593.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <9b13bb2e1f52f1792cd81850ee95bf3781bb5363.1589759816.git.lance.digby@gmail.com>
+References: <9b13bb2e1f52f1792cd81850ee95bf3781bb5363.1589759816.git.lance.digby@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=937
+ adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200018
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1011 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=969 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 18 May 2020 11:02:16 +1000, Lance Digby wrote:
 
+> The NON_EXISTENT_LUN error can be written without an error condition
+> on the initiator responsible. Adding the initiatorname to this message
+> will reduce the effort required to fix this when many initiators are
+> supported by a target.
+> 
+> This version ensures the initiator name is also printed on the same
+> message in transport_lookup_tmr_lun for consistency.
 
-> On May 19, 2020, at 6:05 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
->=20
-> Yes, it's unfortunate, but we have to stop making major concessions just
-> because tools are not up to the task.
->=20
-> We've done that way too much in the past and this particular problem
-> clearly demonstrates that there are limits.
->=20
-> Making brand new technology depend on sane tools is not asked too
-> much. And yes, it's inconvenient, but all of us have to build tools
-> every now and then to get our job done. It's not the end of the world.
->=20
-> Building clang is trivial enough and pointing the make to the right
-> compiler is not rocket science either.
+Applied to 5.8/scsi-queue, thanks!
 
-Yes, it all make sense from that angle. On the other hand, I want to be focu=
-s on kernel rather than compilers by using a stable and rocket-solid version=
-. Not mentioned the time lost by compiling and properly manage my own toolch=
-ain in an automated environment, using such new version of compilers means t=
-hat I have to inevitably deal with compiler bugs occasionally. Anyway, it is=
- just some other more bugs I have to deal with, and I don=E2=80=99t have a b=
-etter solution to offer right now.=
+[1/1] scsi: target: core: Add initiatorname to NON_EXISTENT_LUN error
+      https://git.kernel.org/mkp/scsi/c/5482d56bfedf
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
