@@ -2,108 +2,108 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59996C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C35E6207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:29:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="faG8a+VJ"
+	by mail.kernel.org (Postfix) with ESMTP id 39D29207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgETK3E (ORCPT
+        id S1726789AbgETK3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:29:04 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:52856 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETK3D (ORCPT
+        Wed, 20 May 2020 06:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgETK3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:29:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Pcnkdhzo7iybmY/3WHM6a4StwuJiDWWOYzMSkFwQnZk=; b=faG8a+VJtLLWswqGM9/4fhymDn
-        ufqqw9OgQjgXYtTDE7nAqGEUdCbbE2Mt/fpp63fk46qu6qX+ljtb8wZ7wboqp/1JE6Q1rPogvGY7E
-        aH+OHEZuBDWr0kx9FKcShW4Vdal8XB6MiwHbYBbwZSSOkSED9YHFeU/e8ovIYSim6E5QyJ6n1ICMI
-        p52jeQShZ7j88YNZ4qqNCH0opOnYjNi5QkG/GSkh8Tupe7O2bax+HUl83cRkhQyjEGQvKlwawZFwR
-        LZ6V1P4+spyRr73FS1hNVmp+QPPDGfrmUQOOTKLfjuTtJpy2VWT6Evp/B1+rON9sujijy0f9drG/r
-        dI/lIRoQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbLtW-0005Q2-Jj; Wed, 20 May 2020 10:24:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A4543300478;
-        Wed, 20 May 2020 12:24:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 06F5325D60CB3; Wed, 20 May 2020 12:24:08 +0200 (CEST)
-Date:   Wed, 20 May 2020 12:24:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
- access
-Message-ID: <20200520102407.GF317569@hirez.programming.kicks-ass.net>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-4-bigeasy@linutronix.de>
+        Wed, 20 May 2020 06:29:24 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6057C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:29:23 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jbLyS-0004HF-Sa; Wed, 20 May 2020 12:29:20 +0200
+Message-ID: <d7a0646840374e1d7515bfea7da2badd94df0042.camel@pengutronix.de>
+Subject: Re: [PATCH] drm/etnaviv: fix memory leak when mapping prime
+ imported buffers
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     stable@vger.kernel.org,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        etnaviv@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date:   Wed, 20 May 2020 12:29:19 +0200
+In-Reply-To: <1589969500-6554-1-git-send-email-martin.fuzzey@flowbird.group>
+References: <1589969500-6554-1-git-send-email-martin.fuzzey@flowbird.group>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519201912.1564477-4-bigeasy@linutronix.de>
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:19:07PM +0200, Sebastian Andrzej Siewior wrote:
+Hi Martin,
 
-> diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> index 0c71505f0e19c..8d2b5f75145d7 100644
-> --- a/kernel/rcu/srcutree.c
-> +++ b/kernel/rcu/srcutree.c
-> @@ -25,6 +25,7 @@
->  #include <linux/delay.h>
->  #include <linux/module.h>
->  #include <linux/srcu.h>
-> +#include <linux/locallock.h>
->  
->  #include "rcu.h"
->  #include "rcu_segcblist.h"
-> @@ -735,6 +736,7 @@ static void srcu_flip(struct srcu_struct *ssp)
->  	smp_mb(); /* D */  /* Pairs with C. */
+Am Mittwoch, den 20.05.2020, 12:10 +0200 schrieb Martin Fuzzey:
+> When using mmap() on a prime imported buffer allocated by a
+> different driver (such as imx-drm) the later munmap() does
+> not correctly decrement the refcount of the original enaviv_gem_object,
+> leading to a leak.
+> 
+> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+> Cc: stable@vger.kernel.org
+
+What's the use-case where you did hit this issue? mmap'ing of imported
+buffers through the etnaviv DRM device is currently not well defined
+and I was pondering the idea of forbidding it completely by not
+returning a mmap offset for those objects.
+
+Regards,
+Lucas
+
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
+> index f24dd21..28a01b8 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
+> @@ -93,7 +93,25 @@ static void *etnaviv_gem_prime_vmap_impl(struct etnaviv_gem_object *etnaviv_obj)
+>  static int etnaviv_gem_prime_mmap_obj(struct etnaviv_gem_object *etnaviv_obj,
+>  		struct vm_area_struct *vma)
+>  {
+> -	return dma_buf_mmap(etnaviv_obj->base.dma_buf, vma, 0);
+> +	int ret;
+> +
+> +	ret = dma_buf_mmap(etnaviv_obj->base.dma_buf, vma, 0);
+> +
+> +	/* drm_gem_mmap_obj() has already been called before this function
+> +	 * and has incremented our refcount, expecting it to be decremented
+> +	 * on unmap() via drm_gem_vm_close().
+> +	 * However dma_buf_mmap() invokes drm_gem_cma_prime_mmap()
+> +	 * that ends up updating the vma->vma_private_data to point to the
+> +	 * dma_buf's gem object.
+> +	 * Hence our gem object here will not have its refcount decremented
+> +	 * when userspace does unmap().
+> +	 * So decrement the refcount here to avoid a memory leak if the dma
+> +	 * buf mapping was successful.
+> +	 */
+> +	if (!ret)
+> +		drm_gem_object_put_unlocked(&etnaviv_obj->base);
+> +
+> +	return ret;
 >  }
 >  
-> +static DEFINE_LOCAL_LOCK(sda_lock);
->  /*
->   * If SRCU is likely idle, return true, otherwise return false.
->   *
-> @@ -765,13 +767,13 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
->  	unsigned long tlast;
->  
->  	/* If the local srcu_data structure has callbacks, not idle.  */
-> -	local_irq_save(flags);
-> +	local_lock_irqsave(sda_lock, flags);
->  	sdp = this_cpu_ptr(ssp->sda);
->  	if (rcu_segcblist_pend_cbs(&sdp->srcu_cblist)) {
-> -		local_irq_restore(flags);
-> +		local_unlock_irqrestore(sda_lock, flags);
->  		return false; /* Callbacks already present, so not idle. */
->  	}
-> -	local_irq_restore(flags);
-> +	local_unlock_irqrestore(sda_lock, flags);
+>  static const struct etnaviv_gem_ops etnaviv_gem_prime_ops = {
 
-Would it perhaps make sense to stick the local_lock in struct srcu_data ?
