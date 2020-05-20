@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5095FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D413A205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A9DD205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgETOZ4 (ORCPT
+        id S1728028AbgETO0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:56 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33074 "EHLO
+        Wed, 20 May 2020 10:26:21 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33040 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727040AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727022AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPby-00037p-KL; Wed, 20 May 2020 15:22:22 +0100
+        id 1jbPbx-00036u-Lh; Wed, 20 May 2020 15:22:21 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-007DUg-Li; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbw-007DTD-1K; Wed, 20 May 2020 15:22:20 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, "Jan Kara" <jack@suse.cz>
-Date:   Wed, 20 May 2020 15:14:40 +0100
-Message-ID: <lsq.1589984009.466041298@decadent.org.uk>
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Arnd Bergmann" <arnd@arndb.de>
+Date:   Wed, 20 May 2020 15:14:28 +0100
+Message-ID: <lsq.1589984008.289002177@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 72/99] ext4, jbd2: ensure panic when aborting with
- zero errno
+Subject: [PATCH 3.16 60/99] x86: kvm: avoid unused variable warning
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,68 +55,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 upstream.
+commit 7288bde1f9df6c1475675419bdd7725ce84dec56 upstream.
 
-JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
-aborted, and then __ext4_abort() and ext4_handle_error() can invoke
-panic if ERRORS_PANIC is specified. But if the journal has been aborted
-with zero errno, jbd2_journal_abort() didn't set this flag so we can
-no longer panic. Fix this by always record the proper errno in the
-journal superblock.
+Removing one of the two accesses of the maxphyaddr variable led to
+a harmless warning:
 
-Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+arch/x86/kvm/x86.c: In function 'kvm_set_mmio_spte_mask':
+arch/x86/kvm/x86.c:6563:6: error: unused variable 'maxphyaddr' [-Werror=unused-variable]
+
+Removing the #ifdef seems to be the nicest workaround, as it
+makes the code look cleaner than adding another #ifdef.
+
+Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/jbd2/checkpoint.c |  2 +-
- fs/jbd2/journal.c    | 15 ++++-----------
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ arch/x86/kvm/x86.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/fs/jbd2/checkpoint.c
-+++ b/fs/jbd2/checkpoint.c
-@@ -173,7 +173,7 @@ void __jbd2_log_wait_for_space(journal_t
- 				       "journal space in %s\n", __func__,
- 				       journal->j_devname);
- 				WARN_ON(1);
--				jbd2_journal_abort(journal, 0);
-+				jbd2_journal_abort(journal, -EIO);
- 			}
- 			write_lock(&journal->j_state_lock);
- 		} else {
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2106,12 +2106,10 @@ static void __journal_abort_soft (journa
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5730,14 +5730,12 @@ static void kvm_set_mmio_spte_mask(void)
+ 	/* Set the present bit. */
+ 	mask |= 1ull;
  
- 	__jbd2_journal_abort_hard(journal);
+-#ifdef CONFIG_X86_64
+ 	/*
+ 	 * If reserved bit is not supported, clear the present bit to disable
+ 	 * mmio page fault.
+ 	 */
+-	if (maxphyaddr == 52)
++	if (IS_ENABLED(CONFIG_X86_64) && maxphyaddr == 52)
+ 		mask &= ~1ull;
+-#endif
  
--	if (errno) {
--		jbd2_journal_update_sb_errno(journal);
--		write_lock(&journal->j_state_lock);
--		journal->j_flags |= JBD2_REC_ERR;
--		write_unlock(&journal->j_state_lock);
--	}
-+	jbd2_journal_update_sb_errno(journal);
-+	write_lock(&journal->j_state_lock);
-+	journal->j_flags |= JBD2_REC_ERR;
-+	write_unlock(&journal->j_state_lock);
+ 	kvm_mmu_set_mmio_spte_mask(mask);
  }
- 
- /**
-@@ -2153,11 +2151,6 @@ static void __journal_abort_soft (journa
-  * failure to disk.  ext3_error, for example, now uses this
-  * functionality.
-  *
-- * Errors which originate from within the journaling layer will NOT
-- * supply an errno; a null errno implies that absolutely no further
-- * writes are done to the journal (unless there are any already in
-- * progress).
-- *
-  */
- 
- void jbd2_journal_abort(journal_t *journal, int errno)
 
