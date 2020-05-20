@@ -2,124 +2,142 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78463C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A234C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE07207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bX8NyOa8"
+	by mail.kernel.org (Postfix) with ESMTP id 60A65207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgETUCg (ORCPT
+        id S1728536AbgETUCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:02:36 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47190 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgETUCe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:02:34 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KK2Ree059688;
-        Wed, 20 May 2020 15:02:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590004947;
-        bh=Jlv71XRhYvS94aqoB9HV5Z9r9HYEVNg9gj2FL6x/cOU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bX8NyOa8WhyNk1kme0Ol5d4SFgz4V9Pcvi0kj3nadBNqeURZ08n3uwL4ltrKmUcsY
-         +hSZ01qy6SNvf1vtFrHOV1hZ2lu1r7NgxVx4LY1QMwp12Zt5hb1uqbFZHJIezOi9+E
-         9bAK8kNa+qbB+Ig53lAcB5rDIqVElT4xqVSg9pq4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KK2Rfb071370
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 15:02:27 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 15:02:27 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 15:02:27 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KK2PFc102988;
-        Wed, 20 May 2020 15:02:25 -0500
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
- delay for DP83869
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200520121835.31190-1-dmurphy@ti.com>
- <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
- <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
- <20200520153631.GH652285@lunn.ch>
- <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
- <20200520164313.GI652285@lunn.ch>
- <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
- <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
- <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
- <20200520192719.GK652285@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
-Date:   Wed, 20 May 2020 15:02:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 16:02:45 -0400
+Received: from mga06.intel.com ([134.134.136.31]:8428 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbgETUCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 16:02:43 -0400
+IronPort-SDR: En7TE4pC35+FsL0O09GAitU4+sdrIHfIoMomojKG3Eak4OdySbhQRzLJBPesusjYt+K2xDWlrI
+ Qgi90tMh9pGw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 13:02:42 -0700
+IronPort-SDR: WGQiCEpS+JLoSUye2jjBRzzaU2aCBC9y335dAGm4Yvf+0DsM2Hro8uzHZ9fCeX36P9ZVeV2cR3
+ LKkGrLFBJVxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,415,1583222400"; 
+   d="scan'208";a="289471916"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 13:02:42 -0700
+Date:   Wed, 20 May 2020 13:02:42 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Li Xi <lixi@ddn.com>
+Subject: Re: [PATCH V3 7/8] fs/ext4: Introduce DAX inode flag
+Message-ID: <20200520200242.GG3660833@iweiny-DESK2.sc.intel.com>
+References: <20200520055753.3733520-1-ira.weiny@intel.com>
+ <20200520055753.3733520-8-ira.weiny@intel.com>
+ <34ECB1DE-9F2F-4365-BBBC-DFACF703E7D4@dilger.ca>
 MIME-Version: 1.0
-In-Reply-To: <20200520192719.GK652285@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34ECB1DE-9F2F-4365-BBBC-DFACF703E7D4@dilger.ca>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+On Wed, May 20, 2020 at 01:26:44PM -0600, Andreas Dilger wrote:
+> On May 19, 2020, at 11:57 PM, ira.weiny@intel.com wrote:
+> > 
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
+> > 
+> > Set the flag to be user visible and changeable.  Set the flag to be
+> > inherited.  Allow applications to change the flag at any time with the
+> > exception of if VERITY or ENCRYPT is set.
+> > 
+> > Disallow setting VERITY or ENCRYPT if DAX is set.
+> > 
+> > Finally, on regular files, flag the inode to not be cached to facilitate
+> > changing S_DAX on the next creation of the inode.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> > index 6235440e4c39..467c30a789b6 100644
+> > --- a/fs/ext4/ext4.h
+> > +++ b/fs/ext4/ext4.h
+> > @@ -415,13 +415,16 @@ struct flex_groups {
+> > #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
+> > #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
+> > /* 0x00400000 was formerly EXT4_EOFBLOCKS_FL */
+> > +
+> > +#define EXT4_DAX_FL			0x01000000 /* Inode is DAX */
+> > +
+> > #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has inline data. */
+> > #define EXT4_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+> > #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
+> > #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 lib */
+> 
+> Hi Ira,
+> This flag value conflicts with the reserved flag in e2fsprogs for snapshots:
+> 
+> #define EXT4_SNAPFILE_FL                0x01000000  /* Inode is a snapshot */
 
-On 5/20/20 2:27 PM, Andrew Lunn wrote:
-> Hi Dan
->
->> UGH I think I just got volunteered to do make them common.
-> There is code you can copy from PHY drivers. :-)
->
-> What would be kind of nice is if the validate was in the core as
-> well. Pass a list of possible delays in pS, and it will do a
-> phydev_err() if what is in DT does not match one of the listed
-> delays. Take a look around at what current drivers do and see if you
-> can find a nice abstraction which will work for a few drivers. We
-> cannot easily convert existing drivers without breaking DT, but a
-> design which works in theory for what we currently have has a good
-> chance of working for any new PHY driver.
+Sure NP but is that new?  I'm building off of 5.7-rc4.
 
-I think adding it in the core would be a bit of a challenge.  I think 
-each PHY driver needs to handle parsing and validating this property on 
-its own (like fifo-depth).  It is a PHY specific setting.
+Just curious if I completely missed something.
 
-Take the DP83867/9 and the ADIN1200/ADIN1300.
+> 
+> Please change EXT4_DAX_FL and FS_DAX_FL to use 0x02000000, which is not used
+> for anything in either case.
 
-The 8386X devices has a delta granularity of 250pS and the AD devices is 
-200pS per each setting
+NP, thanks!
+Ira
 
-And the 867/9 has 3x more values (15) vs only 5 for the AD PHY.
+> 
+> Cheers, Andreas
+> 
+> 
+> > diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> > index 379a612f8f1d..7c5f6eb51e2d 100644
+> > --- a/include/uapi/linux/fs.h
+> > +++ b/include/uapi/linux/fs.h
+> > @@ -262,6 +262,7 @@ struct fsxattr {
+> > #define FS_EA_INODE_FL			0x00200000 /* Inode used for large EA */
+> > #define FS_EOFBLOCKS_FL			0x00400000 /* Reserved for ext4 */
+> > #define FS_NOCOW_FL			0x00800000 /* Do not cow file */
+> > +#define FS_DAX_FL			0x01000000 /* Inode is DAX */
+> > #define FS_INLINE_DATA_FL		0x10000000 /* Reserved for ext4 */
+> > #define FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+> > #define FS_CASEFOLD_FL			0x40000000 /* Folder is case insensitive */
+> > --
+> > 2.25.1
+> > 
+> 
+> 
+> Cheers, Andreas
+> 
+> 
+> 
+> 
+> 
 
-And the Atheros AR803x PHY does use rgmii-id in the yaml, which I guess 
-is what you were pointing out, that if set the PHY uses a default 2nS 
-delay and it is not configurable.
 
-Same with the Broadcomm.
-
-Ack to not changing already existing drivers which is only 2 the AD PHY 
-and the DP83867 PHY.  But I can update the yaml for the 83867 and mark 
-the TI specific properties as deprecated in favor of the new properties 
-like I did with fifo-depth.
-
-Dan
-
-
->       Andrew
