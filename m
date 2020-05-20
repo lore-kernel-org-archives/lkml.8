@@ -2,132 +2,132 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6B8C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C69C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C978E207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF770207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KkUdP2Ig"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J5XOh3zu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgETJb4 (ORCPT
+        id S1726822AbgETJco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:31:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgETJbz (ORCPT
+        Wed, 20 May 2020 05:32:44 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19680 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726546AbgETJcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:31:55 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6D1AC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:31:54 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h17so2391789wrc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=2tHuCvrzX51mj1uQ+UwpdZjDnMBFbfdASVT6bpLiK94=;
-        b=KkUdP2Igd2sVLWD2v/jgj8mU8xfvivFCa0hoQGP/ioGQcz7TFCUZozc4aO9Vsk3brC
-         OnkctpfmWwV58oJY46zf8qKaqeSIW/TTp8/jz6DXzGWMPq7Ar/WdhwbHMmlZtcKMJGY2
-         NAf0wEf0Sb0z0s8GQ5F0Wufb2xu96Ut4er+05P9dbMItqbTge830tSsH28XFUBxgfHWm
-         eVzQkvCIqi5P9EHxDBFPdnvIU2yIoqMyvFYXIWW0sOO5op5SCgt0PptetU7TMDGfUG2X
-         yLHQ3JXhhLNjE7hDoNMVPTmVTOIh/jeNYey33l5PZc4GJORVu9Sg9rTSnJI+uqlvR8In
-         bDWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2tHuCvrzX51mj1uQ+UwpdZjDnMBFbfdASVT6bpLiK94=;
-        b=RWKHbGDQfbRYxNNcbB51RdBXXEkscSW6ENJljm8GyW8Xd+Ktwkf58tYePnLuAj4IZo
-         AoKUQdAcFvb0f9ejr15jBKfFAP4nSQ51Eu5jIWlbVYgejFNhaIHaAf57Jl/Vo1pusNSV
-         23bVzJH2lBkP+GZlGxjjh6cHjUIeNi5BDFXyc5UzkhQpvvZv4eP60Zhtp9QxVKyZhqzH
-         jfckq6MCLaC3Xz/eihTb8vIX/gEv/ZWwzzBePiOzFD1dK2UHCTI7PVlqz2MFfEFL1chP
-         kW1I+TeObZnhmQZc3g/cBaPesBhx0i8yhpZDEGw38PyRz9/Tz9X5BIpYzA3t0gxRN+Ao
-         gLsg==
-X-Gm-Message-State: AOAM530SLf5hgCzARjEz8PFhgCJr/iAVeE/2hQBdV3dsY2K2zaqOnkAS
-        5N/2KRH+qA71EkG1bRePTjTM7g==
-X-Google-Smtp-Source: ABdhPJx5k+oUlvwC1JXFJu394O0FcThxr/ncbDj/sSxUGANin8w+P0XmNFDbzi0lv8vNtBzcnA33nA==
-X-Received: by 2002:a05:6000:81:: with SMTP id m1mr3364804wrx.59.1589967113591;
-        Wed, 20 May 2020 02:31:53 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id l11sm2568308wmf.28.2020.05.20.02.31.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 02:31:53 -0700 (PDT)
-Date:   Wed, 20 May 2020 10:31:51 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Jones <rjones@gateworks.com>
-Subject: [GIT PULL] Immutable branch between MFD and HWMON due for the v5.8
- merge window
-Message-ID: <20200520093151.GI271301@dell>
-References: <1589565428-28886-1-git-send-email-tharvey@gateworks.com>
+        Wed, 20 May 2020 05:32:43 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589967163; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=8wS2Ok+wgF4WG5zj5QXvmTTV1vQ1OAhmfXmB4CKETuM=; b=J5XOh3zuuGv8meube552X5UF/TQ+M+VuL8IWExIMtShIL6VoM3hkNF8yRgEGIuklI+0CQVRr
+ PXoWtxV89sw4dg4yN19WUt2r5ysYXSalO7XJvAuPszUayJc03eBdRtO1+gbt7LMCjbZ83AUb
+ 7/Ego3upZ9MUjMEDwjso6vyWHzk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ec4f9330d1be1ca0171fad4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 09:32:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 77A33C433C8; Wed, 20 May 2020 09:32:34 +0000 (UTC)
+Received: from [192.168.0.10] (unknown [183.83.147.160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: aneela)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 66090C433C6;
+        Wed, 20 May 2020 09:32:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 66090C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=aneela@codeaurora.org
+Subject: Re: [PATCH V5 5/5] rpmsg: glink: unregister rpmsg device during
+ endpoint destroy
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
+        sricharan@codeaurora.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
+References: <1589346606-15046-1-git-send-email-aneela@codeaurora.org>
+ <1589346606-15046-6-git-send-email-aneela@codeaurora.org>
+ <20200513221342.GC8328@xps15>
+From:   Arun Kumar Neelakantam <aneela@codeaurora.org>
+Message-ID: <be35a111-87cc-7d5e-fd74-8653175f8a09@codeaurora.org>
+Date:   Wed, 20 May 2020 15:02:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1589565428-28886-1-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <20200513221342.GC8328@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enjoy!
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
-
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-hwmon-v5.8
-
-for you to fetch changes up to 3bce5377ef66a8700dcf7a9cb89b7aeb99326cb7:
-
-  hwmon: Add Gateworks System Controller support (2020-05-20 10:29:17 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD and HWMON due for the v5.8 merge window
-
-----------------------------------------------------------------
-Tim Harvey (3):
-      dt-bindings: mfd: Add Gateworks System Controller bindings
-      mfd: Add Gateworks System Controller core driver
-      hwmon: Add Gateworks System Controller support
-
- .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 196 +++++++++++
- Documentation/hwmon/gsc-hwmon.rst                  |  53 +++
- Documentation/hwmon/index.rst                      |   1 +
- MAINTAINERS                                        |  11 +
- drivers/hwmon/Kconfig                              |   9 +
- drivers/hwmon/Makefile                             |   1 +
- drivers/hwmon/gsc-hwmon.c                          | 390 +++++++++++++++++++++
- drivers/mfd/Kconfig                                |  15 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/gateworks-gsc.c                        | 277 +++++++++++++++
- include/linux/mfd/gsc.h                            |  76 ++++
- include/linux/platform_data/gsc_hwmon.h            |  44 +++
- 12 files changed, 1074 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
- create mode 100644 Documentation/hwmon/gsc-hwmon.rst
- create mode 100644 drivers/hwmon/gsc-hwmon.c
- create mode 100644 drivers/mfd/gateworks-gsc.c
- create mode 100644 include/linux/mfd/gsc.h
- create mode 100644 include/linux/platform_data/gsc_hwmon.h
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On 5/14/2020 3:43 AM, Mathieu Poirier wrote:
+> On Wed, May 13, 2020 at 10:40:06AM +0530, Arun Kumar Neelakantam wrote:
+>> Rpmsg device unregister is not happening if channel close is triggered
+>> from local side and causing re-registration of device failures.
+>>
+>> Unregister rpmsg device for local close in endpoint destroy path.
+>>
+>> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+>> ---
+>>   drivers/rpmsg/qcom_glink_native.c | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+>> index 0e8a28c0..fc8ef66 100644
+>> --- a/drivers/rpmsg/qcom_glink_native.c
+>> +++ b/drivers/rpmsg/qcom_glink_native.c
+>> @@ -1207,6 +1207,7 @@ static void qcom_glink_destroy_ept(struct rpmsg_endpoint *ept)
+>>   {
+>>   	struct glink_channel *channel = to_glink_channel(ept);
+>>   	struct qcom_glink *glink = channel->glink;
+>> +	struct rpmsg_channel_info chinfo;
+>>   	unsigned long flags;
+>>   
+>>   	spin_lock_irqsave(&channel->recv_lock, flags);
+>> @@ -1214,6 +1215,13 @@ static void qcom_glink_destroy_ept(struct rpmsg_endpoint *ept)
+>>   	spin_unlock_irqrestore(&channel->recv_lock, flags);
+>>   
+>>   	/* Decouple the potential rpdev from the channel */
+>> +	if (channel->rpdev) {
+> If we proceed this way no other channel can have an rpdev.  I would hope that
+> unregistration of rpdev would be more symetrical to what is done in patch 03.
+>
+> Thanks,
+> Mathieu
+Unregister here also required along with in qcom_glink_rx_close() 
+otherwise if the remote open the channel again it map to stale rpmsg 
+device.
+>
+>> +		strncpy(chinfo.name, channel->name, sizeof(chinfo.name));
+>> +		chinfo.src = RPMSG_ADDR_ANY;
+>> +		chinfo.dst = RPMSG_ADDR_ANY;
+>> +
+>> +		rpmsg_unregister_device(glink->dev, &chinfo);
+>> +	}
+>>   	channel->rpdev = NULL;
+>>   
+>>   	qcom_glink_send_close_req(glink, channel);
+>> @@ -1477,6 +1485,7 @@ static void qcom_glink_rx_close(struct qcom_glink *glink, unsigned int rcid)
+>>   
+>>   		rpmsg_unregister_device(glink->dev, &chinfo);
+>>   	}
+>> +	channel->rpdev = NULL;
+>>   
+>>   	qcom_glink_send_close_ack(glink, channel->rcid);
+>>   
+>> -- 
+>> 2.7.4
