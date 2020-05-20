@@ -2,156 +2,104 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A009C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F061DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF4220671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19EA206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJeSS+kr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cNAPUipq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgETSVW (ORCPT
+        id S1726907AbgETSWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:21:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36252 "EHLO
+        Wed, 20 May 2020 14:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbgETSVW (ORCPT
+        with ESMTP id S1726688AbgETSWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:21:22 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F2F5C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:21:21 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id m185so3897000wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:21:21 -0700 (PDT)
+        Wed, 20 May 2020 14:22:01 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB01C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:22:01 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id n15so1729964pjt.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:22:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RW8P2ENxQMCRzJDvhD6yay/4wTNgEveKbVybNJiHgVo=;
-        b=IJeSS+krA8BtcjjkI47iWUeYnFuBSbFDXEP2RNUnOMWW5cZeNSgk+DVsm4/yZxPNAz
-         4ezHVkCWd2qDdZ8SjSzgAAt0DjfVbkWimRZVm+WR9wT0/SKcLMYkWBvnUZ7pj9sAWUsL
-         ZgmPy2iZ28uJqlh+QSHst7qpORZOUvAzMfF1b52kEFMzglrR+Fh8cVq2LKtQ3qvCG5gV
-         IWdqLYAOdCwkkYSx5UZFd9b5vYHO8lsF+rCypmOHyJDAuAhuz9QemgjE44UNIRa2iZQ3
-         44WhDBjFLLW/HYFqWjH6BkzwJNaN3y/oZMO9bVJjv37evfX8IEKmg7CSxANYY+MQCBe8
-         LIuA==
+        bh=okYI7MNZp3HlTncsex+p9q3nreaGDkCfau/xqoTDFeA=;
+        b=cNAPUipqx2bFJ+Q4gvOpGJfFNx2kWk3BDsLqCvL3HRuaTXiuxE4RW3w4AaIvqXfFw2
+         +9c7JD4UduZ6lUFRPrWbVyXMUvvWETcxwQT/e/iAhoe1GV4s5SqGVvGL8TJD2ainIm5H
+         ox1we8X5e3lST4DMJtiRgFEA/noZqS1NS7DstM53LIMcqe6MtQYwIOIwVDldY2HpxwNq
+         RRKdrM1KbniVLRdGCoqtULFnPYlMq5qOAizHIlVrNFWKze/EZl3ctrER1UeeRc/W7OrJ
+         VeYnvppKfKewtw0+X727v5pTXANOo5CFB8GByEcUC3dxobcUa5dVIjCBuqkJ8HSk2jKM
+         qxlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RW8P2ENxQMCRzJDvhD6yay/4wTNgEveKbVybNJiHgVo=;
-        b=lxVZC+/SV6K/1yWneXOr0Eh52Hawi46ZEtA1uoQqfI0vDA9GZ5Tt+j8acBSZh659n1
-         FsUmqTjbz/APybw6RgNg1mjdQQcPrnipRLlsVYkl8EzZ+JP7qgZ/NE/rlZ/WZgoBORwi
-         A95hkd5oF64dcz/j3rMQILDs8nvXFC1MKXPOzvjXUO4Hka0VI88sfo8gYdBCxO0+rj6w
-         eRAat1iVgcrXIvekTKCQqJFbxAPkwNDE9x5zKZobIA4DPiOfNg7757eUBng0O1mT3gJM
-         VwoqAHHcGY8SdZb6auUKq0Z4WIXoX/ga9haRNOv+hQcuxAVE4iKRKbkEIKAXfOMNxwp8
-         qRww==
-X-Gm-Message-State: AOAM532rkRRiYzE7xTnun8RlKNM6+NPZHHIPTBiecFxdR8vtOwRCsog2
-        FtWKrQUYlE3pqk2R9xZiYyBOt3j8TPMam+Ta5Ag=
-X-Google-Smtp-Source: ABdhPJxCW5X0NOlDHehi0pwlVrhAXnzeTfYJOtmzMEsCtQvgrfQ3aAfUCod8O8QieU4Qp1Bg6CBcbd7ODrrsnDAhjMA=
-X-Received: by 2002:a7b:cc0e:: with SMTP id f14mr5643658wmh.39.1589998880315;
- Wed, 20 May 2020 11:21:20 -0700 (PDT)
+        bh=okYI7MNZp3HlTncsex+p9q3nreaGDkCfau/xqoTDFeA=;
+        b=j7LlisXi+prHzSFzF2m8r0w3s7Y0Bdxl8pciPNH/GaBW5Wkf/ky+P9paL03zr68Q+6
+         7ENIN5uLGpWU9I4asb/TS8eeOCI09Btx5BV4NzqxEkiQXPjBuAY6L6MzXkAkv0EfmEU5
+         o9KBTMPfkg79q4/SJtkCBmziwRINTxDOqa9tquhCd0MlxCz2bZHGpq9t+XUjYPau3Oig
+         WjMTP1QtN8kymGD7X9PO2Ombx00Y6rOeMbK+ridGM9CupYvqmXCbgLBzvtapk/FyVWz7
+         9Qm9tmNuflrIsVS7aorFhRan7LHmI9hcKcGb6bRTFIAFMuFsqIVOksMrsRAgHX/Wo0Bc
+         od3w==
+X-Gm-Message-State: AOAM531ziKYMVa248wfIHHveRnkHIeMFjJjl7qYywDxp7upC+3M5StkD
+        WnMjcS0wrQjVDrgbJv0fpg4m4+zdKAvBq6YjLFzDYQ==
+X-Google-Smtp-Source: ABdhPJwysKltK1Uu8MOEm5u657a607JdnUfCn095w7uIkCArhvl8hh8nF0iBMFJlYSsdZLUp/Ghxni9M4iiLobISq0Q=
+X-Received: by 2002:a17:90a:a62:: with SMTP id o89mr6889682pjo.217.1589998920813;
+ Wed, 20 May 2020 11:22:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200520135306.11221-1-aurabindo.pillai@amd.com>
-In-Reply-To: <20200520135306.11221-1-aurabindo.pillai@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 20 May 2020 14:21:08 -0400
-Message-ID: <CADnq5_MBME9=yu=fdK-NWgEEZYUwBH-c7Ra7Mg-NrSru9zBS9g@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/amdkfd: Fix large framesize for kfd_smi_ev_read()
-To:     Aurabindo Pillai <aurabindo.pillai@amd.com>
-Cc:     "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, Amber Lin <Amber.Lin@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>
+References: <20200228000001.240428-1-brendanhiggins@google.com>
+ <20200520150227.GA8397@linux-b0ei> <20200520164156.GA1634618@smile.fi.intel.com>
+In-Reply-To: <20200520164156.GA1634618@smile.fi.intel.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 20 May 2020 11:21:49 -0700
+Message-ID: <CAFd5g47Xj6pR=CqXMtYxL6iacqxoZ9PvHxsiG8dfUML24yN1gQ@mail.gmail.com>
+Subject: Re: [PATCH v1] Revert "software node: Simplify software_node_release()
+ function"
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>,
+        Heidi Fahim <heidifahim@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 9:53 AM Aurabindo Pillai
-<aurabindo.pillai@amd.com> wrote:
+On Wed, May 20, 2020 at 9:42 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> The buffer allocated is of 1024 bytes. Allocate this from
-> heap instead of stack.
+> On Wed, May 20, 2020 at 05:02:27PM +0200, Petr Mladek wrote:
+> > On Thu 2020-02-27 16:00:01, Brendan Higgins wrote:
 >
-> Also remove check for stack size since we're allocating from heap
+> > I have found similar report from a test robot, see
+> > https://lore.kernel.org/lkml/20200303002816.GW6548@shao2-debian/
+> >
+> >
+> > I was staring into it for a while and do not understand it. The revert
+> > makes sense. I wonder if it somehow changes the order in which
+> > the release methods are called.
+> >
+> > Anyway, reverting the revert makes test_printf working.
 >
-> Signed-off-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
-> Tested-by: Amber Lin <Amber.Lin@amd.com>
+> There is a proper fix IIRC from Heikki in driver core (no link at hand, sorry).
 
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+The fix for this patch can be found here: https://lkml.org/lkml/2020/5/13/1070
 
-> ---
->  drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c | 26 +++++++++++++++------
->  1 file changed, 19 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c b/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
-> index f5fd18eacf0d..5aebe169f8c6 100644
-> --- a/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
-> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
-> @@ -77,9 +77,11 @@ static ssize_t kfd_smi_ev_read(struct file *filep, char __user *user,
->         int ret;
->         size_t to_copy;
->         struct kfd_smi_client *client = filep->private_data;
-> -       unsigned char buf[MAX_KFIFO_SIZE];
-> +       unsigned char *buf;
->
-> -       BUILD_BUG_ON(MAX_KFIFO_SIZE > 1024);
-> +       buf = kzalloc(MAX_KFIFO_SIZE * sizeof(*buf), GFP_KERNEL);
-> +       if (!buf)
-> +               return -ENOMEM;
->
->         /* kfifo_to_user can sleep so we can't use spinlock protection around
->          * it. Instead, we kfifo out as spinlocked then copy them to the user.
-> @@ -88,19 +90,29 @@ static ssize_t kfd_smi_ev_read(struct file *filep, char __user *user,
->         to_copy = kfifo_len(&client->fifo);
->         if (!to_copy) {
->                 spin_unlock(&client->lock);
-> -               return -EAGAIN;
-> +               ret = -EAGAIN;
-> +               goto ret_err;
->         }
->         to_copy = min3(size, sizeof(buf), to_copy);
->         ret = kfifo_out(&client->fifo, buf, to_copy);
->         spin_unlock(&client->lock);
-> -       if (ret <= 0)
-> -               return -EAGAIN;
-> +       if (ret <= 0) {
-> +               ret = -EAGAIN;
-> +               goto ret_err;
-> +       }
->
->         ret = copy_to_user(user, buf, to_copy);
-> -       if (ret)
-> -               return -EFAULT;
-> +       if (ret) {
-> +               ret = -EFAULT;
-> +               goto ret_err;
-> +       }
->
-> +       kfree(buf);
->         return to_copy;
-> +
-> +ret_err:
-> +       kfree(buf);
-> +       return ret;
->  }
->
->  static ssize_t kfd_smi_ev_write(struct file *filep, const char __user *user,
-> --
-> 2.25.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+Cheers
