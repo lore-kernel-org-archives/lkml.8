@@ -2,88 +2,105 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E891C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39812207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5DC20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589978615;
+	bh=Achw6u2biUSzYpt7lckAtUxEhj9ckmJi3eP9xb6WHM8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qA/2xHbS98/k5lMZk1+67ooeyTOCXSe5cYjjkog/jX3RXpQ5E3StjtrxKNjTpjjEI
+	 YZsnT2G34KRfaP9HN0AXkdXOdR2gax+BkXwK0cvM9fzWYTxxEjWQ0wEOMOZcRfmH16
+	 CWuMGBpRNN+ewZ4E0Op6Z0NOOLKmCfLx+RhxFtsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgETMna (ORCPT
+        id S1726881AbgETMnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:43:30 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:10270 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726224AbgETMn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:43:29 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app2 (Coremail) with SMTP id by_KCgBXHpDCJcVe1faNAQ--.48765S4;
-        Wed, 20 May 2020 20:42:46 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] wlcore: fix runtime pm imbalance in wl1271_tx_work
-Date:   Wed, 20 May 2020 20:42:38 +0800
-Message-Id: <20200520124241.9931-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgBXHpDCJcVe1faNAQ--.48765S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7JF1UWFW3Wr1xCFyruF45KFg_yoW3twc_Gr
-        yUWF1xCr18Ar1jgr47CayfXrWSvryDZ3Z3Gr40qFyfG3y7ArZ8KrySvr9xZryUGrWavF1f
-        Crn8XFyxZr9rXjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbTxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
-        wVAFwVW5JwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
-        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r
-        4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbl1v3UUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
+        Wed, 20 May 2020 08:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbgETMnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:43:33 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9FB7207C4;
+        Wed, 20 May 2020 12:43:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589978612;
+        bh=Achw6u2biUSzYpt7lckAtUxEhj9ckmJi3eP9xb6WHM8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sHUEOW2Tvnp1JASks+INQpiCZxdRRlpi7pMkV2c3FlYjsMlLlMU4WAh9mIFLtuZNd
+         Ck1KI6uFONv+G7ViQs+cZ9Sv3/Ars8HUbL3YbReqMQWoLEArdvnKjMNB2LFAcNsOfI
+         Qu1e2EmwbdB/uz+Dlc+qffoS9PCwskOnBEHYbKKY=
+Date:   Wed, 20 May 2020 13:43:29 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, vigneshr@ti.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+Message-ID: <20200520124329.GF4823@sirena.org.uk>
+References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oFbHfjnMgUMsrGjO"
+Content-Disposition: inline
+In-Reply-To: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Cookie: You can't get there from here.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two error handling paths in this functon. When
-wlcore_tx_work_locked() returns an error code, we should
-decrease the runtime PM usage counter the same way as the
-error handling path beginning from pm_runtime_get_sync().
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/net/wireless/ti/wlcore/tx.c | 1 +
- 1 file changed, 1 insertion(+)
+--oFbHfjnMgUMsrGjO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/wireless/ti/wlcore/tx.c b/drivers/net/wireless/ti/wlcore/tx.c
-index 90e56d4c3df3..e20e18cd04ae 100644
---- a/drivers/net/wireless/ti/wlcore/tx.c
-+++ b/drivers/net/wireless/ti/wlcore/tx.c
-@@ -863,6 +863,7 @@ void wl1271_tx_work(struct work_struct *work)
- 
- 	ret = wlcore_tx_work_locked(wl);
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(wl->dev);
- 		wl12xx_queue_recovery_work(wl);
- 		goto out;
- 	}
--- 
-2.17.1
+On Wed, May 20, 2020 at 08:36:12PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel=
+=2Ecom>
+>=20
+> Add dt-bindings documentation for Cadence-QSPI controller to support
+> spi based flash memories.
+>=20
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@li=
+nux.intel.com>
+> ---
+>  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
+>  .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 133 +++++++++++++++=
+++++++
 
+The changelog says this is adding a new binding but the actual change is
+mostly a conversion to YAML.  Please split the additions out into a
+separate change, ideally doing that before the conversion since there is
+a backlog on review of YAML conversions.
+
+--oFbHfjnMgUMsrGjO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7FJfEACgkQJNaLcl1U
+h9Dl3Qf+LTw6kS7EVKhUNveex8WPCXk8hJiM52SWUTX/njGNYrVCplAyGQd9Hnvk
+bTc+7RDW6mAQ7Hum+CIJzNb7DgJQGCV9MEQ4V/f+/lhDAvNI5x0QSPBLZp9DOI1b
+RA/tyCJfh4hwm9RtoK1HT4sDhvFGQR3Sb/nMpVlkZPLd1Jpox5zuuDaCOJEJHAKb
+Gss5uyXiON9Qk5ee4vwrIykntpBN/snP1b/FBZf8d0xzw01nfm2lsrAHQMk6n4CJ
+oxSL8dArY7vq1ZkNUKNE5qkn0Y6VRjohPZzzc8evRtLR3xaQl+FwAsllDH5VMWTP
+oa4tOoSbipP93UpzOvMah+tPGuguUA==
+=IU1B
+-----END PGP SIGNATURE-----
+
+--oFbHfjnMgUMsrGjO--
