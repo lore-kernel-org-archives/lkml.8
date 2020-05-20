@@ -2,97 +2,183 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A086C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 558F1207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07AAC207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:53:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kdkVPyHg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="bSnYXfe2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgETLwq (ORCPT
+        id S1726943AbgETLxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:52:46 -0400
-Received: from ozlabs.org ([203.11.71.1]:58213 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETLwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:52:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Rrj80h6yz9sT6;
-        Wed, 20 May 2020 21:52:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589975564;
-        bh=dkYzEuVrClOCCcQdMSH5L/ddPgJpv4IKAVe7ASX/8eA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kdkVPyHg+eVM81Co/VNI+kDXuTpTdKNdSIZhmLeUl4Vx0Kn23knTilCd1KDkUt9EO
-         i1lGDB46HZQVc7JevJN7FM3hxga90N4jh18D3JPPQM2YESceay/aNpEiy5I7nQeUG5
-         4KTljRtb7OJJB+RSAJaI3zIS5YQVSQk8V70B2xeU6otqCwUhiqjYotMvsqJLmPOc5Y
-         PjKR/kJBcK/nep7BlG4ng1yLpqzHchBC94MuiDSFnFV0EanskWeKSwkLCzaIbIfnKc
-         RIrmyvUeJSx2xwoc8ZcT1/FasPAQnWe575aW45LhB1/fRifvtCXxH9UKt76YlSBMB5
-         LmctYYo3DdOrg==
-Date:   Wed, 20 May 2020 21:52:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the v4l-dvb tree
-Message-ID: <20200520215242.1e6b7caf@canb.auug.org.au>
+        Wed, 20 May 2020 07:53:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETLxQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:53:16 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE3AC061A0E;
+        Wed, 20 May 2020 04:53:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589975593;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=iPy9ZlubTd1xhTrkVXUYqz/ZgEBhY94Iy8kD2Y+7c9s=;
+        b=bSnYXfe2rREgw1M3JnRrHJpV/Twt8OOdc8xnRGid09ngBxBYpI38/xQkpi5LYpfRaC
+        Pf2x4bLTS1RDuyeHn9h4t7ziARKBU7GbEA99Yp8K6YXl1uZonxPYCzdtbo/V6eRhkWi6
+        LdZ9vr35kR1UFnVBG+j33fe97yKVLpr0EgTqSSemWz3cBhCMEZl1TGxJdd/MCTij9j2B
+        gN9U3YfRXvVZ7d3Dwa7vo7e+CzMKy4YhT78KWdbGF1hwiDBkEJcXVS18qZsIqLrNcBKT
+        1rwdCV/8OGUKdI+Bc7E05ap3Y93TWTjmSJk3jyZd2XCbXaM+T2lUoQG0JbHzhVG1Pwqu
+        egiw==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPbI/Sc5g=="
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.7.0 DYNA|AUTH)
+        with ESMTPSA id k09005w4KBr45E5
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 20 May 2020 13:53:04 +0200 (CEST)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2 1/2] hwrng: iproc-rng200 - Set the quality value
+Date:   Wed, 20 May 2020 13:53:04 +0200
+Message-ID: <2041475.ybOAuNAZB8@tauon.chronox.de>
+In-Reply-To: <dleftjh7wa3my6.fsf%l.stelmach@samsung.com>
+References: <15745285.MnsZKaK4VV@tauon.chronox.de> <CGME20200520104448eucas1p122e9a8ed84d5276a1b796e10ef5e1964@eucas1p1.samsung.com> <dleftjh7wa3my6.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/K=Yt0Ac_CCMak+_QH.42Qi=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/K=Yt0Ac_CCMak+_QH.42Qi=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Am Mittwoch, 20. Mai 2020, 12:44:33 CEST schrieb Lukasz Stelmach:
 
-Hi all,
+Hi Lukasz,
 
-In commit
+> It was <2020-05-20 =C5=9Bro 11:18>, when Stephan Mueller wrote:
+> > Am Mittwoch, 20. Mai 2020, 11:10:32 CEST schrieb Lukasz Stelmach:
+> >> It was <2020-05-20 =C5=9Bro 08:23>, when Stephan Mueller wrote:
+> >>> Am Dienstag, 19. Mai 2020, 23:25:51 CEST schrieb =C5=81ukasz Stelmach:
+> >>>> The value was estimaded with ea_iid[1] using on 10485760 bytes read
+> >>>> from the RNG via /dev/hwrng. The min-entropy value calculated using
+> >>>> the most common value estimate (NIST SP 800-90P[2], section 6.3.1)
+> >>>> was 7.964464.
+> >>>=20
+> >>> I am sorry, but I think I did not make myself clear: testing random
+> >>> numbers post-processing with the statistical tools does NOT give any
+> >>> idea about the entropy rate. Thus, all that was calculated is the
+> >>> proper implementation of the post-processing operation and not the
+> >>> actual noise source.
+> >>>=20
+> >>> What needs to happen is that we need access to raw, unconditioned
+> >>> data from the noise source that is analyzed with the statistical
+> >>> methods.
+> >>=20
+> >> I did understand you and I assure you the data I tested were obtained
+> >> directly from RNGs. As I pointed before[1], that is how /dev/hwrng
+> >> works[2].
+> >=20
+> > I understand that /dev/hwrng pulls the data straight from the
+> > hardware. But the data from the hardware usually is not obtained
+> > straight from the noise source.
+> >=20
+> > Typically you have a noise source (e.g. a ring oscillator) whose data
+> > is digitized then fed into a compression function like an LFSR or a
+> > hash. Then a cryptographic operation like a CBC-MAC, hash or even a
+> > DRBG is applied to that data when the caller wants to have random
+> > numbers.
+>=20
+> I do understand your point (but not entirely, see below). [opinion]
+> However, I am really not sure that this is a "typical" setting for a HW
+> RNG, at least not among RNGs supported by Linux. Otherwise there would
+> be no hw_random framework and no rngd(8) which are suppsed to
+> post-process imperfectly random data from HW. [/opinion]
 
-  de99280b2640 ("media: atomisp: add a notice about possible leak resources=
-")
+The hw_random framework only makes these hardware RNG accessible for in-ker=
+nel=20
+as well as user space use.
+>=20
+> > In order to estimate entropy, we need the raw unconditioned data from
+> > the, say, ring oscillator and not from the (cryptographic) output
+> > operation.
+>=20
+> Can you tell, why it matters in this case? If I understand correctly,
+> the quality field describes not the randomness created by the noise
+> generator but the one delivered by the driver to other software
+> components.
 
-Fixes tag
+The quality field is used by add_hwgenerator_randomness to increase the Lin=
+ux=20
+RNG entropy estimator accordingly. This is the issue.
 
-  Fixes: 88b03de5d705 ("media: atomisp: Add some ACPI detection info")
+And giving an entropy rate based on post-processed data is meaningless.
 
-has these problem(s):
+The concern is, for example, that you use a DRBG that you seeded with, say,=
+ a=20
+zero buffer. You get perfect random data from it that no statistical test c=
+an=20
+disprove. Yet we know this data stream has zero entropy. Thus, we need to g=
+et=20
+to the source and assess its entropy.
 
-  - Target SHA1 does not exist
+>=20
+> > That said, the illustrated example is typical for hardware RNGs. Yet
+> > it is never guaranteed to work that way. Thus, if you can point to
+> > architecture documentation of your specific hardware RNGs showing that
+> > the data read from the hardware is pure unconditioned noise data, then
+> > I have no objections to the patch.
+>=20
+> I can tell for sure that this is the case for exynos-trng[1].
 
-Maybe you meant
+So you are saying that the output for the exynos-trng is straight from a ri=
+ng=20
+oscillator without any post-processing of any kind?
 
-Fixes: ea073ef04fb3 ("media: atomisp: Add some ACPI detection info")
+If this is the case, I would like to suggest you add that statement to the =
+git=20
+commit message with that reference. If so, then I would withdraw my objecti=
+on.
 
---=20
-Cheers,
-Stephen Rothwell
+> There is a
+> post-processor which I have forgotten about since writing the driver,
+> because from the very beginning I didn't intend to use it. I knew there
+> is the software framework for post-processing and simply didn't bother.
+>=20
+> With regards to iproc-rng200 I cannot be sure.
+>=20
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
+ri
+> vers/char/hw_random/exynos-trng.c?h=3Dv5.6#n100
+>=20
+> Kind regards,
 
---Sig_/K=Yt0Ac_CCMak+_QH.42Qi=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+Ciao
+Stephan
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7FGgoACgkQAVBC80lX
-0GzC1gf/RGHdaoDpfWuEcTYhHFcSQYuZ0nhBV4ld17of7daK4gtJGdO0VQnKiL6l
-GSXPwa08uku9z9s2uStr5B52OfUruEl20DoU5LjZLz/DoX3Etyr/m062MAvaeBPs
-yLijH9Wn7Aa5D+OAtWrx7yzrFmbnXD4H+95BpMm2jlydiBMvR2ioI1AMZ3TiP9Uy
-TMLdQE2GU3mHwaXjtOkUF8M/Xykhr+TIy+tBv7FL7ar777G9APdfF4cAhrfXq74y
-uKRE4r4j4kr/XSfd+1jyvMW2AXplVaCsC3NK+CIriRmba0Jo+Bv3nUwVQYf5VxPZ
-4XJ3cc6jmVK5/dpChf32/qW8czpQ8A==
-=KobR
------END PGP SIGNATURE-----
 
---Sig_/K=Yt0Ac_CCMak+_QH.42Qi=--
