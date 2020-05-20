@@ -2,150 +2,131 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DECDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9FFB2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:40:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slRu6H7n"
+	by mail.kernel.org (Postfix) with ESMTP id 6C3C92075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589938812;
+	bh=vzjx/GG0epcegWe9y4yfSLiBocv5o0cqoYzvBOLTx1Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aBl1FAQ4g5HfXSPy75Se+gjwzJMllbu9St6PRUClmYL/kPzV+6A8XIZlpNbZ3ra9f
+	 7rGrLAsPwMDlYIxw4k4T1jItPQh2me979/53xCTLp/CS2kjaeYLDV4fgxzj9M2bKuZ
+	 6ur+ReiMJwLA1Iqf9cky2ksdGBq2vUr0f256RUrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgETBkG (ORCPT
+        id S1728433AbgETBkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 21:40:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbgETBkF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 21:40:05 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68729C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 18:40:04 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b6so2017501qkh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 18:40:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GmglJO6qCW3EO3VU2pXKLFHvUqK1Lzi8wB5jA0danw4=;
-        b=slRu6H7nt8HAd65WdVhkz1X8ZLZBdsiVGjgP9LP16c+3888VV8w3SVu66AA9fLNJAP
-         UZwHWC0TbfsVbUShcSr7daHNilnTQrK3cBQxruj73cXuvY2KVV3lujFpGReuU/KK7bGE
-         Ezom8tOs17UKu4aXEoaifHjPD5aL6cgBKAIJWDevDOXY1yo4+bwDtrK5BiEbAzUOUlcd
-         UWG2JJbjmL2wJH3/QWBwCfqzM77BWTOULJ59FrY+T/39mIvSUWYnMkMehnNYSr4gTCsT
-         1z63oeZQ/BQQeP3Y+RpW0I/gufmoec4vac7j5ihYs51sC0Ys0mw/GLDnhiNiZEtvryiW
-         yLBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GmglJO6qCW3EO3VU2pXKLFHvUqK1Lzi8wB5jA0danw4=;
-        b=CTn9oCeeEodSLpeRVFLfdUo3WXMXpAcihPKxC/q3YAgkses8a75eoIlEgwnAKQ5ynK
-         tC53k/zuDhlf9h3cIm4GIO+ky4Ww2O84caDO5Jo0Di7QS4x+lCZNHM9Gg4hj7U6M/kj+
-         lV0cLuLuttf20Qtav70o/a+9y0lJoao8jwB8S3AQo64kGAE6Ga91rbIfTKAEXSZDLMX1
-         KNdhCsWPPqkYOuUnNajGw8azrp18OA1JN8eKz+QDrtmuKYTcnaDlbih3wSc7bwrmLGuj
-         T7U/aATlIuaWPuW/Lo2trrSyBxbGJe5MKPjfJn2g8ZGm9tX6RDBme4xe2J/ar+iTh4zB
-         stVg==
-X-Gm-Message-State: AOAM532pG7GyB3TdIwFVuzG5MJcIp/0I2d9JB4+ULXzJ6JS4b3yQhoNn
-        G5m2sekARq2Sa9sNLsumtao=
-X-Google-Smtp-Source: ABdhPJzMD8tvmIr0Mtast3BInqY1c5C+5umg6s7m6vnSlvJYpGcFaUquy9FZDW29YDOvjz6PZDknow==
-X-Received: by 2002:ae9:ed05:: with SMTP id c5mr2507460qkg.250.1589938803583;
-        Tue, 19 May 2020 18:40:03 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id 132sm1065028qkj.117.2020.05.19.18.40.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 18:40:02 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1754B40AFD; Tue, 19 May 2020 22:40:01 -0300 (-03)
-Date:   Tue, 19 May 2020 22:40:01 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V7 00/15] perf/x86: Add perf text poke events
-Message-ID: <20200520014001.GF28228@kernel.org>
-References: <20200512121922.8997-1-adrian.hunter@intel.com>
- <bee04840-143c-18bb-df82-5aa58d70730e@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bee04840-143c-18bb-df82-5aa58d70730e@intel.com>
-X-Url:  http://acmel.wordpress.com
+        Tue, 19 May 2020 21:40:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726348AbgETBkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 21:40:11 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F92F2075F;
+        Wed, 20 May 2020 01:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589938810;
+        bh=vzjx/GG0epcegWe9y4yfSLiBocv5o0cqoYzvBOLTx1Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=K747CHeFDoQ4W6ne6KtAIviU1ur/mXBOwXYIj67Beeb6VcYIGSJbqNyFo6RPBoWux
+         +zD3dxY0hQSCoCY/S/mooBdd7DMgA975xp2rq0sR1Swxfbjd/a5hte7WcWt/icTWdW
+         mMUK5ON9SvdfRaHhCarZy333oXuqiF2tVn+qQxEw=
+Date:   Tue, 19 May 2020 18:40:10 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Charan Teja Reddy <charante@codeaurora.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        vinmenon@codeaurora.org
+Subject: Re: [PATCH] mm, page_alloc: skip ->waternark_boost for atomic
+ order-0 allocations
+Message-Id: <20200519184010.e77d25d7f6b853414e760d76@linux-foundation.org>
+In-Reply-To: <1589882284-21010-1-git-send-email-charante@codeaurora.org>
+References: <1589882284-21010-1-git-send-email-charante@codeaurora.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, May 17, 2020 at 04:16:50PM +0300, Adrian Hunter escreveu:
-> On 12/05/20 3:19 pm, Adrian Hunter wrote:
-> > Hi
-> > 
-> > Here are patches to add a text poke event to record changes to kernel text
-> > (i.e. self-modifying code) in order to support tracers like Intel PT
-> > decoding through jump labels, kprobes and ftrace trampolines.
-> > 
-> > The first 8 patches make the kernel changes and the subsequent patches are
-> > tools changes.
-> > 
-> > The next 4 patches add support for updating perf tools' data cache
-> > with the changed bytes.
-> > 
-> > The next patch is an Intel PT specific tools change.
-> > 
-> > The final 2 patches add perf script --show-text-poke-events option
-> > 
-> > Patches also here:
-> > 
-> > 	git://git.infradead.org/users/ahunter/linux-perf.git text_poke
-> > 
-> > Changes in V7
-> > 
-> >   perf: Add perf text poke event
-> >   perf/x86: Add support for perf text poke event for text_poke_bp_batch() callers
-> >   kprobes: Add symbols for kprobe insn pages
-> >   kprobes: Add perf ksymbol events for kprobe insn pages
-> >   perf/x86: Add perf text poke events for kprobes
-> >   ftrace: Add symbols for ftrace trampolines
-> >   ftrace: Add perf ksymbol events for ftrace trampolines
-> >   ftrace: Add perf text poke events for ftrace trampolines
-> > 
-> > 	Added Peter's Ack
-> > 	Improved commit message for text_poke events for ftrace trampolines
-> > 
-> >   perf kcore_copy: Fix module map when there are no modules loaded
-> >   perf evlist: Disable 'immediate' events last
-> >   perf tools: Add support for PERF_RECORD_TEXT_POKE
-> >   perf tools: Add support for PERF_RECORD_KSYMBOL_TYPE_OOL
-> >   perf intel-pt: Add support for text poke events
-> >   perf script: Add option --show-text-poke-events
-> >   perf script: Show text poke address symbol
-> > 
-> > 	Re-based on Arnaldo's perf/core branch
-> > 
+On Tue, 19 May 2020 15:28:04 +0530 Charan Teja Reddy <charante@codeaurora.org> wrote:
+
+> When boosting is enabled, it is observed that rate of atomic order-0
+> allocation failures are high due to the fact that free levels in the
+> system are checked with ->watermark_boost offset. This is not a problem
+> for sleepable allocations but for atomic allocations which looks like
+> regression.
 > 
-> Arnaldo, any comments on the tools patches?
+> This problem is seen frequently on system setup of Android kernel
+> running on Snapdragon hardware with 4GB RAM size. When no extfrag event
+> occurred in the system, ->watermark_boost factor is zero, thus the
+> watermark configurations in the system are:
+>    _watermark = (
+>           [WMARK_MIN] = 1272, --> ~5MB
+>           [WMARK_LOW] = 9067, --> ~36MB
+>           [WMARK_HIGH] = 9385), --> ~38MB
+>    watermark_boost = 0
+> 
+> After launching some memory hungry applications in Android which can
+> cause extfrag events in the system to an extent that ->watermark_boost
+> can be set to max i.e. default boost factor makes it to 150% of high
+> watermark.
+>    _watermark = (
+>           [WMARK_MIN] = 1272, --> ~5MB
+>           [WMARK_LOW] = 9067, --> ~36MB
+>           [WMARK_HIGH] = 9385), --> ~38MB
+>    watermark_boost = 14077, -->~57MB
+> 
+> With default system configuration, for an atomic order-0 allocation to
+> succeed, having free memory of ~2MB will suffice. But boosting makes
+> the min_wmark to ~61MB thus for an atomic order-0 allocation to be
+> successful system should have minimum of ~23MB of free memory(from
+> calculations of zone_watermark_ok(), min = 3/4(min/2)). But failures are
+> observed despite system is having ~20MB of free memory. In the testing,
+> this is reproducible as early as first 300secs since boot and with
+> furtherlowram configurations(<2GB) it is observed as early as first
+> 150secs since boot.
+> 
+> These failures can be avoided by excluding the ->watermark_boost in
+> watermark caluculations for atomic order-0 allocations.
 
-I couldn't get to this yet, sorry, but from a quick look I saw just the
-ordering of some args to perf_event__ functions, and I can quickly fix
-it.
+Seems sensible.
 
-PeterZ, from what we discussed for the next merge Window, perhaps we
-should route the kernel bits via the tip tree while I will push the
-tooling bits on my 5.8 merge request to Linus, Ok?
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -3709,6 +3709,18 @@ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
+>  		}
+>  
+>  		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
+> +		/*
+> +		 * Allow GFP_ATOMIC order-0 allocations to exclude the
+> +		 * zone->watermark_boost in its watermark calculations.
+> +		 * We rely on the ALLOC_ flags set for GFP_ATOMIC
+> +		 * requests in gfp_to_alloc_flags() for this. Reason not to
+> +		 * use the GFP_ATOMIC directly is that we want to fall back
+> +		 * to slow path thus wake up kswapd.
 
-- Arnaldo
+Nice comment, but I don't understand it ;)
+
+Why would testing gfp_mask prevent us from waking kswapd?
+
+> +		 */
+> +		if (unlikely(!order && !(alloc_flags & ALLOC_WMARK_MASK) &&
+> +		     (alloc_flags & (ALLOC_HARDER | ALLOC_HIGH)))) {
+> +			mark = zone->_watermark[WMARK_MIN];
+> +		}
+
+Why is this not implemented for higher-order allocation attempts?
+
+>  		if (!zone_watermark_fast(zone, order, mark,
+>  				       ac->highest_zoneidx, alloc_flags)) {
+>  			int ret;
+
