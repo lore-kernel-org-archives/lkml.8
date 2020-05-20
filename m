@@ -2,134 +2,92 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E51C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94786206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E115206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:08:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xbrxSUuT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgETQIN (ORCPT
+        id S1726946AbgETQIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:08:13 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:59596 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbgETQIM (ORCPT
+        Wed, 20 May 2020 12:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgETQIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:08:12 -0400
-Date:   Wed, 20 May 2020 12:08:10 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Szabolcs Nagy <szabolcs.nagy@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Jack Schmidt <jack.schmidt@uky.edu>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, nd@arm.com
-Subject: Re: clock_gettime64 vdso bug on 32-bit arm, rpi-4
-Message-ID: <20200520160810.GM1079@brightrain.aerifal.cx>
-References: <CAK8P3a2Tw2w73ZkK-W6AA9veMK4-miLUx-TL1EuOdP7EdW-AmQ@mail.gmail.com>
- <0c2abcd1-7da8-2559-1e93-4c3bdd38dec1@linaro.org>
- <CAK8P3a3fxs+14ZdCRmt_GwJGv3Aipm1r9sAHH6aVj2UrWBNuQQ@mail.gmail.com>
- <20200520154128.GA24483@arm.com>
+        Wed, 20 May 2020 12:08:51 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22CEC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:08:50 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j5so3761572wrq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b0xYWh+w/F4qTSH0QTclL7MS2e+5mKVzQgF0NwX1VdA=;
+        b=xbrxSUuTV4VsNXGHpyNiBREQh4CjaWtB9BN3dY9RtRsbQ3q6Wc1c9zuirNc4ZD5/nT
+         Na+uOjpDr1J/5SJkZVH7w3a/7jxWGFfeFYXRkQlbsJuSC+swTEBM7Mihk9eJ9vk8eE1F
+         rmg5VkyVcsfs5z09UB0WfHUjghVCddAtVvIF73rqjLcOJB0vkmJ/hNqUIM5K9bHYtYB2
+         Qk4fB9WSOL3xDfNiYR6N7lAnv/yv1Jpgq+z/7mRt5cEmMc9CjeaaX+kHeO8sPiXuI/BX
+         XKbg13F2pI5vgTw1ZgCCUDSxyFh3ptYp3UEMYTYaVhykHgrjuTAfikxoac2kbplmLjth
+         OYDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b0xYWh+w/F4qTSH0QTclL7MS2e+5mKVzQgF0NwX1VdA=;
+        b=Kdc8jqbsv0+yqtN5UaPWHIxXb53lFuoIHQfZrAahf7tEVNy4VLnE46B3OVvCSkdNfj
+         HGscsKdo9Y7kb+OJce65NjwG4JKnkiI53bVyCGwA2OnpArRnyvooRrvtXGxyzeyXHOsU
+         CZOdmSO1pjzultxOu2vRI/oq0LVzJyhzIlYcK5gbcbQ3T2rfq1jzsKLPLZgUTKQYDnc/
+         zQ1bie+ehwswf+QFVZajb0bPnnfyf1c64dOvEDhk22U00M8GnyHnFNYwLlYi6yxPVCeQ
+         OuyIfyYMCSvkufbEMdkNfQDyYubbCowdT1BcQst5iP55/rfCIuXoLsTZUybYAPmLGI2E
+         6Ctw==
+X-Gm-Message-State: AOAM533QhFGDo+cBUoj5Ts82InEeoIa7Z7E01LWb4sKMaecYLweJgri6
+        o6CGIs2SaZctl4mqzToYv4hQzQ==
+X-Google-Smtp-Source: ABdhPJz93P3tc5SPc/AYro69bXA2d3D8ewi0B2Ij2Ds+zzrwsQ5omOgXlzrtQVfEBTM0udRUP66uEQ==
+X-Received: by 2002:a5d:5751:: with SMTP id q17mr4842701wrw.106.1589990929733;
+        Wed, 20 May 2020 09:08:49 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id z11sm3297731wro.48.2020.05.20.09.08.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 09:08:49 -0700 (PDT)
+Date:   Wed, 20 May 2020 17:08:47 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>, sumit.garg@linaro.org,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kdb: Cleanup math with KDB_CMD_HISTORY_COUNT
+Message-ID: <20200520160847.dpvut45zjd5msz6w@holly.lan>
+References: <20200507161125.1.I2cce9ac66e141230c3644b8174b6c15d4e769232@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520154128.GA24483@arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200507161125.1.I2cce9ac66e141230c3644b8174b6c15d4e769232@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 04:41:29PM +0100, Szabolcs Nagy wrote:
-> The 05/19/2020 22:31, Arnd Bergmann wrote:
-> > On Tue, May 19, 2020 at 10:24 PM Adhemerval Zanella
-> > <adhemerval.zanella@linaro.org> wrote:
-> > > On 19/05/2020 16:54, Arnd Bergmann wrote:
-> > > > Jack Schmidt reported a bug for the arm32 clock_gettimeofday64 vdso call last
-> > > > month: https://github.com/richfelker/musl-cross-make/issues/96 and
-> > > > https://github.com/raspberrypi/linux/issues/3579
-> > > >
-> > > > As Will Deacon pointed out, this was never reported on the mailing list,
-> > > > so I'll try to summarize what we know, so this can hopefully be resolved soon.
-> > > >
-> > > > - This happened reproducibly on Linux-5.6 on a 32-bit Raspberry Pi patched
-> > > >    kernel running on a 64-bit Raspberry Pi 4b (bcm2711) when calling
-> > > >    clock_gettime64(CLOCK_REALTIME)
-> > >
-> > > Does it happen with other clocks as well?
-> > 
-> > Unclear.
-> > 
-> > > > - The kernel tree is at https://github.com/raspberrypi/linux/, but I could
-> > > >   see no relevant changes compared to a mainline kernel.
-> > >
-> > > Is this bug reproducible with mainline kernel or mainline kernel can't be
-> > > booted on bcm2711?
-> > 
-> > Mainline linux-5.6 should boot on that machine but might not have
-> > all the other features, so I think users tend to use the raspberry pi
-> > kernel sources for now.
-> > 
-> > > > - From the report, I see that the returned time value is larger than the
-> > > >   expected time, by 3.4 to 14.5 million seconds in four samples, my
-> > > >   guess is that a random number gets added in at some point.
-> > >
-> > > What kind code are you using to reproduce it? It is threaded or issue
-> > > clock_gettime from signal handlers?
-> > 
-> > The reproducer is very simple without threads or signals,
-> > see the start of https://github.com/richfelker/musl-cross-make/issues/96
-> > 
-> > It does rely on calling into the musl wrapper, not the direct vdso
-> > call.
-> > 
-> > > > - From other sources, I found that the Raspberry Pi clocksource runs
-> > > >   at 54 MHz, with a mask value of 0xffffffffffffff. From these numbers
-> > > >   I would expect that reading a completely random hardware register
-> > > >   value would result in an offset up to 1.33 billion seconds, which is
-> > > >   around factor 100 more than the error we see, though similar.
-> > > >
-> > > > - The test case calls the musl clock_gettime() function, which falls back to
-> > > >   the clock_gettime64() syscall on kernels prior to 5.5, or to the 32-bit
-> > > >   clock_gettime() prior to Linux-5.1. As reported in the bug, Linux-4.19 does
-> > > >   not show the bug.
-> > > >
-> > > > - The behavior was not reproduced on the same user space in qemu,
-> > > >   though I cannot tell whether the exact same kernel binary was used.
-> > > >
-> > > > - glibc-2.31 calls the same clock_gettime64() vdso function on arm to
-> > > >   implement clock_gettime(), but earlier versions did not. I have not
-> > > >   seen any reports of this bug, which could be explained by users
-> > > >   generally being on older versions.
-> > > >
-> > > > - As far as I can tell, there are no reports of this bug from other users,
-> > > >   and so far nobody could reproduce it.
+On Thu, May 07, 2020 at 04:11:46PM -0700, Douglas Anderson wrote:
+> From code inspection the math in handle_ctrl_cmd() looks super sketchy
+> because it subjects -1 from cmdptr and then does a "%
+> KDB_CMD_HISTORY_COUNT".  It turns out that this code works because
+> "cmdptr" is unsigned and KDB_CMD_HISTORY_COUNT is a nice power of 2.
+> Let's make this a little less sketchy.
 > 
-> note: i could not reproduce it in qemu-system with these configs:
+> This patch should be a no-op.
 > 
-> qemu-system-aarch64 + arm64 kernel + compat vdso
-> qemu-system-aarch64 + kvm accel (on cortex-a72) + 32bit arm kernel
-> qemu-system-arm + cpu max + 32bit arm kernel
-> 
-> so i think it's something specific to that user's setup
-> (maybe rpi hw bug or gcc miscompiled the vdso or something
-> with that particular linux, i built my own linux 5.6 because
-> i did not know the exact kernel version where the bug was seen)
-> 
-> i don't have access to rpi (or other cortex-a53 where i
-> can install my own kernel) so this is as far as i got.
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-If we have a binary of the kernel that's known to be failing on the
-hardware, it would be useful to dump its vdso and examine the
-disassembly to see if it was miscompiled.
-
-Rich
+Applied, thanks!
