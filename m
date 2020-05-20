@@ -2,108 +2,94 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59996C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39D29207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F197207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgETK3Y (ORCPT
+        id S1726810AbgETKaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgETK3Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:29:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6057C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:29:23 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1jbLyS-0004HF-Sa; Wed, 20 May 2020 12:29:20 +0200
-Message-ID: <d7a0646840374e1d7515bfea7da2badd94df0042.camel@pengutronix.de>
-Subject: Re: [PATCH] drm/etnaviv: fix memory leak when mapping prime
- imported buffers
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
-Cc:     stable@vger.kernel.org,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        etnaviv@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date:   Wed, 20 May 2020 12:29:19 +0200
-In-Reply-To: <1589969500-6554-1-git-send-email-martin.fuzzey@flowbird.group>
-References: <1589969500-6554-1-git-send-email-martin.fuzzey@flowbird.group>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Wed, 20 May 2020 06:30:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:52518 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726510AbgETKaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:30:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D4D831B;
+        Wed, 20 May 2020 03:30:00 -0700 (PDT)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F6C53F68F;
+        Wed, 20 May 2020 03:29:59 -0700 (PDT)
+Subject: Re: [PATCH v2] sched/pelt: sync util/runnable_sum with PELT window
+ when propagating
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200506155301.14288-1-vincent.guittot@linaro.org>
+ <c1beb50b-d385-524b-56e0-eae16d3700df@arm.com>
+ <CAKfTPtDLceotUW0ni=QhD9Z8cc7NA5Yz2vBJi+NjAVzYztrm+g@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <7be0258e-9799-f85c-39ce-738d6e6a82bd@arm.com>
+Date:   Wed, 20 May 2020 12:29:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAKfTPtDLceotUW0ni=QhD9Z8cc7NA5Yz2vBJi+NjAVzYztrm+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+On 19/05/2020 17:41, Vincent Guittot wrote:
+> On Tue, 19 May 2020 at 12:28, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 06/05/2020 17:53, Vincent Guittot wrote:
 
-Am Mittwoch, den 20.05.2020, 12:10 +0200 schrieb Martin Fuzzey:
-> When using mmap() on a prime imported buffer allocated by a
-> different driver (such as imx-drm) the later munmap() does
-> not correctly decrement the refcount of the original enaviv_gem_object,
-> leading to a leak.
+[...]
+
+>>> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+>>> index b647d04d9c8b..1feff80e7e45 100644
+>>> --- a/kernel/sched/pelt.c
+>>> +++ b/kernel/sched/pelt.c
+>>> @@ -237,6 +237,30 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
+>>>       return 1;
+>>>  }
+>>>
+>>> +/*
+>>> + * When syncing *_avg with *_sum, we must take into account the current
+>>> + * position in the PELT segment otherwise the remaining part of the segment
+>>> + * will be considered as idle time whereas it's not yet elapsed and this will
+>>> + * generate unwanted oscillation in the range [1002..1024[.
+>>> + *
+>>> + * The max value of *_sum varies with the position in the time segment and is
+>>> + * equals to :
+>>> + *
+>>> + *   LOAD_AVG_MAX*y + sa->period_contrib
+>>> + *
+>>> + * which can be simplified into:
+>>> + *
+>>> + *   LOAD_AVG_MAX - 1024 + sa->period_contrib
+>>> + *
+>>> + * because LOAD_AVG_MAX*y == LOAD_AVG_MAX-1024
+>>
+>> Isn't this rather '~' instead of '==', even for y^32 = 0.5 ?
+>>
+>> 47742 * 0.5^(1/32) ~ 47742 - 1024
 > 
-> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-> Cc: stable@vger.kernel.org
+> With integer precision and the runnable_avg_yN_inv array, you've got
+> exactly 1024
 
-What's the use-case where you did hit this issue? mmap'ing of imported
-buffers through the etnaviv DRM device is currently not well defined
-and I was pondering the idea of forbidding it completely by not
-returning a mmap offset for those objects.
-
-Regards,
-Lucas
-
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-> index f24dd21..28a01b8 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-> @@ -93,7 +93,25 @@ static void *etnaviv_gem_prime_vmap_impl(struct etnaviv_gem_object *etnaviv_obj)
->  static int etnaviv_gem_prime_mmap_obj(struct etnaviv_gem_object *etnaviv_obj,
->  		struct vm_area_struct *vma)
->  {
-> -	return dma_buf_mmap(etnaviv_obj->base.dma_buf, vma, 0);
-> +	int ret;
-> +
-> +	ret = dma_buf_mmap(etnaviv_obj->base.dma_buf, vma, 0);
-> +
-> +	/* drm_gem_mmap_obj() has already been called before this function
-> +	 * and has incremented our refcount, expecting it to be decremented
-> +	 * on unmap() via drm_gem_vm_close().
-> +	 * However dma_buf_mmap() invokes drm_gem_cma_prime_mmap()
-> +	 * that ends up updating the vma->vma_private_data to point to the
-> +	 * dma_buf's gem object.
-> +	 * Hence our gem object here will not have its refcount decremented
-> +	 * when userspace does unmap().
-> +	 * So decrement the refcount here to avoid a memory leak if the dma
-> +	 * buf mapping was successful.
-> +	 */
-> +	if (!ret)
-> +		drm_gem_object_put_unlocked(&etnaviv_obj->base);
-> +
-> +	return ret;
->  }
->  
->  static const struct etnaviv_gem_ops etnaviv_gem_prime_ops = {
-
+Ah, OK, I forgot about this and that this is related to commit
+625ed2bf049d ("sched/cfs: Make util/load_avg more stable").
