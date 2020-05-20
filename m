@@ -2,113 +2,88 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35BB9207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:11:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G0Si5nfh"
+	by mail.kernel.org (Postfix) with ESMTP id EE367207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590012730;
+	bh=uQ1OMv45cis4xfNfUEn10N1LZOIsO7sl2U24c4vOXD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H57+jlyXQ3xv3XnOk5vK9AyBWh3G+T3lb2dgEzcTTk4n1DfRdbsPeQGl5fe16Dq2a
+	 Mltlu9XNwuKE7KCeImpmiZRMv04O93lXOildKENuID8t6+PRizhlg4HOGBBkWO/23W
+	 LHusxSof8TP3DQfOIMWIys24DYkirw5lzfwsavZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgETWLA (ORCPT
+        id S1728505AbgETWMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:11:00 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52175 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728261AbgETWK7 (ORCPT
+        Wed, 20 May 2020 18:12:08 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38623 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727947AbgETWMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:10:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590012658;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z1vIhurviEzP2nHp5BDqAvozGvnWo27CfFHlDxPi3JY=;
-        b=G0Si5nfht9lYPgtZ1jJGuB9rJFLNl6FgBxhyMAc1AAFncp2pmPPKFuSv885xBBusWJk9rd
-        pidI2JwM/cSJ6vMNA/LBKv2OaPMQFDY7noL2W2BOs14VcYz3FAbscLv+RHXgeNEpCWvyc9
-        jb35xXilwiCGh7D8KGMGjiSiScPaRqU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-132-aF9O-RrUPJOgoqyMTI5hDQ-1; Wed, 20 May 2020 18:10:54 -0400
-X-MC-Unique: aF9O-RrUPJOgoqyMTI5hDQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E7BB800053;
-        Wed, 20 May 2020 22:10:51 +0000 (UTC)
-Received: from krava (unknown [10.40.193.10])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E253160C05;
-        Wed, 20 May 2020 22:10:45 +0000 (UTC)
-Date:   Thu, 21 May 2020 00:10:44 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 3/7] perf metricgroup: Delay events string creation
-Message-ID: <20200520221044.GQ157452@krava>
-References: <20200520072814.128267-1-irogers@google.com>
- <20200520072814.128267-4-irogers@google.com>
- <20200520131412.GK157452@krava>
- <CAP-5=fXHRiahLZjQHcFiWW=zdXc7r+=WdMpzeCj-+xPcqB2khQ@mail.gmail.com>
- <20200520203409.GA26877@kernel.org>
+        Wed, 20 May 2020 18:12:08 -0400
+Received: by mail-io1-f66.google.com with SMTP id d7so5138552ioq.5;
+        Wed, 20 May 2020 15:12:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TrpuUenHVc45xYnWry+XkSkEe/vvRn8TLqlEqWx18Fo=;
+        b=RG0S6N1+rZiJAZGOOxY8ENRhgEHICZSBSLuyQLnANYFDot63k8AizeUFTkd3Q8/8uo
+         ZMYqSRNDl5d1bWLemSkEAGJNQsMZauMd7tY94XRosg3YkSIbhNdx+Nt1HvB0GRX6UoIy
+         123pOadwGQYusezzJHCtYRVxCoU3K18JXzm5olyPAy4adl3JJJeo9oOZvRH7th1MPa27
+         MiJM7ty2ZF0GgXghHU2Go9dy5GYjwpAKrk9b9gsKeugKqqgvb6UU8z2VHmjIETs1BmsQ
+         g3CmZE0+zumNvpOboEC32wYXo3q27LKDL2DV0BPjEnbgsWP0qRb0e5YvuLpTcjwNF3c5
+         TXFg==
+X-Gm-Message-State: AOAM530FJ6zoZZXJCblWr6HoplGXa9Sv1bMbG2GjZXkeBIWnyRRbgiCe
+        8lpVbwQgt+3ZLrnLUnRtVA==
+X-Google-Smtp-Source: ABdhPJw2KEWNCuaWXpnBG7wbgtBlN5A5qfeRytczstHIJYtrHxbmTOwSrrw1+LHUYr7gGkNzEBG1ZQ==
+X-Received: by 2002:a02:5807:: with SMTP id f7mr1213350jab.118.1590012727297;
+        Wed, 20 May 2020 15:12:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t75sm2084101ild.4.2020.05.20.15.12.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 15:12:06 -0700 (PDT)
+Received: (nullmailer pid 691599 invoked by uid 1000);
+        Wed, 20 May 2020 22:12:05 -0000
+Date:   Wed, 20 May 2020 16:12:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Tom Joseph <tjoseph@cadence.com>, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 13/14] misc: pci_endpoint_test: Add J721E in
+ pci_device_id table
+Message-ID: <20200520221205.GA691565@bogus>
+References: <20200506151429.12255-1-kishon@ti.com>
+ <20200506151429.12255-14-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520203409.GA26877@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200506151429.12255-14-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 05:34:09PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, May 20, 2020 at 11:22:22AM -0700, Ian Rogers escreveu:
-> > On Wed, May 20, 2020 at 6:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > > >                               break;
-> > > >               }
-> > > >       }
-> > > > +     if (!ret) {
-> > >
-> > > could you please do instead:
-> > >
-> > >         if (ret)
-> > >                 return ret;
-> > >
-> > > so the code below cuts down one indent level and you
-> > > don't need to split up the lines
-> > 
-> > Done, broken out as a separate patch in v2:
-> > https://lore.kernel.org/lkml/20200520182011.32236-3-irogers@google.com/
+On Wed, 6 May 2020 20:44:28 +0530, Kishon Vijay Abraham I wrote:
+> Add J721E in pci_device_id table so that pci-epf-test can be used
+> for testing PCIe EP in J721E.
 > 
-> Jiri, was this the only issue with this patchkit? I've merged already
-> the first one, that you acked.
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/misc/pci_endpoint_test.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
 
-I'm still wondering if we can keep groups after the merge,
-it's in my other reply
-
-jirka
-
+Reviewed-by: Rob Herring <robh@kernel.org>
