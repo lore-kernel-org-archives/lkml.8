@@ -2,100 +2,85 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC63C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 329FF2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589992954;
-	bh=vfHcESPMyMnkf0mO1OYp41Fy/VqVcbHA1pyxgiFsLz4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ToU59Pe1Zz4vccBrVFY6MMCx3+YTl6mHuMRI92McEwV5m5zkWfNK7VO20DdU1GZXH
-	 cZp5YgNhmVG0SE47ff3CgxgkGoIleIyZhGO6G1QaHK6OKC2n1UF06K7+/HmCM8eEhI
-	 oDJIzgl/0Z2/WrTuIDkv2yZHA71w7FbJHY4yZcWA=
+	by mail.kernel.org (Postfix) with ESMTP id 5B9B32065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oM7UrpoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgETQmd (ORCPT
+        id S1726898AbgETQnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:42:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38472 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 12:43:19 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41652 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbgETQmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:42:33 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD6742065F;
-        Wed, 20 May 2020 16:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589992953;
-        bh=vfHcESPMyMnkf0mO1OYp41Fy/VqVcbHA1pyxgiFsLz4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=psRBotRKueDUQI2gAuPDPSmpHPsLRbvtO4DLKfQ87/1cLSbBkWzvjQZVuubvI5Z1z
-         oNwHeLjMKV1YUt8SF/j33jJ1FAciYKB8qzxAFs3L615nLDY7VrF+5oo+bYljE3hCC3
-         WqHmVFc9D5YzrSGuhlY5QV9PJJ8CZc39jIAX9slI=
-Date:   Wed, 20 May 2020 11:42:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
-Message-ID: <20200520164230.GA1100990@bjorn-Precision-5520>
+        id S1726486AbgETQnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:43:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=NywBFRjF7GgWpXTGYPudEVjq/5XYdjF+2nJ4tHCAfxE=; b=oM7UrpoKp62ygCtrl3OO3UHXwL
+        q05d/E9ylGaM5dCxgRScYxmI7EbY5LxvKIWlILW6QwcGv6/DGMKLl6rcV/4FoyT4gqcpx1HkNDzgR
+        6uYQNqBtFoMgsJRAyhMclV+GfqNIbdW5VcEECCJ852l8nYF0u0LXw3QTO5DMs9off5z4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jbRoH-002pB6-1B; Wed, 20 May 2020 18:43:13 +0200
+Date:   Wed, 20 May 2020 18:43:13 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+Message-ID: <20200520164313.GI652285@lunn.ch>
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com>
+ <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200520084012.30190-1-dinghao.liu@zju.edu.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 04:40:12PM +0800, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
-> 
-> Also This driver forgets to call pm_runtime_disable() when
-> pm_runtime_get_sync() returns an error code.
+> I am interested in knowing where that is documented.  I want to RTM I
+> grepped for a few different words but came up empty
 
-  Also, call pm_runtime_disable() when pm_runtime_get_sync() returns
-  an error code.
+Hi Dan
 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/pci/controller/pci-tegra.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index 3e64ba6a36a8..00236dd65b5b 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -2712,7 +2712,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
->  	err = pm_runtime_get_sync(pcie->dev);
->  	if (err < 0) {
->  		dev_err(dev, "fail to enable pcie controller: %d\n", err);
-> -		goto teardown_msi;
-> +		goto pm_runtime_put;
->  	}
->  
->  	host->busnr = bus->start;
-> @@ -2746,7 +2746,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
->  pm_runtime_put:
->  	pm_runtime_put_sync(pcie->dev);
->  	pm_runtime_disable(pcie->dev);
-> -teardown_msi:
->  	tegra_pcie_msi_teardown(pcie);
->  put_resources:
->  	tegra_pcie_put_resources(pcie);
-> -- 
-> 2.17.1
-> 
+It probably is not well documented, but one example would be
+
+Documentation/devicetree/bindings/net/ethernet-controller.yaml
+
+says:
+
+      # RX and TX delays are added by the MAC when required
+      - rgmii
+
+      # RGMII with internal RX and TX delays provided by the PHY,
+      # the MAC should not add the RX or TX delays in this case
+      - rgmii-id
+
+      # RGMII with internal RX delay provided by the PHY, the MAC
+      # should not add an RX delay in this case
+      - rgmii-rxid
+
+      # RGMII with internal TX delay provided by the PHY, the MAC
+      # should not add an TX delay in this case
+
+      Andrew
