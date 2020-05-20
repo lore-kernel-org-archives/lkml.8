@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D7EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE57205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F57205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgETO2C (ORCPT
+        id S1726830AbgETO2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:28:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32912 "EHLO
+        Wed, 20 May 2020 10:28:09 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32880 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726948AbgETOW0 (ORCPT
+        by vger.kernel.org with ESMTP id S1726933AbgETOWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:26 -0400
+        Wed, 20 May 2020 10:22:25 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035j-M8; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbv-00035g-B6; Wed, 20 May 2020 15:22:19 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DPv-LX; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-007DQF-QX; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Arend van Spriel" <arend@broadcom.com>,
-        "Kalle Valo" <kvalo@codeaurora.org>
-Date:   Wed, 20 May 2020 15:13:54 +0100
-Message-ID: <lsq.1589984008.243525296@decadent.org.uk>
+        "Kalle Valo" <kvalo@codeaurora.org>,
+        "Navid Emamdoost" <navid.emamdoost@gmail.com>
+Date:   Wed, 20 May 2020 15:13:58 +0100
+Message-ID: <lsq.1589984008.28533969@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 26/99] brcmfmac: fix interface sanity check
+Subject: [PATCH 3.16 30/99] brcmfmac: Fix memory leak in brcmf_usbdev_qinit
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,34 +55,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 3428fbcd6e6c0850b1a8b2a12082b7b2aabb3da3 upstream.
+commit 4282dc057d750c6a7dd92953564b15c26b54c22c upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
-
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+In the implementation of brcmf_usbdev_qinit() the allocated memory for
+reqs is leaking if usb_alloc_urb() fails. Release reqs in the error
+handling path.
 
 Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
-Cc: Arend van Spriel <arend@broadcom.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16:
- - Altsetting lookup is done by the IFALTS() macro
- - Adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
+ drivers/net/wireless/brcm80211/brcmfmac/usb.c | 1 +
+ 1 file changed, 1 insertion(+)
+
 --- a/drivers/net/wireless/brcm80211/brcmfmac/usb.c
 +++ b/drivers/net/wireless/brcm80211/brcmfmac/usb.c
-@@ -41,7 +41,7 @@
+@@ -365,6 +365,7 @@ fail:
+ 			usb_free_urb(req->urb);
+ 		list_del(q->next);
+ 	}
++	kfree(reqs);
+ 	return NULL;
  
- #define CONFIGDESC(usb)         (&((usb)->actconfig)->desc)
- #define IFPTR(usb, idx)         ((usb)->actconfig->interface[(idx)])
--#define IFALTS(usb, idx)        (IFPTR((usb), (idx))->altsetting[0])
-+#define IFALTS(usb, idx)        (*IFPTR((usb), (idx))->cur_altsetting)
- #define IFDESC(usb, idx)        IFALTS((usb), (idx)).desc
- #define IFEPDESC(usb, idx, ep)  (IFALTS((usb), (idx)).endpoint[(ep)]).desc
- 
+ }
 
