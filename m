@@ -2,86 +2,87 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 677F4207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589997292;
-	bh=tSusfwEtnTufQiTMMaZ15xY6HANjfc5RrrUfXAHd4bU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qKUmMCphuE+h3c7i2V/IW1TPHS5bu2h7k9aHooq8yBvG955EvwcVfv+vkViBR5aD+
-	 hCEESZ3Kgx0VBW3vBEiJPT3lzWJJ8UKq/sGhROgDl/8i9Uucs+zAOS1dr9FiroUA1o
-	 Ao4VlJB6ssN9XkLgF5ELAjqY2Z6DsZM/SO7w4vGQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4A7C6204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:56:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AsjQ2Q0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgETRyw (ORCPT
+        id S1726890AbgETR4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbgETRyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:54:49 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6973E20823;
-        Wed, 20 May 2020 17:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589997288;
-        bh=tSusfwEtnTufQiTMMaZ15xY6HANjfc5RrrUfXAHd4bU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WzowI8+GqPbs73hL8wdgdaas6aoLB4lvYGw1rWSCDNTR9IC7pFclCVbjgGMKgBAh5
-         uB8VqgZAdfEHAyY7/qcBGKGpkHNPWQ1Y/ve3p3PeYIQ8Vv10LRnYd9/A8NnP+uNj10
-         z/N/0AOm7CzIOSU+1BrQmu7FJsG6OoT+c8Inlxnk=
-From:   Will Deacon <will@kernel.org>
-To:     Tuan Phan <tuanphan@os.amperecomputing.com>
-Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
-        patches@amperecomputing.com, Robin Murphy <robin.murphy@arm.com>,
-        Len Brown <lenb@kernel.org>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-acpi@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5] ACPI/IORT: Fix PMCG node single ID mapping handling
-Date:   Wed, 20 May 2020 18:54:38 +0100
-Message-Id: <158999660879.126681.3746296394205258449.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com>
-References: <1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com>
+        Wed, 20 May 2020 13:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbgETR4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:56:03 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48B1C061A0E;
+        Wed, 20 May 2020 10:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4Am3TfCV9FAMwHU97EGrfWs3Wf0K8DZDEI58r+TwL5Q=; b=AsjQ2Q0XLd+qkzPdxqGGc0Wzxv
+        gcVC7Y+3vxkTI6lT8c6eYvH/RdOZCJXPBCEbAwhv15VXN7iLfgkChlmSdsMOU9uO2jJUAX4pUO3Z1
+        BEDsSfENhTS7VRbNIqWT09DEBtWNZzqCcnv895v0/3qTo6f8oDGwevgZ5ZYSPHsnAMSnOzvJPDWGj
+        BwfFOFbL5NAwRTibe5fKVzAEXkJoGpVH/7unEe2Jjom6Bc9jOmJ9Hfmu+I54gDk33cRMCs43N3VTE
+        8QKc/l/QhwLBMYrSU8qAIGik1ZCclU74FdxROtbitNMN4pzWGw+zT6eyBMdUNG5Lg/L0tCiTNfFPi
+        msogt3kA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbSwd-0003Jq-4U; Wed, 20 May 2020 17:55:55 +0000
+Date:   Wed, 20 May 2020 10:55:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     yongmyung lee <ymhungry.lee@samsung.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        Zang Leigang <zangleigang@hisilicon.com>,
+        Avi Shchislowski <Avi.Shchislowski@wdc.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        Daejun Park <daejun7.park@samsung.com>
+Subject: Re: Another approach of UFSHPB
+Message-ID: <20200520175555.GA27975@infradead.org>
+References: <835c57b9-f792-2460-c3cc-667031969d63@acm.org>
+ <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
+ <d10b27f1-49ec-d092-b252-2bb8cdc4c66e@acm.org>
+ <SN6PR04MB46408050B71E3A6225D6C495FCBA0@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <CGME20200516171420epcas2p108c570904c5117c3654d71e0a2842faa@epcms2p7>
+ <231786897.01589928601376.JavaMail.epsvc@epcpadp1>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <231786897.01589928601376.JavaMail.epsvc@epcpadp1>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 10:13:07 -0700, Tuan Phan wrote:
-> An IORT PMCG node can have no ID mapping if its overflow interrupt is
-> wire based therefore the code that parses the PMCG node can not assume
-> the node will always have a single mapping present at index 0.
-> 
-> Fix iort_get_id_mapping_index() by checking for an overflow interrupt
-> and mapping count.
-> 
-> [...]
+Serious,
 
-Applied to arm64 (for-next/acpi), thanks!
-
-[1/1] ACPI/IORT: Fix PMCG node single ID mapping handling
-      https://git.kernel.org/arm64/c/50c8ab8d9fbf
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+HPB is a completely fucked up concept and we shoud not merge it at all.
+Especially not with a crazy bullshit vendor extension layer that makes
+it even easier for vendors to implement even worse things than the
+already horrible spec says.  Just stop this crap and implement sane
+interfaces for the next generation hardware instead of wasting your
+time on this idiotic idea.
