@@ -2,204 +2,215 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9544CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4222075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589995399;
-	bh=BFLQ/xq4FnWU6i5c9z1NolKnkBi9zZFq5E30La70Lg8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pq3fI2Lyqe4G2wbYNK4iKzoiWiBijhQvlmt6sQ/nCvIFvK4Y4EJVOgpd3W405nAan
-	 U35tWiOufQFjS7x+aBhrRFSxZQU++yYbdFGy9kZl9IKFCzDtkHZ/WlYYFz2ciPi6gr
-	 wY27wyuMRJkhDyYF7uFxWzRlac6Nt08Yx2gcvFMQ=
+	by mail.kernel.org (Postfix) with ESMTP id 59EE02075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TqlxQ1g2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgETRXS (ORCPT
+        id S1728313AbgETRXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:23:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbgETRXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:23:13 -0400
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 20 May 2020 13:23:21 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21591 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728102AbgETRWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:22:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589995335;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=jrWjpTjo0hJ0e6dSEiSVY2FHCSjGptHFhRGJP2ZKJJk=;
+        b=TqlxQ1g2eoRUnDFizmsN6gaC7izqFJAI6bjxC3BnahaXrKvGX0sZjcYvmH9he9WDfkyx8+
+        PIbBq2N6iocMumtoQQLcHiRuBK46k4c9M9hXEe9l1VZGf/1hr4amBTeVd2zguJFSgLwBR5
+        BxP+InJojaODcvSyB/qmzm+0eE8kNIU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-_SsBqXp-N7eYy7Xf57Uqig-1; Wed, 20 May 2020 13:22:11 -0400
+X-MC-Unique: _SsBqXp-N7eYy7Xf57Uqig-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82CAD20899
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589995392;
-        bh=BFLQ/xq4FnWU6i5c9z1NolKnkBi9zZFq5E30La70Lg8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nBfvpKHE44qsSO+QmT+g2rruAlPKAgHvdSBWsGy4VQIoUumXO2FbQ+ka6HJa1dHlA
-         lhbZnnm0aa7OXw6BR7aENphWEmDmm7kwF+2co5hIEShPUydU0KifdTdTAkDKAQirkx
-         jm6IKJRr6G5tIq92umLeJHet4YHv6nBFXIJK9qhc=
-Received: by mail-wr1-f53.google.com with SMTP id l17so3987150wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 10:23:12 -0700 (PDT)
-X-Gm-Message-State: AOAM531/uQgRzUf7fUkNi13C0c8JBDa86PlYC+C2QXLB4xx6gYzj61QI
-        9UOQHNS+4uxmEz0KZiJGG3LtJ5lEr8evpeeJxLFMvw==
-X-Google-Smtp-Source: ABdhPJzWvveFwpAQLFHvuEIoe9jrHdH4/Ldhlhxp5aUDQkEtAEipDdH3KGVIbAT358jzodam/q3jU4pN6EJiOrd/mnk=
-X-Received: by 2002:adf:a389:: with SMTP id l9mr5199865wrb.18.1589995390910;
- Wed, 20 May 2020 10:23:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200515234547.710474468@linutronix.de> <20200515235125.425810667@linutronix.de>
- <CALCETrUqK6hv4AuGL=GtK+12TCmr5nBA7CBy=X7TNA=w_Jk0Qw@mail.gmail.com>
- <87imgr7nwp.fsf@nanos.tec.linutronix.de> <CALCETrW4BxfTVzv8mXntNXiAPnKxqdMEv7djUknGZcrno2WJHg@mail.gmail.com>
- <87y2pm4ruh.fsf@nanos.tec.linutronix.de> <CALCETrUvH5DQvL6Lo6EkM04pr7wWj+7eZbTg3H_eLNXcZsH0FA@mail.gmail.com>
-In-Reply-To: <CALCETrUvH5DQvL6Lo6EkM04pr7wWj+7eZbTg3H_eLNXcZsH0FA@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 20 May 2020 10:22:59 -0700
-X-Gmail-Original-Message-ID: <CALCETrX4Zy2iuc39XTifYd_mvezCEUtW2ax3=ec1TF=yZxAHDg@mail.gmail.com>
-Message-ID: <CALCETrX4Zy2iuc39XTifYd_mvezCEUtW2ax3=ec1TF=yZxAHDg@mail.gmail.com>
-Subject: Re: [patch V6 10/37] x86/entry: Switch XEN/PV hypercall entry to IDTENTRY
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20C578730A2;
+        Wed, 20 May 2020 17:22:10 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CF5E79C31;
+        Wed, 20 May 2020 17:22:09 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 19/24] KVM: nSVM: extract svm_set_gif
+Date:   Wed, 20 May 2020 13:21:40 -0400
+Message-Id: <20200520172145.23284-20-pbonzini@redhat.com>
+In-Reply-To: <20200520172145.23284-1-pbonzini@redhat.com>
+References: <20200520172145.23284-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 8:16 AM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Wed, May 20, 2020 at 7:13 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > Andy Lutomirski <luto@kernel.org> writes:
-> > > On Tue, May 19, 2020 at 11:58 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >> Which brings you into the situation that you call schedule() from the
-> > >> point where we just moved it out. If we would go there we'd need to
-> > >> ensure that RCU is watching as well. idtentry_exit() might have it
-> > >> turned off ....
-> > >
-> > > I don't think this is possible.  Once you untangle all the wrappers,
-> > > the call sites are effectively:
-> > >
-> > > __this_cpu_write(xen_in_preemptible_hcall, true);
-> > > CALL_NOSPEC to the hypercall page
-> > > __this_cpu_write(xen_in_preemptible_hcall, false);
-> > >
-> > > I think IF=1 when this happens, but I won't swear to it.  RCU had
-> > > better be watching.
-> > >
-> > > As I understand it, the one and only situation Xen wants to handle is
-> > > that an interrupt gets delivered during the hypercall.  The hypervisor
-> > > is too clever for its own good and deals with this by rewinding RIP to
-> > > the beginning of whatever instruction did the hypercall and delivers
-> > > the interrupt, and we end up in this handler.  So, if this happens,
-> > > the idea is to not only handle the interrupt but to schedule if
-> > > scheduling would be useful.
-> > >
-> > > So I don't think we need all this RCU magic.  This really ought to be
-> > > able to be simplified to:
-> > >
-> > > idtentry_exit();
-> > >
-> > > if (appropriate condition)
-> > >   schedule();
-> >
-> > This is exactly the kind of tinkering which causes all kinds of trouble.
-> >
-> > idtentry_exit()
-> >
-> >         if (user_mode(regs)) {
-> >                 prepare_exit_to_usermode(regs);
-> >         } else if (regs->flags & X86_EFLAGS_IF) {
-> >                 /* Check kernel preemption, if enabled */
-> >                 if (IS_ENABLED(CONFIG_PREEMPTION)) {
-> >                     ....
-> >                 }
-> >                 instrumentation_begin();
-> >                 /* Tell the tracer that IRET will enable interrupts */
-> >                 trace_hardirqs_on_prepare();
-> >                 lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-> >                 instrumentation_end();
-> >                 rcu_irq_exit();
-> >                 lockdep_hardirqs_on(CALLER_ADDR0);
-> >         } else {
-> >                 /* IRQ flags state is correct already. Just tell RCU */
-> >                 rcu_irq_exit();
-> >         }
-> >
-> > So in case IF is set then this already told the tracer and lockdep that
-> > interrupts are enabled. And contrary to the ugly version this exit path
-> > does not use rcu_irq_exit_preempt() which is there to warn about crappy
-> > RCU state when trying to schedule.
-> >
-> > So we went great length to sanitize _all_ of this and make it consistent
-> > just to say: screw it for that xen thingy.
-> >
-> > The extra checks and extra warnings for scheduling come with the
-> > guarantee to bitrot when idtentry_exit() or any logic invoked from there
-> > is changed. It's going to look like this:
-> >
-> >         /*
-> >          * If the below causes problems due to inconsistent state
-> >          * or out of sync sanity checks, please complain to
-> >          * luto@kernel.org directly.
-> >          */
-> >         idtentry_exit();
-> >
-> >         if (user_mode(regs) || !(regs->flags & X86_FlAGS_IF))
-> >                 return;
-> >
-> >         if (!__this_cpu_read(xen_in_preemptible_hcall))
-> >                 return;
-> >
-> >         rcu_sanity_check_for_preemption();
-> >
-> >         if (need_resched()) {
-> >                 instrumentation_begin();
-> >                 xen_maybe_preempt_hcall();
-> >                 trace_hardirqs_on();
-> >                 instrumentation_end();
-> >         }
-> >
-> > Of course you need the extra rcu_sanity_check_for_preemption() function
-> > just for this muck.
-> >
-> > That's a true win on all ends? I don't think so.
->
-> Hmm, fair enough.  I guess the IRQ tracing messes a bunch of this logic up.
->
-> Let's keep your patch as is and consider cleanups later.  One approach
-> might be to make this work more like extable handling: instead of
-> trying to schedule from inside the interrupt handler here, patch up
-> RIP and perhaps some other registers and let the actual Xen code just
-> do cond_resched().  IOW, try to make this work the way it always
-> should have:
->
-> int ret;
-> do {
->   ret = issue_the_hypercall();
->   cond_resched();
-> } while (ret == EAGAIN);
+Extract the code that is needed to implement CLGI and STGI,
+so that we can run it from VMRUN and vmexit (and in the future,
+KVM_SET_NESTED_STATE).  Skip the request for KVM_REQ_EVENT unless needed,
+subsuming the evaluate_pending_interrupts optimization that is found
+in enter_svm_guest_mode.
 
-Andrew Cooper pointed out that there is too much magic in Xen for this
-to work.  So never mind.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/irq.c        |  1 +
+ arch/x86/kvm/svm/nested.c | 22 ++------------------
+ arch/x86/kvm/svm/svm.c    | 44 +++++++++++++++++++++++----------------
+ arch/x86/kvm/svm/svm.h    |  1 +
+ 4 files changed, 30 insertions(+), 38 deletions(-)
+
+diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
+index 54f7ea68083b..99d118ffc67d 100644
+--- a/arch/x86/kvm/irq.c
++++ b/arch/x86/kvm/irq.c
+@@ -83,6 +83,7 @@ int kvm_cpu_has_injectable_intr(struct kvm_vcpu *v)
+ 
+ 	return kvm_apic_has_interrupt(v) != -1; /* LAPIC */
+ }
++EXPORT_SYMBOL_GPL(kvm_cpu_has_injectable_intr);
+ 
+ /*
+  * check if there is pending interrupt without
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 3e37410d0b94..a4a9516ff8b5 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -312,30 +312,12 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
+ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+ 			  struct vmcb *nested_vmcb)
+ {
+-	bool evaluate_pending_interrupts =
+-		is_intercept(svm, INTERCEPT_VINTR) ||
+-		is_intercept(svm, INTERCEPT_IRET);
+-
+ 	svm->nested.vmcb = vmcb_gpa;
+ 	load_nested_vmcb_control(svm, &nested_vmcb->control);
+ 	nested_prepare_vmcb_save(svm, nested_vmcb);
+ 	nested_prepare_vmcb_control(svm);
+ 
+-	/*
+-	 * If L1 had a pending IRQ/NMI before executing VMRUN,
+-	 * which wasn't delivered because it was disallowed (e.g.
+-	 * interrupts disabled), L0 needs to evaluate if this pending
+-	 * event should cause an exit from L2 to L1 or be delivered
+-	 * directly to L2.
+-	 *
+-	 * Usually this would be handled by the processor noticing an
+-	 * IRQ/NMI window request.  However, VMRUN can unblock interrupts
+-	 * by implicitly setting GIF, so force L0 to perform pending event
+-	 * evaluation by requesting a KVM_REQ_EVENT.
+-	 */
+-	enable_gif(svm);
+-	if (unlikely(evaluate_pending_interrupts))
+-		kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
++	svm_set_gif(svm, true);
+ }
+ 
+ int nested_svm_vmrun(struct vcpu_svm *svm)
+@@ -478,7 +460,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
+ 	svm->vcpu.arch.mp_state = KVM_MP_STATE_RUNNABLE;
+ 
+ 	/* Give the current vmcb to the guest */
+-	disable_gif(svm);
++	svm_set_gif(svm, false);
+ 
+ 	nested_vmcb->save.es     = vmcb->save.es;
+ 	nested_vmcb->save.cs     = vmcb->save.cs;
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 09b345892fc9..d8187d25fe04 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1977,6 +1977,30 @@ static int vmrun_interception(struct vcpu_svm *svm)
+ 	return nested_svm_vmrun(svm);
+ }
+ 
++void svm_set_gif(struct vcpu_svm *svm, bool value)
++{
++	if (value) {
++		/*
++		 * If VGIF is enabled, the STGI intercept is only added to
++		 * detect the opening of the SMI/NMI window; remove it now.
++		 */
++		if (vgif_enabled(svm))
++			clr_intercept(svm, INTERCEPT_STGI);
++
++		enable_gif(svm);
++		if (svm->vcpu.arch.smi_pending ||
++		    svm->vcpu.arch.nmi_pending ||
++		    kvm_cpu_has_injectable_intr(&svm->vcpu))
++			kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
++	} else {
++		disable_gif(svm);
++
++		/* After a CLGI no interrupts should come */
++		if (!kvm_vcpu_apicv_active(&svm->vcpu))
++			svm_clear_vintr(svm);
++	}
++}
++
+ static int stgi_interception(struct vcpu_svm *svm)
+ {
+ 	int ret;
+@@ -1984,18 +2008,8 @@ static int stgi_interception(struct vcpu_svm *svm)
+ 	if (nested_svm_check_permissions(svm))
+ 		return 1;
+ 
+-	/*
+-	 * If VGIF is enabled, the STGI intercept is only added to
+-	 * detect the opening of the SMI/NMI window; remove it now.
+-	 */
+-	if (vgif_enabled(svm))
+-		clr_intercept(svm, INTERCEPT_STGI);
+-
+ 	ret = kvm_skip_emulated_instruction(&svm->vcpu);
+-	kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
+-
+-	enable_gif(svm);
+-
++	svm_set_gif(svm, true);
+ 	return ret;
+ }
+ 
+@@ -2007,13 +2021,7 @@ static int clgi_interception(struct vcpu_svm *svm)
+ 		return 1;
+ 
+ 	ret = kvm_skip_emulated_instruction(&svm->vcpu);
+-
+-	disable_gif(svm);
+-
+-	/* After a CLGI no interrupts should come */
+-	if (!kvm_vcpu_apicv_active(&svm->vcpu))
+-		svm_clear_vintr(svm);
+-
++	svm_set_gif(svm, false);
+ 	return ret;
+ }
+ 
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 4d57270cac3f..6733f9036499 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -357,6 +357,7 @@ void disable_nmi_singlestep(struct vcpu_svm *svm);
+ bool svm_smi_blocked(struct kvm_vcpu *vcpu);
+ bool svm_nmi_blocked(struct kvm_vcpu *vcpu);
+ bool svm_interrupt_blocked(struct kvm_vcpu *vcpu);
++void svm_set_gif(struct vcpu_svm *svm, bool value);
+ 
+ /* nested.c */
+ 
+-- 
+2.18.2
+
+
