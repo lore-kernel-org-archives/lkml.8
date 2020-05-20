@@ -2,122 +2,265 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C42DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8F19207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CAF920823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RU4s/erR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VSgRjTzy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgETUOy (ORCPT
+        id S1727890AbgETUPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:14:54 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26070 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726943AbgETUOy (ORCPT
+        Wed, 20 May 2020 16:15:13 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52952 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbgETUPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:14:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590005692;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TmIeOpvSLXXYOJ6jQiUjdVDS8jI79jLrqdKnHe80e6k=;
-        b=RU4s/erRaYX5Z2m/bWJjvPNmsj2frBTkT2mpESzTy6YuCuFjU7Dl5tnYP9gJ/r5q4GbVrz
-        3KjaCpG9cwezbdaXczyN86Z6vXZTVG6yp0HjavZZt0uwauzV7IcxPw9Kzs/ImC164pEgVh
-        4K5uY+0oEcXiA5D2olUVbDf8PbpQudo=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-wf2nKFKAPCmR5c-Ux2rUcA-1; Wed, 20 May 2020 16:14:50 -0400
-X-MC-Unique: wf2nKFKAPCmR5c-Ux2rUcA-1
-Received: by mail-ed1-f72.google.com with SMTP id m6so1737622eda.16
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:14:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TmIeOpvSLXXYOJ6jQiUjdVDS8jI79jLrqdKnHe80e6k=;
-        b=TYwbi7FgXb2M0WO4n9xKkm8CTczbwUfHO+nxFF5xkplEnXW1uFgyHACyVtHiHTdh46
-         9npxd5ka+5PECB0xl1IsbebT2fGkZVMTtXb56NUGxyJKCjqDEZqyix7RrILTQxeUXGfh
-         ddCHgwvcwHQStvci2bedUv40dgzm1K9EXexDCGiwgDi3lBSuxPum/dkWEZ/b9lI9hy+s
-         hawWL5HXx+e73cUBFiBHUvv3c/QVo93NCJbwuYoX1tcWDZc8FacAI4VxjvOSZln1oQH4
-         E5lQ4drGaHnj7O9Lw42HmAKtEA59PCoSR31gj4w1ApA3jqj3F9zhTOxCOVR7bcmUokAl
-         057g==
-X-Gm-Message-State: AOAM5308yvGnxQPtFWPHllii09IM+MITeFMfNJ/L1EZ6TL+VyRy8tQ3Y
-        CNlT7QSSlpyIyNQE+kygyBUItRRx/n4lslPAo2aOzFJF4O9BrQhYDJqjmX7uOF2cqCtUEI7QQUr
-        bLzWIPwDPdaLVjQVOVfNRgMur
-X-Received: by 2002:aa7:d312:: with SMTP id p18mr2277874edq.88.1590005689544;
-        Wed, 20 May 2020 13:14:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy9E4xDxfsyPrMh6r2RGpLUE9EPbfiGAvLfUmVbbGop5ohjJ6Ao+kQ7cZJbxuKy3kLG3IUc8A==
-X-Received: by 2002:aa7:d312:: with SMTP id p18mr2277856edq.88.1590005689332;
-        Wed, 20 May 2020 13:14:49 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:30f5:232:d7f0:1e71? ([2001:b07:6468:f312:30f5:232:d7f0:1e71])
-        by smtp.gmail.com with ESMTPSA id be12sm2584241edb.11.2020.05.20.13.14.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 13:14:48 -0700 (PDT)
-Subject: Re: [PATCH 21/24] KVM: x86: always update CR3 in VMCB
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-References: <20200520172145.23284-1-pbonzini@redhat.com>
- <20200520172145.23284-22-pbonzini@redhat.com>
- <20200520182202.GB18102@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d85c2e1d-93b3-186d-7df4-80ae6aa03618@redhat.com>
-Date:   Wed, 20 May 2020 22:14:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 20 May 2020 16:15:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vGYLD4Cni5M9CK3uoOXYgFf41AEDAEgPVaZ/0V765OQ=; b=VSgRjTzyAQQbW4lY+svSnjlCAX
+        RL6soiS99O7rFAjN5R4CfyeU3Jju9R8Zk9B47+X0+U5cSgcXIhKni+KNiA9TDo/P9tznMgQLZRVpj
+        tIpZ6pzs+tkZwjQG7hgh6P/j5+nEI73JNfHjCDDNkdYbr1SPPYWuogEl5+ot63MK17ROlM9QadJIH
+        dgPMiwJinkUPve3j3GGJwNb+NWzSG2boImWndt/Z1Yf5QqFAm8kgKjM0yzj8B60ST0L65zEYvC8hL
+        cE4fbbRWoqz+nIc2nU5WZw9RUWjHNWMp75UhS30RAr0/JyQ0U0uRmoGU4x9v4yawK2gCECBpbINBH
+        XM8WBjrg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbV2w-0003Pt-G1; Wed, 20 May 2020 20:10:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 32558301A80;
+        Wed, 20 May 2020 22:10:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1F14921ABED2A; Wed, 20 May 2020 22:10:33 +0200 (CEST)
+Date:   Wed, 20 May 2020 22:10:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Fox <afox@redhat.com>,
+        Stephen Johnston <sjohnsto@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] sched/cputime: make scale_stime() more precise
+Message-ID: <20200520201033.GA325303@hirez.programming.kicks-ass.net>
+References: <20190718131834.GA22211@redhat.com>
+ <20200127122817.GA10957@redhat.com>
+ <20200519172506.GA317395@hirez.programming.kicks-ass.net>
+ <20200520152439.GC26470@redhat.com>
+ <20200520153603.GP317569@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200520182202.GB18102@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520153603.GP317569@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/20 20:22, Sean Christopherson wrote:
-> As an alternative fix, what about marking VCPU_EXREG_CR3 dirty in
-> __set_sregs()?  E.g.
+On Wed, May 20, 2020 at 05:36:03PM +0200, Peter Zijlstra wrote:
+> On Wed, May 20, 2020 at 05:24:40PM +0200, Oleg Nesterov wrote:
+> > Nevermind, I agree with your version. Will you send this patch or do you
+> > want me to make V3 ?
 > 
-> 		/*
-> 		 * Loading vmcs02.GUEST_CR3 is handled by nested VM-Enter, but
-> 		 * it can be explicitly dirtied by KVM_SET_SREGS.
-> 		 */
-> 		if (is_guest_mode(vcpu) &&
-> 		    !test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_dirty))
+> I got stuck at writing a Changelog, am more scatter brained than usual,
+> due to lack of sleep. If you have Changelog that includes information
+> rather than links to it, feel free to send it along and I'll frob the
+> thing together, or just send a v3 with everything on.
 > 
-> There's already a dependency on __set_sregs() doing
-> kvm_register_mark_available() before kvm_mmu_reset_context(), i.e. the
-> code is already a bit kludgy.  The dirty check would make the kludge less
-> subtle and provide explicit documentation.
+> Otherwise, I'll try again tomorrow :-)
 
-A comment in __set_sregs is certainly a good idea.  But checking for
-dirty seems worse since the caching of CR3 is a bit special in this
-respect (it's never marked dirty).
+I had a another go; I ended up with this...
 
-This patch should probably be split too, so that the Fixes tags are
-separate for Intel and AMD.
+---
+Subject: sched/cputime: Improve cputime_adjust()
+From: Oleg Nesterov <oleg@redhat.com>
+Date: Tue, 19 May 2020 19:25:06 +0200
 
-Paolo
+From: Oleg Nesterov <oleg@redhat.com>
 
->>  			guest_cr3 = vcpu->arch.cr3;
-> 
-> The comment that's just below the context is now stale, e.g. replace
-> vmcs01.GUEST_CR3 with vmcs.GUEST_CR3.
-> 
->> -- 
->> 2.18.2
->>
->>
-> 
+People report that utime and stime from /proc/<pid>/stat become very
+wrong when the numbers are big enough, especially if you watch these
+counters incrementally.
 
+Specifically, the current implementation of: stime*rtime/total,
+results in a saw-tooth function on top of the desired line, where the
+teeth grow in size the larger the values become. IOW, it has a
+relative error.
+
+The result is that, when watching incrementally as time progresses
+(for large values), we'll see periods of pure stime or utime increase,
+irrespective of the actual ratio we're striving for.
+
+Replace scale_stime() with a math64.h helper: mul_u64_u64_div_u64()
+that is far more accurate. This also allows architectures to override
+the implementation -- for instance they can opt for the old algorithm
+if this new one turns out to be too expensive for them.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/include/asm/div64.h |   13 ++++++++++--
+ include/linux/math64.h       |    2 +
+ kernel/sched/cputime.c       |   46 -------------------------------------------
+ lib/math/div64.c             |   39 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 53 insertions(+), 47 deletions(-)
+
+--- a/arch/x86/include/asm/div64.h
++++ b/arch/x86/include/asm/div64.h
+@@ -74,16 +74,25 @@ static inline u64 mul_u32_u32(u32 a, u32
+ #else
+ # include <asm-generic/div64.h>
+ 
+-static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 div)
++/*
++ * Will generate an #DE when the result doesn't fit u64, could fix with an
++ * __ex_table[] entry when it becomes an issue.
++ */
++extern __always_inline u64 mul_u64_u64_div_u64(u64 a, u64 mul, u64 div)
+ {
+ 	u64 q;
+ 
+ 	asm ("mulq %2; divq %3" : "=a" (q)
+-				: "a" (a), "rm" ((u64)mul), "rm" ((u64)div)
++				: "a" (a), "rm" (mul), "rm" (div)
+ 				: "rdx");
+ 
+ 	return q;
+ }
++
++static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 div)
++{
++	return mul_u64_u64_div_u64(a, mul, div);
++}
+ #define mul_u64_u32_div	mul_u64_u32_div
+ 
+ #endif /* CONFIG_X86_32 */
+--- a/include/linux/math64.h
++++ b/include/linux/math64.h
+@@ -263,6 +263,8 @@ static inline u64 mul_u64_u32_div(u64 a,
+ }
+ #endif /* mul_u64_u32_div */
+ 
++u64 mul_u64_u64_div_u64(u64 a, u64 mul, u64 div);
++
+ #define DIV64_U64_ROUND_UP(ll, d)	\
+ 	({ u64 _tmp = (d); div64_u64((ll) + _tmp - 1, _tmp); })
+ 
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -520,50 +520,6 @@ void account_idle_ticks(unsigned long ti
+ }
+ 
+ /*
+- * Perform (stime * rtime) / total, but avoid multiplication overflow by
+- * losing precision when the numbers are big.
+- */
+-static u64 scale_stime(u64 stime, u64 rtime, u64 total)
+-{
+-	u64 scaled;
+-
+-	for (;;) {
+-		/* Make sure "rtime" is the bigger of stime/rtime */
+-		if (stime > rtime)
+-			swap(rtime, stime);
+-
+-		/* Make sure 'total' fits in 32 bits */
+-		if (total >> 32)
+-			goto drop_precision;
+-
+-		/* Does rtime (and thus stime) fit in 32 bits? */
+-		if (!(rtime >> 32))
+-			break;
+-
+-		/* Can we just balance rtime/stime rather than dropping bits? */
+-		if (stime >> 31)
+-			goto drop_precision;
+-
+-		/* We can grow stime and shrink rtime and try to make them both fit */
+-		stime <<= 1;
+-		rtime >>= 1;
+-		continue;
+-
+-drop_precision:
+-		/* We drop from rtime, it has more bits than stime */
+-		rtime >>= 1;
+-		total >>= 1;
+-	}
+-
+-	/*
+-	 * Make sure gcc understands that this is a 32x32->64 multiply,
+-	 * followed by a 64/32->64 divide.
+-	 */
+-	scaled = div_u64((u64) (u32) stime * (u64) (u32) rtime, (u32)total);
+-	return scaled;
+-}
+-
+-/*
+  * Adjust tick based cputime random precision against scheduler runtime
+  * accounting.
+  *
+@@ -622,7 +578,7 @@ void cputime_adjust(struct task_cputime
+ 		goto update;
+ 	}
+ 
+-	stime = scale_stime(stime, rtime, stime + utime);
++	stime = mul_u64_u64_div_u64(stime, rtime, stime + utime);
+ 
+ update:
+ 	/*
+--- a/lib/math/div64.c
++++ b/lib/math/div64.c
+@@ -190,3 +190,42 @@ u32 iter_div_u64_rem(u64 dividend, u32 d
+ 	return __iter_div_u64_rem(dividend, divisor, remainder);
+ }
+ EXPORT_SYMBOL(iter_div_u64_rem);
++
++__weak u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
++{
++	u64 res = 0, div, rem;
++	int shift;
++
++	/* can a * b overflow ? */
++	if (ilog2(a) + ilog2(b) > 62) {
++		/*
++		 * (b * a) / c is equal to
++		 *
++		 *      (b / c) * a +
++		 *      (b % c) * a / c
++		 *
++		 * if nothing overflows. Can the 1st multiplication
++		 * overflow? Yes, but we do not care: this can only
++		 * happen if the end result can't fit in u64 anyway.
++		 *
++		 * So the code below does
++		 *
++		 *      res = (b / c) * a;
++		 *      b = b % c;
++		 */
++		div = div64_u64_rem(b, c, &rem);
++		res = div * a;
++		b = rem;
++
++		shift = ilog2(a) + ilog2(b) - 62;
++		if (shift > 0) {
++			/* drop precision */
++			b >>= shift;
++			c >>= shift;
++			if (!c)
++				return res;
++		}
++	}
++
++	return res + div64_u64(a * b, c);
++}
