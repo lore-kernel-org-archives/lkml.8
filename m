@@ -2,77 +2,159 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ACAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E184C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3B4206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129C6206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YqjJMdYv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KosTd6/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgETHLU (ORCPT
+        id S1726698AbgETHLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:11:20 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52886 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbgETHLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:11:18 -0400
-Received: from zn.tnic (p200300ec2f0bab00953ec33d5d0c7a34.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ab00:953e:c33d:5d0c:7a34])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A916F1EC011B;
-        Wed, 20 May 2020 09:11:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589958677;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=QPiIMZUkbpt1Zese/SOX4DKqaNvHdV5YK/MGVLNP5FQ=;
-        b=YqjJMdYvUJFeiz+usX4+JRM3w4T5+aunyuXNW4Afav0jWtywiQbASuLZe+Ufr6REqeaWb+
-        F3Ldd0wMjoe5fkHz6VMWlQxocjnEX2h7j/5kFTT0sEvNxVrCiEQ1BsSigT9RdRJ/2AqXyX
-        o4OW5fCKNauaf3M058xPewlymlrhtkk=
-Date:   Wed, 20 May 2020 09:11:09 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, ravi.v.shankar@intel.com,
-        mingo@redhat.com, babu.moger@amd.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V6 0/4] x86/resctrl: Enable user to view and select
- thread throttling mode
-Message-ID: <20200520071109.GA1457@zn.tnic>
-References: <cover.1589922949.git.reinette.chatre@intel.com>
- <20200519213516.GF444@zn.tnic>
- <1d9ee0f0-8078-e8b6-ce66-6c0bf51cb3b4@intel.com>
+        Wed, 20 May 2020 03:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgETHLi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 03:11:38 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CBF6C061A0E;
+        Wed, 20 May 2020 00:11:38 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id s1so2567358qkf.9;
+        Wed, 20 May 2020 00:11:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4kMZwt7hLj0a0i78rLlrC0uhyzE2he9fQ+UceU6WqVc=;
+        b=KosTd6/JNSn15SEyXSlM87oFPIIUNoIGfb3SOSCY0mfuaVmzGUIWJgQIuHWIi02EJJ
+         8ycptt0cK0I4ZRZU8XuMnv7nmS+a+oyz0TQr/4hwmXGVg7/rPxDAvlMEsWxvwyO0Re7G
+         zq47tEdzIf1mKQhR2LbgaYf6dUmftwV0/SwoNJrX8EfMsJJyZhozxKd7VtrtzVRDJ1gF
+         uHNdr+EGuePQ5x/T9wU0FrthRtvKUpdZT/P9e5EqptEcEseac87DnWo+uwNaWyIoSOEc
+         WIaW5p9RN+3wXrev+zPH+lMJZqK3k6kguQTFGRM9jzd2H2XL558hI/Q/BJ/jqdY4MIwH
+         JpkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4kMZwt7hLj0a0i78rLlrC0uhyzE2he9fQ+UceU6WqVc=;
+        b=cPMa9xqV9hsKoFGqBeCiTHM3PtgN07XYuh7C5KLjE4LyaYIOptfNYi39rJZarIvf4j
+         519RTW8dAQWkLsgXYpD9SrZPdVDRg22S37QAprxQ9yLwLg0AaHgBMg5t8si14qydUV2F
+         +Q/iud4remjsMRNY6fkuNf1WQXnIVk8jqAfnMnB2zXamVFGgCPeR5wJfsUJmTGWZDW+h
+         S9ygudIM15UQ0PZVh3ICDxEq9GlZWXM0yrzmSq8G75v25LUfJ37AJMG9omnpS3N0wK0p
+         uk0dZi5VzVjyz4dt/GZomHV16Cfz3GCQbfLWj0h1BinXduHk521XkbrSstHHYLV7RXrO
+         FAeQ==
+X-Gm-Message-State: AOAM533DSiF2jMndq5sev+FcFoDfn04V7/7TNaCZIls7CzONrtbpz/ZE
+        8uB2HZILNwR37zscnaInze0pt4eNyHk=
+X-Google-Smtp-Source: ABdhPJypTB9RDD9OIz7alG1vAOP0vhgAKYJB8Leb0qiiTKLILFiMl3L9tpHdEABTuAmo0RhHFy0AcQ==
+X-Received: by 2002:a37:7904:: with SMTP id u4mr3267987qkc.297.1589958697405;
+        Wed, 20 May 2020 00:11:37 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id l2sm1541908qkd.57.2020.05.20.00.11.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 May 2020 00:11:36 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:11:33 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: iio: imu: bmi160: add regulators and
+ mount-matrix
+Message-ID: <20200520071133.GC3361@ict14-OptiPlex-980>
+References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
+ <20200519075111.6356-3-jonathan.albrieux@gmail.com>
+ <20200519185159.00001bd1@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1d9ee0f0-8078-e8b6-ce66-6c0bf51cb3b4@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200519185159.00001bd1@Huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 03:13:59PM -0700, Reinette Chatre wrote:
-> I am very sorry. I was hoping that this series could be considered for
-> inclusion into v5.8 and submitted it seven weeks ago because of that.
-> The recent feedback addressed seemed to be the final few small comments
-> needed to be ready for inclusion and I was afraid that waiting long to
-> address this would cause me to miss opportunity to be considered for
-> inclusion since we are already at rc6.
+On Tue, May 19, 2020 at 06:51:59PM +0100, Jonathan Cameron wrote:
+> On Tue, 19 May 2020 09:50:58 +0200
+> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+> 
+> > Add vdd-supply and vddio-supply support.
+> > Add mount-matrix support.
+> > 
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> 
+> A few minor comments inline.
+> 
+> > ---
+> >  .../devicetree/bindings/iio/imu/bmi160.yaml   | 21 +++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> > index 6b464ce5ed0b..5b13af7a209f 100644
+> > --- a/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> > @@ -46,6 +46,21 @@ properties:
+> >        set if the specified interrupt pin should be configured as
+> >        open drain. If not set, defaults to push-pull.
+> >  
+> > +  vdd-supply:
+> > +    maxItems: 1
+> > +    description: |
+> > +      an optional regulator that needs to be on to provide VDD power to
+> > +      the sensor.
+> 
+> They aren't optional.  Whether we specify them or rely on stub regulators
+> being provided because they aren't controllable is the optional bit.
+> That's clearly defined by them not being in the required list below.
+> So say something li.e
+> 
+>    description: |
+>       provide VDD power to the sensor.
+>
 
-That's understandable but does it really matter when it goes in? If not
-in 5.8, then 5.9. I.e., there's always a next kernel.
+Oh ok thank you, will work on that
 
-So why the hurry?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> > +
+> > +  vddio-supply:
+> > +    maxItems: 1
+> > +    description: |
+> > +      an optional regulator that needs to be on to provide the VDD IO power to
+> > +      the sensor.
+> > +
+> > +  mount-matrix:
+> > +    description: an optional 3x3 mounting rotation matrix
+> > +
+> >  required:
+> >    - compatible
+> >    - reg
+> > @@ -61,9 +76,15 @@ examples:
+> >          bmi160@68 {
+> >                  compatible = "bosch,bmi160";
+> >                  reg = <0x68>;
+> > +                vdd-supply = <&pm8916_l17>;
+> > +                vddio-supply = <&pm8916_l6>;
+> >                  interrupt-parent = <&gpio4>;
+> >                  interrupts = <12 1>;
+> >                  interrupt-names = "INT1";
+> > +                mount-matrix = "0", "1", "0",
+> > +                               "-1", "0", "0",
+> > +                               "0", "0", "1";
+> > +                };
+> >          };
+> >    - |
+> >      // Example for SPI
+> 
+> 
