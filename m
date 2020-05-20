@@ -2,94 +2,89 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54509C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F08D2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UsNiCfJx"
+	by mail.kernel.org (Postfix) with ESMTP id 655482075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgETJBK (ORCPT
+        id S1726892AbgETJBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:01:10 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52030 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETJBI (ORCPT
+        Wed, 20 May 2020 05:01:35 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:56431 "HELO
+        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with SMTP id S1726403AbgETJBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:01:08 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04K914TP015260;
-        Wed, 20 May 2020 04:01:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589965264;
-        bh=b6H804B8RuHsNLb8km9T/gbWP07ThkPpda0h3OTyzoI=;
-        h=To:From:Subject:Date;
-        b=UsNiCfJx9jxEloq1ipY1C1pu6wXYHddi64OvWR3WAcrvcXcXFnkFu9GTtC/Kzpa6K
-         qkYk/tUy33g81V97gqPUs0js5XTUkkhz1makmv+CVtZxhwVttx04iEUwhdiqyPVK+r
-         aN4xHHCiX556f4fWLCopTGT/j1wg+d4Zm7NE6OdM=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04K9147c085736
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 04:01:04 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 04:00:15 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 04:00:15 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04K90EGS035997;
-        Wed, 20 May 2020 04:00:14 -0500
-To:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Bad kfree of dma_parms in v5.7-rc5
-Message-ID: <a9df7155-dd7a-752b-6d1c-3426837756b1@ti.com>
-Date:   Wed, 20 May 2020 12:00:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 20 May 2020 05:01:35 -0400
+X-Greylist: delayed 1607 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 May 2020 05:01:33 EDT
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgC3nwrQ78Repl3XAQ--.22776S4;
+        Wed, 20 May 2020 16:52:37 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: tegra: fix runtime pm imbalance on error
+Date:   Wed, 20 May 2020 16:52:23 +0800
+Message-Id: <20200520085231.32552-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgC3nwrQ78Repl3XAQ--.22776S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW5ZF15Jr17CrWrKFy7trb_yoWfZwbE9r
+        1DuFs7Ar4YkFZxZF12y3WfZF9ava47X3WkKayFyF43Aa1Ivwn8Gry8ZFZ0yF43Gwn8JF1k
+        tr4v9F1xC3yjyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
+        14v_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
+        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
+        Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+        1UYxBIdaVFxhVjvjDU0xZFpf9x0JUsF4iUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+pm_runtime_get_sync() increments the runtime PM usage counter even
+it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core: platform: Initialize dma_parms for 
-platform devices") v5.7-rc5 causes at least some v4l2 platform drivers to break when freeing resources.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-E.g. drivers/media/platform/ti-vpe/cal.c uses vb2_dma_contig_set_max_seg_size() and 
-vb2_dma_contig_clear_max_seg_size() to manage the dma_params, and similar pattern is seen in other 
-drivers too.
-
-After 9495b7e92f716ab2, vb2_dma_contig_set_max_seg_size() will not allocate anything, but 
-vb2_dma_contig_clear_max_seg_size() will still kfree the dma_params.
-
-I'm not sure what's the proper fix here. A flag somewhere to indicate that 
-vb2_dma_contig_set_max_seg_size() did allocate, and thus vb2_dma_contig_clear_max_seg_size() must free?
-
-Or drop the kzalloc and kfree totally, if dma_params is now supposed to always be there?
-
-Or revert 9495b7e92f716ab2, as it was added so late?
-
-  Tomi
-
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index ae30a2fd3716..a69f9e49dcb5 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1651,8 +1651,8 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
+ fail_host_init:
+ 	tegra_pcie_deinit_controller(pcie);
+ fail_pinctrl:
+-	pm_runtime_put_sync(dev);
+ fail_pm_get_sync:
++	pm_runtime_put_sync(dev);
+ 	pm_runtime_disable(dev);
+ 	return ret;
+ }
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
+
