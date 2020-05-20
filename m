@@ -2,79 +2,111 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A205C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18341207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CBD2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgETE6K (ORCPT
+        id S1726679AbgETE64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:58:10 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:59280 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726439AbgETE6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:58:10 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP2rWuMReudY2AA--.67S3;
-        Wed, 20 May 2020 12:58:00 +0800 (CST)
-Subject: Re: [PATCH] MIPS: SGI-IP27: Remove duplicated include in ip27-timer.c
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-References: <1589891291-7030-1-git-send-email-yangtiezhu@loongson.cn>
- <20200519160334.GA16307@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <22dedcf5-356c-3963-a4ec-a8413ce45997@loongson.cn>
-Date:   Wed, 20 May 2020 12:57:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 20 May 2020 00:58:56 -0400
+Received: from smtprelay0073.hostedemail.com ([216.40.44.73]:50388 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726403AbgETE64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 00:58:56 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 87EE1181D330D;
+        Wed, 20 May 2020 04:58:55 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bee40_1b05ed926d13
+X-Filterd-Recvd-Size: 2756
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 20 May 2020 04:58:54 +0000 (UTC)
+Message-ID: <ae3aff79301c130aa15b3fe0ff801804bb019384.camel@perches.com>
+Subject: Re: [RFC PATCH 2/2] init: Allow multi-line output of kernel command
+ line
+From:   Joe Perches <joe@perches.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chenggang Wang <wangchenggang@vivo.com>,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Date:   Tue, 19 May 2020 21:58:53 -0700
+In-Reply-To: <20200520044127.GB938@jagdpanzerIV.localdomain>
+References: <cover.1589916689.git.joe@perches.com>
+         <2b3832fed9370f0f8dfd1ea33dddb1d05a36e265.1589916689.git.joe@perches.com>
+         <20200520044127.GB938@jagdpanzerIV.localdomain>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200519160334.GA16307@alpha.franken.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9DxP2rWuMReudY2AA--.67S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYw7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87
-        Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
-        zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx
-        8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY
-        jI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY
-        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
-        DU0xZFpf9x0JUywZ7UUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/20/2020 12:03 AM, Thomas Bogendoerfer wrote:
-> On Tue, May 19, 2020 at 08:28:11PM +0800, Tiezhu Yang wrote:
->> After commit 9d0aaf98dc24 ("MIPS: SGI-IP27: Move all shared IP27
->> declarations to ip27-common.h"), ip27-common.h is included more
->> than once in ip27-timer.c, remove it.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> applied to mips-next. I only removed the second #include. If you
-> want to clean this up further the includes and comment about
-> ioc3_init() could be removed as well.
+On Wed, 2020-05-20 at 13:41 +0900, Sergey Senozhatsky wrote:
+> On (20/05/19 12:42), Joe Perches wrote:
+> > +static void __init print_cmdline(char *line)
+> > +{
+> > +#ifdef CONFIG_PRINTK
+> > +	const char *prefix = "Kernel command line";
+> > +	size_t len = strlen(line);
+> > +
+> > +	while (len > PRINTK_LOG_LINE_MAX) {
+> > +		char *pos = line;
+> > +		char *last_pos = pos + PRINTK_LOG_LINE_MAX - 1;
+> > +		char saved_char;
+> > +		/* Find last space char within the maximum line length */
+> > +		while ((pos = memchr(pos, ' ', len - (pos - line))) &&
+> > +		       (pos - line) < PRINTK_LOG_LINE_MAX - 1) {
+> 
+> Don't you need to also count in the 'prefix' length?
 
-OK, thank you. I will do it later.
+yup.
 
-Thanks,
-Tiezhu Yang
+> > +			last_pos = pos;
+> > +		}
+> > +		saved_char = line[last_pos - line];
+> > +		line[last_pos - line] = 0;
+> > +		pr_notice("%s: %s\n", prefix, line);
+> > +		prefix = "Kernel command line (continued)";
+> > +		line[last_pos - line] = saved_char;
+> > +		len -= pos - line;
+> > +		line += pos - line;
+> > +	}
+> > +
+> > +	pr_notice("%s: %s\n", prefix, line);
+> > +#endif
+> > +}
+> 
+> I like this in general. And I agree that we better handle this
+> externally, on the printk() caller side, so that printk() will
+> still have sane limits and won't print a 1G string for example.
+> 
+> I wonder if we need to export PRINTK_LOG_LINE_MAX.
 
->
-> Thomas.
->
+I think a #define works well enough.(
+
+>  Maybe we can
+> use here something rather random and much shorter instead. E.g.
+> 256 chars. Hmm. How 
+
+	min(some_max like 132/256, PRINTK_LOG_LINE_MAX)
+
+would work.
+
+> many crash/monitoring tools can get confused
+> by multiple "Kernel command line" prefixes?
+
+I doubt any as it's an init only function.
+
 
