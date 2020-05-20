@@ -2,133 +2,138 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E84D7207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E17207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgETEwJ (ORCPT
+        id S1726737AbgETExT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgETEwI (ORCPT
+        Wed, 20 May 2020 00:53:19 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:54282 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgETExS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:52:08 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E85C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:52:08 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jbGi6-0006TK-QU; Wed, 20 May 2020 06:52:06 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jbGi5-00028J-3x; Wed, 20 May 2020 06:52:05 +0200
-Date:   Wed, 20 May 2020 06:52:05 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     jassisinghbrar@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mailbox: imx: Disable the clock on
- devm_mbox_controller_register() failure
-Message-ID: <20200520045205.ag6i7z2xmeenmqpg@pengutronix.de>
-References: <20200520032246.12482-1-festevam@gmail.com>
+        Wed, 20 May 2020 00:53:18 -0400
+Received: by mail-il1-f200.google.com with SMTP id j69so1655288ila.21
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:53:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=DIiqMHtyvMnz5WMqNfkMUl4cSfa+AjoZJsXH1BmW5zg=;
+        b=ncykXf/YFVlCOzkkzNauJCVfyAx4p5fFFxpadt2kqxdW9286u9JD/IFHSb+l0TMR41
+         4sPWzeO8tj00Okzvv2yVHz7n/wXkWgjkGFOLzAHAY6G2ekzllBSfozVHB1JgMpXTg3Gq
+         h7R4Id/FDkzzljPzqi/kd34Z0iO1ktDzeg6z4AZqwJLzG6crmYH79W1UxG5lKq59hniv
+         sJdA5k16lFSpe2xkV1tH3M28p4I9dXroYu0sjnsMLbSEv/hNSsozSrxKH7NAuAM7bEkk
+         Gvkrjql403HS7T/OtoLVa6MV/zzKGs8EDnXbhGf3/Mjk8er9Ymqn6XvldBz3j1zcJBkU
+         pdUQ==
+X-Gm-Message-State: AOAM53294XfU6dFpshfYq4ztg8lGV8Car69aKI9Xs+U+6HUwtRxpTE2A
+        XdUIvMRWul0kidrCufu7hDxi+TnPeBSrIh1KlOyMTpT9DVtg
+X-Google-Smtp-Source: ABdhPJyzCvrvypkSMKkv5ZvuKJ9z3mUZ9PJRbZLTUWeUvffIQWwP6Vv5CPR+iJVq6K7BY+mutJcJ4aECp/ThjthF5vZY2xA7lyRx
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7bmp72cg7y2mwspo"
-Content-Disposition: inline
-In-Reply-To: <20200520032246.12482-1-festevam@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 06:51:06 up 186 days, 20:09, 181 users,  load average: 0.04, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Received: by 2002:a6b:b5c6:: with SMTP id e189mr2026804iof.196.1589950396655;
+ Tue, 19 May 2020 21:53:16 -0700 (PDT)
+Date:   Tue, 19 May 2020 21:53:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009a6d4305a60d2c6b@google.com>
+Subject: general protection fault in kobject_get (2)
+From:   syzbot <syzbot+407fd358a932bbf639c6@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---7bmp72cg7y2mwspo
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot found the following crash on:
 
-On Wed, May 20, 2020 at 12:22:46AM -0300, Fabio Estevam wrote:
-> devm_mbox_controller_register() may fail, and in the case of failure the
-> priv->clk clock that was previously enabled, should be disabled.
->=20
-> Fixes: 2bb7005696e2 ("mailbox: Add support for i.MX messaging unit")
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+HEAD commit:    d00f26b6 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1316343c100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=26d0bd769afe1a2c
+dashboard link: https://syzkaller.appspot.com/bug?extid=407fd358a932bbf639c6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> ---
->  drivers/mailbox/imx-mailbox.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> index 7906624a731c..3f7c4548c18f 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -508,7 +508,13 @@ static int imx_mu_probe(struct platform_device *pdev)
-> =20
->  	platform_set_drvdata(pdev, priv);
-> =20
-> -	return devm_mbox_controller_register(dev, &priv->mbox);
-> +	ret =3D devm_mbox_controller_register(dev, &priv->mbox);
-> +	if (ret) {
-> +		clk_disable_unprepare(priv->clk);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
->  }
-> =20
->  static int imx_mu_remove(struct platform_device *pdev)
-> --=20
-> 2.17.1
->=20
->=20
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+407fd358a932bbf639c6@syzkaller.appspotmail.com
 
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+general protection fault, probably for non-canonical address 0xdffffc0000000013: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000098-0x000000000000009f]
+CPU: 1 PID: 16682 Comm: syz-executor.3 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:kobject_get+0x30/0x150 lib/kobject.c:640
+Code: 53 e8 d4 7e c6 fd 4d 85 e4 0f 84 a2 00 00 00 e8 c6 7e c6 fd 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 e7 00 00 00
+RSP: 0018:ffffc9000772f240 EFLAGS: 00010203
+RAX: dffffc0000000000 RBX: ffffffff85acfca0 RCX: ffffc9000fc67000
+RDX: 0000000000000013 RSI: ffffffff83acadfa RDI: 000000000000009c
+RBP: 0000000000000060 R08: ffff8880a8dfa4c0 R09: ffffed100a03f403
+R10: ffff8880501fa017 R11: ffffed100a03f402 R12: 0000000000000060
+R13: ffffc9000772f3c0 R14: ffff88805d1ec4e8 R15: ffff88805d1ec580
+FS:  00007f1ebed26700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004d88f0 CR3: 00000000a86c4000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ get_device+0x20/0x30 drivers/base/core.c:2620
+ __ib_get_client_nl_info+0x1d4/0x2a0 drivers/infiniband/core/device.c:1863
+ ib_get_client_nl_info+0x30/0x180 drivers/infiniband/core/device.c:1883
+ nldev_get_chardev+0x52b/0xa40 drivers/infiniband/core/nldev.c:1625
+ rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x586/0x900 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f1ebed25c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004ff720 RCX: 000000000045c829
+RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000009ad R14: 00000000004d5f10 R15: 00007f1ebed266d4
+Modules linked in:
+---[ end trace 239938a6c4c3c99f ]---
+RIP: 0010:kobject_get+0x30/0x150 lib/kobject.c:640
+Code: 53 e8 d4 7e c6 fd 4d 85 e4 0f 84 a2 00 00 00 e8 c6 7e c6 fd 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 e7 00 00 00
+RSP: 0018:ffffc9000772f240 EFLAGS: 00010203
+RAX: dffffc0000000000 RBX: ffffffff85acfca0 RCX: ffffc9000fc67000
+RDX: 0000000000000013 RSI: ffffffff83acadfa RDI: 000000000000009c
+RBP: 0000000000000060 R08: ffff8880a8dfa4c0 R09: ffffed100a03f403
+R10: ffff8880501fa017 R11: ffffed100a03f402 R12: 0000000000000060
+R13: ffffc9000772f3c0 R14: ffff88805d1ec4e8 R15: ffff88805d1ec580
+FS:  00007f1ebed26700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000073fad4 CR3: 00000000a86c4000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
---7bmp72cg7y2mwspo
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl7Et3QACgkQ4omh9DUa
-UbPjEA//QgEWw4m0bNgKXh2n+zSBOgCnjZFToTsq9sSFbM9hszMEF2qZv/Ju2H2D
-ntWUnL8j66M6A33GfGQlPJKf1ZJIgVAP7In//Xk0/TBDi+qakmYTTnm54b44HjW8
-N6RBOUExlFiiJAxuzlvidOy01HctuAMC2WRzyIqrMv//WubrbrmalllYnysJAEE9
-R5SjJqYxuV8RBl7nZHsMd0CFC4fUS3LYfCd6nNGYyvEfBbuLxJgRQgp+FohQapkT
-g25wH8RKk82Rqf+nlFtnen2l76NYwMxzZVx+x5Bci6qumFUYKmL4aVNFqZYQBATO
-9TLAFyVN4FqFQormzZuNfXDrjsmhf9AfNuSTcfDVXpWuT5zpLwPihtu8Iq91lUsC
-tNFH5W2zAvBWhrRHkT4M5oY6zPigjeagrMpUmzBmCG2ptCRTbHzYTKKhmdSFLQXE
-PcdQfMdsh7R2COkGiRQQJmB0n9BrON6ybVDTb+U4a8clOJIvmRH2+0jkoO3TfoAu
-T1KP08ACcV4BbbsfNyvpSLwDy5etVydDbyVFDwPOxB+UIAoH8b8I2WuLeEVkOxQQ
-0nFTc8upPqCqk5QcFNl6LtpMloltfqLj0i3C2iuHA09f5M8D3XV+5b/HO2lI0+e6
-6d1//OLVj6SolMzqQ40o5lkuQ29KSt1l6LI0RyL0F1vDGzGzU3s=
-=d9Sl
------END PGP SIGNATURE-----
-
---7bmp72cg7y2mwspo--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
