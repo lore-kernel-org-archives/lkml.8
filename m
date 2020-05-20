@@ -2,131 +2,95 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF22C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B13C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C64EB2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589991846;
-	bh=5E16tIAp8xQG71YS0BbGpK4xyAiCK1wiPDEQlUT8K5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ir1cfACAuow8YUEKfHHRxHrbha1v3htQvq0eV7Mn4J+Xku1vdiiI14zFMdfE4eEdZ
-	 e/xH8U5dGeW9os6aQNlk92Fqgu3IXm1xB7lSVG1qKeDtINoSQ1vUtzVeAh3T2Bcp8o
-	 3HY6KTnWNBASHfmTaD1fsn8/CciVVHjWtJIpvKY4=
+	by mail.kernel.org (Postfix) with ESMTP id A934820709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgETQYG (ORCPT
+        id S1726790AbgETQ11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:24:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57780 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 12:27:27 -0400
+Received: from sauhun.de ([88.99.104.3]:39468 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbgETQYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:24:05 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5160B20709;
-        Wed, 20 May 2020 16:24:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589991844;
-        bh=5E16tIAp8xQG71YS0BbGpK4xyAiCK1wiPDEQlUT8K5g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W2NRIVGEoxaaE8OcK5W2zDxtbj5cgaNID8SH/DVwwi5x0Cg50Y9aRfx9570J71zTe
-         PqAF6v8pMMFan5BEBSpieyh/8VuHgB0RRHMuADOSFRbucJvv5fxboalxq24oOh2fYZ
-         tf4Gun3C8il8YQ1eKwa1XDc9HlyjOr08y7wJXiRM=
-Date:   Wed, 20 May 2020 18:24:02 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-rt-users@vger.kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep
- is cleared
-Message-ID: <20200520162400.GA8800@lenoir>
-References: <20200520140402.358880-1-juri.lelli@redhat.com>
+        id S1726443AbgETQ11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:27:27 -0400
+Received: from localhost (p5486cd24.dip0.t-ipconnect.de [84.134.205.36])
+        by pokefinder.org (Postfix) with ESMTPSA id 9119C2C1FD1;
+        Wed, 20 May 2020 18:27:24 +0200 (CEST)
+Date:   Wed, 20 May 2020 18:27:24 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Codrin.Ciubotariu@microchip.com
+Cc:     linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, kamel.bouhara@bootlin.com,
+        linux@armlinux.org.uk, linus.walleij@linaro.org, alan@softiron.com
+Subject: Re: Re: [RFC PATCH] i2c: at91: Fix pinmux after devm_gpiod_get() for
+ bus recovery
+Message-ID: <20200520162724.GG5759@ninjato>
+References: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
+ <20200505151256.GF2468@ninjato>
+ <c7a35978-03dd-3c73-6e7d-15ed40b5c57c@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DWg365Y4B18r8evw"
 Content-Disposition: inline
-In-Reply-To: <20200520140402.358880-1-juri.lelli@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <c7a35978-03dd-3c73-6e7d-15ed40b5c57c@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Juri,
 
-On Wed, May 20, 2020 at 04:04:02PM +0200, Juri Lelli wrote:
-> After tasks enter or leave a runqueue (wakeup/block) SCHED full_nohz
-> dependency is checked (via sched_update_tick_dependency()). In case tick
-> can be stopped on a CPU (see sched_can_stop_tick() for details), SCHED
-> dependency for such CPU is cleared. However, this new information is not
-> used right away to actually stop the tick.
-> 
-> In CONFIG_PREEMPT systems booted with threadirqs option, sched clock
-> tick is serviced by an actual task (ksoftirqd corresponding to the CPU
-> where tick timer fired).
+--DWg365Y4B18r8evw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I must confess I haven't tested threaded IRQs but I was
-pretty sure that the timer tick is always serviced on hardirq.
 
-Now the timer list callbacks are executed on softirqs. So if the
-tick itself, executed on hardirq, sees pending timers, it raise
-the softirq which wakes up ksoftirqd on forced irq thread mode
-while calling irq_exit(). Then tick_nohz_irq_exit() sees ksoftirqd
-and the current task on the runqueue, which together can indeed prevent
-from turning off the tick. But then the root cause is pending timer
-list callbacks.
+> > This will do for 5.7. For 5.8 or 5.9, I can imagine to take the two
+> > pinctrl_state pointers into bus_recovery_info and handle all this in the
+> > core. I will try this later this week if noone is super-eager to try it
+> > out before.
+> >=20
+>=20
+> By 'all this' you mean to move the entire function in the core, right?=20
+> Having just these two pointers bus_recinovery_info won't help much. I=20
+> can try it, if you haven't already started...
 
-> So, in case a CPU was running a single task,
-> servicing the timer involves exiting full nozh mode. Problem at this
-> point is that we might lose chances to enter back into full nozh mode,
-> since info about ksoftirqd thread going back to sleep is not used (as
-> mentioned above).
+I mean to add those two pointers to bus_recinovery_info and if they are
+populated, then the I2C core is doing the necessary magic (or maybe just
+the pinctrl handle and assume the states have fixed names?). Russell
+just sent patches to add it to the PXA driver, so we could now double
+check how much could be factored out.
 
-It should enter into nohz_full mode in the next tick, which is usually
-a reasonable delay. If you need guarantee that the tick is stopped before
-resuming userspace, you need a stronger machinery such as the task isolation
-patchset.
+I haven't started yet, let's keep in touch who started first :)
 
-Let's have a look at the trace below:
 
-> ksoftirqd/19-125   [019]   170.700754: softirq_entry:        vec=1 [action=TIMER]
-> ksoftirqd/19-125   [019]   170.700755: softirq_exit:         vec=1 [action=TIMER]
-> ksoftirqd/19-125   [019]   170.700756: softirq_entry:        vec=7 [action=SCHED]
-> ksoftirqd/19-125   [019]   170.700757: softirq_exit:         vec=7 [action=SCHED]
-> ksoftirqd/19-125   [019]   170.700759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
->    sysjitter-2459  [019]   170.701740: local_timer_entry:    vector=236
->    sysjitter-2459  [019]   170.701742: softirq_raise:        vec=1 [action=TIMER]
+--DWg365Y4B18r8evw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-See here the tick sees pending timer callbacks so it raises the timer softirq.
+-----BEGIN PGP SIGNATURE-----
 
->    sysjitter-2459  [019]   170.701743: softirq_raise:        vec=7 [action=SCHED]
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7FWmgACgkQFA3kzBSg
+KbYxwRAAmUjg/PPDIGnjUCza3uhJUYZsY2bgkfy5OcjxXVotYkKYSBhrtw26GG33
+DU2gPBQzDKZWB3T0kZo54GA6ZvzxRGuLKhfWLvLhbDdzz/hy94jX+DpoNJQ8mzr5
+VPpn61UjFAd8/+W+DkpYzovXAQP78o2luuhnFuoqNZbhyEGJ4yWfHY+qICUJd1Ac
+bdtL8oikCf653etM0rtpUPQQ6x/iw1cMH4u6xmtFSFi56jzdVnZB0MJKnc//t7VT
+HfCkBiuOBu78HE007oPG0ylKU7TL8f5a2QCd0cLt87oDr2frfHTTVpLj+n7m8BAY
+VEqc4bchKi58nHL8nD3h1kqFFjSxN08AFRcd6gWeUxyfVUTeuNhhxrzHnGObWJVp
+ZKXcCnS6dgfKm2o/589Qo6I5H6VzYPTGUSwNLrSwUizT8sdqPawhQaKE3CE5sLYs
+8OC7B/QmHT3+jk7Zlz0rQDT9w5mmvyP600CczkK+6ZXNFMuKjDz67X8IERmWoH6e
+lp/7qtxPKxAXSPJ4qTNa3oIW2LIWNJ2dZJVSHGXPi/CuKwJMvJZs8HnXAY6BIWFj
+MEFg1qbTxQ8fn3DNyRwf2iFkmS20RHoh2m80TsNcv71LYoq0ioASu/U4swiPh249
+KnaM3i59M9VIN8cvqnpiAQCmgNJv+hzJifmd8tVpfswSfprOJgk=
+=IUMo
+-----END PGP SIGNATURE-----
 
-Oh and the scheduler tick activates the scheduler softirq as well.
-
->    sysjitter-2459  [019]   170.701744: local_timer_exit:     vector=236
->    sysjitter-2459  [019]   170.701747: sched_wakeup:         ksoftirqd/19:125 [120] success=1 CPU:019
->    sysjitter-2459  [019]   170.701748: tick_stop:            success=0 dependency=SCHED
->    sysjitter-2459  [019]   170.701749: irq_work_entry:       vector=246
->    sysjitter-2459  [019]   170.701750: irq_work_exit:        vector=246
->    sysjitter-2459  [019]   170.701751: tick_stop:            success=0 dependency=SCHED
->    sysjitter-2459  [019]   170.701753: sched_switch:         sysjitter:2459 [120] R ==> ksoftirqd/19:125 [120]
-> ksoftirqd/19-125   [019]   170.701754: softirq_entry:        vec=1 [action=TIMER]
-> ksoftirqd/19-125   [019]   170.701756: softirq_exit:         vec=1 [action=TIMER]
-> ksoftirqd/19-125   [019]   170.701756: softirq_entry:        vec=7 [action=SCHED]
-> ksoftirqd/19-125   [019]   170.701758: softirq_exit:         vec=7 [action=SCHED]
-> ksoftirqd/19-125   [019]   170.701759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
->    sysjitter-2459  [019]   170.702740: local_timer_entry:    vector=236
->    sysjitter-2459  [019]   170.702742: softirq_raise:        vec=1 [action=TIMER]
-
-A new tick but we still have pending timer callback so we'll need to wakeup ksoftirqd
-again.
-
-I think you should trace timers and check which one is concerned here.
-
-Thanks.
+--DWg365Y4B18r8evw--
