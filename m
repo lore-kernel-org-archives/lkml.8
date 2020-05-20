@@ -2,145 +2,134 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D936220825
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5C3206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:15:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=necglobal.onmicrosoft.com header.i=@necglobal.onmicrosoft.com header.b="rtbz5Na7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgETHOc (ORCPT
+        id S1726634AbgETHPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:14:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5820 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726401AbgETHOc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:14:32 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04K6XgF4190676;
-        Wed, 20 May 2020 03:14:28 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312c8pqjyx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 03:14:28 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04K7BNpK020064;
-        Wed, 20 May 2020 07:14:26 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 313x4xh94x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 07:14:26 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04K7ENw756295668
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 07:14:23 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9B71942047;
-        Wed, 20 May 2020 07:14:23 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C7534204F;
-        Wed, 20 May 2020 07:14:23 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.171.23])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 May 2020 07:14:23 +0000 (GMT)
-Subject: Re: [PATCH] s390/sclp_vt220: Fix console name to match device
-To:     =?UTF-8?Q?Valentin_Vidi=c4=87?= <vvidic@valentin-vidic.from.hr>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20200519181654.16765-1-vvidic@valentin-vidic.from.hr>
- <65218cdb-d03f-29a8-1e78-42ff2d4f958d@de.ibm.com>
- <20200520070743.GO4974@valentin-vidic.from.hr>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <cba24059-b3a5-1587-c1f3-8d7dfd0807f5@de.ibm.com>
-Date:   Wed, 20 May 2020 09:14:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200520070743.GO4974@valentin-vidic.from.hr>
-Content-Type: text/plain; charset=utf-8
+        Wed, 20 May 2020 03:15:25 -0400
+Received: from mail-eopbgr1320074.outbound.protection.outlook.com ([40.107.132.74]:62836
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726436AbgETHPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 03:15:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dIFP1cvARrIrhOw4hN1PXCE3xApHMjbbKFOczWQM4wyI+d7cXhIWQRojmXiMJo/H16N+scAJovZrJtwin+PKYqlkwDhJfCGI7SbTSGDOlqb+qAy39cOS+32wTP2zhZQf8Qin2CMS40vN8qRma7k/T6PsGSzeVNPxV94nVKyIeibvSpQ7wScSB8UL6n2zJy9Zjs2aqlFyTukAU26Gkfan+PC0l5N/1uRMgXjjVFWJ6LlKj1AxCRJRz9ZlDpJ/D14Peb0XzLRHap0yJvoDVb3x5YjFnGjyEv3c9lrRI4T8nPAOuE2hO3n1mzdLxaqeyAbsSM2Kuus/d4y+a2Nk9L6bBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wdzTn7465mnduoK4XlK0Klj/szabJQMwmrXVITI7/3I=;
+ b=iB6Nq98Y+JB/WksSz4rIeSbgHGZ1fiZSNhRJVgy7M5s1a16i3PmXv/tPMhaEfHv8uYeFyvatw3ZQKD3MlQCkIjZg1ahJbZJVsK8OUIlrhQTbBYD5p11Qy3kAjpzIkyySCGL2P37a+jCjuRaRqme5JSTDwFbUTcDyjEZicB1dklvsQogAqjUHrczekL0MJk9nrXjxrbeX2aX+jYrj1SRRw+gk/BbIDDUdnZX7MvU+MAFbMehjumF0MYLOPXmFrMrZ5j4BGdd3LgoO1Jdh+FN/AKIntwA6++CMN+7KDDkiUM+wYbsP1Wv4/sqfsdsxwwMPrc7nA89gKj+PGtTU95Ql9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=necglobal.onmicrosoft.com; s=selector1-necglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wdzTn7465mnduoK4XlK0Klj/szabJQMwmrXVITI7/3I=;
+ b=rtbz5Na7VegcTgJ175JnL6FzzlRLPbAzFmCw8ALn9i1SMZ/YSWEtoh77/ovV0hjMWI6gyGEHDkkJ6K7HyFd5OyImBhZGlff5E4XSI0v8Age+4Q7tFBpfD++DfPl246xREp6Ot0bfFAVnadq3DKN6jx8aQbdQwnULyHXIFvqz4ns=
+Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com (2603:1096:404:74::14)
+ by TY2PR01MB4508.jpnprd01.prod.outlook.com (2603:1096:404:10d::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Wed, 20 May
+ 2020 07:15:22 +0000
+Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com
+ ([fe80::3841:ec9f:5cdf:f58]) by TY2PR01MB3210.jpnprd01.prod.outlook.com
+ ([fe80::3841:ec9f:5cdf:f58%5]) with mapi id 15.20.3000.034; Wed, 20 May 2020
+ 07:15:22 +0000
+From:   =?iso-2022-jp?B?SE9SSUdVQ0hJIE5BT1lBKBskQktZOH0hIUQ+TGkbKEIp?= 
+        <naoya.horiguchi@nec.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Zi Yan <ziy@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC V2] mm/vmstat: Add events for PMD based THP migration
+ without split
+Thread-Topic: [RFC V2] mm/vmstat: Add events for PMD based THP migration
+ without split
+Thread-Index: AQHWLN+t0tdY3mXd/ESlj6rXEl97xqiwkxmA
+Date:   Wed, 20 May 2020 07:15:22 +0000
+Message-ID: <20200520071521.GA29616@hori.linux.bs1.fc.nec.co.jp>
+References: <1589784156-28831-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <1589784156-28831-1-git-send-email-anshuman.khandual@arm.com>
+Accept-Language: ja-JP, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-20_03:2020-05-19,2020-05-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- impostorscore=0 spamscore=0 malwarescore=0 adultscore=0 mlxlogscore=559
- priorityscore=1501 clxscore=1015 mlxscore=0 suspectscore=0
- lowpriorityscore=0 cotscore=-2147483648 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005200056
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=nec.com;
+x-originating-ip: [165.225.110.202]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cef4b4c4-1f16-4008-3822-08d7fc8d8f77
+x-ms-traffictypediagnostic: TY2PR01MB4508:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB4508EA788C6C5CEBEB3CF3C8E7B60@TY2PR01MB4508.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04097B7F7F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gLhyw1UAKdoPykFp2x4N5kpCsqnBwVIe8hCzGPpPxEXs6lxF9H5wrb1P4Kd3VDslPJ9SPfmvEoa9Z+iJ4XOEU276PxA8PfrTWg4E7ToC+A8bFc9ol5XwVV6TP6RABwux0gkv2WfnkyKQ71G4YZwx47FRhK+VDJp6grA82ff/5b/Cndx+JDLuHJCxUxulyNdDx4u89NLQ7hY3/vPZJM1fKfStiZChnOhbR2gHZRlUXHHIIy8IePzyCh0WC5jOzSVUrfaaQJ40bP+N0vfxLnDBMIlaE5ZNM/gxukJIHHTDMyx5sSGlCS8/W1wgYvYdNDUOT9GBecdicRmxMPPK1Os6Tl+Ue/ai8tZ6hdmm5Az8bayAkza8V/bDT/Mu2k19oGPkEp6O0Gtdxtl78dUnGED8Uzxg+c8lbWCJ+FNBDikHOT6yBhpq2+tKIva49Qa2eI4N
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3210.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(396003)(376002)(366004)(39860400002)(8676002)(478600001)(6506007)(6486002)(85182001)(55236004)(9686003)(6512007)(6916009)(26005)(4326008)(2906002)(186003)(8936002)(5660300002)(33656002)(1076003)(86362001)(76116006)(66446008)(64756008)(66476007)(66556008)(54906003)(66946007)(316002)(71200400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: NR5bChmnR/LX73D+ru9fzJZnrikXX/AnmaB3XgVybib09emX7Oscc9Fbcc8XUiM/fNyNog5eDA6waGsxe0qJMlN0GAI1jc5GGVptMxEDowMy/u2DUDTt8ir53xciKSLZ+C8mRdEX1NGsau/ij0f34LOUa1godyPpHaQnz3pMSLHHEXjicCaX1HkkhKobZGD9fVn1I3s+VHVF38pC/UrM/vqsyjf0lNF1pUpUfLwoHjBmvvMMNqnR7uQcPc3TsVaeT1dAvVrf2wop0UUHmmsLYbB+ICr22h6ksSWuXWBcK7H9Rjn8MFPGkhQN4JS74U2bUdvHzyQqgNx4DEKfNoWxf0gS+unZWzzwUENOFbk+DwgVUCguOBHcRVYUkdoNY0ml/H6qMEAo6ma8tYePztt5eCKG7sHjYhZ/wUYrwaeBFnU7W3BV0k8tn5+YY6QnL6UDLhgFZFxomGS9t4mAYL6OztAk3Ao/LDh/ByIG2gkjeqCN0EJ9ZeAQxmovjdYRWDTa
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <DDE53C168BEB6A44AE778B5CCC4AE576@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cef4b4c4-1f16-4008-3822-08d7fc8d8f77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 07:15:22.2928
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CD6NH8SwnZnxb74QlVicXXkevVhlD5HM/3WvtfyUQVyS2vxu29BfXnW8Bi+VuzVmaCrCiIl5PFoR06cje2Wg3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4508
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 18, 2020 at 12:12:36PM +0530, Anshuman Khandual wrote:
+> This adds the following two new VM events which will help in validating P=
+MD
+> based THP migration without split. Statistics reported through these even=
+ts
+> will help in performance debugging.
+>=20
+> 1. THP_PMD_MIGRATION_SUCCESS
+> 2. THP_PMD_MIGRATION_FAILURE
+>=20
+> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> Cc: Zi Yan <ziy@nvidia.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
+Hi Anshuman,
 
-On 20.05.20 09:07, Valentin Vidić wrote:
-> On Wed, May 20, 2020 at 07:25:06AM +0200, Christian Borntraeger wrote:
->> This is not as simple. ttyS1 is the the console name and ttysclp0 is the tty name.
->> This has mostly historic reasons and it obviously causes problems.
->> But there is  documentation out that that actually describes the use of 
->> console=ttyS1 console=ttyS0.
->> to have console output on both sclp consoles and there are probably scripts
->> using ttyS1.
->>
->> I am wondering. The tty for ttyS0 is named sclp_line0. Does this work in LPAR?
-> 
-> I ran into this problem with qemu-system-s390x, so not sure about LPAR.
-> Would changing the tty name also cause problems?
+I'm neutral for additinal lines in /proc/vmstat. It's a classic (so widely
+used) but inflexible interface. Users disabling thp are not happy with many
+thp-related lines, but judging from the fact that we already have many
+thp-related lines some users really need them. So I feel hard to decide to
+agree or disagree with additional lines.
 
-My point was more that a similar issue should happen when installing in LPAR. LPAR
-uses the line mode style console which is ttyS0 for the console but sclp_line0 for the
-tty. How does the debian installer handle this?
+I think that tracepoints are the more flexible interfaces for monitoring,
+so I'm interested more in whether thp migration could be monitorable via
+tracepoint. Do you have any idea/plan on it?
 
-Regarding your patch I fear that this patch would break existing setups so we cannot
-use it as is.
+Thanks,
+Naoya Horiguchi=
