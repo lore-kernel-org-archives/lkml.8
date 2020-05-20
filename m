@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F63C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26084C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 525D6205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B38B205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgETOZP (ORCPT
+        id S1728321AbgETOZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:15 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33100 "EHLO
+        Wed, 20 May 2020 10:25:05 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33152 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727041AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727056AbgETOW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:27 -0400
+        Wed, 20 May 2020 10:22:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPby-00036r-Oq; Wed, 20 May 2020 15:22:22 +0100
+        id 1jbPbv-00035k-UW; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPby-007DXF-5d; Wed, 20 May 2020 15:22:22 +0100
+        id 1jbPbv-007DSC-No; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ronnie Sahlberg" <lsahlber@redhat.com>,
-        "Steve French" <stfrench@microsoft.com>
-Date:   Wed, 20 May 2020 15:15:05 +0100
-Message-ID: <lsq.1589984009.491996293@decadent.org.uk>
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
+        "Neelima Krishnan" <neelima.krishnan@intel.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>
+Date:   Wed, 20 May 2020 15:14:22 +0100
+Message-ID: <lsq.1589984008.274460399@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 97/99] cifs: fail i/o on soft mounts if sessionsetup
- errors out
+Subject: [PATCH 3.16 54/99] x86/cpu: Update cached HLE state on write to
+ TSX_CTRL_CPUID_CLEAR
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,48 +59,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-commit b0dd940e582b6a60296b9847a54012a4b080dc72 upstream.
+commit 5efc6fa9044c3356d6046c6e1da6d02572dbed6b upstream.
 
-RHBZ: 1579050
+/proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
+be present on boot cpu even if it was disabled during the bootup. This
+is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
+state is changed via the new MSR IA32_TSX_CTRL.
 
-If we have a soft mount we should fail commands for session-setup
-failures (such as the password having changed/ account being deleted/ ...)
-and return an error back to the application.
+Update the cached HLE bit also since it is expected to change after an
+update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: 95c5824f75f3 ("x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default")
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lore.kernel.org/r/2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/smb2pdu.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/tsx.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -250,9 +250,14 @@ smb2_reconnect(__le16 smb2_command, stru
- 	 */
- 	mutex_lock(&tcon->ses->session_mutex);
- 	rc = cifs_negotiate_protocol(0, tcon->ses);
--	if (!rc && tcon->ses->need_reconnect)
-+	if (!rc && tcon->ses->need_reconnect) {
- 		rc = cifs_setup_session(0, tcon->ses, nls_codepage);
--
-+		if ((rc == -EACCES) && !tcon->retry) {
-+			rc = -EHOSTDOWN;
-+			mutex_unlock(&tcon->ses->session_mutex);
-+			goto failed;
-+		}
-+	}
- 	if (rc || !tcon->need_reconnect) {
- 		mutex_unlock(&tcon->ses->session_mutex);
- 		goto out;
-@@ -290,6 +295,7 @@ out:
- 	case SMB2_SET_INFO:
- 		rc = -EAGAIN;
+--- a/arch/x86/kernel/cpu/tsx.c
++++ b/arch/x86/kernel/cpu/tsx.c
+@@ -115,11 +115,12 @@ void __init tsx_init(void)
+ 		tsx_disable();
+ 
+ 		/*
+-		 * tsx_disable() will change the state of the
+-		 * RTM CPUID bit.  Clear it here since it is now
+-		 * expected to be not set.
++		 * tsx_disable() will change the state of the RTM and HLE CPUID
++		 * bits. Clear them here since they are now expected to be not
++		 * set.
+ 		 */
+ 		setup_clear_cpu_cap(X86_FEATURE_RTM);
++		setup_clear_cpu_cap(X86_FEATURE_HLE);
+ 	} else if (tsx_ctrl_state == TSX_CTRL_ENABLE) {
+ 
+ 		/*
+@@ -131,10 +132,10 @@ void __init tsx_init(void)
+ 		tsx_enable();
+ 
+ 		/*
+-		 * tsx_enable() will change the state of the
+-		 * RTM CPUID bit.  Force it here since it is now
+-		 * expected to be set.
++		 * tsx_enable() will change the state of the RTM and HLE CPUID
++		 * bits. Force them here since they are now expected to be set.
+ 		 */
+ 		setup_force_cpu_cap(X86_FEATURE_RTM);
++		setup_force_cpu_cap(X86_FEATURE_HLE);
  	}
-+failed:
- 	unload_nls(nls_codepage);
- 	return rc;
  }
 
