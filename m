@@ -2,187 +2,166 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD46C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF8DE2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:03:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="x86o//a+"
+	by mail.kernel.org (Postfix) with ESMTP id 35A68206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgETPDK (ORCPT
+        id S1726754AbgETPFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:03:10 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48778 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbgETPDJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:03:09 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KEvG3s045853;
-        Wed, 20 May 2020 15:02:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=bP+cMvdzxHbOp4/kQJ7d2LwPqN/I8FVf/8zsS1gA1f4=;
- b=x86o//a+N7sUAMQyKvyRC0wBFiyV77EMWjWVN/dvnkhMVZ4wU4iVAn88oqMp84gAouIm
- keFU98X+h+UHkob/rIpEI6K69DYND4SSbrGkb7bRdR8/0zP8zKnc3XYVyevMHkrvb9Vg
- Tts6oGcty537eqVTExN/JdbCYxB57kwfu168GmTiQygzHYKa8oADoK9AokYdHnzu1DBF
- kevyPCKqY5YkIzMsC9EjXR7LOkIaJmcMqMUQCUcbLNHxVNfACqksLqoJZit+Vxfkganp
- 0O26RwODFqFy0kd0uyZ2bdmoaDmTrgkRg0jFrG644gGIT3Q+uU7l3CKmtC1t7TEcJNe8 ew== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 3127krbntq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 15:02:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KF2fg2037820;
-        Wed, 20 May 2020 15:02:49 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 313gj3p64t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 15:02:49 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KF2dcD010490;
-        Wed, 20 May 2020 15:02:40 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 May 2020 08:02:39 -0700
-Date:   Wed, 20 May 2020 18:02:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu,
-        devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-tegra@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance on
- error
-Message-ID: <20200520150230.GC30374@kadam>
-References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
- <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com>
+        Wed, 20 May 2020 11:05:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:28224 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbgETPFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 11:05:37 -0400
+IronPort-SDR: 6q+v6PHB1NxjTvtEybu5Kv1UF6gWFnkRKNe1YNuiFP4joUWAQ5gN3sT1H5yS7V+Rrv//VRtMwE
+ Ul/21l3yYHRw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 08:05:36 -0700
+IronPort-SDR: 8YdepVrVeMetoOFxmVGKO/3+DexPOg8DJ9/k6EODfGDXpbR5TAMfIYdoSEeUrlps1Uczv2asS1
+ mdv69UiZTquA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="264712940"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 20 May 2020 08:05:36 -0700
+Received: from [10.249.231.6] (abudanko-mobl.ccr.corp.intel.com [10.249.231.6])
+        by linux.intel.com (Postfix) with ESMTP id 2087C580613;
+        Wed, 20 May 2020 08:05:33 -0700 (PDT)
+Subject: Re: [PATCH v3 6/9] perf stat: introduce --ctl-fd[-ack] options
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
+ <6b8f7e1f-f89c-2c96-95ac-2a128b365a81@linux.intel.com>
+ <20200520123819.GE157452@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <7dcbbca7-b99e-025e-91b4-71c45e746a7b@linux.intel.com>
+Date:   Wed, 20 May 2020 18:05:33 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200520123819.GE157452@krava>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 adultscore=0 bulkscore=0 suspectscore=1 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005200124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1011 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=1 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200123
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 01:15:44PM +0300, Dmitry Osipenko wrote:
-> 20.05.2020 12:51, Dinghao Liu пишет:
-> > pm_runtime_get_sync() increments the runtime PM usage counter even
-> > it returns an error code. Thus a pairing decrement is needed on
-> > the error handling path to keep the counter balanced.
-> > 
-> > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> > ---
-> >  drivers/staging/media/tegra-vde/vde.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
-> > index d3e63512a765..dd134a3a15c7 100644
-> > --- a/drivers/staging/media/tegra-vde/vde.c
-> > +++ b/drivers/staging/media/tegra-vde/vde.c
-> > @@ -777,7 +777,7 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
-> >  
-> >  	ret = pm_runtime_get_sync(dev);
-> >  	if (ret < 0)
-> > -		goto unlock;
-> > +		goto put_runtime_pm;
-> >  
-> >  	/*
-> >  	 * We rely on the VDE registers reset value, otherwise VDE
-> > 
+
+On 20.05.2020 15:38, Jiri Olsa wrote:
+> On Wed, May 13, 2020 at 11:03:03AM +0300, Alexey Budankov wrote:
+>>
+>> Introduce --ctl-fd[-ack] options to pass open file descriptors numbers
+>> from command line. Extend perf-stat.txt file with --ctl-fd[-ack] options
+>> description. Document possible usage model introduced by --ctl-fd[-ack]
+>> options by providing example bash shell script.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  tools/perf/Documentation/perf-stat.txt | 40 ++++++++++++++++++++++++++
+>>  tools/perf/builtin-stat.c              | 10 +++++++
+>>  tools/perf/util/stat.h                 |  2 ++
+>>  3 files changed, 52 insertions(+)
+>>
+>> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+>> index 3b91b30d7672..7f7a0019fbfc 100644
+>> --- a/tools/perf/Documentation/perf-stat.txt
+>> +++ b/tools/perf/Documentation/perf-stat.txt
+>> @@ -164,6 +164,46 @@ with it.  --append may be used here.  Examples:
+>>       3>results  perf stat --log-fd 3          -- $cmd
+>>       3>>results perf stat --log-fd 3 --append -- $cmd
+>>  
+>> +--ctl-fd::
+>> +--ctl-fd-ack::
+>> +
+>> +Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
+>> +'disable': disable events). Optionally send control command completion ('ack') to fd-ack
+>> +descriptor to synchronize with the controlling process. Example of bash shell script
+>> +to enable and disable events during measurements:
+>> +
+>> +#!/bin/bash
+>> +
+>> +ctl_dir=/tmp/
+>> +
+>> +ctl_fifo=${ctl_dir}perf_ctl.fifo
+>> +test -p ${ctl_fifo} && unlink ${ctl_fifo}
+>> +mkfifo ${ctl_fifo}
+>> +exec {ctl_fd}<>${ctl_fifo}
+>> +
+>> +ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
+>> +test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
+>> +mkfifo ${ctl_ack_fifo}
+>> +exec {ctl_fd_ack}<>${ctl_ack_fifo}
+>> +
+>> +perf stat -D -1 -e cpu-cycles -a -I 1000                \
+>> +          --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
+>> +          -- sleep 30 &
+>> +perf_pid=$!
+>> +
+>> +sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
+>> +sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
+>> +
+>> +exec {ctl_fd_ack}>&-
+>> +unlink ${ctl_ack_fifo}
+>> +
+>> +exec {ctl_fd}>&-
+>> +unlink ${ctl_fifo}
+>> +
+>> +wait -n ${perf_pid}
+>> +exit $?
+>> +
+>> +
+>>  --pre::
+>>  --post::
+>>  	Pre and post measurement hooks, e.g.:
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index abea82a1ba24..88055aaf670f 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -187,6 +187,8 @@ static struct perf_stat_config stat_config = {
+>>  	.metric_only_len	= METRIC_ONLY_LEN,
+>>  	.walltime_nsecs_stats	= &walltime_nsecs_stats,
+>>  	.big_num		= true,
+>> +	.ctl_fd			= -1,
+>> +	.ctl_fd_ack		= -1
+>>  };
+>>  
+>>  static inline void diff_timespec(struct timespec *r, struct timespec *a,
+>> @@ -984,6 +986,10 @@ static struct option stat_options[] = {
+>>  		    "Use with 'percore' event qualifier to show the event "
+>>  		    "counts of one hardware thread by sum up total hardware "
+>>  		    "threads of same physical core"),
+>> +	OPT_INTEGER(0, "ctl-fd", &stat_config.ctl_fd,
+>> +		    "Listen on fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events)"),
+>> +	OPT_INTEGER(0, "ctl-fd-ack", &stat_config.ctl_fd_ack,
+>> +		    "Send control command completion ('ack') to fd ack descriptor"),
+>>  	OPT_END()
+>>  };
+>>  
+>> @@ -2180,6 +2186,8 @@ int cmd_stat(int argc, const char **argv)
+>>  	signal(SIGALRM, skip_signal);
+>>  	signal(SIGABRT, skip_signal);
+>>  
+>> +	evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack);
 > 
-> Hello Dinghao,
-> 
-> Thank you for the patch. I sent out a similar patch a week ago [1].
-> 
-> [1]
-> https://patchwork.ozlabs.org/project/linux-tegra/patch/20200514210847.9269-2-digetx@gmail.com/
-> 
-> The pm_runtime_put_noidle() should have the same effect as yours
-> variant, although my variant won't change the last_busy RPM time, which
-> I think is a bit more appropriate behavior.
+> please check the return value
 
-I don't think either patch is correct.  The right thing to do is to fix
-__pm_runtime_resume() so it doesn't leak a reference count on error.
+Accepted in v4.
 
-The problem is that a lot of functions don't check the return so
-possibly we are relying on that behavior.  We may need to introduce a
-new function which cleans up properly instead of leaking reference
-counts?
-
-Also it's not documented that pm_runtime_get_sync() returns 1 sometimes
-on success so it leads to a few bugs.
-
-drivers/gpu/drm/stm/ltdc.c:             ret = pm_runtime_get_sync(ddev->dev);
-drivers/gpu/drm/stm/ltdc.c-             if (ret) {
---
-drivers/gpu/drm/stm/ltdc.c:             ret = pm_runtime_get_sync(ddev->dev);
-drivers/gpu/drm/stm/ltdc.c-             if (ret) {
-
-drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c:  ret = pm_runtime_get_sync(pm->dev);
-drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c-  if (ret)
-
-drivers/media/platform/ti-vpe/cal.c:    ret = pm_runtime_get_sync(&pdev->dev);
-drivers/media/platform/ti-vpe/cal.c-    if (ret)
-
-drivers/mfd/arizona-core.c:                     ret = pm_runtime_get_sync(arizona->dev);
-drivers/mfd/arizona-core.c-                     if (ret != 0)
-
-drivers/remoteproc/qcom_q6v5_adsp.c:    ret = pm_runtime_get_sync(adsp->dev);
-drivers/remoteproc/qcom_q6v5_adsp.c-    if (ret)
-
-drivers/spi/spi-img-spfi.c:     ret = pm_runtime_get_sync(dev);
-drivers/spi/spi-img-spfi.c-     if (ret)
-
-drivers/usb/dwc3/dwc3-pci.c:    ret = pm_runtime_get_sync(&dwc3->dev);
-drivers/usb/dwc3/dwc3-pci.c-    if (ret)
-
-drivers/watchdog/rti_wdt.c:     ret = pm_runtime_get_sync(dev);
-drivers/watchdog/rti_wdt.c-     if (ret) {
-
-regards,
-dan carpenter
-
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 99c7da112c95..e280991a977d 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1082,6 +1082,9 @@ int __pm_runtime_resume(struct device *dev, int rpmflags)
- 	retval = rpm_resume(dev, rpmflags);
- 	spin_unlock_irqrestore(&dev->power.lock, flags);
- 
-+	if (retval < 0 && rpmflags & RPM_GET_PUT)
-+		atomic_dec(&dev->power.usage_count);
-+
- 	return retval;
- }
- EXPORT_SYMBOL_GPL(__pm_runtime_resume);
+~Alexey
