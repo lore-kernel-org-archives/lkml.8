@@ -2,117 +2,78 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D25B2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:43:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S8TpZMqq"
+	by mail.kernel.org (Postfix) with ESMTP id D7E6F2072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590018309;
+	bh=ngrtvfLYBKfv8MQkCaYk8tYirfeqXPlMFjsOE/YFGgk=;
+	h=Date:From:To:cc:Subject:List-ID:From;
+	b=HtxSjWsJ8jP5fJooh9RGIH79ZyFmtXZkwDgxsRSC/y1DXkAXbZtkbK2c6IOHzY7pQ
+	 UTy2PLXd1034ox92kfKfIHUDm+sdep2CAf/JVqNAfFV01MVTe8TVYGce3nXwQ5rOXe
+	 twGek0XUq/2Xn6qIzp9eJTC1KnWFwGQXOSuDxW34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgETXnc (ORCPT
+        id S1726826AbgETXpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:43:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgETXnb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:43:31 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6AA9C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:43:31 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id q16so2037376plr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:43:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FzigqvCYVoWhJQjGnZdN10eq4UVPeXb2NdIvrtIBgdk=;
-        b=S8TpZMqqF+vCdU5tBHdSe/IPfbqyqb2zQD2+XXASut4eAydcA2VnRgFtcX25M/0feS
-         G3Eq8oEgHI5fKit7gG8wXj2RA1JJUI3tqo3ysm1Ori/jhahRsENZ2LKpLJbAtqm3rRuO
-         HGmsY3G7a7tmtLva5XdGTPe8sPmoXHkmOypU4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FzigqvCYVoWhJQjGnZdN10eq4UVPeXb2NdIvrtIBgdk=;
-        b=MIzkm7CKC2p7IS4jN4bG0VfDFSvx6Jndvdxqjmfs35+aXiyIFoW0BubTmY52DwK+cG
-         0JzPkN+kZcHnEhbYqj5z0jVhrdYjz0WyIVJv4vnifzmgTz/kGUC3U0bIqP6wGx87tx84
-         5dteyt5A22gki82vvB6jRa53sAjXHs1MuPXTfGhC0tiuUpZQO3BHAkkeToVfP7hCbGBZ
-         hFW+TmXSco/4CubVjkakWWARHFJeqaCfMrdkauVSthHUDU8CbdVyg57Cf0UrUHjIl3iA
-         Pd4gm6xx5KOdif7ryhekRdlxG8bLvdvQGt6nriau4vDqUye+aqLMLYj6k4/uSKZFp9Qa
-         gxXA==
-X-Gm-Message-State: AOAM532EO+GKHYVN8WuOj8Imms4maxN/Ykg7iPPjPe//LYNGjCNevOIv
-        8Q5XmheuuCgQTvyRtgdK4iT4ZA==
-X-Google-Smtp-Source: ABdhPJzAmXhGgMQ9bm3JEcA9zNoKFZ1bL5DiGR8yLS6nj0HxejjmJnyhib07lt61xKLuMTlbQKDt7w==
-X-Received: by 2002:a17:902:7:: with SMTP id 7mr6893114pla.157.1590018210903;
-        Wed, 20 May 2020 16:43:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s123sm3007557pfs.170.2020.05.20.16.43.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 16:43:29 -0700 (PDT)
-Date:   Wed, 20 May 2020 16:43:28 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 0/8] exec: Control flow simplifications
-Message-ID: <202005201642.E1C6B4A457@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87d06ygssl.fsf@x220.int.ebiederm.org>
+        Wed, 20 May 2020 19:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbgETXpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 19:45:08 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F189F20748;
+        Wed, 20 May 2020 23:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590018308;
+        bh=ngrtvfLYBKfv8MQkCaYk8tYirfeqXPlMFjsOE/YFGgk=;
+        h=Date:From:To:cc:Subject:From;
+        b=aFQEiP489M9V1lc9WQ1OxfNV/2V+7N4zYIpsMfXXKumiUZCXkMtf0oX/l0ZaBRhko
+         XXDUqKcjb3djxslDnJAwC1DX+oVg2M4ipvZyxQQ2EMXpfKDr0PuWTiEpSvLXpbWjS3
+         1PiciD+5N1v3vJ8I1FAXnL7M5Kig9bCT9MNlgPYI=
+Date:   Wed, 20 May 2020 16:45:07 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     jgross@suse.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+cc:     sstabellini@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, tamas@tklengyel.com, roman@zededa.com
+Subject: [PATCH 00/10] fix swiotlb-xen for RPi4
+Message-ID: <alpine.DEB.2.21.2005201628330.27502@sstabellini-ThinkPad-T480s>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d06ygssl.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 05:12:10PM -0500, Eric W. Biederman wrote:
-> 
-> I have pushed this out to:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-next
-> 
-> I have collected up the acks and reviewed-by's, and fixed a couple of
-> typos but that is it.
+Hi all,
 
-Awesome!
+This series is a collection of fixes to get Linux running on the RPi4 as
+dom0.
 
-> If we need comment fixes or additional cleanups we can apply that on top
-> of this series.   This way the code can sit in linux-next until the
-> merge window opens.
-> 
-> Before I pushed this out I also tested this with Kees new test of
-> binfmt_misc and did not find any problems.
+Conceptually there are only two significant changes:
 
-Did this mean to say binfmt_script? It'd be nice to get a binfmt_misc
-test too, though.
+- make sure not to call virt_to_page on vmalloc virt addresses (patch
+  #1)
+- use phys_to_dma and dma_to_phys to translate phys to/from dma
+  addresses (all other patches)
 
-Thanks!
+In particular in regards to the second part, the RPi4 is the first
+board where Xen can run that has the property that dma addresses are
+different from physical addresses, and swiotlb-xen was written with the
+assumption that phys addr == dma addr.
 
--Kees
+This series adds the phys_to_dma and dma_to_phys calls to make it work.
 
--- 
-Kees Cook
+
+Cheers,
+
+Stefano
