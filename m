@@ -2,126 +2,101 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1994EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA49C207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YRc3iz02"
+	by mail.kernel.org (Postfix) with ESMTP id E662F207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgETMBR (ORCPT
+        id S1726858AbgETMB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:01:17 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60536 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgETMBP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:01:15 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KBvY8D173181;
-        Wed, 20 May 2020 12:01:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=68JDAbvefgoH93PS1ZCGMUKwpNrUM0Es7ihpXKYD3SQ=;
- b=YRc3iz024NVv0RIMObb+nH8HqskR8SsNAB++dS9Ryu9eT2P9OAxdFZHQa/zungABs/84
- F61hJvddLjsvEq9YKKQAVNgsXanV/ROCEjrzJ4B0MP6TwH9tZSi8hCgygDPClnGyrWAe
- dy7dBmUb9FsTHxckibNELYF5Y+IwA1PAHTaX/sIi2UPcwXUHfrk+ksYOqUWIbMO+CWsd
- zvyYqtdZ7GnaGGZL3iTcTENkxUgFaNEMJAxWKN1E8nSFe8gsk98z1R6PuEIl2dnSnnO2
- Z8wEOj28LtiOiTF0wq6cKBLHdyftmpqvdVzAvlpR2l60IF1iZju45zqks7BmPQYTPULp tw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31501r96wd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 12:01:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KBsR7x107085;
-        Wed, 20 May 2020 12:01:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 314gm6xwa3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 12:01:06 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04KC13SD003438;
-        Wed, 20 May 2020 12:01:03 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 May 2020 05:01:02 -0700
-Date:   Wed, 20 May 2020 15:00:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Evan Quan <evan.quan@amd.com>,
-        Rui Huang <ray.huang@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        Yintian Tao <yttao@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/amdgpu: off by on in amdgpu_device_attr_create_groups()
- error handling
-Message-ID: <20200520120054.GB172354@mwanda>
+        Wed, 20 May 2020 08:01:29 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14584 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726838AbgETMB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:01:28 -0400
+IronPort-SDR: Wl3syB6EnAeDvJLUW/0tan0arQuvQtlv6DKuwyuh1X/aKceWfBH3YhyxoecCXtzVr9feGT/9of
+ t8+R8NtmVlPw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:01:27 -0700
+IronPort-SDR: uzxLOKHXe9SE2HdBBCrz11GHuT8VoiLselYaXhYRPPoKgG0XNl1xSRf9jj3alBUfTxG+gRHZka
+ wGeN+UdTN/Jg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
+   d="scan'208";a="411996535"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 20 May 2020 05:01:25 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id D5E6914E; Wed, 20 May 2020 15:01:24 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mircea Caprioru <mircea.caprioru@analog.com>,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH v1] mux: adgs1408: Add mod_devicetable.h and remove of_match_ptr
+Date:   Wed, 20 May 2020 15:01:22 +0300
+Message-Id: <20200520120122.67528-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 clxscore=1011 priorityscore=1501 cotscore=-2147483648
- impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
- mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200104
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This loop in the error handling code should start a "i - 1" and end at
-"i == 0".  Currently it starts a "i" and ends at "i == 1".  The result
-is that it removes one attribute that wasn't created yet, and leaks the
-zeroeth attribute.
+Enables probing via the ACPI PRP0001 route but more is mostly about
+removing examples of this that might get copied into new drivers.
 
-Fixes: 4e01847c38f7 ("drm/amdgpu: optimize amdgpu device attribute code")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Also fixes
+  drivers/mux/adgs1408.c:112:34: warning: unused variable 'adgs1408_of_match
+as has been reported recently.
+
+Fixes: e9e40543ad5b ("spi: Add generic SPI multiplexer")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/mux/adgs1408.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-index b75362bf0742..ee4a8e44fbeb 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-@@ -1931,7 +1931,7 @@ static int amdgpu_device_attr_create_groups(struct amdgpu_device *adev,
- 					    uint32_t mask)
- {
- 	int ret = 0;
--	uint32_t i = 0;
-+	int i;
+diff --git a/drivers/mux/adgs1408.c b/drivers/mux/adgs1408.c
+index 89096f10f4c4..12466b06692c 100644
+--- a/drivers/mux/adgs1408.c
++++ b/drivers/mux/adgs1408.c
+@@ -6,9 +6,9 @@
+  */
  
- 	for (i = 0; i < counts; i++) {
- 		ret = amdgpu_device_attr_create(adev, &attrs[i], mask);
-@@ -1942,9 +1942,8 @@ static int amdgpu_device_attr_create_groups(struct amdgpu_device *adev,
- 	return 0;
+ #include <linux/err.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/mux/driver.h>
+-#include <linux/of_platform.h>
+ #include <linux/property.h>
+ #include <linux/spi/spi.h>
  
- failed:
--	for (; i > 0; i--) {
-+	while (--i >= 0)
- 		amdgpu_device_attr_remove(adev, &attrs[i]);
--	}
+@@ -59,7 +59,7 @@ static int adgs1408_probe(struct spi_device *spi)
+ 	s32 idle_state;
+ 	int ret;
  
- 	return ret;
- }
+-	chip_id = (enum adgs1408_chip_id)of_device_get_match_data(dev);
++	chip_id = (enum adgs1408_chip_id)device_get_match_data(dev);
+ 	if (!chip_id)
+ 		chip_id = spi_get_device_id(spi)->driver_data;
+ 
+@@ -119,7 +119,7 @@ MODULE_DEVICE_TABLE(of, adgs1408_of_match);
+ static struct spi_driver adgs1408_driver = {
+ 	.driver = {
+ 		.name = "adgs1408",
+-		.of_match_table = of_match_ptr(adgs1408_of_match),
++		.of_match_table = adgs1408_of_match,
+ 	},
+ 	.probe = adgs1408_probe,
+ 	.id_table = adgs1408_spi_id,
 -- 
 2.26.2
 
