@@ -2,116 +2,86 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4445C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2DE207FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4E3207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgETR1p (ORCPT
+        id S1727947AbgETR1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:27:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:60600 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgETR1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:27:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE19730E;
-        Wed, 20 May 2020 10:27:44 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D77FB3F305;
-        Wed, 20 May 2020 10:27:42 -0700 (PDT)
-Date:   Wed, 20 May 2020 18:27:36 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Tuan Phan <tuanphan@os.amperecomputing.com>, will@kernel.org
-Cc:     patches@amperecomputing.com, Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Wed, 20 May 2020 13:27:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43318 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgETR1x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:27:53 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jbSVN-0000Gh-9u; Wed, 20 May 2020 17:27:45 +0000
+Date:   Wed, 20 May 2020 19:27:44 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     David Ahern <dsahern@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] ACPI/IORT: Fix PMCG node single ID mapping handling
-Message-ID: <20200520172736.GA10693@e121166-lin.cambridge.arm.com>
-References: <1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com>
+Subject: Re: [PATCH net-next] ipv6/route: inherit max_sizes from current netns
+Message-ID: <20200520172744.fytw6aojounuf735@wittgenstein>
+References: <20200520145806.3746944-1-christian.brauner@ubuntu.com>
+ <4b22a3bc-9dae-3f49-6748-ec45deb09a01@gmail.com>
+ <20200520172417.4m7pyalpftdd2xrm@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200520172417.4m7pyalpftdd2xrm@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:13:07AM -0700, Tuan Phan wrote:
-> An IORT PMCG node can have no ID mapping if its overflow interrupt is
-> wire based therefore the code that parses the PMCG node can not assume
-> the node will always have a single mapping present at index 0.
+On Wed, May 20, 2020 at 07:24:18PM +0200, Christian Brauner wrote:
+> On Wed, May 20, 2020 at 10:54:21AM -0600, David Ahern wrote:
+> > On 5/20/20 8:58 AM, Christian Brauner wrote:
+> > > During NorthSec (cf. [1]) a very large number of unprivileged
+> > > containers and nested containers are run during the competition to
+> > > provide a safe environment for the various teams during the event. Every
+> > > year a range of feature requests or bug reports come out of this and
+> > > this year's no different.
+> > > One of the containers was running a simple VPN server. There were about
+> > > 1.5k users connected to this VPN over ipv6 and the container was setup
+> > > with about 100 custom routing tables when it hit the max_sizes routing
+> > > limit. After this no new connections could be established anymore,
+> > > pinging didn't work anymore; you get the idea.
+> > > 
+> > 
+> > should have been addressed by:
+> > 
+> > commit d8882935fcae28bceb5f6f56f09cded8d36d85e6
+> > Author: Eric Dumazet <edumazet@google.com>
+> > Date:   Fri May 8 07:34:14 2020 -0700
+> >     ipv6: use DST_NOCOUNT in ip6_rt_pcpu_alloc()
+> >     We currently have to adjust ipv6 route gc_thresh/max_size depending
+> >     on number of cpus on a server, this makes very little sense.
+> > 
+> > 
+> > Did your tests include this patch?
 > 
-> Fix iort_get_id_mapping_index() by checking for an overflow interrupt
-> and mapping count.
-> 
-> Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
-> 
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
-> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
-> ---
-> v1 -> v2:
-> - Use pmcg node to detect wired base overflow interrupt.
-> 
-> v2 -> v3:
-> - Address Hanjun and Robin's comments.
-> 
-> v3 -> v4:
-> - Update the title and description as mentioned by Lorenzo.
-> 
-> v4 -> v5:
-> - Remove period in the title and commit references.
-> 
->  drivers/acpi/arm64/iort.c | 5 +++++
+> No, it's also pretty hard to trigger. The conference was pretty good for
+> this.
+> I tested on top of rc6. I'm probably missing the big picture here, could
+> you briefy explain how this commit fixes the problem we ran into?
 
-Hi Will,
+Hm, and it'd be great if we could expose the file - even just read-only
+- to network namespaces owned by non-initial user namespaces. It doesn't
+contain sensitive information and could probably be used to limit
+connections etc.
 
-is there a chance we can get this patch into v5.8 ? I understand
-we are very late in the cycle but I wanted to ask (it applies cleanly
-to for-next/acpi).
-
-Thanks !
-Lorenzo
-
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index ed3d2d1..12bb70e 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
->  static int iort_get_id_mapping_index(struct acpi_iort_node *node)
->  {
->  	struct acpi_iort_smmu_v3 *smmu;
-> +	struct acpi_iort_pmcg *pmcg;
->  
->  	switch (node->type) {
->  	case ACPI_IORT_NODE_SMMU_V3:
-> @@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
->  
->  		return smmu->id_mapping_index;
->  	case ACPI_IORT_NODE_PMCG:
-> +		pmcg = (struct acpi_iort_pmcg *)node->node_data;
-> +		if (pmcg->overflow_gsiv || node->mapping_count == 0)
-> +			return -EINVAL;
-> +
->  		return 0;
->  	default:
->  		return -EINVAL;
-> -- 
-> 2.7.4
-> 
+Christian
