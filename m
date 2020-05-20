@@ -2,138 +2,107 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2706AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B76C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E86CE206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE7F20759
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgETPXz convert rfc822-to-8bit (ORCPT
+        id S1726905AbgETPXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:23:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:32705 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgETPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 11:23:54 -0400
-IronPort-SDR: WR8+yPwwH0i1D9vtMloCx6u1fLFkLvn+oalhwokfYdK68XRQPpjAW/b7JGj2PYOXXE+zHk7iWY
- ebPxIYhqm9VA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 08:23:53 -0700
-IronPort-SDR: AkeQM6LZ3P7X6Oi8bFUdxbhbbvsvujPavT2OPZY5Aa8oNm0QW2ltDRhi5803B9ircrW61/80KB
- 0byOG3sFXlVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="253700519"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by fmsmga007.fm.intel.com with ESMTP; 20 May 2020 08:23:53 -0700
-Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 20 May 2020 08:23:53 -0700
-Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.97]) by
- fmsmsx115.amr.corp.intel.com ([169.254.4.85]) with mapi id 14.03.0439.000;
- Wed, 20 May 2020 08:23:53 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>
-CC:     David Airlie <airlied@linux.ie>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        "Rui Huang" <ray.huang@amd.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Evan Quan <evan.quan@amd.com>,
-        "Kenneth Feng" <kenneth.feng@amd.com>,
-        =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-        Yintian Tao <yttao@amd.com>
-Subject: RE: [PATCH v2] drm/amdgpu: off by on in
- amdgpu_device_attr_create_groups() error handling
-Thread-Topic: [PATCH v2] drm/amdgpu: off by on in
- amdgpu_device_attr_create_groups() error handling
-Thread-Index: AQHWLqgW9uvuDNiQMEi3BV2xZkJF36ixF+EA
-Date:   Wed, 20 May 2020 15:23:52 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E2302FA@FMSMSX108.amr.corp.intel.com>
-References: <20200520125209.GP3041@kadam> <20200520130812.GA177222@mwanda>
-In-Reply-To: <20200520130812.GA177222@mwanda>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.106]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Received: from mx2.suse.de ([195.135.220.15]:53794 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726688AbgETPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 11:23:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BB0E0B229;
+        Wed, 20 May 2020 15:23:54 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id CF618604F6; Wed, 20 May 2020 17:23:50 +0200 (CEST)
+Date:   Wed, 20 May 2020 17:23:50 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marek Vasut <marex@denx.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        kernel@pengutronix.de, David Jander <david@protonic.nl>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Herber <christian.herber@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net-next v3 1/2] ethtool: provide UAPI for PHY Signal
+ Quality Index (SQI)
+Message-ID: <20200520152350.GC8771@lion.mk-sys.cz>
+References: <20200520062915.29493-1-o.rempel@pengutronix.de>
+ <20200520062915.29493-2-o.rempel@pengutronix.de>
+ <20200520144544.GB8771@lion.mk-sys.cz>
+ <20200520150711.rj4b22g3zhzej2aw@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520150711.rj4b22g3zhzej2aw@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"off by on"
+On Wed, May 20, 2020 at 05:07:11PM +0200, Oleksij Rempel wrote:
+> On Wed, May 20, 2020 at 04:45:44PM +0200, Michal Kubecek wrote:
+> > On Wed, May 20, 2020 at 08:29:14AM +0200, Oleksij Rempel wrote:
+> > > Signal Quality Index is a mandatory value required by "OPEN Alliance
+> > > SIG" for the 100Base-T1 PHYs [1]. This indicator can be used for cable
+> > > integrity diagnostic and investigating other noise sources and
+> > > implement by at least two vendors: NXP[2] and TI[3].
+> > > 
+> > > [1] http://www.opensig.org/download/document/218/Advanced_PHY_features_for_automotive_Ethernet_V1.0.pdf
+> > > [2] https://www.nxp.com/docs/en/data-sheet/TJA1100.pdf
+> > > [3] https://www.ti.com/product/DP83TC811R-Q1
+> > > 
+> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > ---
+> > 
+> > This looks good to me, there is just one thing I'm not sure about:
+> > 
+> > > diff --git a/include/linux/phy.h b/include/linux/phy.h
+> > > index 59344db43fcb1..950ba479754bd 100644
+> > > --- a/include/linux/phy.h
+> > > +++ b/include/linux/phy.h
+> > > @@ -706,6 +706,8 @@ struct phy_driver {
+> > >  			    struct ethtool_tunable *tuna,
+> > >  			    const void *data);
+> > >  	int (*set_loopback)(struct phy_device *dev, bool enable);
+> > > +	int (*get_sqi)(struct phy_device *dev);
+> > > +	int (*get_sqi_max)(struct phy_device *dev);
+> > >  };
+> > >  #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
+> > >  				      struct phy_driver, mdiodrv)
+> > 
+> > I'm not sure if it's a good idea to define two separate callbacks. It
+> > means adding two pointers instead of one (for every instance of the
+> > structure, not only those implementing them), doing two calls, running
+> > the same checks twice, locking twice, checking the result twice.
+> > 
+> > Also, passing a structure pointer would mean less code changed if we
+> > decide to add more related state values later.
+> > 
+> > What do you think?
+> > 
+> > If you don't agree, I have no objections so
+> > 
+> > Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+> 
+> I have no strong opinion on it. Should I rework it?
 
-or 
+It's up to you. It was a suggestion for possible improvement but I have
+no problem with this version being applied.
 
-"off by one"
-
-?
-
-M
-
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of Dan
->Carpenter
->Sent: Wednesday, May 20, 2020 9:08 AM
->To: Alex Deucher <alexander.deucher@amd.com>; Kevin Wang
-><kevin1.wang@amd.com>
->Cc: David Airlie <airlied@linux.ie>; kernel-janitors@vger.kernel.org; linux-
->kernel@vger.kernel.org; amd-gfx@lists.freedesktop.org; Hawking Zhang
-><Hawking.Zhang@amd.com>; Rui Huang <ray.huang@amd.com>; dri-
->devel@lists.freedesktop.org; Evan Quan <evan.quan@amd.com>; Kenneth
->Feng <kenneth.feng@amd.com>; Christian König
-><christian.koenig@amd.com>; Yintian Tao <yttao@amd.com>
->Subject: [PATCH v2] drm/amdgpu: off by on in
->amdgpu_device_attr_create_groups() error handling
->
->This loop in the error handling code should start a "i - 1" and end at
->"i == 0".  Currently it starts a "i" and ends at "i == 1".  The result
->is that it removes one attribute that wasn't created yet, and leaks the
->zeroeth attribute.
->
->Fixes: 4e01847c38f7 ("drm/amdgpu: optimize amdgpu device attribute code")
->Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
->---
->v2: style change
->
-> drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c           | 3 +--
-> 1 files changed, 1 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
->b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
->index b75362bf0742..e809534fabd4 100644
->--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
->+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
->@@ -1942,9 +1942,8 @@ static int amdgpu_device_attr_create_groups(struct
->amdgpu_device *adev,
-> 	return 0;
->
-> failed:
->-	for (; i > 0; i--) {
->+	while (i--)
-> 		amdgpu_device_attr_remove(adev, &attrs[i]);
->-	}
->
-> 	return ret;
-> }
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Michal
