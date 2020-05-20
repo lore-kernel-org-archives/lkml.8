@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83718C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3E5207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD78207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgETO0p (ORCPT
+        id S1728485AbgETO0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:26:45 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33018 "EHLO
+        Wed, 20 May 2020 10:26:48 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33066 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727011AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727033AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-00037H-Pu; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPby-00037W-GY; Wed, 20 May 2020 15:22:22 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-007DTZ-4W; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbx-007DWS-Ne; Wed, 20 May 2020 15:22:21 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Felipe Balbi" <balbi@kernel.org>
-Date:   Wed, 20 May 2020 15:14:31 +0100
-Message-ID: <lsq.1589984008.317348641@decadent.org.uk>
+        "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
+        "Masahiro Yamada" <masahiroy@kernel.org>
+Date:   Wed, 20 May 2020 15:15:01 +0100
+Message-ID: <lsq.1589984009.174312112@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 63/99] USB: serial: ir-usb: fix link-speed handling
+Subject: [PATCH 3.16 93/99] kconfig: fix broken dependency in
+ randconfig-generated .config
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,99 +56,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-commit 17a0184ca17e288decdca8b2841531e34d49285f upstream.
+commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 upstream.
 
-Commit e0d795e4f36c ("usb: irda: cleanup on ir-usb module") added a USB
-IrDA header with common defines, but mistakingly switched to using the
-class-descriptor baud-rate bitmask values for the outbound header.
+Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
+produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
+which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
 
-This broke link-speed handling for rates above 9600 baud, but a device
-would also be able to operate at the default 9600 baud until a
-link-speed request was issued (e.g. using the TCGETS ioctl).
+This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
+CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
+value of CONFIG_EFI is calculated.
 
-Fixes: e0d795e4f36c ("usb: irda: cleanup on ir-usb module")
-Cc: Felipe Balbi <balbi@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+When this happens, the has_changed flag should be set.
+
+Currently, it takes the result from the last iteration. It should
+accumulate all the results of the loop.
+
+Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
+Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/ir-usb.c | 20 ++++++++++----------
- include/linux/usb/irda.h    | 13 ++++++++++++-
- 2 files changed, 22 insertions(+), 11 deletions(-)
+ scripts/kconfig/confdata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/ir-usb.c
-+++ b/drivers/usb/serial/ir-usb.c
-@@ -339,34 +339,34 @@ static void ir_set_termios(struct tty_st
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -1231,7 +1231,7 @@ bool conf_set_all_new_symbols(enum conf_
  
- 	switch (baud) {
- 	case 2400:
--		ir_baud = USB_IRDA_BR_2400;
-+		ir_baud = USB_IRDA_LS_2400;
- 		break;
- 	case 9600:
--		ir_baud = USB_IRDA_BR_9600;
-+		ir_baud = USB_IRDA_LS_9600;
- 		break;
- 	case 19200:
--		ir_baud = USB_IRDA_BR_19200;
-+		ir_baud = USB_IRDA_LS_19200;
- 		break;
- 	case 38400:
--		ir_baud = USB_IRDA_BR_38400;
-+		ir_baud = USB_IRDA_LS_38400;
- 		break;
- 	case 57600:
--		ir_baud = USB_IRDA_BR_57600;
-+		ir_baud = USB_IRDA_LS_57600;
- 		break;
- 	case 115200:
--		ir_baud = USB_IRDA_BR_115200;
-+		ir_baud = USB_IRDA_LS_115200;
- 		break;
- 	case 576000:
--		ir_baud = USB_IRDA_BR_576000;
-+		ir_baud = USB_IRDA_LS_576000;
- 		break;
- 	case 1152000:
--		ir_baud = USB_IRDA_BR_1152000;
-+		ir_baud = USB_IRDA_LS_1152000;
- 		break;
- 	case 4000000:
--		ir_baud = USB_IRDA_BR_4000000;
-+		ir_baud = USB_IRDA_LS_4000000;
- 		break;
- 	default:
--		ir_baud = USB_IRDA_BR_9600;
-+		ir_baud = USB_IRDA_LS_9600;
- 		baud = 9600;
- 	}
- 
---- a/include/linux/usb/irda.h
-+++ b/include/linux/usb/irda.h
-@@ -118,11 +118,22 @@ struct usb_irda_cs_descriptor {
-  * 6 - 115200 bps
-  * 7 - 576000 bps
-  * 8 - 1.152 Mbps
-- * 9 - 5 mbps
-+ * 9 - 4 Mbps
-  * 10..15 - Reserved
-  */
- #define USB_IRDA_STATUS_LINK_SPEED	0x0f
- 
-+#define USB_IRDA_LS_NO_CHANGE		0
-+#define USB_IRDA_LS_2400		1
-+#define USB_IRDA_LS_9600		2
-+#define USB_IRDA_LS_19200		3
-+#define USB_IRDA_LS_38400		4
-+#define USB_IRDA_LS_57600		5
-+#define USB_IRDA_LS_115200		6
-+#define USB_IRDA_LS_576000		7
-+#define USB_IRDA_LS_1152000		8
-+#define USB_IRDA_LS_4000000		9
-+
- /* The following is a 4-bit value used only for
-  * outbound header:
-  *
+ 		sym_calc_value(csym);
+ 		if (mode == def_random)
+-			has_changed = randomize_choice_values(csym);
++			has_changed |= randomize_choice_values(csym);
+ 		else {
+ 			set_all_choice_values(csym);
+ 			has_changed = true;
 
