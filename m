@@ -2,169 +2,269 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE24C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1F5207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4CE207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b3I6Hev2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ReUsnM81"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgETLRN (ORCPT
+        id S1726847AbgETLRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:17:13 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43041 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726510AbgETLRN (ORCPT
+        Wed, 20 May 2020 07:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETLRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:17:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589973431;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+3+XJ/Vfn9hEmmjKQHW1eZ3jCSPljvkuiuCcfSEsoMI=;
-        b=b3I6Hev28oYJqY5zzSx1p9YR9qKDukc7FcGpHw59oMZpTHBX/YFTOvKTrlaNZdBJiBjdHf
-        b889dFaeHmXjKzEkc7qkKzrKaycrg5vOUJbDCLNQ0KgIyAq/GG0on2MJ52OmJp8x4dc+j/
-        t8v8FBvw8Ug/K8mGgCPOh+8kfSsk1KA=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-FFhbhdDqMVmrQVmA81gxRw-1; Wed, 20 May 2020 07:17:02 -0400
-X-MC-Unique: FFhbhdDqMVmrQVmA81gxRw-1
-Received: by mail-ej1-f71.google.com with SMTP id s7so1232709eji.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:17:02 -0700 (PDT)
+        Wed, 20 May 2020 07:17:22 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD53C061A0E;
+        Wed, 20 May 2020 04:17:21 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id g9so2673939edr.8;
+        Wed, 20 May 2020 04:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fznr8YKSw5EsgmJSzEUboYxavDTpPHDc5z8WMGGxO9c=;
+        b=ReUsnM81SRQYlgOMWEj0WKTvLJLHCKMf8HznDi7j9yY3mzyc5RrfQ6KZwD1LBMQC5V
+         arrmAojM6hm9SLDnsgkv+TWwUnNDvI5Sa1ycUq5cQJHZ9YTES4ypz9wf47refDqECC8a
+         Aq21ol4/5k6aA7EmpidjknvimRUhQ2td9HrFOHrot0OFk5oPgs1+MptplHxNXC6s/u+q
+         BKZHK79j868Y8z4+K3EIjS+e2+gqiQAmmIHI8rL7FyCkNv+CfPOn0IBRKjZgWrUJz82m
+         qaEY1AXMeIFa2p75KHI2pmcwxYf05nWy9MN0XZbgoGrp5wSzzZi2nI8bawcsG6mrSRQC
+         Aw3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+3+XJ/Vfn9hEmmjKQHW1eZ3jCSPljvkuiuCcfSEsoMI=;
-        b=P1aOpoRUCJu3jF4Q0YVtSrxC82yesLVHS4GtJL4loKNoJmSlxsNGj76dsDj764SzDh
-         CadHoT0K1ufb7kYcXeUYo5+xMeRVEnA13hFDxCvQk/6md/uVW1dzmZrUoqiiRu8Mn/ZT
-         DCUQoIpml7IFDnUZGhpLa9HHfBG6ggQyUmoJCNNmVD19kqBvGwZdm+VLSV+A8VeYlZ7D
-         8HUnF0B9fz73VDaQaNyEbGQwJ+TVF28u+IbdZ+dqaklYZlZ3gXjTZzsed2F6hwogfm8E
-         y/CBbWmPFtNl1CXOdFZSGn/gRFToZA1k5YPyH8s/HrVywhKdVzqR08E7zZ1tbIFhTTfS
-         M18Q==
-X-Gm-Message-State: AOAM530EY8mvYcy/6Y6DffGs1vBhtVPvPxgbKd3z+0eK6AC9jqknCabR
-        xRvQDVAXdAWM/bovuSFhPWV8ig6fz5+gFqx6Bz6K6ry9Fzyz8HDHhbs7Em1VbjlRu1+lr8FFo0a
-        4zpD1isP1Sryv6hXQJkigGzex3b5NIQOY0rbySfBp
-X-Received: by 2002:aa7:dc49:: with SMTP id g9mr2772106edu.62.1589973421150;
-        Wed, 20 May 2020 04:17:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw9yaJKGnybcRqUxUy3GthqkOjqhNi4tj5jBm01HqNr4HhbfSnN0NrfDJG+uO9vI/xvh0Cix+t4RnN+OLDEWpE=
-X-Received: by 2002:aa7:dc49:: with SMTP id g9mr2772082edu.62.1589973420888;
- Wed, 20 May 2020 04:17:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fznr8YKSw5EsgmJSzEUboYxavDTpPHDc5z8WMGGxO9c=;
+        b=d3hT+wP3mwuYhnEUGZ5MkehFvva4Hb64mzSxwHOquO2jL2mrsQFZDDyCW5fyth4YKe
+         R38Hz1gQWBPlbixoGiTKnrpHxhh/trOYZ/Ht4ynHOwEwuZlbNogxKM04sMZvwGitoq2K
+         fwghM/PX2XgeIK/BsizQI56567MHM1Ip5EUakzfbw60BwA9+nkR8fS9d0KFMm0PHBXqk
+         MWglr0knpYSyS4/NED6Ksiz1xRF/NxPrGrUim7z0ILU5PKtX3cDiD8c57Ky/d1msOn+g
+         xud64ComVwqZnfs6cdulFhhPeG2+h6lR1AKQT1VvV/FennyYn9olDVVCnpnKjv3qhryW
+         OiLg==
+X-Gm-Message-State: AOAM533r+5Mb0Zzqt4/dBBvJBWb79fbmvh038Z0S3GzsifORu5shN0mt
+        NlHUeuZ1Ot/D9dJeOIXK274=
+X-Google-Smtp-Source: ABdhPJwdo+Z/Jmz0cYRNQafz+lRqspmOePEfutF9rB4j2wxxQAGj6BXTvTnIs69FX7Fzp6tql3PKaA==
+X-Received: by 2002:a50:da06:: with SMTP id z6mr2800642edj.372.1589973439719;
+        Wed, 20 May 2020 04:17:19 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id h8sm1689202edk.72.2020.05.20.04.17.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 04:17:18 -0700 (PDT)
+Date:   Wed, 20 May 2020 13:17:17 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        Alan Mikhak <alan.mikhak@sifive.com>
+Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
+ size >4GB
+Message-ID: <20200520111717.GB2141681@ulmo>
+References: <20200513190855.23318-1-vidyas@nvidia.com>
+ <20200513223508.GA352288@bjorn-Precision-5520>
+ <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+ <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+ <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
+ <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200423170003.GT25745@shell.armlinux.org.uk> <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
- <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
- <20200509114518.GB1551@shell.armlinux.org.uk> <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
- <20200509195246.GJ1551@shell.armlinux.org.uk> <20200509202050.GK1551@shell.armlinux.org.uk>
- <20200519095330.GA1551@shell.armlinux.org.uk> <CAGnkfhzuyxJDo-DXPHPiNtP4RbRpry+3M9eoiTknGR0zvgPuoA@mail.gmail.com>
- <20200519190534.78bb8389@turbo.teknoraver.net> <20200520111043.GK1551@shell.armlinux.org.uk>
-In-Reply-To: <20200520111043.GK1551@shell.armlinux.org.uk>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Wed, 20 May 2020 13:16:25 +0200
-Message-ID: <CAGnkfhx2qHVSBNTRQf+RQiRWBHxF5hPE=5m+YVKBv6C97P=BOw@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
- to handle RSS tables
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev <netdev@vger.kernel.org>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
+Content-Disposition: inline
+In-Reply-To: <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 1:11 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Tue, May 19, 2020 at 07:05:34PM +0200, Matteo Croce wrote:
-> > On Tue, 19 May 2020 12:05:20 +0200
-> > Matteo Croce <mcroce@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > The patch seems to work. I'm generating traffic with random MAC and IP
-> > addresses, to have many flows:
-> >
-> > # tcpdump -tenni eth2
-> > 9a:a9:b1:3a:b1:6b > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.4.0 > 192.168.0.4.0: UDP, length 12
-> > 9e:92:fd:f8:7f:0a > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.4.0 > 192.168.0.4.0: UDP, length 12
-> > 66:b7:11:8a:c2:1f > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.1.0 > 192.168.0.1.0: UDP, length 12
-> > 7a:ba:58:bd:9a:62 > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.1.0 > 192.168.0.1.0: UDP, length 12
-> > 7e:78:a9:97:70:3a > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.2.0 > 192.168.0.2.0: UDP, length 12
-> > b2:81:91:34:ce:42 > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.2.0 > 192.168.0.2.0: UDP, length 12
-> > 2a:05:52:d0:d9:3f > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.3.0 > 192.168.0.3.0: UDP, length 12
-> > ee:ee:47:35:fa:81 > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.3.0 > 192.168.0.3.0: UDP, length 12
-> >
-> > This is the default rate, with rxhash off:
-> >
-> > # utraf eth2
-> > tx: 0 bps 0 pps rx: 397.4 Mbps 827.9 Kpps
-> > tx: 0 bps 0 pps rx: 396.3 Mbps 825.7 Kpps
-> > tx: 0 bps 0 pps rx: 396.6 Mbps 826.3 Kpps
-> > tx: 0 bps 0 pps rx: 396.5 Mbps 826.1 Kpps
-> >
-> >     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-> >       9 root      20   0       0      0      0 R  99.7   0.0   7:02.58 ksoftirqd/0
-> >      15 root      20   0       0      0      0 S   0.0   0.0   0:00.00 ksoftirqd/1
-> >      20 root      20   0       0      0      0 S   0.0   0.0   2:01.48 ksoftirqd/2
-> >      25 root      20   0       0      0      0 S   0.0   0.0   0:32.86 ksoftirqd/3
-> >
-> > and this with rx hashing enabled:
-> >
-> > # ethtool -K eth2 rxhash on
-> > # utraf eth2
-> > tx: 0 bps 0 pps rx: 456.4 Mbps 950.8 Kpps
-> > tx: 0 bps 0 pps rx: 458.4 Mbps 955.0 Kpps
-> > tx: 0 bps 0 pps rx: 457.6 Mbps 953.3 Kpps
-> > tx: 0 bps 0 pps rx: 462.2 Mbps 962.9 Kpps
-> >
-> >     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-> >      20 root      20   0       0      0      0 R   0.7   0.0   2:02.34 ksoftirqd/2
-> >      25 root      20   0       0      0      0 S   0.3   0.0   0:33.25 ksoftirqd/3
-> >       9 root      20   0       0      0      0 S   0.0   0.0   7:52.57 ksoftirqd/0
-> >      15 root      20   0       0      0      0 S   0.0   0.0   0:00.00 ksoftirqd/1
-> >
-> >
-> > The throughput doesn't increase so much, maybe we hit an HW limit of
-> > the gigabit port. The interesting thing is how the global CPU usage
-> > drops from 25% to 1%.
-> > I can't explain this, it could be due to the reduced contention?
->
-> Hi Matteo,
->
-> Can I take that as a Tested-by ?
->
-> Thanks.
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
->
 
-Tested-by: Matteo Croce <mcroce@redhat.com>
+--4SFOXa2GPu3tIq4H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-probably also:
+On Tue, May 19, 2020 at 10:08:54PM +0000, Gustavo Pimentel wrote:
+> On Tue, May 19, 2020 at 15:58:16, Lorenzo Pieralisi=20
+> <lorenzo.pieralisi@arm.com> wrote:
+>=20
+> > On Tue, May 19, 2020 at 07:25:02PM +0530, Vidya Sagar wrote:
+> > >=20
+> > >=20
+> > > On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
+> > > > External email: Use caution opening links or attachments
+> > > >=20
+> > > >=20
+> > > > On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
+> > > > > [+cc Alan; please cc authors of relevant commits,
+> > > > > updated Andrew's email address]
+> > > > >=20
+> > > > > On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
+> > > > > > commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exce=
+eds max for
+> > > > > > 32-bits") enables warning for MEM resources of size >4GB but pr=
+efetchable
+> > > > > >   memory resources also come under this category where sizes ca=
+n go beyond
+> > > > > > 4GB. Avoid logging a warning for prefetchable memory resources.
+> > > > > >=20
+> > > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > > > > ---
+> > > > > >   drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
+> > > > > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > >=20
+> > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c =
+b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > index 42fbfe2a1b8f..a29396529ea4 100644
+> > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > > > > >                      pp->mem =3D win->res;
+> > > > > >                      pp->mem->name =3D "MEM";
+> > > > > >                      mem_size =3D resource_size(pp->mem);
+> > > > > > -                   if (upper_32_bits(mem_size))
+> > > > > > +                   if (upper_32_bits(mem_size) &&
+> > > > > > +                       !(win->res->flags & IORESOURCE_PREFETCH=
+))
+> > > > > >                              dev_warn(dev, "MEM resource size e=
+xceeds max for 32 bits\n");
+> > > > > >                      pp->mem_size =3D mem_size;
+> > > > > >                      pp->mem_bus_addr =3D pp->mem->start - win-=
+>offset;
+> > > >=20
+> > > > That warning was added for a reason - why should not we log legitim=
+ate
+> > > > warnings ? AFAIU having resources larger than 4GB can lead to undef=
+ined
+> > > > behaviour given the current ATU programming API.
+> > > Yeah. I'm all for a warning if the size is larger than 4GB in case of
+> > > non-prefetchable window as one of the ATU outbound translation
+> > > channels is being used,
+> >=20
+> > Is it true for all DWC host controllers ? Or there may be another
+> > exception whereby we would be forced to disable this warning altogether
+> > ?
+> >=20
+> > > but, we are not employing any ATU outbound translation channel for
+> >=20
+> > What does this mean ? "we are not employing any ATU outbound...", is
+> > this the tegra driver ? And what guarantees that this warning is not
+> > legitimate on DWC host controllers that do use the ATU outbound
+> > translation for prefetchable windows ?
+> >=20
+> > Can DWC maintainers chime in and clarify please ?
+>=20
+> Before this code section, there is the following function call=20
+> pci_parse_request_of_pci_ranges(), which performs a simple validation for=
+=20
+> the IORESOURCE_MEM resource type.
+> This validation checks if the resource is marked as prefetchable, if so,=
+=20
+> an error message "non-prefetchable memory resource required" is given and=
+=20
+> a return code with the -EINVAL value.
 
-Reported-by: Matteo Croce <mcroce@redhat.com>
+That's not what the code is doing. pci_parse_request_of_pci_range() will
+traverse over the whole list of resources that it can find for the given
+host controller and checks whether one of the resources defines prefetch
+memory (note the res_valid |=3D ...). The error will only be returned if
+no prefetchable memory region was found.
 
-Thanks,
--- 
-Matteo Croce
-per aspera ad upstream
+dw_pcie_host_init() will then again traverse the list of resources and
+it will typically encounter two resource of type IORESOURCE_MEM, one for
+non-prefetchable memory and another for prefetchable memory.
 
+Vidya's patch is to differentiate between these two resources and allow
+prefetchable memory regions to exceed sizes of 4 GiB.
+
+That said, I wonder if there isn't a bigger problem at hand here. From
+looking at the code it doesn't seem like the DWC driver makes any
+distinction between prefetchable and non-prefetchable memory. Or at
+least it doesn't allow both to be stored in struct pcie_port.
+
+Am I missing something? Or can anyone explain how we're programming the
+apertures for prefetchable vs. non-prefetchable memory? Perhaps this is
+what Vidya was referring to when he said: "we are not using an outbound
+ATU translation channel for prefetchable memory".
+
+It looks to me like we're also getting partially lucky, or perhaps that
+is by design, in that Tegra194 defines PCI regions in the following
+order: I/O, prefetchable memory, non-prefetchable memory. That means
+that the DWC core code will overwrite prefetchable memory data with that
+of non-prefetchable memory and hence the non-prefetchable region ends up
+stored in struct pcie_port and is then used to program the ATU outbound
+channel.
+
+> In other words, to reach the code that Vidya is changing, it can be only=
+=20
+> if the resource is a non-prefetchable, any prefetchable resource will be=
+=20
+> blocked by the previous call, if I'm not mistaken.
+>=20
+> Having this in mind, Vidya's change will not make the expected result=20
+> aimed by him.
+
+Given the above I think it does. We've also seen this patch eliminate a
+warning that we were seeing before, so I think it has the intended
+effect.
+
+> I don't see any problem by having resources larger than 4GB, from what=20
+> I'm seeing in the databook there isn't any restricting related to that as=
+=20
+> long they don't consume the maximum space that is addressable by the=20
+> system (depending on if they are 32-bit or 64-bit system address).
+>=20
+> To be honest, I'm not seeing a system that could have this resource=20
+> larger than 4GB, but it might exist some exception that I don't know of,=
+=20
+> that's why I accepted Alan's patch to warn the user that the resource=20
+> exceeds the maximum for the 32 bits so that he can be aware that he=20
+> *might* be consuming the maximum space addressable.
+
+I think it's pretty common to have this type of prefetchable memory
+region when you connect discrete GPUs to PCIe. It's not unusual for
+high-end GPUs to have 8 GiB or even more dedicated video memory and
+those will typically be mapped to a prefetchable memory region on
+the PCI device.
+
+Thierry
+
+--4SFOXa2GPu3tIq4H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7FEbkACgkQ3SOs138+
+s6F6yg//fBafWy3d6e0tL7M5stxppWxWvQDR4/Z5dSLrjT7jNJWWRO315MZRLlVz
+NOLteGGxX0u8AuPUrWpbT9Jh+Vzh4vT4QaauJ7xIUl1MTEf/P3csUfXx7n/AoETj
+coBkKHNLXbLf1IwgkSaVepYp73Ml9Vr84n8Z+yf8cL1kNp8FBra/QrjcRTUGAgbJ
+3fdGjAvAMVOpbes39E1O6JcL0nlDNyKL7XLfWk/g1Wc+9Ny+iUY+RlsFhPv/QGlk
+fcwEWYCAjEyWeihxkQJaWHcyuXpjGQyc0RzQh/KI+3dQxO8m/ks5u+LiWa0kyNOa
+vTAFx5PA3pYCElo7qraiGINzdBZ2plF0JnOMQDUb9OTPkdDZOQujT2jQLEyY7AGz
+WD48DgbKotZ2B4I5YD9oBv5NULOEeVO/b+uifv3HzprM2Mxuqf5ptm90GLi6AUDQ
+fkdEVUYQR4qiXCs9a9X/27HboiUhBVQ8gFB/IVV8w3Eatut2j1+NfOLUfRn/Y+iF
+eWhra2JQAntY3fep8CrFurDgoyzF39+Ys7QLeJpHmcbEdlU+WpA2dvxFXv2+rTpg
+8YjtT6IwrS9qBgmSIeF6kpFBEQCAgnOV1mLbqvJ1ImZAtDr2Tc3bPWONCCiQY5C3
+YEPX9oPa6+xyGzSX2cpFc85K0vFMJmISXSoaf/Oe2YxxPJ2aXVU=
+=0Qo8
+-----END PGP SIGNATURE-----
+
+--4SFOXa2GPu3tIq4H--
