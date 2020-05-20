@@ -2,146 +2,116 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25039C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C0FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02911207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589977132;
-	bh=8CP83BNx4w4eSN3vzsufLxH4B9JagHCoVP0PGOxrYBQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=q8Q23v5qza+Oa8CkBLr53zqOpZwEY00noqau08U5363sZn2rkq1dg+a1ESfIQC9wI
-	 RPXKq/a4gw7iADPa462YWH+KjkFjTFG6GZSc+naifmU+ZOo33eBvliJE+Zfm7dnoCX
-	 f8chwqM7rWpUl5IkvbekJM06s3/pWXrtt00ndAok=
+	by mail.kernel.org (Postfix) with ESMTP id 3648A2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ea1iryGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgETMSv (ORCPT
+        id S1726881AbgETMSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:18:51 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:41287 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgETMSt (ORCPT
+        Wed, 20 May 2020 08:18:53 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59128 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgETMSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:18:49 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 04KCIMJ9022097;
-        Wed, 20 May 2020 21:18:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 04KCIMJ9022097
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589977103;
-        bh=g0zQPGJX5aE8iJ6qIRev+jPwAR5NWJr805RkASX1zTI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zJCoavnr9CixnplYluA9RyMAFjamyvoqQIyAE+p+amiGPrfqveVZHLzxsYL3jBM0Z
-         pqC+OQRHyzu4cxF5TvQZUsh09zyAdPU4uM+pl0Yi5qtnG+Y9YqLOoE7razAEK0gbb/
-         sZsG2u58E0UJknDCzuT1V5y7p4h8dOItt/Twd7Ti3VHw7yvAZqcpHGQDkZRZxjqbQ/
-         F6P48TyibU63KS87UtN3umI0cpbz8fNqIoUR8s0B/onheyh5rZmZbzbmB2ZaYZjwq7
-         dyeGsbBr7jGYBMabATN9MYcB4YKoE4CSww3k1X0jtbZY33zKQUp5tzsSGfg0RRb6CY
-         F9JLfnNEConGw==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id 1so1661502vsl.9;
-        Wed, 20 May 2020 05:18:22 -0700 (PDT)
-X-Gm-Message-State: AOAM531N5abF0iWdqDlqQVdE+bW7qYnS9GN4a4jiY9/H8XqCbTJwkEqI
-        crYYGtSc7kmovWw9m+dmOR9xRL7fttcu0vqRkbQ=
-X-Google-Smtp-Source: ABdhPJwS8xCBVayubCaHlqPYv6nB0mPqnUm6GC4Vnnq6e4EwAfmP7hY7SDE4Ws5oW5RVzm9M3oIuNl09taV32lbtlB0=
-X-Received: by 2002:a67:d016:: with SMTP id r22mr2799400vsi.215.1589977101116;
- Wed, 20 May 2020 05:18:21 -0700 (PDT)
+        Wed, 20 May 2020 08:18:50 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIkbQ111640;
+        Wed, 20 May 2020 07:18:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589977126;
+        bh=Flh0goqgDng7jM1nNd4yAiC2nJe1NMBBFdYh80Rm9b0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Ea1iryGeWODdNj9JCdj7nd8QCaZSAgIiIBvhc4Ev3zBZwpFWdR4VSzn+Y+/54zPxC
+         Ru1fGNZfph4v4/SNr01vp1KhBlqS8JzRwShtqcvXCm5+BwUGfR1DMKYQjsTgpgbLcp
+         BBoqMh5VYyspMq0DHuQKuW+gPa9n7yP21oO1jpNs=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KCIkui090381
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 07:18:46 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 07:18:46 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 07:18:46 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIkHY076844;
+        Wed, 20 May 2020 07:18:46 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v2 1/4] net: phy: dp83869: Update port-mirroring to read straps
+Date:   Wed, 20 May 2020 07:18:32 -0500
+Message-ID: <20200520121835.31190-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200520121835.31190-1-dmurphy@ti.com>
+References: <20200520121835.31190-1-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <20200517094859.2376211-1-masahiroy@kernel.org>
- <20200517094859.2376211-4-masahiroy@kernel.org> <20200519102133.GA279905@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200519102133.GA279905@hirez.programming.kicks-ass.net>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 20 May 2020 21:17:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARkUkdRsW0D5cc5cEtXFJfnKhiVuZvrD6T1Xg3sr9kv=A@mail.gmail.com>
-Message-ID: <CAK7LNARkUkdRsW0D5cc5cEtXFJfnKhiVuZvrD6T1Xg3sr9kv=A@mail.gmail.com>
-Subject: Re: [PATCH 03/29] modpost: add read_text_file() and get_line() helpers
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 7:21 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Sun, May 17, 2020 at 06:48:33PM +0900, Masahiro Yamada wrote:
->
-> > +char *read_text_file(const char *filename)
-> > +{
-> > +     struct stat st;
-> > +     int fd;
-> > +     char *buf;
-> > +
-> > +     fd = open(filename, O_RDONLY);
-> > +     if (fd < 0)
-> > +             return NULL;
-> > +
-> > +     if (fstat(fd, &st) < 0)
-> > +             return NULL;
-> > +
-> > +     buf = NOFAIL(malloc(st.st_size + 1));
-> > +
-> > +     if (read(fd, buf, st.st_size) != st.st_size) {
->
-> Is this sensible coding ? I've always been taught read() can return
-> early/short for a number of reasons and we must not assume this is an
-> error.
->
-> The 'normal' way to read a file is something like:
->
->         for (;;) {
->                 ssize_t ret = read(fd, buf + size, st.st_size - size);
->                 if (ret < 0) {
->                         free(buf);
->                         buf = NULL;
->                         goto close;
->                 }
->                 if (!ret)
->                         break;
->
->                 size += ret;
->         }
->
-> > +             free(buf);
-> > +             buf = NULL;
-> > +             goto close;
-> > +     }
-> > +     buf[st.st_size] = '\0';
-> > +close:
-> > +     close(fd);
-> > +
-> > +     return buf;
-> > +}
+The device tree may not have the property set for port mirroring
+because the hardware may have it strapped. If the property is not in the
+DT then check the straps and set the port mirroring bit appropriately.
 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/dp83869.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-In theory, I think yes.
-
-But, is it necessary when we know
-it is reading a regular file?
-
-
-
-The specification [1] says this:
-
-"The value returned may be less than nbyte if the number of bytes
-left in the file is less than nbyte, if the read() request was
-interrupted by a signal, or if the file is a pipe or FIFO or
-special file and has fewer than nbyte bytes immediately available
-for reading."
-
-
-This case does not meet any of 'if ...' parts.
-
-[1] https://pubs.opengroup.org/onlinepubs/000095399/functions/read.html
-
-
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index 7996a4aea8d2..073a0f7754a5 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -66,6 +66,7 @@
+ 
+ /* STRAP_STS1 bits */
+ #define DP83869_STRAP_STS1_RESERVED		BIT(11)
++#define DP83869_STRAP_MIRROR_ENABLED           BIT(12)
+ 
+ /* PHYCTRL bits */
+ #define DP83869_RX_FIFO_SHIFT	12
+@@ -191,10 +192,18 @@ static int dp83869_of_init(struct phy_device *phydev)
+ 	else if (of_property_read_bool(of_node, "ti,min-output-impedance"))
+ 		dp83869->io_impedance = DP83869_IO_MUX_CFG_IO_IMPEDANCE_MIN;
+ 
+-	if (of_property_read_bool(of_node, "enet-phy-lane-swap"))
++	if (of_property_read_bool(of_node, "enet-phy-lane-swap")) {
+ 		dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
+-	else
+-		dp83869->port_mirroring = DP83869_PORT_MIRRORING_DIS;
++	} else {
++		/* If the lane swap is not in the DT then check the straps */
++		ret = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_STRAP_STS1);
++		if (ret < 0)
++			return ret;
++		if (ret & DP83869_STRAP_MIRROR_ENABLED)
++			dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
++		else
++			dp83869->port_mirroring = DP83869_PORT_MIRRORING_DIS;
++	}
+ 
+ 	if (of_property_read_u32(of_node, "rx-fifo-depth",
+ 				 &dp83869->rx_fifo_depth))
 -- 
-Best Regards
-Masahiro Yamada
+2.26.2
+
