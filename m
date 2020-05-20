@@ -2,172 +2,93 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFE9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6092220708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589993976;
-	bh=UW1xs7yeIGx3kZqw2YLLv5n3UIU3CvqqIq1meipxqmY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oBZjj1x1F7aN8O1+RHldoMLLCPRcGXcDeZ+vRdus/d+pcnyB3zLfrGsm8aWHCf3E8
-	 fhYdb+VAr/xUvk3AdpYQkc2y9wfygRgaEte/PAdO4u4x1AEK0g5rSTlKhnB3IR+FQH
-	 VvW7cyYe1vfZQtEMch8B92eqnglOvvlObsxNW1aQ=
+	by mail.kernel.org (Postfix) with ESMTP id AA0C720849
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:00:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mj9eUXZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgETQ7f (ORCPT
+        id S1726833AbgETRAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:59:35 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:43705 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgETQ7f (ORCPT
+        Wed, 20 May 2020 13:00:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30340 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726510AbgETRAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:59:35 -0400
-Received: by mail-ej1-f67.google.com with SMTP id a2so4786903ejb.10;
-        Wed, 20 May 2020 09:59:33 -0700 (PDT)
+        Wed, 20 May 2020 13:00:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589994010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X0s/clL5mjNTm9iTq4AW82jUcL/vW7HiRSQKjdhr2yY=;
+        b=Mj9eUXZ3OJMRcFmQRM4bJmVlX29A1AmAEqaeJQyCQL9dQtmgMRS70fzNEbovWRE73Lcvfw
+        tLj0zzP1usjEElwqPbpDQACvJ12OPdkd+8kteO13PoOSrpKOeNJHZDMPo2ZwMH/NYNFdl6
+        juJWQ/WgDfLeTtIc2EjKry5HQ6SLtPY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-aNX38VWkNhyODuYanSepIg-1; Wed, 20 May 2020 13:00:06 -0400
+X-MC-Unique: aNX38VWkNhyODuYanSepIg-1
+Received: by mail-wm1-f71.google.com with SMTP id g10so1513281wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 10:00:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ulK8UjBcVR88erWI+DBVtEzBcjfexz2ALmk1KaikEeE=;
-        b=Guq15TKhii54fz86KViM72ZQKoUigoduUrKfP7Hv8effARsvmK749+sqbgVNdesEvV
-         wji5r4TSOYX6BP3WBD1LJ64jxH2er+dd/KGuVNyUcAb4ROrBdgqo0ItHf9GG5MV4UVJG
-         WWFg/cIyZTsimG5AGInXs16UjD9cSD2Efqls3G5hzk8HiwbbBGYRGhi/SinBOLRl7y8T
-         Y01ZVMKFwfmtcc85yfV64uyVL5NJf5TUPTqtIKBBNYCSzyYxSfaEzwhMDUb0XE63UFsY
-         PttRZJOoaCTqq9BrmVM18KeSfv+pM4I6pL17HgKrhxpl6BSSSle3GVFApyl3AOevmBFw
-         qtkg==
-X-Gm-Message-State: AOAM532SRQu+gXGANwTDq6jkXnZST5iUiNCpiYU1wsqhs7l+R8/hLrIy
-        kn5hXo7Mz6oRPNYDTP7NnZc=
-X-Google-Smtp-Source: ABdhPJxKJgx5XBPyBkWBT1fGe9dfNWGjBmU9XzwJaHwySJbBASqYFUxO125YFnq5b+LbkAd0l7I75g==
-X-Received: by 2002:a17:906:3912:: with SMTP id f18mr4709801eje.539.1589993973055;
-        Wed, 20 May 2020 09:59:33 -0700 (PDT)
-Received: from localhost (ip-37-188-251-131.eurotel.cz. [37.188.251.131])
-        by smtp.gmail.com with ESMTPSA id z14sm2355795ejd.37.2020.05.20.09.59.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 09:59:32 -0700 (PDT)
-Date:   Wed, 20 May 2020 18:59:30 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: unify reclaim retry limits with page allocator
-Message-ID: <20200520165930.GF6462@dhcp22.suse.cz>
-References: <20200520163142.GA808793@chrisdown.name>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X0s/clL5mjNTm9iTq4AW82jUcL/vW7HiRSQKjdhr2yY=;
+        b=pe6X2AnvOZHuVVJfZAzdhLs1sbHX3xq/hvZj//mhzhSnryZiV28/5EVgMpL+jwVaSW
+         Q/HWSNr60cKI+nx1gJpMLke5isNWt+XlzP+wqYRjRdb0V/oD0kqVsPCje5TNk34WUI+4
+         HpO+GE2LCF6GzKoVzfIbINM8fSZ/D28gfuvB47Y52BZWmbAbiK3np5ca/ax0Tc8qEu4n
+         kncAfwO4ZhBNXaaJQaxI8leSl9bPyHf6/2e8rE6xkZ6+iNJgOY2mCI5s2RSbuxi3Pl0z
+         HeeLm+FXoAr/R6EeIZg3uzZczNofEbflMwVO1uocoEKIwMZBpQK/asd8x8OO4gs3KxQk
+         aeAw==
+X-Gm-Message-State: AOAM533bGMnN2yceyO7/7W1PCfkJPsF2zk1NQNBBvE9WadcxIMUZp/aI
+        XKWfHblKGcfIQd2vdpNZw1o3xRMnd7TVgAX6vdiQVGUI3oRVSV/OjZqowJipdy/uegQG5ti9R+M
+        A0eDewgd1x8kaxW/1G8s6rNZY
+X-Received: by 2002:adf:f5c1:: with SMTP id k1mr4893038wrp.30.1589994005496;
+        Wed, 20 May 2020 10:00:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwuFBue81XLEPWPGpg5C2PeSU5lxiWQNLEInF0QLqbrJcCGW+wbuSIRM+Mf8XQ0LvrbqxtoWg==
+X-Received: by 2002:adf:f5c1:: with SMTP id k1mr4893027wrp.30.1589994005256;
+        Wed, 20 May 2020 10:00:05 -0700 (PDT)
+Received: from [192.168.178.58] ([151.30.94.134])
+        by smtp.gmail.com with ESMTPSA id v131sm3947123wmb.27.2020.05.20.10.00.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 10:00:04 -0700 (PDT)
+Subject: Re: [PATCH 1/3] selftests: kvm: add a SVM version of state-test
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     oupton@google.com
+References: <20200519180740.89884-1-pbonzini@redhat.com>
+ <87y2pmsg8w.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <229dd02b-d8ab-0a81-63b5-0d24061ffe05@redhat.com>
+Date:   Wed, 20 May 2020 19:00:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520163142.GA808793@chrisdown.name>
+In-Reply-To: <87y2pmsg8w.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 20-05-20 17:31:42, Chris Down wrote:
-> Reclaim retries have been set to 5 since the beginning of time in
-> 66e1707bc346 ("Memory controller: add per cgroup LRU and reclaim").
-> However, we now have a generally agreed-upon standard for page reclaim:
-> MAX_RECLAIM_RETRIES (currently 16), added many years later in
-> 0a0337e0d1d1 ("mm, oom: rework oom detection").
+On 20/05/20 18:50, Vitaly Kuznetsov wrote:
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > 
-> In the absence of a compelling reason to declare an OOM earlier in memcg
-> context than page allocator context, it seems reasonable to supplant
-> MEM_CGROUP_RECLAIM_RETRIES with MAX_RECLAIM_RETRIES, making the page
-> allocator and memcg internals more similar in semantics when reclaim
-> fails to produce results, avoiding premature OOMs or throttling.
-> 
-> Signed-off-by: Chris Down <chris@chrisdown.name>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
 
-I have already expressed my dislike to some of the MEM_CGROUP_RECLAIM_RETRIES
-usage but using MAX_RECLAIM_RETRIES is a reasonable thing to do. There
-is simply no reason to have two retry limits.
+This was sent by mistake, but thanks for the review anyway!
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Paolo
 
-> ---
->  mm/memcontrol.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index b040951ccd6b..d3b23c57bed4 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -73,9 +73,6 @@ EXPORT_SYMBOL(memory_cgrp_subsys);
->  
->  struct mem_cgroup *root_mem_cgroup __read_mostly;
->  
-> -/* The number of times we should retry reclaim failures before giving up. */
-> -#define MEM_CGROUP_RECLAIM_RETRIES	5
-> -
->  /* Socket memory accounting disabled? */
->  static bool cgroup_memory_nosocket;
->  
-> @@ -2386,7 +2383,7 @@ void mem_cgroup_handle_over_high(void)
->  	unsigned long pflags;
->  	unsigned long nr_reclaimed;
->  	unsigned int nr_pages = current->memcg_nr_pages_over_high;
-> -	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-> +	int nr_retries = MAX_RECLAIM_RETRIES;
->  	struct mem_cgroup *memcg;
->  
->  	if (likely(!nr_pages))
-> @@ -2438,7 +2435,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
->  		      unsigned int nr_pages)
->  {
->  	unsigned int batch = max(MEMCG_CHARGE_BATCH, nr_pages);
-> -	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-> +	int nr_retries = MAX_RECLAIM_RETRIES;
->  	struct mem_cgroup *mem_over_limit;
->  	struct page_counter *counter;
->  	unsigned long nr_reclaimed;
-> @@ -2557,7 +2554,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
->  		       get_order(nr_pages * PAGE_SIZE));
->  	switch (oom_status) {
->  	case OOM_SUCCESS:
-> -		nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-> +		nr_retries = MAX_RECLAIM_RETRIES;
->  		goto retry;
->  	case OOM_FAILED:
->  		goto force;
-> @@ -3168,7 +3165,7 @@ static inline bool memcg_has_children(struct mem_cgroup *memcg)
->   */
->  static int mem_cgroup_force_empty(struct mem_cgroup *memcg)
->  {
-> -	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-> +	int nr_retries = MAX_RECLAIM_RETRIES;
->  
->  	/* we call try-to-free pages for make this cgroup empty */
->  	lru_add_drain_all();
-> @@ -6001,7 +5998,7 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
->  				 char *buf, size_t nbytes, loff_t off)
->  {
->  	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-> -	unsigned int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-> +	unsigned int nr_retries = MAX_RECLAIM_RETRIES;
->  	bool drained = false;
->  	unsigned long high;
->  	int err;
-> @@ -6049,7 +6046,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
->  				char *buf, size_t nbytes, loff_t off)
->  {
->  	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-> -	unsigned int nr_reclaims = MEM_CGROUP_RECLAIM_RETRIES;
-> +	unsigned int nr_reclaims = MAX_RECLAIM_RETRIES;
->  	bool drained = false;
->  	unsigned long max;
->  	int err;
-> -- 
-> 2.26.2
-
--- 
-Michal Hocko
-SUSE Labs
