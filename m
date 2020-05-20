@@ -2,106 +2,122 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5106207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589976016;
-	bh=p2b++fqgB3j8t8wQVCowLSphUGbZ0n9M7PbJlfK7X/g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qJIz0YKhVXQP/eFRKFllSwvALeSnHywze9e0kTDAyf/KqbZqMtJ8WHKh2ey/7b47Q
-	 NGzWCusHdYW5ZKHjDAJs7+PdkPoVxLibPqGCIPlezCumI69ppTm98KtJTluK1yepNo
-	 4gDcHze9+VivF1JLyCSYv4hxcjy85ugHHfY+DTb4=
+	by mail.kernel.org (Postfix) with ESMTP id 3DF2E207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:00:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XiDxFzSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgETMAQ (ORCPT
+        id S1726914AbgETMAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:00:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgETMAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:00:15 -0400
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD4F02088E;
-        Wed, 20 May 2020 12:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589976015;
-        bh=p2b++fqgB3j8t8wQVCowLSphUGbZ0n9M7PbJlfK7X/g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CW5CxvEsFMAQykySax7pzLLLsuOOb0yHjoog78dUyoDsiNZGpdB8q/hjeryKbCcTP
-         wIa4BnzHQws04aAqGlgPIA8bdvGr19unsaZtfbi4gLUwlMH2JvsZcNiutZfHgBEWvk
-         gebWAQM0XpcbGPvbaAEOxAJQZtXaojp57sWXGDvY=
-Received: by mail-lj1-f172.google.com with SMTP id v16so3323685ljc.8;
-        Wed, 20 May 2020 05:00:14 -0700 (PDT)
-X-Gm-Message-State: AOAM532eYYX0uWOGVm2+oU5QjmU2qUG2wfhKSV4RaFm4Om1FVb9OJaDj
-        g4sPXTOz1bX3mbmanQWvemVWQGxJUWgnKudqtT8=
-X-Google-Smtp-Source: ABdhPJzqow3O8ENCEDm8pm97wOipgg7aCLHp2fW6FeVlcUNXw9PQ19agZuUv9OGshUKmBWlDt+HIDjaQRQTcXVnWHKU=
-X-Received: by 2002:a2e:8e99:: with SMTP id z25mr2440347ljk.142.1589976012909;
- Wed, 20 May 2020 05:00:12 -0700 (PDT)
+        Wed, 20 May 2020 08:00:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39196 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgETMAp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:00:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KBvw0S100740;
+        Wed, 20 May 2020 12:00:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=zYw0CIqLQPQjZf813z+RcnjB+lAB2/Yov6H6AlW2Ba0=;
+ b=XiDxFzSvYv5EPCuvFARWejtgr2wJvPaXE2ITysQ0m3iDDhY6XtgJla57x7E/1oYu8/V3
+ bHL2qLY410MKcFcZapZiWuKWtKEB9E0juKbvFQcnO9Gs1cJp33sSoidCoc5QECdrowsv
+ oHEyvEEBgwySs7Kp4KK314ifOQpDNEbop52hjeGeu6DSWsORM0W+dOsmGtRPNwo0JBXU
+ BZSzaYR+FoRhnogsahbY7GKo3o4ZCBRB84o9zQt4VajIVIvEFIIpvSCxGViiTHHJdmF/
+ ee85S+PMV4/a/da6AKiMvOBzoW+6pE7qJjRUtG+CEyGqdm+qs+TYfYFDe3hUTH1z5fry Qw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31284m2p0q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 12:00:34 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KBrABx064080;
+        Wed, 20 May 2020 12:00:33 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 3150205ke2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 12:00:33 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KC0Pds014045;
+        Wed, 20 May 2020 12:00:25 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 May 2020 05:00:25 -0700
+Date:   Wed, 20 May 2020 15:00:19 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Evgeniy Polyakov <zbr@ioremap.net>,
+        Akira Shimahara <akira215corp@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] w1_therm: Free the correct variable
+Message-ID: <20200520120019.GA172354@mwanda>
 MIME-Version: 1.0
-References: <15745285.MnsZKaK4VV@tauon.chronox.de> <CGME20200520104448eucas1p122e9a8ed84d5276a1b796e10ef5e1964@eucas1p1.samsung.com>
- <dleftjh7wa3my6.fsf%l.stelmach@samsung.com> <2041475.ybOAuNAZB8@tauon.chronox.de>
-In-Reply-To: <2041475.ybOAuNAZB8@tauon.chronox.de>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 20 May 2020 14:00:01 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPeBkZ3R2wT9-A8LWkFx0W9KY70VW7JNjwp0RMDRc7hkTg@mail.gmail.com>
-Message-ID: <CAJKOXPeBkZ3R2wT9-A8LWkFx0W9KY70VW7JNjwp0RMDRc7hkTg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] hwrng: iproc-rng200 - Set the quality value
-To:     Stephan Mueller <smueller@chronox.de>
-Cc:     Lukasz Stelmach <l.stelmach@samsung.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Kukjin Kim <kgene@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 bulkscore=0 suspectscore=2 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 mlxscore=0
+ cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005200104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 at 13:53, Stephan Mueller <smueller@chronox.de> wrote:
-> > > That said, the illustrated example is typical for hardware RNGs. Yet
-> > > it is never guaranteed to work that way. Thus, if you can point to
-> > > architecture documentation of your specific hardware RNGs showing that
-> > > the data read from the hardware is pure unconditioned noise data, then
-> > > I have no objections to the patch.
-> >
-> > I can tell for sure that this is the case for exynos-trng[1].
->
-> So you are saying that the output for the exynos-trng is straight from a ring
-> oscillator without any post-processing of any kind?
+The problem is that we change "p_args" to point to the middle of the
+string so when we free it at the end of the function it's not freeing
+the same pointer that we originally allocated.
 
-Hi,
+Fixes: e2c94d6f5720 ("w1_therm: adding alarm sysfs entry")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+From static analysis.  I guess it must not cause too much of a problem
+at run time?
 
-I think we will never be able to state this because the manual is
-quite limited in sharing internals. What the driver does and probably
-Lukasz wanted to say is that there is "post processing" block and
-feature which can be disabled. The manual is saying the TRNG block
-generates random data from thermal noise but not how much in a direct
-way. There could be some simple post-processing or not (except the one
-able to on/off). Also manual says this post processing block is there
-to remove statistical weakness from the TRNG block. To me it does not
-prove enough that raw data is really raw...
+ drivers/w1/slaves/w1_therm.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
+index cc4b88056b33..a6c85e486671 100644
+--- a/drivers/w1/slaves/w1_therm.c
++++ b/drivers/w1/slaves/w1_therm.c
+@@ -1526,8 +1526,9 @@ static ssize_t alarms_store(struct device *device,
+ 	int temp, ret = -EINVAL;
+ 	char *token = NULL;
+ 	s8 tl, th, tt;	/* 1 byte per value + temp ring order */
+-	char *p_args = kmalloc(size, GFP_KERNEL);
++	char *p_args, *orig;
+ 
++	p_args = orig = kmalloc(size, GFP_KERNEL);
+ 	/* Safe string copys as buf is const */
+ 	if (!p_args) {
+ 		dev_warn(device,
+@@ -1611,7 +1612,7 @@ static ssize_t alarms_store(struct device *device,
+ 
+ free_m:
+ 	/* free allocated memory */
+-	kfree(p_args);
++	kfree(orig);
+ 
+ 	return size;
+ }
+-- 
+2.26.2
+
