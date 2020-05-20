@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0189C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D64CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC3E205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19578205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgETOWp (ORCPT
+        id S1727963AbgETOXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:22:45 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32864 "EHLO
+        Wed, 20 May 2020 10:23:16 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33498 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726917AbgETOWZ (ORCPT
+        by vger.kernel.org with ESMTP id S1727779AbgETOWa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:25 -0400
+        Wed, 20 May 2020 10:22:30 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035n-K9; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbw-00036O-LQ; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DQB-Pu; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbv-007DRO-DR; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>
-Date:   Wed, 20 May 2020 15:13:57 +0100
-Message-ID: <lsq.1589984008.955560377@decadent.org.uk>
+        "Matthew Garrett" <mjg59@google.com>,
+        "Ard Biesheuvel" <ardb@kernel.org>,
+        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
+        linux-efi@vger.kernel.org, "Arvind Sankar" <nivedita@alum.mit.edu>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Ingo Molnar" <mingo@kernel.org>
+Date:   Wed, 20 May 2020 15:14:12 +0100
+Message-ID: <lsq.1589984008.411826113@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 29/99] zd1211rw: fix storage endpoint lookup
+Subject: [PATCH 3.16 44/99] efi/x86: Map the entire EFI vendor string
+ before copying it
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,35 +60,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit 2d68bb2687abb747558b933e80845ff31570a49c upstream.
+commit ffc2760bcf2dba0dbef74013ed73eea8310cc52c upstream.
 
-Make sure to use the current alternate setting when verifying the
-storage interface descriptors to avoid submitting an URB to an invalid
-endpoint.
+Fix a couple of issues with the way we map and copy the vendor string:
+- we map only 2 bytes, which usually works since you get at least a
+  page, but if the vendor string happens to cross a page boundary,
+  a crash will result
+- only call early_memunmap() if early_memremap() succeeded, or we will
+  call it with a NULL address which it doesn't like,
+- while at it, switch to early_memremap_ro(), and array indexing rather
+  than pointer dereferencing to read the CHAR16 characters.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: a1030e92c150 ("[PATCH] zd1211rw: Convert installer CDROM device into WLAN device")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filename]
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: linux-efi@vger.kernel.org
+Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
+Link: https://lkml.kernel.org/r/20200103113953.9571-5-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[bwh: Backported to 3.16: Keep using early_memremap() since
+ early_memremap_ro() is not defined.]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/zd1211rw/zd_usb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/platform/efi/efi.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/drivers/net/wireless/zd1211rw/zd_usb.c
-+++ b/drivers/net/wireless/zd1211rw/zd_usb.c
-@@ -1272,7 +1272,7 @@ static void print_id(struct usb_device *
- static int eject_installer(struct usb_interface *intf)
- {
- 	struct usb_device *udev = interface_to_usbdev(intf);
--	struct usb_host_interface *iface_desc = &intf->altsetting[0];
-+	struct usb_host_interface *iface_desc = intf->cur_altsetting;
- 	struct usb_endpoint_descriptor *endpoint;
- 	unsigned char *cmd;
- 	u8 bulk_out_ep;
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -718,7 +718,6 @@ void __init efi_init(void)
+ 	efi_char16_t *c16;
+ 	char vendor[100] = "unknown";
+ 	int i = 0;
+-	void *tmp;
+ 
+ #ifdef CONFIG_X86_32
+ 	if (boot_params.efi_info.efi_systab_hi ||
+@@ -745,14 +744,16 @@ void __init efi_init(void)
+ 	/*
+ 	 * Show what we know for posterity
+ 	 */
+-	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
++	c16 = early_memremap(efi.systab->fw_vendor,
++			     sizeof(vendor) * sizeof(efi_char16_t));
+ 	if (c16) {
+-		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
+-			vendor[i] = *c16++;
++		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
++			vendor[i] = c16[i];
+ 		vendor[i] = '\0';
+-	} else
++		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
++	} else {
+ 		pr_err("Could not map the firmware vendor!\n");
+-	early_memunmap(tmp, 2);
++	}
+ 
+ 	pr_info("EFI v%u.%.02u by %s\n",
+ 		efi.systab->hdr.revision >> 16,
 
