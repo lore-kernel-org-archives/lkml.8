@@ -2,94 +2,93 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8924C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21758C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B76C207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE298207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ceTVpBXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgETTvd (ORCPT
+        id S1727046AbgETTvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbgETTvd (ORCPT
+        Wed, 20 May 2020 15:51:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40132 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726818AbgETTvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:51:33 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4DFAC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:51:32 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbUkC-0001ev-0Q; Wed, 20 May 2020 21:51:12 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 659B8100C99; Wed, 20 May 2020 21:51:11 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V6 01/37] tracing/hwlat: Use ktime_get_mono_fast_ns()
-In-Reply-To: <20200519181802.5c88c557@gandalf.local.home>
-References: <20200515234547.710474468@linutronix.de> <20200515235124.466962628@linutronix.de> <20200519172627.7e65669e@gandalf.local.home> <871rnf7g61.fsf@nanos.tec.linutronix.de> <20200519181802.5c88c557@gandalf.local.home>
-Date:   Wed, 20 May 2020 21:51:11 +0200
-Message-ID: <87lflmv100.fsf@nanos.tec.linutronix.de>
+        Wed, 20 May 2020 15:51:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590004305;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DGqT6N2646F6LGP9Mud3H6z1mtxuCvYr0HabA03YMfs=;
+        b=ceTVpBXzbcIRbq2N6tNVulZ/ixHjIyJ6gQDULw2L4NIpApL+SFZNmn477VR1C3iJmBmlKy
+        dOa5aJEflUE6TXypuAv9ua9NidFkSM2CIFQcDJ8smEp5E3BpqU/vjVhAg50mYj/iXWI7Em
+        eddsvmr8WfgV4OVQPsKvVnu0zADDO80=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-u9D7PshUPEW-i_Xv7M-7qA-1; Wed, 20 May 2020 15:51:43 -0400
+X-MC-Unique: u9D7PshUPEW-i_Xv7M-7qA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C601D107ACCA;
+        Wed, 20 May 2020 19:51:40 +0000 (UTC)
+Received: from mail (ovpn-112-106.rdu2.redhat.com [10.10.112.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D2634739F;
+        Wed, 20 May 2020 19:51:35 +0000 (UTC)
+Date:   Wed, 20 May 2020 15:51:34 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Daniel Colascione <dancol@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, timmurray@google.com,
+        minchan@google.com, sspatil@google.com, lokeshgidra@google.com
+Subject: Re: [PATCH 2/2] Add a new sysctl knob:
+ unprivileged_userfaultfd_user_mode_only
+Message-ID: <20200520195134.GK26186@redhat.com>
+References: <20200423002632.224776-1-dancol@google.com>
+ <20200423002632.224776-3-dancol@google.com>
+ <20200508125054-mutt-send-email-mst@kernel.org>
+ <20200508125314-mutt-send-email-mst@kernel.org>
+ <20200520045938.GC26186@redhat.com>
+ <202005200921.2BD5A0ADD@keescook>
+ <20200520194804.GJ26186@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520194804.GJ26186@redhat.com>
+User-Agent: Mutt/1.14.0 (2020-05-02)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+On Wed, May 20, 2020 at 03:48:04PM -0400, Andrea Arcangeli wrote:
+> The sysctl /proc/sys/kernel/unprivileged_bpf_disabled is already there
 
-> On Tue, 19 May 2020 23:45:10 +0200
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->
->> >> @@ -165,20 +155,22 @@ void trace_hwlat_callback(bool enter)
->> >>   * Used to repeatedly capture the CPU TSC (or similar), looking for potential
->> >>   * hardware-induced latency. Called with interrupts disabled and with
->> >>   * hwlat_data.lock held.
->> >> + *
->> >> + * Use ktime_get_mono_fast() here as well because it does not wait on the
->> >> + * timekeeping seqcount like ktime_get_mono().  
->> >
->> > When doing a "git grep ktime_get_mono" I only find
->> > ktime_get_mono_fast_ns() (and this comment), so I don't know what to compare
->> > that to. Did you mean another function?  
->> 
->> Yeah. I fatfingered the comment. The code uses ktime_get_mono_fast_ns().
->
-> Well, I assumed that's what you meant with "ktime_get_mono_fast()" but I
-> don't know what function you are comparing it to that waits on the seqcount
-> like "ktime_get_mono()" as there is no such function.
+Oops I picked the wrong unprivileged_* :) of course I meant:
+/proc/sys/vm/unprivileged_userfaultfd
 
-Gah. ktime_get_mono_fast_ns() and ktime_get() of course.
