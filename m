@@ -2,173 +2,284 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB43C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20559C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA519206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2F1206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gsg+Cs7g"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I0oks8Cn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgETJFd (ORCPT
+        id S1726822AbgETJGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:05:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
+        Wed, 20 May 2020 05:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgETJFa (ORCPT
+        with ESMTP id S1726436AbgETJF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:05:30 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2AABC061A0E;
-        Wed, 20 May 2020 02:05:30 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id u5so1137513pgn.5;
-        Wed, 20 May 2020 02:05:30 -0700 (PDT)
+        Wed, 20 May 2020 05:05:59 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B386C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:05:59 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ci23so950998pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:05:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NRHzvHn1j06kdZmHKeAQCTbbxh0DL1ErcnMNWhv1xvs=;
-        b=Gsg+Cs7gs+30dP9JnggONTcLAOA8wf6wkvlxhgkxRKeWPc4dCJuLIQvfMppzpJGK2H
-         rVQNkkzIee+ex5QQ5Qw2cGTnktiGQWvsC4Jz2fljhX+WuIi66GjGp2OuQEQeR+FlaSPZ
-         q+BbtMFA7VwYqH3HAa3aPa+8rnPNB2U9srEu/I2xieOW9EDOlj0tIURrC+khFZNB8iXS
-         KcCTwx30Fxo0gWmwEJ6colhr1fDGM6hsZ+DhE+qoBLc0lrP9kCFFRuhGZV0OxYmDdWZl
-         dBtdlFZ81XLEVHYJ9da5482zQpD/x4Uw2B3ICaiE/iTvFq3PEQXl8JLmn3qEtIMy19Q0
-         foGw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=f0a69KoHD271I3l1GldQGAeZxMsJyy1bxo8ro0OOOBc=;
+        b=I0oks8CnC3Swt6NOYWkSoYwAlTa1Z18E+vy0NEVZUTl9z/ravaz96K/tIcUbsu1Y6W
+         Hxp7noqE3XCRjRxE0x6TEN2WBUg9KaEOdBoCSm/qJ4djaXmD8m/HEZb/oL7iXCiG0mzf
+         /JjxXftN/N2U7elLIJ+kX26ycp5kSgQ1WWtmo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NRHzvHn1j06kdZmHKeAQCTbbxh0DL1ErcnMNWhv1xvs=;
-        b=fUXB3qlwI6j6VxC2jzeMW/zNAk3XkHC69XeeHFyOTGuRzLZ0smLzg2t3JgIArK44OV
-         u2KJsyyHvJL2KwM6fVhgbWbHmnujDwI0Bfqgoj7+5z0iuqgYNyAfiFyi+fK4JXt41DZN
-         laf+jrWYd75LRFtpAsba1DNr6Yt1d/l63uJS22Xvovzv5pIlW1GZK8JQgeT+wMUOOWFs
-         gSSPWhbLV9ZjotbjxFbeJZZFffXiVT6CoEunMc1OJtIBsoLi3hOlzfv5JbCu0sc457wl
-         ptV+5zkAhsG4yG0pa4yrCi7KJB/c1X4PT40xw3dq6tN7NVG3FFxNAQCcIzfrERMypaJZ
-         kgqQ==
-X-Gm-Message-State: AOAM530xTxO3KopSeu/gGPeWQAJ3qIMk/2P4yLvc59RR7m9WCIl+Ck4j
-        9UV2G+e0vH2fZfUnIVCvPN4sbqw16YI3O2/U1Iw=
-X-Google-Smtp-Source: ABdhPJxolDQZpZlKXESKruYZArLxtcIc7XMvXQgU1n42ugJ2tJki5LhCBCCTsnz9Yqutpw7a9rnVg+kwZMjn3W6rhC8=
-X-Received: by 2002:a63:7b4b:: with SMTP id k11mr3147445pgn.411.1589965530404;
- Wed, 20 May 2020 02:05:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=f0a69KoHD271I3l1GldQGAeZxMsJyy1bxo8ro0OOOBc=;
+        b=ObLTPCK3crYLHhK6Ll2z+RVmEW30FI7QACAAlRpSNaVMaqcnfa3bKTa08uT0vq+GEm
+         gUGS0obA0GXDF4yPP7hf77l0wbTy3ceBp+ag3+l4t/zMDhBAWX9o5Q584f/E9ZAMis29
+         MXCjax0TP1V92UuOSsUDXESbk5pQpy5GQ19CxxD5RFmpVA3Z4F6ioADQMUO367NFjCuO
+         +k228eVyaZuZsP09OSIjZzkztznj4y7Xs2QgK3f4zCPnNqk4r5AKXwSAnGi1RixX1qcx
+         Ka1zMbc2X2H9bSlYt297UYyd2aqiXR9BYXPlWNU4r3nBIzCw03Txnw8oGWJpPdAekeb7
+         UZYw==
+X-Gm-Message-State: AOAM532JTIrz3Oc5U3h4zX5ZRqs0Tdn7iWv1aYYTE7zTZgOcj/ikdski
+        xVolpqK24hh+C3LRGLMnu4aPAA==
+X-Google-Smtp-Source: ABdhPJx9xcLw9LPIYUhEzAw0K95oX+/gO7XOj/7Uvb9MrC6NYusB6jmqCxfjtPfSpomQsd5Zkm1hHA==
+X-Received: by 2002:a17:902:b186:: with SMTP id s6mr3591908plr.111.1589965559001;
+        Wed, 20 May 2020 02:05:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m4sm1662711pje.47.2020.05.20.02.05.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 02:05:58 -0700 (PDT)
+Date:   Wed, 20 May 2020 02:05:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kselftest@vger.kernel.org
+Cc:     Shuah Khan <shuah@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests/exec: Add binfmt_script regression test
+Message-ID: <202005200204.D07DF079@keescook>
 MIME-Version: 1.0
-References: <20200520083821.9602-1-gengcixi@gmail.com> <20200520085111.GE2837844@kroah.com>
-In-Reply-To: <20200520085111.GE2837844@kroah.com>
-From:   Cixi Geng <gengcixi@gmail.com>
-Date:   Wed, 20 May 2020 17:04:54 +0800
-Message-ID: <CAF12kFsxiBC3sqvHbp1i5HLXxDnvM2ApFSKGpu-hjGW9LBhd0A@mail.gmail.com>
-Subject: Re: [RFC][PATCH V2] GCOV: profile by modules
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     oberpar@linux.ibm.com, linux-serial@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        jslaby@suse.com, Orson Zhai <orsonzhai@gmail.com>,
-        zhang.lyra@gmail.com, Cixi Geng <cixi.geng1@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for guidances, I will fix error and upload new patch
+While working on commit b5372fe5dc84 ("exec: load_script: Do not exec
+truncated interpreter path"), I wrote a series of test scripts to verify
+corner cases. However, soon after, commit 6eb3c3d0a52d ("exec: increase
+BINPRM_BUF_SIZE to 256") landed, resulting in the tests needing to be
+refactored for the larger BINPRM_BUF_SIZE, which got lost on my TODO
+list. During the recent exec refactoring work[1], the need for these tests
+resurfaced, so I've finished them up for addition to the kernel selftests.
 
-Greg KH <gregkh@linuxfoundation.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=8820=E6=
-=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=884:51=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Wed, May 20, 2020 at 04:38:21PM +0800, gengcixi@gmail.com wrote:
-> > From: Cixi Geng <cixi.geng1@unisoc.com>
-> >
-> > ---
-> > Replace symbol GCOV_PROFILE_MODULES with GCOV_PROFILE_PREREQS
-> > ---
-> > The CONFIG_GCOV_PROFILE_ALL will compile kernel by profiling entire
-> > kernel which will lead to kernel run slower.Use GCOV_PROFILE_PREREQS
-> > to control part of the kernel modules to open gcov.
-> >
-> > Only add SERIAL_GCOV for an example.
-> >
-> > Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
-> > ---
-> >  drivers/tty/serial/Kconfig  |  6 ++++++
-> >  drivers/tty/serial/Makefile |  1 +
-> >  kernel/gcov/Kconfig         | 14 ++++++++++++++
-> >  3 files changed, 21 insertions(+)
-> >
-> > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> > index adf9e80e7dc9..964df1a2989c 100644
-> > --- a/drivers/tty/serial/Kconfig
-> > +++ b/drivers/tty/serial/Kconfig
-> > @@ -1566,3 +1566,9 @@ endmenu
-> >
-> >  config SERIAL_MCTRL_GPIO
-> >       tristate
-> > +
-> > +config SERIAL_GCOV
-> > +       bool "open gcov for serial"
->
-> What do you mean by "open"?  And Kconfig entries are usually Upper Case" =
-:)
->
-> > +       depends on GCOV_PROFILE_PREREQS
-> > +       help
-> > +         Say Y here to enable gcov in serial.
->
-> I think we need more text here.
->
->
-> > diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-> > index d056ee6cca33..7be1202286d2 100644
-> > --- a/drivers/tty/serial/Makefile
-> > +++ b/drivers/tty/serial/Makefile
-> > @@ -2,6 +2,7 @@
-> >  #
-> >  # Makefile for the kernel serial device drivers.
-> >  #
-> > +GCOV_PROFILE :=3D $(CONFIG_SERIAL_GCOV)
-> >
-> >  obj-$(CONFIG_SERIAL_CORE) +=3D serial_core.o
-> >
-> > diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-> > index 3941a9c48f83..91cc8f3c7c43 100644
-> > --- a/kernel/gcov/Kconfig
-> > +++ b/kernel/gcov/Kconfig
-> > @@ -51,6 +51,20 @@ config GCOV_PROFILE_ALL
-> >       larger and run slower. Also be sure to exclude files from profili=
-ng
-> >       which are not linked to the kernel image to prevent linker errors=
-.
-> >
-> > +config GCOV_PROFILE_PREREQS
-> > +     bool "Profile Kernel subsytem"
-> > +     depends on !COMPILE_TEST
-> > +     depends on GCOV_KERNEL
-> > +     default n
->
-> default is always 'n', no need to list that
->
-> > +     help
-> > +     This options activates profiling for the specified kernel modules=
-.
-> > +
-> > +     If unsure, say N.
-> > +
-> > +     When some modules need Gcov data, enable this config, then config=
-ure
-> > +     with gcov on the corresponding modules configs.The directories or=
- files
->
-> '. '?
->
-> > +     of these modules will be added profiling flags after kernel compi=
-le.
->
-> The lines under "help" need to be indented more, right?
->
-> thanks,
->
-> greg k-h
+[1] https://lore.kernel.org/lkml/202005191144.E3112135@keescook/
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ tools/testing/selftests/exec/Makefile      |   1 +
+ tools/testing/selftests/exec/binfmt_script | 171 +++++++++++++++++++++
+ 2 files changed, 172 insertions(+)
+ create mode 100755 tools/testing/selftests/exec/binfmt_script
+
+diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
+index 33339e31e365..7f4527f897c4 100644
+--- a/tools/testing/selftests/exec/Makefile
++++ b/tools/testing/selftests/exec/Makefile
+@@ -3,6 +3,7 @@ CFLAGS = -Wall
+ CFLAGS += -Wno-nonnull
+ CFLAGS += -D_GNU_SOURCE
+ 
++TEST_PROGS := binfmt_script
+ TEST_GEN_PROGS := execveat
+ TEST_GEN_FILES := execveat.symlink execveat.denatured script subdir
+ # Makefile is a run-time dependency, since it's accessed by the execveat test
+diff --git a/tools/testing/selftests/exec/binfmt_script b/tools/testing/selftests/exec/binfmt_script
+new file mode 100755
+index 000000000000..05f94a741c7a
+--- /dev/null
++++ b/tools/testing/selftests/exec/binfmt_script
+@@ -0,0 +1,171 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
++#
++# Test that truncation of bprm->buf doesn't cause unexpected execs paths, along
++# with various other pathological cases.
++import os, subprocess
++
++# Relevant commits
++#
++# b5372fe5dc84 ("exec: load_script: Do not exec truncated interpreter path")
++# 6eb3c3d0a52d ("exec: increase BINPRM_BUF_SIZE to 256")
++
++# BINPRM_BUF_SIZE
++SIZE=256
++
++NAME_MAX=int(subprocess.check_output(["getconf", "NAME_MAX", "."]))
++
++test_num=0
++
++code='''#!/usr/bin/perl
++print "Executed interpreter! Args:\n";
++print "0 : '$0'\n";
++$counter = 1;
++foreach my $a (@ARGV) {
++    print "$counter : '$a'\n";
++    $counter++;
++}
++'''
++
++##
++# test - produce a binfmt_script hashbang line for testing
++#
++# @size:     bytes for bprm->buf line, including hashbang but not newline
++# @good:     whether this script is expected to execute correctly
++# @hashbang: the special 2 bytes for running binfmt_script
++# @leading:  any leading whitespace before the executable path
++# @root:     start of executable pathname
++# @target:   end of executable pathname
++# @arg:      bytes following the executable pathname
++# @fill:     character to fill between @root and @target to reach @size bytes
++# @newline:  character to use as newline, not counted towards @size
++# ...
++def test(name, size, good=True, leading="", root="./", target="/perl",
++                     fill="A", arg="", newline="\n", hashbang="#!"):
++    global test_num, tests, NAME_MAX
++    test_num += 1
++    if test_num > tests:
++        raise ValueError("more binfmt_script tests than expected! (want %d, expected %d)"
++                         % (test_num, tests))
++
++    middle = ""
++    remaining = size - len(hashbang) - len(leading) - len(root) - len(target) - len(arg)
++    # The middle of the pathname must not exceed NAME_MAX
++    while remaining >= NAME_MAX:
++        middle += fill * (NAME_MAX - 1)
++        middle += '/'
++        remaining -= NAME_MAX
++    middle += fill * remaining
++
++    dirpath = root + middle
++    binary = dirpath + target
++    if len(target):
++        os.makedirs(dirpath, mode=0o755, exist_ok=True)
++        open(binary, "w").write(code)
++        os.chmod(binary, 0o755)
++
++    buf=hashbang + leading + root + middle + target + arg + newline
++    if len(newline) > 0:
++        buf += 'echo this is not really perl\n'
++
++    script = "binfmt_script-%s" % (name)
++    open(script, "w").write(buf)
++    os.chmod(script, 0o755)
++
++    proc = subprocess.Popen(["./%s" % (script)], shell=True,
++                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
++    stdout = proc.communicate()[0]
++
++    if proc.returncode == 0 and b'Executed interpreter' in stdout:
++        if good:
++            print("ok %d - binfmt_script %s (successful good exec)"
++                  % (test_num, name))
++        else:
++            print("not ok %d - binfmt_script %s succeeded when it should have failed"
++                  % (test_num, name))
++    else:
++        if good:
++            print("not ok %d - binfmt_script %s failed when it should have succeeded (rc:%d)"
++                  % (test_num, name, proc.returncode))
++        else:
++            print("ok %d - binfmt_script %s (correctly failed bad exec)"
++                  % (test_num, name))
++
++    # Clean up crazy binaries
++    os.unlink(script)
++    if len(target):
++        elements = binary.split('/')
++        os.unlink(binary)
++        elements.pop()
++        while len(elements) > 1:
++            os.rmdir("/".join(elements))
++            elements.pop()
++
++tests=27
++print("TAP version 1.3")
++print("1..%d" % (tests))
++
++### FAIL (8 tests)
++
++# Entire path is well past the BINFMT_BUF_SIZE.
++test(name="too-big",        size=SIZE+80, good=False)
++# Path is right at max size, making it impossible to tell if it was truncated.
++test(name="exact",          size=SIZE,    good=False)
++# Same as above, but with leading whitespace.
++test(name="exact-space",    size=SIZE,    good=False, leading=" ")
++# Huge buffer of only whitespace.
++test(name="whitespace-too-big", size=SIZE+71, good=False, root="",
++                                              fill=" ", target="")
++# A good path, but it gets truncated due to leading whitespace.
++test(name="truncated",      size=SIZE+17, good=False, leading=" " * 19)
++# Entirely empty except for #!
++test(name="empty",          size=2,       good=False, root="",
++                                          fill="", target="", newline="")
++# Within size, but entirely spaces
++test(name="spaces",         size=SIZE-1,  good=False, root="", fill=" ",
++                                          target="", newline="")
++# Newline before binary.
++test(name="newline-prefix", size=SIZE-1,  good=False, leading="\n",
++                                          root="", fill=" ", target="")
++
++### ok (19 tests)
++
++# The original test case that was broken by commit:
++# 8099b047ecc4 ("exec: load_script: don't blindly truncate shebang string")
++test(name="test.pl",        size=439, leading=" ",
++     root="./nix/store/bwav8kz8b3y471wjsybgzw84mrh4js9-perl-5.28.1/bin",
++     arg=" -I/nix/store/x6yyav38jgr924nkna62q3pkp0dgmzlx-perl5.28.1-File-Slurp-9999.25/lib/perl5/site_perl -I/nix/store/ha8v67sl8dac92r9z07vzr4gv1y9nwqz-perl5.28.1-Net-DBus-1.1.0/lib/perl5/site_perl -I/nix/store/dcrkvnjmwh69ljsvpbdjjdnqgwx90a9d-perl5.28.1-XML-Parser-2.44/lib/perl5/site_perl -I/nix/store/rmji88k2zz7h4zg97385bygcydrf2q8h-perl5.28.1-XML-Twig-3.52/lib/perl5/site_perl")
++# One byte under size, leaving newline visible.
++test(name="one-under",           size=SIZE-1)
++# Two bytes under size, leaving newline visible.
++test(name="two-under",           size=SIZE-2)
++# Exact size, but trailing whitespace visible instead of newline
++test(name="exact-trunc-whitespace", size=SIZE, arg=" ")
++# Exact size, but trailing space and first arg char visible instead of newline.
++test(name="exact-trunc-arg",     size=SIZE, arg=" f")
++# One bute under, with confirmed non-truncated arg since newline now visible.
++test(name="one-under-full-arg",  size=SIZE-1, arg=" f")
++# Short read buffer by one byte.
++test(name="one-under-no-nl",     size=SIZE-1, newline="")
++# Short read buffer by half buffer size.
++test(name="half-under-no-nl",    size=int(SIZE/2), newline="")
++# One byte under with whitespace arg. leaving wenline visible.
++test(name="one-under-trunc-arg", size=SIZE-1, arg=" ")
++# One byte under with whitespace leading. leaving wenline visible.
++test(name="one-under-leading",   size=SIZE-1, leading=" ")
++# One byte under with whitespace leading and as arg. leaving newline visible.
++test(name="one-under-leading-trunc-arg",  size=SIZE-1, leading=" ", arg=" ")
++# Same as above, but with 2 bytes under
++test(name="two-under-no-nl",     size=SIZE-2, newline="")
++test(name="two-under-trunc-arg", size=SIZE-2, arg=" ")
++test(name="two-under-leading",   size=SIZE-2, leading=" ")
++test(name="two-under-leading-trunc-arg",   size=SIZE-2, leading=" ", arg=" ")
++# Same as above, but with buffer half filled
++test(name="two-under-no-nl",     size=int(SIZE/2), newline="")
++test(name="two-under-trunc-arg", size=int(SIZE/2), arg=" ")
++test(name="two-under-leading",   size=int(SIZE/2), leading=" ")
++test(name="two-under-lead-trunc-arg", size=int(SIZE/2), leading=" ", arg=" ")
++
++if test_num != tests:
++    raise ValueError("fewer binfmt_script tests than expected! (ran %d, expected %d"
++                     % (test_num, tests))
+-- 
+2.20.1
+
+
+-- 
+Kees Cook
