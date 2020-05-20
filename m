@@ -2,117 +2,100 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9363C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E99C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBCDC20884
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5D52084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590009151;
+	bh=zLuusxvkC3SyINCgh0xthoz+hc/q1pInV443m0AO10A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rNI/gqfH5e9m17oxj4WmC3M/ilLoueqCLVDXAs6d8nAUygCZ3eg3GmVIO7mjyPbG/
+	 4A9Hx4OFnIb1U5H7DXgoo6evBguxofF3jBwVU4wwRJZ9pOp/wCNrrfILLd6RH88fBP
+	 W2XU+UWFwXSEJiIGhGuE1GWrKccouIDbJP5MIv/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgETVMG (ORCPT
+        id S1728227AbgETVMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:12:06 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60792 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgETVMF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:12:05 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BD7CB803087B;
-        Wed, 20 May 2020 21:12:02 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rm8xPnTOIoPd; Thu, 21 May 2020 00:12:02 +0300 (MSK)
-Date:   Thu, 21 May 2020 00:12:00 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200520211200.qhfgdz4qnatyloob@mobilestation>
-References: <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
- <20200518134820.wedoumgbsllvhem6@mobilestation>
- <20200518163206.GA17800@alpha.franken.de>
- <20200518205752.txbylbjt2zkwdwwe@mobilestation>
- <20200519155053.GB15797@alpha.franken.de>
- <20200520121201.wohv6u646rx5otkf@mobilestation>
- <20200520133827.GA17714@alpha.franken.de>
- <20200520134826.pc6si3k6boaexp4i@mobilestation>
- <20200520183057.GA23855@alpha.franken.de>
+        Wed, 20 May 2020 17:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727018AbgETVMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:12:30 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A85B207E8;
+        Wed, 20 May 2020 21:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590009150;
+        bh=zLuusxvkC3SyINCgh0xthoz+hc/q1pInV443m0AO10A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sj9iEj94CxDfU5vwFNq0cHwmX8CyIAFqswgo9D+tK56EkCGAS37Bxte6eQaJyka4F
+         doxTjqswFaaXcd9IsCCG3QQaGKdtz1TmH8MEdcDKik/mw4UOVO36nOyb+VdLo41LsM
+         m/DXofwQqusL1ChxV6Vp6JrFys1BIrWunQjkLLsk=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8E04E40AFD; Wed, 20 May 2020 18:12:28 -0300 (-03)
+Date:   Wed, 20 May 2020 18:12:28 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 16/19] perf ftrace: add option -t/--tid to filter by
+ thread id
+Message-ID: <20200520211228.GE32678@kernel.org>
+References: <20200510150628.16610-1-changbin.du@gmail.com>
+ <20200510150628.16610-17-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520183057.GA23855@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200510150628.16610-17-changbin.du@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:30:57PM +0200, Thomas Bogendoerfer wrote:
-> On Wed, May 20, 2020 at 04:48:26PM +0300, Serge Semin wrote:
-> > On Wed, May 20, 2020 at 03:38:27PM +0200, Thomas Bogendoerfer wrote:
-> > > On Wed, May 20, 2020 at 03:12:01PM +0300, Serge Semin wrote:
-> > > > Since you don't like the way I initially fixed it, suppose there we don't have
-> > > > another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
-> > > > parameter to select a proper accessors, like sw in our case, and sb by defaul).
-> > > > Right?
-> > > 
-> > > to be on the safe side it's probably the best thing. But I don't know
-> > > enough about CPS_NS16550 to judge whether shift value correlates with
-> > > possible access width.
-> > 
-> > The base address passed to the _mips_cps_putc() leaf is UART-base address. It
-> > has nothing to do with CPS. See:
+Em Sun, May 10, 2020 at 11:06:25PM +0800, Changbin Du escreveu:
+> This allows us to trace single thread instead of the whole process.
+
+I was going to adjust the patch to add, but you forgot to add the entry
+to tools/perf/Documentation/perf-ftrace.txt,
+
+Please do so,
+
+- Arnaldo
+ 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> ok, I'm confused. So this isn't an uart inside CPS hardware, but an uart used
-> by CPS code for debug output, right ? 
-
-Right. It's not CPS, but just UART available on the system. See a comment in the
-arch/mips/kernel/cps-vec-ns16550.S:
-/**
- * mips_cps_bev_dump() - dump relevant exception state to UART
- * @a0: pointer to NULL-terminated ASCII string naming the exception
- *
- * Write information that may be useful in debugging an exception to the
- * UART configured by CONFIG_MIPS_CPS_NS16550_*.
- *...
- */
-LEAF(mips_cps_bev_dump)
-        move            s0, ra
-        move            s1, a0
-
-        li              t9, CKSEG1ADDR(CONFIG_MIPS_CPS_NS16550_BASE)
-        ...
-
-See the base is just loaded to the t9 register.
-
-> 
-> To solve the issued please add CONFIG_MIPS_CPS_NS16550_WIDTH to select the
-> correct access width.
-
-Ok. Thanks.
-
--Sergey
-
-> 
-> Thomas.
-> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 0b39b6a88026..8d04e5afe2d3 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -707,6 +707,8 @@ int cmd_ftrace(int argc, const char **argv)
+>  		    "List available functions to filter"),
+>  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+>  		   "trace on existing process id"),
+> +	OPT_STRING('t', "tid", &ftrace.target.tid, "tid",
+> +		   "trace on existing thread id (exclusive to --pid)"),
+>  	OPT_INCR('v', "verbose", &verbose,
+>  		 "be more verbose"),
+>  	OPT_BOOLEAN('a', "all-cpus", &ftrace.target.system_wide,
 > -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+> 2.25.1
+> 
+
+-- 
+
+- Arnaldo
