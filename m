@@ -2,113 +2,131 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B039C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A86206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E049E206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:09:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Enb7s1ty"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="ejWrZ/jf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgETTHQ (ORCPT
+        id S1726845AbgETTJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:07:16 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38242 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726688AbgETTHP (ORCPT
+        Wed, 20 May 2020 15:09:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbgETTJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:07:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590001635; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=QXlLEUKSHL/0UjZpVA1wNzA6wRLVED9Vpod9975E1rc=; b=Enb7s1ty908bUHK9DlRFlHpEDcb17XY3g5YQAnnnO71NzECPq/k+7fewqPdRPQMqz1QZHXaU
- 2b+wsiyhdFpKkbx951zE2j3o3THqSxehSZF+L6AyAxVFkDhsRoCMOU20dhQMmnsLAwUHYwfg
- eDmMqO+xWkcK18NAYvJI9qpy3Ao=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ec57fcd62ee3a3497b55603 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 19:06:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1E5A5C433C9; Wed, 20 May 2020 19:06:53 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2A298C433C8;
-        Wed, 20 May 2020 19:06:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2A298C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v3 2/7] bus: mhi: core: Introduce independent voting
- mechanism
-To:     bbhatt@codeaurora.org
-Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        hemantk@codeaurora.org, linux-kernel@vger.kernel.org
-References: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
- <1589832241-13867-3-git-send-email-bbhatt@codeaurora.org>
- <a12e693d-a8bb-3ecf-e799-c46de7429b5d@codeaurora.org>
- <574a4fe915f86608b59f10577eb960e9@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <a51d366e-5466-cbd0-b19c-61e76e8671b5@codeaurora.org>
-Date:   Wed, 20 May 2020 13:06:50 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 15:09:10 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23098C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:09:10 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id s19so4324814edt.12
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tl5hNSaq9jwtAfQ3H4b6ZmG+ScLEKqnmbeQTtX38GBs=;
+        b=ejWrZ/jfJqN1W3XBa5rEh8Lk4R2pGtjUsAfERal12GI7QfCZfWLDd9UtMrTSYE1/tI
+         FovDCSwIGfbaaHj8cZJ1IKJDULyXaqYHAyGtIE65kUKbthWtIjz/KQGrx+y85v2kRRQb
+         81QOjyfbBp6VHvsSe4y3k88jU+q/CRx/ohQyM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tl5hNSaq9jwtAfQ3H4b6ZmG+ScLEKqnmbeQTtX38GBs=;
+        b=lzLL4kKJbY/6s/UKIX6rvmZ4rhXD2HRkQJMLfEWZMBhJe99e6CIixnQYpY1JfW+Wsq
+         cO74nhbXG/6X3L816qR0kyoUKDqo94FgptKbiF7mGXXi7YGzrkGKgGjGAd0luH22FD0+
+         QQcjOYWd43Wsi0Xy1LSUn1kblirsjFyuXT68CVQrKD283ZCMQMKgkx4pywBDwJtRiHcM
+         I7u+WrWI2qr+E+2a04SyYOQzMuAxmKpf1b6cULZK3LA/VfgcTLOS7i9VthpXlCud8C9Z
+         pMDj4kWoleWyvSZSnIIBbLlBqm4iHTeE+1fggxlYBTj1+oGoJN9dQoJC2YLKMO7/AEiH
+         RyEw==
+X-Gm-Message-State: AOAM531DQQbJU+3guy0qf6NRifgQPy8aEHqStVJsemz2x4K3TnaPWg+d
+        oD7FXip7Q6LTNRPtvrhV4pPlgOhbaHdA5CLg
+X-Google-Smtp-Source: ABdhPJweTP3W62AzAZrqweXxsUYkSWvtaZ1Wr8JxuA7F/wzgya+W3/hBf6pFGJ7YDBt9fmp3P99NeQ==
+X-Received: by 2002:a50:9312:: with SMTP id m18mr4674386eda.252.1590001748698;
+        Wed, 20 May 2020 12:09:08 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:758d])
+        by smtp.gmail.com with ESMTPSA id g21sm2514869edw.9.2020.05.20.12.09.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 12:09:08 -0700 (PDT)
+Date:   Wed, 20 May 2020 20:09:06 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, cgroups@vger.kernel.org
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200520190906.GA558281@chrisdown.name>
+References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
+ <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
+ <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
+ <20200519075213.GF32497@dhcp22.suse.cz>
+ <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+ <20200519084535.GG32497@dhcp22.suse.cz>
+ <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <574a4fe915f86608b59f10577eb960e9@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/2020 12:43 PM, bbhatt@codeaurora.org wrote:
-> On 2020-05-20 09:54, Jeffrey Hugo wrote:
->> On 5/18/2020 2:03 PM, Bhaumik Bhatt wrote:
->>> Allow independent votes from clients such that they can choose to vote
->>> for either the device or the bus or both. This helps in cases where the
->>> device supports autonomous low power mode wherein it can move to M2
->>> state without the need to notify the host. Clients can also vote only to
->>> keep the underlying bus active without having the device in M0 state to
->>> support offload use cases.
->>>
->>> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
->>> ---
->>
->> I wonder, why doesn't this fit with runtimePM?
-> Hi Jeff,
-> 
-> Can you elaborate?
-> 
-> In short, with this patch, MHI just wants to give controller the option to
-> choose the vote type so we can implement autonomous low power mode entries
-> on both host and device.
+Hi Naresh,
 
-So, you are attempting to manage the power mode of the device.  The 
-standard mechanism to do so in Linux is runtime pm.
+Naresh Kamboju writes:
+>As a part of investigation on this issue LKFT teammate Anders Roxell
+>git bisected the problem and found bad commit(s) which caused this problem.
+>
+>The following two patches have been reverted on next-20200519 and retested the
+>reproducible steps and confirmed the test case mkfs -t ext4 got PASS.
+>( invoked oom-killer is gone now)
+>
+>Revert "mm, memcg: avoid stale protection values when cgroup is above
+>protection"
+>    This reverts commit 23a53e1c02006120f89383270d46cbd040a70bc6.
+>
+>Revert "mm, memcg: decouple e{low,min} state mutations from protection
+>checks"
+>    This reverts commit 7b88906ab7399b58bb088c28befe50bcce076d82.
 
-https://elixir.bootlin.com/linux/latest/source/Documentation/driver-api/pm/devices.rst
+Thanks Anders and Naresh for tracking this down and reverting.
 
-I'm no runtime pm expert, but it feels like your whole voting mechanism, 
-etc is just reimplemeting that.  Reimplementing the wheel, when its been 
-a standard thing that the majority of the kernel uses is not usually 
-acceptable.
+I'll take a look tomorrow. I don't see anything immediately obviously wrong in 
+either of those commits from a (very) cursory glance, but they should only be 
+taking effect if protections are set.
 
-IMO, you need some sort of justification why runtime pm is not 
-applicable for you, because I'm willing to bet Mani/Greg are going to 
-ask the same.
+Since you have i386 hardware available, and I don't, could you please apply 
+only "avoid stale protection" again and check if it only happens with that 
+commit, or requires both? That would help narrow down the suspects.
 
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Do you use any memcg protections in these tests?
+
+Thank you!
+
+Chris
