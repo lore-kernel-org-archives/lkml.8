@@ -2,134 +2,126 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3739C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE342072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A9E2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="hnmvyk/M"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dfrdutoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgETEgn (ORCPT
+        id S1726672AbgETEit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:36:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
+        Wed, 20 May 2020 00:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgETEgn (ORCPT
+        with ESMTP id S1725785AbgETEis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:36:43 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D54C6C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:36:42 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d10so867985pgn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:36:42 -0700 (PDT)
+        Wed, 20 May 2020 00:38:48 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CF9C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:38:44 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id j145so1847812oib.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z18eUcX9wumqAi1dZD97mqpztrpNBRW0eHw97u6ixxM=;
-        b=hnmvyk/M83EsgHOqYGveBP5/xO9sKSMWadm584PNwZy+/Oph7HoRx8Ln2sEpjLU5qw
-         xOWTiT2CEAUODRkg1aJNaUdrmEp3/fYLwuouPPQWxotBxYF6+pHp7Cvl3nkJxxLjT9JZ
-         abO018U4u4MauIzN8h07kT81+XaoZl/+wOQAtMHPMqQ38OmBmBVRZCnDzPPl4vZxll9+
-         urzIGK9Rx0rocxi/lsOK5HoPZbjGFO2mAyAhr8EvTdewc9sWCs6MgBNsfv2ZQT6/c4qk
-         EEdgKI4X3/EtLJO7fnn/a/+meJ7+T5jaU8pNhnU02fr94zN+/I4ID5W6KR0y1fSmcawM
-         sxiw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/gvGtY5nqJXPbJ1LBsOILjTaDTKNBUV9oTxyk5neDx8=;
+        b=dfrdutoU73QiEI7RWhK3Xq9DKlTgEjQ31RRM66E++uRGGez1lIqk/qtQ6nML+l2lZs
+         USS7DkFQNTMxvkSA6GtCDuIxqfw0+hctBd7BT2ZqOlAPoPaCtDBsENa2oeLGb7jq8L7x
+         7uPnwTa5kqPTFR3E0k4uizFSdSWlFZfZycmtLC0dR4psle5GcCHgAvqTUNW8kWA7qOmn
+         L/B0MY1Z3P8UtYz2P6SnWc9qNRvmDximS79CwuLQGp51YGcQIjbjUwRdw5zifkUd7iPA
+         6dnNZT8JjtUBMG48gD0jlWbAA7NJXR7qigrkMF66XYS1/QSMKrLrxdKgEIzfyH7L/Z3p
+         mFyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z18eUcX9wumqAi1dZD97mqpztrpNBRW0eHw97u6ixxM=;
-        b=aeITk1zJsf3vuRMjPuzNdeaSDljdGh1nRg1sunpmKaGW7GtRYoFbFdEziWGb7E3uAl
-         ZoySc0cLckecCeT5f+a1+y/GBMR/hJFpIfRUIxq+85fAvIfAnnPfIXiO55NkboBvBNlK
-         hTAkGHl8tppo7P52i2zuAnBH8lMmuwft1WyTmEIWRiyodk8ddTEXSRcbU/YWuzpzrSiz
-         n3jNuZjnZOwp8P+qFRj6Mo/M232jRWr0+joKoih4L26+/yjXrtgwFoKZyacylWeRBPne
-         WsIlkQDqs7tA/KGme5aghPsp9Qcfarc5NUqAyAUt9PWPLvjREMUv/HqtICxL64yiVrjf
-         injw==
-X-Gm-Message-State: AOAM532+4vhZFoUOT4gnqoJBt/mAZKueJ4LPX+EvyTK0QPkhd634ApAp
-        G8edzdEIAv50IsVD4igh74faew==
-X-Google-Smtp-Source: ABdhPJwtRqanuNy5NN42n7ANp36PIBW5Zrc+UW5lghh91ZKUrjlYos3E7Sj4Rg2hzERL1tJEpETFaw==
-X-Received: by 2002:a62:7996:: with SMTP id u144mr2368896pfc.86.1589949402274;
-        Tue, 19 May 2020 21:36:42 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id y10sm876007pfb.53.2020.05.19.21.36.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 21:36:41 -0700 (PDT)
-Date:   Tue, 19 May 2020 21:36:37 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     David Miller <davem@davemloft.net>, tglx@linutronix.de,
-        a.darwish@linutronix.de, peterz@infradead.org, mingo@redhat.com,
-        will@kernel.org, paulmck@kernel.org, bigeasy@linutronix.de,
-        rostedt@goodmis.org, linux-kernel@vger.kernel.org, kuba@kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of
- a seqcount
-Message-ID: <20200519213637.4d874aad@hermes.lan>
-In-Reply-To: <886041df-d889-3d88-59fe-e190d15f9c98@gmail.com>
-References: <87v9kr5zt7.fsf@nanos.tec.linutronix.de>
-        <20200519161141.5fbab730@hermes.lan>
-        <87lfln5w61.fsf@nanos.tec.linutronix.de>
-        <20200519.195722.1091264300612213554.davem@davemloft.net>
-        <886041df-d889-3d88-59fe-e190d15f9c98@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/gvGtY5nqJXPbJ1LBsOILjTaDTKNBUV9oTxyk5neDx8=;
+        b=hPW6EjLj844jfewEPCuimNJ945vA/sLy1KxX7WZUtkX/TeXj8LyNyA9RC97D8/ZLr/
+         jwppZrwQ+PmlvmAhM0bK53/sTcANv2IEpSdLYbAognhjVR/pHuj2t4X/boU74Z/s50Kh
+         mzSGdFmoSvMgKQFJUkkW3Hh/42E6JDHTocKezYoDe3zsXqpM9nHOW6LGxKSNCskR04Bd
+         YxMKYa/U45D/Ezkz6rtBJUS8tvSROjoLbKk3TdyncGDefPuNrf/CiKJXD9p+y3mAhMTZ
+         x3jcD0hHV1R9A4x6CSEYxyYt/WeaKbKHAlRXahUCUz5TvTb+m3GLlgROjgehzfTtFJ+r
+         4cOw==
+X-Gm-Message-State: AOAM532uDd8OJ1Wj1LSbKC/wb2k0GVRh5MDM4NcXP6fTmlnxaL0mBZSb
+        FJ/XbWx9034dUZm7TDvLkB7NzxAXhQkHbk3pc5ZlsQ==
+X-Google-Smtp-Source: ABdhPJz9Do6JGTC2Xjtyghaq1P404WN1SjGSsMaszjfbRq1bSzqPkD5zd4sCBRDHzeDX5e2szj+lCQlb49uh9ew8Mz4=
+X-Received: by 2002:aca:f1c2:: with SMTP id p185mr1986908oih.69.1589949523526;
+ Tue, 19 May 2020 21:38:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200520043626.181820-1-saravanak@google.com>
+In-Reply-To: <20200520043626.181820-1-saravanak@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 19 May 2020 21:38:07 -0700
+Message-ID: <CAGETcx9hYrnMF8JU+KV6jvxExq3jYgdg4Z_-TyjN4RUQnV8qvA@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Fix handling of SYNC_STATE_ONLY +
+ STATELESS device links
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     Android Kernel Team <kernel-team@android.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 20:18:19 -0700
-Eric Dumazet <eric.dumazet@gmail.com> wrote:
+On Tue, May 19, 2020 at 9:36 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> Commit 21c27f06587d ("driver core: Fix SYNC_STATE_ONLY device link
+> implementation") didn't completely fix STATELESS + SYNC_STATE_ONLY
+> handling.
+>
+> What looks like an optimization in that commit is actually a bug that
+> causes an if condition to always take the else path. This prevents
+> reordering of devices in the dpm_list when a DL_FLAG_STATELESS device
+> link is create on top of an existing DL_FLAG_SYNC_STATE_ONLY device
+> link.
+>
+> Fixes: 21c27f06587d ("driver core: Fix SYNC_STATE_ONLY device link implementation")
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+> Sigh... device links are tricky and hard! Sorry about the endless fixes :(
+> Also, how was this not caught by the compiler as a warning?
+>
+> -Saravana
+>
+>  drivers/base/core.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 83a3e0b62ce3..dfd4e94ef790 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -543,12 +543,14 @@ struct device_link *device_link_add(struct device *consumer,
+>
+>                 if (flags & DL_FLAG_STATELESS) {
+>                         kref_get(&link->kref);
+> -                       link->flags |= DL_FLAG_STATELESS;
+>                         if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
+> -                           !(link->flags & DL_FLAG_STATELESS))
+> +                           !(link->flags & DL_FLAG_STATELESS)) {
+> +                               link->flags |= DL_FLAG_STATELESS;
+>                                 goto reorder;
+> -                       else
+> +                       } else {
+> +                               link->flags |= DL_FLAG_STATELESS;
+>                                 goto out;
+> +                       }
+>                 }
+>
+>                 /*
 
-> On 5/19/20 7:57 PM, David Miller wrote:
-> > From: Thomas Gleixner <tglx@linutronix.de>
-> > Date: Wed, 20 May 2020 01:42:30 +0200
-> >   
-> >> Stephen Hemminger <stephen@networkplumber.org> writes:  
-> >>> On Wed, 20 May 2020 00:23:48 +0200
-> >>> Thomas Gleixner <tglx@linutronix.de> wrote:  
-> >>>> No. We did not. -ENOTESTCASE  
-> >>>
-> >>> Please try, it isn't that hard..
-> >>>
-> >>> # time for ((i=0;i<1000;i++)); do ip li add dev dummy$i type dummy; done
-> >>>
-> >>> real	0m17.002s
-> >>> user	0m1.064s
-> >>> sys	0m0.375s  
-> >>
-> >> And that solves the incorrectness of the current code in which way?  
-> > 
-> > You mentioned that there wasn't a test case, he gave you one to try.
-> >   
-> 
-> I do not think this would ever use device rename, nor netdev_get_name()
-> 
-> None of this stuff is fast path really.
-> 
-> # time for ((i=1;i<1000;i++)); do ip li add dev dummy$i type dummy; done
-> 
-> real	0m1.127s
-> user	0m0.270s
-> sys	0m1.039s
+Forgot to add stable@vger.kernel.org. Doing that now.
 
-Your right it is a weak test, and most of the overhead is in the syscall
-and all netlink events that happen.
-
-It does end up looking up the new name, so would exercise that.
-Better test is to use %d syntax or create 1000 dummy's then rename every one.
-
-This is more of a stress test
-# for ((i=0;i<1000;i++)); do echo link add dev dummy%d type dummy; done | time ip -batch -
-0.00user 0.29system 0:02.11elapsed 13%CPU (0avgtext+0avgdata 2544maxresident)k
-0inputs+0outputs (0major+148minor)pagefaults 0swaps
-
-# for ((i=999;i>=0;i--)); do echo link set dummy$i name dummy$((i+1)); done | time ip -batch -
-0.00user 0.26system 0:54.98elapsed 0%CPU (0avgtext+0avgdata 2508maxresident)k
-0inputs+0outputs (0major+145minor)pagefaults 0swaps
-
+-Saravana
