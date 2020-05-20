@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9A3207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB77207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgETOYv (ORCPT
+        id S1728310AbgETOY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:24:51 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33168 "EHLO
+        Wed, 20 May 2020 10:24:58 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33176 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727066AbgETOW2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727065AbgETOW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-00036v-RI; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPby-00037e-Dp; Wed, 20 May 2020 15:22:22 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-007DTN-2o; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbw-007DUQ-GN; Wed, 20 May 2020 15:22:20 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>
-Date:   Wed, 20 May 2020 15:14:29 +0100
-Message-ID: <lsq.1589984008.760545650@decadent.org.uk>
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Luis Henriques" <luis.henriques@canonical.com>
+Date:   Wed, 20 May 2020 15:14:37 +0100
+Message-ID: <lsq.1589984009.835833982@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 61/99] KVM: x86/mmu: Apply max PA check for MMIO
- sptes to 32-bit KVM
+Subject: [PATCH 3.16 69/99] tracing: Fix very unlikely race of registering
+ two stat tracers
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,40 +56,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-commit e30a7d623dccdb3f880fbcad980b0cb589a1da45 upstream.
+commit dfb6cd1e654315168e36d947471bd2a0ccd834ae upstream.
 
-Remove the bogus 64-bit only condition from the check that disables MMIO
-spte optimization when the system supports the max PA, i.e. doesn't have
-any reserved PA bits.  32-bit KVM always uses PAE paging for the shadow
-MMU, and per Intel's SDM:
+Looking through old emails in my INBOX, I came across a patch from Luis
+Henriques that attempted to fix a race of two stat tracers registering the
+same stat trace (extremely unlikely, as this is done in the kernel, and
+probably doesn't even exist). The submitted patch wasn't quite right as it
+needed to deal with clean up a bit better (if two stat tracers were the
+same, it would have the same files).
 
-  PAE paging translates 32-bit linear addresses to 52-bit physical
-  addresses.
+But to make the code cleaner, all we needed to do is to keep the
+all_stat_sessions_mutex held for most of the registering function.
 
-The kernel's restrictions on max physical addresses are limits on how
-much memory the kernel can reasonably use, not what physical addresses
-are supported by hardware.
+Link: http://lkml.kernel.org/r/1410299375-20068-1-git-send-email-luis.henriques@canonical.com
 
-Fixes: ce88decffd17 ("KVM: MMU: mmio page fault support")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16: adjust filename, context]
+Fixes: 002bb86d8d42f ("tracing/ftrace: separate events tracing and stats tracing engine")
+Reported-by: Luis Henriques <luis.henriques@canonical.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kvm/x86.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_stat.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5734,7 +5734,7 @@ static void kvm_set_mmio_spte_mask(void)
- 	 * If reserved bit is not supported, clear the present bit to disable
- 	 * mmio page fault.
- 	 */
--	if (IS_ENABLED(CONFIG_X86_64) && maxphyaddr == 52)
-+	if (maxphyaddr == 52)
- 		mask &= ~1ull;
+--- a/kernel/trace/trace_stat.c
++++ b/kernel/trace/trace_stat.c
+@@ -302,7 +302,7 @@ static int init_stat_file(struct stat_se
+ int register_stat_tracer(struct tracer_stat *trace)
+ {
+ 	struct stat_session *session, *node;
+-	int ret;
++	int ret = -EINVAL;
  
- 	kvm_mmu_set_mmio_spte_mask(mask);
+ 	if (!trace)
+ 		return -EINVAL;
+@@ -313,17 +313,15 @@ int register_stat_tracer(struct tracer_s
+ 	/* Already registered? */
+ 	mutex_lock(&all_stat_sessions_mutex);
+ 	list_for_each_entry(node, &all_stat_sessions, session_list) {
+-		if (node->ts == trace) {
+-			mutex_unlock(&all_stat_sessions_mutex);
+-			return -EINVAL;
+-		}
++		if (node->ts == trace)
++			goto out;
+ 	}
+-	mutex_unlock(&all_stat_sessions_mutex);
+ 
++	ret = -ENOMEM;
+ 	/* Init the session */
+ 	session = kzalloc(sizeof(*session), GFP_KERNEL);
+ 	if (!session)
+-		return -ENOMEM;
++		goto out;
+ 
+ 	session->ts = trace;
+ 	INIT_LIST_HEAD(&session->session_list);
+@@ -332,15 +330,16 @@ int register_stat_tracer(struct tracer_s
+ 	ret = init_stat_file(session);
+ 	if (ret) {
+ 		destroy_session(session);
+-		return ret;
++		goto out;
+ 	}
+ 
++	ret = 0;
+ 	/* Register */
+-	mutex_lock(&all_stat_sessions_mutex);
+ 	list_add_tail(&session->session_list, &all_stat_sessions);
++ out:
+ 	mutex_unlock(&all_stat_sessions_mutex);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ void unregister_stat_tracer(struct tracer_stat *trace)
 
