@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3550C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96EB4207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11478207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgETO0h (ORCPT
+        id S1726566AbgETO0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:26:37 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33070 "EHLO
+        Wed, 20 May 2020 10:26:41 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32968 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727037AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726985AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035i-JS; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbw-00036D-6p; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DPq-KT; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbv-007DQt-58; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "Guenter Roeck" <linux@roeck-us.net>,
-        "Brian Norris" <briannorris@chromium.org>,
-        "Douglas Anderson" <dianders@chromium.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>, franky.lin@broadcom.com,
-        "Matthias Kaehlcke" <mka@chromium.org>
-Date:   Wed, 20 May 2020 15:13:53 +0100
-Message-ID: <lsq.1589984008.528149311@decadent.org.uk>
+        "Thierry Reding" <treding@nvidia.com>,
+        "Stephen Warren" <swarren@nvidia.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>
+Date:   Wed, 20 May 2020 15:14:06 +0100
+Message-ID: <lsq.1589984008.898690280@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 25/99] brcmfmac: abort and release host after error
+Subject: [PATCH 3.16 38/99] ARM: tegra: Enable PLLP bypass during Tegra124 LP1
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,54 +56,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Stephen Warren <swarren@nvidia.com>
 
-commit 863844ee3bd38219c88e82966d1df36a77716f3e upstream.
+commit 1a3388d506bf5b45bb283e6a4c4706cfb4897333 upstream.
 
-With commit 216b44000ada ("brcmfmac: Fix use after free in
-brcmf_sdio_readframes()") applied, we see locking timeouts in
-brcmf_sdio_watchdog_thread().
+For a little over a year, U-Boot has configured the flow controller to
+perform automatic RAM re-repair on off->on power transitions of the CPU
+rail[1]. This is mandatory for correct operation of Tegra124. However,
+RAM re-repair relies on certain clocks, which the kernel must enable and
+leave running. PLLP is one of those clocks. This clock is shut down
+during LP1 in order to save power. Enable bypass (which I believe routes
+osc_div_clk, essentially the crystal clock, to the PLL output) so that
+this clock signal toggles even though the PLL is not active. This is
+required so that LP1 power mode (system suspend) operates correctly.
 
-brcmfmac: brcmf_escan_timeout: timer expired
-INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
-Not tainted 4.19.94-07984-g24ff99a0f713 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
-[<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
-[<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
-[<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
-[<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
+The bypass configuration must then be undone when resuming from LP1, so
+that all peripheral clocks run at the expected rate. Without this, many
+peripherals won't work correctly; for example, the UART baud rate would
+be incorrect.
 
-In addition to restarting or exiting the loop, it is also necessary to
-abort the command and to release the host.
+NVIDIA's downstream kernel code only does this if not compiled for
+Tegra30, so the added code is made conditional upon the chip ID.
+NVIDIA's downstream code makes this change conditional upon the active
+CPU cluster. The upstream kernel currently doesn't support cluster
+switching, so this patch doesn't test the active CPU cluster ID.
 
-Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: franky.lin@broadcom.com
-Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16:
- - Use bus->sdiodev->func[1] instead of ->func1
- - Adjust filename]
+[1] 3cc7942a4ae5 ARM: tegra: implement RAM repair
+
+Reported-by: Jonathan Hunter <jonathanh@nvidia.com>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mach-tegra/sleep-tegra30.S | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
-@@ -1971,6 +1971,8 @@ static uint brcmf_sdio_readframes(struct
- 			if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
- 					       BRCMF_SDIO_FT_NORMAL)) {
- 				rd->len = 0;
-+				brcmf_sdio_rxfail(bus, true, true);
-+				sdio_release_host(bus->sdiodev->func[1]);
- 				brcmu_pkt_buf_free_skb(pkt);
- 				continue;
- 			}
+--- a/arch/arm/mach-tegra/sleep-tegra30.S
++++ b/arch/arm/mach-tegra/sleep-tegra30.S
+@@ -378,6 +378,14 @@ _pll_m_c_x_done:
+ 	pll_locked r1, r0, CLK_RESET_PLLC_BASE
+ 	pll_locked r1, r0, CLK_RESET_PLLX_BASE
+ 
++	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
++	cmp	r1, #TEGRA30
++	beq	1f
++	ldr	r1, [r0, #CLK_RESET_PLLP_BASE]
++	bic	r1, r1, #(1<<31)	@ disable PllP bypass
++	str	r1, [r0, #CLK_RESET_PLLP_BASE]
++1:
++
+ 	mov32	r7, TEGRA_TMRUS_BASE
+ 	ldr	r1, [r7]
+ 	add	r1, r1, #LOCK_DELAY
+@@ -637,7 +645,10 @@ tegra30_switch_cpu_to_clk32k:
+ 	str	r0, [r4, #PMC_PLLP_WB0_OVERRIDE]
+ 
+ 	/* disable PLLP, PLLA, PLLC and PLLX */
++	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
++	cmp	r1, #TEGRA30
+ 	ldr	r0, [r5, #CLK_RESET_PLLP_BASE]
++	orrne	r0, r0, #(1 << 31)	@ enable PllP bypass on fast cluster
+ 	bic	r0, r0, #(1 << 30)
+ 	str	r0, [r5, #CLK_RESET_PLLP_BASE]
+ 	ldr	r0, [r5, #CLK_RESET_PLLA_BASE]
 
