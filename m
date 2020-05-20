@@ -2,125 +2,102 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07459C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F119C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA980207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFC2207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgETOps (ORCPT
+        id S1726839AbgETOqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:45:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56556 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgETOpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:45:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4275AAB5C;
-        Wed, 20 May 2020 14:45:48 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id 25BD2604F6; Wed, 20 May 2020 16:45:44 +0200 (CEST)
-Date:   Wed, 20 May 2020 16:45:44 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        mkl@pengutronix.de, Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH net-next v3 1/2] ethtool: provide UAPI for PHY Signal
- Quality Index (SQI)
-Message-ID: <20200520144544.GB8771@lion.mk-sys.cz>
-References: <20200520062915.29493-1-o.rempel@pengutronix.de>
- <20200520062915.29493-2-o.rempel@pengutronix.de>
+        Wed, 20 May 2020 10:46:37 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:60025 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbgETOqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:46:37 -0400
+Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M8yU2-1jfHsS43HC-00635K; Wed, 20 May 2020 16:46:35 +0200
+Received: by mail-qk1-f169.google.com with SMTP id 142so3777850qkl.6;
+        Wed, 20 May 2020 07:46:34 -0700 (PDT)
+X-Gm-Message-State: AOAM531pJVNy2rqeddo+bEaedt/o7zabkZawqZOmKGnPWqf3yFS2laIg
+        3mi7zM2cr/ReA08fgMnbnTz8uRPX2jY6hXDO60E=
+X-Google-Smtp-Source: ABdhPJypyX4heAr8jTclXxNAM/F9gqjiDJaAB+OY94A6vygzYebCNAhZrJgCDtF9wxcn3J21WQxZOGR9j7pCMgQrZhQ=
+X-Received: by 2002:a37:46c9:: with SMTP id t192mr2136041qka.3.1589985993796;
+ Wed, 20 May 2020 07:46:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cvVnyQ+4j833TQvp"
-Content-Disposition: inline
-In-Reply-To: <20200520062915.29493-2-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200519131327.1836482-1-arnd@arndb.de> <20200519181034.58c67eb5bea24aae24d33421@linux-foundation.org>
+ <CAK8P3a281ZLKwkWCKkAdQvA6=XA4=+mKWbwEzK_BR4Uu1c5DNQ@mail.gmail.com> <CAMuHMdUx9zKbc7n164Gi+N9k-NhmbgXtU+Z4yZ9SvdxeCMtJKw@mail.gmail.com>
+In-Reply-To: <CAMuHMdUx9zKbc7n164Gi+N9k-NhmbgXtU+Z4yZ9SvdxeCMtJKw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 20 May 2020 16:46:17 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0+RWNUroSAtdVazxMV=o+FYpTX9Wvkbr5gODh4=zODkQ@mail.gmail.com>
+Message-ID: <CAK8P3a0+RWNUroSAtdVazxMV=o+FYpTX9Wvkbr5gODh4=zODkQ@mail.gmail.com>
+Subject: Re: [PATCH] sh: include linux/time_types.h for sockios
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:b37uLIBrkCHgv4k2PH+HERQcOSyA0KYzXqw8DvcE2yw3JW2DIxe
+ Xh+X+ga+AkhCv93hrN2oMUrAkkbfYIz+38vok9RTy4bViJroDzncnfdhehHefKfWSzqubVz
+ UkZ+Y/QhIZbP9/eGDIRDrgYj1lJVRAA9kHtw3nkrzkumb6q3Pzxl+xB/fYiM1MrNBQpNZxW
+ Nk12BSgxO8MlVCLwycS2g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Pp97+cetrdM=:WHm0MWpOr9t/XF13Oz0t7W
+ DkI/b9ZdeAIhgHeTaUxiFo3Y4KA97wNoUPlyNQ74yQ2JN7DVb8B+tj1rpBerwHl/7IUzQfgjo
+ Zds7VsfwKpm5OJwqTowgOT71tumCeeh6l2JLxcvfI4BJY2zuwOyPupfPXewVXrEYUsTkQ6RVP
+ s7LZow9wh87jK3D4JN1inhguBGlFSY3igna8Jk5e6qQz9L6D2vSF1CWuQJRMPiy7PhiyO4z2x
+ Fxt886DN7Xtw9z3vqFA5cvYYPl9NMbf7uKlRlEADAbLL76oi6L29OJAYKwzez6I/bjX2oxDTE
+ ak5tzm2V6D/1Vi/hQW1vSWkRVZ1fv6EqqxJvDA5JLOi4frFkolKf2wxkTMoILbJ+9mXYYy/ZE
+ 0lAoMZyiVtaLuDUkqH/XQeCHwpN5xDjK1OGDWD43dRA6VSDLDc3c9rJ8GSp6cVAWyQqvKnVbk
+ w/2JERyxhkndpuXQunQkllsGechjnXjc06ivRLZVHwWsavwZhhCs/26dCxB0yKONQQHYNA2+W
+ QNpbkfYDwGNK4lrSRfkqIaj//Xw7Xqvb+g7yVAEha9ZmEcIUGyN17o96jlnjEoTcrXwh46kkT
+ YoXUsRIuFohwwU3wq1eNmFrozTIcEFTVPtq34S0vdK65tzwHXAd+S0ukO6Pue0RZ57W8uXzaw
+ 3suN3vyZYrg74rtuF8s6w6pMaeBdBrKeXaWH+ZDLLMU9EXEk+hjLg2aL2U8nxi+XJBDIKe+fy
+ 0o2AOw3XEQpTvjmJ0aSNTib26JDp4FsPeJ36+LtvrGCEkPKhTzB3U65PFTFxvvhJgezPsEtdv
+ ib5Zda7WH4e/yeNfW35++HqEDXmug1PldclpKjokueokoDynfc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 20, 2020 at 1:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, May 20, 2020 at 10:32 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Wed, May 20, 2020 at 3:10 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > On Tue, 19 May 2020 15:13:13 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > Using the socket ioctls on arch/sh (and only there) causes build
+> > > > time problems when __kernel_old_timeval/__kernel_old_timespec are
+> > > > not already visible to the compiler.
+> > > >
+> > > > Add an explict include line for the header that defines these
+> > > > structures.
+> > >
+> > > I can grab this.
+> >
+> > Thanks!
+> >
+> > > > Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> > > > Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> > > > Fixes: 8c709f9a0693 ("y2038: sh: remove timeval/timespec usage from headers")
+> > > > Fixes: 0768e17073dc ("net: socket: implement 64-bit timestamps")
+> > >
+> > > cc:stable?
+> >
+> > Yes, I missed that.
+>
+> Doesn't matter, the stable bots will pick it up anyway, based on the Fixes tag.
 
---cvVnyQ+4j833TQvp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I normally prefer to be explicit, as some bug fixes may address
+something that has been caused by an earlier commit, but should not
+be backported for some reason.
 
-On Wed, May 20, 2020 at 08:29:14AM +0200, Oleksij Rempel wrote:
-> Signal Quality Index is a mandatory value required by "OPEN Alliance
-> SIG" for the 100Base-T1 PHYs [1]. This indicator can be used for cable
-> integrity diagnostic and investigating other noise sources and
-> implement by at least two vendors: NXP[2] and TI[3].
->=20
-> [1] http://www.opensig.org/download/document/218/Advanced_PHY_features_fo=
-r_automotive_Ethernet_V1.0.pdf
-> [2] https://www.nxp.com/docs/en/data-sheet/TJA1100.pdf
-> [3] https://www.ti.com/product/DP83TC811R-Q1
->=20
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-
-This looks good to me, there is just one thing I'm not sure about:
-
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index 59344db43fcb1..950ba479754bd 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -706,6 +706,8 @@ struct phy_driver {
->  			    struct ethtool_tunable *tuna,
->  			    const void *data);
->  	int (*set_loopback)(struct phy_device *dev, bool enable);
-> +	int (*get_sqi)(struct phy_device *dev);
-> +	int (*get_sqi_max)(struct phy_device *dev);
->  };
->  #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
->  				      struct phy_driver, mdiodrv)
-
-I'm not sure if it's a good idea to define two separate callbacks. It
-means adding two pointers instead of one (for every instance of the
-structure, not only those implementing them), doing two calls, running
-the same checks twice, locking twice, checking the result twice.
-
-Also, passing a structure pointer would mean less code changed if we
-decide to add more related state values later.
-
-What do you think?
-
-If you don't agree, I have no objections so
-
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-
-Michal
-
---cvVnyQ+4j833TQvp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7FQpIACgkQ538sG/LR
-dpV0dgf9EtLDViFGNOKw6wA8VFfIA2ANEsV19HAMn4YfQZ8pORVhIoJsKw8sAK64
-l9xidgkJ+CuzNSzsynX7a1jQc8inPdZ2qNsQwi6f6q/5ndtGoGtieEvMU+4EvlnN
-J0DehPfI9geLnzz7PjTuCYVbhBryTZoi0+otYDPPS1b1xhKlPdnNBHjnK2bsTrO4
-7ysx/iQT4PRhuy8R7+1c3BwHKpq0Ofhk3zFZtrIahQF4dUIcNFSec+Hs5LEb9wwt
-w96SKsAhwpgUeqMs/+eHHNIbjGQtrM42Kl2oA0MIUqW72rVETsnmlVyZH8gJVwWo
-mgAqSTHL0MtZKJR0/Guq+4KM1AVKsQ==
-=uNvL
------END PGP SIGNATURE-----
-
---cvVnyQ+4j833TQvp--
+      Arnd
