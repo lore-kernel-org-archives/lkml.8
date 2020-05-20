@@ -2,125 +2,230 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09636C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D2D20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:20:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="A2DCqD0h"
+	by mail.kernel.org (Postfix) with ESMTP id 23C1A2089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590013245;
+	bh=QiViETNi8wofYtVy8U8bBIRhCWXJvq/on+FEFj6JOIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GblQShMAKVu0EvK6Ivv5JAFLuuAtR0zi+PJqgB+Q2dSSsEW5LEGj6zjDVLCPpJ0C/
+	 6dCZMzcK7RFpgJpU986Gcu9AFVvUgvzb5L4L8trHDOf2594TXDu5NE0UAmnCBCgyAI
+	 k/cQ4N1VpsnuwKkJ0PqOHPJ81z4eDBTNRdXpYIl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgETWUA (ORCPT
+        id S1728505AbgETWUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbgETWT7 (ORCPT
+        Wed, 20 May 2020 18:20:44 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33159 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbgETWUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:19:59 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9950AC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:19:59 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f6so2132536pgm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ycck34yOE2eI9p8XWX3gxgUmzwvA56jseIW5KzHm0FY=;
-        b=A2DCqD0hVrSACeq0opTnEGbqUnFx7U3NbKrctUt8Fdp4HjEK96vLUZVZxbuOjtTdIh
-         Pbz3ztBmNqUcs7UitHS3izJWLdMiIMKDqJXpXNRSjufBQx47OoKi653UN/2KthcG2V/X
-         Z+DZhrBPirFLJiBzVVneXPrIobV9exvpAXaXk+geGM+UwkNiTYiq2lBellAWSGZN2Mx0
-         Y1OEY7xC5wTR0nISpAnvYgG4tb04ZFLjhwfNehfkBo3inxr0c/IMgHFMSFlnIJhcmV/v
-         3n+8ZMYs0p/6tXSSAgHWOVyYgbRCG4CYl/HP0ZkXv9ijLS0R2hZdtA/4u+o2fz2pGP84
-         FGuQ==
+        Wed, 20 May 2020 18:20:44 -0400
+Received: by mail-il1-f194.google.com with SMTP id y17so2771222ilg.0;
+        Wed, 20 May 2020 15:20:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=ycck34yOE2eI9p8XWX3gxgUmzwvA56jseIW5KzHm0FY=;
-        b=K3taOGPZgupTsEWyxGbiWEetEy522BxkhXZY7u7Q0ZwxAjsRmHyB8/CfQPqaq/XmRn
-         B4jGuVS106Cd1DfJ/OUTE9O6urgFZxQND/dgXJ2OIEn/50F3aWtGgPpX415oHBaT3XWa
-         1KkMZ4Puf2jQ8U1YyOdj/DCsPdk1fEJueoGEkqgqvE/0XE0f7MY8u6bANzRWCKAsejCg
-         r/pwHiWzhn3eaQYWO/amiIIIaZ09ROq5mEvGsB8oDV+6FPHelHS7s/D+HpYMxIICmefJ
-         gozKwZnxstecIawtEeVmP+PxrmUbDtr0IY0I87rPTmPlyAQAGz6gIKOs4NTcM7iPTl9r
-         LtGg==
-X-Gm-Message-State: AOAM530mUj+d6VAPEusNpMTzX9V9VxSomEDfBS5YjPOLLdWCNfWVISAa
-        w7DNMXJgU2sNLuBbR+HUJcqV0Q==
-X-Google-Smtp-Source: ABdhPJzBffw38fH6z7ClizvGlzg2njXTkTLF5T+vdnNSXUq5Ja4qQVrUaZwoxh29v5k8bvkf9BzFUg==
-X-Received: by 2002:a62:4e83:: with SMTP id c125mr2021866pfb.165.1590013198938;
-        Wed, 20 May 2020 15:19:58 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id y4sm2966513pfq.10.2020.05.20.15.19.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cvcsbmtAMBUtxfIKB+hoBBdn/4WW1hWmEN5RP5dp/Z0=;
+        b=Xb4a+t3n2hAKF1CBgmXR7T7l4GZpzmDIH7bOKZHS3t8oggvmWgrzBSXy/mLvS26IWf
+         XuG5ByfOeiV881xWr++NJYlJpn6qQmNHnCuTF+dxwZSmaKE/GNJWH+DEBsBZJ3mVHjQA
+         SbTIMOCt9ujaMxQ8DWTMe2jDjoQmGFRhaAtxdORjFuT8kejdJ4g+kHF0t+ybEoTlrSsO
+         9YBaJUvOPGRXLcEqFVGMtlamaYd92fAkesDwS1AGv5kvpn217/Gh4OvLfYV/1+xrw1VZ
+         Jgaa3NBJxUNtIxan0LEUYXc0TCHVPkLPWP0TyqkWO4eIPA+hHII4KUhwIueaLEq385bX
+         38ag==
+X-Gm-Message-State: AOAM532hsOanGiQKnmrgTZrmpYC8+s81KwAhdYtmDz+5+Kv1t12OPdq9
+        Eo8Ig+XlHSL2bUQdkzaLP6ye1Ng=
+X-Google-Smtp-Source: ABdhPJybrWt7gAM8MOngLf1pJSaQmJyDF6HmEm5+ths4SE/nrQrPRuXnk2C9Hu3iAmKaSp2P7SOXjw==
+X-Received: by 2002:a05:6e02:686:: with SMTP id o6mr5812922ils.280.1590013242979;
+        Wed, 20 May 2020 15:20:42 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id 7sm1609841ion.52.2020.05.20.15.20.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 15:19:58 -0700 (PDT)
-Date:   Wed, 20 May 2020 15:19:58 -0700 (PDT)
-X-Google-Original-Date: Wed, 20 May 2020 15:12:25 PDT (-0700)
-Subject:     Re: [PATCH v5 0/2] cacheinfo support to read no. of L2 cache ways enabled
-In-Reply-To: <1582175719-7401-1-git-send-email-yash.shah@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        anup@brainfault.org, Greg KH <gregkh@linuxfoundation.org>,
-        alexios.zavras@intel.com, tglx@linutronix.de, bp@suse.de,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sachin.ghadi@sifive.com, yash.shah@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     david.abdurachmanov@gmail.com, yash.shah@sifive.com
-Message-ID: <mhng-2f2a1b1f-278b-4062-82cd-750b4e9f3d55@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 20 May 2020 15:20:42 -0700 (PDT)
+Received: (nullmailer pid 704863 invoked by uid 1000);
+        Wed, 20 May 2020 22:20:40 -0000
+Date:   Wed, 20 May 2020 16:20:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com, rgummal@xilinx.com
+Subject: Re: [PATCH v7 1/2] PCI: xilinx-cpm: Add YAML schemas for Versal CPM
+ Root Port
+Message-ID: <20200520222040.GA693614@bogus>
+References: <1588852716-23132-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1588852716-23132-2-git-send-email-bharat.kumar.gogada@xilinx.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588852716-23132-2-git-send-email-bharat.kumar.gogada@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 21:15:17 PST (-0800), yash.shah@sifive.com wrote:
-> The patchset includes 2 patches. Patch 1 implements cache_get_priv_group
-> which make use of a generic ops structure to return a private attribute
-> group for custom cacheinfo. Patch 2 implements a private attribute named
-> "number_of_ways_enabled" in the cacheinfo framework. Reading this
-> attribute returns the number of L2 cache ways enabled at runtime,
->
-> This patchset is based on Linux v5.6-rc2 and tested on HiFive Unleashed
-> board.
->
-> v5:
-> - Since WayEnable is 8bits, mask out and return only the last 8 bit in
->   l2_largest_wayenabled()
-> - Rebased on Linux v5.6-rc2
->
-> v4:
-> - Rename "sifive_l2_largest_wayenabled" to "l2_largest_wayenabled" and
->   make it a static function
->
-> v3:
-> - As per Anup Patel's suggestion[0], implement a new approach which uses
->   generic ops structure. Hence addition of patch 1 to this series and
->   corresponding changes to patch 2.
-> - Dropped "riscv: dts: Add DT support for SiFive L2 cache controller"
->   patch since it is already merged
-> - Rebased on Linux v5.5-rc6
->
-> Changes in v2:
-> - Rebase the series on v5.5-rc3
-> - Remove the reserved-memory node from DT
->
-> [0]: https://lore.kernel.org/linux-riscv/CAAhSdy0CXde5s_ya=4YvmA4UQ5f5gLU-Z_FaOr8LPni+s_615Q@mail.gmail.com/
->
-> Yash Shah (2):
->   riscv: cacheinfo: Implement cache_get_priv_group with a generic ops
->     structure
->   riscv: Add support to determine no. of L2 cache way enabled
->
->  arch/riscv/include/asm/cacheinfo.h   | 15 ++++++++++++++
->  arch/riscv/kernel/cacheinfo.c        | 17 ++++++++++++++++
->  drivers/soc/sifive/sifive_l2_cache.c | 38 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 70 insertions(+)
->  create mode 100644 arch/riscv/include/asm/cacheinfo.h
+On Thu, May 07, 2020 at 05:28:35PM +0530, Bharat Kumar Gogada wrote:
+> Add YAML schemas documentation for Versal CPM Root Port driver.
+> 
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml | 105 +++++++++++++++++++++
+>  1 file changed, 105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> new file mode 100644
+> index 0000000..5fc5c3f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -0,0 +1,105 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/xilinx-versal-cpm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: CPM Host Controller device tree for Xilinx Versal SoCs
+> +
+> +maintainers:
+> +  - Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> +
 
-I must have lost track of this one, it's on for-next now.  Thanks to David for
-reminding me.
+allOf:
+  - $ref: /schemas/pci/pci-bus.yaml#
+
+> +properties:
+> +  compatible:
+> +    const: xlnx,versal-cpm-host-1.00
+> +
+
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+
+Can drop.
+
+> +
+> +  reg:
+> +    items:
+> +      - description: Configuration space region and bridge registers.
+> +      - description: CPM system level control and status registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: cfg
+> +      - const: cpm_slcr
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  msi-map:
+> +    description:
+> +      Maps a Requester ID to an MSI controller and associated MSI sideband data.
+> +
+> +  ranges:
+> +    maxItems: 2
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+
+> +  interrupt-map-mask:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  interrupt-map:
+> +    description: Standard PCI IRQ mapping properties.
+
+Can drop these 2.
+
+> +
+> +  interrupt_controller:
+
+s/_/-/
+
+> +    description: Interrupt controller child node.
+
+type: object
+
+And then need to describe all the properties under it too.
+
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
+
+Can drop.
+
+> +
+> +required:
+> +  - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - reg
+> +  - reg-names
+> +  - "#interrupt-cells"
+> +  - interrupts
+> +  - interrupt-parent
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +  - ranges
+> +  - bus-range
+> +  - msi-map
+
+interrupt-controller node not required?
+
+You can drop all the standard properties required in pci-bus.yaml (it's 
+in dtschema repo).
+
+> +
+> +additionalProperties: false
+
+This will need to be 'unevaluatedProperties: false'
+
+> +
+> +examples:
+> +  - |
+> +
+> +    versal {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               cpm_pcie: pci@fca10000 {
+
+pcie@...
+
+> +                       compatible = "xlnx,versal-cpm-host-1.00";
+> +                       #address-cells = <3>;
+> +                       #interrupt-cells = <1>;
+> +                       #size-cells = <2>;
+> +                       interrupts = <0 72 4>;
+> +                       interrupt-parent = <&gic>;
+> +                       interrupt-map-mask = <0 0 0 7>;
+> +                       interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
+> +                                       <0 0 0 2 &pcie_intc_0 1>,
+> +                                       <0 0 0 3 &pcie_intc_0 2>,
+> +                                       <0 0 0 4 &pcie_intc_0 3>;
+> +                       bus-range = <0x00 0xff>;
+> +                       ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000>,
+> +                                <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
+> +                       msi-map = <0x0 &its_gic 0x0 0x10000>;
+> +                       reg = <0x6 0x00000000 0x0 0x10000000>,
+> +                             <0x0 0xfca10000 0x0 0x1000>;
+> +                       reg-names = "cfg", "cpm_slcr";
+> +                       pcie_intc_0: interrupt_controller {
+> +                               #address-cells = <0>;
+> +                               #interrupt-cells = <1>;
+> +                               interrupt-controller ;
+> +                       };
+> +                };
+> +    };
+> -- 
+> 2.7.4
+> 
