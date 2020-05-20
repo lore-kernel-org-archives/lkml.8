@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43740C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DED72054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F1D92054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgETPIV (ORCPT
+        id S1726958AbgETPJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:08:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34088 "EHLO
+        Wed, 20 May 2020 11:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgETPIV (ORCPT
+        with ESMTP id S1726486AbgETPJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:08:21 -0400
+        Wed, 20 May 2020 11:09:06 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00D5FC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:08:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2CE7C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:09:05 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jbQJx-0003qg-SS; Wed, 20 May 2020 17:07:50 +0200
+        id 1jbQKn-0003t3-NK; Wed, 20 May 2020 17:08:41 +0200
 Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 4642B100C99; Wed, 20 May 2020 17:07:49 +0200 (CEST)
+        id 3580A100C99; Wed, 20 May 2020 17:08:41 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Andy Lutomirski <luto@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
@@ -55,11 +55,11 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V6 23/37] x86/entry: Provide IDTENTRY_SYSVEC
-In-Reply-To: <CALCETrUrNq9+k2--OVXyLbTAOoy9hGoPvMh6Ny3y_nU8vVn8gg@mail.gmail.com>
-References: <20200515234547.710474468@linutronix.de> <20200515235126.724725645@linutronix.de> <CALCETrUrNq9+k2--OVXyLbTAOoy9hGoPvMh6Ny3y_nU8vVn8gg@mail.gmail.com>
-Date:   Wed, 20 May 2020 17:07:49 +0200
-Message-ID: <87sgfu4pbu.fsf@nanos.tec.linutronix.de>
+Subject: Re: [patch V6 30/37] x86/entry: Convert reschedule interrupt to IDTENTRY_RAW
+In-Reply-To: <CALCETrUYwedYeia=DoS8OXGmHVScdqP6vCoWrbfaAi7j83U-_A@mail.gmail.com>
+References: <20200515234547.710474468@linutronix.de> <20200515235127.404958221@linutronix.de> <CALCETrUYwedYeia=DoS8OXGmHVScdqP6vCoWrbfaAi7j83U-_A@mail.gmail.com>
+Date:   Wed, 20 May 2020 17:08:41 +0200
+Message-ID: <87o8qi4pae.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Linutronix-Spam-Score: -1.0
@@ -75,18 +75,34 @@ Andy Lutomirski <luto@kernel.org> writes:
 > On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >>
 >>
->> Provide a IDTENTRY variant for system vectors to consolidate the different
->> mechanisms to emit the ASM stubs for 32 an 64 bit.
+>> The scheduler IPI does not need the full interrupt entry handling logic
+>> when the entry is from kernel mode.
 >>
->> On 64bit this also moves the stack switching from ASM to C code. 32bit will
->> excute the system vectors w/o stack switching as before. As some of the
->> system vector handlers require access to pt_regs this requires a new stack
->> switching macro which can handle an argument.
+>> Even if tracing is enabled the only requirement is that RCU is watching and
+>> preempt_count has the hardirq bit on.
+>>
+>> The NOHZ tick state does not have to be adjusted. If the tick is not
+>> running then the CPU is in idle and the idle exit will restore the
+>> tick. Softinterrupts are not raised here, so handling them on return is not
+>> required either.
+>>
+>> User mode entry must go through the regular entry path as it will invoke
+>> the scheduler on return so context tracking needs to be in the correct
+>> state.
+>>
+>> Use IDTENTRY_RAW and the RCU conditional variants of idtentry_enter/exit()
+>> to guarantee that RCU is watching even if the IPI hits a RCU idle section.
+>>
+>> Remove the tracepoint static key conditional which is incomplete
+>> vs. tracing anyway because e.g. ack_APIC_irq() calls out into
+>> instrumentable code.
+>>
+>> Avoid the overhead of irq time accounting and introduce variants of
+>> __irq_enter/exit() so instrumentation observes the correct preempt count
+>> state.
 >
-> Is that last sentence obsolete?
+> Leftover text from an old version?
 
-Yes.
+Indeed
 
-> Otherwise,
->
-> Acked-by: Andy Lutomirski <luto@kernel.org>
+> The code is Reviewed-by: Andy Lutomirski <luto@kernel.org>
