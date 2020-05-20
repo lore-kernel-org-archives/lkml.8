@@ -2,99 +2,135 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3267CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7EE6207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD80206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:06:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WCwxFtPd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iHbcc8RX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgETTGB (ORCPT
+        id S1726806AbgETTGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgETTGA (ORCPT
+        Wed, 20 May 2020 15:06:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25210 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726510AbgETTGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:06:00 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7767EC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:06:00 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d7so3440603qtn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=B9+fSKP0z6kMIaGF+78kIniE7F4EO/EazsTHVPcfTDo=;
-        b=WCwxFtPd93lX5/INoql/D9+P8RcSW7fw5beK5vPk6ptSAutO+LLRfER/Li076COnIy
-         lu/zA9qDPWjbyug0UIyw4mMQeixprvXth5P/EtI5AkIfhsMuxSLisIe/QrdbfNbZFrWM
-         8GSsyxRhzhcRuqGDcZlxIbzr/beMFanlycBBBGt7D1NGjio6GMtlUhnwVhBeqjvMWoDM
-         lnvb8JDxrjn6F+dYN03sCqTb4ra7eT2mIUjpP5RnYV8U05GxhMKb/UqwVRbrHrVxVJLi
-         uPYMGPRevLMjJ2vPCFkLtuyo16AhMjPrmay/yztRKeK+ApmdPkuRgqlw6m2WvQ7/twkc
-         r/kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=B9+fSKP0z6kMIaGF+78kIniE7F4EO/EazsTHVPcfTDo=;
-        b=LjsW6f+JVoqOS8+XZis3JeB0IA+sk0RVQ2H/anpxUbYqE/ACqlOulg8OUeI1AtJ16J
-         Gl3Ur77gS3GtUD/SyjkCWR94PJ5ToO4R4mEJAZjanqHhT0sQ81h4CER3qF4+qPct1FWb
-         H1C1HuHgy3kBhqP1hKEioRDrjJLTw9SYG+uHkY0yI6JUGiAqB30X41X9bgDB5Upp2kqt
-         nICO14v6znbyRZfPfTIII050xQ2Gd3LFx4P5EqCSVI8PygdCOqXxX3KeWV4Y3JtXd6N4
-         qZD8++l+xnEElZUsGIKkNcf6er2Tdr0duZVvgCSKrzBBstHkvETToj3Uja4QaYiAw2U0
-         3aaA==
-X-Gm-Message-State: AOAM5311Y1+b9y2AUJOYF7qOCF4uWKsHoZZUEkdplycec4DMg8LT415F
-        Nm94R8kWhukjuWtInXfcRK/5pA==
-X-Google-Smtp-Source: ABdhPJwMrPX8DXKy1MU6YGO3yj6Jsv1W1IZKUQc7PDxHt2LFjJv8FHFUGPY2Oja2twOoWMAH5HGJrg==
-X-Received: by 2002:ac8:3ac4:: with SMTP id x62mr7227139qte.283.1590001559595;
-        Wed, 20 May 2020 12:05:59 -0700 (PDT)
-Received: from Qians-MacBook-Air.local (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id c63sm2695364qkf.131.2020.05.20.12.05.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 12:05:58 -0700 (PDT)
-Date:   Wed, 20 May 2020 15:05:56 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Vitaly Wool <vitaly.wool@konsulko.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>
-Subject: Re: zswap z3fold + memory offline = infinite loop
-Message-ID: <20200520190556.GB4894@Qians-MacBook-Air.local>
-References: <D90B73BA-22EC-407E-838F-2BA646C60DE0@lca.pw>
- <CAM4kBBKkOGOjT5fddQ_vongNx_cXmv0tCQzD9ZtrGgkuPTKfTg@mail.gmail.com>
- <CAG=TAF65nmW2m9-5z5xvLmfRAD0LZAxgARJOEAqvzA3GdN-iJA@mail.gmail.com>
- <CAM4kBBJSEpB9kS+PKpd5HJT0Ox5rNWW2vsvHTVUw7Q59C-ktig@mail.gmail.com>
+        Wed, 20 May 2020 15:06:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590001610;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vOhbEgMkocnxd/SuSd9QcQbSLlk7GuMIQKjrDzR/nDE=;
+        b=iHbcc8RXeqasNaRNJtVT2nUlMhtVUwvI7+kXqRwPFzsll8BfCIntCMbe7e957ck/KA9I/l
+        jMuhg0zb0ylDdaYro1ajcRaT1+aYXgfghKSBnqaETsOSt7y0EHl14Or1Mr6Qk8K9Z57wV4
+        viewOWg7awSWofAYL3Xif/SvF9HLNns=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-298-W9iIFHZwPcqY5lE551OJpQ-1; Wed, 20 May 2020 15:06:47 -0400
+X-MC-Unique: W9iIFHZwPcqY5lE551OJpQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 605481404;
+        Wed, 20 May 2020 19:06:46 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B49162932;
+        Wed, 20 May 2020 19:06:38 +0000 (UTC)
+Date:   Wed, 20 May 2020 15:06:35 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     linux-audit@redhat.com, Paul Moore <paul@paul-moore.com>,
+        fw@strlen.de, LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, twoerner@redhat.com,
+        Eric Paris <eparis@parisplace.org>, tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v6] audit: add subj creds to NETFILTER_CFG record
+ to cover async unregister
+Message-ID: <20200520190635.z7iz2ivf53l4bxq6@madcap2.tricolour.ca>
+References: <a585b9933896bc542347d8f3f26b08005344dd84.1589920939.git.rgb@redhat.com>
+ <20200520165510.4l4q47vq6fyx7hh6@madcap2.tricolour.ca>
+ <CAHC9VhRERV9_kgpcn2LBptgXGY0BB4A9CHT+V4-HFMcNd9_Ncg@mail.gmail.com>
+ <17476338.hsbNre52Up@x2>
+ <20200520185922.vnutg5z3hwp7grjm@madcap2.tricolour.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM4kBBJSEpB9kS+PKpd5HJT0Ox5rNWW2vsvHTVUw7Q59C-ktig@mail.gmail.com>
+In-Reply-To: <20200520185922.vnutg5z3hwp7grjm@madcap2.tricolour.ca>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:23:38AM +0200, Vitaly Wool wrote:
-> On Tue, May 19, 2020 at 5:50 AM Qian Cai <cai@lca.pw> wrote:
-> <snip>
-> >
+On 2020-05-20 14:59, Richard Guy Briggs wrote:
+> On 2020-05-20 14:51, Steve Grubb wrote:
+> > On Wednesday, May 20, 2020 2:40:45 PM EDT Paul Moore wrote:
+> > > On Wed, May 20, 2020 at 12:55 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > On 2020-05-20 12:51, Richard Guy Briggs wrote:
+> > > > > Some table unregister actions seem to be initiated by the kernel to
+> > > > > garbage collect unused tables that are not initiated by any userspace
+> > > > > actions.  It was found to be necessary to add the subject credentials
+> > > > > to cover this case to reveal the source of these actions.  A sample
+> > > > > record:
+> > > > > 
+> > > > > The uid, auid, tty, ses and exe fields have not been included since
+> > > > > they
+> > > > > are in the SYSCALL record and contain nothing useful in the non-user
+> > > > > context.
+> > > > > 
+> > > > >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat
+> > > > >   family=bridge entries=0 op=unregister pid=153
+> > > > >   subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2
 > > >
-> > > Removing that check in ->isolate() is not a big deal, but ->migratepage() shall not allow actual migration anyway if there are mapped objects.
-> >
-> > Is that worse than an endless loop here?
+> > > FWIW, that record looks good.
+> > 
+> > It's severely broken
+> > 
+> > cat log.file
+> > type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat 
+> > family=bridge entries=0 op=unregister pid=153 
+> > subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2
+> > 
+> > ausearch -if log.file --format text
+> > At 19:33:40 12/31/1969  did-unknown 
+> > 
+> > ausearch -if log.file --format csv
+> > NODE,EVENT,DATE,TIME,SERIAL_NUM,EVENT_KIND,SESSION,SUBJ_PRIME,SUBJ_SEC,SUBJ_KIND,ACTION,RESULT,OBJ_PRIME,OBJ_SEC,OBJ_KIND,HOW
+> > error normalizing NETFILTER_CFG
+> > ,NETFILTER_CFG,12/31/1969,19:33:40,0,,,,,,,,,,
+> > 
+> > This is unusable. This is why the bug was filed in the first place.
 > 
-> Well, let's figure if there really has to be an endless loop. Would
-> you mind retesting with
-> https://marc.info/?l=linux-mm&m=158996286816704&w=2?
+> Have you applied this patchset?
+> 	https://www.redhat.com/archives/linux-audit/2020-May/msg00072.html
+> 
+> AUDIT_EVENT_LISTENER is also broken without this first patch.
 
-The patch does not help. Running the reproducer the second time would still
-trigger the looping.
+And EVENT_LISTENER also needs this patch:
+	https://github.com/linux-audit/audit-userspace/pull/114/commits/27daa6fca534b30199040d0ad05420a8331ab421
+
+> > -Steve
+> > 
+> > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > 
+> > > > Self-NACK.  I forgot to remove cred and tty declarations.
+> 
+> - RGB
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
