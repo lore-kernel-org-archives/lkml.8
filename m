@@ -2,96 +2,141 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF54BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E97C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC451207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="I4xNE42d"
+	by mail.kernel.org (Postfix) with ESMTP id AB883207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590000227;
+	bh=owmd5u00J5EiVH2Bk/mE1PizXwMz7BYeJOqOkWe+ZV4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=yA76qQytjoTCdvbxyMHa5jjdxypeKGlJVWsbM6YihR06WshhFC4kbdIYhIqJ8Dlvc
+	 zFBWjKzAtRZ4jyPGhJ/+ibERRhTmk1+CtSZLOxbSzOfdL3vFjSfuN14z9zdMs7SNRn
+	 syu2cd3tBhJKpSu8nwck+KpRXRZA+HMV+f+4KTZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgETSnU (ORCPT
+        id S1726840AbgETSnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:43:20 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55440 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726754AbgETSnT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:43:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590000199; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=0P2VQJRaXtfQ2Tc7Ubm5P15zd9+AUrdFPbZkwYBI0Lc=;
- b=I4xNE42dprydcqPMSYAVMSmEE1b1x4yGptEqBIXLRmBEEimuy1/5O72d8sM5jmmrrzMGhvQ2
- QL91CC5y+LPXkf1HbbtMBdcSYpSGRmOKzF7eRi5SRWhS1HEr2j/QPlED+LpdVxw128WlcjPW
- x6EnKZ3dq7SIIj78umsTORzGG54=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec57a38.7f21c8d76068-smtp-out-n02;
- Wed, 20 May 2020 18:43:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A4FD1C433C8; Wed, 20 May 2020 18:43:03 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Wed, 20 May 2020 14:43:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726688AbgETSnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:43:46 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2846FC433C9;
-        Wed, 20 May 2020 18:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE1BB2072C;
+        Wed, 20 May 2020 18:43:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590000226;
+        bh=owmd5u00J5EiVH2Bk/mE1PizXwMz7BYeJOqOkWe+ZV4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=StBvvx4lBl3cno5a4mqWpDoOstM5l0ZCDMY6G5r34semnxevm7xhNqhzoFtrEPcMu
+         ydvPzGsJnRI0oNwJlKNR49Lz90gDD2ruiCbx5Z6s9q2k+ARwsupEKIUcxB9HTDpQlh
+         vTNLSIQVTrnsvOHUxetEg7a+bqKt7BB38Ws79mng=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id CA0273522A2B; Wed, 20 May 2020 11:43:45 -0700 (PDT)
+Date:   Wed, 20 May 2020 11:43:45 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
+ access
+Message-ID: <20200520184345.GU2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200519201912.1564477-1-bigeasy@linutronix.de>
+ <20200519201912.1564477-4-bigeasy@linutronix.de>
+ <20200520102407.GF317569@hirez.programming.kicks-ass.net>
+ <20200520120608.mwros5jurmidxxfv@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 May 2020 11:43:03 -0700
-From:   bbhatt@codeaurora.org
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        hemantk@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] bus: mhi: core: Introduce independent voting
- mechanism
-In-Reply-To: <a12e693d-a8bb-3ecf-e799-c46de7429b5d@codeaurora.org>
-References: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
- <1589832241-13867-3-git-send-email-bbhatt@codeaurora.org>
- <a12e693d-a8bb-3ecf-e799-c46de7429b5d@codeaurora.org>
-Message-ID: <574a4fe915f86608b59f10577eb960e9@codeaurora.org>
-X-Sender: bbhatt@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520120608.mwros5jurmidxxfv@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 09:54, Jeffrey Hugo wrote:
-> On 5/18/2020 2:03 PM, Bhaumik Bhatt wrote:
->> Allow independent votes from clients such that they can choose to vote
->> for either the device or the bus or both. This helps in cases where 
->> the
->> device supports autonomous low power mode wherein it can move to M2
->> state without the need to notify the host. Clients can also vote only 
->> to
->> keep the underlying bus active without having the device in M0 state 
->> to
->> support offload use cases.
->> 
->> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
->> ---
+On Wed, May 20, 2020 at 02:06:08PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-05-20 12:24:07 [+0200], Peter Zijlstra wrote:
+> > On Tue, May 19, 2020 at 10:19:07PM +0200, Sebastian Andrzej Siewior wrote:
+> > 
+> > > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+> > > index 0c71505f0e19c..8d2b5f75145d7 100644
+> > > --- a/kernel/rcu/srcutree.c
+> > > +++ b/kernel/rcu/srcutree.c
+> > > @@ -25,6 +25,7 @@
+> > >  #include <linux/delay.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/srcu.h>
+> > > +#include <linux/locallock.h>
+> > >  
+> > >  #include "rcu.h"
+> > >  #include "rcu_segcblist.h"
+> > > @@ -735,6 +736,7 @@ static void srcu_flip(struct srcu_struct *ssp)
+> > >  	smp_mb(); /* D */  /* Pairs with C. */
+> > >  }
+> > >  
+> > > +static DEFINE_LOCAL_LOCK(sda_lock);
+> > >  /*
+> > >   * If SRCU is likely idle, return true, otherwise return false.
+> > >   *
+> > > @@ -765,13 +767,13 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
+> > >  	unsigned long tlast;
+> > >  
+> > >  	/* If the local srcu_data structure has callbacks, not idle.  */
+> > > -	local_irq_save(flags);
+> > > +	local_lock_irqsave(sda_lock, flags);
+> > >  	sdp = this_cpu_ptr(ssp->sda);
+> > >  	if (rcu_segcblist_pend_cbs(&sdp->srcu_cblist)) {
+> > > -		local_irq_restore(flags);
+> > > +		local_unlock_irqrestore(sda_lock, flags);
+> > >  		return false; /* Callbacks already present, so not idle. */
+> > >  	}
+> > > -	local_irq_restore(flags);
+> > > +	local_unlock_irqrestore(sda_lock, flags);
+> > 
+> > Would it perhaps make sense to stick the local_lock in struct srcu_data ?
 > 
-> I wonder, why doesn't this fit with runtimePM?
-Hi Jeff,
+> In that case we would need something for pointer stability before the
+> lock is acquired.
+> I remember Paul looked at that patch a few years ago and he said that
+> that disabling interrupts here is important and matches the other part
+> instance where the interrupts are disabled. Looking at it now, it seems
+> that there is just pointer stability but I can't tell if
+> rcu_segcblist_pend_cbs() needs more than just this.
 
-Can you elaborate?
+Yes, that CPU's rcu_segcblist structure does need mutual exclusion in
+this case.  This is because rcu_segcblist_pend_cbs() looks not just
+at the ->tails[] pointer, but also at the pointer referenced by the
+->tails[] pointer.  This last pointer is in an rcu_head structure, and
+not just any rcu_head structure, but one that is ready to be invoked.
+So this callback could vanish into the freelist (or worse) at any time.
+But callback invocation runs on the CPU that enqueued the callbacks
+(as long as that CPU remains online, anyway), so disabling interrupts
+suffices in mainline.
 
-In short, with this patch, MHI just wants to give controller the option 
-to
-choose the vote type so we can implement autonomous low power mode 
-entries
-on both host and device.
+Now, we could have srcu_might_be_idle() instead acquire the sdp->lock
+to protect the structure.
 
-Let us know if you need some more information.
+What would be really nice is a primitive that acquires such a per-CPU
+lock and remains executing on that CPU, whether by the graces of
+preempt_disable(), local_irq_save(), migrate_disable(), or what have you.
 
-Thanks,
-Bhaumik
+							Thanx, Paul
