@@ -2,225 +2,280 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6619220758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:36:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BeejYFGD"
+	by mail.kernel.org (Postfix) with ESMTP id 486B9207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgETMgq (ORCPT
+        id S1726845AbgETMha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:36:46 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53178 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726435AbgETMgq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:36:46 -0400
-X-UUID: 8afe1c4d6c35493b886f7a847bf383b0-20200520
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Pwtdqua4C8EFsZiafKrIKlZSpGuf7w5Db4mwt3cBCP0=;
-        b=BeejYFGDsl/sdadPUTDzI5+nYmhZC0w2tE1GmREat7eG4LxJVzlA9Npz35gqH6cVQklT9itHm4X1ETvvTX/uu/PZxbnys1qo5u2CkSCUvp8v/oyA/+x9Ij5XAtjSbrbZcRxxRYaSuePnqU70RmdexDd7Pz7gDu8F6DCDYZHSFc0=;
-X-UUID: 8afe1c4d6c35493b886f7a847bf383b0-20200520
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 119742408; Wed, 20 May 2020 20:36:38 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 20 May 2020 20:36:36 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 20 May 2020 20:36:35 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v5 2/4] kasan: record and print the free track
-Date:   Wed, 20 May 2020 20:36:36 +0800
-Message-ID: <20200520123636.3936-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 20 May 2020 08:37:30 -0400
+Received: from mga03.intel.com ([134.134.136.65]:9336 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgETMh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:37:28 -0400
+IronPort-SDR: k7Y1Pe3kkZeKiDKbKkQMuPtC+ZTtLebrb1dM5Rpi4hgBpX1r3KNEyKNPIJ0uo9ByEBp7tjl7tx
+ 0Uy7liME92rw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:37:27 -0700
+IronPort-SDR: D5/HcTSd977KFLxOHQe/HElu2vRfxizSz4HNHvwrYSkd5NtICZkOT9hg2FOQPuV68APxcZxgcg
+ vwHJhpKNr74g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="412004419"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga004.jf.intel.com with ESMTP; 20 May 2020 05:37:25 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI Controller driver
+Date:   Wed, 20 May 2020 20:36:12 +0800
+Message-Id: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TW92ZSBmcmVlIHRyYWNrIGZyb20ga2FzYW5fYWxsb2NfbWV0YSB0byBrYXNhbl9mcmVlX21ldGEg
-aW4gb3JkZXINCnRvIG1ha2Ugc3RydWN0IGthc2FuX2FsbG9jX21ldGEgYW5kIGthc2FuX2ZyZWVf
-bWV0YSBzaXplIGFyZSBib3RoDQoxNiBieXRlcy4gSXQgaXMgYSBnb29kIHNpemUgYmVjYXVzZSBp
-dCBpcyB0aGUgbWluaW1hbCByZWR6b25lIHNpemUNCmFuZCBhIGdvb2QgbnVtYmVyIG9mIGFsaWdu
-bWVudC4NCg0KRm9yIGZyZWUgdHJhY2ssIHdlIG1ha2Ugc29tZSBtb2RpZmljYXRpb25zIGFzIHNo
-b3duIGJlbG93Og0KMSkgUmVtb3ZlIHRoZSBmcmVlX3RyYWNrIGZyb20gc3RydWN0IGthc2FuX2Fs
-bG9jX21ldGEuDQoyKSBBZGQgdGhlIGZyZWVfdHJhY2sgaW50byBzdHJ1Y3Qga2FzYW5fZnJlZV9t
-ZXRhLg0KMykgQWRkIGEgbWFjcm8gS0FTQU5fS01BTExPQ19GUkVFVFJBQ0sgaW4gb3JkZXIgdG8g
-Y2hlY2sgd2hldGhlcg0KICAgcHJpbnQgZnJlZSBzdGFjayBpbiBLQVNBTiByZXBvcnQuDQoNClsx
-XWh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTk4NDM3DQoNClNp
-Z25lZC1vZmYtYnk6IFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1lZGlhdGVrLmNvbT4NClN1Z2dl
-c3RlZC1ieTogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KQ28tZGV2ZWxvcGVk
-LWJ5OiBEbWl0cnkgVnl1a292IDxkdnl1a292QGdvb2dsZS5jb20+DQpDYzogQW5kcmV5IFJ5YWJp
-bmluIDxhcnlhYmluaW5AdmlydHVvenpvLmNvbT4NCkNjOiBEbWl0cnkgVnl1a292IDxkdnl1a292
-QGdvb2dsZS5jb20+DQpDYzogQWxleGFuZGVyIFBvdGFwZW5rbyA8Z2xpZGVyQGdvb2dsZS5jb20+
-DQotLS0NCiBtbS9rYXNhbi9jb21tb24uYyAgICAgICAgIHwgMjIgKystLS0tLS0tLS0tLS0tLS0t
-LS0tLQ0KIG1tL2thc2FuL2dlbmVyaWMuYyAgICAgICAgfCAyMiArKysrKysrKysrKysrKysrKysr
-KysrDQogbW0va2FzYW4vZ2VuZXJpY19yZXBvcnQuYyB8ICAxICsNCiBtbS9rYXNhbi9rYXNhbi5o
-ICAgICAgICAgIHwgMTMgKysrKysrKysrKystLQ0KIG1tL2thc2FuL3F1YXJhbnRpbmUuYyAgICAg
-fCAgMSArDQogbW0va2FzYW4vcmVwb3J0LmMgICAgICAgICB8IDI2ICsrKystLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tDQogbW0va2FzYW4vdGFncy5jICAgICAgICAgICB8IDM3ICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysNCiA3IGZpbGVzIGNoYW5nZWQsIDc4IGluc2VydGlvbnMo
-KyksIDQ0IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvbW0va2FzYW4vY29tbW9uLmMgYi9t
-bS9rYXNhbi9jb21tb24uYw0KaW5kZXggOGJjNjE4Mjg5YmIxLi40N2I1MzkxMmYzMjIgMTAwNjQ0
-DQotLS0gYS9tbS9rYXNhbi9jb21tb24uYw0KKysrIGIvbW0va2FzYW4vY29tbW9uLmMNCkBAIC01
-MSw3ICs1MSw3IEBAIGRlcG90X3N0YWNrX2hhbmRsZV90IGthc2FuX3NhdmVfc3RhY2soZ2ZwX3Qg
-ZmxhZ3MpDQogCXJldHVybiBzdGFja19kZXBvdF9zYXZlKGVudHJpZXMsIG5yX2VudHJpZXMsIGZs
-YWdzKTsNCiB9DQogDQotc3RhdGljIGlubGluZSB2b2lkIHNldF90cmFjayhzdHJ1Y3Qga2FzYW5f
-dHJhY2sgKnRyYWNrLCBnZnBfdCBmbGFncykNCit2b2lkIGthc2FuX3NldF90cmFjayhzdHJ1Y3Qg
-a2FzYW5fdHJhY2sgKnRyYWNrLCBnZnBfdCBmbGFncykNCiB7DQogCXRyYWNrLT5waWQgPSBjdXJy
-ZW50LT5waWQ7DQogCXRyYWNrLT5zdGFjayA9IGthc2FuX3NhdmVfc3RhY2soZmxhZ3MpOw0KQEAg
-LTI5OSwyNCArMjk5LDYgQEAgc3RydWN0IGthc2FuX2ZyZWVfbWV0YSAqZ2V0X2ZyZWVfaW5mbyhz
-dHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsDQogCXJldHVybiAodm9pZCAqKW9iamVjdCArIGNhY2hl
-LT5rYXNhbl9pbmZvLmZyZWVfbWV0YV9vZmZzZXQ7DQogfQ0KIA0KLQ0KLXN0YXRpYyB2b2lkIGth
-c2FuX3NldF9mcmVlX2luZm8oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0KLQkJdm9pZCAqb2Jq
-ZWN0LCB1OCB0YWcpDQotew0KLQlzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSAqYWxsb2NfbWV0YTsN
-Ci0JdTggaWR4ID0gMDsNCi0NCi0JYWxsb2NfbWV0YSA9IGdldF9hbGxvY19pbmZvKGNhY2hlLCBv
-YmplY3QpOw0KLQ0KLSNpZmRlZiBDT05GSUdfS0FTQU5fU1dfVEFHU19JREVOVElGWQ0KLQlpZHgg
-PSBhbGxvY19tZXRhLT5mcmVlX3RyYWNrX2lkeDsNCi0JYWxsb2NfbWV0YS0+ZnJlZV9wb2ludGVy
-X3RhZ1tpZHhdID0gdGFnOw0KLQlhbGxvY19tZXRhLT5mcmVlX3RyYWNrX2lkeCA9IChpZHggKyAx
-KSAlIEtBU0FOX05SX0ZSRUVfU1RBQ0tTOw0KLSNlbmRpZg0KLQ0KLQlzZXRfdHJhY2soJmFsbG9j
-X21ldGEtPmZyZWVfdHJhY2tbaWR4XSwgR0ZQX05PV0FJVCk7DQotfQ0KLQ0KIHZvaWQga2FzYW5f
-cG9pc29uX3NsYWIoc3RydWN0IHBhZ2UgKnBhZ2UpDQogew0KIAl1bnNpZ25lZCBsb25nIGk7DQpA
-QCAtNDkyLDcgKzQ3NCw3IEBAIHN0YXRpYyB2b2lkICpfX2thc2FuX2ttYWxsb2Moc3RydWN0IGtt
-ZW1fY2FjaGUgKmNhY2hlLCBjb25zdCB2b2lkICpvYmplY3QsDQogCQlLQVNBTl9LTUFMTE9DX1JF
-RFpPTkUpOw0KIA0KIAlpZiAoY2FjaGUtPmZsYWdzICYgU0xBQl9LQVNBTikNCi0JCXNldF90cmFj
-aygmZ2V0X2FsbG9jX2luZm8oY2FjaGUsIG9iamVjdCktPmFsbG9jX3RyYWNrLCBmbGFncyk7DQor
-CQlrYXNhbl9zZXRfdHJhY2soJmdldF9hbGxvY19pbmZvKGNhY2hlLCBvYmplY3QpLT5hbGxvY190
-cmFjaywgZmxhZ3MpOw0KIA0KIAlyZXR1cm4gc2V0X3RhZyhvYmplY3QsIHRhZyk7DQogfQ0KZGlm
-ZiAtLWdpdCBhL21tL2thc2FuL2dlbmVyaWMuYyBiL21tL2thc2FuL2dlbmVyaWMuYw0KaW5kZXgg
-OGFjZjQ4ODgyYmEyLi40YjNjYmFkNzQzMWIgMTAwNjQ0DQotLS0gYS9tbS9rYXNhbi9nZW5lcmlj
-LmMNCisrKyBiL21tL2thc2FuL2dlbmVyaWMuYw0KQEAgLTM0NiwzICszNDYsMjUgQEAgdm9pZCBr
-YXNhbl9yZWNvcmRfYXV4X3N0YWNrKHZvaWQgKmFkZHIpDQogCWFsbG9jX2luZm8tPmF1eF9zdGFj
-a1sxXSA9IGFsbG9jX2luZm8tPmF1eF9zdGFja1swXTsNCiAJYWxsb2NfaW5mby0+YXV4X3N0YWNr
-WzBdID0ga2FzYW5fc2F2ZV9zdGFjayhHRlBfTk9XQUlUKTsNCiB9DQorDQordm9pZCBrYXNhbl9z
-ZXRfZnJlZV9pbmZvKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwNCisJCQkJdm9pZCAqb2JqZWN0
-LCB1OCB0YWcpDQorew0KKwlzdHJ1Y3Qga2FzYW5fZnJlZV9tZXRhICpmcmVlX21ldGE7DQorDQor
-CWZyZWVfbWV0YSA9IGdldF9mcmVlX2luZm8oY2FjaGUsIG9iamVjdCk7DQorCWthc2FuX3NldF90
-cmFjaygmZnJlZV9tZXRhLT5mcmVlX3RyYWNrLCBHRlBfTk9XQUlUKTsNCisNCisJLyoNCisJICog
-IHRoZSBvYmplY3Qgd2FzIGZyZWVkIGFuZCBoYXMgZnJlZSB0cmFjayBzZXQNCisJICovDQorCSoo
-dTggKilrYXNhbl9tZW1fdG9fc2hhZG93KG9iamVjdCkgPSBLQVNBTl9LTUFMTE9DX0ZSRUVUUkFD
-SzsNCit9DQorDQorc3RydWN0IGthc2FuX3RyYWNrICprYXNhbl9nZXRfZnJlZV90cmFjayhzdHJ1
-Y3Qga21lbV9jYWNoZSAqY2FjaGUsDQorCQkJCXZvaWQgKm9iamVjdCwgdTggdGFnKQ0KK3sNCisJ
-aWYgKCoodTggKilrYXNhbl9tZW1fdG9fc2hhZG93KG9iamVjdCkgIT0gS0FTQU5fS01BTExPQ19G
-UkVFVFJBQ0spDQorCQlyZXR1cm4gTlVMTDsNCisJcmV0dXJuICZnZXRfZnJlZV9pbmZvKGNhY2hl
-LCBvYmplY3QpLT5mcmVlX3RyYWNrOw0KK30NCmRpZmYgLS1naXQgYS9tbS9rYXNhbi9nZW5lcmlj
-X3JlcG9ydC5jIGIvbW0va2FzYW4vZ2VuZXJpY19yZXBvcnQuYw0KaW5kZXggZTIwMGFjYjJkMjky
-Li5hMzhjN2E5ZTE5MmEgMTAwNjQ0DQotLS0gYS9tbS9rYXNhbi9nZW5lcmljX3JlcG9ydC5jDQor
-KysgYi9tbS9rYXNhbi9nZW5lcmljX3JlcG9ydC5jDQpAQCAtODAsNiArODAsNyBAQCBzdGF0aWMg
-Y29uc3QgY2hhciAqZ2V0X3NoYWRvd19idWdfdHlwZShzdHJ1Y3Qga2FzYW5fYWNjZXNzX2luZm8g
-KmluZm8pDQogCQlicmVhazsNCiAJY2FzZSBLQVNBTl9GUkVFX1BBR0U6DQogCWNhc2UgS0FTQU5f
-S01BTExPQ19GUkVFOg0KKwljYXNlIEtBU0FOX0tNQUxMT0NfRlJFRVRSQUNLOg0KIAkJYnVnX3R5
-cGUgPSAidXNlLWFmdGVyLWZyZWUiOw0KIAkJYnJlYWs7DQogCWNhc2UgS0FTQU5fQUxMT0NBX0xF
-RlQ6DQpkaWZmIC0tZ2l0IGEvbW0va2FzYW4va2FzYW4uaCBiL21tL2thc2FuL2thc2FuLmgNCmlu
-ZGV4IGE3MzkxYmM4MzA3MC4uZWY2NTVhMWM2ZTE1IDEwMDY0NA0KLS0tIGEvbW0va2FzYW4va2Fz
-YW4uaA0KKysrIGIvbW0va2FzYW4va2FzYW4uaA0KQEAgLTE3LDE1ICsxNywxNyBAQA0KICNkZWZp
-bmUgS0FTQU5fUEFHRV9SRURaT05FICAgICAgMHhGRSAgLyogcmVkem9uZSBmb3Iga21hbGxvY19s
-YXJnZSBhbGxvY2F0aW9ucyAqLw0KICNkZWZpbmUgS0FTQU5fS01BTExPQ19SRURaT05FICAgMHhG
-QyAgLyogcmVkem9uZSBpbnNpZGUgc2x1YiBvYmplY3QgKi8NCiAjZGVmaW5lIEtBU0FOX0tNQUxM
-T0NfRlJFRSAgICAgIDB4RkIgIC8qIG9iamVjdCB3YXMgZnJlZWQgKGttZW1fY2FjaGVfZnJlZS9r
-ZnJlZSkgKi8NCisjZGVmaW5lIEtBU0FOX0tNQUxMT0NfRlJFRVRSQUNLIDB4RkEgIC8qIG9iamVj
-dCB3YXMgZnJlZWQgYW5kIGhhcyBmcmVlIHRyYWNrIHNldCAqLw0KICNlbHNlDQogI2RlZmluZSBL
-QVNBTl9GUkVFX1BBR0UgICAgICAgICBLQVNBTl9UQUdfSU5WQUxJRA0KICNkZWZpbmUgS0FTQU5f
-UEFHRV9SRURaT05FICAgICAgS0FTQU5fVEFHX0lOVkFMSUQNCiAjZGVmaW5lIEtBU0FOX0tNQUxM
-T0NfUkVEWk9ORSAgIEtBU0FOX1RBR19JTlZBTElEDQogI2RlZmluZSBLQVNBTl9LTUFMTE9DX0ZS
-RUUgICAgICBLQVNBTl9UQUdfSU5WQUxJRA0KKyNkZWZpbmUgS0FTQU5fS01BTExPQ19GUkVFVFJB
-Q0sgS0FTQU5fVEFHX0lOVkFMSUQNCiAjZW5kaWYNCiANCi0jZGVmaW5lIEtBU0FOX0dMT0JBTF9S
-RURaT05FICAgIDB4RkEgIC8qIHJlZHpvbmUgZm9yIGdsb2JhbCB2YXJpYWJsZSAqLw0KLSNkZWZp
-bmUgS0FTQU5fVk1BTExPQ19JTlZBTElEICAgMHhGOSAgLyogdW5hbGxvY2F0ZWQgc3BhY2UgaW4g
-dm1hcHBlZCBwYWdlICovDQorI2RlZmluZSBLQVNBTl9HTE9CQUxfUkVEWk9ORSAgICAweEY5ICAv
-KiByZWR6b25lIGZvciBnbG9iYWwgdmFyaWFibGUgKi8NCisjZGVmaW5lIEtBU0FOX1ZNQUxMT0Nf
-SU5WQUxJRCAgIDB4RjggIC8qIHVuYWxsb2NhdGVkIHNwYWNlIGluIHZtYXBwZWQgcGFnZSAqLw0K
-IA0KIC8qDQogICogU3RhY2sgcmVkem9uZSBzaGFkb3cgdmFsdWVzDQpAQCAtMTI3LDYgKzEyOSw5
-IEBAIHN0cnVjdCBrYXNhbl9mcmVlX21ldGEgew0KIAkgKiBPdGhlcndpc2UgaXQgbWlnaHQgYmUg
-dXNlZCBmb3IgdGhlIGFsbG9jYXRvciBmcmVlbGlzdC4NCiAJICovDQogCXN0cnVjdCBxbGlzdF9u
-b2RlIHF1YXJhbnRpbmVfbGluazsNCisjaWZkZWYgQ09ORklHX0tBU0FOX0dFTkVSSUMNCisJc3Ry
-dWN0IGthc2FuX3RyYWNrIGZyZWVfdHJhY2s7DQorI2VuZGlmDQogfTsNCiANCiBzdHJ1Y3Qga2Fz
-YW5fYWxsb2NfbWV0YSAqZ2V0X2FsbG9jX2luZm8oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLA0K
-QEAgLTE2OCw2ICsxNzMsMTAgQEAgdm9pZCBrYXNhbl9yZXBvcnRfaW52YWxpZF9mcmVlKHZvaWQg
-Km9iamVjdCwgdW5zaWduZWQgbG9uZyBpcCk7DQogc3RydWN0IHBhZ2UgKmthc2FuX2FkZHJfdG9f
-cGFnZShjb25zdCB2b2lkICphZGRyKTsNCiANCiBkZXBvdF9zdGFja19oYW5kbGVfdCBrYXNhbl9z
-YXZlX3N0YWNrKGdmcF90IGZsYWdzKTsNCit2b2lkIGthc2FuX3NldF90cmFjayhzdHJ1Y3Qga2Fz
-YW5fdHJhY2sgKnRyYWNrLCBnZnBfdCBmbGFncyk7DQordm9pZCBrYXNhbl9zZXRfZnJlZV9pbmZv
-KHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwgdm9pZCAqb2JqZWN0LCB1OCB0YWcpOw0KK3N0cnVj
-dCBrYXNhbl90cmFjayAqa2FzYW5fZ2V0X2ZyZWVfdHJhY2soc3RydWN0IGttZW1fY2FjaGUgKmNh
-Y2hlLA0KKwkJCQl2b2lkICpvYmplY3QsIHU4IHRhZyk7DQogDQogI2lmIGRlZmluZWQoQ09ORklH
-X0tBU0FOX0dFTkVSSUMpICYmIFwNCiAJKGRlZmluZWQoQ09ORklHX1NMQUIpIHx8IGRlZmluZWQo
-Q09ORklHX1NMVUIpKQ0KZGlmZiAtLWdpdCBhL21tL2thc2FuL3F1YXJhbnRpbmUuYyBiL21tL2th
-c2FuL3F1YXJhbnRpbmUuYw0KaW5kZXggOTc4YmM0YTNlYjUxLi40YzUzNzU4MTA0NDkgMTAwNjQ0
-DQotLS0gYS9tbS9rYXNhbi9xdWFyYW50aW5lLmMNCisrKyBiL21tL2thc2FuL3F1YXJhbnRpbmUu
-Yw0KQEAgLTE0NSw2ICsxNDUsNyBAQCBzdGF0aWMgdm9pZCBxbGlua19mcmVlKHN0cnVjdCBxbGlz
-dF9ub2RlICpxbGluaywgc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKQ0KIAlpZiAoSVNfRU5BQkxF
-RChDT05GSUdfU0xBQikpDQogCQlsb2NhbF9pcnFfc2F2ZShmbGFncyk7DQogDQorCSoodTggKilr
-YXNhbl9tZW1fdG9fc2hhZG93KG9iamVjdCkgPSBLQVNBTl9LTUFMTE9DX0ZSRUU7DQogCV9fX2Nh
-Y2hlX2ZyZWUoY2FjaGUsIG9iamVjdCwgX1RISVNfSVBfKTsNCiANCiAJaWYgKElTX0VOQUJMRUQo
-Q09ORklHX1NMQUIpKQ0KZGlmZiAtLWdpdCBhL21tL2thc2FuL3JlcG9ydC5jIGIvbW0va2FzYW4v
-cmVwb3J0LmMNCmluZGV4IDI5YTgwMWQ1Y2Q3NC4uOTRiNzZhMWRmOTc2IDEwMDY0NA0KLS0tIGEv
-bW0va2FzYW4vcmVwb3J0LmMNCisrKyBiL21tL2thc2FuL3JlcG9ydC5jDQpAQCAtMTcwLDI2ICsx
-NzAsNiBAQCBzdGF0aWMgdm9pZCBkZXNjcmliZV9vYmplY3RfYWRkcihzdHJ1Y3Qga21lbV9jYWNo
-ZSAqY2FjaGUsIHZvaWQgKm9iamVjdCwNCiAJCSh2b2lkICopKG9iamVjdF9hZGRyICsgY2FjaGUt
-Pm9iamVjdF9zaXplKSk7DQogfQ0KIA0KLXN0YXRpYyBzdHJ1Y3Qga2FzYW5fdHJhY2sgKmthc2Fu
-X2dldF9mcmVlX3RyYWNrKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwNCi0JCXZvaWQgKm9iamVj
-dCwgdTggdGFnKQ0KLXsNCi0Jc3RydWN0IGthc2FuX2FsbG9jX21ldGEgKmFsbG9jX21ldGE7DQot
-CWludCBpID0gMDsNCi0NCi0JYWxsb2NfbWV0YSA9IGdldF9hbGxvY19pbmZvKGNhY2hlLCBvYmpl
-Y3QpOw0KLQ0KLSNpZmRlZiBDT05GSUdfS0FTQU5fU1dfVEFHU19JREVOVElGWQ0KLQlmb3IgKGkg
-PSAwOyBpIDwgS0FTQU5fTlJfRlJFRV9TVEFDS1M7IGkrKykgew0KLQkJaWYgKGFsbG9jX21ldGEt
-PmZyZWVfcG9pbnRlcl90YWdbaV0gPT0gdGFnKQ0KLQkJCWJyZWFrOw0KLQl9DQotCWlmIChpID09
-IEtBU0FOX05SX0ZSRUVfU1RBQ0tTKQ0KLQkJaSA9IGFsbG9jX21ldGEtPmZyZWVfdHJhY2tfaWR4
-Ow0KLSNlbmRpZg0KLQ0KLQlyZXR1cm4gJmFsbG9jX21ldGEtPmZyZWVfdHJhY2tbaV07DQotfQ0K
-LQ0KIHN0YXRpYyB2b2lkIGRlc2NyaWJlX29iamVjdChzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUs
-IHZvaWQgKm9iamVjdCwNCiAJCQkJY29uc3Qgdm9pZCAqYWRkciwgdTggdGFnKQ0KIHsNCkBAIC0y
-MDEsOCArMTgxLDEwIEBAIHN0YXRpYyB2b2lkIGRlc2NyaWJlX29iamVjdChzdHJ1Y3Qga21lbV9j
-YWNoZSAqY2FjaGUsIHZvaWQgKm9iamVjdCwNCiAJCXByaW50X3RyYWNrKCZhbGxvY19pbmZvLT5h
-bGxvY190cmFjaywgIkFsbG9jYXRlZCIpOw0KIAkJcHJfZXJyKCJcbiIpOw0KIAkJZnJlZV90cmFj
-ayA9IGthc2FuX2dldF9mcmVlX3RyYWNrKGNhY2hlLCBvYmplY3QsIHRhZyk7DQotCQlwcmludF90
-cmFjayhmcmVlX3RyYWNrLCAiRnJlZWQiKTsNCi0JCXByX2VycigiXG4iKTsNCisJCWlmIChmcmVl
-X3RyYWNrKSB7DQorCQkJcHJpbnRfdHJhY2soZnJlZV90cmFjaywgIkZyZWVkIik7DQorCQkJcHJf
-ZXJyKCJcbiIpOw0KKwkJfQ0KIA0KICNpZmRlZiBDT05GSUdfS0FTQU5fR0VORVJJQw0KIAkJaWYg
-KGFsbG9jX2luZm8tPmF1eF9zdGFja1swXSkgew0KZGlmZiAtLWdpdCBhL21tL2thc2FuL3RhZ3Mu
-YyBiL21tL2thc2FuL3RhZ3MuYw0KaW5kZXggMjViNzczNGU3MDEzLi4yMDFkZWU1ZDZhZTAgMTAw
-NjQ0DQotLS0gYS9tbS9rYXNhbi90YWdzLmMNCisrKyBiL21tL2thc2FuL3RhZ3MuYw0KQEAgLTE2
-MiwzICsxNjIsNDAgQEAgdm9pZCBfX2h3YXNhbl90YWdfbWVtb3J5KHVuc2lnbmVkIGxvbmcgYWRk
-ciwgdTggdGFnLCB1bnNpZ25lZCBsb25nIHNpemUpDQogCWthc2FuX3BvaXNvbl9zaGFkb3coKHZv
-aWQgKilhZGRyLCBzaXplLCB0YWcpOw0KIH0NCiBFWFBPUlRfU1lNQk9MKF9faHdhc2FuX3RhZ19t
-ZW1vcnkpOw0KKw0KK3ZvaWQga2FzYW5fc2V0X2ZyZWVfaW5mbyhzdHJ1Y3Qga21lbV9jYWNoZSAq
-Y2FjaGUsDQorCQkJCXZvaWQgKm9iamVjdCwgdTggdGFnKQ0KK3sNCisJc3RydWN0IGthc2FuX2Fs
-bG9jX21ldGEgKmFsbG9jX21ldGE7DQorCXU4IGlkeCA9IDA7DQorDQorCWFsbG9jX21ldGEgPSBn
-ZXRfYWxsb2NfaW5mbyhjYWNoZSwgb2JqZWN0KTsNCisNCisjaWZkZWYgQ09ORklHX0tBU0FOX1NX
-X1RBR1NfSURFTlRJRlkNCisJaWR4ID0gYWxsb2NfbWV0YS0+ZnJlZV90cmFja19pZHg7DQorCWFs
-bG9jX21ldGEtPmZyZWVfcG9pbnRlcl90YWdbaWR4XSA9IHRhZzsNCisJYWxsb2NfbWV0YS0+ZnJl
-ZV90cmFja19pZHggPSAoaWR4ICsgMSkgJSBLQVNBTl9OUl9GUkVFX1NUQUNLUzsNCisjZW5kaWYN
-CisNCisJa2FzYW5fc2V0X3RyYWNrKCZhbGxvY19tZXRhLT5mcmVlX3RyYWNrW2lkeF0sIEdGUF9O
-T1dBSVQpOw0KK30NCisNCitzdHJ1Y3Qga2FzYW5fdHJhY2sgKmthc2FuX2dldF9mcmVlX3RyYWNr
-KHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSwNCisJCQkJdm9pZCAqb2JqZWN0LCB1OCB0YWcpDQor
-ew0KKwlzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0YSAqYWxsb2NfbWV0YTsNCisJaW50IGkgPSAwOw0K
-Kw0KKwlhbGxvY19tZXRhID0gZ2V0X2FsbG9jX2luZm8oY2FjaGUsIG9iamVjdCk7DQorDQorI2lm
-ZGVmIENPTkZJR19LQVNBTl9TV19UQUdTX0lERU5USUZZDQorCWZvciAoaSA9IDA7IGkgPCBLQVNB
-Tl9OUl9GUkVFX1NUQUNLUzsgaSsrKSB7DQorCQlpZiAoYWxsb2NfbWV0YS0+ZnJlZV9wb2ludGVy
-X3RhZ1tpXSA9PSB0YWcpDQorCQkJYnJlYWs7DQorCX0NCisJaWYgKGkgPT0gS0FTQU5fTlJfRlJF
-RV9TVEFDS1MpDQorCQlpID0gYWxsb2NfbWV0YS0+ZnJlZV90cmFja19pZHg7DQorI2VuZGlmDQor
-DQorCXJldHVybiAmYWxsb2NfbWV0YS0+ZnJlZV90cmFja1tpXTsNCit9DQotLSANCjIuMTguMA0K
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+
+Add dt-bindings documentation for Cadence-QSPI controller to support
+spi based flash memories.
+
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+---
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
+ .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 133 +++++++++++++++++++++
+ 2 files changed, 133 insertions(+), 67 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+deleted file mode 100644
+index 945be7d5b236..000000000000
+--- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
++++ /dev/null
+@@ -1,67 +0,0 @@
+-* Cadence Quad SPI controller
+-
+-Required properties:
+-- compatible : should be one of the following:
+-	Generic default - "cdns,qspi-nor".
+-	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+-	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+-- reg : Contains two entries, each of which is a tuple consisting of a
+-	physical address and length. The first entry is the address and
+-	length of the controller register set. The second entry is the
+-	address and length of the QSPI Controller data area.
+-- interrupts : Unit interrupt specifier for the controller interrupt.
+-- clocks : phandle to the Quad SPI clock.
+-- cdns,fifo-depth : Size of the data FIFO in words.
+-- cdns,fifo-width : Bus width of the data FIFO in bytes.
+-- cdns,trigger-address : 32-bit indirect AHB trigger address.
+-
+-Optional properties:
+-- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
+-- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
+-  the read data rather than the QSPI clock. Make sure that QSPI return
+-  clock is populated on the board before using this property.
+-
+-Optional subnodes:
+-Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
+-custom properties:
+-- cdns,read-delay : Delay for read capture logic, in clock cycles
+-- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
+-                  mode chip select outputs are de-asserted between
+-		  transactions.
+-- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
+-                  de-activated and the activation of another.
+-- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
+-                  transaction and deasserting the device chip select
+-		  (qspi_n_ss_out).
+-- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+-                  and first bit transfer.
+-- resets	: Must contain an entry for each entry in reset-names.
+-		  See ../reset/reset.txt for details.
+-- reset-names	: Must include either "qspi" and/or "qspi-ocp".
+-
+-Example:
+-
+-	qspi: spi@ff705000 {
+-		compatible = "cdns,qspi-nor";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		reg = <0xff705000 0x1000>,
+-		      <0xffa00000 0x1000>;
+-		interrupts = <0 151 4>;
+-		clocks = <&qspi_clk>;
+-		cdns,is-decoded-cs;
+-		cdns,fifo-depth = <128>;
+-		cdns,fifo-width = <4>;
+-		cdns,trigger-address = <0x00000000>;
+-		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
+-		reset-names = "qspi", "qspi-ocp";
+-
+-		flash0: n25q00@0 {
+-			...
+-			cdns,read-delay = <4>;
+-			cdns,tshsl-ns = <50>;
+-			cdns,tsd2d-ns = <50>;
+-			cdns,tchsh-ns = <4>;
+-			cdns,tslch-ns = <4>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+new file mode 100644
+index 000000000000..1c15acc184b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+@@ -0,0 +1,133 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence QSPI Flash Controller support
++
++maintainers:
++  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++
++description: |
++  Binding Documentation for Cadence QSPI controller,This controller is
++  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
++  has been tested On Intel's LGM SoC.
++
++properties:
++  compatible:
++     enum:
++       - cdns,qspi-nor
++       - ti,k2g-qspi
++       - ti,am654-ospi
++       - intel,lgm-qspi
++
++  reg:
++    items:
++      - description:
++          The first entry is the address and length of
++          the controller register set.
++      - description:
++          The second entry is the address and length of
++          the QSPI Controller data area.
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  cdns,fifo-depth:
++    description:
++     Depth of hardware FIFO in words.
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - enum: [ 128, 256 ]
++      - default: 128
++
++  cdns,fifo-width:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    multipleOf: 4
++    description:
++      4 byte bus width of the data FIFO in bytes.
++
++  cdns,trigger-address:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      32-bit indirect AHB trigger address.
++
++  cdns,rclk-en:
++    type: boolean
++    description: |
++      Flag to indicate that QSPI return clock is used to latch the read data
++      rather than the QSPI clock. Make sure that QSPI return clock is populated
++      on the board before using this property.
++
++# subnode's properties
++patternProperties:
++  "@[0-9a-f]+$":
++    type: object
++    description:
++      flash device uses the subnodes below defined properties.
++
++  cdns,read-delay:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Delay for read capture logic, in clock cycles.
++
++  cdns,tshsl-ns:
++    description: |
++      Delay in nanoseconds for the length that the master mode chip select
++      outputs are de-asserted between transactions.
++
++  cdns,tsd2d-ns:
++    description: |
++      Delay in nanoseconds between one chip select being de-activated
++      and the activation of another.
++
++  cdns,tchsh-ns:
++    description: |
++      Delay in nanoseconds between last bit of current transaction and
++      deasserting the device chip select (qspi_n_ss_out).
++
++  cdns,tslch-ns:
++    description: |
++      Delay in nanoseconds between setting qspi_n_ss_out low and
++      first bit transfer.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - cdns,fifo-depth
++  - cdns,fifo-width
++  - cdns,trigger-address
++
++examples:
++  - |
++    spi@ff705000 {
++          compatible = "cdns,qspi-nor";
++          #address-cells = <1>;
++          #size-cells = <0>;
++          reg = <0xff705000 0x1000>,
++                <0xffa00000 0x1000>;
++          interrupts = <0 151 4>;
++          clocks = <&qspi_clk>;
++          cdns,fifo-depth = <128>;
++          cdns,fifo-width = <4>;
++          cdns,trigger-address = <0x00000000>;
++
++          flash@0 {
++              compatible = "jedec,spi-nor";
++              reg = <0x0>;
++              cdns,read-delay = <4>;
++              cdns,tshsl-ns = <50>;
++              cdns,tsd2d-ns = <50>;
++              cdns,tchsh-ns = <4>;
++              cdns,tslch-ns = <4>;
++          };
++    };
++
+-- 
+2.11.0
 
