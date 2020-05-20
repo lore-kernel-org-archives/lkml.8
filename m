@@ -2,242 +2,88 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EB7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B83C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 859D0207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403D2207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O704peJ8"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="C4YpUv33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgETUBc (ORCPT
+        id S1728264AbgETUC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbgETT4H (ORCPT
+        Wed, 20 May 2020 16:02:28 -0400
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:55822 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbgETUC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:56:07 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413DCC061A0E;
-        Wed, 20 May 2020 12:56:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Wd08dyMU5IfAW7gVOq/7rRtlHhJfaMVGF9qWpfUzCOA=; b=O704peJ8ydbqOQtLLNJ7AXuka3
-        hKilh7/BZRD0jSrZ4eGrQI+hY7nAsiNPRxwTOz/+homkePi24DYjTei1T7/bSyTejrQ23hsWTHlCY
-        mIzPpHovF//thGZX4Z/HGutufWL0sZNhvApN2r6mL/orDFoP3UTaAX7CGXLgHAWaR+d0na/p/pGXx
-        NHOuj9RYJIt1XmFiAAV3/h7BGCMleW1ewm8DW10SPBtl+wVVS7NBYGBD84+agVgtrJdHUrLEK9YWr
-        t+6rXIPmL8ZHeQGb8fyOPeHcsLfOKeTwG0glfDS2c9FoTaSigxDhcwXo/XPjghq+R4fkCUt/9rz3h
-        k42SxOjw==;
-Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbUo6-0001oR-32; Wed, 20 May 2020 19:55:14 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
-        ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH 01/33] dlm: use the tcp version of accept_from_sock for sctp as well
-Date:   Wed, 20 May 2020 21:54:37 +0200
-Message-Id: <20200520195509.2215098-2-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520195509.2215098-1-hch@lst.de>
-References: <20200520195509.2215098-1-hch@lst.de>
+        Wed, 20 May 2020 16:02:27 -0400
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id A5E0A60233;
+        Wed, 20 May 2020 16:02:25 -0400 (EDT)
+        (envelope-from junio@pobox.com)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=from:to:cc
+        :subject:references:date:in-reply-to:message-id:mime-version
+        :content-type; s=sasl; bh=GNEMXWUJjY+FjrgaGZ2Nxbc6ddo=; b=C4YpUv
+        33nYYwaTq4v7t5/g0OMs82CqpDtY0mpnuTYGXPflCXO4LilaurMNQsFNdbRV4iXo
+        WHYi553IZvNG20HOuIISDS4xsaoCKyaBMU3ykvDaPR1CygnY19QEA/AMSkfOjv7L
+        566nMutwq5dsMtmM02f74AvAv34v0CrCCzhZg=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=from:to:cc
+        :subject:references:date:in-reply-to:message-id:mime-version
+        :content-type; q=dns; s=sasl; b=RyXwnEionwZQyYQHKbM5t5vxIMpo8awO
+        3J4/4y5Z25azS9Nbneg9FycILaGRSr2LfxU7B/EeboT9uhUZ8/slojkbVqyzouDf
+        OV8r0O7T/HJszB5ajEabrG4gKrqvQocWF2MkcWwU2cmslcfQcVSrxIGsBkttxWUZ
+        f4jLPIrsf3Y=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 9596E60232;
+        Wed, 20 May 2020 16:02:25 -0400 (EDT)
+        (envelope-from junio@pobox.com)
+Received: from pobox.com (unknown [35.196.173.25])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 13F6360231;
+        Wed, 20 May 2020 16:02:25 -0400 (EDT)
+        (envelope-from junio@pobox.com)
+From:   Junio C Hamano <gitster@pobox.com>
+To:     Jeff King <peff@peff.net>
+Cc:     git@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
+Subject: Re: [ANNOUNCE] Git v2.27.0-rc1
+References: <xmqqsgfuv2ko.fsf@gitster.c.googlers.com>
+        <20200520193156.GA4700@coredump.intra.peff.net>
+Date:   Wed, 20 May 2020 13:02:24 -0700
+In-Reply-To: <20200520193156.GA4700@coredump.intra.peff.net> (Jeff King's
+        message of "Wed, 20 May 2020 15:31:56 -0400")
+Message-ID: <xmqqmu62v0hb.fsf@gitster.c.googlers.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Pobox-Relay-ID: D2F15FB2-9AD4-11EA-8B7C-C28CBED8090B-77302942!pb-smtp1.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only difference between a few missing fixes applied to the SCTP
-one is that TCP uses ->getpeername to get the remote address, while
-SCTP uses kernel_getsockopt(.. SCTP_PRIMARY_ADDR).  But given that
-getpeername is defined to return the primary address for sctp, there
-doesn't seem to be any reason for the different way of quering the
-peername, or all the code duplication.
+Jeff King <peff@peff.net> writes:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/dlm/lowcomms.c | 123 ++--------------------------------------------
- 1 file changed, 3 insertions(+), 120 deletions(-)
+> On Wed, May 20, 2020 at 12:17:11PM -0700, Junio C Hamano wrote:
+>
+>> Git 2.27 Release Notes (draft)
+>> ==============================
+>> 
+>> Updates since v2.26
+>> -------------------
+>> 
+>> Backward compatibility notes
+>
+> Is it worth mentioning here the reversion of v2 as the default protocol?
 
-diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
-index cdfaf4f0e11a0..f13dad0fd9ef3 100644
---- a/fs/dlm/lowcomms.c
-+++ b/fs/dlm/lowcomms.c
-@@ -724,7 +724,7 @@ static int receive_from_sock(struct connection *con)
- }
- 
- /* Listening socket is busy, accept a connection */
--static int tcp_accept_from_sock(struct connection *con)
-+static int accept_from_sock(struct connection *con)
- {
- 	int result;
- 	struct sockaddr_storage peeraddr;
-@@ -852,123 +852,6 @@ static int tcp_accept_from_sock(struct connection *con)
- 	return result;
- }
- 
--static int sctp_accept_from_sock(struct connection *con)
--{
--	/* Check that the new node is in the lockspace */
--	struct sctp_prim prim;
--	int nodeid;
--	int prim_len, ret;
--	int addr_len;
--	struct connection *newcon;
--	struct connection *addcon;
--	struct socket *newsock;
--
--	mutex_lock(&connections_lock);
--	if (!dlm_allow_conn) {
--		mutex_unlock(&connections_lock);
--		return -1;
--	}
--	mutex_unlock(&connections_lock);
--
--	mutex_lock_nested(&con->sock_mutex, 0);
--
--	ret = kernel_accept(con->sock, &newsock, O_NONBLOCK);
--	if (ret < 0)
--		goto accept_err;
--
--	memset(&prim, 0, sizeof(struct sctp_prim));
--	prim_len = sizeof(struct sctp_prim);
--
--	ret = kernel_getsockopt(newsock, IPPROTO_SCTP, SCTP_PRIMARY_ADDR,
--				(char *)&prim, &prim_len);
--	if (ret < 0) {
--		log_print("getsockopt/sctp_primary_addr failed: %d", ret);
--		goto accept_err;
--	}
--
--	make_sockaddr(&prim.ssp_addr, 0, &addr_len);
--	ret = addr_to_nodeid(&prim.ssp_addr, &nodeid);
--	if (ret) {
--		unsigned char *b = (unsigned char *)&prim.ssp_addr;
--
--		log_print("reject connect from unknown addr");
--		print_hex_dump_bytes("ss: ", DUMP_PREFIX_NONE,
--				     b, sizeof(struct sockaddr_storage));
--		goto accept_err;
--	}
--
--	newcon = nodeid2con(nodeid, GFP_NOFS);
--	if (!newcon) {
--		ret = -ENOMEM;
--		goto accept_err;
--	}
--
--	mutex_lock_nested(&newcon->sock_mutex, 1);
--
--	if (newcon->sock) {
--		struct connection *othercon = newcon->othercon;
--
--		if (!othercon) {
--			othercon = kmem_cache_zalloc(con_cache, GFP_NOFS);
--			if (!othercon) {
--				log_print("failed to allocate incoming socket");
--				mutex_unlock(&newcon->sock_mutex);
--				ret = -ENOMEM;
--				goto accept_err;
--			}
--			othercon->nodeid = nodeid;
--			othercon->rx_action = receive_from_sock;
--			mutex_init(&othercon->sock_mutex);
--			INIT_LIST_HEAD(&othercon->writequeue);
--			spin_lock_init(&othercon->writequeue_lock);
--			INIT_WORK(&othercon->swork, process_send_sockets);
--			INIT_WORK(&othercon->rwork, process_recv_sockets);
--			set_bit(CF_IS_OTHERCON, &othercon->flags);
--		}
--		mutex_lock_nested(&othercon->sock_mutex, 2);
--		if (!othercon->sock) {
--			newcon->othercon = othercon;
--			add_sock(newsock, othercon);
--			addcon = othercon;
--			mutex_unlock(&othercon->sock_mutex);
--		} else {
--			printk("Extra connection from node %d attempted\n", nodeid);
--			ret = -EAGAIN;
--			mutex_unlock(&othercon->sock_mutex);
--			mutex_unlock(&newcon->sock_mutex);
--			goto accept_err;
--		}
--	} else {
--		newcon->rx_action = receive_from_sock;
--		add_sock(newsock, newcon);
--		addcon = newcon;
--	}
--
--	log_print("connected to %d", nodeid);
--
--	mutex_unlock(&newcon->sock_mutex);
--
--	/*
--	 * Add it to the active queue in case we got data
--	 * between processing the accept adding the socket
--	 * to the read_sockets list
--	 */
--	if (!test_and_set_bit(CF_READ_PENDING, &addcon->flags))
--		queue_work(recv_workqueue, &addcon->rwork);
--	mutex_unlock(&con->sock_mutex);
--
--	return 0;
--
--accept_err:
--	mutex_unlock(&con->sock_mutex);
--	if (newsock)
--		sock_release(newsock);
--	if (ret != -EAGAIN)
--		log_print("error accepting connection from node: %d", ret);
--
--	return ret;
--}
--
- static void free_entry(struct writequeue_entry *e)
- {
- 	__free_page(e->page);
-@@ -1253,7 +1136,7 @@ static struct socket *tcp_create_listen_sock(struct connection *con,
- 	write_lock_bh(&sock->sk->sk_callback_lock);
- 	sock->sk->sk_user_data = con;
- 	save_listen_callbacks(sock);
--	con->rx_action = tcp_accept_from_sock;
-+	con->rx_action = accept_from_sock;
- 	con->connect_action = tcp_connect_to_sock;
- 	write_unlock_bh(&sock->sk->sk_callback_lock);
- 
-@@ -1340,7 +1223,7 @@ static int sctp_listen_for_all(void)
- 	save_listen_callbacks(sock);
- 	con->sock = sock;
- 	con->sock->sk->sk_data_ready = lowcomms_data_ready;
--	con->rx_action = sctp_accept_from_sock;
-+	con->rx_action = accept_from_sock;
- 	con->connect_action = sctp_connect_to_sock;
- 
- 	write_unlock_bh(&sock->sk->sk_callback_lock);
--- 
-2.26.2
+Yeah, that is a good suggestion.  The fix inside v2 is not worth
+reporting, but the change of the default is noteworthy enough to be
+at the top.
+
 
