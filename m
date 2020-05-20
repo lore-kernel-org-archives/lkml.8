@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5095FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9DD205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D91205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgETO0V (ORCPT
+        id S1728064AbgETO0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:26:21 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33040 "EHLO
+        Wed, 20 May 2020 10:26:24 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33004 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727022AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727007AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-00036u-Lh; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPbw-00035x-7p; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-007DTD-1K; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbv-007DRc-FQ; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Arnd Bergmann" <arnd@arndb.de>
-Date:   Wed, 20 May 2020 15:14:28 +0100
-Message-ID: <lsq.1589984008.289002177@decadent.org.uk>
+        "Joe Thornber" <ejt@redhat.com>,
+        "Mike Snitzer" <snitzer@redhat.com>,
+        "Eric Wheeler" <dm-devel@lists.ewheeler.net>
+Date:   Wed, 20 May 2020 15:14:15 +0100
+Message-ID: <lsq.1589984008.706059311@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 60/99] x86: kvm: avoid unused variable warning
+Subject: [PATCH 3.16 47/99] dm space map common: fix to ensure new block
+ isn't already in use
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,43 +57,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Joe Thornber <ejt@redhat.com>
 
-commit 7288bde1f9df6c1475675419bdd7725ce84dec56 upstream.
+commit 4feaef830de7ffdd8352e1fe14ad3bf13c9688f8 upstream.
 
-Removing one of the two accesses of the maxphyaddr variable led to
-a harmless warning:
+The space-maps track the reference counts for disk blocks allocated by
+both the thin-provisioning and cache targets.  There are variants for
+tracking metadata blocks and data blocks.
 
-arch/x86/kvm/x86.c: In function 'kvm_set_mmio_spte_mask':
-arch/x86/kvm/x86.c:6563:6: error: unused variable 'maxphyaddr' [-Werror=unused-variable]
+Transactionality is implemented by never touching blocks from the
+previous transaction, so we can rollback in the event of a crash.
 
-Removing the #ifdef seems to be the nicest workaround, as it
-makes the code look cleaner than adding another #ifdef.
+When allocating a new block we need to ensure the block is free (has
+reference count of 0) in both the current and previous transaction.
+Prior to this fix we were doing this by searching for a free block in
+the previous transaction, and relying on a 'begin' counter to track
+where the last allocation in the current transaction was.  This
+'begin' field was not being updated in all code paths (eg, increment
+of a data block reference count due to breaking sharing of a neighbour
+block in the same btree leaf).
 
-Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+This fix keeps the 'begin' field, but now it's just a hint to speed up
+the search.  Instead the current transaction is searched for a free
+block, and then the old transaction is double checked to ensure it's
+free.  Much simpler.
+
+This fixes reports of sm_disk_new_block()'s BUG_ON() triggering when
+DM thin-provisioning's snapshots are heavily used.
+
+Reported-by: Eric Wheeler <dm-devel@lists.ewheeler.net>
+Signed-off-by: Joe Thornber <ejt@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kvm/x86.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ .../md/persistent-data/dm-space-map-common.c  | 27 +++++++++++++++++++
+ .../md/persistent-data/dm-space-map-common.h  |  2 ++
+ .../md/persistent-data/dm-space-map-disk.c    |  6 +++--
+ .../persistent-data/dm-space-map-metadata.c   |  5 +++-
+ 4 files changed, 37 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5730,14 +5730,12 @@ static void kvm_set_mmio_spte_mask(void)
- 	/* Set the present bit. */
- 	mask |= 1ull;
- 
--#ifdef CONFIG_X86_64
- 	/*
- 	 * If reserved bit is not supported, clear the present bit to disable
- 	 * mmio page fault.
- 	 */
--	if (maxphyaddr == 52)
-+	if (IS_ENABLED(CONFIG_X86_64) && maxphyaddr == 52)
- 		mask &= ~1ull;
--#endif
- 
- 	kvm_mmu_set_mmio_spte_mask(mask);
+--- a/drivers/md/persistent-data/dm-space-map-common.c
++++ b/drivers/md/persistent-data/dm-space-map-common.c
+@@ -384,6 +384,33 @@ int sm_ll_find_free_block(struct ll_disk
+ 	return -ENOSPC;
  }
+ 
++int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
++	                         dm_block_t begin, dm_block_t end, dm_block_t *b)
++{
++	int r;
++	uint32_t count;
++
++	do {
++		r = sm_ll_find_free_block(new_ll, begin, new_ll->nr_blocks, b);
++		if (r)
++			break;
++
++		/* double check this block wasn't used in the old transaction */
++		if (*b >= old_ll->nr_blocks)
++			count = 0;
++		else {
++			r = sm_ll_lookup(old_ll, *b, &count);
++			if (r)
++				break;
++
++			if (count)
++				begin = *b + 1;
++		}
++	} while (count);
++
++	return r;
++}
++
+ static int sm_ll_mutate(struct ll_disk *ll, dm_block_t b,
+ 			int (*mutator)(void *context, uint32_t old, uint32_t *new),
+ 			void *context, enum allocation_event *ev)
+--- a/drivers/md/persistent-data/dm-space-map-common.h
++++ b/drivers/md/persistent-data/dm-space-map-common.h
+@@ -109,6 +109,8 @@ int sm_ll_lookup_bitmap(struct ll_disk *
+ int sm_ll_lookup(struct ll_disk *ll, dm_block_t b, uint32_t *result);
+ int sm_ll_find_free_block(struct ll_disk *ll, dm_block_t begin,
+ 			  dm_block_t end, dm_block_t *result);
++int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
++	                         dm_block_t begin, dm_block_t end, dm_block_t *result);
+ int sm_ll_insert(struct ll_disk *ll, dm_block_t b, uint32_t ref_count, enum allocation_event *ev);
+ int sm_ll_inc(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
+ int sm_ll_dec(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
+--- a/drivers/md/persistent-data/dm-space-map-disk.c
++++ b/drivers/md/persistent-data/dm-space-map-disk.c
+@@ -165,8 +165,10 @@ static int sm_disk_new_block(struct dm_s
+ 	enum allocation_event ev;
+ 	struct sm_disk *smd = container_of(sm, struct sm_disk, sm);
+ 
+-	/* FIXME: we should loop round a couple of times */
+-	r = sm_ll_find_free_block(&smd->old_ll, smd->begin, smd->old_ll.nr_blocks, b);
++	/*
++	 * Any block we allocate has to be free in both the old and current ll.
++	 */
++	r = sm_ll_find_common_free_block(&smd->old_ll, &smd->ll, smd->begin, smd->ll.nr_blocks, b);
+ 	if (r)
+ 		return r;
+ 
+--- a/drivers/md/persistent-data/dm-space-map-metadata.c
++++ b/drivers/md/persistent-data/dm-space-map-metadata.c
+@@ -447,7 +447,10 @@ static int sm_metadata_new_block_(struct
+ 	enum allocation_event ev;
+ 	struct sm_metadata *smm = container_of(sm, struct sm_metadata, sm);
+ 
+-	r = sm_ll_find_free_block(&smm->old_ll, smm->begin, smm->old_ll.nr_blocks, b);
++	/*
++	 * Any block we allocate has to be free in both the old and current ll.
++	 */
++	r = sm_ll_find_common_free_block(&smm->old_ll, &smm->ll, smm->begin, smm->ll.nr_blocks, b);
+ 	if (r)
+ 		return r;
+ 
 
