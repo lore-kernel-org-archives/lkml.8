@@ -2,43 +2,42 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E06C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA86207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43CA207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yf8Ka3KY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ma/DUEc/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgETT4U (ORCPT
+        id S1728111AbgETT4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51104 "EHLO
+        Wed, 20 May 2020 15:56:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728078AbgETT4P (ORCPT
+        with ESMTP id S1726964AbgETT4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:56:15 -0400
+        Wed, 20 May 2020 15:56:07 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7140CC061A0E;
-        Wed, 20 May 2020 12:56:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A15C08C5C0;
+        Wed, 20 May 2020 12:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=i5gzlZfmXUuIBw3Csz0XurxqeATQQuTIPLX7NZ3IHJc=; b=Yf8Ka3KY10PsFQLSQ0S7PJwbz9
-        /nh5S639e1X1O5QwFd3tu0u+AyQ4K3+hlTVIKPTnIIw/vDZO1lg6HKQhxT+kaECLnHIKZmCZ70jig
-        /azcg0Gyk6j/PFKUf1YC7jwW8/bRbEifwsOY10bTlg2nI2PIC8UL8QZG0hOV7187M8HcogWW31O5E
-        1j6S/k6P5anvVQnxYi4ald6MEHrDvZF36fB+sJVvQOkismQQ5U12aDGuTrQKspD6rUGBGp1+f5RlC
-        XNL96I/2JQo0Jr/+CFB+42e38fw49FLT0lfB7gdTl0B6WEUcC57e1Xr4/f1F3frhNwNuNtUplCQnV
-        KpFdtCnw==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=AvcdAD8zTTSJDfWEpIpfpetvjQ99drHMp3Vtm1fZek8=; b=ma/DUEc/VfLIdSMqChe6fBXtRM
+        KFPIi0kExGxuMcY7MKuOHO7HDRL3fZTdRlVLkDNs7CIr3Y81qhwST3zP5iggrt/WXayW1EKMqqag1
+        AvC/YCGpoRtlOhSsCppb9mDB78KuJpoGGXo5TuGPK9ngfY+jniQETGjxwv6oE9IfQ7Ni40xZ36pxh
+        qAk7tK35dbFwZz+5SSeM6/7oFaHXTh9RiaDcOrrmB/wNmgFnkW3elg7zIJsYQTCrm5fdS8GdfQvzi
+        bQ35oJTYDm0DTjgxdbe5Rw1DYcKft1UsNPhk9zD9I1wl67ev9qL0kSTZBwuDqU1mwQI7FPc3zZzm4
+        zSwwU/3A==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbUoV-0002Rc-8B; Wed, 20 May 2020 19:55:39 +0000
+        id 1jbUo3-0001ns-KW; Wed, 20 May 2020 19:55:12 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -57,12 +56,10 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
         ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
         linux-nfs@vger.kernel.org
-Subject: [PATCH 10/33] net: add sock_set_rcvbuf
-Date:   Wed, 20 May 2020 21:54:46 +0200
-Message-Id: <20200520195509.2215098-11-hch@lst.de>
+Subject: remove kernel_setsockopt and kernel_getsockopt v2
+Date:   Wed, 20 May 2020 21:54:36 +0200
+Message-Id: <20200520195509.2215098-1-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520195509.2215098-1-hch@lst.de>
-References: <20200520195509.2215098-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -71,137 +68,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to directly set the SO_RCVBUFFORCE sockopt from kernel space
-without going through a fake uaccess.
+Hi Dave,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/dlm/lowcomms.c  |  7 +-----
- include/net/sock.h |  1 +
- net/core/sock.c    | 59 +++++++++++++++++++++++++---------------------
- 3 files changed, 34 insertions(+), 33 deletions(-)
+this series removes the kernel_setsockopt and kernel_getsockopt
+functions, and instead switches their users to small functions that
+implement setting (or in one case getting) a sockopt directly using
+a normal kernel function call with type safety and all the other
+benefits of not having a function call.
 
-diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
-index b6e6dba281547..2822a430a2b49 100644
---- a/fs/dlm/lowcomms.c
-+++ b/fs/dlm/lowcomms.c
-@@ -1180,7 +1180,6 @@ static int sctp_listen_for_all(void)
- 	struct socket *sock = NULL;
- 	int result = -EINVAL;
- 	struct connection *con = nodeid2con(0, GFP_NOFS);
--	int bufsize = NEEDED_RMEM;
- 	int one = 1;
- 
- 	if (!con)
-@@ -1195,11 +1194,7 @@ static int sctp_listen_for_all(void)
- 		goto out;
- 	}
- 
--	result = kernel_setsockopt(sock, SOL_SOCKET, SO_RCVBUFFORCE,
--				 (char *)&bufsize, sizeof(bufsize));
--	if (result)
--		log_print("Error increasing buffer space on socket %d", result);
--
-+	sock_set_rcvbuf(sock->sk, NEEDED_RMEM);
- 	result = kernel_setsockopt(sock, SOL_SCTP, SCTP_NODELAY, (char *)&one,
- 				   sizeof(one));
- 	if (result < 0)
-diff --git a/include/net/sock.h b/include/net/sock.h
-index dc08c176238fd..c997289aabbf9 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2693,6 +2693,7 @@ void sock_enable_timestamps(struct sock *sk);
- void sock_no_linger(struct sock *sk);
- void sock_set_keepalive(struct sock *sk);
- void sock_set_priority(struct sock *sk, u32 priority);
-+void sock_set_rcvbuf(struct sock *sk, int val);
- void sock_set_reuseaddr(struct sock *sk);
- void sock_set_sndtimeo(struct sock *sk, s64 secs);
- 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 728f5fb156a0c..3c6ebf952e9ad 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -789,6 +789,35 @@ void sock_set_keepalive(struct sock *sk)
- }
- EXPORT_SYMBOL(sock_set_keepalive);
- 
-+static void __sock_set_rcvbuf(struct sock *sk, int val)
-+{
-+	/* Ensure val * 2 fits into an int, to prevent max_t() from treating it
-+	 * as a negative value.
-+	 */
-+	val = min_t(int, val, INT_MAX / 2);
-+	sk->sk_userlocks |= SOCK_RCVBUF_LOCK;
-+
-+	/* We double it on the way in to account for "struct sk_buff" etc.
-+	 * overhead.   Applications assume that the SO_RCVBUF setting they make
-+	 * will allow that much actual data to be received on that socket.
-+	 *
-+	 * Applications are unaware that "struct sk_buff" and other overheads
-+	 * allocate from the receive buffer during socket buffer allocation.
-+	 *
-+	 * And after considering the possible alternatives, returning the value
-+	 * we actually used in getsockopt is the most desirable behavior.
-+	 */
-+	WRITE_ONCE(sk->sk_rcvbuf, max_t(int, val * 2, SOCK_MIN_RCVBUF));
-+}
-+
-+void sock_set_rcvbuf(struct sock *sk, int val)
-+{
-+	lock_sock(sk);
-+	__sock_set_rcvbuf(sk, val);
-+	release_sock(sk);
-+}
-+EXPORT_SYMBOL(sock_set_rcvbuf);
-+
- /*
-  *	This is meant for all protocols to use and covers goings on
-  *	at the socket level. Everything here is generic.
-@@ -885,30 +914,7 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 		 * play 'guess the biggest size' games. RCVBUF/SNDBUF
- 		 * are treated in BSD as hints
- 		 */
--		val = min_t(u32, val, sysctl_rmem_max);
--set_rcvbuf:
--		/* Ensure val * 2 fits into an int, to prevent max_t()
--		 * from treating it as a negative value.
--		 */
--		val = min_t(int, val, INT_MAX / 2);
--		sk->sk_userlocks |= SOCK_RCVBUF_LOCK;
--		/*
--		 * We double it on the way in to account for
--		 * "struct sk_buff" etc. overhead.   Applications
--		 * assume that the SO_RCVBUF setting they make will
--		 * allow that much actual data to be received on that
--		 * socket.
--		 *
--		 * Applications are unaware that "struct sk_buff" and
--		 * other overheads allocate from the receive buffer
--		 * during socket buffer allocation.
--		 *
--		 * And after considering the possible alternatives,
--		 * returning the value we actually used in getsockopt
--		 * is the most desirable behavior.
--		 */
--		WRITE_ONCE(sk->sk_rcvbuf,
--			   max_t(int, val * 2, SOCK_MIN_RCVBUF));
-+		__sock_set_rcvbuf(sk, min_t(u32, val, sysctl_rmem_max));
- 		break;
- 
- 	case SO_RCVBUFFORCE:
-@@ -920,9 +926,8 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 		/* No negative values (to prevent underflow, as val will be
- 		 * multiplied by 2).
- 		 */
--		if (val < 0)
--			val = 0;
--		goto set_rcvbuf;
-+		__sock_set_rcvbuf(sk, max(val, 0));
-+		break;
- 
- 	case SO_KEEPALIVE:
- 		if (sk->sk_prot->keepalive)
--- 
-2.26.2
+In some cases these functions seem pretty heavy handed as they do
+a lock_sock even for just setting a single variable, but this mirrors
+the real setsockopt implementation unlike a few drivers that just set
+set the fields directly.
 
+
+Changes since v1:
+ - use ->getname for sctp sockets in dlm
+ - add a new ->bind_add struct proto method for dlm/sctp
+ - switch the ipv6 and remaining sctp helpers to inline function so that
+   the ipv6 and sctp modules are not pulled in by any module that could
+   potentially use ipv6 or sctp connections
+ - remove arguments to various sock_* helpers that are always used with
+   the same constant arguments
