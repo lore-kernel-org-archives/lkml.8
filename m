@@ -2,129 +2,138 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F53BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7020320709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F379920709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PzmLpPEy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DL3F2D4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgETQdr (ORCPT
+        id S1726840AbgETQem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:33:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39576 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726548AbgETQdr (ORCPT
+        Wed, 20 May 2020 12:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgETQel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:33:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589992425;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bAZr9JpGFpcuu3XfWQIxwcbd9+r9VJYRanbh/qrJCdA=;
-        b=PzmLpPEy9Ms7KFQ4McaMei57TrQcdmyLdDh7WL5pYwhCVRWBV+hBl3BGg1Wse2voaZcvc3
-        ygg0ReAhIOnYLxYvbpAuJyNfcZ+Z+dfAeoBedmkCio3j5ovcY3c5U72zunV6ZdjwtqMab1
-        DuXxK2inNKleTV/m4mYAHyUQxd13HBg=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-73-Nf2LA8oPOnKIaQdlIAnrig-1; Wed, 20 May 2020 12:33:43 -0400
-X-MC-Unique: Nf2LA8oPOnKIaQdlIAnrig-1
-Received: by mail-ej1-f71.google.com with SMTP id t26so1557348ejs.19
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:33:43 -0700 (PDT)
+        Wed, 20 May 2020 12:34:41 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC44EC061A0E;
+        Wed, 20 May 2020 09:34:41 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id f13so4226316qkh.2;
+        Wed, 20 May 2020 09:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0nQOcruuCe+I6JJK5BECCDmKUQ6rKpy28VBBPrbownc=;
+        b=DL3F2D4KLPheZda48cG2S6TdXunu6Hqeqq97gvDMUiGWAEzDvwu3xe/a0Ck9iRujLR
+         xIOpDzt88Ov8oNt80zr2fDzVA9LhRKMwh7k+2d1CqadmLPVaSD0v5hAzdD1MfuQ5zzeX
+         58SDNiuAYMfTVNgLeu5GqEWqCHqAWMzw5LxA9eSor4wMyBAbw5FD23rbi13BANuEsfJD
+         C9HmwOz5ztm/cIit3EB8qEsA31DoYJ0Bzt0VcCPdORGG0/Pl7QjzrnQORGwtk/+tjH1q
+         wCwmjuva9nkq5dAObmFZ7fKpk0NzRSvxO4x1fT4kOXVugSdhldMgpZHDylUMCH5SBEUy
+         RzLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=bAZr9JpGFpcuu3XfWQIxwcbd9+r9VJYRanbh/qrJCdA=;
-        b=QtmsB9V0Oe9UO+jxZAtwOwTfOsodhhNbYrt825x7YNjNaoAT3xjX8P8csczTf3uOmP
-         a2PbOcay1kkO2pMt+n/O+32Xmg3mUmjRmXYT6bxzQaYNMuZrdQ0JS+fqvdBl1TmPz7V0
-         x9tI1bIzcK5P9obZCwU6T1BuuDmsqk+pCOBmFd00a/Qh942f1hvgzvSJsAm6A66NGh3B
-         8rP2keSUpSExf8YCA3JqTx+qZoOurWrS13BqNoMPX/ZqBMXpqEH2W4AsPd5obCowYmZP
-         rtdkQWn/2X8ELA4TWMCAyeyBEmUyG4oGk1kHnyK+SoPmDskgYXQjHaP3hPKyiyOTogar
-         BI5A==
-X-Gm-Message-State: AOAM533v87CeViGeVFub5GhXS3LQWGUDpbncyAISYhovAcvyWo9UOiF4
-        RQyX+LVDfGGD3r5KvzcxEwxwsCOsFpJPOQi83BAUPxVNLxIHpcau4wxIjJittbyGZ3mhtOBGr4K
-        0nHPGlPeFHqWwCNIBpbUFkCk9
-X-Received: by 2002:a17:906:6bc5:: with SMTP id t5mr4270295ejs.459.1589992422409;
-        Wed, 20 May 2020 09:33:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx7yvH7d/edQcZjZSz0U8YMWI3hpcZy/hW1aUOvFSWb9mTe9xQ9+gEka1tRNCnBYytolrP33w==
-X-Received: by 2002:a17:906:6bc5:: with SMTP id t5mr4270277ejs.459.1589992422203;
-        Wed, 20 May 2020 09:33:42 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id 13sm2347728ejw.88.2020.05.20.09.33.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0nQOcruuCe+I6JJK5BECCDmKUQ6rKpy28VBBPrbownc=;
+        b=fhObod3xNiv3+YibVrRzH+hsj5yJ9+MV7Cgtib+ChSDeN3fOLgs5B/ig6lw3vDbFRE
+         9/Ocd1hLRCcLobWg0Y1Xn7AH+iAmXQc6sDledh9lG8HmUyaK46lOkzdJgTXyALVbJxNL
+         vDN+J/j4pF75ZxQ8mdbRsDuDdKmMIEM8XOCgSTBkKUzsjPXG1L/6Pu90eA/9+jVLs2PB
+         U5xGYN3Evt1wmEDB0utQEGlvBkE/ihmTPEV9w860ULdAWvleJGGXcau+IbNjitEjvRkQ
+         jUu4ukhLcRXRmY+Ra5rh41p6V8qIisazlpjmbGih/TnyJFMWTrZMpH+2OYYk4hJNHJ6h
+         MVLw==
+X-Gm-Message-State: AOAM530zPEAjq6h3S30BHuGPdLyyVyF5xz/q1WIkLTEhWJ91JSUg8+yz
+        /VL63H5P9xUeRv1M64thKGgQAoMlqJaKEA==
+X-Google-Smtp-Source: ABdhPJz6YGPZqytqVuTMTHbOK7LpNwiSZ+mBPDroUHjdn42r2goTiVVdieuIjj/d8g1Oty4T5DI65A==
+X-Received: by 2002:a05:620a:1131:: with SMTP id p17mr5732390qkk.248.1589992480395;
+        Wed, 20 May 2020 09:34:40 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id q59sm2803261qtd.73.2020.05.20.09.34.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 09:33:41 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>
-Subject: Re: [PATCH 2/2] kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL unconditionally
-In-Reply-To: <20200520160740.6144-3-mlevitsk@redhat.com>
-References: <20200520160740.6144-1-mlevitsk@redhat.com> <20200520160740.6144-3-mlevitsk@redhat.com>
-Date:   Wed, 20 May 2020 18:33:40 +0200
-Message-ID: <874ksatvkr.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 20 May 2020 09:34:37 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v5 0/4] iio: magnetometer: ak8975: Add gpio reset support
+Date:   Wed, 20 May 2020 18:34:05 +0200
+Message-Id: <20200520163417.27805-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxim Levitsky <mlevitsk@redhat.com> writes:
+v5:
+ - add maintainer
 
-> This msr is only available when the host supports WAITPKG feature.
->
-> This breaks a nested guest, if the L1 hypervisor is set to ignore
-> unknown msrs, because the only other safety check that the
-> kernel does is that it attempts to read the msr and
-> rejects it if it gets an exception.
->
-> Fixes: 6e3ba4abce KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
->
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> ---
->  arch/x86/kvm/x86.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fe3a24fd6b263..9c507b32b1b77 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -5314,6 +5314,10 @@ static void kvm_init_msr_list(void)
->  			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
->  			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
->  				continue;
-> +			break;
-> +		case MSR_IA32_UMWAIT_CONTROL:
-> +			if (!kvm_cpu_cap_has(X86_FEATURE_WAITPKG))
-> +				continue;
+v4:
+ - fix some typo
+ - use gpio's dt-bindings for more clarity in documentation
+ - set compatible properties without vendor prefix as deprecated
+https://lore.kernel.org/linux-iio/20200520073125.30808-1-jonathan.albrieux@gmail.com/
 
-I'm probably missing something but (if I understand correctly) the only
-effect of dropping MSR_IA32_UMWAIT_CONTROL from msrs_to_save would be
-that KVM userspace won't see it in e.g. KVM_GET_MSR_INDEX_LIST. But why
-is this causing an issue? I see both vmx_get_msr()/vmx_set_msr() have
-'host_initiated' check:
+v3:
+ - fix patch messages style
+ - align reset gpio comment to kernel doc reccomendation
+ - introduce changelog
+https://lore.kernel.org/linux-iio/20200519124402.26076-1-jonathan.albrieux@gmail.com/
 
-       case MSR_IA32_UMWAIT_CONTROL:
-                if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
-                        return 1;
+v2:
+ - rewording of reset gpio comment and patch messages to better clarify
+   reset gpio behaviour
+https://lore.kernel.org/linux-iio/20200518133645.19127-1-jonathan.albrieux@gmail.com/
 
-so KVM userspace should be able to read/write this MSR even when there's
-no hardware support for it. Or who's trying to read/write it?
+v1:
+ - initial patch submission
+https://lore.kernel.org/linux-iio/20200519065749.4624-1-jonathan.albrieux@gmail.com/
 
-Also, kvm_cpu_cap_has() check is not equal to vmx_has_waitpkg() which
-checks secondary execution controls.
+Convert documentation from txt format to yaml. Add documentation about
+reset-gpio.
 
->  		default:
->  			break;
->  		}
+Deassert reset on ak8975_power_on(), assert reset on ak8975_power_off().
+
+Without reset's deassertion during ak8975_power_on(), driver's probe fails
+on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+
+AK09911 has an active low reset gpio to handle register's reset.
+AK09911 datasheet says that, if not used, reset pin should be connected
+to VID. This patch emulates this situation.
+
+Jonathan Albrieux (4):
+  dt-bindings: iio: magnetometer: ak8975: convert format to yaml, add
+    maintainer
+  dt-bindings: iio: magnetometer: ak8975: add gpio reset support
+  iio: magnetometer: ak8975: Fix typo, uniform measurement unit style
+  iio: magnetometer: ak8975: Add gpio reset support
+
+ .../bindings/iio/magnetometer/ak8975.txt      | 30 --------
+ .../bindings/iio/magnetometer/ak8975.yaml     | 77 +++++++++++++++++++
+ drivers/iio/magnetometer/ak8975.c             | 22 +++++-
+ 3 files changed, 97 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
 
 -- 
-Vitaly
+2.17.1
 
