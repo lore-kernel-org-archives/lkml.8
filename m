@@ -2,146 +2,149 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22077C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF96C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1861206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C45207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZntZSa1a"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yg9w9UDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgETTN3 (ORCPT
+        id S1726850AbgETTOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:13:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44629 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726566AbgETTN3 (ORCPT
+        Wed, 20 May 2020 15:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbgETTOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:13:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590002007;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uVj+MsI3l6KMi5hkuPwd7L6S2NyrXRTHPrxS0K9UsOs=;
-        b=ZntZSa1aATOrGrEaFf5WIOPm4vh0Z3DSsq8k4b8/fBfwnp0zSK7YWLpO+JKWPxwfUHtkPd
-        1xIHlbkAh9beAREc6hhM7GfDT32O9n/kLmB9SOe0jwVoDThmT14LpZsOekw16K7OR9Vk/9
-        B86JmXaTWU4fdS9AMToEkfNAmOMHCcE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-TUkh5LkHMQm8KIdAbJot0w-1; Wed, 20 May 2020 15:13:23 -0400
-X-MC-Unique: TUkh5LkHMQm8KIdAbJot0w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCBBB461;
-        Wed, 20 May 2020 19:13:21 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-114-121.rdu2.redhat.com [10.10.114.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 476375C1BE;
-        Wed, 20 May 2020 19:13:21 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id C16CD22036E; Wed, 20 May 2020 15:13:20 -0400 (EDT)
-Date:   Wed, 20 May 2020 15:13:20 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, x86@kernel.org,
-        stable@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: Re: [PATCH v3 2/2] x86/copy_mc: Introduce copy_mc_generic()
-Message-ID: <20200520191320.GA3255@redhat.com>
-References: <158992635164.403910.2616621400995359522.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158992636214.403910.12184670538732959406.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Wed, 20 May 2020 15:14:04 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9C3C05BD43
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:14:04 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id z26so908124oog.8
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:14:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FRPY2XoLC1HQ0rwn66pqOU81U3Fi4846T5ndJoAtH6c=;
+        b=Yg9w9UDs6tUntrB8W23rRvi1y7E7NEUOuEnjPj0mpeq+am0z5b0QbPNF4VDCSYPmNw
+         sBKAPvUKJzHKaDsnJH2JZpY+FDRJKMQvzx3iFRit/JfcMVrpJTmpnbVON7Bxf/XfxXhx
+         SqiWGOZt4iUaAr+64SgvFOUa9XCxMkdB6tCyl/NUpElBr6edcOltHM/5iVm0zqFlnR6B
+         Yb7RDU9oYm08GbL3xXfcqX/RZN1Ku84LRuC3b4+YrMeIBDOc5ogEIiVlGEFj2UD6Rtxn
+         7GHIxjZo9asxYbuP015cF2S2T+fsqaJGBwfVzgfZO6eo7G0AmhoP/sm90raRXD6asDHf
+         GitQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FRPY2XoLC1HQ0rwn66pqOU81U3Fi4846T5ndJoAtH6c=;
+        b=qhVxcGlJXQmXf4Cy/lAraQsnp7iX6KQBGvfO7rZEP6YA/RMCoT5U7qqRaoQldMtlBb
+         blsir3cRtYiUpoGu7m0QpbB4Iecl5C/vOrRyPPe4JzBDPxNChQ6I3648QIprAmlTKKqw
+         RRW/Z1SrxwT2A9QenQrtYIHhpuXZ7zkqNsP+57ImYjVT60doUVhc0GJ/qIXUHEKCThzw
+         tfys8Yf0JIZebNiBSbldD+FkwO5yedjLklyU6sE+bCX6KYI1BOT9CGhWSSReGASq9zgq
+         Mz63Yg/SwtNLezpnHX8yum1mZhxMcL+1Jz7jxC3VdnVcLUMDG8PLnFe0pdNIva4nc+nA
+         SeSA==
+X-Gm-Message-State: AOAM533SVAPPeXme+EyfL3FiCE8VuoSLUO2EcgPSCjFHio5E07RItnNK
+        8u1vrbCuqroDgICg8j6uizpUIQt/M6RwE/7M4BKrGQ==
+X-Google-Smtp-Source: ABdhPJyGZsapr+npAruEBsDKJ42yyXDu4Y+4ye6UYWC88Y9NpvopN4BSuewmoE4/1wwkovB0eTsyoA2KR87k48NO6+A=
+X-Received: by 2002:a4a:b389:: with SMTP id p9mr4566919ooo.84.1590002043642;
+ Wed, 20 May 2020 12:14:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158992636214.403910.12184670538732959406.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+ <20200512125327.1868-10-georgi.djakov@linaro.org> <20200519185836.GA469006@bogus>
+ <CAGETcx8+NZYT863ySLf6XvgLBm8PM_4euue2=zbDscgmDFh+7g@mail.gmail.com> <3a392629be195fa6bebca18309efffab@codeaurora.org>
+In-Reply-To: <3a392629be195fa6bebca18309efffab@codeaurora.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 20 May 2020 12:13:27 -0700
+Message-ID: <CAGETcx9a=9pMonfyoNGqkkfaDwJ+=U6OqK1op5UYM2zQbktsXQ@mail.gmail.com>
+Subject: Re: [PATCH v8 09/10] dt-bindings: interconnect: Add interconnect-tags bindings
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 03:12:42PM -0700, Dan Williams wrote:
-> The original copy_mc_fragile() implementation had negative performance
-> implications since it did not use the fast-string instruction sequence
-> to perform copies. For this reason copy_mc_to_kernel() fell back to
-> plain memcpy() to preserve performance on platform that did not indicate
-> the capability to recover from machine check exceptions. However, that
-> capability detection was not architectural and now that some platforms
-> can recover from fast-string consumption of memory errors the memcpy()
-> fallback now causes these more capable platforms to fail.
-> 
-> Introduce copy_mc_generic() as the fast default implementation of
-> copy_mc_to_kernel() and finalize the transition of copy_mc_fragile() to
-> be a platform quirk to indicate 'fragility'. With this in place
-> copy_mc_to_kernel() is fast and recovery-ready by default regardless of
-> hardware capability.
-> 
-> Thanks to Vivek for identifying that copy_user_generic() is not suitable
-> as the copy_mc_to_user() backend since the #MC handler explicitly checks
-> ex_has_fault_handler().
+On Wed, May 20, 2020 at 11:51 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> On 2020-05-20 01:27, Saravana Kannan wrote:
+> > On Tue, May 19, 2020 at 11:58 AM Rob Herring <robh@kernel.org> wrote:
+> >>
+> >> On Tue, May 12, 2020 at 03:53:26PM +0300, Georgi Djakov wrote:
+> >> > From: Sibi Sankar <sibis@codeaurora.org>
+> >> >
+> >> > Add interconnect-tags bindings to enable passing of optional
+> >> > tag information to the interconnect framework.
+> >> >
+> >> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> >> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> >> > ---
+> >> > v8:
+> >> > * New patch, picked from here:
+> >> >   https://lore.kernel.org/r/20200504202243.5476-10-sibis@codeaurora.org
+> >> >
+> >> >  .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
+> >> >  1 file changed, 5 insertions(+)
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> >> > index 6f5d23a605b7..c1a226a934e5 100644
+> >> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> >> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> >> > @@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
+> >> >                        * dma-mem: Path from the device to the main memory of
+> >> >                                   the system
+> >> >
+> >> > +interconnect-tags : List of interconnect path tags sorted in the same order as the
+> >> > +                 interconnects property. Consumers can append a specific tag to
+> >> > +                 the path and pass this information to the interconnect framework
+> >> > +                 to do aggregation based on the attached tag.
+> >>
+> >> Why isn't this information in the 'interconnect' arg cells?
+> >>
+> >> We have 'interconnect-names' because strings don't mix with cells. An
+> >> expanding list of 'interconnect-.*' is not a good pattern IMO.
+>
+> Rob,
+> Currently the interconnect paths
+> assume a default tag and only few
+> icc paths require tags that differ
+> from the default ones. Encoding the
+> tags in the interconnect arg cells
+> would force all paths to specify
+> the tags. I guess that's okay.
 
-/me is curious to know why #MC handler mandates use of _ASM_EXTABLE_FAULT().
+I think that's the right thing. Those cells are meant to be "args" to
+the provider.
 
-[..]
-> +/*
-> + * copy_mc_generic - memory copy with exception handling
-> + *
-> + * Fast string copy + fault / exception handling. If the CPU does
-> + * support machine check exception recovery, but does not support
-> + * recovering from fast-string exceptions then this CPU needs to be
-> + * added to the copy_mc_fragile_key set of quirks. Otherwise, absent any
-> + * machine check recovery support this version should be no slower than
-> + * standard memcpy.
-> + */
-> +SYM_FUNC_START(copy_mc_generic)
-> +	ALTERNATIVE "jmp copy_mc_fragile", "", X86_FEATURE_ERMS
-> +	movq %rdi, %rax
-> +	movq %rdx, %rcx
-> +.L_copy:
-> +	rep movsb
-> +	/* Copy successful. Return zero */
-> +	xorl %eax, %eax
-> +	ret
-> +SYM_FUNC_END(copy_mc_generic)
-> +EXPORT_SYMBOL_GPL(copy_mc_generic)
-> +
-> +	.section .fixup, "ax"
-> +.E_copy:
-> +	/*
-> +	 * On fault %rcx is updated such that the copy instruction could
-> +	 * optionally be restarted at the fault position, i.e. it
-> +	 * contains 'bytes remaining'. A non-zero return indicates error
-> +	 * to copy_safe() users, or indicate short transfers to
+> >
+> > Also, is there an example for interconnect-tags that I missed? Is it a
+> > list of strings, numbers, etc?
+>
+> Saravana,
+> https://patchwork.kernel.org/patch/11527589/
+> ^^ is an example of interconnect-tag useage.
 
-copy_safe() is vestige of terminology of previous patches?
+If we actually merge interconnect-tags, I think the doc should be
+updated. Instead of having to grep around.
 
-> +	 * user-copy routines.
-> +	 */
-> +	movq %rcx, %rax
-> +	ret
-> +
-> +	.previous
-> +
-> +	_ASM_EXTABLE_FAULT(.L_copy, .E_copy)
-
-A question for my education purposes.
-
-So copy_mc_generic() can handle MCE both on source and destination
-addresses? (Assuming some device can generate MCE on stores too).
-On the other hand copy_mc_fragile() handles MCE recovery only on
-source and non-MCE recovery on destination.
-
-Thanks
-Vivek
-
+-Saravana
