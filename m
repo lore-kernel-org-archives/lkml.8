@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7AEF2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A5F20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590008582;
-	bh=uyf+wpnbvMCA+KKkDsZ57pe3xA1JZhzPoaS/ZNfJBhs=;
+	s=default; t=1590008595;
+	bh=SBUiOIx2KjFTYdpaOV6/FsM6KzAmcEnDPhSPp16qsvI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1l4oLgVle+ICK+H2sWbI/gNZIvJ82w+4jTWDeh3+szQi9JTcOT0taW02wZe0DkhR5
-	 IXc1yDyxf5cPOxcJIQEEdD5b66l1u5KFqw9xTWgqvIaR1V0v1SDFvbgCpa1zQV25L/
-	 TnvstNkC+9ZHaqWvVUrxx/Uq7MwatnPAPT8cyfjs=
+	b=Cg+ffx9HbKpXuIMBlidaCe7lTAlTkOnlxKemPCXpi481YLD9noq7YBkLGQITJBQVQ
+	 iFgXCMIZf/oXLtmpLLzdDu4snuk5mG7AnuWFoj168LV4Ekq0MfYWU0RLQpkH18PsdL
+	 GK8WZ8iDfyw4ikHfFVPO3uFpFZH23Aw5mC9wER1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgETVDC (ORCPT
+        id S1728222AbgETVDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:03:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60754 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 17:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbgETVDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:03:01 -0400
+        id S1727018AbgETVDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:03:14 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAB012075F;
-        Wed, 20 May 2020 21:03:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FAA42084C;
+        Wed, 20 May 2020 21:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590008580;
-        bh=uyf+wpnbvMCA+KKkDsZ57pe3xA1JZhzPoaS/ZNfJBhs=;
+        s=default; t=1590008593;
+        bh=SBUiOIx2KjFTYdpaOV6/FsM6KzAmcEnDPhSPp16qsvI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qdMfq2otSnPS3ILIDB3TxZLHbeGCXVEAT5JP4khm2Gfj6z4kpOZjT/wh8hSvNJlqS
-         kJuejX07yPIK6MgcKceR8ukxoKQPMfFoxa3vVYr34LpSTUI9ZjLEqbh5NtBCiUOBNW
-         RRjv6dTZwn34gPEs+JIxCl6Dpwi1v6jNcfmfC9a0=
+        b=sHlXw6xxm/weg4Uhvcy011U1a3gw3idnijKcdJeb0AjynRsRfro7/SYsE6+e/HY9z
+         2A1/hYUlrMsQxsCZjV29VwRTFjfbKGi3WeebzEn9668nbP2DflzCxe5mk38DX2y2yg
+         x7MzBeB3vviOy1hVRoqTjJMKBOPciXz1omQTKoIc=
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E839240AFD; Wed, 20 May 2020 18:02:57 -0300 (-03)
-Date:   Wed, 20 May 2020 18:02:57 -0300
+        id A2FBB40AFD; Wed, 20 May 2020 18:03:11 -0300 (-03)
+Date:   Wed, 20 May 2020 18:03:11 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Changbin Du <changbin.du@gmail.com>
 Cc:     Jiri Olsa <jolsa@redhat.com>,
@@ -49,87 +49,69 @@ Cc:     Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/19] perf ftrace: add option -l/--long-info to show
- more info
-Message-ID: <20200520210257.GV32678@kernel.org>
+Subject: Re: [PATCH 09/19] perf ftrace: add support for trace option
+ tracing_thresh
+Message-ID: <20200520210311.GW32678@kernel.org>
 References: <20200510150628.16610-1-changbin.du@gmail.com>
- <20200510150628.16610-9-changbin.du@gmail.com>
+ <20200510150628.16610-10-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200510150628.16610-9-changbin.du@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200510150628.16610-10-changbin.du@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, May 10, 2020 at 11:06:17PM +0800, Changbin Du escreveu:
-> Sometimes we want ftrace display more and longer information about trace.
+Em Sun, May 10, 2020 at 11:06:18PM +0800, Changbin Du escreveu:
+> This adds an option '--tracing-thresh' to setup trace duration threshold
+> for funcgraph tracer.
 
-Humm, -v? Or that would bring too much stuff from other parts of perf?
-I guess so, perhaps as an option to the function-graph tracer, one that
-combines, as you do, several options provided by that tracer?
-
-- Arnaldo
+Ditto
  
-> $ sudo perf ftrace -G -l
->  6800.190937 |   4)   <...>-7683   |   2.072 us    |  mutex_unlock();
->  6800.190941 |   4)   <...>-7683   |   2.171 us    |  __fsnotify_parent();
->  6800.190943 |   4)   <...>-7683   |   1.497 us    |  fsnotify();
->  6800.190944 |   4)   <...>-7683   |   0.775 us    |  __sb_end_write();
->  6800.190945 |   4)   <...>-7683   |   0.854 us    |  fpregs_assert_state_consistent();
->  6800.190947 |   4)   <...>-7683   |               |  do_syscall_64() {
->  6800.190948 |   4)   <...>-7683   |               |    __x64_sys_close() {
->  6800.190948 |   4)   <...>-7683   |               |      __close_fd() {
->  6800.190948 |   4)   <...>-7683   |   0.322 us    |        _raw_spin_lock();
->  6800.190949 |   4)   <...>-7683   |               |        filp_close() {
->  6800.190949 |   4)   <...>-7683   |   0.320 us    |          dnotify_flush();
->  6800.190950 |   4)   <...>-7683   |   0.325 us    |          locks_remove_posix();
-> 
 > Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > ---
->  tools/perf/builtin-ftrace.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+>  tools/perf/builtin-ftrace.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
 > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index b16600a16efa..f11f2d3431b0 100644
+> index f11f2d3431b0..20bc14d6c5fb 100644
 > --- a/tools/perf/builtin-ftrace.c
 > +++ b/tools/perf/builtin-ftrace.c
-> @@ -42,6 +42,7 @@ struct perf_ftrace {
->  	bool			func_stack_trace;
+> @@ -43,6 +43,7 @@ struct perf_ftrace {
 >  	bool			nosleep_time;
 >  	bool			nofuncgraph_irqs;
-> +	bool			long_info;
+>  	bool			long_info;
+> +	unsigned		tracing_thresh;
 >  };
 >  
 >  struct filter_entry {
-> @@ -190,6 +191,9 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
->  	write_tracing_option_file("func_stack_trace", "0");
->  	write_tracing_option_file("sleep-time", "1");
->  	write_tracing_option_file("funcgraph-irqs", "1");
-> +	write_tracing_option_file("funcgraph-proc", "0");
-> +	write_tracing_option_file("funcgraph-abstime", "0");
-> +	write_tracing_option_file("irq-info", "0");
->  }
+> @@ -213,6 +214,9 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+>  	if (write_tracing_file("max_graph_depth", "0") < 0)
+>  		return -1;
 >  
->  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
-> @@ -371,6 +375,23 @@ static int set_tracing_funcgraph_irqs(struct perf_ftrace *ftrace)
+> +	if (write_tracing_file("tracing_thresh", "0") < 0)
+> +		return -1;
+> +
+>  	reset_tracing_filters();
+>  	reset_tracing_options(ftrace);
+>  	return 0;
+> @@ -392,6 +396,21 @@ static int set_tracing_long_info(struct perf_ftrace *ftrace)
 >  	return 0;
 >  }
 >  
-> +static int set_tracing_long_info(struct perf_ftrace *ftrace)
+> +static int set_tracing_thresh(struct perf_ftrace *ftrace)
 > +{
-> +	if (!ftrace->long_info)
+> +	char buf[16];
+> +
+> +	if (ftrace->tracing_thresh == 0)
 > +		return 0;
 > +
-> +	if (write_tracing_option_file("funcgraph-proc", "1") < 0)
-> +		return -1;
+> +	snprintf(buf, sizeof(buf), "%d", ftrace->tracing_thresh);
 > +
-> +	if (write_tracing_option_file("funcgraph-abstime", "1") < 0)
-> +		return -1;
-> +
-> +	if (write_tracing_option_file("irq-info", "1") < 0)
+> +	if (write_tracing_file("tracing_thresh", buf) < 0)
 > +		return -1;
 > +
 > +	return 0;
@@ -138,24 +120,24 @@ combines, as you do, several options provided by that tracer?
 >  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
 >  {
 >  	char *trace_file;
-> @@ -449,6 +470,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+> @@ -475,6 +494,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
 >  		goto out_reset;
 >  	}
 >  
-> +	if (set_tracing_long_info(ftrace) < 0) {
-> +		pr_err("failed to set tracing option funcgraph-proc/funcgraph-abstime/irq-info\n");
+> +	if (set_tracing_thresh(ftrace) < 0) {
+> +		pr_err("failed to set tracing thresh\n");
 > +		goto out_reset;
 > +	}
 > +
 >  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
 >  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
 >  		goto out_reset;
-> @@ -588,6 +614,8 @@ int cmd_ftrace(int argc, const char **argv)
->  		    "Measure on-CPU time only (function_graph only)"),
->  	OPT_BOOLEAN(0, "nofuncgraph-irqs", &ftrace.nofuncgraph_irqs,
+> @@ -616,6 +640,8 @@ int cmd_ftrace(int argc, const char **argv)
 >  		    "Ignore functions that happen inside interrupt (function_graph only)"),
-> +	OPT_BOOLEAN('l', "long-info", &ftrace.long_info,
-> +		    "Show process names, PIDs, timestamps, irq-info if available"),
+>  	OPT_BOOLEAN('l', "long-info", &ftrace.long_info,
+>  		    "Show process names, PIDs, timestamps, irq-info if available"),
+> +	OPT_UINTEGER(0, "tracing-thresh", &ftrace.tracing_thresh,
+> +		     "Only show functions of which the duration is greater than <n>µs"),
 >  	OPT_END()
 >  	};
 >  
