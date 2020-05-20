@@ -2,285 +2,149 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFD8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1450C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C68207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAFB207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vjazAm37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgETJaV (ORCPT
+        id S1726925AbgETJah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:30:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37588 "EHLO
+        Wed, 20 May 2020 05:30:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETJaU (ORCPT
+        with ESMTP id S1726896AbgETJaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:30:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C89C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:30:19 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jbL2h-0003Wo-CB; Wed, 20 May 2020 11:29:39 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jbL2g-000483-Mt; Wed, 20 May 2020 11:29:38 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: [PATCH v7 2/5] ARM: dts: add Protonic WD2 board
-Date:   Wed, 20 May 2020 11:29:34 +0200
-Message-Id: <20200520092937.15797-3-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520092937.15797-1-o.rempel@pengutronix.de>
-References: <20200520092937.15797-1-o.rempel@pengutronix.de>
+        Wed, 20 May 2020 05:30:35 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C25C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:30:35 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id n18so2121742wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:30:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wc6stLd7fv3SlBSmBsX1XmQPwtI3AmwZLYlnJzwyzvw=;
+        b=vjazAm37j6JS0ESDLULP7usxUJmcyJXpI1rYanJaiBMEXC47/00EoRJqXccf2I/aHF
+         52deqipmXhdXb5EVkrQLE6gsz2A75scUhggoIq6VvVuYAA7SeSN8FKnu783vCaJD+lGl
+         oJbe9GifOa2TT59QiErtSRIQDSyNwLbHL8NjtYgFCMfCdYZ2BbiXPnihGjZel5DGTJ/M
+         DZSn/NAOoba12f60Dh40Ra2FYgfuafQB0ij5r+w2xW+9dGHHUENhQYIPsJOjfGgi5rzR
+         QcJ5mOS1YHLQIjdCS8QMEujcXfs863rcj24FHVj+SWqcI54f2AWW3KDQDQCkFFqDj1gC
+         ewqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wc6stLd7fv3SlBSmBsX1XmQPwtI3AmwZLYlnJzwyzvw=;
+        b=Yp+WnKrHstGZ+t36Me0j6nU/+wsaPtTL2AhLZ9//9LaMwWCvYrCuLNKMLQ1zqIC8I8
+         Sibre+BV8SJV6Gd6DrbtowlQd6fIqkTau/vs7eV+NQkjJjQgrRvSO+EVgnPbXd2dMSvF
+         GPIniY7r6Iyyi8urCgys8f6yDsh/s8I1e+LNyKx8tnEwd9soe9nDCQ4lnR444OB/3rYl
+         BQgyjB8aPEunzP/RJTb+URB/pT5eXlh7VeWCCX0AVe+X5uQIjydbKaJYPHPXoWIUlGKf
+         z0EeomA/atVtYCrdQXyxVtQMSXdG9q60siQwDiuIQUDiMyDhyAs3+B5cwZ0BJB9At3hC
+         aJ0A==
+X-Gm-Message-State: AOAM532Y3EEXvkjc7eD8XrTY6Z3gMwEhTptlG6fyIar/r6a1QRRsatyU
+        dcDUuG9IXs18fyeYzJcGdd8I8w==
+X-Google-Smtp-Source: ABdhPJymBBbiK71tQTEAqr5QIR08/MCj+YzDXrNmdjU7RtZMKMWFmlQRCDMRfe/P26o83I25huuHag==
+X-Received: by 2002:a1c:305:: with SMTP id 5mr3772868wmd.60.1589967034154;
+        Wed, 20 May 2020 02:30:34 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id x5sm2370385wro.12.2020.05.20.02.30.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 02:30:33 -0700 (PDT)
+Date:   Wed, 20 May 2020 10:30:31 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: Re: [PATCH v11 1/3] dt-bindings: mfd: Add Gateworks System
+ Controller bindings
+Message-ID: <20200520093031.GF271301@dell>
+References: <1589565428-28886-1-git-send-email-tharvey@gateworks.com>
+ <1589565428-28886-2-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1589565428-28886-2-git-send-email-tharvey@gateworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the Protonic WD2 board, which is an internal development
-platform for low-cost agricultural Virtual Terminals based on COTS tablets
-and web applications.
-It inherits from the PRTI6Q base class.
+On Fri, 15 May 2020, Tim Harvey wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: David Jander <david@protonic.nl>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- arch/arm/boot/dts/Makefile         |   1 +
- arch/arm/boot/dts/imx6q-prtwd2.dts | 188 +++++++++++++++++++++++++++++
- 2 files changed, 189 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-prtwd2.dts
+> This patch adds documentation of device-tree bindings for the
+> Gateworks System Controller (GSC).
+> 
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> v11:
+>  - no change
+> 
+> v10:
+>  - no change
+> 
+> v9:
+>  - added Reviewed-by: Rob Herring <robh@kernel.org>
+>  - remove allOf: see https://lkml.org/lkml/2020/4/15/1930
+>  - encorporate Lee's review comments for item descriptions
+> 
+> v8:
+>  - add register to fan-controller node name
+> 
+> v7:
+>  - change divider from mili-ohms to ohms
+>  - add constraints for voltage divider and offset
+>  - remove unnecessary ref for offset
+>  - renamed fan to fan-controller and changed base prop to reg
+> 
+> v6:
+>  - fix typo
+>  - drop invalid description from #interrupt-cells property
+>  - fix adc pattern property
+>  - add unit suffix
+>  - replace hwmon/adc with adc/channel
+>  - changed adc type to mode and enum int
+>  - add unit suffix and drop ref for voltage-divider
+>  - moved fan to its own subnode with base register
+> 
+> v5:
+>  - resolve dt_binding_check issues
+> 
+> v4:
+>  - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+>  - remove unncessary resolution/scaling properties for ADCs
+>  - update to yaml
+>  - remove watchdog
+> 
+> v3:
+>  - replaced _ with -
+>  - remove input bindings
+>  - added full description of hwmon
+>  - fix unit address of hwmon child nodes
+> ---
+>  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 196 +++++++++++++++++++++
+>  1 file changed, 196 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 206a36a50575e..8ce744f1cbfc9 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -539,6 +539,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-pico-pi.dtb \
- 	imx6q-pistachio.dtb \
- 	imx6q-prti6q.dtb \
-+	imx6q-prtwd2.dtb \
- 	imx6q-rex-pro.dtb \
- 	imx6q-sabreauto.dtb \
- 	imx6q-sabrelite.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-prtwd2.dts b/arch/arm/boot/dts/imx6q-prtwd2.dts
-new file mode 100644
-index 0000000000000..fd9f457a273e2
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-prtwd2.dts
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (c) 2018 Protonic Holland
-+ */
-+
-+/dts-v1/;
-+#include "imx6q.dtsi"
-+#include "imx6qdl-prti6q.dtsi"
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+	model = "Protonic WD2 board";
-+	compatible = "prt,prtwd2", "fsl,imx6q";
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0x20000000>;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	usdhc2_wifi_pwrseq: usdhc2_wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wifi_npd>;
-+		reset-gpios = <&gpio6 10 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	/* PRTWD2 rev 1 bitbang I2C for Ethernet Switch */
-+	i2c@4 {
-+		compatible = "i2c-gpio";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_i2c4>;
-+		sda-gpios = <&gpio1 22 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&gpio1 31 GPIO_ACTIVE_HIGH>;
-+		i2c-gpio,delay-us = <20>;	/* ~10 kHz */
-+		i2c-gpio,scl-output-only;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-0 = <&pinctrl_can1 &pinctrl_can1phy>;
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rmii";
-+	clocks = <&clks IMX6QDL_CLK_ENET>,
-+		 <&clks IMX6QDL_CLK_ENET>;
-+	clock-names = "ipg", "ahb";
-+	status = "okay";
-+
-+	fixed-link {
-+		speed = <100>;
-+		pause;
-+		full-duplex;
-+	};
-+};
-+
-+&i2c3 {
-+	adc@49 {
-+		compatible = "ti,ads1015";
-+		reg = <0x49>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* V in */
-+		channel@4 {
-+			reg = <4>;
-+			ti,gain = <1>;
-+			ti,datarate = <3>;
-+		};
-+
-+		/* I charge */
-+		channel@5 {
-+			reg = <5>;
-+			ti,gain = <1>;
-+			ti,datarate = <3>;
-+		};
-+
-+		/* V bus  */
-+		channel@6 {
-+			reg = <6>;
-+			ti,gain = <1>;
-+			ti,datarate = <3>;
-+		};
-+
-+		/* nc */
-+		channel@7 {
-+			reg = <7>;
-+			ti,gain = <1>;
-+			ti,datarate = <3>;
-+		};
-+	};
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	non-removable;
-+	no-1-8-v;
-+	non-removable;
-+	mmc-pwrseq = <&usdhc2_wifi_pwrseq>;
-+	pm-ignore-notify;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	wifi@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usb_eth_chg>;
-+
-+	pinctrl_can1phy: can1phy {
-+		fsl,pins = <
-+			/* CAN1_SR */
-+			MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x13070
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			/* MX6QDL_ENET_PINGRP4 */
-+			MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0	0x1b0b0
-+			MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1	0x1b0b0
-+			MX6QDL_PAD_ENET_RX_ER__ENET_RX_ER	0x130b0
-+			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN	0x1b0b0
-+			MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0	0x1b0b0
-+			MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1	0x1b0b0
-+			MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN	0x1b0b0
-+
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x1b0b0
-+			/* Phy reset */
-+			MX6QDL_PAD_CSI0_DAT4__GPIO5_IO22	0x1b0b0
-+			/* nINTRP */
-+			MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23	0x1b0b0
-+
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x10030
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x10030
-+		>;
-+	};
-+
-+	pinctrl_i2c4: i2c4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_MDIO__GPIO1_IO22	0x1f8b0
-+			MX6QDL_PAD_ENET_MDC__GPIO1_IO31		0x1f8b0
-+		>;
-+	};
-+
-+	pinctrl_usb_eth_chg: usbethchggrp {
-+		fsl,pins = <
-+			/* USB charging control */
-+			MX6QDL_PAD_NANDF_CS0__GPIO6_IO11	0x130b0
-+			MX6QDL_PAD_NANDF_CS1__GPIO6_IO14	0x130b0
-+			MX6QDL_PAD_NANDF_CS2__GPIO6_IO15	0x130b0
-+			MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x130b0
-+			>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170b9
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100b9
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
-+		>;
-+	};
-+
-+	pinctrl_wifi_npd: wifinpd {
-+		fsl,pins = <
-+			/* WL_REG_ON */
-+			MX6QDL_PAD_NANDF_RB0__GPIO6_IO10	0x13069
-+		>;
-+	};
-+};
+Applied, thanks.
+
 -- 
-2.26.2
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
