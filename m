@@ -2,241 +2,165 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D4320756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f7mZU9ne"
+	by mail.kernel.org (Postfix) with ESMTP id BBB7C20756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgETOEY (ORCPT
+        id S1726886AbgETOEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:04:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39652 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726789AbgETOEY (ORCPT
+        Wed, 20 May 2020 10:04:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETOEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:04:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589983461;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=xTGlqq0w081BobQNfRL2NqghydaELJw3UKoGzWbyJpk=;
-        b=f7mZU9nem8GE+fqjbTzU9AuKvQuXyZhtnrg8MOrGpIoqaBXwyW9k8fxtQ0bVyVraOOQbjB
-        Y+DoswVj8s8pjO3qpoEqLukj6AJboxm4XpJwm/clxcHrWwR1jOJgbS0vp+QZD9csjk6KPE
-        nKZSiQZ96G+CEP7R2PSMtwOZVGHJIZ4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-275-TaGil7twNdmUL5A2nCCURA-1; Wed, 20 May 2020 10:04:19 -0400
-X-MC-Unique: TaGil7twNdmUL5A2nCCURA-1
-Received: by mail-wr1-f72.google.com with SMTP id p8so1455557wrj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:04:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xTGlqq0w081BobQNfRL2NqghydaELJw3UKoGzWbyJpk=;
-        b=sRsPBeTFqJu/861t2vaSPuyoMSWw3o1P/TS21vzll6x5f1dMJHwSEBlIN75K9u+FMR
-         WJaRq7vMOsrBrbJMAXFkbhG3XSnc2slBwOQt0sN5bxTTyxV06ffvxAWUALo0P+qQ4prU
-         o8CfQJExUoTPBNFE++hp6ri93IsOkTG3kKmIa58QDVav94n8YrET87BWFz3ddpSt//lC
-         5sPpOkrHd83LJMmyLebsPKjEy/cO42W/9EoxWGI+IRIAz71nWNmuBONNz8eV5PLauUKb
-         cKFCEbKM8vy1Hw6cE6D079msCO/H6j6KLBYw2IzjUTyBJpYYH1h1RpB8LOq187xkoi3J
-         7qGg==
-X-Gm-Message-State: AOAM531aAUvGzdnpBdMmUWKhr5j4Y4M/hKfnxOlu9k0OH5WSdFXnRKQF
-        5xrzecgDvlKTUGRqrC65BXzECdNWwjvWVm7eZ2JCNlyaPVIUrMDU4Xb0Gg7/jqitN+kYH/6QhGo
-        pvc8ImQnMaloWDckvZvJs9Qgn
-X-Received: by 2002:adf:82ab:: with SMTP id 40mr1435267wrc.85.1589983458488;
-        Wed, 20 May 2020 07:04:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyu0MqZibcZwm0TugA9lSrlYHRFVkt44fdqu7Gy6ljrDMmGQ6iF6IJ+Tw+6grygO2EOUDDaFA==
-X-Received: by 2002:adf:82ab:: with SMTP id 40mr1435250wrc.85.1589983458178;
-        Wed, 20 May 2020 07:04:18 -0700 (PDT)
-Received: from localhost.localdomain.com ([151.29.188.60])
-        by smtp.gmail.com with ESMTPSA id q4sm3293174wma.9.2020.05.20.07.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 07:04:17 -0700 (PDT)
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org
-Cc:     linux-rt-users@vger.kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
-Subject: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep is cleared
-Date:   Wed, 20 May 2020 16:04:02 +0200
-Message-Id: <20200520140402.358880-1-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.25.3
+        Wed, 20 May 2020 10:04:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7B5C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:04:51 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jbPKq-0006ID-Kl; Wed, 20 May 2020 16:04:40 +0200
+Message-ID: <ebcfc9843b57c5611b2106a3fe3553efb48734f0.camel@pengutronix.de>
+Subject: Re: [PATCH 2/3] drm/etnaviv: Don't ignore errors on getting clocks
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Lubomir Rintel <lkundrak@v3.sk>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 20 May 2020 16:04:39 +0200
+In-Reply-To: <20200520133824.GK1695525@furthur.local>
+References: <20200513150007.1315395-1-lkundrak@v3.sk>
+         <20200513150007.1315395-3-lkundrak@v3.sk>
+         <CAOMZO5B582=tZ_YBCyVYFtGh=z5hZKFxP7XoUHEmH3jZsk2uYQ@mail.gmail.com>
+         <CAOMZO5BdiXCVXs+8jP7PoRvgKd1sxCu4KhjvJBvL=Qig2WOs4g@mail.gmail.com>
+         <1e15be39906034a95b86c026e060ed9866586d94.camel@pengutronix.de>
+         <20200514082755.GN1551@shell.armlinux.org.uk>
+         <ab384507b90474b0030d8ce64fdcfe868b52c3cb.camel@pengutronix.de>
+         <20200514085307.GO1551@shell.armlinux.org.uk>
+         <20200520133824.GK1695525@furthur.local>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After tasks enter or leave a runqueue (wakeup/block) SCHED full_nohz
-dependency is checked (via sched_update_tick_dependency()). In case tick
-can be stopped on a CPU (see sched_can_stop_tick() for details), SCHED
-dependency for such CPU is cleared. However, this new information is not
-used right away to actually stop the tick.
+Am Mittwoch, den 20.05.2020, 15:38 +0200 schrieb Lubomir Rintel:
+> On Thu, May 14, 2020 at 09:53:08AM +0100, Russell King - ARM Linux admin wrote:
+> > On Thu, May 14, 2020 at 10:40:58AM +0200, Lucas Stach wrote:
+> > > Am Donnerstag, den 14.05.2020, 09:27 +0100 schrieb Russell King - ARM Linux admin:
+> > > > On Thu, May 14, 2020 at 10:18:02AM +0200, Lucas Stach wrote:
+> > > > > Am Mittwoch, den 13.05.2020, 23:41 -0300 schrieb Fabio Estevam:
+> > > > > > On Wed, May 13, 2020 at 2:09 PM Fabio Estevam <festevam@gmail.com> wrote:
+> > > > > > 
+> > > > > > > The binding doc Documentation/devicetree/bindings/gpu/vivante,gc.yaml
+> > > > > > > says that only the 'reg' clock could be optional, the others are
+> > > > > > > required.
+> > > > > > 
+> > > > > > arch/arm/boot/dts/dove.dtsi only uses the 'core' clock.
+> > > > > > arch/arm/boot/dts/stm32mp157.dtsi uses 'bus' and 'core'
+> > > > > > 
+> > > > > > Maybe the binding needs to be updated and it seems that using
+> > > > > > devm_clk_get_optional() like you propose is safe.
+> > > > > 
+> > > > > The binding is correct as-is. We want to require those clocks to be
+> > > > > present, but the dove DT was added before the binding was finalized, so
+> > > > > the driver still treats the clocks as optional to not break
+> > > > > compatibility with old DTs. Maybe this warrants a comment in the
+> > > > > code...
+> > > > 
+> > > > The binding doc in mainline says:
+> > > > 
+> > > >   clocks:
+> > > >     items:
+> > > >       - description: AXI/master interface clock
+> > > >       - description: GPU core clock
+> > > >       - description: Shader clock (only required if GPU has feature PIPE_3D)
+> > > >       - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
+> > > >     minItems: 1
+> > > >     maxItems: 4
+> > > > 
+> > > >   clock-names:
+> > > >     items:
+> > > >       enum: [ bus, core, shader, reg ]
+> > > >     minItems: 1
+> > > >     maxItems: 4
+> > > > 
+> > > > which looks correct to me - and means that Dove is compliant with that.
+> > > 
+> > > The YAML binding actually did loose something in translation here,
+> > > which I didn't notice. Previously all those clocks were listed under
+> > > "Required properties", with the exceptions listed in parenthesis. So
+> > > the Dove GPU, which is a combined 2D/3D core should have axi, core and
+> > > shader clocks specified.
+> > 
+> > That may be your desire, but that is impossible without knowing that
+> > (a) it has the clocks
+> > (b) what those clocks are connected to
+> > 
+> > I guess we could "make something up" but as DT is supposed to describe
+> > hardware, I don't see how we can satisfy that and your requirement.
+> > 
+> > The only thing that is known from the documentation is that there is
+> > one clock for the GPU on Dove.
+> 
+> Yes. This means that in fact "core" is the only required clock for all
+> implementations of vivante,gc and the common binding needs to be updated
+> to reflect that. I'll follow with a patch that does that, unless there
+> are strong objections.
+> 
+> If there are implementations that require different clock inputs, then they
+> need to use additional compatible string for the particular flavor and the
+> binding should have conditionals for them. Something like this:
+> 
+>   if:
+>     properties:
+>       compatible:
+>         contains:
+>           const: fsl,imx6sx-gpu
+>   then:
+>     properties:
+>       clocks:
+>         minItems: 4
 
-In CONFIG_PREEMPT systems booted with threadirqs option, sched clock
-tick is serviced by an actual task (ksoftirqd corresponding to the CPU
-where tick timer fired). So, in case a CPU was running a single task,
-servicing the timer involves exiting full nozh mode. Problem at this
-point is that we might lose chances to enter back into full nozh mode,
-since info about ksoftirqd thread going back to sleep is not used (as
-mentioned above).
+The DT binding of a device should describe the hardware of the device,
+not the specific integration into a SoC. Now it's a bit hard to make
+any definite statements about the Vivante GC GPU module itself, as most
+of the information we have is from reverse engineering. It's pretty
+clear though that the GPU module has at least 2 clock inputs: axi and
+core, as there is a feature bit that tells us if it's okay to gate the
+axi clock independently from core. 
 
-Fix it by calling tick_nozh_full_update_tick(_cpu)() right after SCHED
-dependency is cleared, so that tick can be promptly stopped.
+I'm not 100% sure about the older cores as found in Dove, but all the
+more recent cores allow to clock the shader partition independently of
+the core partition, so that's another clock input.
 
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
----
-Hi,
+Now when it comes to a SoC integration, it's totally fine to have all
+those GPU module clock inputs fed from the same clock source and behind
+a shared gate maybe. But that doesn't change the clock inputs from the
+device perspective, it's still 3 independent clock inputs, which then
+just point to the same clock source in the DT.
 
-I noticed what seems to be the problem described in the changelog while
-running sysjitter [1] on a PREEMPT system setup for isolation and full
-nozh, i.e. ... skew_tick=1 nohz=on nohz_full=4-35 rcu_nocbs=4-35
-threadirqs (36 CPUs box).
+imx6sx.dtsi is even a precedent of such a setup: all module clock
+inputs are fed by a common clock and share a single gate.
 
-Starting sysjitter with something like the following
-
-perf stat -C 4-35 -e irq_vectors:local_timer_entry taskset \
---cpu-list 4-35 ./sysjitter/sysjitter --runtime 30 200
-
-with vanilla kernel was returning ~5k local_timer_entry events, while
-that number goes down to ~100 or so with the proposed patch applied.
-
-The following trace snippet also highlight the problematic situation:
-
-...
-ksoftirqd/19-125   [019]   170.700754: softirq_entry:        vec=1 [action=TIMER]
-ksoftirqd/19-125   [019]   170.700755: softirq_exit:         vec=1 [action=TIMER]
-ksoftirqd/19-125   [019]   170.700756: softirq_entry:        vec=7 [action=SCHED]
-ksoftirqd/19-125   [019]   170.700757: softirq_exit:         vec=7 [action=SCHED]
-ksoftirqd/19-125   [019]   170.700759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
-   sysjitter-2459  [019]   170.701740: local_timer_entry:    vector=236
-   sysjitter-2459  [019]   170.701742: softirq_raise:        vec=1 [action=TIMER]
-   sysjitter-2459  [019]   170.701743: softirq_raise:        vec=7 [action=SCHED]
-   sysjitter-2459  [019]   170.701744: local_timer_exit:     vector=236
-   sysjitter-2459  [019]   170.701747: sched_wakeup:         ksoftirqd/19:125 [120] success=1 CPU:019
-   sysjitter-2459  [019]   170.701748: tick_stop:            success=0 dependency=SCHED
-   sysjitter-2459  [019]   170.701749: irq_work_entry:       vector=246
-   sysjitter-2459  [019]   170.701750: irq_work_exit:        vector=246
-   sysjitter-2459  [019]   170.701751: tick_stop:            success=0 dependency=SCHED
-   sysjitter-2459  [019]   170.701753: sched_switch:         sysjitter:2459 [120] R ==> ksoftirqd/19:125 [120]
-ksoftirqd/19-125   [019]   170.701754: softirq_entry:        vec=1 [action=TIMER]
-ksoftirqd/19-125   [019]   170.701756: softirq_exit:         vec=1 [action=TIMER]
-ksoftirqd/19-125   [019]   170.701756: softirq_entry:        vec=7 [action=SCHED]
-ksoftirqd/19-125   [019]   170.701758: softirq_exit:         vec=7 [action=SCHED]
-ksoftirqd/19-125   [019]   170.701759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
-   sysjitter-2459  [019]   170.702740: local_timer_entry:    vector=236
-   sysjitter-2459  [019]   170.702742: softirq_raise:        vec=1 [action=TIMER]
-   sysjitter-2459  [019]   170.702743: softirq_raise:        vec=7 [action=SCHED]
-   sysjitter-2459  [019]   170.702744: local_timer_exit:     vector=236
-   sysjitter-2459  [019]   170.702747: sched_wakeup:         ksoftirqd/19:125 [120] success=1 CPU:019
-   sysjitter-2459  [019]   170.702748: tick_stop:            success=0 dependency=SCHED
-   sysjitter-2459  [019]   170.702749: irq_work_entry:       vector=246
-   sysjitter-2459  [019]   170.702750: irq_work_exit:        vector=246
-   sysjitter-2459  [019]   170.702751: tick_stop:            success=0 dependency=SCHED
-   sysjitter-2459  [019]   170.702753: sched_switch:         sysjitter:2459 [120] R ==> ksoftirqd/19:125 [120]
-ksoftirqd/19-125   [019]   170.702755: softirq_entry:        vec=1 [action=TIMER]
-ksoftirqd/19-125   [019]   170.702756: softirq_exit:         vec=1 [action=TIMER]
-ksoftirqd/19-125   [019]   170.702757: softirq_entry:        vec=7 [action=SCHED]
-ksoftirqd/19-125   [019]   170.702758: softirq_exit:         vec=7 [action=SCHED]
-ksoftirqd/19-125   [019]   170.702760: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
-   sysjitter-2459  [019]   170.703740: local_timer_entry:    vector=236
-   sysjitter-2459  [019]   170.703742: softirq_raise:        vec=1 [action=TIMER]
-   sysjitter-2459  [019]   170.703743: softirq_raise:        vec=7 [action=SCHED]
-   sysjitter-2459  [019]   170.703745: local_timer_exit:     vector=236
-   sysjitter-2459  [019]   170.703747: sched_wakeup:         ksoftirqd/19:125 [120] success=1 CPU:019
-   sysjitter-2459  [019]   170.703748: tick_stop:            success=0 dependency=SCHED
-   sysjitter-2459  [019]   170.703749: irq_work_entry:       vector=246
-   sysjitter-2459  [019]   170.703750: irq_work_exit:        vector=246
-   sysjitter-2459  [019]   170.703751: tick_stop:            success=0 dependency=SCHED
-   sysjitter-2459  [019]   170.703753: sched_switch:         sysjitter:2459 [120] R ==> ksoftirqd/19:125 [120]
-ksoftirqd/19-125   [019]   170.703755: softirq_entry:        vec=1 [action=TIMER]
-ksoftirqd/19-125   [019]   170.703756: softirq_exit:         vec=1 [action=TIMER]
-ksoftirqd/19-125   [019]   170.703757: softirq_entry:        vec=7 [action=SCHED]
-ksoftirqd/19-125   [019]   170.703758: softirq_exit:         vec=7 [action=SCHED]
-ksoftirqd/19-125   [019]   170.703759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
-   sysjitter-2459  [019]   170.704500: call_function_single_entry: vector=251
-   sysjitter-2459  [019]   170.704502: call_function_single_exit: vector=251
-   sysjitter-2459  [019]   170.704504: tick_stop:            success=1 dependency=NONE
-...
-
-Luckily sometimes it happens (like in the above) that an interrupt fires
-on a CPU while ksoftirqd is not executing, SCHED dep is seen as cleared
-and the CPU enters full nohz. I've however observed pathological cases
-where CPUs aren't able to enter back full nohz for a long time.
-
-Hope my understanding is correct. Please find below a naive attempt to
-fix the problem. I'm pretty sure I'm missing details, e.g. I'm not sure
-it is safe to possibly stop the tick remotely. Consider the following as
-not more than another way of pointing the problem out. :-)
-
-Best,
-
-Juri
-
-1 - https://github.com/alexeiz/sysjitter
----
- kernel/time/tick-sched.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 3e2dc9b8858c..0d696e55d774 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -342,11 +342,16 @@ void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit)
- }
- EXPORT_SYMBOL_GPL(tick_nohz_dep_set_cpu);
- 
-+static void tick_nohz_full_update_tick_cpu(struct tick_sched *ts, int cpu);
-+
- void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit)
- {
- 	struct tick_sched *ts = per_cpu_ptr(&tick_cpu_sched, cpu);
- 
- 	atomic_andnot(BIT(bit), &ts->tick_dep_mask);
-+
-+	if (!in_irq())
-+		tick_nohz_full_update_tick_cpu(ts, cpu);
- }
- EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
- 
-@@ -870,11 +875,9 @@ static void tick_nohz_restart_sched_tick(struct tick_sched *ts, ktime_t now)
- 	tick_nohz_restart(ts, now);
- }
- 
--static void tick_nohz_full_update_tick(struct tick_sched *ts)
-+static void tick_nohz_full_update_tick_cpu(struct tick_sched *ts, int cpu)
- {
- #ifdef CONFIG_NO_HZ_FULL
--	int cpu = smp_processor_id();
--
- 	if (!tick_nohz_full_cpu(cpu))
- 		return;
- 
-@@ -888,6 +891,15 @@ static void tick_nohz_full_update_tick(struct tick_sched *ts)
- #endif
- }
- 
-+static void tick_nohz_full_update_tick(struct tick_sched *ts)
-+{
-+#ifdef CONFIG_NO_HZ_FULL
-+	int cpu = smp_processor_id();
-+
-+	tick_nohz_full_update_tick_cpu(ts, cpu);
-+#endif
-+}
-+
- static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
- {
- 	/*
--- 
-2.25.3
+Regards,
+Lucas
 
