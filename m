@@ -6,118 +6,78 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E549207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07847207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgETKfa (ORCPT
+        id S1726748AbgETKg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:35:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:52642 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgETKfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:35:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E02A31B;
-        Wed, 20 May 2020 03:35:29 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.169.41.142])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5957E3F68F;
-        Wed, 20 May 2020 03:35:27 -0700 (PDT)
-From:   Bin Lu <bin.lu@arm.com>
-To:     catalin.marinas@arm.com
-Cc:     keno@juliacomputing.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, oleg@redhat.com,
-        sudeep.holla@arm.com, will@kernel.org, Bin Lu <Bin.Lu@arm.com>
-Subject: Re: [PATCH] arm64: Fix PTRACE_SYSEMU semantics
-Date:   Wed, 20 May 2020 18:34:20 +0800
-Message-Id: <1589970860-62695-1-git-send-email-bin.lu@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20200519120725.GA20313@gaia>
-References: <20200519120725.GA20313@gaia>
-References: <20200515222253.GA38408@juliacomputing.com> <20200518114119.GB32394@willie-the-truck> <20200519120725.GA20313@gaia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519120725.GA20313@gaia>
-X-Mutt-References: <20200519120725.GA20313@gaia>
-X-Mutt-Fcc: =ARM/Sent Items
+        Wed, 20 May 2020 06:36:27 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:57706 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726403AbgETKg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:36:26 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgDnzpEUCMVepaaMAQ--.43711S4;
+        Wed, 20 May 2020 18:36:08 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/nouveau: fix runtime pm imbalance on error
+Date:   Wed, 20 May 2020 18:36:04 +0800
+Message-Id: <20200520103604.19083-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgDnzpEUCMVepaaMAQ--.43711S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWfKFg_Ca
+        n3AFnxWrn3Kr4qqFsrAw45ZFyI9a98WF18Zayvqas3trWUZrnxGryxXrn8Zr9xXryxWFyD
+        tw4vqF98Cr9rujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_Jw1lc2xSY4AK67AK
+        6r4DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4
+        IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+        MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+        WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWU
+        JVWrZr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F
+        4UJbIYCTnIWIevJa73UjIFyTuYvjfUY3ktUUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bin Lu <Bin.Lu@arm.com>
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a pairing decrement is needed
+on the error handling path to keep the counter balanced.
 
-On Tue, May 19, 2020 at 01:07:27PM +0100, Catalin Marinas wrote:
-> On Mon, May 18, 2020 at 12:41:20PM +0100, Will Deacon wrote:
-> > On Fri, May 15, 2020 at 06:22:53PM -0400, Keno Fischer wrote:
-> > > Quoth the man page:
-> > > ```
-> > >        If the tracee was restarted by PTRACE_SYSCALL or PTRACE_SYSEMU, the
-> > >        tracee enters syscall-enter-stop just prior to entering any system
-> > >        call (which will not be executed if the restart was using
-> > >        PTRACE_SYSEMU, regardless of any change made to registers at this
-> > >        point or how the tracee is restarted after this stop).
-> > > ```
-> > >
-> > > The parenthetical comment is currently true on x86 and powerpc,
-> > > but not currently true on arm64. arm64 re-checks the _TIF_SYSCALL_EMU
-> > > flag after the syscall entry ptrace stop. However, at this point,
-> > > it reflects which method was used to re-start the syscall
-> > > at the entry stop, rather than the method that was used to reach it.
-> > > Fix that by recording the original flag before performing the ptrace
-> > > stop, bringing the behavior in line with documentation and x86/powerpc.
-> > >
-> > > Signed-off-by: Keno Fischer <keno@juliacomputing.com>
-> > > ---
-> > >  arch/arm64/kernel/ptrace.c | 8 +++++---
-> > >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> > > index b3d3005d9515..b67b4d14aa17 100644
-> > > --- a/arch/arm64/kernel/ptrace.c
-> > > +++ b/arch/arm64/kernel/ptrace.c
-> > > @@ -1829,10 +1829,12 @@ static void tracehook_report_syscall(struct pt_regs *regs,
-> > >
-> > >  int syscall_trace_enter(struct pt_regs *regs)
-> > >  {
-> > > -	if (test_thread_flag(TIF_SYSCALL_TRACE) ||
-> > > -		test_thread_flag(TIF_SYSCALL_EMU)) {
-> > > +	u32 flags = READ_ONCE(current_thread_info()->flags) &
-> > > +		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
-> > > +
-> > > +	if (flags) {
-> >
-> > nit: but I'd rather the '&' operation was in the conditional so that the
-> > 'flags' variable holds all of the flags.
-> >
-> > With that:
-> >
-> > Acked-by: Will Deacon <will@kernel.org>
-> >
-> > Also needs:
-> >
-> > Cc: <stable@vger.kernel.org>
-> > Fixes: f086f67485c5 ("arm64: ptrace: add support for syscall emulation")
-> >
-> > Catalin -- can you pick this up for 5.7 please, with my 'nit' addressed?
->
-> I'll queue it with the above addressed. I think flags also needs to be
-> unsigned long rather than u32.
->
-> However, before sending the pull request, I'd like Sudeep to confirm
-> that it doesn't break his original use-case for this feature.
->
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/gpu/drm/nouveau/nouveau_gem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested-by: Bin Lu <Bin.Lu@arm.com> (for gVisor)
-
-I have just tested all gVisor syscall test cases with ptrace(Regs, FPRegs, TLS)
-on Arm64 platform.
-The test results are the same as before there was no patch.
-
-My idea is that this kernel patch has no bad effects on gVisor.
-Linux Kernel version: 5.7.0-rc6+
-gVisor version: release-20200511.0
+diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
+index f5ece1f94973..125cefbb6210 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_gem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
+@@ -157,8 +157,8 @@ nouveau_gem_object_close(struct drm_gem_object *gem, struct drm_file *file_priv)
+ 			if (!WARN_ON(ret < 0 && ret != -EACCES)) {
+ 				nouveau_gem_object_unmap(nvbo, vma);
+ 				pm_runtime_mark_last_busy(dev);
+-				pm_runtime_put_autosuspend(dev);
+ 			}
++			pm_runtime_put_autosuspend(dev);
+ 		}
+ 	}
+ 	ttm_bo_unreserve(&nvbo->bo);
+-- 
+2.17.1
 
