@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42431C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A60FC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB71207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B03208B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgETOYH (ORCPT
+        id S1728187AbgETOYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:24:07 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33180 "EHLO
+        Wed, 20 May 2020 10:24:09 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33178 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727072AbgETOW2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727063AbgETOW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPby-00036u-H8; Wed, 20 May 2020 15:22:22 +0100
+        id 1jbPbz-00037c-Qy; Wed, 20 May 2020 15:22:23 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-007DVe-9h; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPbx-007DWY-Q5; Wed, 20 May 2020 15:22:21 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        "Jim Mattson" <jmattson@google.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Andrew Honig" <ahonig@google.com>
-Date:   Wed, 20 May 2020 15:14:52 +0100
-Message-ID: <lsq.1589984009.983393284@decadent.org.uk>
+        "Fabian Frederick" <fabf@skynet.be>,
+        "Trond Myklebust" <trond.myklebust@primarydata.com>
+Date:   Wed, 20 May 2020 15:15:02 +0100
+Message-ID: <lsq.1589984009.804184108@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 84/99] KVM: Check for a bad hva before dropping into
- the ghc slow path
+Subject: [PATCH 3.16 94/99] nfs: use kmap/kunmap directly
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,76 +55,167 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Fabian Frederick <fabf@skynet.be>
 
-commit fcfbc617547fc6d9552cb6c1c563b6a90ee98085 upstream.
+commit 0795bf8357c1887e2a95e6e4f5b89d0896a0d929 upstream.
 
-When reading/writing using the guest/host cache, check for a bad hva
-before checking for a NULL memslot, which triggers the slow path for
-handing cross-page accesses.  Because the memslot is nullified on error
-by __kvm_gfn_to_hva_cache_init(), if the bad hva is encountered after
-crossing into a new page, then the kvm_{read,write}_guest() slow path
-could potentially write/access the first chunk prior to detecting the
-bad hva.
+This patch removes useless nfs_readdir_get_array() and
+nfs_readdir_release_array() as suggested by Trond Myklebust
 
-Arguably, performing a partial access is semantically correct from an
-architectural perspective, but that behavior is certainly not intended.
-In the original implementation, memslot was not explicitly nullified
-and therefore the partial access behavior varied based on whether the
-memslot itself was null, or if the hva was simply bad.  The current
-behavior was introduced as a seemingly unintentional side effect in
-commit f1b9dd5eb86c ("kvm: Disallow wraparound in
-kvm_gfn_to_hva_cache_init"), which justified the change with "since some
-callers don't check the return code from this function, it sit seems
-prudent to clear ghc->memslot in the event of an error".
+nfs_readdir() calls nfs_revalidate_mapping() before
+readdir_search_pagecache() , nfs_do_filldir(), uncached_readdir()
+so mapping should be correct.
 
-Regardless of intent, the partial access is dependent on _not_ checking
-the result of the cache initialization, which is arguably a bug in its
-own right, at best simply weird.
+While kmap() can't fail, all subsequent error checks were removed
+as well as unused labels.
 
-Fixes: 8f964525a121 ("KVM: Allow cross page reads and writes from cached translations.")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Andrew Honig <ahonig@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Fabian Frederick <fabf@skynet.be>
+Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- virt/kvm/kvm_main.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/nfs/dir.c | 67 ++++++++++------------------------------------------
+ 1 file changed, 12 insertions(+), 55 deletions(-)
 
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1596,12 +1596,12 @@ int kvm_write_guest_cached(struct kvm *k
- 	if (slots->generation != ghc->generation)
- 		kvm_gfn_to_hva_cache_init(kvm, ghc, ghc->gpa, ghc->len);
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -170,27 +170,6 @@ typedef struct {
+ } nfs_readdir_descriptor_t;
  
--	if (unlikely(!ghc->memslot))
--		return kvm_write_guest(kvm, ghc->gpa, data, len);
+ /*
+- * The caller is responsible for calling nfs_readdir_release_array(page)
+- */
+-static
+-struct nfs_cache_array *nfs_readdir_get_array(struct page *page)
+-{
+-	void *ptr;
+-	if (page == NULL)
+-		return ERR_PTR(-EIO);
+-	ptr = kmap(page);
+-	if (ptr == NULL)
+-		return ERR_PTR(-ENOMEM);
+-	return ptr;
+-}
 -
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
- 
-+	if (unlikely(!ghc->memslot))
-+		return kvm_write_guest(kvm, ghc->gpa, data, len);
-+
- 	r = __copy_to_user((void __user *)ghc->hva, data, len);
- 	if (r)
- 		return -EFAULT;
-@@ -1622,12 +1622,12 @@ int kvm_read_guest_cached(struct kvm *kv
- 	if (slots->generation != ghc->generation)
- 		kvm_gfn_to_hva_cache_init(kvm, ghc, ghc->gpa, ghc->len);
- 
--	if (unlikely(!ghc->memslot))
--		return kvm_read_guest(kvm, ghc->gpa, data, len);
+-static
+-void nfs_readdir_release_array(struct page *page)
+-{
+-	kunmap(page);
+-}
 -
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
+-/*
+  * we are freeing strings created by nfs_add_to_readdir_array()
+  */
+ static
+@@ -229,13 +208,10 @@ int nfs_readdir_make_qstr(struct qstr *s
+ static
+ int nfs_readdir_add_to_array(struct nfs_entry *entry, struct page *page)
+ {
+-	struct nfs_cache_array *array = nfs_readdir_get_array(page);
++	struct nfs_cache_array *array = kmap(page);
+ 	struct nfs_cache_array_entry *cache_entry;
+ 	int ret;
  
-+	if (unlikely(!ghc->memslot))
-+		return kvm_read_guest(kvm, ghc->gpa, data, len);
-+
- 	r = __copy_from_user(data, (void __user *)ghc->hva, len);
- 	if (r)
- 		return -EFAULT;
+-	if (IS_ERR(array))
+-		return PTR_ERR(array);
+-
+ 	cache_entry = &array->array[array->size];
+ 
+ 	/* Check that this entry lies within the page bounds */
+@@ -254,7 +230,7 @@ int nfs_readdir_add_to_array(struct nfs_
+ 	if (entry->eof != 0)
+ 		array->eof_index = array->size;
+ out:
+-	nfs_readdir_release_array(page);
++	kunmap(page);
+ 	return ret;
+ }
+ 
+@@ -343,11 +319,7 @@ int nfs_readdir_search_array(nfs_readdir
+ 	struct nfs_cache_array *array;
+ 	int status;
+ 
+-	array = nfs_readdir_get_array(desc->page);
+-	if (IS_ERR(array)) {
+-		status = PTR_ERR(array);
+-		goto out;
+-	}
++	array = kmap(desc->page);
+ 
+ 	if (*desc->dir_cookie == 0)
+ 		status = nfs_readdir_search_for_pos(array, desc);
+@@ -359,8 +331,7 @@ int nfs_readdir_search_array(nfs_readdir
+ 		desc->current_index += array->size;
+ 		desc->page_index++;
+ 	}
+-	nfs_readdir_release_array(desc->page);
+-out:
++	kunmap(desc->page);
+ 	return status;
+ }
+ 
+@@ -551,13 +522,10 @@ int nfs_readdir_page_filler(nfs_readdir_
+ 	} while (!entry->eof);
+ 
+ 	if (count == 0 || (status == -EBADCOOKIE && entry->eof != 0)) {
+-		array = nfs_readdir_get_array(page);
+-		if (!IS_ERR(array)) {
+-			array->eof_index = array->size;
+-			status = 0;
+-			nfs_readdir_release_array(page);
+-		} else
+-			status = PTR_ERR(array);
++		array = kmap(page);
++		array->eof_index = array->size;
++		status = 0;
++		kunmap(page);
+ 	}
+ 
+ 	put_page(scratch);
+@@ -627,11 +595,7 @@ int nfs_readdir_xdr_to_array(nfs_readdir
+ 		goto out;
+ 	}
+ 
+-	array = nfs_readdir_get_array(page);
+-	if (IS_ERR(array)) {
+-		status = PTR_ERR(array);
+-		goto out_label_free;
+-	}
++	array = kmap(page);
+ 	memset(array, 0, sizeof(struct nfs_cache_array));
+ 	array->eof_index = -1;
+ 
+@@ -655,8 +619,7 @@ int nfs_readdir_xdr_to_array(nfs_readdir
+ 
+ 	nfs_readdir_free_large_page(pages_ptr, pages, array_size);
+ out_release_array:
+-	nfs_readdir_release_array(page);
+-out_label_free:
++	kunmap(page);
+ 	nfs4_label_free(entry.label);
+ out:
+ 	nfs_free_fattr(entry.fattr);
+@@ -754,12 +717,7 @@ int nfs_do_filldir(nfs_readdir_descripto
+ 	struct nfs_cache_array *array = NULL;
+ 	struct nfs_open_dir_context *ctx = file->private_data;
+ 
+-	array = nfs_readdir_get_array(desc->page);
+-	if (IS_ERR(array)) {
+-		res = PTR_ERR(array);
+-		goto out;
+-	}
+-
++	array = kmap(desc->page);
+ 	for (i = desc->cache_entry_index; i < array->size; i++) {
+ 		struct nfs_cache_array_entry *ent;
+ 
+@@ -780,8 +738,7 @@ int nfs_do_filldir(nfs_readdir_descripto
+ 	if (array->eof_index >= 0)
+ 		desc->eof = 1;
+ 
+-	nfs_readdir_release_array(desc->page);
+-out:
++	kunmap(desc->page);
+ 	cache_page_release(desc);
+ 	dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %Lu; returning = %d\n",
+ 			(unsigned long long)*desc->dir_cookie, res);
 
