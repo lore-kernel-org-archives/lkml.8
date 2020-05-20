@@ -4,92 +4,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22982C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1F4B207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE401207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbgETKWX (ORCPT
+        id S1726868AbgETKWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:22:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35600 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726435AbgETKWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:22:23 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1DACEE65830E18F0CE88;
-        Wed, 20 May 2020 18:22:20 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.10) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Wed, 20 May 2020
- 18:22:13 +0800
-Subject: Re: [PATCH] perf bpf-loader: Add missing '*' for key_scan_pos
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     <cj.chengjian@huawei.com>, <huawei.libin@huawei.com>,
-        <xiexiuqi@huawei.com>, <mark.rutland@arm.com>,
-        <guohanjun@huawei.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <wangnan0@huawei.com>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <20200520033216.48310-1-bobo.shaobowang@huawei.com>
- <20200520070551.GC110644@krava>
-From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Message-ID: <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
-Date:   Wed, 20 May 2020 18:22:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 20 May 2020 06:22:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36640 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgETKWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:22:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 29739AEC2;
+        Wed, 20 May 2020 10:22:37 +0000 (UTC)
+Date:   Wed, 20 May 2020 12:22:33 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>
+Subject: [PATCH v2] printk/kdb: Redirect printk messages into kdb in any
+ context
+Message-ID: <20200520102233.GC3464@linux-b0ei>
+References: <20200512142533.ta4uejwmq5gchtlx@holly.lan>
+ <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
+ <20200514084230.GO17734@linux-b0ei>
+ <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
+ <20200515085021.GS17734@linux-b0ei>
+ <20200515103308.GD42471@jagdpanzerIV.localdomain>
+ <20200515134806.5cw4xxnxw7k3223l@holly.lan>
+ <20200518092139.GK7340@linux-b0ei>
+ <20200520042102.GA938@jagdpanzerIV.localdomain>
+ <20200520093557.lwwxnhvgmacipdce@holly.lan>
 MIME-Version: 1.0
-In-Reply-To: <20200520070551.GC110644@krava>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.10]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520093557.lwwxnhvgmacipdce@holly.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+kdb has to get messages on consoles even when the system is stopped.
+It uses kdb_printf() internally and calls console drivers on its own.
 
-在 2020/5/20 15:05, Jiri Olsa 写道:
-> On Wed, May 20, 2020 at 11:32:16AM +0800, Wang ShaoBo wrote:
->> key_scan_pos is a pointer for getting scan position in
->> bpf__obj_config_map() for each BPF map configuration term,
->> but it's misused when error not happened.
->>
->> Fixes: 066dacbf2a32 ("perf bpf: Add API to set values to map entries in a bpf object")
->> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
->> ---
->>   tools/perf/util/bpf-loader.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
->> index 10c187b8b8ea..460056bc072c 100644
->> --- a/tools/perf/util/bpf-loader.c
->> +++ b/tools/perf/util/bpf-loader.c
->> @@ -1225,7 +1225,7 @@ bpf__obj_config_map(struct bpf_object *obj,
->>   out:
->>   	free(map_name);
->>   	if (!err)
->> -		key_scan_pos += strlen(map_opt);
->> +		*key_scan_pos += strlen(map_opt);
-> seems good, was there something failing because of this?
->
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
->
-> thanks,
-> jirka
+It uses a hack to reuse an existing code. It sets "kdb_trap_printk"
+global variable to redirect even the normal printk() into the
+kdb_printf() variant.
 
-   I found this problem when i checked this code, I think it is
+The variable "kdb_trap_printk" is checked in printk_default() and
+it is ignored when printk is redirected to printk_safe in NMI context.
+Solve this by moving the check into printk_func().
 
-   an implicit question, but if we delete the two line,  the problem
+It is obvious that it is not fully safe. But it does not make things
+worse. The console drivers are already called in this context by
+db_printf() direct calls.
 
-   also no longer exists.
+Reported-by: Sumit Garg <sumit.garg@linaro.org>
+Tested-by: Sumit Garg <sumit.garg@linaro.org>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+Changes in v2:
 
-   thanks,
+   + more detailed commit message
 
-   Wang ShaoBo
+ kernel/printk/printk.c      | 14 +-------------
+ kernel/printk/printk_safe.c |  7 +++++++
+ 2 files changed, 8 insertions(+), 13 deletions(-)
 
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 9a9b6156270b..63a1aa377cd9 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -35,7 +35,6 @@
+ #include <linux/memblock.h>
+ #include <linux/syscalls.h>
+ #include <linux/crash_core.h>
+-#include <linux/kdb.h>
+ #include <linux/ratelimit.h>
+ #include <linux/kmsg_dump.h>
+ #include <linux/syslog.h>
+@@ -2036,18 +2035,7 @@ EXPORT_SYMBOL(vprintk);
+ 
+ int vprintk_default(const char *fmt, va_list args)
+ {
+-	int r;
+-
+-#ifdef CONFIG_KGDB_KDB
+-	/* Allow to pass printk() to kdb but avoid a recursion. */
+-	if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0)) {
+-		r = vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
+-		return r;
+-	}
+-#endif
+-	r = vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
+-
+-	return r;
++	return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
+ }
+ EXPORT_SYMBOL_GPL(vprintk_default);
+ 
+diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+index d9a659a686f3..7ccb821d0bfe 100644
+--- a/kernel/printk/printk_safe.c
++++ b/kernel/printk/printk_safe.c
+@@ -6,6 +6,7 @@
+ #include <linux/preempt.h>
+ #include <linux/spinlock.h>
+ #include <linux/debug_locks.h>
++#include <linux/kdb.h>
+ #include <linux/smp.h>
+ #include <linux/cpumask.h>
+ #include <linux/irq_work.h>
+@@ -359,6 +360,12 @@ void __printk_safe_exit(void)
+ 
+ __printf(1, 0) int vprintk_func(const char *fmt, va_list args)
+ {
++#ifdef CONFIG_KGDB_KDB
++	/* Allow to pass printk() to kdb but avoid a recursion. */
++	if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0))
++		return vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
++#endif
++
+ 	/*
+ 	 * Try to use the main logbuf even in NMI. But avoid calling console
+ 	 * drivers that might have their own locks.
+-- 
+2.26.1
 
