@@ -2,187 +2,125 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07459C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65A7E2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589985799;
-	bh=93xiZdfQmazN0EU3A6j+wlLxKCqDuPGLCkRTQ2Xp2Dk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UiU4Am1YH1FUsIlRjs4LpmGL7xxUqvYwggFmAKgUEfDhtBo9urBHJnUvXqT4DCI+b
-	 o0kfLOrL6bRI6o/PbAi35vm+NcpD79SYBMjZ/+AWsghXnEGRQL3IK3Or+F3CsyaAOY
-	 J2nsucHjr57ZNVyCz6gAxlfRQw1CtG46qstfUL8k=
+	by mail.kernel.org (Postfix) with ESMTP id DA980207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgETOnR (ORCPT
+        id S1726812AbgETOps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37928 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 10:45:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56556 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETOnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:43:16 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D60D20884;
-        Wed, 20 May 2020 14:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589985795;
-        bh=93xiZdfQmazN0EU3A6j+wlLxKCqDuPGLCkRTQ2Xp2Dk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zqJjU+Pe293oZ6ocassxcPcA2DVflYdbghR2e84eL9bvigCMGhmQkEOCWyB9x9qMk
-         tqfg3MOzrmqIwWdyGsSFsZlCwfR41ZaBdF245d85c681C2Dl3glo6eQhgQz0uzWQtO
-         S6isGeYhInUenMyUNLrWaEyxfF/HwQyFKs4eh/rE=
-Received: by mail-oi1-f169.google.com with SMTP id j145so3145628oib.5;
-        Wed, 20 May 2020 07:43:15 -0700 (PDT)
-X-Gm-Message-State: AOAM531+BIqNCKzDa8kyNYT9iHKcVz+hzG9LYtYjVpkvzmCpW0ZWbXK8
-        2Wk1MTbzsQyze6n4fZOoZw17xvzizvpj3f2hZA==
-X-Google-Smtp-Source: ABdhPJzyaxh/SnkAwbz5oRVIMrIQtReCF6vMmwmfUuuZxVCZFWwPmcpMMg2xoPSi8xvODJyqRQJXHWuqYsTq1+BbBwk=
-X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr3499546oie.152.1589985794742;
- Wed, 20 May 2020 07:43:14 -0700 (PDT)
+        id S1726510AbgETOpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:45:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4275AAB5C;
+        Wed, 20 May 2020 14:45:48 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 25BD2604F6; Wed, 20 May 2020 16:45:44 +0200 (CEST)
+Date:   Wed, 20 May 2020 16:45:44 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        mkl@pengutronix.de, Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: Re: [PATCH net-next v3 1/2] ethtool: provide UAPI for PHY Signal
+ Quality Index (SQI)
+Message-ID: <20200520144544.GB8771@lion.mk-sys.cz>
+References: <20200520062915.29493-1-o.rempel@pengutronix.de>
+ <20200520062915.29493-2-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <20191203174229.GA1721849@ulmo> <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
- <20191204091703.d32to5omdm3eynon@vireshk-i7> <20191204093339.GA2784830@ulmo>
- <20191204095138.rrul5vxnkprfwmku@vireshk-i7> <20200407100520.GA1720957@ulmo>
-In-Reply-To: <20200407100520.GA1720957@ulmo>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 20 May 2020 08:43:03 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+rMYAZ=ub0U7qdHSsWgbQugodhvigFCxrFm49HwrCmAQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+rMYAZ=ub0U7qdHSsWgbQugodhvigFCxrFm49HwrCmAQ@mail.gmail.com>
-Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
- get BPMP data
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mikko Perttunen <cyndis@kapsi.fi>,
-        Sumit Gupta <sumitg@nvidia.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        bbasu@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cvVnyQ+4j833TQvp"
+Content-Disposition: inline
+In-Reply-To: <20200520062915.29493-2-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 4:05 AM Thierry Reding <thierry.reding@gmail.com> wrote:
->
-> On Wed, Dec 04, 2019 at 03:21:38PM +0530, Viresh Kumar wrote:
-> > On 04-12-19, 10:33, Thierry Reding wrote:
-> > > Yeah, the code that registers this device is in drivers/base/cpu.c in
-> > > register_cpu(). It even retrieves the device tree node for the CPU from
-> > > device tree and stores it in cpu->dev.of_node, so we should be able to
-> > > just pass &cpu->dev to tegra_bpmp_get() in order to retrieve a reference
-> > > to the BPMP.
-> > >
-> > > That said, I'm wondering if perhaps we could just add a compatible
-> > > string to the /cpus node for cases like this where we don't have an
-> > > actual device representing the CPU complex. There are a number of CPU
-> > > frequency drivers that register dummy devices just so that they have
-> > > something to bind a driver to.
-> > >
-> > > If we allow the /cpus node to represent the CPU complex (if no other
-> > > "device" does that yet), we can add a compatible string and have the
-> > > cpufreq driver match on that.
-> > >
-> > > Of course this would be slightly difficult to retrofit into existing
-> > > drivers because they'd need to remain backwards compatible with existing
-> > > device trees. But it would allow future drivers to do this a little more
-> > > elegantly. For some SoCs this may not matter, but especially once you
-> > > start depending on additional resources this would come in handy.
-> > >
-> > > Adding Rob and the device tree mailing list for feedback on this idea.
-> >
-> > Took some time to find this thread, but something around this was
-> > suggested by Rafael earlier.
-> >
-> > https://lore.kernel.org/lkml/8139001.Q4eV8YG1Il@vostro.rjw.lan/
->
-> I gave this a try and came up with the following:
->
-> --- >8 ---
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> index f4ede86e32b4..e4462f95f0b3 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> @@ -1764,6 +1764,9 @@ bpmp_thermal: thermal {
->         };
->
->         cpus {
-> +               compatible = "nvidia,tegra194-ccplex";
-> +               nvidia,bpmp = <&bpmp>;
 
-Is there more than 1 bpmp? If not you don't need this. Just lookup the
-node by compatible.
+--cvVnyQ+4j833TQvp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 20, 2020 at 08:29:14AM +0200, Oleksij Rempel wrote:
+> Signal Quality Index is a mandatory value required by "OPEN Alliance
+> SIG" for the 100Base-T1 PHYs [1]. This indicator can be used for cable
+> integrity diagnostic and investigating other noise sources and
+> implement by at least two vendors: NXP[2] and TI[3].
+>=20
+> [1] http://www.opensig.org/download/document/218/Advanced_PHY_features_fo=
+r_automotive_Ethernet_V1.0.pdf
+> [2] https://www.nxp.com/docs/en/data-sheet/TJA1100.pdf
+> [3] https://www.ti.com/product/DP83TC811R-Q1
+>=20
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
 
-> +
->                 #address-cells = <1>;
->                 #size-cells = <0>;
->
-> --- >8 ---
->
-> Now I can do something rougly like this, although I have a more complete
-> patch locally that also gets rid of all the global variables because we
-> now actually have a struct platform_device that we can anchor everything
-> at:
->
-> --- >8 ---
-> static const struct of_device_id tegra194_cpufreq_of_match[] = {
->         { .compatible = "nvidia,tegra194-ccplex", },
->         { /* sentinel */ }
-> };
-> MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
->
-> static struct platform_driver tegra194_ccplex_driver = {
->         .driver = {
->                 .name = "tegra194-cpufreq",
->                 .of_match_table = tegra194_cpufreq_of_match,
->         },
->         .probe = tegra194_cpufreq_probe,
->         .remove = tegra194_cpufreq_remove,
-> };
-> module_platform_driver(tegra194_ccplex_driver);
-> --- >8 ---
->
-> I don't think that's exactly what Rafael (Cc'ed) had in mind, since the
-> above thread seems to have mostly talked about binding a driver to each
-> individual CPU.
->
-> But this seems a lot better than having to instantiate a device from
-> scratch just so that a driver can bind to it and it allows additional
-> properties to be associated with the CCPLEX device.
+This looks good to me, there is just one thing I'm not sure about:
 
-What additional properties? A continual stream of properties added 1
-by 1 would negatively affect my opinion of this.
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 59344db43fcb1..950ba479754bd 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -706,6 +706,8 @@ struct phy_driver {
+>  			    struct ethtool_tunable *tuna,
+>  			    const void *data);
+>  	int (*set_loopback)(struct phy_device *dev, bool enable);
+> +	int (*get_sqi)(struct phy_device *dev);
+> +	int (*get_sqi_max)(struct phy_device *dev);
+>  };
+>  #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
+>  				      struct phy_driver, mdiodrv)
 
-> Rob, any thoughts on this from a device tree point of view? The /cpus
-> bindings don't mention the compatible property, but there doesn't seem
-> to be anything in the bindings that would prohibit its use.
+I'm not sure if it's a good idea to define two separate callbacks. It
+means adding two pointers instead of one (for every instance of the
+structure, not only those implementing them), doing two calls, running
+the same checks twice, locking twice, checking the result twice.
 
-What happens when you have more than one cpu related driver in
-addition to cpufreq? You may still have to end up creating child
-platform devices and then gained very little.
+Also, passing a structure pointer would mean less code changed if we
+decide to add more related state values later.
 
-You could solve this without DT changes. You can bind on node names.
-The driver probe can then check the parent compatible and return if
-not matching. I'm not sure if you could get module auto loading to
-work in that case. It would have to be based on the root compatible
-(rather than the driver match table) and be able to load multiple
-matching modules.
+What do you think?
 
-Rob
+If you don't agree, I have no objections so
+
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+
+Michal
+
+--cvVnyQ+4j833TQvp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7FQpIACgkQ538sG/LR
+dpV0dgf9EtLDViFGNOKw6wA8VFfIA2ANEsV19HAMn4YfQZ8pORVhIoJsKw8sAK64
+l9xidgkJ+CuzNSzsynX7a1jQc8inPdZ2qNsQwi6f6q/5ndtGoGtieEvMU+4EvlnN
+J0DehPfI9geLnzz7PjTuCYVbhBryTZoi0+otYDPPS1b1xhKlPdnNBHjnK2bsTrO4
+7ysx/iQT4PRhuy8R7+1c3BwHKpq0Ofhk3zFZtrIahQF4dUIcNFSec+Hs5LEb9wwt
+w96SKsAhwpgUeqMs/+eHHNIbjGQtrM42Kl2oA0MIUqW72rVETsnmlVyZH8gJVwWo
+mgAqSTHL0MtZKJR0/Guq+4KM1AVKsQ==
+=uNvL
+-----END PGP SIGNATURE-----
+
+--cvVnyQ+4j833TQvp--
