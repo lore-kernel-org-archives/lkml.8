@@ -2,102 +2,101 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED52AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5288205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BDA20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgETOU3 (ORCPT
+        id S1726870AbgETOWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETOU2 (ORCPT
+        Wed, 20 May 2020 10:22:23 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60896 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726436AbgETOWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:20:28 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F49AC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:20:28 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbPZc-0002ZW-EX; Wed, 20 May 2020 16:19:56 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E6152100C99; Wed, 20 May 2020 16:19:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V6 12/37] x86/entry: Provide idtentry_entry/exit_cond_rcu()
-In-Reply-To: <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com>
-References: <20200515234547.710474468@linutronix.de> <20200515235125.628629605@linutronix.de> <CALCETrWnkuwvTuJKr8Vuecgr_q+1ReBDrTv4XOqGaw7-ZpEeQQ@mail.gmail.com> <87ftbv7nsd.fsf@nanos.tec.linutronix.de> <87a7237k3x.fsf@nanos.tec.linutronix.de> <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com> <874ksb7hbg.fsf@nanos.tec.linutronix.de> <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com>
-Date:   Wed, 20 May 2020 16:19:55 +0200
-Message-ID: <87v9kq4rjo.fsf@nanos.tec.linutronix.de>
+        Wed, 20 May 2020 10:22:20 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jbPbu-00034v-5I; Wed, 20 May 2020 15:22:18 +0100
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jbPbt-007DNz-No; Wed, 20 May 2020 15:22:17 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        stable@kernel.org, "Piotr Krysiuk" <piotras@gmail.com>,
+        "Al Viro" <viro@zeniv.linux.org.uk>
+Date:   Wed, 20 May 2020 15:13:30 +0100
+Message-ID: <lsq.1589984008.458461925@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 02/99] propagate_one(): mnt_set_mountpoint() needs
+ mount_lock
+In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Tue, May 19, 2020 at 2:20 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> Unless I've missed something, the effect here is that #PF hitting in
-> an RCU-watching context will skip rcu_irq_enter(), whereas all IRQs
-> (because you converted them) as well as other faults and traps will
-> call rcu_irq_enter().
+3.16.84-rc1 review patch.  If anyone has any objections, please let me know.
 
-The only reason why this is needed for #PF is that a kernel mode #PF may
-sleep. And of course you cannot sleep after calling rcu_irq_enter().
+------------------
 
-All other interrupts/traps/system vectors cannot sleep ever. So it's a
-straight forward enter/exit.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-> Once upon a time, we did this horrible thing where, on entry from user
-> mode, we would turn on interrupts while still in CONTEXT_USER, which
-> means we could get an IRQ in an extended quiescent state.  This means
-> that the IRQ code had to end the EQS so that IRQ handlers could use
-> RCU.  But I killed this a few years ago -- x86 Linux now has a rule
-> that, if IF=1, we are *not* in an EQS with the sole exception of the
-> idle code.
->
-> In my dream world, we would never ever get IRQs while in an EQS -- we
-> would do MWAIT with IF=0 and we would exit the EQS before taking the
-> interrupt.  But I guess we still need to support HLT, which means we
-> have this mess.
+commit b0d3869ce9eeacbb1bbd541909beeef4126426d5 upstream.
 
-You always can dream, but dont complain about the nightmares :)
+... to protect the modification of mp->m_count done by it.  Most of
+the places that modify that thing also have namespace_lock held,
+but not all of them can do so, so we really need mount_lock here.
+Kudos to Piotr Krysiuk <piotras@gmail.com>, who'd spotted a related
+bug in pivot_root(2) (fixed unnoticed in 5.3); search for other
+similar turds has caught out this one.
 
-Thanks,
+Cc: stable@kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Piotr Krysiuk <piotras@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ fs/pnode.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-        tglx
+--- a/fs/pnode.c
++++ b/fs/pnode.c
+@@ -249,14 +249,13 @@ static int propagate_one(struct mount *m
+ 	child = copy_tree(last_source, last_source->mnt.mnt_root, type);
+ 	if (IS_ERR(child))
+ 		return PTR_ERR(child);
++	read_seqlock_excl(&mount_lock);
+ 	mnt_set_mountpoint(m, mp, child);
++	if (m->mnt_master != dest_master)
++		SET_MNT_MARK(m->mnt_master);
++	read_sequnlock_excl(&mount_lock);
+ 	last_dest = m;
+ 	last_source = child;
+-	if (m->mnt_master != dest_master) {
+-		read_seqlock_excl(&mount_lock);
+-		SET_MNT_MARK(m->mnt_master);
+-		read_sequnlock_excl(&mount_lock);
+-	}
+ 	hlist_add_head(&child->mnt_hash, list);
+ 	return count_mounts(m->mnt_ns, child);
+ }
+
