@@ -2,109 +2,161 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C96EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5A92065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFA9207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:51:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="h9J16NzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgETQvq (ORCPT
+        id S1727818AbgETQv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:51:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38576 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726727AbgETQvp (ORCPT
+        Wed, 20 May 2020 12:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgETQvz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:51:45 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KGXM0h064606;
-        Wed, 20 May 2020 12:51:18 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312bg8q2q4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 12:51:17 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04KGUb1P012254;
-        Wed, 20 May 2020 16:51:15 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 313xehm0t1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 16:51:14 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04KGpCUR63701082
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 16:51:12 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A799911C04C;
-        Wed, 20 May 2020 16:51:12 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4065C11C050;
-        Wed, 20 May 2020 16:51:12 +0000 (GMT)
-Received: from pomme.tlslab.ibm.com (unknown [9.145.151.133])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 May 2020 16:51:12 +0000 (GMT)
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-To:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, paulus@samba.org
-Cc:     mpe@ellerman.id.au, sukadev@linux.ibm.com, linuxram@us.ibm.com
-Subject: [PATCH] KVM: PPC: Book3S HV: relax check on H_SVM_INIT_ABORT
-Date:   Wed, 20 May 2020 18:51:10 +0200
-Message-Id: <20200520165110.71020-1-ldufour@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 20 May 2020 12:51:55 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46729C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:51:55 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id d7so3053769qtn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:51:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uCbIDnmbNb/xu62b5tooWAb+6qi8tujvE6x6ac0v/iU=;
+        b=h9J16NzSlg3JV6ahuk3Cz7vW9mS71GGHOJsvtWXV/OhEqA115o493JYJT5neianrkT
+         8nb/lO4XJjaix3BGuGg7pGmHyyrmqlSmT44lwrhNwmLORSVOHl0fjA+p6k7EF01If26v
+         Vtvc1KweE5OUCkM3/Por0KoMn8ykmOGsBB5H8z39O/Tb6axHXh6a+3ZMoky6Md6iuZk+
+         HDee2q5k6T0Dn4ugXpn9HlqPjl0wjA+VELcBuoY3l37PIObJdU8TvHkGglRjKiW0ODnb
+         JCizuvakRxoXGSr2L/HDSHWCk5lpVA13/B7kAR9YVydF2g7LZVdrsYh9+kchKd36A+a6
+         QhUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uCbIDnmbNb/xu62b5tooWAb+6qi8tujvE6x6ac0v/iU=;
+        b=W1QyTZPuET6XrHrI///VOD5fyaf/jF4BGNzlOtCidgi4fTidsBoc2A0LyhoPHpm0Xp
+         /uzBbrUS8NeDKwTwqf0wTOhepUHSn2u2Y34jQ7PWeAmqjqUKDABzacf+CHW588SJ95JS
+         wmzi3Of1Z6ahtfIytJ9Am7DaW7Y9RSAIw6m/IPfjnQjB3+L6iWKVZOb32gfcF10hxlbv
+         +bzdIgd7Rn78jY/ro3rLHPdYPWa/j8JQLCnZGAb3/hm3UuwKdw2DXE9keHGfyYq491n4
+         ZaiO0M2/9qHHwFNXFpgug7S83bfDqid1w78rkmdBdoadb2Wgmo0NybjyUjq2B++V7l3y
+         GIvg==
+X-Gm-Message-State: AOAM531zkVYFp7IyjuHIYD40olVXRfA+XG1zZd6za7wP9/3HO27m/pPB
+        A1fDGkGZvHAC8NkPJr5JzfsyXchniyc=
+X-Google-Smtp-Source: ABdhPJw6ggJ8wCSJvBlsLOuaKgIMkvBTDwzygxZftVoWK3+Q5wPJrDCRnCOYTf/UH4XJd5VTz0QvZw==
+X-Received: by 2002:aed:3949:: with SMTP id l67mr5993780qte.313.1589993514300;
+        Wed, 20 May 2020 09:51:54 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:4708])
+        by smtp.gmail.com with ESMTPSA id f198sm2663370qke.46.2020.05.20.09.51.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 09:51:53 -0700 (PDT)
+Date:   Wed, 20 May 2020 12:51:31 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200520165131.GB630613@cmpxchg.org>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-20_10:2020-05-20,2020-05-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 bulkscore=0 cotscore=-2147483648 malwarescore=0
- mlxscore=0 suspectscore=0 spamscore=0 phishscore=0 impostorscore=0
- mlxlogscore=996 clxscore=1011 priorityscore=1501 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005200135
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520160756.GE6462@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_*
-Hcalls") added checks of secure bit of SRR1 to filter out the Hcall
-reserved to the Ultravisor.
+On Wed, May 20, 2020 at 06:07:56PM +0200, Michal Hocko wrote:
+> On Wed 20-05-20 15:37:12, Chris Down wrote:
+> > In Facebook production, we've seen cases where cgroups have been put
+> > into allocator throttling even when they appear to have a lot of slack
+> > file caches which should be trivially reclaimable.
+> > 
+> > Looking more closely, the problem is that we only try a single cgroup
+> > reclaim walk for each return to usermode before calculating whether or
+> > not we should throttle. This single attempt doesn't produce enough
+> > pressure to shrink for cgroups with a rapidly growing amount of file
+> > caches prior to entering allocator throttling.
+> > 
+> > As an example, we see that threads in an affected cgroup are stuck in
+> > allocator throttling:
+> > 
+> >     # for i in $(cat cgroup.threads); do
+> >     >     grep over_high "/proc/$i/stack"
+> >     > done
+> >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+> >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+> >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+> > 
+> > ...however, there is no I/O pressure reported by PSI, despite a lot of
+> > slack file pages:
+> > 
+> >     # cat memory.pressure
+> >     some avg10=78.50 avg60=84.99 avg300=84.53 total=5702440903
+> >     full avg10=78.50 avg60=84.99 avg300=84.53 total=5702116959
+> >     # cat io.pressure
+> >     some avg10=0.00 avg60=0.00 avg300=0.00 total=78051391
+> >     full avg10=0.00 avg60=0.00 avg300=0.00 total=78049640
+> >     # grep _file memory.stat
+> >     inactive_file 1370939392
+> >     active_file 661635072
+> > 
+> > This patch changes the behaviour to retry reclaim either until the
+> > current task goes below the 10ms grace period, or we are making no
+> > reclaim progress at all. In the latter case, we enter reclaim throttling
+> > as before.
+> 
+> Let me try to understand the actual problem. The high memory reclaim has
+> a target which is proportional to the amount of charged memory. For most
+> requests that would be SWAP_CLUSTER_MAX though (resp. N times that where
+> N is the number of memcgs in excess up the hierarchy). I can see to be
+> insufficient if the memcg is already in a large excess but if the
+> reclaim can make a forward progress this should just work fine because
+> each charging context should reclaim at least the contributed amount.
+> 
+> Do you have any insight on why this doesn't work in your situation?
+> Especially with such a large inactive file list I would be really
+> surprised if the reclaim was not able to make a forward progress.
 
-However, the Hcall H_SVM_INIT_ABORT is made by the Ultravisor passing the
-context of the VM calling UV_ESM. This allows the Hypervisor to return to
-the guest without going through the Ultravisor. Thus the Secure bit of SRR1
-is not set in that particular case.
+The workload we observed this in was downloading a large file and
+writing it to disk, which means that a good chunk of that memory was
+dirty. The first reclaim pass appears to make little progress because
+it runs into dirty pages.
 
-In the case a regular VM is calling H_SVM_INIT_ABORT, this hcall will be
-filtered out in kvmppc_h_svm_init_abort() because kvm->arch.secure_guest is
-not set in that case.
+> Now to your patch. I do not like it much to be honest.
+> MEM_CGROUP_RECLAIM_RETRIES is quite arbitrary and I neither like it in
+> memory_high_write because the that is an interruptible context so there
+> shouldn't be a good reason to give up after $FOO number of failed
+> attempts. try_charge and memory_max_write are slightly different because
+> we are invoking OOM killer based on the number of failed attempts.
 
-Fixes: 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_* Hcalls")
-Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
----
- arch/powerpc/kvm/book3s_hv.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+The same is true for memory.high. We are invoking the userspace OOM
+killer when memory.high reclaim fails and we put tasks to sleep.
 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 93493f0cbfe8..eb1f96cb7b72 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -1099,9 +1099,7 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
- 			ret = kvmppc_h_svm_init_done(vcpu->kvm);
- 		break;
- 	case H_SVM_INIT_ABORT:
--		ret = H_UNSUPPORTED;
--		if (kvmppc_get_srr1(vcpu) & MSR_S)
--			ret = kvmppc_h_svm_init_abort(vcpu->kvm);
-+		ret = kvmppc_h_svm_init_abort(vcpu->kvm);
- 		break;
- 
- 	default:
--- 
-2.26.2
+The actual number of retries is arbitrary, correct. That's because OOM
+is arbitrary. It's a sampled state, and this is our sampling period.
 
+But it's not that important. The much more important thing is that we
+continue reclaiming as long as there is forward progress. How many
+times we retry when there is no forward progress is less critical -
+but it's nice to have the same cutoff for OOM situations everywhere.
+
+> Also if the current high reclaim scaling is insufficient then we should
+> be handling that via memcg_nr_pages_over_high rather than effectivelly
+> unbound number of reclaim retries.
+
+???
