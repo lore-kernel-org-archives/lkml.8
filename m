@@ -2,252 +2,113 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F61C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE312075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589991700;
-	bh=cf7SnoUKILsXfk6nREe49uTGqNz+I83kLsELCZ8YnpE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MmuzA02KxAFgfcUk1HInpSrle6VThfCaajbAtPkjZObGw3vOk0Tv+63fhpIq6L+rR
-	 TyHtDhIJJqwtwO2nNG6TdRYbFutTs1SGWngUG2GHv9uP6es6d1T7k7KodyA9Z6etdR
-	 3enRLKYVWbiGqEvflfgQgoRj8lEXI0dn1guUbqTY=
+	by mail.kernel.org (Postfix) with ESMTP id 7E9A620709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:23:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBA1I2vD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgETQVj (ORCPT
+        id S1726790AbgETQXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgETQVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:21:39 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71D5A20759;
-        Wed, 20 May 2020 16:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589991698;
-        bh=cf7SnoUKILsXfk6nREe49uTGqNz+I83kLsELCZ8YnpE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LZZTAr53m//LKawBCmnf0HO0GxEnlOU3TFFQMIZFrguGjqevjEhgTSk++89t0RcYe
-         G04rBH8Zsg0OISut2kAs1tn4qewUkwkF9E5W20czBHlFFv8xsZfqEptT7BkzRkgG54
-         G9aLso6sJsL8CzRD6ihCbooDGdAbhJkXu69fNS6U=
-Received: by mail-oi1-f178.google.com with SMTP id w4so3483620oia.1;
-        Wed, 20 May 2020 09:21:38 -0700 (PDT)
-X-Gm-Message-State: AOAM533nwLjVaUmhIEXERBUGXkEoPqVO+seVEIZli4bow3MxmKmyPf9M
-        vbAIf9K9cNEdvtomMST/SIo6Zxqyc8qrgu7p1A==
-X-Google-Smtp-Source: ABdhPJyHaWOJ7qDGphT10pEe3j+PbsubndR2qktwtkhzM2CkrB1ImoFPzV72dJWpXtFyHEyBcJYaQPw91qc8h1Wk0yY=
-X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr3860137oie.152.1589991697632;
- Wed, 20 May 2020 09:21:37 -0700 (PDT)
+        Wed, 20 May 2020 12:23:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58925 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726439AbgETQXc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:23:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589991810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NoVochZcFS3v4/Dvw5anGBO9w8j/2/n96KgXu49AdWA=;
+        b=fBA1I2vDSI++blRuLzWQ6n1KmOJxsuvpokd4J1OHsAwcZIOlMAQDwmdltJTBFnx+4ywKiC
+        WImAdbkZF1DAW6W1vMCmKVuG43r9pQdOuvrXUFAFUomtdIVR0n3gs8i98J9f9PHofZUieJ
+        xSW6vcyL5mJGW6qjZq+agNOy2MOhGtg=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-RoFfOyw0P-emptd0IEJ3Ug-1; Wed, 20 May 2020 12:23:29 -0400
+X-MC-Unique: RoFfOyw0P-emptd0IEJ3Ug-1
+Received: by mail-ed1-f70.google.com with SMTP id a14so1475302edx.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:23:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=NoVochZcFS3v4/Dvw5anGBO9w8j/2/n96KgXu49AdWA=;
+        b=gpaCU6046wnTV3KA2K8Ysbjj4hfyut8gPVmxjmvsBCEVF5lNjOmovMcI8OW208DxtY
+         p5O4+Gme0lKMfQzj7WPgcBF89PuNpjbUy4PXEXsbtVUzZZIF94suMaNgdbmYk+7t2/9m
+         V82tj+ZlIkH/3aO8p/60PcK7ulJdf0I/mESiPbFsO4Y/E3TCBSpsFMiyhLb6hZ8rXRI/
+         dXyWII/FcOngFQhQDbY1tNdvfLEhoExJLX3q81QTghIo2IdgWS+yp48NPIvZDYYMX1fZ
+         oYWEkuB0DJdPqxYwmVsYMN0+bRCc6v0UWa9DG/dj/TEw0ALWAj8wipMra8iznYumhBkf
+         ZpDQ==
+X-Gm-Message-State: AOAM531R2uaM/qBWek56XuyOmRLBknkLw12+AZE5dNMdCoy/rYloXGs3
+        ezhppGuopmH8axcUPaBf5Hpa/XFV1MvHTXePci8MjSJklVhVhLqf1Eh+tX/MFtIQS/ElcNfVtNX
+        8ludyMoR2sURVPYhstdJauVTJ
+X-Received: by 2002:a17:906:415b:: with SMTP id l27mr4584383ejk.240.1589991807365;
+        Wed, 20 May 2020 09:23:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy6D8uFHurXAxp3TFzy/tn3+V3RRSaJtWT2otMOBsMiXStjME+hqZObXrQKm8bEIzEbD/QnGQ==
+X-Received: by 2002:a17:906:415b:: with SMTP id l27mr4584369ejk.240.1589991807185;
+        Wed, 20 May 2020 09:23:27 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id s1sm2369800ejh.81.2020.05.20.09.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 09:23:26 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>
+Subject: Re: [PATCH 1/2] kvm: cosmetic: remove wrong braces in kvm_init_msr_list switch
+In-Reply-To: <20200520160740.6144-2-mlevitsk@redhat.com>
+References: <20200520160740.6144-1-mlevitsk@redhat.com> <20200520160740.6144-2-mlevitsk@redhat.com>
+Date:   Wed, 20 May 2020 18:23:25 +0200
+Message-ID: <877dx6tw1u.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <20191203174229.GA1721849@ulmo> <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
- <20191204091703.d32to5omdm3eynon@vireshk-i7> <20191204093339.GA2784830@ulmo>
- <20191204095138.rrul5vxnkprfwmku@vireshk-i7> <20200407100520.GA1720957@ulmo>
- <CAL_Jsq+rMYAZ=ub0U7qdHSsWgbQugodhvigFCxrFm49HwrCmAQ@mail.gmail.com> <20200520153854.GA2154237@ulmo>
-In-Reply-To: <20200520153854.GA2154237@ulmo>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 20 May 2020 10:21:25 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJOPzD_3+bygrMB+JSkDOZo=m0R28LDXSOU_Z=quTNeRw@mail.gmail.com>
-Message-ID: <CAL_JsqJOPzD_3+bygrMB+JSkDOZo=m0R28LDXSOU_Z=quTNeRw@mail.gmail.com>
-Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
- get BPMP data
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mikko Perttunen <cyndis@kapsi.fi>,
-        Sumit Gupta <sumitg@nvidia.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        bbasu@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 9:39 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+Maxim Levitsky <mlevitsk@redhat.com> writes:
+
+> I think these were added accidentally.
 >
-> On Wed, May 20, 2020 at 08:43:03AM -0600, Rob Herring wrote:
-> > On Tue, Apr 7, 2020 at 4:05 AM Thierry Reding <thierry.reding@gmail.com> wrote:
-> > >
-> > > On Wed, Dec 04, 2019 at 03:21:38PM +0530, Viresh Kumar wrote:
-> > > > On 04-12-19, 10:33, Thierry Reding wrote:
-> > > > > Yeah, the code that registers this device is in drivers/base/cpu.c in
-> > > > > register_cpu(). It even retrieves the device tree node for the CPU from
-> > > > > device tree and stores it in cpu->dev.of_node, so we should be able to
-> > > > > just pass &cpu->dev to tegra_bpmp_get() in order to retrieve a reference
-> > > > > to the BPMP.
-> > > > >
-> > > > > That said, I'm wondering if perhaps we could just add a compatible
-> > > > > string to the /cpus node for cases like this where we don't have an
-> > > > > actual device representing the CPU complex. There are a number of CPU
-> > > > > frequency drivers that register dummy devices just so that they have
-> > > > > something to bind a driver to.
-> > > > >
-> > > > > If we allow the /cpus node to represent the CPU complex (if no other
-> > > > > "device" does that yet), we can add a compatible string and have the
-> > > > > cpufreq driver match on that.
-> > > > >
-> > > > > Of course this would be slightly difficult to retrofit into existing
-> > > > > drivers because they'd need to remain backwards compatible with existing
-> > > > > device trees. But it would allow future drivers to do this a little more
-> > > > > elegantly. For some SoCs this may not matter, but especially once you
-> > > > > start depending on additional resources this would come in handy.
-> > > > >
-> > > > > Adding Rob and the device tree mailing list for feedback on this idea.
-> > > >
-> > > > Took some time to find this thread, but something around this was
-> > > > suggested by Rafael earlier.
-> > > >
-> > > > https://lore.kernel.org/lkml/8139001.Q4eV8YG1Il@vostro.rjw.lan/
-> > >
-> > > I gave this a try and came up with the following:
-> > >
-> > > --- >8 ---
-> > > diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> > > index f4ede86e32b4..e4462f95f0b3 100644
-> > > --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> > > +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> > > @@ -1764,6 +1764,9 @@ bpmp_thermal: thermal {
-> > >         };
-> > >
-> > >         cpus {
-> > > +               compatible = "nvidia,tegra194-ccplex";
-> > > +               nvidia,bpmp = <&bpmp>;
-> >
-> > Is there more than 1 bpmp? If not you don't need this. Just lookup the
-> > node by compatible.
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  arch/x86/kvm/x86.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >
-> There no SoCs currently than need to differentiate between multiple
-> BPMPs, so yes, it would be possible to look up the node by compatible.
-> But we also used to assume that PCs would only ever come with a single
-> GPU or audio card and that's always caused a lot of work to clean up
-> when it turned out to no longer be true.
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 471fccf7f8501..fe3a24fd6b263 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5299,7 +5299,7 @@ static void kvm_init_msr_list(void)
+>  				 !intel_pt_validate_hw_cap(PT_CAP_single_range_output)))
+>  				continue;
+>  			break;
+> -		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B: {
+> +		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
+>  			if (!kvm_cpu_cap_has(X86_FEATURE_INTEL_PT) ||
+>  				msrs_to_save_all[i] - MSR_IA32_RTIT_ADDR0_A >=
+>  				intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2)
+> @@ -5314,7 +5314,6 @@ static void kvm_init_msr_list(void)
+>  			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
+>  			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+>  				continue;
+> -		}
+>  		default:
+>  			break;
+>  		}
 
-Job security. ;)
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-> Also, we already have a couple of devices referencing the BPMP by
-> phandle like this, so having this in a CCPLEX node would keep things
-> consistent.
->
-> One of the reasons why we initially did it this way was also so that we
-> could make the dependencies explicit within device tree. If we look up
-> by compatible string, then the driver is the only one with the knowledge
-> about where to get at it. If we have the explicit reference we at least
-> have a chance of determining the dependency by just looking at the
-> device tree.
+-- 
+Vitaly
 
-This case probably makes sense, but then driver dependencies can
-evolve and you'd be updating the DT for every dependency. There's just
-this general mindset that a driver can't look at the DT outside of its
-own node.
-
-> > >                 #address-cells = <1>;
-> > >                 #size-cells = <0>;
-> > >
-> > > --- >8 ---
-> > >
-> > > Now I can do something rougly like this, although I have a more complete
-> > > patch locally that also gets rid of all the global variables because we
-> > > now actually have a struct platform_device that we can anchor everything
-> > > at:
-> > >
-> > > --- >8 ---
-> > > static const struct of_device_id tegra194_cpufreq_of_match[] = {
-> > >         { .compatible = "nvidia,tegra194-ccplex", },
-> > >         { /* sentinel */ }
-> > > };
-> > > MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
-> > >
-> > > static struct platform_driver tegra194_ccplex_driver = {
-> > >         .driver = {
-> > >                 .name = "tegra194-cpufreq",
-> > >                 .of_match_table = tegra194_cpufreq_of_match,
-> > >         },
-> > >         .probe = tegra194_cpufreq_probe,
-> > >         .remove = tegra194_cpufreq_remove,
-> > > };
-> > > module_platform_driver(tegra194_ccplex_driver);
-> > > --- >8 ---
-> > >
-> > > I don't think that's exactly what Rafael (Cc'ed) had in mind, since the
-> > > above thread seems to have mostly talked about binding a driver to each
-> > > individual CPU.
-> > >
-> > > But this seems a lot better than having to instantiate a device from
-> > > scratch just so that a driver can bind to it and it allows additional
-> > > properties to be associated with the CCPLEX device.
-> >
-> > What additional properties? A continual stream of properties added 1
-> > by 1 would negatively affect my opinion of this.
->
-> I don't expect there would be many. I think there's an earlier
-> generation of Tegra that requires a regulator and I can imagine that's
-> pretty common. But other than that I would expect this to be a fairly
-> narrow set of properties.
->
-> > > Rob, any thoughts on this from a device tree point of view? The /cpus
-> > > bindings don't mention the compatible property, but there doesn't seem
-> > > to be anything in the bindings that would prohibit its use.
-> >
-> > What happens when you have more than one cpu related driver in
-> > addition to cpufreq? You may still have to end up creating child
-> > platform devices and then gained very little.
->
-> That's only if you absolutely want to stick with the "one driver per
-> subsystem" model. I personally think that's completely obsolete these
-> days. If you have a CPU complex device that can do both CPU frequency
-> scaling and put the CPU into idle states, for example, then there is
-> really no reason to artificially split that into two separate drivers
-> just to match the subsystems that we have.
->
-> Most subsystems that I've come across work just fine if a single driver
-> registers with multiple subsystems.
-
-Yes exactly. If only everyone thought this way...
-
-> I also know that some people like it better when things are nicely split
-> up into multiple drivers. But I really don't see how that simplifies
-> things. In fact in my opinion that makes things only more complicated
-> because you have additional boilerplate and then you need to be extra
-> careful about how these different drivers are ordered, and you need to
-> take extra precautions when sharing things like clocks and register
-> regions.
-
-I just cleaned up this exact mess with VExpress drivers...
-
-It's just a constant issue to deal with.
-
-> > You could solve this without DT changes. You can bind on node names.
-> > The driver probe can then check the parent compatible and return if
-> > not matching. I'm not sure if you could get module auto loading to
-> > work in that case. It would have to be based on the root compatible
-> > (rather than the driver match table) and be able to load multiple
-> > matching modules.
->
-> That sounds like it would get very complicated for something this
-> simple. Having a compatible string in /cpus seemed like the most logical
-> option because it would basically just work out of the box and the same
-> way we're used to from other devices.
-
-That's also why I get the node per driver...
-
-
-That said, I'm fine with adding the compatible. I hope I don't regret it.
-
-Rob
