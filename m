@@ -2,121 +2,93 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08397C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E426E2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04AF02070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgETM5T (ORCPT
+        id S1726903AbgETM6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:57:19 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46451 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgETM5S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:57:18 -0400
-Received: by mail-oi1-f193.google.com with SMTP id b3so2760145oib.13;
-        Wed, 20 May 2020 05:57:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aJamwLm96ytvqLYKUjvZ9u/+2q4WNnQotOo2fde5CyY=;
-        b=RYnh5AHn7EaIbWpJHztdHUvamESoormlMzEx+3VLrLoja9JM5+OB73jLEuj+quLM9x
-         JINTDcwi+ZieErAw3P1lNU3Lr7zi6kZ5M3zZURm3nKhltNCAIv/CX/scDZH/QrM6NcPd
-         AOQdKwaHL+spyQMipPI3l+nQwR/XnMqCuE9BuQwHDqzDsNlH4oqrVQbYAiWnjKVYqlW8
-         LwxQIBdcSjAWvImclN8db/CBrHEGNtdWCenVQ3dV6rFF7k2YIecrb6w7+i2z6u14dfr7
-         FVWEJk8vxHgksPNC/nYGlsBjlTYC6L5NlR2ymXD3lNQYiT2UZQ5LEvaALel0MXuGuGaW
-         /08w==
-X-Gm-Message-State: AOAM5337vv65OmtvByjKI96Obo1UlAOVdnxUb9CrUynf8jt7Xu3GwePh
-        f1C+PE1EgWtJUIUWvuMtuZQzjNs0FcHR8aK8Yho=
-X-Google-Smtp-Source: ABdhPJwu+X5b8qR/tGxmz/DLvGSkjMTN6arpme3EHT/9IgTdRR+s5gJsMua0uE/HtMU43Dl221Icff70S4LCyfQLDG4=
-X-Received: by 2002:a05:6808:1:: with SMTP id u1mr3056906oic.54.1589979437182;
- Wed, 20 May 2020 05:57:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200511145257.22970-1-geert+renesas@glider.be>
- <20200520121420.GA1867563@smile.fi.intel.com> <CAMuHMdW9EsRLYYTL0pd-PqqZs5WcUfK8i2uceNwJnSvAQKuVgw@mail.gmail.com>
- <CAHp75Vc9=1cD81TDuaGuFQpBcHaKqEZKv8tA7ZGBbDJ6MKq6kw@mail.gmail.com> <CAHp75VcARgxf-Ty77mk2PJ0BUxJsXQdDLMffiDdv1gCkF_VMtg@mail.gmail.com>
-In-Reply-To: <CAHp75VcARgxf-Ty77mk2PJ0BUxJsXQdDLMffiDdv1gCkF_VMtg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 20 May 2020 14:57:05 +0200
-Message-ID: <CAMuHMdXA8skK86yM4uX=2=ib0PNZvuvVdu4GzoD7zYngwz1emg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/6] gpio: Add GPIO Aggregator
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 20 May 2020 08:58:02 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:11690 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726439AbgETM6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:58:01 -0400
+X-Greylist: delayed 872 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 May 2020 08:57:59 EDT
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgAXT7Q1KcVe2a3gAA--.58314S4;
+        Wed, 20 May 2020 20:57:30 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maital Hahn <maitalm@ti.com>,
+        Fuqian Huang <huangfq.daxian@gmail.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Tony Lindgren <tony@atomide.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] wlcore: fix runtime pm imbalance in wl1271_op_suspend
+Date:   Wed, 20 May 2020 20:57:22 +0800
+Message-Id: <20200520125724.12832-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgAXT7Q1KcVe2a3gAA--.58314S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw4UCw4UCF45try5tFW8JFb_yoWfGrb_Kr
+        srWrn7tr1kA342gr15CanxZryjvr9ru3Z3u3yIvryfJa1UZrZ7Jr1rZ3s8Xr97WrW7Zr1f
+        Gr98GF18Z34UZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbT8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWU
+        XwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6ryUMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUFzuWDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+When wlcore_hw_interrupt_notify() returns an error code,
+a pairing runtime PM usage counter decrement is needed to
+keep the counter balanced.
 
-On Wed, May 20, 2020 at 2:41 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, May 20, 2020 at 3:40 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wed, May 20, 2020 at 3:38 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Wed, May 20, 2020 at 2:14 PM Andy Shevchenko
-> > > <andriy.shevchenko@intel.com> wrote:
-> > > > On Mon, May 11, 2020 at 04:52:51PM +0200, Geert Uytterhoeven wrote:
-> >
-> > ...
-> >
-> > > > Sorry for late reply, recently noticed this nice idea.
-> > > > The comment I have is, please, can we reuse bitmap parse algorithm and syntax?
-> > > > We have too many different formats and parsers in the kernel and bitmap's one
-> > > > seems suitable here.
-> > >
-> > > Thank you, I wasn't aware of that.
-> > >
-> > > Which one do you mean? The documentation seems to be confusing,
-> > > and incomplete.
-> > > My first guess was bitmap_parse(), but that one assumes hex values?
-> > > And given it processes the unsigned long bitmap in u32 chunks, I guess
-> > > it doesn't work as expected on big-endian 64-bit?
-> > >
-> > > bitmap_parselist() looks more suitable, and the format seems to be
->
-> > > compatible with what's currently used, so it won't change ABI.
->
-> What ABI? We didn't have a release with it, right? So, we are quite
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/net/wireless/ti/wlcore/main.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-ABI = the parameters it accepts currently.
-
-> flexible for few more weeks to amend it.
-
-Indeed, we have time to make changes until the release of v5.8.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index f140f7d7f553..8faee8cec1bc 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -1746,9 +1746,7 @@ static int __maybe_unused wl1271_op_suspend(struct ieee80211_hw *hw,
+ 
+ 		ret = wl1271_configure_suspend(wl, wlvif, wow);
+ 		if (ret < 0) {
+-			mutex_unlock(&wl->mutex);
+-			wl1271_warning("couldn't prepare device to suspend");
+-			return ret;
++			goto out_sleep;
+ 		}
+ 	}
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
