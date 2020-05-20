@@ -2,126 +2,152 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC42C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDF8B20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C982084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JNEE1o6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726493AbgETGir (ORCPT
+        id S1726535AbgETGjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:38:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:53816 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgETGiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 02:38:46 -0400
-IronPort-SDR: GV12MgCQyzMEjvj7TK91LXISLzCiVK/XVNt3U5WQZJObfmbVwb1U5DXJZeIoDqulbEYubERhGZ
- 6UsLJK7gyz5w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 23:38:46 -0700
-IronPort-SDR: wzPYeZPBSZy/xujHLb2StAkI30oFzPyTb+qF7FyiJtIynpT25wbT2tres16z32jhJOuwo6HdwR
- rqHnm0xF6hwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
-   d="scan'208";a="343397466"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga001.jf.intel.com with ESMTP; 19 May 2020 23:38:46 -0700
-Date:   Tue, 19 May 2020 23:38:45 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 59/75] x86/sev-es: Handle MONITOR/MONITORX Events
-Message-ID: <20200520063845.GC17090@linux.intel.com>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-60-joro@8bytes.org>
+        Wed, 20 May 2020 02:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETGjj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 02:39:39 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B7CC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 23:39:39 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l18so1916423wrn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 23:39:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=t0COEyXj5D7NvkjtdvydID9BlBfxGe8of0Dfo1AtG48=;
+        b=JNEE1o6yhLVdcuKXhiGY+WKqOeJP/cguKffC8RXamxJeYUzNWMSAf5svkdHabJt3X2
+         fQ/ibhR69Q/0NTu4DHD1BhZyV7yp+1jx/ogls2VBx5Anqks+AxyaB+uFdCiAWepuXPml
+         fU++yx8fB9HPa9iEI3CLdd7jRQ8FEfbiI9/EAAJzPFP8dR3c/XRJncHAWqD0LnIOzUZh
+         U1ES+pAUkLOyI1r5UuXphntFHQOmYJ4LYw9cTLf2lsrZDPH1C0w9p4dv82Isr1hUoaU+
+         xcHPLrBKE0qyoZ45tbz1tXRA7gkPXpD3oBKkI2k0xxQrJ4CHs/8EbN1fojDjeTAKR2lR
+         mqcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=t0COEyXj5D7NvkjtdvydID9BlBfxGe8of0Dfo1AtG48=;
+        b=of57LKEF85O+ZnjmZZIb/W8PmPkwJCgkVvqcwNKwI/1gxy9Cyl/CpfMlJQLZ94kbej
+         wEC1Xl7P94AiFIysRp2JGOxPPWDK3MWkIHcJBxAz0FB5nvDVE4tLzUmFx1W8sEiWrTz2
+         EG/YTDGY/enhY+Z619/GqP2fl8RWEWq4dCFXhV5uSAbmrJ+mxxe8p2/eWRBuUp26iuQ7
+         aaybTPed71BiYVklCUnunmnAOc8x0MDx9aUDHPHKd9JP21TGSHvIrIMfA6hh56t4LYUN
+         fWoH3f+OK9YqH8NMDYset/vF+UmNSyPW/uWscReinN+qhE4BMDiz6bmKpiZULIrz0VCJ
+         3N7A==
+X-Gm-Message-State: AOAM533yvGVxp5L5EwtIiGwRm1tt55RsaR2eUI0X9nTUO0Ypzpwdye4/
+        hxD956xudKe80myC+h8ZIFyE6A==
+X-Google-Smtp-Source: ABdhPJz10hiF6TxXkTZa5JarAelnWM1tRH1Rh9uBwIjHWV9cX2CCPggm62zNbl3YzgDThSkN+F/BhA==
+X-Received: by 2002:a5d:43d1:: with SMTP id v17mr2579195wrr.282.1589956777948;
+        Tue, 19 May 2020 23:39:37 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id z132sm2217692wmc.29.2020.05.19.23.39.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 23:39:37 -0700 (PDT)
+Date:   Wed, 20 May 2020 07:39:35 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] mfd: Introduce QTI I2C PMIC controller
+Message-ID: <20200520063935.GZ271301@dell>
+References: <cover.1588115326.git.gurus@codeaurora.org>
+ <5644dea146f8b49a5b827c56392ff916bfb343e9.1588115326.git.gurus@codeaurora.org>
+ <20200429075010.GX3559@dell>
+ <20200501011319.GA28441@codeaurora.org>
+ <20200515104520.GK271301@dell>
+ <20200519185757.GA13992@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-60-joro@8bytes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519185757.GA13992@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:17:09PM +0200, Joerg Roedel wrote:
-> From: Tom Lendacky <thomas.lendacky@amd.com>
-> 
-> Implement a handler for #VC exceptions caused by MONITOR and MONITORX
-> instructions.
-> 
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> [ jroedel@suse.de: Adapt to #VC handling infrastructure ]
-> Co-developed-by: Joerg Roedel <jroedel@suse.de>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/kernel/sev-es.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index 601554e6360f..1a961714cd1b 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -824,6 +824,22 @@ static enum es_result vc_handle_rdpmc(struct ghcb *ghcb, struct es_em_ctxt *ctxt
->  	return ES_OK;
->  }
->  
-> +static enum es_result vc_handle_monitor(struct ghcb *ghcb,
-> +					struct es_em_ctxt *ctxt)
-> +{
-> +	phys_addr_t monitor_pa;
-> +	pgd_t *pgd;
-> +
-> +	pgd = __va(read_cr3_pa());
-> +	monitor_pa = vc_slow_virt_to_phys(ghcb, ctxt->regs->ax);
-> +
-> +	ghcb_set_rax(ghcb, monitor_pa);
-> +	ghcb_set_rcx(ghcb, ctxt->regs->cx);
-> +	ghcb_set_rdx(ghcb, ctxt->regs->dx);
-> +
-> +	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_MONITOR, 0, 0);
+On Tue, 19 May 2020, Guru Das Srinagesh wrote:
 
-Why?  If SVM has the same behavior as VMX, the MONITOR will be disarmed on
-VM-Enter, i.e. the VMM can't do anything useful for MONITOR/MWAIT.  I
-assume that's the case given that KVM emulates MONITOR/MWAIT as NOPs on
-SVM.
-
-> +}
-> +
->  static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
->  					 struct ghcb *ghcb,
->  					 unsigned long exit_code)
-> @@ -860,6 +876,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
->  	case SVM_EXIT_WBINVD:
->  		result = vc_handle_wbinvd(ghcb, ctxt);
->  		break;
-> +	case SVM_EXIT_MONITOR:
-> +		result = vc_handle_monitor(ghcb, ctxt);
-> +		break;
->  	case SVM_EXIT_NPF:
->  		result = vc_handle_mmio(ghcb, ctxt);
->  		break;
-> -- 
-> 2.17.1
+> On Fri, May 15, 2020 at 11:45:20AM +0100, Lee Jones wrote:
+> > On Thu, 30 Apr 2020, Guru Das Srinagesh wrote:
+> > 
+> > > On Wed, Apr 29, 2020 at 08:50:10AM +0100, Lee Jones wrote:
+> > > > On Tue, 28 Apr 2020, Guru Das Srinagesh wrote:
+> > > > 
+> > > > > The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
+> > > > > multi-function PMIC devices which communicate over the I2C bus.  The
+> > > > > controller enumerates all child nodes as platform devices, and
+> > > > > instantiates a regmap interface for them to communicate over the I2C
+> > > > > bus.
+> > > > > 
+> > > > > The controller also controls interrupts for all of the children platform
+> > > > > devices.  The controller handles the summary interrupt by deciphering
+> > > > > which peripheral triggered the interrupt, and which of the peripheral
+> > > > > interrupts were triggered.  Finally, it calls the interrupt handlers for
+> > > > > each of the virtual interrupts that were registered.
+> > > > > 
+> > > > > Nicholas Troast is the original author of this driver.
+> > > > > 
+> > > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > > > > ---
+> > > > >  drivers/mfd/Kconfig         |  11 +
+> > > > >  drivers/mfd/Makefile        |   1 +
+> > > > >  drivers/mfd/qcom-i2c-pmic.c | 737 ++++++++++++++++++++++++++++++++++++++++++++
+> > > > 
+> > > > The vast majority of this driver deals with IRQ handling.  Why can't
+> > > > this be split out into its own IRQ Chip driver and moved to
+> > > > drivers/irqchip?
+> > > 
+> > > There appear to be quite a few in-tree MFD drivers that register IRQ
+> > > controllers, like this driver does:
+> > > 
+> > > $ grep --exclude-dir=.git -rnE "irq_domain_(add|create).+\(" drivers/mfd | wc -l
+> > > 23
+> > > 
+> > > As a further example, drivers/mfd/stpmic1.c closely resembles this
+> > > driver in that it uses both devm_regmap_add_irq_chip() as well as
+> > > devm_of_platform_populate().
+> > > 
+> > > As such, it seems like this driver is in line with some of the
+> > > architectural choices that have been accepted in already-merged drivers.
+> > > Could you please elaborate on your concerns?
+> > 
+> > It is true that *basic* IRQ domain support has been added to these
+> > drivers in the past.  However, IMHO the support added to this driver
+> > goes beyond those realms such that it would justify a driver of its
+> > own.
 > 
+> I am exploring an option to see if the regmap-irq APIs may be used in
+> this driver, similar to stpmic1.c. Just to let you know, it might be a
+> few days before I am able to post my next patchset as I'll have to make
+> the necessary changes and test them out first.
+
+Take your time.
+
+The next release is due imminently, so you have as long as you need.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
