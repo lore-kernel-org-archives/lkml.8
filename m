@@ -2,88 +2,115 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB46C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD365C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 016C02072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A222207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:21:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="in49gkq3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A1K4+hLR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgETRTb (ORCPT
+        id S1727839AbgETRVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:19:31 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43044 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgETRTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:19:30 -0400
-Received: from zn.tnic (p200300ec2f0bab0091014823f6ed2297.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ab00:9101:4823:f6ed:2297])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A646E1EC02CF;
-        Wed, 20 May 2020 19:19:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589995169;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=zhU45fI/CA3wuFt48B50fMgYqlagkSqzGMK7oqHwFsU=;
-        b=in49gkq3bglqba6c0XBPRuNsPjqeEIm/cWYww8/zxlc5D72ZYNGUZkg3B6BsGOW+VxmbNq
-        vqr1iagn0a4lqhKUb/j0gnSrdW65UpjoMW0cXp34SZUfSWeg0BsIufW5jpplL9EsIsV0e8
-        1nolWs1eNNbYWZkNz56Kv/ggx25N17A=
-Date:   Wed, 20 May 2020 19:19:22 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Philip Li <philip.li@intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>, lkp <lkp@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [tip:x86/mm 1/23] arch/x86/mm/init.c:75:6: warning: no previous
- prototype for function 'x86_has_pat_wp'
-Message-ID: <20200520171922.GH1457@zn.tnic>
-References: <202005200123.gFjGzJEH%lkp@intel.com>
- <20200519205505.GD444@zn.tnic>
- <20200519212541.GA3580016@ubuntu-s3-xlarge-x86>
- <CAKwvOdk+JwddxLaXc9S7SMMTye8bDaGEckcs7zu5tEMD0G3Yog@mail.gmail.com>
- <831EE4E5E37DCC428EB295A351E6624952648ACF@shsmsx102.ccr.corp.intel.com>
- <CAKwvOdmoA5ZFCiUQ5fVf7+970Y4bxvU=kYWb49NENQzxdm7F1Q@mail.gmail.com>
- <20200520005218.GA3101@intel.com>
- <CAKwvOdkPW2p-4fDUNT6so3DrxiJgtUNEFPJcHNf7VROozc4wjQ@mail.gmail.com>
+        Wed, 20 May 2020 13:21:05 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40542 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETRVE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:21:04 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KHKwHq020773;
+        Wed, 20 May 2020 12:20:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589995258;
+        bh=yrKwbAO5uhLlt/mQiD0EoGYC+VF09O7pczsKToEZH94=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=A1K4+hLRPyQxIGoro61sk9hld7QVYHYIQ39iV7K7YLq2iusgjGI99agLUY9uFUq4a
+         N76y38HGtQmugA0vaOnlLLCVyQ5v5/V04asTE1ND8x5vM9vT3d/Xsxo4xBZS03lr2a
+         GR01Y4d+580V16HR/P22TGZejnEu+geq+2JKOQY4=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KHKvpo014522
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 12:20:57 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 12:20:36 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 12:20:36 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KHKaEO089527;
+        Wed, 20 May 2020 12:20:36 -0500
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+ <20200520164313.GI652285@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+Date:   Wed, 20 May 2020 12:20:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdkPW2p-4fDUNT6so3DrxiJgtUNEFPJcHNf7VROozc4wjQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200520164313.GI652285@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 06:07:14PM -0700, Nick Desaulniers wrote:
-> It may be time to consider "promoting" some warnings from W=1 to be on
-> by default.
+Andrew/Florian
 
-That's the end goal with -Wmissing-prototypes for arch/x86/ at least.
-We'll turn that on once all current warnings are fixed and won't allow
-any more patches with it.
+On 5/20/20 11:43 AM, Andrew Lunn wrote:
+>> I am interested in knowing where that is documented.  I want to RTM I
+>> grepped for a few different words but came up empty
+> Hi Dan
+>
+> It probably is not well documented, but one example would be
+>
+> Documentation/devicetree/bindings/net/ethernet-controller.yaml
+>
+> says:
+>
+>        # RX and TX delays are added by the MAC when required
+>        - rgmii
+>
+>        # RGMII with internal RX and TX delays provided by the PHY,
+>        # the MAC should not add the RX or TX delays in this case
+>        - rgmii-id
+>
+>        # RGMII with internal RX delay provided by the PHY, the MAC
+>        # should not add an RX delay in this case
+>        - rgmii-rxid
+>
+>        # RGMII with internal TX delay provided by the PHY, the MAC
+>        # should not add an TX delay in this case
+>
+>        Andrew
 
-This is where the 0day bot would help with testing this but it really
-should say that it is a W=1 build and should tone down the message
-frequency as we're still very noisy.
+OKI I read that.  I also looked at a couple other drivers too.
 
-Thx.
+I am wondering if rx-internal-delay and tx-internal-delay should become 
+a common property like tx/rx fifo-depth
 
--- 
-Regards/Gruss,
-    Boris.
+And properly document how to use it or at least the expectation on use.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Dan
+
