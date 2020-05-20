@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB80FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64C67205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BD9205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgETO27 (ORCPT
+        id S1728629AbgETO3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:28:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60924 "EHLO
+        Wed, 20 May 2020 10:29:02 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60914 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726799AbgETOWV (ORCPT
+        by vger.kernel.org with ESMTP id S1726775AbgETOWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:21 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-00034x-7Y; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-000351-Aq; Wed, 20 May 2020 15:22:18 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbt-007DO8-PJ; Wed, 20 May 2020 15:22:17 +0100
+        id 1jbPbt-007DOT-TE; Wed, 20 May 2020 15:22:17 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Steffen Klassert" <steffen.klassert@secunet.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Tobias Klauser" <tklauser@distanz.ch>
-Date:   Wed, 20 May 2020 15:13:32 +0100
-Message-ID: <lsq.1589984008.782735810@decadent.org.uk>
+        "Mathias Krause" <minipli@googlemail.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>
+Date:   Wed, 20 May 2020 15:13:36 +0100
+Message-ID: <lsq.1589984008.54165052@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 04/99] padata: Remove unused but set variables
+Subject: [PATCH 3.16 08/99] padata: ensure padata_do_serial() runs on the
+ correct CPU
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,42 +56,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tobias Klauser <tklauser@distanz.ch>
+From: Mathias Krause <minipli@googlemail.com>
 
-commit 119a0798dc42ed4c4f96d39b8b676efcea73aec6 upstream.
+commit 350ef88e7e922354f82a931897ad4a4ce6c686ff upstream.
 
-Remove the unused but set variable pinst in padata_parallel_worker to
-fix the following warning when building with 'W=1':
+If the algorithm we're parallelizing is asynchronous we might change
+CPUs between padata_do_parallel() and padata_do_serial(). However, we
+don't expect this to happen as we need to enqueue the padata object into
+the per-cpu reorder queue we took it from, i.e. the same-cpu's parallel
+queue.
 
-  kernel/padata.c: In function ‘padata_parallel_worker’:
-  kernel/padata.c:68:26: warning: variable ‘pinst’ set but not used [-Wunused-but-set-variable]
+Ensure we're not switching CPUs for a given padata object by tracking
+the CPU within the padata object. If the serial callback gets called on
+the wrong CPU, defer invoking padata_reorder() via a kernel worker on
+the CPU we're expected to run on.
 
-Also remove the now unused variable pd which is only used to set pinst.
-
-Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
-Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Mathias Krause <minipli@googlemail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/padata.c | 4 ----
- 1 file changed, 4 deletions(-)
+ include/linux/padata.h |  2 ++
+ kernel/padata.c        | 20 +++++++++++++++++++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -37,6 +37,7 @@
+  * @list: List entry, to attach to the padata lists.
+  * @pd: Pointer to the internal control structure.
+  * @cb_cpu: Callback cpu for serializatioon.
++ * @cpu: Cpu for parallelization.
+  * @seq_nr: Sequence number of the parallelized data object.
+  * @info: Used to pass information from the parallel to the serial function.
+  * @parallel: Parallel execution function.
+@@ -46,6 +47,7 @@ struct padata_priv {
+ 	struct list_head	list;
+ 	struct parallel_data	*pd;
+ 	int			cb_cpu;
++	int			cpu;
+ 	int			info;
+ 	void                    (*parallel)(struct padata_priv *padata);
+ 	void                    (*serial)(struct padata_priv *padata);
 --- a/kernel/padata.c
 +++ b/kernel/padata.c
-@@ -63,15 +63,11 @@ static int padata_cpu_hash(struct parall
- static void padata_parallel_worker(struct work_struct *parallel_work)
- {
+@@ -130,6 +130,7 @@ int padata_do_parallel(struct padata_ins
+ 	padata->cb_cpu = cb_cpu;
+ 
+ 	target_cpu = padata_cpu_hash(pd);
++	padata->cpu = target_cpu;
+ 	queue = per_cpu_ptr(pd->pqueue, target_cpu);
+ 
+ 	spin_lock(&queue->parallel.lock);
+@@ -367,10 +368,21 @@ void padata_do_serial(struct padata_priv
+ 	int cpu;
  	struct padata_parallel_queue *pqueue;
--	struct parallel_data *pd;
--	struct padata_instance *pinst;
- 	LIST_HEAD(local_list);
+ 	struct parallel_data *pd;
++	int reorder_via_wq = 0;
  
- 	local_bh_disable();
- 	pqueue = container_of(parallel_work,
- 			      struct padata_parallel_queue, work);
--	pd = pqueue->pd;
--	pinst = pd->pinst;
+ 	pd = padata->pd;
  
- 	spin_lock(&pqueue->parallel.lock);
- 	list_replace_init(&pqueue->parallel.list, &local_list);
+ 	cpu = get_cpu();
++
++	/* We need to run on the same CPU padata_do_parallel(.., padata, ..)
++	 * was called on -- or, at least, enqueue the padata object into the
++	 * correct per-cpu queue.
++	 */
++	if (cpu != padata->cpu) {
++		reorder_via_wq = 1;
++		cpu = padata->cpu;
++	}
++
+ 	pqueue = per_cpu_ptr(pd->pqueue, cpu);
+ 
+ 	spin_lock(&pqueue->reorder.lock);
+@@ -387,7 +399,13 @@ void padata_do_serial(struct padata_priv
+ 
+ 	put_cpu();
+ 
+-	padata_reorder(pd);
++	/* If we're running on the wrong CPU, call padata_reorder() via a
++	 * kernel worker.
++	 */
++	if (reorder_via_wq)
++		queue_work_on(cpu, pd->pinst->wq, &pqueue->reorder_work);
++	else
++		padata_reorder(pd);
+ }
+ EXPORT_SYMBOL(padata_do_serial);
+ 
 
