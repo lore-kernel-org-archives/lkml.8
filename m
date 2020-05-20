@@ -2,140 +2,121 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2257C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A568207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="E0onSRN5"
+	by mail.kernel.org (Postfix) with ESMTP id A81302075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgETKCA (ORCPT
+        id S1726833AbgETKDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:02:00 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:47008 "EHLO extserv.mm-sol.com"
+        Wed, 20 May 2020 06:03:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:51960 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETKCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:02:00 -0400
-Received: from [192.168.1.4] (212-5-158-12.ip.btc-net.bg [212.5.158.12])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 90A62CFEB;
-        Wed, 20 May 2020 13:01:57 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1589968918; bh=DzcUAhFL6G6Vzz7vTvgr6Z/dAJBJLJKn2F3Wqs3Pvzo=;
-        h=Subject:To:Cc:From:Date:From;
-        b=E0onSRN5ou33/t/JrfYkn/kTvcKP3EdES429TX7TYKkOGaqg/2jk0NJFlz6/t9qIe
-         +8l2DqFT36DdjVm0Zm0te3gQh4cZCUTgMra5XppOYwsnwQQi4qykoQtZXAQvj/97c6
-         AA9lGia5yEOlDUBqZOfPgL1uSOuiWtt4Brq1vMgHK5wzAQGkdErBX6QrQzN9hdYt0R
-         JbBwp0Fa/No29c1jstjT4fyRTKVt6QUktBYsBoFHdfBLd/3XpCgCf+71q8to4XcIuo
-         +Jvy4Geib5IGjUkmou+R8LjWvUM2d8LjMicd9Cm3QnkUBK0BffKZ46vuyoJsNNtgmu
-         2hXlM0KaDbkiQ==
-Subject: Re: R: R: [PATCH v3 08/11] devicetree: bindings: pci: document PARF
- params bindings
-To:     ansuelsmth@gmail.com, 'Rob Herring' <robh@kernel.org>
-Cc:     'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Bjorn Helgaas' <bhelgaas@google.com>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Philipp Zabel' <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-9-ansuelsmth@gmail.com> <20200507181044.GA15159@bogus>
- <062301d624a6$8be610d0$a3b23270$@gmail.com> <20200512154544.GA823@bogus>
- <99f42001-0f41-5e63-f6ad-2e744ec86d36@mm-sol.com>
- <02e001d62925$dca9e9a0$95fdbce0$@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <72c588ec-5dd3-6c8a-5ebf-1e01bf2fa96a@mm-sol.com>
-Date:   Wed, 20 May 2020 13:01:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726435AbgETKDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:03:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF56531B;
+        Wed, 20 May 2020 03:03:39 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.114])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A71583F68F;
+        Wed, 20 May 2020 03:03:37 -0700 (PDT)
+Date:   Wed, 20 May 2020 11:03:30 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, oleg@redhat.com,
+        Keno Fischer <keno@juliacomputing.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: Fix PTRACE_SYSEMU semantics
+Message-ID: <20200520100330.GA25430@bogus>
+References: <20200515222253.GA38408@juliacomputing.com>
+ <20200518114119.GB32394@willie-the-truck>
+ <20200519120725.GA20313@gaia>
 MIME-Version: 1.0
-In-Reply-To: <02e001d62925$dca9e9a0$95fdbce0$@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519120725.GA20313@gaia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Catalin,
 
-On 5/13/20 3:56 PM, ansuelsmth@gmail.com wrote:
->> On 5/12/20 6:45 PM, Rob Herring wrote:
->>> On Thu, May 07, 2020 at 09:34:35PM +0200, ansuelsmth@gmail.com
->> wrote:
->>>>> On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
->>>>>> It is now supported the editing of Tx De-Emphasis, Tx Swing and
->>>>>> Rx equalization params on ipq8064. Document this new optional
->> params.
->>>>>>
->>>>>> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
->>>>>> ---
->>>>>>  .../devicetree/bindings/pci/qcom,pcie.txt     | 36
->> +++++++++++++++++++
->>>>>>  1 file changed, 36 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>>>> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>>>>> index 6efcef040741..8cc5aea8a1da 100644
->>>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>>>>> @@ -254,6 +254,42 @@
->>>>>>  			- "perst-gpios"	PCIe endpoint reset signal line
->>>>>>  			- "wake-gpios"	PCIe endpoint wake signal line
->>>>>>
->>>>>> +- qcom,tx-deemph-gen1:
->>>>>> +	Usage: optional (available for ipq/apq8064)
->>>>>> +	Value type: <u32>
->>>>>> +	Definition: Gen1 De-emphasis value.
->>>>>> +		    For ipq806x should be set to 24.
->>>>>
->>>>> Unless these need to be tuned per board, then the compatible string
->> for
->>>>> ipq806x should imply all these settings.
->>>>>
->>>>
->>>> It was requested by v2 to make this settings tunable. These don't change
->> are
->>>> all the same for every ipq806x SoC. The original implementation had this
->>>> value hardcoded for ipq806x. Should I restore this and drop this patch?
->>>
->>> Yes, please.
->>
->> I still think that the values for tx deemph and tx swing should be
->> tunable. But I can live with them in the driver if they not break
->> support for apq8064.
->>
->> The default values in the registers for apq8064 and ipq806x are:
->>
->> 			default		your change
->> TX_DEEMPH_GEN1		21		24
->> TX_DEEMPH_GEN2_3_5DB	21		24
->> TX_DEEMPH_GEN2_6DB	32		34
->>
->> TX_SWING_FULL		121		120
->> TX_SWING_LOW		121		120
->>
->> So until now (without your change) apq8064 worked with default values.
->>
-> 
-> I will limit this to ipq8064(-v2) if this could be a problem.
+On Tue, May 19, 2020 at 01:07:27PM +0100, Catalin Marinas wrote:
+> On Mon, May 18, 2020 at 12:41:20PM +0100, Will Deacon wrote:
+> > On Fri, May 15, 2020 at 06:22:53PM -0400, Keno Fischer wrote:
+> > > Quoth the man page:
+> > > ```
+> > >        If the tracee was restarted by PTRACE_SYSCALL or PTRACE_SYSEMU, the
+> > >        tracee enters syscall-enter-stop just prior to entering any system
+> > >        call (which will not be executed if the restart was using
+> > >        PTRACE_SYSEMU, regardless of any change made to registers at this
+> > >        point or how the tracee is restarted after this stop).
+> > > ```
+> > >
+> > > The parenthetical comment is currently true on x86 and powerpc,
+> > > but not currently true on arm64. arm64 re-checks the _TIF_SYSCALL_EMU
+> > > flag after the syscall entry ptrace stop. However, at this point,
+> > > it reflects which method was used to re-start the syscall
+> > > at the entry stop, rather than the method that was used to reach it.
+> > > Fix that by recording the original flag before performing the ptrace
+> > > stop, bringing the behavior in line with documentation and x86/powerpc.
+> > >
+> > > Signed-off-by: Keno Fischer <keno@juliacomputing.com>
+> > > ---
+> > >  arch/arm64/kernel/ptrace.c | 8 +++++---
+> > >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+> > > index b3d3005d9515..b67b4d14aa17 100644
+> > > --- a/arch/arm64/kernel/ptrace.c
+> > > +++ b/arch/arm64/kernel/ptrace.c
+> > > @@ -1829,10 +1829,12 @@ static void tracehook_report_syscall(struct pt_regs *regs,
+> > >
+> > >  int syscall_trace_enter(struct pt_regs *regs)
+> > >  {
+> > > -	if (test_thread_flag(TIF_SYSCALL_TRACE) ||
+> > > -		test_thread_flag(TIF_SYSCALL_EMU)) {
+> > > +	u32 flags = READ_ONCE(current_thread_info()->flags) &
+> > > +		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
+> > > +
+> > > +	if (flags) {
+> >
+> > nit: but I'd rather the '&' operation was in the conditional so that the
+> > 'flags' variable holds all of the flags.
+> >
+> > With that:
+> >
+> > Acked-by: Will Deacon <will@kernel.org>
+> >
+> > Also needs:
+> >
+> > Cc: <stable@vger.kernel.org>
+> > Fixes: f086f67485c5 ("arm64: ptrace: add support for syscall emulation")
+> >
+> > Catalin -- can you pick this up for 5.7 please, with my 'nit' addressed?
+>
+> I'll queue it with the above addressed. I think flags also needs to be
+> unsigned long rather than u32.
+>
+> However, before sending the pull request, I'd like Sudeep to confirm
+> that it doesn't break his original use-case for this feature.
+>
 
-I guess you can do it that way, but if new board appear in the future
-with slightly different parameters (for example deemph_gen1 = 23 and so
-on) do we need to add another compatible for that? At the end we will
-have compatibles per board but not per SoC. :(
+I just tested it with my simple programs I had before. I have also asked
+teams working on gvisor to test. They have tested it and see no
+regression. I will ask them to reply here.
 
--- 
-regards,
-Stan
+Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+
+--
+Regards,
+Sudeep
