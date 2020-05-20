@@ -2,233 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30801C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03C4E207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C291207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:52:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="fzp1wwwz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgETLvc (ORCPT
+        id S1726862AbgETLwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:51:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35748 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETLvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:51:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1B5F3ABCF;
-        Wed, 20 May 2020 11:51:32 +0000 (UTC)
-Message-ID: <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
-Subject: Re: [PATCH 04/15] PCI: brcmstb: Add compatibily of other chips
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Wed, 20 May 2020 13:51:26 +0200
-In-Reply-To: <20200519203419.12369-5-james.quinlan@broadcom.com>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
-         <20200519203419.12369-5-james.quinlan@broadcom.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Jq1cvgOnIw0Gps6POiR0"
-User-Agent: Evolution 3.36.2 
+        Wed, 20 May 2020 07:52:19 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17746 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726224AbgETLwT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:52:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589975503; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=GfT1xh3tW+op1ejqTNjcpgDi0MrBuexm4GbeTF/eelkRK7yWnq8tg9juS5XP1ia8wjL69yfDK/56y54bVPJi1msf9MYSzOPe2NxQhpi0nOd4BLorpYhw8F94PRI1tgOtWmgpCQAAefWN+peiwbmzZx/0XeJPdbtLz1CDvNpbGog=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1589975503; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=ictEe6A1ntbqXb4Xzcdgn7ZvBdHoQtE5VuKky/cV41U=; 
+        b=ZFQe82fEVscGFRFPCbKFgXa98gb4lQeMwcCe0lvDXv3deeXd8e2IquMsFOU62nAUtWP5oPgOknu1X6weJL7em9H/0+7YIYXTVr9VUXaogFwcHnlinLZ4f/8wPwEXUjHuHYuQ4k65j9f+hkzx+nxOi34kmhBaicxxqVhNOHsesko=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589975503;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=ictEe6A1ntbqXb4Xzcdgn7ZvBdHoQtE5VuKky/cV41U=;
+        b=fzp1wwwzDH/3SmtY/HwC1OVZ1jzJfbBXbbopDM8KDU4yoggwO99TaTC+k1CVyxuv
+        YzHaQHA6Kx5zJdcWHcRPkl1YNAX+DjeBaKGo3HwVd1AH9JEztwMOyuqZZSdvxZY9R97
+        eRZhor2U6C7BtVdsDsbqJaNEXn7VDrlHjJmB5yjc=
+Received: from [127.0.0.1] (223.104.210.187 [223.104.210.187]) by mx.zoho.com.cn
+        with SMTPS id 1589975500561839.4780833843952; Wed, 20 May 2020 19:51:40 +0800 (CST)
+Date:   Wed, 20 May 2020 19:51:38 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>, maz@kernel.org
+CC:     Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] irqchip: Add Loongson PCH MSI controller
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <871rno3uab.fsf@nanos.tec.linutronix.de>
+References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-5-jiaxun.yang@flygoat.com> <874ksk3uda.fsf@nanos.tec.linutronix.de> <871rno3uab.fsf@nanos.tec.linutronix.de>
+Message-ID: <4324EED5-187D-4113-B7F2-DBF45C42AFFD@flygoat.com>
 MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-Jq1cvgOnIw0Gps6POiR0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Jim,
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=8813=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888=
+:15:40, Thomas Gleixner <tglx@linutronix=2Ede> =E5=86=99=E5=88=B0:
+>Thomas Gleixner <tglx@linutronix=2Ede> writes:
+>> Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom> writes:
+>>> +
+>>> +struct pch_msi_data {
+>>> +	spinlock_t		msi_map_lock;
+>>> +	phys_addr_t		doorbell;
+>>> +	u32			irq_first;	/* The vector number that MSIs starts */
+>>> +	u32			num_irqs;	/* The number of vectors for MSIs */
+>>> +	unsigned long		*msi_map;
+>>> +};
+>>> +
+>>> +static void pch_msi_mask_msi_irq(struct irq_data *d)
+>>> +{
+>>> +	pci_msi_mask_irq(d);
+>>> +	irq_chip_mask_parent(d);
+>>> +}
+>>> +
+>>> +static void pch_msi_unmask_msi_irq(struct irq_data *d)
+>>> +{
+>>> +	pci_msi_unmask_irq(d);
+>>> +	irq_chip_unmask_parent(d);
+>>
+>> The ordering of mask and unmask is assymetric=2E That does not make sen=
+se=2E
+>>
+>>> +static struct msi_domain_info pch_msi_domain_info =3D {
+>>> +	=2Eflags		=3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>>> +			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+>>> +	=2Echip	=3D &pch_msi_irq_chip,
+>>
+>> Please maintain tabular layout=2E
+>
+>Ooops=2E Wanted to reply to V3, but the comments are valid for V3 as well=
+=2E
 
-On Tue, 2020-05-19 at 16:34 -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
->=20
-> Add in compatibility strings and code for three Broadcom STB chips.
-> Some of the register locations, shifts, and masks are different
-> for certain chips, requiring the use of different constants based
-> on of_id.
->=20
-> We would like to add the following at this time to the match list
-> but we need to wait until the end of this patchset so that
-> everything works.
->=20
->     { .compatible =3D "brcm,bcm7211-pcie", .data =3D &generic_cfg },
->     { .compatible =3D "brcm,bcm7278-pcie", .data =3D &bcm7278_cfg },
->     { .compatible =3D "brcm,bcm7216-pcie", .data =3D &bcm7278_cfg },
->     { .compatible =3D "brcm,bcm7445-pcie", .data =3D &generic_cfg },
->=20
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 103 +++++++++++++++++++++++---
->  1 file changed, 91 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> b/drivers/pci/controller/pcie-brcmstb.c
-> index 73020b4ff090..c1cf4ea7d3d9 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -120,9 +120,8 @@
->  #define  PCIE_EXT_SLOT_SHIFT				15
->  #define  PCIE_EXT_FUNC_SHIFT				12
-> =20
-> -#define PCIE_RGR1_SW_INIT_1				0x9210
->  #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
-> -#define  PCIE_RGR1_SW_INIT_1_INIT_MASK			0x2
-> +#define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
-> =20
->  /* PCIe parameters */
->  #define BRCM_NUM_PCIE_OUT_WINS		0x4
-> @@ -152,6 +151,69 @@
->  #define SSC_STATUS_SSC_MASK		0x400
->  #define SSC_STATUS_PLL_LOCK_MASK	0x800
-> =20
-> +#define IDX_ADDR(pcie)	\
-> +	(pcie->reg_offsets[EXT_CFG_INDEX])
-> +#define DATA_ADDR(pcie)	\
-> +	(pcie->reg_offsets[EXT_CFG_DATA])
-> +#define PCIE_RGR1_SW_INIT_1(pcie) \
-> +	(pcie->reg_offsets[RGR1_SW_INIT_1])
-> +
-> +enum {
-> +	RGR1_SW_INIT_1,
-> +	EXT_CFG_INDEX,
-> +	EXT_CFG_DATA,
-> +};
-> +
-> +enum {
-> +	RGR1_SW_INIT_1_INIT_MASK,
-> +	RGR1_SW_INIT_1_INIT_SHIFT,
-> +};
-> +
-> +enum pcie_type {
-> +	GENERIC,
-> +	BCM7278,
-> +};
-> +
-> +struct pcie_cfg_data {
-> +	const int *reg_field_info;
-> +	const int *offsets;
-> +	const enum pcie_type type;
-> +};
-> +
-> +static const int pcie_reg_field_info[] =3D {
-> +	[RGR1_SW_INIT_1_INIT_MASK] =3D 0x2,
-> +	[RGR1_SW_INIT_1_INIT_SHIFT] =3D 0x1,
-> +};
-> +
-> +static const int pcie_reg_field_info_bcm7278[] =3D {
-> +	[RGR1_SW_INIT_1_INIT_MASK] =3D 0x1,
-> +	[RGR1_SW_INIT_1_INIT_SHIFT] =3D 0x0,
-> +};
-> +
-> +static const int pcie_offsets[] =3D {
-> +	[RGR1_SW_INIT_1] =3D 0x9210,
-> +	[EXT_CFG_INDEX]  =3D 0x9000,
-> +	[EXT_CFG_DATA]   =3D 0x9004,
-> +};
-> +
-> +static const struct pcie_cfg_data generic_cfg =3D {
-> +	.reg_field_info	=3D pcie_reg_field_info,
-> +	.offsets	=3D pcie_offsets,
-> +	.type		=3D GENERIC,
-> +};
-> +
-> +static const int pcie_offset_bcm7278[] =3D {
-> +	[RGR1_SW_INIT_1] =3D 0xc010,
-> +	[EXT_CFG_INDEX] =3D 0x9000,
-> +	[EXT_CFG_DATA] =3D 0x9004,
-> +};
-> +
-> +static const struct pcie_cfg_data bcm7278_cfg =3D {
-> +	.reg_field_info =3D pcie_reg_field_info_bcm7278,
-> +	.offsets	=3D pcie_offset_bcm7278,
-> +	.type		=3D BCM7278,
-> +};
+All fixed in v4=2E
 
-It's not essential, but if v2 is due I'd suggest factoring out the bcm2728
-specific structures above, and moving them to patch #15. This will keep a
-clearer division between the patch introducing the infrastructure and the o=
-ne
-adding the support for a new device.
+Please review=2E
 
-> +
->  struct brcm_msi {
->  	struct device		*dev;
->  	void __iomem		*base;
-> @@ -176,6 +238,9 @@ struct brcm_pcie {
->  	int			gen;
->  	u64			msi_target_addr;
->  	struct brcm_msi		*msi;
-> +	const int		*reg_offsets;
-> +	const int		*reg_field_info;
-> +	enum pcie_type		type;
->  };
-> =20
->  /*
-> @@ -602,20 +667,21 @@ static struct pci_ops brcm_pcie_ops =3D {
-> =20
->  static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie, =
-u32
-> val)
->  {
-> -	u32 tmp;
-> +	u32 tmp, mask =3D  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
-> +	u32 shift =3D pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
-
-I don't think you need shift here, IIUC u32p_replace_bits() will take care =
-of
-all the masking and shifting internally, moreover, you'd be able to drop th=
-e
-shift entry from reg_field_info.
-
-> -	tmp =3D readl(pcie->base + PCIE_RGR1_SW_INIT_1);
-> -	u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_INIT_MASK);
-> -	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
-> +	tmp =3D readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> +	tmp =3D (tmp & ~mask) | ((val << shift) & mask);
-> +	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
->  }
-
-Regards,
-Nicolas
+Thanks!
 
 
---=-Jq1cvgOnIw0Gps6POiR0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+>
+>Thanks,
+>
+>        tglx
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7FGb4ACgkQlfZmHno8
-x/7r3Af9FXMBMrDwT+Vt9o7RkKFabu6R0R+3IDKueGxDKtwNVX9URFSH2FK8L1qb
-E8BBO5KDQScZitOeDkdnG6eRtnTzT1qMXdAOUWHJ0qP/UpQ2dtwmqbUyGbnFwKY1
-6p/V9Rp6kgePO275Jw45G+jVzM2x3fUma2idaqI9MbNJzYP3B0DgfLiOd0Ii+Kpx
-Ws3Zs3GVLxfZ1IZ3/YKjfhadL9fzkNdqwgwWDJQRoxEaLXItSZdrMzdoHwlBHz+k
-2eodgvkTQ+4715irAd4eFzp63cOM/HE2K48EuepCt8g7HvyHh/aIsaWuXczhvrxw
-rXSlOTVJIPYkNOAlKyTTr/zmyoF3aQ==
-=1UHK
------END PGP SIGNATURE-----
-
---=-Jq1cvgOnIw0Gps6POiR0--
-
+--=20
+Jiaxun Yang
