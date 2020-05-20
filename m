@@ -2,196 +2,94 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED17C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 718FA206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:31:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jHOv6fx6"
+	by mail.kernel.org (Postfix) with ESMTP id B3831207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgETIbx (ORCPT
+        id S1726785AbgETIcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:31:53 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30385 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726224AbgETIbx (ORCPT
+        Wed, 20 May 2020 04:32:42 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:47463 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETIcl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:31:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589963511;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VIXZDqOXFcihJ2bkHai3mXCdDvdUV50NdKrrdZHodZ8=;
-        b=jHOv6fx6zKprG9a37xhEz84Q9ya5WyU6vLuWDLgZMO7CNrdglg73Sot2RIfBf4vceAyFEx
-        zsWIgRM51JM+ZBTkw6+kJKPWth6/y7IK6sjjska5kuuR8vOxia7p2Ag8iqAIBxgRd5JWdY
-        phKQJIBP0d1PtmOtvGla621+5UAQpTY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-133-4UOREkHQPpSWf8vRyQgz3Q-1; Wed, 20 May 2020 04:31:49 -0400
-X-MC-Unique: 4UOREkHQPpSWf8vRyQgz3Q-1
-Received: by mail-wr1-f70.google.com with SMTP id n9so1075562wru.20
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:31:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VIXZDqOXFcihJ2bkHai3mXCdDvdUV50NdKrrdZHodZ8=;
-        b=mCP7kygJEkze6/MadtvB7+oTJjW3LkC0okRye5RtUjtMmujenFnu5/L0nYnbM1oVq4
-         p7deWqFd6Z4T4o8gbNtO6Axs0rSOTg51jiO9MtPPucH8CxDEMyQzVdqRH/2X4J8E5R2s
-         Ki/u2LH7Fbn26s5v8Lk15cmUblGJn7poGCCsNXu/RdU4++UAl+uluzNNo69OOqvy/GaY
-         uhfF2TDKR7sz3j1/ek2V4IJ0uPxNMVMqUdAZIDd9bAQ+1WWGhs1HtwZAODoTrYKRQzxG
-         9fr8zvnKGnO4AJWYmlt1TWnnXlaU0XfbRhDLFzuKdGxQPcUbF06q5M9Fe8JkznqBstN3
-         XY/Q==
-X-Gm-Message-State: AOAM532Xy8xWewHD7JywKg0WN+++wMHLCPflynURSEfq4QP/NnReJIiU
-        ZZEScWtKHsM+p4qw95JsLNzf79fHRULEW3759QBebP3LDIBsnT06E/koOm2+X/5bYX6Yh/ny4+M
-        V3j06CAG7+WaPH4HVlr3zDenN
-X-Received: by 2002:adf:e582:: with SMTP id l2mr3359601wrm.392.1589963508419;
-        Wed, 20 May 2020 01:31:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw/wWhNbkFUbl52kCp+7p0x4VY2NFui6YdjuRHEScktqhonOudYQ/aReKxg9+b6j7L6s89s0Q==
-X-Received: by 2002:adf:e582:: with SMTP id l2mr3359575wrm.392.1589963508152;
-        Wed, 20 May 2020 01:31:48 -0700 (PDT)
-Received: from [192.168.1.27] (lfbn-lyo-1-134-107.w86-202.abo.wanadoo.fr. [86.202.218.107])
-        by smtp.gmail.com with ESMTPSA id z10sm2269453wmi.2.2020.05.20.01.31.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 01:31:47 -0700 (PDT)
-Subject: Re: [PATCH 3/3] objtool: Enable compilation of objtool for all
- architectures
-To:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <cover.1589913349.git.mhelsley@vmware.com>
- <96252a8eee50710f4fe115ca516f0e6058b9f66b.1589913349.git.mhelsley@vmware.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <b27ee658-2886-107c-a367-632467ec6929@redhat.com>
-Date:   Wed, 20 May 2020 09:31:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 20 May 2020 04:32:41 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MxDck-1iqvjr1ekS-00xexJ; Wed, 20 May 2020 10:32:39 +0200
+Received: by mail-qt1-f182.google.com with SMTP id m64so1921053qtd.4;
+        Wed, 20 May 2020 01:32:39 -0700 (PDT)
+X-Gm-Message-State: AOAM532/YEZMPDLymtXiAK8C+tZZNXDAYAgwZ5a3cNyYyCd4ue9lu+YG
+        x/5DHCbb9WLVFFDBNCKW1OmFzhFlkB2HlRZCS78=
+X-Google-Smtp-Source: ABdhPJwxHJfu9ad8fPRH3eY75VjvZPKl03jAeY6SOosBXI/bytpm+uNaMTBw34fhMdF542eIC1sItzGVn5tJJELnGhs=
+X-Received: by 2002:ac8:518f:: with SMTP id c15mr3966843qtn.142.1589963558179;
+ Wed, 20 May 2020 01:32:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <96252a8eee50710f4fe115ca516f0e6058b9f66b.1589913349.git.mhelsley@vmware.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200519131327.1836482-1-arnd@arndb.de> <20200519181034.58c67eb5bea24aae24d33421@linux-foundation.org>
+In-Reply-To: <20200519181034.58c67eb5bea24aae24d33421@linux-foundation.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 20 May 2020 10:32:22 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a281ZLKwkWCKkAdQvA6=XA4=+mKWbwEzK_BR4Uu1c5DNQ@mail.gmail.com>
+Message-ID: <CAK8P3a281ZLKwkWCKkAdQvA6=XA4=+mKWbwEzK_BR4Uu1c5DNQ@mail.gmail.com>
+Subject: Re: [PATCH] sh: include linux/time_types.h for sockios
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:r7q4B6sn5NDNHf0cUJuyd3+1Dx9OG521Z2awa++weaIQNrMRw7j
+ 7G2xNSqzvvsexvR+IosDSi01VEZul/SrksXUAxkUMezDyTdIimNLJeK76xYW1jW9wNzHP09
+ QXOD1rHs6cd4jdwvsNan568zUgSQDYwsiDVqkzxdSPGcMaT1ZGWTmhMhdZG9i3SklGB3RqV
+ +5ZWx4MrASaBwE4h31aQQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9ZRZAO9Lg1g=:C4gWAUP+tl/Tap5d+XHgYe
+ xYjVThaqPba6ka+0NWAAA52g99sJ73ROP3NpPcZw9kqg20i6f7isM0GKnohB0xp+Yn4kD4z5d
+ XUdkQXmIGRw3G3PPJ95LH1xM0aa8zrr0jdfEGL1gWan9wi3Hirkj9Ar8pCizvGhGohjDk4Sj/
+ /cGPPxmjf1a29BQlM5Z5Waa7RlfPKnC4WaDHmUsozc+Yhat2fVO/J7ehdDJRM7fkQ4yH0u57z
+ VgeGeiuCcfGP4ioBS2jomfqSP8Nch0Xj9SKo1h6Znf9tzCZSEufcLQaDiSAMU9BrTxXo8tY+Q
+ EBvhS+1fEydaop3LN137Bvfq6i/N4lfoJjth2QnsWotcgVmhudwHyKpLJOFzELhKF96012TJg
+ DTK2bcwl89ffGX3k9K4GZ40JHVwMH8ksmWU/+OUkGWDVPako8KeLIkbVIJb2H5OQGEAO8pvBi
+ C+AtISAucdED+4MhIqXIoFmtOFJNg6B1LLOU580CXYa8lyhc7JoHPNMH6iQs5nAasWKAQtJxO
+ TKYnZq8hM1JBU/EVkRoIO0fbWTkJaCpbmyWKY2U/faahvtI96706ol5givhOEJ4QpLiqJRXNU
+ FylAK7aTLq755/oIr64IIpkNFwRSF1DQfKFF4kPGBjlqcail2NV6eX0QBcza9OqxCE6Dbj8hO
+ BCDRLiZ3Ezawyyo3ANJkVa3bMlEkl1KZBPBLfcdJ+6PPlUXx4uHYjL/ooEMWgzB6FFg/nb4iC
+ lrYunllPD45K/snDuFoS0VDIfQoxmfbCTyOJewDFmfGaROLEFq75EOIPwylJADRvs7joimiHp
+ D/yv/ovrjd4yq3BGVczcaQfilT3UdfZtap13K1ii/8cm+1DW6g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 20, 2020 at 3:10 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> On Tue, 19 May 2020 15:13:13 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> > Using the socket ioctls on arch/sh (and only there) causes build
+> > time problems when __kernel_old_timeval/__kernel_old_timespec are
+> > not already visible to the compiler.
+> >
+> > Add an explict include line for the header that defines these
+> > structures.
+>
+> I can grab this.
 
+Thanks!
 
-On 5/19/20 9:55 PM, Matt Helsley wrote:
-> objtool currently only compiles for x86 architectures. This is
-> fine as it presently does not support tooling for other
-> architectures. However, we would like to be able to convert other
-> kernel tools to run as objtool sub commands because they too
-> process ELF object files. This will allow us to convert tools
-> such as recordmcount to use objtool's ELF code.
-> 
-> Since much of recordmcount's ELF code is copy-paste code to/from
-> a variety of other kernel tools (look at modpost for example) this
-> means that if we can convert recordmcount we can convert more.
-> 
-> We define "missing" weak definitions for subcommand entry functions
-> and other weak definitions for shared functions critical to
-> building existing subcommands. These return 127 when the command is
-> missing which signify tools that do not exist on all architectures.
-> In this case the "check" and "orc" tools do not exist on all
-> architectures so we only add them for x86. Future changes adding
-> support for "check", to arm64 for example, can then modify the
-> SUBCMD_CHECK variable when building for arm64.
-> 
-> objtool is not currently wired in to KConfig to be built for other
-> architectures because it's not needed for those architectures and
-> there are no commands it supports other than those for x86. As more
-> command support is enabled on various architectures the necessary
-> KConfig changes can be made (e.g. adding "STACK_VALIDATION") to
-> trigger building objtool.
-> 
-> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
-> Cc: Julien Thierry <jthierry@redhat.com>
-> ---
->   tools/objtool/Build           | 13 +++++++++----
->   tools/objtool/Makefile        | 11 ++++++++++-
->   tools/objtool/arch.h          |  4 +++-
->   tools/objtool/builtin-check.c |  2 +-
->   tools/objtool/builtin-orc.c   |  3 +--
->   tools/objtool/check.c         |  4 ++--
->   tools/objtool/check.h         |  4 ----
->   tools/objtool/objtool.h       | 14 ++++++++++++++
->   tools/objtool/orc.h           | 18 ------------------
->   tools/objtool/orc_dump.c      |  3 ++-
->   tools/objtool/orc_gen.c       |  1 -
->   tools/objtool/weak.c          | 35 +++++++++++++++++++++++++++++++++++
->   12 files changed, 77 insertions(+), 35 deletions(-)
->   delete mode 100644 tools/objtool/orc.h
->   create mode 100644 tools/objtool/weak.c
-> 
-> diff --git a/tools/objtool/Build b/tools/objtool/Build
-> index 66f44f5cd2a6..b7222d5cc7bc 100644
-> --- a/tools/objtool/Build
-> +++ b/tools/objtool/Build
-> @@ -1,11 +1,16 @@
->   objtool-y += arch/$(SRCARCH)/
-> +
-> +objtool-y += weak.o
-> +
-> +objtool-$(SUBCMD_CHECK) += check.o
-> +objtool-$(SUBCMD_CHECK) += special.o
-> +objtool-$(SUBCMD_ORC) += check.o
-> +objtool-$(SUBCMD_ORC) += orc_gen.o
-> +objtool-$(SUBCMD_ORC) += orc_dump.o
-> +
->   objtool-y += builtin-check.o
->   objtool-y += builtin-orc.o
-> -objtool-y += check.o
-> -objtool-y += orc_gen.o
-> -objtool-y += orc_dump.o
->   objtool-y += elf.o
-> -objtool-y += special.o
->   objtool-y += objtool.o
->   
->   objtool-y += libstring.o
-> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-> index 6b91388aecbb..12686e2f1a56 100644
-> --- a/tools/objtool/Makefile
-> +++ b/tools/objtool/Makefile
-> @@ -46,7 +46,16 @@ elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(CC) $(CFLAGS) -x c -E -
->   CFLAGS += $(if $(elfshdr),,-DLIBELF_USE_DEPRECATED)
->   
->   AWK = awk
-> -export srctree OUTPUT CFLAGS SRCARCH AWK
-> +
-> +SUBCMD_CHECK := n
-> +SUBCMD_ORC := n
-> +
-> +ifeq ($(SRCARCH),x86)
-> +	SUBCMD_CHECK := y
-> +	SUBCMD_ORC := y
-> +endif
-> +
-> +export srctree OUTPUT CFLAGS SRCARCH AWK SUBCMD_CHECK SUBCMD_ORC
+> > Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> > Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> > Fixes: 8c709f9a0693 ("y2038: sh: remove timeval/timespec usage from headers")
+> > Fixes: 0768e17073dc ("net: socket: implement 64-bit timestamps")
+>
+> cc:stable?
 
-Nit: I was thinking, since the list of SUBCMD_* is only going to grow
-maybe it would be nicer to have a single export line for the SUBCMD_* 
-variables and leave the export line of [srctree..AWK] untouched.
+Yes, I missed that.
 
-Just a suggestion, and only in case you respin this taking into account 
-Josh's comment.
-
-Otherwise things look good to me.
-
-Cheers,
-
--- 
-Julien Thierry
-
+     Arnd
