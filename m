@@ -2,91 +2,98 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78396C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6424EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D614207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401F820849
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OI8xrvd+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXWaUVl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgETDEn (ORCPT
+        id S1728606AbgETDFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 23:04:43 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39457 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726352AbgETDEn (ORCPT
+        Tue, 19 May 2020 23:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728433AbgETDFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 23:04:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589943882;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R73O4aUb2p7w01cdPQS1ezbGo2TrRH6uTOtAEoGytJg=;
-        b=OI8xrvd+rtFND7NoO6/+gGZtTr09IlPCATW572Ei3lxtXSZdJTaZ3aimZ5ovZdBjS8JN3c
-        gfKknmZt8/SLZrDMOUFRAktmvoxSbza9dqbhAe9zV2gNDtHPdnH1CiGnHnG9y1KU/tJg2a
-        6yPrJMFvj13Iam0czFPccRmT+JWC19s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-100-zX1buEnGN9Ke__JvbqtseA-1; Tue, 19 May 2020 23:04:37 -0400
-X-MC-Unique: zX1buEnGN9Ke__JvbqtseA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9539C8018A2;
-        Wed, 20 May 2020 03:04:36 +0000 (UTC)
-Received: from T590 (ovpn-12-217.pek2.redhat.com [10.72.12.217])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C6085261A1;
-        Wed, 20 May 2020 03:04:29 +0000 (UTC)
-Date:   Wed, 20 May 2020 11:04:24 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>
-Subject: Re: [PATCH 5/9] blk-mq: don't set data->ctx and data->hctx in
- blk_mq_alloc_request_hctx
-Message-ID: <20200520030424.GI416136@T590>
-References: <20200518093155.GB35380@T590>
- <87imgty15d.fsf@nanos.tec.linutronix.de>
- <20200518115454.GA46364@T590>
- <20200518131634.GA645@lst.de>
- <20200518141107.GA50374@T590>
- <20200518165619.GA17465@lst.de>
- <20200519015420.GA70957@T590>
- <20200519153000.GB22286@lst.de>
- <20200520011823.GA415158@T590>
+        Tue, 19 May 2020 23:05:18 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4F7DC061A0E;
+        Tue, 19 May 2020 20:05:17 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id l15so1553729lje.9;
+        Tue, 19 May 2020 20:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HoeSq/8pPr91BzAJhNOgffpepxPbgET+ZXok/fBudck=;
+        b=gXWaUVl9AECOIaCl0Fcc+xIuo4vo2rEIF5DT5q2sv+aXAEEHz28fli9wQX7i4ZL0vd
+         OTMHmhNz8TAFAW+eEa4bcvhbiIu5W4TKrw/tR8wq4t6xZR6Ed2hk+0PNmkujpnyDWgvc
+         s7tPAX538te6tQJPButCPQupE1SOrMPA/IVar+zT+v5TIELfDPahdw4HGt8fdOeVrY0J
+         i2LbrOe9t80DtGsd00VNOZshUUf2oNbffcVgAzIrNwv2ZnsFdYSy5fOnGSuVECXxNRbs
+         10VLvYUYyRv5pXPhGbClPwhJc8VvC7G2u30dXXZh2SByvRn1fWehU7xco2tsGt7/dpXo
+         sAIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HoeSq/8pPr91BzAJhNOgffpepxPbgET+ZXok/fBudck=;
+        b=tqiDpz9UkzHmRIq7vmRyW7yWgfL0uJZYIZHsrj/wZAHWu3w9ofw4+KzCrGk24YycZG
+         RKFvyQPKdZaSwCtFoQwqPKs6DXuiK9r4EF+dUUWkaDDkeFX5q/qq0ZNW8GIW9aULKHAa
+         XDbRps0sWud55hF4HMUzZEO5yUPEMDkTf0sEeIYxugub6gUdBEpiXhuMbeKTqlCuSekJ
+         C3aXUUPWFImiXwNxHi82vD6b7Ida3f6FXXl53sZSaFJmdhJNsgdBqw58dViut3ogjyfr
+         YzRT18/HbXlDYAJIGMrI48nrRRw0HeRW+4XfsRViQolzq0SJ6JaGPBV/Bk4vKMNC+adh
+         wvyg==
+X-Gm-Message-State: AOAM533Mh8Q//t+MEYma4JRhzcL0Qnk5kDPmNUYydI61QNRo0S3js6Jf
+        YRoq9hfNwX2J4HRZChwpGr+GUCowPXfbx1HgbkM=
+X-Google-Smtp-Source: ABdhPJxUgi5dbYAyeOHZlGuF5KVl0KkfJn5CPaaSvjLesR7QA9yJpSBV50lArSyjN0Eg4earSj4hHAa4IsUApfKwREg=
+X-Received: by 2002:a2e:920e:: with SMTP id k14mr1474641ljg.288.1589943916318;
+ Tue, 19 May 2020 20:05:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520011823.GA415158@T590>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <1589940278-3680-1-git-send-email-peng.fan@nxp.com>
+ <1589940278-3680-4-git-send-email-peng.fan@nxp.com> <CAOMZO5BPPRy_XGHHyZfE3eOrmCwW_VytueY-An8qqke6HU06TQ@mail.gmail.com>
+ <DB6PR0402MB27602682E90E4CED55244BCC88B60@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR0402MB27602682E90E4CED55244BCC88B60@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 20 May 2020 00:06:36 -0300
+Message-ID: <CAOMZO5DmiQbfJjTLKPiv6uUNaQ8ae-0h7uOpPf2J9ZMwDoE+Eg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: imx8mp: add mu node
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 09:18:23AM +0800, Ming Lei wrote:
-> On Tue, May 19, 2020 at 05:30:00PM +0200, Christoph Hellwig wrote:
-> > On Tue, May 19, 2020 at 09:54:20AM +0800, Ming Lei wrote:
-> > > As Thomas clarified, workqueue hasn't such issue any more, and only other
-> > > per CPU kthreads can run until the CPU clears the online bit.
-> > > 
-> > > So the question is if IO can be submitted from such kernel context?
-> > 
-> > What other per-CPU kthreads even exist?
-> 
-> I don't know, so expose to wider audiences.
+Hi Peng,
 
-One user is io uring with IORING_SETUP_SQPOLL & IORING_SETUP_SQ_AFF, see
-io_sq_offload_start(), and it is a IO submission kthread.
+On Wed, May 20, 2020 at 12:01 AM Peng Fan <peng.fan@nxp.com> wrote:
 
-Thanks,
-Ming
+> Nothing specific in i.MX8MP for the mu part, so do we really need
+> add "fsl,imx8mp-mu"?
 
+It is good practice to add a more specific option.
+
+Let's say in future a bug is found that affects imx8mp MU, then you
+could fix the MU driver and keep the dtb compatibility.
