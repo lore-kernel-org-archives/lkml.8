@@ -2,96 +2,118 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB09FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70743C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9D61207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE3D204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eOqHqyKa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgETKaL (ORCPT
+        id S1726844AbgETKaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:30:11 -0400
-Received: from mga06.intel.com ([134.134.136.31]:29393 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgETKaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:30:08 -0400
-IronPort-SDR: KZrtG0XJyT31nGFDfahxvuh59l0rpThbG5bCovmsEnjqWB770L+C2/r9UqUIXOl+R8hUIBYwpH
- Ak9nORPpzSVA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 03:30:04 -0700
-IronPort-SDR: zB7UAGtXmOqSB9pbiZQ0fato3STNm567WdPr8rk3xAUSFpchwt6s7EhzXDd12+c3TElKTOhqQJ
- f21PqY+1ez3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
-   d="scan'208";a="253636154"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 20 May 2020 03:30:02 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 0E66994; Wed, 20 May 2020 13:30:00 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] drivers property: When no children in primary, try secondary
-Date:   Wed, 20 May 2020 13:29:59 +0300
-Message-Id: <20200520102959.34812-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 20 May 2020 06:30:17 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24443 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726452AbgETKaO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:30:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589970613;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LGTpfrIIrUndkAVZ2N+k9ch+ZMAMk2llwppj8ZkxQsA=;
+        b=eOqHqyKaQZd28mxeMDb3uJLEKaoLjIwCpg2ObiNRJUAU+eI5j3Oic9TFGZionyKD4h2Kmb
+        nxI1YKCHxM5eZ5JciCc1xIlmygb7TlVFoXEKFDwgm+UpNjtJYx6cp6oqADGJqJb+mSJb6o
+        6AMD+IpbYFaV4nltjrHHhovMY47eqgU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-514-HjzYvl8oOT65HFROhg83fg-1; Wed, 20 May 2020 06:30:11 -0400
+X-MC-Unique: HjzYvl8oOT65HFROhg83fg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C84FB1800D42;
+        Wed, 20 May 2020 10:30:09 +0000 (UTC)
+Received: from krava (unknown [10.40.193.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 408F960BEC;
+        Wed, 20 May 2020 10:30:06 +0000 (UTC)
+Date:   Wed, 20 May 2020 12:30:06 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Cc:     cj.chengjian@huawei.com, huawei.libin@huawei.com,
+        xiexiuqi@huawei.com, mark.rutland@arm.com, guohanjun@huawei.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        wangnan0@huawei.com, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf bpf-loader: Add missing '*' for key_scan_pos
+Message-ID: <20200520103006.GA157452@krava>
+References: <20200520033216.48310-1-bobo.shaobowang@huawei.com>
+ <20200520070551.GC110644@krava>
+ <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Software firmware nodes can provide a child node to its parent.
-Since software node can be secondary, we need a mechanism to access
-the children. The idea is to list children of the primary node first
-and when they are finished, continue with secondary node if available.
+On Wed, May 20, 2020 at 06:22:12PM +0800, Wangshaobo (bobo) wrote:
+> 
+> 在 2020/5/20 15:05, Jiri Olsa 写道:
+> > On Wed, May 20, 2020 at 11:32:16AM +0800, Wang ShaoBo wrote:
+> > > key_scan_pos is a pointer for getting scan position in
+> > > bpf__obj_config_map() for each BPF map configuration term,
+> > > but it's misused when error not happened.
+> > > 
+> > > Fixes: 066dacbf2a32 ("perf bpf: Add API to set values to map entries in a bpf object")
+> > > Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+> > > ---
+> > >   tools/perf/util/bpf-loader.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> > > index 10c187b8b8ea..460056bc072c 100644
+> > > --- a/tools/perf/util/bpf-loader.c
+> > > +++ b/tools/perf/util/bpf-loader.c
+> > > @@ -1225,7 +1225,7 @@ bpf__obj_config_map(struct bpf_object *obj,
+> > >   out:
+> > >   	free(map_name);
+> > >   	if (!err)
+> > > -		key_scan_pos += strlen(map_opt);
+> > > +		*key_scan_pos += strlen(map_opt);
+> > seems good, was there something failing because of this?
+> > 
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > 
+> > thanks,
+> > jirka
+> 
+>   I found this problem when i checked this code, I think it is
+> 
+>   an implicit question, but if we delete the two line,  the problem
+> 
+>   also no longer exists.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/base/property.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+and what's the actual problem, what's broken?
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 5f35c0ccf5e0..1e6d75e65938 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -708,14 +708,23 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
- 						 struct fwnode_handle *child)
- {
- 	struct acpi_device *adev = ACPI_COMPANION(dev);
--	struct fwnode_handle *fwnode = NULL;
-+	struct fwnode_handle *fwnode = NULL, *next;
- 
- 	if (dev->of_node)
- 		fwnode = &dev->of_node->fwnode;
- 	else if (adev)
- 		fwnode = acpi_fwnode_handle(adev);
- 
--	return fwnode_get_next_child_node(fwnode, child);
-+	/* Try to find a child in primary fwnode */
-+	next = fwnode_get_next_child_node(fwnode, child);
-+	if (next)
-+		return next;
-+
-+	/* When no more children in primary, continue with secondary */
-+	if (!IS_ERR_OR_NULL(fwnode->secondary))
-+		next = fwnode_get_next_child_node(fwnode->secondary, child);
-+
-+	return next;
- }
- EXPORT_SYMBOL_GPL(device_get_next_child_node);
- 
--- 
-2.26.2
+jirka
+
+> 
+>   thanks,
+> 
+>   Wang ShaoBo
+> 
+> 
 
