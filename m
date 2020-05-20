@@ -2,86 +2,86 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C98BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC0A7206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBE0206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iV6TViia"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hFgkLgdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgETRpp (ORCPT
+        id S1726838AbgETRqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETRpo (ORCPT
+        Wed, 20 May 2020 13:46:40 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14038 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETRqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:45:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A9FC061A0E;
-        Wed, 20 May 2020 10:45:44 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r3so2141275wrn.11;
-        Wed, 20 May 2020 10:45:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D5JmNuIcmWj9PJckcf8PZ/y227AtBQpRXD26DETlfQQ=;
-        b=iV6TViiaeKUAaE1Vp3z17NyAtjiakBJxGDTJ8bc3Q9Ory99wDaqi93QLrL5Ncga3m7
-         uDBZGQHgLOz/tcewEnQd83/lpEe7dOsMLbGer9wbl+Wyg0dwnn3tALYnKYMmiwtFSGpv
-         zT3d163IIZz0dQbsCWzlO7lZ+gHBAcGEG/rNtjP5PWMzCD6hhiErrVFYOWKR2KwnhoeQ
-         AgxMtCPGcSlOK+EbIy13pfY8bcS+SVhq8mkacjoCqcwH8eckb/9bg2NdPsZ0VCd4hh+Y
-         4H7V09G7jPauzLnzjK+IWw4+fqKcboC2rOEUkwAlS+9e9jlM8fiyT2D5BlYlQ1xO6U8J
-         0BWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D5JmNuIcmWj9PJckcf8PZ/y227AtBQpRXD26DETlfQQ=;
-        b=L5xvHvJ2Nt8DOI3bNfnpzCU8LPB2e5ZJmEHcS3jGqayB9EzNsI1QkJM1oBy3EzNrYh
-         Gbb7bBnXnw2TOYiSqW1YmCiR0PTQZOPhc7uUzlvGthyuJ6GDtGwb64sEuMkb3MruvBiS
-         2vk0TG5UyK/qsro+S7nTHoww6go6Nv94Qzt39UaAtE1w9kgcGv+wwewlTfPxnH6Adr7W
-         PTl5FYADfpXeAlw8QZSn1Rhnq4U5O5Habx3ydcj+pr1MfTo2pgapzmHENRSHZ/hu5ixd
-         G1mJ3f0tbqZcDsvSWIOKH+Re3M0v1twJV7mLEJSEEIaAfPyehCLx0UkZjvwxMHlFnY9E
-         OAQQ==
-X-Gm-Message-State: AOAM532iHwJGXcGXJ2p6rK4kA2H8DytuNV8EEEhTldelC+x+F15DW9CS
-        zx8A0REoOurJLRwJdVvnNswxqad8
-X-Google-Smtp-Source: ABdhPJy6YY7aNDIxqKO4ABtmYK5jM9e9Y3VrQ7CcJdC4/mpJ5nC5Ouh8zCBe5DQbFoWS0+LOcM7nNA==
-X-Received: by 2002:adf:e441:: with SMTP id t1mr4597279wrm.347.1589996743033;
-        Wed, 20 May 2020 10:45:43 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id q144sm3946631wme.0.2020.05.20.10.45.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 10:45:41 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
- delay for DP83869
-To:     Dan Murphy <dmurphy@ti.com>, Andrew Lunn <andrew@lunn.ch>
-Cc:     hkallweit1@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200520121835.31190-1-dmurphy@ti.com>
- <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
- <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
- <20200520153631.GH652285@lunn.ch>
- <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
- <20200520164313.GI652285@lunn.ch>
- <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
-Date:   Wed, 20 May 2020 10:45:38 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Wed, 20 May 2020 13:46:39 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec56cf30000>; Wed, 20 May 2020 10:46:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 20 May 2020 10:46:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 20 May 2020 10:46:39 -0700
+Received: from [10.25.75.122] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May
+ 2020 17:46:35 +0000
+Subject: Re: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory
+ resource size >4GB
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Andrew Murray" <amurray@thegoodpenguin.co.uk>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        "Alan Mikhak" <alan.mikhak@sifive.com>
+References: <20200513190855.23318-1-vidyas@nvidia.com>
+ <20200513223508.GA352288@bjorn-Precision-5520>
+ <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+ <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+ <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
+ <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <20200520111717.GB2141681@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <b1a72abe-6da0-b782-0269-65388f663e26@nvidia.com>
+Date:   Wed, 20 May 2020 23:16:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200520111717.GB2141681@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589996787; bh=cHthH4QXLAI7YiXvZFZG9yRNjIOqQYNiVwOQEH/uJOo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hFgkLgdCqtvGd0uCUirFZRjNJO3dfLXJMWuLq4Cv8h/FmDxPYc563OjeurYCIkOSy
+         uVKVGFcf4Qp5A/cW2aw+C+oLYxfQbSBhfvRM0I9MjfJsCRtsfgjzvxoLia8d8G0zfm
+         JgQ0yvk2yBE4WDxZU9YnRm6BgfFojT6lnZe+Jar47Gt1W0IE6ueZo2kvbIUuHNd9hQ
+         4ZLTzCg8/XU16h4A83oH9hKHRvLRlIk1+Yxz7pQOCmA5oolWldgsRvxi6GvNNWGyC9
+         qiy0aaQNev/p4L8CX9Nk2amv4asx4c02ZbPp1o7bDGGuIWVMmfhbhbK15wGtv2OO68
+         n0JTxSwgnnj3g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -89,42 +89,140 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 5/20/2020 10:20 AM, Dan Murphy wrote:
-> Andrew/Florian
+On 20-May-20 4:47 PM, Thierry Reding wrote:
+> On Tue, May 19, 2020 at 10:08:54PM +0000, Gustavo Pimentel wrote:
+>> On Tue, May 19, 2020 at 15:58:16, Lorenzo Pieralisi
+>> <lorenzo.pieralisi@arm.com> wrote:
+>>
+>>> On Tue, May 19, 2020 at 07:25:02PM +0530, Vidya Sagar wrote:
+>>>>
+>>>>
+>>>> On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
+>>>>>> [+cc Alan; please cc authors of relevant commits,
+>>>>>> updated Andrew's email address]
+>>>>>>
+>>>>>> On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
+>>>>>>> commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
+>>>>>>> 32-bits") enables warning for MEM resources of size >4GB but prefetchable
+>>>>>>>    memory resources also come under this category where sizes can go beyond
+>>>>>>> 4GB. Avoid logging a warning for prefetchable memory resources.
+>>>>>>>
+>>>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>>>>> ---
+>>>>>>>    drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
+>>>>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> index 42fbfe2a1b8f..a29396529ea4 100644
+>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>>>>>                       pp->mem = win->res;
+>>>>>>>                       pp->mem->name = "MEM";
+>>>>>>>                       mem_size = resource_size(pp->mem);
+>>>>>>> -                   if (upper_32_bits(mem_size))
+>>>>>>> +                   if (upper_32_bits(mem_size) &&
+>>>>>>> +                       !(win->res->flags & IORESOURCE_PREFETCH))
+>>>>>>>                               dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+>>>>>>>                       pp->mem_size = mem_size;
+>>>>>>>                       pp->mem_bus_addr = pp->mem->start - win->offset;
+>>>>>
+>>>>> That warning was added for a reason - why should not we log legitimate
+>>>>> warnings ? AFAIU having resources larger than 4GB can lead to undefined
+>>>>> behaviour given the current ATU programming API.
+>>>> Yeah. I'm all for a warning if the size is larger than 4GB in case of
+>>>> non-prefetchable window as one of the ATU outbound translation
+>>>> channels is being used,
+>>>
+>>> Is it true for all DWC host controllers ? Or there may be another
+>>> exception whereby we would be forced to disable this warning altogether
+>>> ?
+>>>
+>>>> but, we are not employing any ATU outbound translation channel for
+>>>
+>>> What does this mean ? "we are not employing any ATU outbound...", is
+>>> this the tegra driver ? And what guarantees that this warning is not
+>>> legitimate on DWC host controllers that do use the ATU outbound
+>>> translation for prefetchable windows ?
+>>>
+>>> Can DWC maintainers chime in and clarify please ?
+>>
+>> Before this code section, there is the following function call
+>> pci_parse_request_of_pci_ranges(), which performs a simple validation for
+>> the IORESOURCE_MEM resource type.
+>> This validation checks if the resource is marked as prefetchable, if so,
+>> an error message "non-prefetchable memory resource required" is given and
+>> a return code with the -EINVAL value.
 > 
-> On 5/20/20 11:43 AM, Andrew Lunn wrote:
->>> I am interested in knowing where that is documented.  I want to RTM I
->>> grepped for a few different words but came up empty
->> Hi Dan
->>
->> It probably is not well documented, but one example would be
->>
->> Documentation/devicetree/bindings/net/ethernet-controller.yaml
->>
->> says:
->>
->>        # RX and TX delays are added by the MAC when required
->>        - rgmii
->>
->>        # RGMII with internal RX and TX delays provided by the PHY,
->>        # the MAC should not add the RX or TX delays in this case
->>        - rgmii-id
->>
->>        # RGMII with internal RX delay provided by the PHY, the MAC
->>        # should not add an RX delay in this case
->>        - rgmii-rxid
->>
->>        # RGMII with internal TX delay provided by the PHY, the MAC
->>        # should not add an TX delay in this case
->>
->>        Andrew
+> That's not what the code is doing. pci_parse_request_of_pci_range() will
+> traverse over the whole list of resources that it can find for the given
+> host controller and checks whether one of the resources defines prefetch
+> memory (note the res_valid |= ...). The error will only be returned if
+> no prefetchable memory region was found.
 > 
-> OKI I read that.  I also looked at a couple other drivers too.
+> dw_pcie_host_init() will then again traverse the list of resources and
+> it will typically encounter two resource of type IORESOURCE_MEM, one for
+> non-prefetchable memory and another for prefetchable memory.
 > 
-> I am wondering if rx-internal-delay and tx-internal-delay should become
-> a common property like tx/rx fifo-depth
-> > And properly document how to use it or at least the expectation on use.
+> Vidya's patch is to differentiate between these two resources and allow
+> prefetchable memory regions to exceed sizes of 4 GiB.
+> 
+> That said, I wonder if there isn't a bigger problem at hand here. From
+> looking at the code it doesn't seem like the DWC driver makes any
+> distinction between prefetchable and non-prefetchable memory. Or at
+> least it doesn't allow both to be stored in struct pcie_port.
+> 
+> Am I missing something? Or can anyone explain how we're programming the
+> apertures for prefetchable vs. non-prefetchable memory? Perhaps this is
+> what Vidya was referring to when he said: "we are not using an outbound
+> ATU translation channel for prefetchable memory".
+> 
+> It looks to me like we're also getting partially lucky, or perhaps that
+> is by design, in that Tegra194 defines PCI regions in the following
+> order: I/O, prefetchable memory, non-prefetchable memory. That means
+> that the DWC core code will overwrite prefetchable memory data with that
+> of non-prefetchable memory and hence the non-prefetchable region ends up
+> stored in struct pcie_port and is then used to program the ATU outbound
+> channel.
+Well,it is by design. I mean, since the code is not differentiating 
+between prefetchable and non-prefetchable regions, I ordered the entries 
+in 'ranges' property in such a way that 'prefetchable' comes first 
+followed by 'non-prefetchable' entry so that ATU region is used for 
+generating the translation required for 'non-prefetchable' region (which 
+is a non 1-to-1 mapping)
 
-Yes they should, and they should have an unit associated with the name.
--- 
-Florian
+> 
+>> In other words, to reach the code that Vidya is changing, it can be only
+>> if the resource is a non-prefetchable, any prefetchable resource will be
+>> blocked by the previous call, if I'm not mistaken.
+>>
+>> Having this in mind, Vidya's change will not make the expected result
+>> aimed by him.
+> 
+> Given the above I think it does. We've also seen this patch eliminate a
+> warning that we were seeing before, so I think it has the intended
+> effect.
+> 
+>> I don't see any problem by having resources larger than 4GB, from what
+>> I'm seeing in the databook there isn't any restricting related to that as
+>> long they don't consume the maximum space that is addressable by the
+>> system (depending on if they are 32-bit or 64-bit system address).
+>>
+>> To be honest, I'm not seeing a system that could have this resource
+>> larger than 4GB, but it might exist some exception that I don't know of,
+>> that's why I accepted Alan's patch to warn the user that the resource
+>> exceeds the maximum for the 32 bits so that he can be aware that he
+>> *might* be consuming the maximum space addressable.
+> 
+> I think it's pretty common to have this type of prefetchable memory
+> region when you connect discrete GPUs to PCIe. It's not unusual for
+> high-end GPUs to have 8 GiB or even more dedicated video memory and
+> those will typically be mapped to a prefetchable memory region on
+> the PCI device.
+> 
+> Thierry
+> 
