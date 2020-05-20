@@ -2,112 +2,128 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBA2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 344C12070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DF7207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589979564;
+	bh=UY6bhyA1qIT24OzeirfJ2m2V4bIa7vSuhBxipVcxHSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w9mfJYbuAQbhOSwj0KytTXPVFVvf29xtKP7ls2M/69FyR3RNpmrfmd3ZguF8UnGmC
+	 s1GqawvK0mYwyG7ojSotyC4YB2Xh4Nqvk/TyxVcY8nfHSD5Y77TOZElXhY3TH0dPgF
+	 dv5qQ/T314Gy9EURVNE3Zz5Sr688JK1a5tqdkcTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgETM6g (ORCPT
+        id S1726948AbgETM7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:58:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:55752 "EHLO foss.arm.com"
+        Wed, 20 May 2020 08:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgETM6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:58:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A917130E;
-        Wed, 20 May 2020 05:58:34 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 246EE3F52E;
-        Wed, 20 May 2020 05:58:33 -0700 (PDT)
-Date:   Wed, 20 May 2020 13:58:23 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Tuan Phan <tuanphan@os.amperecomputing.com>
-Cc:     patches@amperecomputing.com, Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
+        id S1726439AbgETM7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:59:23 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 428642070A;
+        Wed, 20 May 2020 12:59:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589979561;
+        bh=UY6bhyA1qIT24OzeirfJ2m2V4bIa7vSuhBxipVcxHSg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PQv/vo1vuOh5BN49oSfeBhlvcbtDT/i2W10QY5VDIAdRGhoXfpN3/Z/QUeozn5SD+
+         rzEi1mftpME8HSrsWYMdBHtO+ywFV0pA1oQallMrYtkq4UKSLTdC9feue1eJt4ywVs
+         qENI/Bjv+xJ6dqkzZxsfk4v9OQqOwLRmWnay1Niw=
+Date:   Wed, 20 May 2020 13:59:17 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Rob Clark <robdclark@gmail.com>,
         Robin Murphy <robin.murphy@arm.com>,
-        Neil Leeder <nleeder@codeaurora.org>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] ACPI/IORT: Fix PMCG node single ID mapping handling.
-Message-ID: <20200520125813.GA6906@e121166-lin.cambridge.arm.com>
-References: <1589570686-5780-1-git-send-email-tuanphan@os.amperecomputing.com>
+        Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS , Joerg Roedel <joro@8bytes.org>," 
+        <iommu@lists.linux-foundation.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
+Message-ID: <20200520125916.GE25815@willie-the-truck>
+References: <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
+ <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
+ <20200507125357.GA31783@willie-the-truck>
+ <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
+ <CAF6AEGvuHKObTR97XdSXjmjKB+qjQ8N1_wxM=ZU8bEkF=cXp-A@mail.gmail.com>
+ <20200511173008.GA24282@jcrouse1-lnx.qualcomm.com>
+ <20200518154522.GN32394@willie-the-truck>
+ <5a0ad639e272026c8be57393937cda22@codeaurora.org>
+ <CAF6AEGuzBtj+srindmOvhaom5BdS2adLaOF=v_MtguMja14V2w@mail.gmail.com>
+ <a801e79a0a75092c28a6646ae7fa5e36@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589570686-5780-1-git-send-email-tuanphan@os.amperecomputing.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a801e79a0a75092c28a6646ae7fa5e36@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 12:24:46PM -0700, Tuan Phan wrote:
-> An IORT PMCG node can have no ID mapping if its overflow interrupt is
-> wire based therefore the code that parses the PMCG node can not assume
-> the node will always have a single mapping present at index 0.
+On Wed, May 20, 2020 at 03:02:45PM +0530, Sai Prakash Ranjan wrote:
+> On 2020-05-19 20:41, Rob Clark wrote:
+> > On Tue, May 19, 2020 at 2:26 AM Sai Prakash Ranjan
+> > <saiprakash.ranjan@codeaurora.org> wrote:
+> > > On 2020-05-18 21:15, Will Deacon wrote:
+> > > > So this sounds like an erratum to me, and I'm happy to set HUPCF if we
+> > > > detect the broken implementation. However, it will need an entry in
+> > > > Documentation/arm64/silicon-errata.rst and a decent comment in the
+> > > > driver
+> > > > to explain what we're doing and why.
+> > > >
+> > > 
+> > > AFAIK there is no erratum documented internally for this behaviour and
+> > > this
+> > > exists from MSM8996 SoC time and errata usually don't survive this
+> > > long
+> > > across generation of SoCs and there is no point for us in disguising
+> > > it.
+> > 
+> > possibly longer, qcom_iommu sets CFCFG..
+> > 
 > 
-> Fix iort_get_id_mapping_index() by checking for an overflow interrupt
-> and mapping count.
+> Oh right, I was still in college when those SoCs were released ;)
 > 
-> Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG").
+> > > Is it OK if we clearly mention it as the "design limitation" or some
+> > > other
+> > > term which we can agree upon along with the description which Rob and
+> > > Jordan
+> > > provided for setting HUPCF in the driver when we add the set_hupcf
+> > > callback?
+> > 
+> > I'm not too picky on what we call it, but afaict it has been this way
+> > since the beginning of time, rather than specific to a certain SoC or
+> > generation of SoCs.  So it doesn't seem like the hw designers consider
+> > it a bug.
+> > 
+> > (I'm not sure what the expected behavior is.. nor if any other SMMU
+> > implementation encounters this sort of situation..)
+> 
+> Yes, that was my point as well that its probably not counted as a bug
+> by the hw designers. So I'm going to post setting HUPCF on QCOM
+> implementation with clear comments based on yours and Jordan's description
+> of this problem, but I wanted to have a way to set this only for GPU context
+> bank and not GMU as Jordan mentioned earlier that GMU doesnt need HUPCF set.
+> I was checking as to how do we map cb to device, if it was possible then we
+> can have
+> a compatibility thing like we did for identity mapping. Any ideas Robin?
 
-Remove these periods in the $SUBJECT and commit references, I
-don't know why you keep adding them.
+Right, see my reply over at:
 
-Anyway - I don't know if it is too late for v5.8 but this patch
-is ready to be merged (minus the nits I have just mentioned).
+https://lore.kernel.org/r/20200520125700.GD25815@willie-the-truck
 
-Lorenzo
+Hopefully something like that can be made to work.
 
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
-> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
-> ---
-> v1 -> v2:
-> - Use pmcg node to detect wired base overflow interrupt.
-> 
-> v2 -> v3:
-> - Address Hanjun and Robin's comments.
-> 
-> v3 -> v4:
-> - Update the title and description as mentioned by Lorenzo.
-> 
->  drivers/acpi/arm64/iort.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index ed3d2d1..12bb70e 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
->  static int iort_get_id_mapping_index(struct acpi_iort_node *node)
->  {
->  	struct acpi_iort_smmu_v3 *smmu;
-> +	struct acpi_iort_pmcg *pmcg;
->  
->  	switch (node->type) {
->  	case ACPI_IORT_NODE_SMMU_V3:
-> @@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
->  
->  		return smmu->id_mapping_index;
->  	case ACPI_IORT_NODE_PMCG:
-> +		pmcg = (struct acpi_iort_pmcg *)node->node_data;
-> +		if (pmcg->overflow_gsiv || node->mapping_count == 0)
-> +			return -EINVAL;
-> +
->  		return 0;
->  	default:
->  		return -EINVAL;
-> -- 
-> 2.7.4
-> 
+Will
