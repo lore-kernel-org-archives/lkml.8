@@ -2,185 +2,126 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FE5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D139EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFC2E2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC01F207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:56:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gSAZCYM2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FcM3iKpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgETMyp (ORCPT
+        id S1726875AbgETM42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:54:45 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:49668 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgETMyn (ORCPT
+        Wed, 20 May 2020 08:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbgETM4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:54:43 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200520125441euoutp026ce663c2f1ae4870e2f289f17edf47c5~QvbuaAQE11820218202euoutp026
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:54:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200520125441euoutp026ce663c2f1ae4870e2f289f17edf47c5~QvbuaAQE11820218202euoutp026
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589979281;
-        bh=tI5Tz3jwy69CbvaLcGW1XkMaXVbgX6nnxFjydaxiPro=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=gSAZCYM2xENBhaEvkth7OHo+5ZJAXiu4TjgrBgyT4s0vZ+k2EgQFXrQm5hLMFgiCB
-         XFxfvTRETuZyCCuw1m+TDzYwyi+BcJnsYLaZupe+XwDwf8AOWr8L31BYwsPhj+ZI5+
-         Sr1Q1Gl0xqK7KfZU0c3F43hCXOcHaAPI3AS7wLhI=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200520125441eucas1p2518704a415e86be1d3ebdd4d63e5f4dd~QvbuL68VZ1106011060eucas1p24;
-        Wed, 20 May 2020 12:54:41 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 91.36.61286.19825CE5; Wed, 20
-        May 2020 13:54:41 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200520125441eucas1p1188e037c9f8d1df14275319fe99148fa~Qvbt3pwZm2505325053eucas1p1c;
-        Wed, 20 May 2020 12:54:41 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200520125441eusmtrp1e0e8ba6c2903278a92af16aac21461bf~Qvbt3GZuE2658726587eusmtrp1j;
-        Wed, 20 May 2020 12:54:41 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-3f-5ec528910e21
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 17.AA.07950.19825CE5; Wed, 20
-        May 2020 13:54:41 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200520125440eusmtip1a4daa457d392325b6f96004b88018d65~Qvbtcr6sm0783007830eusmtip1K;
-        Wed, 20 May 2020 12:54:40 +0000 (GMT)
-Subject: Re: Bad kfree of dma_parms in v5.7-rc5
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <29a21e64-a63f-6721-c938-d713488767c1@samsung.com>
-Date:   Wed, 20 May 2020 14:54:40 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.0
+        Wed, 20 May 2020 08:56:24 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15BA5C05BD43
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:56:24 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l18so3039931wrn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FRf0IXb8hQkrdaL1fqV3l4f1s2bF25mDJk/8LzKBDyk=;
+        b=FcM3iKpmGOIcheIq2sv7UBjccYXgY5UfnFjB4xNjwyYn/tsB62nOO1DlESb5YDOJW0
+         sqFXADpYAoyt8FhrnVZr8S0nV8jXbRhFgVllGSXhkdtwDwjB2N1piQYgke2bBl7yz4Cu
+         VYa9mPs5vM6n6ad8Zc7RtsTFPTTusIOL3Oj7Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FRf0IXb8hQkrdaL1fqV3l4f1s2bF25mDJk/8LzKBDyk=;
+        b=F8OHh9+bPC1u3fRrRVgNDAJhzHNdkMj9RzrsdBYaqDkZVEBh0oipzRi9gZ12sm02zp
+         EchnwQ1z04QDjBBRHBF2+hcKjjyZWNwwsBXUObfV4kI1245yPFOB36B3iTfNiO3c3v5k
+         i2YBj1XY+2T6yFpM7lgfCfc/nPpaju5QpCt8EzsGY15Vi5cNlP5gr5bcQRljQyo3ktCC
+         B75H0ycktXKUj6SNXr4Yx3qCNCCfFfRt5PDnChGISNAuBRSbRqhggHbKRdBrpUBWrEME
+         UEeNgcGZP4G6B6NRXEyyg/fnVDBmuZRIxaqwzvEQ1ZYWlG3Q7e4IbBIJgErtC4eP8yer
+         7QFw==
+X-Gm-Message-State: AOAM530RriRbMBaPggAkAsrh1alK5rTh4UlqKwsf0y8ivrfw6cxmr+Gq
+        DOqjc4vO9XwX9nJ1NGV6JpOzoZpqrvo=
+X-Google-Smtp-Source: ABdhPJzZTIkt68m48X0Gd2mSWXMTScvuAo6k7MEMXpKVIa3O8ND+TYDMoHIr5dtTngUw3l1H6DOPPg==
+X-Received: by 2002:adf:e703:: with SMTP id c3mr4169330wrm.252.1589979382402;
+        Wed, 20 May 2020 05:56:22 -0700 (PDT)
+Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id i11sm2961978wrc.35.2020.05.20.05.56.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 05:56:21 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH bpf] security: Fix hook iteration for secid_to_secctx
+Date:   Wed, 20 May 2020 14:56:16 +0200
+Message-Id: <20200520125616.193765-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
 MIME-Version: 1.0
-In-Reply-To: <227465a5-c6e6-5b4d-abbd-7789727843a6@ti.com>
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsWy7djP87oTNY7GGcxeoW5xedccNoueDVtZ
-        LZZt+sNksX7+LTaL42vDHVg9Nq3qZPO4c20Pm8fxG9uZPD5vkgtgieKySUnNySxLLdK3S+DK
-        6PpzjqVgrWjFjRUzWRoYzwp2MXJySAiYSKy8fJ65i5GLQ0hgBaPEnqfnmSCcL4wS82fNYQOp
-        EhL4zChx80UYTMfyyW8YIYqWM0osXvUUynkP1P7qGFAHB4ewgL7E2Rn2IHERgbuMEgfXX2IH
-        6WYTMJToetsFNpVXwE7i1a/nzCD1LAKqEvdPF4CERQViJU4v3swIUSIocXLmExYQm1PASuL6
-        +89MIDazgLxE89bZzBC2uMStJ/PBrpYQ6GeXWD71ATPEpS4SJ2d/Y4OwhSVeHd/CDmHLSJye
-        3MMC0dDMKPHw3Fp2CKeHUeJy0wxGiCpriTvnfoF9wyygKbF+lz5E2FFi4tn57CBhCQE+iRtv
-        BSGO4JOYtG06M0SYV6KjTQiiWk1i1vF1cGsPXrgEdZqHRNO9nawTGBVnIXlzFpLXZiF5bRbC
-        DQsYWVYxiqeWFuempxYb5qWW6xUn5haX5qXrJefnbmIEppjT/45/2sH49VLSIUYBDkYlHl4O
-        gaNxQqyJZcWVuYcYJTiYlUR4F/IDhXhTEiurUovy44tKc1KLDzFKc7AoifMaL3oZKySQnliS
-        mp2aWpBaBJNl4uCUamDcZ1lx0vuSqYSjo+X9S+8+6UpMNF3olvDzOG/X00PWKR9nxUe5hZTf
-        mbG3nsU/plPPs/3/M2bTqRtyJ/FVH9hk1vcvSX1e0jXrQ0K3LlbMdmF7ym62/EhIOdNvlg9v
-        Dr+V8/BNe2L42CnkLG/lr30Je2a6apwMk+fdudT0u2t0QrnOiv9rI52VWIozEg21mIuKEwHQ
-        PMdELQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsVy+t/xu7oTNY7GGZx7zmNxedccNoueDVtZ
-        LZZt+sNksX7+LTaL42vDHVg9Nq3qZPO4c20Pm8fxG9uZPD5vkgtgidKzKcovLUlVyMgvLrFV
-        ija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL6PpzjqVgrWjFjRUzWRoYzwp2
-        MXJySAiYSCyf/Iaxi5GLQ0hgKaPE9aPTWSESMhInpzVA2cISf651sUEUvWWUePL4FUsXIweH
-        sIC+xNkZ9iA1IgL3GSXenjaBqLnOJPG/5TUzSIJNwFCi6y1IMycHr4CdxKtfz5lBelkEVCXu
-        ny4ACYsKxEqsvtbKCFEiKHFy5hMWEJtTwEri+vvPTCA2s4CZxLzND5khbHmJ5q2zoWxxiVtP
-        5jNNYBSchaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwdrYd+7ll
-        B2PXu+BDjAIcjEo8vBwCR+OEWBPLiitzDzFKcDArifAu5AcK8aYkVlalFuXHF5XmpBYfYjQF
-        +m0is5Rocj4wrvNK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTCe
-        nxR/ObD2yat/Xy8kWp04/o3hwsMlUm4K345+OHz++3qNO05ctmpvF0c/vta9QIzl+B5XjU0V
-        ymduvk1YmLMmWrdD4jpfi+erewEuRyUWpyuGxjRaTJSvWbHO6tNjsyiJ/d+EEhvKC6IMi/7y
-        31jtoHtORUeqTYbt+A3BuOXe837fZ/sZ1dalxFKckWioxVxUnAgAn/N3w7MCAAA=
-X-CMS-MailID: 20200520125441eucas1p1188e037c9f8d1df14275319fe99148fa
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200520090109eucas1p17270805f81f6958cd5084a7b910efc6c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200520090109eucas1p17270805f81f6958cd5084a7b910efc6c
-References: <CGME20200520090109eucas1p17270805f81f6958cd5084a7b910efc6c@eucas1p1.samsung.com>
-        <a9df7155-dd7a-752b-6d1c-3426837756b1@ti.com>
-        <e9674719-0c86-63be-04a3-ee98bd884901@samsung.com>
-        <f3c58dcd-b806-95ef-2434-3084e65e1afb@ti.com>
-        <e3fa0b35-7cca-1e37-c2fa-63cc07e6bfda@samsung.com>
-        <227465a5-c6e6-5b4d-abbd-7789727843a6@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomi,
+From: KP Singh <kpsingh@google.com>
 
-On 20.05.2020 14:43, Tomi Valkeinen wrote:
-> On 20/05/2020 12:22, Marek Szyprowski wrote:
->> On 20.05.2020 11:18, Tomi Valkeinen wrote:
->>> On 20/05/2020 12:13, Marek Szyprowski wrote:
->>>> On 20.05.2020 11:00, Tomi Valkeinen wrote:
->>>>> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core:
->>>>> platform: Initialize dma_parms for platform devices") v5.7-rc5 causes
->>>>> at least some v4l2 platform drivers to break when freeing resources.
->>>>>
->>>>> E.g. drivers/media/platform/ti-vpe/cal.c uses
->>>>> vb2_dma_contig_set_max_seg_size() and
->>>>> vb2_dma_contig_clear_max_seg_size() to manage the dma_params, and
->>>>> similar pattern is seen in other drivers too.
->>>>>
->>>>> After 9495b7e92f716ab2, vb2_dma_contig_set_max_seg_size() will not
->>>>> allocate anything, but vb2_dma_contig_clear_max_seg_size() will still
->>>>> kfree the dma_params.
->>>>>
->>>>> I'm not sure what's the proper fix here. A flag somewhere to indicate
->>>>> that vb2_dma_contig_set_max_seg_size() did allocate, and thus
->>>>> vb2_dma_contig_clear_max_seg_size() must free?
->>>>>
->>>>> Or drop the kzalloc and kfree totally, if dma_params is now supposed
->>>>> to always be there?
->>>>
->>>> Thanks for reporting this issue!
->>>>
->>>> Once the mentioned commit has been merged, the code should assume that
->>>> the platform devices does have a struct dma_params allocated, so the
->>>> proper fix is to alloc dma_params only if the bus is not a platform 
->>>> bus:
->>>>
->>>> if (!dev_is_platform(dev) && !dev->dma_parms) {
->>>>        dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
->>>>
->>>> same check for the free path.
->>>
->>> There is also "amba: Initialize dma_parms for amba devices". And the
->>> commit message says PCI devices do this too.
->>>
->>> Guessing this based on the device type doesn't sound like a good idea
->>> to me.
->>
->> Indeed. Then replace the allocation with a simple check for NULL
->> dma_parms and return an error in such case. This should be enough for
->> v5.8. Later we can simply get rid of those helpers and inline setting
->> max segment size directly to the drivers.
->
-> Is that valid either? Then we assume that dma_parms is always set up 
-> by someone else. That's true for platform devices and apparently some 
-> other devices, but is it true for all devices now?
+secid_to_secctx is not stackable, and since the BPF LSM registers this
+hook by default, the call_int_hook logic is not suitable which
+"bails-on-fail" and casues issues when other LSMs register this hook and
+eventually breaks Audit.
 
-# git grep vb2_dma_contig_set_max_seg_size | wc -l
+In order to fix this, directly iterate over the security hooks instead
+of using call_int_hook as suggested in:
 
-18
+https: //lore.kernel.org/bpf/9d0eb6c6-803a-ff3a-5603-9ad6d9edfc00@schaufler-ca.com/#t
 
-I've checked all clients of the vb2_dma_contig_set_max_seg_size 
-function. There are only 9 drivers, all of them are platform device 
-drivers. We don't care about off-tree users, so the proposed approach is 
-imho fine.
+Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+Fixes: 625236ba3832 ("security: Fix the default value of secid_to_secctx hook"
+Reported-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: KP Singh <kpsingh@google.com>
+---
+ security/security.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-Best regards
+diff --git a/security/security.c b/security/security.c
+index 7fed24b9d57e..51de970fbb1e 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1965,8 +1965,20 @@ EXPORT_SYMBOL(security_ismaclabel);
+ 
+ int security_secid_to_secctx(u32 secid, char **secdata, u32 *seclen)
+ {
+-	return call_int_hook(secid_to_secctx, -EOPNOTSUPP, secid, secdata,
+-				seclen);
++	struct security_hook_list *hp;
++	int rc;
++
++	/*
++	 * Currently, only one LSM can implement secid_to_secctx (i.e this
++	 * LSM hook is not "stackable").
++	 */
++	hlist_for_each_entry(hp, &security_hook_heads.secid_to_secctx, list) {
++		rc = hp->hook.secid_to_secctx(secid, secdata, seclen);
++		if (rc != LSM_RET_DEFAULT(secid_to_secctx))
++			return rc;
++	}
++
++	return LSM_RET_DEFAULT(secid_to_secctx);
+ }
+ EXPORT_SYMBOL(security_secid_to_secctx);
+ 
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.26.2.761.g0e0b3e54be-goog
 
