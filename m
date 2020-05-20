@@ -2,151 +2,107 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CC3C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC9520708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251ED20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ldprSHue"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HFRC4axw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgETIEH (ORCPT
+        id S1726827AbgETIEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:04:07 -0400
-Received: from mail-eopbgr80057.outbound.protection.outlook.com ([40.107.8.57]:48546
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726436AbgETIEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:04:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LqLs0R8aHFD0Z+Qp2p0lij3Keg0ABREXz/faUS4y9a/WqSXNPfqkc0JILTt3+xKzcr2SK2nMmyHXjbuh4pcbZgOWOj1//T0cGqm/mGFUwtOcPpGppdkXH2AYCto3zZC6rSZ8X16n8tDODrc6pxmbV2Wbynx1i9Yu0pPaPhONcUcGt7qHTXx1FAsiKo+T5Z91JkfY0twdwIoyD+wkj8wvqVk546JNGmuJvAbC2Tb5SWdBzB9UEpGavOD8Tx4uRvhLQHUHLHucr2ZuDjq8nvTfZjtlVqY0f60/I9y/kH+7m4dtPu7X5S2wEIUKF/PEgT8Sp4rurK2C4tt/bhOGKeiMfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=djm4ykrzIh685Ihgr1jovCY6GBt92z40W4Z1dgXLTA0=;
- b=DNlatJ/6PlPXvj5dIepaEHBWIAWm/21kxWqtCVTkBHJvxnTOm8dU4qbwhpSAGerrYAbSLnlaK8IhjbvJNFc2nIpKFuaUgAcLCyeMQiXa18h4/AezSa4FC+S1KqSdPgc51N8Im1MiINcAoougymlmR/0AkoF63VrfUOnv3sJbIY1HOTRPECANquBMxufjzH8HWNL85KHUVHFrWI5j+W7PVPQyaWqjkQhOzPa/q5euAQYR0cKkpmaVgabfrhtfDqd7PF7S2ffMJZyDqaZXMzZxGspjBufhbVMRwHqLpRzPxt8IqF017Czy27XkOVy21/hSm76h8pksMjaouf3m2kGyZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=djm4ykrzIh685Ihgr1jovCY6GBt92z40W4Z1dgXLTA0=;
- b=ldprSHueqUk82/1HnNWzTkQQfEYCZe+npYvPEqA0IaoQKx6lzNpHvovF7r4ZAcPJt9YY0BENFussw1vNH8SQClsWUidGbntzwHJ6bmKClRMunT667LwogrhbfGvoB2YoXCwDZru57Bf8kkRGpWW0pYfP8jQ1ryUNUsZgVRzIXQ0=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3915.eurprd04.prod.outlook.com (2603:10a6:8:e::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Wed, 20 May
- 2020 08:03:57 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3000.034; Wed, 20 May 2020
- 08:03:57 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2] dt-bindings: thermal: Convert i.MX to json-schema
-Thread-Topic: [PATCH V2] dt-bindings: thermal: Convert i.MX to json-schema
-Thread-Index: AQHWLm2mA+HT3r0LW0SOVkVMMBmKlqiwl6oAgAAEz2A=
-Date:   Wed, 20 May 2020 08:03:57 +0000
-Message-ID: <DB3PR0402MB3916B45468AD8B69D6F318FDF5B60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1589954560-10810-1-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB4966F875F2E04D0F6FC3AE3A80B60@AM6PR04MB4966.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB4966F875F2E04D0F6FC3AE3A80B60@AM6PR04MB4966.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 648a8d58-57b9-45a8-d64d-08d7fc945918
-x-ms-traffictypediagnostic: DB3PR0402MB3915:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3915AF9944B3370F89F6DE21F5B60@DB3PR0402MB3915.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:586;
-x-forefront-prvs: 04097B7F7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VaI6P/am5P3RPjFyDIiPyHD9nOBDHcVz7/QXIyzJvCWUXW/FNmndzvYF6k72GN0jVKYen+HepSobEzllurSaAJsbMP9AoFTETNR5vauqYZgCn8Sklkul+P5KegI2Tdj66o1g9rvkrmpnjWVQReDiTGqOZ3UjgJVURi4bpbmlbxk+iRHjM7SbL2fGQfFXAFPGzklYmcFxKnfQv2vgd7bTlfjIMLKYjNze6bE1nLeYKGcFSpXCV2JAtfqNsEpreXWooapGRuHzZw8+zHYeq+4OKR0nYVJf5WBkz1mObkUto4+oDGSS6g9Gj3Mq32ZJnH35BOg9EGuQb1Wo0kkgpA0NI8yEFBX9BvVOIfD8y1Y6EKixrytPyn1IzP1dg4g89tC0hn4wIaleCuBMGaAFfLQrysH2uATNtwg0BUyI0H6DOLmWwLJBLbujCek8QmUc8LuRi8eXbMmt6veX1L08ObPCJsPDwM+EZa2HJRYuBea7s7M=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(39860400002)(346002)(396003)(376002)(7696005)(8676002)(71200400001)(9686003)(55016002)(7416002)(478600001)(86362001)(5660300002)(33656002)(8936002)(52536014)(186003)(44832011)(26005)(2906002)(4326008)(6506007)(316002)(66446008)(66476007)(110136005)(66556008)(64756008)(66946007)(76116006)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: DemBxdYx0BqvVLntZz29OkGFlRBg8OBKp975Gmi0ZVmN56cgL9Ata7dQPrWrCea2m+eaaVplsZ1OktxYNM0wKp6pWcDZfH1z7rpTsfGxslEwdXmjaS9k7GFKDvb4OeqCM9AoXxsq7SKLTFe12BoHZQuBxIEkxTZYJBnLG1TJW9FUN5DpeKfKzqBD7KrHsHtgIjFx7rZwILuYSvZFCAKBDSBsZKUlvTl0xQHtGVqfRIX+wsnbmN1G4Y6KaM8FDN+BDj3WPkDXiaJblPVaZL/dRIHxZcW80XEWXxG+Cs+lqvz6zA977ecpYj5rLjVF8Xo/Dou3USCKt9B8D2TqPebeDUsMxmf6A5gYCABRZ4P22GFvpfiTRUqtfM5tOnFWcm4E+HfYzDs43f+EJKOeFRRV7JtVFUcqCnxxna+/5/HLEo1FW/n2Jc35dpg9Z/II3TFmmBBnJxwEB7tTeZNb39mxIg93ApOVUjHGe2LVzR9se3fbCYS1Ua/kaLBJPyHOOlXJ
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 20 May 2020 04:04:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55745 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726436AbgETIEq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 04:04:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589961885;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tODKxPEhKOy3EtWiEeXfICX4Oq3a9d2MWwv3RjPjgr8=;
+        b=HFRC4axwnvlDfvaRBPAKds6CcKzXO9TKcGFhVwrUU8WAgv1JD9cogxmfYQ47V9i0KiSxFO
+        A3/HW9adgMmLX/2cob1JLjT5CEUNsLSsY5R3DuS6XO5r0Qah0qBn17s6HYuPq6G9qIRecD
+        RcyaVrk0UtlD4DHV4zFHCX3bfi/d81E=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-469-xQsKOu-BMuekTitgqdHZ0A-1; Wed, 20 May 2020 04:04:44 -0400
+X-MC-Unique: xQsKOu-BMuekTitgqdHZ0A-1
+Received: by mail-wr1-f70.google.com with SMTP id l12so1064420wrw.9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:04:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tODKxPEhKOy3EtWiEeXfICX4Oq3a9d2MWwv3RjPjgr8=;
+        b=pVrpY0JIXsIdrDmafDfun9WUK4ZrNn5V7iJvqi6rASn8nAcxiMFcYx9Jz9J/zPjAeK
+         +HYvvC9FIwqV7ZGF1Ab+wPZ+1lgQc/rN0s/v6wVltqDuOcJqnzQGIhA1vwwhRZMb4QnB
+         mNd/Xzv1wgX9X/LYKXpPVHJ+BHk8vHajqvg6Oxx1twXf4cnbBtaRdVpWDcDpcszQoqS2
+         fUq4C5IBTk/o7qOGFwfHL6S1xJ56Xq+pIvy7nZYYbxny5VwXF55qneofy2LjhjRkZZG1
+         5Ud/Thds8yt/046yQlXCsYJVvYwKwpoPOEX7w70gcwXh1bsL9gToH2f91e5OoeAdXpX7
+         uqpQ==
+X-Gm-Message-State: AOAM530k5YwU/Y+lYMhy4H2WBMByMq5VesgQuxcuIzYMt+aLppBISeez
+        hEbod9BLtNjhdxDgSyUUK6lTopkFqZiC7oxkMFR8rOqn22tfOAt7iq7mhM2y2JKba9uil5H4f9e
+        NXOzo/d5VUQGnpW4GMhA6G+u9
+X-Received: by 2002:a05:6000:11ca:: with SMTP id i10mr3138764wrx.10.1589961882841;
+        Wed, 20 May 2020 01:04:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzY2cSIgL58y2H/BiNwiTnt+p2jmmQ05xVyK44+WVRrlhAbO7zIFMCD6cJ85iRgSS3nhSobmg==
+X-Received: by 2002:a05:6000:11ca:: with SMTP id i10mr3138741wrx.10.1589961882676;
+        Wed, 20 May 2020 01:04:42 -0700 (PDT)
+Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
+        by smtp.gmail.com with ESMTPSA id n9sm2370316wmj.5.2020.05.20.01.04.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 01:04:42 -0700 (PDT)
+Subject: Re: [PATCH 2/3] objtool: Move struct objtool_file into
+ arch-independent header
+To:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <cover.1589913349.git.mhelsley@vmware.com>
+ <8a877bc283cbad704c7472ac3ef534d49629dd05.1589913349.git.mhelsley@vmware.com>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <46066936-eb20-1b64-eef1-9b57aeab3a73@redhat.com>
+Date:   Wed, 20 May 2020 09:04:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 648a8d58-57b9-45a8-d64d-08d7fc945918
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 08:03:57.5444
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tpn6d5SYV1SAfH2TNMmOXfICd44NwKJxhmkGaxaTUYn3lBgGAqImL4dkd4jOVf+G8OzVkD8BfUZUukWR14HkHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3915
+In-Reply-To: <8a877bc283cbad704c7472ac3ef534d49629dd05.1589913349.git.mhelsley@vmware.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gU3ViamVjdDogUkU6IFtQQVRDSCBWMl0gZHQtYmluZGluZ3M6IHRoZXJtYWw6IENvbnZl
-cnQgaS5NWCB0byBqc29uLXNjaGVtYQ0KPiANCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24u
-SHVhbmdAbnhwLmNvbT4NCj4gPiBTZW50OiBXZWRuZXNkYXksIE1heSAyMCwgMjAyMCAyOjAzIFBN
-DQo+ID4NCj4gPiBDb252ZXJ0IHRoZSBpLk1YIHRoZXJtYWwgYmluZGluZyB0byBEVCBzY2hlbWEg
-Zm9ybWF0IHVzaW5nIGpzb24tc2NoZW1hDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBI
-dWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNlIFYx
-Og0KPiA+IAktIG1vdmUgdGVtcG1vbiBub2RlIGludG8gaXRzIHBhcmVudCBub2RlIGFuYXRvcCBp
-biBleGFtcGxlOw0KPiA+IAktIGltcHJvdmUgImZzbCx0ZW1wbW9uIiBkZXNjcmlwdGlvbi4NCj4g
-PiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9pbXgtdGhlcm1hbC50
-eHQgICAgfCAgNjEgLS0tLS0tLS0tLS0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy90
-aGVybWFsL2lteC10aGVybWFsLnlhbWwgICB8IDEwMA0KPiANCj4gWy4uLl0NCj4gDQo+ID4gK3Rp
-dGxlOiBOWFAgaS5NWCBUaGVybWFsIEJpbmRpbmcNCj4gPiArDQo+ID4gK21haW50YWluZXJzOg0K
-PiA+ICsgIC0gU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4NCj4gPiArICAtIEFuc29u
-IEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4g
-PiArICBjb21wYXRpYmxlOg0KPiA+ICsgICAgb25lT2Y6DQo+ID4gKyAgICAgIC0gaXRlbXM6DQo+
-IA0KPiBEcm9wIFVubmVjZXNzYXJ5IHByb3BlcnRpZXMNCg0KV2lsbCB1c2UgZW51bSBkaXJlY3Rs
-eS4NCg0KPiANCj4gPiArICAgICAgICAgIC0gZW51bToNCj4gPiArICAgICAgICAgICAgICAtIGZz
-bCxpbXg2cS10ZW1wbW9uDQo+ID4gKyAgICAgICAgICAgICAgLSBmc2wsaW14NnN4LXRlbXBtb24N
-Cj4gPiArICAgICAgICAgICAgICAtIGZzbCxpbXg3ZC10ZW1wbW9uDQo+ID4gKw0KPiA+ICsgIGlu
-dGVycnVwdHM6DQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICBUaGUgaW50ZXJy
-dXB0IG91dHB1dCBvZiB0aGUgY29udHJvbGxlciwgdGhlIElSUSB3aWxsIGJlIHRyaWdnZXJlZA0K
-PiA+ICsgICAgICB3aGVuIHRlbXBlcmF0dXJlIGlzIGhpZ2hlciB0aGFuIGhpZ2ggdGhyZXNob2xk
-Lg0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gDQo+IFlvdSdkIGJldHRlciBleHBsYWluIHdoeSBp
-bnRlcnJ1cHRzIG51bWJlciBpcyBjaGFuZ2VkIGluIHRoZSBuZXcgYmluZGluZw0KPiBjb21wYXJl
-ZCB0byB0aGUgb3JpZ2luYWwgb25lLiBQcm9iYWJseSBhZGQgaW4gY29tbWl0IG1lc3NhZ2UgaWYg
-cmVhbGx5DQo+IG5lZWRlZC4NCg0KVGhlcmUgaXMgT05MWSAxIGludGVycnVwdCBvdXRwdXQgZnJv
-bSB0ZW1wZXJhdHVyZSB0byBHSUMsIHNvbWUgcGxhdGZvcm1zIGxpa2UNCmkuTVg2U1gvaS5NWDdE
-IGhhcyAyIG1vcmUgc2Vjb25kYXJ5IGludGVycnVwdHMgaW5zaWRlIGFuYXRvcCB3aGljaCBzaGFy
-ZXMgc2FtZSBvdXRwdXQNCmludGVycnVwdCB0byBHSUMsIHRoZXNlIDIgaW50ZXJydXB0cyBhcmUg
-Tk9UIHVzZWQgZm9yIG5vdywgc28gZnJvbSB0aGUgaGlnaCBsZXZlbA0KZGVzY3JpcHRpb24gb2Yg
-dGhlIGludGVycnVwdCwgc2hvdWxkIGJlIE9OTFkgMSBpbnRlcnJ1cHQgaXRlbSBJIHRoaW5rLg0K
-DQo+IA0KPiA+ICsNCj4gPiArICBudm1lbS1jZWxsczoNCj4gPiArICAgIGRlc2NyaXB0aW9uOiB8
-DQo+ID4gKyAgICAgIFBoYW5kbGUgdG8gdGhlIGNhbGlicmF0aW9uIGNlbGxzIHByb3ZpZGVkIGJ5
-IG9jb3RwIGZvciBjYWxpYnJhdGlvbg0KPiA+ICsgICAgICBkYXRhIGFuZCB0ZW1wZXJhdHVyZSBn
-cmFkZS4NCj4gDQo+IEJldHRlciBkZXNjcmliZSBmb3IgZWFjaCBvZiB0aGVtIGFzIHlvdSBkaWQg
-Zm9yIGNsb2Nrcw0KDQpXaWxsIGRvIGluIFYzLg0KDQo+IA0KPiA+ICsgICAgbWF4SXRlbXM6IDIN
-Cj4gPiArDQo+ID4gKyAgbnZtZW0tY2VsbC1uYW1lczoNCj4gPiArICAgIG1heEl0ZW1zOiAyDQo+
-ID4gKyAgICBpdGVtczoNCj4gPiArICAgICAgLSBjb25zdDogY2FsaWINCj4gPiArICAgICAgLSBj
-b25zdDogdGVtcF9ncmFkZQ0KPiA+ICsNCj4gPiArICBmc2wsdGVtcG1vbjoNCj4gPiArICAgICRy
-ZWY6ICcvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy9waGFuZGxlJw0KPiA+ICsgICAg
-ZGVzY3JpcHRpb246IFBoYW5kbGUgdG8gdGhlIHJlZ2lzdGVyIG1hcCBub2RlLg0KPiANCj4gV2hh
-dCByZWdpc3RlciBtYXA/IEEgYml0IGFtYmlndW91cy4uDQoNClRlbXBlcmF0dXJlIHNlbnNvciBy
-ZWdpc3RlcnMsIHdpbGwgYWRkIG1vcmUgZGV0YWlsIGluIFYzLg0KDQpBbnNvbg0KDQo=
+
+
+On 5/19/20 9:55 PM, Matt Helsley wrote:
+> The objtool_file structure describes the files objtool works on,
+> is used by the check subcommand, and the check.h header is included
+> by the orc subcommands so it's presently used by all subcommands.
+> 
+> Since the structure will be useful in all subcommands besides check,
+> and some subcommands may not want to include check.h to get the
+> definition, split the structure out into a new header meant for use
+> by all objtool subcommands.
+> 
+> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+
+Reviewed-by: Julien Thierry <jthierry@redhat.com>
+
+-- 
+Julien Thierry
+
