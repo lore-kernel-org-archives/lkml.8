@@ -2,126 +2,94 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5604C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0698C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C452C207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:03:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589983404;
-	bh=QuXivJWfSCHoFejw2WGsuzr9GwmENzgWc4fknuN2hVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fwXcVbXEx3f5JieGlZh8DwsfzH1t2S21Aj0Qdw/VhtE6qU7hgJmUC/0g+5pGpY8fO
-	 4qeBT4SJJnU3REO2iEu3Wui+ltHtxwByhPTFuKa1cu3dTV8/TiTZXmmKLaS+CmxY12
-	 eXOOWKP++MgrbXNZgiSyXR4ayYDebyDKH6NvxZiM=
+	by mail.kernel.org (Postfix) with ESMTP id C484B20756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgETODY (ORCPT
+        id S1726851AbgETOEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 10:04:14 -0400
+Received: from mga17.intel.com ([192.55.52.151]:33806 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgETODX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:03:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E20D320756;
-        Wed, 20 May 2020 14:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589983403;
-        bh=QuXivJWfSCHoFejw2WGsuzr9GwmENzgWc4fknuN2hVw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eiyArFOnyS9XWPVzx2pT9OR3PB51ouV4SYNXBJ/MysL4g4tA60zrn+LXVy2btR79O
-         RI9k8qrNOLyJ2r26YpfZ9DWI8NVapbA8kStc2j9iMBOnMPrz+iik1p9pAf++tpwLEf
-         mcWbA0DiSjTiLMPuGXhTXbwNZHh9ZjMLZ0mML4wI=
-Date:   Wed, 20 May 2020 16:03:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma
- offsets
-Message-ID: <20200520140320.GA3624154@kroah.com>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-10-james.quinlan@broadcom.com>
- <20200520054349.GB2180554@kroah.com>
- <CA+-6iNyQFauYc0ZNbzRmao_oOZD8XM+1D0XE133HP_-zgMLzuA@mail.gmail.com>
+        id S1726439AbgETOEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:04:13 -0400
+IronPort-SDR: cfOqL/2PglMPsMUqmPBL46dgO7pfvm9ZT4Y5GbnsNSvyavvbOuwE23vSubNGqD6MwUMHtUTnfc
+ /qmB0cd3VpRg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 07:04:12 -0700
+IronPort-SDR: M9dCvdQeUC+baWWCbFtgbQpU/ZPq6nmnS5bIdWxLmZRnk9Tb+A64fwQlUFOOlp5PjS0kuQJO5Z
+ IvbtydjIPTUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="440039112"
+Received: from ttluu1x-mobl.ger.corp.intel.com (HELO localhost) ([10.252.38.239])
+  by orsmga005.jf.intel.com with ESMTP; 20 May 2020 07:04:03 -0700
+Date:   Wed, 20 May 2020 17:04:01 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 02/20] x86/cpufeatures: x86/msr: Intel SGX Launch
+ Control hardware bits
+Message-ID: <20200520140401.GB34750@linux.intel.com>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-3-jarkko.sakkinen@linux.intel.com>
+ <20200520122346.GG1457@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+-6iNyQFauYc0ZNbzRmao_oOZD8XM+1D0XE133HP_-zgMLzuA@mail.gmail.com>
+In-Reply-To: <20200520122346.GG1457@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 09:50:36AM -0400, Jim Quinlan wrote:
-> On Wed, May 20, 2020 at 1:43 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, May 19, 2020 at 04:34:07PM -0400, Jim Quinlan wrote:
-> > > diff --git a/include/linux/device.h b/include/linux/device.h
-> > > index ac8e37cd716a..6cd916860b5f 100644
-> > > --- a/include/linux/device.h
-> > > +++ b/include/linux/device.h
-> > > @@ -493,6 +493,8 @@ struct dev_links_info {
-> > >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
-> > >   *           DMA limit than the device itself supports.
-> > >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-> > > + * @dma_map: Like dma_pfn_offset but used when there are multiple
-> > > + *           pfn offsets for multiple dma-ranges.
-> > >   * @dma_parms:       A low level driver may set these to teach IOMMU code about
-> > >   *           segment limitations.
-> > >   * @dma_pools:       Dma pools (if dma'ble device).
-> > > @@ -578,7 +580,12 @@ struct device {
-> > >                                            allocations such descriptors. */
-> > >       u64             bus_dma_limit;  /* upstream dma constraint */
-> > >       unsigned long   dma_pfn_offset;
-> > > -
-> > > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
-> > > +     const void *dma_offset_map;     /* Like dma_pfn_offset, but for
-> > > +                                      * the unlikely case of multiple
-> > > +                                      * offsets. If non-null, dma_pfn_offset
-> > > +                                      * will be 0. */
-> > > +#endif
-> > >       struct device_dma_parameters *dma_parms;
-> > >
-> > >       struct list_head        dma_pools;      /* dma pools (if dma'ble) */
-> >
-> > I'll defer to Christoph here, but I thought we were trying to get rid of
-> > stuff like this from struct device, not add new things to it for dma
-> Hi Greg,
+On Wed, May 20, 2020 at 02:23:47PM +0200, Borislav Petkov wrote:
 > 
-> I wasn't aware of this policy.  I put it in 'struct device' because
-> just like the existing dma_pfn_offset; it seemed to be the only way to
-> pull this off.  I'll certainly follow any ideas on alternative
-> strategies from Christoph et al.
+> > Subject: Re: [PATCH v30 02/20] x86/cpufeatures: x86/msr: Intel SGX Launch Control hardware bits
+> 							  ^
+> 							Add
 > 
-> > apis.  And why is it a void *?
-> Just wanted to minimize the number of lines I've added to device.h, no
-> other reason.
+> Needs a verb.
 
-How would using a real type make this more lines?  Never use a void *
-unless you have to, we want the compiler to check our errors for us :)
+"x86/cpufeatures: x86/msr: Add Intel SGX Launch Control hardware bits"
 
-thanks,
+> On Fri, May 15, 2020 at 03:43:52AM +0300, Jarkko Sakkinen wrote:
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > Add X86_FEATURE_SGX_LC, which informs whether or not the CPU supports SGX
+> > Launch Control.
+> > 
+> > Add MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}, which when combined contain a
+> > SHA256 hash of a 3072-bit RSA public key. SGX backed software packages, so
+> > called enclaves, are always signed. All enclaves signed with the public key
+> > are unconditionally allowed to initialize. [1]
+> > 
+> > Add FEATURE_CONTROL_SGX_LE_WR bit of the feature control MSR, which informs
+> > whether the formentioned MSRs are writable or not. If the bit is off, the
+> 
+> "aforementioned"
+> 
+> > public key MSRs are read-only for the OS.
 
-greg k-h
+Thanks, fixed.
+
+> Regards/Gruss,
+>     Boris.
+
+/Jarkko
