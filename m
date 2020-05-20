@@ -2,111 +2,177 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0111C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F46A205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sJORLtI8"
+	by mail.kernel.org (Postfix) with ESMTP id D1E5B205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgETGlX (ORCPT
+        id S1726757AbgETGl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:41:23 -0400
-Received: from mail-db8eur05on2075.outbound.protection.outlook.com ([40.107.20.75]:45198
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726425AbgETGlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 02:41:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64432 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726658AbgETGlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 02:41:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KK0Fx6MJTxdUMk51B+QQi9bTwSxikBDVyUrntsskU4u8k3F1M08kPW43x+z8ghmasDeJPZat9RhF1UIEd+XeoYz1KlhVwmQQyhYhst0Wm/ykUq7tRGmDD4iTJk1mHC9QV9x/Pmu5FQeMi9TkLuES4xT6nN4jswJhrl/WLd/+JMuefFKgSA3LuyWrlGXwSMUbo1o2cSvXGZyO7acUQgpa6uDj1qC30jIzmXqeidbCqpznkvDSbQyH7+JpFibjlU5p/bo1wEH5Fay85Q4vc1hJCRUS1+u71WXYtkZVoro1/2FL/1HXqT4qwK+wV7EDVNQZY6BdYG/TlY3MjEqBrwgy4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JTMHKX7ai+SeVlCoUMLA4HsyVUYE3FQ3HqF8Tlf35ro=;
- b=Q6ad3ngrsO49u0K80CWTp2ZqE5IxuEKndLMv7PPlJy6f4wgIwPI+jh/9I8wZHA/5kJaXcVxjn+9PAqrsNxwd9SwBOU6wqpZ099zju6OHf8bLh69ilvLDheQGNteRCuLefICEKS7mmtRxcXaltx3fI63ZNvHhd3Emrhg+teSdK5oVB9CTIBmnTo3hYjwcfIOej+4Q8v/mgkjAMAe1fK6hDySDcFERCYER0rZXsco0ys7NIRgpIIMSbSX3C8B+2dhE9kl7zMQ3MzFV0ePpAmU7klBtMXiZxp14klJkudTEVf3pyIZbXsN1iydsigSnQO/Nil8amBYyt295XKnD0I9Gug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JTMHKX7ai+SeVlCoUMLA4HsyVUYE3FQ3HqF8Tlf35ro=;
- b=sJORLtI8+77Pv6N0k/jNwVBMVPdLkJLpcURWBZvdT1BVxqwZMLJI77Rz7t8tPuSvV076y8QoNdXOFDZBs5uz9dM5bu6GRrJlkuD2HeiqIViRavnHpSZTwYkPLpGispHBReMSGD7iXY8WEJTDdTkpOqd0F93HZnzszvW9ZxBZVfw=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB4120.eurprd04.prod.outlook.com (2603:10a6:209:4b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Wed, 20 May
- 2020 06:41:15 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.034; Wed, 20 May 2020
- 06:41:14 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 0/4] arm64: dts: imx8m: dtb aliases update
-Thread-Topic: [PATCH 0/4] arm64: dts: imx8m: dtb aliases update
-Thread-Index: AQHWLkwkW+oc0zbvzkitTZ4UpbqnCKiwhm7g
-Date:   Wed, 20 May 2020 06:41:14 +0000
-Message-ID: <AM6PR04MB4966C199450F7EC8665E0C9980B60@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589940166-736-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1589940166-736-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 016f118e-489b-4a72-df38-08d7fc88cb13
-x-ms-traffictypediagnostic: AM6PR04MB4120:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB41201D0ACE49AF675B83EF2F80B60@AM6PR04MB4120.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-forefront-prvs: 04097B7F7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EQ6fYvTC8oyLjtnaM+KeR+zygv0YN5AK44m9u1fPkQi7+f+twRbyf3xyYpMonjik8Y6TpbGNGAziSTM45BwGC8N3+RahkN4eujBzvPO2EGQEn4HebMspIGuivVDpps7s/kH+LffIfCc3qVZt+YVKjIikaG5wh+zk5xKsRhBTpnqBfd7B2pSIOQH0jRuLGce3328Xl4W8cZWZTPJeP4grgGiJAE1Ev8E6rtFsoBjKq6rPT+OYlswzHfvqME3UmmlpvVL93qWB3Oee8eeBU/+ccXmNg1HG043uAYgF/oulz0f+4a4u9xidQmzEcDF2nImitqhW85oXUYhX9W6K8gJmksj2kscrECCvDdaWydhWfteed+b97lnpWlCY+TVRPYwN
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(33656002)(8936002)(6506007)(15650500001)(186003)(26005)(110136005)(8676002)(316002)(54906003)(86362001)(4326008)(7696005)(66476007)(66556008)(4744005)(66946007)(66446008)(71200400001)(64756008)(52536014)(2906002)(44832011)(478600001)(76116006)(5660300002)(55016002)(9686003)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: LfIk+R8H98ou9JPNsXgsSQ93mDMM393t+auEWAGLbDPSBxWCL94PoGqx/Ca9pn7AYxcd0HTqPAZNoOFk09A9lm+vqNUe3FB9E6EmU3GIQE+07QF8E/H7I+RHr7cgm5jIlImsLVRjUO8EuR46+OzfBZqLqGn7M3utNHLGXGgb9Vq8hUQ6zVJ1UXS9zQEUlvuKYtJhCdI61rLjcISRYPGI+yhMaeidUjgtm4i5y4qTOoQrbUYjp7jn0diSp6LVPqyBmq5lby06zUkSJKFIu4pAPJPczEVkVDOPc713O6Tf71WYKlA5G/tDuOQi3A2OSQ0W0cNdm4LKKwitnozHRKOJeHEBXMgAgxa6rYwthlHAm8Av5eb106+ee5hXvjsQEksWi40x/LjTU+6594NhA1h22zBkIAjiWHhShjZqyEWGbIsmsSZ1EeepLR9i/d0hWZScOyhAMWb0IsEu1gjSVaZLBFFGKinPyQ2/3agLxg03iyc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04K6VScC040115;
+        Wed, 20 May 2020 02:41:10 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312c659wbx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 02:41:10 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04K6ejhu003252;
+        Wed, 20 May 2020 06:41:09 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 313xehk2r4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 06:41:08 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04K6dr6H13959648
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 06:39:53 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0F13BA4064;
+        Wed, 20 May 2020 06:41:06 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 81AF3A4054;
+        Wed, 20 May 2020 06:41:04 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.79.188.115])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 May 2020 06:41:04 +0000 (GMT)
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+To:     linux-ext4@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.com>,
+        tytso@mit.edu, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Ritesh Harjani <riteshh@linux.ibm.com>
+Subject: [PATCHv5 5/5] ext4: mballoc: Use lock for checking free blocks while retrying
+Date:   Wed, 20 May 2020 12:10:36 +0530
+Message-Id: <9cb740a117c958c36596f167b12af1beae9a68b7.1589955723.git.riteshh@linux.ibm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1589955723.git.riteshh@linux.ibm.com>
+References: <cover.1589955723.git.riteshh@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 016f118e-489b-4a72-df38-08d7fc88cb13
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 06:41:14.7754
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xmqhMLpMlxqDPUQxTDeLT2QnaFfPAS7N4Z1UTCWbMzUIoIg9T6kfglDo2Tf2qL22dRDbkjM8y+49BEIFRq+C5A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4120
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-20_02:2020-05-19,2020-05-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 suspectscore=3 mlxlogscore=999 cotscore=-2147483648
+ spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 phishscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBN
-YXkgMjAsIDIwMjAgMTA6MDMgQU0NCj4gDQo+IE1pbm9yIHBhdGNoc2V0IHRvIHVwZGF0ZSBkZXZp
-Y2UgdHJlZSBhbGlhc2VzDQo+IA0KPiBQZW5nIEZhbiAoNCk6DQo+ICAgYXJtNjQ6IGR0czogaW14
-OG1xOiBBZGQgbW1jIGFsaWFzZXMNCj4gICBhcm02NDogZHRzOiBpbXg4bXE6IEFkZCBldGhlcm5l
-dCBhbGlhcw0KPiAgIGFybTY0OiBkdHM6IGlteDhtbTogc29ydCB0aGUgYWxpYXNlcw0KPiAgIGFy
-bTY0OiBkdHM6IGlteDhtcDogYWRkIGkyYyBhbGlhc2VzDQoNCkZvciB0aGlzIHBhdGNoc2V0LA0K
-DQpSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVn
-YXJkcw0KQWlzaGVuZw0K
+Currently while doing block allocation grp->bb_free may be getting
+modified if discard is happening in parallel.
+For e.g. consider a case where there are lot of threads who have
+preallocated lot of blocks and there is a thread which is trying
+to discard all of this group's PA. Now it could happen that
+we see all of those group's bb_free is zero and fail the allocation
+while there is sufficient space if we free up all the PA.
+
+So this patch adds another flag "EXT4_MB_STRICT_CHECK" which will be set
+if we are unable to allocate any blocks in the first try (since we may
+not have considered blocks about to be discarded from PA lists).
+So during retry attempt to allocate blocks we will use ext4_lock_group()
+for checking if the group is good or not.
+
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+---
+ fs/ext4/ext4.h              |  2 ++
+ fs/ext4/mballoc.c           | 13 ++++++++++++-
+ include/trace/events/ext4.h |  3 ++-
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index fb37fb3fe689..d185f3bcb9eb 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -150,6 +150,8 @@ enum SHIFT_DIRECTION {
+ #define EXT4_MB_USE_ROOT_BLOCKS		0x1000
+ /* Use blocks from reserved pool */
+ #define EXT4_MB_USE_RESERVED		0x2000
++/* Do strict check for free blocks while retrying block allocation */
++#define EXT4_MB_STRICT_CHECK		0x4000
+ 
+ struct ext4_allocation_request {
+ 	/* target inode for block we're allocating */
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index c9297c878a90..a9083113a8c0 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -2176,9 +2176,13 @@ static int ext4_mb_good_group_nolock(struct ext4_allocation_context *ac,
+ 				     ext4_group_t group, int cr)
+ {
+ 	struct ext4_group_info *grp = ext4_get_group_info(ac->ac_sb, group);
++	struct super_block *sb = ac->ac_sb;
++	bool should_lock = ac->ac_flags & EXT4_MB_STRICT_CHECK;
+ 	ext4_grpblk_t free;
+ 	int ret = 0;
+ 
++	if (should_lock)
++		ext4_lock_group(sb, group);
+ 	free = grp->bb_free;
+ 	if (free == 0)
+ 		goto out;
+@@ -2186,6 +2190,8 @@ static int ext4_mb_good_group_nolock(struct ext4_allocation_context *ac,
+ 		goto out;
+ 	if (unlikely(EXT4_MB_GRP_BBITMAP_CORRUPT(grp)))
+ 		goto out;
++	if (should_lock)
++		ext4_unlock_group(sb, group);
+ 
+ 	/* We only do this if the grp has never been initialized */
+ 	if (unlikely(EXT4_MB_GRP_NEED_INIT(grp))) {
+@@ -2194,8 +2200,12 @@ static int ext4_mb_good_group_nolock(struct ext4_allocation_context *ac,
+ 			return ret;
+ 	}
+ 
++	if (should_lock)
++		ext4_lock_group(sb, group);
+ 	ret = ext4_mb_good_group(ac, group, cr);
+ out:
++	if (should_lock)
++		ext4_unlock_group(sb, group);
+ 	return ret;
+ }
+ 
+@@ -4610,7 +4620,8 @@ static bool ext4_mb_discard_preallocations_should_retry(struct super_block *sb,
+ 		goto out_dbg;
+ 	}
+ 	seq_retry = ext4_get_discard_pa_seq_sum();
+-	if (seq_retry != *seq) {
++	if (!(ac->ac_flags & EXT4_MB_STRICT_CHECK) || seq_retry != *seq) {
++		ac->ac_flags |= EXT4_MB_STRICT_CHECK;
+ 		*seq = seq_retry;
+ 		ret = true;
+ 	}
+diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
+index 19c87661eeec..0df9efa80b16 100644
+--- a/include/trace/events/ext4.h
++++ b/include/trace/events/ext4.h
+@@ -35,7 +35,8 @@ struct partial_cluster;
+ 	{ EXT4_MB_DELALLOC_RESERVED,	"DELALLOC_RESV" },	\
+ 	{ EXT4_MB_STREAM_ALLOC,		"STREAM_ALLOC" },	\
+ 	{ EXT4_MB_USE_ROOT_BLOCKS,	"USE_ROOT_BLKS" },	\
+-	{ EXT4_MB_USE_RESERVED,		"USE_RESV" })
++	{ EXT4_MB_USE_RESERVED,		"USE_RESV" },		\
++	{ EXT4_MB_STRICT_CHECK,		"STRICT_CHECK" })
+ 
+ #define show_map_flags(flags) __print_flags(flags, "|",			\
+ 	{ EXT4_GET_BLOCKS_CREATE,		"CREATE" },		\
+-- 
+2.21.0
+
