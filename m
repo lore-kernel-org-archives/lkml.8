@@ -2,278 +2,88 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F483C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40705C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03B59207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED26E2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="IktwJbLz"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="rKm9ZjaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgETIXe (ORCPT
+        id S1726857AbgETIXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55346 "EHLO
+        Wed, 20 May 2020 04:23:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgETIXc (ORCPT
+        with ESMTP id S1726452AbgETIXw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:23:32 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DFABC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:23:32 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k18so2257585ion.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:23:31 -0700 (PDT)
+        Wed, 20 May 2020 04:23:52 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9437AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:23:51 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id q2so2549816ljm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:23:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tvhc95Q3g028qLTJV8u0mdNMwmqDgdXr1VFvPL6SRJQ=;
-        b=IktwJbLztFdygn1fXL+7Wczekks99TerhdSvVxlaDmBO/+xj1ql6ek9dfjOcjyVarN
-         pSvsnpHrD/4r21ZQDlx0dynwRciBGiF4E26yx2NIn2p16cBpi6HgqsN8GcG5AYg2Sm0I
-         kSIvTW/+o9RO6ruDJM8sArHRxMie8dfkuRXxM=
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oz66q4UAEVR/PNvzqC0no71qGvbWiyB846KaBJkHgtU=;
+        b=rKm9ZjaWIE2hC9QPpUPBTVRGKDDl5BqESk3XO+jd/cNexMh0EKlQf1Amp4dFqTXNhj
+         Pb24R7m1bkaYrPy3tmojnvsEL6rflyOKl1O9FzhVuj78mEKk6hcwDi2Ry9sSihXaTjpd
+         H3KRwWxDFs75o3Z4sg7Ol9e8dhEqMFy5w90wI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tvhc95Q3g028qLTJV8u0mdNMwmqDgdXr1VFvPL6SRJQ=;
-        b=f3HZ+gGBmNJsh0bdGUvO6ez7Ga9yeAu/ee99HvpK8k4y6J+f02X4LWiY9J7Df5Xv3l
-         Q5loH5f+OAK8SQ+PZZBMVXoTo4lefJZGMsGJP1/JLJelLu/MEI8BA+l/ZGvHOGpchgEy
-         ag98TllyjkTiu0WakAnMj+/iIe9n8yD2LWqnA32SSh4dn4mCY7dL/6tdZCGeG4zV7LVX
-         kBrmmeBaBJ7UuK5t+YClV9FGNUGl8t5QvnNdRh3+8imqgADO5kEEwHOf/yb7pxyoPN6C
-         vNBKqftEJUrymtdmFPFtJCQIJAgn6VMXi775kJMgFJSSbOsndD2zYXOEOdvp8GrrZE2t
-         oQmw==
-X-Gm-Message-State: AOAM533lRfA2serS28lkRUMdSJUWb0omZXXtpTNuRvAKzAfBUJFiDQXK
-        56+qxB2qwF5kRe1fH4E2PwhgTA==
-X-Google-Smtp-Source: ABdhPJwEqarmfMUcn8Jgj5d0caODWN1mY0iJB8Tw1UL2AXnEcySOgJAlqmTuKvz0uNn0JefbnIADsw==
-X-Received: by 2002:a6b:6414:: with SMTP id t20mr2541747iog.32.1589963010913;
-        Wed, 20 May 2020 01:23:30 -0700 (PDT)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id a20sm883940iot.17.2020.05.20.01.23.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 May 2020 01:23:29 -0700 (PDT)
-Date:   Wed, 20 May 2020 08:23:28 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kees Cook <keescook@chromium.org>, Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: seccomp feature development
-Message-ID: <CAMp4zn-hs=e6Di9QddR1hYYiWixeUDh_R1eV2_VngZ=D3u=2pg@mail.gmail.com>
-References: <202005181120.971232B7B@keescook>
- <20200519102648.dnnciytdaocfrmjc@wittgenstein>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oz66q4UAEVR/PNvzqC0no71qGvbWiyB846KaBJkHgtU=;
+        b=LAPqdSzLvDyHxphyuLMYEy/QzW0bvoCCaGSPI5A965ZI9ym7CpHnoN95py46HjtBwh
+         7nFeQFedD/OpKVOThMMw2DBmc6Vtg8x2AnyjXouV+k9Lmp7MtRwv3KKQZhtSewIyHQMx
+         nhLCKbSdsktxmDE/+FinFQOGXKU8V9X9mYcbzmi8UrqO5BXtH+YVPt8u0CrZbChW1Do/
+         M2bQAWJDHlOAxRR8Ob06WvJwj6FocrxKPJhQQ1+Zf3JOIfPo+GjZ4ZE5w4Twxw3T7X6N
+         vR/74I6t2ayTPNoGqFSBboOvzgNkXmCNvMW/ONuP6jUwg6b6BZwK4awEfb/eQf1qUe9V
+         DzuQ==
+X-Gm-Message-State: AOAM533urCWjR5KPKJM2KDBNmOoYBp7ryOCK7nZrYHi/XZEcxsNFF5bk
+        KD2uxo5UbNsudYWBWJMhAtHgEu0MCziuliPVD6xCGA==
+X-Google-Smtp-Source: ABdhPJyAutftRRlL+OIere8EnY9rywd3lsy/s1EiRDf6pT9dthPdIPLw1F8/CGo5Jz3ePKIP+yltl0Q74gaOmFx2cao=
+X-Received: by 2002:a2e:92cb:: with SMTP id k11mr2142631ljh.96.1589963029135;
+ Wed, 20 May 2020 01:23:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519102648.dnnciytdaocfrmjc@wittgenstein>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <D90B73BA-22EC-407E-838F-2BA646C60DE0@lca.pw> <CAM4kBBKkOGOjT5fddQ_vongNx_cXmv0tCQzD9ZtrGgkuPTKfTg@mail.gmail.com>
+ <CAG=TAF65nmW2m9-5z5xvLmfRAD0LZAxgARJOEAqvzA3GdN-iJA@mail.gmail.com>
+In-Reply-To: <CAG=TAF65nmW2m9-5z5xvLmfRAD0LZAxgARJOEAqvzA3GdN-iJA@mail.gmail.com>
+From:   Vitaly Wool <vitaly.wool@konsulko.com>
+Date:   Wed, 20 May 2020 10:23:38 +0200
+Message-ID: <CAM4kBBJSEpB9kS+PKpd5HJT0Ox5rNWW2vsvHTVUw7Q59C-ktig@mail.gmail.com>
+Subject: Re: zswap z3fold + memory offline = infinite loop
+To:     Qian Cai <cai@lca.pw>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Tue, May 19, 2020 at 3:26 AM Christian Brauner <christian.brauner@ubuntu.com> wrote:
->
-> On Mon, May 18, 2020 at 02:04:57PM -0700, Kees Cook wrote:
-> > Hi!
-> >
-> > This is my attempt at a brain-dump on my plans for nearish-term seccomp
-> > features. Welcome to my TED talk... ;)
-> >
-> > These are the things I've been thinking about:
-> >
-> > - fd passing
-> > - deep argument inspection
-> > - changing structure sizes
-> > - syscall bitmasks
-> >
-> > ## changing structure sizes
-> >
-> > Background: there have been regular needs to add things to various
-> > seccomp structures. Each come with their own unique pains, and solving
-> > this as completely as possible in a future-proof way would be very nice.
-> >
-> > As noted in "fd passing" above, there is a desire to add some useful
-> > things to the user_notif struct (e.g. thread group pid). Similarly,
-> > there have been requests in the past (though I can't find any good
-> > references right now, just my indirect comments[3]) to grow seccomp_data.
-> > Combined with the EA struct work above, there's a clear need for seccomp
-> > to reexamine how it deals with its API structures (and how this
-> > interacts with filters).
-> >
-> > First, let's consider seccomp_data. If we grow it, the EA struct offset
-> > will move, based on the deep arg inspection design above. Alternatively,
-> > we could instead put seccomp_data offset 0, and EA struct at offset
-> > PAGE_SIZE, and treat seccomp_data itself as an EA struct where we let
-> > the filter access whatever it thinks is there, with it being zero-filled
-> > by the kernel. For any values where 0 is valid, there will just need to
-> > be a "is that field valid?" bit before it:
->
-> That's exactly what clone3() - and openat2() too - I think is doing.
-> (Case in point, CLONE_INTO_CGROUP with the .cgroup member referencing a
->  file descriptor for which 0 is obviously valid.)
+On Tue, May 19, 2020 at 5:50 AM Qian Cai <cai@lca.pw> wrote:
+<snip>
 >
 > >
-> >       unsigned long feature_bits;
-> >       unsigned long interesting_thing_1;
-> >       unsigned long interesting_thing_2;
-> >       unsigned long interesting_thing_3;
-> >       ...
-> >
-> > and the filter would check feature_bits...
-> >
-> > (However, this needs to be carefully considered given that seccomp_data
-> > is embedded in user_notif... should the EA struct from userspace also be
-> > copied into user_notif? More thoughts on this below...)
-> >
-> > For user_notif, I think we need something in and around these options:
-> >
-> > - make a new API that explicitly follows EA struct design
-> >   (and while read()/write() might be easier[4], I tend to agree with
-> >   Jann and we need to stick to ioctl(): as Tycho noted, "read/write is
-> >   for data". Though I wonder if read() could be used for the notifications,
-> >   which ARE data, and use ioctl() for the responses?)
+> > Removing that check in ->isolate() is not a big deal, but ->migratepage() shall not allow actual migration anyway if there are mapped objects.
 >
-> I'm still pretty convinced that my original suggestion here to switch
-> user_notif over to esyscall design is the way to go and probably the
-> least complex.
->
-I think that the big difference in the esyscall design is that the
-nested structures don't require evolution. In addition, the kernel
-deals with the burden of old versions of userspace structs without
-requiring the user to do dynamic allocation.
+> Is that worse than an endless loop here?
 
-> > - make a new API that is perf_event_open()-style where fields are
-> >   explicitly requested, as Sargun suggested[5]. (This looks like it
-> >   might be complex to construct, but would get us by far the most
-> >   extensible API.)
-> > - jam whatever we pick into the existing API (we'll be forced to do
-> >   SOMETHING to make the old API still work, so, I dunno what that will
-> >   look like until we finish the rest of the design).
-> >
-> > If we did a requested-fields approach, what would the user_notif event
-> > block of bytes look like? Would it be entirely dynamic based on the
-> > initial ioctl()? Another design consideration here is that we don't want
-> > the kernel doing tons of work (especially copying) and tossing tons
-> > of stuff into a huge structure that the user doesn't care about. In
-> > addition to explicit fields, maybe the EA struct could be included,
-> > perhaps with specified offset/size, so only the portion the user_notif
-> > user wanted to inspect was copied?
-> >
-> > The complexity of the per-field API is higher, but I think it might be
-> > the most robust and have the greatest chance at being performant.
-> > For example, "send me user_notif but I only care about the pid" would
-> > mean no syscall arguments are copied, etc.
->
-> Before we go with such a flexible design we should ask who's going to
-> use it that way? At least for our use-cass we always want everything.
-> Maybe I'm missing other uses though. But most use-cases seem kinda
-> pointless, e.g. just getting the pid seems not interesting. I could see
-> a use-case for pid + syscall number without arguments and the notifier
-> always replying with _CONTINUE but even that seems a little odd to me.
->
-I think it's worth being clear about the perf_event_attr style API [1][2].
-That's here there are two steps:
-1. Configure what / how / versions of fields you want to receive. This looks
-something like this:
-struct seccomp_notif_config {
-	/*
-	 * Size of this data structure, indicating which 
-	 * member fields are included.
-	 */
-	__u32	size;
-	/* Bitmask of optional fields */
-	__u64	optional_fixed_size_fields;
-	/* Size indicates version. 0 means omit */
-	__u32	size_of_variable_member1;
-	__u32	size_of_variable_member2;
-	/* New varible sized members are added at the end */
-}
-2. Then at read time, the user builds a structure like this on the stack:
-struct notif_flat {
-	/* Existing variable members cannot have their sizes changed */
-	struct variable_member1 ...;
-	struct variable_member2 ...;
-	__u32 optional_field1;
-	__u32 optional_field2;
-}
-And you can read (or ioctl) the notification into the buffer in one-go.
+Well, let's figure if there really has to be an endless loop. Would
+you mind retesting with
+https://marc.info/?l=linux-mm&m=158996286816704&w=2?
 
-There is a slightly different alternative where the data structure
-you share with the kernel looks more like:
-struct notif_submembers {
-	__u32 optional_field1;
-	__u32 optional_field2;
-}
-struct notif_ptrs {
-	/* Points are empty buffers the size of variable member */
-	struct *variable_member1;
-	struct *variable_member2;
-	// You cannot interleave fixed fields, they may be at the end
-	struct notif_submembers members;
-}
-
-I think that userspace signaling up to kernelspace what it wants is a better
-design. I'm not sure how the kernel would tell userspace to lay out a structure
-of mixed pointers, and flat fields, so I think you'd have something like this:
-
-/* this datastructure is returned by the kernel */
-struct seccom_sizes {
-	__u32	num_members;
-	/* Ack, VLA */
-	__u32	member_sizes[];
-	__u32	submember_size;;	
-}
-
-If we go down the route of notif_ptrs, it requires the kernel read in
-the datastructure, find the pointers in userspace and copy out to a bunch of
-other buffers. In addition, it means the userspace has to deal with managing
-all these buffers (And have a mechanism like seccomp_notif_sizes to find the
-number of structures, and their respective buffer size). Because this is
-dynamic and not static (can vary based on kernel version), the user can no
-longer rely on stack allocations / static programming, and has to do at least
-some basic casting back and forth to void.
-
-If we go down the route of notif_flat, it makes thing slightly nicer, unless
-we want to upgrade (extend) a field without moving it to the bottom of the
-datastructure. If we try to do in-place growth it will move around all
-the other fields.
-
-I think that perf_event_attr style API not only solves this problem more
-cleanly (at least from the perspective of userspace), but it also means
-less extra memory copies if we don't need to. I think that this is interesting
-from the perspective of performance, and simpler userspace code without
-having to do dynamic allocations for fields that I do not care about.
-Although the fields we've discussed adding so far (pidfd, tgid) are tiny,
-cheap, and easy to work with, they still mean that userspace has to
-deal with dynamic memory allocation.
-
-Mostly, I'd like to get clarity on:
-1. Do we want to go down the route of perf_event_attr or continue to have
-a mechanism where the kernel tells userspace how to layout a struct at runtime
-
-If we want to do the latter, can someone counterpropose an API if they
-have a better idea than that I've described aboe.
-2. Do we want to want to open the door to read(2) for receiving events?
-3. Do we want to *ever* send other things with events? (FDs) -- it sounds
-   like we've answered this one with a no
-4. Should the kernel be able to handle userspace applications without
-requiring them to dynamic allocations?
-5. Where does this become a performance concern?
-6. Is there *anything* that is a good idea to pass back with the notification
-(FDs, locks, etc...?)
-
--Sargun
-
-[1]: https://lore.kernel.org/linux-api/20200518213734.GA25216@ircssh-2.c.rugged-nimbus-611.internal/
-[2]: https://lore.kernel.org/linux-api/20200518083224.GA16270@ircssh-2.c.rugged-nimbus-611.internal/
+Best regards,
+   Vitaly
