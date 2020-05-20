@@ -2,118 +2,112 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7468CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41C2420823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9820F20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZHLnycp6"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SJdjEkS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgETV7j (ORCPT
+        id S1728437AbgETV7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:59:39 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:60362 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728046AbgETV7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:59:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590011978; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=3uYuYChDUZSVg5PdvAhch35HzgAV57/WwZiYWni9v5A=; b=ZHLnycp6/vtcEthhS177y4hrEwK081QbvsALTnAFDYIpNNoICorhIWT6/OlpDgu8fEGwA1cv
- vm9v46yTmTXvIH0XkhEOSfHtHBc0ubl41hs1p1wb5of6JVMipCLQRQJRt7+Vei2xoitpHhg4
- uEjW9ihBkDmYuWTA58vXfuXYMVw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ec5a83eeb073d5691184cf7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 21:59:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 10257C433CB; Wed, 20 May 2020 21:59:26 +0000 (UTC)
-Received: from [192.168.8.150] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 20 May 2020 17:59:54 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43567 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728046AbgETV7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:59:53 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3099C433C8;
-        Wed, 20 May 2020 21:59:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C3099C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v4 2/2] scsi: ufs-qcom: enter and exit hibern8 during
- clock scaling
-To:     Avri Altman <Avri.Altman@wdc.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "PedroM.Sousa@synopsys.com" <PedroM.Sousa@synopsys.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Cc:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <186237103353b5a79c3496e619fca894dbc78600.1589997078.git.asutoshd@codeaurora.org>
- <9b67c25eb7c0bf80075b36660aebdb3788207353.1589997078.git.asutoshd@codeaurora.org>
- <SN6PR04MB464071B647084B0EB111992DFCB60@SN6PR04MB4640.namprd04.prod.outlook.com>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <f9425765-42fb-717b-e20c-fd57e310b882@codeaurora.org>
-Date:   Wed, 20 May 2020 14:59:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49S69f0563z9sTN;
+        Thu, 21 May 2020 07:59:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590011991;
+        bh=9C6FrJ77beTpNxWh+pD6MyfUV83fIBDXa4d8Y0TzOSM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SJdjEkS8jmUSJNvTL2/OgiIK1vFpPkNTyafthYft2xoB9en3dZURUoXdwLpzoYXtz
+         h8AuZykvsQQRYh9l2SILQhUmjmi5jt+dJTi7GUUJPaylmPA2orAFhM8yw6/RoVMGQ6
+         7eO5S1fQzrAG06c10NdCjySS0KCa7sTG73hZHOHdPprnMegcKZMoo3+SCKwzW00dMN
+         2vgxs5fexrQ0x+WaCGxi0sS0ek/LKkzdFqcEZsz2gwRwpAJCJuCcO+rnUtGWHyTDMM
+         YeXrm1fJ60Bdb9eOOa25t+1gjNW7TvwSk6ibuG0KK/e1wdTWZyjpEhvF6vHltW9pwi
+         KYmmIHrPyjMQw==
+Date:   Thu, 21 May 2020 07:59:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: linux-next: Fixes tags needs some work in the tip tree
+Message-ID: <20200521075949.6db68c4a@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <SN6PR04MB464071B647084B0EB111992DFCB60@SN6PR04MB4640.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/brJGB.HyXKGJi3d5CyS7j6P";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Avri,
+--Sig_/brJGB.HyXKGJi3d5CyS7j6P
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 5/20/2020 2:33 PM, Avri Altman wrote:
-> Hi,
-> 
->>
->>
->> Qualcomm controller needs to be in hibern8 before scaling clocks.
->> This change puts the controller in hibern8 state before scaling
->> and brings it out after scaling of clocks.
->>
->> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> 
-> I guess that your previous versions are pretty far back - ,
-> I noticed a comment by Pedro, so you might want to resend this series.
-> 
-Ok.
+Hi all,
 
-> What happens if the pre-change is successful,
-> but you are not getting to the post change because, e.g. ufshcd_set_clk_freq failed?
-> 
-I agree. Let me check this.
+In commit
 
-> Also, this piece of code is ~5 years old, so you might want to elaborate on how come hibernation is now needed.
-> 
-> Thanks,
-> Avri
-> 
+  39f23ce07b93 ("sched/fair: Fix unthrottle_cfs_rq() for leaf_cfs_rq list")
 
-Thanks for the review. Hibernation was needed since long actually.
-I guess it was never pushed upstream.
+Fixes tag
 
-Thanks,
--asd
+  Fixes: fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+In commit
+
+  b34cb07dde7c ("sched/fair: Fix enqueue_task_fair() warning some more")
+
+Fixes tag
+
+  Fixes: fe61468b2cb ("sched/fair: Fix enqueue_task_fair warning")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/brJGB.HyXKGJi3d5CyS7j6P
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7FqFUACgkQAVBC80lX
+0GzARQf/SI6L16TURENQFR2YyrVsoAzQhqRQENLRo7GxNnQ6jku/l/i1LI83tIc+
+UNACByZhdFoWxDO4ili44MDzWCbphEgnoYhUpXFQn7Q4ZQxemHAFBCcZs4LkPShV
+lFFpILeYMe+B4EaF3a+qUDMRui7FD3ptdLslmGNPgSyKC8pAJJpm1cEMvlVVkiH9
+wkLWFbgzjO+cHtj9net6dtcNPcQD2nDZju5LUwPDutt4HzglWobyY4Vr6qfA0Ir+
+vUSrq2Z94r6BbKfZq0+1eMPIr+saP0/xBpTSC5sNHTLRwQzDMGAM2aFQaHbQ9daa
+hia8MHohaU/3KfOuANTKowjL5mR9UQ==
+=E8PV
+-----END PGP SIGNATURE-----
+
+--Sig_/brJGB.HyXKGJi3d5CyS7j6P--
