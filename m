@@ -2,236 +2,204 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F644C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6129C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2579120873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lk2pKb+1"
+	by mail.kernel.org (Postfix) with ESMTP id 9C37D20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590014904;
+	bh=PizrXtPeLRHGYi8hhZOhVUD3zKJQzwUNb0DoltWvmN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P+Wh8C508VP7C92l50Fu9iZUJtOzWAqYW5SJgqL36O1MokPvoK0dEk20AqAEouHKM
+	 2uYrJUpMQJseE18fvoiFnrWwB1qHtMITLTyquVCvlrQNu2B6ujY5S6nGlYfftDMv7P
+	 n+fFlJ/sLk9NrsppfIfBHu8/pRCdnrUX0F0nVheI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgETWsS (ORCPT
+        id S1728630AbgETWsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbgETWsR (ORCPT
+        Wed, 20 May 2020 18:48:23 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:38038 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbgETWsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:48:17 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8CABC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:48:17 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id v23so1194411vke.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=47LWty0h4lFiVFN17MSJUE+uaQH/Kp+4z/ot0VIo9pg=;
-        b=Lk2pKb+1a/iz6NJQA6L1mx1V04sa3fommdf5Ng9euSWqmIv3ljCRIHh25CIUVCynMp
-         4opGi0a8VG4L6kakNxcjbuKsRpZMI4tYjOCkSjfygKBv+aOJiatcnonG4QcAnW7C11YT
-         cHLtL1uLlJcwVCuJkFnspzzIw1rpGrJn9jsRI=
+        Wed, 20 May 2020 18:48:19 -0400
+Received: by mail-il1-f196.google.com with SMTP id j2so5051100ilr.5;
+        Wed, 20 May 2020 15:48:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=47LWty0h4lFiVFN17MSJUE+uaQH/Kp+4z/ot0VIo9pg=;
-        b=BuheDBwH4H1LKJO2dTsnq8SOA7lBl+kyzgMPqyTJ5fenQqT/kK1KyPL/cgR8fqsLlG
-         iAUqgyvCJwxAPvukEj/bHkmy1r1MyEEEqGhw/GD/1uhIJBFiNYO/Bn79SBzxn0R4b2do
-         x8hEQJefIKKOP4coaXOqpptXLlqqIjfkwgWHcW9joTF2sOvEEtAtuoGnC+9SpoFS7052
-         Pxf7mF2Dnl3sJD2Xo9ElzRiHCytBmpDx/ubUrcLgkuUfuLMdxKf6IQ5jO+8P1VIMDHCs
-         QN3+TnLIJVOS6iwd35ILX7p/jGwtCTM3vYywTvzruQ4JvOaBNklbuYECFecPVv/kckjD
-         /ehg==
-X-Gm-Message-State: AOAM533TnVgE0VwC/zOGy4szxdS0TLnRHidlG28QRzfPJJtAjFJOfYHp
-        LG/przqlClGs6RKLyheqlnn+zpL5oQw=
-X-Google-Smtp-Source: ABdhPJxgS2cOc0GhdoEb9Y0SBsZHNAYR0zi8hpRZloHInRTUpYl+QzJNrA8OhAuiIa4s1fPY//Li6w==
-X-Received: by 2002:a1f:9716:: with SMTP id z22mr5590804vkd.55.1590014895584;
-        Wed, 20 May 2020 15:48:15 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id o9sm613542vko.18.2020.05.20.15.48.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 15:48:14 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id i5so1892789uaq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:48:13 -0700 (PDT)
-X-Received: by 2002:a9f:230a:: with SMTP id 10mr3392329uae.0.1590014893375;
- Wed, 20 May 2020 15:48:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=a6CsSkyyYqfJ3PWKR4lfOXJnXovm0FJ9Ug4n/bB3wGo=;
+        b=uS/+oHkA0Tgg37hfjbRJZhq403HOwOn23zMVHu1lPgFeiLZEHoijn7bTJ1AYhIt5+V
+         hnIZ0FSWCYGtuXfPi80IpswWFk0F0M6W9MtIlt926HWb92GUCay94hwfrxSV1SWCb5MN
+         3EZfu3WYn8nfu5Nl2S2l0sAOYDCXzqn7ECHDEVFTxt8Zh+7FXFMZJHZWeXSijSDauNrv
+         oklBES/pXTSR3fjMbUvPKWbsR2IUEBr9NivkdpIM4oFFv0D7yjXxnU8Am1VN7HMyX+Il
+         DeSX83HgI7wQz8ZJt8vF0Up3lXtkAAnL0Jn2FdIBE3sYmJMkqLDqb6h+cYotGCsI89qA
+         lEBQ==
+X-Gm-Message-State: AOAM531roOLUdivNDF5lEMxByoTQp9o+Ha1e7VIxl05UJ52C7RH85Yr4
+        pwj1lBkFaehkYl3mW4R4PQ==
+X-Google-Smtp-Source: ABdhPJz7AEJmGD0xmO7ymFo3VwMxQRTMwG6wmqEGmjyaLRoWT7TJaCjZrFM91Sil3ymBrKdaJzQ8cw==
+X-Received: by 2002:a92:3a51:: with SMTP id h78mr6415882ila.39.1590014898311;
+        Wed, 20 May 2020 15:48:18 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v15sm2051219ila.57.2020.05.20.15.48.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 15:48:17 -0700 (PDT)
+Received: (nullmailer pid 747995 invoked by uid 1000);
+        Wed, 20 May 2020 22:48:16 -0000
+Date:   Wed, 20 May 2020 16:48:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        Alan Mikhak <alan.mikhak@sifive.com>
+Subject: Re: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory
+ resource size >4GB
+Message-ID: <20200520224816.GA739245@bogus>
+References: <20200513190855.23318-1-vidyas@nvidia.com>
+ <20200513223508.GA352288@bjorn-Precision-5520>
+ <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+ <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+ <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
+ <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <20200520111717.GB2141681@ulmo>
+ <b1a72abe-6da0-b782-0269-65388f663e26@nvidia.com>
 MIME-Version: 1.0
-References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
- <1589307480-27508-3-git-send-email-rbokka@codeaurora.org> <ffaccce7-95c0-2f95-ad3b-55f1da42eaee@linaro.org>
- <14e1fa51-066c-6e1b-01a4-2103612de9e9@codeaurora.org> <d5902226-21b3-7941-6405-688d7a115142@linaro.org>
- <b80aaca0-0594-e04b-5320-b5b3c4478161@codeaurora.org> <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
- <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com> <9864496c-b066-3fe8-5608-bd9af69663f4@linaro.org>
-In-Reply-To: <9864496c-b066-3fe8-5608-bd9af69663f4@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 20 May 2020 15:48:01 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UbZPQ74COXJbOikq9Wcx1UvtuMuMA+nqkx44uySoqggg@mail.gmail.com>
-Message-ID: <CAD=FV=UbZPQ74COXJbOikq9Wcx1UvtuMuMA+nqkx44uySoqggg@mail.gmail.com>
-Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse support
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1a72abe-6da0-b782-0269-65388f663e26@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, May 20, 2020 at 11:16:32PM +0530, Vidya Sagar wrote:
+> 
+> 
+> On 20-May-20 4:47 PM, Thierry Reding wrote:
+> > On Tue, May 19, 2020 at 10:08:54PM +0000, Gustavo Pimentel wrote:
+> > > On Tue, May 19, 2020 at 15:58:16, Lorenzo Pieralisi
+> > > <lorenzo.pieralisi@arm.com> wrote:
+> > > 
+> > > > On Tue, May 19, 2020 at 07:25:02PM +0530, Vidya Sagar wrote:
+> > > > > 
+> > > > > 
+> > > > > On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
+> > > > > > External email: Use caution opening links or attachments
+> > > > > > 
+> > > > > > 
+> > > > > > On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
+> > > > > > > [+cc Alan; please cc authors of relevant commits,
+> > > > > > > updated Andrew's email address]
+> > > > > > > 
+> > > > > > > On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
+> > > > > > > > commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
+> > > > > > > > 32-bits") enables warning for MEM resources of size >4GB but prefetchable
+> > > > > > > >    memory resources also come under this category where sizes can go beyond
+> > > > > > > > 4GB. Avoid logging a warning for prefetchable memory resources.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > > > > > > ---
+> > > > > > > >    drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
+> > > > > > > >    1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > index 42fbfe2a1b8f..a29396529ea4 100644
+> > > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > > > > > > >                       pp->mem = win->res;
+> > > > > > > >                       pp->mem->name = "MEM";
+> > > > > > > >                       mem_size = resource_size(pp->mem);
+> > > > > > > > -                   if (upper_32_bits(mem_size))
+> > > > > > > > +                   if (upper_32_bits(mem_size) &&
+> > > > > > > > +                       !(win->res->flags & IORESOURCE_PREFETCH))
+> > > > > > > >                               dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+> > > > > > > >                       pp->mem_size = mem_size;
+> > > > > > > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
+> > > > > > 
+> > > > > > That warning was added for a reason - why should not we log legitimate
+> > > > > > warnings ? AFAIU having resources larger than 4GB can lead to undefined
+> > > > > > behaviour given the current ATU programming API.
+> > > > > Yeah. I'm all for a warning if the size is larger than 4GB in case of
+> > > > > non-prefetchable window as one of the ATU outbound translation
+> > > > > channels is being used,
+> > > > 
+> > > > Is it true for all DWC host controllers ? Or there may be another
+> > > > exception whereby we would be forced to disable this warning altogether
+> > > > ?
+> > > > 
+> > > > > but, we are not employing any ATU outbound translation channel for
+> > > > 
+> > > > What does this mean ? "we are not employing any ATU outbound...", is
+> > > > this the tegra driver ? And what guarantees that this warning is not
+> > > > legitimate on DWC host controllers that do use the ATU outbound
+> > > > translation for prefetchable windows ?
+> > > > 
+> > > > Can DWC maintainers chime in and clarify please ?
+> > > 
+> > > Before this code section, there is the following function call
+> > > pci_parse_request_of_pci_ranges(), which performs a simple validation for
+> > > the IORESOURCE_MEM resource type.
+> > > This validation checks if the resource is marked as prefetchable, if so,
+> > > an error message "non-prefetchable memory resource required" is given and
+> > > a return code with the -EINVAL value.
+> > 
+> > That's not what the code is doing. pci_parse_request_of_pci_range() will
+> > traverse over the whole list of resources that it can find for the given
+> > host controller and checks whether one of the resources defines prefetch
+> > memory (note the res_valid |= ...). The error will only be returned if
+> > no prefetchable memory region was found.
+> > 
+> > dw_pcie_host_init() will then again traverse the list of resources and
+> > it will typically encounter two resource of type IORESOURCE_MEM, one for
+> > non-prefetchable memory and another for prefetchable memory.
+> > 
+> > Vidya's patch is to differentiate between these two resources and allow
+> > prefetchable memory regions to exceed sizes of 4 GiB.
+> > 
+> > That said, I wonder if there isn't a bigger problem at hand here. From
+> > looking at the code it doesn't seem like the DWC driver makes any
+> > distinction between prefetchable and non-prefetchable memory. Or at
+> > least it doesn't allow both to be stored in struct pcie_port.
+> > 
+> > Am I missing something? Or can anyone explain how we're programming the
+> > apertures for prefetchable vs. non-prefetchable memory? Perhaps this is
+> > what Vidya was referring to when he said: "we are not using an outbound
+> > ATU translation channel for prefetchable memory".
+> > 
+> > It looks to me like we're also getting partially lucky, or perhaps that
+> > is by design, in that Tegra194 defines PCI regions in the following
+> > order: I/O, prefetchable memory, non-prefetchable memory. That means
+> > that the DWC core code will overwrite prefetchable memory data with that
+> > of non-prefetchable memory and hence the non-prefetchable region ends up
+> > stored in struct pcie_port and is then used to program the ATU outbound
+> > channel.
+> Well,it is by design. I mean, since the code is not differentiating between
+> prefetchable and non-prefetchable regions, I ordered the entries in 'ranges'
+> property in such a way that 'prefetchable' comes first followed by
+> 'non-prefetchable' entry so that ATU region is used for generating the
+> translation required for 'non-prefetchable' region (which is a non 1-to-1
+> mapping)
 
-On Wed, May 20, 2020 at 7:35 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
-> On 18/05/2020 19:31, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Mon, May 18, 2020 at 3:45 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >>
-> >> On 18/05/2020 11:39, Ravi Kumar Bokka (Temp) wrote:
-> >>>
-> >>> Based on the compatible, do i need to separate probe function for
-> >>> qfprom-efuse and maintain separate nvmem object to register nvmem
-> >>> framework. Is this what you are suggesting to implementing this in to
-> >>> one existing driver?
-> >>
-> >> Yes for same driver we should add new compatible string and add support
-> >> to this in existing qfprom driver.
-> >> Ideally we should allocate nvmem_config object at probe with different
-> >> parameters based on compatible string.
-> >
-> > I wish I had better documentation for exactly what was in the SoC
-> > instead of the heavily redacted stuff Qualcomm provides.  Really the
-> > answer here is: how do you best describe the hardware?  OK, so I just
-> > spent the past hour or so trying to patch together all the bits and
-> > fragments that Qualcomm provided me.  Just like a scavenger hunt!
-> > Fun!  The best I can patch together is that there is a single QFPROM
-> > with these ranges:
-> >
-> > 0x00780000 - 0x007800FF
-> > QFPROM HW registers, range 1/2
-> >
-> > 0x00780120 - 0x007808FF
-> > QFPROM "raw" space
-> >
->
-> so this is the only region is the QFPROM fuses can be programmed!
->
-> > 0x00782000 - 0x007820FF
-> > QFPROM HW registers, range 2/2
-> >
-> > 0x00784120 - 0x007848FF
-> > QFPROM "corrected" space
->
-> Is this some kind of FEC corrected regions?
+You are getting lucky with your 'design'. Relying on order is fragile 
+(except of course in the places in DT where order is defined, but ranges 
+is not one of them).
 
-Yes.
-
-
-> > 0x00786000 - 0x00786FFF
-> > QFPROM memory range that I don't really understand and maybe we don't
-> > worry about right now?
->
-> >
-> > Did I get that right?  If so, is there a prize for winning the scavenger hunt?
-> >
-> > ---
-> >
-> > If so then, IMO, it wouldn't be insane to actually keep it as two
-> > drivers and two device tree nodes, as you've done.  I'd defer to
-> > Srinivas and Rob Herring, though.  The existing driver would be a
-> > read-only driver and provide access to the "corrected" versions of all
-> > the registers.  Its node would have "#address-cells = <1>" and
-> > "#size-cells = <1>" because it's expected that other drivers might
-> > need to refer to data stored here.
-> >
-> > Your new driver would be read-write and provide access to the "raw"
-> > values.  A read from your new driver would not necessarily equal a
-> > read from the old driver if the FEC (forward error correction) kicked
->
-> Is this only applicable for corrected address space?
-
-I guess I was proposing a two dts-node / two drive approach here.
-
-dts node #1:just covers the memory range for accessing the FEC-corrected data
-driver #1: read-only and reads the FEC-corrected data
-
-dts node #2: covers the memory range that's _not_ the FEC-corrected
-memory range.
-driver #2: read-write.  reading reads uncorrected data
-
-Does that seem sane?
-
-
-> > in.  Other drivers should never refer to the non-corrected values so
-> > you wouldn't have "#address-cells" and "#size-cells".  The only way to
-> > really read or write it would be through sysfs.
-> >
-> > It would be super important to document what's happening, of course.
-> > ...and ideally name them to make it clearer too.
-> >
-> > ---
-> >
-> > Another alternative (if Srinivas and/or Rob H prefer it) would be to
-> > deprecate the old driver and/or bindings and say that there really
-> > should just be one node and one driver.  In that case you'd replace
-> > the old node with:
-> >
-> > qfprom@780000 {
-> >    compatible = "qcom,sc7180-qfprom-efuse";
->
-> May be "qcom,sc7180-qfprom"
->
->
-> >    reg = <0 0x00780000 0 0x6fff>;
-> >    #address-cells = <1>;
-> >    #size-cells = <1>;
-> >
-> >    clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-> >    clock-names = "sec";
-> >
-> >    qusb2p_hstx_trim: hstx-trim-primary@25b {
-> >      reg = <0x25b 0x1>;
-> >      bits = <1 3>;
-> >    };
-> > };
-> >
-> > You'd use the of_match_table solution to figure out the relevant
-> > offsets (0x120, 0x2000, 0x4120, 0x6000) for sc7180 and this new driver
-> > would be responsible for being able to read the corrected values and
->
->
-> Encompassing these offsets in driver as part of the register defines
-> itself should be a good start!
->
-> It will also be nice to understand how similar this thing is with w.rt
-> other Qcom SoCs?
-
-At least sdm845 is about the same.  I cross-referenced docs I had with
-sc7180 and sdm845 and that's how I came up with my model for how this
-works.
-
-
-> > also for programming.  In this case I'm not sure how (assuming it's
-> > valuable) you'd provide read access to the uncorrected data.
-> I will leave this question to the author of the driver.
->
-> --srini
->
-> >
-> >
-> > -Doug
-> >
+Rob
