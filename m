@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5944CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A707207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A392207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgETO1K (ORCPT
+        id S1728511AbgETO1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:27:10 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33046 "EHLO
+        Wed, 20 May 2020 10:27:13 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32998 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727020AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727004AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-000376-Sl; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPbv-000362-SL; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-007DTU-3m; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbu-007DQa-Vm; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Wed, 20 May 2020 15:14:30 +0100
-Message-ID: <lsq.1589984008.819765862@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Vladimir Oltean" <olteanv@gmail.com>,
+        "Richard Cochran" <richardcochran@gmail.com>
+Date:   Wed, 20 May 2020 15:14:02 +0100
+Message-ID: <lsq.1589984008.281174821@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 62/99] USB: serial: ir-usb: add missing endpoint
- sanity check
+Subject: [PATCH 3.16 34/99] gianfar: Fix TX timestamping with a stacked
+ DSA driver
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,37 +57,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-commit 2988a8ae7476fe9535ab620320790d1714bdad1d upstream.
+commit c26a2c2ddc0115eb088873f5c309cf46b982f522 upstream.
 
-Add missing endpoint sanity check to avoid dereferencing a NULL-pointer
-on open() in case a device lacks a bulk-out endpoint.
+The driver wrongly assumes that it is the only entity that can set the
+SKBTX_IN_PROGRESS bit of the current skb. Therefore, in the
+gfar_clean_tx_ring function, where the TX timestamp is collected if
+necessary, the aforementioned bit is used to discriminate whether or not
+the TX timestamp should be delivered to the socket's error queue.
 
-Note that prior to commit f4a4cbb2047e ("USB: ir-usb: reimplement using
-generic framework") the oops would instead happen on open() if the
-device lacked a bulk-in endpoint and on write() if it lacked a bulk-out
-endpoint.
+But a stacked driver such as a DSA switch can also set the
+SKBTX_IN_PROGRESS bit, which is actually exactly what it should do in
+order to denote that the hardware timestamping process is undergoing.
 
-Fixes: f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Therefore, gianfar would misinterpret the "in progress" bit as being its
+own, and deliver a second skb clone in the socket's error queue,
+completely throwing off a PTP process which is not expecting to receive
+it, _even though_ TX timestamping is not enabled for gianfar.
+
+There have been discussions [0] as to whether non-MAC drivers need or
+not to set SKBTX_IN_PROGRESS at all (whose purpose is to avoid sending 2
+timestamps, a sw and a hw one, to applications which only expect one).
+But as of this patch, there are at least 2 PTP drivers that would break
+in conjunction with gianfar: the sja1105 DSA switch and the felix
+switch, by way of its ocelot core driver.
+
+So regardless of that conclusion, fix the gianfar driver to not do stuff
+based on flags set by others and not intended for it.
+
+[0]: https://www.spinics.net/lists/netdev/msg619699.html
+
+Fixes: f0ee7acfcdd4 ("gianfar: Add hardware TX timestamping support")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/ir-usb.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/freescale/gianfar.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/serial/ir-usb.c
-+++ b/drivers/usb/serial/ir-usb.c
-@@ -199,6 +199,9 @@ static int ir_startup(struct usb_serial
- 	struct usb_irda_cs_descriptor *irda_desc;
- 	int rates;
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -2524,13 +2524,17 @@ static void gfar_clean_tx_ring(struct gf
  
-+	if (serial->num_bulk_in < 1 || serial->num_bulk_out < 1)
-+		return -ENODEV;
+ 	while ((skb = tx_queue->tx_skbuff[skb_dirtytx])) {
+ 		unsigned long flags;
++		bool do_tstamp;
 +
- 	irda_desc = irda_usb_find_class_desc(serial, 0);
- 	if (!irda_desc) {
- 		dev_err(&serial->dev->dev,
++		do_tstamp = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
++			    priv->hwts_tx_en;
+ 
+ 		frags = skb_shinfo(skb)->nr_frags;
+ 
+ 		/* When time stamping, one additional TxBD must be freed.
+ 		 * Also, we need to dma_unmap_single() the TxPAL.
+ 		 */
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
++		if (unlikely(do_tstamp))
+ 			nr_txbds = frags + 2;
+ 		else
+ 			nr_txbds = frags + 1;
+@@ -2544,7 +2548,7 @@ static void gfar_clean_tx_ring(struct gf
+ 		    (lstatus & BD_LENGTH_MASK))
+ 			break;
+ 
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
++		if (unlikely(do_tstamp)) {
+ 			next = next_txbd(bdp, base, tx_ring_size);
+ 			buflen = next->length + GMAC_FCB_LEN + GMAC_TXPAL_LEN;
+ 		} else
+@@ -2553,7 +2557,7 @@ static void gfar_clean_tx_ring(struct gf
+ 		dma_unmap_single(priv->dev, bdp->bufPtr,
+ 				 buflen, DMA_TO_DEVICE);
+ 
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
++		if (unlikely(do_tstamp)) {
+ 			struct skb_shared_hwtstamps shhwtstamps;
+ 			u64 *ns = (u64*) (((u32)skb->data + 0x10) & ~0x7);
+ 
 
