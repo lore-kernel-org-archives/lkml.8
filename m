@@ -2,177 +2,290 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FDFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 048D120671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589990389;
-	bh=KQlZWM4EgGUJxks+dgScQlJpcc0Bs+aRHvmSSBZvdrY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oQ4gCOGHHjGIUanAK+6PMJzA0W3KSCJH4A3BDWNEln0QPF/aglHDUjvnnhav9TnER
-	 BUlaY86d54SkoIIUbhKD2xp8YmOejBjAIdwN+6aloJ+tGpQAnFoyINQpXvbD04Aj51
-	 p4BEHXdX+Y1WU/CQTa/TFQcT7wCRCLRXo8JzFvXE=
+	by mail.kernel.org (Postfix) with ESMTP id E5AB22070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:02:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IHF+WyLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgETP7s (ORCPT
+        id S1726844AbgETQCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:59:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgETP7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:59:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A856220671;
-        Wed, 20 May 2020 15:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589990385;
-        bh=KQlZWM4EgGUJxks+dgScQlJpcc0Bs+aRHvmSSBZvdrY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1vfFff/pXGLpXhQkukVAcB48aUGthYHL2F9aeu0iQI6ykEgTHfLuVnDHXivhoNOdk
-         w1K1lnDOHSsXweq7ZC+zbwh0jQN0T94hLA+0dNQly/CX9pOcEp2Y6vhtevV69jSSu4
-         r5ZNrsj3OAZqxPcoevtKXDP7kTwtuLFB3Vnp2yww=
-Date:   Wed, 20 May 2020 17:59:43 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Olof Johansson <olof.johansson@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
-Message-ID: <20200520155943.GB3916378@kroah.com>
-References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
- <20200520051536.GA2141566@kroah.com>
- <CAKMK7uEbwTK68sxhf452fPHzAreQqRbRc7=RLGX-9SesXnJnLQ@mail.gmail.com>
- <5701b299-7800-1584-4b3a-6147e7ad3fca@codeaurora.org>
+        Wed, 20 May 2020 12:02:09 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57883 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726560AbgETQCI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:02:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589990526;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KMQx3CJaDuLGpNTSBHpWIwiqV2cYKS8CUQMrDvjG1OI=;
+        b=IHF+WyLKeCn+Dk/KeOnFfyyBOwEypwX3AZYh61Qe06YMWw/USmM3/uI67/JlpRR29xrDp9
+        8koYFsu36S/kSM3aC5poBiLGO3OPr4sSNkGcWF2ghRBJQpwwt3ExDG8qhg/3Jth+SEVa9H
+        vIWvRJiSwkFng7VmRGviiIQhf5CT3xU=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-b8VpCxxpPZayDUKteklelw-1; Wed, 20 May 2020 12:01:32 -0400
+X-MC-Unique: b8VpCxxpPZayDUKteklelw-1
+Received: by mail-ej1-f71.google.com with SMTP id gl5so1540948ejb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:01:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KMQx3CJaDuLGpNTSBHpWIwiqV2cYKS8CUQMrDvjG1OI=;
+        b=Q+Iju85NER9joNC4XMd9qoqbACAswh9D/PzsCjvyWTFfx36qmh20LTHNoGy4tik7a6
+         1qET1kAsPxrLYLxK7+BsNUcqw3GSw6JreG+L49WlZ1pozVNMA0kzSTjI5VksBnJUxI0R
+         btFxcuTn5NV6r826QFgBjEM2ais3uGYwnJEsvvfpVgQni9MNB8scCUzaYwCqin1fBgG8
+         h8QHi0smyBxh4y6r1nwKnMmREMfe+PbKB2h7mP6RJJy6g7E3E3S4x8pLj2TpM6K8p4nc
+         peNjeCUjksoERwPRxw2L0nDDkbDz6o1DMN22wSULJdmbCwSweJGvvRXnesR7DxjDGneD
+         3Zyw==
+X-Gm-Message-State: AOAM532ei4fP4bTdjwJnTqaoAoIW4ajDlbx8b251B118nmXZ0maujBgv
+        O7h4YNabhWP5kBN2SHTH5I4SdG2aXUsI7iFm1yG+gpcGXwNzKpG9UESrXnmLpgP7kcG/s1HOoWL
+        UJCrZVW1cHiKeAoLnGRSHP5Pc6j1FIuaEaLveMfPe
+X-Received: by 2002:a05:6402:31ad:: with SMTP id dj13mr4175765edb.232.1589990490999;
+        Wed, 20 May 2020 09:01:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzT9suogOnoQUaF/gxrh/lSHkNmFGj8jKQHtSgp0nG/kUUrYtFstNCEi3zmWpJfNw4m2Rq4QNGA6RtD20kKDfU=
+X-Received: by 2002:a05:6402:31ad:: with SMTP id dj13mr4175708edb.232.1589990490525;
+ Wed, 20 May 2020 09:01:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5701b299-7800-1584-4b3a-6147e7ad3fca@codeaurora.org>
+References: <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
+ <20200312214736.GA3818@techsingularity.net> <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
+ <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
+ <20200320152251.GC3818@techsingularity.net> <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
+ <20200320163843.GD3818@techsingularity.net> <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
+ <20200507155422.GD3758@techsingularity.net> <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+ <20200507174934.GD19331@lorien.usersys.redhat.com> <20200508034741.13036-1-hdanton@sina.com>
+ <CAE4VaGDBAquxbBjuzzyaT1WPR95wiaiHsrEPs-eOP2W+r=fQFg@mail.gmail.com>
+ <20200519043154.10876-1-hdanton@sina.com> <CAE4VaGAxqK_gr7gstk1S8z3vx+9c6rG-Xo_kUiAzuOWpqOR4cQ@mail.gmail.com>
+In-Reply-To: <CAE4VaGAxqK_gr7gstk1S8z3vx+9c6rG-Xo_kUiAzuOWpqOR4cQ@mail.gmail.com>
+From:   Jirka Hladky <jhladky@redhat.com>
+Date:   Wed, 20 May 2020 18:01:19 +0200
+Message-ID: <CAE4VaGBsjVYc0kOXjm8OgRQgg73rUcyovMAiqcTO7VhbOhxUFw@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>,
+        "aokuliar@redhat.com" <aokuliar@redhat.com>,
+        "kkolakow@redhat.com" <kkolakow@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:48:13AM -0600, Jeffrey Hugo wrote:
-> On 5/20/2020 2:34 AM, Daniel Vetter wrote:
-> > On Wed, May 20, 2020 at 7:15 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
-> > > > On Tue, May 19, 2020 at 07:41:20PM +0200, Greg Kroah-Hartman wrote:
-> > > > > On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
-> > > > > > On 5/18/2020 11:08 PM, Dave Airlie wrote:
-> > > > > > > On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
-> > > > > > > > 
-> > > > > > > > Introduction:
-> > > > > > > > Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
-> > > > > > > > SoC ASIC for the purpose of efficently running Deep Learning inference
-> > > > > > > > workloads in a data center environment.
-> > > > > > > > 
-> > > > > > > > The offical press release can be found at -
-> > > > > > > > https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
-> > > > > > > > 
-> > > > > > > > The offical product website is -
-> > > > > > > > https://www.qualcomm.com/products/datacenter-artificial-intelligence
-> > > > > > > > 
-> > > > > > > > At the time of the offical press release, numerious technology news sites
-> > > > > > > > also covered the product.  Doing a search of your favorite site is likely
-> > > > > > > > to find their coverage of it.
-> > > > > > > > 
-> > > > > > > > It is our goal to have the kernel driver for the product fully upstream.
-> > > > > > > > The purpose of this RFC is to start that process.  We are still doing
-> > > > > > > > development (see below), and thus not quite looking to gain acceptance quite
-> > > > > > > > yet, but now that we have a working driver we beleive we are at the stage
-> > > > > > > > where meaningful conversation with the community can occur.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > Hi Jeffery,
-> > > > > > > 
-> > > > > > > Just wondering what the userspace/testing plans for this driver.
-> > > > > > > 
-> > > > > > > This introduces a new user facing API for a device without pointers to
-> > > > > > > users or tests for that API.
-> > > > > > 
-> > > > > > We have daily internal testing, although I don't expect you to take my word
-> > > > > > for that.
-> > > > > > 
-> > > > > > I would like to get one of these devices into the hands of Linaro, so that
-> > > > > > it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
-> > > > > > to convince the powers that be to make this happen.
-> > > > > > 
-> > > > > > Regarding what the community could do on its own, everything but the Linux
-> > > > > > driver is considered proprietary - that includes the on device firmware and
-> > > > > > the entire userspace stack.  This is a decision above my pay grade.
-> > > > > 
-> > > > > Ok, that's a decision you are going to have to push upward on, as we
-> > > > > really can't take this without a working, open, userspace.
-> > > > 
-> > > > Uh wut.
-> > > > 
-> > > > So the merge criteria for drivers/accel (atm still drivers/misc but I
-> > > > thought that was interim until more drivers showed up) isn't actually
-> > > > "totally-not-a-gpu accel driver without open source userspace".
-> > > > 
-> > > > Instead it's "totally-not-a-gpu accel driver without open source
-> > > > userspace" _and_ you have to be best buddies with Greg. Or at least
-> > > > not be on the naughty company list. Since for habanalabs all you
-> > > > wanted is a few test cases to exercise the ioctls. Not the entire
-> > > > userspace.
-> > > 
-> > > Also, to be fair, I have changed my mind after seeing the mess of
-> > > complexity that these "ioctls for everyone!" type of pass-through
-> > > these kinds of drivers are creating.  You were right, we need open
-> > > userspace code in order to be able to properly evaluate and figure out
-> > > what they are doing is right or not and be able to maintain things over
-> > > time correctly.
-> > > 
-> > > So I was wrong, and you were right, my apologies for my previous
-> > > stubbornness.
-> > 
-> > Awesome and don't worry, I'm pretty sure we've all been stubborn
-> > occasionally :-)
-> > 
-> >  From a drivers/gpu pov I think still not quite there since we also
-> > want to see the compiler for these programmable accelerator thingies.
-> > But just having a fairly good consensus that "userspace library with
-> > all the runtime stuff excluding compiler must be open" is a huge step
-> > forward. Next step may be that we (kernel overall, drivers/gpu will
-> > still ask for the full thing) have ISA docs for these programmable
-> > things, so that we can also evaluate that aspect and gauge how many
-> > security issues there might be. Plus have a fighting chance to fix up
-> > the security leaks when (post smeltdown I don't really want to
-> > consider this an if) someone finds a hole in the hw security wall. At
-> > least in drivers/gpu we historically have a ton of drivers with
-> > command checkers to validate what userspace wants to run on the
-> > accelerator thingie. Both in cases where the hw was accidentally too
-> > strict, and not strict enough.
-> 
-> I think this provides a pretty clear guidance on what you/the community are
-> looking for, both now and possibly in the future.
-> 
-> Thank you.
-> 
-> From my perspective, it would be really nice if there was something like
-> Mesa that was a/the standard for these sorts of accelerators.  Its somewhat
-> the wild west, and we've struggled with it.
+I have an update on netperf-cstate-small-cross-socket results.
 
-Put a first cut at such a thing out there and see how it goes!  Nothing
-is preventing you from starting such a project, and it would be most
-welcome as you have seen.
+Reported performance degradation of 2.5% for the UDP stream throughput
+and 0.6% for the TCP throughput is for message size of 16kB. For
+smaller message sizes, the performance drop is higher - up to 5% for
+UDP throughput for a message size of 64B. See the numbers below [1]
 
-good luck,
+We still think that it's acceptable given the gains in other
+situations (this is again compared to 5.7 vanilla) :
 
-greg k-h
+* solved the performance drop upto 20%  with single instance
+SPECjbb2005 benchmark on 8 NUMA node servers (particularly on AMD EPYC
+Rome systems) => this performance drop was INCREASING with higher
+threads counts (10% for 16 threads and 20 % for 32 threads)
+* solved the performance drop upto 50% for low load scenarios
+(SPECjvm2008 and NAS)
+
+[1]
+Hillf's patch compared to 5.7 (rc4) vanilla:
+
+TCP throughput
+Message size (B)
+64          -2.6%
+128        -2.3%
+256        -2.6%
+1024      -2.7%
+2048      -2.2%
+3312      -2.4%
+4096      -1.1%
+8192      -0.4%
+16384    -0.6%
+
+UDP throughput
+64          -5.0%
+128        -3.0%
+256        -3.0%
+1024      -3.1%
+2048      -3.3%
+3312      -3.5%
+4096      -4.0%
+8192      -3.3%
+16384    -2.6%
+
+
+On Wed, May 20, 2020 at 3:58 PM Jirka Hladky <jhladky@redhat.com> wrote:
+>
+> Hi Hillf, Mel and all,
+>
+> thanks for the patch! It has produced really GOOD results.
+>
+> 1) It has fixed performance problems with 5.7 vanilla kernel for
+> single-tenant workload and low system load scenarios, without
+> performance degradation for the multi-tenant tasks. It's producing the
+> same results as the previous proof-of-concept patch where
+> adjust_numa_imbalance function was modified to be a no-op (returning
+> the same value of imbalance as it gets on the input).
+>
+> 2) We have also added Mel's netperf-cstate-small-cross-socket test to
+> our test battery:
+> https://github.com/gormanm/mmtests/blob/master/configs/config-network-netperf-cstate-small-cross-socket
+>
+> Mel told me that he had seen significant performance improvements with
+> 5.7 over 5.6 for the netperf-cstate-small-cross-socket scenario.
+>
+> Out of 6 different patches we have tested, your patch has performed
+> the best for this scenario. Compared to vanilla, we see minimal
+> performance degradation of 2.5% for the udp stream throughput and 0.6%
+> for the tcp throughput. The testing was done on a dual-socket system
+> with Gold 6132 CPU.
+>
+> @Mel - could you please test Hillf's patch with your full testing
+> suite? So far, it looks very promising, but I would like to check the
+> patch thoroughly to make sure it does not hurt performance in other
+> areas.
+>
+> Thanks a lot!
+> Jirka
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+> On Tue, May 19, 2020 at 6:32 AM Hillf Danton <hdanton@sina.com> wrote:
+> >
+> >
+> > Hi Jirka
+> >
+> > On Mon, 18 May 2020 16:52:52 +0200 Jirka Hladky wrote:
+> > >
+> > > We have compared it against kernel with adjust_numa_imbalance disabled
+> > > [1], and both kernels perform at the same level for the single-tenant
+> > > jobs, but the proposed patch is bad for the multitenancy mode. The
+> > > kernel with adjust_numa_imbalance disabled is a clear winner here.
+> >
+> > Double thanks to you for the tests!
+> >
+> > > We would be very interested in what others think about disabling
+> > > adjust_numa_imbalance function. The patch is bellow. It would be great
+> >
+> > A minute...
+> >
+> > > to collect performance results for different scenarios to make sure
+> > > the results are objective.
+> >
+> > I don't have another test case but a diff trying to confine the tool
+> > in question back to the hard-coded 2's field.
+> >
+> > It's used in the first hunk below to detect imbalance before migrating
+> > a task, and a small churn of code is added at another call site when
+> > balancing idle CPUs.
+> >
+> > Thanks
+> > Hillf
+> >
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -1916,20 +1916,26 @@ static void task_numa_find_cpu(struct ta
+> >          * imbalance that would be overruled by the load balancer.
+> >          */
+> >         if (env->dst_stats.node_type == node_has_spare) {
+> > -               unsigned int imbalance;
+> > -               int src_running, dst_running;
+> > +               unsigned int imbalance = 2;
+> >
+> > -               /*
+> > -                * Would movement cause an imbalance? Note that if src has
+> > -                * more running tasks that the imbalance is ignored as the
+> > -                * move improves the imbalance from the perspective of the
+> > -                * CPU load balancer.
+> > -                * */
+> > -               src_running = env->src_stats.nr_running - 1;
+> > -               dst_running = env->dst_stats.nr_running + 1;
+> > -               imbalance = max(0, dst_running - src_running);
+> > -               imbalance = adjust_numa_imbalance(imbalance, src_running);
+> > +               //No imbalance computed without spare capacity
+> > +               if (env->dst_stats.node_type != env->src_stats.node_type)
+> > +                       goto check_imb;
+> > +
+> > +               imbalance = adjust_numa_imbalance(imbalance,
+> > +                                               env->src_stats.nr_running);
+> > +
+> > +               //Do nothing without imbalance
+> > +               if (!imbalance) {
+> > +                       imbalance = 2;
+> > +                       goto check_imb;
+> > +               }
+> > +
+> > +               //Migrate task if it's likely to grow balance
+> > +               if (env->dst_stats.nr_running + 1 < env->src_stats.nr_running)
+> > +                       imbalance = 0;
+> >
+> > +check_imb:
+> >                 /* Use idle CPU if there is no imbalance */
+> >                 if (!imbalance) {
+> >                         maymove = true;
+> > @@ -9011,12 +9017,13 @@ static inline void calculate_imbalance(s
+> >                         env->migration_type = migrate_task;
+> >                         env->imbalance = max_t(long, 0, (local->idle_cpus -
+> >                                                  busiest->idle_cpus) >> 1);
+> > -               }
+> >
+> > -               /* Consider allowing a small imbalance between NUMA groups */
+> > -               if (env->sd->flags & SD_NUMA)
+> > -                       env->imbalance = adjust_numa_imbalance(env->imbalance,
+> > -                                               busiest->sum_nr_running);
+> > +                       /* Consider allowing a small imbalance between NUMA groups */
+> > +                       if (env->sd->flags & SD_NUMA &&
+> > +                           local->group_type == busiest->group_type)
+> > +                               env->imbalance = adjust_numa_imbalance(env->imbalance,
+> > +                                                       busiest->sum_nr_running);
+> > +               }
+> >
+> >                 return;
+> >         }
+> > --
+> >
+>
+>
+> --
+> -Jirka
+
+
+
+-- 
+-Jirka
+
