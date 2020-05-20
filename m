@@ -6,50 +6,45 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C57C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9123AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34BFD207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7652E20823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgETK74 (ORCPT
+        id S1726820AbgETK77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 20 May 2020 06:59:59 -0400
+Received: from ozlabs.org ([203.11.71.1]:37389 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726720AbgETK74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 06:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETK7z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:59:55 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C77C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:59:54 -0700 (PDT)
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 49RqX93lSgz9sT6; Wed, 20 May 2020 20:59:53 +1000 (AEST)
+        id 49RqXB3T3fz9sTC; Wed, 20 May 2020 20:59:54 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, erhard_f@mailbox.org,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Paul Mackerras <paulus@samba.org>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <2c50f3b1c9bbaa4217c9a98f3044bd2a36c46a4f.1586361277.git.christophe.leroy@c-s.fr>
-References: <2c50f3b1c9bbaa4217c9a98f3044bd2a36c46a4f.1586361277.git.christophe.leroy@c-s.fr>
-Subject: Re: [PATCH] powerpc/kasan: Fix stack overflow by increasing THREAD_SHIFT
-Message-Id: <158997212859.943180.2820921951061590486.b4-ty@ellerman.id.au>
-Date:   Wed, 20 May 2020 20:59:53 +1000 (AEST)
+In-Reply-To: <9fd0f9a827ebbeae64ad7a6f6c595d242f4dd5fc.1588747860.git.christophe.leroy@csgroup.eu>
+References: <9fd0f9a827ebbeae64ad7a6f6c595d242f4dd5fc.1588747860.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH] powerpc/8xx: Update email address in MAINTAINERS
+Message-Id: <158997212671.943180.6637276774386432310.b4-ty@ellerman.id.au>
+Date:   Wed, 20 May 2020 20:59:54 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020 15:58:49 +0000 (UTC), Christophe Leroy wrote:
-> When CONFIG_KASAN is selected, the stack usage is increased.
+On Wed, 6 May 2020 06:51:59 +0000 (UTC), Christophe Leroy wrote:
+> Since 01 May 2020, our email adresses have changed to @csgroup.eu
 > 
-> In the same way as x86 and arm64 architectures, increase
-> THREAD_SHIFT when CONFIG_KASAN is selected.
+> Update MAINTAINERS accordingly.
 
 Applied to powerpc/next.
 
-[1/1] powerpc/kasan: Fix stack overflow by increasing THREAD_SHIFT
-      https://git.kernel.org/powerpc/c/edbadaf0671072298e506074128b64e003c5812c
+[1/1] powerpc/8xx: Update email address in MAINTAINERS
+      https://git.kernel.org/powerpc/c/679d74abc4e14cb369e46f080d90f4dc8c143e65
 
 cheers
