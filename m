@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B41D20849
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD383207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgETO1S (ORCPT
+        id S1727949AbgETO1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:27:18 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33014 "EHLO
+        Wed, 20 May 2020 10:27:21 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32958 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727013AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726979AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-000360-P5; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbw-00036B-13; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DQQ-SG; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbv-007DQp-48; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Himanshu Madhani" <hmadhani@marvell.com>,
-        "Quinn Tran" <qutran@marvell.com>
-Date:   Wed, 20 May 2020 15:14:00 +0100
-Message-ID: <lsq.1589984008.409553224@decadent.org.uk>
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        "Stephen Warren" <swarren@nvidia.com>
+Date:   Wed, 20 May 2020 15:14:05 +0100
+Message-ID: <lsq.1589984008.801885396@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 32/99] scsi: qla2xxx: Fix mtcp dump collection failure
+Subject: [PATCH 3.16 37/99] clk: tegra: Mark fuse clock as critical
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,34 +56,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Quinn Tran <qutran@marvell.com>
+From: Stephen Warren <swarren@nvidia.com>
 
-commit 641e0efddcbde52461e017136acd3ce7f2ef0c14 upstream.
+commit bf83b96f87ae2abb1e535306ea53608e8de5dfbb upstream.
 
-MTCP dump failed due to MB Reg 10 was picking garbage data from stack
-memory.
+For a little over a year, U-Boot on Tegra124 has configured the flow
+controller to perform automatic RAM re-repair on off->on power
+transitions of the CPU rail[1]. This is mandatory for correct operation
+of Tegra124. However, RAM re-repair relies on certain clocks, which the
+kernel must enable and leave running. The fuse clock is one of those
+clocks. Mark this clock as critical so that LP1 power mode (system
+suspend) operates correctly.
 
-Fixes: 81178772b636a ("[SCSI] qla2xxx: Implemetation of mctp.")
-Link: https://lore.kernel.org/r/20191217220617.28084-14-hmadhani@marvell.com
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[1] 3cc7942a4ae5 ARM: tegra: implement RAM repair
+
+Reported-by: Jonathan Hunter <jonathanh@nvidia.com>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/qla2xxx/qla_mbx.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/clk/tegra/clk-tegra-periph.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -5388,9 +5388,8 @@ qla2x00_dump_mctp_data(scsi_qla_host_t *
- 	mcp->mb[7] = LSW(MSD(req_dma));
- 	mcp->mb[8] = MSW(addr);
- 	/* Setting RAM ID to valid */
--	mcp->mb[10] |= BIT_7;
- 	/* For MCTP RAM ID is 0x40 */
--	mcp->mb[10] |= 0x40;
-+	mcp->mb[10] = BIT_7 | 0x40;
- 
- 	mcp->out_mb |= MBX_10|MBX_8|MBX_7|MBX_6|MBX_5|MBX_4|MBX_3|MBX_2|MBX_1|
- 	    MBX_0;
+--- a/drivers/clk/tegra/clk-tegra-periph.c
++++ b/drivers/clk/tegra/clk-tegra-periph.c
+@@ -517,7 +517,11 @@ static struct tegra_periph_init_data gat
+ 	GATE("vcp", "clk_m", 29, 0, tegra_clk_vcp, 0),
+ 	GATE("apbdma", "clk_m", 34, 0, tegra_clk_apbdma, 0),
+ 	GATE("kbc", "clk_32k", 36, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_kbc, 0),
+-	GATE("fuse", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse, 0),
++	/*
++	 * Critical for RAM re-repair operation, which must occur on resume
++	 * from LP1 system suspend and as part of CCPLEX cluster switching.
++	 */
++	GATE("fuse", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse, CLK_IS_CRITICAL),
+ 	GATE("fuse_burn", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse_burn, 0),
+ 	GATE("kfuse", "clk_m", 40, TEGRA_PERIPH_ON_APB, tegra_clk_kfuse, 0),
+ 	GATE("apbif", "clk_m", 107, TEGRA_PERIPH_ON_APB, tegra_clk_apbif, 0),
 
