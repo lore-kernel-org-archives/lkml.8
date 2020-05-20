@@ -2,128 +2,110 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19059C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3B4207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="iryf6IwZ"
+	by mail.kernel.org (Postfix) with ESMTP id DE4CA20849
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589973096;
+	bh=CZO2oVmSFplMBz9Hp/Ib++cLu93ut1vlEwhwSgDctvg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Fy5dKHFEhJ54ZMgrmPKkc31Ca7V7b08TJArbZKMCuI5jAh4Et6DCkfFPVaC1A8/mq
+	 Mz9ag8J68ch9VNf7RibMsZFp7HN58KAyoU1zpFqu9GknoFsQxktpUqQeVwxbECFRVE
+	 oiT6f6CEfUGGCmDUbhggkzDkXBcBXityx7Ofr8F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgETLLb (ORCPT
+        id S1726899AbgETLLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:11:31 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:4072 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgETLL0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:11:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589973085; x=1621509085;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WV0s6syDCFCLZ7SWuRmHom6k1uwxvsH4yqT1PpZ4Ge4=;
-  b=iryf6IwZgwKZH2Ik4k+rjS8+ypExZ8mdzy+vj6mV+VBH6TD5BKdgSp+C
-   IxocxXTLhUyggKpxxFYvJBs3+cCCjFSuabLLFM1eORB6JI+5VxQQxkmYg
-   Oyd6WTax/8FybwQvQs72L1P9ak671ScMxFHPxLVG5whGjVbRjn7+zLxnx
-   CY+Iw/pSDwelJynpx5K64ngSdOOAbG0tjBS9AjOy8mJsDpxyLty/vlVNH
-   sSygmz0ukfFdZZq/KKuvlDY/a2mLra0iJE5iZrW91ed9I+6WDEppRw5SP
-   iXU8aNbpiGs1JUi3YMl3Fi9t438cNSvkxrA3MAR/BigP5XURqbiwWJ/2r
-   Q==;
-IronPort-SDR: U0TDrSaBqtVelQF5n+U25gGaKV9aN0DQc1R3iyJwBRLJVDQsICrbjbVa+IIgB4o0Obnlg1a+bS
- /99/O+RJ4d8dkDeQTJmA9LENFqCbjxOOpgl9Pe1dJFkgBBBs1ECM6speUWoSxiTScaz0rjfI//
- MT7QU5BHSdD2xkpo9d3e80Xxu+DsUS24YaCgXCkFg52p6akS2GPN/hTwvqAiAAMjPEvF+efhJ7
- fOOhfPQnx977nWUYPw4mqU3NjIpZwndNgtyzVzDMJvszec6y9R+gOZe2rH5MoFpyEEN4f/MaLl
- 1do=
-X-IronPort-AV: E=Sophos;i="5.73,413,1583218800"; 
-   d="scan'208";a="77278945"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 May 2020 04:11:25 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 20 May 2020 04:11:24 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 20 May 2020 04:11:22 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <jiri@resnulli.us>, <ivecera@redhat.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
-        <nikolay@cumulusnetworks.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH 3/3] bridge: mrp: Restore port state when deleting MRP instance
-Date:   Wed, 20 May 2020 13:09:23 +0000
-Message-ID: <20200520130923.3196432-4-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520130923.3196432-1-horatiu.vultur@microchip.com>
-References: <20200520130923.3196432-1-horatiu.vultur@microchip.com>
-MIME-Version: 1.0
+        Wed, 20 May 2020 07:11:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726859AbgETLLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:11:32 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6429E207C4;
+        Wed, 20 May 2020 11:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589973091;
+        bh=CZO2oVmSFplMBz9Hp/Ib++cLu93ut1vlEwhwSgDctvg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0JQBodzpZZsofv0Hjk8g+YCto+yzr1HnJmp8bkaaHFsZdNStcwkqu6sxB/Cq7RGNZ
+         D9oyW+ivG0VvZVxdbnNjqnjrKg4ZFxKYuPou20DYf2dxIBIfJoUskwUkakdJdMZzgW
+         O2b3pTDEl9xo3o3HjCuYb8IrGfvnz8+E0HAxmEdI=
+Date:   Wed, 20 May 2020 20:11:26 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/20] maccess: always use strict semantics for
+ probe_kernel_read
+Message-Id: <20200520201126.f37d3b1e46355199216404e2@kernel.org>
+In-Reply-To: <20200519134449.1466624-14-hch@lst.de>
+References: <20200519134449.1466624-1-hch@lst.de>
+        <20200519134449.1466624-14-hch@lst.de>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a MRP instance is deleted, then restore the port according to the
-bridge state. If the bridge is up then the ports will be in forwarding
-state otherwise will be in disabled state.
+On Tue, 19 May 2020 15:44:42 +0200
+Christoph Hellwig <hch@lst.de> wrote:
 
-Fixes: 9a9f26e8f7ea ("bridge: mrp: Connect MRP API with the switchdev API")
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_mrp.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 2f6737cc53e6c..82da20e712507 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1208,7 +1208,13 @@ fetch_store_strlen(unsigned long addr)
+>  	u8 c;
+>  
+>  	do {
+> -		ret = probe_kernel_read(&c, (u8 *)addr + len, 1);
+> +		if (IS_ENABLED(CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE) &&
+> +		    (unsigned long)addr < TASK_SIZE) {
+> +			ret = probe_user_read(&c,
+> +				(__force u8 __user *)addr + len, 1);
+> +		} else {
+> +			ret = probe_kernel_read(&c, (u8 *)addr + len, 1);
+> +		}
+>  		len++;
+>  	} while (c && ret == 0 && len < MAX_STRING_SIZE);
 
-diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-index a5a3fa59c078a..bdd8920c15053 100644
---- a/net/bridge/br_mrp.c
-+++ b/net/bridge/br_mrp.c
-@@ -229,6 +229,7 @@ static void br_mrp_test_work_expired(struct work_struct *work)
- static void br_mrp_del_impl(struct net_bridge *br, struct br_mrp *mrp)
- {
- 	struct net_bridge_port *p;
-+	u8 state;
- 
- 	/* Stop sending MRP_Test frames */
- 	cancel_delayed_work_sync(&mrp->test_work);
-@@ -240,20 +241,24 @@ static void br_mrp_del_impl(struct net_bridge *br, struct br_mrp *mrp)
- 	p = rtnl_dereference(mrp->p_port);
- 	if (p) {
- 		spin_lock_bh(&br->lock);
--		p->state = BR_STATE_FORWARDING;
-+		state = netif_running(br->dev) ?
-+				BR_STATE_FORWARDING : BR_STATE_DISABLED;
-+		p->state = state;
- 		p->flags &= ~BR_MRP_AWARE;
- 		spin_unlock_bh(&br->lock);
--		br_mrp_port_switchdev_set_state(p, BR_STATE_FORWARDING);
-+		br_mrp_port_switchdev_set_state(p, state);
- 		rcu_assign_pointer(mrp->p_port, NULL);
- 	}
- 
- 	p = rtnl_dereference(mrp->s_port);
- 	if (p) {
- 		spin_lock_bh(&br->lock);
--		p->state = BR_STATE_FORWARDING;
-+		state = netif_running(br->dev) ?
-+				BR_STATE_FORWARDING : BR_STATE_DISABLED;
-+		p->state = state;
- 		p->flags &= ~BR_MRP_AWARE;
- 		spin_unlock_bh(&br->lock);
--		br_mrp_port_switchdev_set_state(p, BR_STATE_FORWARDING);
-+		br_mrp_port_switchdev_set_state(p, state);
- 		rcu_assign_pointer(mrp->s_port, NULL);
- 	}
- 
+To avoid redundant check in the loop, we can use strnlen_user_nofault() out of
+the loop. Something like below.
+
+...
+	u8 c;
+
+	if (IS_ENABLED(CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE) &&
+	    (unsigned long)addr < TASK_SIZE) {
+		return strnlen_user_nofault((__force u8 __user *)addr, MAX_STRING_SIZE);
+
+	do {
+		ret = probe_kernel_read(&c, (u8 *)addr + len, 1);
+		len++;
+	} while (c && ret == 0 && len < MAX_STRING_SIZE);
+...
+
+This must work because we must not have a string that continues across
+kernel　space and user space.
+
+Thank you,
+
+
 -- 
-2.26.2
-
+Masami Hiramatsu <mhiramat@kernel.org>
