@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFCAA2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11DD8207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589997285;
-	bh=EV94N2IIkGZzV+14r1rugh4SSd9XfTPJ8E4cS0nEkS8=;
+	s=default; t=1589997289;
+	bh=LwxTBNwVwq8v+Z3EBK8Zb+aYAe0AVV8dq4zcV/fvDC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GuhktaBBTdrsgCnlgZZrE64gMU0oq3xDbh8uWJ6FCPQOTjHB99T9/CQzJFw8zGZHO
-	 TzzfHu9vUWihGZ9pAN4KnaEsk0S9Dg00bdzUjZ/3GsB0aGQJSFJZtBzXvSEUhx9FVg
-	 R31Mie+n5VKSrcSmGBqkxNCUUxZnSAHGGH0sP7qQ=
+	b=DB/7kYZkVYaT4M0I/gkDki28NhUpN0K08PEPZkf7Q9Z9Xaomu9A8xcUXb1c+Q258m
+	 XvlayomVcTuUBiB8L40xJ64AoMRhobL72wfB6oOP1eaXburJjJQ7W8EPRLsaGSb/hx
+	 xQOij5fnhyQjNFXqB3xSgnprstcZm1Nog4VQHcxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgETRyo (ORCPT
+        id S1726862AbgETRys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:54:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60802 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 13:54:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbgETRyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:54:44 -0400
+        id S1726576AbgETRyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:54:46 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04AE4206B6;
-        Wed, 20 May 2020 17:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD330207D3;
+        Wed, 20 May 2020 17:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589997284;
-        bh=EV94N2IIkGZzV+14r1rugh4SSd9XfTPJ8E4cS0nEkS8=;
+        s=default; t=1589997286;
+        bh=LwxTBNwVwq8v+Z3EBK8Zb+aYAe0AVV8dq4zcV/fvDC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cfHXIMvbuOyN/UvyyunVQAwg5AvLKmQ653t5+gRzkHhMBCkJIXahw7D++Novj8c3X
-         sq9SqqgPBsADAQpz81mVYWr+VrQKGsyYBH90xFtxmCvs00LWkdmL4Y1EFpXqjZ0DlI
-         0DQOS/Sp9rvnHsg4w+pc7x5n3FVyaE5js6ccjj8E=
+        b=OFq5+gFik+r6kGeqmyDWMKqEgZalTs7c4tPsNNhQaX/MPA8BMIV672M3qkbbA9ZDQ
+         27uhRAS9YPmjakvM6KuqrfY2I4LD9GHc/miBeCKwQtsFFp7gOUwchYkOUzmuSE6foo
+         tpr7SsjsgdfdXkm0DB9u1TBpd5zg/WWX5pPxmrwI=
 From:   Will Deacon <will@kernel.org>
 To:     Anshuman Khandual <anshuman.khandual@arm.com>,
         linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
         Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH V2] arm64/cpufeature: Drop open encodings while extracting parange
-Date:   Wed, 20 May 2020 18:54:36 +0100
-Message-Id: <158999641420.123499.9803666962947435393.b4-ty@kernel.org>
+Subject: Re: [PATCH V3] arm64/cpufeature: Validate hypervisor capabilities during CPU hotplug
+Date:   Wed, 20 May 2020 18:54:37 +0100
+Message-Id: <158998676494.231372.15074477766045633803.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1589360614-1164-1-git-send-email-anshuman.khandual@arm.com>
-References: <1589360614-1164-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <1589248647-22925-1-git-send-email-anshuman.khandual@arm.com>
+References: <1589248647-22925-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,25 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 14:33:34 +0530, Anshuman Khandual wrote:
-> Currently there are multiple instances of parange feature width mask open
-> encodings while fetching it's value. Even the width mask value (0x7) itself
-> is not accurate. It should be (0xf) per ID_AA64MMFR0_EL1.PARange[3:0] as in
-> ARM ARM (0487F.a). Replace them with cpuid_feature_extract_unsigned_field()
-> which can extract given standard feature (4 bits width i.e 0xf mask) field.
+On Tue, 12 May 2020 07:27:27 +0530, Anshuman Khandual wrote:
+> This validates hypervisor capabilities like VMID width, IPA range for any
+> hot plug CPU against system finalized values. KVM's view of the IPA space
+> is used while allowing a given CPU to come up. While here, it factors out
+> get_vmid_bits() for general use.
 > 
 > Cc: Catalin Marinas <catalin.marinas@arm.com>
 > Cc: Will Deacon <will@kernel.org>
 > Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
 > Cc: James Morse <james.morse@arm.com>
-> Cc: kvmarm@lists.cs.columbia.edu
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
 > Cc: linux-arm-kernel@lists.infradead.org
+> Cc: kvmarm@lists.cs.columbia.edu
 > Cc: linux-kernel@vger.kernel.org
 
 Applied to arm64 (for-next/cpufeature), thanks!
 
-[1/1] arm64/cpufeature: Drop open encodings while extracting parange
-      https://git.kernel.org/arm64/c/f73531f0257f
+[1/1] arm64/cpufeature: Validate hypervisor capabilities during CPU hotplug
+      https://git.kernel.org/arm64/c/c73433fc630c
+
+But please note that I made some changes to verify_hyp_capabilities() so
+that it's (a) static and (b) uses IS_ENABLED to avoid the dummy function
+definition. I also extended the IS_ENABLED_check so that it doesn't
+conflict with the KVM kconfig changes from Fuad. Please shout if you think
+I'm still missing something.
 
 Cheers,
 -- 
