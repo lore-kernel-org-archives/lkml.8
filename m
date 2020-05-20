@@ -2,119 +2,135 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30801C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A66DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C291207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F47207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:52:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="fzp1wwwz"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="CoYWaj4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgETLwT (ORCPT
+        id S1726903AbgETLwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:52:19 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17746 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726224AbgETLwT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:52:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1589975503; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=GfT1xh3tW+op1ejqTNjcpgDi0MrBuexm4GbeTF/eelkRK7yWnq8tg9juS5XP1ia8wjL69yfDK/56y54bVPJi1msf9MYSzOPe2NxQhpi0nOd4BLorpYhw8F94PRI1tgOtWmgpCQAAefWN+peiwbmzZx/0XeJPdbtLz1CDvNpbGog=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1589975503; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=ictEe6A1ntbqXb4Xzcdgn7ZvBdHoQtE5VuKky/cV41U=; 
-        b=ZFQe82fEVscGFRFPCbKFgXa98gb4lQeMwcCe0lvDXv3deeXd8e2IquMsFOU62nAUtWP5oPgOknu1X6weJL7em9H/0+7YIYXTVr9VUXaogFwcHnlinLZ4f/8wPwEXUjHuHYuQ4k65j9f+hkzx+nxOi34kmhBaicxxqVhNOHsesko=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589975503;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=ictEe6A1ntbqXb4Xzcdgn7ZvBdHoQtE5VuKky/cV41U=;
-        b=fzp1wwwzDH/3SmtY/HwC1OVZ1jzJfbBXbbopDM8KDU4yoggwO99TaTC+k1CVyxuv
-        YzHaQHA6Kx5zJdcWHcRPkl1YNAX+DjeBaKGo3HwVd1AH9JEztwMOyuqZZSdvxZY9R97
-        eRZhor2U6C7BtVdsDsbqJaNEXn7VDrlHjJmB5yjc=
-Received: from [127.0.0.1] (223.104.210.187 [223.104.210.187]) by mx.zoho.com.cn
-        with SMTPS id 1589975500561839.4780833843952; Wed, 20 May 2020 19:51:40 +0800 (CST)
-Date:   Wed, 20 May 2020 19:51:38 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>, maz@kernel.org
-CC:     Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] irqchip: Add Loongson PCH MSI controller
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <871rno3uab.fsf@nanos.tec.linutronix.de>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-5-jiaxun.yang@flygoat.com> <874ksk3uda.fsf@nanos.tec.linutronix.de> <871rno3uab.fsf@nanos.tec.linutronix.de>
-Message-ID: <4324EED5-187D-4113-B7F2-DBF45C42AFFD@flygoat.com>
+        Wed, 20 May 2020 07:52:41 -0400
+Received: from mout.web.de ([217.72.192.78]:45529 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgETLwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:52:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1589975555;
+        bh=PwIzsgac3fZ2pv36DcN1rKhtcfH6APFMURzNXOaB6XA=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=CoYWaj4vt9Ik1CXGCsnv8NVH8y7QZYJjO4E4w6laRH07OYJcutgl4RXmp6NkSEJvn
+         1ipWUmm+K3RVOofrK1UzomBn/UyFpHj2N6qWfcosVRtedUOWMaVvdGN0I6WGfL10gk
+         tC16znk++CUYUz6F1akFN0XfWdJmflwj2eg7rRnQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.152.26]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LwqJw-1j0C0Q35vk-016RXv; Wed, 20
+ May 2020 13:52:34 +0200
+Cc:     linux-kernel@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] i2c: cadence: Add error handling for a platform_get_irq()
+ call in cdns_i2c_probe()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Dejin Zheng <zhengdejin5@gmail.com>, linux-i2c@vger.kernel.org
+Message-ID: <b5bf30bd-e630-beb6-e860-44311204c264@web.de>
+Date:   Wed, 20 May 2020 13:52:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+X-Provags-ID: V03:K1:t6wxxFBH9WVRYl6tU1pbFQKexowPiufsKmW3wT+BENBwS4S3zW7
+ jMsERgiOWAdv9SlgWLaj4rEMnz4UYdJX76VECgRdFK/xhn+8eElgR+BXLNzHRVRsshM+82Z
+ arq55KCJ3S8tlhvY24rG4kq3+EPQdYIk61WaKFuZmxMvazm2FFVPm9BnJ4Wrl+BvmuHGxrL
+ Nwb0MdxvSK+6v19WhCbhA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IwGj8gBUWok=:vuUol08s1F47G16/+FPNCk
+ pdazKl5SzQagB2KmpoqAo/8SJKPZrNuxrkCXFKvG0Ar/zJq+oV8QNsMxzzc1vNp+RtTgohA3H
+ shOdBVOSh/5pXAD71P8OUe9q93vLGIp7FRQjpeSlewS/5ISmA2LgYMz1xaNmdBwJMaagkOaF5
+ QyJTv9bZpSo9Lubte28bjO9QkHvD01PSyKm2/V4PPQuFsr9zGysKBvAM18sFTVV7PZ8LEZXpj
+ ee7GRIuCK+M0dcIDZAOhP+taxxvGEUZQPSqj2ps6K7EMdaDGO8Hxlqpu3PogCtqbSaGiXk11x
+ 4g3RYmVUZnEDfeW3TfuhHjfvtuB0GvGsZZQ5Oq5yTPtGP9jbmDacTaQgaUa2mHdTTT3zO6NdG
+ QySdxKbKlDfB6czA7JP7Os8sH0xFr7muKDupL+XH3YgX0vy3wB+CfOm7oNdDnPpM53cV8/Y+S
+ /6qZTadV0W2BfiKlV2LxPjcVCJ5xn5z/cl051U8yvYjhQMVegT7zOHcenc7Ffzk4WZzbvMU9x
+ Khkkik72Q93PzLxQrENqdI+PVovZVLbDoTbl+Rsn8dDEl3+inuCUOkBn3ScrJ5cOcHZjpSLVw
+ /PCCF8pUnDkXCxtEumy7EElDfjjPXAqicgX7SAm8oNa2CCMfDgIsQFKSWmOFX9aXG7CjGEOSH
+ BtRlt/6QfBAzFrTt8pmuM6VlwJnBUuD2yPU+kwaBDPdN6fHUGUHwzBvukXMffk8ajQR6JSUEH
+ z4sPSnGS7Ecn9eLJd5oPyEUuD2Soxw2xdTwubuVdznBFaUCyv/n86TNjPrCuTmpCnNdr4arp6
+ 9QHAQW0P9qreAIX4yk2qasPmuyomhER5E4htwlv5YOU89x9jbvs8TSUfvIGdtAPAtgvN0wbZ2
+ OlRj047cJJYhxbguoSal5KZnKIvZIYsxhTfg38LvI61P7FHvqYAbu8zvXneONxRnvhIzFefOz
+ 23XN24alJsJMQTelFgACtHiogmg1/Ms2So+/Rtsgdg1YKIMYVMKXIBYO5KMYL+AG3tM4wKf96
+ hi1NJtE2mYXotqqXc4+yK8SGnbps2bB5EPiwACu6LRzhmCwg24hlej+FyC1Be8qQhFStW61B+
+ uxWSnfdtSM+1fsM2AgEze9g8ZRclr8ci+PST5l3NhYvrs7MwX8NcMvYv3mz93A3ccZPw02vQ2
+ J0/cnjbUj/M9Nks1m8eFEm+3hmu+7XNJz+xN5CZHMOs4U/23VATRblVhLFasYCtdzqg9AXpkT
+ L93T4BSBKxKesAnS2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> The driver initialization should be end immediately after found
+> the platform_get_irq() function return an error.
+
+I suggest to improve also this change description.
+How do you think about a wording variant like the following?
+
+   Return an error code after a call of the function =E2=80=9Cplatform_get=
+_irq=E2=80=9D failed.
 
 
-=E4=BA=8E 2020=E5=B9=B45=E6=9C=8813=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888=
-:15:40, Thomas Gleixner <tglx@linutronix=2Ede> =E5=86=99=E5=88=B0:
->Thomas Gleixner <tglx@linutronix=2Ede> writes:
->> Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom> writes:
->>> +
->>> +struct pch_msi_data {
->>> +	spinlock_t		msi_map_lock;
->>> +	phys_addr_t		doorbell;
->>> +	u32			irq_first;	/* The vector number that MSIs starts */
->>> +	u32			num_irqs;	/* The number of vectors for MSIs */
->>> +	unsigned long		*msi_map;
->>> +};
->>> +
->>> +static void pch_msi_mask_msi_irq(struct irq_data *d)
->>> +{
->>> +	pci_msi_mask_irq(d);
->>> +	irq_chip_mask_parent(d);
->>> +}
->>> +
->>> +static void pch_msi_unmask_msi_irq(struct irq_data *d)
->>> +{
->>> +	pci_msi_unmask_irq(d);
->>> +	irq_chip_unmask_parent(d);
->>
->> The ordering of mask and unmask is assymetric=2E That does not make sen=
-se=2E
->>
->>> +static struct msi_domain_info pch_msi_domain_info =3D {
->>> +	=2Eflags		=3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
->>> +			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
->>> +	=2Echip	=3D &pch_msi_irq_chip,
->>
->> Please maintain tabular layout=2E
->
->Ooops=2E Wanted to reply to V3, but the comments are valid for V3 as well=
-=2E
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
+e?
 
-All fixed in v4=2E
-
-Please review=2E
-
-Thanks!
-
-
->
->Thanks,
->
->        tglx
-
---=20
-Jiaxun Yang
+Regards,
+Markus
