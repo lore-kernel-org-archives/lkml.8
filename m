@@ -2,410 +2,179 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE714C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F06BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9134207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD072072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:55:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xuJe0Zw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgETOyc (ORCPT
+        id S1726862AbgETOzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:54:32 -0400
-Received: from mga14.intel.com ([192.55.52.115]:27027 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETOyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:54:31 -0400
-IronPort-SDR: jBoO3nFYmWJcJQkZDpofRJQqKKluRoGSnvhIjL66fYDkBx1Pce50mynmc6GQcf9+PcuOr+NKb6
- H/mk2Trpa0uQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 07:54:31 -0700
-IronPort-SDR: FzX76Gq6r0Mp5WT39XxITd7IMdIN8sA0+4H1/WxoIr3thi1ua91iaTz6omU6HO6l4ZR98VykTN
- hW9JSOeletGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="308743884"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 May 2020 07:54:31 -0700
-Date:   Wed, 20 May 2020 07:54:31 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Vaibhav Jain <vaibhav@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RESEND PATCH v7 3/5] powerpc/papr_scm: Fetch nvdimm health
- information from PHYP
-Message-ID: <20200520145430.GB3660833@iweiny-DESK2.sc.intel.com>
-References: <20200519190058.257981-1-vaibhav@linux.ibm.com>
- <20200519190058.257981-4-vaibhav@linux.ibm.com>
+        Wed, 20 May 2020 10:55:19 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47744 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETOzS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:55:18 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KEt56t020122;
+        Wed, 20 May 2020 09:55:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589986505;
+        bh=uJ0Vb5JIqEbT+TGiMoMQolR3yOEu9tZTebuogh5jPAo=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=xuJe0Zw/zFQOXCbcSMXGjCSeSmOUmVLI/NbPQ87oDS3XnASIpv/BgAL4sMY+84Axm
+         tRVqM98LZce2N81zbzOjsdBoXlhC3fQPgm8hy//EimncRw3EOJqT4a4OO9pkuQAMcx
+         ZC0IRN5z2x+vFaI4+UYPgBkEVWP6RDS67VPvvafU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KEt5nq037164
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 09:55:05 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 09:55:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 09:55:05 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KEt5Jw096887;
+        Wed, 20 May 2020 09:55:05 -0500
+Date:   Wed, 20 May 2020 09:55:05 -0500
+From:   Bin Liu <b-liu@ti.com>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+CC:     Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <russell@personaltelco.net>,
+        <fercerpav@gmail.com>
+Subject: Re: [PATCH v1] usb: musb: dsps: set MUSB_DA8XX quirk for AM335x
+Message-ID: <20200520145505.GC15845@iaqt7>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, russell@personaltelco.net,
+        fercerpav@gmail.com
+References: <20200327053849.5348-1-o.rempel@pengutronix.de>
+ <20200519221851.GA15845@iaqt7>
+ <20200520044934.hyngdg774ibqai46@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200519190058.257981-4-vaibhav@linux.ibm.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200520044934.hyngdg774ibqai46@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 12:30:56AM +0530, Vaibhav Jain wrote:
-> Implement support for fetching nvdimm health information via
-> H_SCM_HEALTH hcall as documented in Ref[1]. The hcall returns a pair
-> of 64-bit big-endian integers, bitwise-and of which is then stored in
-> 'struct papr_scm_priv' and subsequently partially exposed to
-> user-space via newly introduced dimm specific attribute
-> 'papr/flags'. Since the hcall is costly, the health information is
-> cached and only re-queried, 60s after the previous successful hcall.
+On Wed, May 20, 2020 at 06:49:34AM +0200, Oleksij Rempel wrote:
+> On Tue, May 19, 2020 at 05:18:51PM -0500, Bin Liu wrote:
+> > Hi,
+> > 
+> > On Fri, Mar 27, 2020 at 06:38:49AM +0100, Oleksij Rempel wrote:
+> > > Beagle Bone Black has different memory corruptions if kernel is
+> > > configured with USB_TI_CPPI41_DMA=y. This issue is reproducible with
+> > > ath9k-htc driver (ar9271 based wifi usb controller):
+> > > 
+> > > root@AccessBox:~ iw dev wlan0 set monitor  fcsfail otherbss
+> > > root@AccessBox:~ ip l s dev wlan0 up
+> > > kmemleak: Cannot insert 0xda577e40 into the object search tree (overlaps existing)
+> > > CPU: 0 PID: 176 Comm: ip Not tainted 5.5.0 #7
+> > > Hardware name: Generic AM33XX (Flattened Device Tree)
+> > > [<c0112c14>] (unwind_backtrace) from [<c010dc98>] (show_stack+0x18/0x1c)
+> > > [<c010dc98>] (show_stack) from [<c08c7c2c>] (dump_stack+0x84/0x98)
+> > > [<c08c7c2c>] (dump_stack) from [<c02c75a8>] (create_object+0x2f8/0x324)
+> > > [<c02c75a8>] (create_object) from [<c02b8928>] (kmem_cache_alloc+0x1a8/0x39c)
+> > > [<c02b8928>] (kmem_cache_alloc) from [<c072fb68>] (__alloc_skb+0x60/0x174)
+> > > [<c072fb68>] (__alloc_skb) from [<bf0c5c58>] (ath9k_wmi_cmd+0x50/0x184 [ath9k_htc])
+> > > [<bf0c5c58>] (ath9k_wmi_cmd [ath9k_htc]) from [<bf0cb410>] (ath9k_regwrite_multi+0x54/0x84 [ath9k_htc])
+> > > [<bf0cb410>] (ath9k_regwrite_multi [ath9k_htc]) from [<bf0cb7fc>] (ath9k_regwrite+0xf0/0xfc [ath9k_htc])
+> > > [<bf0cb7fc>] (ath9k_regwrite [ath9k_htc]) from [<bf1aca78>] (ar5008_hw_process_ini+0x280/0x6c0 [ath9k_hw])
+> > > [<bf1aca78>] (ar5008_hw_process_ini [ath9k_hw]) from [<bf1a66ac>] (ath9k_hw_reset+0x270/0x1458 [ath9k_hw])
+> > > [<bf1a66ac>] (ath9k_hw_reset [ath9k_hw]) from [<bf0c9588>] (ath9k_htc_start+0xb0/0x22c [ath9k_htc])
+> > > [<bf0c9588>] (ath9k_htc_start [ath9k_htc]) from [<bf0eb3c0>] (drv_start+0x4c/0x1e8 [mac80211])
+> > > [<bf0eb3c0>] (drv_start [mac80211]) from [<bf104a84>] (ieee80211_do_open+0x480/0x954 [mac80211])
+> > > [<bf104a84>] (ieee80211_do_open [mac80211]) from [<c075127c>] (__dev_open+0xdc/0x160)
+> > > [<c075127c>] (__dev_open) from [<c07516a8>] (__dev_change_flags+0x1a4/0x204)
+> > > [<c07516a8>] (__dev_change_flags) from [<c0751728>] (dev_change_flags+0x20/0x50)
+> > > [<c0751728>] (dev_change_flags) from [<c076971c>] (do_setlink+0x2ac/0x978)
+> > > 
+> > > After applying this patch, the system is running in monitor mode without
+> > > noticeable issues.
+> > > 
+> > > Suggested-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > ---
+> > >  drivers/usb/musb/musb_dsps.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
+> > > index 88923175f71e..c01f9e9e69f5 100644
+> > > --- a/drivers/usb/musb/musb_dsps.c
+> > > +++ b/drivers/usb/musb/musb_dsps.c
+> > > @@ -690,7 +690,7 @@ static void dsps_dma_controller_resume(struct dsps_glue *glue) {}
+> > >  #endif /* CONFIG_USB_TI_CPPI41_DMA */
+> > >  
+> > >  static struct musb_platform_ops dsps_ops = {
+> > > -	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP,
+> > > +	.quirks		= MUSB_DMA_CPPI41 | MUSB_INDEXED_EP | MUSB_DA8XX,
+> > 
+> > The MUSB_DA8XX flag cannot be simply applied to MUSB_DSPS, at least the
+> > teardown and autoreq register offsets are different as show in
+> > cppi41_dma_controller_create().
 > 
-> The patch also adds a  documentation text describing flags reported by
-> the the new sysfs attribute 'papr/flags' is also introduced at
-> Documentation/ABI/testing/sysfs-bus-papr-scm.
+> ok
 > 
-> [1] commit 58b278f568f0 ("powerpc: Provide initial documentation for
-> PAPR hcalls")
+> > Do you understand what exactly caused the issue?
 > 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-> ---
-> Changelog:
+> No.
 > 
-> Resend:
-> * None
+> Disabling DMA support "solve" this issue as well.
 > 
-> v6..v7 :
-> * Used the exported buf_seq_printf() function to generate content for
->   'papr/flags'
-> * Moved the PAPR_SCM_DIMM_* bit-flags macro definitions to papr_scm.c
->   and removed the papr_scm.h file [Mpe]
-> * Some minor consistency issued in sysfs-bus-papr-scm
->   documentation. [Mpe]
-> * s/dimm_mutex/health_mutex/g [Mpe]
-> * Split drc_pmem_query_health() into two function one of which takes
->   care of caching and locking. [Mpe]
-> * Fixed a local copy creation of dimm health information using
->   READ_ONCE(). [Mpe]
+> Beside, with DMA support, there remains one more crash with different symptoms.
+> I can workaround it by disabling CPU Freq governor, or setting it to performance.
 > 
-> v5..v6 :
-> * Change the flags sysfs attribute from 'papr_flags' to 'papr/flags'
->   [Dan Williams]
-> * Include documentation for 'papr/flags' attr [Dan Williams]
-> * Change flag 'save_fail' to 'flush_fail' [Dan Williams]
-> * Caching of health bitmap to reduce expensive hcalls [Dan Williams]
-> * Removed usage of PPC_BIT from 'papr-scm.h' header [Mpe]
-> * Replaced two __be64 integers from papr_scm_priv to a single u64
->   integer [Mpe]
-> * Updated patch description to reflect the changes made in this
->   version.
-> * Removed avoidable usage of 'papr_scm_priv.dimm_mutex' from
->   flags_show() [Dan Williams]
+> > The kernel trace above doesn't provide enuough information.
 > 
-> v4..v5 :
-> * None
+> Do you have any suggestions how to instrument the kernel to get needed
+> information? Or, should I try to capture USB traffic before the crash? 
+
+First can you please try the following patch instead?
+
+diff --git a/drivers/usb/musb/musb_cppi41.c b/drivers/usb/musb/musb_cppi41.c
+index 7fbb8a307145..26c996f8b2bd 100644
+--- a/drivers/usb/musb/musb_cppi41.c
++++ b/drivers/usb/musb/musb_cppi41.c
+@@ -614,7 +614,6 @@ static int cppi41_dma_channel_abort(struct dma_channel *channel)
+        }
+
+        /* DA8xx Advisory 2.3.27: wait 250 ms before to start the teardown */
+-       if (musb->ops->quirks & MUSB_DA8XX)
+                mdelay(250);
+
+        tdbit = 1 << cppi41_channel->port_num;
+
 > 
-> v3..v4 :
-> * None
-> 
-> v2..v3 :
-> * Removed PAPR_SCM_DIMM_HEALTH_NON_CRITICAL as a condition for
->        	 NVDIMM unarmed [Aneesh]
-> 
-> v1..v2 :
-> * New patch in the series.
-> ---
->  Documentation/ABI/testing/sysfs-bus-papr-scm |  27 +++
->  arch/powerpc/platforms/pseries/papr_scm.c    | 169 ++++++++++++++++++-
->  2 files changed, 194 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-papr-scm
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-papr-scm b/Documentation/ABI/testing/sysfs-bus-papr-scm
-> new file mode 100644
-> index 000000000000..6143d06072f1
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-papr-scm
-> @@ -0,0 +1,27 @@
-> +What:		/sys/bus/nd/devices/nmemX/papr/flags
-> +Date:		Apr, 2020
-> +KernelVersion:	v5.8
-> +Contact:	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-nvdimm@lists.01.org,
-> +Description:
-> +		(RO) Report flags indicating various states of a
-> +		papr-scm NVDIMM device. Each flag maps to a one or
-> +		more bits set in the dimm-health-bitmap retrieved in
-> +		response to H_SCM_HEALTH hcall. The details of the bit
-> +		flags returned in response to this hcall is available
-> +		at 'Documentation/powerpc/papr_hcalls.rst' . Below are
-> +		the flags reported in this sysfs file:
-> +
-> +		* "not_armed"	: Indicates that NVDIMM contents will not
-> +				  survive a power cycle.
-> +		* "flush_fail"	: Indicates that NVDIMM contents
-> +				  couldn't be flushed during last
-> +				  shut-down event.
-> +		* "restore_fail": Indicates that NVDIMM contents
-> +				  couldn't be restored during NVDIMM
-> +				  initialization.
-> +		* "encrypted"	: NVDIMM contents are encrypted.
-> +		* "smart_notify": There is health event for the NVDIMM.
-> +		* "scrubbed"	: Indicating that contents of the
-> +				  NVDIMM have been scrubbed.
-> +		* "locked"	: Indicating that NVDIMM contents cant
-> +				  be modified until next power cycle.
-> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-> index f35592423380..142636e1a59f 100644
-> --- a/arch/powerpc/platforms/pseries/papr_scm.c
-> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
-> @@ -12,6 +12,7 @@
->  #include <linux/libnvdimm.h>
->  #include <linux/platform_device.h>
->  #include <linux/delay.h>
-> +#include <linux/seq_buf.h>
->  
->  #include <asm/plpar_wrappers.h>
->  
-> @@ -22,6 +23,44 @@
->  	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
->  	 (1ul << ND_CMD_SET_CONFIG_DATA))
->  
-> +/* DIMM health bitmap bitmap indicators */
-> +/* SCM device is unable to persist memory contents */
-> +#define PAPR_SCM_DIMM_UNARMED                   (1ULL << (63 - 0))
-> +/* SCM device failed to persist memory contents */
-> +#define PAPR_SCM_DIMM_SHUTDOWN_DIRTY            (1ULL << (63 - 1))
-> +/* SCM device contents are persisted from previous IPL */
-> +#define PAPR_SCM_DIMM_SHUTDOWN_CLEAN            (1ULL << (63 - 2))
-> +/* SCM device contents are not persisted from previous IPL */
-> +#define PAPR_SCM_DIMM_EMPTY                     (1ULL << (63 - 3))
-> +/* SCM device memory life remaining is critically low */
-> +#define PAPR_SCM_DIMM_HEALTH_CRITICAL           (1ULL << (63 - 4))
-> +/* SCM device will be garded off next IPL due to failure */
-> +#define PAPR_SCM_DIMM_HEALTH_FATAL              (1ULL << (63 - 5))
-> +/* SCM contents cannot persist due to current platform health status */
-> +#define PAPR_SCM_DIMM_HEALTH_UNHEALTHY          (1ULL << (63 - 6))
-> +/* SCM device is unable to persist memory contents in certain conditions */
-> +#define PAPR_SCM_DIMM_HEALTH_NON_CRITICAL       (1ULL << (63 - 7))
-> +/* SCM device is encrypted */
-> +#define PAPR_SCM_DIMM_ENCRYPTED                 (1ULL << (63 - 8))
-> +/* SCM device has been scrubbed and locked */
-> +#define PAPR_SCM_DIMM_SCRUBBED_AND_LOCKED       (1ULL << (63 - 9))
-> +
-> +/* Bits status indicators for health bitmap indicating unarmed dimm */
-> +#define PAPR_SCM_DIMM_UNARMED_MASK (PAPR_SCM_DIMM_UNARMED |		\
-> +				    PAPR_SCM_DIMM_HEALTH_UNHEALTHY)
-> +
-> +/* Bits status indicators for health bitmap indicating unflushed dimm */
-> +#define PAPR_SCM_DIMM_BAD_SHUTDOWN_MASK (PAPR_SCM_DIMM_SHUTDOWN_DIRTY)
-> +
-> +/* Bits status indicators for health bitmap indicating unrestored dimm */
-> +#define PAPR_SCM_DIMM_BAD_RESTORE_MASK  (PAPR_SCM_DIMM_EMPTY)
-> +
-> +/* Bit status indicators for smart event notification */
-> +#define PAPR_SCM_DIMM_SMART_EVENT_MASK (PAPR_SCM_DIMM_HEALTH_CRITICAL | \
-> +					PAPR_SCM_DIMM_HEALTH_FATAL |	\
-> +					PAPR_SCM_DIMM_HEALTH_UNHEALTHY)
-> +
-> +/* private struct associated with each region */
->  struct papr_scm_priv {
->  	struct platform_device *pdev;
->  	struct device_node *dn;
-> @@ -39,6 +78,15 @@ struct papr_scm_priv {
->  	struct resource res;
->  	struct nd_region *region;
->  	struct nd_interleave_set nd_set;
-> +
-> +	/* Protect dimm health data from concurrent read/writes */
-> +	struct mutex health_mutex;
-> +
-> +	/* Last time the health information of the dimm was updated */
-> +	unsigned long lasthealth_jiffies;
-> +
-> +	/* Health information for the dimm */
-> +	u64 health_bitmap;
+> If it helps, ath9k_htc is a usb wifi adapter. It generates a lot of
+> USB traffic on multiple endpoints. Bulk with data packets and Interrupt
+> with register accesses, LED blinking... etc.
 
-I wonder if this should be typed big endian as you mention that it is in the
-commit message?
+Do you have a link to the picture or description of the adapter? I'd like
+to see if I can buy the same to take a look.
 
->  };
->  
->  static int drc_pmem_bind(struct papr_scm_priv *p)
-> @@ -144,6 +192,62 @@ static int drc_pmem_query_n_bind(struct papr_scm_priv *p)
->  	return drc_pmem_bind(p);
->  }
->  
-> +/*
-> + * Issue hcall to retrieve dimm health info and populate papr_scm_priv with the
-> + * health information.
-> + */
-> +static int __drc_pmem_query_health(struct papr_scm_priv *p)
-> +{
-> +	unsigned long ret[PLPAR_HCALL_BUFSIZE];
-
-Is this exclusive to 64bit?  Why not u64?
-
-> +	s64 rc;
-
-plpar_hcall() returns long and this function returns int and rc is declared
-s64?
-
-Why not have them all be long to follow plpar_hcall?
-
-> +
-> +	/* issue the hcall */
-> +	rc = plpar_hcall(H_SCM_HEALTH, ret, p->drc_index);
-> +	if (rc != H_SUCCESS) {
-> +		dev_err(&p->pdev->dev,
-> +			 "Failed to query health information, Err:%lld\n", rc);
-> +		rc = -ENXIO;
-> +		goto out;
-> +	}
-> +
-> +	p->lasthealth_jiffies = jiffies;
-> +	p->health_bitmap = ret[0] & ret[1];
-> +
-> +	dev_dbg(&p->pdev->dev,
-> +		"Queried dimm health info. Bitmap:0x%016lx Mask:0x%016lx\n",
-> +		ret[0], ret[1]);
-> +out:
-> +	return rc;
-> +}
-> +
-> +/* Min interval in seconds for assuming stable dimm health */
-> +#define MIN_HEALTH_QUERY_INTERVAL 60
-> +
-> +/* Query cached health info and if needed call drc_pmem_query_health */
-> +static int drc_pmem_query_health(struct papr_scm_priv *p)
-> +{
-> +	unsigned long cache_timeout;
-> +	s64 rc;
-> +
-> +	/* Protect concurrent modifications to papr_scm_priv */
-> +	rc = mutex_lock_interruptible(&p->health_mutex);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/* Jiffies offset for which the health data is assumed to be same */
-> +	cache_timeout = p->lasthealth_jiffies +
-> +		msecs_to_jiffies(MIN_HEALTH_QUERY_INTERVAL * 1000);
-> +
-> +	/* Fetch new health info is its older than MIN_HEALTH_QUERY_INTERVAL */
-> +	if (time_after(jiffies, cache_timeout))
-> +		rc = __drc_pmem_query_health(p);
-
-And back to s64 after returning int?
-
-> +	else
-> +		/* Assume cached health data is valid */
-> +		rc = 0;
-> +
-> +	mutex_unlock(&p->health_mutex);
-> +	return rc;
-> +}
->  
->  static int papr_scm_meta_get(struct papr_scm_priv *p,
->  			     struct nd_cmd_get_config_data_hdr *hdr)
-> @@ -286,6 +390,64 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
->  	return 0;
->  }
->  
-> +static ssize_t flags_show(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct nvdimm *dimm = to_nvdimm(dev);
-> +	struct papr_scm_priv *p = nvdimm_provider_data(dimm);
-> +	struct seq_buf s;
-> +	u64 health;
-> +	int rc;
-> +
-> +	rc = drc_pmem_query_health(p);
-
-and back to int...
-
-Just make them long all through...
-
-Ira
-
-> +	if (rc)
-> +		return rc;
-> +
-> +	/* Copy health_bitmap locally, check masks & update out buffer */
-> +	health = READ_ONCE(p->health_bitmap);
-> +
-> +	seq_buf_init(&s, buf, PAGE_SIZE);
-> +	if (health & PAPR_SCM_DIMM_UNARMED_MASK)
-> +		seq_buf_printf(&s, "not_armed ");
-> +
-> +	if (health & PAPR_SCM_DIMM_BAD_SHUTDOWN_MASK)
-> +		seq_buf_printf(&s, "flush_fail ");
-> +
-> +	if (health & PAPR_SCM_DIMM_BAD_RESTORE_MASK)
-> +		seq_buf_printf(&s, "restore_fail ");
-> +
-> +	if (health & PAPR_SCM_DIMM_ENCRYPTED)
-> +		seq_buf_printf(&s, "encrypted ");
-> +
-> +	if (health & PAPR_SCM_DIMM_SMART_EVENT_MASK)
-> +		seq_buf_printf(&s, "smart_notify ");
-> +
-> +	if (health & PAPR_SCM_DIMM_SCRUBBED_AND_LOCKED)
-> +		seq_buf_printf(&s, "scrubbed locked ");
-> +
-> +	if (seq_buf_used(&s))
-> +		seq_buf_printf(&s, "\n");
-> +
-> +	return seq_buf_used(&s);
-> +}
-> +DEVICE_ATTR_RO(flags);
-> +
-> +/* papr_scm specific dimm attributes */
-> +static struct attribute *papr_scm_nd_attributes[] = {
-> +	&dev_attr_flags.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group papr_scm_nd_attribute_group = {
-> +	.name = "papr",
-> +	.attrs = papr_scm_nd_attributes,
-> +};
-> +
-> +static const struct attribute_group *papr_scm_dimm_attr_groups[] = {
-> +	&papr_scm_nd_attribute_group,
-> +	NULL,
-> +};
-> +
->  static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
->  {
->  	struct device *dev = &p->pdev->dev;
-> @@ -312,8 +474,8 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
->  	dimm_flags = 0;
->  	set_bit(NDD_LABELING, &dimm_flags);
->  
-> -	p->nvdimm = nvdimm_create(p->bus, p, NULL, dimm_flags,
-> -				  PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
-> +	p->nvdimm = nvdimm_create(p->bus, p, papr_scm_dimm_attr_groups,
-> +				  dimm_flags, PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
->  	if (!p->nvdimm) {
->  		dev_err(dev, "Error creating DIMM object for %pOF\n", p->dn);
->  		goto err;
-> @@ -399,6 +561,9 @@ static int papr_scm_probe(struct platform_device *pdev)
->  	if (!p)
->  		return -ENOMEM;
->  
-> +	/* Initialize the dimm mutex */
-> +	mutex_init(&p->health_mutex);
-> +
->  	/* optional DT properties */
->  	of_property_read_u32(dn, "ibm,metadata-size", &metadata_size);
->  
-> -- 
-> 2.26.2
-> _______________________________________________
-> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
-> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
+-Bin.
