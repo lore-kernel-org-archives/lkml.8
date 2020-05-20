@@ -2,191 +2,241 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA543C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A66C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA34620709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3DD020758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="UWVOqHnL"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="k5cGZb8j";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="YAfKhmJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgETT06 (ORCPT
+        id S1726892AbgETT1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgETT05 (ORCPT
+        Wed, 20 May 2020 15:27:23 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:17454 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726560AbgETT1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:26:57 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB79C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:26:55 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d10so1914826pgn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:26:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=ybElckBuJkHNMqBT6bP/3ZUGSTcEzT1Byb+0g20pfBo=;
-        b=UWVOqHnL+z5agcX6Eq8DH5sU8YNxqBh807UzkYKVvXssCMg7c8XOZ04sL/SIx1TtN3
-         AsUxfChZlGY3gvkjCQav7AMEnq7rjQV4X+R7lntZ0RqZCu+uG7Qkpc84QbqIq5FmHqoC
-         oU6TfFe60DkVaMA91yxbgN005wsjyoSq7YCgbw4KKntwovRRG6Xtb6jrgrBcENtz2KuR
-         91C/99ABalWYBfAc2rGx9Z4qy5k/EhABDnUTEzIM11sl6ieWbGM6mVIytMywSrj6IghN
-         SHWYreiclfPizheQVBMOsVZkwEE973g5QrF5W5Dy3zKxjBLjvRK6ncy0UBhuKJH8cI/Q
-         6Mew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=ybElckBuJkHNMqBT6bP/3ZUGSTcEzT1Byb+0g20pfBo=;
-        b=R7bQhSgQzMYIC7rDUvy+m+UftbQBKyZbAkbd4Ol6Bi1LbujJQrpCiGVLvO9ZlCbBkT
-         GzhCWgWp/kFq7teNxbjMQzj6KuB8MAdRfrI2VgApLJ8fgJhO1nHpK6rg5CAIwXMwdOem
-         JFKLSdd8g7uMgMOZWMHSGwjv0c0hzyg90xU86Tnu9AmkMJK9Q+lBAudYhtzDZc+wUDrf
-         QBYn6ouJr+xXP92H9NpVmwhJ2Bfo0urGj/6pOfGinQLGoOtePczp522cwMOBUpolwUta
-         oDoTc1ejFTx8DPBtUFt+KKsGngTBP9PJFu1hGACi3oxfDoV5JCMzVmC9Eu6eUtQWyZfa
-         IIng==
-X-Gm-Message-State: AOAM533uIK2Zvf4rJBISTCefaDWPLzhLL1j15ct9MzzYWr7BkGpHdH5W
-        lSqeos+bGnE0zyezwMHy310AVA==
-X-Google-Smtp-Source: ABdhPJzI1my29KHz2ptD6Y/uBxW4rPjNP/9mzZxdAhbEBiQheLu2gpIwJMhc2m7QPA3u12V7AenNCA==
-X-Received: by 2002:a63:ef09:: with SMTP id u9mr5746921pgh.406.1590002809290;
-        Wed, 20 May 2020 12:26:49 -0700 (PDT)
-Received: from [192.168.10.160] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id z190sm2693166pfb.1.2020.05.20.12.26.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 May 2020 12:26:48 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <34ECB1DE-9F2F-4365-BBBC-DFACF703E7D4@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_96A80465-DD54-49D5-8819-3365C95A2437";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH V3 7/8] fs/ext4: Introduce DAX inode flag
-Date:   Wed, 20 May 2020 13:26:44 -0600
-In-Reply-To: <20200520055753.3733520-8-ira.weiny@intel.com>
-Cc:     Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Li Xi <lixi@ddn.com>
-To:     ira.weiny@intel.com
-References: <20200520055753.3733520-1-ira.weiny@intel.com>
- <20200520055753.3733520-8-ira.weiny@intel.com>
-X-Mailer: Apple Mail (2.3273)
+        Wed, 20 May 2020 15:27:22 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KJO1Se001286;
+        Wed, 20 May 2020 12:27:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=nofm9MPEFWuHDTbfW7X9gmETCR5y032TBU5uz0NDD78=;
+ b=k5cGZb8jjepKCvQnF75QkZ7e6ZPolyKD0+3IXfxemCAoxdCU7MCe6wCLtS/FLl6Hc3J7
+ R4ZmKR78Hf6FBKYpkLpZr830qO8RkPrUdXZmZjW+oyHLSECjBHs96a1q5Wdl60Q4fLS5
+ ilgbvjqb/TnyCi/qpC6RCsZgiL/E5ii9ff0= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 312e0hrsmk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 20 May 2020 12:27:13 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 20 May 2020 12:27:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hv9k++RjAmV7/Whgv+/NBWFlFu9jPTZ8U1fqRpzQ8I92xfjBlGqswZ80ZXE2oPcbQOl7zjrZGT9LHra6JdGns9rqN3/Y2RMSTRYKTMB1p790a7DZwXjG+fi+UztpItW+p1jwz9uzLLQ2JDZDHzse+gNDeFad0pHEE7D5zsmv+DmjUheVh3LLlA7pBm6/hou2xYqAvAvpBIwSW560Fdnfb9b+o0HC6f4Wq4MjTaJm4Ago8e1MU6hQZom+YIDRFqCK7ttHmzcWtrElkuR+EmuIi/vRu0fKnNkYeqPBRpKqW2DMIraRIkFqOoE+IKTZOFr5HNTmzMayB7NSkgq/8hdlyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nofm9MPEFWuHDTbfW7X9gmETCR5y032TBU5uz0NDD78=;
+ b=CNpWdnOne+yh9a1daKks7BYVHnaCyEhpuchwpI7iBnXaqFdvKI+DEqU2eUa0ZEl4zzz9Jj1YP++JYEzQ7dIxSZ1bVocqVGFeM1levkrGPqUfOeqdi3zTI9xtz7ad6WdEwn6KaOjjgpbfTQ5Xq/kXu/Wf1jcBHPSKR0JJpZ6Rf7XRDx/0dBj1eI1O63u95k0GsN0De5cuM0BbYopjEahrfcxnA/weK8dL4Bjw07dKH6BU7PR5OfON+4fV+bwrR66bzjvuurtDKLN3b9tqDMSBTUQ0cJrfKApsAcMDCy1TujxW/cHtUADH2VKF3BHlso/gzeXScRK4sUKN1QRHCQKK5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nofm9MPEFWuHDTbfW7X9gmETCR5y032TBU5uz0NDD78=;
+ b=YAfKhmJwDSrCRoSl8bM0Tt8abIK6ge6zRznu7OxJMu+cBT9YFUtIrfsGOc9mv6VQUZ0AmGDUFYiDoeuxzdCSzSVSAQ3g83qnMHYHufWRP9xL/6nxavUhwbERl/SyJKmZRX5S7mGWp6gLYecBWXIDD1ppnGjtrqPGQeqQ4t+QjQw=
+Authentication-Results: suse.cz; dkim=none (message not signed)
+ header.d=none;suse.cz; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB3416.namprd15.prod.outlook.com (2603:10b6:a03:110::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Wed, 20 May
+ 2020 19:26:55 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.3021.020; Wed, 20 May 2020
+ 19:26:55 +0000
+Date:   Wed, 20 May 2020 12:26:52 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 03/19] mm: memcg: convert vmstat slab counters to bytes
+Message-ID: <20200520192652.GA278395@carbon.dhcp.thefacebook.com>
+References: <20200422204708.2176080-1-guro@fb.com>
+ <20200422204708.2176080-4-guro@fb.com>
+ <b72ff85a-22aa-f55d-41ee-2ddee00674a7@suse.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b72ff85a-22aa-f55d-41ee-2ddee00674a7@suse.cz>
+X-ClientProxiedBy: BY5PR04CA0027.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::37) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:e80) by BY5PR04CA0027.namprd04.prod.outlook.com (2603:10b6:a03:1d0::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Wed, 20 May 2020 19:26:55 +0000
+X-Originating-IP: [2620:10d:c090:400::5:e80]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 121f2e0c-eb21-4173-8d22-08d7fcf3c1d8
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3416:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3416ECBB2FFE3C4FB982E0CFBEB60@BYAPR15MB3416.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 04097B7F7F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: P8MwGAwI15d++SKi9zDzXyaFoCGnRzcoXrcijjNhKKqJHr12DRPOQCekGooDhZSxa4+ceoXPcUlcaBe9QS2ASA7a4JfBq2o8sAnJASx10pChag/1CugEBBJgvoOe+ywaRzmE4QwjkOcZfVjkp/qofhusej2/7dSlYGRRUMx2da+bEBgxBZlXzW9QqLQORlW5gT4K9HTyo9az+8G/8K0MI+ffvg7TkG4XZq8ebObc/TpN60Ujh3wIT54O9XVcQp+IPX5tnbmz2YOz6wylXAeCT3BfODrLqbdlC27GoOAWlxPg+T7RZzkoUE/fgnA+LjY1W/APs42ze0Z8Cr07GCSSAw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(376002)(396003)(346002)(366004)(5660300002)(66476007)(66556008)(66946007)(2906002)(6666004)(9686003)(478600001)(55016002)(54906003)(8676002)(16526019)(53546011)(316002)(6916009)(8936002)(86362001)(33656002)(186003)(4326008)(52116002)(7696005)(1076003)(6506007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: VNqyV4lzGV7LaFSK1Cs28LAlVTwPUsiDRSF61hGXwV9QkzHaxsSScJdrJZrMZV933z/AEWJd4+WY9GBvXvBzghJyfVRT1SSRMezh1+LMQOGS+Kbrhnltl5l3AOpqYr7+SKqh3IfvF8BuUfbd5Xb8Z+61PBtdAW+3skU2x94xqoYQ7vqc+I4WpuSsfbhjswYcJbCgZSVAdJrcexqAyxV+77uEINqwkYXRYLGJv/kb4oen8RPjttIu/Rxi98nZwhiamLMccnPUCiX8VXikDqYyxbK0yjrfgXZWgg4XKjaOJE9LBx/C/BAE04eOmu/Yt7Q2PjX2wsFKQ86u1ifALLj2PtcL2UfnQhiWVmwd8GPztE6WUNqShTKd2S+L+GpUYb6FqVrnC+Jb2oaBZop42j4ybd62ra2UbC10QhyKgMzHQ9TEF4zIyT3NU1lr6xNasUVjNh6R7juYq+a6XA/gisXgFHNVHPiFNY16F3iMOlpj6+mSFA11OUkY4zd1uIceq+AIScNHLSjJeEm17VCQgFmNjg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 121f2e0c-eb21-4173-8d22-08d7fcf3c1d8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2020 19:26:55.7120
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bXgadTOpH5I6k6VD0pTnQU57RN6/Fpt9LAAnLXwXjn/meqAoF1RLKtjngEYF5zx0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3416
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-20_15:2020-05-20,2020-05-20 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0 mlxscore=0
+ priorityscore=1501 mlxlogscore=999 cotscore=-2147483648 clxscore=1015
+ adultscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=1 impostorscore=0
+ phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005200155
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Apple-Mail=_96A80465-DD54-49D5-8819-3365C95A2437
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
-
-On May 19, 2020, at 11:57 PM, ira.weiny@intel.com wrote:
+On Wed, May 20, 2020 at 02:25:22PM +0200, Vlastimil Babka wrote:
+> On 4/22/20 10:46 PM, Roman Gushchin wrote:
+> > In order to prepare for per-object slab memory accounting, convert
+> > NR_SLAB_RECLAIMABLE and NR_SLAB_UNRECLAIMABLE vmstat items to bytes.
+> > 
+> > To make it obvious, rename them to NR_SLAB_RECLAIMABLE_B and
+> > NR_SLAB_UNRECLAIMABLE_B (similar to NR_KERNEL_STACK_KB).
+> > 
+> > Internally global and per-node counters are stored in pages,
+> > however memcg and lruvec counters are stored in bytes.
+> > This scheme may look weird, but only for now. As soon as slab
+> > pages will be shared between multiple cgroups, global and
+> > node counters will reflect the total number of slab pages.
+> > However memcg and lruvec counters will be used for per-memcg
+> > slab memory tracking, which will take separate kernel objects
+> > in the account. Keeping global and node counters in pages helps
+> > to avoid additional overhead.
+> > 
+> > The size of slab memory shouldn't exceed 4Gb on 32-bit machines,
+> > so it will fit into atomic_long_t we use for vmstats.
+> > 
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > ---
+> >  drivers/base/node.c     |  4 ++--
+> >  fs/proc/meminfo.c       |  4 ++--
+> >  include/linux/mmzone.h  | 16 +++++++++++++---
+> >  kernel/power/snapshot.c |  2 +-
+> >  mm/memcontrol.c         | 11 ++++-------
+> >  mm/oom_kill.c           |  2 +-
+> >  mm/page_alloc.c         |  8 ++++----
+> >  mm/slab.h               | 15 ++++++++-------
+> >  mm/slab_common.c        |  4 ++--
+> >  mm/slob.c               | 12 ++++++------
+> >  mm/slub.c               |  8 ++++----
+> >  mm/vmscan.c             |  3 ++-
+> >  mm/workingset.c         |  6 ++++--
+> >  13 files changed, 53 insertions(+), 42 deletions(-)
 > 
-> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
+> > @@ -206,7 +206,17 @@ enum node_stat_item {
+> >  
+> >  static __always_inline bool vmstat_item_in_bytes(enum node_stat_item item)
+> >  {
+> > -	return false;
+> > +	/*
+> > +	 * Global and per-node slab counters track slab pages.
+> > +	 * It's expected that changes are multiples of PAGE_SIZE.
+> > +	 * Internally values are stored in pages.
+> > +	 *
+> > +	 * Per-memcg and per-lruvec counters track memory, consumed
+> > +	 * by individual slab objects. These counters are actually
+> > +	 * byte-precise.
+> > +	 */
+> > +	return (item == NR_SLAB_RECLAIMABLE_B ||
+> > +		item == NR_SLAB_UNRECLAIMABLE_B);
+
+Hello, Vlastimil!
+
+Thank you for looking into the patchset, appreciate it.
+In the next version I'll add some comments based on your suggestions in previous
+letters.
+
+> >  }
 > 
-> Set the flag to be user visible and changeable.  Set the flag to be
-> inherited.  Allow applications to change the flag at any time with the
-> exception of if VERITY or ENCRYPT is set.
+> Ok, so this is no longer a no-op, but __always_inline here and inline in
+> global_node_page_state() should hopefully mean that for all users of
+> global_node_page_state(<constant>) the compiler will eliminate the branch for
+> non-slab counters. But there are also functions such as si_mem_available() that
+> use non-constant item. Maybe compiler is smart enough anyway, but perhaps it's
+> better to use global_node_page_state_pages() in such callers?
+
+I'll take a look, thanks for the idea.
+
 > 
-> Disallow setting VERITY or ENCRYPT if DAX is set.
+> However __mod_node_page_state() and mode_node_state() will now branch always. I
+> wonder if the "API clean" goal is worth it...
+
+You mean just adding a special write-side helper which will perform a conversion
+and put VM_WARN_ON_ONCE() into generic write-side helpers?
+
 > 
-> Finally, on regular files, flag the inode to not be cached to facilitate
-> changing S_DAX on the next creation of the inode.
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -1409,9 +1409,8 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
+> >  		       (u64)memcg_page_state(memcg, MEMCG_KERNEL_STACK_KB) *
+> >  		       1024);
+> >  	seq_buf_printf(&s, "slab %llu\n",
+> > -		       (u64)(memcg_page_state(memcg, NR_SLAB_RECLAIMABLE) +
+> > -			     memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE)) *
+> > -		       PAGE_SIZE);
+> > +		       (u64)(memcg_page_state(memcg, NR_SLAB_RECLAIMABLE_B) +
+> > +			     memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE_B)));
+> >  	seq_buf_printf(&s, "sock %llu\n",
+> >  		       (u64)memcg_page_state(memcg, MEMCG_SOCK) *
+> >  		       PAGE_SIZE);
+> > @@ -1445,11 +1444,9 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
+> >  			       PAGE_SIZE);
+> >  
+> >  	seq_buf_printf(&s, "slab_reclaimable %llu\n",
+> > -		       (u64)memcg_page_state(memcg, NR_SLAB_RECLAIMABLE) *
+> > -		       PAGE_SIZE);
+> > +		       (u64)memcg_page_state(memcg, NR_SLAB_RECLAIMABLE_B));
+> >  	seq_buf_printf(&s, "slab_unreclaimable %llu\n",
+> > -		       (u64)memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE) *
+> > -		       PAGE_SIZE);
+> > +		       (u64)memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE_B));
 > 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 6235440e4c39..467c30a789b6 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -415,13 +415,16 @@ struct flex_groups {
-> #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
-> #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
-> /* 0x00400000 was formerly EXT4_EOFBLOCKS_FL */
-> +
-> +#define EXT4_DAX_FL			0x01000000 /* Inode is DAX */
-> +
-> #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has inline data. */
-> #define EXT4_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
-> #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
-> #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 lib */
-
-Hi Ira,
-This flag value conflicts with the reserved flag in e2fsprogs for snapshots:
-
-#define EXT4_SNAPFILE_FL                0x01000000  /* Inode is a snapshot */
-
-Please change EXT4_DAX_FL and FS_DAX_FL to use 0x02000000, which is not used
-for anything in either case.
-
-Cheers, Andreas
-
-
-> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-> index 379a612f8f1d..7c5f6eb51e2d 100644
-> --- a/include/uapi/linux/fs.h
-> +++ b/include/uapi/linux/fs.h
-> @@ -262,6 +262,7 @@ struct fsxattr {
-> #define FS_EA_INODE_FL			0x00200000 /* Inode used for large EA */
-> #define FS_EOFBLOCKS_FL			0x00400000 /* Reserved for ext4 */
-> #define FS_NOCOW_FL			0x00800000 /* Do not cow file */
-> +#define FS_DAX_FL			0x01000000 /* Inode is DAX */
-> #define FS_INLINE_DATA_FL		0x10000000 /* Reserved for ext4 */
-> #define FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
-> #define FS_CASEFOLD_FL			0x40000000 /* Folder is case insensitive */
-> --
-> 2.25.1
+> So here we are now printing in bytes instead of pages, right? That's fine for
+> OOM report, but in sysfs aren't we breaking existing users?
 > 
 
+Hm, but it was in bytes previously, look at that x * PAGE_SIZE.
+Or do you mean that now it can be not rounded to PAGE_SIZE?
+If so, I don't think it breaks any expectations.
 
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_96A80465-DD54-49D5-8819-3365C95A2437
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl7FhHQACgkQcqXauRfM
-H+CzoxAAgUIKJH9Its4enBgM8d6Tekq7iU1pViIdAgr4uLrkgansf1UZuQ97o7J1
-1TzpTiNJmIr6fdeG9H3f3jO+H0T0MVOORk3pm89HjKKNG2aouHVWx8nKzhf6ks+p
-6PHoYF4Xtwj6YfDUW6THUoDlmxeEE+CWOIwsonP+piygiO7NtoFrIrA12VcO5Ijb
-MrAddf7egV/mX98ipVGZK8kwOpnmpzJCfakWyDVY+MXuDzHSfMCyLxZXK1yDqXNl
-Z0rCJ4TTnVzPLToXaAIsNM9IuN8AFZL7TNKHQEpwCji88UjgLuSXM+5prLBUC5bt
-24by4B4TicvR8Sy2YBVpAcs0UWPe7KXeibkQkjtUnR3ndCQjbxBHDks+1m6tpHqA
-Ttu5X4T17iK005ZfPCuL6neK1pcvXGOb/+EeljXbgxJYfg88hVr2G12LY1hYSBaj
-20Q1DFeXGwSDVmnKAPl+zEAHRb5kobj1/wAvKtXTCJ/fPsjAXmv74Ox/jZA+oWJD
-z4YXLPgbJEXxreW7becBUOvF1FbJQwXdmwoeQmuiQwNjqEUjSWBNN6O7lsHbfECh
-Hb/scj62OMzWJs4ybq/5oKUdloV5aWYhcuEGyYHEkGJXyXSHUuxn9/33qiW9h+ym
-jGRYEamsw1IxSQy1V5uf+T18l0jpO3zja1PtG0T8cA3aPh4ZBkc=
-=KvVr
------END PGP SIGNATURE-----
-
---Apple-Mail=_96A80465-DD54-49D5-8819-3365C95A2437--
+Thanks!
