@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED76CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8EED207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52F620823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IA1nCq53"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zn7/Ne73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgETT4K (ORCPT
+        id S1728690AbgETUAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
+        Wed, 20 May 2020 16:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgETT4G (ORCPT
+        with ESMTP id S1727964AbgETT4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:56:06 -0400
+        Wed, 20 May 2020 15:56:10 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9AA2C08C5C2;
-        Wed, 20 May 2020 12:56:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D191CC061A0E;
+        Wed, 20 May 2020 12:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=RS3LTvliBGxyGsnnvxZgDr4L9B5S1/4iYu+vJVezXGg=; b=IA1nCq5387FDZyPHwQSHibUr1/
-        CT/pQ8Y8GNTneQCNiXZ9KBQ4yjdLFbYZFxIB6Tfyb7D4QTdFOK/o4kw4gwVgy5S/ZkREyErzJAnOR
-        i01FLml+PjMqNs8nDgbcDYUf/SSA/WCWP7F4U/AsS3vqGHB8MwZyfqWZbHp2OLMwLVNuRLdi++WUu
-        a7+3MH7Xpz/v+9TTm/NiAVRL+fpr5wPbDv88+1MRVSMVdD6PMFgky6/E1SICQf9+MnSmH+cd7RR30
-        FKS2Xm1gzdYW7d8wR9H7+rveKj4+Z6ni4falzXtAE3UpwenhCou7XXCvS1uVMo/w/U/aEpo29VtXD
-        wOuEI/gQ==;
+        bh=OiNHoC++ZJU6Frq2cw0ICACNWwiR/rswekrw6423rd8=; b=Zn7/Ne73or8IKnF1hrtFo2d59x
+        cQ3ZkfKPxSeMFK9wAHs1TnoW91cYr3Q/B6blL59jfHD84P/F0nr7yan3oDWkKYAG8UUR9xzyVwlpj
+        PbIBrSz3c8xKUIA66xiAtxuj6za6zOtxeEUUzvHsAUs9PhmA0fJ48I0H168sHn19lWbrAXzm0p9rN
+        ZYtzepaO/Zf9BUokiPf5UxrC7AVjI9KNwKlomeY60e8voSEcTmOjd95IwKX5ljs/8fUN/Cjgc6j1p
+        2YM5OQhF6Fvb/3WjyXNWYvhpJLc5zFt9n7niMsq1zanF9vfgjpc3iAXRhwDSs7uvuBhFI9/y7ivsf
+        So7lrlDg==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbUo8-0001ss-Fg; Wed, 20 May 2020 19:55:16 +0000
+        id 1jbUoP-0002Ho-Sq; Wed, 20 May 2020 19:55:34 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
         ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
         linux-nfs@vger.kernel.org
-Subject: [PATCH 02/33] net: remove kernel_getsockopt
-Date:   Wed, 20 May 2020 21:54:38 +0200
-Message-Id: <20200520195509.2215098-3-hch@lst.de>
+Subject: [PATCH 08/33] net: add sock_enable_timestamps
+Date:   Wed, 20 May 2020 21:54:44 +0200
+Message-Id: <20200520195509.2215098-9-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200520195509.2215098-1-hch@lst.de>
 References: <20200520195509.2215098-1-hch@lst.de>
@@ -71,72 +71,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No users left.
+Add a helper to directly enable timestamps instead of setting the
+SO_TIMESTAMP* sockopts from kernel space and going through a fake
+uaccess.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/net.h |  2 --
- net/socket.c        | 34 ----------------------------------
- 2 files changed, 36 deletions(-)
+ include/net/sock.h       |  1 +
+ net/core/sock.c          | 47 +++++++++++++++++++++++++---------------
+ net/rxrpc/local_object.c |  8 +------
+ 3 files changed, 31 insertions(+), 25 deletions(-)
 
-diff --git a/include/linux/net.h b/include/linux/net.h
-index 6451425e828f5..74ef5d7315f70 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -303,8 +303,6 @@ int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
- 		   int flags);
- int kernel_getsockname(struct socket *sock, struct sockaddr *addr);
- int kernel_getpeername(struct socket *sock, struct sockaddr *addr);
--int kernel_getsockopt(struct socket *sock, int level, int optname, char *optval,
--		      int *optlen);
- int kernel_setsockopt(struct socket *sock, int level, int optname, char *optval,
- 		      unsigned int optlen);
- int kernel_sendpage(struct socket *sock, struct page *page, int offset,
-diff --git a/net/socket.c b/net/socket.c
-index 80422fc3c836e..81a98b6cbd087 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -3624,40 +3624,6 @@ int kernel_getpeername(struct socket *sock, struct sockaddr *addr)
- }
- EXPORT_SYMBOL(kernel_getpeername);
+diff --git a/include/net/sock.h b/include/net/sock.h
+index cdec7bc055d5b..99ef43508d2b5 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2689,6 +2689,7 @@ static inline bool sk_dev_equal_l3scope(struct sock *sk, int dif)
+ void sock_def_readable(struct sock *sk);
  
--/**
-- *	kernel_getsockopt - get a socket option (kernel space)
-- *	@sock: socket
-- *	@level: API level (SOL_SOCKET, ...)
-- *	@optname: option tag
-- *	@optval: option value
-- *	@optlen: option length
-- *
-- *	Assigns the option length to @optlen.
-- *	Returns 0 or an error.
-- */
+ int sock_bindtoindex(struct sock *sk, int ifindex);
++void sock_enable_timestamps(struct sock *sk);
+ void sock_no_linger(struct sock *sk);
+ void sock_set_priority(struct sock *sk, u32 priority);
+ void sock_set_reuseaddr(struct sock *sk);
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 23f80880fbb2c..e4a4dd2b3d8b3 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -757,6 +757,28 @@ void sock_set_sndtimeo(struct sock *sk, s64 secs)
+ }
+ EXPORT_SYMBOL(sock_set_sndtimeo);
+ 
++static void __sock_set_timestamps(struct sock *sk, bool val, bool new, bool ns)
++{
++	if (val)  {
++		sock_valbool_flag(sk, SOCK_TSTAMP_NEW, new);
++		sock_valbool_flag(sk, SOCK_RCVTSTAMPNS, ns);
++		sock_set_flag(sk, SOCK_RCVTSTAMP);
++		sock_enable_timestamp(sk, SOCK_TIMESTAMP);
++	} else {
++		sock_reset_flag(sk, SOCK_RCVTSTAMP);
++		sock_reset_flag(sk, SOCK_RCVTSTAMPNS);
++		sock_reset_flag(sk, SOCK_TSTAMP_NEW);
++	}
++}
++
++void sock_enable_timestamps(struct sock *sk)
++{
++	lock_sock(sk);
++	__sock_set_timestamps(sk, true, false, true);
++	release_sock(sk);
++}
++EXPORT_SYMBOL(sock_enable_timestamps);
++
+ /*
+  *	This is meant for all protocols to use and covers goings on
+  *	at the socket level. Everything here is generic.
+@@ -948,28 +970,17 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+ 		break;
+ 
+ 	case SO_TIMESTAMP_OLD:
++		__sock_set_timestamps(sk, valbool, false, false);
++		break;
+ 	case SO_TIMESTAMP_NEW:
++		__sock_set_timestamps(sk, valbool, true, false);
++		break;
+ 	case SO_TIMESTAMPNS_OLD:
++		__sock_set_timestamps(sk, valbool, false, true);
++		break;
+ 	case SO_TIMESTAMPNS_NEW:
+-		if (valbool)  {
+-			if (optname == SO_TIMESTAMP_NEW || optname == SO_TIMESTAMPNS_NEW)
+-				sock_set_flag(sk, SOCK_TSTAMP_NEW);
+-			else
+-				sock_reset_flag(sk, SOCK_TSTAMP_NEW);
 -
--int kernel_getsockopt(struct socket *sock, int level, int optname,
--			char *optval, int *optlen)
--{
--	mm_segment_t oldfs = get_fs();
--	char __user *uoptval;
--	int __user *uoptlen;
--	int err;
+-			if (optname == SO_TIMESTAMP_OLD || optname == SO_TIMESTAMP_NEW)
+-				sock_reset_flag(sk, SOCK_RCVTSTAMPNS);
+-			else
+-				sock_set_flag(sk, SOCK_RCVTSTAMPNS);
+-			sock_set_flag(sk, SOCK_RCVTSTAMP);
+-			sock_enable_timestamp(sk, SOCK_TIMESTAMP);
+-		} else {
+-			sock_reset_flag(sk, SOCK_RCVTSTAMP);
+-			sock_reset_flag(sk, SOCK_RCVTSTAMPNS);
+-			sock_reset_flag(sk, SOCK_TSTAMP_NEW);
+-		}
++		__sock_set_timestamps(sk, valbool, true, true);
+ 		break;
 -
--	uoptval = (char __user __force *) optval;
--	uoptlen = (int __user __force *) optlen;
--
--	set_fs(KERNEL_DS);
--	if (level == SOL_SOCKET)
--		err = sock_getsockopt(sock, level, optname, uoptval, uoptlen);
--	else
--		err = sock->ops->getsockopt(sock, level, optname, uoptval,
--					    uoptlen);
--	set_fs(oldfs);
--	return err;
--}
--EXPORT_SYMBOL(kernel_getsockopt);
--
- /**
-  *	kernel_setsockopt - set a socket option (kernel space)
-  *	@sock: socket
+ 	case SO_TIMESTAMPING_NEW:
+ 		sock_set_flag(sk, SOCK_TSTAMP_NEW);
+ 		/* fall through */
+diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
+index 01135e54d95d2..5ea2bd01fdd59 100644
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -189,13 +189,7 @@ static int rxrpc_open_socket(struct rxrpc_local *local, struct net *net)
+ 		}
+ 
+ 		/* We want receive timestamps. */
+-		opt = 1;
+-		ret = kernel_setsockopt(local->socket, SOL_SOCKET, SO_TIMESTAMPNS_OLD,
+-					(char *)&opt, sizeof(opt));
+-		if (ret < 0) {
+-			_debug("setsockopt failed");
+-			goto error;
+-		}
++		sock_enable_timestamps(local->socket->sk);
+ 		break;
+ 
+ 	default:
 -- 
 2.26.2
 
