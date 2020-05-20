@@ -2,101 +2,152 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB77C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C528220829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:05:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OXSTJKDH"
+	by mail.kernel.org (Postfix) with ESMTP id 0E7FB20671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590008715;
+	bh=H+0YEqphbDH29yv2oc+57hfNzq7deHukdVPhHcYS2H0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qmeeGIn1BI6zlnbEoBlfthFU91ucNHnFSiRowrIfsu3c1rfS39snliRcqeWN9Hian
+	 tya5DowPsB+P5INQZRaCFPxk85uKb1h3XwTrQPofidE7HLnVRDUH2QnVyhDnPgiEB7
+	 oGLNK0v3KIGQicu6eaQ7qx/JTXXAo69Xa2uDuCkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgETVFL (ORCPT
+        id S1728199AbgETVFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:05:11 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17456 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgETVFK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:05:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec59af60000>; Wed, 20 May 2020 14:02:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 20 May 2020 14:05:10 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 20 May 2020 14:05:10 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May
- 2020 21:05:09 +0000
-Subject: Re: [PATCH] nouveau/hmm: fix migrate zero page to GPU
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>, Ben Skeggs <bskeggs@redhat.com>
-References: <20200520183652.21633-1-rcampbell@nvidia.com>
- <20200520192045.GH24561@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <0ef69e08-7f5d-7a3d-c657-55b3a8df1dfe@nvidia.com>
-Date:   Wed, 20 May 2020 14:05:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 20 May 2020 17:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727018AbgETVFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:05:12 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E73A2084C;
+        Wed, 20 May 2020 21:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590008711;
+        bh=H+0YEqphbDH29yv2oc+57hfNzq7deHukdVPhHcYS2H0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CyHD5gOqXKmwWItvVQTBZJu0iRZIw5MziGTsFkUzQ7FgBZ31wYQUh7Q+7YkQhl3Ct
+         fK4nmupU0rZxp4QgGs9ltanO/UxAYQY81QaUqzBLakSQHa8IptM9bmJtElJ2uHs/5o
+         DjI7jrQdI7D7wDFVhtSfatfZ3o/MJaxhXGgU8CWM=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 904C840AFD; Wed, 20 May 2020 18:05:09 -0300 (-03)
+Date:   Wed, 20 May 2020 18:05:09 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/19] perf ftrace: add support for trace option
+ funcgraph-tail
+Message-ID: <20200520210509.GY32678@kernel.org>
+References: <20200510150628.16610-1-changbin.du@gmail.com>
+ <20200510150628.16610-11-changbin.du@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200520192045.GH24561@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590008566; bh=oNYfOayL5+NnABbnpFvMSS5jJdalJIc06Ghq09EUD4E=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OXSTJKDHNXgUvcTtaCjRAbYfLocszE4i6M3tulp2GOmCgY+AtUmJn09EYEPdwMXak
-         qBNS1ru1cIpS5X+kjTGjaFfdmoHvtoZY5l3arAAiNRNiJI6/9fIRgnXyzXFfRNunfy
-         e7fys5XkFfg76pjban7f52m7QSu5jIJjzW6DyHYa19Z8otwsm6BAKxOEv4s6XnhwkR
-         sEElneYYy7Vr5vGMG9inFQ7oP1gdk7FgIeuEDL5HTIfhCmOQMRuqgDTQUQO22+9ASL
-         t2yLvPza0CZuQ4UjzRUItjyydP5yPzO8cb9kKfk3uINysnpUQ0GMWaSRYNUYgfph5z
-         qlsDmF8dXLmBA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510150628.16610-11-changbin.du@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Sun, May 10, 2020 at 11:06:19PM +0800, Changbin Du escreveu:
+> This adds an option '--funcgraph-tail' for function graph tracer.
 
-On 5/20/20 12:20 PM, Jason Gunthorpe wrote:
-> On Wed, May 20, 2020 at 11:36:52AM -0700, Ralph Campbell wrote:
->> When calling OpenCL clEnqueueSVMMigrateMem() on a region of memory that
->> is backed by pte_none() or zero pages, migrate_vma_setup() will fill the
->> source PFN array with an entry indicating the source page is zero.
->> Use this to optimize migration to device private memory by allocating
->> GPU memory and zero filling it instead of failing to migrate the page.
->>
->> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
->>
->> This patch applies cleanly to Jason's Gunthorpe's hmm tree plus two
->> patches I posted earlier. The first is queued in Ben Skegg's nouveau
->> tree and the second is still pending review/not queued.
->> [1] ("nouveau/hmm: map pages after migration")
->> https://lore.kernel.org/linux-mm/20200304001339.8248-5-rcampbell@nvidia.com/
->> [2] ("nouveau/hmm: fix nouveau_dmem_chunk allocations")
->> https://lore.kernel.org/lkml/20200421231107.30958-1-rcampbell@nvidia.com/
-> 
-> It would be best if it goes through Ben's tree if it doesn't have
-> conflicts with the hunks I have in the hmm tree.. Is it the case?
-> 
-> Jason
+And I think we should make these available in a compact way, as Intel PT
+has, i.e. instead of doing something like:
 
-I think there might be some merge conflicts even though it is semantically
-independent of the other changes. I guess since we are at 5.7-rc6 and not
-far from the merge window, I can rebase after 5.8-rc1 and resend.
-I posted this mostly to get some review and as a "heads up" of the issue.
+   --function-graph-options nosleep_time,noirqs,no_tail,long_info
+
+We could have:
+
+   -G ns,ni,nt,li
+
+To save on typing, or something like that.
+
+- Arnaldo
+ 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 20bc14d6c5fb..2ef5d1c4b23c 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -42,6 +42,7 @@ struct perf_ftrace {
+>  	bool			func_stack_trace;
+>  	bool			nosleep_time;
+>  	bool			nofuncgraph_irqs;
+> +	bool			funcgraph_tail;
+>  	bool			long_info;
+>  	unsigned		tracing_thresh;
+>  };
+> @@ -192,6 +193,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+>  	write_tracing_option_file("func_stack_trace", "0");
+>  	write_tracing_option_file("sleep-time", "1");
+>  	write_tracing_option_file("funcgraph-irqs", "1");
+> +	write_tracing_option_file("funcgraph-tail", "0");
+>  	write_tracing_option_file("funcgraph-proc", "0");
+>  	write_tracing_option_file("funcgraph-abstime", "0");
+>  	write_tracing_option_file("irq-info", "0");
+> @@ -411,6 +413,17 @@ static int set_tracing_thresh(struct perf_ftrace *ftrace)
+>  	return 0;
+>  }
+>  
+> +static int set_tracing_funcgraph_tail(struct perf_ftrace *ftrace)
+> +{
+> +	if (!ftrace->funcgraph_tail)
+> +		return 0;
+> +
+> +	if (write_tracing_option_file("funcgraph-tail", "1") < 0)
+> +		return -1;
+> +
+> +	return 0;
+> +}
+> +
+>  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  {
+>  	char *trace_file;
+> @@ -499,6 +512,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  		goto out_reset;
+>  	}
+>  
+> +	if (set_tracing_funcgraph_tail(ftrace) < 0) {
+> +		pr_err("failed to set tracing option funcgraph-tail\n");
+> +		goto out_reset;
+> +	}
+> +
+>  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
+>  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
+>  		goto out_reset;
+> @@ -638,6 +656,8 @@ int cmd_ftrace(int argc, const char **argv)
+>  		    "Measure on-CPU time only (function_graph only)"),
+>  	OPT_BOOLEAN(0, "nofuncgraph-irqs", &ftrace.nofuncgraph_irqs,
+>  		    "Ignore functions that happen inside interrupt (function_graph only)"),
+> +	OPT_BOOLEAN(0, "funcgraph-tail", &ftrace.funcgraph_tail,
+> +		    "Show function tails comment (function_graph only)"),
+>  	OPT_BOOLEAN('l', "long-info", &ftrace.long_info,
+>  		    "Show process names, PIDs, timestamps, irq-info if available"),
+>  	OPT_UINTEGER(0, "tracing-thresh", &ftrace.tracing_thresh,
+> -- 
+> 2.25.1
+> 
+
+-- 
+
+- Arnaldo
