@@ -2,32 +2,32 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D9CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AECFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D05B4205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28057205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgETOWV (ORCPT
+        id S1728630AbgETO3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:22:21 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60900 "EHLO
+        Wed, 20 May 2020 10:29:09 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60938 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726443AbgETOWU (ORCPT
+        by vger.kernel.org with ESMTP id S1726804AbgETOWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:20 -0400
+        Wed, 20 May 2020 10:22:21 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-00034u-5G; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-00034z-7T; Wed, 20 May 2020 15:22:18 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbt-007DNv-Mk; Wed, 20 May 2020 15:22:17 +0100
+        id 1jbPbt-007DOJ-RC; Wed, 20 May 2020 15:22:17 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Piotr Krysiuk" <piotras@gmail.com>,
-        "Al Viro" <viro@zeniv.linux.org.uk>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Wed, 20 May 2020 15:13:29 +0100
-Message-ID: <lsq.1589984008.741363642@decadent.org.uk>
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        "Steffen Klassert" <steffen.klassert@secunet.com>
+Date:   Wed, 20 May 2020 15:13:34 +0100
+Message-ID: <lsq.1589984008.79928707@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 01/99] fs/namespace.c: fix mountpoint reference
- counter race
+Subject: [PATCH 3.16 06/99] padata: get_next is never NULL
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,44 +57,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Piotr Krysiuk <piotras@gmail.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-A race condition between threads updating mountpoint reference counter
-affects longterm releases 4.4.220, 4.9.220, 4.14.177 and 4.19.118.
+commit 69b348449bda0f9588737539cfe135774c9939a7 upstream.
 
-The mountpoint reference counter corruption may occur when:
-* one thread increments m_count member of struct mountpoint
-  [under namespace_sem, but not holding mount_lock]
-    pivot_root()
-* another thread simultaneously decrements the same m_count
-  [under mount_lock, but not holding namespace_sem]
-    put_mountpoint()
-      unhash_mnt()
-        umount_mnt()
-          mntput_no_expire()
+Per Dan's static checker warning, the code that returns NULL was removed
+in 2010, so this patch updates the comments and fixes the code
+assumptions.
 
-To fix this race condition, grab mount_lock before updating m_count in
-pivot_root().
-
-Reference: CVE-2020-12114
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Piotr Krysiuk <piotras@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/namespace.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/padata.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2937,8 +2937,8 @@ SYSCALL_DEFINE2(pivot_root, const char _
- 	/* make certain new is below the root */
- 	if (!is_path_reachable(new_mnt, new.dentry, &root))
- 		goto out4;
--	root_mp->m_count++; /* pin it so it won't go away */
- 	lock_mount_hash();
-+	root_mp->m_count++; /* pin it so it won't go away */
- 	detach_mnt(new_mnt, &parent_path);
- 	detach_mnt(root_mnt, &root_parent);
- 	if (root_mnt->mnt.mnt_flags & MNT_LOCKED) {
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -153,8 +153,6 @@ EXPORT_SYMBOL(padata_do_parallel);
+  * A pointer to the control struct of the next object that needs
+  * serialization, if present in one of the percpu reorder queues.
+  *
+- * NULL, if all percpu reorder queues are empty.
+- *
+  * -EINPROGRESS, if the next object that needs serialization will
+  *  be parallel processed by another cpu and is not yet present in
+  *  the cpu's reorder queue.
+@@ -181,8 +179,6 @@ static struct padata_priv *padata_get_ne
+ 	cpu = padata_index_to_cpu(pd, next_index);
+ 	next_queue = per_cpu_ptr(pd->pqueue, cpu);
+ 
+-	padata = NULL;
+-
+ 	reorder = &next_queue->reorder;
+ 
+ 	spin_lock(&reorder->lock);
+@@ -234,12 +230,11 @@ static void padata_reorder(struct parall
+ 		padata = padata_get_next(pd);
+ 
+ 		/*
+-		 * All reorder queues are empty, or the next object that needs
+-		 * serialization is parallel processed by another cpu and is
+-		 * still on it's way to the cpu's reorder queue, nothing to
+-		 * do for now.
++		 * If the next object that needs serialization is parallel
++		 * processed by another cpu and is still on it's way to the
++		 * cpu's reorder queue, nothing to do for now.
+ 		 */
+-		if (!padata || PTR_ERR(padata) == -EINPROGRESS)
++		if (PTR_ERR(padata) == -EINPROGRESS)
+ 			break;
+ 
+ 		/*
 
