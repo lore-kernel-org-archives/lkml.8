@@ -2,228 +2,191 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3842CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38A532072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B172072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:38:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P6YVFEYp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K8S5mAZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgETShC (ORCPT
+        id S1726839AbgETSim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:37:02 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13139 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgETShB (ORCPT
+        Wed, 20 May 2020 14:38:42 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27177 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726510AbgETSil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:37:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec5787e0001>; Wed, 20 May 2020 11:35:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 20 May 2020 11:37:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 20 May 2020 11:37:01 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May
- 2020 18:36:58 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 20 May 2020 18:36:58 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec578c90005>; Wed, 20 May 2020 11:36:57 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Ben Skeggs" <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH] nouveau/hmm: fix migrate zero page to GPU
-Date:   Wed, 20 May 2020 11:36:52 -0700
-Message-ID: <20200520183652.21633-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 20 May 2020 14:38:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589999919;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uXQ+5epfH0IUohGuzl6yDkV1s9DuksnVQ0R3fsPd6/4=;
+        b=K8S5mAZ+MvmWfkr9Paw6WNiuWH4n39LG3leiuh4mNzDSodeschmLFIuPahKnAXsfJ6BQP6
+        IJGuvEFDZHvsleWyR1KQJkomOJ71aACI9UMlfjlSVD68Ka8Gwp8W8R1EYQT3sjCgblqTQH
+        RzSxpZHituhxpe0yqmBEgC6A3IlCl8E=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-Qdzvz2emOOqFvnGIzkmjUQ-1; Wed, 20 May 2020 14:38:37 -0400
+X-MC-Unique: Qdzvz2emOOqFvnGIzkmjUQ-1
+Received: by mail-wr1-f70.google.com with SMTP id r7so1767429wrc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:38:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uXQ+5epfH0IUohGuzl6yDkV1s9DuksnVQ0R3fsPd6/4=;
+        b=S+YKhvdeY7EdxImSlWOo171hLdxJQQWTb0LZcBNPorCPevdy7tRWnGg+i4aC52BlDh
+         mLHyaH6wnFlyvWdeVEw58u6Ri5AZbe0jVzC4ZZz0iy8NUrYCOG1xBU/LnE8Qjz0TtTY5
+         VZBfZm5rq9NEEgJmkndmJc1XH4iWTpmojxkTPd0rE+PE87XJ+rbl2uoLtngpbSCeuvSm
+         e9Q21Nf2K0j+IoCpyDjBHgujt2vp3l+4Qd+n5fqmKuUDyLTaC1cCeYtf6suYoxfaHzgZ
+         EiPlV1oSpSKogqzm8aAJoh4FLEtrQY2wUum0Ofqjt8KIYHt2o4JVwE9xo8SVjF0KhCYB
+         ZfJg==
+X-Gm-Message-State: AOAM531XNFF0gEmzJbpnLEaadIzIiBx9Gtq28FtK3H5dZWTJQ/+2AsLW
+        ZegWJSN7Z14HUzYRBNR8wPSkUfi36xrfWF6OTX/oLTDweJskV/HUzJawi1zCd3RJbHysGiDbeeQ
+        2TE3+JoMiarwgNhb8qHGDy88A
+X-Received: by 2002:adf:8b98:: with SMTP id o24mr5386064wra.156.1589999916447;
+        Wed, 20 May 2020 11:38:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwFocmzJYmKHfClVXT6xi3xafkw9GOIkQ0Dhri2qTWT79BmMj9mhok9inN/J9Oep3mFiITNdA==
+X-Received: by 2002:adf:8b98:: with SMTP id o24mr5386028wra.156.1589999915789;
+        Wed, 20 May 2020 11:38:35 -0700 (PDT)
+Received: from localhost.localdomain ([151.68.137.74])
+        by smtp.gmail.com with ESMTPSA id i21sm3888749wml.5.2020.05.20.11.38.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 11:38:35 -0700 (PDT)
+Date:   Wed, 20 May 2020 20:38:30 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
+        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
+Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
+ sched_attr::sched_period
+Message-ID: <20200520183830.GN10078@localhost.localdomain>
+References: <20190726145409.947503076@infradead.org>
+ <20190726161357.397880775@infradead.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589999742; bh=qnRRPm8US23d/hFk1NYbhQ7k/2eulBbsURi/MjGsi3Q=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=P6YVFEYpA241+7WHmIB7wmBoS+Y2AIkvac9gi6/5dug0MvAFiHSAmAbj/yM4zbrK4
-         I7H7eoCVLxoKOeEZ6DmCDPV0/Gycuai/nF72W9V+Ts1W1zwiqaiVZA6qBToKYvXGfP
-         t7gZlJafbWJgkgkj6x+jteZSD7orpinSfLRfm3HeI/QjyS3X6XuilImjWLvcS63BHh
-         IOUKKa43+VYpxsVMrVNHibTQ6UP9fGpYauRIycYpWnDhUeeycyAD615NOh3Zt9+xlf
-         2J3ofDPoxn130Q/HwgWQOMxNBjlWwgzpzsw5edXKvRoMIW8EVZnkCdcBkXNz4o9bGV
-         MANaeyPAkhiaQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190726161357.397880775@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling OpenCL clEnqueueSVMMigrateMem() on a region of memory that
-is backed by pte_none() or zero pages, migrate_vma_setup() will fill the
-source PFN array with an entry indicating the source page is zero.
-Use this to optimize migration to device private memory by allocating
-GPU memory and zero filling it instead of failing to migrate the page.
+Hi Peter,
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
+On 26/07/19 16:54, Peter Zijlstra wrote:
+> 
+> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Cc: Luca Abeni <luca.abeni@santannapisa.it>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  include/linux/sched/sysctl.h |    3 +++
+>  kernel/sched/deadline.c      |   23 +++++++++++++++++++++--
+>  kernel/sysctl.c              |   14 ++++++++++++++
+>  3 files changed, 38 insertions(+), 2 deletions(-)
+> 
+> --- a/include/linux/sched/sysctl.h
+> +++ b/include/linux/sched/sysctl.h
+> @@ -56,6 +56,9 @@ int sched_proc_update_handler(struct ctl
+>  extern unsigned int sysctl_sched_rt_period;
+>  extern int sysctl_sched_rt_runtime;
+>  
+> +extern unsigned int sysctl_sched_dl_period_max;
+> +extern unsigned int sysctl_sched_dl_period_min;
+> +
+>  #ifdef CONFIG_UCLAMP_TASK
+>  extern unsigned int sysctl_sched_uclamp_util_min;
+>  extern unsigned int sysctl_sched_uclamp_util_max;
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -2597,6 +2597,14 @@ void __getparam_dl(struct task_struct *p
+>  }
+>  
+>  /*
+> + * Default limits for DL period; on the top end we guard against small util
+> + * tasks still getting rediculous long effective runtimes, on the bottom end we
+> + * guard against timer DoS.
+> + */
+> +unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
+> +unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
+> +
+> +/*
+>   * This function validates the new parameters of a -deadline task.
+>   * We ask for the deadline not being zero, and greater or equal
+>   * than the runtime, as well as the period of being zero or
+> @@ -2608,6 +2616,8 @@ void __getparam_dl(struct task_struct *p
+>   */
+>  bool __checkparam_dl(const struct sched_attr *attr)
+>  {
+> +	u64 period, max, min;
+> +
+>  	/* special dl tasks don't actually use any parameter */
+>  	if (attr->sched_flags & SCHED_FLAG_SUGOV)
+>  		return true;
+> @@ -2631,12 +2641,21 @@ bool __checkparam_dl(const struct sched_
+>  	    attr->sched_period & (1ULL << 63))
+>  		return false;
+>  
+> +	period = attr->sched_period;
+> +	if (!period)
+> +		period = attr->sched_deadline;
+> +
+>  	/* runtime <= deadline <= period (if period != 0) */
+> -	if ((attr->sched_period != 0 &&
+> -	     attr->sched_period < attr->sched_deadline) ||
+> +	if (period < attr->sched_deadline ||
+>  	    attr->sched_deadline < attr->sched_runtime)
+>  		return false;
+>  
+> +	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
+> +	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
+> +
+> +	if (period < min || period > max)
+> +		return false;
+> +
+>  	return true;
+>  }
+>  
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -443,6 +443,20 @@ static struct ctl_table kern_table[] = {
+>  		.proc_handler	= sched_rt_handler,
+>  	},
+>  	{
+> +		.procname	= "sched_deadline_period_max_us",
+> +		.data		= &sysctl_sched_dl_period_max,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "sched_deadline_period_min_us",
+> +		.data		= &sysctl_sched_dl_period_min,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+>  		.procname	= "sched_rr_timeslice_ms",
+>  		.data		= &sysctl_sched_rr_timeslice,
+>  		.maxlen		= sizeof(int),
 
-This patch applies cleanly to Jason's Gunthorpe's hmm tree plus two
-patches I posted earlier. The first is queued in Ben Skegg's nouveau
-tree and the second is still pending review/not queued.
-[1] ("nouveau/hmm: map pages after migration")
-https://lore.kernel.org/linux-mm/20200304001339.8248-5-rcampbell@nvidia.com=
-/
-[2] ("nouveau/hmm: fix nouveau_dmem_chunk allocations")
-https://lore.kernel.org/lkml/20200421231107.30958-1-rcampbell@nvidia.com/
+I think this never made it upstream. And I believe both me and Daniel
+were OK with it. Do you recall if any additional change was needed?
 
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 75 ++++++++++++++++++++++----
- 1 file changed, 66 insertions(+), 9 deletions(-)
+Thanks,
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouve=
-au/nouveau_dmem.c
-index cbc71567f9a5..e5c230d9ae24 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -56,6 +56,8 @@ enum nouveau_aper {
- typedef int (*nouveau_migrate_copy_t)(struct nouveau_drm *drm, u64 npages,
- 				      enum nouveau_aper, u64 dst_addr,
- 				      enum nouveau_aper, u64 src_addr);
-+typedef int (*nouveau_clear_page_t)(struct nouveau_drm *drm, u32 length,
-+				      enum nouveau_aper, u64 dst_addr);
-=20
- struct nouveau_dmem_chunk {
- 	struct list_head list;
-@@ -67,6 +69,7 @@ struct nouveau_dmem_chunk {
-=20
- struct nouveau_dmem_migrate {
- 	nouveau_migrate_copy_t copy_func;
-+	nouveau_clear_page_t clear_func;
- 	struct nouveau_channel *chan;
- };
-=20
-@@ -436,6 +439,52 @@ nvc0b5_migrate_copy(struct nouveau_drm *drm, u64 npage=
-s,
- 	return 0;
- }
-=20
-+static int
-+nvc0b5_migrate_clear(struct nouveau_drm *drm, u32 length,
-+		     enum nouveau_aper dst_aper, u64 dst_addr)
-+{
-+	struct nouveau_channel *chan =3D drm->dmem->migrate.chan;
-+	u32 launch_dma =3D (1 << 10) /* REMAP_ENABLE_TRUE */ |
-+			 (1 << 8) /* DST_MEMORY_LAYOUT_PITCH. */ |
-+			 (1 << 7) /* SRC_MEMORY_LAYOUT_PITCH. */ |
-+			 (1 << 2) /* FLUSH_ENABLE_TRUE. */ |
-+			 (2 << 0) /* DATA_TRANSFER_TYPE_NON_PIPELINED. */;
-+	u32 remap =3D (4 <<  0) /* DST_X_CONST_A */ |
-+		    (5 <<  4) /* DST_Y_CONST_B */ |
-+		    (3 << 16) /* COMPONENT_SIZE_FOUR */ |
-+		    (1 << 24) /* NUM_DST_COMPONENTS_TWO */;
-+	int ret;
-+
-+	ret =3D RING_SPACE(chan, 12);
-+	if (ret)
-+		return ret;
-+
-+	switch (dst_aper) {
-+	case NOUVEAU_APER_VRAM:
-+		BEGIN_IMC0(chan, NvSubCopy, 0x0264, 0);
-+			break;
-+	case NOUVEAU_APER_HOST:
-+		BEGIN_IMC0(chan, NvSubCopy, 0x0264, 1);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	launch_dma |=3D 0x00002000; /* DST_TYPE_PHYSICAL. */
-+
-+	BEGIN_NVC0(chan, NvSubCopy, 0x0700, 3);
-+	OUT_RING(chan, 0);
-+	OUT_RING(chan, 0);
-+	OUT_RING(chan, remap);
-+	BEGIN_NVC0(chan, NvSubCopy, 0x0408, 2);
-+	OUT_RING(chan, upper_32_bits(dst_addr));
-+	OUT_RING(chan, lower_32_bits(dst_addr));
-+	BEGIN_NVC0(chan, NvSubCopy, 0x0418, 1);
-+	OUT_RING(chan, length >> 3);
-+	BEGIN_NVC0(chan, NvSubCopy, 0x0300, 1);
-+	OUT_RING(chan, launch_dma);
-+	return 0;
-+}
-+
- static int
- nouveau_dmem_migrate_init(struct nouveau_drm *drm)
- {
-@@ -445,6 +494,7 @@ nouveau_dmem_migrate_init(struct nouveau_drm *drm)
- 	case  VOLTA_DMA_COPY_A:
- 	case TURING_DMA_COPY_A:
- 		drm->dmem->migrate.copy_func =3D nvc0b5_migrate_copy;
-+		drm->dmem->migrate.clear_func =3D nvc0b5_migrate_clear;
- 		drm->dmem->migrate.chan =3D drm->ttm.chan;
- 		return 0;
- 	default:
-@@ -487,21 +537,28 @@ static unsigned long nouveau_dmem_migrate_copy_one(st=
-ruct nouveau_drm *drm,
- 	unsigned long paddr;
-=20
- 	spage =3D migrate_pfn_to_page(src);
--	if (!spage || !(src & MIGRATE_PFN_MIGRATE))
-+	if (!(src & MIGRATE_PFN_MIGRATE))
- 		goto out;
-=20
- 	dpage =3D nouveau_dmem_page_alloc_locked(drm);
- 	if (!dpage)
- 		goto out;
-=20
--	*dma_addr =3D dma_map_page(dev, spage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
--	if (dma_mapping_error(dev, *dma_addr))
--		goto out_free_page;
--
- 	paddr =3D nouveau_dmem_page_addr(dpage);
--	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_VRAM,
--			paddr, NOUVEAU_APER_HOST, *dma_addr))
--		goto out_dma_unmap;
-+	if (spage) {
-+		*dma_addr =3D dma_map_page(dev, spage, 0, page_size(spage),
-+					 DMA_BIDIRECTIONAL);
-+		if (dma_mapping_error(dev, *dma_addr))
-+			goto out_free_page;
-+		if (drm->dmem->migrate.copy_func(drm, page_size(spage),
-+			NOUVEAU_APER_VRAM, paddr, NOUVEAU_APER_HOST, *dma_addr))
-+			goto out_dma_unmap;
-+	} else {
-+		*dma_addr =3D DMA_MAPPING_ERROR;
-+		if (drm->dmem->migrate.clear_func(drm, page_size(dpage),
-+			NOUVEAU_APER_VRAM, paddr))
-+			goto out_free_page;
-+	}
-=20
- 	*pfn =3D NVIF_VMM_PFNMAP_V0_V | NVIF_VMM_PFNMAP_V0_VRAM |
- 		((paddr >> PAGE_SHIFT) << NVIF_VMM_PFNMAP_V0_ADDR_SHIFT);
-@@ -528,7 +585,7 @@ static void nouveau_dmem_migrate_chunk(struct nouveau_d=
-rm *drm,
- 	for (i =3D 0; addr < args->end; i++) {
- 		args->dst[i] =3D nouveau_dmem_migrate_copy_one(drm, args->src[i],
- 				dma_addrs + nr_dma, pfns + i);
--		if (args->dst[i])
-+		if (!dma_mapping_error(drm->dev->dev, dma_addrs[nr_dma]))
- 			nr_dma++;
- 		addr +=3D PAGE_SIZE;
- 	}
---=20
-2.20.1
+Juri
 
