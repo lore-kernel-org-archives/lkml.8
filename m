@@ -2,126 +2,213 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D90C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 032B720748
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB98920748
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgETGTI (ORCPT
+        id S1726545AbgETGTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 20 May 2020 02:19:11 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:8290 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726489AbgETGTI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 02:19:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55036 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgETGTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 02:19:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C3567AD45;
-        Wed, 20 May 2020 06:19:07 +0000 (UTC)
-Date:   Wed, 20 May 2020 16:18:51 +1000
-From:   Aleksa Sarai <asarai@suse.de>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>,
-        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: seccomp feature development
-Message-ID: <20200520061851.rxxgz2frffqt66q6@yavin.dot.cyphar.com>
-References: <202005181120.971232B7B@keescook>
- <CAG48ez1LrQvR2RHD5-ZCEihL4YT1tVgoAJfGYo+M3QukumX=OQ@mail.gmail.com>
- <20200519024846.b6dr5cjojnuetuyb@yavin.dot.cyphar.com>
- <CAADnVQKRCCHRQrNy=V7ue38skb8nKCczScpph2WFv7U_jsS3KQ@mail.gmail.com>
- <20200520012045.5yqejh6kic3gbkyw@yavin.dot.cyphar.com>
- <20200520051703.wh7s2bnpnrqxpk5j@ast-mbp.dhcp.thefacebook.com>
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04K6H7tq010214;
+        Wed, 20 May 2020 02:18:49 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 312d35vb9w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 02:18:49 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 04K6IldW042165
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 20 May 2020 02:18:48 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 19 May
+ 2020 23:18:46 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 19 May 2020 23:18:46 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04K6IhC3024736;
+        Wed, 20 May 2020 02:18:43 -0400
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: [PATCH] iio: dac: ad5592r-base: Replace indio_dev->mlock with own device lock
+Date:   Wed, 20 May 2020 09:18:13 +0300
+Message-ID: <20200520061819.29056-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rn7hnswmzhtvif3b"
-Content-Disposition: inline
-In-Reply-To: <20200520051703.wh7s2bnpnrqxpk5j@ast-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-20_02:2020-05-19,2020-05-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=743
+ suspectscore=0 bulkscore=0 mlxscore=0 phishscore=0 cotscore=-2147483648
+ impostorscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ clxscore=1015 adultscore=0 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As part of the general cleanup of indio_dev->mlock, this change replaces
+it with a local lock on the device's state structure.
 
---rn7hnswmzhtvif3b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/iio/dac/ad5592r-base.c | 28 +++++++++++++++-------------
+ drivers/iio/dac/ad5592r-base.h |  1 +
+ 2 files changed, 16 insertions(+), 13 deletions(-)
 
-On 2020-05-19, Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> On Wed, May 20, 2020 at 11:20:45AM +1000, Aleksa Sarai wrote:
-> > No it won't become copy_from_user(), nor will there be a TOCTOU race.
-> >=20
-> > The idea is that seccomp will proactively copy the struct (and
-> > recursively any of the struct pointers inside) before the syscall runs
-> > -- as this is done by seccomp it doesn't require any copy_from_user()
-> > primitives in cBPF. We then run the cBPF filter on the copied struct,
-> > just like how cBPF programs currently operate on seccomp_data (how this
-> > would be exposed to the cBPF program as part of the seccomp ABI is the
-> > topic of discussion here).
-> >=20
-> > Then, when the actual syscall code runs, the struct will have already
-> > been copied and the syscall won't copy it again.
->=20
-> Let's take bpf syscall as an example.
-> Are you suggesting that all of syscall logic of conditionally parsing
-> the arguments will be copy-pasted into seccomp-syscall infra, then
-> it will do copy_from_user() all the data and replace all aligned_u64
-> in "union bpf_attr" with kernel copied pointers instead of user pointers
-> and make all of bpf syscall's copy_from_user() actions to be conditional ?
-> If seccomp is on, use kernel pointers... if seccomp is off, do copy_from_=
-user ?
-> And the same idea will be replicated for all syscalls?
+diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
+index e2110113e884..10109eb81db2 100644
+--- a/drivers/iio/dac/ad5592r-base.c
++++ b/drivers/iio/dac/ad5592r-base.c
+@@ -166,10 +166,10 @@ static int ad5592r_reset(struct ad5592r_state *st)
+ 		udelay(1);
+ 		gpiod_set_value(gpio, 1);
+ 	} else {
+-		mutex_lock(&iio_dev->mlock);
++		mutex_lock(&st->lock);
+ 		/* Writing this magic value resets the device */
+ 		st->ops->reg_write(st, AD5592R_REG_RESET, 0xdac);
+-		mutex_unlock(&iio_dev->mlock);
++		mutex_unlock(&st->lock);
+ 	}
+ 
+ 	udelay(250);
+@@ -247,7 +247,7 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
+ 		}
+ 	}
+ 
+-	mutex_lock(&iio_dev->mlock);
++	mutex_lock(&st->lock);
+ 
+ 	/* Pull down unused pins to GND */
+ 	ret = ops->reg_write(st, AD5592R_REG_PULLDOWN, pulldown);
+@@ -285,7 +285,7 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
+ 		ret = -EIO;
+ 
+ err_unlock:
+-	mutex_unlock(&iio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 	return ret;
+ }
+ 
+@@ -314,11 +314,11 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
+ 		if (!chan->output)
+ 			return -EINVAL;
+ 
+-		mutex_lock(&iio_dev->mlock);
++		mutex_lock(&st->lock);
+ 		ret = st->ops->write_dac(st, chan->channel, val);
+ 		if (!ret)
+ 			st->cached_dac[chan->channel] = val;
+-		mutex_unlock(&iio_dev->mlock);
++		mutex_unlock(&st->lock);
+ 		return ret;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		if (chan->type == IIO_VOLTAGE) {
+@@ -333,12 +333,12 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
+ 			else
+ 				return -EINVAL;
+ 
+-			mutex_lock(&iio_dev->mlock);
++			mutex_lock(&st->lock);
+ 
+ 			ret = st->ops->reg_read(st, AD5592R_REG_CTRL,
+ 						&st->cached_gp_ctrl);
+ 			if (ret < 0) {
+-				mutex_unlock(&iio_dev->mlock);
++				mutex_unlock(&st->lock);
+ 				return ret;
+ 			}
+ 
+@@ -360,7 +360,7 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
+ 
+ 			ret = st->ops->reg_write(st, AD5592R_REG_CTRL,
+ 						 st->cached_gp_ctrl);
+-			mutex_unlock(&iio_dev->mlock);
++			mutex_unlock(&st->lock);
+ 
+ 			return ret;
+ 		}
+@@ -382,7 +382,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
+ 
+ 	switch (m) {
+ 	case IIO_CHAN_INFO_RAW:
+-		mutex_lock(&iio_dev->mlock);
++		mutex_lock(&st->lock);
+ 
+ 		if (!chan->output) {
+ 			ret = st->ops->read_adc(st, chan->channel, &read_val);
+@@ -419,7 +419,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
+ 		} else {
+ 			int mult;
+ 
+-			mutex_lock(&iio_dev->mlock);
++			mutex_lock(&st->lock);
+ 
+ 			if (chan->output)
+ 				mult = !!(st->cached_gp_ctrl &
+@@ -437,7 +437,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
+ 	case IIO_CHAN_INFO_OFFSET:
+ 		ret = ad5592r_get_vref(st);
+ 
+-		mutex_lock(&iio_dev->mlock);
++		mutex_lock(&st->lock);
+ 
+ 		if (st->cached_gp_ctrl & AD5592R_REG_CTRL_ADC_RANGE)
+ 			*val = (-34365 * 25) / ret;
+@@ -450,7 +450,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
+ 	}
+ 
+ unlock:
+-	mutex_unlock(&iio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 	return ret;
+ }
+ 
+@@ -625,6 +625,8 @@ int ad5592r_probe(struct device *dev, const char *name,
+ 	iio_dev->info = &ad5592r_info;
+ 	iio_dev->modes = INDIO_DIRECT_MODE;
+ 
++	mutex_init(&st->lock);
++
+ 	ad5592r_init_scales(st, ad5592r_get_vref(st));
+ 
+ 	ret = ad5592r_reset(st);
+diff --git a/drivers/iio/dac/ad5592r-base.h b/drivers/iio/dac/ad5592r-base.h
+index 4774e4cd9c11..23dac2f1ff8a 100644
+--- a/drivers/iio/dac/ad5592r-base.h
++++ b/drivers/iio/dac/ad5592r-base.h
+@@ -52,6 +52,7 @@ struct ad5592r_state {
+ 	struct regulator *reg;
+ 	struct gpio_chip gpiochip;
+ 	struct mutex gpio_lock;	/* Protect cached gpio_out, gpio_val, etc. */
++	struct mutex lock;
+ 	unsigned int num_channels;
+ 	const struct ad5592r_rw_ops *ops;
+ 	int scale_avail[2][2];
+-- 
+2.17.1
 
-This would be done optionally per-syscall. Only syscalls which want to
-opt-in to such a mechanism (such as clone3 and openat2) would be
-affected. Also, bpf is possibly the least-friendly syscall to pick as an
-example of these types of filters -- openat2/clone3 is much simpler to
-consider.
-
-The point is that if we both agree that seccomp needs to have a way to
-do "deep argument inspection" (filtering based on the struct argument to
-a syscall), then some sort of caching mechanism is simply necessary to
-solve the problem. Otherwise there's a trivial TOCTOU and seccomp
-filtering for such syscalls would be rendered almost useless.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---rn7hnswmzhtvif3b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl7Ey8kACgkQnhiqJn3b
-jbS1aw/+Ke+3XabRAdGNQcKJl07/uM/ddqclXOauVrhWiCSAxWSnWVu97XP7n4Ce
-gQq6Da4u3IVhScgvfuR7utNO0uprnaW7Aj4Seb8ioajFA4I5DCWzn1JJHl90et7n
-0oonnFE/IQuCwcWfCJ8EVcv6HdLBxpGPXEciCX9qXUyi6ipEAlmaRI1am7SeUFcF
-dfc6Nz4azXPMtrTaXlQbwQ4pLHDF1pW+rBa06mgyJlQYgvcmsmxkE3fRxhJxauBX
-4sWTYrkVQu0aB3CnSONO5sqfZiZuEf0rGJqF8ETgTYSBBQ5hGT1uuvQYnCz7jtM6
-AbTq8BGAMG3Ox/2s/sezHLsWJx2ypoQ34NMSSfRgacBmse56OdHGP8zEDJJRm/OA
-RNqpL5ZJ9HWG8H9zor9FTcc4CvvdxUpX326QCL+l3eJrt+Afd++erZyOpfbzZhKH
-MKb7aSSmhvy+NgVpZpjj8CF3mzYdAlTFVldgXRa5rvKwshz75+8uA9dCZa7MidDQ
-Vmw4vIkdcWXY8c5VABuKw0p4Z41OCV15eKBDzK4e6fR4HDTM8QHe6X4sk8f3cR9F
-4P5JEuO6YOfXuDGClgc0Nb89IqtwBB61EJyt/LZbwIcu4A6htR2lTsxlSJfqWHCz
-Z3haeWiCQoaPN9Sgt/NXhPOn+MYJq/xqle4SAHCzKC+YdjWyvrQ=
-=Iji/
------END PGP SIGNATURE-----
-
---rn7hnswmzhtvif3b--
