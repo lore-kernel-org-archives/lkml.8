@@ -2,220 +2,176 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F54C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48139C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 683EA2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B182065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:50:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SCTNYKnL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Eh6SNc8k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgETQuU (ORCPT
+        id S1727119AbgETQuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:50:20 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24102 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726984AbgETQuP (ORCPT
+        Wed, 20 May 2020 12:50:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbgETQu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:50:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589993414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rXTymJQNnp1YqswORUb9Q++cmRFARlB1HN4U6umjrto=;
-        b=SCTNYKnL/v2doLZGjRX2ZYDR+X7uVV/fO7edS22qSwXRWuoRAxWWlcSIGF5CoNU8dOYvHp
-        hVgBiY9pgFkPbNeN5yVpPnoy8wwAKpdZ8y60OhjdhsHlj+uf18xzMq7EH8BFdvgw3wTLPj
-        bvT+Zm11RcM5DJBDlVL71fM2ZcrCSek=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-6QF-ruJxMT26_JRAzqYwUw-1; Wed, 20 May 2020 12:50:10 -0400
-X-MC-Unique: 6QF-ruJxMT26_JRAzqYwUw-1
-Received: by mail-ed1-f69.google.com with SMTP id a23so1512155edn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:50:10 -0700 (PDT)
+        Wed, 20 May 2020 12:50:28 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890D4C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:50:27 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id o134so1311122ybg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dKYd+eEqh94+PPSxeT0mEN4CuPeMB4JjYrAni6yKOek=;
+        b=Eh6SNc8kXSnAsUcJ5NDUp1JxID73klNpgan5mB/uvuYRnEWgar9pgqlkZSuIvpsVcJ
+         5D5oeNsStNFxA5sYJNZ+t216Rv2BDcgEUT+Mhe6/MaxnYjKFV5VEe6GxiBoERmOmBrSG
+         RVtGXez/y2uvR9MXKV3qNOX9QlYr+FXL6PLilyrvR3Ykp4Q2AWMM9PXTjASyVKPeInsW
+         Rs9Ery4sW/GeLu7I76XKp55D0+vk0kEAdXO3YC+5xGkPWviutxFd6lHb9qBEYaHV4dPl
+         vSyLhhI8q5fbkzAwG2N8Uwip8g5oXJfipPY8OlZN9Q6/Wodsd6B81xf5GdR53xHbKpRO
+         qgdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=rXTymJQNnp1YqswORUb9Q++cmRFARlB1HN4U6umjrto=;
-        b=jBD1HryBKD7jhJXHamK0PkVnYMiy9mvXwyCAEWhv8gQCUxhyVLCYFBo2oDoRGrRsVc
-         LkUmf2DI7HcqJwAP5awSi0+A/rq0UfEhXTIYEooW2Di9D0mX2B+eNzIJLaQt1CRGcScC
-         QL9TjGLVcQE9XqlRIB7yVSZI6rsJSLFBSjls6uolReLIz98k8V7kI8CLrLz5ggBpog97
-         6CBw0foEs/8RQhiicH9u9mH/bFLxxvmUp7gRkCmsN3ZRGQQSflWbWPh0wjT3sA/+oT30
-         0gYVMouyuyPskyrUqTCH8onLycDGf07kJosfTXVPZCVFLXNHIN0m/9q9LGooeLt61jc3
-         7/5Q==
-X-Gm-Message-State: AOAM533Bav0u8dOcSXlenECj5d4iaaF8OA+OIekgODiP8q3AjzPXpgCD
-        yoWBln6+GEKLPSYtN8jCCO0GUo2gFPpruFwxQLXgiKxBUIIKHDTveU0lpo6ycfNXazZ17jWhapj
-        YXENXYQ7qS44RJMz/njIM+HG2
-X-Received: by 2002:aa7:d2d0:: with SMTP id k16mr4185171edr.272.1589993409425;
-        Wed, 20 May 2020 09:50:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwGAobpwNZkjUCikORCeYDsn8zxpL1WyvEjubOSA8Bp5jVuA9sEe1UrgNI543D4ovpr0A8txA==
-X-Received: by 2002:aa7:d2d0:: with SMTP id k16mr4185150edr.272.1589993409195;
-        Wed, 20 May 2020 09:50:09 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id gx25sm2319388ejb.63.2020.05.20.09.50.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 09:50:08 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     oupton@google.com
-Subject: Re: [PATCH 1/3] selftests: kvm: add a SVM version of state-test
-In-Reply-To: <20200519180740.89884-1-pbonzini@redhat.com>
-References: <20200519180740.89884-1-pbonzini@redhat.com>
-Date:   Wed, 20 May 2020 18:50:07 +0200
-Message-ID: <87y2pmsg8w.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dKYd+eEqh94+PPSxeT0mEN4CuPeMB4JjYrAni6yKOek=;
+        b=Rp4YaLCjC79w2/GDnYe9aWS/j+HdYlQ8DETT1JIyIN9tM+unEvJkOE6qKapXeWppp0
+         amTKjAV0LOkkqrKBryWake5TFFG8/zwqg8xXdq21fQcyINTctfpkj7VsMnYxKV9AsXw+
+         yVE+y6Zxa3CrKKxCc5kdOOsubTRF3wQexWrlQP0TG42kxKY6aPmd5brALZKNGBXZ5uH2
+         NH5E5Jf4yAhQJuFw74c/vfRrUaFIqI5QtF/I+2masZFgqrvkvSwiL+dnqcQVaiKtSFPq
+         8v6fTYihElch/C2eZ1JGKKvsHlKYxiyOhHxvZoHtodXb2eJNED6Shyns9GsU0XJSAtFA
+         VVLA==
+X-Gm-Message-State: AOAM533n5rS52GSlBNa9TsA7JS58+RBbVPiCgYrPZj0kP5xvTx/BsQPJ
+        rNP4fn6VVdNkBcVHUhH7fRJ05lBO0YdnbVzyrgd1HQ==
+X-Google-Smtp-Source: ABdhPJy5M4bW3EQJOtlA1J3fukdU3GsXBm5ahWMZ7f1tynRhLuSFHjlXX7HP519wXpXurP8N9XDEwnsZVT7E1P4g7iM=
+X-Received: by 2002:a25:790e:: with SMTP id u14mr8671529ybc.324.1589993426351;
+ Wed, 20 May 2020 09:50:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200520072814.128267-1-irogers@google.com> <20200520072814.128267-6-irogers@google.com>
+ <20200520134847.GM157452@krava>
+In-Reply-To: <20200520134847.GM157452@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 20 May 2020 09:50:13 -0700
+Message-ID: <CAP-5=fVGf9i7hvQcht_8mnMMjzhQYdFqPzZFraE-iMR7Vcr1tw@mail.gmail.com>
+Subject: Re: [PATCH 5/7] perf metricgroup: Remove duped metric group events
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
-
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  .../testing/selftests/kvm/x86_64/state_test.c | 65 ++++++++++++++++---
->  1 file changed, 55 insertions(+), 10 deletions(-)
+On Wed, May 20, 2020 at 6:49 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> diff --git a/tools/testing/selftests/kvm/x86_64/state_test.c b/tools/testing/selftests/kvm/x86_64/state_test.c
-> index 5b1a016edf55..1c5216f1ef0a 100644
-> --- a/tools/testing/selftests/kvm/x86_64/state_test.c
-> +++ b/tools/testing/selftests/kvm/x86_64/state_test.c
-> @@ -18,10 +18,42 @@
->  #include "kvm_util.h"
->  #include "processor.h"
->  #include "vmx.h"
-> +#include "svm_util.h"
->  
->  #define VCPU_ID		5
-> +#define L2_GUEST_STACK_SIZE 64
-> +
-> +void svm_l2_guest_code(void)
-> +{
-> +	GUEST_SYNC(4);
-> +        /* Exit to L1 */
-> +	vmcall();
-> +	GUEST_SYNC(6);
-> +	/* Done, exit to L1 and never come back.  */
-> +	vmcall();
-> +}
-> +
-> +static void svm_l1_guest_code(struct svm_test_data *svm)
-> +{
-> +        unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-> +	struct vmcb *vmcb = svm->vmcb;
+> On Wed, May 20, 2020 at 12:28:12AM -0700, Ian Rogers wrote:
+>
+> SNIP
+>
+> >
+> > @@ -157,7 +183,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+> >       int i = 0;
+> >       int ret = 0;
+> >       struct egroup *eg;
+> > -     struct evsel *evsel;
+> > +     struct evsel *evsel, *tmp;
+> >       unsigned long *evlist_used;
+> >
+> >       evlist_used = bitmap_alloc(perf_evlist->core.nr_entries);
+> > @@ -173,7 +199,8 @@ static int metricgroup__setup_events(struct list_head *groups,
+> >                       ret = -ENOMEM;
+> >                       break;
+> >               }
+> > -             evsel = find_evsel_group(perf_evlist, &eg->pctx, metric_events,
+> > +             evsel = find_evsel_group(perf_evlist, &eg->pctx,
+> > +                                     eg->has_constraint, metric_events,
+> >                                       evlist_used);
+> >               if (!evsel) {
+> >                       pr_debug("Cannot resolve %s: %s\n",
+> > @@ -200,6 +227,12 @@ static int metricgroup__setup_events(struct list_head *groups,
+> >               list_add(&expr->nd, &me->head);
+> >       }
+> >
+> > +     evlist__for_each_entry_safe(perf_evlist, tmp, evsel) {
+> > +             if (!test_bit(evsel->idx, evlist_used)) {
+> > +                     evlist__remove(perf_evlist, evsel);
+> > +                     evsel__delete(evsel);
+> > +             }
+>
+> is the groupping still enabled when we merge groups? could part
+> of the metric (events) be now computed in different groups?
 
-Nit: indentation
+By default the change will take two metrics and allow the shorter
+metric (in terms of number of events) to share the events of the
+longer metric. If the events for the shorter metric aren't in the
+longer metric then the shorter metric must use its own group of
+events. If sharing has occurred then the bitmap is used to work out
+which events and groups are no longer in use.
 
-> +
-> +	GUEST_ASSERT(svm->vmcb_gpa);
-> +	/* Prepare for L2 execution. */
-> +        generic_svm_setup(svm, svm_l2_guest_code,
-> +                          &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-> +
-> +	GUEST_SYNC(3);
-> +	run_guest(vmcb, svm->vmcb_gpa);
-> +	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-> +	GUEST_SYNC(5);
-> +	vmcb->save.rip += 3;
-> +	run_guest(vmcb, svm->vmcb_gpa);
-> +	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-> +	GUEST_SYNC(7);
-> +}
->  
-> -void l2_guest_code(void)
-> +void vmx_l2_guest_code(void)
->  {
->  	GUEST_SYNC(6);
->  
-> @@ -42,9 +74,8 @@ void l2_guest_code(void)
->  	vmcall();
->  }
->  
-> -void l1_guest_code(struct vmx_pages *vmx_pages)
-> +static void vmx_l1_guest_code(struct vmx_pages *vmx_pages)
->  {
-> -#define L2_GUEST_STACK_SIZE 64
->          unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
->  
->  	GUEST_ASSERT(vmx_pages->vmcs_gpa);
-> @@ -56,7 +87,7 @@ void l1_guest_code(struct vmx_pages *vmx_pages)
->  	GUEST_SYNC(4);
->  	GUEST_ASSERT(vmptrstz() == vmx_pages->vmcs_gpa);
->  
-> -	prepare_vmcs(vmx_pages, l2_guest_code,
-> +	prepare_vmcs(vmx_pages, vmx_l2_guest_code,
->  		     &l2_guest_stack[L2_GUEST_STACK_SIZE]);
->  
->  	GUEST_SYNC(5);
-> @@ -106,20 +137,31 @@ void l1_guest_code(struct vmx_pages *vmx_pages)
->  	GUEST_ASSERT(vmresume());
->  }
->  
-> -void guest_code(struct vmx_pages *vmx_pages)
-> +static u32 cpuid_ecx(u32 eax)
-> +{
-> +	u32 result;
-> +	asm volatile("cpuid" : "=c" (result) : "a" (eax));
+With --metric-no-group then any event can be used for a metric as
+there is no grouping. This is why more events can be eliminated.
 
-Nit: doesn't cpuid clobber ebx/edx too? (and ecx also works as
-input). I'd suggest we write correct implementation and put it to
-the library (or find a way to use native_cpuid() from
-arch/x86/include/asm/processor.h)
+With --metric-no-merge then the logic to share events between
+different metrics is disabled and every metric is in a group. This
+allows the current behavior to be had.
 
-> +	return result;
-> +}
-> +
-> +static void __attribute__((__flatten__)) guest_code(void *arg)
->  {
->  	GUEST_SYNC(1);
->  	GUEST_SYNC(2);
->  
-> -	if (vmx_pages)
-> -		l1_guest_code(vmx_pages);
-> +	if (arg) {
-> +		if (cpuid_ecx(0x80000001) & CPUID_SVM)
-> +			svm_l1_guest_code(arg);
-> +		else
-> +			vmx_l1_guest_code(arg);
-> +	}
->  
->  	GUEST_DONE();
->  }
->  
->  int main(int argc, char *argv[])
->  {
-> -	vm_vaddr_t vmx_pages_gva = 0;
-> +	vm_vaddr_t nested_gva = 0;
->  
->  	struct kvm_regs regs1, regs2;
->  	struct kvm_vm *vm;
-> @@ -136,8 +178,11 @@ int main(int argc, char *argv[])
->  	vcpu_regs_get(vm, VCPU_ID, &regs1);
->  
->  	if (kvm_check_cap(KVM_CAP_NESTED_STATE)) {
-> -		vcpu_alloc_vmx(vm, &vmx_pages_gva);
-> -		vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
-> +		if (kvm_get_supported_cpuid_entry(0x80000001)->ecx & CPUID_SVM)
-> +			vcpu_alloc_svm(vm, &nested_gva);
-> +		else
-> +			vcpu_alloc_vmx(vm, &nested_gva);
-> +		vcpu_args_set(vm, VCPU_ID, 1, nested_gva);
->  	} else {
->  		pr_info("will skip nested state checks\n");
->  		vcpu_args_set(vm, VCPU_ID, 1, 0);
+There are some corner cases, such as metrics with constraints (that
+don't group) and duration_time that is never placed into a group.
 
-With two nitpicks above,
+Partial sharing, with one event in 1 weak event group and 1 in another
+is never performed. Using --metric-no-group allows something similar.
+Given multiplexing, I'd be concerned about accuracy problems if events
+between groups were shared - say for IPC, were you measuring
+instructions and cycles at the same moment?
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> I was wondering if we could merge all the hasmaps into single
+> one before the parse the evlist.. this way we won't need removing
+> later.. but I did not thought this through completely, so it
+> might not work at some point
 
--- 
-Vitaly
+This could be done in the --metric-no-group case reasonably easily
+like the current hashmap. For groups you'd want something like a set
+of sets of events, but then you'd only be able to share events if the
+sets were the same. A directed acyclic graph could capture the events
+and the sharing relationships, it may be possible to optimize cases
+like {A,B,C}, {A,B,D}, {A,B} so that the small group on the end shares
+events with both the {A,B,C} and {A,B,D} group. This may be good
+follow up work. We could also solve this in the json, for example
+create a "phony" group of {A,B,C,D} that all three metrics share from.
+You could also use --metric-no-group to achieve that sharing now.
 
+Thanks,
+Ian
+
+> jirka
+>
