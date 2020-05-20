@@ -2,108 +2,118 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F41C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0FB320671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMMvxKw9"
+	by mail.kernel.org (Postfix) with ESMTP id 80D44207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589960461;
+	bh=fov+5ZAYC3Ejkwb00u9X7W9YQjKrMIXgfLHkPImHt8g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=J6uceqREZlaI4xdsRoU1KRxjIHpnHOt4XHvl1/y8FO58YDN/HUs4gpM+i7HGuml/E
+	 TCS9kfnqhYmwRsAsqjR6caqYi/uRX55W9UX0TwDFo+A5jqyrgyHBXZlPAyUk9FwscD
+	 yPxWvTFpHH7vFkKs+FzNlNFciGZd/2kqiW10QKdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgETHdg (ORCPT
+        id S1726805AbgETHlB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgETHdf (ORCPT
+        Wed, 20 May 2020 03:41:01 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34691 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726435AbgETHk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:33:35 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8EBC061A0E;
-        Wed, 20 May 2020 00:33:35 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id k19so1819936edv.9;
-        Wed, 20 May 2020 00:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JhMvQ6wT2z/w9jJ1AFzBZlKrPInU1Ytn40KkatChIbI=;
-        b=OMMvxKw98HtRI0PuS3gCbRt7U0oBV+X/jYhUXMOzZtBBWsa/2zBaiAzySqnvgAbuUi
-         rXiyqAkfovsELMtD4msd6trgfju0pOHGSoBT8VZCDGNAT9XjF3ah2vTD9OM2tgYxED/z
-         4joKMkb917LW6jRKmKdPT6OHqdRIL5Zo3Pc8DqqCiKCb4Y06YOtLsdpG8s7JPa6+QHNB
-         k7cxDzlzU8ASGhhBQERLxZYTsEsEROjs+YYtrC46x8k5nl6CtAp3k4uGaMcaa5zV+kAo
-         J+VMdZa5vjFOJcp8nW/y73ommkh2dISrDXYp7hr+UhhVopWkTZ5VlGnZt1WKydQHDQus
-         wE1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JhMvQ6wT2z/w9jJ1AFzBZlKrPInU1Ytn40KkatChIbI=;
-        b=H6lKsKOsL7tAg/69FTKQLY0wHTV8mUxKaJ+2Wxjln8r6gBUmHxzLFNIN0RreYBRo5A
-         FHK/RrlZ7leu5lQVe6tErZGKwWTlGk1kFlpQjVOogPpFVA70TWQhRUYH1ksiS8RLCG1V
-         A4w2LMOWX2dLr1PGNAYgKRg4IHu8BaQ12d0BV9TiS77spyCOqK12lr+SMwaxOHPX5uuh
-         SeBiaQZ0a425oyQ4rvyvPzxkOvmujbbL2yGAPo7K7PwxTxXRw3HfM/9ZTDnagDiMQnrG
-         K1dm0c93PoeRiwz4fPaYgTsQvUFboAFqHi8vAW8XpL28K5BeJpb1WJVFj9FcyoT+tYrh
-         aOXA==
-X-Gm-Message-State: AOAM531aQvIGib+HJizwwpmpU90ry+kbMxvaAkK39Gg1TDd0mXMJ0NVd
-        UaCuN6wMXi+mRnBJ9ZdzoqxV5xi+c9c=
-X-Google-Smtp-Source: ABdhPJwB4O0WJOY8eMzSBtHOUZMdLBdwqnBOUTE9viaGo0ldgqm4CzJ5o972WDJ7A+EM4U1tBXuh0Q==
-X-Received: by 2002:aa7:c4da:: with SMTP id p26mr2186573edr.184.1589960013840;
-        Wed, 20 May 2020 00:33:33 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id u10sm1057252edb.65.2020.05.20.00.33.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 May 2020 00:33:33 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg property
-Date:   Wed, 20 May 2020 09:33:27 +0200
-Message-Id: <20200520073327.6016-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 20 May 2020 03:40:59 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-153-U9-Y8UJlOdu0jcY7-C2i4Q-1; Wed, 20 May 2020 03:40:54 -0400
+X-MC-Unique: U9-Y8UJlOdu0jcY7-C2i4Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37645A0BD7;
+        Wed, 20 May 2020 07:40:53 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.194.155])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A79D7958F;
+        Wed, 20 May 2020 07:40:50 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH] perf stat: Fail on extra comma while parsing events
+Date:   Wed, 20 May 2020 09:40:50 +0200
+Message-Id: <20200520074050.156988-1-jolsa@kernel.org>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives this error:
+Ian reported that we allow to parse following:
 
-arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
-touchscreen@3e: reg:0:0: 56 was expected
+  $ perf stat -e ,cycles true
 
-The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
-was shipped with different addresses then the binding currently allows.
-Change the reg property that any address will pass.
+which is wrong and we should fail, like we do with this fix:
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
-edt-ft5x06.yaml
+  $ perf stat -e ,cycles true
+  event syntax error: ',cycles'
+                        \___ parser error
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+The reason is that we don't have rule for ',' in 'event'
+start condition and it's matched and accepted by default
+rule.
+
+Adding scanner debug support (that Ian already added for
+expr code), which was really useful for finding this. It's
+enabled together with bison debug via 'make PARSER_DEBUG=1'.
+
+Reported-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/parse-events.c | 1 +
+ tools/perf/util/parse-events.l | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-index 383d64a91..baa8e8f7e 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-+++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-@@ -42,7 +42,7 @@ properties:
-       - focaltech,ft6236
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index e37a6a3e6217..d251c8a778b8 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2014,6 +2014,7 @@ static int parse_events__scanner(const char *str, void *parse_state, int start_t
  
-   reg:
--    const: 0x38
-+    maxItems: 1
+ #ifdef PARSER_DEBUG
+ 	parse_events_debug = 1;
++	parse_events_set_debug(1, scanner);
+ #endif
+ 	ret = parse_events_parse(parse_state, scanner);
  
-   interrupts:
-     maxItems: 1
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index c589fc42f058..394132254447 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -252,7 +252,9 @@ modifier_bp	[rwx]{1,3}
+ 			BEGIN(INITIAL);
+ 			REWIND(0);
+ 		}
+-
++,		{
++			return ',';
++		}
+ }
+ 
+ <array>{
 -- 
-2.11.0
+2.25.4
 
