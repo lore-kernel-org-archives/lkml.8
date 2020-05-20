@@ -2,204 +2,149 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6129C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3176C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C37D20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590014904;
-	bh=PizrXtPeLRHGYi8hhZOhVUD3zKJQzwUNb0DoltWvmN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P+Wh8C508VP7C92l50Fu9iZUJtOzWAqYW5SJgqL36O1MokPvoK0dEk20AqAEouHKM
-	 2uYrJUpMQJseE18fvoiFnrWwB1qHtMITLTyquVCvlrQNu2B6ujY5S6nGlYfftDMv7P
-	 n+fFlJ/sLk9NrsppfIfBHu8/pRCdnrUX0F0nVheI=
+	by mail.kernel.org (Postfix) with ESMTP id 8E52120873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HMo1TGmo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgETWsX (ORCPT
+        id S1728651AbgETWs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:48:23 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38038 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbgETWsT (ORCPT
+        Wed, 20 May 2020 18:48:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbgETWs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:48:19 -0400
-Received: by mail-il1-f196.google.com with SMTP id j2so5051100ilr.5;
-        Wed, 20 May 2020 15:48:18 -0700 (PDT)
+        Wed, 20 May 2020 18:48:26 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF07BC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:48:26 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id er16so2230599qvb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:48:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RStaSzm0BE79LxWHy0r6BH6gCPvj9qWnIh+kjRrtDqs=;
+        b=HMo1TGmoIadolO348/feUnNKreceXmNKSpkmSSZBAfVlijoSVb7QdgroRmplfbn43Q
+         fRlJiTkyVCaEUr2sZuc7m3WQVaJC6ui1ntFR0I5Os/tIeou8a10HOEjN4v6OW0QjFezt
+         VZyINWgAw8VPK+6riAK0tl6vVs4lAnSmPjXr8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a6CsSkyyYqfJ3PWKR4lfOXJnXovm0FJ9Ug4n/bB3wGo=;
-        b=uS/+oHkA0Tgg37hfjbRJZhq403HOwOn23zMVHu1lPgFeiLZEHoijn7bTJ1AYhIt5+V
-         hnIZ0FSWCYGtuXfPi80IpswWFk0F0M6W9MtIlt926HWb92GUCay94hwfrxSV1SWCb5MN
-         3EZfu3WYn8nfu5Nl2S2l0sAOYDCXzqn7ECHDEVFTxt8Zh+7FXFMZJHZWeXSijSDauNrv
-         oklBES/pXTSR3fjMbUvPKWbsR2IUEBr9NivkdpIM4oFFv0D7yjXxnU8Am1VN7HMyX+Il
-         DeSX83HgI7wQz8ZJt8vF0Up3lXtkAAnL0Jn2FdIBE3sYmJMkqLDqb6h+cYotGCsI89qA
-         lEBQ==
-X-Gm-Message-State: AOAM531roOLUdivNDF5lEMxByoTQp9o+Ha1e7VIxl05UJ52C7RH85Yr4
-        pwj1lBkFaehkYl3mW4R4PQ==
-X-Google-Smtp-Source: ABdhPJz7AEJmGD0xmO7ymFo3VwMxQRTMwG6wmqEGmjyaLRoWT7TJaCjZrFM91Sil3ymBrKdaJzQ8cw==
-X-Received: by 2002:a92:3a51:: with SMTP id h78mr6415882ila.39.1590014898311;
-        Wed, 20 May 2020 15:48:18 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v15sm2051219ila.57.2020.05.20.15.48.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RStaSzm0BE79LxWHy0r6BH6gCPvj9qWnIh+kjRrtDqs=;
+        b=o6ma8TYdqyFt6Kf79sufuYGp1RCYojrM+bu2aO3Qydwrx4F0LQXhX1Ts52mCp1O4bo
+         d+s30TA4XrCdonV7wfMNNO8NlljPeTlAZKuMaQYc0RsFeUXS9jFTZTqssBhACzjFb9wQ
+         Talt7bE6TUbc8cbD9QXb0rLSK+83V/XPdeL8LyNdeEze4A/11rithtqT33ociLcuZKWb
+         qN7P1+bipr4N+ZPgVozoBxT/X2v/INZMsnck+NkSpEul6WNWNjeARXlQfzaoHXm9xBRf
+         8cILjx9be+xGcYf5dODCGex3He8v8iG4BsmFtXlyn6R9OUCDZ2/tlrWU0Zow1iACqBcE
+         pqNQ==
+X-Gm-Message-State: AOAM530twvJ98I6WkOaL1aCzTwNW+weR0bwwE96dNUupFdGgDBQaSTNN
+        D3HbHb4zZmtzj9X3Hn/j7A3MRg==
+X-Google-Smtp-Source: ABdhPJx6kwE258pbhfEt1te9GYfBlCarhExCr10+mjpGezARIkHTrNcpY3adcrfm7+5RiLYQTARiKg==
+X-Received: by 2002:a0c:b78a:: with SMTP id l10mr7528048qve.121.1590014905916;
+        Wed, 20 May 2020 15:48:25 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id c3sm3451258qtp.24.2020.05.20.15.48.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 15:48:17 -0700 (PDT)
-Received: (nullmailer pid 747995 invoked by uid 1000);
-        Wed, 20 May 2020 22:48:16 -0000
-Date:   Wed, 20 May 2020 16:48:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
-        Alan Mikhak <alan.mikhak@sifive.com>
-Subject: Re: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory
- resource size >4GB
-Message-ID: <20200520224816.GA739245@bogus>
-References: <20200513190855.23318-1-vidyas@nvidia.com>
- <20200513223508.GA352288@bjorn-Precision-5520>
- <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
- <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
- <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
- <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
- <20200520111717.GB2141681@ulmo>
- <b1a72abe-6da0-b782-0269-65388f663e26@nvidia.com>
+        Wed, 20 May 2020 15:48:25 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
+Cc:     vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>, joel@joelfernandes.org,
+        paulmck@kernel.org
+Subject: [PATCH RFC] sched: Use sched-RCU in core-scheduling balancing logic
+Date:   Wed, 20 May 2020 18:48:18 -0400
+Message-Id: <20200520224818.78930-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+In-Reply-To: <cover.1583332764.git.vpillai@digitalocean.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1a72abe-6da0-b782-0269-65388f663e26@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:16:32PM +0530, Vidya Sagar wrote:
-> 
-> 
-> On 20-May-20 4:47 PM, Thierry Reding wrote:
-> > On Tue, May 19, 2020 at 10:08:54PM +0000, Gustavo Pimentel wrote:
-> > > On Tue, May 19, 2020 at 15:58:16, Lorenzo Pieralisi
-> > > <lorenzo.pieralisi@arm.com> wrote:
-> > > 
-> > > > On Tue, May 19, 2020 at 07:25:02PM +0530, Vidya Sagar wrote:
-> > > > > 
-> > > > > 
-> > > > > On 18-May-20 9:24 PM, Lorenzo Pieralisi wrote:
-> > > > > > External email: Use caution opening links or attachments
-> > > > > > 
-> > > > > > 
-> > > > > > On Wed, May 13, 2020 at 05:35:08PM -0500, Bjorn Helgaas wrote:
-> > > > > > > [+cc Alan; please cc authors of relevant commits,
-> > > > > > > updated Andrew's email address]
-> > > > > > > 
-> > > > > > > On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
-> > > > > > > > commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
-> > > > > > > > 32-bits") enables warning for MEM resources of size >4GB but prefetchable
-> > > > > > > >    memory resources also come under this category where sizes can go beyond
-> > > > > > > > 4GB. Avoid logging a warning for prefetchable memory resources.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > > > > ---
-> > > > > > > >    drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
-> > > > > > > >    1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > > > > > 
-> > > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > > > index 42fbfe2a1b8f..a29396529ea4 100644
-> > > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > > > @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > > > > > >                       pp->mem = win->res;
-> > > > > > > >                       pp->mem->name = "MEM";
-> > > > > > > >                       mem_size = resource_size(pp->mem);
-> > > > > > > > -                   if (upper_32_bits(mem_size))
-> > > > > > > > +                   if (upper_32_bits(mem_size) &&
-> > > > > > > > +                       !(win->res->flags & IORESOURCE_PREFETCH))
-> > > > > > > >                               dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
-> > > > > > > >                       pp->mem_size = mem_size;
-> > > > > > > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
-> > > > > > 
-> > > > > > That warning was added for a reason - why should not we log legitimate
-> > > > > > warnings ? AFAIU having resources larger than 4GB can lead to undefined
-> > > > > > behaviour given the current ATU programming API.
-> > > > > Yeah. I'm all for a warning if the size is larger than 4GB in case of
-> > > > > non-prefetchable window as one of the ATU outbound translation
-> > > > > channels is being used,
-> > > > 
-> > > > Is it true for all DWC host controllers ? Or there may be another
-> > > > exception whereby we would be forced to disable this warning altogether
-> > > > ?
-> > > > 
-> > > > > but, we are not employing any ATU outbound translation channel for
-> > > > 
-> > > > What does this mean ? "we are not employing any ATU outbound...", is
-> > > > this the tegra driver ? And what guarantees that this warning is not
-> > > > legitimate on DWC host controllers that do use the ATU outbound
-> > > > translation for prefetchable windows ?
-> > > > 
-> > > > Can DWC maintainers chime in and clarify please ?
-> > > 
-> > > Before this code section, there is the following function call
-> > > pci_parse_request_of_pci_ranges(), which performs a simple validation for
-> > > the IORESOURCE_MEM resource type.
-> > > This validation checks if the resource is marked as prefetchable, if so,
-> > > an error message "non-prefetchable memory resource required" is given and
-> > > a return code with the -EINVAL value.
-> > 
-> > That's not what the code is doing. pci_parse_request_of_pci_range() will
-> > traverse over the whole list of resources that it can find for the given
-> > host controller and checks whether one of the resources defines prefetch
-> > memory (note the res_valid |= ...). The error will only be returned if
-> > no prefetchable memory region was found.
-> > 
-> > dw_pcie_host_init() will then again traverse the list of resources and
-> > it will typically encounter two resource of type IORESOURCE_MEM, one for
-> > non-prefetchable memory and another for prefetchable memory.
-> > 
-> > Vidya's patch is to differentiate between these two resources and allow
-> > prefetchable memory regions to exceed sizes of 4 GiB.
-> > 
-> > That said, I wonder if there isn't a bigger problem at hand here. From
-> > looking at the code it doesn't seem like the DWC driver makes any
-> > distinction between prefetchable and non-prefetchable memory. Or at
-> > least it doesn't allow both to be stored in struct pcie_port.
-> > 
-> > Am I missing something? Or can anyone explain how we're programming the
-> > apertures for prefetchable vs. non-prefetchable memory? Perhaps this is
-> > what Vidya was referring to when he said: "we are not using an outbound
-> > ATU translation channel for prefetchable memory".
-> > 
-> > It looks to me like we're also getting partially lucky, or perhaps that
-> > is by design, in that Tegra194 defines PCI regions in the following
-> > order: I/O, prefetchable memory, non-prefetchable memory. That means
-> > that the DWC core code will overwrite prefetchable memory data with that
-> > of non-prefetchable memory and hence the non-prefetchable region ends up
-> > stored in struct pcie_port and is then used to program the ATU outbound
-> > channel.
-> Well,it is by design. I mean, since the code is not differentiating between
-> prefetchable and non-prefetchable regions, I ordered the entries in 'ranges'
-> property in such a way that 'prefetchable' comes first followed by
-> 'non-prefetchable' entry so that ATU region is used for generating the
-> translation required for 'non-prefetchable' region (which is a non 1-to-1
-> mapping)
+rcu_read_unlock() can incur an infrequent deadlock in
+sched_core_balance(). Fix this by using sched-RCU instead.
 
-You are getting lucky with your 'design'. Relying on order is fragile 
-(except of course in the places in DT where order is defined, but ranges 
-is not one of them).
+This fixes the following spinlock recursion observed when testing the
+core scheduling patches on PREEMPT=y kernel on ChromeOS:
 
-Rob
+[    3.240891] BUG: spinlock recursion on CPU#2, swapper/2/0
+[    3.240900]  lock: 0xffff9cd1eeb28e40, .magic: dead4ead, .owner: swapper/2/0, .owner_cpu: 2
+[    3.240905] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.4.22htcore #4
+[    3.240908] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[    3.240910] Call Trace:
+[    3.240919]  dump_stack+0x97/0xdb
+[    3.240924]  ? spin_bug+0xa4/0xb1
+[    3.240927]  do_raw_spin_lock+0x79/0x98
+[    3.240931]  try_to_wake_up+0x367/0x61b
+[    3.240935]  rcu_read_unlock_special+0xde/0x169
+[    3.240938]  ? sched_core_balance+0xd9/0x11e
+[    3.240941]  __rcu_read_unlock+0x48/0x4a
+[    3.240945]  __balance_callback+0x50/0xa1
+[    3.240949]  __schedule+0x55a/0x61e
+[    3.240952]  schedule_idle+0x21/0x2d
+[    3.240956]  do_idle+0x1d5/0x1f8
+[    3.240960]  cpu_startup_entry+0x1d/0x1f
+[    3.240964]  start_secondary+0x159/0x174
+[    3.240967]  secondary_startup_64+0xa4/0xb0
+[   14.998590] watchdog: BUG: soft lockup - CPU#0 stuck for 11s! [kworker/0:10:965]
+
+Cc: vpillai <vpillai@digitalocean.com>
+Cc: Aaron Lu <aaron.lwe@gmail.com>
+Cc: Aubrey Li <aubrey.intel@gmail.com>
+Cc: peterz@infradead.org
+Cc: paulmck@kernel.org
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Change-Id: I1a4bf0cd1426b3c21ad5de44719813ad4ee5805e
+---
+ kernel/sched/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 780514d03da47..b8ca6fcaaaf06 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4897,7 +4897,7 @@ static void sched_core_balance(struct rq *rq)
+ 	struct sched_domain *sd;
+ 	int cpu = cpu_of(rq);
+ 
+-	rcu_read_lock();
++	rcu_read_lock_sched();
+ 	raw_spin_unlock_irq(rq_lockp(rq));
+ 	for_each_domain(cpu, sd) {
+ 		if (!(sd->flags & SD_LOAD_BALANCE))
+@@ -4910,7 +4910,7 @@ static void sched_core_balance(struct rq *rq)
+ 			break;
+ 	}
+ 	raw_spin_lock_irq(rq_lockp(rq));
+-	rcu_read_unlock();
++	rcu_read_unlock_sched();
+ }
+ 
+ static DEFINE_PER_CPU(struct callback_head, core_balance_head);
+-- 
+2.26.2.761.g0e0b3e54be-goog
+
