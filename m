@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE986C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0594207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C369320823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPG4thKH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="li8yuBGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgETKvR (ORCPT
+        id S1726836AbgETKv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50250 "EHLO
+        Wed, 20 May 2020 06:51:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgETKvQ (ORCPT
+        with ESMTP id S1726525AbgETKv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:51:16 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2636CC061A0E;
-        Wed, 20 May 2020 03:51:16 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id l6so2498361oic.9;
-        Wed, 20 May 2020 03:51:16 -0700 (PDT)
+        Wed, 20 May 2020 06:51:27 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F705C061A0E;
+        Wed, 20 May 2020 03:51:27 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id s198so2520619oie.6;
+        Wed, 20 May 2020 03:51:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Lmmfbn4mr6A0h7hmwd/l0uk/axIob7xQ0gsYq9RKwYo=;
-        b=UPG4thKHcxjXahgGtsfBX30nxv+Ur7nvMNVZhrDgP/hKP2nE5OtDcVNXC5DsBEMBDd
-         JylqL6k2tmF0uNWoXLRAKTG0gJZEpjLDz8sX/fDCZ8cp8lhwdDE7ZNlqemjS8BA3DNkx
-         rZVI/UMjfmgnjeTLdxk0A/zO3ZcAlJiPDOiHHATWaN0jSGLV0jNpLav99elMDlbC+wAx
-         RNv/nlWBvM5k2jHwRM07h/NSM/2RGpH98KjXQIzlLDlldNCnlDTD+SZgJ7NZFJ3qM9J3
-         tiuXRfddG95S8AvHgYS17tgFnjMfhtEK3Jbq6AeunOd9ndE3NaCObDCFk91q/ilt8OQ6
-         E3QA==
+        bh=MfSjPcEt/nAwSUypHPmchEB/Dcbe/ptEf9XnM1/0FSQ=;
+        b=li8yuBGpjb3sRMpEiqvdB7JOszWNjMTkmgEHRypt7SsR/yyvEemHYYoa+Qj1cpEUOK
+         ebQimIrcPqkkQ7Zrh8rZe1Th0uxS4UD6wrLEuIJrpZgbKwUE4IqNF26/Rd5eHQro76n+
+         d2QeXbeuBI9aYXXAzZFAPBY6s1Q4R2a3yBwc1she/4rVILbgXIO+W9hOYMfsSXuwSUws
+         zXG0lj+rD4pPZesmmWhNU/u4G7XR+VE3ko+ROQAs45oorfY5G510851YiHxF1Jab+IJ8
+         TOP795cHZDeeV1Ikm5hFj87WpgEdILmlo0qQT6Kl7EP4uqqpk5Ec7j0FrclA9AZZcg1W
+         F4qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Lmmfbn4mr6A0h7hmwd/l0uk/axIob7xQ0gsYq9RKwYo=;
-        b=uIdgmzC/6Mb9oxka5RkwNzBnWyA6I0/tZoBcBfgl7Cfd533SdDyZ0Na6bb3ygdARGf
-         yX7kg8LJMBO1gqw8GXjQgJvV+5wIbOZxynjmnZaFDijCwg0gjyd2iQsEtr6ChxTbDSLm
-         O3CF3Ij6/l4FUUva4Ic5NvSdt544IFRWNp1HN6KsjX35vxPLGwIpdyORHrT+UGpeo/e2
-         0p4n8mPtNr5M4pS2EwbqtJEHK/E0okzW0z0JHSJGStQBZOAgRV3mQx6VQ8wrmV3vwnh0
-         zxTJxhKvGaLlazhglgSXdrt8IRM/s4ugh2XSmSn6QP+RYac1EQeesN0I2iTs55IIgVfw
-         xnfQ==
-X-Gm-Message-State: AOAM530l/Uul9NO57SteCJxQbQBpqqg1Q8ra9dZ8Be38ZW7vp8ObE7nx
-        BIf94CV3q5RePYZQSz/E4jE=
-X-Google-Smtp-Source: ABdhPJzFlBY4grTJUCu25VM0gtQbIpQo+JhGRTrcttwJSXb2e0cw0aSlDvog3evuCWv4k3108nEQLw==
-X-Received: by 2002:aca:2b04:: with SMTP id i4mr2775589oik.39.1589971875510;
-        Wed, 20 May 2020 03:51:15 -0700 (PDT)
+        bh=MfSjPcEt/nAwSUypHPmchEB/Dcbe/ptEf9XnM1/0FSQ=;
+        b=evqx4tOwmhaMfuLduiNfjYR3+BIDQa3SZuikVyBB0JH2RLoMMHA11/iAXxYiErB2bH
+         et8gGdHA2hzcZpQ1N5o/Fa9NlQDa2/feob5mwA6I9CqmFWsk5BGkduP5XpnSwgp07JGI
+         cKomt+MLHt4yEfVILIdsuzczca/FDCv+nPhmurB+HBSQKaqDNXDr5o55Cj7BxPat/uWT
+         WxufWpk5Z9qVUdH4pMjMB8kK8TvJm2IbgyqFBCt5x9Uqj48aEVj+JXviXN7SThLd8wqs
+         P7UBGXZB4VQByQKIq9lgmKjoKjL+KHpYSyo2hCJL/AxqzXsqZ7ks4eBlKrDqppoN0RKA
+         heFg==
+X-Gm-Message-State: AOAM531Yom4Gh7NlKKqOKLI3JrlGs6LtQJngGndBuKkMgoHMFWbNE7FU
+        a72757EDqkJ2Ap008MyLMaM=
+X-Google-Smtp-Source: ABdhPJyaoaOnIGiW5mF96QInJyUdWgU8IB9+8+A5dwmeq88FK5NIoagPCIjs2hg3ZiDysDU5DDBV9A==
+X-Received: by 2002:aca:c341:: with SMTP id t62mr2787934oif.5.1589971886521;
+        Wed, 20 May 2020 03:51:26 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id p67sm692741oic.46.2020.05.20.03.51.10
+        by smtp.gmail.com with ESMTPSA id g90sm45950otg.75.2020.05.20.03.51.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 03:51:14 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] clk / soc: mediatek: Bind clock and gpu driver for
- mt2712
+        Wed, 20 May 2020 03:51:25 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] clk / soc: mediatek: Bind clock and gpu driver for
+ mt2701
 To:     Stephen Boyd <sboyd@kernel.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         ck.hu@mediatek.com, mark.rutland@arm.com,
@@ -74,13 +74,13 @@ Cc:     linux-kernel@vger.kernel.org, drinkcat@chromium.org,
         Matthias Brugger <mbrugger@suse.com>, matthias.bgg@kernel.org,
         Chun-Kuang Hu <chunkuang.hu@kernel.org>,
         Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Richard Fontana <rfontana@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>
 References: <20200401201736.2980433-1-enric.balletbo@collabora.com>
- <20200401201736.2980433-2-enric.balletbo@collabora.com>
- <158996963088.215346.15782560941924531394@swboyd.mtv.corp.google.com>
+ <20200401201736.2980433-3-enric.balletbo@collabora.com>
+ <158996963892.215346.7498020261398211458@swboyd.mtv.corp.google.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -156,12 +156,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <6ce1ac7b-2519-5a44-fa8c-0745cc1ed042@gmail.com>
-Date:   Wed, 20 May 2020 12:51:09 +0200
+Message-ID: <11ad0061-f0b3-a0ed-a216-f77eb45bcda1@gmail.com>
+Date:   Wed, 20 May 2020 12:51:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <158996963088.215346.15782560941924531394@swboyd.mtv.corp.google.com>
+In-Reply-To: <158996963892.215346.7498020261398211458@swboyd.mtv.corp.google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -173,12 +173,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 20/05/2020 12:13, Stephen Boyd wrote:
-> Quoting Enric Balletbo i Serra (2020-04-01 13:17:34)
+> Quoting Enric Balletbo i Serra (2020-04-01 13:17:35)
 >> Now that the mmsys driver is the top-level entry point for the
 >> multimedia subsystem, we could bind the clock and the gpu driver on
 >> those devices that is expected to work, so the drm driver is
->> intantiated by the mmsys driver and display, hopefully, working again on
->> those devices.
+>> intantiated by the mmsys driver and display, hopefully, working again.
 >>
 >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 >> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
