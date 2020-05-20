@@ -2,156 +2,163 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22030C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 047A120756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5048B20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgETUwm (ORCPT
+        id S1728098AbgETUxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:52:42 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:35897 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgETUwl (ORCPT
+        Wed, 20 May 2020 16:53:18 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:55555 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgETUxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:52:41 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MTREY-1jTuUF1FHQ-00Tlhw for <linux-kernel@vger.kernel.org>; Wed, 20 May
- 2020 22:52:39 +0200
-Received: by mail-qk1-f175.google.com with SMTP id f83so5017878qke.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:52:39 -0700 (PDT)
-X-Gm-Message-State: AOAM531zZ8HmZ83F3zCGPOaRfnHBls5JMaTttEJWSImudsl78bWGt50a
-        2xl9vC+uzQOblA85QCxA+LofBk28udQ4syCmx0k=
-X-Google-Smtp-Source: ABdhPJwbCjpvdQ69jpw/vCRNJG1pz94dQq04t1slk369ddybTSxpRyrBSWLEnc3+a/1PYLuOZHitGEyzoYkmb2QoEpI=
-X-Received: by 2002:a37:bc7:: with SMTP id 190mr6681765qkl.286.1590007958081;
- Wed, 20 May 2020 13:52:38 -0700 (PDT)
+        Wed, 20 May 2020 16:53:17 -0400
+Received: by mail-il1-f200.google.com with SMTP id x20so3747818ilj.22
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:53:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Rb87Bzjcw5BZZ4t704CyHC78m8xK3zzc4utS90aukKs=;
+        b=kiO+X/gqYTod7oC0j9jSjUF4TG8raCB7fJecjCerOl6tH6cgntGHfnp6BOHdT0a+cY
+         /5WE+EkcO+Ieq1ANDeL97Ui1Fih7woYudPcTzcNw1SqrX+LJ96+lq2jptF+hKxFA/KrR
+         rnjkPfV9SPsAWUmabnWUxgCIAgFP3fzKR0J8KvP8bksNGkk7BGTjjxzKPyCPP+sQfYvb
+         bowcpWhy6TMM0IuqQrR13LzIgrC2M5LWPr2V7x8gB2vAlHHuZmC/ISqTf5pO6tkr3iY4
+         JtgPX6HSoutsm6L0LEOs41Uf8RP/GjvxhfZvdriDuBErVEDgbM31Z9aX3vsEBEimh1W8
+         V7lA==
+X-Gm-Message-State: AOAM532e7HISE/VBrzyyARjAdWX+F8Z7hzIk+ewqhBr973QGzBxH3vOg
+        FAstFLwFGvkDqn/1nU+BnX+E3yJaBcLpoYt/TaZfEnvU5AD3
+X-Google-Smtp-Source: ABdhPJwzLuP8/O0m9muI68oS0VyQjqQ09UQ41csTB8uXB200Jkh0/jqdmTZiFgYSzQULXgLmgD4BnpO6RSjbPgePVAfQtm3DZtsG
 MIME-Version: 1.0
-References: <CAK8P3a2Tw2w73ZkK-W6AA9veMK4-miLUx-TL1EuOdP7EdW-AmQ@mail.gmail.com>
- <0c2abcd1-7da8-2559-1e93-4c3bdd38dec1@linaro.org> <CAK8P3a3fxs+14ZdCRmt_GwJGv3Aipm1r9sAHH6aVj2UrWBNuQQ@mail.gmail.com>
- <20200520154128.GA24483@arm.com> <20200520160810.GM1079@brightrain.aerifal.cx>
- <20200520170932.GO1079@brightrain.aerifal.cx>
-In-Reply-To: <20200520170932.GO1079@brightrain.aerifal.cx>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 20 May 2020 22:52:22 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2+_a+Qj8uvSToLKwf_pj14EouAFzEO6Un5uc8fT9Vr-w@mail.gmail.com>
-Message-ID: <CAK8P3a2+_a+Qj8uvSToLKwf_pj14EouAFzEO6Un5uc8fT9Vr-w@mail.gmail.com>
-Subject: Re: clock_gettime64 vdso bug on 32-bit arm, rpi-4
-To:     Rich Felker <dalias@libc.org>
-Cc:     Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Jack Schmidt <jack.schmidt@uky.edu>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, nd <nd@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>
+X-Received: by 2002:a92:5c87:: with SMTP id d7mr5954008ilg.114.1590007995850;
+ Wed, 20 May 2020 13:53:15 -0700 (PDT)
+Date:   Wed, 20 May 2020 13:53:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c866c705a61a95d4@google.com>
+Subject: INFO: task hung in locks_remove_posix
+From:   syzbot <syzbot+f5bc30abd8916982419c@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, bfields@fieldses.org, jlayton@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:5UGgv9NWEnc6ImpRaSBMXnVcIq18Y7ckb72GuQHkW/IycHgvBz1
- uxyjf/hAhRyIIMpPn4WUN+rnMn1ajianxdqkO/gs+JK7q6Vsxap5k1CLxgGe1Jz09u1KfgL
- KJWYchAJuJnoQVCBtB9ZidSAm1L+JgdAQHg6k6/lV16GjfVWJ3CPwTMjw/cpZ1GIbDu/X7T
- SiflyUM5L3CJpqB5pCkng==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:s8zDq3F/oHE=:LzFUjbGDp9pOgMAo0TFURo
- moA/HBS8fjgz2jmYsC5o2tPT0NoSxx+oFhKT4eiKgGiLdURR2KQKTPF5cZr7W2+0CLrIBn4ML
- TiYm1Y5+tIU+W9RDmFfOKu21AuwUJkI5iEk3OxpzDnJsEwRcTkk7uyqHOCu00xjAZyw+L3MZD
- 6NBOB10tUXK/cw7SiyhLYeDeFbJITN8PRfUX8WycPqUjHOHaBzq0s9q5qbEVKKyNbkIPWFTi+
- pJ0nREmUHDuJFhtay7MZ6X2p9J2BsF9k0RjhwTbebMm1egYfu1/vKF4WpvL8ov9/8vQoDYL4i
- YPqm7htc0HHXMvnW0EkarEZWc27C9Akjv9yjJwQ9U2N0DG0mAg4332tOjLdXMMOHuzzfhfZVI
- LSsZ+zsY60puHuAUc743/IprrhjeSJUBWQhN+MD2mL482BY79qIq1LgX+hQSayrzW8MlRMSsy
- O5TkK2lqw/72lLqyY8/mdcrPJLoEFujWqus8O5lfba/jmdnEvA/4u2qLEcX+OqoNECFVexNKZ
- uyR7QMuc3wX9rj8vLe5Kxu2p7qUojKMtqVpAh6AaAxiwytFQMokx9BtWdEF4+Nmv5UUYP174O
- a0iPQCtaXJW6aoAKSu4A/M4S9es+94WL8MpS2gUwm1sk8zYKyoUtuUuVpBsixg5kDw3AeKrpO
- nAvGzNCoBtvpX3Djnm/3EdByeqhEm0tNOhpI19Z13P8ZFUvt9aMZMn/ZdbTdcF6OqAJEIunhs
- nypCLmruYIENrkDrxbjjo1Nnj1jQfreNNoK3AtFwHKi5ur3YKh0dY9Nl0KfO39dsOInCrF1ax
- 8yuEZNj61XzStaDsUCxgtVr9KYNPsmpgncqWNUW78YDKppssDY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 7:09 PM Rich Felker <dalias@libc.org> wrote:
->
-> On Wed, May 20, 2020 at 12:08:10PM -0400, Rich Felker wrote:
-> > On Wed, May 20, 2020 at 04:41:29PM +0100, Szabolcs Nagy wrote:
-> > > The 05/19/2020 22:31, Arnd Bergmann wrote:
-> > > > On Tue, May 19, 2020 at 10:24 PM Adhemerval Zanella
-> > > > <adhemerval.zanella@linaro.org> wrote:
-> > > > > On 19/05/2020 16:54, Arnd Bergmann wrote:
-> > > note: i could not reproduce it in qemu-system with these configs:
-> > >
-> > > qemu-system-aarch64 + arm64 kernel + compat vdso
-> > > qemu-system-aarch64 + kvm accel (on cortex-a72) + 32bit arm kernel
-> > > qemu-system-arm + cpu max + 32bit arm kernel
-> > >
-> > > so i think it's something specific to that user's setup
-> > > (maybe rpi hw bug or gcc miscompiled the vdso or something
-> > > with that particular linux, i built my own linux 5.6 because
-> > > i did not know the exact kernel version where the bug was seen)
-> > >
-> > > i don't have access to rpi (or other cortex-a53 where i
-> > > can install my own kernel) so this is as far as i got.
-> >
-> > If we have a binary of the kernel that's known to be failing on the
-> > hardware, it would be useful to dump its vdso and examine the
-> > disassembly to see if it was miscompiled.
->
-> OK, OP posted it and I think we've solved this. See
-> https://github.com/richfelker/musl-cross-make/issues/96#issuecomment-631604410
+Hello,
 
-Thanks a lot everyone for figuring this out.
+syzbot found the following crash on:
 
-> And my analysis:
->
-> <@dalias> see what i just found on the tracker
-> <@dalias> patch_vdso/vdso_nullpatch_one in arch/arm/kernel/vdso.c patches out the time32 functions in this case
-> <@dalias> but not the time64 one
-> <@dalias> this looks like a real kernel bug that's not hw-specific except breaking on all hardware where the patching-out is needed
-> <@dalias> we could possibly work around it by refusing to use the time64 vdso unless the time32 one is also present
-> <@dalias> yep
-> <@dalias> so i think we've solved this. the kernel thought it wasnt using vdso anymore because it patched it out
-> <@dalias> but it forgot to patch out the time64 one
-> <@dalias> so it stopped updating the data needed for vdso to work
+HEAD commit:    806d8acc USB: dummy-hcd: use configurable endpoint naming ..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=16c9ece2100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d800e9bad158025f
+dashboard link: https://syzkaller.appspot.com/bug?extid=f5bc30abd8916982419c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-As you mentioned in the issue tracker, the patching was meant as
-an optimization and missing it for clock_gettime64 was a mistake but
-should by itself not have caused incorrect data to be returned.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-I would assume that there is another bug that leads to clock_gettime64
-not entering the syscall fallback path as it should but instead returning
-bogus data.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f5bc30abd8916982419c@syzkaller.appspotmail.com
 
-Here are some more things I found:
+INFO: task syz-executor.2:3145 blocked for more than 143 seconds.
+      Not tainted 5.7.0-rc5-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.2  D28552  3145    370 0x80004006
+Call Trace:
+ context_switch kernel/sched/core.c:3367 [inline]
+ __schedule+0x892/0x1d80 kernel/sched/core.c:4083
+ locks_remove_posix+0x277/0x4e0 fs/locks.c:2706
+ __sched_text_start+0x8/0x8
+ spin_unlock_irqrestore include/linux/spinlock.h:408 [inline]
+ prepare_to_wait_event+0x129/0x650 kernel/sched/wait.c:305
+ schedule+0xcd/0x2b0 kernel/sched/core.c:4158
+ wdm_flush+0x2ea/0x3c0 drivers/usb/class/cdc-wdm.c:590
+ wdm_poll+0x280/0x280 include/linux/poll.h:50
+ wait_for_completion+0x280/0x280
+ finish_wait+0x260/0x260 include/linux/list.h:301
+ task_work_add+0x97/0x120 kernel/task_work.c:35
+ wdm_poll+0x280/0x280 include/linux/poll.h:50
+ filp_close+0xb4/0x170 fs/open.c:1251
+ close_files fs/file.c:388 [inline]
+ put_files_struct fs/file.c:416 [inline]
+ put_files_struct+0x1d8/0x2e0 fs/file.c:413
+ exit_files+0x7e/0xa0 fs/file.c:445
+ do_exit+0xb36/0x2c80 kernel/exit.c:791
+ find_held_lock+0x2d/0x110 kernel/locking/lockdep.c:4458
+ mm_update_next_owner+0x7a0/0x7a0 kernel/exit.c:375
+ lock_downgrade+0x720/0x720 kernel/locking/lockdep.c:4599
+ do_group_exit+0x125/0x340 kernel/exit.c:894
+ get_signal+0x480/0x2480 kernel/signal.c:2739
+ schedule_timeout_idle+0x80/0x80 kernel/time/timer.c:1942
+ do_signal+0x88/0x1ae0 arch/x86/kernel/signal.c:784
+ free_object+0x5/0x70 lib/debugobjects.c:429
+ destroy_hrtimer_on_stack kernel/time/hrtimer.c:453 [inline]
+ hrtimer_nanosleep+0x211/0x3a0 kernel/time/hrtimer.c:1947
+ nanosleep_copyout+0x100/0x100 kernel/time/hrtimer.c:1861
+ force_valid_ss arch/x86/kernel/signal.c:73 [inline]
+ restore_sigcontext+0x620/0x620 arch/x86/kernel/signal.c:134
+ hrtimer_init_sleeper_on_stack+0x90/0x90 kernel/time/hrtimer.c:1833
+ put_old_itimerspec32+0x1d0/0x1d0 kernel/time/time.c:908
+ __do_sys_clock_gettime kernel/time/posix-timers.c:1094 [inline]
+ __se_sys_clock_gettime kernel/time/posix-timers.c:1082 [inline]
+ __x64_sys_clock_gettime+0x154/0x240 kernel/time/posix-timers.c:1082
+ __do_sys_nanosleep kernel/time/hrtimer.c:1962 [inline]
+ __se_sys_nanosleep kernel/time/hrtimer.c:1953 [inline]
+ __x64_sys_nanosleep+0x1ed/0x260 kernel/time/hrtimer.c:1953
+ hrtimer_nanosleep+0x3a0/0x3a0 kernel/time/hrtimer.c:1943
+ exit_to_usermode_loop+0x1a2/0x200 arch/x86/entry/common.c:161
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x4e0/0x5a0 arch/x86/entry/common.c:305
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ trace_hardirqs_off_caller+0x2b/0x200 kernel/trace/trace_preemptirq.c:67
 
-- From reading the linux-5.6 code that was tested, I see that a condition
-  that leads to patching out the clock_gettime() vdso should also lead to
-  clock_gettime64() falling back to the the syscall after
-  __arch_get_hw_counter() returns an error, but for some reason that
-  does not happen. Presumably the presence of the patching meant that
-  this code path was never much exercised.
-  A missing 45939ce292b4 ("ARM: 8957/1: VDSO: Match ARMv8 timer in
-  cntvct_functional()") would explain the problem, if it happened on
-  linux-5.6-rc7 or earlier. The fix was merged in the final v5.6 though.
+Showing all locks held in the system:
+1 lock held by khungtaskd/23:
+ #0: ffffffff87111260 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x264 kernel/locking/lockdep.c:5754
+1 lock held by in:imklog/267:
+ #0: ffff8881d976d9f0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
 
-- The patching may actually be counterproductive because it means that
-   clock_gettime(CLOCK_*COARSE, ...) has to go through the system call
-   when it could just return the time of the last timer tick regardless of the
-   clocksource.
+=============================================
 
-- We may get bitten by errata handling on 32-bit kernels running on 64-bit
-  hardware that has errata workaround in arch/arm64 for compat mode
-  but not in native arm kernels. ARM64_ERRATUM_1418040,
-  ARM64_ERRATUM_858921 or SUN50I_ERRATUM_UNKNOWN1
-  are examples of workaround that are not used on 32-bit kernels running
-  on 64-bit hardware.
+NMI backtrace for cpu 0
+CPU: 0 PID: 23 Comm: khungtaskd Not tainted 5.7.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ irq_force_complete_move.cold+0x13/0x47 arch/x86/kernel/apic/vector.c:1023
+ nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+ lapic_can_unplug_cpu.cold+0x3b/0x3b
+ nmi_trigger_cpumask_backtrace+0x1db/0x207 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+ watchdog+0xa99/0xfd0 kernel/hung_task.c:289
+ reset_hung_task_detector+0x30/0x30 kernel/hung_task.c:243
+ kthread+0x326/0x430 kernel/kthread.c:268
+ kthread_create_on_node+0xf0/0xf0 kernel/kthread.c:405
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1 skipped: idling at native_safe_halt arch/x86/include/asm/irqflags.h:60 [inline]
+NMI backtrace for cpu 1 skipped: idling at arch_safe_halt arch/x86/include/asm/irqflags.h:103 [inline]
+NMI backtrace for cpu 1 skipped: idling at default_idle+0x28/0x300 arch/x86/kernel/process.c:697
 
-         Arnd
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
