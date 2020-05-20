@@ -2,289 +2,308 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D08DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 217C120759
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590017153;
-	bh=SYUQNzqlZLou4hG1Rs5Wwn1tq092fpjwOeylYP8u3m4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=mP6Bpo0Hv4Y9a3SfUHLBzpcTdIAEJDcCpQLBnVl3SryOVaAg7eGHFa+lmPObUz1NY
-	 5A3+oqUJ0OZ57EAr0nHHWZ8439u4nNELKH6kqJjX4baYlxTv4RDqKBI+tR9PHEpMLW
-	 Szeu9u9dVp7nxqVMNsGTUor4gRQ3qxLOurkwhlj8=
+	by mail.kernel.org (Postfix) with ESMTP id D673520874
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="UvqFuo73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgETXZw (ORCPT
+        id S1728741AbgETX0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728462AbgETXZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:25:52 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDAA32070A;
-        Wed, 20 May 2020 23:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590017151;
-        bh=SYUQNzqlZLou4hG1Rs5Wwn1tq092fpjwOeylYP8u3m4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cAXbQsEkVsWPy41T6QRwRQk1lNC9dcnolBN+UC4IkcRy2jSkhcuin1m7X2JFpHnFQ
-         UPCQwy9VaVmSma8stzJogn2xewiC+VWI4whHQvOmQtXGXbRegwli8EKUwit1jTqOm/
-         aBeu8MD0xvkwMg41KfJaRcecCffPEbN5urE4HKC8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D27953522A2B; Wed, 20 May 2020 16:25:50 -0700 (PDT)
-Date:   Wed, 20 May 2020 16:25:50 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V6 12/37] x86/entry: Provide
- idtentry_entry/exit_cond_rcu()
-Message-ID: <20200520232550.GA20812@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <87a7237k3x.fsf@nanos.tec.linutronix.de>
- <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com>
- <874ksb7hbg.fsf@nanos.tec.linutronix.de>
- <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com>
- <20200520022353.GN2869@paulmck-ThinkPad-P72>
- <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com>
- <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
- <20200520180546.GQ2869@paulmck-ThinkPad-P72>
- <87o8qiv135.fsf@nanos.tec.linutronix.de>
- <20200520221531.GW2869@paulmck-ThinkPad-P72>
+        Wed, 20 May 2020 19:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728462AbgETX0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 19:26:02 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6495C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:00 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id v4so4103670qte.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=29qrSLO3a0Xt52/LRlvTsiLnKnN+GSkKRdsahYMpe80=;
+        b=UvqFuo731M0lFWYv2fhK1zJ/DLeXPrhcF9LP+b2mL19ohXpkgrlfY4S4lb7K+ltnBK
+         LG29mz0nURpPxOSnqCos/MgUxRHKt1kgGLu5xUdxzqHn56nV/kpf7HyTOeHFGSlTXpZ1
+         ytVQV/0+bgn/i2ZuABmRlrGThXfZmVbY7sep1DbE9LuUooo22iV/cGFrmvw3ukiu5u2C
+         m46JWbzAsnsWBvAXU5o1iVNPD8hla/vMibusyVRhOAVhcJeKHYsMXZPxV8bR37tEMPx6
+         qRF9GyEA6+/BdW/YQR6xQhjoqzfugRA3FJJbHQBPAs6VkF7mis504iLPeUeWMR3iIVjN
+         e1dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=29qrSLO3a0Xt52/LRlvTsiLnKnN+GSkKRdsahYMpe80=;
+        b=Ayoc246Qh9uKr0zYT/BtjtTmh2so1h7kGuF0efLTlBoZzab4sMKDmWafLQ813QAAjx
+         n2vt1q4NJtYWPrU6PPPl4bkrSrfBeEDwAnQ+wJj4AqM1ZBZZuLKS8ADHhrbgfYfXFl3V
+         5DCwq3ZC8dXDa1qmP7eDENRhjaoNdG6Fm5Y1IRKOBTn4Wh8cvYvDRAkga4SHK1KAbyV0
+         ens4yQgCA4NJF2ji3l2G6/x0pbUxaewoGsWXTN+q6GvQ6hmEBtgWWIn0n5Y4IB7fZc2M
+         piVY4Z9Zp50YQFIn01Ka4zhCiP5cJpEurX7epgu1jpOuadnagUWQsFSSRJh/svfsHfXU
+         BSMg==
+X-Gm-Message-State: AOAM532Iux99SFi/9ctSIww2XEqpvJvRWuCf2AJ07xm7ozqJD0ZXG2cB
+        MgDxnVOL2v2KMKyBoBUVChVAbEt/jqs=
+X-Google-Smtp-Source: ABdhPJx1Fbr2rSi9Smk+KrQo8U2nQOWt+IZgeMvnccpiQ6wM12CCBMYh9+jOyldr6lzQTAuAED/USQ==
+X-Received: by 2002:aed:3f67:: with SMTP id q36mr8071439qtf.237.1590017159806;
+        Wed, 20 May 2020 16:25:59 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:4708])
+        by smtp.gmail.com with ESMTPSA id k43sm4105259qtk.67.2020.05.20.16.25.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 16:25:59 -0700 (PDT)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     linux-mm@kvack.org
+Cc:     Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH 00/14] mm: balance LRU lists based on relative thrashing v2
+Date:   Wed, 20 May 2020 19:25:11 -0400
+Message-Id: <20200520232525.798933-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520221531.GW2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:15:31PM -0700, Paul E. McKenney wrote:
-> On Wed, May 20, 2020 at 09:49:18PM +0200, Thomas Gleixner wrote:
-> > "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > > On Wed, May 20, 2020 at 09:51:17AM -0700, Andy Lutomirski wrote:
-> > >> Paul, the major change here is that if an IRQ hits normal kernel code
-> > >> (i.e. code where RCU is watching and we're not in an EQS), the IRQ
-> > >> won't call rcu_irq_enter() and rcu_irq_exit().  Instead it will call
-> > >> rcu_tickle() on entry and nothing on exit.  Does that cover all the
-> > >> bases?
-> > >
-> > > From an RCU viewpoint, yes, give or take my concerns about someone
-> > > putting rcu_tickle() on entry and rcu_irq_exit() on exit.  Perhaps
-> > > I can bring some lockdep trickery to bear.
-> > 
-> > An surplus rcu_irq_exit() should already trigger alarms today.
-> 
-> Fair point!
-> 
-> > > But I must defer to Thomas and Peter on the non-RCU/non-NO_HZ_FULL
-> > > portions of this.
-> > 
-> > I don't see a problem. Let me write that into actual testable patch
-> > form.
-> 
-> Here is the RCU part, with my current best guess for the commit log.
-> 
-> Please note that this is on top of my -rcu stack, so some adjustment
-> will likely be needed to pull it underneath Joel's series that removes
-> the special-purpose bits at the bottom of the ->dynticks counter.
-> 
-> But a starting point, anyway.
+The reclaim code that balances between swapping and cache reclaim
+tries to predict likely reuse based on in-memory reference patterns
+alone. This works in many cases, but when it fails it cannot detect
+when the cache is thrashing pathologically, or when we're in the
+middle of a swap storm.
 
-Same patch, but with updated commit log based on IRC discussion
-with Andy.
+The high seek cost of rotational drives under which the algorithm
+evolved also meant that mistakes could quickly result in lockups from
+too aggressive swapping (which is predominantly random IO). As a
+result, the balancing code has been tuned over time to a point where
+it mostly goes for page cache and defers swapping until the VM is
+under significant memory pressure.
 
-							Thanx, Paul
+The resulting strategy doesn't make optimal caching decisions - where
+optimal is the least amount of IO required to execute the workload.
 
-------------------------------------------------------------------------
+The proliferation of fast random IO devices such as SSDs, in-memory
+compression such as zswap, and persistent memory technologies on the
+horizon, has made this undesirable behavior very noticable: Even in
+the presence of large amounts of cold anonymous memory and a capable
+swap device, the VM refuses to even seriously scan these pages, and
+can leave the page cache thrashing needlessly.
 
-commit 1771ea9fac5748d1424d9214c51b2f79cc1176b6
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Wed May 20 15:03:07 2020 -0700
+This series sets out to address this. Since commit ("a528910e12ec mm:
+thrash detection-based file cache sizing") we have exact tracking of
+refault IO - the ultimate cost of reclaiming the wrong pages. This
+allows us to use an IO cost based balancing model that is more
+aggressive about scanning anonymous memory when the cache is
+thrashing, while being able to avoid unnecessary swap storms.
 
-    rcu: Abstract out tickle_nohz_for_rcu() from rcu_nmi_enter()
-    
-    There will likely be exception handlers that can sleep, which rules
-    out the usual approach of invoking rcu_nmi_enter() on entry and also
-    rcu_nmi_exit() on all exit paths.  However, the alternative approach of
-    just not calling anything can prevent RCU from coaxing quiescent states
-    from nohz_full CPUs that are looping in the kernel:  RCU must instead
-    IPI them explicitly.  It would be better to enable the scheduler tick
-    on such CPUs to interact with RCU in a lighter-weight manner, and this
-    enabling is one of the things that rcu_nmi_enter() currently does.
-    
-    What is needed is something that helps RCU coax quiescent states while
-    not preventing subsequent sleeps.  This commit therefore splits out the
-    nohz_full scheduler-tick enabling from the rest of the rcu_nmi_enter()
-    logic into a new function named tickle_nohz_for_rcu().
-    
-    Suggested-by: Andy Lutomirski <luto@kernel.org>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+These patches base the LRU balance on the rate of refaults on each
+list, times the relative IO cost between swap device and filesystem
+(swappiness), in order to optimize reclaim for least IO cost incurred.
 
-diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
-index 621556e..d4be42a 100644
---- a/include/linux/hardirq.h
-+++ b/include/linux/hardirq.h
-@@ -14,6 +14,10 @@ extern bool synchronize_hardirq(unsigned int irq);
- 
- #if defined(CONFIG_TINY_RCU)
- 
-+static inline void tickle_nohz_for_rcu(void)
-+{
-+}
-+
- static inline void rcu_nmi_enter(void)
- {
- }
-@@ -23,6 +27,7 @@ static inline void rcu_nmi_exit(void)
- }
- 
- #else
-+extern void tickle_nohz_for_rcu(void);
- extern void rcu_nmi_enter(void);
- extern void rcu_nmi_exit(void);
- #endif
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 7812574..0a3cad4 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -806,6 +806,67 @@ void noinstr rcu_user_exit(void)
- #endif /* CONFIG_NO_HZ_FULL */
- 
- /**
-+ * tickle_nohz_for_rcu - Enable scheduler tick on CPU if RCU needs it.
-+ *
-+ * The scheduler tick is not normally enabled when CPUs enter the kernel
-+ * from nohz_full userspace execution.  After all, nohz_full userspace
-+ * execution is an RCU quiescent state and the time executing in the kernel
-+ * is quite short.  Except of course when it isn't.  And it is not hard to
-+ * cause a large system to spend tens of seconds or even minutes looping
-+ * in the kernel, which can cause a number of problems, include RCU CPU
-+ * stall warnings.
-+ *
-+ * Therefore, if a nohz_full CPU fails to report a quiescent state
-+ * in a timely manner, the RCU grace-period kthread sets that CPU's
-+ * ->rcu_urgent_qs flag with the expectation that the next interrupt or
-+ * exception will invoke this function, which will turn on the scheduler
-+ * tick, which will enable RCU to detect that CPU's quiescent states,
-+ * for example, due to cond_resched() calls in CONFIG_PREEMPT=n kernels.
-+ * The tick will be disabled once a quiescent state is reported for
-+ * this CPU.
-+ *
-+ * Of course, in carefully tuned systems, there might never be an
-+ * interrupt or exception.  In that case, the RCU grace-period kthread
-+ * will eventually cause one to happen.  However, in less carefully
-+ * controlled environments, this function allows RCU to get what it
-+ * needs without creating otherwise useless interruptions.
-+ */
-+noinstr void tickle_nohz_for_rcu(void)
-+{
-+	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-+
-+	if (in_nmi())
-+		return; // Enabling tick is unsafe in NMI handlers.
-+	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
-+			 "Illegal tickle_nohz_for_rcu from extended quiescent state");
-+	instrumentation_begin();
-+	if (!tick_nohz_full_cpu(rdp->cpu) ||
-+	    !READ_ONCE(rdp->rcu_urgent_qs) ||
-+	    READ_ONCE(rdp->rcu_forced_tick)) {
-+		// RCU doesn't need nohz_full help from this CPU, or it is
-+		// already getting that help.
-+		instrumentation_end();
-+		return;
-+	}
-+
-+	// We get here only when not in an extended quiescent state and
-+	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
-+	// already watching and (2) The fact that we are in an interrupt
-+	// handler and that the rcu_node lock is an irq-disabled lock
-+	// prevents self-deadlock.  So we can safely recheck under the lock.
-+	// Note that the nohz_full state currently cannot change.
-+	raw_spin_lock_rcu_node(rdp->mynode);
-+	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-+		// A nohz_full CPU is in the kernel and RCU needs a
-+		// quiescent state.  Turn on the tick!
-+		WRITE_ONCE(rdp->rcu_forced_tick, true);
-+		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
-+	}
-+	raw_spin_unlock_rcu_node(rdp->mynode);
-+	instrumentation_end();
-+}
-+
-+/**
-  * rcu_nmi_enter - inform RCU of entry to NMI context
-  * @irq: Is this call from rcu_irq_enter?
-  *
-@@ -835,7 +896,9 @@ noinstr void rcu_nmi_enter(void)
- 	 * is if the interrupt arrived in kernel mode; in this case we would
- 	 * be the outermost interrupt but still increment by 2 which is Ok.
- 	 */
--	if (rcu_dynticks_curr_cpu_in_eqs()) {
-+	if (!rcu_dynticks_curr_cpu_in_eqs()) {
-+		tickle_nohz_for_rcu();
-+	} else {
- 
- 		if (!in_nmi())
- 			rcu_dynticks_task_exit();
-@@ -851,28 +914,6 @@ noinstr void rcu_nmi_enter(void)
- 		}
- 
- 		incby = 1;
--	} else if (!in_nmi()) {
--		instrumentation_begin();
--		if (tick_nohz_full_cpu(rdp->cpu) &&
--		    READ_ONCE(rdp->rcu_urgent_qs) &&
--		    !READ_ONCE(rdp->rcu_forced_tick)) {
--			// We get here only if we had already exited the
--			// extended quiescent state and this was an
--			// interrupt (not an NMI).  Therefore, (1) RCU is
--			// already watching and (2) The fact that we are in
--			// an interrupt handler and that the rcu_node lock
--			// is an irq-disabled lock prevents self-deadlock.
--			// So we can safely recheck under the lock.
--			raw_spin_lock_rcu_node(rdp->mynode);
--			if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
--				// A nohz_full CPU is in the kernel and RCU
--				// needs a quiescent state.  Turn on the tick!
--				WRITE_ONCE(rdp->rcu_forced_tick, true);
--				tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
--			}
--			raw_spin_unlock_rcu_node(rdp->mynode);
--		}
--		instrumentation_end();
- 	}
- 	instrumentation_begin();
- 	trace_rcu_dyntick(incby == 1 ? TPS("End") : TPS("StillNonIdle"),
+	History
+
+I floated these changes in 2016. At the time they were incomplete and
+full of workarounds due to a lack of infrastructure in the reclaim
+code: We didn't have PageWorkingset, we didn't have hierarchical
+cgroup statistics, and problems with the cgroup swap controller. As
+swapping wasn't too high a priority then, the patches stalled out.
+With all dependencies in place now, here we are again with much
+cleaner, feature-complete patches.
+
+I kept the acks for patches that stayed materially the same :-)
+
+Below is a series of test results that demonstrate certain problematic
+behavior of the current code, as well as showcase the new code's more
+predictable and appropriate balancing decisions.
+
+	Test #1: No convergence
+
+This test shows an edge case where the VM currently doesn't converge
+at all on a new file workingset with a stale anon/tmpfs set.
+
+The test sets up a cold anon set the size of 3/4 RAM, then tries to
+establish a new file set half the size of RAM (flat access pattern).
+
+The vanilla kernel refuses to even scan anon pages and never
+converges. The file set is perpetually served from the filesystem.
+
+The first test kernel is with the series up to the workingset patch
+applied. This allows thrashing page cache to challenge the anonymous
+workingset. The VM then scans the lists based on the current
+scanned/rotated balancing algorithm. It converges on a stable state
+where all cold anon pages are pushed out and the fileset is served
+entirely from cache:
+
+			    noconverge/5.7-rc5-mm	noconverge/5.7-rc5-mm-workingset
+Scanned			417719308.00 (    +0.00%)		64091155.00 (   -84.66%)
+Reclaimed		417711094.00 (    +0.00%)		61640308.00 (   -85.24%)
+Reclaim efficiency %	      100.00 (    +0.00%)		      96.18 (    -3.78%)
+Scanned file		417719308.00 (    +0.00%)		59211118.00 (   -85.83%)
+Scanned anon			0.00 (    +0.00%)	         4880037.00 (          )
+Swapouts			0.00 (    +0.00%)	         2439957.00 (          )
+Swapins				0.00 (    +0.00%)		     257.00 (          )
+Refaults		415246605.00 (    +0.00%)		59183722.00 (   -85.75%)
+Restore refaults		0.00 (    +0.00%)	        54988252.00 (          )
+
+The second test kernel is with the full patch series applied, which
+replaces the scanned/rotated ratios with refault/swapin rate-based
+balancing. It evicts the cold anon pages more aggressively in the
+presence of a thrashing cache and the absence of swapins, and so
+converges with about 60% of the IO and reclaim activity:
+
+			noconverge/5.7-rc5-mm-workingset	noconverge/5.7-rc5-mm-lrubalance
+Scanned				64091155.00 (    +0.00%)		37579741.00 (   -41.37%)
+Reclaimed			61640308.00 (    +0.00%)		35129293.00 (   -43.01%)
+Reclaim efficiency %		      96.18 (    +0.00%)		      93.48 (    -2.78%)
+Scanned file			59211118.00 (    +0.00%)		32708385.00 (   -44.76%)
+Scanned anon			 4880037.00 (    +0.00%)		 4871356.00 (    -0.18%)
+Swapouts			 2439957.00 (    +0.00%)		 2435565.00 (    -0.18%)
+Swapins				     257.00 (    +0.00%)		     262.00 (    +1.94%)
+Refaults			59183722.00 (    +0.00%)		32675667.00 (   -44.79%)
+Restore refaults		54988252.00 (    +0.00%)		28480430.00 (   -48.21%)
+
+We're triggering this case in host sideloading scenarios: When a
+host's primary workload is not saturating the machine (primary load is
+usually driven by user activity), we can optimistically sideload a
+batch job; if user activity picks up and the primary workload needs
+the whole host during this time, we freeze the sideload and rely on it
+getting pushed to swap. Frequently that swapping doesn't happen and
+the completely inactive sideload simply stays resident while the
+expanding primary worklad is struggling to gain ground.
+
+	Test #2: Kernel build
+
+This test is a a kernel build that is slightly memory-restricted (make
+-j4 inside a 400M cgroup).
+
+Despite the very aggressive swapping of cold anon pages in test #1,
+this test shows that the new kernel carefully balances swap against
+cache refaults when both the file and the cache set are pressured.
+
+It shows the patched kernel to be slightly better at finding the
+coldest memory from the combined anon and file set to evict under
+pressure. The result is lower aggregate reclaim and paging activity:
+
+				    5.7-rc5-mm	5.7-rc5-mm-lrubalance
+Real time		   210.60 (    +0.00%)	   210.97 (    +0.18%)
+User time		   745.42 (    +0.00%)	   746.48 (    +0.14%)
+System time		    69.78 (    +0.00%)	    69.79 (    +0.02%)
+Scanned file		354682.00 (    +0.00%)	293661.00 (   -17.20%)
+Scanned anon		465381.00 (    +0.00%)	378144.00 (   -18.75%)
+Swapouts		185920.00 (    +0.00%)	147801.00 (   -20.50%)
+Swapins			 34583.00 (    +0.00%)	 32491.00 (    -6.05%)
+Refaults		212664.00 (    +0.00%)	172409.00 (   -18.93%)
+Restore refaults	 48861.00 (    +0.00%)	 80091.00 (   +63.91%)
+Total paging IO		433167.00 (    +0.00%)	352701.00 (   -18.58%)
+
+	Test #3: Overload
+
+This next test is not about performance, but rather about the
+predictability of the algorithm. The current balancing behavior
+doesn't always lead to comprehensible results, which makes performance
+analysis and parameter tuning (swappiness e.g.) very difficult.
+
+The test shows the balancing behavior under equivalent anon and file
+input. Anon and file sets are created of equal size (3/4 RAM), have
+the same access patterns (a hot-cold gradient), and synchronized
+access rates. Swappiness is raised from the default of 60 to 100 to
+indicate equal IO cost between swap and cache.
+
+With the vanilla balancing code, anon scans make up around 9% of the
+total pages scanned, or a ~1:10 ratio. This is a surprisingly skewed
+ratio, and it's an outcome that is hard to explain given the input
+parameters to the VM.
+
+The new balancing model targets a 1:2 balance: All else being equal,
+reclaiming a file page costs one page IO - the refault; reclaiming an
+anon page costs two IOs - the swapout and the swapin. In the test we
+observe a ~1:3 balance.
+
+The scanned and paging IO numbers indicate that the anon LRU algorithm
+we have in place right now does a slightly worse job at picking the
+coldest pages compared to the file algorithm. There is ongoing work to
+improve this, like Joonsoo's anon workingset patches; however, it's
+difficult to compare the two aging strategies when the balancing
+between them is behaving unintuitively.
+
+The slightly less efficient anon reclaim results in a deviation from
+the optimal 1:2 scan ratio we would like to see here - however, 1:3 is
+much closer to what we'd want to see in this test than the vanilla
+kernel's aging of 10+ cache pages for every anonymous one:
+
+			overload-100/5.7-rc5-mm-workingset	overload-100/5.7-rc5-mm-lrubalance-realfile
+Scanned				 533633725.00 (    +0.00%)			  595687785.00 (   +11.63%)
+Reclaimed			 494325440.00 (    +0.00%)			  518154380.00 (    +4.82%)
+Reclaim efficiency %			92.63 (    +0.00%)				 86.98 (    -6.03%)
+Scanned file			 484532894.00 (    +0.00%)			  456937722.00 (    -5.70%)
+Scanned anon			  49100831.00 (    +0.00%)			  138750063.00 (  +182.58%)
+Swapouts			   8096423.00 (    +0.00%)			   48982142.00 (  +504.98%)
+Swapins				  10027384.00 (    +0.00%)			   62325044.00 (  +521.55%)
+Refaults			 479819973.00 (    +0.00%)			  451309483.00 (    -5.94%)
+Restore refaults		 426422087.00 (    +0.00%)			  399914067.00 (    -6.22%)
+Total paging IO			 497943780.00 (    +0.00%)			  562616669.00 (   +12.99%)
+
+	Test #4: Parallel IO
+
+It's important to note that these patches only affect the situation
+where the kernel has to reclaim workingset memory, which is usually a
+transitionary period. The vast majority of page reclaim occuring in a
+system is from trimming the ever-expanding page cache.
+
+These patches don't affect cache trimming behavior. We never swap as
+long as we only have use-once cache moving through the file LRU, we
+only consider swapping when the cache is actively thrashing.
+
+The following test demonstrates this. It has an anon workingset that
+takes up half of RAM and then writes a file that is twice the size of
+RAM out to disk.
+
+As the cache is funneled through the inactive file list, no anon pages
+are scanned (aside from apparently some background noise of 10 pages):
+
+					  5.7-rc5-mm		          5.7-rc5-mm-lrubalance
+Scanned			    10714722.00 (    +0.00%)		       10723445.00 (    +0.08%)
+Reclaimed		    10703596.00 (    +0.00%)		       10712166.00 (    +0.08%)
+Reclaim efficiency %		  99.90 (    +0.00%)			     99.89 (    -0.00%)
+Scanned file		    10714722.00 (    +0.00%)		       10723435.00 (    +0.08%)
+Scanned anon			   0.00 (    +0.00%)			     10.00 (          )
+Swapouts			   0.00 (    +0.00%)			      7.00 (          )
+Swapins				   0.00 (    +0.00%)			      0.00 (    +0.00%)
+Refaults			  92.00 (    +0.00%)			     41.00 (   -54.84%)
+Restore refaults		   0.00 (    +0.00%)			      0.00 (    +0.00%)
+Total paging IO			  92.00 (    +0.00%)			     48.00 (   -47.31%)
+
+These patches are based on v5.7-rc5-mm (minus linux-next and up).
+
+ Documentation/admin-guide/sysctl/vm.rst |  23 ++++--
+ fs/cifs/file.c                          |  10 +--
+ fs/fuse/dev.c                           |   2 +-
+ include/linux/memcontrol.h              |  13 ++++
+ include/linux/mmzone.h                  |  21 ++----
+ include/linux/swap.h                    |   5 +-
+ include/linux/vm_event_item.h           |   4 ++
+ include/linux/vmstat.h                  |   1 +
+ kernel/sysctl.c                         |   3 +-
+ mm/khugepaged.c                         |   8 +--
+ mm/memcontrol.c                         |  18 ++---
+ mm/memory.c                             |   2 +-
+ mm/shmem.c                              |   6 +-
+ mm/swap.c                               |  90 +++++++++++------------
+ mm/swap_state.c                         |   7 +-
+ mm/vmscan.c                             | 114 ++++++++++++------------------
+ mm/vmstat.c                             |   4 ++
+ mm/workingset.c                         |  21 ++++--
+ 18 files changed, 180 insertions(+), 172 deletions(-)
+
+
