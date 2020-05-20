@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3504820759
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C5020759
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Vfqtr1av"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Lb7ndAEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgETX0u (ORCPT
+        id S1728721AbgETX0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55674 "EHLO
+        Wed, 20 May 2020 19:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728750AbgETX0H (ORCPT
+        with ESMTP id S1728683AbgETX0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:26:07 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A732C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:07 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id t25so4128020qtc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:07 -0700 (PDT)
+        Wed, 20 May 2020 19:26:02 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1933CC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:02 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id v4so4103712qte.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ONzXxQJWlYS6v930NyblSl/dSH7byxuUjdizqQ76XH0=;
-        b=Vfqtr1avu8tKcBmh9fQhTBFRNFDrzNK0PrK8D6jNEROiFm3/ZTM/m06At6b/4uXVsC
-         1vbyQWxOIaVQr8yv2yXIoDgk7tZynHELSGHCvuW7WV2763JCx3aB8O33biCDlb137whD
-         YgcWXGrAB+b+mPLNQFGRvhO6neIyhmoIE6bO5J0FYCYgv+ZTT/AzpiPnrIdTee7gBQia
-         P+7xyDQehuBqMoq6DezkMOl7yYDOuW2DcBiYBvc3Qk4tEDxyOUsSSdzIzTake8NsBSF/
-         +Cyv0HXlKg53qZ5z2nVOzPqKfeedvzJGjOYZSvaRrM8tSG1urxGtbkJMYtK/JbJy4hwa
-         Xv/Q==
+        bh=2ozutM1RuMVFVDvSIK8bxM1gfp4d+rFh7jBPaadPhlY=;
+        b=Lb7ndAEuNhjpm7qFW7cY/KXnvFygKYOdT4JswXczLPm909v/DQ8GR7bbm44g/X0spu
+         p+/16sYWRdQx8Pm26HKQwjp4euw6hp95qZ8If2y+6Lox6HQZx2c+LIwq5Y0oPZxBzXs3
+         ZA3Arusf3P6B4eajc4K3WyFw2kA4iSUUg1kEJ96RgKwwEWmlVQ2wDIvpq6YM/ddUvEKn
+         oEjySAahIKLRb9VG1+Twv7hYdcsJI4ETtJdTABdfTl7Opktcpi2wNjDAtfxC2xkALi/K
+         o2svRWYCilFhKKJYzc7pz7+IYAeMn0+Gbgr0Txxt00hvGDR9FzKc8alzfLV2+uOXOopH
+         9JOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ONzXxQJWlYS6v930NyblSl/dSH7byxuUjdizqQ76XH0=;
-        b=K8d60Vh6WnTzUYR/coF1fhG36HN4ttyR5pzoiMTKm3Ne/Q7CH3uKQwkZ3yatqDi04z
-         a5Ye7ssEz/CIiX4JvGEmhgpkEm5tMCZ3oNlwEgucAjhfrsspI8yWWypAnrmnEpmCo6KG
-         wwMTAfwa7cidqidRYR/ASxK2vSqwUK6VdtamRmmoUCp7ZmTxSCVjMVOZtbggBnzEIuGB
-         1ofabW60xQ8RwiC7QPENxA24ceaN8Y/3KL7gl1aDV6G3e+atq/ZOjwtdV4+Tc2pD8fhw
-         k3tRuMrf0nuCTaLPA8mafm0xXnOjx59PJPJCKLuFAZ0ynzrLCBRuoQKKQkkdwV4r3HIY
-         ToAA==
-X-Gm-Message-State: AOAM5336BdAZUpxD3H0mhK4Pk6JWJVxgoE9LszFgoZ5scyAb3/XV/rEM
-        zBtH3kV0qDihN227uBElzbJ8XlX7nyA=
-X-Google-Smtp-Source: ABdhPJxWLrLCauEGOpU27uvVaRr+J6xURbThu0ApKi/WqsatFbaueRYa5w8NI0hkSOEFQm0hdHV3iw==
-X-Received: by 2002:ac8:3fa4:: with SMTP id d33mr8066768qtk.376.1590017166387;
-        Wed, 20 May 2020 16:26:06 -0700 (PDT)
+        bh=2ozutM1RuMVFVDvSIK8bxM1gfp4d+rFh7jBPaadPhlY=;
+        b=jdhjcqyoDjgU6CdxxmhXKjK3yNnzuW83PssKutp06G0X8Vp9PEnbfBWZUurQm8ZWir
+         RdcRXBxEcekRLQeVjSxw6XSrsrmDrNV6Y1TvFWcDs6B0SubcyGQKiOCQXyTyxtP/yovw
+         b/sjA0tHlqdyIecMpNmejivuwUwfYBxMx0XXL6ccbyWSa0so+xzfru/ZEAQQ93QBGOwB
+         jzlcvfH0KLW90duHg/XSrg6cTN34djwofAldspr3EH8DBUPi0ye7e0vDdKmDzCRakh6P
+         CZqOTZdLL3zzlhh3D/NAdVSZ38o9VhGmfHSsZVv9qZJZqEPnx0N1V8KrynAYtTnISHa/
+         AYDg==
+X-Gm-Message-State: AOAM533TTZEPoeEdWThlLOwJN+wujtmNwyjqgDpX1/XA/lJkjn8uIQTh
+        8G90/SWctifrisAlP7FvKLDdZA==
+X-Google-Smtp-Source: ABdhPJwHDsn4V5BDMrhnRfBkMRRvO8wA+GSitS0IWz8FXvpMWlAjzbtWutB3L5QWvt/43zchkIBqSg==
+X-Received: by 2002:ac8:6615:: with SMTP id c21mr8107277qtp.185.1590017161371;
+        Wed, 20 May 2020 16:26:01 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:4708])
-        by smtp.gmail.com with ESMTPSA id p42sm3802559qtk.94.2020.05.20.16.26.05
+        by smtp.gmail.com with ESMTPSA id l6sm2544316qkc.59.2020.05.20.16.26.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 16:26:05 -0700 (PDT)
+        Wed, 20 May 2020 16:26:00 -0700 (PDT)
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     linux-mm@kvack.org
 Cc:     Rik van Riel <riel@surriel.com>,
@@ -67,9 +67,9 @@ Cc:     Rik van Riel <riel@surriel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH 04/14] mm: fold and remove lru_cache_add_anon() and lru_cache_add_file()
-Date:   Wed, 20 May 2020 19:25:15 -0400
-Message-Id: <20200520232525.798933-5-hannes@cmpxchg.org>
+Subject: [PATCH 01/14] mm: fix LRU balancing effect of new transparent huge pages
+Date:   Wed, 20 May 2020 19:25:12 -0400
+Message-Id: <20200520232525.798933-2-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200520232525.798933-1-hannes@cmpxchg.org>
 References: <20200520232525.798933-1-hannes@cmpxchg.org>
@@ -80,235 +80,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They're the same function, and for the purpose of all callers they are
-equivalent to lru_cache_add().
+Currently, THP are counted as single pages until they are split right
+before being swapped out. However, at that point the VM is already in
+the middle of reclaim, and adjusting the LRU balance then is useless.
+
+Always account THP by the number of basepages, and remove the fixup
+from the splitting path.
 
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 Reviewed-by: Rik van Riel <riel@redhat.com>
 Acked-by: Michal Hocko <mhocko@suse.com>
 Acked-by: Minchan Kim <minchan@kernel.org>
 ---
- fs/cifs/file.c       | 10 +++++-----
- fs/fuse/dev.c        |  2 +-
- include/linux/swap.h |  2 --
- mm/khugepaged.c      |  8 ++------
- mm/memory.c          |  2 +-
- mm/shmem.c           |  6 +++---
- mm/swap.c            | 38 ++++++++------------------------------
- mm/swap_state.c      |  2 +-
- 8 files changed, 21 insertions(+), 49 deletions(-)
+ mm/swap.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 0b1528edebcf..169ab37bb3aa 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -4162,7 +4162,7 @@ cifs_readv_complete(struct work_struct *work)
- 	for (i = 0; i < rdata->nr_pages; i++) {
- 		struct page *page = rdata->pages[i];
- 
--		lru_cache_add_file(page);
-+		lru_cache_add(page);
- 
- 		if (rdata->result == 0 ||
- 		    (rdata->result == -EAGAIN && got_bytes)) {
-@@ -4232,7 +4232,7 @@ readpages_fill_pages(struct TCP_Server_Info *server,
- 			 * fill them until the writes are flushed.
- 			 */
- 			zero_user(page, 0, PAGE_SIZE);
--			lru_cache_add_file(page);
-+			lru_cache_add(page);
- 			flush_dcache_page(page);
- 			SetPageUptodate(page);
- 			unlock_page(page);
-@@ -4242,7 +4242,7 @@ readpages_fill_pages(struct TCP_Server_Info *server,
- 			continue;
- 		} else {
- 			/* no need to hold page hostage */
--			lru_cache_add_file(page);
-+			lru_cache_add(page);
- 			unlock_page(page);
- 			put_page(page);
- 			rdata->pages[i] = NULL;
-@@ -4437,7 +4437,7 @@ static int cifs_readpages(struct file *file, struct address_space *mapping,
- 			/* best to give up if we're out of mem */
- 			list_for_each_entry_safe(page, tpage, &tmplist, lru) {
- 				list_del(&page->lru);
--				lru_cache_add_file(page);
-+				lru_cache_add(page);
- 				unlock_page(page);
- 				put_page(page);
- 			}
-@@ -4475,7 +4475,7 @@ static int cifs_readpages(struct file *file, struct address_space *mapping,
- 			add_credits_and_wake_if(server, &rdata->credits, 0);
- 			for (i = 0; i < rdata->nr_pages; i++) {
- 				page = rdata->pages[i];
--				lru_cache_add_file(page);
-+				lru_cache_add(page);
- 				unlock_page(page);
- 				put_page(page);
- 			}
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 97eec7522bf2..8c0cc79d8071 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -840,7 +840,7 @@ static int fuse_try_move_page(struct fuse_copy_state *cs, struct page **pagep)
- 	get_page(newpage);
- 
- 	if (!(buf->flags & PIPE_BUF_FLAG_LRU))
--		lru_cache_add_file(newpage);
-+		lru_cache_add(newpage);
- 
- 	err = 0;
- 	spin_lock(&cs->req->waitq.lock);
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index b42fb47d8cbe..30fd4641890e 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -334,8 +334,6 @@ extern unsigned long nr_free_pagecache_pages(void);
- 
- /* linux/mm/swap.c */
- extern void lru_cache_add(struct page *);
--extern void lru_cache_add_anon(struct page *page);
--extern void lru_cache_add_file(struct page *page);
- extern void lru_add_page_tail(struct page *page, struct page *page_tail,
- 			 struct lruvec *lruvec, struct list_head *head);
- extern void activate_page(struct page *);
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index f2e0a5e5cfbb..d458c61d6195 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1869,13 +1869,9 @@ static void collapse_file(struct mm_struct *mm,
- 
- 		SetPageUptodate(new_page);
- 		page_ref_add(new_page, HPAGE_PMD_NR - 1);
--
--		if (is_shmem) {
-+		if (is_shmem)
- 			set_page_dirty(new_page);
--			lru_cache_add_anon(new_page);
--		} else {
--			lru_cache_add_file(new_page);
--		}
-+		lru_cache_add(new_page);
- 
- 		/*
- 		 * Remove pte page tables, so we can re-fault the page as huge.
-diff --git a/mm/memory.c b/mm/memory.c
-index b4efc125ae09..a1813ca388a8 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3139,7 +3139,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 				if (err)
- 					goto out_page;
- 
--				lru_cache_add_anon(page);
-+				lru_cache_add(page);
- 				swap_readpage(page, true);
- 			}
- 		} else {
-diff --git a/mm/shmem.c b/mm/shmem.c
-index e83de27ce8f4..ea95a3e46fbb 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1609,7 +1609,7 @@ static int shmem_replace_page(struct page **pagep, gfp_t gfp,
- 		 */
- 		oldpage = newpage;
- 	} else {
--		lru_cache_add_anon(newpage);
-+		lru_cache_add(newpage);
- 		*pagep = newpage;
- 	}
- 
-@@ -1860,7 +1860,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
- 					charge_mm);
- 	if (error)
- 		goto unacct;
--	lru_cache_add_anon(page);
-+	lru_cache_add(page);
- 
- 	spin_lock_irq(&info->lock);
- 	info->alloced += compound_nr(page);
-@@ -2376,7 +2376,7 @@ static int shmem_mfill_atomic_pte(struct mm_struct *dst_mm,
- 	if (!pte_none(*dst_pte))
- 		goto out_release_unlock;
- 
--	lru_cache_add_anon(page);
-+	lru_cache_add(page);
- 
- 	spin_lock_irq(&info->lock);
- 	info->alloced++;
 diff --git a/mm/swap.c b/mm/swap.c
-index 68eae1e2787a..c93a6c84464c 100644
+index bf9a79fed62d..68eae1e2787a 100644
 --- a/mm/swap.c
 +++ b/mm/swap.c
-@@ -403,35 +403,6 @@ void mark_page_accessed(struct page *page)
+@@ -263,13 +263,14 @@ void rotate_reclaimable_page(struct page *page)
  }
- EXPORT_SYMBOL(mark_page_accessed);
  
--static void __lru_cache_add(struct page *page)
--{
--	struct pagevec *pvec = &get_cpu_var(lru_add_pvec);
--
--	get_page(page);
--	if (!pagevec_add(pvec, page) || PageCompound(page))
--		__pagevec_lru_add(pvec);
--	put_cpu_var(lru_add_pvec);
--}
--
--/**
-- * lru_cache_add_anon - add a page to the page lists
-- * @page: the page to add
-- */
--void lru_cache_add_anon(struct page *page)
--{
--	if (PageActive(page))
--		ClearPageActive(page);
--	__lru_cache_add(page);
--}
--
--void lru_cache_add_file(struct page *page)
--{
--	if (PageActive(page))
--		ClearPageActive(page);
--	__lru_cache_add(page);
--}
--EXPORT_SYMBOL(lru_cache_add_file);
--
- /**
-  * lru_cache_add - add a page to a page list
-  * @page: the page to be added to the LRU.
-@@ -443,10 +414,17 @@ EXPORT_SYMBOL(lru_cache_add_file);
-  */
- void lru_cache_add(struct page *page)
+ static void update_page_reclaim_stat(struct lruvec *lruvec,
+-				     int file, int rotated)
++				     int file, int rotated,
++				     unsigned int nr_pages)
  {
-+	struct pagevec *pvec = &get_cpu_var(lru_add_pvec);
-+
- 	VM_BUG_ON_PAGE(PageActive(page) && PageUnevictable(page), page);
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
--	__lru_cache_add(page);
-+
-+	get_page(page);
-+	if (!pagevec_add(pvec, page) || PageCompound(page))
-+		__pagevec_lru_add(pvec);
-+	put_cpu_var(lru_add_pvec);
+ 	struct zone_reclaim_stat *reclaim_stat = &lruvec->reclaim_stat;
+ 
+-	reclaim_stat->recent_scanned[file]++;
++	reclaim_stat->recent_scanned[file] += nr_pages;
+ 	if (rotated)
+-		reclaim_stat->recent_rotated[file]++;
++		reclaim_stat->recent_rotated[file] += nr_pages;
  }
-+EXPORT_SYMBOL(lru_cache_add);
  
- /**
-  * lru_cache_add_active_or_unevictable
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index 17123caec6dd..b5e08ff00e1e 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -432,7 +432,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ static void __activate_page(struct page *page, struct lruvec *lruvec,
+@@ -286,7 +287,7 @@ static void __activate_page(struct page *page, struct lruvec *lruvec,
+ 		trace_mm_lru_activate(page);
  
- 	/* Initiate read into locked page */
- 	SetPageWorkingset(page);
--	lru_cache_add_anon(page);
-+	lru_cache_add(page);
- 	*new_page_allocated = true;
- 	return page;
+ 		__count_vm_event(PGACTIVATE);
+-		update_page_reclaim_stat(lruvec, file, 1);
++		update_page_reclaim_stat(lruvec, file, 1, hpage_nr_pages(page));
+ 	}
+ }
  
+@@ -541,7 +542,7 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+ 
+ 	if (active)
+ 		__count_vm_event(PGDEACTIVATE);
+-	update_page_reclaim_stat(lruvec, file, 0);
++	update_page_reclaim_stat(lruvec, file, 0, hpage_nr_pages(page));
+ }
+ 
+ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+@@ -557,7 +558,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+ 		add_page_to_lru_list(page, lruvec, lru);
+ 
+ 		__count_vm_events(PGDEACTIVATE, hpage_nr_pages(page));
+-		update_page_reclaim_stat(lruvec, file, 0);
++		update_page_reclaim_stat(lruvec, file, 0, hpage_nr_pages(page));
+ 	}
+ }
+ 
+@@ -582,7 +583,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+ 
+ 		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
+ 		count_memcg_page_event(page, PGLAZYFREE);
+-		update_page_reclaim_stat(lruvec, 1, 0);
++		update_page_reclaim_stat(lruvec, 1, 0, hpage_nr_pages(page));
+ 	}
+ }
+ 
+@@ -890,8 +891,6 @@ EXPORT_SYMBOL(__pagevec_release);
+ void lru_add_page_tail(struct page *page, struct page *page_tail,
+ 		       struct lruvec *lruvec, struct list_head *list)
+ {
+-	const int file = 0;
+-
+ 	VM_BUG_ON_PAGE(!PageHead(page), page);
+ 	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
+ 	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
+@@ -917,9 +916,6 @@ void lru_add_page_tail(struct page *page, struct page *page_tail,
+ 		add_page_to_lru_list_tail(page_tail, lruvec,
+ 					  page_lru(page_tail));
+ 	}
+-
+-	if (!PageUnevictable(page))
+-		update_page_reclaim_stat(lruvec, file, PageActive(page_tail));
+ }
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+@@ -962,8 +958,9 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
+ 
+ 	if (page_evictable(page)) {
+ 		lru = page_lru(page);
+-		update_page_reclaim_stat(lruvec, page_is_file_lru(page),
+-					 PageActive(page));
++		update_page_reclaim_stat(lruvec, is_file_lru(lru),
++					 PageActive(page),
++					 hpage_nr_pages(page));
+ 		if (was_unevictable)
+ 			count_vm_event(UNEVICTABLE_PGRESCUED);
+ 	} else {
 -- 
 2.26.2
 
